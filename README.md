@@ -6,11 +6,14 @@ Let's settle down, rest our minds, spill the tea of our experience in multiple a
 ├── dataProcessing
 |   ├── handlingMissingData
 |   |   ├── determineMissingValues
-|   |   ├── regressionImputing
+|   |   ├── regressionImputingggi
 |   ├── handlingOutliers
 ├── dataEDA
-|   ├── correlation
+|   ├── correlalstion
 |   |   ├── detectmulticollinearity
 |   |   ├── extremeCorrelation
+├── dataModeling
+|   ├── xgboost
+|   |   ├── info
 └── README.md
 ```
