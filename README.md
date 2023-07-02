@@ -8,6 +8,8 @@ Let's settle down, rest our minds, spill the tea of our experience in multiple a
 |   |   ├── determineMissingValues
 |   |   ├── regressionImputingggi
 |   ├── handlingOutliers
+|   ├── handlingObjectdata
+|   |   ├── wordsSimilarity
 ├── dataEDA
 |   ├── correlalstion
 |   |   ├── detectmulticollinearity
