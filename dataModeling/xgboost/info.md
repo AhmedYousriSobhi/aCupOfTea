@@ -4,12 +4,19 @@
 XGBoost (eXtreme Gradient Boosting) is a popular machine learning algorithm that belongs to the gradient boosting framework. It is known for its efficiency, accuracy, and flexibility in handling a variety of data types and problem domains. XGBoost is widely used for both regression and classification tasks.
 
 ## Historical Defenitions
-Ensemble: "Combining multiple models together"
+__Ensemble__: "Combining multiple models together"
 - Referes to the process of combining multiple individual models, called base learners, to form a stronger and more accurate model.
 - The idea behind the ensemble learning is that the collective knowledge of multiple models can often outperform a single model.
 - Ensemble methods can be applied to various machine learning algorithms, such as decision trees, neural networks, or support vector machines.
+- The models that form the ensemble, also known as base learners, could be either from the same learning algorithm or different learning algorithms. 
+- Bagging and boosting are two widely used ensemble learners. Though these two techniques can be used with several statistical models, the most predominant usage has been with decision trees
 
-Boosting: 'Ensemble but the models are sequentials'
+__Bagging__: 'Ensemble but the models are in parallel'
+- While decision trees are one of the most easily interpretable models, they exhibit highly variable behavior. Consider a single training dataset that we randomly split into two parts. Now, let’s use each part to train a decision tree in order to obtain two models.
+- When we fit both these models, they would yield different results. Decision trees are said to be associated with high variance due to this behavior. 
+- Bagging or boosting aggregation helps to reduce the variance in any learner. Several decision trees which are generated in parallel, form the base learners of bagging technique. Data sampled with replacement is fed to these learners for training. The final prediction is the averaged output from all the learners
+
+__Boosting__: 'Ensemble but the models are sequentials'
 - Boosting is a specific technique within ensemble learning that focuses on sequentially building an ensemble of models in an iterative manner. 
 - The key idea of boosting is to train each model in the ensemble to correct the mistakes or misclassifications made by the previous models. 
 - Boosting algorithms, such as AdaBoost and Gradient Boosting, iteratively build an ensemble of models, with each model giving more weight to the misclassified or difficult instances.
@@ -44,3 +51,4 @@ Some key features and advantages of XGBoost include:
 
 ### Resources:
 - [simplilearn](https://www.simplilearn.com/what-is-xgboost-algorithm-in-machine-learning-article)
+- [analyticsvidhya](https://www.analyticsvidhya.com/blog/2018/09/an-end-to-end-guide-to-understand-the-math-behind-xgboost/#h-why-ensemble-learning)
