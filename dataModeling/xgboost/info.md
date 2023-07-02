@@ -16,6 +16,8 @@ __Bagging__: 'Ensemble but the models are in parallel'
 - When we fit both these models, they would yield different results. Decision trees are said to be associated with high variance due to this behavior. 
 - Bagging or boosting aggregation helps to reduce the variance in any learner. Several decision trees which are generated in parallel, form the base learners of bagging technique. Data sampled with replacement is fed to these learners for training. The final prediction is the averaged output from all the learners
 
+![bagging image](https://lh3.googleusercontent.com/4svO7UdzXj-JxFwU-_SyrMWMqxp8Al3pVpQYr5A-nzCDXdEqVL_CHeqbeVVW8Kivsq76q5sozAKwGsQuy5qnk5wVYfqWb5LHxhknBm9DSLBjg0ViSRTVjZ3gFQPwiGxJ8wP2usOH)
+
 __Boosting__: 'Ensemble but the models are sequentials'
 - Boosting is a specific technique within ensemble learning that focuses on sequentially building an ensemble of models in an iterative manner. 
 - The key idea of boosting is to train each model in the ensemble to correct the mistakes or misclassifications made by the previous models. 
@@ -30,6 +32,8 @@ So: it is a special implementation of the boosting.
 Gradient Boosting framework is a machine learning technique that combine multiple weak predictive models to create a strong predictive model. It is a type of ensemble learning where the models are trained sequentailly, each one correcting the mistakes made by the previous one.
 
 The key idea behind gradient boosting is to iteratively fit the models to the residuals or errors of the previous models. In each iteration, a new model is trained to minimize the loss function by reducing the errors of the ensemble. This process is typically done using gradient descent optimization, where the model is updated in the direction of the steepest descent of the loss function.
+
+![boosting image](https://i0.wp.com/neptune.ai/wp-content/uploads/2022/10/Ensemble-algorithms-boosting.png?ssl=1)
 
 ## XGboost Methadology
 The key idea behind XGBoost is to build an ensemble of weak predictive models, typically decision trees, and iteratively improve their performance. It trains these models in a sequential manner, where each new model is trained to correct the mistakes made by the previous models. This iterative process allows XGBoost to learn complex patterns and make accurate predictions.
@@ -52,3 +56,4 @@ Some key features and advantages of XGBoost include:
 ### Resources:
 - [simplilearn](https://www.simplilearn.com/what-is-xgboost-algorithm-in-machine-learning-article)
 - [analyticsvidhya](https://www.analyticsvidhya.com/blog/2018/09/an-end-to-end-guide-to-understand-the-math-behind-xgboost/#h-why-ensemble-learning)
+- [neptune](https://neptune.ai/blog/xgboost-everything-you-need-to-know)
