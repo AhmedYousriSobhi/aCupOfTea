@@ -3,19 +3,23 @@ Let's settle down, rest our minds, spill the tea of our experience in multiple a
 
 ```bash
 .
-├── dataProcessing
-|   ├── handlingMissingData
-|   |   ├── determineMissingValues
-|   |   ├── regressionImputingggi
-|   ├── handlingOutliers
-|   ├── handlingObjectdata
-|   |   ├── wordsSimilarity
-├── dataEDA
-|   ├── correlalstion
-|   |   ├── detectmulticollinearity
-|   |   ├── extremeCorrelation
-├── dataModeling
-|   ├── xgboost
-|   |   ├── info
+├── tabularData
+|   ├── dataProcessing
+|   |   ├── handlingMissingData
+|   |   |   ├── determineMissingValues
+|   |   |   ├── regressionImputingggi
+|   |   ├── handlingOutliers
+|   |   ├── handlingObjectdata
+|   |   |   ├── wordsSimilarity
+|   ├── dataEDA
+|   |   ├── correlalstion
+|   |   |   ├── detectmulticollinearity
+|   |   |   ├── extremeCorrelation
+|   ├── dataModeling
+|   |   ├── xgboost
+|   |   |   ├── info
+├── tips
+|   ├── kaggle
+|   |   ├── tips
 └── README.md
 ```
