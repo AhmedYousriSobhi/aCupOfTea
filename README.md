@@ -21,5 +21,8 @@ Let's settle down, rest our minds, spill the tea of our experience in multiple a
 ├── tips
 |   ├── kaggle
 |   |   ├── tips
+|   ├── pythonCleanCode
+|   |   ├── cleanCode-GoogleStyleGuide
+|   |   ├── nb_GoogleStyleGuide
 └── README.md
 ```
