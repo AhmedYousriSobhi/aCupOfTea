@@ -7,8 +7,9 @@ import numpy as np
 
 class SkewnessTransformer(BaseEstimator, TransformerMixin):
 
-    def __init__(self, skew_limit=0.8):
+    def __init__(self, skew_limit=0.8, forced_fix= False):
         self.skew_limit = skew_limit
+        self.forced_fix= forced_fix
         self.method_dict = {}
 
     def fit(self, X, y=None):
@@ -50,7 +51,7 @@ class SkewnessTransformer(BaseEstimator, TransformerMixin):
         for feature_idx in skew_col_indices:
             feature = X[:, feature_idx]
 
-            method = self.recommend_skewness_reduction_method(feature)
+            method = self.recommend_skewness_reduction_method(feature, self.forced_fix)
             if method not in method_dict:
                 method_dict[method] = [feature_idx]
             else:
