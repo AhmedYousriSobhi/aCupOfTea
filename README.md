@@ -3,14 +3,26 @@ Let's settle down, rest our minds, spill the tea of our experience in multiple a
 
 ```bash
 .
+├── programming
+|   ├── dataStructure
+|   |   ├── nb_DataStructure
+|   ├── oop
+|   |   ├── nb_OOP
+|   |   ├── objectOrientedProgramming
+|   ├── softwareGoals
+|   |   ├── robustness
+|   |   |   ├── nb_Robustness
+|   |   |   ├── script_UnitTest.py
 ├── tabularData
 |   ├── dataProcessing
 |   |   ├── handlingMissingData
 |   |   |   ├── determineMissingValues
 |   |   |   ├── regressionImputingggi
-|   |   ├── handlingOutliers
 |   |   ├── handlingObjectdata
 |   |   |   ├── wordsSimilarity
+|   |   ├── handlingOutliers
+|   |   ├── handlingSkewness
+|   |   |   ├── script_SkewFix.py
 |   ├── dataEDA
 |   |   ├── correlalstion
 |   |   |   ├── detectmulticollinearity
