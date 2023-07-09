@@ -9,10 +9,14 @@ Let's settle down, rest our minds, spill the tea of our experience in multiple a
 |   ├── oop
 |   |   ├── nb_OOP
 |   |   ├── objectOrientedProgramming
+|   ├── pythonCleanCode
+|   |   ├── cleanCode-GoogleStyleGuide
+|   |   ├── nb_GoogleStyleGuide
 |   ├── softwareGoals
 |   |   ├── robustness
 |   |   |   ├── nb_Robustness
-|   |   |   ├── script_UnitTest.py
+|   |   |   ├── script_RectangleClass
+|   |   |   ├── script_UnitTest
 ├── tabularData
 |   ├── dataProcessing
 |   |   ├── handlingMissingData
@@ -22,7 +26,7 @@ Let's settle down, rest our minds, spill the tea of our experience in multiple a
 |   |   |   ├── wordsSimilarity
 |   |   ├── handlingOutliers
 |   |   ├── handlingSkewness
-|   |   |   ├── script_SkewFix.py
+|   |   |   ├── script_SkewFix
 |   ├── dataEDA
 |   |   ├── correlalstion
 |   |   |   ├── detectmulticollinearity
@@ -33,8 +37,5 @@ Let's settle down, rest our minds, spill the tea of our experience in multiple a
 ├── tips
 |   ├── kaggle
 |   |   ├── tips
-|   ├── pythonCleanCode
-|   |   ├── cleanCode-GoogleStyleGuide
-|   |   ├── nb_GoogleStyleGuide
 └── README.md
 ```
