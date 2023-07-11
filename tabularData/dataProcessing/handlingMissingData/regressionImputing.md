@@ -15,13 +15,13 @@ Continuting the __determineMissingValues__ markdown file, we saw that, there wer
 
 This is called __Catch-22__ a problematic situation for which the only solution is denied by a circumstance inherent in the problem or by a rule. It was taken from the show-business catch-22 "no work unless you have an agent, no agent unless you've worked Mary Murphy. also : the circumstance or rule that denies a solution."
 
-```
+```python
 missing_columns = ["Glucose", "BloodPressure", "SkinThickness", "Insulin", "BMI"]
 ```
  
 We can avoid this Catch-22 situation by initially imputing all the variables with missing values using some trivial methods like Simple Random Imputation (we impute the missing data with random observed values of the variable) which is later followed by Regression Imputation of each of the variables iteratively.
 
-```
+```python
 def random_imputation(df, feature):
 
     number_missing = df[feature].isnull().sum()
@@ -35,7 +35,7 @@ def random_imputation(df, feature):
 
 Then we apply this function on each of column of the columns which contains missing values.
 
-```
+```python
 for feature in missing_columns:
     df[feature + '_imp'] = df[feature]
     df = random_imputation(df, feature)
@@ -43,7 +43,7 @@ for feature in missing_columns:
 
 Now we have none missing columns, which will help us use the regression imputing on each target missing column, based on other features.
 
-```
+```python
 deter_data = pd.DataFrame(columns = ["Det" + name for name in missing_columns])
 
 for feature in missing_columns:
@@ -69,7 +69,7 @@ Another point:
 
 When we compare both complete data with the incomplete data:
 - the complete data has a lesser standard deviation (thus lesser variability) than the incomplete data.
-```
+```python
 pd.concat([df[["Insulin", "SkinThickness"]], deter_data[["DetInsulin", "DetSkinThickness"]]], axis = 1).describe().T
 ```
 

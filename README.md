@@ -18,6 +18,11 @@ Let's settle down, rest our minds, spill the tea of our experience in multiple a
 |   |   |   ├── script_RectangleClass
 |   |   |   ├── script_UnitTest
 ├── tabularData
+|   ├── conceptInMachineLearning
+|   |   ├── dataEDAanalysis
+|   |   ├── mlSupervisedClassification
+|   |   ├── mlSupervisedRegression
+|   |   ├── mlUnsupervised
 |   ├── dataProcessing
 |   |   ├── handlingMissingData
 |   |   |   ├── determineMissingValues

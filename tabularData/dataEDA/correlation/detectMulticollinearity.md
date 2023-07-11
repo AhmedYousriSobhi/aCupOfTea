@@ -5,12 +5,12 @@
 Correlation is measured between numeric features only.
 
 Starting with calculating the correlation metric between numeric features
-```
+```python
 corr_matrix = df.select_dtypes('number').corr()
 ```
 
 Secondly, visualizing the metric using heatmap
-```
+```python
 _, ax = plt.subplots(figsize =(10,8)) 
 sns.heatmap(corr_matrix,ax = ax, linewidths = 0.1)
 plt.title('Features Correlation')
@@ -23,7 +23,7 @@ Heatmap is not very easily to be visulized, So for better interpretting, we will
 
 Thirdly, Calculating the correlation between each feature and all the other featuers.
 
-```
+```python
 # Simplify by emptying all the data below the diagonal
 # np.tril_indices_from will return the indecies diagonal and below (lower triangle)
 tril_index = np.tril_indices_from(corr_matrix)
@@ -53,12 +53,12 @@ This will output a dataframe, containing each feature and its correlation coeffi
 |f2|f3|-0.023|0.023|
 
 Fourthly, Ploting a histplot to get an overview of the features correlation.
-```
+```python
 ax = corr_values.abs_correlation.hist(bins=50, figsize=(12, 8))
 ax.set(xlabel='Absolute Correlation', ylabel='Frequency')
 ```
 
 Lastly, Check which of the featueres has a correlation above certain threshold like 0.8
-```
+```python
 corr_values.sort_values('correlation', ascending=False).query('abs_correlation>0.8')
 ```

@@ -18,7 +18,7 @@ When you check for any Nans values in the dataset, you will find that all values
 But some data related to diabetes, five number summary would show that some variables have 0.0 as their minimum value which would be meaningless in their case. Plasma glucose concentration, Diastolic blood pressure, Triceps skinfold thickness, 2-Hour serum insulin and Body mass index cannot be zero.
 
 So for feasibility of the analysis, we replace all these 'missing' data with __nan__, and try to impute them again with more appropriate values.
-```
+```python
 df.loc[df["Glucose"] == 0.0, "Glucose"] = np.NAN
 df.loc[df["BloodPressure"] == 0.0, "BloodPressure"] = np.NAN
 df.loc[df["SkinThickness"] == 0.0, "SkinThickness"] = np.NAN

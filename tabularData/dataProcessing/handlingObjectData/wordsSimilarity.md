@@ -55,7 +55,7 @@ So following up, The calculated metrix
 ## Implementation: fuzzywuzzy
 In Python, there is a developed package designed to do that similatity calculation called __fuzzywuzzy__, which in deep calculate the Levenshtein distance.
 
-```
+```python
 from fuzzywuzzy import fuzz
 ```
 
