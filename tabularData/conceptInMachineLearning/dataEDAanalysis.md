@@ -269,111 +269,104 @@ __Hypothesis Testing: Bayesian Approach__
 - The priors are multiplied by the likelihood ratio, which does not depend on the priors. The likelihood ratio tells us how we should update the priors in reaction to seeing a given set of data and that will give us our posterior distribution.
 
 ## 19- Type1 and Type2 Errors:
-	Let's think of an example; we're going to imagine we're tossing a coin, and our null hypothesis H0 is that we are working with a fair coin,
-	and the alternative hypothesis H1 is that it's not a fair coin.
-	> Type1 Error in this case is going to be incorectly rejecting the null H0, so this would mean we are indeed working with a fair coin, but
-	  we make the error given our sample data that we should decide to reject the null.
-	> Type2 Error on the other hand, is going to incorrectly accept the null H0, so this would mean we are working with a biased coin, but instead
-	  we accepted that we are working with a fair coin given our data (fail to reject that it is a fair coin given our data)
+Let's think of an example; we're going to imagine we're tossing a coin, and our null hypothesis H0 is that we are working with a fair coin, and the alternative hypothesis H1 is that it's not a fair coin.
 
-	  Power of a test = 1 - P(Type2 Error)	1 - the probability of incorrectly accepting the null
+__Type1 Error__ in this case is going to be incorectly rejecting the null H0, so this would mean we are indeed working with a fair coin, but we make the error given our sample data that we should decide to reject the null.
+
+__Type2 Error__ on the other hand, is going to incorrectly accept the null H0, so this would mean we are working with a biased coin, but instead we accepted that we are working with a fair coin given our data (fail to reject that it is a fair coin given our data)
+
+```
+Power of a test = 1 - P(Type2 Error)	
+			    = 1 - the probability of incorrectly accepting the null
+```
 
 ## 20- Hypothesis Terminologies:
-	> The Likelihood Ratio; is called a Test Statistic; we use it to decide wether to accept/reject the null hypothesis H0.
-	> The Rejection Region; is the set of values of the test statistic that lead to rejecting null hypothesis H0.
-	> The Acceptance Region; is the set of values of the test statistic that lead to accept the null hypothesis H0.
-	> The Null Distribution; is the test statistic's distribution when the null hypothesis is true.
+__The Likelihood Ratio__; is called a Test Statistic; we use it to decide wether to accept/reject the null hypothesis H0.
+
+__The Rejection Region__; is the set of values of the test statistic that lead to rejecting null hypothesis H0.
+
+__The Acceptance Region__; is the set of values of the test statistic that lead to accept the null hypothesis H0.
+
+__The Null Distribution__; is the test statistic's distribution when the null hypothesis is true.
 
 ## 21- Business Examples:
-	> Testing marketing intervention effectiveness:
-	  For a new direct mail marketing compaign to existing customers, the null hypothesis (H0) would be that our campaign does not actually
-	  impact purchasing.
-	  The alternative hypothesis (H1) would suggest that it does indeed have an impact
+__Testing marketing intervention effectiveness__
+- For a new direct mail marketing compaign to existing customers, the null hypothesis (H0) would be that our campaign does not actually impact purchasing.
+The alternative hypothesis (H1) would suggest that it does indeed have an impact.
 
-	> Website Layut:
-	  For a proposed change to a website layout, we may test the null hypothesis (H0) that the change had no impact on traffic.
-	  Or we would look for evidence to reject the null hypothesis in favor of an alternative hypothesis (H1), that there is indeed an impact of
-	  the website layout on traffic.
+__Website Layout__
+- For a proposed change to a website layout, we may test the null hypothesis (H0) that the change had no impact on traffic.
+- Or we would look for evidence to reject the null hypothesis in favor of an alternative hypothesis (H1), that there is indeed an impact of the website layout on traffic.
 
 ## 22- Significance Level and p-value:
-	> We know the distribution of the null hypothesis, such as the odds the coin is fair or the distribution of marketing intervention
-	  effectiveness.
-	  To get a rejection reason, we have to calculate the test statistic.
-	  We will choose before testing the data, the level at which we're going to actually reject our null hypothesis.
+We know the distribution of the null hypothesis, such as the odds the coin is fair or the distribution of marketing intervention effectiveness.
 
-	  To make this clear, we have to choose the Significance level (alpha) beforehand, which is the probability threshold which the null 
-	  hypothesis will be rejected, the significance level should tie closely with how important to you.
-	  It is to avoid Type1 or Type2 Error.
+To get a rejection reason, we have to calculate the test statistic. We will choose before testing the data, the level at which we're going to actually reject our null hypothesis.
 
-	  The idea of being a lower significance level, means that we would only reject the null if the probability of the data that we see is
-	  extremely low, assuming the null hypothesis.
-	  We must choose (alpha) before computing the test statistic, if we don't we might be accused of p-hacking, which is changing the p-value
-	  for which we will accept or reject the null.
-	  If you need to be absolutely certain that you can reject the null, (aka, avoid Type1 Error of incorrectly reject the null) you choose
-	  a very low (alpha).		// common values for p-value 0.01,0.05; for extreme safty maybe 0.001
-	  Example:
-	  > If a medication has dangerous side effects, and the null is that it will not aid in recovery from a disease, while the alternative is 
-	    that it will aid in the recovery from the desease, you want to be very cetain that you can reject the null (there is no effect)
+To make this clear, we have to choose the Significance level (alpha) beforehand, which is the probability threshold which the null hypothesis will be rejected. the significance level should tie closely with how important to you. It is to avoid Type1 or Type2 Error.
 
-	    On the other hand, it may not be as strict for deciding wheter to increase the font size for ads, and seeing whether that would effect,
-	    where the null being no effect and alternative has effect; here a Type2 error a failure to reject the null (falsly accept the null) is
-	    not as dangerous as the medicaton one.
+The idea of being a lower significance level, means that we would only reject the null if the probability of the data that we see is extremely low, assuming the null hypothesis.
 
-	> p-value: The smallest significance level at which the null hypothesis would be rejected
-		   The probability under the null distribution of result as or more extreme than what was actually observed.
+We must choose (alpha) before computing the test statistic, if we don't we might be accused of p-hacking, which is changing the p-value for which we will accept or reject the null.
 
-	> Confidence Interval: the values for which we accept the null hypothesis, essentially the other side of the p-value
+If you need to be absolutely certain that you can reject the null, (aka, avoid Type1 Error of incorrectly reject the null) you choose
+- a very low (alpha),  # common values for p-value 0.01,0.05; for extreme safty maybe 0.001
+
+Example
+- If a medication has dangerous side effects, and the null is that it will not aid in recovery from a disease, while the alternative is that it will aid in the recovery from the desease, you want to be very cetain that you can reject the null (there is no effect).
+
+- On the other hand, it may not be as strict for deciding wheter to increase the font size for ads, and seeing whether that would effect, where the null being no effect and alternative has effect; here a Type2 error a failure to reject the null (falsly accept the null) is not as dangerous as the medicaton one.
+
+__p-value__: The smallest significance level at which the null hypothesis would be rejected The probability under the null distribution of result as or more extreme than what was actually observed.
+- p-value measures the probability of getting a more extreme values than the one you got from the experiment.
+- If the p-value is greater than alpha, you accept the null hypothesis.
+
+__Confidence Interval__: the values for which we accept the null hypothesis, essentially the other side of the p-value.
 
 ## 23- F-Statistic:
-	> The null hypothesis (H0) for the F-Statistic, which is just a test statistic for regression, is that the data can be modeled by setting
-	  all (weights) to zero.
-	  So that you can ask yourself: does adding the features actually give us an extra indicator of what the target will actually be compared
-	  to just taking the mean of that target variable?
+The null hypothesis (H0) for the F-Statistic, which is just a test statistic for regression, is that the data can be modeled by setting all (weights) to zero. So that you can ask yourself: does adding the features actually give us an extra indicator of what the target will actually be compared to just taking the mean of that target variable?
 
-	  You reject the null hypothesis, which means that you are not getting any better than the mean value if your p-value is small enough for
-	  your F-Statistic.
+You reject the null hypothesis, which means that you are not getting any better than the mean value if your p-value is small enough for your F-Statistic.
 
-	  F-Statistic value is a number that relate to some probability, if that probability being very low, it means that the probability of coming
-	  up with the data given that the coefficients are not actually going to have any effect (so you reject the H0)
-	  In other words, the probability of just using the mean and coming up with values that you did is going to be very low, so you reject the
-	  null hypothesis and assume that those coefficients actually do have an effect on the target variable.
+F-Statistic value is a number that relate to some probability, if that probability being very low, it means that the probability of coming up with the data given that the coefficients are not actually going to have any effect (so you reject the H0)
+
+In other words, the probability of just using the mean and coming up with values that you did is going to be very low, so you reject the null hypothesis and assume that those coefficients actually do have an effect on the target variable.
 
 ## 24- Power and Sample size:
-	> Probability of at least one Type1 Error is approximately = 1 - (1 - 0.05)^#tests	// for 5% significance p-value = 0.05
+Probability of at least one Type1 Error is approximately:
+```python
+probability = 1 - (1 - 0.05)^num_tests	 # for 5% significance p-value = 0.05
+```
 
-	> Bonferroni Correction:
-	  > The Bonferroni Correction says choose p_threshold so that the probability of making a Type1 Error (assuming no effect) is 5%
-	  > Typically choose p_threshold = 0.05/(#tests)
-	  > Bonferroni Correction allows the probability of Type1 Error to be controlled but at the cost of power.
-	  > Effects either need to be larger or the tests need larger samples to be detected.
-	  > Best practice is to limit the number of comparisons done to a few well-motivated cases.
+__Bonferroni Correction__
+- The Bonferroni Correction says choose p_threshold so that the probability of making a Type1 Error (assuming no effect) is 5%
+- Typically choose p_threshold = 0.05/(#tests)
+- Bonferroni Correction allows the probability of Type1 Error to be controlled but at the cost of power.
+- Effects either need to be larger or the tests need larger samples to be detected.
+- Best practice is to limit the number of comparisons done to a few well-motivated cases.
 
-## 25- Correlation vs. Causation:
-	> Does it rain more on cooler days?
-	  Maybe it depend on where you are, some places have summer monsoons, so maybe as it gets warmer there it rains more
-	  > Warmer wether increases evaporation, which can increase humidity, in warmer wether, there is water in the air to form precipitation.
-	    This mechanism would suggest warmer wether -> more rain
-	  > Cooler wether decreases dew point (i.e. air can hold less water), this suggests if humid air enters the air and cools, it will turn into
-	    rain.
-	    This mechanism would suggest cooler wether -> more rain
+## 25- Correlation vs Causation:
+__Does it rain more on cooler days?__
 
-	  The idea here that we want to think about the underlying mechanism when we are talking about cause and effect
+Maybe it depend on where you are, some places have summer monsoons, so maybe as it gets warmer there it rains more.
+- Warmer wether increases evaporation, which can increase humidity, in warmer wether, there is water in the air to form precipitation. This mechanism would suggest warmer wether -> more rain
+- Cooler wether decreases dew point (i.e. air can hold less water), this suggests if humid air enters the air and cools, it will turn into rain. This mechanism would suggest cooler wether -> more rain
 
-	> How correlations are important?
-	  > If two variables X and Y are correlated, then X is useful for predicting Y, not necessarily going to tell you the cause and effects, but
-	    it may be good at predicting another value.
-	  > If we are trying to model Y, and we find things that correlate with Y, we may be able to improve our modeling, so it worth knowing that
-	    even if there's no casual factor, if the correlation is strong and we are not trying to directly manipulate our X 'features' as a casual
-	    factor, it can still prove useful to make predictions.
-	    But note that; it just might be slightly more dangerous as this relationship, if we don't understand the underlying factors, it may not
-	    hold in the future.
-	    Also, we definitely want to make sure to weigh against ever using it as a feature that we can tweak in order to adjust the target variable
+The idea here that we want to think about the underlying mechanism when we are talking about cause and effect
 
-	  > We should be careful about changing X with the hope of changing Y, X and Y can be correlated for different reasons:
-		> X causes Y (what we want, causation = correlation)
-		> Y causes X (mixing up cause-and-effect)
-		> X and Y are both caused by something else (confounding, external variable)
-		> X and Y are not related at all, we just got unlucky in the sample (spurious)
+__How correlations are important?__
+
+If two variables X and Y are correlated, then X is useful for predicting Y, not necessarily going to tell you the cause and effects, but it may be good at predicting another value.
+
+If we are trying to model Y, and we find things that correlate with Y, we may be able to improve our modeling, so it worth knowing that even if there's no casual factor, if the correlation is strong and we are not trying to directly manipulate our X 'features' as a casual factor, it can still prove useful to make predictions.
+
+But note that; it just might be slightly more dangerous as this relationship, if we don't understand the underlying factors, it may not hold in the future. Also, we definitely want to make sure to weigh against ever using it as a feature that we can tweak in order to adjust the target variable
+
+We should be careful about changing X with the hope of changing Y, X and Y can be correlated for different reasons:
+- X causes Y (what we want, causation = correlation)
+- Y causes X (mixing up cause-and-effect)
+- X and Y are both caused by something else (confounding, external variable)
+- X and Y are not related at all, we just got unlucky in the sample (spurious)
 
 ## Credits: 
 - IBM Coursera Specialization
