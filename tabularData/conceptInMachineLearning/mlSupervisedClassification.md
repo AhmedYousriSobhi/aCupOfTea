@@ -1,64 +1,64 @@
-1) One technique to accomplish multi class classification is One-vs-All, with One-vs-All we would take one class, and declared that all else is going
-   to be our other class and apply Logistic Regression, and we do so for the rest of the classes
+# Machine Learning Concept: Supervisied Learning - Classification
 
-   We'll end up with with Logistic models splitting out (say 3 classes) the 3 probabilities one for each class, and the estimated category is going
-   to be the class with the highest estimated probabiliy for each one of those One-vs-All, and end up with a 3 separate decision boundaries given the
-   highest given probability for each one of our separate 3 Logistic Regression problems.
+## 1- One-vs-All technique 
+One technique to accomplish multi class classification is One-vs-All, with One-vs-All we would take one class, and declared that all else is going to be our other class and apply Logistic Regression, and we do so for the rest of the classes. 
 
-2) The choice of the right error metric depends heavily on the question and the data available; for example building a classifier to predict whether
-   individual have leukemia, in our training data, a large majority 99% of patients are healthy; lets say we built a classifier that uses accuracy
-   as our error metric, then a simple model could be built that always predicts healthy, and although this is a useless model it will result in 99%
-   accuracy.
+We'll end up with Logistic models splitting out (say 3 classes) the 3 probabilities one for each class, and the estimated category is going to be the class with the highest estimated probabiliy for each one of those One-vs-All, and end up with a 3 separate decision boundaries, the highest given probability for each one of our separate 3 Logistic Regression problems.
 
-   Thus we see the importance in understanding our data and choosing the appropriate metric, accuracy is often not the right metric for a binary
-   classification problem.
+## 2- Choosing error metric
+The choice of the right error metric depends heavily on the question and the data available; for example building a classifier to predict whether   individual have leukemia, in our training data, a large majority 99% of patients are healthy; lets say we built a classifier that uses accuracy as our error metric, then a simple model could be built that always predicts healthy, and although this is a useless model it will result in 99% accuracy.
 
-3) Confusion Matrix:
-	> The Vertical axis in our confusion matrix contains columns that correspond to the predicted values (Predicted Positive/Predicted Negative),
-	  where the Horizontal axis so each one of our rows that correspond to the ground truth (Actual Positive/Actual Negative).
+Thus we see the importance in understanding our data and choosing the appropriate metric, accuracy is often not the right metric for a binary classification problem.
 
-	> The Diagonal is going to contain the elements that are correctly predicted values, and the Off-Diagonal is going to contain the elements
-	  correspond to the errors.
+Note: Check markdown note regarding accuracy failure in classification in 'tabularData/dataEvaluation/classificationAccuracy'.
 
-	> The False Positive (FP) "bottom left" called Type I error, where the False Negative (FN) "top right" called Type II error.
+## 3- Confusion Matrix:
+|               | Positive Prediction | Negative Prediction|
+|---------------|---------------------|--------------------|
+| Actual Positive | True Positive (TP)  | False Negative (FN)|
+| Actual Negative | False Positive (FP) | True Negative (TN)|
 
-	> Accuracy: we can calculate accuracy as the some of both correct predictions "True Positive + True Negative" (TP + TN) "the Diagonal" over
-	  the denominator which is the total number of samples (TP + TN + FP + FN)
-	  >> Total correct prediction over all of our samples.
-		>> Accuracy= (TP + TN)/(TP + TN + FP + FN)
+The Vertical axis in our confusion matrix contains columns that correspond to the predicted values (Predicted Positive/Predicted Negative), where the Horizontal axis so each one of our rows that correspond to the ground truth (Actual Positive/Actual Negative).
 
-	> Recall (Sensitivity): which is the ability to identify all the actual positive incidents, so when we're trying to recall all the actual
-	  positive instances recall measures the percentage of the actual positive class that is correctly predicted.
-	  So out of the first row how many did we predict correctly? 
-	  In other words, this is going to be the capture rate, in our leukemia example, what percentage of the true leukemia cases is our model
-	  capturing? 
-	  Note that, you can easily achieve 100% recall by predicting everything to be positive, in our example if everyone has leukemia, so out of
-	  all of our actual positives, we got those all correct (because we predicted everyone has leukemia)
-		>> Recall/Sensitivity= TP/(TP + FN)	// first row
+The Diagonal is going to contain the elements that are correctly predicted values, and the Off-Diagonal is going to contain the elements correspond to the errors.
 
-	> Precision: with precision, we are identifying out of all our positive predictions how many did we get correct?
-	  When the model predicts leukimia, how often is it right? so if you always predict leukemia then your recall will be 100%, but the precision
-	  here (all of your predictions) alot of them will be wrong.
-	  Note that you can predict one really showcase to be leukemia and every thing else you can predict to be non-leukemia and end up achieving
-	  a 100% precision, and in that case you recall would be very low, as you only captured one of the two cases out of all of them.
-		>> Precision= TP/(TP + FP)		// first column
+The False Positive (FP) "bottom left" called Type I error, where the False Negative (FN) "top right" called Type II error.
 
-	> So there's a trade-off between recall and precision.
+__Accuracy__: we can calculate accuracy as the some of both correct predictions "True Positive + True Negative" (TP + TN) "the Diagonal" over the denominator which is the total number of samples (TP + TN + FP + FN)
+- Total correct prediction over all of our samples.
+```
+Accuracy= (TP + TN)/(TP + TN + FP + FN)
+```
 
-	> Specifity: Which is trying to avoid false alarms, here we are only looking at the bottom row of actual negative classes, and specificity
-	  is concerned with how correctly is the actual negative class is predicted.
-	  In other words, it's going to be the recall for classes zero out of all the cases where we do not have leukemia how often do we correctly
-	  identify those patients as not have leukemia?
-	  We can see how it would be much important for our leukemia example to have higher recall which identify all true positives correctly than
-	  any of our other measures.
-		>> Specifity= TN/(TN + FP)		// second row
+Recall (Sensitivity): which is the ability to identify all the actual positive incidents, so when we're trying to recall all the actual positive instances recall measures the percentage of the actual positive class that is correctly predicted. So out of the first row how many did we predict correctly? 
+	  
+In other words, this is going to be the capture rate, in our leukemia example, what percentage of the true leukemia cases is our model capturing?. Note that, you can easily achieve 100% recall by predicting everything to be positive, in our example if everyone has leukemia, so out of all of our actual positives, we got those all correct (because we predicted everyone has leukemia)
 
-	> F1-score: also called the harmonic mean, the F1-score is a nice metric to use because it uses both the precision and the recall, and it
-	  tries to capture this trade-off between recall and precision, so optimizing F1-score will not allow for the corner cases like predicting
-	  everything to be one.
-		>> F1-score= 2*(Precision * Recall)/(Precision + Recall)
+```
+Recall/Sensitivity= TP/(TP + FN)	// first row
+```
 
-4) Receiver Operating Characteristic curve (ROC curve):
+Precision: with precision, we are identifying out of all our positive predictions how many did we get correct?. When the model predicts leukimia, how often is it right? so if you always predict leukemia then your recall will be 100%, but the precision here (all of your predictions) alot of them will be wrong.
+
+Note that you can predict one really showcase to be leukemia and every thing else you can predict to be non-leukemia and end up achieving a 100% precision, and in that case you recall would be very low, as you only captured one of the two cases out of all of them.
+```
+Precision= TP/(TP + FP)		// first column
+```
+So there's a trade-off between recall and precision.
+
+__Specifity__: Which is trying to avoid false alarms, here we are only looking at the bottom row of actual negative classes, and specificity is concerned with how correctly is the actual negative class is predicted.
+
+In other words, it's going to be the recall for classes zero out of all the cases where we do not have leukemia how often do we correctly identify those patients as not have leukemia?. We can see how it would be much important for our leukemia example to have higher recall which identify all true positives correctly than any of our other measures.
+```
+Specifity= TN/(TN + FP)		// second row
+```
+
+__F1-score__: also called the harmonic mean, the F1-score is a nice metric to use because it uses both the precision and the recall, and it tries to capture this trade-off between recall and precision, so optimizing F1-score will not allow for the corner cases like predicting everything to be one.
+```
+F1-score= 2*(Precision * Recall)/(Precision + Recall)
+```
+
+### Receiver Operating Characteristic curve (ROC curve):
 	> The ROC curve indicates the senstivity or the recall out of all of our actual positives (how many did we get correct on y-axis),and then
 	  the false positive rate or (1 - Specificity) on our x-axis
 	  Remember that Specificity is our true negative rate, thus one minus this value gives us the false positive rate, so if we got all of our
@@ -79,11 +79,11 @@
 	  perfect classification and will be close the top left corner of the curve (high TPR and low FPR).
 	  Having the AUC = 0.5 is essentially as good as picking one of the two classes at random.
 
-5) Precision-Recall Curve:
+### Precision-Recall Curve
 	> This is an unbalanced metric, this will mostly be a decreasing curve
 	> The AUC will depend on how unbalanced our dataset is.
 
-6) Choosing the right approach:
+### Choosing the right approach
 	> The ROC curve will generally do better with data with balanced classes.
 	> The Precision-Recall curve will better suited for data with imbalanced classes. (like the leukemia example)
 
@@ -99,10 +99,10 @@
 	  Precision-Recall curves.
 	  So we may just look at precision, just look at recall, just look at the F1-score.
 
-7) Now there is no generalization of ROC, or Precision-Recall, but we can look at both Precision-Recall, Specificity, etc. for each class as a one
+Now there is no generalization of ROC, or Precision-Recall, but we can look at both Precision-Recall, Specificity, etc. for each class as a one
    vs. all approach
 
-8) KNN Models:
+## 4- KNN Models:
 	> The first thing, we're going to need is to determine the value of K; how many neighbors are we going to choose between.
 	> The second thing, we need is we need to know how to measure the distance between each one of our neighbors, as there are different measures
 	  that we can use, also we need to keep in mind how will those measures extrapolate to be on two dimensions.
@@ -129,7 +129,7 @@
 	  Note that in multiple classes, choosing a K is preferred to be equal to a multiple of the number of labels (classes), for example a 3 label
 	  data we choose some multiples of 3 aka n3 + 1, that + 1 to ensure that one always has the majority vote
 
-9) Pros and Cons of KNN:
+### Pros and Cons of KNN:
    Pros:
 	> Simple to implement (doesn't rquire estimation)
 	> Adapts well on new data
@@ -143,7 +143,7 @@
 	> Can requires lots of memory if dataset is large (or as it grows)
 	> When there are many predictors (features), KNN accuracy can break down due to curse of dimensionality
 
-10) Support Vector Machines (SVM):
+## 5- Support Vector Machines (SVM):
 	> SVM are linear classifier that won't return probabilities, but they'll return labels either 1 or 0, and those labels are decided by which 
 	  size of a certain decision boundary they fall on, that decision boundary was initially found by determining the hyperplane or line that
 	  minimize errors, as well as finding the widest margin between our two classes.
@@ -174,7 +174,7 @@
 	  outside our margin, that was a major problem that Logistic Regression was meant to solve and SVM can be even stronger as they are going to
 	  completely ignore these outliers that are correctly identified.
 
-11) Kernal SVM:
+### 5.1- Kernal SVM:
 
 	> Non-linear data can be made linear with the right transformation into higher dimensional space, this transformation proves us that magic,
 	  that is going to be the main idea behind how we come up with a non-linear classification, built off of a linear classifier such as SVM, so
@@ -213,9 +213,9 @@
 	  dataset in higher dimensional space.
 	  These methods will just perform mapping and not the classification step.
 
-12) Support Vector Machine models rarely overfit on training data.
+Support Vector Machine models rarely overfit on training data.
 
-13) Decision Trees:
+## 6- Decision Trees:
 	> Decision trees will seek to split up the dataset into two datasets at every set for which the decision is going to be easier, and then
 	  continue to iterate.
 
@@ -269,7 +269,7 @@
 			> Gini Index: it's similar to the entropy characteristics but doesn't contain logarithm, so in practice Gini index is often
 			  used
 
-14) Decision Trees Pros and Cons:
+### 6.1- Decision Trees Pros and Cons:
 	> Decision trees tend to add high variance, that is they tend to overfit, now since it doesn't make any stronger assumption such as linearly
 	  separable classes, it tends to find structures that explain the training set too well, so small changes in data end up greatly affecting the
 	  prediction, so one solution is to impose a max depth to help prune our trees, and this allows for our tree to only make a certain amount
@@ -285,7 +285,8 @@
 	  Then as opposed to the distance or linear-based algorithms, there's no scaling required, scaling would simply change the question at the
 	  nodes, but the ordering of those values, if we scaled them, would remain the same, so it had no impact on creating those splits
 
-15) Bagging; bootstrap aggregation, where the bootstrapping set being the step where we get random subsets of the original training set to build our
+### 6.2- Techniques in decision trees
+Bagging; bootstrap aggregation, where the bootstrapping set being the step where we get random subsets of the original training set to build our
     classifiers, and the aggregation step being the step where we aggregate the classifications together using a majority vote.
 
     For example we can create bootstrap samples followed by building independent decision trees on each one of these samples, here the decision trees
@@ -296,7 +297,7 @@
     and it's going to be able to do so similar to decision trees while managing the overfitting unlike decision trees.
     So it'll be managing the variance while coming up with a decision boundary that's not necessarily linear, log-linear, or polynomial.
 
-16) To leverage all these different decision trees based off bootstrap samples, the key is that each tree gets a vote for that final decision and by
+To leverage all these different decision trees based off bootstrap samples, the key is that each tree gets a vote for that final decision and by
     doing this for all different rows in dataset we get the majority class results which is called meta classification, as it uses several classifiers
     in order to take their outputs and decide on the class by combining or aggregating -voting- on which one is the majority class.
 
@@ -304,14 +305,14 @@
     This will end up being another hyperparameter that we can tune, where the bigger the number of trees, the less overfit our decision trees will be
     or bagging -techniquly-, in practice, there's a point of diminishing return, usually around 50 trees should do the trick
 
-17) Bagging and Decision Trees similarities:
+	Bagging and Decision Trees similarities:
 	> Easy to interpret and implement.
 	> Can easy send in different datatypes with no preprocessing required (Hetrogenous input data allowed)
     Specific to bagging:
 	> there will not be as much variability, as we are reducing the variance and thus the chances of overfitting once we introduced bagging
 	> Can grow trees in parallel, where each tree is not dependent on any other tree because it's just specific to its own dataset
 
-18) Random Forest:
+### 6.3- Random Forest:
 	> If normal bagging produced n independent trees, each with variance Sigma squared, then the bagged variance is (Sigma squared/n), so the 
 	  larger n is the more we can reduce this overall variance, but in reality these trees are not independent, since we're sampling with
 	  replacement they are likely to be highly correlated, and as the correlation is close to one, we end up with no reduction in variance,
@@ -327,7 +328,7 @@
 	  This resulting algorithm is what is called Random Forest; so random forest is essentially the bagging (bootstrapping and aggregating) with
 	  not only the subset of the rows being random, but also the subset of the features or columns also being random
 
-19) Extra Trees:
+### 6.4- Extra Trees:
 	> What about the cases where Random Forest does not reduce the variance enough (overfitting)?
 	  We can introduce even more randomness, we can randomly select the actual splits in each one of our decision trees, recall that decision tree
 	  typically use a greedy search to find a best split, so if a certain feature is available in a given subset, that feature may always be
@@ -337,7 +338,7 @@
 	  The hope with Extra Trees is with enough random splits, we still have majority classes in each one of these leaf nodes and the vote will
 	  still be a good classifier when all aggregated together, even if those individual components are a bit weaker
 
-20) Boosting:
+### 6.5- Boosting:
 	> While it does help with reducing variance like Bagging, it's more meant for business problems where we may want to continue to better fit or
 	  correct our model, to ensure that we get even rare events correct.
 
@@ -366,31 +367,31 @@
 	  On the other hand, if the learning rate is too high, then we can easily overfit by allowing each successive tree to have too much influence
 	  on our final decision.
 
-21) Boosting Specifics:
+#### Boosting Specifics:
 	> Boosting utilizes different loss functions.
 	> At each stage (each of our weak learners), the margin is determined for each point
 	> Margin is positive for correctly classified points, and negative for misclassifications.
 	> The value of the margin can be thought of as the distance from margin (from decision boundary); we can penalize misclassified faraway points
 	  heavily or not and the loss function gives us the penalization and determines what type of boosting algorithm we're actually going to use.
 
-22) Boosting Loss Functions:
+#### Boosting Loss Functions:
     > 0 - 1 Loss Function:
 	> This function returns 1 for incorrectly classified points and ignores correctly classified points, this is a theoretical loss function due
 	  to the fact that it's not differentiable (non-smooth and convex which is diffecult to optimize)
 
-23) AdaBoost:
+#### AdaBoost:
 	> AdaBoost (Adaptive Boosting), it uses an exponential loss function e^(- margin), where very negative points can strongly affect the loss;
 	  so if the distance from our margin is large and incorrect, we end up with a large contribution to that overall error for that given point.
 
 	> Thus AdaBoost is more sensitie to outliers that other types of boosting
 
-24) Gradient Boosting:
+#### Gradient Boosting:
 	> Generalized boosting method that can use different loss functions.
 
 	> Common implementation uses binomial log likelihood loss function (deviance: log(1 + e^(- margin))), the reduced value of the log likelihood
 	  loss function for large margins (for misclassified points) makes this version of boosting more robust to outliers than AdaBoost
 
-25) Bagging vs. Boosting:
+#### Bagging vs. Boosting:
     > Bagging:
 	> We use subsamples that we would only train each classifier on one bootstrapped sample.
 	> Base learners (each one of those smaller trees) are independent from one another, and usually they are not going to be stumps but rather
@@ -408,7 +409,7 @@
 	  each one of our weak learners.
 	> We do have be aware of overfitting with excess trees
 
-26) Stacking:
+#### Stacking:
 	> In stacking base learners can be anything (SVM, LR, RF, ...), so there's no bias here towards needing to use a decision tree.
 
 	> The idea is to fit several algorithms to our training set and use their predictions (scores) of each of these individual base learners as
@@ -429,7 +430,7 @@
 	> We want to be aware that such models can get pretty complex pretty quickly, and as usual, higher complexity generally means that we are
 	  more likely to overfit.
 
-27) Unbalanced Classes:
+## 7- Unbalanced Classes
 	> Classifiers are usually built to optimize accuracy, and hence will often perform poorly on unbalanced classes.
 
 	> For unbalanced datasets, the idea is to find a way to actually balance our datasets before fitting our model; one option is to downsample,
@@ -440,7 +441,7 @@
 
 	  Finally, we can do a mix of downsampling and upsampling (Resampling)
 
-28) Steps for unbalanced datasets:
+### 7.1- Steps for unbalanced datasets:
 	> Do a stratified train-test split, just to ensure we keep the balance for both our train and test sets in regards to those unbalanced classes
 
 	> We can then go ahead and either undersample or oversample to our training set, doing this step second to the stratified train-test split
@@ -457,7 +458,7 @@
     So as our ability to catch all the minority classes goes up (Recall increases), as a propotion of our predicted values of our actual predictions,
     we're more likely to have a given value predicted incorrectly (Precision decreases)
 
-29) Downsampling vs. Upsampling:
+### 7.2- Downsampling vs. Upsampling:
     Downsampling:
 	> Downsampling will add tremendous importance to our minority class, but will typically raise up our recall, but also brings down precision,
 	  we're definitely going to be increasing the ability of our model to correctly predict that minority class, but at the cost of losing a lot
@@ -468,7 +469,7 @@
 	  is a little bit lesser than of Downsampling, the downside of Upsampling is that we are fitting to duplications of the same data in the
 	  minority class, and thus given more weight and thus overfitting to those repeated rows of data.
 
-30) Unbalanced classes methodology:
+### 7.3- Unbalanced classes methodology:
 	> Every classifier used will produce a different model
 	> Every dataset we use (produced by various sampling methods) will produce a different model
 	> We can choose the best model using any criteria (accuracy here is not a good option) including AUC "Area Under the Curve", but remember that
@@ -476,7 +477,7 @@
 	> Once a model is choosen, you can walk along the ROC curve and pick any point on it (threshold), each point has different precision/recall 
 	  values you can pick what best suits your business objectives.
 
-31) Oversampling:
+### 7.4- Oversampling:
     Random Oversampling:
 	> Simplest Oversampling approach, what we do is that we just randomly resample with replacement the rows from our minority class.
 
@@ -534,7 +535,7 @@
 			> Therefore, with ADASYN more samples will be generated in the area that the nearest neighbor rule is not respected, thus
 			  putting more weight on values that would have been originally misclassified.
 
-32) Undersampling:
+### 7.5- Undersampling:
 	> NearMiss Methods:
 	  NearMiss-1:
 		> Here we'll look through different means of keeping points that are closest to nearby minority points, consider positive is the
@@ -569,13 +570,13 @@
 		> Essentially, all we do here is run K-nearest neighbors with K=1, then if we misclassify a point in one of the majority classes, that
 		  point will be removed
 
-33) Blagging (Balanced Bagging):
-	> The idea here is to ensure to continuosly downsample each of our bootstrap samples (each of the majority class ofcourse), and then use these
-	  balanced samples to learn each one of our individual decision trees.
+## 8- Blagging (Balanced Bagging):
+The idea here is to ensure to continuosly downsample each of our bootstrap samples (each of the majority class ofcourse), and then use these balanced samples to learn each one of our individual decision trees.
 
-	  This will allow for more weight to be attributed to that minority class, ensuring that we have more balanced decision being made.
+This will allow for more weight to be attributed to that minority class, ensuring that we have more balanced decision being made.
 
-34) Model Interpretability:
-	todo
+## 9- Model Interpretability:
+todo
 
-### Credits: IBM Coursera Specialization
+## Credits 
+- IBM Coursera Specialization

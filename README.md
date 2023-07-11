@@ -36,6 +36,10 @@ Let's settle down, rest our minds, spill the tea of our experience in multiple a
 |   |   ├── correlalstion
 |   |   |   ├── detectmulticollinearity
 |   |   |   ├── extremeCorrelation
+|   ├── dataEvaluation
+|   |   ├── classificationAccuracy
+|   |   |   ├── accuracyParadox
+|   |   |   ├── nb_AccuracyParadox
 |   ├── dataModeling
 |   |   ├── xgboost
 |   |   |   ├── info
