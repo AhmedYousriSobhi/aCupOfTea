@@ -1,5 +1,5 @@
 # aCupOfTea
-Let's settle down, rest our minds, spill the tea of our experience in multiple ai fields, and enjoy the drink. If you find something interesting here, offer us a Cupt of Tea.
+Let's settle down, rest our minds, spill the tea of our experience in multiple ai fields [Data Science, Machine Learning, Deep Learning], and enjoy the drink. If you find something interesting here, offer us a Cup of Tea.
 
 ```bash
 .
@@ -45,9 +45,7 @@ Let's settle down, rest our minds, spill the tea of our experience in multiple a
 |   |   |   ├── nb_AccuracyParadox
 |   ├── dataModeling
 |   |   ├── xgboost
-|   |   |   ├── info
 ├── tips
 |   ├── kaggle
-|   |   ├── tips
 └── README.md
 ```
