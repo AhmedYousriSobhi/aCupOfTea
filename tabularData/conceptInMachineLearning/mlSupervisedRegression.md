@@ -1,3 +1,5 @@
+# Machine Learning Concept: Supervisied Learning - Regression
+
 1) Traditional Statistical Modeling vs Machine Learning:
 	> Traditional Statistical Modeling, we often know a good deal about the underlying process, thus we can choose a model of analysis that 
 	  closely approximates that underlying process and use this tp develop a predictive model.
