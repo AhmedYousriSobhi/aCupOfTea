@@ -90,7 +90,8 @@ We can think to our trade-off if our threshold for predicting positive is really
 __ROC AUC (ROC Area Under the Curve)__ gives a measure of how well we are separating the two classes; if the area is 1 it means we have a perfect classification and will be close the top left corner of the curve (high TPR and low FPR). Having the AUC = 0.5 is essentially as good as picking one of the two classes at random.
 
 ### 3.2- Precision-Recall Curve
-![precision_recall curve vs ROC](image.png)
+![precision_recall curve vs ROC](https://i.stack.imgur.com/lCMZJ.png)
+
 - This is an unbalanced metric, this will mostly be a decreasing curve.
 - The AUC will depend on how unbalanced our dataset is.
 
@@ -191,9 +192,9 @@ Support Vector Machine models rarely overfit on training data.
 ## 6- Decision Trees:
 Decision trees will seek to split up the dataset into two datasets at every set for which the decision is going to be easier, and then continue to iterate.
 
-Decision trees can have categories in its leaves, ex) will play or will not play, and it'll use the majority class on that leave to predict the class that followed the steps down this decision tree, so it still a classification algorithm trying to classify according to the majority class This idea can be used in predicting quanities instead of classes as well, and rather than decision trees, it will be called Regression Trees.
+Decision trees can have categories in its leaves, will play or will not play, and it'll use the majority class on that leave to predict the class that followed the steps down this decision tree, so it still a classification algorithm trying to classify according to the majority class. This idea can be used in predicting quanities instead of classes as well, and rather than decision trees, it will be called Regression Trees.
 
-In Regression Trees we keep splitting up our dataset into smaller subsets (like we did in classification), we will then have the outcome variables which are going to be continuous values for each one of these subsets, and then with that subsets, we can average out within that subset what is going to be the aveage (target variable) and that is going to be our prediction.
+In Regression Trees we keep splitting up our dataset into smaller subsets (like we did in classification), we will then have the outcome variables which are going to be continuous values for each one of these subsets, and then with that subsets, we can average out within that subset what is going to be the average (target variable) and that is going to be our prediction.
 	  
 The possible outputs of a regression tree are going to be bound by the number of splits, so those are going to be the number of values that we can have, so we'll not get an output of a linear function that can basically spin out any value but rather limited to whatever amount of leaves we have at the end of our tree.
 - Depth of 2 => 4 values; 5 => 25 values
@@ -203,24 +204,26 @@ First step is to select the feature, and ask a question with a true, or false an
 
 Then, we continue splitting with our available features to create further subsets of our data and can continue to spilt, and think about when can we actually stop splitting and declare we've made a decision.
 
-One idea in terms of determining when we should stop splitting is to continue splitting until the leaves are pure (only one class remains)
+#### When to stop splitting?
+- One idea in terms of determining when we should stop splitting is to continue splitting until the leaves are pure (only one class remains)
 
-Another idea is we can enter a max depth and then stop or prune our tree at that depth, and at that depth we don't allow it to grow any further, as a result, leaves are probably not going to be pure in this example, and we can make our best guess at that point by determining what class in that subset is more dominant, which one has the majority, and we can assign that class to that leaf
+- Another idea is we can enter a max depth and then stop or prune our tree at that depth, and at that depth we don't allow it to grow any further, as a result, leaves are probably not going to be pure in this example, and we can make our best guess at that point by determining what class in that subset is more dominant, which one has the majority, and we can assign that class to that leaf
 
-A third idea is we can keep going until a predefined performance metrics is achieved, for example if the classification has a certain accuracy, then we would stop.
+- A third idea is we can keep going until a predefined performance metrics is achieved, for example if the classification has a certain accuracy, then we would stop.
 
-In practice, the first idea will often overfit, so if we allow it to keep going until all of our leaves are pure, then we will often overfit our training set, and the second and third ideas are in order to avoid that overfitting; either pruning at a maximum depth or setting once we get to a certain accuracy we stop
+- In practice, the first idea will often overfit, so if we allow it to keep going until all of our leaves are pure, then we will often overfit our training set, and the second and third ideas are in order to avoid that overfitting; either pruning at a maximum depth or setting once we get to a certain accuracy we stop
 
+#### Condtion for splitting
 So how exactly do we find the right splits? We need a way to evaluate all the possible splits, then we can use greedy search to find the best split, greedy search here means that at every step we find the best split regardless of what happened in prior steps or what would happen in future steps.
 
-- __Information theory__: we're going to find the split that induces the biggest information gain, lets start by first trying classification error, just seeing if we can decrease the overall average error when we split our data, in other words, we're doing (1 - the overall accuracy)
+- __Information theory__: we're going to find the split that induces the biggest information gain, lets start by first trying classification error, just seeing if we can decrease the overall average error when we split our data, in other words, we're doing (1 - the overall accuracy).
 
 - __Entropy__: To find the best split we'll use the entropy equation; p(i|t) is going to be the probability of a class given the certain subset of data we're currently working in.
 			  
-- Splitting based on entropy allows further splits to occur
-- Can evantually reach goal of homogenous nodes
+  - Splitting based on entropy allows further splits to occur.
+  - Can evantually reach goal of homogenous nodes.
 
-- Gini Index: it's similar to the entropy characteristics but doesn't contain logarithm, so in practice Gini index is often used
+- Gini Index: it's similar to the entropy characteristics but doesn't contain logarithm, so in practice Gini index is often used.
 
 ### 6.2- Decision Trees Pros and Cons:
 Decision trees tend to add high variance, that is they tend to overfit, now since it doesn't make any stronger assumption such as linearly separable classes, it tends to find structures that explain the training set too well, so small changes in data end up greatly affecting the prediction, so one solution is to impose a max depth to help prune our trees, and this allows for our tree to only make a certain amount of splits.
@@ -229,10 +232,10 @@ We can prune our trees based on: certain threshold of information gain, minimum 
 
 Some strengths of decision trees is that since it's a sequence of questions and answers, it turns out that it'll be very easy to interpret and visualize assuming that we don't have too large of a tree which can get a bit more complex, but even for those we can look at the roots where those larger decisions are made. Also, it's pretty easy to use it with various types of data, the algorithm will fairly easily turn any of your features into binary features on its own.
 
-Then as opposed to the distance or linear-based algorithms, there's no scaling required, scaling would simply change the question at the nodes, but the ordering of those values, if we scaled them, would remain the same, so it had no impact on creating those splits.
+Then as opposed to the distance or linear-based algorithms, __there's no scaling required__, scaling would simply change the question at the nodes, but the ordering of those values, if we scaled them, would remain the same, so it had no impact on creating those splits.
 
 ### 6.3- Techniques in decision trees
-Bagging; bootstrap aggregation, where the bootstrapping set being the step where we get random subsets of the original training set to build our classifiers, and the aggregation step being the step where we aggregate the classifications together using a majority vote.
+__Bagging__; bootstrap aggregation, where the bootstrapping set being the step where we get random subsets of the original training set to build our classifiers, and the aggregation step being the step where we aggregate the classifications together using a majority vote.
 
 For example we can create bootstrap samples followed by building independent decision trees on each one of these samples, here the decision trees can be fairly deep.
 
@@ -244,120 +247,89 @@ How's the actual number of trees going to be decided? This will end up being ano
 
 __Bagging and Decision Trees similarities__
 - Easy to interpret and implement.
-- Can easy send in different datatypes with no preprocessing required (Hetrogenous input data allowed)
+- Can easy send in different datatypes with no preprocessing required (Hetrogenous input data allowed).
 
 __Specific to bagging__
 - There will not be as much variability, as we are reducing the variance and thus the chances of overfitting once we introduced bagging
 - Can grow trees in parallel, where each tree is not dependent on any other tree because it's just specific to its own dataset.
 
-### 6.4- Random Forest:
+### `6.4- Random Forest`:
 If normal bagging produced n independent trees, each with variance Sigma squared, then the bagged variance is (Sigma squared/n), so the larger n is the more we can reduce this overall variance, but in reality these trees are not independent, since we're sampling with replacement they are likely to be highly correlated, and as the correlation is close to one, we end up with no reduction in variance, which should make sense if we keep using the same or very similar trees, we're not gaining any new information. We need to ensure that each one of these decision trees are somewhat different that one another
 
 Solutions for that would be; introducing more randomness, to achieve this, we restrict the number of features the trees are allowed to be built from, as each tree will be built from a random subset of not just rows, but of a random subset of columns as well, and by default our classification model we'll limit that subset of features to the square root of the total number of features available and regression will tale one-third of the total number of features that are available. This will force different decisions for each tree depending on which one of the features are now still available for that tree (that subset)
 
 This resulting algorithm is what is called Random Forest; so random forest is essentially the bagging (bootstrapping and aggregating) with not only the subset of the rows being random, but also the subset of the features or columns also being random.
 
-### 6.5- Extra Trees:
+### `6.5- Extra Trees`:
 What about the cases where Random Forest does not reduce the variance enough (overfitting)?
 
-We can introduce even more randomness, we can randomly select the actual splits in each one of our decision trees, recall that decision tree typically use a greedy search to find a best split, so if a certain feature is available in a given subset, that feature may always be
-	  chosen as that first split at the top of the decision tree, so we oppose thos method and we select features randomly and create splits
-	  randomly and won't choose greedily and that's what we call Extra Random Trees.
+We can introduce even more randomness, we can randomly select the actual splits in each one of our decision trees, recall that decision tree typically use a greedy search to find a best split, so if a certain feature is available in a given subset, that feature may always be chosen as that first split at the top of the decision tree, so we oppose thos method and we select features randomly and create splits randomly and won't choose greedily and that's what we call Extra Random Trees.
 
-	  The hope with Extra Trees is with enough random splits, we still have majority classes in each one of these leaf nodes and the vote will
-	  still be a good classifier when all aggregated together, even if those individual components are a bit weaker
+The hope with Extra Trees is with enough random splits, we still have majority classes in each one of these leaf nodes and the vote will still be a good classifier when all aggregated together, even if those individual components are a bit weaker.
 
-### 6.6- Boosting:
-	> While it does help with reducing variance like Bagging, it's more meant for business problems where we may want to continue to better fit or
-	  correct our model, to ensure that we get even rare events correct.
+### `6.6- Boosting`:
+While it does help with reducing variance like Bagging, it's more meant for business problems where we may want to continue to better fit or correct our model, to ensure that we get even rare events correct.
 
-	> Unlike with Bagging, it will be easily possible to overfit our dataset
+Unlike with Bagging, it will be easily possible to overfit our dataset
 
-	> The decision trees in Boosting will have only one split, so no deep trees, we can call it `decision stump`, the idea here is we're trying
-	  to build from our original decision stump, further smaller decision stumps in order to improve our original decision boundary, each one of
-	  these stumps are going to be called the weak learners, and with boosting, we create a new way to decide on and stack together many weak
-	  learners intelligently to ultimately come up with a strong classification algorithm
+The decision trees in Boosting will have only one split, so no deep trees, we can call it `decision stump`, the idea here is we're trying
+to build from our original decision stump, further smaller decision stumps in order to improve our original decision boundary, each one of these stumps are going to be called the weak learners, and with boosting, we create a new way to decide on and stack together many weak learners intelligently to ultimately come up with a strong classification algorithm.
 
-	> Ex) Lets create an initial decision stump with one node and two leaves, this splite with have some mistakes in it, and it would be a good
-	      idea to weight these mistakes more heavily in our next weak learner, as we in weighting those mistakes more heavily, a larger error if
-	      we got those mistakes wrong again with the next weak learner, and also the next weak learner should be rewarded more, if we got them
-	      right.
-	      So we lower the weights of the records that the first model got right, and increase the weights of the ones that are wrongly classified.
+Example Lets create an initial decision stump with one node and two leaves, this splite with have some mistakes in it, and it would be a good idea to weight these mistakes more heavily in our next weak learner, as we in weighting those mistakes more heavily, a larger error if we got those mistakes wrong again with the next weak learner, and also the next weak learner should be rewarded more, if we got them right. So we lower the weights of the records that the first model got right, and increase the weights of the ones that are wrongly classified.
 
-	      Doing that for every next weak learner (reduce the weights of rights and increase the weights of wrongs) if we continue to do this based
-	      on the errors made by each one of the prior learners and combine those decisions to form a single strong classifier.
+Doing that for every next weak learner (reduce the weights of rights and increase the weights of wrongs) if we continue to do this based on the errors made by each one of the prior learners and combine those decisions to form a single strong classifier.
 
-	      This final decision boundary will be created by weighting how well each decision boundary did, and correctly classifying at each
-	      step, so better classifiers gets more weight, as well as incorporating a learning rate to say how much we allow to correct our errors
-	      at each one of these steps (how much we will allow each step to move towards correcting the prior tree)
+This final decision boundary will be created by weighting how well each decision boundary did, and correctly classifying at each step, so better classifiers gets more weight, as well as incorporating a learning rate to say how much we allow to correct our errors at each one of these steps (how much we will allow each step to move towards correcting the prior tree)
 
-	  Generally speaking, we'll want more trees if we're working with a lower learning rate, as that would mean that we are correcting our errors
-	  at a very slow pace. (small learnig rate => less overfit, higher bias, and lower variance)
-	  On the other hand, if the learning rate is too high, then we can easily overfit by allowing each successive tree to have too much influence
-	  on our final decision.
+Generally speaking, we'll want more trees if we're working with a lower learning rate, as that would mean that we are correcting our errors at a very slow pace. (small learnig rate => less overfit, higher bias, and lower variance)
+On the other hand, if the learning rate is too high, then we can easily overfit by allowing each successive tree to have too much influence on our final decision.
 
-#### Boosting Specifics:
-	> Boosting utilizes different loss functions.
-	> At each stage (each of our weak learners), the margin is determined for each point
-	> Margin is positive for correctly classified points, and negative for misclassifications.
-	> The value of the margin can be thought of as the distance from margin (from decision boundary); we can penalize misclassified faraway points
-	  heavily or not and the loss function gives us the penalization and determines what type of boosting algorithm we're actually going to use.
+#### `Boosting Specifics`:
+- Boosting utilizes different loss functions.
+- At each stage (each of our weak learners), the margin is determined for each point.
+- Margin is positive for correctly classified points, and negative for misclassifications.
+- The value of the margin can be thought of as the distance from margin (from decision boundary); we can penalize misclassified faraway points heavily or not and the loss function gives us the penalization and determines what type of boosting algorithm we're actually going to use.
 
-#### Boosting Loss Functions:
-    > 0 - 1 Loss Function:
-	> This function returns 1 for incorrectly classified points and ignores correctly classified points, this is a theoretical loss function due
-	  to the fact that it's not differentiable (non-smooth and convex which is diffecult to optimize)
+#### `Boosting Loss Functions: 0 - 1 Loss Function`
+- This function returns 1 for incorrectly classified points and ignores correctly classified points, this is a theoretical loss function due to the fact that it's not differentiable (non-smooth and convex which is diffecult to optimize).
 
-#### AdaBoost:
-	> AdaBoost (Adaptive Boosting), it uses an exponential loss function e^(- margin), where very negative points can strongly affect the loss;
-	  so if the distance from our margin is large and incorrect, we end up with a large contribution to that overall error for that given point.
+#### __`AdaBoost (Adaptive Boosting)`__
+- it uses an exponential loss function e^(- margin), where very negative points can strongly affect the loss; so if the distance from our margin is large and incorrect, we end up with a large contribution to that overall error for that given point.
 
-	> Thus AdaBoost is more sensitie to outliers that other types of boosting
+- Thus AdaBoost is more sensitie to outliers that other types of boosting.
 
-#### Gradient Boosting:
-	> Generalized boosting method that can use different loss functions.
+#### `Gradient Boosting`:
+- Generalized boosting method that can use different loss functions.
 
-	> Common implementation uses binomial log likelihood loss function (deviance: log(1 + e^(- margin))), the reduced value of the log likelihood
-	  loss function for large margins (for misclassified points) makes this version of boosting more robust to outliers than AdaBoost
+- Common implementation uses binomial log likelihood loss function (deviance: log(1 + e^(- margin))), the reduced value of the log likelihood loss function for large margins (for misclassified points) makes this version of boosting more robust to outliers than AdaBoost.
 
-#### Bagging vs. Boosting:
-    > Bagging:
-	> We use subsamples that we would only train each classifier on one bootstrapped sample.
-	> Base learners (each one of those smaller trees) are independent from one another, and usually they are not going to be stumps but rather
-	  full trees
-	> Bagging only takes into account the data of the bootstrapped sample.
-	> All samples are going to be equal and comming up with that final classification, so it can be an equal vote
-	> We don't have to worry about excess trees causing overfitting
+#### `Bagging vs. Boosting`:
+__Bagging__
+- We use subsamples that we would only train each classifier on one bootstrapped sample.
+- Base learners (each one of those smaller trees) are independent from one another, and usually they are not going to be stumps but rather full trees
+- Bagging only takes into account the data of the bootstrapped sample.
+- All samples are going to be equal and comming up with that final classification, so it can be an equal vote.
+- We don't have to worry about excess trees causing overfitting
 
-    > Boosting:
-	> We can use the entire dataset to train each of our classifiers.
-	> Base learners are going to be weak learners and they're created successively, where each learner builds on top of the previous steps.
-	> Boosting takes into account not only the current data, but it also accounts for residuals from previous models when building each one of
-	  the successive learners.
-	> At each iteration, the previous mistakes are trying to correct by weighting them more heavily, so we're going to have different weights for
-	  each one of our weak learners.
-	> We do have be aware of overfitting with excess trees
+__Boosting__
+- We can use the entire dataset to train each of our classifiers.
+- Base learners are going to be weak learners and they're created successively, where each learner builds on top of the previous steps.
+- Boosting takes into account not only the current data, but it also accounts for residuals from previous models when building each one of the successive learners.
+- At each iteration, the previous mistakes are trying to correct by weighting them more heavily, so we're going to have different weights for each one of our weak learners.
+- We do have be aware of overfitting with excess trees
 
-#### Stacking:
-	> In stacking base learners can be anything (SVM, LR, RF, ...), so there's no bias here towards needing to use a decision tree.
+#### `Stacking`:
+In stacking base learners can be anything (SVM, LR, RF, ...), so there's no bias here towards needing to use a decision tree.
 
-	> The idea is to fit several algorithms to our training set and use their predictions (scores) of each of these individual base learners as
-	  a new traing set where they become a Meta Features (each one of the outputs of each of these base learners), then we pass those through to
-	  one final classifier (Meta Classifier) to come up with a single prediction.
+The idea is to fit several algorithms to our training set and use their predictions (scores) of each of these individual base learners as a new traing set where they become a Meta Features (each one of the outputs of each of these base learners), then we pass those through to one final classifier (Meta Classifier) to come up with a single prediction.
 
-	> Stacking is like Bagging, but not limited to decision trees.
+Stacking is like Bagging, but not limited to decision trees.
 
-	> Output of base learners creates features to be fed into the final classifier, one option for that classifier is we can do a majority vote
-	  or a weighted vote, another option it can be its own model; we can run a linear regression, logistic regression, SVM, or random forest using
-	  the output of each of these base learners as the input into that final learner.
+Output of base learners creates features to be fed into the final classifier, one option for that classifier is we can do a majority vote or a weighted vote, another option it can be its own model; we can run a linear regression, logistic regression, SVM, or random forest using the output of each of these base learners as the input into that final learner.
 
-	> Note that in order to optimize the meta step parameters (optimize each of the parameters for our base learners) we need to be careful and
-	  scientific about our approach; meaning we need a hold-out data (test set) for our base learners as well, we can't just have a hold-our set
-	  for our final classification method in order to properly learn the parameters for each of our base learners we need to ensure we have a
-	  hold-out set for those as well.
+Note that in order to optimize the meta step parameters (optimize each of the parameters for our base learners) we need to be careful and scientific about our approach; meaning we need a hold-out data (test set) for our base learners as well, we can't just have a hold-our set for our final classification method in order to properly learn the parameters for each of our base learners we need to ensure we have a hold-out set for those as well.
 
-	> We want to be aware that such models can get pretty complex pretty quickly, and as usual, higher complexity generally means that we are
-	  more likely to overfit.
+We want to be aware that such models can get pretty complex pretty quickly, and as usual, higher complexity generally means that we are more likely to overfit.
 
 ## 7- Unbalanced Classes
 	> Classifiers are usually built to optimize accuracy, and hence will often perform poorly on unbalanced classes.
