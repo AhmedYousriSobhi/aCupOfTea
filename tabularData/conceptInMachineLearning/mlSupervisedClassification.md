@@ -163,6 +163,8 @@ So that orthogonal line will be the value that we compute, with values further a
 
 The higher those coefficients are, the larger the effect each feature has on determining that positive or negative class.
 
+So support vectors are data points that are closer to the hyperplane and influence the position and orientation of the hyperplane.
+
 SVM only depends on those support vectors, and then comes up with the largest margin using those support vectors, that means that SVM maybe more sensitive to values that fall within our margin, but they will not be affected at all by those large values classified correctly while outside our margin, that was a major problem that Logistic Regression was meant to solve and SVM can be even stronger as they are going to completely ignore these outliers that are correctly identified.
 
 ### 5.1- Kernal SVM:
@@ -253,29 +255,29 @@ __Specific to bagging__
 - There will not be as much variability, as we are reducing the variance and thus the chances of overfitting once we introduced bagging
 - Can grow trees in parallel, where each tree is not dependent on any other tree because it's just specific to its own dataset.
 
-### `6.4- Random Forest`:
+### 6.4- Random Forest:
 If normal bagging produced n independent trees, each with variance Sigma squared, then the bagged variance is (Sigma squared/n), so the larger n is the more we can reduce this overall variance, but in reality these trees are not independent, since we're sampling with replacement they are likely to be highly correlated, and as the correlation is close to one, we end up with no reduction in variance, which should make sense if we keep using the same or very similar trees, we're not gaining any new information. We need to ensure that each one of these decision trees are somewhat different that one another
 
 Solutions for that would be; introducing more randomness, to achieve this, we restrict the number of features the trees are allowed to be built from, as each tree will be built from a random subset of not just rows, but of a random subset of columns as well, and by default our classification model we'll limit that subset of features to the square root of the total number of features available and regression will tale one-third of the total number of features that are available. This will force different decisions for each tree depending on which one of the features are now still available for that tree (that subset)
 
-This resulting algorithm is what is called Random Forest; so random forest is essentially the bagging (bootstrapping and aggregating) with not only the subset of the rows being random, but also the subset of the features or columns also being random.
+This resulting algorithm is what is called Random Forest; so __random forest is essentially the bagging (bootstrapping and aggregating) with not only the subset of the rows being random, but also the subset of the features or columns also being random__.
 
-### `6.5- Extra Trees`:
+### 6.5- Extra Trees:
 What about the cases where Random Forest does not reduce the variance enough (overfitting)?
 
 We can introduce even more randomness, we can randomly select the actual splits in each one of our decision trees, recall that decision tree typically use a greedy search to find a best split, so if a certain feature is available in a given subset, that feature may always be chosen as that first split at the top of the decision tree, so we oppose thos method and we select features randomly and create splits randomly and won't choose greedily and that's what we call Extra Random Trees.
 
 The hope with Extra Trees is with enough random splits, we still have majority classes in each one of these leaf nodes and the vote will still be a good classifier when all aggregated together, even if those individual components are a bit weaker.
 
-### `6.6- Boosting`:
+### 6.6- Boosting:
 While it does help with reducing variance like Bagging, it's more meant for business problems where we may want to continue to better fit or correct our model, to ensure that we get even rare events correct.
 
-Unlike with Bagging, it will be easily possible to overfit our dataset
+Unlike with Bagging, it will be easily possible to overfit our dataset.
 
-The decision trees in Boosting will have only one split, so no deep trees, we can call it `decision stump`, the idea here is we're trying
+The decision trees in Boosting will have only one split, so no deep trees, we can call it __decision stump__, the idea here is we're trying
 to build from our original decision stump, further smaller decision stumps in order to improve our original decision boundary, each one of these stumps are going to be called the weak learners, and with boosting, we create a new way to decide on and stack together many weak learners intelligently to ultimately come up with a strong classification algorithm.
 
-Example Lets create an initial decision stump with one node and two leaves, this splite with have some mistakes in it, and it would be a good idea to weight these mistakes more heavily in our next weak learner, as we in weighting those mistakes more heavily, a larger error if we got those mistakes wrong again with the next weak learner, and also the next weak learner should be rewarded more, if we got them right. So we lower the weights of the records that the first model got right, and increase the weights of the ones that are wrongly classified.
+Example Lets create an initial decision stump with one node and two leaves, this split will have some mistakes in it, and it would be a good idea to weight these mistakes more heavily in our next weak learner, as we in weighting those mistakes more heavily, a larger error if we got those mistakes wrong again with the next weak learner, and also the next weak learner should be rewarded more, if we got them right. So we lower the weights of the records that the first model got right, and increase the weights of the ones that are wrongly classified.
 
 Doing that for every next weak learner (reduce the weights of rights and increase the weights of wrongs) if we continue to do this based on the errors made by each one of the prior learners and combine those decisions to form a single strong classifier.
 
@@ -284,26 +286,26 @@ This final decision boundary will be created by weighting how well each decision
 Generally speaking, we'll want more trees if we're working with a lower learning rate, as that would mean that we are correcting our errors at a very slow pace. (small learnig rate => less overfit, higher bias, and lower variance)
 On the other hand, if the learning rate is too high, then we can easily overfit by allowing each successive tree to have too much influence on our final decision.
 
-#### `Boosting Specifics`:
+#### Boosting Specifics:
 - Boosting utilizes different loss functions.
 - At each stage (each of our weak learners), the margin is determined for each point.
 - Margin is positive for correctly classified points, and negative for misclassifications.
 - The value of the margin can be thought of as the distance from margin (from decision boundary); we can penalize misclassified faraway points heavily or not and the loss function gives us the penalization and determines what type of boosting algorithm we're actually going to use.
 
-#### `Boosting Loss Functions: 0 - 1 Loss Function`
+#### Boosting Loss Functions: 0 - 1 Loss Function
 - This function returns 1 for incorrectly classified points and ignores correctly classified points, this is a theoretical loss function due to the fact that it's not differentiable (non-smooth and convex which is diffecult to optimize).
 
-#### __`AdaBoost (Adaptive Boosting)`__
+#### AdaBoost (Adaptive Boosting)
 - it uses an exponential loss function e^(- margin), where very negative points can strongly affect the loss; so if the distance from our margin is large and incorrect, we end up with a large contribution to that overall error for that given point.
 
 - Thus AdaBoost is more sensitie to outliers that other types of boosting.
 
-#### `Gradient Boosting`:
+#### Gradient Boosting:
 - Generalized boosting method that can use different loss functions.
 
 - Common implementation uses binomial log likelihood loss function (deviance: log(1 + e^(- margin))), the reduced value of the log likelihood loss function for large margins (for misclassified points) makes this version of boosting more robust to outliers than AdaBoost.
 
-#### `Bagging vs. Boosting`:
+#### Bagging vs. Boosting:
 __Bagging__
 - We use subsamples that we would only train each classifier on one bootstrapped sample.
 - Base learners (each one of those smaller trees) are independent from one another, and usually they are not going to be stumps but rather full trees
@@ -316,9 +318,9 @@ __Boosting__
 - Base learners are going to be weak learners and they're created successively, where each learner builds on top of the previous steps.
 - Boosting takes into account not only the current data, but it also accounts for residuals from previous models when building each one of the successive learners.
 - At each iteration, the previous mistakes are trying to correct by weighting them more heavily, so we're going to have different weights for each one of our weak learners.
-- We do have be aware of overfitting with excess trees
+- We do have be aware of overfitting with excess trees.
 
-#### `Stacking`:
+### 6.7- Stacking:
 In stacking base learners can be anything (SVM, LR, RF, ...), so there's no bias here towards needing to use a decision tree.
 
 The idea is to fit several algorithms to our training set and use their predictions (scores) of each of these individual base learners as a new traing set where they become a Meta Features (each one of the outputs of each of these base learners), then we pass those through to one final classifier (Meta Classifier) to come up with a single prediction.
@@ -331,147 +333,134 @@ Note that in order to optimize the meta step parameters (optimize each of the pa
 
 We want to be aware that such models can get pretty complex pretty quickly, and as usual, higher complexity generally means that we are more likely to overfit.
 
-## 7- Unbalanced Classes
-	> Classifiers are usually built to optimize accuracy, and hence will often perform poorly on unbalanced classes.
+## 7- MultiClass Classifier
+MultiClass Classifier (aka : multinomial classifiers) is used to distinguish between More than Two classes.
 
-	> For unbalanced datasets, the idea is to find a way to actually balance our datasets before fitting our model; one option is to downsample,
-	  downsampling here means only taking as many of the larger class (majority class) as there are available of our smaller class (minority).
+Some Algorithms are capable of handling MultiClass directly Like : Random Forest , Naive Bayes Classifier. Others are strictly binary classifiers Like : Support Vector Machine , Linear Classifier.
 
-	  Upsampling is essentially creating copies of the smaller outcomes until we have a balanced sample set, so rather than bring down the
-	  majority class, we bring up the minority
+Strategies to perform multiclass classification using binary classifiers.
 
-	  Finally, we can do a mix of downsampling and upsampling (Resampling)
+Case : Train model to classify an image of number from 0 to 9 
+- Train 10 Binary classifier, one for each digit (one digit detector : each detector detects whether it is a number 5 or not), so to classify an image, get the decision score from each classifier, and select the class whose classifier outputs the highest score :  One-Versus-All (aka: One-Versus-Rest).
 
-### 7.1- Steps for unbalanced datasets:
-	> Do a stratified train-test split, just to ensure we keep the balance for both our train and test sets in regards to those unbalanced classes
+- Train a Binary Classifier for every pair of digits (0-1 detector, 0-2 detector …. 8-9 detector), So if there is N class, a [N*(N-1)]/2 Classifiers needed (in our case 10 digits: 45 Classifier), Advantages: that each classifier only needs to be trained on the part of the training set for the two classes that it must distinguish : One-Versus-One.
 
-	> We can then go ahead and either undersample or oversample to our training set, doing this step second to the stratified train-test split
-	  will ensure that we don't have those same values in our train and test set, if we were to actually oversample and then do the split (now we
-	  have duplicates from our minority class), then we can have those samples in both our train and test set.
+For most binary classification algorithms, however, OvA is preferred. Special Case: SVM prefers to use OvO as it scales poorly with large datasets sizes, So OvO train many classifiers on small training sets than training few classifiers on large training sets.
 
-	> Finally, once we have our training set and we've over/undersmples then we can fit the model using that new balanced dataset in order to come
-	  up with a prediction
+Scikit-Learn detects when you try to use a binary classification algorithm for a multi‐class classification task, and it automatically runs OvA (except for SVM classifiers for which it uses OvO)
 
-    With unbalanced classes, the data often isn't easily separable, we have to choose to make sacrifice to one class or the other, meaning; by either
-    upsampling the minority, or downsampling the majority we are in danger of adding more weight to the features relating to minority (more weight to
-    the minority), thus we become more likely to wrongly label a few majority class points as the minority.
+Using SGDClassifier to Train 10 number of images : Scikit-Learn actually trained 10 binary classifiers, got their decision scores for the image, and selected the class with the highest score.
 
-    So as our ability to catch all the minority classes goes up (Recall increases), as a propotion of our predicted values of our actual predictions,
-    we're more likely to have a given value predicted incorrectly (Precision decreases)
+If you want to force Scikit-Learn to use one-versus-one or one-versus-all, you can use the OneVsOneClassifier or OneVsRestClassifier classes.
 
-### 7.2- Downsampling vs. Upsampling:
-    Downsampling:
-	> Downsampling will add tremendous importance to our minority class, but will typically raise up our recall, but also brings down precision,
-	  we're definitely going to be increasing the ability of our model to correctly predict that minority class, but at the cost of losing a lot
-	  of valuable data that can help us predict that majority class.
+## 8- Unbalanced Classes
+Classifiers are usually built to optimize accuracy, and hence will often perform poorly on unbalanced classes.
 
-    Upsampling:
-	> It mitigates some of the excessive weight of the minority class, Recall is still typically higher than Precision, but the gap between them
-	  is a little bit lesser than of Downsampling, the downside of Upsampling is that we are fitting to duplications of the same data in the
-	  minority class, and thus given more weight and thus overfitting to those repeated rows of data.
+For unbalanced datasets, the idea is to find a way to actually balance our datasets before fitting our model; 
 
-### 7.3- Unbalanced classes methodology:
-	> Every classifier used will produce a different model
-	> Every dataset we use (produced by various sampling methods) will produce a different model
-	> We can choose the best model using any criteria (accuracy here is not a good option) including AUC "Area Under the Curve", but remember that
-	  every model will produce a different ROC curve.
-	> Once a model is choosen, you can walk along the ROC curve and pick any point on it (threshold), each point has different precision/recall 
-	  values you can pick what best suits your business objectives.
+One option is to downsample, downsampling here means only taking as many of the larger class (majority class) as there are available of our smaller class (minority).
 
-### 7.4- Oversampling:
-    Random Oversampling:
-	> Simplest Oversampling approach, what we do is that we just randomly resample with replacement the rows from our minority class.
+Upsampling is essentially creating copies of the smaller outcomes until we have a balanced sample set, so rather than bring down the majority class, we bring up the minority
 
-	> In this approach there is no concerns about where these points (new data) lie in feature space, and whether cerain points will be more or
-	  less indicative of the cluster of the actual minority class.
+Finally, we can do a mix of downsampling and upsampling (Resampling)
 
-	> This random Oversampling will work best for categorical data where our features distance from other samples may not have as much
-	  interpretive underlying similarity, so we don't have to worry about whether or not there's a cluster and whether or not we're trying to
-	  define that cluster as correctly when we're working with categorical data.
+### 8.1- Steps for unbalanced datasets:
+Do a stratified train-test split, just to ensure we keep the balance for both our train and test sets in regards to those unbalanced classes.
 
-    Synthetic Oversampling:
-	> Here we actually creating new samples pf that minority class that don't yet exist, the first step is to start with one of the points in that
-	  minority class, then we choose one of the K nearest neighbors, then we create a new point randomly between the line connecting the two
-	  points, and then we repeat this for each one of the number of neighbors that we have set out.
+We can then go ahead and either undersample or oversample to our training set, doing this step second to the stratified train-test split will ensure that we don't have those same values in our train and test set, if we were to actually oversample and then do the split (now we have duplicates from our minority class), then we can have those samples in both our train and test set.
 
-	> There's two main approaches for the synthetic Oversampling both based on K nearest neighbors as its foundation:
-		> SMOTE (Synthetic Minority Oversampling Technique):
-		  Regular SMOTE: 
-			> Regular SMOTE is where we connect to the minority class points to any neighbors even those of other classes as long as they
-			  are nearest neighbors
+Finally, once we have our training set and we've over/undersmples then we can fit the model using that new balanced dataset in order to come up with a prediction.
 
-			> We use those connected lines to randomly generate our new points somewhere in between those connected lines
+With unbalanced classes, the data often isn't easily separable, we have to choose to make sacrifice to one class or the other, meaning; by either upsampling the minority, or downsampling the majority we are in danger of adding more weight to the features relating to minority (more weight to the minority), thus we become more likely to wrongly label a few majority class points as the minority.
 
-		  Borderline SMOTE:
-			> Borderline SMOTE is where we have to first classify our points as outliers, safe, or in-danger. 
-			  > Where outliers will refer to those points where all neighbors are from a different class; so we start off with a point
-			    from a minority class and we will look at "let's say 3 neighbors" and all 3 of those neighbors are from a different class
-			    that would be an outlier
-			  > Safe, which refers to those values for which all neighbors are from the same class, let's say we have 3 neighbors, and we
-			    are looking at a minority class point, all 3 of of the points nearby are all from the same class.
-			  > In-danger, where at least half of the nearest neighbors are from the same class, but they're not all from the same class
-			    so from 3 neighbors 2 out of the 3 are from the same class
+So as our ability to catch all the minority classes goes up (Recall increases), as a propotion of our predicted values of our actual predictions, we're more likely to have a given value predicted incorrectly (Precision decreases)
 
-			> Borderline 1:
-			  > Where we connects minority in-danger points only to minority points and then use those connections to generate our new
-			    samples
+### 8.2- Downsampling vs. Upsampling:
+__Downsampling__
+- Downsampling will add tremendous importance to our minority class, but will typically raise up our recall, but also brings down precision, we're definitely going to be increasing the ability of our model to correctly predict that minority class, but at the cost of losing a lot of valuable data that can help us predict that majority class.
 
-			> Borderline 2:
-			  > Where we connect minority in-danger points to whatever's nearby no matter what the class is.
+__Upsampling__
+- It mitigates some of the excessive weight of the minority class, Recall is still typically higher than Precision, but the gap between them is a little bit lesser than of Downsampling.
+- The downside of Upsampling is that we are fitting to duplications of the same data in the minority class, and thus given more weight and thus overfitting to those repeated rows of data.
 
-		  SVM SMOTE:
-			> SVM SMOTE uses an underlying support vector machines classifier to find support vectors, and it uses that to generate
-			  samples considering those support vectors
+### 8.3- Unbalanced classes methodology:
+Every classifier used will produce a different model.
 
-		  Notes:
-			> For both Borderline and SVM SMOTE, a neighborhood is defined using the parameter n neighbors to decide the number of
-			  neighbors to use, to decide whether a sample is in-danger, safe, or an outlier
+Every dataset we use (produced by various sampling methods) will produce a different model.
 
-		> ADASYN (ADAptive SYNthetic sampling):
-			> It works very similarly to SMOTE, it starts off by looking at the classes in the neighborhood of each minority point.
+We can choose the best model using any criteria (accuracy here is not a good option) including AUC "Area Under the Curve", but remember that every model will produce a different ROC curve.
 
-			> However, the number of samples generated for each point is going to be proportional to the number of samples which are not
-			  from the same class as that point in a given neighborhood.
+Once a model is choosen, you can walk along the ROC curve and pick any point on it (threshold), each point has different precision/recall  values you can pick what best suits your business objectives.
 
-			> Therefore, with ADASYN more samples will be generated in the area that the nearest neighbor rule is not respected, thus
-			  putting more weight on values that would have been originally misclassified.
+### 8.4- Oversampling Techniques:
+__Random Oversampling__
+- Simplest Oversampling approach, what we do is that we just randomly resample with replacement the rows from our minority class.
 
-### 7.5- Undersampling:
-	> NearMiss Methods:
-	  NearMiss-1:
-		> Here we'll look through different means of keeping points that are closest to nearby minority points, consider positive is the
-		  majority class and negative is the minority class, the goal here is to only select the positive samples (from the majority class)
-		  for which the aveage distance to the N closest samples of the negative class are the smallest.
-		  We're generally trying to keep points that are near our decision boundaries.
+- In this approach there is no concerns about where these points (new data) lie in feature space, and whether cerain points will be more or less indicative of the cluster of the actual minority class.
 
-		> Be aware that, with this type of downsampling, it can easily be skewed by the presence of some outliers or noise that may cause
-		  those clusters to stick together far from that boundary.
+- This random Oversampling will work best for categorical data where our features distance from other samples may not have as much interpretive underlying similarity, so we don't have to worry about whether or not there's a cluster and whether or not we're trying to define that cluster as correctly when we're working with categorical data.
 
-	  NearMiss-2:
-		> It's going to select the positive samples for which the average distance to the farthest samples of the negative class is the
-		  smallest
+__Synthetic Oversampling__
+- Here we actually creating new samples of that minority class that don't yet exist, the first step is to start with one of the points in that minority class, then we choose one of the K nearest neighbors, then we create a new point randomly between the line connecting the two points, and then we repeat this for each one of the number of neighbors that we have set out.
 
-		> So NearMiss-2 will not be as affected by outliers since it does not focus on minimizing distance to the nearest samples, but rather
-		  minimizing the distance from the farthest samples.
+- There's two main approaches for the synthetic Oversampling both based on K nearest neighbors as its foundation:
+  - __SMOTE (Synthetic Minority Oversampling Technique)__
+    - __1- Regular SMOTE__ 
+      - Regular SMOTE is where we connect to the minority class points to any neighbors even those of other classes as long as they are nearest neighbors.
+  
+      - We use those connected lines to randomly generate our new points somewhere in between those connected lines.
 
-	  NearMiss-3:
-		> It's going to be a two-step algorithm; first, it's going to be for each negative sample we're going to find the K-nearest neighbors
-		  of the positive class, then the positive samples selected are going to be the ones for which the average distance to the N-nearest
-		  neighbors is the largest.
+    - __2- Borderline SMOTE__
+      - Borderline SMOTE is where we have to first classify our points as outliers, safe, or in-danger. 
+      - Where __outliers__ will refer to those points where all neighbors are from a different class; so we start off with a point from a minority class and we will look at "let's say 3 neighbors" and all 3 of those neighbors are from a different class that would be an outlier
+      - __Safe__, which refers to those values for which all neighbors are from the same class, let's say we have 3 neighbors, and we are looking at a minority class point, all 3 of of the points nearby are all from the same class.
+      - __In-danger__, where at least half of the nearest neighbors are from the same class, but they're not all from the same class so from 3 neighbors 2 out of the 3 are from the same class.
 
-		> Thus we are taking points that are a bit further apart from one another, and due to that NearMiss-3 is probably the version which
-		  will be less affected by outliers.
+      - __Borderline 1__: Where we connects minority in-danger points only to minority points and then use those connections to generate our new samples.
 
-	  Tomek Links (Mixed Mutual Nearest Neighbors):
-		> A Tomek link exists if two samples from different classes are the nearest neighbors of one another, we can remove either the
-		  majority class point or both points.
-		  The idea being that this will remove the points that are too close together, and create more distinct classes
+      - __Borderline 2__: Where we connect minority in-danger points to whatever's nearby no matter what the class is.
 
-	  Edited Nearest Neighbors:
-		> Essentially, all we do here is run K-nearest neighbors with K=1, then if we misclassify a point in one of the majority classes, that
-		  point will be removed
+    - __3- SVM SMOTE__
+      - SVM SMOTE uses an underlying support vector machines classifier to find support vectors, and it uses that to generate samples considering those support vectors.
 
-## 8- Blagging (Balanced Bagging):
+  - __Notes__:
+      - For both Borderline and SVM SMOTE, a neighborhood is defined using the parameter n neighbors to decide the number of neighbors to use, to decide whether a sample is in-danger, safe, or an outlier.
+  
+<br>
+
+  - __ADASYN (ADAptive SYNthetic sampling)__
+    - It works very similarly to SMOTE, it starts off by looking at the classes in the neighborhood of each minority point.
+
+    - However, the number of samples generated for each point is going to be proportional to the number of samples which are not from the same class as that point in a given neighborhood.
+
+    - Therefore, with ADASYN more samples will be generated in the area that the nearest neighbor rule is not respected, thus putting more weight on values that would have been originally misclassified.
+
+### 8.5- Undersampling Techniques
+__NearMiss Methods__
+
+__NearMiss-1__
+- Here we'll look through different means of keeping points that are closest to nearby minority points, consider positive is the majority class and negative is the minority class, the goal here is to only select the positive samples (from the majority class) for which the average distance to the N closest samples of the negative class are the smallest. We're generally trying to keep points that are near our decision boundaries.
+  - Remove the majority samples which close enough to minority class.
+- Be aware that, with this type of downsampling, it can easily be skewed by the presence of some outliers or noise that may cause those clusters to stick together far from that boundary.
+
+__NearMiss-2__
+- It's going to select the positive samples for which the average distance to the farthest samples of the negative class is the smallest.
+
+- So NearMiss-2 will not be as affected by outliers since it does not focus on minimizing distance to the nearest samples, but rather minimizing the distance from the farthest samples.
+
+__NearMiss-3__
+- It's going to be a two-step algorithm; first, it's going to be for each negative sample we're going to find the K-nearest neighbors of the positive class, then the positive samples selected are going to be the ones for which the average distance to the N-nearest neighbors is the largest.
+
+- Thus we are taking points that are a bit further apart from one another, and due to that NearMiss-3 is probably the version which will be less affected by outliers.
+
+- __Tomek Links (Mixed Mutual Nearest Neighbors)__
+  - A Tomek link exists if two samples from different classes are the nearest neighbors of one another, we can remove either the majority class point or both points.
+  - The idea being that this will remove the points that are too close together, and create more distinct classes.
+
+- __Edited Nearest Neighbors__
+  - Essentially, all we do here is run K-nearest neighbors with K=1, then if we misclassify a point in one of the majority classes, that point will be removed.
+
+### 8.6- Blagging (Balanced Bagging):
 The idea here is to ensure to continuosly downsample each of our bootstrap samples (each of the majority class ofcourse), and then use these balanced samples to learn each one of our individual decision trees.
 
 This will allow for more weight to be attributed to that minority class, ensuring that we have more balanced decision being made.
