@@ -6,22 +6,15 @@ Let's settle down, rest our minds, spill the tea of our experience in multiple a
 ├── business
 |   ├── realStateCompany
 |   ├── dataScienceAndBusiness
+├── designPatterns
+|   ├── featureCross
 ├── programming
 |   ├── dataStructure
-|   |   ├── nb_DataStructure
 |   ├── decorators
-|   |   ├── nb_Decorators
 |   ├── oop
-|   |   ├── nb_OOP
-|   |   ├── objectOrientedProgramming
 |   ├── pythonCleanCode
-|   |   ├── cleanCode-GoogleStyleGuide
-|   |   ├── nb_GoogleStyleGuide
 |   ├── softwareGoals
 |   |   ├── robustness
-|   |   |   ├── nb_Robustness
-|   |   |   ├── script_RectangleClass
-|   |   |   ├── script_UnitTest
 ├── tabularData
 |   ├── conceptInMachineLearning
 |   |   ├── dataEDAanalysis
@@ -31,12 +24,11 @@ Let's settle down, rest our minds, spill the tea of our experience in multiple a
 |   ├── dataProcessing
 |   |   ├── handlingMissingData
 |   |   |   ├── determineMissingValues
-|   |   |   ├── regressionImputingggi
+|   |   |   ├── regressionImputing
 |   |   ├── handlingObjectdata
 |   |   |   ├── wordsSimilarity
 |   |   ├── handlingOutliers
 |   |   ├── handlingSkewness
-|   |   |   ├── script_SkewFix
 |   ├── dataEDA
 |   |   ├── correlalstion
 |   |   |   ├── detectmulticollinearity
@@ -44,7 +36,6 @@ Let's settle down, rest our minds, spill the tea of our experience in multiple a
 |   ├── dataEvaluation
 |   |   ├── classificationAccuracy
 |   |   |   ├── accuracyParadox
-|   |   |   ├── nb_AccuracyParadox
 |   ├── dataModeling
 |   |   ├── xgboost
 ├── tips
