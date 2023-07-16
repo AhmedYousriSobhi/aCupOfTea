@@ -1,5 +1,7 @@
 # aCupOfTea
-Let's settle down, rest our minds, spill the tea of our experience in multiple ai fields [Data Science, Machine Learning, Deep Learning], and enjoy the drink. If you find something interesting here, offer us a Cup of Tea.
+Let's settle down, rest our minds, spill the tea of our experience in multiple ai fields [Data Science, Machine Learning, Deep Learning], including many other aspects starting from prorgramming and clean code till design patterns & businness interference.
+
+Enjoy the drink, and if you find something interesting here, offer us a cup of tea.
 
 ```bash
 .
