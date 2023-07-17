@@ -1,4 +1,4 @@
-# Missing Data
+# Missing Data - Regression Imputing
 
 It is recommened to read __determineMissingValues__ before starting.
 

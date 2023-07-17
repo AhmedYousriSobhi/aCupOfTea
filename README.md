@@ -27,6 +27,7 @@ Enjoy the drink, and if you find something interesting here, offer us a cup of t
 |   |   ├── handlingMissingData
 |   |   |   ├── determineMissingValues
 |   |   |   ├── regressionImputing
+|   |   |   ├── meanImputing
 |   |   ├── handlingObjectdata
 |   |   |   ├── wordsSimilarity
 |   |   ├── handlingOutliers
