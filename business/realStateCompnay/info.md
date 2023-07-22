@@ -60,3 +60,29 @@ As a data scientist working for a real estate company, there are various project
 |__Property Recommendation Engine__| Develop a recommendation system that suggests properties to potential buyers or tenants based on their preferences, budget, location, and other relevant criteria. This can improve customer experience, increase engagement, and drive conversions.
 
 Remember, the specific projects will depend on the company's goals, available data, and challenges they are facing. It's important to work closely with stakeholders to understand their needs and align the projects with the company's objectives.
+
+## Projects
+### Mainly Projects 
+|Project|Description|
+|-----|----|
+|Property's Offering Time| Estimating the offering time for a property, it is the time when a property will be sold or rent after once it is announced in the market.<br/>This time will be calculated based on selected features.<br/>This project will help the company to determine its inventory and depended profit from these property.|
+|Property forecasted Price|Forecasting the estimated price of a property for future interval.|
+|Property Current Price|Estimating current price for property based on corresponding features.|
+
+### Related Projects
+|Projects|Description|
+|---|---|
+|Predictive Property Valuation| Build a model to predict property values based on various features like location, size, amenities, and historical sales data. <br/>This can help in accurately pricing properties and understanding market trends.
+|Demand Forecasting| Develop models to forecast the demand for properties in different areas, allowing the company to anticipate market trends and plan their investments accordingly.
+|Customer Segmentation| Use clustering techniques to segment customers based on their preferences, behaviors, and needs. <br/>This can help in targeted marketing and personalized recommendations.
+|Churn Prediction| Build a model to predict customer churn, helping the company retain existing customers by identifying potential churners and implementing appropriate strategies.
+|Optimized Property Search| Create algorithms that help customers find properties that best match their preferences and budget, making the property search process more efficient and personalized.
+|Rental Price Prediction| Develop models to predict rental prices based on factors such as location, property type, and local amenities, enabling landlords to set competitive rental rates.
+|Automated Property Appraisal| Build a system to automatically appraise properties based on historical sales data and market trends, streamlining the property valuation process.
+|Real Estate Market Analysis| Conduct comprehensive market analysis to identify emerging trends, hotspots, and investment opportunities for the company and its clients.
+|Image Analysis for Property Photos| Implement computer vision techniques to analyze property images and extract relevant features, improving the property listing quality.
+|Property Portfolio Optimization| Optimize the company's property portfolio by analyzing property performance metrics, return on investment (ROI), and risk factors.
+|Time-to-Sell Prediction| Develop models to predict the time it takes to sell a property, helping real estate agents and sellers set realistic expectations.
+|Real Estate Sentiment Analysis| Analyze sentiment from customer reviews, social media, and other sources to gain insights into customer satisfaction and areas for improvement.
+|Fraud Detection| Build fraud detection models to identify potentially fraudulent transactions or property listings, enhancing security and trust for customers.
+|Market Price Index| Create a real estate market price index to track the overall health and performance of the real estate market in different regions.
