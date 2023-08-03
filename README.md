@@ -11,6 +11,9 @@ Enjoy the drink, and if you find something interesting here, offer us a cup of t
 |   ├── dataScienceAndBusiness
 ├── designPatterns
 |   ├── featureCross
+├── generativeAI
+|   ├── evaluation_and_debugging
+|   |   ├── wandb_sklearnProject.
 ├── Prblems
 |   ├── question_CheapestFlatsPerCityUsingSQL
 |   ├── question_JobCounterUsingPySpark
