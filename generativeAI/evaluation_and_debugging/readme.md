@@ -7,6 +7,8 @@ Many teams have a large difficulty to manage these process during training a mod
 
 So In this article, we will cover tools and best practices to solve these problems.
 
+Also all experimental projects are saved in our [https://wandb.ai/acupoftea/projects](https://wandb.ai/acupoftea/projects) page for public usage.
+
 ## Topic Covered
 - Instrument W&B in an ML training pipeline.
 - Training diffusion models.
@@ -53,6 +55,8 @@ wandb.login(anonymous='allow')
 Note: you can find your API key in your browser throught: [https://wandb.ai.authorize](https://wandb.ai.authorize)
 
 ### Overview
+[Experimental Projects](https://wandb.ai/acupoftea/projects)
+
 The idea during using this tool, is to just update the configuration for the model, then simply run again the training model process, the W&B tool will create a new run, save it, and compare it with other previous runs.
 
 ### Overview - pick a run

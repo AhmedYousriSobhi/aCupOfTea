@@ -1,0 +1,104 @@
+{
+    "os": "Linux-6.2.6-76060206-generic-x86_64-with-glibc2.35",
+    "python": "3.9.0",
+    "heartbeatAt": "2023-08-03T12:00:19.005204",
+    "startedAt": "2023-08-03T12:00:17.107464",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "<python with no main file>",
+    "git": {
+        "remote": "https://github.com/AhmedYousriSobhi/aCupOfTea.git",
+        "commit": "fa224c3e747cfe2092e49cb3c9a70b234f25d25f"
+    },
+    "email": "ahmedyousrisobhi@gmail.com",
+    "root": "/home/yousri/Workspace/aCupOfTea",
+    "host": "yousri-Lenovo-Legion-5-15IMH05H",
+    "username": "yousri",
+    "executable": "/home/yousri/anaconda3/envs/fixedsolution/bin/python",
+    "cpu_count": 6,
+    "cpu_count_logical": 12,
+    "cpu_freq": {
+        "current": 0.8995833333333335,
+        "min": 800.0,
+        "max": 5000.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 0.899,
+            "min": 800.0,
+            "max": 5000.0
+        },
+        {
+            "current": 0.899,
+            "min": 800.0,
+            "max": 5000.0
+        },
+        {
+            "current": 0.9,
+            "min": 800.0,
+            "max": 5000.0
+        },
+        {
+            "current": 0.9,
+            "min": 800.0,
+            "max": 5000.0
+        },
+        {
+            "current": 0.9,
+            "min": 800.0,
+            "max": 5000.0
+        },
+        {
+            "current": 0.899,
+            "min": 800.0,
+            "max": 5000.0
+        },
+        {
+            "current": 0.899,
+            "min": 800.0,
+            "max": 5000.0
+        },
+        {
+            "current": 0.9,
+            "min": 800.0,
+            "max": 5000.0
+        },
+        {
+            "current": 0.899,
+            "min": 800.0,
+            "max": 5000.0
+        },
+        {
+            "current": 0.9,
+            "min": 800.0,
+            "max": 5000.0
+        },
+        {
+            "current": 0.9,
+            "min": 800.0,
+            "max": 5000.0
+        },
+        {
+            "current": 0.9,
+            "min": 800.0,
+            "max": 5000.0
+        }
+    ],
+    "disk": {
+        "total": 380.18306732177734,
+        "used": 148.63752365112305
+    },
+    "gpu": "NVIDIA GeForce RTX 2060",
+    "gpu_count": 1,
+    "gpu_devices": [
+        {
+            "name": "NVIDIA GeForce RTX 2060",
+            "memory_total": 6442450944
+        }
+    ],
+    "memory": {
+        "total": 15.479839324951172
+    }
+}
