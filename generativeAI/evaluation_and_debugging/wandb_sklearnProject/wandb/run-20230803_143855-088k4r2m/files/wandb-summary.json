@@ -1,0 +1,1 @@
+{"train_acc": 0.9520837158068661, "val_acc": 0.8428781204111601, "train_confusion_matrix": [[4643, 25], [236, 543]], "val_confusion_matrix": [[1098, 67], [147, 50]], "_timestamp": 1691062742.327505, "_runtime": 6.998183012008667, "_step": 0, "_wandb": {"runtime": 5}}
