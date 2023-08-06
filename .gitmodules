@@ -1,3 +1,6 @@
 [submodule "projects/used_cars_price_estimation"]
 	path = projects/used_cars_price_estimation
 	url = https://github.com/AhmedYousriSobhi/used_cars_price_estimation.git
+[submodule "projects/market_campain_imapct"]
+	path = projects/market_campain_imapct 
+	url = https://github.com/AhmedYousriSobhi/market_campain_imapct.git
