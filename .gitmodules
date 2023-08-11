@@ -4,3 +4,6 @@
 [submodule "projects/market_campain_imapct"]
 	path = projects/market_campain_imapct
 	url = https://github.com/AhmedYousriSobhi/market_campain_imapct.git
+[submodule "problems/problem_solving"]
+	path = problems/problem_solving
+	url = https://github.com/AhmedYousriSobhi/problem_solving.git
