@@ -15,6 +15,7 @@ Enjoy the drink, and if you find something interesting here, offer us a cup of t
 |   ├── evaluation_and_debugging
 |   |   ├── wandb_sklearnProject.
 ├── Prblems
+|   ├── problem_solving
 |   ├── question_CheapestFlatsPerCityUsingSQL
 |   ├── question_JobCounterUsingPySpark
 |   ├── question_MachineLearningClassifier
