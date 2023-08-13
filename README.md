@@ -70,6 +70,7 @@ From the aroma of well-structured code to the rich flavors of design patterns an
 |   |   ├── mlSupervisedClassification
 |   |   ├── mlSupervisedRegression
 |   |   ├── mlUnsupervised
+|   ├── conceptInTimeSeries
 |   ├── dataProcessing
 |   |   ├── handlingMissingData
 |   |   |   ├── determineMissingValues
@@ -84,6 +85,8 @@ From the aroma of well-structured code to the rich flavors of design patterns an
 |   |   |   ├── detectmulticollinearity
 |   |   |   ├── extremeCorrelation
 |   ├── dataEvaluation
+|   |   ├── modelBehaviour
+|   |   |   ├── biasVarienceTradeOff
 |   |   ├── classification
 |   |   |   ├── accuracyParadox
 |   |   ├── regression
