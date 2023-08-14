@@ -294,4 +294,5 @@ Model adjustments that decrease bias will often increase variance, and vice vers
 	  almost no effects, whereas if the coefficient is large, a small change in that feature will have a large impact on our target variable y,
 	  thus it will be higher sensitivity to a change in that feature and thus a higher vaiance in that underlying model.
 
-### Credits: IBM Coursera Specialization
+### Credits: 
+- IBM Coursera Specialization
