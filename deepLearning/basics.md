@@ -1,10 +1,58 @@
 # Deep Learning - Basics
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/9173f95c-88e9-42b2-bc09-f3aa65285b5b)
+
 
 In this article, we'll start explaining the important basics in deep learning
 
 A neural network tries to represent a given output based on its inputs by learning the appropaite parameters that could map the input to the target output.
 
 In real life the relation between output and input are not a linear relation, but a non-linear complex one. This force us to choose methods that introduce this non-linearity, these methods are called activation functions.
+
+# Neural Network
+A neural network is a machine learning model that is inspired by the human brain. It is made up of interconnected nodes, called neurons, that are arranged in layers.
+
+The first layer is called the input layer, and it receives the data that the network will process. The last layer is called the output layer, and it produces the network's output. The layers in between are called hidden layers.
+
+The neurons in each layer are connected to the neurons in the next layer. The connections between neurons are called synapses. The strength of each synapse is determined by a weight.
+
+The network learns by adjusting the weights of the synapses. This is done through a process called backpropagation. Backpropagation is an algorithm that calculates the error of the network's output and then adjusts the weights to reduce the error.
+
+The more the network is trained, the better it will become at predicting the output for a given input.
+
+So Let's define a deep network to be : 
+```
+DEEP Networks are gigantic Non-Linear or implicit sophisticated look-up table.
+```
+
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/c1c6b6f4-a4ef-4243-bf09-88d640a40969)
+
+Here are some of the key features of a neural network:
+
+* **Non-linearity:** Neural networks are able to learn non-linear relationships between the input and output data. This is because the activation functions used in neural networks are non-linear.
+* **Parallel processing:** Neural networks can process data in parallel. This means that the network can learn from multiple data points at the same time.
+* **Adaptability:** Neural networks are able to adapt to new data. This is because the weights of the synapses can be adjusted to improve the network's performance.
+* **Generalization:** Neural networks are able to generalize to new data. This means that the network can learn from a limited amount of data and then apply the knowledge to new data that it has not seen before.
+
+Neural networks are a powerful tool that can be used for a variety of tasks, including:
+
+* **Classification:** Neural networks can be used to classify data into different categories. For example, a neural network can be used to classify images into different objects or to classify text into different categories.
+* **Regression:** Neural networks can be used to predict a continuous value, such as the price of a stock or the number of sales.
+* **Natural language processing:** Neural networks can be used to process natural language, such as text and speech. For example, a neural network can be used to translate text from one language to another or to generate text.
+* **Computer vision:** Neural networks can be used to process images and videos. For example, a neural network can be used to identify objects in an image or to track the movement of people in a video.
+
+Neural networks are a rapidly growing field of machine learning. As the technology continues to develop, neural networks will be able to solve even more complex problems.
+
+Note: Number of layers = number of hidden layers + 1
+
+## Loss functions Vs Cost function
+The loss function computes the error for a single training example; The Cost function is the average of the loss functions of the entire training set.
+
+## Removing INTERCEPT?
+Let's reacall a real linear regression line: y = a + b*x + Error, where
+- a: INTERCEPT.
+- Error: they are the residuals which are normally distributed.
+
+Assume removing the intercept, then the line will go through the origin wherein the dependent variable and the independent variable is equal to zero.
 
 # Activation Function
 An activation function is a function that is applied to the output of a neuron in a neural network. It is used to introduce non-linearity into the network, which is essential for learning complex patterns.
@@ -55,11 +103,11 @@ The sigmoid function is a special activation function because it has a few prope
 - Smooth and continuous: The sigmoid function is smooth and continuous, which makes it easy to differentiate. This is important for the backpropagation algorithm, which is used to update the weights of the network during training.
 - Interpretable: The sigmoid function is relatively easy to interpret, which can be helpful for debugging and understanding the behavior of the network.
 
+![sigmoid](https://github.com/AhmedYousriSobhi/insightMe/assets/66730765/1c9404c7-1888-4265-ba9b-76a7b2f8c2da)
+
 However, the sigmoid function also has some limitations.
 - Vanishing gradient problem: The sigmoid function has a derivative that approaches zero as the input approaches 0 or 1. This can make it difficult for the network to learn, as the updates to the weights become very small.
 - Sensitive to outliers: The sigmoid function is sensitive to outliers, which can cause the network to make incorrect predictions.
-
-![sigmoid](https://github.com/AhmedYousriSobhi/insightMe/assets/66730765/1c9404c7-1888-4265-ba9b-76a7b2f8c2da)
 
 ### Tanh
 The hyperbolic tangent (tanh) function is an activation function that is similar to the sigmoid function, but it has a range of -1 to 1. This makes it a good choice for regression problems, where the output of the network should be a continuous value.
@@ -71,6 +119,8 @@ Here are some of the reasons why the tanh function is preferred over the sigmoid
 - Sensitivity to outliers: The tanh function is less sensitive to outliers than the sigmoid function. This is because the tanh function is symmetric around 0, while the sigmoid function is not.
 - Smoothness: The tanh function is a smooth function, which makes it easier to train neural networks. The sigmoid function is not as smooth, which can make it more difficult to train neural networks.
 
+![image](https://github.com/AhmedYousriSobhi/insightMe/assets/66730765/d5f4bfd9-7223-490e-a2f0-60d1137b5c9a)
+
 Here are some cases where the tanh function is preferred over the sigmoid function:
 - Regression problems: The tanh function is a good choice for regression problems where the output should be a continuous value.
 - Problems with outliers: The tanh function is less sensitive to outliers than the sigmoid function, so it is a good choice for problems where the data may contain outliers.
@@ -80,12 +130,12 @@ However, the tanh function also has some limitations.
 - Vanishing gradient problem: The tanh function has a derivative that approaches zero as the input approaches 0 or 1. This can make it difficult for the network to learn, as the updates to the weights become very small.
 - Not interpretable: The tanh function is not as interpretable as the sigmoid function. This can make it more difficult to debug and understand the behavior of the network.
 
-![image](https://github.com/AhmedYousriSobhi/insightMe/assets/66730765/d5f4bfd9-7223-490e-a2f0-60d1137b5c9a)
-
 ### SoftMax
 The softmax function is a special activation function because it is used in classification problems with multiple output classes. The softmax function takes a vector of real numbers as input and outputs a vector of probabilities, where each probability represents the likelihood of the input belonging to a particular class.
 
 The softmax function is a versatile and useful activation function. It is a good choice for classification problems with multiple output classes.
+
+![image](https://github.com/AhmedYousriSobhi/insightMe/assets/66730765/e4213589-5943-4b58-8003-4caafad0d414)
 
 Here are some of the reasons why the softmax function is special:
 - Normalization: The softmax function is a normalization function, which means that the sum of the outputs is always equal to 1. This is important for classification problems, where the output should represent the probability of the input belonging to a particular class.
@@ -100,7 +150,8 @@ However, the softmax function also has some limitations.
 - Vanishing gradient problem: The softmax function can suffer from the vanishing gradient problem, which can make it difficult for the network to learn.
 - Not interpretable: The softmax function is not as interpretable as some other activation functions, such as the sigmoid function. This can make it more difficult to debug and understand the behavior of the network.
 
-![image](https://github.com/AhmedYousriSobhi/insightMe/assets/66730765/e4213589-5943-4b58-8003-4caafad0d414)
+#### Why not to use MAX function instead?
+Max function is not differentiable!!, that's why they introduced a function represent 'probability and outputs from 0 to 1'.
 
 ### Absolute
 The absolute activation function is a non-linear function that outputs the absolute value of its input. It is defined as follows:
@@ -115,14 +166,14 @@ The absolute activation function is a simple function, but it can be useful in s
 
 The absolute activation function is also less sensitive to the vanishing gradient problem than some other activation functions, such as the sigmoid function. __The vanishing gradient problem is a problem that can occur when the derivatives of the activation function approach zero__. This can make it difficult for the network to learn, as the updates to the weights become very small.
 
+![image](https://github.com/AhmedYousriSobhi/insightMe/assets/66730765/87408356-e779-46ef-bbca-f85bcde915a1)
+
 However, the absolute activation function also has some limitations. It is not as interpretable as some other activation functions, such as the sigmoid function. This can make it more difficult to debug and understand the behavior of the network.
 
 Here are some cases where the absolute activation function is used:
 - Outlier detection: The absolute activation function can be used to make neural networks more robust to outliers.
 - Robust regression: The absolute activation function can be used to improve the robustness of regression models to outliers.
 - Image processing: The absolute activation function can be used to remove noise from images.
-
-![image](https://github.com/AhmedYousriSobhi/insightMe/assets/66730765/87408356-e779-46ef-bbca-f85bcde915a1)
 
 #### Can ABS() be used as activation function?
 ![image](https://github.com/AhmedYousriSobhi/insightMe/assets/66730765/ce98192b-df96-4da0-9088-204c5e33dc82)
@@ -154,6 +205,9 @@ For Output Laysers: Depends on the task whether it is classification or regressi
 - Classification: (Probability of class)
   - Binary Classifier: Sigmoid.
   - Multi-Class Classifier: SoftMax.
+
+## The PERCEPTRION ERROR
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/7cbc3b81-3ac1-4129-9e12-6807593f3e59)
 
 ## Gradient in Neural Network
 ### 1- What is a Gradient?
@@ -253,8 +307,91 @@ Here is a table that summarizes the key differences between the two problems:
 If we start with weights so large, so y-pred will have total of large value due to weight multiplication. Same if we start with weights so small.
 This will lead us to Exploding and vanishing of gradient respectively .
 
+## Weights Initialization In NN
+### Notes
+Initialize the weights and biases to be zero:
+- Each neuron in the first hidden layer will perform the same computation. So even after multiple iterations of gradient descent each neuron in the layer will be computing the same thing as other neurons.
+- Can't break the similarity.
+
+[True/False] Logistic regression weights w should be initialized randomly rather than to all zeros, because if you initialize to all zeros, then logistic regression will fail to learn a useful decision boundary because it will fail to “break symmetry”. 
+- False!!! As: Logistic Regression doesn't have a hidden layer. If you initialize the weights to zeros, the first example x fed in the logistic regression will output zero but the derivatives of the Logistic Regression depend on the input x (because there's no hidden layer) which is not zero. So at the second iteration, the weights values follow x's distribution and are different from each other if x is not a constant vector.
+
+[What will happen?] You have built a network using the tanh activation for all the hidden units. You initialize the weights to relative large values, using np.random.randn(..,..)*1000. 
+- This will cause the inputs of the tanh to also be very large, thus causing gradients to be close to zero. The optimization algorithm will thus become slow.
+
+## Regularization
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/a8808f25-1ec8-4e80-a21e-d9d847654466)
+
+## Normalization
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/df5de503-2d57-4081-b8f5-2cafc63f36b9)
+
 ## Parameters Initialization
 ![image](https://github.com/AhmedYousriSobhi/insightMe/assets/66730765/7a7d5cd3-8ab9-46a0-8b24-b874d2c2eb1d)
+
+## Gradient Checking
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/e176e115-c10f-455a-9b6e-4f87a226661c)
+
+## Optimizers
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/f33a9f39-4784-4f6a-83b1-2e40f313cef9)
+
+### Mini-Batch
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/d641dbe7-5996-499f-bed6-60d8c2d610b6)
+
+### Exponential Weighted Average
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/e2028315-967b-408d-b91d-064dba175f77)
+
+### Momentum GD
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/ebf7fb38-f529-495f-b58b-1ad5354055c9)
+
+## RMSPROP GD
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/5bc03172-77ff-4149-800c-6f6d18fcb418)
+
+### ADAM
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/7e76f734-9f22-4030-a76e-2dcd64798082)
+
+### Learning Rate
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/b553002f-a591-4d36-b6c2-c5cfcd378132)
+
+### ADAGRAD
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/eadda4e7-5df6-48cb-a9a4-72a6387dc5dc)
+
+### Local Minima
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/3236fef4-d76f-4c26-82a7-9fbc3493441d)
+
+### Transfer Learning
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/4da95f84-bf2e-4cd6-80c2-e61110ee3e0b)
+
+## Hyper-Parameters Tuning
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/2c0fb4e3-cdb5-4411-8deb-8d61a03ebfda)
+
+## Batch Normalization
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/3a54e166-239f-44eb-bbb9-5f38be712f8f)
+
+## Multi-Class Classification
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/25daacc3-43e1-4198-9f16-f56b619f094f)
+
+## BIAS - Variance
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/68ce6a70-b616-4659-8f9f-c79bab3b9b54)
+
+## Single Number Evaluation Metric
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/341da905-b0d8-4c66-839b-2823fa6afebd)
+
+## Avoidable Bias
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/7402b25f-a4dc-4e28-b518-409abd8881f6)
+
+## Error Analysis
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/f27ae9c2-88bb-4e0a-a2d0-71987381e76c)
+
+Tip: Build your system quickly then iterate.
+
+## Mismatched Training & Dev/Test Sets
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/d384acf1-01c0-4dba-98b8-2d96de07a55b)
+
+## Learning From Multiple Tasks
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/aa70563e-3fd0-41e6-946c-56fb18715c12)
+
+## End-To-End Deep Learning
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/bf085b8a-07e7-4a69-b954-b58e8a7fea19)
 
 ## Credits
 - Deep Learning Specialization By Andrew NG in Coursera
