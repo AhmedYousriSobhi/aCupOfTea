@@ -27,7 +27,15 @@
     - [Importants of Padding](#importants-of-padding)
     - [Technical Note: Odd-Sized Filters](#technical-note-odd-sized-filters)
   - [Strided Convolution](#strided-convolution)
+    - [How does it work?](#how-does-it-work)
+    - [Effect of Stide](#effect-of-stide)
+    - [Why to use Stride?](#why-to-use-stride)
+    - [Important Note](#important-note)
   - [Volume Convolution](#volume-convolution)
+    - [Dealing with Three channels Image](#dealing-with-three-channels-image)
+    - [Dealing with multiple Filters](#dealing-with-multiple-filters)
+    - [Output Dimentions](#output-dimentions)
+    - [Convolution on RGB image](#convolution-on-rgb-image)
   - [Pooling Layer](#pooling-layer)
   - [Why Convolution](#why-convolution)
   - [Transponsed Convolution](#transponsed-convolution)
@@ -169,9 +177,9 @@ Vertocal Edge filter must be have Bright Pixels in the left, and Dark Pixels in 
 Keep in mind that the Canny edge detector involves more than just a single kernel; it includes multiple steps such as Gaussian smoothing, gradient computation, non-maximum suppression, and hysteresis thresholding. The table provides a concise overview of these edge detection kernels' characteristics, but the choice of kernel should be based on the specific requirements and characteristics of the image data and the desired results
 
 ## Padding
-### Problem statement
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/00bced76-5184-4c39-a570-0689f0f786c4)
 
+### Problem statement
 During the convolution process, the sliding filter does not actually visit all the pixels the same number of times, so not all the pixels in the images are treated the same by the filter, specially the pixels in the boundaries. This leads to a reduction in the spatial dimensions of the output.
 What if there is a whole dog in the pixels in the edge? So we want to make sure our model deals with every pixel equally.
 
@@ -230,8 +238,81 @@ Filters are usually odd-sized, and Two reasons for that:
 ## Strided Convolution
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/f0d01d5c-4a3f-4df0-b1e3-a58a6172922d)
 
+In a standard convolution, a filter is applied to an input image by sliding it over the image with a fixed step size. Strided convolutions introduce the concept of a "Stride", which determines the step size at which the filter moves accros the input image.
+
+### How does it work?
+In a traditional convolution operation:
+- The filter is placed at the top-left corner of the image.
+- The filter slides horizontally and vertically across the image pixel by pixel.
+- At each position, the element-wise multiplication of the filter and the overlapping image region is computed, and the results are summed to form a single value in the output feature map.
+
+With strided convolution:
+- The filter is still placed at the top-left corner of the image.
+- However, the filter slides across the image with a defined step size called the "Stride".
+- At each stride position, the element-wise multiplication and summation occur as usual, producing an output value in the feature map.
+
+Stride is represented by division in the equation; because it is the number of pixels that the kernel skips over when it is applied to the input image. For example, if the stride is 2, then the kernel will skip over 1 pixel in the input image for every 2 pixels that it scans.
+
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/df1e3d41-a1e1-4e89-9d03-b8a430a26f0f)
+
+Remember that Striding is in Horizontal and Vertical axises.
+
+### Effect of Stide
+The main effect of using a strode larger than 1 is a reduction in the spatial dimentions of the output feature map. A larger stride means the filter "Skips" over more pixels, leading to fewer output values. This reduction is spatial dimensions can be useful for downsampling or reducing computational complexity.
+
+### Why to use Stride?
+For varous reasons:
+1. __Downsampling__: Using a larger stride reduces the spatial resolution of the feature map, which can be useful for downsampling and dimensionality reduction in the networks.
+2. __Reduced Computational Complexity__: Larger strides results in fewer computations, making the process faster and less memory-intense.
+3. __Feature Reduciotn__: Strided convolutions can help reduce overfitting by forcing the network to capture more important features due to the reduced number of computations.
+4. __Pooling Replacement__: Strided convolutions can replace pooling layers in some architectures, offering more control over feature extraction.
+
+### Important Note
+However, using larger strides can also lead to information loss, as some spatial details might be skipped over the filter.
+
+Strided convolutions are often combined with other techniques like dilation, padding, and skip connections to mitigate these issues and maintain the network's ability to capture important features.
+
 ## Volume Convolution
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/f9bd227f-71d1-43d0-bd8f-92cdf478d6e8)
+
+### Dealing with Three channels Image
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/5db78db8-7597-4d7c-8694-4b80286a5104)
+
+In this case, we will use filter that has same number of channels like the input image, and the output will be a single channel feature image.
+
+### Dealing with multiple Filters
+What if we need to detect vertical & horizontal edges?, In this case we will use two filters:
+- Yellow: Vertical Edge Detector -> Output is 1 channel.
+- Orange: Horizontal Edge Detector -> Output is 1 channel.
+  
+Then Combine both outputs of the two filters together to make a two channel output.
+- __So Number of Channels in the output image = #Filters used__.
+
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/474b05cc-37bf-4705-98b3-994b07aad563)
+
+But remember that we are dealing with RGB image, which is a 3 channels image like in the image above (6 x 6 x 3), So in this case, each of the filters [yellow: vertical, orange: horizontal] will be also a 3 dimentional filter, so each channel of R, B, & G will have an applied filter on it.
+
+### Output Dimentions
+To summarize the dimention like in the image:
+```
+  n x n x n_c * f x f x n_c  -> n-f+1 x n-f+1 x n_c` 
+  6 x 6 x 3     3 x 3 x 3         4   x   4   x  2
+
+  Where:
+    n : input image shape dimention.
+    n_c : the number of channels.
+    * : Convolution operation.
+    f : filter shape dimention.
+    n_c` : Number of used filters.
+  
+  Assuming padding = 0, stride = 1
+```
+### Convolution on RGB image
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/cf461885-c9f3-4b9e-a5d5-4ec441c119a6)
+
+In this case, we will have a filter with three channels n_c = 3, as each channel will be will be convolutioned with its correponding image color channel, and the output will be a single channel.
+
+For example illustrated above, we just need a red channel edge detector, then all other results from the convolution of the G, & B channels will be zeros.
 
 ## Pooling Layer
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/21ee794c-9d0d-40d7-bcb9-53ffbdd6e427)
