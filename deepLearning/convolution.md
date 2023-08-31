@@ -36,7 +36,15 @@
     - [Dealing with multiple Filters](#dealing-with-multiple-filters)
     - [Output Dimentions](#output-dimentions)
     - [Convolution on RGB image](#convolution-on-rgb-image)
+    - [One Layer Convolution Neural Network](#one-layer-convolution-neural-network)
+    - [Summary of Notation](#summary-of-notation)
+    - [Number of Parameters Calculation](#number-of-parameters-calculation)
+    - [One Layer Convolution - Multiple Filters](#one-layer-convolution---multiple-filters)
+    - [Convolution Multiplication Visuale Example](#convolution-multiplication-visuale-example)
   - [Pooling Layer](#pooling-layer)
+    - [HyperParameters](#hyperparameters)
+    - [Types of Pooling](#types-of-pooling)
+  - [CNN Example](#cnn-example)
   - [Why Convolution](#why-convolution)
   - [Transponsed Convolution](#transponsed-convolution)
   - [Case Studies: Classic Networks](#case-studies-classic-networks)
@@ -50,6 +58,7 @@
   - [Face Recognition](#face-recognition)
     - [One Shot Learning](#one-shot-learning)
   - [Neural Style Transfer](#neural-style-transfer)
+  - [Credits](#credits)
 
 ## Abstract
 Computer vision is a field of artificial intelligence (AI) that enables computers and systems to derive meaningful information from digital images, videos, and other visual inputs, then take actions or make recommendations based on that information.
@@ -314,8 +323,106 @@ In this case, we will have a filter with three channels n_c = 3, as each channel
 
 For example illustrated above, we just need a red channel edge detector, then all other results from the convolution of the G, & B channels will be zeros.
 
+### One Layer Convolution Neural Network
+When you convolute a filter with shape (3x3x3) with RBG image with shape (6x6x3), the output feature map image will be with shape (4x4x1), as we have only one filter applied to the image. 
+
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/6080c854-4d7f-48f3-a59a-bfacae2d0bb0)
+
+Let's see how this actually happens under the hood:
+- The filter applied has a three channels, so each channel will be applied to each channel of the RGB image indevidually, each of the multiplication is element-wise, resulting in three separate feature maps (one for each channel). These feature maps represent the response of the filter to each color channel.
+- Each of these features map are summed together into a single featuere map which will have a shape of (4x4x1).
+- Adding a bias term to the output.
+- Applying activation function like Relu, to have a final output feature map.
+
+### Summary of Notation
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/e8731001-aedb-4d57-8d22-4922698285d7)
+
+Where:
+- M: Number of activation layers.
+
+### Number of Parameters Calculation
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/8729ab7b-26e8-4b53-8c7c-a9b47bdde759)
+
+To calculate the total paratmeters required for training in the convolution neural network:
+- Weights paramters = 3 * 3 * 3 = 27 paramters.
+- Bias Term = 1
+
+So the total number of parameters will = 27 + 1 = 28 
+
+### One Layer Convolution - Multiple Filters
+If we have two filters, how the convolutions work between an input image, and the two filters?
+- The same approach to calculate the output feature image (n_H, n_W), for each filter individually, where each filter has shape (f, f, n_C_prev).
+- Then stacking the filter outputs into one single output volume (n_H, n_W, n_C), where n_C is the number of filters which in this case will be equal to 2.
+
+The figures below illustrate how the process works:
+
+1- Calculating the ouptut of the first applied filter.
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/e624607e-8238-4e8a-9047-e3429c3ab860)
+
+2- Calculating the second output from the second filter.
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/0e9a118e-cd7a-44f9-88ee-8783782748d3)
+
+3- Stacking the two outputs together into single output volume with shape (n_H, n_W, n_C).
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/d1fe037e-14ae-4b64-9499-1e5b01801a77)
+
+Numerical Example:
+
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/07816791-09cf-463c-a4ef-93465b0769d2)
+
+Note: As we go deep in CNN
+- Image dimentions decrease.
+- Number of filters increase.
+  
+### Convolution Multiplication Visuale Example
+A great guide for [visuale illustration](https://cs231n.github.io/assets/conv-demo/index.html) descripted in the [CS231n: Convolutional Neural Networks for Visual Recognition](https://cs231n.github.io/convolutional-networks/#conv)
+
 ## Pooling Layer
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/21ee794c-9d0d-40d7-bcb9-53ffbdd6e427)
+
+Pooling operates on individual feature maps produced by the convolutional layers. It replaces a group of adjacent pixels with a single value, thus reducing the spatial resolution of the feature map. The general idea is to capture the most important information while reducing the computational complexity and the risk of overfitting
+So it is a technique to reduce the information in an image while maintaining features.
+
+ ConvNets often also use pooling layers to: 
+- reduce the size of the representation, to speed the computation.
+- make some of the features that detects a bit more robust.
+
+### HyperParameters
+Pooling layer has a set of hyperparameters:
+- f : filter size.
+- s : Stride size.
+
+__Pooling Layer has Hyperparameters to set, but don’t have a parameter to learn. (for ex. Nothing for gradient descent to learn)__
+
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/afbc5b3d-e699-453e-a644-e87239f84436)
+
+### Types of Pooling
+Max Pooling:
+- In max pooling, each output value of the pooled feature map is the maximum value within the corresponding region of the input feature map. 
+- Max pooling helps preserve the most prominent features in a given region, making it effective for identifying spatial patterns regardless of their precise location.
+
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/df11f6fd-c8d7-47b6-988d-e847dfdc7afc)
+
+Average Pooling:
+- In average pooling, each output value is the average of all values in the corresponding region of the input feature map. 
+- Average pooling can help mitigate noise and provide a more generalized representation.
+
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/8603e90c-d9e9-421d-994f-abd4b0293e64)
+
+## CNN Example
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/43872116-9cd0-41e0-b107-a23535dbbf5d)
+
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/895fa879-acf0-4436-ae41-87a002fcc76b)
+
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/e9e63f06-c566-4337-aeb3-1732695235a6)
+
+Remember: Each image (3 channels) go through each filter individually.
+Here are the 5 typos:
+1. (5*5*3 + 1) * 8 = 608
+2. (5*5*8 + 1) * 16 = 3216
+3. In the FC3, 400*120 + 120 = 48120, since the bias should have 120 parameters, not 1
+4. Similarly, in the FC4, 120*84 + 84 (not 1) = 10164
+(Here, the bias is for the fully connected layer.  In fully connected layers, there will be one bias for each neuron, so the bias become In FC3 there were 120 neurons so 120 biases.)
+5. Finally, in the softmax, 84*10 + 10 = 850
 
 ## Why Convolution
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/309d9bc8-2a0f-47f6-8c2e-cd2b832cd39e)
@@ -356,3 +463,6 @@ For example illustrated above, we just need a red channel edge detector, then al
 ## Neural Style Transfer
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/8686dc3d-026e-42b0-a093-7163cad8de15)
 
+
+## Credits
+[CS231n: Convolutional Neural Networks for Visual Recognition](https://cs231n.github.io/convolutional-networks/).
