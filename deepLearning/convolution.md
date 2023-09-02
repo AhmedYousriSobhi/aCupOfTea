@@ -47,16 +47,35 @@
   - [CNN Example](#cnn-example)
   - [Why Convolution](#why-convolution)
   - [Transponsed Convolution](#transponsed-convolution)
+    - [Upsampling: Nearest Neighbors](#upsampling-nearest-neighbors)
+    - [Checkboard Pattern](#checkboard-pattern)
+  - [Multiple Input](#multiple-input)
   - [Case Studies: Classic Networks](#case-studies-classic-networks)
+    - [LeNet-5](#lenet-5)
+      - [Architecture](#architecture)
+      - [Pros \& Cons](#pros--cons)
+    - [AlexNet](#alexnet)
+      - [Architecture](#architecture-1)
+      - [Pros \& Cons](#pros--cons-1)
+      - [ILSVRC](#ilsvrc)
+      - [Local Response Normalization](#local-response-normalization)
+    - [VGG-16](#vgg-16)
   - [Case Studies: Residual Neural Networks](#case-studies-residual-neural-networks)
   - [Case Studies: Inception Networks](#case-studies-inception-networks)
   - [Case Studies: Mobile Net](#case-studies-mobile-net)
+    - [Motivation](#motivation)
   - [Practical Advices using ConvNet](#practical-advices-using-convnet)
+    - [Data Augmentation](#data-augmentation)
+    - [State of Computer Vision](#state-of-computer-vision)
   - [Detection Algorithms](#detection-algorithms)
-    - [Detection Algorithms - YOLO Algorithm](#detection-algorithms---yolo-algorithm)
-    - [Detection Algorithms - Semantic Segmentation](#detection-algorithms---semantic-segmentation)
+    - [Object Localization](#object-localization)
+    - [Landmark Detection](#landmark-detection)
+    - [Object Detection](#object-detection)
+  - [Detection Algorithms - YOLO Algorithm](#detection-algorithms---yolo-algorithm)
+  - [Detection Algorithms - Semantic Segmentation](#detection-algorithms---semantic-segmentation)
   - [Face Recognition](#face-recognition)
     - [One Shot Learning](#one-shot-learning)
+    - [Siamese Network - Deep Face](#siamese-network---deep-face)
   - [Neural Style Transfer](#neural-style-transfer)
   - [Credits](#credits)
 
@@ -440,7 +459,7 @@ __Parameters Sharing__: means that the same set of learnable weights (paramters)
 - __Reduced Model Complexity__: without parameter sharing, a fully connected layer would require a large number of unique parameters, especially when dealling with high-resolution images. This leads to a high computational & memory burden. Convolution layers alleviate this issue by resuing the same weights across the input, resulting in a much more compact model.
 - __Translation Invariance__: parameters sharing contributes to a property called translation invariance. This means that the network can recognize the same feature or pattern regardless of its exact location in the input. For example, if an edge detector filter detects a vertical edge in one part of the image, it can also recognize the same vertical edge in a different location.
 
-___Sparsity of Connections__: Convolutional layers enforce a sparsity of connections, which means that each output value depends only on a small, local subset of input values, unlike in a fully conected layer where each output node is connected to all input nodes. 
+__Sparsity of Connections__: Convolutional layers enforce a sparsity of connections, which means that each output value depends only on a small, local subset of input values, unlike in a fully conected layer where each output node is connected to all input nodes. 
 
 The idea of sparsity of connections is that only the input nodes that are relevant to the output node need to be connected. By sparsifying the connections, the model can learn more efficiently
 
@@ -460,19 +479,158 @@ From the image above:
 
 Transposed convolution is a type of convolution that is used to upsample an image. It is also known as deconvolution or fractionally strided convolution.
 
-In a regular convolution, a kernel is used to scan an input image and produce an output image. The kernel is a small matrix of weights that is used to calculate the output value at each pixel in the output image.
-
-In a transposed convolution, the kernel is used to scan an output image and produce an input image. The kernel is used to upsample the output image by adding zeros in between the pixels.
+In a __regular convolution__, a kernel is used to scan an input image and produce an output image. The kernel is a small matrix of weights that is used to calculate the output value at each pixel in the output image. In a __transposed convolution__, the kernel is used to scan an output image and produce an input image. The kernel is used to upsample the output image by adding zeros in between the pixels.
 
 Transposed convolution can be used for a variety of tasks, including image upsampling, image denoising, and image super-resolution.
 
 Note: There is no learnable parameters here.
 
+### Upsampling: Nearest Neighbors
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/02bf6142-f41f-4c52-b94f-a930702374dc)
 
+We have a feature map of shape 2 * 2, and require to be converted to  4 * 4 output matrix, in case of upsampling using nearest Neighbors, in the input matrix, each pixel is converted to a 2 * 2 matrix with same pixel value.
+
+### Checkboard Pattern
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/19b56e8c-c6a3-4f26-b48b-87200da5aeff)
+
+When doing the upsampling of an image, like the one above, the image looks like it is pixlated, which can be described by "Checkboard pattern", this is one of the problem of transposed convolution.
+
+This problem happenes because some pixels are influenced much more heavily by other pixels, while the one around it are not. Let's dig into the image below, assume we have in image of 2 * 2 pixels, and using a filter of shape 2 * 2, and stride = 1, we want to output an image of shape 3 * 3.
+
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/f9cc71c0-f8b7-49e3-80c8-3a7d0c938a6c)
+
+In this case, while calculating, output pixels are affected by various of the filter pixels, unsymetric effect, for example, the pixel in the left up corner is only affected by the value 2 in left ip corner of the filter, compared to the output centered pixel which is affected by all pixels of the filter.
+
+## Multiple Input
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/9af37e76-f531-4617-9413-a7ac7f36c268)
+
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/fbde6876-cd35-4375-8384-2edbdf80a0da)
+
+The image shows a diagram of a system with multiple inputs. The system takes in three types of data: text, numerics, and images. The image data is processed by a convolutional neural network (CNN), the text data is processed by a recurrent neural network (RNN), and the numeric data is fed directly into the fully connected layer. The outputs of the three networks are then combined to produce a final output.
+
+Multiple input is a type of input that allows a computer to process multiple types of data at the same time. This can be useful for tasks that require the processing of different types of data, such as natural language processing, machine translation, and image recognition.
+
+In the case of the system shown in the image, the multiple input allows the system to process text, numerics, and images data at the same time. This can be useful for tasks such as sentiment analysis, which involves understanding the sentiment of text, or image classification, which involves classifying images into different categories.
+
+Multiple input can be implemented in a variety of ways. One way is to use a single neural network that has multiple inputs and outputs. Another way is to use multiple neural networks, each of which is specialized in processing a single type of data.
+
+The choice of implementation depends on the specific task and the available resources.
 
 ## Case Studies: Classic Networks
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/8748e5f1-a40a-4037-9e36-2c26993d1e8a)
+### LeNet-5
+
+LeNet-5 is a convolutional neural network (CNN) architecture developed by Yann LeCun et al. in 1998. It is a simple and efficient CNN that has been used for a variety of tasks, including handwritten digit recognition and face detection.
+
+Paper: [Gradient-Based Learning applied to document recognition](http://vision.stanford.edu/cs598_spring07/papers/Lecun98.pdf), was released in 1998, by LeCun.
+
+#### Architecture
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/b22b76a5-aed1-4f53-9fa7-d94469da0c38)
+
+
+The LeNet-5 architecture consists of seven layers:
+- __Input layer__: This layer takes in the input image. The input image is a 32x32 grayscale image.
+- __Convolutional layer__: This layer applies a convolution operation to the input image. The convolution operation uses a filter to extract features from the input image.
+- __Avg pooling layer__: This layer downsamples the output of the convolutional layer. The average pooling operation takes the average value from each patch of the output of the convolutional layer.
+- __Convolutional layer__: This layer applies another convolution operation to the output of the ReLU layer.
+- __Avg pooling layer__: This layer downsamples the output of the second convolutional layer.
+- __Fully connected layer__: This layer connects all of the neurons in the previous layer to a single neuron. The output of the fully connected layer is the classification of the input image.
+
+#### Pros & Cons
+Lenet-5 is a simple and efficient CNN that has been used for a variety of tasks. It is a good starting point for understanding CNNs and for developing your own CNN architectures.
+
+Here are some of the advantages of LeNet-5:
+- It is simple and efficient.
+- It has been used for a variety of tasks.
+- It is a good starting point for understanding CNNs.
+
+Here are some of the disadvantages of LeNet-5:
+- It is not as powerful as some of the newer CNN architectures.
+- It is not as well-suited for large-scale image classification tasks.
+
+Overall, LeNet-5 is a good choice for simple image classification tasks. It is easy to understand and implement, and it has been used successfully for a variety of tasks.
+
+### AlexNet
+AlexNet is a convolutional neural network (CNN) architecture developed by Alex Krizhevsky, Ilya Sutskever, and Geoffrey Hinton in 2012. It is a deep CNN, with eight layers, and it was the first CNN to achieve state-of-the-art results on the ImageNet Large Scale Visual Recognition Challenge (ILSVRC) in 2012.
+
+Paper: [ImageNet Classification with Deep Convolutional Neural Networks](https://proceedings.neurips.cc/paper_files/paper/2012/file/c399862d3b9d6b76c8436e924a68c45b-Paper.pdf)
+
+#### Architecture
+
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/95103a11-78b7-445b-9727-6ab0755dec07)
+
+AlexNet is a convolutional neural network (CNN) architecture developed by Alex Krizhevsky, Ilya Sutskever, and Geoffrey Hinton in 2012. It is a deep CNN, with eight layers, and it was the first CNN to achieve state-of-the-art results on the ImageNet Large Scale Visual Recognition Challenge (ILSVRC) in 2012.
+
+The AlexNet architecture consists of the following layers:
+- __Input layer__: This layer takes in the input image. The input image is a 224x224 RGB image.
+- __Convolutional layer__: This layer applies a convolution operation to the input image. The convolution operation uses a filter to extract features from the input image.
+- __Max pooling layer__: This layer downsamples the output of the convolutional layer. The max pooling operation takes the maximum value from each patch of the output of the convolutional layer.
+- __ReLU layer__: This layer applies the rectified linear unit (ReLU) activation function to the output of the max pooling layer. The ReLU activation function is a non-linear function that helps to improve the learning of the CNN.
+- __Convolutional layer__: This layer applies another convolution operation to the output of the ReLU layer.
+- __Max pooling layer__: This layer downsamples the output of the second convolutional layer.
+- __Fully connected layer__: This layer connects all of the neurons in the previous layer to a single neuron. The output of the fully connected layer is the classification of the input image.
+- __Dropout layer__: This layer randomly sets a fraction of the neurons to zero. This helps to prevent overfitting.
+
+AlexNet is a deep CNN, and it is more powerful than LeNet-5. It was the first CNN to achieve state-of-the-art results on the __ILSVRC__ (explained below), and it has been used as a baseline for many other CNN architectures.
+
+Some notes to highlight:
+- Similar to LeNet, but much bigger.
+- Adding Relu Activation function layer.
+- Require Multiple GPU for training.
+- __Local Response Normalization "LRN"__, explained below.
+
+#### Pros & Cons
+Here are some of the advantages of AlexNet:
+- It is deep and powerful.
+- It achieved state-of-the-art results on the ILSVRC.
+- It has been used as a baseline for many other CNN architectures.
+
+Here are some of the disadvantages of AlexNet:
+- It is computationally expensive to train and deploy.
+- It is not as well-suited for small-scale image classification tasks.
+
+Overall, AlexNet is a powerful CNN architecture that has been used for a variety of tasks. It is a good starting point for understanding deep CNNs and for developing your own CNN architectures.
+
+#### ILSVRC
+The ImageNet Large Scale Visual Recognition Challenge (ILSVRC) is an annual competition in image classification and object detection. The competition is held by the ImageNet project, which is a large-scale dataset of images with human-annotated labels.
+
+![ImageNet](https://deargen.blog/wp-content/uploads/2019/09/1.-ec9db4ebafb8eca780eb84b7.jpg)
+
+The ILSVRC was founded in 2010, and it has been held annually since then. The competition has been instrumental in the development of deep learning, as many of the most successful deep learning models have been developed for the ILSVRC.
+
+The ILSVRC has two main tracks: image classification and object detection. The image classification track involves classifying images into one of 1,000 object categories. The object detection track involves detecting and classifying objects in images.
+
+The ILSVRC is a challenging competition, and the accuracy of the winning entries has improved significantly over the years. The first winner of the image classification track achieved an accuracy of 74.8%, while the winner of the 2021 competition achieved an accuracy of 96.2%.
+
+The ILSVRC is a valuable resource for the development of deep learning models. The competition provides a benchmark for evaluating the performance of new models, and it has helped to drive the development of more accurate and efficient models.
+
+#### Local Response Normalization
+Local Response Normalization (LRN) is a technique used in convolutional neural networks (CNNs) to normalize the responses of neurons within a local region of the network. This helps to prevent the network from learning features that are too localized and to improve the generalization of the network.
+-  It's a contrast enhancement process for feature maps in convNets.
+  
+LRN is used in the AlexNet CNN architecture. It is applied after each convolution layer in the network. The LRN operation takes the output of the convolution layer and divides it by a normalized sum of the outputs of the neurons in a local region. The local region is defined by a window size and a stride. The window size is the number of neurons that are considered in the local region, and the stride is the number of neurons that are skipped when moving from one local region to the next.
+
+The formula for LRN is:
+```
+output = input / (k * sum(input^2) + eps)
+
+where:
+  - input is the output of the convolution layer
+  - k is a constant
+  - sum(input^2) is the sum of the squared outputs of the neurons in the local region
+  - eps is a small constant to prevent division by zero
+```
+The LRN operation has two main effects:
+- It reduces the activations of neurons that are responding to similar inputs. This helps to prevent the network from learning features that are too localized.
+- It increases the activations of neurons that are responding to different inputs. This helps to improve the generalization of the network.
+
+LRN has been shown to be effective in improving the performance of CNNs on a variety of tasks, including image classification and object detection. However, it has also been shown to be computationally expensive, and it can sometimes lead to overfitting.
+
+In recent years, LRN has been replaced by other normalization techniques, such as batch normalization and layer normalization. These techniques are more computationally efficient and have been shown to be more effective in improving the performance of CNNs.
+
+### VGG-16
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/54fe8100-bda5-4a2c-a27b-2e3c12dbbdf3)
+
 
 ## Case Studies: Residual Neural Networks
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/22fe1dfe-c789-483d-a0c4-3acf9f8123bd)
@@ -482,17 +640,28 @@ Note: There is no learnable parameters here.
 
 ## Case Studies: Mobile Net
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/3fd46de6-6f85-4dab-bf97-db5758defb46)
+### Motivation
 
 ## Practical Advices using ConvNet
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/1b9c67fb-74ec-431c-8ba4-4e162f2abe58)
 
+### Data Augmentation
+
+### State of Computer Vision
+
 ## Detection Algorithms
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/1e39d010-20a2-457f-b221-a005842e0482)
 
-### Detection Algorithms - YOLO Algorithm
+### Object Localization
+
+### Landmark Detection
+
+### Object Detection
+
+## Detection Algorithms - YOLO Algorithm
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/8c0def3e-73bf-4bcc-9ce5-45bd58e551f3)
 
-### Detection Algorithms - Semantic Segmentation
+## Detection Algorithms - Semantic Segmentation
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/494a0eb9-4274-422b-862d-4607b9514077)
 
 ## Face Recognition
@@ -500,6 +669,33 @@ Note: There is no learnable parameters here.
 
 ### One Shot Learning
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/1f2b1c09-b0b5-4924-8aff-840fb3d509c7)
+
+One-shot learning is a machine learning task where the model is only given one example of each class to learn from.
+
+### Siamese Network - Deep Face
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/6e209283-61c3-4d8d-8642-57da036d04c7)
+
+Siamese networks are a type of neural network that are used for one-shot learning. 
+
+Siamese networks consist of two identical neural networks that are trained together. The two networks are fed with two images, and the goal is to train the networks to output a similarity score that indicates whether the two images are of the same object or not.
+
+Siamese networks are often used for face recognition, object recognition, and other tasks that require one-shot learning.
+
+Here is an example of how Siamese networks can be used for face recognition:
+
+Let's say we have a Siamese network that is trained on a dataset of faces. We want to use the network to recognize a new face. We can do this by feeding the network two images, one of the new face and one of a known face. The network will then output a similarity score that indicates how similar the two faces are. If the similarity score is high, then the network will predict that the two faces are of the same person.
+
+Here is a diagram of a Siamese network for face recognition:
+
+Input 1: Image of new face
+Input 2: Image of known face
+
+Network 1: Neural network that takes in the input image and outputs a similarity score
+Network 2: Neural network that takes in the input image and outputs a similarity score
+
+As you can see, the two networks are identical. They both take in an image and output a similarity score. The similarity scores from the two networks are then combined to produce a final similarity score.
+
+Siamese networks are a powerful tool for one-shot learning. They have been used for a variety of tasks, including face recognition, object recognition, and other tasks that require one-shot learning.
 
 ## Neural Style Transfer
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/8686dc3d-026e-42b0-a093-7163cad8de15)
