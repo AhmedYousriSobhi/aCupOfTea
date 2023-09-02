@@ -47,9 +47,11 @@ From the aroma of well-structured code to the rich flavors of design patterns an
 |   ├── realStateCompany
 |   ├── dataScienceAndBusiness
 ├── deepLearning
+|   ├── workspace
 |   ├── basics
 |   ├── convolution
 |   ├── historyOfAI
+|   ├── stateOfArt
 ├── designPatterns
 |   ├── featureCross
 ├── generativeAI

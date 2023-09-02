@@ -411,24 +411,65 @@ Average Pooling:
 ## CNN Example
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/43872116-9cd0-41e0-b107-a23535dbbf5d)
 
+Let's take a fully CNN example which consists of a input of a RGB image, passing through the following architecture, which consists of [Convolution layer, pooling layer, a second convolution layer, a second pooling layer, a three fully conected layers, one final activation softmax function].
+
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/895fa879-acf0-4436-ae41-87a002fcc76b)
 
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/e9e63f06-c566-4337-aeb3-1732695235a6)
 
 Remember: Each image (3 channels) go through each filter individually.
 Here are the 5 typos:
-1. (5*5*3 + 1) * 8 = 608
-2. (5*5*8 + 1) * 16 = 3216
-3. In the FC3, 400*120 + 120 = 48120, since the bias should have 120 parameters, not 1
+1. (5 * 5 * 3 + 1) * 8 = 608; This "8" because the activation shape has 8 channels.
+2. (5 * 5 * 8 + 1) * 16 = 3216; This "16" because the activation shape has 16 channels.
+3. In the FC3, 400*120 + 120 (not 1) = 48120, since the bias should have 120 parameters, not 1.
 4. Similarly, in the FC4, 120*84 + 84 (not 1) = 10164
-(Here, the bias is for the fully connected layer.  In fully connected layers, there will be one bias for each neuron, so the bias become In FC3 there were 120 neurons so 120 biases.)
 5. Finally, in the softmax, 84*10 + 10 = 850
+
+Note: Here, the bias is for the fully connected layer.  In fully connected layers, there will be one bias for each neuron, so the bias become In FC3 there were 120 neurons so 120 biases.
 
 ## Why Convolution
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/309d9bc8-2a0f-47f6-8c2e-cd2b832cd39e)
 
+Compared to fully conceted layer where if we pass an image, so all pixels are converted to a single vector, where each pixel has a neuron for it (assuming that), so for example if we have an image with shape [32 * 32 * 3] which equals to 3072 parameters + 3072 bias.
+So the convolution neuron network have in contrast a low number of parameters, which reduce the complexity of comuptation process, and also reduce overfitting.
+
+There are two most common reasons for why convolutions:
+
+__Parameters Sharing__: means that the same set of learnable weights (paramters) is used for multiple positions within the input data. This concept is valuable in computer vision & image processing for the following task:
+- __Local Feature Detection__: in images, local patters, such as edges, textures, and corners, often occure repeateally in different regions. For instance, a feature detector (such as vertical edge detector) that's usefull in one part of the image is problably usefull in another part of the image. Parameter sharing allows a single set of weights to be applied across different parts of the image, making in possible for the network to learn to detect these local features more efficiently.
+- __Reduced Model Complexity__: without parameter sharing, a fully connected layer would require a large number of unique parameters, especially when dealling with high-resolution images. This leads to a high computational & memory burden. Convolution layers alleviate this issue by resuing the same weights across the input, resulting in a much more compact model.
+- __Translation Invariance__: parameters sharing contributes to a property called translation invariance. This means that the network can recognize the same feature or pattern regardless of its exact location in the input. For example, if an edge detector filter detects a vertical edge in one part of the image, it can also recognize the same vertical edge in a different location.
+
+___Sparsity of Connections__: Convolutional layers enforce a sparsity of connections, which means that each output value depends only on a small, local subset of input values, unlike in a fully conected layer where each output node is connected to all input nodes. 
+
+The idea of sparsity of connections is that only the input nodes that are relevant to the output node need to be connected. By sparsifying the connections, the model can learn more efficiently
+
+This sparsity has several advantages:
+- __Efficient Computation__: With fully connected layers, every neuron in a layer is connected to every neuron in the preceding layer, resulting in a dense and computationally expensive architecture. In contrast, convolutional layers have sparse connections, which significantly reduce the number of computations required. This is especially important for processing large images efficiently.
+- __Local Receptive Fields__: Convolutional layers use small, local receptive fields (the filter size) to extract features. This local receptive field ensures that each neuron in the feature map focuses on a specific region of the input, allowing it to capture local patterns and details. This property aligns well with the hierarchical nature of visual information processing.
+- __Feature Hierarchies__: By stacking multiple convolutional layers, CNNs create a hierarchy of features. Lower layers detect basic features like edges and textures, while higher layers learn to recognize more complex patterns and objects. This hierarchical structure is crucial for representing visual information effectively.
+  
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/65ccb2f6-bd97-4b67-bbad-01f484a0e0e1)
+
+From the image above: 
+- Green circle - This value (zero) is only depend on the green square (convolution between filter and this part of image) only. So the rest of the image pixels don’t have effect.
+- Red circle - Same thing happens to this value (30).
+
 ## Transponsed Convolution
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/9db9f00b-d0a2-40c5-9fd9-dd031c1db353)
+
+Transposed convolution is a type of convolution that is used to upsample an image. It is also known as deconvolution or fractionally strided convolution.
+
+In a regular convolution, a kernel is used to scan an input image and produce an output image. The kernel is a small matrix of weights that is used to calculate the output value at each pixel in the output image.
+
+In a transposed convolution, the kernel is used to scan an output image and produce an input image. The kernel is used to upsample the output image by adding zeros in between the pixels.
+
+Transposed convolution can be used for a variety of tasks, including image upsampling, image denoising, and image super-resolution.
+
+Note: There is no learnable parameters here.
+
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/02bf6142-f41f-4c52-b94f-a930702374dc)
+
 
 ## Case Studies: Classic Networks
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/8748e5f1-a40a-4037-9e36-2c26993d1e8a)
