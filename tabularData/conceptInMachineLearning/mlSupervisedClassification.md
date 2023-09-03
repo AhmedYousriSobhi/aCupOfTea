@@ -1,5 +1,46 @@
 # Machine Learning Concept: Supervisied Learning - Classification
 
+## Table of Content
+- [Machine Learning Concept: Supervisied Learning - Classification](#machine-learning-concept-supervisied-learning---classification)
+  - [Table of Content](#table-of-content)
+  - [1- One-vs-All technique](#1--one-vs-all-technique)
+  - [2- Choosing error metric](#2--choosing-error-metric)
+  - [3- Confusion Matrix](#3--confusion-matrix)
+    - [3.1- Receiver Operating Characteristic curve (ROC curve):](#31--receiver-operating-characteristic-curve-roc-curve)
+    - [3.2- Precision-Recall Curve](#32--precision-recall-curve)
+    - [3.3- Choosing the right approach](#33--choosing-the-right-approach)
+  - [4- KNN Models:](#4--knn-models)
+    - [4.1- Defining the KNN](#41--defining-the-knn)
+    - [4.2- Determing K-value](#42--determing-k-value)
+    - [4.3- Pros and Cons of KNN:](#43--pros-and-cons-of-knn)
+  - [5- Support Vector Machines (SVM):](#5--support-vector-machines-svm)
+    - [5.1- Kernal SVM:](#51--kernal-svm)
+  - [6- Decision Trees:](#6--decision-trees)
+    - [6.1- Building a Decision Tree:](#61--building-a-decision-tree)
+      - [When to stop splitting?](#when-to-stop-splitting)
+      - [Condtion for splitting](#condtion-for-splitting)
+    - [6.2- Decision Trees Pros and Cons:](#62--decision-trees-pros-and-cons)
+    - [6.3- Techniques in decision trees](#63--techniques-in-decision-trees)
+    - [6.4- Random Forest:](#64--random-forest)
+    - [6.5- Extra Trees:](#65--extra-trees)
+    - [6.6- Boosting:](#66--boosting)
+      - [Boosting Specifics:](#boosting-specifics)
+      - [Boosting Loss Functions: 0 - 1 Loss Function](#boosting-loss-functions-0---1-loss-function)
+      - [AdaBoost (Adaptive Boosting)](#adaboost-adaptive-boosting)
+      - [Gradient Boosting:](#gradient-boosting)
+      - [Bagging vs. Boosting:](#bagging-vs-boosting)
+    - [6.7- Stacking:](#67--stacking)
+  - [7- MultiClass Classifier](#7--multiclass-classifier)
+  - [8- Unbalanced Classes](#8--unbalanced-classes)
+    - [8.1- Steps for unbalanced datasets:](#81--steps-for-unbalanced-datasets)
+    - [8.2- Downsampling vs. Upsampling:](#82--downsampling-vs-upsampling)
+    - [8.3- Unbalanced classes methodology:](#83--unbalanced-classes-methodology)
+    - [8.4- Oversampling Techniques:](#84--oversampling-techniques)
+    - [8.5- Undersampling Techniques](#85--undersampling-techniques)
+    - [8.6- Blagging (Balanced Bagging):](#86--blagging-balanced-bagging)
+  - [9- Model Interpretability:](#9--model-interpretability)
+  - [Credits](#credits)
+
 ## 1- One-vs-All technique 
 One technique to accomplish multi class classification is One-vs-All, with One-vs-All we would take one class, and declared that all else is going to be our other class and apply Logistic Regression, and we do so for the rest of the classes. 
 
@@ -12,7 +53,7 @@ Thus we see the importance in understanding our data and choosing the appropriat
 
 Note: Check markdown note regarding accuracy failure in classification in 'tabularData/dataEvaluation/classificationAccuracy'.
 
-## 3- Confusion Matrix:
+## 3- Confusion Matrix
 |               | Positive Prediction | Negative Prediction|
 |---------------|---------------------|--------------------|
 | Actual Positive | True Positive (TP)  | False Negative (FN)|

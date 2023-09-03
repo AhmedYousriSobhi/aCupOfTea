@@ -1,5 +1,21 @@
 # Machine Learning Concept: Supervisied Learning - Regression
 
+## Table of Content
+- [Machine Learning Concept: Supervisied Learning - Regression](#machine-learning-concept-supervisied-learning---regression)
+	- [Table of Content](#table-of-content)
+	- [1- Traditional Statistical Modeling vs Machine Learning](#1--traditional-statistical-modeling-vs-machine-learning)
+	- [2- Machine Learning in Context with AI](#2--machine-learning-in-context-with-ai)
+	- [3- Model: A Learning Algorithm](#3--model-a-learning-algorithm)
+	- [4- Interpretation and Prediction:](#4--interpretation-and-prediction)
+	- [5- R2 metric:](#5--r2-metric)
+	- [6- Features \& Target Transformation](#6--features--target-transformation)
+	- [7- Cross Validation](#7--cross-validation)
+	- [Sources of Model Error](#sources-of-model-error)
+	- [Regularization](#regularization)
+	- [Why feature selection is improtant:](#why-feature-selection-is-improtant)
+		- [Notes on Ridge Regression:](#notes-on-ridge-regression)
+		- [Credits:](#credits)
+
 ## 1- Traditional Statistical Modeling vs Machine Learning
 Traditional Statistical Modeling, we often know a good deal about the underlying process, thus we can choose a model of analysis that closely approximates that underlying process and use this to develop a predictive model.
 

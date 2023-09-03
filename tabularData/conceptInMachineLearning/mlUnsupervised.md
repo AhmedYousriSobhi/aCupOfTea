@@ -1,5 +1,13 @@
-# Machine Learning Concept: Unsupervisied Learning
+# Machine Learning Concept - Unsupervisied Learning
 
+## Table of Content
+- [Machine Learning Concept - Unsupervisied Learning](#machine-learning-concept---unsupervisied-learning)
+  - [Table of Content](#table-of-content)
+  - [1- There can be two cases of unsupervised learning:](#1--there-can-be-two-cases-of-unsupervised-learning)
+  - [2- The Curse of dimensionality:](#2--the-curse-of-dimensionality)
+  - [3- K-mean:](#3--k-mean)
+  - [Credits](#credits)
+  
 ## 1- There can be two cases of unsupervised learning:
 One popularly use case is called __clustering__, where we use our unlabeled data to identify an unknown structure and an example of this may be segmenting our customers into different groups.
 

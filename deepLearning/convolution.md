@@ -4,99 +4,99 @@
 ## Table of Content
 - [Deep Learning - Convolution](#deep-learning---convolution)
   - [Table of Content](#table-of-content)
-  - [Abstract](#abstract)
-  - [What made the jump to use deep learning in computer vision field?](#what-made-the-jump-to-use-deep-learning-in-computer-vision-field)
-  - [Motivation to Introduce Conveolution Concept](#motivation-to-introduce-conveolution-concept)
-  - [Convolution](#convolution)
-    - [What does convolution mean in math?](#what-does-convolution-mean-in-math)
-    - [What is the different between correlation and convolution?](#what-is-the-different-between-correlation-and-convolution)
-    - [What does 'slid' mean in convolution?](#what-does-slid-mean-in-convolution)
-    - [Technical Note](#technical-note)
-  - [Filter/Kernel](#filterkernel)
-    - [Vertical Edge Detector](#vertical-edge-detector)
-      - [How to calculate the convolution ?](#how-to-calculate-the-convolution-)
-      - [Examples](#examples)
-      - [Learning to Detect Edges](#learning-to-detect-edges)
-      - [Other Common Used Filters for Vertical Edge Detection](#other-common-used-filters-for-vertical-edge-detection)
-  - [Padding](#padding)
-    - [Problem statement](#problem-statement)
-    - [Padding Definition](#padding-definition)
-    - [Why to Use Padding?](#why-to-use-padding)
-    - [Output Shape After Padding](#output-shape-after-padding)
-    - [Types of Padding \[Valid vs Same\]](#types-of-padding-valid-vs-same)
-    - [Importants of Padding](#importants-of-padding)
-    - [Technical Note: Odd-Sized Filters in 'SAME' Convolution](#technical-note-odd-sized-filters-in-same-convolution)
-  - [Strided Convolution](#strided-convolution)
-    - [How does it work?](#how-does-it-work)
-    - [Effect of Stide](#effect-of-stide)
-    - [Why to use Stride?](#why-to-use-stride)
-    - [Important Note](#important-note)
-  - [Volume Convolution](#volume-convolution)
-    - [Dealing with Three channels Image](#dealing-with-three-channels-image)
-    - [Dealing with multiple Filters](#dealing-with-multiple-filters)
-    - [Output Dimentions](#output-dimentions)
-    - [Convolution on RGB image](#convolution-on-rgb-image)
-    - [One Layer Convolution Neural Network](#one-layer-convolution-neural-network)
-    - [Summary of Notation](#summary-of-notation)
-    - [Number of Parameters Calculation](#number-of-parameters-calculation)
-    - [One Layer Convolution - Multiple Filters](#one-layer-convolution---multiple-filters)
-    - [Convolution Multiplication Visuale Example](#convolution-multiplication-visuale-example)
-  - [Pooling Layer](#pooling-layer)
-    - [HyperParameters](#hyperparameters)
-    - [Types of Pooling](#types-of-pooling)
-  - [CNN Example](#cnn-example)
-  - [Why Convolution](#why-convolution)
-  - [Transponsed Convolution](#transponsed-convolution)
-    - [Upsampling: Nearest Neighbors](#upsampling-nearest-neighbors)
-    - [Checkboard Pattern](#checkboard-pattern)
-  - [Multiple Input](#multiple-input)
-  - [Case Studies: Classic Networks](#case-studies-classic-networks)
-    - [LeNet-5](#lenet-5)
-      - [Architecture](#architecture)
-      - [Pros \& Cons](#pros--cons)
-    - [AlexNet](#alexnet)
-      - [Architecture](#architecture-1)
-      - [Pros \& Cons](#pros--cons-1)
-      - [ILSVRC](#ilsvrc)
-      - [Local Response Normalization "LRN"](#local-response-normalization-lrn)
-    - [VGG-16](#vgg-16)
-      - [Architecture](#architecture-2)
-      - [Pros \& Cons](#pros--cons-2)
-  - [Comparison between Classic Networks](#comparison-between-classic-networks)
-  - [Case Studies: Residual Neural Networks](#case-studies-residual-neural-networks)
-    - [Vanishing Gradient in CNN](#vanishing-gradient-in-cnn)
-    - [Residual Block](#residual-block)
-    - [Architecture](#architecture-3)
-    - [Why do residuals networks work?](#why-do-residuals-networks-work)
-    - [Identiy Function](#identiy-function)
-    - [Pros \& Cons](#pros--cons-3)
-    - [Popular Models](#popular-models)
-  - [Case Studies: Inception Networks](#case-studies-inception-networks)
-  - [Case Studies: Mobile Net](#case-studies-mobile-net)
+- [Abstract](#abstract)
+- [What made the jump to use deep learning in computer vision field?](#what-made-the-jump-to-use-deep-learning-in-computer-vision-field)
+- [Motivation to Introduce Conveolution Concept](#motivation-to-introduce-conveolution-concept)
+- [Convolution](#convolution)
+  - [What does convolution mean in math?](#what-does-convolution-mean-in-math)
+  - [What is the different between correlation and convolution?](#what-is-the-different-between-correlation-and-convolution)
+  - [What does 'slid' mean in convolution?](#what-does-slid-mean-in-convolution)
+  - [Technical Note](#technical-note)
+- [Filter/Kernel](#filterkernel)
+  - [Vertical Edge Detector](#vertical-edge-detector)
+    - [How to calculate the convolution ?](#how-to-calculate-the-convolution-)
+    - [Examples](#examples)
+    - [Learning to Detect Edges](#learning-to-detect-edges)
+    - [Other Common Used Filters for Vertical Edge Detection](#other-common-used-filters-for-vertical-edge-detection)
+- [Padding](#padding)
+  - [Problem statement](#problem-statement)
+  - [Padding Definition](#padding-definition)
+  - [Why to Use Padding?](#why-to-use-padding)
+  - [Output Shape After Padding](#output-shape-after-padding)
+  - [Types of Padding \[Valid vs Same\]](#types-of-padding-valid-vs-same)
+  - [Importants of Padding](#importants-of-padding)
+  - [Technical Note: Odd-Sized Filters in 'SAME' Convolution](#technical-note-odd-sized-filters-in-same-convolution)
+- [Strided Convolution](#strided-convolution)
+  - [How does it work?](#how-does-it-work)
+  - [Effect of Stide](#effect-of-stide)
+  - [Why to use Stride?](#why-to-use-stride)
+  - [Important Note](#important-note)
+- [Volume Convolution](#volume-convolution)
+  - [Dealing with Three channels Image](#dealing-with-three-channels-image)
+  - [Dealing with multiple Filters](#dealing-with-multiple-filters)
+  - [Output Dimentions](#output-dimentions)
+  - [Convolution on RGB image](#convolution-on-rgb-image)
+  - [One Layer Convolution Neural Network](#one-layer-convolution-neural-network)
+  - [Summary of Notation](#summary-of-notation)
+  - [Number of Parameters Calculation](#number-of-parameters-calculation)
+  - [One Layer Convolution - Multiple Filters](#one-layer-convolution---multiple-filters)
+  - [Convolution Multiplication Visuale Example](#convolution-multiplication-visuale-example)
+- [Pooling Layer](#pooling-layer)
+  - [HyperParameters](#hyperparameters)
+  - [Types of Pooling](#types-of-pooling)
+- [CNN Example](#cnn-example)
+- [Why Convolution](#why-convolution)
+- [Transponsed Convolution](#transponsed-convolution)
+  - [Upsampling: Nearest Neighbors](#upsampling-nearest-neighbors)
+  - [Checkboard Pattern](#checkboard-pattern)
+- [Multiple Input](#multiple-input)
+- [Case Studies: Classic Networks](#case-studies-classic-networks)
+  - [LeNet-5](#lenet-5)
+    - [Architecture](#architecture)
+    - [Pros \& Cons](#pros--cons)
+  - [AlexNet](#alexnet)
+    - [Architecture](#architecture-1)
+    - [Pros \& Cons](#pros--cons-1)
+    - [ILSVRC](#ilsvrc)
+    - [Local Response Normalization "LRN"](#local-response-normalization-lrn)
+  - [VGG-16](#vgg-16)
+    - [Architecture](#architecture-2)
+    - [Pros \& Cons](#pros--cons-2)
+- [Comparison between Classic Networks](#comparison-between-classic-networks)
+- [Case Studies: Residual Neural Networks](#case-studies-residual-neural-networks)
+  - [Vanishing Gradient in CNN](#vanishing-gradient-in-cnn)
+  - [Residual Block](#residual-block)
+  - [Architecture](#architecture-3)
+  - [Why do residuals networks work?](#why-do-residuals-networks-work)
+  - [Identiy Function](#identiy-function)
+  - [Pros \& Cons](#pros--cons-3)
+  - [Popular Models](#popular-models)
+- [Case Studies: Inception Networks](#case-studies-inception-networks)
+- [Case Studies: Mobile Net](#case-studies-mobile-net)
     - [Motivation](#motivation)
-  - [Practical Advices using ConvNet](#practical-advices-using-convnet)
-    - [Data Augmentation](#data-augmentation)
-    - [State of Computer Vision](#state-of-computer-vision)
-  - [Detection Algorithms](#detection-algorithms)
-    - [Object Localization](#object-localization)
-    - [Landmark Detection](#landmark-detection)
-    - [Object Detection](#object-detection)
-  - [Detection Algorithms - YOLO Algorithm](#detection-algorithms---yolo-algorithm)
-  - [Detection Algorithms - Semantic Segmentation](#detection-algorithms---semantic-segmentation)
-  - [Face Recognition](#face-recognition)
-    - [One Shot Learning](#one-shot-learning)
-    - [Siamese Network - Deep Face](#siamese-network---deep-face)
-  - [Neural Style Transfer](#neural-style-transfer)
-  - [Credits](#credits)
+- [Practical Advices using ConvNet](#practical-advices-using-convnet)
+  - [Data Augmentation](#data-augmentation)
+  - [State of Computer Vision](#state-of-computer-vision)
+- [Detection Algorithms](#detection-algorithms)
+  - [Object Localization](#object-localization)
+  - [Landmark Detection](#landmark-detection)
+  - [Object Detection](#object-detection)
+- [Detection Algorithms - YOLO Algorithm](#detection-algorithms---yolo-algorithm)
+- [Detection Algorithms - Semantic Segmentation](#detection-algorithms---semantic-segmentation)
+- [Face Recognition](#face-recognition)
+  - [One Shot Learning](#one-shot-learning)
+  - [Siamese Network - Deep Face](#siamese-network---deep-face)
+- [Neural Style Transfer](#neural-style-transfer)
+- [Credits](#credits)
 
-## Abstract
+# Abstract
 Computer vision is a field of artificial intelligence (AI) that enables computers and systems to derive meaningful information from digital images, videos, and other visual inputs, then take actions or make recommendations based on that information.
 
 Our focus here is using deep learning to help in computer vision field.
 
 ![video](https://miro.medium.com/v2/resize:fit:640/1*NLnnf_M4Nlm4p1GAWrWUCQ.gif)
 
-## What made the jump to use deep learning in computer vision field?
+# What made the jump to use deep learning in computer vision field?
 1. __Feature Learning__: Traditional computer vision methods often required manual engineering of features to represent patterns in images. Deep learning automates this process by learning features directly from data, eliminating the need for hand-crafted features and making the learning process more data-driven.
   
 2. __Hierarchical Representations__: Deep learning models can learn hierarchical representations of data. This mimics the hierarchical nature of visual information processing in the human brain, allowing models to learn intricate patterns and abstractions at different levels.
@@ -123,13 +123,13 @@ Our focus here is using deep learning to help in computer vision field.
 
 In essence, the combination of improved performance, increased availability of data, advances in hardware, and the emergence of innovative deep learning architectures converged to create a compelling case for researchers to embrace deep learning as a game-changing approach in computer vision
 
-## Motivation to Introduce Conveolution Concept
+# Motivation to Introduce Conveolution Concept
 In real life, we deal with images with high resolution like 1000x1000 from a 1 Mega pixles camera, So that would be 3M vector of features for a deep neaural network to learn. So it is not optimal solution to use classic traditional neural network with images.
 
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/faafa5c4-7b33-4338-a059-7a9e86ab28c5)
 
-## Convolution
-### What does convolution mean in math?
+# Convolution
+## What does convolution mean in math?
 In mathematics, convolution is an operation that combines two functions to produce a third funcrion. It's mathematical concept often used in various fields, including signal processing, image processing, probability theory, and more.
 
 The convolution operation involces integrating the product of two funcrions as one funcrion "slides" over the other. It's represneted by the symbol "*".
@@ -147,14 +147,14 @@ Here's a breakdown of the terms in this formula:
 
 __In practical terms, convolution helps in understanding how two functions interact when one is "slid" over the other, taking into account their overlapping values__. 
 
-### What is the different between correlation and convolution?
+## What is the different between correlation and convolution?
 Correlation is measurement of the similarity between two signals/sequences. Convolution is measurement of effect of one signal on the other signal.
 
 Convolution is to preserve the __spatial relationship__ between pixels by learning image features in small lttle pathces of image data, like describing a nose in human face; That's why we don't enter the image as a vector, instead we enter it as a __2D matrix__.
 
 So To do, we need element multiplication between filtter & patch data.
 
-### What does 'slid' mean in convolution?
+## What does 'slid' mean in convolution?
 In the context of convolution operation, 'sliding' refers to the process of moving a filter (also known as kernal) across an input signal or image. This filter is usually a small matrix that represents a certain pattern or feature. As the filter slides or moves accross the input, it computes element-wise products with the overlapping portions of the input, and then sums up these products to produce an output value.
 
 ![convolution](https://miro.medium.com/v2/resize:fit:679/1*Fw-ehcNBR9byHtho-Rxbtw.gif)
@@ -163,7 +163,7 @@ Imagine the input signal or image as a grid, and the filter as a smaller grid th
 
 Sliding the filter allows the convolution operation to capture local patterns, features, and relationships within the input. The distance by which you slide the filter at each step is called the "stride." The stride determines how much the filter moves between positions. A smaller stride means the filter moves in smaller steps, capturing finer details, while a larger stride skips more positions, capturing more general features.
 
-### Technical Note
+## Technical Note
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/25ce48ed-5d41-407f-91e0-0f4cba668a56)
 
 - In Math, Cross-correlation just a name they love to say for convolution.
@@ -171,7 +171,7 @@ Sliding the filter allows the convolution operation to capture local patterns, f
 - A Funny fact, this slip is just to achieve the property of Association, but in convolution neural network, they do not this property.
 - That’s why we don’t slip our filter in CNN.
 
-## Filter/Kernel
+# Filter/Kernel
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/7ae94cf6-dd3d-457c-8d11-9e288908bb78)
 
 Let's explore more about the first function which slid over the input function, we call the slid function a "Filter/Kernel", and the other function which will be our input image. They both are metrics, which could have a variety of dimensions.
@@ -180,7 +180,7 @@ The filter is a specific feature extraction, some of them are designed to detect
 
 Deep learning help in training and defining the matrix value of the filter to detect certain feature.
 
-### Vertical Edge Detector
+## Vertical Edge Detector
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/8e758e67-da67-4219-b88c-c536a906918f)
  It is a convolution kernel that is used to detect vertical edges in an image. It is a 3x3 kernel that has all zeros except for the center element, which is 1. The kernel is applied to the image by multiplying each pixel in the image with the corresponding element in the kernel and then summing the results. The output of the convolution operation is a new image that highlights the vertical edges in the original image.
 
@@ -188,22 +188,22 @@ Vertocal Edge filter must be have Bright Pixels in the left, and Dark Pixels in 
 
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/4017fca3-9760-4e6a-b486-ee7b55fc385a)
 
-#### How to calculate the convolution ?
+### How to calculate the convolution ?
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/caca5bcd-8615-43f8-bc97-b9943c2a555a)
 
-#### Examples
+### Examples
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/af0063e8-0cff-48e9-b6a0-41fccb42fc5f)
 
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/b3696ca6-685e-4d95-96c5-01dbb6346c18)
 
-#### Learning to Detect Edges
+### Learning to Detect Edges
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/e68a1ba2-87fa-4441-9871-b4915c845a41)
 
 1. There are other types of vertical edges filters; the advantage of this is it puts a little bit more weight to the central row, the central pixel, and this makes it maybe a little bit more robust.
 2. Use Neural Network to learn filter value for vertical filter using forward & backward propagation.
 3. Can even train the Neural Network to make filter that detect edges with line angle like 45, 70, or even 73 degrees.
    
-#### Other Common Used Filters for Vertical Edge Detection
+### Other Common Used Filters for Vertical Edge Detection
 |Kernel|	Matrix|	Advantages|	Disadvantages|	When to Use|
 |--|--|--|--|--|
 |Sobel Vertical|	-1 0 1<br>-2 0 2<br>-1 0 1|	- Emphasizes edges effectively<br>- Computationally efficient|	- Sensitive to noise|	General edge detection, real-time applications|
@@ -214,23 +214,23 @@ Vertocal Edge filter must be have Bright Pixels in the left, and Dark Pixels in 
 
 Keep in mind that the Canny edge detector involves more than just a single kernel; it includes multiple steps such as Gaussian smoothing, gradient computation, non-maximum suppression, and hysteresis thresholding. The table provides a concise overview of these edge detection kernels' characteristics, but the choice of kernel should be based on the specific requirements and characteristics of the image data and the desired results
 
-## Padding
+# Padding
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/00bced76-5184-4c39-a570-0689f0f786c4)
 
-### Problem statement
+## Problem statement
 During the convolution process, the sliding filter does not actually visit all the pixels the same number of times, so not all the pixels in the images are treated the same by the filter, specially the pixels in the boundaries. This leads to a reduction in the spatial dimensions of the output.
 What if there is a whole dog in the pixels in the edge? So we want to make sure our model deals with every pixel equally.
 
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/e63bad77-948f-47fd-9b1e-88443be72562)
 
-### Padding Definition
+## Padding Definition
 So to solve this, w'll use padding; to make sure each pixel is visited same number of times.
 
 Padding in the context of image processing and convolutional neural networks (CNNs) refers to the practice of adding extra pixels around the boundary of an image or feature map. Padding is used to control the spatial dimensions of the output after performing convolution or pooling operations.
 
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/75902d71-39f3-4ba4-bd12-de06fec13de7)
 
-### Why to Use Padding?
+## Why to Use Padding?
 There are two problems happen to image:
 1. Doing convolution of image with a filter, the image shrinks in size.
    1. But we don't want the image to be shrinked every time we do edge detection or feature extraction.
@@ -241,12 +241,12 @@ That's why we use padding to solve this problems.
 
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/4f3ca3b5-034d-4b40-805a-0de72f0c5ff5)
 
-### Output Shape After Padding
+## Output Shape After Padding
 size of the image after convolution with a filter:
 - Without Padding: __n - f + 1__
 - With Padding: __N + 2*p - f + 1__
 
-### Types of Padding [Valid vs Same]
+## Types of Padding [Valid vs Same]
 __Valid (No Padding)__
 - The output shape of the image is shrinked, padding is not used.
 - In valid padding, no extra pixels are added to the image or feature map before convolution. As a result, the spatial dimensions of the output feature map are smaller than those of the input. This can lead to a loss of information at the image boundaries
@@ -257,14 +257,14 @@ __Same Padding__
 
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/9af88ed9-7df8-4078-83c3-e6021bae8831)
 
-### Importants of Padding
+## Importants of Padding
 - It helps preserve spatial dimensions, which can be important for retaining contextual information and preventing information loss.
 - It assists in centering the convolutional filter on the input pixels, which can improve feature extraction.
 - It ensures that pixels at the image boundaries receive the same treatment as central pixels, reducing edge artifacts.
 
 In the context of CNNs, padding is typically specified as a parameter when defining the architecture. The amount of padding added to each side of the input depends on the size of the filter and the chosen padding strategy
 
-### Technical Note: Odd-Sized Filters in 'SAME' Convolution
+## Technical Note: Odd-Sized Filters in 'SAME' Convolution
 Filters are usually odd-sized, and Two reasons for that:
 1. __Asymetric Padding__:
    1. If filter is even, "f" is even, so you need to give asymmetric padding, which is not reasonable.
@@ -273,12 +273,12 @@ Filters are usually odd-sized, and Two reasons for that:
    1. Then it has a central position and sometimes in computer vision it's nice to have a distinguisher.
    2. More explaining: An odd-sized filter has a central position, which means there is a single pixel at the center of the filter. This central pixel helps in capturing the essence of the local information within the filter's receptive field. In computer vision tasks, having a central pixel aids in capturing symmetry and patterns in images. Additionally, using an odd-sized filter provides a clear distinguisher, making it easier to define a focal point and understand the structure of the filter.
 
-## Strided Convolution
+# Strided Convolution
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/f0d01d5c-4a3f-4df0-b1e3-a58a6172922d)
 
 In a standard convolution, a filter is applied to an input image by sliding it over the image with a fixed step size. Strided convolutions introduce the concept of a "Stride", which determines the step size at which the filter moves accros the input image.
 
-### How does it work?
+## How does it work?
 In a traditional convolution operation:
 - The filter is placed at the top-left corner of the image.
 - The filter slides horizontally and vertically across the image pixel by pixel.
@@ -295,30 +295,30 @@ Stride is represented by division in the equation; because it is the number of p
 
 Remember that Striding is in Horizontal and Vertical axises.
 
-### Effect of Stide
+## Effect of Stide
 The main effect of using a strode larger than 1 is a reduction in the spatial dimentions of the output feature map. A larger stride means the filter "Skips" over more pixels, leading to fewer output values. This reduction is spatial dimensions can be useful for downsampling or reducing computational complexity.
 
-### Why to use Stride?
+## Why to use Stride?
 For varous reasons:
 1. __Downsampling__: Using a larger stride reduces the spatial resolution of the feature map, which can be useful for downsampling and dimensionality reduction in the networks.
 2. __Reduced Computational Complexity__: Larger strides results in fewer computations, making the process faster and less memory-intense.
 3. __Feature Reduciotn__: Strided convolutions can help reduce overfitting by forcing the network to capture more important features due to the reduced number of computations.
 4. __Pooling Replacement__: Strided convolutions can replace pooling layers in some architectures, offering more control over feature extraction.
 
-### Important Note
+## Important Note
 However, using larger strides can also lead to information loss, as some spatial details might be skipped over the filter.
 
 Strided convolutions are often combined with other techniques like dilation, padding, and skip connections to mitigate these issues and maintain the network's ability to capture important features.
 
-## Volume Convolution
+# Volume Convolution
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/f9bd227f-71d1-43d0-bd8f-92cdf478d6e8)
 
-### Dealing with Three channels Image
+## Dealing with Three channels Image
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/5db78db8-7597-4d7c-8694-4b80286a5104)
 
 In this case, we will use filter that has same number of channels like the input image, and the output will be a single channel feature image.
 
-### Dealing with multiple Filters
+## Dealing with multiple Filters
 What if we need to detect vertical & horizontal edges?, In this case we will use two filters:
 - Yellow: Vertical Edge Detector -> Output is 1 channel.
 - Orange: Horizontal Edge Detector -> Output is 1 channel.
@@ -330,7 +330,7 @@ Then Combine both outputs of the two filters together to make a two channel outp
 
 But remember that we are dealing with RGB image, which is a 3 channels image like in the image above (6 x 6 x 3), So in this case, each of the filters [yellow: vertical, orange: horizontal] will be also a 3 dimentional filter, so each channel of R, B, & G will have an applied filter on it.
 
-### Output Dimentions
+## Output Dimentions
 To summarize the dimention like in the image:
 ```
   n x n x n_c * f x f x n_c  -> n-f+1 x n-f+1 x n_c` 
@@ -345,14 +345,14 @@ To summarize the dimention like in the image:
   
   Assuming padding = 0, stride = 1
 ```
-### Convolution on RGB image
+## Convolution on RGB image
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/cf461885-c9f3-4b9e-a5d5-4ec441c119a6)
 
 In this case, we will have a filter with three channels n_c = 3, as each channel will be will be convolutioned with its correponding image color channel, and the output will be a single channel.
 
 For example illustrated above, we just need a red channel edge detector, then all other results from the convolution of the G, & B channels will be zeros.
 
-### One Layer Convolution Neural Network
+## One Layer Convolution Neural Network
 When you convolute a filter with shape (3x3x3) with RBG image with shape (6x6x3), the output feature map image will be with shape (4x4x1), as we have only one filter applied to the image. 
 
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/6080c854-4d7f-48f3-a59a-bfacae2d0bb0)
@@ -363,13 +363,13 @@ Let's see how this actually happens under the hood:
 - Adding a bias term to the output.
 - Applying activation function like Relu, to have a final output feature map.
 
-### Summary of Notation
+## Summary of Notation
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/e8731001-aedb-4d57-8d22-4922698285d7)
 
 Where:
 - M: Number of activation layers.
 
-### Number of Parameters Calculation
+## Number of Parameters Calculation
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/8729ab7b-26e8-4b53-8c7c-a9b47bdde759)
 
 To calculate the total paratmeters required for training in the convolution neural network:
@@ -378,7 +378,7 @@ To calculate the total paratmeters required for training in the convolution neur
 
 So the total number of parameters will = 27 + 1 = 28 
 
-### One Layer Convolution - Multiple Filters
+## One Layer Convolution - Multiple Filters
 If we have two filters, how the convolutions work between an input image, and the two filters?
 - The same approach to calculate the output feature image (n_H, n_W), for each filter individually, where each filter has shape (f, f, n_C_prev).
 - Then stacking the filter outputs into one single output volume (n_H, n_W, n_C), where n_C is the number of filters which in this case will be equal to 2.
@@ -402,10 +402,10 @@ Note: As we go deep in CNN
 - Image dimentions decrease.
 - Number of filters increase.
   
-### Convolution Multiplication Visuale Example
+## Convolution Multiplication Visuale Example
 A great guide for [visuale illustration](https://cs231n.github.io/assets/conv-demo/index.html) descripted in the [CS231n: Convolutional Neural Networks for Visual Recognition](https://cs231n.github.io/convolutional-networks/#conv)
 
-## Pooling Layer
+# Pooling Layer
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/21ee794c-9d0d-40d7-bcb9-53ffbdd6e427)
 
 Pooling operates on individual feature maps produced by the convolutional layers. It replaces a group of adjacent pixels with a single value, thus reducing the spatial resolution of the feature map. The general idea is to capture the most important information while reducing the computational complexity and the risk of overfitting
@@ -415,7 +415,7 @@ So it is a technique to reduce the information in an image while maintaining fea
 - reduce the size of the representation, to speed the computation.
 - make some of the features that detects a bit more robust.
 
-### HyperParameters
+## HyperParameters
 Pooling layer has a set of hyperparameters:
 - f : filter size.
 - s : Stride size.
@@ -424,7 +424,7 @@ __Pooling Layer has Hyperparameters to set, but don’t have a parameter to lear
 
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/afbc5b3d-e699-453e-a644-e87239f84436)
 
-### Types of Pooling
+## Types of Pooling
 Max Pooling:
 - In max pooling, each output value of the pooled feature map is the maximum value within the corresponding region of the input feature map. 
 - Max pooling helps preserve the most prominent features in a given region, making it effective for identifying spatial patterns regardless of their precise location.
@@ -437,7 +437,7 @@ Average Pooling:
 
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/8603e90c-d9e9-421d-994f-abd4b0293e64)
 
-## CNN Example
+# CNN Example
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/43872116-9cd0-41e0-b107-a23535dbbf5d)
 
 Let's take a fully CNN example which consists of a input of a RGB image, passing through the following architecture, which consists of [Convolution layer, pooling layer, a second convolution layer, a second pooling layer, a three fully conected layers, one final activation softmax function].
@@ -456,7 +456,7 @@ Here are the 5 typos:
 
 Note: Here, the bias is for the fully connected layer.  In fully connected layers, there will be one bias for each neuron, so the bias become In FC3 there were 120 neurons so 120 biases.
 
-## Why Convolution
+# Why Convolution
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/309d9bc8-2a0f-47f6-8c2e-cd2b832cd39e)
 
 Compared to fully conceted layer where if we pass an image, so all pixels are converted to a single vector, where each pixel has a neuron for it (assuming that), so for example if we have an image with shape [32 * 32 * 3] which equals to 3072 parameters + 3072 bias.
@@ -484,7 +484,7 @@ From the image above:
 - Green circle - This value (zero) is only depend on the green square (convolution between filter and this part of image) only. So the rest of the image pixels don’t have effect.
 - Red circle - Same thing happens to this value (30).
 
-## Transponsed Convolution
+# Transponsed Convolution
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/9db9f00b-d0a2-40c5-9fd9-dd031c1db353)
 
 Transposed convolution is a type of convolution that is used to upsample an image. It is also known as deconvolution or fractionally strided convolution.
@@ -495,12 +495,12 @@ Transposed convolution can be used for a variety of tasks, including image upsam
 
 Note: There is no learnable parameters here.
 
-### Upsampling: Nearest Neighbors
+## Upsampling: Nearest Neighbors
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/02bf6142-f41f-4c52-b94f-a930702374dc)
 
 We have a feature map of shape 2 * 2, and require to be converted to  4 * 4 output matrix, in case of upsampling using nearest Neighbors, in the input matrix, each pixel is converted to a 2 * 2 matrix with same pixel value.
 
-### Checkboard Pattern
+## Checkboard Pattern
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/19b56e8c-c6a3-4f26-b48b-87200da5aeff)
 
 When doing the upsampling of an image, like the one above, the image looks like it is pixlated, which can be described by "Checkboard pattern", this is one of the problem of transposed convolution.
@@ -511,7 +511,7 @@ This problem happenes because some pixels are influenced much more heavily by ot
 
 In this case, while calculating, output pixels are affected by various of the filter pixels, unsymetric effect, for example, the pixel in the left up corner is only affected by the value 2 in left ip corner of the filter, compared to the output centered pixel which is affected by all pixels of the filter.
 
-## Multiple Input
+# Multiple Input
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/9af37e76-f531-4617-9413-a7ac7f36c268)
 
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/fbde6876-cd35-4375-8384-2edbdf80a0da)
@@ -526,15 +526,15 @@ Multiple input can be implemented in a variety of ways. One way is to use a sing
 
 The choice of implementation depends on the specific task and the available resources.
 
-## Case Studies: Classic Networks
+# Case Studies: Classic Networks
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/8748e5f1-a40a-4037-9e36-2c26993d1e8a)
-### LeNet-5
+## LeNet-5
 
 LeNet-5 is a convolutional neural network (CNN) architecture developed by Yann LeCun et al. in 1998. It is a simple and efficient CNN that has been used for a variety of tasks, including handwritten digit recognition and face detection.
 
 Paper: [Gradient-Based Learning applied to document recognition](http://vision.stanford.edu/cs598_spring07/papers/Lecun98.pdf), was released in 1998, by LeCun.
 
-#### Architecture
+### Architecture
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/b22b76a5-aed1-4f53-9fa7-d94469da0c38)
 
 
@@ -546,7 +546,7 @@ The LeNet-5 architecture consists of seven layers:
 - __Avg pooling layer__: This layer downsamples the output of the second convolutional layer.
 - __Fully connected layer__: This layer connects all of the neurons in the previous layer to a single neuron. The output of the fully connected layer is the classification of the input image.
 
-#### Pros & Cons
+### Pros & Cons
 Lenet-5 is a simple and efficient CNN that has been used for a variety of tasks. It is a good starting point for understanding CNNs and for developing your own CNN architectures.
 
 Here are some of the advantages of LeNet-5:
@@ -560,12 +560,12 @@ Here are some of the disadvantages of LeNet-5:
 
 Overall, LeNet-5 is a good choice for simple image classification tasks. It is easy to understand and implement, and it has been used successfully for a variety of tasks.
 
-### AlexNet
+## AlexNet
 AlexNet is a convolutional neural network (CNN) architecture developed by Alex Krizhevsky, Ilya Sutskever, and Geoffrey Hinton in 2012. It is a deep CNN, with eight layers, and it was the first CNN to achieve state-of-the-art results on the ImageNet Large Scale Visual Recognition Challenge (ILSVRC) in 2012.
 
 Paper: [ImageNet Classification with Deep Convolutional Neural Networks](https://proceedings.neurips.cc/paper_files/paper/2012/file/c399862d3b9d6b76c8436e924a68c45b-Paper.pdf)
 
-#### Architecture
+### Architecture
 
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/95103a11-78b7-445b-9727-6ab0755dec07)
 
@@ -589,7 +589,7 @@ Some notes to highlight:
 - Require Multiple GPU for training.
 - __Local Response Normalization "LRN"__, explained below.
 
-#### Pros & Cons
+### Pros & Cons
 Here are some of the advantages of AlexNet:
 - It is deep and powerful.
 - It achieved state-of-the-art results on the ILSVRC.
@@ -601,7 +601,7 @@ Here are some of the disadvantages of AlexNet:
 
 Overall, AlexNet is a powerful CNN architecture that has been used for a variety of tasks. It is a good starting point for understanding deep CNNs and for developing your own CNN architectures.
 
-#### ILSVRC
+### ILSVRC
 The ImageNet Large Scale Visual Recognition Challenge (ILSVRC) is an annual competition in image classification and object detection. The competition is held by the ImageNet project, which is a large-scale dataset of images with human-annotated labels.
 
 ![ImageNet](https://deargen.blog/wp-content/uploads/2019/09/1.-ec9db4ebafb8eca780eb84b7.jpg)
@@ -614,7 +614,7 @@ The ILSVRC is a challenging competition, and the accuracy of the winning entries
 
 The ILSVRC is a valuable resource for the development of deep learning models. The competition provides a benchmark for evaluating the performance of new models, and it has helped to drive the development of more accurate and efficient models.
 
-#### Local Response Normalization "LRN"
+### Local Response Normalization "LRN"
 Local Response Normalization (LRN) is a technique used in convolutional neural networks (CNNs) to normalize the responses of neurons within a local region of the network. This helps to prevent the network from learning features that are too localized and to improve the generalization of the network.
 -  It's a contrast enhancement process for feature maps in convNets.
   
@@ -638,13 +638,13 @@ LRN has been shown to be effective in improving the performance of CNNs on a var
 
 In recent years, LRN has been replaced by other normalization techniques, such as batch normalization and layer normalization. These techniques are more computationally efficient and have been shown to be more effective in improving the performance of CNNs.
 
-### VGG-16
+## VGG-16
 Vgg-16 is a convolution neural network (CNN) architecture developed by Karen Simonyan and Andrew Zisserman at the University of Oxford in 2014. It is a deep CNN, with 16 layers, and it was the runner-up in the ImageNet Large Scale Visual Recognition Challenge (ILSVRC) in 2014.
 
 Paper: [Very Deep Convolution Networks for Large-Scale Image Recognition](https://arxiv.org/pdf/1409.1556.pdf), by Simonyan & Zisserman in 2015.
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/54fe8100-bda5-4a2c-a27b-2e3c12dbbdf3)
 
-#### Architecture
+### Architecture
 - __Input layer__: This layer takes in the input image. The input image is a 224x224 RGB image.
 - __Convolutional layer__: This layer applies a convolution operation to the input image. The convolution operation uses a filter to extract features from the input image.
 - __Max pooling layer__: This layer downsamples the output of the convolutional layer. The max pooling operation takes the maximum value from each patch of the output of the convolutional layer.
@@ -657,7 +657,7 @@ Paper: [Very Deep Convolution Networks for Large-Scale Image Recognition](https:
 Insigts: 
 - Has more learnable parameters around 138M.
 
-#### Pros & Cons
+### Pros & Cons
 Here are some of the advantages of VGG-16:
 - It is deep and powerful.
 - It achieved second place in the ILSVRC.
@@ -667,7 +667,7 @@ Here are some of the disadvantages of VGG-16:
 - It is computationally expensive to train and deploy.
 - It is not as well-suited for small-scale image classification tasks.
 
-## Comparison between Classic Networks
+# Comparison between Classic Networks
 |Characteristic|	LeNet|	AlexNet|	VGG-16|
 |--|--|--|--|
 Year|	1998|	2012|	2014|
@@ -695,7 +695,7 @@ Key takeaways:
 
 Each of these models contributed to the advancement of deep learning in computer vision, and their characteristics highlight the evolution of neural network architectures over time.
 
-## Case Studies: Residual Neural Networks
+# Case Studies: Residual Neural Networks
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/22fe1dfe-c789-483d-a0c4-3acf9f8123bd)
 
 Residual Network (ResNet) is a type of convolutional neural network (CNN) that uses residual connections to allow the network to learn deeper architectures without the risk of vanishing gradients.
@@ -708,7 +708,7 @@ ResNet was introduced by He et al. in 2015. It won the ImageNet Large Scale Visu
 
 Paper: [Deep Residual Learning for Image Recognition](https://arxiv.org/pdf/1512.03385.pdf), by He et al, in 2015.
 
-### Vanishing Gradient in CNN
+## Vanishing Gradient in CNN
 The vanishing gradient is a problem that occur in deep learning when the gradient, of the loss function with respect to the parameters of the network, become very small as the network becomes deeper. This can make it difficult for the network to learn, as the updates to the parameters become very small.
 
 The vanishing gradient problem occurs in CNNs because of the way that convolutions are performed. Convolutions involve multiplying the input image by a filter, and then summing the results. This operation can be thought of as a weighted sum of the input pixels.
@@ -717,7 +717,7 @@ The weights of the filter are learned during the training. However, as the netwo
 
 As the weights of the filter become smaller, the gradients of the loss function with respect to the weights also become smaller. This can lead to the vanishing gradient problem.
 
-### Residual Block
+## Residual Block
 A residual block consists of two convolution layers, followed by a ReLU activation function. The output of the first convolution layer is added to the output of the second convolution layer. This is called the residual connection.
 
 The residual connection helps to prevent the vanishing gradient problem by adding a shortcut from the input of a layer to the output of the layer. This shortcut allows the gradients to flow through the network even if the weights of the filters become very small.
@@ -742,7 +742,7 @@ Where:
 - a[l+1]: Activation function of the next layer.
 ```
 
-### Architecture
+## Architecture
 
 The ResNet architecture consists of a stack of residual blocks. Each residual block consists of two convolution layers, followed by a ReLU activation function. The output of the first convolution layer is added to the output of the second convolution layer.
 
@@ -765,7 +765,7 @@ Output layer
 ```
 The number of residual blocks can vary depending on the specific ResNet model. For example, ResNet-50 has 34 residual blocks, while ResNet-101 has 101 residual blocks.
 
-### Why do residuals networks work?
+## Why do residuals networks work?
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/d5777f39-117a-4730-b843-339973b954df)
 
 In the last line in the image above, when the weigth & bias of the next layer are zeros, the the value of the output of activation function is still not zero, as there is another input which is the activation function of the first layer.
@@ -776,12 +776,12 @@ So The ResNet skip connection makes the network to work like a normal big NN abo
 - As the residual connection allows the output of the first convolution layer to be added directly to the output of the second convolution layer. This means that the second convolution layer can learn to do something helpful, such as feature extraction, without having to learn to undo the work of the first convolution layer.
 - For example, the first convolution layer might learn to extract edges from an image. The second convolution layer could then learn to combine these edges to form more complex features, such as shapes or objects. The residual connection ensures that the second convolution layer does not have to learn to undo the work of the first convolution layer, and can focus on learning more complex features.
   
-### Identiy Function
+## Identiy Function
 An identity function is a function that takes an input and returns the same input. In other words, f(x) = x for all values of x.
 
 In the context of ResNet, the identity function refers to a residual block that does not perform any convolution operations. The output of the first convolution layer is simply added to the output of the second convolution layer. This means that the second convolution layer does not have to learn to do anything, and simply passes the input through unchanged.
 
-### Pros & Cons
+## Pros & Cons
 Here are some of the advantages of ResNet:
 - It is able to learn deeper architectures without the risk of vanishing gradients.
 - It has achieved state-of-the-art results on a variety of tasks, including image classification, object detection, and segmentation.
@@ -790,7 +790,7 @@ Here are some of the disadvantages of ResNet:
 - It is computationally expensive to train and deploy.
 - It is not as well-suited for small-scale image classification tasks.
 
-### Popular Models
+## Popular Models
 Here are some of the popular ResNet models:
 - ResNet-18: This is the smallest ResNet model. It has 18 layers.
 - ResNet-34: This is a slightly deeper ResNet model. It has 34 layers.
@@ -800,44 +800,44 @@ Here are some of the popular ResNet models:
 
 These are just a few of the many ResNet models that have been developed. The choice of model depends on the specific task and the available resources.
 
-## Case Studies: Inception Networks
+# Case Studies: Inception Networks
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/b0fb668d-035f-473e-bac1-d421ad1da19a)
 
-## Case Studies: Mobile Net
+# Case Studies: Mobile Net
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/3fd46de6-6f85-4dab-bf97-db5758defb46)
 ### Motivation
 
-## Practical Advices using ConvNet
+# Practical Advices using ConvNet
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/1b9c67fb-74ec-431c-8ba4-4e162f2abe58)
 
-### Data Augmentation
+## Data Augmentation
 
-### State of Computer Vision
+## State of Computer Vision
 
-## Detection Algorithms
+# Detection Algorithms
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/1e39d010-20a2-457f-b221-a005842e0482)
 
-### Object Localization
+## Object Localization
 
-### Landmark Detection
+## Landmark Detection
 
-### Object Detection
+## Object Detection
 
-## Detection Algorithms - YOLO Algorithm
+# Detection Algorithms - YOLO Algorithm
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/8c0def3e-73bf-4bcc-9ce5-45bd58e551f3)
 
-## Detection Algorithms - Semantic Segmentation
+# Detection Algorithms - Semantic Segmentation
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/494a0eb9-4274-422b-862d-4607b9514077)
 
-## Face Recognition
+# Face Recognition
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/3950d138-4fb8-41d8-88f3-715ff469041d)
 
-### One Shot Learning
+## One Shot Learning
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/1f2b1c09-b0b5-4924-8aff-840fb3d509c7)
 
 One-shot learning is a machine learning task where the model is only given one example of each class to learn from.
 
-### Siamese Network - Deep Face
+## Siamese Network - Deep Face
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/6e209283-61c3-4d8d-8642-57da036d04c7)
 
 Siamese networks are a type of neural network that are used for one-shot learning. 
@@ -862,9 +862,9 @@ As you can see, the two networks are identical. They both take in an image and o
 
 Siamese networks are a powerful tool for one-shot learning. They have been used for a variety of tasks, including face recognition, object recognition, and other tasks that require one-shot learning.
 
-## Neural Style Transfer
+# Neural Style Transfer
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/8686dc3d-026e-42b0-a093-7163cad8de15)
 
 
-## Credits
+# Credits
 [CS231n: Convolutional Neural Networks for Visual Recognition](https://cs231n.github.io/convolutional-networks/).

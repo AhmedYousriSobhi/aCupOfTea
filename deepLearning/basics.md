@@ -8,6 +8,70 @@ A neural network tries to represent a given output based on its inputs by learni
 
 In real life the relation between output and input are not a linear relation, but a non-linear complex one. This force us to choose methods that introduce this non-linearity, these methods are called activation functions.
 
+## Table of Content
+- [Deep Learning - Basics](#deep-learning---basics)
+  - [Table of Content](#table-of-content)
+- [Neural Network](#neural-network)
+  - [Loss functions Vs Cost function](#loss-functions-vs-cost-function)
+  - [Removing INTERCEPT?](#removing-intercept)
+- [Activation Function](#activation-function)
+  - [Linear Function](#linear-function)
+  - [Most Common Activation Functions](#most-common-activation-functions)
+    - [Relu](#relu)
+      - [What is Dying Relu Problem?](#what-is-dying-relu-problem)
+      - [How to Prevent the Dying Relu Problem?](#how-to-prevent-the-dying-relu-problem)
+    - [Leaky Relu](#leaky-relu)
+    - [Sigmoid](#sigmoid)
+    - [Tanh](#tanh)
+    - [SoftMax](#softmax)
+      - [Why not to use MAX function instead?](#why-not-to-use-max-function-instead)
+    - [Absolute](#absolute)
+      - [Can ABS() be used as activation function?](#can-abs-be-used-as-activation-function)
+    - [Comparison between Activation Functions](#comparison-between-activation-functions)
+    - [Activation Function must be differentiable ?](#activation-function-must-be-differentiable-)
+    - [Which Activation Function should we use?](#which-activation-function-should-we-use)
+  - [The PERCEPTRION ERROR](#the-perceptrion-error)
+  - [Gradient in Neural Network](#gradient-in-neural-network)
+    - [1- What is a Gradient?](#1--what-is-a-gradient)
+    - [3- What is Gradient Descend?](#3--what-is-gradient-descend)
+      - [3.1- How does it works?](#31--how-does-it-works)
+      - [3.2- Common types of Gradient Descent](#32--common-types-of-gradient-descent)
+  - [Vanishing/Exploding Gradient](#vanishingexploding-gradient)
+    - [1.1.1- Vanishing Gradient Problem](#111--vanishing-gradient-problem)
+      - [1.1.2- Solutions to Vanishing Gradient Problem](#112--solutions-to-vanishing-gradient-problem)
+    - [1.2.1- Exploding Gradient Problem](#121--exploding-gradient-problem)
+      - [1.2.2- Solutions to Exploding Gradient Problem](#122--solutions-to-exploding-gradient-problem)
+      - [1.3- Common Solution for Both \[Vanishing/Exploding\] Gradient](#13--common-solution-for-both-vanishingexploding-gradient)
+    - [1.4- Summary](#14--summary)
+    - [2- Vanishing/Exploding Gradient in NN](#2--vanishingexploding-gradient-in-nn)
+  - [Weights Initialization In NN](#weights-initialization-in-nn)
+    - [Notes](#notes)
+  - [Regularization](#regularization)
+  - [Normalization](#normalization)
+  - [Parameters Initialization](#parameters-initialization)
+  - [Gradient Checking](#gradient-checking)
+  - [Optimizers](#optimizers)
+    - [Mini-Batch](#mini-batch)
+    - [Exponential Weighted Average](#exponential-weighted-average)
+    - [Momentum GD](#momentum-gd)
+  - [RMSPROP GD](#rmsprop-gd)
+    - [ADAM](#adam)
+    - [Learning Rate](#learning-rate)
+    - [ADAGRAD](#adagrad)
+    - [Local Minima](#local-minima)
+    - [Transfer Learning](#transfer-learning)
+  - [Hyper-Parameters Tuning](#hyper-parameters-tuning)
+  - [Batch Normalization](#batch-normalization)
+  - [Multi-Class Classification](#multi-class-classification)
+  - [BIAS - Variance](#bias---variance)
+  - [Single Number Evaluation Metric](#single-number-evaluation-metric)
+  - [Avoidable Bias](#avoidable-bias)
+  - [Error Analysis](#error-analysis)
+- [Mismatched Training \& Dev/Test Sets](#mismatched-training--devtest-sets)
+- [Learning From Multiple Tasks](#learning-from-multiple-tasks)
+- [End-To-End Deep Learning](#end-to-end-deep-learning)
+- [Credits](#credits)
+
 # Neural Network
 A neural network is a machine learning model that is inspired by the human brain. It is made up of interconnected nodes, called neurons, that are arranged in layers.
 
@@ -384,14 +448,14 @@ Initialize the weights and biases to be zero:
 
 Tip: Build your system quickly then iterate.
 
-## Mismatched Training & Dev/Test Sets
+# Mismatched Training & Dev/Test Sets
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/d384acf1-01c0-4dba-98b8-2d96de07a55b)
 
-## Learning From Multiple Tasks
+# Learning From Multiple Tasks
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/aa70563e-3fd0-41e6-946c-56fb18715c12)
 
-## End-To-End Deep Learning
+# End-To-End Deep Learning
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/bf085b8a-07e7-4a69-b954-b58e8a7fea19)
 
-## Credits
+# Credits
 - Deep Learning Specialization By Andrew NG in Coursera
