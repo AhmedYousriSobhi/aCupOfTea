@@ -25,7 +25,7 @@
     - [Output Shape After Padding](#output-shape-after-padding)
     - [Types of Padding \[Valid vs Same\]](#types-of-padding-valid-vs-same)
     - [Importants of Padding](#importants-of-padding)
-    - [Technical Note: Odd-Sized Filters](#technical-note-odd-sized-filters)
+    - [Technical Note: Odd-Sized Filters in 'SAME' Convolution](#technical-note-odd-sized-filters-in-same-convolution)
   - [Strided Convolution](#strided-convolution)
     - [How does it work?](#how-does-it-work)
     - [Effect of Stide](#effect-of-stide)
@@ -58,9 +58,19 @@
       - [Architecture](#architecture-1)
       - [Pros \& Cons](#pros--cons-1)
       - [ILSVRC](#ilsvrc)
-      - [Local Response Normalization](#local-response-normalization)
+      - [Local Response Normalization "LRN"](#local-response-normalization-lrn)
     - [VGG-16](#vgg-16)
+      - [Architecture](#architecture-2)
+      - [Pros \& Cons](#pros--cons-2)
+  - [Comparison between Classic Networks](#comparison-between-classic-networks)
   - [Case Studies: Residual Neural Networks](#case-studies-residual-neural-networks)
+    - [Vanishing Gradient in CNN](#vanishing-gradient-in-cnn)
+    - [Residual Block](#residual-block)
+    - [Architecture](#architecture-3)
+    - [Why do residuals networks work?](#why-do-residuals-networks-work)
+    - [Identiy Function](#identiy-function)
+    - [Pros \& Cons](#pros--cons-3)
+    - [Popular Models](#popular-models)
   - [Case Studies: Inception Networks](#case-studies-inception-networks)
   - [Case Studies: Mobile Net](#case-studies-mobile-net)
     - [Motivation](#motivation)
@@ -254,7 +264,7 @@ __Same Padding__
 
 In the context of CNNs, padding is typically specified as a parameter when defining the architecture. The amount of padding added to each side of the input depends on the size of the filter and the chosen padding strategy
 
-### Technical Note: Odd-Sized Filters
+### Technical Note: Odd-Sized Filters in 'SAME' Convolution
 Filters are usually odd-sized, and Two reasons for that:
 1. __Asymetric Padding__:
    1. If filter is even, "f" is even, so you need to give asymmetric padding, which is not reasonable.
@@ -454,12 +464,12 @@ So the convolution neuron network have in contrast a low number of parameters, w
 
 There are two most common reasons for why convolutions:
 
-__Parameters Sharing__: means that the same set of learnable weights (paramters) is used for multiple positions within the input data. This concept is valuable in computer vision & image processing for the following task:
+1- __Parameters Sharing__: means that the same set of learnable weights (paramters) is used for multiple positions within the input data. This concept is valuable in computer vision & image processing for the following task:
 - __Local Feature Detection__: in images, local patters, such as edges, textures, and corners, often occure repeateally in different regions. For instance, a feature detector (such as vertical edge detector) that's usefull in one part of the image is problably usefull in another part of the image. Parameter sharing allows a single set of weights to be applied across different parts of the image, making in possible for the network to learn to detect these local features more efficiently.
 - __Reduced Model Complexity__: without parameter sharing, a fully connected layer would require a large number of unique parameters, especially when dealling with high-resolution images. This leads to a high computational & memory burden. Convolution layers alleviate this issue by resuing the same weights across the input, resulting in a much more compact model.
 - __Translation Invariance__: parameters sharing contributes to a property called translation invariance. This means that the network can recognize the same feature or pattern regardless of its exact location in the input. For example, if an edge detector filter detects a vertical edge in one part of the image, it can also recognize the same vertical edge in a different location.
 
-__Sparsity of Connections__: Convolutional layers enforce a sparsity of connections, which means that each output value depends only on a small, local subset of input values, unlike in a fully conected layer where each output node is connected to all input nodes. 
+2- __Sparsity of Connections__: Convolutional layers enforce a sparsity of connections, which means that each output value depends only on a small, local subset of input values, unlike in a fully conected layer where each output node is connected to all input nodes. 
 
 The idea of sparsity of connections is that only the input nodes that are relevant to the output node need to be connected. By sparsifying the connections, the model can learn more efficiently
 
@@ -604,7 +614,7 @@ The ILSVRC is a challenging competition, and the accuracy of the winning entries
 
 The ILSVRC is a valuable resource for the development of deep learning models. The competition provides a benchmark for evaluating the performance of new models, and it has helped to drive the development of more accurate and efficient models.
 
-#### Local Response Normalization
+#### Local Response Normalization "LRN"
 Local Response Normalization (LRN) is a technique used in convolutional neural networks (CNNs) to normalize the responses of neurons within a local region of the network. This helps to prevent the network from learning features that are too localized and to improve the generalization of the network.
 -  It's a contrast enhancement process for feature maps in convNets.
   
@@ -629,11 +639,166 @@ LRN has been shown to be effective in improving the performance of CNNs on a var
 In recent years, LRN has been replaced by other normalization techniques, such as batch normalization and layer normalization. These techniques are more computationally efficient and have been shown to be more effective in improving the performance of CNNs.
 
 ### VGG-16
+Vgg-16 is a convolution neural network (CNN) architecture developed by Karen Simonyan and Andrew Zisserman at the University of Oxford in 2014. It is a deep CNN, with 16 layers, and it was the runner-up in the ImageNet Large Scale Visual Recognition Challenge (ILSVRC) in 2014.
+
+Paper: [Very Deep Convolution Networks for Large-Scale Image Recognition](https://arxiv.org/pdf/1409.1556.pdf), by Simonyan & Zisserman in 2015.
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/54fe8100-bda5-4a2c-a27b-2e3c12dbbdf3)
 
+#### Architecture
+- __Input layer__: This layer takes in the input image. The input image is a 224x224 RGB image.
+- __Convolutional layer__: This layer applies a convolution operation to the input image. The convolution operation uses a filter to extract features from the input image.
+- __Max pooling layer__: This layer downsamples the output of the convolutional layer. The max pooling operation takes the maximum value from each patch of the output of the convolutional layer.
+- __ReLU layer__: This layer applies the rectified linear unit (ReLU) activation function to the output of the max pooling layer. The ReLU activation function is a non-linear function that helps to improve the learning of the CNN.
+- __Convolutional layer__: This layer applies another convolution operation to the output of the ReLU layer.
+- __Max pooling layer__: This layer downsamples the output of the second convolutional layer.
+- __Repeat steps 4-6__: This is repeated five more times.
+- __Fully connected layer__: This layer connects all of the neurons in the previous layer to a single neuron. The output of the fully connected layer is the classification of the input image.
+
+Insigts: 
+- Has more learnable parameters around 138M.
+
+#### Pros & Cons
+Here are some of the advantages of VGG-16:
+- It is deep and powerful.
+- It achieved second place in the ILSVRC.
+- It has been used as a baseline for many other CNN architectures.
+
+Here are some of the disadvantages of VGG-16:
+- It is computationally expensive to train and deploy.
+- It is not as well-suited for small-scale image classification tasks.
+
+## Comparison between Classic Networks
+|Characteristic|	LeNet|	AlexNet|	VGG-16|
+|--|--|--|--|
+Year|	1998|	2012|	2014|
+Depth (Number of Layers)|	Shallow (7 layers)|	Deeper (8 layers)|	Deep (16 layers)|
+Convolutional Layers	|Yes	|Yes	|Yes|
+Max-Pooling Layers|	Yes|	Yes|	Yes|
+Activation Function|	Sigmoid & Tanh|	ReLU|	ReLU|
+Fully Connected Layers|	Yes (2 FC layers)|	Yes (3 FC layers)|	Yes (3 FC layers)|
+Local Receptive Fields|	Smaller|	Larger|	Smaller|
+Convolutional Filters|	Smaller (5x5, 3x3)|	Larger (11x11, 5x5)|	Smaller (3x3)|
+Pooling Type	|Average Pooling	|Max-Pooling	|Max-Pooling|
+Regularization|	Dropout	|Dropout|	Dropout|
+Batch Normalization	|No	|No	|Yes|
+|Achievements|	Handwritten Digits|	ImageNet Competition|	ImageNet Competition|
+
+Key takeaways:
+- __Depth__: LeNet is relatively shallow compared to AlexNet and VGG-16. AlexNet has more layers than LeNet, while VGG-16 is even deeper, with 16 weight layers.
+- __Activation Function__: LeNet uses Sigmoid and Tanh activation functions, while AlexNet and VGG-16 use Rectified Linear Unit (ReLU) activations.
+- __Convolutional Filters__: LeNet and VGG-16 use smaller 3x3 filters, while AlexNet employs larger 11x11 and 5x5 filters.
+- __Pooling Type__: LeNet uses average pooling, AlexNet uses max-pooling, and VGG-16 also employs max-pooling.
+- __Regularization__: All three models use dropout as a regularization technique to prevent overfitting.
+- __Receptive fields__: represent the region of the input data that each neuron in a layer is sensitive to.
+- __Batch Normalization__: VGG-16 incorporates batch normalization to stabilize training and improve convergence.
+- __Achievements__: LeNet pioneered CNNs for handwritten digit recognition. AlexNet won the ImageNet competition and popularized deep learning. VGG-16 further improved ImageNet classification accuracy, establishing deeper networks as a standard in computer vision.
+
+Each of these models contributed to the advancement of deep learning in computer vision, and their characteristics highlight the evolution of neural network architectures over time.
 
 ## Case Studies: Residual Neural Networks
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/22fe1dfe-c789-483d-a0c4-3acf9f8123bd)
+
+Residual Network (ResNet) is a type of convolutional neural network (CNN) that uses residual connections to allow the network to learn deeper architectures without the risk of vanishing gradients.
+
+Residual connections are connections that skip over one or more layers in the network. These connections allow the output of a layer to be added directly to the input of the next layer. This helps to prevent the gradients from vanishing as the network becomes deeper.
+
+ResNet was the first CNN architecture introduced the "Residual Block" (explained below), after that other CNN architectures started using this blocks like: DenseNet and InceptionNet.
+
+ResNet was introduced by He et al. in 2015. It won the ImageNet Large Scale Visual Recognition Challenge (ILSVRC) in 2015 and 2016.
+
+Paper: [Deep Residual Learning for Image Recognition](https://arxiv.org/pdf/1512.03385.pdf), by He et al, in 2015.
+
+### Vanishing Gradient in CNN
+The vanishing gradient is a problem that occur in deep learning when the gradient, of the loss function with respect to the parameters of the network, become very small as the network becomes deeper. This can make it difficult for the network to learn, as the updates to the parameters become very small.
+
+The vanishing gradient problem occurs in CNNs because of the way that convolutions are performed. Convolutions involve multiplying the input image by a filter, and then summing the results. This operation can be thought of as a weighted sum of the input pixels.
+
+The weights of the filter are learned during the training. However, as the network becomes deeper, the weights of the filter become smaller. This is because the filter is applied to a smaller and smaller patch of the input image.
+
+As the weights of the filter become smaller, the gradients of the loss function with respect to the weights also become smaller. This can lead to the vanishing gradient problem.
+
+### Residual Block
+A residual block consists of two convolution layers, followed by a ReLU activation function. The output of the first convolution layer is added to the output of the second convolution layer. This is called the residual connection.
+
+The residual connection helps to prevent the vanishing gradient problem by adding a shortcut from the input of a layer to the output of the layer. This shortcut allows the gradients to flow through the network even if the weights of the filters become very small.
+
+Note: in the image below, Andrew was explaining the residual block on two fully connected layers instead of ConvNet, for just explaining the connection for simplicity.
+
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/4105bc7c-5a05-4bb9-aef7-d0e2bdb3dfc6)
+
+During calculating the weights, the equations become the follwoing:
+```
+z[l+1] = W[l+1] a[l] + b[l+1]
+a[l+1] = g(z[l+1]) -> this is the plain cnn network.
+
+z[l+2] = W[l+2] a[l+1] + b[l+2]
+a[l+2] = g(z[l+2] + a[l])
+
+Where:
+- z[l+1]: the output before the activation function.
+- W[l+1]: The weight of the next layer.
+- a[l]: Input activation function of the current layer.
+- b[l+1]: Bias of the next layer.
+- a[l+1]: Activation function of the next layer.
+```
+
+### Architecture
+
+The ResNet architecture consists of a stack of residual blocks. Each residual block consists of two convolution layers, followed by a ReLU activation function. The output of the first convolution layer is added to the output of the second convolution layer.
+
+This has a better performance in the training error compared to the plain cnn network without a residual block.
+
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/f76aec72-6ec9-4ff6-94c0-75c039c34f7d)
+
+The ResNet architecture can be made deeper by stacking more residual blocks. The deeper the network, the more features it can learn. However, a deeper network is also more difficult to train.
+
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/db15182c-2c2b-47e8-8c48-0d49171e1c8a)
+
+The basic architecture of ResNet as follows:
+```
+Input layer
+Residual block 1
+Residual block 2
+...
+Residual block n
+Output layer
+```
+The number of residual blocks can vary depending on the specific ResNet model. For example, ResNet-50 has 34 residual blocks, while ResNet-101 has 101 residual blocks.
+
+### Why do residuals networks work?
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/d5777f39-117a-4730-b843-339973b954df)
+
+In the last line in the image above, when the weigth & bias of the next layer are zeros, the the value of the output of activation function is still not zero, as there is another input which is the activation function of the first layer.
+  - Weights --> zero, if using regularization.
+  - Bias --> zero, if using decaying bias.
+
+So The ResNet skip connection makes the network to work like a normal big NN above. This even can improve the performance; if we traied to make the hidden layers learn something helpful like feature extractions and not just doing identity function (explained below).
+- As the residual connection allows the output of the first convolution layer to be added directly to the output of the second convolution layer. This means that the second convolution layer can learn to do something helpful, such as feature extraction, without having to learn to undo the work of the first convolution layer.
+- For example, the first convolution layer might learn to extract edges from an image. The second convolution layer could then learn to combine these edges to form more complex features, such as shapes or objects. The residual connection ensures that the second convolution layer does not have to learn to undo the work of the first convolution layer, and can focus on learning more complex features.
+  
+### Identiy Function
+An identity function is a function that takes an input and returns the same input. In other words, f(x) = x for all values of x.
+
+In the context of ResNet, the identity function refers to a residual block that does not perform any convolution operations. The output of the first convolution layer is simply added to the output of the second convolution layer. This means that the second convolution layer does not have to learn to do anything, and simply passes the input through unchanged.
+
+### Pros & Cons
+Here are some of the advantages of ResNet:
+- It is able to learn deeper architectures without the risk of vanishing gradients.
+- It has achieved state-of-the-art results on a variety of tasks, including image classification, object detection, and segmentation.
+
+Here are some of the disadvantages of ResNet:
+- It is computationally expensive to train and deploy.
+- It is not as well-suited for small-scale image classification tasks.
+
+### Popular Models
+Here are some of the popular ResNet models:
+- ResNet-18: This is the smallest ResNet model. It has 18 layers.
+- ResNet-34: This is a slightly deeper ResNet model. It has 34 layers.
+- ResNet-50: This is a popular ResNet model. It has 50 layers.
+- ResNet-101: This is a deeper ResNet model. It has 101 layers.
+- ResNet-152: This is the deepest ResNet model. It has 152 layers.
+
+These are just a few of the many ResNet models that have been developed. The choice of model depends on the specific task and the available resources.
 
 ## Case Studies: Inception Networks
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/b0fb668d-035f-473e-bac1-d421ad1da19a)
