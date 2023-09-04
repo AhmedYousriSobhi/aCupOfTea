@@ -1,5 +1,17 @@
 # Generative AI - Evaluation and Debugging Using Weights & Biases Tools
 
+## Table of Content
+- [Generative AI - Evaluation and Debugging Using Weights \& Biases Tools](#generative-ai---evaluation-and-debugging-using-weights--biases-tools)
+  - [Table of Content](#table-of-content)
+  - [Motivation](#motivation)
+  - [Topic Covered](#topic-covered)
+  - [Instrument W\&B](#instrument-wb)
+    - [Why use Weights \& Biases?](#why-use-weights--biases)
+    - [Integrate with any Python script](#integrate-with-any-python-script)
+    - [Overview](#overview)
+    - [Overview - pick a run](#overview---pick-a-run)
+  - [Credits](#credits)
+
 ## Motivation
 We all have that case, when we train a model, tune the architecture, changing in the training dataset, then iterating more and more, then we decide to go back to last week model which had better performance, but what were the tuning parameters used, and even what was the dataset used for that training, did I saved them?
 

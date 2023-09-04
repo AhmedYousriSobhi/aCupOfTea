@@ -1,5 +1,10 @@
 # Detect Multicollinearity
 
+## Table of Content
+- [Detect Multicollinearity](#detect-multicollinearity)
+  - [Table of Content](#table-of-content)
+  - [How to detect correlation between features?](#how-to-detect-correlation-between-features)
+
 ## How to detect correlation between features?
 
 Correlation is measured between numeric features only.

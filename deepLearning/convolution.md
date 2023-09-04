@@ -72,6 +72,14 @@
   - [Pros \& Cons](#pros--cons-3)
   - [Popular Models](#popular-models)
 - [Case Studies: Inception Networks](#case-studies-inception-networks)
+  - [Abstract](#abstract-1)
+  - [1x1 Convolution](#1x1-convolution)
+  - [Motivation for Inception Network](#motivation-for-inception-network)
+  - [Architecture](#architecture-4)
+    - [Inception Module](#inception-module)
+    - [Inception Network](#inception-network)
+  - [Pros \& Cons](#pros--cons-4)
+  - [Naming Reason](#naming-reason)
 - [Case Studies: Mobile Net](#case-studies-mobile-net)
     - [Motivation](#motivation)
 - [Practical Advices using ConvNet](#practical-advices-using-convnet)
@@ -802,6 +810,167 @@ These are just a few of the many ResNet models that have been developed. The cho
 
 # Case Studies: Inception Networks
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/b0fb668d-035f-473e-bac1-d421ad1da19a)
+
+## Abstract
+The Inception Network, often referred to as GoogLeNet, was motivated by the need to address two main challenges in deep neural networks: computational efficiency and the vanishing gradient problem when training very deep networks. The key insight that led to the inception of this network was the use of 1x1 convolutions in a multi-path architecture.
+
+Paper: [Going Deeper with Convolutions](https://arxiv.org/pdf/1409.4842.pdf), by Szegedy in 2014.
+
+## 1x1 Convolution
+A 1x1 convolution, also known as a pointwise convolution or network-in-network, is a type of convolution operation where the filter size is 1x1. Unlike standard convolutional operations that capture spatial patterns, a 1x1 convolution operates on individual pixels or elements in the input tensor and performs channel-wise (depth-wise) operations. It effectively acts as a linear transformation on the input channels.
+
+Here's how a 1x1 convolution works:
+- For each output channel, it computes a weighted sum of the input channels at the corresponding spatial position, with each weight learned during training.
+- It can be thought of as a form of feature aggregation and transformation that combines and reweights the information from the input channels.
+
+In the image below, an example of using a 1x1 convolution, where the feature image with size [28 x 28 x 192], with 32 filter with size [1 x 1 x 192], then the output feature map will have size [28 x 28 x 32].
+
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/a1a5ff07-1de6-4ced-91bb-183ef6c3582e)
+
+Let's go deeper to fully understand, let's assume we have a filter with size [1 * 1 * 32], and value of '2'. This filter will be convoluted with feature map of size [6 x 6 x 32], so the output feature map will have size [6 * 6 * nc], where the nc is the number of filters used in the convolution proccess. This filter is combined with an activation function Relu to introduce the non-linearity.
+
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/96b6fa39-cf94-4b86-813d-475208615c2b)
+
+1x1 convolutions are particularly useful for several reasons:
+- __Dimension Reduction__: By controlling the number of output channels in a 1x1 convolution layer, you can effectively reduce the dimensionality of the feature maps. This can be valuable for reducing computational complexity and model size in deep neural networks.
+- __Feature Combination__: 1x1 convolutions allow feature maps to be combined and mixed at different depths in the network. This can lead to the creation of more complex features by combining information from multiple input channels.
+- __Non-Linearity__: While each 1x1 convolution operation is linear, when combined with activation functions like ReLU, they introduce non-linearity into the network, enabling it to capture complex relationships between features.
+
+## Motivation for Inception Network
+Inception Network says “Let’s do them all”. Adjusting each filter so the output have the same size. All the outputs from each filter are stacked together. The problem here is the “Computational Cost”.
+
+For example, The computational Cost for 5x5 filter:
+- 32 filter for Conv-Padding layer, each filter is 5*5*192 .
+- for each filter, there is multiplication to do.
+- we have 28x28x32 output which for each channel we have to do 5*5*192 multiplication → total ~=  120M parameter.
+  
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/85ee66ee-4ead-461b-bf43-ce690a57b6e7)
+
+Alternatively, Using a 1x1 convolution network, The Solution Idea, Shrink the representation before increasing the size again.
+- Reduce the size of huge input volume to a smaller “Bottle neck” layer size. This name as this is the smallest size that the image could resized to.
+- This doesn’t hurt the performance, but also decrease the computational cost.
+
+For example, in this case, in the first ConvNet, the 16 fitlers with size [1x1x192], the total learnable parameters = 28 * 28 * 16 * 192 = 2.4 M. In the second ConvNet, using a 32 filters with size [5x5x16], in this case the learnable parameters = 28 * 28 * 32 * 5 * 5 * 16 = 10M, So the total learnable parameters = 12.4M
+
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/683ea6f8-cbf1-4efc-873c-0c725866f5b9)
+
+So this enlightned the way to use multiple filters, with different smaller sizes, then stacking the output together. Each filter is used to detect specific task, in addition to decrease the total number of learnalbe parameters which leads to reduce the computational cost.
+
+For example, Here using a three different size filters, in addition to a MAX-POOL layer.
+
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/95d6f08a-6d89-4e0c-8da3-bf66999e1f08)
+
+## Architecture
+The inception network has a hierarchical structure, with each layer consisting of a number of inception modules. An inception module is a building block that combines different filter sizes in a single layer. This allows the inception network to learn features at different scales, which is important for image recognition tasks.
+
+### Inception Module
+The inception module consists of 1x1, 3x3, and 5x5 convolutions. The 1x1 convolutions are used to reduce the dimensionality of the input data, while the 3x3 and 5x5 convolutions are used to learn features at different scales.
+
+The inception module also uses max pooling and dropout layers to regularize the network and prevent overfitting.
+
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/63bd32a0-22f4-4781-b833-4dcf771210ac)
+
+### Inception Network
+The original inception network has 9 inception modules.
+
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/e1aa4086-9588-4fec-8c10-4ef3d23ca6d2)
+
+```yaml
+Input Image
+   |
+   v
+[224x224x3]
+   |
+   v
+Convolution 7x7, ReLU, Stride 2   <-- Initial Convolution
+[112x112x64]
+   |
+   v
+Max-Pooling 3x3, Stride 2
+[56x56x64]
+   |
+   v
+Convolution 1x1, ReLU
+[56x56x64]
+   |
+   v
+Convolution 3x3, ReLU
+[56x56x192]
+   |
+   v
+Max-Pooling 3x3, Stride 2
+[28x28x192]
+   |
+   v
+Inception Module 1
+   |   |   |   |
+   v   v   v   v
+[28x28x256]
+   |
+   v
+Inception Module 2
+   |   |   |   |
+   v   v   v   v
+[28x28x480]
+   |
+   v
+Max-Pooling 3x3, Stride 2
+[14x14x480]
+   |
+   v
+Inception Module 3
+   |   |   |   |
+   v   v   v   v
+[14x14x832]
+   |
+   v
+Inception Module 4
+   |   |   |   |
+   v   v   v   v
+[14x14x1024]
+   |
+   v
+Average Pooling 7x7
+[1x1x1024]
+   |
+   v
+Dropout
+[1x1x1024]
+   |
+   v
+Fully Connected Layer (Softmax)
+[1x1x1000]
+   |
+   v
+Output (Class Probabilities)
+
+```
+Key elements of the architecture:
+|Element|Description|
+|--|--|
+|Initial Convolution| The network begins with a 7x7 convolution layer followed by max-pooling to reduce spatial dimensions.
+|Inception Modules| The core of GoogLeNet consists of multiple inception modules. Each inception module includes parallel convolutional pathways of different filter sizes (1x1, 3x3, 5x5) and a max-pooling pathway. This allows the network to capture features at different scales.
+|Dimension Reduction| 1x1 convolutions are used within the inception modules to reduce the number of channels before applying larger filters, enhancing computational efficiency.
+|Multiple Stages| The network has multiple stages, each with its own inception modules, and the spatial dimensions are reduced by max-pooling as the network progresses.
+|Final Layers| The final layers include an average pooling layer to obtain a fixed-size feature map, dropout for regularization, and a fully connected layer with softmax activation for classification.
+
+## Pros & Cons
+The inception network has been shown to be very effective for image recognition tasks. It achieved a breakthrough performance on the ImageNet Visual Recognition Challenge in 2014, and it has been used as a basis for many other deep CNN architectures.
+
+Here are some of the benefits of using inception networks:
+- __Efficiency__: Inception networks are more efficient than other deep CNNs, which makes them faster to train and deploy.
+- __Accuracy__: Inception networks have achieved state-of-the-art accuracy on a variety of image recognition tasks.
+- __Flexibility__: Inception networks are flexible and can be adapted to different tasks.
+
+Here are some of the limitations of inception networks:
+- __Complexity__: Inception networks are complex and can be difficult to train and deploy.
+- __Data requirements__: Inception networks require a large amount of data to train.
+- __Interpretability__: Inception networks are not as interpretable as other deep CNN architectures.
+
+## Naming Reason
+It is named after the way that it combines different filter sizes in each layer, which is similar to the way that the human eye perceives images.
+
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/c9003e60-f2f0-436d-a71a-839968169b99)
 
 # Case Studies: Mobile Net
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/3fd46de6-6f85-4dab-bf97-db5758defb46)

@@ -1,5 +1,11 @@
 # Extreme Correlation
 
+## Table of Content
+- [Extreme Correlation](#extreme-correlation)
+  - [Table of Content](#table-of-content)
+  - [Should we remove features with __high__ correlation between each other?](#should-we-remove-features-with-high-correlation-between-each-other)
+  - [Should we remove features with __low__ correlation between each other?](#should-we-remove-features-with-low-correlation-between-each-other)
+
 ## Should we remove features with __high__ correlation between each other?
 
 Removing features with high correlation to each other, also known as multicollinearity (a statistical concept where several independent variables in a model are correlated), can be beneficial in certain cases. Here are a few points to consider when deciding whether to remove highly correlated features from the model:

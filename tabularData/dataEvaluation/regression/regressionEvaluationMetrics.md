@@ -1,5 +1,23 @@
 # Regression Evalulation Metrics
 
+## Table of Content
+- [Regression Evalulation Metrics](#regression-evalulation-metrics)
+  - [Table of Content](#table-of-content)
+  - [Abstract](#abstract)
+  - [MSE - Mean Squared Error](#mse---mean-squared-error)
+  - [RMSE - Root Mean Squared Error](#rmse---root-mean-squared-error)
+  - [Mean absolute error (MAE)](#mean-absolute-error-mae)
+  - [R-squared (R^2)](#r-squared-r2)
+  - [Adjusted R^2](#adjusted-r2)
+  - [Mean absolute percentage error (MAPE)](#mean-absolute-percentage-error-mape)
+  - [Root mean squared logarithmic error (RMSLE)](#root-mean-squared-logarithmic-error-rmsle)
+  - [Median absolute error (MedAE)](#median-absolute-error-medae)
+  - [Explained variance score (EVS)](#explained-variance-score-evs)
+  - [AIC (Akaike information criterion)](#aic-akaike-information-criterion)
+  - [BIC (Bayesian information criterion)](#bic-bayesian-information-criterion)
+  - [A Good Tip](#a-good-tip)
+  - [Accuracy Metric in Regression Problem](#accuracy-metric-in-regression-problem)
+
 ## Abstract
 For a regression problem, the output is a continous number from the infinite values in the number world, unlike the classification problem, where the output should belong to either a binary value like [0, 1], or a multiclass output.
 

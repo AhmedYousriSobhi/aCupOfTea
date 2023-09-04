@@ -1,9 +1,9 @@
-# Tips - Customer Segmentation
+# Customer Segmentation
 
 Customer segmentation is a crucial marketing strategy that involves dividing a company's customer base into distinct groups or segments based on certain shared characteristics, behaviors, or preferences. The goal of customer segmentation is to understand your customers better and tailor your marketing efforts, products, and services to meet the unique needs and preferences of each segment. This approach allows businesses to be more efficient and effective in their marketing efforts, ultimately leading to increased customer satisfaction and profitability.
 
 ## Table of Content
-- [Tips - Customer Segmentation](#tips---customer-segmentation)
+- [Customer Segmentation](#customer-segmentation)
   - [Table of Content](#table-of-content)
   - [Key Points to Consider when Exploring Customer Segmentation](#key-points-to-consider-when-exploring-customer-segmentation)
   - [Aspects in Customer Segmentation](#aspects-in-customer-segmentation)

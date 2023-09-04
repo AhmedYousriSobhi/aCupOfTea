@@ -1,5 +1,12 @@
 # Accuracy Paradox
 
+## Table of Content
+- [Accuracy Paradox](#accuracy-paradox)
+  - [Table of Content](#table-of-content)
+  - [Accuracy Fails for Imbalanced Classification](#accuracy-fails-for-imbalanced-classification)
+  - [Accuracy Paradox](#accuracy-paradox-1)
+  - [Credits](#credits)
+
 In a Classification machine learning problem, one of the common most-used evaluation metric is __Accuracy__.
 
 ```
