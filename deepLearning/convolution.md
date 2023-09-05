@@ -81,7 +81,13 @@
   - [Pros \& Cons](#pros--cons-4)
   - [Naming Reason](#naming-reason)
 - [Case Studies: Mobile Net](#case-studies-mobile-net)
-    - [Motivation](#motivation)
+  - [Motivation](#motivation)
+  - [Floating-Point Operation (FLOP) \[Optional\]](#floating-point-operation-flop-optional)
+    - [Computational Cost Calculation (FLOP Calculation)](#computational-cost-calculation-flop-calculation)
+    - [Why Height and Width included in the calculation?](#why-height-and-width-included-in-the-calculation)
+  - [Key-Idea: DepthWise-Separable Convolutions](#key-idea-depthwise-separable-convolutions)
+    - [Normal (Standard) Convolution](#normal-standard-convolution)
+    - [DepthWise Separable Convolution](#depthwise-separable-convolution)
 - [Practical Advices using ConvNet](#practical-advices-using-convnet)
   - [Data Augmentation](#data-augmentation)
   - [State of Computer Vision](#state-of-computer-vision)
@@ -974,7 +980,110 @@ It is named after the way that it combines different filter sizes in each layer,
 
 # Case Studies: Mobile Net
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/3fd46de6-6f85-4dab-bf97-db5758defb46)
-### Motivation
+
+MobileNet is a convolutional neural network (CNN) architecture that is designed for mobile devices. It is designed to be lightweight and efficient, while still being able to achieve good performance on image classification tasks.
+
+## Motivation
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/bf3f3003-aa25-4eb3-8646-049f64ebd79a)
+
+The motivation for creating MobileNet was to address the challenges of deploying deep learning models on mobile devices. Mobile devices have limited resources, such as memory and processing power. This makes it difficult to deploy deep learning models on mobile devices, as these models can be very large and computationally expensive.
+
+By introducing a key idea, of using Normal Convolution vs depthwise-separable convolutions.
+
+Paper: [MobileNets: Efficient Convolutional Neural Networks for Mobile Vision Application](https://arxiv.org/pdf/1704.04861.pdf), by Howard, in 2017
+
+## Floating-Point Operation (FLOP) [Optional]
+FLOP stands for "Floating-Point Operation" or "Floating-Point Operation Per Second," depending on the context. It is a measure of the computational work performed by a computer program or algorithm, specifically in terms of floating-point arithmetic operations.
+
+Floating-point operations involve operations with real numbers (typically represented with decimal points) and can include addition, subtraction, multiplication, and division. These operations are fundamental in various scientific and engineering computations, including those in numerical simulations, machine learning, computer graphics, and more.
+
+FLOPs are closely related to convolutional neural networks (CNNs) and deep learning in general. FLOPs provide a measure of the computational complexity and cost associated with training and running CNN models. 
+
+Here's how FLOPs are related to convolutional neural networks:
+
+|Aspect|Relationship|
+|--|--|
+|Model Complexity| FLOPs are used to measure the computational complexity of a CNN model. The number of FLOPs required by a model indicates how many floating-point operations (e.g., additions and multiplications) are needed to process an input and generate an output. In deep learning, particularly in CNNs, the majority of computational work occurs during the forward and backward passes, involving operations like convolutions, matrix multiplications, and nonlinear activations.
+|Model Efficiency| FLOPs can be used to assess the computational efficiency of CNN models. Efficient models aim to achieve good performance with fewer FLOPs. Reducing the number of FLOPs can lead to models that are faster to train, require less computational resources (e.g., GPUs), and are more suitable for deployment on resource-constrained devices like mobile phones.
+|Architectural Choices| When designing CNN architectures, researchers and practitioners often consider the FLOP count as a factor. Different architectural choices, such as the number of layers, filter sizes, and pooling operations, can significantly impact the FLOP count. This consideration helps in optimizing models for specific tasks and hardware platforms.
+|Comparing Models| FLOP counts are useful for comparing different CNN models. Researchers and engineers can use FLOP counts to evaluate and select models that strike a balance between computational cost and accuracy. It allows for informed decisions when choosing a model for a particular application.
+|Model Pruning| FLOP counts play a role in model pruning, which is a technique for reducing the computational complexity of deep neural networks. By identifying and removing less important neurons or connections, the FLOP count can be reduced while maintaining reasonable performance.
+|Energy Efficiency| In applications where energy efficiency is critical, FLOP counts are relevant. Fewer FLOPs generally translate to less energy consumption, which is important in mobile and edge computing scenarios.
+|Quantization| The precision of floating-point numbers used in neural networks (e.g., single-precision or half-precision) can impact FLOP counts. Quantization techniques, which reduce precision, can help decrease the FLOP count and improve computational efficiency.
+
+### Computational Cost Calculation (FLOP Calculation)
+The calculation of FLOPs (Floating-Point Operations) in a Convolutional Neural Network (CNN) involves counting the number of arithmetic operations, such as additions and multiplications, performed during both the forward and backward passes of the network. The specific operations counted depend on the layers and operations within the network. Here's how FLOPs are typically calculated in a CNN:
+|Layer|Calculation|
+|--|--|
+|__Convolutional Layer__| In a convolutional layer, the FLOPs are calculated based on the following factors:</br>- Number of Filters (K): This is the number of filters in the layer.</br>- Filter Size (F): The size of each filter (e.g., 3x3 or 5x5).</br>- Input Channels (C): The number of input channels.</br>- Output Dimensions (H_out x W_out): The height and width of the output feature map.</br>The FLOPs per filter in a convolutional layer can be calculated as follows:</br>__FLOPs per Filter = F × F × C × Hout × Wout__ </br>If you have K filters in the layer, the total FLOPs for the layer would be K times the FLOPs per filter.
+| __Fully Connected (Dense) Layer__| In a fully connected (dense) layer, the FLOPs depend on the number of neurons in the layer. If there are N neurons in the layer and the previous layer had M outputs, the FLOPs for the dense layer are typically calculated as follows:</br>__FLOPs per Dense Layer = M × N__
+|__Activation Functions__| Activation functions like ReLU, sigmoid, or tanh don't usually contribute significantly to the FLOP count because they involve simple element-wise operations on tensors.
+|__Pooling Layers__|Pooling layers (e.g., max-pooling) also involve relatively few FLOPs, as they typically perform element-wise comparisons and selections.
+|__Element-wise Operations__| Element-wise operations like addition and multiplication between tensors are counted individually. For example, element-wise addition between two tensors of the same size would contribute as many additions as there are elements in the tensors.
+|__Batch Normalization and Other Layers__| The FLOP count for layers like batch normalization depends on the specific implementation and operations performed during training and inference.
+
+To calculate the total FLOPs for an entire CNN model, you would sum the FLOPs for each layer in the network, including convolutional layers, dense layers, and any other relevant layers. This provides an estimate of the computational cost associated with training and running the model.
+
+### Why Height and Width included in the calculation?
+In the calculation of FLOPs (Floating-Point Operations) for convolutional layers, the height (H) and width (W) of the output feature map are added because they represent the spatial dimensions of the output. These dimensions affect the number of operations performed by the convolution operation.
+
+Here's why H and W are included in the FLOP calculation:
+|Reason|Description|
+|--|--|
+|Spatial Dimensions Impact Operations| In a convolutional layer, the filters (kernels) are applied to the input feature map, and the output feature map is produced by sliding the filter over the input in both the height and width dimensions. Each element in the output feature map is the result of a weighted sum of the elements in the input feature map that the filter covers. Therefore, the spatial dimensions (H and W) directly impact the number of operations performed.|
+|Different Filters for Each Location| At each spatial location (H_out, W_out) of the output feature map, a different filter is applied. So, for each (H_out, W_out) position in the output feature map, a set of multiplicative operations is performed, involving the filter weights and the input values within the filter's receptive field.|
+|Total Operations Across the Feature Map| To calculate the total number of operations (FLOPs) for the entire convolutional layer, you need to account for the operations performed at each spatial location in the output feature map. Summing these operations over all (H_out, W_out) positions gives you the total FLOPs for the layer.|
+
+The formula for FLOPs per filter in a convolutional layer typically includes terms related to the filter size (F), the number of input channels (C), and the output dimensions (H_out and W_out) because all of these factors contribute to the computational cost of the layer.
+
+## Key-Idea: DepthWise-Separable Convolutions
+### Normal (Standard) Convolution
+Normal (Standard) Convolution:
+1. Structure: In standard convolution, a single convolutional operation is applied to the entire input volume using a 3D filter (kernel) that spans both the spatial dimensions (width and height) and the depth dimension (channels) of the input.
+2. Computational Cost: The computational cost of standard convolution depends on the following factors:
+   - Number of Filters (K): The number of filters applied to the input.
+   - Filter Size (F): The spatial size of the filters (e.g., 3x3, 5x5).
+   - Input Channels (C): The number of input channels.
+   - Input Spatial Dimensions (HxW): The height and width of the input.
+   - Output Spatial Dimensions (H_out x W_out): The height and width of the output feature map.
+
+The total number of multiplicative operations (FLOPs) for standard convolution can be calculated as follows for each filter:
+```
+FLOPs per Filter= F × F × C × Hout × Wout​
+
+If you have K filters, the total FLOPs for the layer would be K times the FLOPs per filter.
+```
+
+For example, if we have an image with shape [6x6x3], and 5 applying filter with size [3x3x3], the output will be a feature map with size [4x4x5].
+```yaml
+Total Computational Cost = #filter_params * #filters_positions * #filters
+                         =  3 * 3 * 3     *       4 * 4        *    5
+                         =   2160 parameters. 
+```
+
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/68552846-52e4-4228-85c6-1129d84c23b5)
+
+### DepthWise Separable Convolution
+Idea Introduced is called Depthwise Separable Convolution, to reduce computational cost while maintaining reasonable accuracy.
+
+1. Structure: Depthwise separable convolution is a two-step operation:
+   - Depthwise Convolution: In this step, a separate convolution is applied to each input channel (depthwise) using a 3D filter with a size of 3x3 (or another specified size).
+   - Pointwise Convolution: After depthwise convolution, a 1x1 convolution (pointwise convolution) is applied to mix the depthwise features and produce the final output. This step can include changing the number of output channels.
+2. Computational Cost: The computational cost of depthwise separable convolution can be significantly lower than standard convolution. The FLOPs for depthwise separable convolution are calculated as follows:
+```
+   For the depthwise convolution, the FLOPs per filter are the same as for standard convolution:
+      FLOP per filter =  F × F × C × Hout × Wout
+
+   For the pointwise convolution, the FLOPs per filter are:
+      FLOP per filter = 1 × 1 × ( C × Hout × Wout ) × K
+
+    Here, K represents the number of output channels after the pointwise convolution.
+```
+
+The total FLOPs for depthwise separable convolution are the sum of the FLOPs for the depthwise and pointwise convolutions, considering the number of filters K.
+
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/5efb50c0-e2a8-4470-9c05-436cdba1019e)
+
 
 # Practical Advices using ConvNet
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/1b9c67fb-74ec-431c-8ba4-4e162f2abe58)
