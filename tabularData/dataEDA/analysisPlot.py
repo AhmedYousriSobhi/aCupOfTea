@@ -128,3 +128,61 @@ def plot_numeric_features(df:pd.DataFrame, cols_to_drop:list, plot_type, save_pl
             plt.savefig(f'../report/plots/numerical_{plot_type.__name__}.jpg',bbox_inches = 'tight')
         
     plt.show()
+
+def plot_timeseries_trend(df:pd.DataFrame, timestamp_col:str, target_col:str, groupby_lst:list, fig_title:str='', save:bool=False)->None:
+    """
+        Plot price trend per input selected feature
+
+        Input:
+            df: pandas DataFrame, input dataset.
+            timestamp_col: str, timestamp feature which will be x-axis.
+            target_col: str, target featuers, which will be y-axis
+            groupby_col: list, features which the dataset will be grouped by.
+            fig_title: str, title of the plot
+            save: boolean, indicate whether save or not to save the plot.
+
+        Output:
+            None.
+    """
+
+    # Create a copy of input dataframe
+    _df = df.copy()
+
+    # Group the data by category
+    grouped_data = _df.sort_values(timestamp_col, ascending=True).groupby(groupby_lst)
+
+    # Determine the number of categories
+    num_categories = len(grouped_data)
+
+    # Calculate the number of rows and columns for subplots
+    num_rows = int(num_categories / 2) + num_categories % 2
+    num_cols = 2
+
+    # Create subplots
+    fig, axes = plt.subplots(num_rows, num_cols, figsize=(15, 10))
+
+    # Flatten the axes array to easily iterate through subplots
+    axes = axes.flatten()
+
+    # Plotting the trend for each category
+    for i, (category, group) in enumerate(grouped_data):
+        ax = axes[i]  # Select the appropriate subplot
+        ax.plot(group[timestamp_col], group[target_col])
+        ax.set_title(category)
+        ax.set_xlabel('Time')
+        ax.set_ylabel(target_col)
+
+    # Hide empty subplots if necessary
+    if num_categories < num_rows * num_cols:
+        for j in range(num_categories, num_rows * num_cols):
+            fig.delaxes(axes[j])
+    
+    plt.suptitle(fig_title)
+    plt.tight_layout()  # Adjust the spacing between subplots
+    
+    if save==True:
+        plt.savefig(f'../report/plots/{fig_title.replace(" ", "_")}.jpg')
+    
+    plt.show()
+
+    return None
