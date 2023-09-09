@@ -92,11 +92,13 @@ From the aroma of well-structured code to the rich flavors of design patterns an
 |   |   |   ├── extremeCorrelation
 |   |   ├── analysisPloting
 |   ├── dataEvaluation
-|   |   ├── modelBehaviour
-|   |   |   ├── biasVarienceTradeOff
 |   |   ├── classification
 |   |   |   ├── accuracyParadox
+|   |   ├── clustering
+|   |   ├── modelBehaviour
+|   |   |   ├── biasVarienceTradeOff
 |   |   ├── regression
+|   ├── dataFeatureEngineering
 |   ├── dataModeling
 |   |   ├── xgboost
 ├── tips
