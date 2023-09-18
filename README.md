@@ -46,17 +46,49 @@ From the aroma of well-structured code to the rich flavors of design patterns an
 |   ├── foodDeliveryServiceCompany
 |   ├── realStateCompany
 |   ├── dataScienceAndBusiness
-├── deepLearning
-|   ├── workspace
-|   ├── basics
-|   ├── convolution
-|   ├── historyOfAI
-|   ├── stateOfArt
+├── fields
+|   ├── deepLearning
+|   |   ├── workspace
+|   |   ├── basics
+|   |   ├── convolution
+|   |   ├── historyOfAI
+|   |   ├── stateOfArt
+|   ├── generativeAI
+|   |   ├── evaluation_and_debugging
+|   |   |   ├── wandb_sklearnProject.
+|   ├── tabularData
+|   |   ├── conceptInMachineLearning
+|   |   |   ├── dataEDAanalysis
+|   |   |   ├── mlSupervisedClassification
+|   |   |   ├── mlSupervisedRegression
+|   |   |   ├── mlUnsupervised
+|   |   ├── conceptInTimeSeries
+|   |   ├── dataProcessing
+|   |   |   ├── handlingMissingData
+|   |   |   |   ├── determineMissingValues
+|   |   |   |   ├── regressionImputing
+|   |   |   |   ├── meanImputing
+|   |   |   ├── handlingObjectdata
+|   |   |   |   ├── wordsSimilarity
+|   |   |   ├── handlingOutliers
+|   |   |   ├── handlingSkewness
+|   |   ├── dataEDA
+|   |   |   ├── correlalstion
+|   |   |   |   ├── detectmulticollinearity
+|   |   |   |   ├── extremeCorrelation
+|   |   |   ├── analysisPloting
+|   |   ├── dataEvaluation
+|   |   |   ├── classification
+|   |   |   |   ├── accuracyParadox
+|   |   |   ├── clustering
+|   |   |   ├── modelBehaviour
+|   |   |   |   ├── biasVarienceTradeOff
+|   |   |   ├── regression
+|   |   ├── dataFeatureEngineering
+|   |   ├── dataModeling
+|   |   |   ├── xgboost
 ├── designPatterns
 |   ├── featureCross
-├── generativeAI
-|   ├── evaluation_and_debugging
-|   |   ├── wandb_sklearnProject.
 ├── Prblems
 |   ├── problem_solving
 |   ├── question_CheapestFlatsPerCityUsingSQL
@@ -70,37 +102,6 @@ From the aroma of well-structured code to the rich flavors of design patterns an
 |   ├── softwareGoals
 |   |   ├── robustness
 ├── projects
-├── tabularData
-|   ├── conceptInMachineLearning
-|   |   ├── dataEDAanalysis
-|   |   ├── mlSupervisedClassification
-|   |   ├── mlSupervisedRegression
-|   |   ├── mlUnsupervised
-|   ├── conceptInTimeSeries
-|   ├── dataProcessing
-|   |   ├── handlingMissingData
-|   |   |   ├── determineMissingValues
-|   |   |   ├── regressionImputing
-|   |   |   ├── meanImputing
-|   |   ├── handlingObjectdata
-|   |   |   ├── wordsSimilarity
-|   |   ├── handlingOutliers
-|   |   ├── handlingSkewness
-|   ├── dataEDA
-|   |   ├── correlalstion
-|   |   |   ├── detectmulticollinearity
-|   |   |   ├── extremeCorrelation
-|   |   ├── analysisPloting
-|   ├── dataEvaluation
-|   |   ├── classification
-|   |   |   ├── accuracyParadox
-|   |   ├── clustering
-|   |   ├── modelBehaviour
-|   |   |   ├── biasVarienceTradeOff
-|   |   ├── regression
-|   ├── dataFeatureEngineering
-|   ├── dataModeling
-|   |   ├── xgboost
 ├── tips
 └── README.md
 ```
