@@ -7,3 +7,6 @@
 [submodule "problems/problem_solving"]
 	path = problems/problem_solving
 	url = https://github.com/AhmedYousriSobhi/problem_solving.git
+[submodule "projects/BEV-Project"]
+	path = projects/BEV-Project
+	url = https://github.com/oforomar/BEV-Project.git
