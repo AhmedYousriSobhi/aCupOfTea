@@ -1,5 +1,6 @@
 # aCupOfTea
 # AI Tea Lounge: Sipping Knowledge in AI Domains
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/4a033ba8-5aac-475d-9b27-ec13e68746ba)
 
 Welcome to the AI Tea Lounge, a cozy space to settle down, share experiences, and indulge in the world of artificial intelligence. In this repository, we've brewed a blend of insights and expertise spanning across Data Science, Machine Learning, Deep Learning, and a wide spectrum of AI-related topics. From programming and clean code practices to design patterns and business implications, we invite you to join us for a cup of wisdom.
 
