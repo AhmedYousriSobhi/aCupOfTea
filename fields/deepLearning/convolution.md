@@ -93,14 +93,31 @@
   - [State of Computer Vision](#state-of-computer-vision)
 - [Detection Algorithms](#detection-algorithms)
   - [Object Localization](#object-localization)
+    - [Classification, Localization vs Detection](#classification-localization-vs-detection)
+    - [Classification with Localization](#classification-with-localization)
+    - [Target Label](#target-label)
   - [Landmark Detection](#landmark-detection)
   - [Object Detection](#object-detection)
+    - [Traditional detection Algorithm](#traditional-detection-algorithm)
 - [Detection Algorithms - YOLO Algorithm](#detection-algorithms---yolo-algorithm)
+  - [Convolution Implementation of Sliding Window](#convolution-implementation-of-sliding-window)
+    - [Turning FC Layer into Convolution Layers](#turning-fc-layer-into-convolution-layers)
+    - [Global Average Pooling (GAP)](#global-average-pooling-gap)
+    - [Steps for Convertion](#steps-for-convertion)
+    - [Convoluted Sliding Window](#convoluted-sliding-window)
+  - [Bounding Box Prediction](#bounding-box-prediction)
+  - [Non-Max Suppression - NMS](#non-max-suppression---nms)
+  - [Anchor Boxes](#anchor-boxes)
+  - [Summerized Yolo Steps](#summerized-yolo-steps)
+  - [YOLO Algorithm](#yolo-algorithm)
+- [YOLOv3 Architecture \[Optional\]](#yolov3-architecture-optional)
+  - [YOLOv3 Architecture - Numerical Representation](#yolov3-architecture---numerical-representation)
 - [Detection Algorithms - Semantic Segmentation](#detection-algorithms---semantic-segmentation)
 - [Face Recognition](#face-recognition)
   - [One Shot Learning](#one-shot-learning)
   - [Siamese Network - Deep Face](#siamese-network---deep-face)
 - [Neural Style Transfer](#neural-style-transfer)
+- [State-of-Art](#state-of-art)
 - [Credits](#credits)
 
 # Abstract
@@ -881,7 +898,7 @@ The original inception network has 9 inception modules.
 
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/e1aa4086-9588-4fec-8c10-4ef3d23ca6d2)
 
-```yaml
+``` mathematica
 Input Image
    |
    v
@@ -1095,14 +1112,266 @@ The total FLOPs for depthwise separable convolution are the sum of the FLOPs for
 # Detection Algorithms
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/1e39d010-20a2-457f-b221-a005842e0482)
 
+Detection algorithms are used to identify the presence and location of objects in images or videos. They are used in a wide range of applications, such as self-driving cars, facial recognition, and medical imaging.
+
+There are three aspects we should take care of while dealing with object detection.
+
 ## Object Localization
+Localization in the concept of defining the location of object inside an image frame, which is most popular by the red boundary box surronding an object detectec.
+
+### Classification, Localization vs Detection
+There multiple different between classification, localization, and detection:
+- Classification: It just figure out what object in the Image, like below the first image is classified to have a [CAR] on it.
+- Localization: It determines the location of the object using a boundary box, like below in the second image, it localized the car location inside the frame.
+- Detection: It classifies objects and localize their location in the image frame.
+
+Note: Classification and Localization work on one image, unlike Detection which can detects multiple objects in the image frame.
+
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/7166cc8f-1442-47d9-a9f2-d0aa7235386d)
+
+### Classification with Localization
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/07a98949-6b3f-4e4f-8462-67e703b8efc2)
+
+Instead of just ouputing a signle output using softmax to decide which output class does this object belongs to, like in the image above:
+```
+1- Pedestrain.
+2- Car.
+3- Motorcycle.
+4- Background.
+```
+
+We can output extra 4 neurons outptus for [bx, by, bh, bw] of the image object -> which used for localization.
+```
+bx: center of the image on x-axis.
+by: center of the image on y-axis.
+bh: highet of the object in percentage of the image frame hieght.
+bw: width of the object in percentage of the image frame width. 
+```
+
+### Target Label
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/590b9ea1-4bc4-410d-b7c8-75a0d0a76868)
+
+Now target label y have 8 components:
+```
+[
+   PC: 1 -> Object found, else 0.
+   bx-by-bh-bw: Location.
+   c1-c2-c3: Object Class
+]
+```
+In Loss function:
+- if y1(PC) = 1, so we take the square of difference between each component.
+- if y1(PC) = 0, we only care if there is an object, so the loss function is for PC, so the rest of the output vector is zeros [0 ? ? ? ? ? ? ?]
+
+In some other casses, they uses for each component a special loss function like:
+- PC: Binary Cross-entropy or logistic regression error.
+- Locations: Mean Square Error (MSE).
+- Classese: Log likely loss.
+
+Important Note: In dataset, you will have to provide true labels to train the NN, Even giving the location true values.
 
 ## Landmark Detection
+Landmark detection is the process of identifying and localizing key points or landmarks on an object. Landmarks can be natural features, such as the eyes, nose, and mouth on a face, or man-made features, such as the corners of a building or the traffic lights on a road.
+
+Landmark detection is a challenging task because landmarks can vary greatly in appearance and location. For example, the eyes on a face can be different sizes and shapes, and they can be located in different positions on the face. Additionally, landmarks can be occluded by other objects, such as glasses or a hat.
+
+Landmark detection is used in a wide range of applications, including:
+|Application|Description|
+|--|--|
+Facial recognition| Landmark detection is used to identify faces in images and videos. This information can be used for a variety of purposes, such as security and surveillance, or to unlock devices.</br>A facial recognition system might use landmark detection to identify the eyes, nose, and mouth on a face. This information can then be used to compare the face to a database of known faces.
+|Medical imaging| Landmark detection is used to identify anatomical landmarks in medical images. This information can be used to help doctors diagnose diseases and recommend treatments.</br>A medical imaging system might use landmark detection to identify the spine, ribs, and other anatomical landmarks in an X-ray image. This information can then be used to help a doctor diagnose a disease or injury.
+|Augmented reality| Landmark detection is used to track the position of objects in the real world and to overlay digital information onto those objects. This technology is used in a variety of applications, such as video games and navigation apps.</br>An augmented reality app might use landmark detection to track the position of a coffee mug on a table. The app could then overlay digital information onto the coffee mug, such as the temperature of the coffee.
+|Virtual reality| Landmark detection is used to track the position of the user's head and hands in virtual environments. This technology is used to create immersive virtual experiences.</br>A virtual reality headset might use landmark detection to track the position of the user's head and hands. This information can then be used to create the illusion that the user is actually inside the virtual environment.
+
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/f1143f1c-7f57-4d76-9a08-97315fcad806)
+
+A label Technique like :
+- For face detection: 
+   - Define points (x,y) coordinates, of eyes, nose, face borders.
+   - So output target y, should predict all these points and a PC (face or not).
+   - In snapchat, filters, are pretrained models on face detection , then output of that is used to put a filter item on it like crown.
+- For Pose detection:
+   - Same technique, a label landmark is done in the training set, to define how should it look like.
+   - So output y is a predicted of all these points.
 
 ## Object Detection
+There are two main types of detection algorithms:
+|Detection Algorithms|Types Description|
+|--|--|
+|Traditional detection algorithms| These algorithms typically use a sliding window approach. The algorithm slides a window across the image and tries to classify the contents of the window as an object or not.
+|Deep learning detection algorithms| These algorithms use neural networks to learn the features of objects and to classify them. Deep learning detection algorithms are typically more accurate than traditional detection algorithms, but they can also be more computationally expensive.
+
+Some of the most popular detection algorithms include:
+|Detection Algorithms|Examples|
+|--|--|
+|Traditional detection algorithms|Histogram of Oriented Gradients (HOG)</br>Deformable Part Model (DPM)</br>Region-based Convolutional Neural Network (R-CNN)
+Deep learning detection algorithms|Faster R-CNN</br>You Only Look Once (YOLO)</br>Single Shot MultiBox Detector (SSD)
+
+### Traditional detection Algorithm
+First we train a ConvNet model on targets using image with objects sizes which take most of the size of the image, like the training set below.
+- This idea of training the model on sized window.
+- Each windows only contain one object or nothing.
+  
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/6ddf9a6a-cec2-4687-9433-e98917a6e8fb)
+
+For Big Images, we define a window size, this window will be used as __sliding window detection__ to slide for every region in the image, and pass them to ConvNet, to determine if there is an object of not.
+- We can change window size.
+- This sliding window method has drawbacks of Computational cost, and slowness, as every sliding window is passed to convolution NN.
+
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/39bd9d17-6524-4a12-b10a-7baa51904a98)
+
+This will motivate us to jump into the deep learning detection algorithms.
 
 # Detection Algorithms - YOLO Algorithm
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/8c0def3e-73bf-4bcc-9ce5-45bd58e551f3)
+
+You Only Look Once (YOLO) is a state-of-the-art object detection algorithm that was introduced in 2015. YOLO is known for its speed and accuracy, and it has been used to develop a variety of real-time object detection applications, such as self-driving cars and facial recognition.
+
+YOLO works by predicting the bounding boxes and class probabilities of all objects in an image in a single forward pass through the network. This is in contrast to other object detection algorithms, which typically require multiple passes through the network to detect objects.
+
+YOLO takes an input image and divides it into a grid, then predicts bounding boxes and class probabilities for objects in each grid cell in a single forward pass through a neural network. Here's an overview of the YOLO algorithm:
+
+Key Characteristics of YOLO:
+|Characteristic|Description|
+|-|-|
+|Single Pass Detection| YOLO performs object detection in a single pass through the neural network, as opposed to two-stage detectors that first propose regions of interest and then classify them. This makes YOLO much faster.
+|Bounding Box Predictions| For each grid cell, YOLO predicts multiple bounding boxes (usually, 2 or 3) along with confidence scores. These bounding boxes specify the location and size of the detected objects.
+|Class Predictions| In addition to bounding boxes, YOLO predicts class probabilities for each object. This means that YOLO can classify objects into different categories.
+|Multiple Scales| YOLO predicts bounding boxes and class probabilities at different scales, allowing it to detect objects of various sizes in the input image.
+|Anchor Boxes| YOLO uses anchor boxes, which are pre-defined shapes of different sizes, to improve accuracy in predicting bounding boxes. The network predicts offsets to these anchor boxes for better localization.
+|Non-Maximum Suppression (NMS)| After object detection, YOLO uses NMS to eliminate duplicate bounding boxes for the same object. This step helps improve precision and reduces redundancy.
+
+## Convolution Implementation of Sliding Window
+The convolutional implementation of the sliding window in YOLO is a technique that allows YOLO to detect objects in an image without having to explicitly slide a window across the image.
+
+Instead of doing sliding window sequentially, we do it convolutionaly in Parallel.
+- So this all these windows are calculated at the same time.
+- That’s why the FC layer is turned into convolutional layer.
+- So one of the box matches the car inside it.
+
+To implement this, YOLO uses a convolutional neural network (CNN) to extract features from the input image. The CNN is trained to extract features that are relevant to object detection, such as the edges and corners of objects.
+
+Once the CNN has extracted features from the input image, YOLO uses those features to predict the bounding boxes and class probabilities of all objects in the image. This is done using a fully connected layer at the end of the CNN.
+
+The convolutional implementation of the sliding window has a number of advantages over the traditional sliding window approach:
+- It is more efficient, as it does not require the network to explicitly slide a window across the image.
+- It is more accurate, as the network is able to learn the optimal features for object detection directly from the data.
+- It is more robust to changes in the input image, such as occlusion and illumination variations.
+
+### Turning FC Layer into Convolution Layers
+In the YOLO architecture, fully connected layers are typically converted into convolutional layers to enable the model to accept variable-sized input images, perform object detection across the entire image, and reduces the spatial dimensions of the output of the fully connected layer to 1x1. This conversion is part of the process of adapting the YOLO network to work with different input sizes and maintaining the ability to detect objects at different scales. 
+
+### Global Average Pooling (GAP)
+Here's how fully connected layers are converted into convolutional layers in YOLO:
+
+![diagram](https://www.researchgate.net/publication/351384018/figure/fig3/AS:1024177104486401@1621194258753/Comparison-between-a-fully-connected-layer-and-global-average-pooling-a-Operation-of.png)
+
+The input to the fully connected layer is a feature map with dimensions (height, width, channels). The output of the fully connected layer is a vector with dimensions (1, 1, channels).
+
+**The global average pooling (GAP)** operation reduces the spatial dimensions of the output of the fully connected layer to 1x1. This is done by taking the average of all the values in each channel of the feature map.
+
+The output of the global average pooling operation is then passed to a convolution layer with a kernel size of 1x1. This convolution layer outputs a feature map with dimensions (1, 1, channels).
+
+### Steps for Convertion
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/7399bf10-0f50-45c6-8736-c28aeb722773)
+|Step|Details|
+|-|-|
+|Replace Fully Connected Layers with Global Average Pooling (GAP)|The first step in converting fully connected layers is to replace the final few fully connected layers in the network with a Global Average Pooling (GAP) layer.</br>GAP computes the spatial average of each feature map, resulting in a fixed-size feature map regardless of the input image's size.
+|Add 1x1 Convolutional Layers|After GAP, 1x1 convolutional layers are added to the network. These layers have a kernel size of 1x1, meaning they operate on individual pixels (or, more precisely, feature map values at each spatial location).</br>The 1x1 convolutional layers help capture channel-wise interactions and combine information across channels.
+|Adjust Output Size| The number of filters (channels) in the 1x1 convolutional layers is set to match the desired output size for object detection. For example, if you want the network to predict bounding boxes and class probabilities for 3 objects, you might set the number of filters to 3.
+|Final Output Layer|The last 1x1 convolutional layer serves as the final output layer. It predicts bounding boxes and class probabilities for objects.
+
+### Convoluted Sliding Window
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/be9e4e8b-656d-416f-91bb-d0c25874369e)
+
+Grid Cells: YOLO divides the input image into a grid of cells. Each grid cell is responsible for predicting objects that are present within its boundaries. The grid is typically uniform, and the number of cells along the height and width of the image is determined by the network architecture.
+
+This allow the capability of merging/combining grids together and take a bigger grid.
+
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/6d2b530a-3248-46de-9f5b-8c5672461d7b)
+
+If the center/midpoint of an object falls into a grid cell, that grid cell is responsible for detecting that object
+
+## Bounding Box Prediction
+The next step is predicting the bounding box inside each grid cell, then determining the location of the object according to the predicted bounding box, and also prediction the class of that object.
+
+To summarized these steps:
+|Step|Details|
+|-|-|
+|Bounding Box Predictions|For each grid cell, YOLO predicts multiple bounding boxes (often 3 or 4, depending on the configuration). These bounding boxes are defined relative to the grid cell's coordinates and dimensions.
+|Localization Predictions|For each bounding box, YOLO predicts localization information, which includes the center coordinates (x, y) of the object within the grid cell and the width and height.
+|Class Predictions| In addition to localization, YOLO predicts class probabilities for each bounding box. These probabilities represent the likelihood of an object belonging to a particular class or category (e.g., "car," "person," "dog").
+
+## Non-Max Suppression - NMS
+After object detection, YOLO applies a post-processing step called non-maximum suppression (NMS). NMS filters out redundant and low-confidence bounding boxes, retaining only the most confident and non-overlapping predictions for each object.
+
+## Anchor Boxes
+YOLO uses anchor boxes, which are predefined boxes with different aspect ratios and sizes. The network predicts offsets to these anchor boxes. The anchor boxes serve as templates for the predicted bounding boxes and help improve localization accuracy.
+
+## Summerized Yolo Steps
+|Step|Details|
+|-|-|
+|Grid Cells| YOLO divides the input image into a grid of cells. Each grid cell is responsible for predicting objects that are present within its boundaries. The grid is typically uniform, and the number of cells along the height and width of the image is determined by the network architecture.
+|Bounding Box Predictions| For each grid cell, YOLO predicts multiple bounding boxes (often 3 or 4, depending on the configuration). These bounding boxes are defined relative to the grid cell's coordinates and dimensions.
+|Localization Predictions| For each bounding box, YOLO predicts localization information, which includes the center coordinates (x, y) of the object within the grid cell and the width and height (w, h) of the bounding box.
+|Class Predictions| In addition to localization, YOLO predicts class probabilities for each bounding box. These probabilities represent the likelihood of an object belonging to a particular class or category (e.g., "car," "person," "dog").
+|Anchor Boxes| YOLO uses anchor boxes, which are predefined boxes with different aspect ratios and sizes. The network predicts offsets to these anchor boxes. The anchor boxes serve as templates for the predicted bounding boxes and help improve localization accuracy.
+|Confidence Score| Each bounding box prediction is associated with a confidence score, indicating how confident the model is in the presence of an object within that bounding box.
+|Non-Maximum Suppression (NMS)| After object detection, YOLO applies a post-processing step called non-maximum suppression (NMS). NMS filters out redundant and low-confidence bounding boxes, retaining only the most confident and non-overlapping predictions for each object.
+## YOLO Algorithm
+
+# YOLOv3 Architecture [Optional]
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/496c0f66-d509-4778-97de-7ab022c2f83f)
+
+|Layer|Description|
+|--|--|
+Input Layer|YOLOv3 takes an image as input, which is typically resized to a fixed size (e.g., 416x416 pixels).</br>The input image is passed through the network for feature extraction.
+|Feature Extraction Backbone|YOLOv3 employs a feature extraction backbone, which is a series of convolutional layers that capture hierarchical features from the input image.</br>This backbone network typically uses Darknet-53 architecture in YOLOv3, which is a deep and powerful CNN architecture.
+|Feature Pyramid Network (FPN)|YOLOv3 incorporates a Feature Pyramid Network, which combines features from multiple scales to handle objects of different sizes effectively.</br>FPN helps in detecting both small and large objects in the image.
+|Detection Heads|YOLOv3 has three detection heads, each responsible for detecting objects at a different scale (small, medium, and large).</br>Each detection head consists of a series of convolutional layers and outputs bounding box coordinates (center coordinates, width, height) and class probabilities for objects in a specific grid cell.</br>The number of bounding box predictions for each cell may vary but is often set to 3 or 4.
+|Anchor Boxes|YOLOv3 uses anchor boxes, which are pre-defined boxes of different sizes and aspect ratios.</br>Each detection head predicts offsets to these anchor boxes to refine bounding box predictions.
+|Final Output|The outputs from all three detection heads are combined to produce the final set of bounding boxes and class probabilities.</br>A non-maximum suppression (NMS) algorithm is applied to eliminate duplicate and low-confidence bounding boxes.
+|Class Prediction|Alongside bounding box predictions, YOLOv3 predicts class probabilities for each object detected.</br>The model is capable of classifying objects into multiple categories.
+|Output Layer|The final output is a set of bounding boxes, each associated with a class label and a confidence score.
+
+## YOLOv3 Architecture - Numerical Representation
+This numeric representation provides an overview of the architecture's flow, from input image to the final output. YOLOv3 has three detection heads, each responsible for detecting objects at different scales (small, medium, and large). Each detection head predicts bounding box coordinates (center coordinates, width, height) and class probabilities for objects within a specific grid cell.
+
+It's important to note that the actual architecture may vary in terms of the number of layers, anchor boxes, and other hyperparameters, depending on the specific YOLO variant and model configuration. Additionally, the anchor boxes used in YOLOv3 are predefined shapes that are refined based on predictions to improve bounding box accuracy.
+
+``` mathematica
+Input Image (e.g., 416x416 pixels)
+  |
+Darknet-53 Feature Extraction Backbone
+  |
+Feature Pyramid Network (FPN)
+  |
+Detection Head 1 (Small Objects)
+  |  |
+  |  |-- Convolutional Layers
+  |  |-- Bounding Box Predictions (x, y, width, height)
+  |  |-- Class Predictions (Class probabilities)
+  |
+Detection Head 2 (Medium Objects)
+  |  |
+  |  |-- Convolutional Layers
+  |  |-- Bounding Box Predictions (x, y, width, height)
+  |  |-- Class Predictions (Class probabilities)
+  |
+Detection Head 3 (Large Objects)
+  |  |
+  |  |-- Convolutional Layers
+  |  |-- Bounding Box Predictions (x, y, width, height)
+  |  |-- Class Predictions (Class probabilities)
+  |
+Anchor Boxes and Anchor Box Offsets
+  |
+Non-Maximum Suppression (NMS)
+  |
+Final Output:
+  - Bounding Boxes (center coordinates, width, height)
+  - Class Probabilities
+```
 
 # Detection Algorithms - Semantic Segmentation
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/494a0eb9-4274-422b-862d-4607b9514077)
@@ -1143,6 +1412,12 @@ Siamese networks are a powerful tool for one-shot learning. They have been used 
 # Neural Style Transfer
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/8686dc3d-026e-42b0-a093-7163cad8de15)
 
+# State-of-Art
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/b621b4da-f2ac-4c7e-ab3e-d6780dbbc8b6)
+
+The term "state of the art" refers to the current highest level of development or advancement in a particular field or technology. It describes the most advanced and innovative techniques, methods, or models that are currently being used or recognized as the best solutions to a specific problem. In the context of machine learning and deep learning, the "state of the art" refers to the most advanced and effective models, algorithms, and approaches that have been developed to tackle various challenges.
+
+Please refere to the following chapter of [STATE-OF-ART](https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/fields/deepLearning/stateOfArt.md)
 
 # Credits
 [CS231n: Convolutional Neural Networks for Visual Recognition](https://cs231n.github.io/convolutional-networks/).

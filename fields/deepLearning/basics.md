@@ -1,5 +1,6 @@
 # Deep Learning - Basics
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/9173f95c-88e9-42b2-bc09-f3aa65285b5b)
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/f0c2a453-6da1-43cf-846d-3c9425b5996b)
+
 
 
 In this article, we'll start explaining the important basics in deep learning
@@ -70,6 +71,7 @@ In real life the relation between output and input are not a linear relation, bu
 - [Mismatched Training \& Dev/Test Sets](#mismatched-training--devtest-sets)
 - [Learning From Multiple Tasks](#learning-from-multiple-tasks)
 - [End-To-End Deep Learning](#end-to-end-deep-learning)
+  - [Face Recognition as end-to-end approach](#face-recognition-as-end-to-end-approach)
 - [Credits](#credits)
 
 # Neural Network
@@ -456,6 +458,27 @@ Tip: Build your system quickly then iterate.
 
 # End-To-End Deep Learning
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/bf085b8a-07e7-4a69-b954-b58e8a7fea19)
+
+End-to_end deep leanring is a techinque where a single neural network trained to perform a task directly from the input data, without any manual feature extraction. This is in contrast to traditional machine learning approaches , which typically involve manually extraction features from the input data and then training a seperate machine learning model on those features.
+
+Comapred to a multiple stage approach, where there are more than one stage, and each stage takes an input and result to an output which is the input to the next stage. This is similir to mappping and input X to a final output Y.
+
+Briefly, there have been some data processing systems, or learning systems that require multiple stages of processing. And what end-to-end deep learning does, is it can take all those multiple stages, and replace it usually with just a single neural network.
+
+End-to-end deep learning has been used to achieve state-of-art results on wide range of tasks, including image recognition, natural language processing, and speech recognition.
+
+## Face Recognition as end-to-end approach
+We could create a single neaural network to be able to detect the input image and output the identity of the people in the images, which is called a signle stage approach.
+
+Alternatively, We could uses a two stage approach, where the first stage is face detection for the input image, and extract that face, then pass this output face detected into a second stage which is face recognition, where the detected face is comapred with a predefined database of labeld faces vectores and measure the similarity between these two faces. 
+
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/d4b8a3a1-4ac6-4817-a0ad-6c1415248040)
+
+Two reasons for why two stages NN is better than one stage NN to determine Identity of employee:
+- Each of two problem you’re solving is much simpler (one to detect faces, second to determine  employee).
+- You have a lot of data compared for each stage bigger than one stage.
+
+A Question Here: Do you have the sufficient data to learn a function of the complexity needed to map x to y?
 
 # Credits
 - Deep Learning Specialization By Andrew NG in Coursera
