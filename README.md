@@ -88,8 +88,8 @@ From the aroma of well-structured code to the rich flavors of design patterns an
 |   |   ├── dataFeatureEngineering
 |   |   ├── dataModeling
 |   |   |   ├── xgboost
-├── designPatterns
-|   ├── featureCross
+|   ├── designPatterns
+|   |   ├── featureCross
 ├── Prblems
 |   ├── problem_solving
 |   ├── question_CheapestFlatsPerCityUsingSQL
