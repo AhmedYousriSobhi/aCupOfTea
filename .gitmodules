@@ -10,3 +10,6 @@
 [submodule "projects/BEV-Project"]
 	path = projects/BEV-Project
 	url = https://github.com/oforomar/BEV-Project.git
+[submodule "projects/customer_segmentation"]
+	path = projects/customer_segmentation
+	url = https://github.com/AhmedYousriSobhi/customer_segmentation
