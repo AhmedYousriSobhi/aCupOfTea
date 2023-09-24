@@ -13,3 +13,6 @@
 [submodule "projects/customer_segmentation"]
 	path = projects/customer_segmentation
 	url = https://github.com/AhmedYousriSobhi/customer_segmentation
+[submodule "projects/face-off"]
+	path = projects/face-off
+	url = https://github.com/AhmedYousriSobhi/face-off
