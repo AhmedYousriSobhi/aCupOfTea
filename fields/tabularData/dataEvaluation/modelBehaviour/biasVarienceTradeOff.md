@@ -1,16 +1,16 @@
 # Bias & Variance Trade Off
 
-## Table of Content
+# Table of Content
 - [Bias \& Variance Trade Off](#bias--variance-trade-off)
-  - [Table of Content](#table-of-content)
-  - [Bias](#bias)
-  - [Variance](#variance)
-  - [Bias-Variance Trade-Off](#bias-variance-trade-off)
-  - [Consistent vs Accurate](#consistent-vs-accurate)
-    - [Consistent but Inaccurate](#consistent-but-inaccurate)
-    - [Incosistent but Accurate](#incosistent-but-accurate)
+- [Table of Content](#table-of-content)
+- [Bias](#bias)
+- [Variance](#variance)
+- [Bias-Variance Trade-Off](#bias-variance-trade-off)
+- [Consistent vs Accurate](#consistent-vs-accurate)
+  - [Consistent but Inaccurate](#consistent-but-inaccurate)
+  - [Incosistent but Accurate](#incosistent-but-accurate)
 
-## Bias
+# Bias
 Bias refers to the error introduced by approximating a real-world problem, which may be complex, by a simplified model. Bias in a machine learning model occurs when the predicted values are further from the actual values.
 
 A model with high bias makes strong assumptions about the underlying data distribution and may oversimplify the relationships between features and the target variable. This can result in systematic errors, causing the model to consistently miss the true patterns in the data. In other words, a biased model is inaccurate and might underperform both on the training data and new, unseen data.
@@ -24,7 +24,7 @@ Characteristics of a high-bias model:
 - Fails to capture underlying patterns.
 - Consistently performs poorly on both training and test data.
 
-## Variance
+# Variance
 Variance refers to the error due to the model's sensitivity to small fluctuations or noise in the training data. Variance refers to the amount the target model will change when trained with different training data.
 
 A model with high variance captures noise or random fluctuations in the training data as meaningful patterns, leading to high performance on the training data but poor generalization to new data. High variance models tend to overfit the training data by fitting it too closely, resulting in a poor fit to unseen data.
@@ -38,7 +38,9 @@ Characteristics of a high-variance model:
 - Poor performance on new, unseen data.
 - Prone to overfitting.
 
-## Bias-Variance Trade-Off
+# Bias-Variance Trade-Off
+![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/b244c3fa-656f-4210-9d62-6a8a733af974)
+
 In summary, the main differences between bias and variance are:
 
 - Bias: Bias relates to the error introduced due to oversimplification of the model. High bias results in consistently inaccurate predictions.
@@ -48,7 +50,7 @@ The goal in machine learning is to find a balance between bias and variance to c
 
 The bias-variance trade-off comes into play because reducing bias often leads to an increase in variance, and vice versa. A model that is too simple (high bias) will not be able to capture the underlying patterns in the data, resulting in systematic errors. Conversely, a very complex model (low bias) might fit the training data closely but will also fit the noise, leading to poor generalization.
 
-The goal is to strike a balance between bias and variance, which results in the best overall predictive performance on new, unseen data. This can be achieved by:
+The goal is to strike a balance between bias and variance, __to have the lowest generalization error__, which results in the best overall predictive performance on new, unseen data. This can be achieved by:
 
 - Selecting an appropriate model complexity: Choosing a model that is neither too simple (high bias) nor too complex (high variance) for the given problem.
 - Using regularization techniques: Methods like L1 or L2 regularization can help control model complexity and reduce variance.
@@ -57,8 +59,8 @@ The goal is to strike a balance between bias and variance, which results in the 
 
 Finding the right balance between bias and variance depends on the specific problem, dataset, and the model's characteristics. It's important to strike this balance to create a model that can generalize well and make accurate predictions on new data.
 
-## Consistent vs Accurate
-### Consistent but Inaccurate
+# Consistent vs Accurate
+## Consistent but Inaccurate
 A machine learning model that is consistent but inaccurate refers to a situation where the model's predictions are systematically wrong in terms of their overall accuracy, despite demonstrating a certain level of consistency or stability in its behavior. In other words, the model consistently makes predictions that are biased or far from the true values, even though it might consistently produce similar predictions across different instances or datasets.
 
 Consistency in this context means that the model's predictions don't vary significantly when given different inputs or when trained on different subsets of data. However, this doesn't guarantee that the model's predictions are accurate or close to the ground truth.
@@ -79,7 +81,7 @@ This situation can arise due to various reasons:
 
 It's important to address these issues in machine learning by improving the quality of training data, selecting appropriate features, refining the model architecture, and fine-tuning hyperparameters to strike a balance between bias and variance. Monitoring the model's performance on various metrics and using techniques like cross-validation can help detect and mitigate issues related to consistency and accuracy.
 
-### Incosistent but Accurate
+## Incosistent but Accurate
 the model's predictions might be close to the true values or ground truth, but its behavior is unstable and varies widely across different instances or datasets.
 
 High variance and low bias algorithms train models that are accurate but inconsistent

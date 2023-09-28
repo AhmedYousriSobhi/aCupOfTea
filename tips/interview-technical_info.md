@@ -2,6 +2,16 @@
 
 When you are doing an interview for any techinical position, there are some important questions you should ask the interviewer about, so let's discuss more about these questions.
 
+# Table of Content
+- [Technical Info](#technical-info)
+- [Table of Content](#table-of-content)
+- [As a Data Scientist](#as-a-data-scientist)
+  - [What is the data team structure?](#what-is-the-data-team-structure)
+  - [What are the future long and short term planning for the team?](#what-are-the-future-long-and-short-term-planning-for-the-team)
+  - [How many of the data scientist project deployed?](#how-many-of-the-data-scientist-project-deployed)
+  - [What are they technology tools there using?](#what-are-they-technology-tools-there-using)
+
+# As a Data Scientist
 Let's assume the applied position is a Data Scientist:
 
 ## What is the data team structure?

@@ -1,50 +1,40 @@
 # Data EDA and Analysis
 
-## Table of Content
+# Table of Content
 - [Data EDA and Analysis](#data-eda-and-analysis)
-  - [Table of Content](#table-of-content)
-  - [1. Machine Learning Workflow](#1-machine-learning-workflow)
-  - [2. Decisions in analytics are increasingly driven by data and models, and key aspects of our Machine Learning Workflow are getting depend on cleaning](#2-decisions-in-analytics-are-increasingly-driven-by-data-and-models-and-key-aspects-of-our-machine-learning-workflow-are-getting-depend-on-cleaning)
-  - [3. How data can be messy:](#3-how-data-can-be-messy)
-  - [4- Dealing with missing data:](#4--dealing-with-missing-data)
-  - [5- Dealing with outliers](#5--dealing-with-outliers)
-  - [6. Exploratory Data Analysis (EDA):](#6-exploratory-data-analysis-eda)
-  - [7- EDA techniques:](#7--eda-techniques)
-  - [8- Feature Engineering and Variable Transformation:](#8--feature-engineering-and-variable-transformation)
-  - [9- Transformations](#9--transformations)
-  - [25- Correlation vs Causation:](#25--correlation-vs-causation)
-  - [Credits:](#credits)
+- [Table of Content](#table-of-content)
+- [1. Machine Learning Workflow](#1-machine-learning-workflow)
+- [2. Decisions in analytics are increasingly driven by data and models, and key aspects of our Machine Learning Workflow are getting depend on cleaning data](#2-decisions-in-analytics-are-increasingly-driven-by-data-and-models-and-key-aspects-of-our-machine-learning-workflow-are-getting-depend-on-cleaning-data)
+- [3. How data can be messy:](#3-how-data-can-be-messy)
+- [4- Dealing with missing data:](#4--dealing-with-missing-data)
+- [5- Dealing with outliers](#5--dealing-with-outliers)
+- [6. Exploratory Data Analysis (EDA):](#6-exploratory-data-analysis-eda)
+- [7- EDA techniques:](#7--eda-techniques)
+- [8- Feature Engineering and Variable Transformation:](#8--feature-engineering-and-variable-transformation)
+- [9- Transformations](#9--transformations)
+- [25- Correlation vs Causation:](#25--correlation-vs-causation)
+- [Credits:](#credits)
 
-## 1. Machine Learning Workflow
-Problem Statement
-- What problem are we trying to solve.
-- “A problem well-stated is a problem half-solved" by Charles Kettering, the head of research at General Motors 
+# 1. Machine Learning Workflow
+|Step|Description|
+|--|--|
+|Problem Statement|What problem are we trying to solve.</br></br>“A problem well-stated is a problem half-solved" by Charles Kettering, the head of research at General Motors 
+|Data Collection|What data do we need to solve that problem
+|Data Exploration and Preprocessing|Expolre and analysis the collected data.</br></br>How should we clean our data so our model can use it
+|Modeling|Build a model to solve our problem
+|Validation|Did that model solve the problem
+|Decision Making and Deployment|Putting the model into production
 
-Data Collection
-- What data do we need to solve that problem
+# 2. Decisions in analytics are increasingly driven by data and models, and key aspects of our Machine Learning Workflow are getting depend on cleaning data
+|Aspect|Description|
+|--|--|
+|Ovservations| An instance of the data (usually a row of the dataset), if a row "an obsevation" is not clean, we are misrepresenting, to our model, the relationship between our features and our targets.
+|Labels| They have to be labeled correctly.
+|Algorithms| Which is the computer programs that estimate models based on avaliable data, we need to recognize that our algorithms are going to be learned assuming the data accurately represents a real world.
+|Features| The information we have for each observation, if the recording of certain features are out, such as transaction amounts or locations with fraud, think about how easily that can throw off fraud detection.
+|Model| The hypothesized relationship between observations and data, the model itself is going to be assuming that this is actual data representing real world.
 
-Data Exploration and Preprocessing
-- Expolre and analysis the collected data.
-- How should we clean our data so our model can use it
-
-Modeling
-- Build a model to solve our problem
-
-Validation
-- Did that model solve the problem
-
-Decision Making and Deployment
-- Putting the model into production
-
-## 2. Decisions in analytics are increasingly driven by data and models, and key aspects of our Machine Learning Workflow are getting depend on cleaning
-data
-- Ovservations: An instance of the data (usually a row of the dataset), if a row "an obsevation" is not clean, we are misrepresenting, to our model, the relationship between our features and our targets.
-- Labels: They have to be labeled correctly.
-- Algorithms: Which is the computer programs that estimate models based on avaliable data, we need to recognize that our algorithms are going to be learned assuming the data accurately represents a real world.
-- Features: The information we have for each observation, if the recording of certain features are out, such as transaction amounts or locations with fraud, think about how easily that can throw off fraud detection.
-- Model: The hypothesized relationship between observations and data, the model itself is going to be assuming that this is actual data representing real world.
-
-## 3. How data can be messy:
+# 3. How data can be messy:
 __Duplicate or unnecessary data__
 - It bring extra weight to observations to our model or bring unnecessary noise.
 - Pay attention to duplicate values and research why there are multiple values, it's a good idea to look at the features you bringing in and filter the data as necessary; be carful not to filter too much if you may use features later.
@@ -63,7 +53,7 @@ __Data sourcing issues__
 - Different database types
 - Combining data from on-premises and on-the-cloud
 
-## 4- Dealing with missing data:
+# 4- Dealing with missing data:
 Remove the missing data, it'll quickly clean our data without having to guess an appropriate replacement value, on the other hand we may end up losing too much information, or biasing our dataset to some reason that the data is not collected for a particular field.
 
 We can impute our data, and that means that we would be replacing our null values with either the mean, or the median, or even a more complex estimation of the value, the pro to this is that we don't lose full rows or columns that may be important to our model, but on the other hand we add another level of uncertainty to our model as this is now based on estimates of what we think that true value for that missing value should have been, and reduce variability.
@@ -72,7 +62,7 @@ We can mask the data, so that all of our missing values are their own category, 
 
 Check markdown note regarding missing data in 'tabularData/dataProcessing/handlingMissingData'.
 
-## 5- Dealing with outliers
+# 5- Dealing with outliers
 An outlier is an observation in data that is distinct from most other observations, typically these observations are aberrations, and do not accurately represent the phenomenon we are trying to explain through to our model.
 
 Residuals: differences between actual and predicted values given your model, and they are going to represent model failure approaches that we can use in order to leverage residuals (detecting outliers):
@@ -97,14 +87,14 @@ Polices for outliers (what should we do):
 
 Check markdown note regarding missing data in 'tabularData/dataProcessing/handlingOutliers'.
 
-## 6. Exploratory Data Analysis (EDA):
+# 6. Exploratory Data Analysis (EDA):
 EDA is going to be the approach to analyzing datasets to summarize their main characteristics, often with visual methods and statistical summary as well.
 
 EDA is useful as it's like the initial conversation with data before getting started, this will determine if the data that we are looking at actually makes sense, or if we need further cleaning, or if more data is actually needed.
 
 EDA will help us identify patterns and trends in the actual dataset, sometimes this can be as important if not more important than the actual findings from the modeling.
 
-## 7- EDA techniques:
+# 7- EDA techniques:
 __Summary statistics__
 - Average, Mean, Median, Min, Max, Correlations, etc.
 
@@ -115,14 +105,14 @@ __EDA tools__
 - Pandas; data wrangling or summary statistics
 - Matplotlib, Seaborn for visualization
 
-## 8- Feature Engineering and Variable Transformation:
+# 8- Feature Engineering and Variable Transformation:
 Before we move to modeling, we'll most likely need to adjust the raw data coming in, to optimize model performance.
 
 Models used in Machine Learning Workflows will often be based off of some assumptions about the data, a common example is a linear regression models where it's going to assume a linear relationship between the observations and the target (outcome) variable.
 
 The mathematical theory behind a linear regression is going to assume that our residuals from our model are going to be normally distributed Often the raw data that we get both the features and the target (outcome) variable can be negatively or positively skewed, and in real life that data can come in all shapes and sizes and data transformations can help the algorithm find a better solution that will end up having residuals that are actually normally distributed.
 
-## 9- Transformations 
+# 9- Transformations 
 __Log transformation__
 - Log transformation can be a useful way to find a linear relationship when the underlying raw data, which may not actually have a linear relationship. So the resulting algorithm will still be a linear regression, as the features now have been transformed, feature engineered, so that we can input those into the linear regression model.
 - ```python
@@ -132,7 +122,7 @@ __Log transformation__
 __Polynomial features__
 - We can estiamte higher-order relationships in this data by adding polynomial features, for example instead of only incorporating budget, we can incorporate budget squared as a feature and add more flexibility to our model and fit a linear model using these polynomial features, and again we will end up with a linear model even though we've included new features.
 
-## 10- Variable Selection: 
+# 10- Variable Selection: 
 Variable selection involves choosing the set of features to include in the model; variables must often transformed before they can be included in models, in addition to log and polynomial transformations, this can involve:
 
 - __Encoding__
@@ -154,7 +144,7 @@ Variable selection involves choosing the set of features to include in the model
     - __Robust Scale__: It's similar to min-max scaling, but instead maps the interquartile range (75th percentile - 25th percentile) to (0, 1). This means the variable itself takes values outside of the (0, 1) interval.
   - The appropiate method of scaling or encoding depends on the type of feature.
 
-## 11- Notes:
+# 11- Notes:
 If you have a columns consists of all/mostly unique values eg: ID, that's not going to give us any predictive value for tying to run  a machine learning model, it can't learn anything if every single value for that column is a unique value.
 
 We want to ensure that there's not too heavy of a multi-collinearity between each one of our features, as that can throw off our interpretation of something like linear regression (use pair plot to see that).
@@ -162,19 +152,19 @@ We want to ensure that there's not too heavy of a multi-collinearity between eac
 A side note: It's ok to have 'some' multi-collinearity when your doing multiple regressions.
 - Check markdown note regarding missing data in 'tabularData/dataEda/correlation'.
 
-## 12- Estimation vs Inference:
+# 12- Estimation vs Inference:
 __Estimation__: Is the application of an algorithm, for example taking the average; keep in mind that estimate is just going to give us an estimate of a certian parameter, such as the mean.
 
 __Inference__: Invovles putting an accuracy on the estimate, for example standard error of the average; when performing statistical inference, we are trying to understand the underlying distribution of the population including our estimate of the mean.
 
-## 13- Machine Learning and Statistical Inference:
+# 13- Machine Learning and Statistical Inference:
 Machine Learning and Statistical Inference are similar, in both cases, we're using some sample data in order to infer qualities of the  actual underlying population distribution in the real world and the models that would have generated that data. When we say here our data-generating process, we can think of the linear model as an example of a data-generating process representing the actual joint distribution between our x and the y variable.
 
 We may care about the whole distribution when doing machine learning, or just some features of our distribution, such as just getting the point estimate of for example our mean.
 
 Machine Learning that focuses on understanding the underlying parameters and individual effects of all of our parameters require tools pulled from statistical inference. On the other hand, some machine learning models tend to only mildly focus on all these different parameters of the underlying parameters of our distribution, and just focus instead on prediction results, or just those estimates.
 
-## 14- Parametric vs. Non-parametric;
+# 14- Parametric vs. Non-parametric;
 A parametric model is a particular type of statistical model: it's also a set of distributions or regressions, but they have a finite number of parameters. 
 
 So we can think here with ordinary least squares (OLS) with our linear models, where what we saw is that we had to predefine the number of coefficients according to the features or transformed features, that we were working with, and we had to assume also a linear distribution.
@@ -195,7 +185,7 @@ Example non-parametric models:
 - Creating a distribution of the data (CDF; cumulative distribution function) using a histogram as the probability of where a certain value will fall according to the actual data, so we're not assuming a normal distribution or exponential distribution, but a distribution defined by the actual data that you've pulled from your sample.
 - In this case, we wouldn't be specifying any of the parameters that we need for let's say a normal distribution.
 
-## 15- Common Distributions:
+# 15- Common Distributions:
 __Uniform Distribution__
 - Uniform because it is a uniformly equal chance that you'll get any value within our range, you can think here, the chances of rolling a dice where a 1 is equally likely to 6 versus 3 versus 4, every single value is equally likely.
 
@@ -222,7 +212,7 @@ __Exponential Distribution__
 __Poisson Distribution__
 - A good way to think about this in the real-world is the number of events that happened during a certian amount of time, an example for it is how many people are going to watch a youtube video in the next 10 minutes? If the Lambda parameter is 1, then we'd say most of the time there's only 1 person that watches this video every 10 minutes, and it's tight around that 1, but if it's something like lambda = 10, then 10 people watch it every 10 minutes, and you'd probably have more of a spread of your standard deviation (covered under lambda) because it could be closer to 5 or 15 when you have a larger value of lambda.
 
-## 16- Frequentist vs. Bayesian Statistics:
+# 16- Frequentist vs. Bayesian Statistics:
 __Frequentist Statistics__
 - Frequentist statistics is concerned with repeated observations to the limit, for a frequentist statistics, the idea is that we start without any idea for the probabilities we're trying to estimate.
 - Let's start thinking about how it works in regards to queuing theory, queuing theory is an important concept to keep in mind for many businesses, and that idea is that it's the study of working with queues or lines and how many servers we need to match the size of that queue, so you can think about a grocery store and how many cashiers will need to check out customers in a timely fashion.
@@ -248,14 +238,14 @@ To summerize:
 - If you have certain beliefs or knowledge about your area of research, a Bayesian approach might be better.
 - Frequentist statiscs never uses or calculate the probability of the hypothesis, while Bayesian uses probabilities of data and probabilities of both hypothesis.
 
-## 17- Recap:
+# 17- Recap:
 Machine Learning may only focus on the estimation, whereas statistical inference will look to the underlying data generating process.
 
 Parametric modeling will rely on assumptions of distributions and number of parameters of that distribution.
 
 Non-parameteric models will not have as strong assumption as parametric.
 
-## 18- Hypothesis Testing:
+# 18- Hypothesis Testing:
 Hypothesis is a statement about a population parameter such as mean of our Poisson Distribution and our estimate of the number of people that will come into the line for our grocery store example in the next hour.
 
 We create two hypotheses:
@@ -284,7 +274,7 @@ __Hypothesis Testing: Bayesian Approach__
 
 - The priors are multiplied by the likelihood ratio, which does not depend on the priors. The likelihood ratio tells us how we should update the priors in reaction to seeing a given set of data and that will give us our posterior distribution.
 
-## 19- Type1 and Type2 Errors:
+# 19- Type1 and Type2 Errors:
 Let's think of an example; we're going to imagine we're tossing a coin, and our null hypothesis H0 is that we are working with a fair coin, and the alternative hypothesis H1 is that it's not a fair coin.
 
 __Type1 Error__ in this case is going to be incorectly rejecting the null H0, so this would mean we are indeed working with a fair coin, but we make the error given our sample data that we should decide to reject the null.
@@ -296,7 +286,7 @@ Power of a test = 1 - P(Type2 Error)
 			    = 1 - the probability of incorrectly accepting the null
 ```
 
-## 20- Hypothesis Terminologies:
+# 20- Hypothesis Terminologies:
 __The Likelihood Ratio__; is called a Test Statistic; we use it to decide wether to accept/reject the null hypothesis H0.
 
 __The Rejection Region__; is the set of values of the test statistic that lead to rejecting null hypothesis H0.
@@ -305,7 +295,7 @@ __The Acceptance Region__; is the set of values of the test statistic that lead 
 
 __The Null Distribution__; is the test statistic's distribution when the null hypothesis is true.
 
-## 21- Business Examples:
+# 21- Business Examples:
 __Testing marketing intervention effectiveness__
 - For a new direct mail marketing compaign to existing customers, the null hypothesis (H0) would be that our campaign does not actually impact purchasing.
 The alternative hypothesis (H1) would suggest that it does indeed have an impact.
@@ -314,7 +304,7 @@ __Website Layout__
 - For a proposed change to a website layout, we may test the null hypothesis (H0) that the change had no impact on traffic.
 - Or we would look for evidence to reject the null hypothesis in favor of an alternative hypothesis (H1), that there is indeed an impact of the website layout on traffic.
 
-## 22- Significance Level and p-value:
+# 22- Significance Level and p-value:
 We know the distribution of the null hypothesis, such as the odds the coin is fair or the distribution of marketing intervention effectiveness.
 
 To get a rejection reason, we have to calculate the test statistic. We will choose before testing the data, the level at which we're going to actually reject our null hypothesis.
@@ -339,7 +329,7 @@ __p-value__: The smallest significance level at which the null hypothesis would 
 
 __Confidence Interval__: the values for which we accept the null hypothesis, essentially the other side of the p-value.
 
-## 23- F-Statistic:
+# 23- F-Statistic:
 The null hypothesis (H0) for the F-Statistic, which is just a test statistic for regression, is that the data can be modeled by setting all (weights) to zero. So that you can ask yourself: does adding the features actually give us an extra indicator of what the target will actually be compared to just taking the mean of that target variable?
 
 You reject the null hypothesis, which means that you are not getting any better than the mean value if your p-value is small enough for your F-Statistic.
@@ -348,7 +338,7 @@ F-Statistic value is a number that relate to some probability, if that probabili
 
 In other words, the probability of just using the mean and coming up with values that you did is going to be very low, so you reject the null hypothesis and assume that those coefficients actually do have an effect on the target variable.
 
-## 24- Power and Sample size:
+# 24- Power and Sample size:
 Probability of at least one Type1 Error is approximately:
 ```python
 probability = 1 - (1 - 0.05)^num_tests	 # for 5% significance p-value = 0.05
@@ -361,7 +351,7 @@ __Bonferroni Correction__
 - Effects either need to be larger or the tests need larger samples to be detected.
 - Best practice is to limit the number of comparisons done to a few well-motivated cases.
 
-## 25- Correlation vs Causation:
+# 25- Correlation vs Causation:
 __Does it rain more on cooler days?__
 
 Maybe it depend on where you are, some places have summer monsoons, so maybe as it gets warmer there it rains more.
@@ -384,5 +374,5 @@ We should be careful about changing X with the hope of changing Y, X and Y can b
 - X and Y are both caused by something else (confounding, external variable)
 - X and Y are not related at all, we just got unlucky in the sample (spurious)
 
-## Credits: 
+# Credits: 
 - IBM Coursera Specialization

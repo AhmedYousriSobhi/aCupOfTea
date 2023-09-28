@@ -1,9 +1,11 @@
 # Machine Learning Concept - Unsupervisied Learning
+Unsupervised machine learning is a type of machine learning where the model is trained on a dataset without labeled target values or explicit supervision. In unsupervised learning, the algorithm is tasked with finding patterns, structures, or relationships within the data on its own. 
 
 # Table of Content
 - [Machine Learning Concept - Unsupervisied Learning](#machine-learning-concept---unsupervisied-learning)
 - [Table of Content](#table-of-content)
-- [There can be two cases of unsupervised learning:](#there-can-be-two-cases-of-unsupervised-learning)
+- [Description of Unspervised ML](#description-of-unspervised-ml)
+- [Two cases of unsupervised learning](#two-cases-of-unsupervised-learning)
 - [The Curse of dimensionality](#the-curse-of-dimensionality)
 - [K-means](#k-means)
 - [Choosing the right Clustering ALgorithm](#choosing-the-right-clustering-algorithm)
@@ -13,6 +15,7 @@
   - [Elbow Method](#elbow-method)
     - [Python Implementation](#python-implementation)
 - [Dimentionality Reduction Techniques](#dimentionality-reduction-techniques)
+  - [Techinical Comparison](#techinical-comparison)
 - [Principal Component Analysis (PCA)](#principal-component-analysis-pca)
   - [Example: Dimensionality Reduction using PCA](#example-dimensionality-reduction-using-pca)
   - [PCA Algorithm](#pca-algorithm)
@@ -22,7 +25,21 @@
   - [PCA Technical Points](#pca-technical-points)
 - [Credits](#credits)
   
-# There can be two cases of unsupervised learning:
+# Description of Unspervised ML
+Here's a description of unsupervised machine learning:
+|Aspect|Description|
+|--|--|
+|No Labeled Output| Unlike supervised learning, where the algorithm is provided with input-output pairs and learns to map inputs to specific outputs, unsupervised learning deals with data where there are no target labels or explicit output values to predict.|
+Objective| The primary objective of unsupervised learning is to discover the inherent structure or organization within the data. This could involve finding clusters of similar data points, reducing the dimensionality of the data, or discovering underlying patterns.|
+|Common Tasks|Clustering: One common task in unsupervised learning is clustering, where the algorithm groups similar data points together into clusters or categories. Common clustering algorithms include K-Means, hierarchical clustering, and DBSCAN. </br></br>Dimensionality Reduction: Unsupervised learning is also used for dimensionality reduction, which involves reducing the number of features or variables in the data while preserving its essential structure. Principal Component Analysis (PCA) and t-Distributed Stochastic Neighbor Embedding (t-SNE) are popular dimensionality reduction techniques.</br></br>Anomaly Detection: Another task is anomaly detection, where the algorithm identifies data points that are significantly different from the rest of the data. This is useful for detecting outliers or unusual patterns in the data.</br></br>Density Estimation: Unsupervised learning can be used for density estimation, which involves estimating the probability distribution of the data. Kernel Density Estimation (KDE) is an example of a density estimation technique.
+|Feature Learning|Unsupervised learning is often used for feature learning, where the algorithm automatically learns relevant features or representations from the data. This can be particularly beneficial for tasks like image and text analysis.
+|Evaluation| Evaluating the performance of unsupervised learning algorithms can be challenging because there are no ground truth labels. Evaluation metrics depend on the specific task; for example, silhouette score for clustering or reconstruction error for dimensionality reduction.
+|Applications|Unsupervised learning finds applications in various domains, including image and speech recognition, recommendation systems, anomaly detection in cybersecurity, customer segmentation in marketing, and more.</br></br>It is particularly useful in exploratory data analysis when you want to gain insights from data that lacks clear labels or when you want to preprocess data before applying supervised learning techniques.
+Challenges|Unsupervised learning can be challenging because it relies on the algorithm's ability to discover meaningful patterns without explicit guidance.</br></br>The choice of the right algorithm and hyperparameters can significantly impact results.
+
+In summary, unsupervised machine learning is a branch of machine learning focused on finding patterns and structures within data without the use of labeled target values. It is a valuable tool for uncovering hidden insights and knowledge from large and complex datasets.
+
+# Two cases of unsupervised learning
 One popularly use case is called __clustering__, where we use our unlabeled data to identify an unknown structure and an example of this may be segmenting our customers into different groups.
 
 The other major use case for unsupervised algorithms is for __dimensionality reduction__. Namely using structural characteristics to reduce the size of our dataset without losing much information contained in that original dataset.
@@ -42,6 +59,19 @@ If we have several features, things can go wrong;
 - On top of that, higher dimensions will often lead to slower performance as dealing with more columns is going to be more computationally expensive.
 
 - Also it will lead to the incidence of outliers increasing as the dimensionality increases
+
+Here are some of the specific problems that can arise due to the curse of dimensionality:
+
+- Data sparsity: As the number of dimensions increases, the data becomes more and more sparse. This means that there are fewer and fewer data points that are close to each other in high-dimensional space. This can make it difficult to find patterns and relationships in the data.
+- Overfitting: Machine learning models are more likely to overfit high-dimensional data. Overfitting occurs when a model learns the training data too well and is unable to generalize to new data.
+- Computational complexity: Training machine learning models on high-dimensional data can be very computationally expensive. This is because the algorithms need to learn the relationships between all of the different dimensions in the data.
+
+There are a number of techniques that can be used to mitigate the curse of dimensionality, such as:
+- Feature selection: Feature selection is the process of selecting a subset of features that are most relevant to the task at hand. This can help to reduce the dimensionality of the data and make it easier to find patterns and relationships.
+- Dimensionality reduction: Dimensionality reduction is the process of transforming the data into a lower-dimensional space while preserving as much information as possible. This can help to make the data more manageable and easier to analyze.
+- Regularization: Regularization is a technique that can help to prevent overfitting. It works by penalizing the model for having complex relationships between the different features.
+
+The curse of dimensionality is a complex topic, and there is no one-size-fits-all solution. The best approach to dealing with the curse of dimensionality will depend on the specific problem that you are trying to solve.
 
 # K-means
 The process is to take k centroids, find the nearest points, then take the average of each one of those points that are closer to that centroid than any other centroid, and set that average that we have as the new centroid and view the closest points to that new centroid.
@@ -84,7 +114,7 @@ Choosing the appropriate number of clusters (K) is a crucial step in clustering 
 |Method|Details|
 |--|--|
 |Elbow Method|Plot the within-cluster sum of squares (inertia) against different values of K.</br>Look for an "elbow" point in the plot where the inertia starts to level off. This can be a good choice for K.
-|Silhouette Score|Calculate the silhouette score for different values of K.The silhouette score measures the quality of clustering, and higher values indicate better separation between clusters.Choose the K that maximizes the silhouette score.</br>You can use the silhouette_score function from scikit-learn.
+|Silhouette Score|Calculate the silhouette score for different values of K. The silhouette score measures the quality of clustering, and higher values indicate better separation between clusters.Choose the K that maximizes the silhouette score.</br>You can use the silhouette_score function from scikit-learn.
 |Gap Statistics|Gap statistics compare the performance of your clustering to a reference (e.g., random data) and can help identify the optimal K.</br>The larger the gap statistic, the better the clustering.</br>You can use libraries like scikit-learn or external packages for gap statistics.
 |Domain Knowledge|In some cases, domain knowledge or business requirements may guide your choice of K.
 |Visual Inspection|Visualize the results of different K values and choose the one that makes the most sense based on the distribution of data points.
@@ -94,7 +124,7 @@ After determining the optimal number of clusters (K), you can proceed with clust
 ## Silhouette Score
 The Silhouette Score is a metric for evaluating the quality of clustering results. It measures how well a data point fits into its assigned cluster and how distinct it is from other clusters. The Silhouette Score ranges from -1 to 1, where a high value indicates that the object is well matched to its own cluster and poorly matched to neighboring clusters.
 
-The Silhouette Score is calculated for each data point in the dataset. The Silhouette Score for a data point is calculated as follows:
+The Silhouette Score is calculated for each data point in the dataset, and calculated as follows:
 ```
 Silhouette Score = (b - a) / max(a, b)
 
@@ -107,6 +137,10 @@ where:
 The average intra-cluster distance is the average distance between the data point and all other data points in its cluster. The average nearest-cluster distance is the average distance between the data point and the nearest data point in another cluster.
 
 The Silhouette Score for a cluster is calculated as the average Silhouette Score for all data points in the cluster. The overall Silhouette Score for the clustering is calculated as the average Silhouette Score for all clusters.
+
+If b > a, then the score is postive, this indicates:
+- From b, which is bigger, clusters are far from each others, which means they are seperated.
+- From a, which is smaller, in the same cluster, the data points are near to each others.
 
 A high Silhouette Score indicates that the clustering is well-defined and that the data points are well-assigned to their clusters. A low Silhouette Score indicates that the clustering is not well-defined and that some of the data points may be assigned to the wrong clusters.
 
@@ -121,7 +155,7 @@ Here are some tips for improving the Silhouette Score:
 
 
 ## Elbow Method
-The elbow method is a heuristic method for determining the optimal number of clusters in a data set. It involves plotting the within-cluster sum of squares (WCSS) for different cluster numbers and identifying the “elbow” point where WCSS starts to level off.
+The elbow method is a heuristic method for determining the optimal number of clusters in a data set. It involves plotting the **within-cluster sum of squares (WCSS)** for different cluster numbers and identifying the “elbow” point where WCSS starts to level off.
 
 The WCSS is a measure of how well the data points in a cluster are grouped together. It is calculated as the sum of the squared distances between each data point and the cluster centroid.
 
@@ -154,7 +188,27 @@ Here are some tips for using the elbow method effectively:
 python code provided for Elbow method implementation locatted at ["tabularData/dataModeling/cluster_elbow_method.py"](https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/fields/tabularData/dataModeling/clustering/cluster_elbow_method.py)
 
 # Dimentionality Reduction Techniques
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/d9cec421-fce6-4707-9434-1b41fd59b50b)
+There are many different dimensionality reduction techniques, each with its own strengths and weaknesses. Some of the most common dimensionality reduction techniques include:
+|Technique|Description|
+|--|--|
+|Principal component analysis (PCA)| PCA is a linear dimensionality reduction technique that finds the principal components of the data, which are the directions in which the data varies the most. PCA is a simple and efficient technique, but it is not able to capture non-linear relationships in the data.
+|Kernel principal component analysis (KPCA)| KPCA is a non-linear extension of PCA that uses a kernel function to transform the data into a higher-dimensional space, where PCA is then performed. This allows KPCA to capture non-linear relationships in the data. However, KPCA is more computationally expensive than PCA and the results can be more difficult to interpret.
+|Linear discriminant analysis (LDA)| LDA is a supervised dimensionality reduction technique that is used to reduce the dimensionality of the data while preserving the information that is useful for discrimination between different classes. LDA is a powerful technique for classification, but it is not able to capture non-linear relationships in the data.
+|t-distributed stochastic neighbor embedding (t-SNE)| t-SNE is a non-linear dimensionality reduction technique that is used to visualize high-dimensional data in a low-dimensional space. t-SNE is able to preserve the local structure of the data, which makes it well-suited for visualization tasks. However, t-SNE is computationally expensive and the results can be difficult to interpret.
+|Uniform manifold approximation and projection (UMAP)| UMAP is a non-linear dimensionality reduction technique that is similar to t-SNE, but it is more efficient and produces more consistent results. UMAP is well-suited for visualization and clustering tasks.
+
+In addition to these general-purpose dimensionality reduction techniques, there are also many specialized techniques that have been developed for specific applications. For example, there are dimensionality reduction techniques for image processing, natural language processing, and financial data analysis.
+
+## Techinical Comparison
+|Technique|	Date of creation|	Work principle|	Other important comparison points|
+|--|--|--|--|
+Principal component analysis (PCA)|	1901|	Finds the principal components of the data, which are the directions in which the data varies the most.|	Linear, simple to implement and understand, fast and efficient, interpretable results, sensitive to outliers|
+Kernel principal component analysis (KPCA)|	1999|	Uses a kernel function to transform the data into a higher-dimensional space, where PCA is then performed.|	Non-linear, can capture non-linear relationships in the data, more robust to outliers than PCA, more computationally expensive than PCA, results can be more difficult to interpret|
+Linear discriminant analysis (LDA)|	1936|	Finds a linear combination of the features that maximizes the discrimination between different classes.|	Supervised, powerful for classification, cannot capture non-linear relationships in the data|
+t-distributed stochastic neighbor embedding (t-SNE)|	2008|	Uses a probability distribution to embed the data in a lower-dimensional space while preserving the local structure of the data.|	Non-linear, well-suited for visualization tasks, computationally expensive, results can be difficult to interpret|
+Uniform manifold approximation and projection (UMAP)|	2018|	Uses a fuzzy topological data analysis framework to embed the data in a lower-dimensional space while preserving the local and global structure of the data.|	Non-linear, well-suited for visualization and clustering tasks, more efficient and produces more consistent results than t-SNE
+
+The best dimensionality reduction technique to use will depend on the specific characteristics of your data and your needs. It is important to experiment with different techniques to find the one that works best for your problem.
 
 # Principal Component Analysis (PCA)
 Principal component analysis (PCA) is a statistical procedure that uses an orthogonal transformation to convert a set of observations of possibly correlated variables into a set of values of linearly uncorrelated variables called principal components. This transformation is defined in such a way that the first principal component has the largest possible variance (that is, accounts for as much of the variability in the data as possible), and each succeeding component in turn has the largest possible variance given that it is orthogonal to the preceding components. The resulting components are a linear combination of the original variables, and at any given component, information about the original variables is lost.

@@ -9,9 +9,9 @@ A neural network tries to represent a given output based on its inputs by learni
 
 In real life the relation between output and input are not a linear relation, but a non-linear complex one. This force us to choose methods that introduce this non-linearity, these methods are called activation functions.
 
-## Table of Content
+# Table of Content
 - [Deep Learning - Basics](#deep-learning---basics)
-  - [Table of Content](#table-of-content)
+- [Table of Content](#table-of-content)
 - [Neural Network](#neural-network)
   - [Loss functions Vs Cost function](#loss-functions-vs-cost-function)
   - [Removing INTERCEPT?](#removing-intercept)
@@ -31,43 +31,43 @@ In real life the relation between output and input are not a linear relation, bu
     - [Comparison between Activation Functions](#comparison-between-activation-functions)
     - [Activation Function must be differentiable ?](#activation-function-must-be-differentiable-)
     - [Which Activation Function should we use?](#which-activation-function-should-we-use)
-  - [The PERCEPTRION ERROR](#the-perceptrion-error)
-  - [Gradient in Neural Network](#gradient-in-neural-network)
-    - [1- What is a Gradient?](#1--what-is-a-gradient)
-    - [3- What is Gradient Descend?](#3--what-is-gradient-descend)
-      - [3.1- How does it works?](#31--how-does-it-works)
-      - [3.2- Common types of Gradient Descent](#32--common-types-of-gradient-descent)
-  - [Vanishing/Exploding Gradient](#vanishingexploding-gradient)
-    - [1.1.1- Vanishing Gradient Problem](#111--vanishing-gradient-problem)
-      - [1.1.2- Solutions to Vanishing Gradient Problem](#112--solutions-to-vanishing-gradient-problem)
-    - [1.2.1- Exploding Gradient Problem](#121--exploding-gradient-problem)
-      - [1.2.2- Solutions to Exploding Gradient Problem](#122--solutions-to-exploding-gradient-problem)
-      - [1.3- Common Solution for Both \[Vanishing/Exploding\] Gradient](#13--common-solution-for-both-vanishingexploding-gradient)
-    - [1.4- Summary](#14--summary)
-    - [2- Vanishing/Exploding Gradient in NN](#2--vanishingexploding-gradient-in-nn)
-  - [Weights Initialization In NN](#weights-initialization-in-nn)
-    - [Notes](#notes)
-  - [Regularization](#regularization)
-  - [Normalization](#normalization)
-  - [Parameters Initialization](#parameters-initialization)
-  - [Gradient Checking](#gradient-checking)
-  - [Optimizers](#optimizers)
-    - [Mini-Batch](#mini-batch)
-    - [Exponential Weighted Average](#exponential-weighted-average)
-    - [Momentum GD](#momentum-gd)
+- [The PERCEPTRION ERROR](#the-perceptrion-error)
+- [Gradient in Neural Network](#gradient-in-neural-network)
+  - [1- What is a Gradient?](#1--what-is-a-gradient)
+  - [3- What is Gradient Descend?](#3--what-is-gradient-descend)
+    - [3.1- How does it works?](#31--how-does-it-works)
+    - [3.2- Common types of Gradient Descent](#32--common-types-of-gradient-descent)
+- [Vanishing/Exploding Gradient](#vanishingexploding-gradient)
+  - [1.1.1- Vanishing Gradient Problem](#111--vanishing-gradient-problem)
+  - [1.1.2- Solutions to Vanishing Gradient Problem](#112--solutions-to-vanishing-gradient-problem)
+  - [1.2.1- Exploding Gradient Problem](#121--exploding-gradient-problem)
+  - [1.2.2- Solutions to Exploding Gradient Problem](#122--solutions-to-exploding-gradient-problem)
+  - [1.3- Common Solution for Both \[Vanishing/Exploding\] Gradient](#13--common-solution-for-both-vanishingexploding-gradient)
+  - [1.4- Summary](#14--summary)
+  - [2- Vanishing/Exploding Gradient in NN](#2--vanishingexploding-gradient-in-nn)
+- [Weights Initialization In NN](#weights-initialization-in-nn)
+  - [Notes](#notes)
+- [Regularization](#regularization)
+- [Normalization](#normalization)
+- [Parameters Initialization](#parameters-initialization)
+- [Gradient Checking](#gradient-checking)
+- [Optimizers](#optimizers)
+  - [Mini-Batch](#mini-batch)
+  - [Exponential Weighted Average](#exponential-weighted-average)
+  - [Momentum GD](#momentum-gd)
   - [RMSPROP GD](#rmsprop-gd)
-    - [ADAM](#adam)
-    - [Learning Rate](#learning-rate)
-    - [ADAGRAD](#adagrad)
-    - [Local Minima](#local-minima)
-    - [Transfer Learning](#transfer-learning)
-  - [Hyper-Parameters Tuning](#hyper-parameters-tuning)
-  - [Batch Normalization](#batch-normalization)
-  - [Multi-Class Classification](#multi-class-classification)
-  - [BIAS - Variance](#bias---variance)
-  - [Single Number Evaluation Metric](#single-number-evaluation-metric)
-  - [Avoidable Bias](#avoidable-bias)
-  - [Error Analysis](#error-analysis)
+  - [ADAM](#adam)
+  - [Learning Rate](#learning-rate)
+  - [ADAGRAD](#adagrad)
+  - [Local Minima](#local-minima)
+  - [Transfer Learning](#transfer-learning)
+- [Hyper-Parameters Tuning](#hyper-parameters-tuning)
+- [Batch Normalization](#batch-normalization)
+- [Multi-Class Classification](#multi-class-classification)
+- [BIAS - Variance](#bias---variance)
+- [Single Number Evaluation Metric](#single-number-evaluation-metric)
+- [Avoidable Bias](#avoidable-bias)
+- [Error Analysis](#error-analysis)
 - [Mismatched Training \& Dev/Test Sets](#mismatched-training--devtest-sets)
 - [Learning From Multiple Tasks](#learning-from-multiple-tasks)
 - [End-To-End Deep Learning](#end-to-end-deep-learning)
@@ -272,11 +272,11 @@ For Output Laysers: Depends on the task whether it is classification or regressi
   - Binary Classifier: Sigmoid.
   - Multi-Class Classifier: SoftMax.
 
-## The PERCEPTRION ERROR
+# The PERCEPTRION ERROR
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/7cbc3b81-3ac1-4129-9e12-6807593f3e59)
 
-## Gradient in Neural Network
-### 1- What is a Gradient?
+# Gradient in Neural Network
+## 1- What is a Gradient?
 A gradient is the direction of greatest change in a function. It is a vector that points in the direction of the steepest ascent of the function. The gradient can be calculated using calculus, and it is used in many machine learning algorithms, such as gradient descent.
 
 In machine learning, the gradient is used to update the weights of a neural network. The gradient of the loss function with respect to the weights is calculated, and the weights are updated in the direction of the negative gradient. This means that the weights are updated in the direction that minimizes the loss function.
@@ -290,14 +290,14 @@ Here are some of the applications of gradients:
 -Natural language processing: Gradients are used in natural language processing tasks, such as sentiment analysis and machine translation.
 -Computer vision: Gradients are used in computer vision tasks, such as object detection and image classification.
 
-### 3- What is Gradient Descend?
+## 3- What is Gradient Descend?
 Gradient descent is an optimization algorithm used in machine learning to find the minimum of a function. It works by iteratively moving in the direction of the negative gradient of the function, which is the direction of steepest descent.
 
 The gradient of a function is a vector that points in the direction of the greatest increase of the function. The negative gradient points in the direction of the greatest decrease of the function.
 
 Gradient descent is a simple algorithm, but it can be very effective in finding the minimum of a function. It is often used in neural networks to train the weights of the network.
 
-#### 3.1- How does it works?
+### 3.1- How does it works?
 Here is an example of how gradient descent works:
 
 Let's say we have a function f(x) that we want to minimize. We can start with an initial guess for the value of x, and then use gradient descent to update our guess.
@@ -308,7 +308,7 @@ We can then repeat this process, updating our guess each time in the direction o
 
 Gradient descent is a powerful algorithm, but it can be slow to converge. There are a number of variations of gradient descent that can be used to speed up convergence.
 
-#### 3.2- Common types of Gradient Descent
+### 3.2- Common types of Gradient Descent
 Here are some of the most common variations of gradient descent:
 - Stochastic gradient descent: Stochastic gradient descent uses a single data point to update the weights of the network at each iteration. This can be more efficient than batch gradient descent, but it can also be less accurate.
 - Mini-batch gradient descent: Mini-batch gradient descent uses a small batch of data points to update the weights of the network at each iteration. This can be more efficient than stochastic gradient descent, but it can also be more accurate.
@@ -316,40 +316,40 @@ Here are some of the most common variations of gradient descent:
 - Adagrad: Adagrad is a technique that can be used to prevent the gradients from becoming too small. It works by adjusting the learning rate based on the magnitude of the gradients.
 - RMSprop: RMSprop is a technique that is similar to Adagrad, but it is more efficient. It works by averaging the squared gradients over time.
 
-## Vanishing/Exploding Gradient
+# Vanishing/Exploding Gradient
 ![image](https://github.com/AhmedYousriSobhi/insightMe/assets/66730765/f5d744d2-83c5-45aa-9d93-3e9daf6abad7)
 
 The vanishing gradient and exploding gradient problems are two common problems that can occur in neural networks. The vanishing gradient problem occurs when the gradients of the activation function become very small as the network learns. This can make it difficult for the network to learn, as the updates to the weights become very small.
 
 The exploding gradient problem occurs when the gradients of the activation function become very large as the network learns. This can cause the network to become unstable, and the weights can become very large or very small.
 
-### 1.1.1- Vanishing Gradient Problem
+## 1.1.1- Vanishing Gradient Problem
 The vanishing gradient problem occurs when the derivative of the activation function approaches zero as the input approaches a certain value. This can happen with activation functions that have a narrow range of output values, such as the sigmoid function.
 
 The vanishing gradient problem can make it difficult for the network to learn because the updates to the weights become very small. This is because the gradients are used to determine how much the weights should be updated, and if the gradients are very small, the updates will be very small as well. This can make it difficult for the network to make significant changes to its predictions, and it can prevent the network from learning.
 
 The vanishing gradient problem is most likely to occur in deep neural networks with many layers. This is because the gradients are multiplied by the derivative of the activation function at each layer, and if the derivative of the activation function approaches zero, the gradients will become very small very quickly.
 
-#### 1.1.2- Solutions to Vanishing Gradient Problem
+## 1.1.2- Solutions to Vanishing Gradient Problem
 There are a number of solutions to the vanishing gradient problem. 
 1. Using different activation function such as the ReLU function. The ReLU function has a non-zero derivative for all positive values, so it does not suffer from the vanishing gradient problem.
 2. Weights Initialization: The weights should be initialized in a way that ensures that the gradients do not become too small.
 3. Decreasing the learning rate: The learning rate is the step size that is used to update the weights of the network. If the learning rate is too large, the gradients can become too small.
 
-### 1.2.1- Exploding Gradient Problem
+## 1.2.1- Exploding Gradient Problem
 The exploding gradient problem occurs when the derivative of the activation function approaches infinity as the input approaches a certain value. This can happen with activation functions that have a wide range of output values, such as the ReLU function.
 
 The exploding gradient problem can make the network unstable because the updates to the weights can become very large. This is because the gradients are used to determine how much the weights should be updated, and if the gradients are very large, the updates will be very large as well. This can cause the network to make sudden and unpredictable changes to its predictions, and it can prevent the network from learning.
 
 The exploding gradient problem is most likely to occur in deep neural networks with many layers. This is because the gradients are multiplied by the derivative of the activation function at each layer, and if the derivative of the activation function approaches infinity, the gradients will become very large very quickly.
 
-#### 1.2.2- Solutions to Exploding Gradient Problem
+## 1.2.2- Solutions to Exploding Gradient Problem
 There are a number of solutions to the exploding gradient problem. 
 1. Using a different activation function: Such as the tanh function. The tanh function has a derivative that is bounded between -1 and 1, so it does not suffer from the exploding gradient problem.
 2. __Gradient Clipping__: Clipping the gradients means that the gradients are limited to a certain range. This can help to prevent the gradients from becoming too large.
 3. Decreasing the learning rate: The learning rate is the step size that is used to update the weights of the network. If the learning rate is too small, the gradients will not become too large.
 
-#### 1.3- Common Solution for Both [Vanishing/Exploding] Gradient
+## 1.3- Common Solution for Both [Vanishing/Exploding] Gradient
 1. Batch Normalization: It occurs after the activation function.
     ![image](https://github.com/AhmedYousriSobhi/insightMe/assets/66730765/0aa8a7ee-c737-4ae3-9eac-b93b83c32ed4)
     ![image](https://github.com/AhmedYousriSobhi/insightMe/assets/66730765/dae1df13-d1bc-4cc6-914d-7aab6c457447)
@@ -357,7 +357,7 @@ There are a number of solutions to the exploding gradient problem.
 2. Weight Initialization: 
     ![image](https://github.com/AhmedYousriSobhi/insightMe/assets/66730765/874d52a3-6947-484c-b8ad-531142995fe4)
 
-### 1.4- Summary
+## 1.4- Summary
 Here is a table that summarizes the key differences between the two problems:
 |Problem| Description|
 |--|--|
@@ -367,14 +367,14 @@ Here is a table that summarizes the key differences between the two problems:
 |Effect on Learning|	Makes it difficult for the network to learn.
 
 
-### 2- Vanishing/Exploding Gradient in NN
+## 2- Vanishing/Exploding Gradient in NN
 ![image](https://github.com/AhmedYousriSobhi/insightMe/assets/66730765/917be651-4416-498b-ae30-64188dbd9762)
 
 If we start with weights so large, so y-pred will have total of large value due to weight multiplication. Same if we start with weights so small.
 This will lead us to Exploding and vanishing of gradient respectively .
 
-## Weights Initialization In NN
-### Notes
+# Weights Initialization In NN
+## Notes
 Initialize the weights and biases to be zero:
 - Each neuron in the first hidden layer will perform the same computation. So even after multiple iterations of gradient descent each neuron in the layer will be computing the same thing as other neurons.
 - Can't break the similarity.
@@ -385,67 +385,67 @@ Initialize the weights and biases to be zero:
 [What will happen?] You have built a network using the tanh activation for all the hidden units. You initialize the weights to relative large values, using np.random.randn(..,..)*1000. 
 - This will cause the inputs of the tanh to also be very large, thus causing gradients to be close to zero. The optimization algorithm will thus become slow.
 
-## Regularization
+# Regularization
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/a8808f25-1ec8-4e80-a21e-d9d847654466)
 
-## Normalization
+# Normalization
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/df5de503-2d57-4081-b8f5-2cafc63f36b9)
 
-## Parameters Initialization
+# Parameters Initialization
 ![image](https://github.com/AhmedYousriSobhi/insightMe/assets/66730765/7a7d5cd3-8ab9-46a0-8b24-b874d2c2eb1d)
 
-## Gradient Checking
+# Gradient Checking
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/e176e115-c10f-455a-9b6e-4f87a226661c)
 
-## Optimizers
+# Optimizers
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/f33a9f39-4784-4f6a-83b1-2e40f313cef9)
 
-### Mini-Batch
+## Mini-Batch
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/d641dbe7-5996-499f-bed6-60d8c2d610b6)
 
-### Exponential Weighted Average
+## Exponential Weighted Average
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/e2028315-967b-408d-b91d-064dba175f77)
 
-### Momentum GD
+## Momentum GD
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/ebf7fb38-f529-495f-b58b-1ad5354055c9)
 
 ## RMSPROP GD
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/5bc03172-77ff-4149-800c-6f6d18fcb418)
 
-### ADAM
+## ADAM
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/7e76f734-9f22-4030-a76e-2dcd64798082)
 
-### Learning Rate
+## Learning Rate
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/b553002f-a591-4d36-b6c2-c5cfcd378132)
 
-### ADAGRAD
+## ADAGRAD
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/eadda4e7-5df6-48cb-a9a4-72a6387dc5dc)
 
-### Local Minima
+## Local Minima
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/3236fef4-d76f-4c26-82a7-9fbc3493441d)
 
-### Transfer Learning
+## Transfer Learning
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/4da95f84-bf2e-4cd6-80c2-e61110ee3e0b)
 
-## Hyper-Parameters Tuning
+# Hyper-Parameters Tuning
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/2c0fb4e3-cdb5-4411-8deb-8d61a03ebfda)
 
-## Batch Normalization
+# Batch Normalization
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/3a54e166-239f-44eb-bbb9-5f38be712f8f)
 
-## Multi-Class Classification
+# Multi-Class Classification
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/25daacc3-43e1-4198-9f16-f56b619f094f)
 
-## BIAS - Variance
+# BIAS - Variance
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/68ce6a70-b616-4659-8f9f-c79bab3b9b54)
 
-## Single Number Evaluation Metric
+# Single Number Evaluation Metric
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/341da905-b0d8-4c66-839b-2823fa6afebd)
 
-## Avoidable Bias
+# Avoidable Bias
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/7402b25f-a4dc-4e28-b518-409abd8881f6)
 
-## Error Analysis
+# Error Analysis
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/f27ae9c2-88bb-4e0a-a2d0-71987381e76c)
 
 Tip: Build your system quickly then iterate.

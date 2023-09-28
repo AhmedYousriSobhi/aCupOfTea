@@ -9,6 +9,10 @@
 - [PCA - Explained Variance](#pca---explained-variance)
 - [What does these explained\_variance\_ratio means?](#what-does-these-explained_variance_ratio-means)
 - [Are These Explained-Variance Values 'Good' or 'Bad'?](#are-these-explained-variance-values-good-or-bad)
+- [PCA Vs KPCA](#pca-vs-kpca)
+  - [Comparison](#comparison)
+  - [Which one to use?](#which-one-to-use)
+  - [Usage Examples](#usage-examples)
 
 # How to decide whether to use PCA or not?
 Deciding whether to use Principal Component Analysis (PCA) for dimensionality reduction depends on your specific dataset, objectives, and constraints. Here are some factors to consider when deciding whether or not to apply PCA:
@@ -105,3 +109,38 @@ In practice, you should consider your specific objectives when evaluating the ex
 - If you are conducting feature engineering, you may use PCA to identify the most relevant features based on their contributions to the explained variance.
 
 Ultimately, the "goodness" of explained variance values depends on how well they align with your specific analytical goals and constraints.
+
+# PCA Vs KPCA
+PCA is a linear dimensionality reduction technique, meaning that it finds linear combinations of the original features to create new features.
+
+Kernel Principal Component Analysis (KPCA) is a non-linear extension of PCA. It works by using a kernel function to transform the data into a higher-dimensional space, where PCA is then performed. This allows KPCA to find non-linear relationships in the data.
+
+## Comparison
+Comparison of PCA and KPCA:
+|Characteristic|	PCA|	KPCA|
+|--|--|--|
+|Linearity|	Linear|	Non-linear|
+|Dimensionality|	Reduces dimensionality by finding linear combinations of the original features|	Reduces dimensionality by finding non-linear combinations of the original features|
+Computational complexity|	Lower|	Higher|
+Performance on non-linear data|	Poor|	Good|
+|Advantages|Simple to implement and understand.</br>Fast and efficient.</br>Interpretable results.|Can capture non-linear relationships in the data.</br>More robust to outliers than PCA|
+|Disadvantages|Cannot capture non-linear relationships in the data.</br>Sensitive to outliers|More computationally expensive than PCA.</br>Results can be more difficult to interpret|
+
+## Which one to use?
+
+If your data is linear or you need a fast and efficient dimensionality reduction technique, then PCA is a good choice. However, if your data is non-linear or you need a technique that is robust to outliers, then KPCA is a better option.
+
+## Usage Examples
+Here are some examples of when to use PCA and KPCA:
+
+PCA:
+- Image processing: To reduce the dimensionality of images before performing other tasks such as classification or segmentation.
+- Natural language processing: To reduce the dimensionality of text data before performing other tasks such as topic modeling or sentiment analysis.
+- Financial data analysis: To reduce the dimensionality of financial data before performing other tasks such as risk assessment or portfolio optimization.
+    
+KPCA:
+- Image recognition: To recognize objects in images that may appear in different orientations or under different lighting conditions.
+- Handwriting recognition: To recognize handwritten characters that may vary in shape and size.
+- Speech recognition: To recognize spoken words that may vary in pronunciation and intonation.
+
+Overall, PCA and KPCA are both powerful dimensionality reduction techniques. The best one to use will depend on the specific characteristics of your data and your needs.

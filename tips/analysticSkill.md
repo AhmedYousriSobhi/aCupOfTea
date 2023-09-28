@@ -1,6 +1,16 @@
 # Tips: Analytic Skill for a Data Scientist
 
-The analysis part is a crucial aspect of a data scientist's work. To strengthen your data analysis skills and go deeper into this area, consider the following steps:
+The analysis part is a crucial aspect of a data scientist's work. 
+
+# Table of Content
+- [Tips: Analytic Skill for a Data Scientist](#tips-analytic-skill-for-a-data-scientist)
+- [Table of Content](#table-of-content)
+- [Steps to Consider](#steps-to-consider)
+- [Getting Into Domain Knowledge](#getting-into-domain-knowledge)
+- [Standalone analytic task in new domain knowledge](#standalone-analytic-task-in-new-domain-knowledge)
+
+# Steps to Consider
+To strengthen your data analysis skills and go deeper into this area, consider the following steps:
 
 |Step|Description|
 |---|---|
@@ -20,7 +30,7 @@ The analysis part is a crucial aspect of a data scientist's work. To strengthen 
 |Continuous Practice| Like any skill, data analysis improves with practice. Regularly work on data projects, even if they are small, to keep honing your skills.
 |Receive Feedback| Seek feedback on your work from peers or mentors. Constructive criticism can help you identify areas for improvement and grow as a data scientist.
 
-## Getting Into Domain Knowledge
+# Getting Into Domain Knowledge
 Getting up to speed with the domain knowledge of a new company is essential for a data scientist to effectively work on their analysis. Here are some steps to quickly acquire domain knowledge:
 |Step|Description|
 |--|--|
@@ -39,7 +49,7 @@ Getting up to speed with the domain knowledge of a new company is essential for 
 
 Remember, getting up to speed with domain knowledge is a gradual process, and you might not become an expert overnight. Be patient, stay curious, and continuously engage with the domain to improve your understanding over time. Your efforts to acquire domain knowledge will not only help you perform better in data analysis but also make you a more valuable asset to the company.
 
-## Standalone analytic task in new domain knowledge
+# Standalone analytic task in new domain knowledge
 In a situation where you are given a new dataset from a company without a specific analysis topic and are expected to discover insights on your own, you can follow these steps to effectively approach the analysis:
 
 |Step|Description|
