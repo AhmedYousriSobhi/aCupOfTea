@@ -115,4 +115,9 @@ The AI A Cup of Tea thrives on collaboration and diverse perspectives. If you ha
 ## Sip and Support
 If you find a thought-provoking idea or a solution that resonates with you, consider offering us a cup of tea by sharing your thoughts, insights, or even improvements. Let's nurture a space where ideas flow freely, and our collective sips of wisdom create a harmonious symphony of AI knowledge.
 
-Cheers to knowledge, growth, and a cup of AI-infused tea! 🍵🤖
+
+<div id="header">
+  <img src="https://media.giphy.com/media/KZMRyVjEtdv8AU6mIr/giphy.gif" width="350"/>
+</div>
+
+__Cheers to knowledge, growth, and a cup of AI-infused tea! 🍵🤖__
