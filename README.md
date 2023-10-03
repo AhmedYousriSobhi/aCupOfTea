@@ -54,9 +54,14 @@ From the aroma of well-structured code to the rich flavors of design patterns an
 |   |   ├── convolution
 |   |   ├── historyOfAI
 |   |   ├── stateOfArt
+|   ├── designPatterns
+|   |   ├── featureCross
 |   ├── generativeAI
 |   |   ├── evaluation_and_debugging
-|   |   |   ├── wandb_sklearnProject.
+|   ├── projectTopics
+|   ├── recommenderSystems
+|   ├── reinforcementLearning
+|   ├── statistics
 |   ├── tabularData
 |   |   ├── conceptInMachineLearning
 |   |   |   ├── dataEDAanalysis
@@ -88,8 +93,6 @@ From the aroma of well-structured code to the rich flavors of design patterns an
 |   |   ├── dataFeatureEngineering
 |   |   ├── dataModeling
 |   |   |   ├── xgboost
-|   ├── designPatterns
-|   |   ├── featureCross
 ├── Prblems
 |   ├── problem_solving
 |   ├── question_CheapestFlatsPerCityUsingSQL
@@ -114,7 +117,6 @@ The AI A Cup of Tea thrives on collaboration and diverse perspectives. If you ha
 <a name='Sip-and-Support'></a>
 ## Sip and Support
 If you find a thought-provoking idea or a solution that resonates with you, consider offering us a cup of tea by sharing your thoughts, insights, or even improvements. Let's nurture a space where ideas flow freely, and our collective sips of wisdom create a harmonious symphony of AI knowledge.
-
 
 <div id="header">
   <img src="https://media.giphy.com/media/KZMRyVjEtdv8AU6mIr/giphy.gif" width="350"/>
