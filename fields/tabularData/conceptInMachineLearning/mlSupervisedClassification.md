@@ -39,6 +39,7 @@
     - [Gradient Boosting](#gradient-boosting)
   - [Bagging vs. Boosting](#bagging-vs-boosting)
   - [Stacking](#stacking)
+  - [Addtional Explaining about XGBOOST](#addtional-explaining-about-xgboost)
 - [MultiClass Classifier](#multiclass-classifier)
 - [Unbalanced Classes](#unbalanced-classes)
   - [Steps for unbalanced datasets](#steps-for-unbalanced-datasets)
@@ -375,6 +376,9 @@ Output of base learners creates features to be fed into the final classifier, on
 Note that in order to optimize the meta step parameters (optimize each of the parameters for our base learners) we need to be careful and scientific about our approach; meaning we need a hold-out data (test set) for our base learners as well, we can't just have a hold-our set for our final classification method in order to properly learn the parameters for each of our base learners we need to ensure we have a hold-out set for those as well.
 
 We want to be aware that such models can get pretty complex pretty quickly, and as usual, higher complexity generally means that we are more likely to overfit.
+
+## Addtional Explaining about XGBOOST
+For More exploration about these techniques and how XGBOOST works, Please Jumpt to this topic of XGBOOST Model located [here](https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/fields/tabularData/dataModeling/xgboost/info.md).
 
 # MultiClass Classifier
 MultiClass Classifier (aka : multinomial classifiers) is used to distinguish between More than Two classes.
