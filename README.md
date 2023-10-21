@@ -46,12 +46,13 @@ From the aroma of well-structured code to the rich flavors of design patterns an
 ├── fields
 |   ├── dataCollection
 |   ├── deepLearning
+|   |   ├── conceptsInDeepLearning
+|   |   |   ├── basics
+|   |   |   ├── convolution
+|   |   |   ├── sequenceModels
+|   |   |   ├── historyOfAI
+|   |   |   ├── stateOfArt
 |   |   ├── workspace
-|   |   ├── basics
-|   |   ├── convolution
-|   |   ├── sequenceModels
-|   |   ├── historyOfAI
-|   |   ├── stateOfArt
 |   ├── designPatterns
 |   |   ├── featureCross
 |   ├── generativeAI
@@ -63,6 +64,8 @@ From the aroma of well-structured code to the rich flavors of design patterns an
 |   |   ├── CustomerSegmentation
 |   ├── recommenderSystems
 |   ├── reinforcementLearning
+|   |   ├── conceptsInReinforcementLearning
+|   |   |   ├── basics
 |   ├── statistics
 |   ├── tabularData
 |   |   ├── conceptInMachineLearning

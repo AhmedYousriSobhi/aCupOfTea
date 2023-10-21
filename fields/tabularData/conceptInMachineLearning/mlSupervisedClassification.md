@@ -89,18 +89,17 @@ It's the total correct prediction over all of our samples.
 
 We can calculate accuracy as the some of both correct predictions "True Positive + True Negative" (TP + TN) "the Diagonal" over the denominator which is the total number of samples (TP + TN + FP + FN)
 
-```
-    Accuracy= (TP + TN)/(TP + TN + FP + FN)
-```
+
+$${Accuracy} = \frac{TP + TN}{TP + Tn + FP + FN}$$
 
 ## Recall (Sensitivity) 
 Which is the ability to identify all the __actual positive incidents__, so when we're trying to recall all the actual positive instances, recall measures the percentage of the actual positive class that is correctly predicted. So out of the first row how many did we predict correctly? 
 	  
 In other words, this is going to be the capture rate, in our leukemia example, what percentage of the true leukemia cases is our model capturing?. Note that, you can easily achieve 100% recall by predicting everything to be positive, in our example if everyone has leukemia, so out of all of our actual positives, we got those all correct (because we predicted everyone has leukemia)
 
-```
-   Recall/Sensitivity= TP/(TP + FN)	# first row
-```
+$${Recall/Sensitivity} = \frac{TP}{TP+FN}$$
+
+Note this is the first row in Confusion matrix
 
 ## Precision
 With precision, we are identifying out of all our __positive predictions__ how many did we get correct?. When the model predicts leukimia, how often is it right? so if you always predict leukemia then your recall will be 100%, but the precision here (all of your predictions) alot of them will be wrong.
@@ -108,10 +107,10 @@ With precision, we are identifying out of all our __positive predictions__ how m
 Note that you can predict one really showcase to be leukemia and every thing else you can predict to be non-leukemia and end up achieving a 100% precision, and in that case you recall would be very low, as you only captured one of the two cases out of all of them.
 
 Precision is the true postivies over the predicted positve values.
+
+$$Precision = \frac{TP}{TP+FP}$$
  
-```
-   Precision= TP/(TP + FP)	# first column
-```
+Note this is the first column in Confusion matrix
 
 So there's a trade-off between recall and precision; If you trained a classifier to detect videos that are safe for kids, you would probably prefer a classifier that rejects many good videos (low recall), but keeps only safe ones (high precision.)
 
@@ -124,18 +123,16 @@ Also called True Negative Rate, which is trying to avoid false alarms, here we a
 
 In other words, it's going to be the recall for classes zero out of all the cases where we do not have leukemia how often do we correctly identify those patients as not have leukemia?. We can see how it would be much important for our leukemia example to have higher recall which identify all true positives correctly than any of our other measures.
 
-```
-   Specifity= TN/(TN + FP)	# second row
-```
+$$Specifity = \frac{TN}{TN+FP}$$
 
-A highly specific test means that there are few false positive results
+Note:
+- This is the second row in the confusion matrix.
+- A highly specific test means that there are few false positive results
   
 ## F1-score 
 Also called the harmonic mean, the F1-score is a nice metric to use because it uses both the precision and the recall, and it tries to capture this trade-off between recall and precision, so optimizing F1-score will not allow for the corner cases like predicting everything to be one.
 
-```
-   F1-score= 2*(Precision * Recall)/(Precision + Recall)
-```
+$$F1-score = \frac{2*(Precision * Recall)}{Precision + Recall}$$
 
 ## Receiver Operating Characteristic curve (ROC curve):
 ![ROC Curve](https://github.com/AhmedYousriSobhi/Intro-to-ML-with-Tensorflow-Scholarship-Program/assets/66730765/e0516d9a-7aac-4f13-be1c-376bc18e7369)
