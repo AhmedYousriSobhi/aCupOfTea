@@ -11,10 +11,26 @@
   - [General Notes about HPC Systems](#general-notes-about-hpc-systems)
   - [Getting Starting with HPC](#getting-starting-with-hpc)
   - [AI integration in HPC](#ai-integration-in-hpc)
-    - [Exaple AI-Powered HPC Projects](#exaple-ai-powered-hpc-projects)
+    - [Examples of AI-Powered HPC Projects](#examples-of-ai-powered-hpc-projects)
   - [HPC in Automotive Field Industry](#hpc-in-automotive-field-industry)
     - [Examples](#examples)
     - [Additional Tasks](#additional-tasks)
+  - [Required Main Skills](#required-main-skills)
+    - [1- Linux basics and navigation through OS X](#1--linux-basics-and-navigation-through-os-x)
+      - [Linux basics](#linux-basics)
+      - [Navigation through OS X](#navigation-through-os-x)
+      - [Why is this skill important?](#why-is-this-skill-important)
+      - [Advanced Topics](#advanced-topics)
+  - [In AI/Data Science: Comparison between MLOPS \& HPC](#in-aidata-science-comparison-between-mlops--hpc)
+      - [Which role is right for you?](#which-role-is-right-for-you)
+    - [2- Automation with Python or Bash](#2--automation-with-python-or-bash)
+      - [Benefits](#benefits)
+      - [Tips](#tips)
+    - [3- Docker and containers](#3--docker-and-containers)
+      - [Specific Examples of how Docker is helpful](#specific-examples-of-how-docker-is-helpful)
+      - [Tips for using Docker in HPC](#tips-for-using-docker-in-hpc)
+    - [\[In AI Related Field\] Data Dcience Knowledge](#in-ai-related-field-data-dcience-knowledge)
+      - [Specific Helpful Examples](#specific-helpful-examples)
 
 ## What is HPC Systems?
 HPC systems, or high-performance computing systems, are powerful computers that can perform complex calculations at very high speeds. They are used in a wide range of fields, including science, engineering, medicine, and finance, to solve problems that would be too time-consuming or impossible to solve on a regular computer.
@@ -90,7 +106,7 @@ AI is integrated in the projects of HPC in a variety of ways. Here are some exam
 |Developing new drugs and treatments| AI can be used to develop new drugs and treatments for diseases. For example, AI can be used to design drugs that are more effective and have fewer side effects. AI can also be used to identify new drug targets.
 |Improving the efficiency of HPC systems| AI can be used to improve the efficiency of HPC systems. For example, AI can be used to optimize the scheduling of jobs and to allocate resources more efficiently.
 
-### Exaple AI-Powered HPC Projects
+### Examples of AI-Powered HPC Projects
 Here are some specific examples of AI-powered HPC projects:
 |Project|Description|
 |--|--|
@@ -128,3 +144,188 @@ In addition to the above, HPC systems are also used in automotive companies for 
 |Research and development| HPC systems are used in automotive companies for research and development purposes. For example, HPC systems can be used to develop new materials, new powertrain technologies, and new safety features.
 
 HPC systems are an essential tool for automotive companies that want to stay ahead of the competition. By using HPC systems, automotive companies can design better vehicles, develop new features, and improve their manufacturing processes.
+
+## Required Main Skills
+### 1- Linux basics and navigation through OS X 
+Linux basics and navigation through OS X is a skill that encompasses the fundamental knowledge and skills required to use the Linux and macOS operating systems. This includes understanding the basic concepts of file systems, directories, and permissions, as well as being able to navigate the operating system using the command line and GUI.
+
+#### Linux basics
+
+Linux is a Unix-like operating system that is used by a wide range of people, from hobbyists to enterprise users. It is known for its stability, flexibility, and open-source nature.
+
+Some of the basic concepts that are essential for understanding Linux include:
+- File systems: Linux uses a hierarchical file system, which means that files and directories are organized in a tree structure.
+- Directories: Directories are used to group files and other directories together.
+- Permissions: Permissions control who can read, write, and execute files and directories.
+
+To navigate the Linux command line, users use a variety of commands. Some of the most common commands include:
+```
+    ls: Lists the contents of a directory.
+    cd: Changes the current directory.
+    pwd: Prints the current directory.
+    mkdir: Creates a new directory.
+    rmdir: Removes a directory.
+    cp: Copies files and directories.
+    mv: Moves files and directories.
+    rm: Removes files and directories.
+```
+
+#### Navigation through OS X
+OS X is a Unix-based graphical user interface (GUI) operating system developed by Apple. It is based on the open-source Darwin operating system, which is also the basis for FreeBSD.
+
+OS X users can navigate the operating system using the Finder, which is the GUI file manager. The Finder allows users to view and manage files and directories, as well as launch applications.
+
+OS X users can also navigate the operating system using the Terminal, which is the command line interface (CLI) for macOS. The Terminal allows users to execute commands and scripts to perform a variety of tasks, including managing files and directories, launching applications, and configuring the system.
+
+#### Why is this skill important?
+
+Linux basics and navigation through OS X is an important skill for a variety of reasons. First, Linux is a very popular operating system, and it is used by a wide range of people and organizations. Second, OS X is a popular operating system for developers, and it is often used to develop applications for both macOS and iOS. Third, Linux and OS X are both Unix-based operating systems, so knowledge of Linux basics can be transferred to other Unix-like operating systems, such as FreeBSD and Solaris.
+
+How to learn Linux basics and navigation through OS X
+
+There are a variety of resources available for learning Linux basics and navigation through OS X. Some popular resources include:
+|Resource|Detail|
+|--|--|
+|Books| There are many books available on Linux and OS X, covering a wide range of topics from beginner to advanced.
+|Online tutorials| There are many websites that offer online tutorials on Linux and OS X. These tutorials can be a great way to learn the basics of the operating system at your own pace.
+|Virtual machines| Virtual machines allow you to run Linux and OS X on your existing computer. This can be a great way to learn the operating systems without having to install them on your main computer.
+
+If you are interested in learning Linux basics and navigation through OS X, I recommend that you start with a good introductory book or online tutorial. Once you have a basic understanding of the operating system, you can start to explore more advanced topics.
+
+#### Advanced Topics
+Here are some advanced topics in Linux and macOS that you may be interested in exploring:
+
+**Linux**:
+
+|Topic|Details|
+|--|--|    
+|System administration| This includes tasks such as managing users and groups, configuring system services, and troubleshooting system problems.
+|Shell scripting| Shell scripting allows you to automate tasks by writing scripts that can be executed by the shell.
+|Kernel development| The kernel is the core of the Linux operating system. Kernel development involves modifying the kernel to add new features or improve performance.
+|Networking| This includes topics such as configuring network interfaces, setting up routing, and troubleshooting network problems.
+|Security| This includes topics such as hardening your system against attack, configuring firewalls, and detecting and responding to security incidents.
+    
+**macOS**:
+|Topic|Details|
+|--|--|
+|Advanced system administration| This includes tasks such as managing Xsan storage, configuring macOS Server, and troubleshooting complex system problems.
+|macOS scripting| macOS scripting allows you to automate tasks by writing scripts that can be executed by the macOS Script Editor.
+|macOS development| macOS development involves developing applications for macOS. This includes topics such as using the Xcode IDE, the Cocoa and AppKit frameworks, and the Swift and Objective-C programming languages.
+|macOS networking| This includes topics such as configuring network interfaces, setting up routing, and troubleshooting network problems.
+|macOS security| This includes topics such as hardening your system against attack, configuring firewalls, and detecting and responding to security incidents.
+
+In addition to these general topics, there are many other advanced topics that you can explore, depending on your specific interests. For example, you could learn about:
+|General Topic|Details|
+|--|--|
+|Cloud computing| This includes topics such as deploying and managing Linux and macOS systems in the cloud.
+|Big data| This includes topics such as using Linux and macOS systems to process and analyze large datasets.
+|Machine learning| This includes topics such as using Linux and macOS systems to train and deploy machine learning models.
+|Artificial intelligence| This includes topics such as using Linux and macOS systems to develop and deploy artificial intelligence applications.
+
+## In AI/Data Science: Comparison between MLOPS & HPC
+MLOps engineers and HPC systems engineers who support data scientists work both play important roles in the machine learning development process. However, there are some key differences between the two roles.
+
+**MLOps engineers** are responsible for building and maintaining the infrastructure and processes that allow data scientists to deploy and manage their machine learning models in production. They work closely with data scientists to understand their needs and develop solutions that meet those needs. MLOps engineers also need to have a strong understanding of machine learning and software development.
+
+**HPC systems engineers** are responsible for designing, building, and maintaining the high-performance computing (HPC) systems that data scientists use to train and run their machine learning models. HPC systems are typically very powerful and expensive, so it is important for HPC systems engineers to have a deep understanding of computer hardware and software. They also need to be able to optimize systems for performance and efficiency.
+
+Here is a more detailed comparison of the two roles:
+|Role|	Primary focus|	Skills required|
+|--|--|--|
+|MLOps engineer|	Building and maintaining the infrastructure and processes that allow data scientists to deploy and manage their machine learning models in production|	Machine learning, software development, DevOps|
+|HPC systems engineer|	Designing, building, and maintaining high-performance computing (HPC) systems|	Computer hardware and software, system optimization
+
+How MLOps and HPC systems engineers support data scientists' work
+
+MLOps and HPC systems engineers both support data scientists' work by providing them with the tools and resources they need to develop and deploy machine learning models. MLOps engineers provide data scientists with the infrastructure and processes they need to deploy and manage their models in production. HPC systems engineers provide data scientists with the high-performance computing systems they need to train and run their models.
+
+Here are some specific examples of how MLOps and HPC systems engineers support data scientists' work:
+|Support|Details|
+|--|--|
+|MLOps engineers|Set up and maintain the continuous integration and continuous delivery (CI/CD) pipeline for machine learning models.</br>Develop and maintain the infrastructure for deploying and managing machine learning models in production.</br>Monitor and monitor machine learning models in production and make adjustments as needed.
+|HPC systems engineers|Design, build, and maintain HPC systems that are optimized for machine learning.</br>Work with data scientists to optimize their machine learning algorithms for HPC systems.</br>Provide data scientists with support and training on how to use HPC systems.|
+
+#### Which role is right for you?
+
+If you are interested in a career in machine learning, but you are not sure which role is right for you, here are some things to consider:
+
+- Are you interested in developing and maintaining the infrastructure and processes for machine learning? If so, then a career in MLOps engineering may be right for you.
+- Are you interested in designing, building, and maintaining HPC systems? If so, then a career in HPC systems engineering may be right for you.
+- Do you have the skills and experience required for either role? If not, then you may need to consider additional education or training.
+
+Ultimately, the best way to decide which role is right for you is to talk to people who work in both fields and learn more about their experiences. You should also consider your own interests and skills when making your decision.
+
+### 2- Automation with Python or Bash
+Automation with Python or Bash is a valuable skill for HPC systems engineers because it allows them to automate many of the tasks that they need to perform on a regular basis. This can save them a lot of time and effort, and it can also help to improve the accuracy and consistency of their work.
+
+Here are some specific examples of how HPC systems engineers can use automation to improve their work:
+- To automate the deployment and configuration of HPC systems. This can include tasks such as installing the operating system, configuring the hardware, and installing and configuring the necessary software.
+- To automate the management of HPC jobs. This can include tasks such as submitting jobs to the queue, monitoring the progress of jobs, and resubmitting jobs that fail.
+- To automate the analysis of HPC system performance. This can include tasks such as collecting performance data, analyzing the data, and generating reports.
+- To automate the troubleshooting of HPC system problems. This can include tasks such as collecting diagnostic information, identifying the root cause of problems, and implementing solutions.
+
+#### Benefits
+In addition to these specific tasks, automation can also help HPC systems engineers to be more efficient and productive in their overall work. For example, automation can help them to:
+- Avoid repetitive tasks. This can free up their time to focus on more important tasks.
+- Improve the accuracy and consistency of their work. Automation can help to reduce the number of errors that are made.
+- Respond to changes more quickly. Automation can help HPC systems engineers to quickly deploy new systems and services, and to respond to changes in the needs of their users.
+
+Overall, automation with Python or Bash is a valuable skill for HPC systems engineers. It allows them to automate many of the tasks that they need to perform on a regular basis, which can save them time and effort, improve the accuracy and consistency of their work, and help them to be more efficient and productive.
+
+#### Tips
+Here are some additional tips for using automation to improve your work as an HPC systems engineer:
+- Start with small tasks. Don't try to automate everything at once. Start with small, well-defined tasks. Once you have automated a few small tasks, you can gradually move on to more complex tasks.
+- Use existing tools and libraries. There are many existing tools and libraries that can be used to automate HPC tasks. This can save you a lot of time and effort.
+- Document your scripts. It is important to document your automation scripts so that you and others can understand how they work. This will make it easier to troubleshoot problems and to maintain your scripts.
+- Test your scripts thoroughly. Before you deploy your automation scripts in production, it is important to test them thoroughly to make sure that they work as expected.
+
+### 3- Docker and containers
+Docker and containers are helpful for HPC systems engineers in a number of ways.
+|Benefit|Detail|
+|--|--|
+|Portability| Docker images are portable, meaning that they can be run on any platform that has the Docker engine installed. This makes it easy to deploy and run HPC applications on a variety of systems, including on-premises HPC clusters, cloud-based HPC systems, and even laptops.
+|Reproducibility| Docker containers can be used to create reproducible environments for HPC applications. This means that different researchers can run the same application on different systems and get the same results. This is important for scientific research, where reproducibility is essential.
+|Efficiency| Docker containers can help to improve the efficiency of HPC systems. This is because containers share the underlying operating system kernel, which reduces the overhead of running multiple applications.
+
+#### Specific Examples of how Docker is helpful
+Here are some specific examples of how HPC systems engineers can use Docker and containers to improve their work:
+
+- To deploy and run HPC applications on a variety of systems. For example, an HPC systems engineer can use Docker to deploy and run HPC applications on a cloud-based HPC system, which can provide scalability and flexibility.
+- To create reproducible environments for HPC applications. This can help to ensure that different researchers get the same results when running the same application on different systems.
+- To improve the efficiency of HPC systems. Docker containers can help to reduce the overhead of running multiple applications on an HPC system, which can improve performance and reduce costs.
+
+In addition to these specific tasks, Docker and containers can also help HPC systems engineers to be more efficient and productive in their overall work. For example, Docker and containers can help HPC systems engineers to:
+
+- Quickly and easily deploy new HPC applications. Docker images can be created and deployed quickly and easily, which can help HPC systems engineers to respond to the needs of their users more quickly.
+- Manage HPC applications more easily. Docker containers can be used to manage HPC applications more easily. For example, containers can be used to start, stop, and restart applications, and to scale applications up and down.
+- Troubleshoot HPC applications more easily. Docker containers can be used to troubleshoot HPC applications more easily. For example, containers can be used to isolate the environment in which an application is running, which can help to identify the root cause of problems.
+
+Overall, Docker and containers are valuable skills for HPC systems engineers. They can help HPC systems engineers to deploy and run HPC applications more easily, to create reproducible environments for HPC applications, to improve the efficiency of HPC systems, and to be more efficient and productive in their overall work.
+
+#### Tips for using Docker in HPC
+Here are some additional tips for using Docker and containers to improve your work as an HPC systems engineer:
+
+- Use a container registry. A container registry is a central repository for Docker images. This can make it easier to manage and share Docker images within your organization.
+- Use a container orchestration platform. A container orchestration platform can help you to manage and deploy Docker containers at scale. This can be helpful for deploying and running large HPC applications.
+- Use a container monitoring solution. A container monitoring solution can help you to monitor the performance and health of your Docker containers. This can be helpful for identifying and troubleshooting problems.
+
+### [In AI Related Field] Data Dcience Knowledge
+Data science knowledge is helpful for HPC systems engineers in a number of ways.
+|Benefit|Details|
+|--|--|
+|Understanding the needs of data scientists| HPC systems engineers need to understand the needs of data scientists in order to design and maintain HPC systems that meet those needs. Data science knowledge is essential for understanding the types of data that data scientists work with, the algorithms they use, and the performance requirements of their workloads.
+|Optimizing HPC systems for data science workloads| HPC systems engineers need to be able to optimize HPC systems for data science workloads. This includes tuning the operating system, configuring the hardware, and choosing the right software tools. Data science knowledge is essential for understanding the performance bottlenecks in data science workloads and how to alleviate them.
+|Troubleshooting data science problems| HPC systems engineers may need to troubleshoot data science problems that are related to the HPC system. This could include problems with the hardware, software, or configuration. Data science knowledge is essential for understanding the root cause of data science problems and how to fix them.
+
+In addition to these specific tasks, data science knowledge can also help HPC systems engineers to be more effective in their overall role. For example, data science knowledge can help HPC systems engineers to:
+
+- Communicate more effectively with data scientists: HPC systems engineers who have data science knowledge can communicate more effectively with data scientists. This is because they have a shared understanding of the data science workflow, the algorithms used, and the performance requirements of data science workloads.
+- Stay up-to-date on the latest trends in data science: Data science is a rapidly evolving field. HPC systems engineers who have data science knowledge can stay up-to-date on the latest trends and technologies. This allows them to design and maintain HPC systems that are well-suited for the latest data science workloads.
+
+Overall, data science knowledge is a valuable skill for HPC systems engineers. It allows them to better understand the needs of data scientists, optimize HPC systems for data science workloads, troubleshoot data science problems, and communicate more effectively with data scientists.
+
+#### Specific Helpful Examples
+Here are some specific examples of how data science knowledge can be helpful for HPC systems engineers:
+- An HPC systems engineer can use their data science knowledge to help data scientists choose the right hardware and software for their workloads. For example, they can help data scientists to choose the right type of compute nodes, the right amount of memory, and the right storage solution.
+- An HPC systems engineer can use their data science knowledge to help data scientists to optimize their code for performance. For example, they can help data scientists to choose the right data structures and algorithms, and to parallelize their code.
+- An HPC systems engineer can use their data science knowledge to help data scientists to troubleshoot problems with their code or with the HPC system. For example, they can help data scientists to identify performance bottlenecks and to fix bugs.
