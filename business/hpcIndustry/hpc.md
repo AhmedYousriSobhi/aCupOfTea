@@ -21,16 +21,17 @@
       - [Navigation through OS X](#navigation-through-os-x)
       - [Why is this skill important?](#why-is-this-skill-important)
       - [Advanced Topics](#advanced-topics)
-  - [In AI/Data Science: Comparison between MLOPS \& HPC](#in-aidata-science-comparison-between-mlops--hpc)
-      - [Which role is right for you?](#which-role-is-right-for-you)
     - [2- Automation with Python or Bash](#2--automation-with-python-or-bash)
       - [Benefits](#benefits)
       - [Tips](#tips)
     - [3- Docker and containers](#3--docker-and-containers)
       - [Specific Examples of how Docker is helpful](#specific-examples-of-how-docker-is-helpful)
       - [Tips for using Docker in HPC](#tips-for-using-docker-in-hpc)
-    - [\[In AI Related Field\] Data Dcience Knowledge](#in-ai-related-field-data-dcience-knowledge)
+    - [4- \[In AI Related Field\] Data Dcience Knowledge](#4--in-ai-related-field-data-dcience-knowledge)
       - [Specific Helpful Examples](#specific-helpful-examples)
+  - [In AI/Data Science: Comparison between MLOPS \& HPC](#in-aidata-science-comparison-between-mlops--hpc)
+    - [Which role is right for you?](#which-role-is-right-for-you)
+  - [Data Scientist Switchs to HPC System Engineer](#data-scientist-switchs-to-hpc-system-engineer)
 
 ## What is HPC Systems?
 HPC systems, or high-performance computing systems, are powerful computers that can perform complex calculations at very high speeds. They are used in a wide range of fields, including science, engineering, medicine, and finance, to solve problems that would be too time-consuming or impossible to solve on a regular computer.
@@ -222,39 +223,6 @@ In addition to these general topics, there are many other advanced topics that y
 |Machine learning| This includes topics such as using Linux and macOS systems to train and deploy machine learning models.
 |Artificial intelligence| This includes topics such as using Linux and macOS systems to develop and deploy artificial intelligence applications.
 
-## In AI/Data Science: Comparison between MLOPS & HPC
-MLOps engineers and HPC systems engineers who support data scientists work both play important roles in the machine learning development process. However, there are some key differences between the two roles.
-
-**MLOps engineers** are responsible for building and maintaining the infrastructure and processes that allow data scientists to deploy and manage their machine learning models in production. They work closely with data scientists to understand their needs and develop solutions that meet those needs. MLOps engineers also need to have a strong understanding of machine learning and software development.
-
-**HPC systems engineers** are responsible for designing, building, and maintaining the high-performance computing (HPC) systems that data scientists use to train and run their machine learning models. HPC systems are typically very powerful and expensive, so it is important for HPC systems engineers to have a deep understanding of computer hardware and software. They also need to be able to optimize systems for performance and efficiency.
-
-Here is a more detailed comparison of the two roles:
-|Role|	Primary focus|	Skills required|
-|--|--|--|
-|MLOps engineer|	Building and maintaining the infrastructure and processes that allow data scientists to deploy and manage their machine learning models in production|	Machine learning, software development, DevOps|
-|HPC systems engineer|	Designing, building, and maintaining high-performance computing (HPC) systems|	Computer hardware and software, system optimization
-
-How MLOps and HPC systems engineers support data scientists' work
-
-MLOps and HPC systems engineers both support data scientists' work by providing them with the tools and resources they need to develop and deploy machine learning models. MLOps engineers provide data scientists with the infrastructure and processes they need to deploy and manage their models in production. HPC systems engineers provide data scientists with the high-performance computing systems they need to train and run their models.
-
-Here are some specific examples of how MLOps and HPC systems engineers support data scientists' work:
-|Support|Details|
-|--|--|
-|MLOps engineers|Set up and maintain the continuous integration and continuous delivery (CI/CD) pipeline for machine learning models.</br>Develop and maintain the infrastructure for deploying and managing machine learning models in production.</br>Monitor and monitor machine learning models in production and make adjustments as needed.
-|HPC systems engineers|Design, build, and maintain HPC systems that are optimized for machine learning.</br>Work with data scientists to optimize their machine learning algorithms for HPC systems.</br>Provide data scientists with support and training on how to use HPC systems.|
-
-#### Which role is right for you?
-
-If you are interested in a career in machine learning, but you are not sure which role is right for you, here are some things to consider:
-
-- Are you interested in developing and maintaining the infrastructure and processes for machine learning? If so, then a career in MLOps engineering may be right for you.
-- Are you interested in designing, building, and maintaining HPC systems? If so, then a career in HPC systems engineering may be right for you.
-- Do you have the skills and experience required for either role? If not, then you may need to consider additional education or training.
-
-Ultimately, the best way to decide which role is right for you is to talk to people who work in both fields and learn more about their experiences. You should also consider your own interests and skills when making your decision.
-
 ### 2- Automation with Python or Bash
 Automation with Python or Bash is a valuable skill for HPC systems engineers because it allows them to automate many of the tasks that they need to perform on a regular basis. This can save them a lot of time and effort, and it can also help to improve the accuracy and consistency of their work.
 
@@ -309,7 +277,7 @@ Here are some additional tips for using Docker and containers to improve your wo
 - Use a container orchestration platform. A container orchestration platform can help you to manage and deploy Docker containers at scale. This can be helpful for deploying and running large HPC applications.
 - Use a container monitoring solution. A container monitoring solution can help you to monitor the performance and health of your Docker containers. This can be helpful for identifying and troubleshooting problems.
 
-### [In AI Related Field] Data Dcience Knowledge
+### 4- [In AI Related Field] Data Dcience Knowledge
 Data science knowledge is helpful for HPC systems engineers in a number of ways.
 |Benefit|Details|
 |--|--|
@@ -329,3 +297,62 @@ Here are some specific examples of how data science knowledge can be helpful for
 - An HPC systems engineer can use their data science knowledge to help data scientists choose the right hardware and software for their workloads. For example, they can help data scientists to choose the right type of compute nodes, the right amount of memory, and the right storage solution.
 - An HPC systems engineer can use their data science knowledge to help data scientists to optimize their code for performance. For example, they can help data scientists to choose the right data structures and algorithms, and to parallelize their code.
 - An HPC systems engineer can use their data science knowledge to help data scientists to troubleshoot problems with their code or with the HPC system. For example, they can help data scientists to identify performance bottlenecks and to fix bugs.
+
+## In AI/Data Science: Comparison between MLOPS & HPC
+MLOps engineers and HPC systems engineers who support data scientists work both play important roles in the machine learning development process. However, there are some key differences between the two roles.
+
+**MLOps engineers** are responsible for building and maintaining the infrastructure and processes that allow data scientists to deploy and manage their machine learning models in production. They work closely with data scientists to understand their needs and develop solutions that meet those needs. MLOps engineers also need to have a strong understanding of machine learning and software development.
+
+**HPC systems engineers** are responsible for designing, building, and maintaining the high-performance computing (HPC) systems that data scientists use to train and run their machine learning models. HPC systems are typically very powerful and expensive, so it is important for HPC systems engineers to have a deep understanding of computer hardware and software. They also need to be able to optimize systems for performance and efficiency.
+
+Here is a more detailed comparison of the two roles:
+|Role|	Primary focus|	Skills required|
+|--|--|--|
+|MLOps engineer|	Building and maintaining the infrastructure and processes that allow data scientists to deploy and manage their machine learning models in production|	Machine learning, software development, DevOps|
+|HPC systems engineer|	Designing, building, and maintaining high-performance computing (HPC) systems|	Computer hardware and software, system optimization
+
+How MLOps and HPC systems engineers support data scientists' work
+
+MLOps and HPC systems engineers both support data scientists' work by providing them with the tools and resources they need to develop and deploy machine learning models. MLOps engineers provide data scientists with the infrastructure and processes they need to deploy and manage their models in production. HPC systems engineers provide data scientists with the high-performance computing systems they need to train and run their models.
+
+Here are some specific examples of how MLOps and HPC systems engineers support data scientists' work:
+|Support|Details|
+|--|--|
+|MLOps engineers|Set up and maintain the continuous integration and continuous delivery (CI/CD) pipeline for machine learning models.</br>Develop and maintain the infrastructure for deploying and managing machine learning models in production.</br>Monitor and monitor machine learning models in production and make adjustments as needed.
+|HPC systems engineers|Design, build, and maintain HPC systems that are optimized for machine learning.</br>Work with data scientists to optimize their machine learning algorithms for HPC systems.</br>Provide data scientists with support and training on how to use HPC systems.|
+
+### Which role is right for you?
+
+If you are interested in a career in machine learning, but you are not sure which role is right for you, here are some things to consider:
+
+- Are you interested in developing and maintaining the infrastructure and processes for machine learning? If so, then a career in MLOps engineering may be right for you.
+- Are you interested in designing, building, and maintaining HPC systems? If so, then a career in HPC systems engineering may be right for you.
+- Do you have the skills and experience required for either role? If not, then you may need to consider additional education or training.
+
+Ultimately, the best way to decide which role is right for you is to talk to people who work in both fields and learn more about their experiences. You should also consider your own interests and skills when making your decision.
+
+## Data Scientist Switchs to HPC System Engineer
+Your experience as a data scientist will be very helpful in applying for an HPC systems engineer job. Here are some specific ways that your data science experience can help you:
+|Way of help|Description|
+|--|--|
+|Understand the needs of data scientists| As a data scientist, you have a deep understanding of the needs of data scientists. This will be invaluable in your role as an HPC systems engineer, as you will be responsible for designing and maintaining HPC systems that meet the needs of data scientists.
+|Troubleshoot data science problems| As a data scientist, you have experience troubleshooting data science problems. This will be helpful in your role as an HPC systems engineer, as you may need to troubleshoot data science problems that are related to the HPC system.
+|Communicate with data scientists| As a data scientist, you have experience communicating with other data scientists. This will be helpful in your role as an HPC systems engineer, as you will need to communicate with data scientists about their needs and how the HPC system can be used to meet those needs.
+
+In addition to these specific skills, your data science experience will also give you a general understanding of the data science workflow and the types of data science workloads that HPC systems are used to run. This knowledge will be helpful in your role as an HPC systems engineer, as it will allow you to better design and maintain HPC systems for data science workloads.
+
+Here are some specific examples of how your data science experience can help you in your role as an HPC systems engineer:
+
+- You can help data scientists to choose the right hardware and software for their workloads. For example, you can help data scientists to choose the right type of compute nodes, the right amount of memory, and the right storage solution.
+- You can help data scientists to optimize their code for performance. For example, you can help data scientists to choose the right data structures and algorithms, and to parallelize their code.
+- You can help data scientists to troubleshoot problems with their code or with the HPC system. For example, you can help data scientists to identify performance bottlenecks and to fix bugs.
+
+Overall, your data science experience will be a valuable asset in your role as an HPC systems engineer. It will give you the skills and knowledge that you need to design, maintain, and support HPC systems for data scientists.
+
+Here are some additional tips for applying for an HPC systems engineer job with your data science experience:
+
+- Highlight your data science experience in your resume and cover letter. Be sure to mention your specific skills and experience, and how they will be helpful in your role as an HPC systems engineer.
+- Be prepared to answer questions about your data science experience in interviews. Be able to articulate how your data science skills and experience will help you to be a successful HPC systems engineer.
+- Network with other HPC systems engineers and data scientists. This is a great way to learn more about the field and to find job opportunities.
+
+By following these tips, you can increase your chances of landing an HPC systems engineer job with your data science experience.
