@@ -20,7 +20,7 @@ In this blog, we will introduce more practice illustrated in question and answer
   - [Which command is used to view the current ip address configuration for all network interfaces on a linux system?](#which-command-is-used-to-view-the-current-ip-address-configuration-for-all-network-interfaces-on-a-linux-system)
     - [How to get Network Address from IP Address \& Subset?](#how-to-get-network-address-from-ip-address--subset)
   - [In linux everything is stored as a \[executables, file, directory, none of the above\]](#in-linux-everything-is-stored-as-a-executables-file-directory-none-of-the-above)
-  - [which file contains the configuration for the rsyslogd daemon?](#which-file-contains-the-configuration-for-the-rsyslogd-daemon)
+  - [Which file contains the configuration for the rsyslogd daemon?](#which-file-contains-the-configuration-for-the-rsyslogd-daemon)
     - [What is Rsyslogd?](#what-is-rsyslogd)
   - [what is the role of the free software foundation?](#what-is-the-role-of-the-free-software-foundation)
     - [Free Software Foundation (FSF)](#free-software-foundation-fsf)
@@ -358,7 +358,7 @@ Files in Linux can also have different permissions, which control who can read, 
 
 The concept of everything being a file is one of the core principles of Linux, and it makes the operating system very powerful and flexible.
 
-## which file contains the configuration for the rsyslogd daemon?
+## Which file contains the configuration for the rsyslogd daemon?
 The configuration file for the rsyslogd daemon is **/etc/rsyslog.conf**. This file contains the rules that rsyslogd uses to filter and log messages.
 
 ### What is Rsyslogd?
