@@ -64,6 +64,7 @@ Linux administration is the art and science of efficiently managing Linux-based 
     - [Info](#info-11)
     - [Command: sosreport](#command-sosreport)
     - [Tips](#tips-11)
+  - [Summarize How to search for Command Information](#summarize-how-to-search-for-command-information)
   - [Frequently Asked Questions (FAQ)](#frequently-asked-questions-faq-2)
 - [Chapter 4: Creating, Viewing, and Editing Text Files](#chapter-4-creating-viewing-and-editing-text-files)
   - [Abstract Introduction:](#abstract-introduction)
@@ -154,6 +155,7 @@ Linux administration is the art and science of efficiently managing Linux-based 
   - [Frequently Asked Questions (FAQ)](#frequently-asked-questions-faq-6)
 - [Chapter 8: Controlling Services and Daemons](#chapter-8-controlling-services-and-daemons)
   - [Info](#info-21)
+  - [What is a Daemon?](#what-is-a-daemon)
   - [Command Definitions](#command-definitions)
   - [Illustration](#illustration-4)
   - [Frequently Asked Questions (FAQ)](#frequently-asked-questions-faq-7)
@@ -247,9 +249,14 @@ Linux administration is the art and science of efficiently managing Linux-based 
     - [Section Note](#section-note-3)
   - [Frequently Asked Questions (FAQ)](#frequently-asked-questions-faq-13)
 - [Chapter 15: Using Virtualized Systems](#chapter-15-using-virtualized-systems)
+  - [Info](#info-29)
+  - [Section: Installing a New Virtual Machine](#section-installing-a-new-virtual-machine)
+    - [Commands: virt-install](#commands-virt-install)
+    - [Example Usage](#example-usage-7)
   - [Frequently Asked Questions (FAQ)](#frequently-asked-questions-faq-14)
 - [Chapter 16: Comprehensive Review](#chapter-16-comprehensive-review)
-  - [Frequently Asked Questions (FAQ)](#frequently-asked-questions-faq-15)
+  - [Info](#info-30)
+  - [Commands Summerize](#commands-summerize)
 - [Credits](#credits)
 
 # Indtrocution
@@ -778,6 +785,40 @@ This generates a compressed tarball containing system information that can be sh
 ### Tips
 - Red Hat provides extensive support, including documentation, knowledge base articles, and customer support.
 - Creating an SOS report can be crucial for resolving complex system issues.
+
+## Summarize How to search for Command Information
+Searching for information about a command in Linux is a common task, especially when you need to understand its usage, options, and examples. Here's how you can search for information about a command:
+
+**1- Man Pages (Manual Pages)**:
+- The primary source of information for most Linux commands is the manual pages, or man pages. You can access the man page for a command by typing man followed by the command's name. For example:
+```bash
+    man ls
+```
+- This will display a detailed manual page with information about the command's usage, options, and often examples.
+
+**2- Info Pages**:
+- Some commands have info pages in addition to man pages. You can access info pages by typing info followed by the command's name. For example:
+
+```bash
+    info cp
+```
+- Info pages often provide more detailed and structured information compared to man pages.
+
+**3- Online Documentation**:
+- Many Linux distributions provide online documentation that includes command references and guides. You can often access these resources via a web browser or by searching for "Linux command name documentation" in your favorite search engine.
+
+**4- Command Help**:
+- Many commands have built-in help options that you can access by using the --help or -h switch. For example:
+```bash
+    ls --help
+```
+- This will provide a brief overview of the command's options.
+
+**5- Online Forums and Communities**:
+- If you're facing a specific issue or have questions about a command, you can search online forums and communities like Stack Exchange, Linux forums, and Reddit's Linux-related subreddits. Many experienced Linux users are willing to help.
+
+**6- Books and Documentation**:
+- Linux books, guides, and documentation often include detailed explanations of various commands and their usage. You can consult these resources for in-depth information.
 
 ## Frequently Asked Questions (FAQ)
 Interview questions may focus on a candidate's knowledge of accessing and utilizing various resources for seeking help and documentation. Here are some common interview questions related to this chapter:
@@ -1710,6 +1751,17 @@ Answer: You can use the nice command to change the priority of a process. A high
 Abstract|In this chapter, you'll learn how to manage system services and daemons on a Linux system. System services are background processes that run continuously and provide various functionalities. You'll explore how to identify automatically started system processes, control system services, and use the systemctl command for managing services.
 |Motivation|Controlling services and daemons is essential for ensuring the proper functioning of a Linux system. You may need to start, stop, restart, enable, or disable various services to meet the system's requirements. Understanding how to manage services is a fundamental part of Linux administration.
 Objective| This chapter covers the following key tasks:</br>- Identifying automatically started system processes.</br>- Controlling system services using the systemctl command.</br>- Enabling and disabling services.</br>- Managing service units.</br>- Investigating service unit status and logs.
+## What is a Daemon?
+A daemon (pronounced "dee-mun") is a background process or service in a computer's operating system that runs without direct interaction with a user. Daemons perform various tasks and functions, such as handling system services, background jobs, or providing network services. They typically run continuously, waiting for specific events or conditions to trigger their actions. Daemons are an essential part of the Unix-like operating systems, and they play a crucial role in managing and maintaining the system's functionality.
+
+Some common examples of daemons in Unix-like systems include:
+- HTTP Daemon (httpd): Responsible for serving web pages and handling HTTP requests, like Apache or Nginx.
+- SSH Daemon (sshd): Manages Secure Shell (SSH) connections and allows remote access to the system securely.
+- Print Spooler Daemon: Handles print jobs sent to printers on the system.
+- Cron Daemon (cron): Executes scheduled tasks at specified times.
+- Systemd (systemd): Acts as a system and service manager, controlling the boot process and managing system services.
+
+Daemons often run in the background, don't have a user interface, and typically have names ending with the letter "d" to indicate that they are daemons (e.g., httpd, sshd). They are essential for the proper functioning and automation of many services and tasks on a computer or server.
 
 ## Command Definitions
 Here are some commands and their descriptions that you'll encounter in this chapter:
@@ -2609,13 +2661,93 @@ Answer: Symbolic links, often referred to as symlinks, are files that act as poi
 
 # Chapter 15: Using Virtualized Systems
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/5e3638b4-33e6-4594-9ace-1fa24678e18d)
+## Info
+|Info|Details|
+|-|-|
+|Abstract Introduction|Chapter 15 explores the world of virtualization on Linux. Virtualization allows you to run multiple operating systems on a single physical machine. It's widely used for server consolidation, testing environments, and development. This chapter delves into managing and creating virtual machines using tools like **KVM (Kernel-Based Virtual Machine)**.
+|Motivation|Understanding virtualization is crucial in modern IT environments. It offers flexibility, resource optimization, and efficient management of infrastructure. Whether you're an administrator or developer, virtualization skills are valuable.
+|Objective|In this chapter, you'll learn how to manage a local virtualization host, install a new virtual machine, and grasp the fundamental concepts of virtualization in Linux.
+|Workspace|We'll explore various commands and tools related to virtualization, primarily focusing on KVM. You'll work with virtual machines, understand their configuration, and get hands-on experience in managing these virtualized systems.
+|Illustration|Throughout this chapter, you'll gain practical knowledge of virtualization concepts and tools. By the end, you'll be capable of running and managing virtual machines on your Linux system.
+|Commands|virsh: A command-line utility for managing virtual machines using libvirt.</br>virt-install: A tool for creating virtual machines.</br>virsh list: Lists running virtual machines.</br>virsh start: Starts a virtual machine.</br>virt-viewer: A graphical tool for accessing virtual machines.
+|Key Features|Creating and managing virtual machines.</br>Understanding KVM and libvirt.</br>Practical experience in virtualization.
+
+## Section: Installing a New Virtual Machine
+|Info|Detials|
+|-|-|
+Motivation|In this section, you'll learn how to install a new virtual machine. Whether you're setting up a testing environment, running a different Linux distribution, or creating a dedicated development environment, understanding the process is essential.
+|Objective|By the end of this section, you'll be able to create a new virtual machine using the virt-install command, install an operating system of your choice, and manage its basic configuration.
+|Workspace|We'll work with the virt-install command to create a new virtual machine. You'll need an ISO image of the operating system you want to install. We'll go through the command's syntax, explore options, and provide code examples.
+|Illustration|You'll understand how to use the virt-install command to create a virtual machine and install an operating system. The provided code examples will guide you through the process.
+
+### Commands: virt-install
+|Command|Description|Syntax|Key Features|Switches|
+|-|-|-|-|-|
+virt-install|Command-line tool for creating and installing virtual machines. It provides a convenient way to create, configure, and install virtualized instances of various operating systems. It's commonly used in KVM (Kernel-Based Virtual Machine) environments.|virt-install [OPTIONS]|- Creating a new virtual machine.</br>- Installing an operating system.</br>-Customizing virtual machine settings.|--name: Specifies the name of the virtual machine.</br>--memory: Sets the amount of memory allocated to the virtual machine.</br>--vcpus: Specifies the number of virtual CPUs.</br>--cdrom: Points to the ISO image for the operating system installation.</br>--disk: Defines the virtual disk's storage.</br>--network NETWORK: Configures the virtual machine's network.
+
+### Example Usage
+```bash
+virt-install --name my-vm \
+  --memory 1024 \
+  --vcpus 2 \
+  --cdrom /path/to/your-os.iso \
+  --disk size=10
+```
+
+In the example above, we create a virtual machine named "my-vm" with 1GB of memory, 2 virtual CPUs, an OS ISO image for installation, and a 10GB virtual disk.
 
 ## Frequently Asked Questions (FAQ)
+Q1: What is the primary purpose of creating a virtual machine?
+- Answer: The primary purpose of creating a virtual machine is to simulate a separate, self-contained computing environment within a physical host. This allows you to run multiple operating systems on a single physical server, making efficient use of hardware resources, facilitating testing and development, and enhancing system management.
+
+Q2: Can I install any operating system on a virtual machine using virt-install?
+- Answer: Yes, you can install a wide range of operating systems using virt-install. As long as you have the ISO image of the desired operating system, you can use virt-install to create a virtual machine and install it.
+
+Q3: How can I manage the resources of a virtual machine created with virt-install?
+- Answer: You can manage the resources of a virtual machine by specifying options such as memory, CPU cores, and disk size when using virt-install. Additionally, you can later modify these settings using tools like virsh to adapt to the virtual machine's requirements.
+
+Q4: Is it possible to install multiple virtual machines on the same physical server?
+- Answer: Yes, you can create and run multiple virtual machines on a single physical server. The number of virtual machines you can run depends on the server's hardware resources, but virtualization platforms like KVM are designed to support multiple virtual machines on a single host.
+
+Q5: How can I access the virtual machine after it's created?
+- Answer: Once a virtual machine is created, you can access it through various methods, including remote desktop access or SSH. The specific method depends on the operating system you installed and its configuration.
 
 # Chapter 16: Comprehensive Review
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/fd83e237-9b56-46a6-ac31-16eda2f30cd8)
 
-## Frequently Asked Questions (FAQ)
+## Info
+|Info|Details|
+|-|-|
+Abstract Introduction|In this chapter, you will engage in a comprehensive review of the concepts, commands, and techniques you've learned throughout the course. It's an opportunity to test your knowledge and skills in system administration, file management, user and group management, permissions, process management, networking, and much more.
+|Motivation|The motivation behind this chapter is to reinforce your understanding of the material and prepare you for real-world Linux system administration tasks. It's a chance to validate your knowledge and ensure you're well-equipped to manage Linux systems effectively.
+Objective|By the end of this chapter, you should be able to confidently tackle Linux system administration tasks, troubleshoot common issues, and demonstrate your proficiency in working with Linux systems.
+Sections|This chapter doesn't have specific sections, but it's structured as a series of questions and tasks that test your knowledge across various topics.
+Key Features|Self-assessment: You can assess your understanding of the material.</br>Practical exercises: You can practice solving real-world Linux system administration challenges.</br>Solidifying knowledge: It's an opportunity to reinforce your expertise in Linux administration.
+
+## Commands Summerize
+Command|	Description|	Syntax|	Switches|	Key Features|
+|-|-|-|-|-|
+|cd|	Change the current working directory.|	cd [directory]|	N/A|	Navigating between directories.
+|pwd|	Print the current working directory.|	pwd|	N/A|	Display the absolute path of the current directory.
+|ls	|List files and directories in a directory.|	ls [options] [directory]|	-l (long format)</br>-a (all files)</br> -h (human-readable size)|	Display file and directory information.
+|find|	Search for files and directories.|	find [path] [expression]|	-name (search by name)</br> -type (search by type)</br> -exec (execute a command)|Searching for files and directories.
+|cp|	Copy files and directories.|	cp [options] <source> <destination>|	-r (recursive)</br> -i (interactive)</br> -u (update)|	Copying files and directories.|
+|mv|	Move or rename files and directories.|	mv [options] <source> <destination>|-i (interactive)</br> -u (update)|	Moving and renaming files and directories.
+|rm|	Remove files and directories.|	rm [options] <file(s)>|	-r (recursive)</br> -i (interactive)|	Deleting files and directories.
+|nano|	A simple text editor.|	nano [options] [file]|	N/A|	Editing text files in the terminal.
+|vim|	A powerful text editor.|	vim [options] [file]|	N/A|	Advanced text editing with Vim.
+|man|	Read manual pages.|	man [command]|	N/A|	Accessing documentation and help.
+|ps|	List information about processes.|	ps [options]|	aux (list all processes)</br> -ef (extended format)|	Viewing information about running processes.
+|kill|	Terminate processes.|	kill [options] <process ID>|	-9 (forceful termination)</br> -15 (graceful termination)|	Terminating processes with different signals.
+|chmod|	Change file permissions.|	chmod [options] <permissions> <file>|	+x (add execute permission)</br> -w (remove write permission)|	Modifying file permissions.
+|chown|	Change file ownership.|	chown [options] \<user:group> <file>|	N/A|	Changing the owner of a file.|
+|df|	Display disk space usage.|	df [options] [filesystem]|	-h (human-readable size)|	Checking disk space usage.
+|lsblk|	List block devices.|	lsblk [options] [device]|	N/A|	Listing information about block devices.
+|mount|	Mount a file system.|	mount [options] <device> <mountpoint>|	N/A|	Mounting file systems.
+|umount|	Unmount a file system.|	umount [options] <mountpoint>|	N/A|	Unmounting file systems.
+|ln|	Create links (hard or symbolic) between files.|	ln [options] <source> <destination>|	-s (symbolic link)</br> -T (treat link as file)|	Creating hard and symbolic links.
+|find|	Search for files and directories.|	find [path] [expression]|	-name (search by name)</br> -type (search by type)</br> -exec (execute a command)|	Searching for files and directories.
+|locate|	Quickly find files and directories.|	locate [options] <file>|	N/A|	Searching for files using a pre-built index.
 
 # Credits
 - RedHat Documentation
