@@ -456,24 +456,16 @@ Example commands include ls (list files) and pwd (print working directory). Thes
 
 ## Frequently Asked Questions (FAQ)
 What is the command line, and why is it important in a Linux environment?
-```
-Answer: The command line is a text-based interface to interact with a computer's operating system. It's important in Linux for tasks like system administration, automation, and efficient file management.
-```
+- Answer: The command line is a text-based interface to interact with a computer's operating system. It's important in Linux for tasks like system administration, automation, and efficient file management.
 
 Explain the difference between the local console and the desktop environment when accessing the command line.
-```
-Answer: The local console is a text-based interface directly on the system, while the desktop environment is a graphical user interface. The console is useful for system recovery and maintenance, whereas the desktop environment provides a user-friendly interface.
-```
+- Answer: The local console is a text-based interface directly on the system, while the desktop environment is a graphical user interface. The console is useful for system recovery and maintenance, whereas the desktop environment provides a user-friendly interface.
 
 What is the purpose of the Bash shell, and how does it differ from other shells?
-```
-Answer: Bash is a command-line shell used for executing commands and scripts. It's the default shell in most Linux distributions. Differences between shells include syntax and features.
-```
+- Answer: Bash is a command-line shell used for executing commands and scripts. It's the default shell in most Linux distributions. Differences between shells include syntax and features.
 
 How do you navigate through directories using the command line, and what are some common commands for file management?
-```
-Answer: Use commands like cd to change directories and ls to list files. File management commands include cp, mv, and rm.
-```
+- Answer: Use commands like cd to change directories and ls to list files. File management commands include cp, mv, and rm.
 
 # Chapter 2: Managing Files From the Command Line
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/41c2c3cc-0ecc-4737-972d-f46861153ba2)
@@ -676,53 +668,33 @@ ls *[0-9].txt
 
 ## Frequently Asked Questions (FAQ)
 Q: What is the default directory structure of the Linux File System?
-```
-The default structure of the Linux File System is a hierarchical structure that begins with the root directory. All other directories stem from the root directory.
-```
+- The default structure of the Linux File System is a hierarchical structure that begins with the root directory. All other directories stem from the root directory.
 
 Q: What is an inode and how is it used in the Linux File System?
-```
-An inode is an index node. It serves as a unique identifier for a specific piece of metadata on a given filesystem. Each piece of metadata describes what we think of as a file.
-```
+- An inode is an index node. It serves as a unique identifier for a specific piece of metadata on a given filesystem. Each piece of metadata describes what we think of as a file.
 
 Q: How do I manage disk space in the Linux File System?
-```
-You can manage disk space using the Graphical User Interface (GUI). Disk space management can be done using a file manager, but you can also use the du (disk usage), and df (disk free) commands in the terminal.
-```
+- You can manage disk space using the Graphical User Interface (GUI). Disk space management can be done using a file manager, but you can also use the du (disk usage), and df (disk free) commands in the terminal.
 
 Q: How is data organized in the Linux File System?
-```
-Linux uses devices to receive, send, and store data. Typically, devices correspond to physical hardware components like hard disks, USB sticks, or input/output devices such as a keyboard. However, some devices may not have a hardware component, and in such cases, the kernel provides pseudodevices that you can access as if they were physical devices.
-
-When formatting a partition on a disk, the operating system writes the filesystem, as we have previously discussed, so that you can efficiently organize data within the logical filesystem hierarchy provided by Linux.
-```
+- Linux uses devices to receive, send, and store data. Typically, devices correspond to physical hardware components like hard disks, USB sticks, or input/output devices such as a keyboard. However, some devices may not have a hardware component, and in such cases, the kernel provides pseudodevices that you can access as if they were physical devices.
+- When formatting a partition on a disk, the operating system writes the filesystem, as we have previously discussed, so that you can efficiently organize data within the logical filesystem hierarchy provided by Linux.
 
 Q: What is the difference between the root directory and the home directory in Linux?
-```
-The root directory is the top most level of the Linux File System, and everything, including the home directory, falls under the root directory. The home directory contains the data for a particular user. Every user registered on the system will have their own named directory under the home directory.
-```
+- The root directory is the top most level of the Linux File System, and everything, including the home directory, falls under the root directory. The home directory contains the data for a particular user. Every user registered on the system will have their own named directory under the home directory.
 
 Q: How do you create and delete files and directories in the Linux File System?
-```
-The creation and deletion of files and folders are possible through both the GUI and the command-line terminal. The GUI provides an intuitive approach where you can simply right-click anywhere and create a new folder.
-
-Alternatively, in the terminal, you can use the mkdir command to create a new directory. Similarly, to create a new file, you can use the touch command.
-```
+- The creation and deletion of files and folders are possible through both the GUI and the command-line terminal. The GUI provides an intuitive approach where you can simply right-click anywhere and create a new folder.
+- Alternatively, in the terminal, you can use the mkdir command to create a new directory. Similarly, to create a new file, you can use the touch command.
 
 Q: How do you locate files by name using the find command, and provide an example?
-```
-Answer: The find command searches for files by name in a specified directory. For example, to find all .txt files in the /home/user directory, you can use find /home/user -name "*.txt".
-```
+- Answer: The find command searches for files by name in a specified directory. For example, to find all .txt files in the /home/user directory, you can use find /home/user -name "*.txt".
 
 Q: What is path name expansion, and how can you use wildcards to match file names?
-```
-Answer: Path name expansion allows you to use wildcards like *, ?, [ ], and { } to match file names based on patterns. For example, *.txt matches all files with a .txt extension.
-```
+- Answer: Path name expansion allows you to use wildcards like *, ?, [ ], and { } to match file names based on patterns. For example, *.txt matches all files with a .txt extension.
 
 Q: Explain the purpose of file permissions in Linux and provide an example of changing file permissions.
-```
-Answer: File permissions control who can access and modify files. You can change file permissions using the chmod command. For example, chmod 644 file.txt sets read and write permissions for the owner and read-only permissions for others.
-```
+- Answer: File permissions control who can access and modify files. You can change file permissions using the chmod command. For example, chmod 644 file.txt sets read and write permissions for the owner and read-only permissions for others.
 
 # Chapter 3: Getting Help in Red Hat Enterprise Linux
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/52102ef2-618c-4af8-b950-0297230406b2)
@@ -874,29 +846,19 @@ Searching for information about a command in Linux is a common task, especially 
 Interview questions may focus on a candidate's knowledge of accessing and utilizing various resources for seeking help and documentation. Here are some common interview questions related to this chapter:
 
 Q: What is the purpose of the man command in Linux, and how do you use it to access command documentation?
-```
-Answer: The man command is used to access manual pages that provide detailed information about command usage, options, and functionality. To use it, you type man followed by the command you want to learn about. For example, man ls displays the manual page for the ls command.
-```
+- Answer: The man command is used to access manual pages that provide detailed information about command usage, options, and functionality. To use it, you type man followed by the command you want to learn about. For example, man ls displays the manual page for the ls command.
 
 Q: What is the difference between man and info documentation in Linux, and when would you use one over the other?
-```
-Answer: man and info are both documentation systems. man provides concise command documentation, while info offers more extensive documentation, often used for in-depth explanations. The choice depends on the depth of information required for a particular command.
-```
+- Answer: man and info are both documentation systems. man provides concise command documentation, while info offers more extensive documentation, often used for in-depth explanations. The choice depends on the depth of information required for a particular command.
 
 Q: Explain how to access package-specific documentation stored in the /usr/share/doc directory.
-```
-Answer: Package-specific documentation is often stored in the /usr/share/doc directory. To access it, navigate to the directory and list available documentation packages with 'ls'. You can then use commands like 'less' to view specific documentation files.
-```
+- Answer: Package-specific documentation is often stored in the /usr/share/doc directory. To access it, navigate to the directory and list available documentation packages with 'ls'. You can then use commands like 'less' to view specific documentation files.
 
 Q: What resources does Red Hat provide for obtaining support and assistance with Red Hat Enterprise Linux?
-```
-Answer: Red Hat offers various resources, including the customer support portal for documentation, knowledge base articles, and support tickets. You can also create an SOS report to provide system information for troubleshooting.
-```
+- Answer: Red Hat offers various resources, including the customer support portal for documentation, knowledge base articles, and support tickets. You can also create an SOS report to provide system information for troubleshooting.
 
 Q: What is the purpose of an SOS report, and how do you generate one in Red Hat Enterprise Linux?
-```
-Answer: An SOS report is used to gather system information for troubleshooting complex issues. To generate an SOS report, you can use the sosreport command. It creates a compressed tarball containing system information that can be shared with Red Hat support.
-```
+- Answer: An SOS report is used to gather system information for troubleshooting complex issues. To generate an SOS report, you can use the sosreport command. It creates a compressed tarball containing system information that can be shared with Red Hat support.
 
 # Chapter 4: Creating, Viewing, and Editing Text Files
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/62d775bb-f85d-4245-b4b0-57e13ad21d86)
@@ -982,29 +944,19 @@ gedit filename.txt
 Interview questions may focus on a candidate's ability to work with text files and text editors in Linux. Here are some common interview questions related to this chapter:
 
 Q: Explain the purpose of text files in Linux and why they are essential for system administration.
-```
-Answer: Text files are fundamental for storing configuration data, scripts, and system-related information. They are essential for system administration because they allow for easy configuration management and automation.
-```
+- Answer: Text files are fundamental for storing configuration data, scripts, and system-related information. They are essential for system administration because they allow for easy configuration management and automation.
 
 Q: Describe the differences between command-line text editors like vi and nano and graphical text editors like Gedit. When would you use one over the other?
-```
-Answer: Command-line text editors are typically used in terminal environments, while graphical editors provide a user-friendly interface. vi and nano are often used in terminal sessions for quick edits, while graphical editors are preferred for more extensive editing tasks.
-```
+- Answer: Command-line text editors are typically used in terminal environments, while graphical editors provide a user-friendly interface. vi and nano are often used in terminal sessions for quick edits, while graphical editors are preferred for more extensive editing tasks.
 
 Q:How can you create a new text file using the command line, and what command would you use to open and edit it with vi?
-```
-Answer: You can create a new text file with touch and edit it with vi using the command vi filename.txt. To open and edit an existing file with vi, you'd use vi existing_file.txt.
-```
+- Answer: You can create a new text file with touch and edit it with vi using the command vi filename.txt. To open and edit an existing file with vi, you'd use vi existing_file.txt.
 
 Q: Explain the modes in the vi (Vim) text editor and how you switch between them.
-```
-Answer: Vim has three primary modes: Normal, Insert, and Visual. You switch between modes by pressing 'Esc' to go from Insert to Normal mode and 'i' to enter Insert mode. In Normal mode, you can execute commands.
-```
+- Answer: Vim has three primary modes: Normal, Insert, and Visual. You switch between modes by pressing 'Esc' to go from Insert to Normal mode and 'i' to enter Insert mode. In Normal mode, you can execute commands.
 
 Q: What are the advantages of using vim over other text editors, and how would you save and exit a file in Vim?
-```
-Answer: Vim is highly configurable, provides powerful text manipulation features, and has a strong community. To save and exit a file in Vim, press 'Esc' to enter Normal mode and then type :wq and press 'Enter'.
-```
+- Answer: Vim is highly configurable, provides powerful text manipulation features, and has a strong community. To save and exit a file in Vim, press 'Esc' to enter Normal mode and then type :wq and press 'Enter'.
 
 # Chapter 5: Managing Local Linux Users and Groups
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/664202a2-70b7-4f4b-b259-b2e9e53d19e5)
@@ -1083,29 +1035,19 @@ passwd username
 Interview questions may assess a candidate's knowledge of user and group management in Linux, a critical skill for system administration. Here are some common interview questions related to this chapter:
 
 Q: Explain the purpose of user accounts and groups in Linux. Why is it essential to manage them effectively?
-```
-Answer: User accounts provide individual access to the system, while groups allow for the management of user privileges. Effective management is essential for security, access control, and resource allocation.
-```
+- Answer: User accounts provide individual access to the system, while groups allow for the management of user privileges. Effective management is essential for security, access control, and resource allocation.
 
 Q: What is the difference between a user and a group in Linux, and how do they work together for access control?
-```
-Answer: Users are individual accounts, while groups are collections of users. Groups are used to grant permissions to multiple users simultaneously, simplifying access control.
-```
+- Answer: Users are individual accounts, while groups are collections of users. Groups are used to grant permissions to multiple users simultaneously, simplifying access control.
 
 Q: How can you create a new user account in Linux, and what command would you use for this?
-```
-Answer: To create a new user account, you can use the useradd command. For example, sudo useradd newuser creates a new user account named "newuser."
-```
+- Answer: To create a new user account, you can use the useradd command. For example, sudo useradd newuser creates a new user account named "newuser."
 
 Q: Explain the concept of superuser access in Linux. How do you gain superuser access, and what precautions should be taken when using it?
-```
-Answer: The superuser, often referred to as "root," has elevated privileges. To gain superuser access, you can use the su command. Precautions include using it sparingly, as it provides unrestricted access to the system.
-```
+- Answer: The superuser, often referred to as "root," has elevated privileges. To gain superuser access, you can use the su command. Precautions include using it sparingly, as it provides unrestricted access to the system.
 
 Q: Describe how to set or change a user's password in Linux. What command is used, and what security considerations should be kept in mind when managing passwords?
-```        
-Answer: To set or change a user's password, you can use the passwd command. Security considerations include using strong passwords, ensuring regular password changes, and protecting password hashes.
-```
+- Answer: To set or change a user's password, you can use the passwd command. Security considerations include using strong passwords, ensuring regular password changes, and protecting password hashes.
 
 # Chapter 6: Controlling Access to Files with Linux File System Permissions
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/eeafb85d-435a-4417-a3b0-ffdcc00dd915)
@@ -1379,34 +1321,22 @@ Here's a breakdown of what each digit in "0002" represents:
 you may encounter a range of questions that assess your knowledge of file permissions and your ability to manage them effectively. Here are some frequently asked interview questions, including one tricky question:
 
 Q: What are the three basic types of permissions associated with files and directories in Linux?
-```
-Answer: The three basic types of permissions are read (r), write (w), and execute (x).
-```
+- Answer: The three basic types of permissions are read (r), write (w), and execute (x).
 
 Q: Explain the difference between the owner, group, and others permissions.
-```
-Answer: The owner refers to the file's creator, the group is a set of users with common permissions, and others are all users who are neither the owner nor in the group.
-```
+- Answer: The owner refers to the file's creator, the group is a set of users with common permissions, and others are all users who are neither the owner nor in the group.
 
 Q: What is the umask, and how does it affect file permissions when creating new files or directories?
-```
-Answer: The umask is a value that sets the default permissions for newly created files and directories. It's subtracted from the maximum permissions to determine the actual permissions.
-```
+- Answer: The umask is a value that sets the default permissions for newly created files and directories. It's subtracted from the maximum permissions to determine the actual permissions.
     
 Q: How can you change file permissions using the chmod command, and what are some common symbolic and numeric notations used with chmod?
-```
-Answer: You can use chmod to change permissions. Symbolic notation (e.g., chmod u+r) and numeric notation (e.g., chmod 644) are common methods.
-```
+- Answer: You can use chmod to change permissions. Symbolic notation (e.g., chmod u+r) and numeric notation (e.g., chmod 644) are common methods.
 
 Q: Explain the SUID, SGID, and sticky bit permissions and their purposes.
-```
-Answer: SUID (Set User ID), SGID (Set Group ID), and sticky bit permissions have special meanings. SUID allows a program to run as the file's owner, SGID allows a program to run as the file's group, and the sticky bit helps control directory access.
-```
+- Answer: SUID (Set User ID), SGID (Set Group ID), and sticky bit permissions have special meanings. SUID allows a program to run as the file's owner, SGID allows a program to run as the file's group, and the sticky bit helps control directory access.
 
 Q: You need to set file permissions in such a way that the owner can read, write, and execute, but the group and others can only read. What chmod command would you use?
-```
-Answer: You can use the following command to achieve this: chmod 744 filename. This sets the owner's permissions to read, write, and execute (4 + 2 + 1 = 7) and the group and others to read-only (4).
-```
+- Answer: You can use the following command to achieve this: chmod 744 filename. This sets the owner's permissions to read, write, and execute (4 + 2 + 1 = 7) and the group and others to read-only (4).
 
 # Chapter 7: Monitoring and Managing Linux Processes
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/1a638030-516a-42ab-a968-67788e085372)
@@ -1779,19 +1709,13 @@ In practice, you'll most often encounter priority adjustments within this -20 to
 
 ## Frequently Asked Questions (FAQ)
 Q: What is the difference between ps and top commands?
-```
-Answer: ps is a static command for listing processes, while top provides dynamic real-time information about processes and system performance. top is interactive and updates continuously.
-```
+- Answer: ps is a static command for listing processes, while top provides dynamic real-time information about processes and system performance. top is interactive and updates continuously.
 
 Q: When should I use the kill command, and when should I use pkill?
-```
-Answer: Use the kill command when you know the PID of the process you want to terminate. Use pkill when you need to kill processes based on their name or other attributes.
-```
+- Answer: Use the kill command when you know the PID of the process you want to terminate. Use pkill when you need to kill processes based on their name or other attributes.
 
 Q: How can you prioritize a specific process over others without killing them?
-```
-Answer: You can use the nice command to change the priority of a process. A higher nice value gives lower priority, while a lower nice value gives higher priority. For example, to increase the priority of a process with PID 123, you can use nice -n -10 -p 123.
-```
+- Answer: You can use the nice command to change the priority of a process. A higher nice value gives lower priority, while a lower nice value gives higher priority. For example, to increase the priority of a process with PID 123, you can use nice -n -10 -p 123.
 
 # Chapter 8: Controlling Services and Daemons
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/f278feb9-a104-478e-b776-ebdf34efb657)
@@ -1858,29 +1782,19 @@ These commands allow you to control the httpd service, making it start, stop, or
 
 ## Frequently Asked Questions (FAQ)
 Q1: What is the purpose of enabling or disabling a service at boot?
-```
-A1: Enabling a service means it will start automatically when the system boots up, ensuring it's available. Disabling a service prevents it from starting automatically, which can be useful for services that are only needed on-demand.
-```
+- A1: Enabling a service means it will start automatically when the system boots up, ensuring it's available. Disabling a service prevents it from starting automatically, which can be useful for services that are only needed on-demand.
 
 Q2: How can I check the status of a service?
-```
-A2: You can use the systemctl status \<service> command to check the status and view detailed information about a service.
-```
+- A2: You can use the systemctl status \<service> command to check the status and view detailed information about a service.
 
 Q3: What's the difference between starting and enabling a service?
-```
-A3: Starting a service means that it will run immediately, while enabling a service ensures it starts automatically during system boot.
-```
+- A3: Starting a service means that it will run immediately, while enabling a service ensures it starts automatically during system boot.
 
 Q4: How can I check the status of a service?
-```
-A4: You can use the systemctl status <service> command to view the status, log, and other information about a service.
-```
+- A4: You can use the systemctl status <service> command to view the status, log, and other information about a service.
 
 Q5: Can I customize service startup options?
-```
-A5: Yes, you can customize service startup options by editing the service unit file. These files are usually found in /etc/systemd/system/ and can be adjusted to set specific behaviors for services.
-```
+- A5: Yes, you can customize service startup options by editing the service unit file. These files are usually found in /etc/systemd/system/ and can be adjusted to set specific behaviors for services.
 
 # Chapter 9: Configuring and Securing OpenSSH Service
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/b5d179aa-8ed2-4ffe-838b-f1a5bcd1f77f)
@@ -1924,27 +1838,19 @@ By following these steps, you can configure SSH key-based authentication, which 
 
 ## Frequently Asked Questions (FAQ)
 Q1: Why is SSH key-based authentication more secure than password authentication?
-```
-A1: SSH key-based authentication is more secure because it relies on cryptographic keys rather than passwords. It's resistant to brute-force attacks, and keys can be protected with passphrases for an additional layer of security.
-```
+- A1: SSH key-based authentication is more secure because it relies on cryptographic keys rather than passwords. It's resistant to brute-force attacks, and keys can be protected with passphrases for an additional layer of security.
+
 Q2: What is the purpose of customizing the SSH service configuration?
-```
-A2: Customizing the SSH service allows you to adapt it to your organization's security policies and requirements. You can control access, enforce security settings, and improve the service's performance.
-```
+- A2: Customizing the SSH service allows you to adapt it to your organization's security policies and requirements. You can control access, enforce security settings, and improve the service's performance.
+
 Q3: What is SSH key-based authentication, and why is it more secure?
-```
-A3: SSH key-based authentication involves using cryptographic keys for authentication instead of passwords. It's more secure because keys are difficult to guess, and you can protect them with passphrases.
-```
+- A3: SSH key-based authentication involves using cryptographic keys for authentication instead of passwords. It's more secure because keys are difficult to guess, and you can protect them with passphrases.
 
 Q4: How do I restrict SSH logins to specific users or groups?
-```
-A4: You can restrict SSH logins by modifying the sshd_config file. For example, you can use the AllowUsers or AllowGroups directives to specify which users or groups are allowed to log in.
-```
+- A4: You can restrict SSH logins by modifying the sshd_config file. For example, you can use the AllowUsers or AllowGroups directives to specify which users or groups are allowed to log in.
 
 Q5: What is the purpose of changing the default SSH port?
-```
-A5: Changing the default SSH port (22) is a security measure to make it harder for unauthorized users to find your SSH service. It's a basic security practice to minimize exposure to common attacks.
-```
+- A5: Changing the default SSH port (22) is a security measure to make it harder for unauthorized users to find your SSH service. It's a basic security practice to minimize exposure to common attacks.
 
 # Chapter 10: Analyzing and Storing Logs
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/6e85762b-4ad4-4a16-b4b0-ac215e2e681d)
@@ -1991,27 +1897,19 @@ Understanding these commands and practices is crucial for effective log analysis
 
 ## Frequently Asked Questions (FAQ)
 Q1: Why are logs important for system administration?
-```
-A1: Logs provide a record of system events and activities, which is crucial for diagnosing issues, monitoring system performance, and ensuring security. They offer insights into what's happening on a Linux system.
-```
+- A1: Logs provide a record of system events and activities, which is crucial for diagnosing issues, monitoring system performance, and ensuring security. They offer insights into what's happening on a Linux system.
+
 Q2: What is log rotation, and why is it necessary?
-```
-A2: Log rotation is the process of archiving and managing log files to prevent them from consuming too much disk space. It's necessary to ensure that log files don't fill up the file system and to preserve historical log data. Tools like logrotate automate this process.
-```
+- A2: Log rotation is the process of archiving and managing log files to prevent them from consuming too much disk space. It's necessary to ensure that log files don't fill up the file system and to preserve historical log data. Tools like logrotate automate this process.
+
 Q3: How can I search for specific log entries in the systemd journal using journalctl?
-```
-A3: You can search for specific log entries using options like -u (for filtering by unit) or -t (for filtering by message ID). For example, journalctl -u ssh shows SSH-related logs.
-```
+- A3: You can search for specific log entries using options like -u (for filtering by unit) or -t (for filtering by message ID). For example, journalctl -u ssh shows SSH-related logs.
 
 Q4: What's the purpose of log rotation?
-```
-A4: Log rotation is necessary to manage log files efficiently. It archives older logs, compresses them, and ensures that log files don't consume excessive disk space. It also helps in preserving historical log data for analysis.
-```
+- A4: Log rotation is necessary to manage log files efficiently. It archives older logs, compresses them, and ensures that log files don't consume excessive disk space. It also helps in preserving historical log data for analysis.
 
 Q5: How can I configure log rotation for specific log files?
-```
-A5: You can configure log rotation for specific log files by creating custom log rotation configuration files in /etc/logrotate.d/. These files define rules for rotating and managing specific log files.
-```
+- A5: You can configure log rotation for specific log files by creating custom log rotation configuration files in /etc/logrotate.d/. These files define rules for rotating and managing specific log files.
 
 # Chapter 11: Managing Red Hat Enterprise Linux Networking
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/a7b637ea-d505-4728-b69e-e3ceb7ac659b)
@@ -2068,25 +1966,19 @@ By understanding these commands, you can effectively manage network connections 
 
 ## Frequently Asked Questions (FAQ)
 Q1: What is NetworkManager, and why is it used in Red Hat Enterprise Linux?
-```
-A1: NetworkManager is a utility used for managing network connections. It simplifies network configuration, providing an intuitive way to manage network interfaces and connections in Linux.
-```
+- A1: NetworkManager is a utility used for managing network connections. It simplifies network configuration, providing an intuitive way to manage network interfaces and connections in Linux.
+
 Q2: How can I configure a static IP address using nmcli?
-```
-A2: To configure a static IP address, use the nmcli connection modify command, as shown in the illustration. You can set the IP address, subnet mask, and gateway in the command.
-```
+- A2: To configure a static IP address, use the nmcli connection modify command, as shown in the illustration. You can set the IP address, subnet mask, and gateway in the command.
+
 Q3: What is the purpose of setting the hostname in Linux?
-```
-A3: The hostname identifies a system on a network. Setting the hostname is essential for system identification and proper network communication.
-```
+- A3: The hostname identifies a system on a network. Setting the hostname is essential for system identification and proper network communication.
+
 Q4: What is the resolv.conf file used for?
-```
-A4: The resolv.conf file contains DNS name resolution settings. It specifies the DNS servers and search domains used for hostname resolution.
-```
+- A4: The resolv.conf file contains DNS name resolution settings. It specifies the DNS servers and search domains used for hostname resolution.
+
 Q5: Can I configure network connections through a graphical interface in Red Hat Enterprise Linux?
-```
-A5: Yes, you can use the nm-connection-editor tool to configure network connections through a graphical interface, making it more user-friendly for those who prefer GUI interactions.
-```
+- A5: Yes, you can use the nm-connection-editor tool to configure network connections through a graphical interface, making it more user-friendly for those who prefer GUI interactions.
 
 # Chapter 12: Archiving and Copying Files Between Systems
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/0fc018e8-409a-494e-a1bc-3110601f2fd6)
@@ -2279,29 +2171,19 @@ Use rsync when|You need to synchronize directories or files regularly, efficient
 
 ## Frequently Asked Questions (FAQ)
 Q: What is the difference between archiving and compressing files?
-```
-Answer: Archiving involves bundling multiple files or directories into a single file, preserving their structure and permissions. Compression, on the other hand, reduces the size of a file or archive to save storage space. Often, archiving and compression are combined, as seen in tools like tar.
-```
+- Answer: Archiving involves bundling multiple files or directories into a single file, preserving their structure and permissions. Compression, on the other hand, reduces the size of a file or archive to save storage space. Often, archiving and compression are combined, as seen in tools like tar.
 
 Q: How do I extract the contents of a tar archive?
-```
-Answer: To extract the contents of a tar archive, use the tar -xvf archive.tar command. The -x option stands for extract. This will unpack the files and directories from the archive.
-```
+- Answer: To extract the contents of a tar archive, use the tar -xvf archive.tar command. The -x option stands for extract. This will unpack the files and directories from the archive.
 
 Q: Is scp the only way to securely copy files between systems?
-```
-Answer: scp is a widely used method for secure file copy, but there are other options, such as using SFTP (SSH File Transfer Protocol) or tools like rsync with SSH. The choice depends on your specific requirements and preferences.
-```
+- Answer: scp is a widely used method for secure file copy, but there are other options, such as using SFTP (SSH File Transfer Protocol) or tools like rsync with SSH. The choice depends on your specific requirements and preferences.
 
 Q: Can I use rsync to synchronize files between two local directories?
-```
-Answer: Yes, rsync can be used to synchronize files between local directories. You can specify local paths as the source and destination in the rsync command.
-```
+- Answer: Yes, rsync can be used to synchronize files between local directories. You can specify local paths as the source and destination in the rsync command.
 
 Q: What are the advantages of using compression when creating tar archives?
-```
-Answer: Using compression with tar archives reduces the size of the archive, making it more efficient for storage and transfer. Compression can also save bandwidth and time during file transfers.
-```
+- Answer: Using compression with tar archives reduces the size of the archive, making it more efficient for storage and transfer. Compression can also save bandwidth and time during file transfers.
 
 # Chapter 13: Installing and Updating Software Packages
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/717f6b3b-9f27-4fd5-b2e3-d2b8ec8ab12e)
@@ -2383,33 +2265,23 @@ yum update package-name
 
 ## Frequently Asked Questions (FAQ)
 Q: How do I attach a Linux system to a subscription for software updates using subscription-manager?
+- Answer: You can attach a system to a subscription using a command like: 
+```bash
+   subscription-manager register --username=myusername --password=mypassword, 
 ```
-Answer: You can attach a system to a subscription using a command like: 
-
-subscription-manager register --username=myusername --password=mypassword, 
-
-where myusername and mypassword should be replaced with your credentials.
-```
+- where myusername and mypassword should be replaced with your credentials.
 
 Q: What is the basic syntax for installing an RPM package using rpm?
-```
-Answer: To install an RPM package, you can use the rpm -ivh package.rpm command, replacing package.rpm with the name of the RPM package you want to install.
-```
+- Answer: To install an RPM package, you can use the rpm -ivh package.rpm command, replacing package.rpm with the name of the RPM package you want to install.
 
 Q: How can I update software packages using Yum?
-```
-Answer: To update software packages with Yum, use the yum update package-name command, where package-name is the name of the package you want to update.
-```
+- Answer: To update software packages with Yum, use the yum update package-name command, where package-name is the name of the package you want to update.
 
 Q: How do I register my system for Red Hat software updates?
-```
-A: You can use the subscription-manager command to register your system. Replace myuser and mypassword with your Red Hat account credentials.
-```
-    
+- A: You can use the subscription-manager command to register your system. Replace myuser and mypassword with your Red Hat account credentials.
+  
 Q: What is RPM and Yum, and how do they differ in package management?
-```
-A: RPM is a low-level package manager for individual packages, while Yum is a high-level package manager that handles dependencies and simplifies package installation and updates on Red Hat-based systems.
-```
+- A: RPM is a low-level package manager for individual packages, while Yum is a high-level package manager that handles dependencies and simplifies package installation and updates on Red Hat-based systems.
 
 # Chapter 14: Accessing Linux File Systems
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/4e710e43-103f-4c12-a4c7-61f7afb86f00)
@@ -2689,25 +2561,19 @@ Mastering these commands is essential for efficiently locating files and directo
 
 ## Frequently Asked Questions (FAQ)
 Q1: What is the purpose of identifying file systems and devices?
-```
-Answer: Identifying file systems and devices is essential for managing storage in Linux. It helps you understand which file systems are available, what devices are connected, and how they are organized. This knowledge is crucial for tasks such as mounting, unmounting, and managing storage effectively.
-```
+- Answer: Identifying file systems and devices is essential for managing storage in Linux. It helps you understand which file systems are available, what devices are connected, and how they are organized. This knowledge is crucial for tasks such as mounting, unmounting, and managing storage effectively.
+
 Q2: When should I use the mount command?
-```
-Answer: You should use the mount command when you need to make the content of a storage device accessible to your file system. It's typically used to mount partitions, external drives, network shares, and other storage devices to specific directories in your file system.
-```
+- Answer: You should use the mount command when you need to make the content of a storage device accessible to your file system. It's typically used to mount partitions, external drives, network shares, and other storage devices to specific directories in your file system.
+
 Q3: What's the difference between mounting and unmounting a file system?
-```
-Answer: Mounting is the process of making the content of a storage device accessible by attaching it to a directory in the file system hierarchy. Unmounting, on the other hand, is the process of detaching the mounted file system, making it inaccessible. Mounting makes data available, while unmounting removes that accessibility.
-```
+- Answer: Mounting is the process of making the content of a storage device accessible by attaching it to a directory in the file system hierarchy. Unmounting, on the other hand, is the process of detaching the mounted file system, making it inaccessible. Mounting makes data available, while unmounting removes that accessibility.
+
 Q4: How can I identify the file systems and devices on my Linux system?
-```
-Answer: You can identify file systems and devices using commands like df and lsblk. The df command provides information about disk space usage and mounted file systems. The lsblk command displays information about block devices, including disks and partitions.
-```
+- Answer: You can identify file systems and devices using commands like df and lsblk. The df command provides information about disk space usage and mounted file systems. The lsblk command displays information about block devices, including disks and partitions.
+
 Q5: What are symbolic links (symlinks)?
-```
-Answer: Symbolic links, often referred to as symlinks, are files that act as pointers or references to other files or directories. They provide a convenient way to reference files and directories without duplicating data. Symlinks are created using the ln command with the -s switch.
-```
+- Answer: Symbolic links, often referred to as symlinks, are files that act as pointers or references to other files or directories. They provide a convenient way to reference files and directories without duplicating data. Symlinks are created using the ln command with the -s switch.
 
 # Chapter 15: Using Virtualized Systems
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/5e3638b4-33e6-4594-9ace-1fa24678e18d)
