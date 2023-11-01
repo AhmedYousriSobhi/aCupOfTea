@@ -98,6 +98,7 @@ Linux administration is the art and science of efficiently managing Linux-based 
     - [Info](#info-17)
     - [Commands: useradd, usermod, userdel, passwd](#commands-useradd-usermod-userdel-passwd)
     - [Tips](#tips-17)
+    - [Steps to add User to a Group?](#steps-to-add-user-to-a-group)
   - [Frequently Asked Questions (FAQ)](#frequently-asked-questions-faq-4)
 - [Chapter 6: Controlling Access to Files with Linux File System Permissions](#chapter-6-controlling-access-to-files-with-linux-file-system-permissions)
   - [Abstract Introduction](#abstract-introduction-2)
@@ -486,6 +487,7 @@ The Linux File System is organized logically into a hierarchical structure, whic
 - The Linux file system hierarchy is a structured layout of directories and files, starting with the root directory /.
 - Key directories include /bin (system binaries), /home (user home directories), and /etc (system configuration files).
 
+![filesystem](https://www.linuxfoundation.org/hs-fs/hubfs/Imported_Blog_Media/standard-unix-filesystem-hierarchy-1.png?width=1817&height=1001&name=standard-unix-filesystem-hierarchy-1.png)
 Common directories in the Linux file system hierarchy include:
 
 |Directory|Details|
@@ -1030,6 +1032,39 @@ passwd username
 ### Tips
 - Properly configure user account properties, including home directories, default shells, and group memberships.
 - Regularly audit and manage user accounts to ensure system security.
+
+### Steps to add User to a Group?
+To add a user to a group in Linux, you can use the usermod command. The usermod command allows you to modify the properties of a user account, including the groups that the user belongs to.
+
+To add a user to a group using the usermod command, you must specify the following:
+- The name of the user to add to the group
+- The name of the group to add the user to
+
+For example, to add the user bard to the group developers, you would run the following command:
+```bash
+usermod -a -G developers bard
+```
+- The -G option tells the usermod command to modify the user's group memberships. The developers argument is the name of the group to add the user to.
+- The -a option in the usermod command tells the command to append the group to the list of groups that the user belongs to. This means that the user will be added to the group, but they will not be removed from any other groups that they belong to.
+
+You can also use the groupadd command to add a user to a group. The groupadd command allows you to create and modify groups.
+
+To add a user to a group using the groupadd command, you must specify the following:
+- The name of the group to create or modify
+- The name of the user to add to the group
+
+For example, to add the user bard to the group developers, you would run the following command:
+```bash
+groupadd -f -m developers
+```
+The -f option tells the groupadd command to force the creation of the group, even if it already exists. The -m option tells the groupadd command to create a home directory for the group.
+
+Once you have added the user to the group, you can check to make sure that the user has been added to the group by running the following command:
+```bash
+groups bard
+```
+
+This command will print a list of the groups that the user bard belongs to.
 
 ## Frequently Asked Questions (FAQ)
 Interview questions may assess a candidate's knowledge of user and group management in Linux, a critical skill for system administration. Here are some common interview questions related to this chapter:

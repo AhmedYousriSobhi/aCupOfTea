@@ -41,6 +41,7 @@ In this blog, we will introduce more practice illustrated in question and answer
     - [What is Virtual File System (VFS)?](#what-is-virtual-file-system-vfs)
   - [What is LLIO?](#what-is-llio)
   - [Which is the earliest and most widely used shell that came with unix system? \[C shell, Bourne shell, korn shell, smith shell\]](#which-is-the-earliest-and-most-widely-used-shell-that-came-with-unix-system-c-shell-bourne-shell-korn-shell-smith-shell)
+  - [Credits](#credits)
 
 ## What is the  location for subdirectories for local programs and executables for user and administrative commands? 
 Choose from [/mnt, /user, /opt, /tmp]
@@ -723,3 +724,6 @@ The other options are incorrect:
 - C shell: The C shell was developed in the early 1980s and was inspired by the C programming language. It is a more powerful and flexible shell than the Bourne shell, but it is also more complex.
 - Korn shell: The Korn shell was developed in the mid-1980s and is based on the Bourne shell. It adds a number of features to the Bourne shell, such as support for job control and shell scripts.
 - Smith shell: The Smith shell is a relatively new shell that was developed in the early 2000s. It is a lightweight and efficient shell that is designed for use on embedded systems.
+
+## Credits
+- [Intellpaat: Interview Questions](https://intellipaat.com/blog/interview-question/linux-interview-questions/#1)
