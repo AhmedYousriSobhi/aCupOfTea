@@ -60,6 +60,9 @@ From the aroma of well-structured code to the rich flavors of design patterns an
 |   |   ├── langchain
 |   |   ├── llm_VsCode
 |   |   ├── Machine_translator
+|   ├── libarariesAndFrameworks
+|   |   ├── pandas
+|   |   ├── pytorch
 |   ├── projectTopics
 |   |   ├── CustomerSegmentation
 |   ├── recommenderSystems
@@ -114,6 +117,7 @@ From the aroma of well-structured code to the rich flavors of design patterns an
 |   ├── decorators
 |   ├── languages
 |   ├── oop
+|   ├── python
 |   ├── pythonCleanCode
 |   ├── softwareGoals
 |   |   ├── robustness
