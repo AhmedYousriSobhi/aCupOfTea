@@ -16,6 +16,8 @@ If you are like me love to learn from books and articles rather than watching re
 - They provide a free course tutorial, explained with a great effort with many interesting notes.
 - You can follow up with them on colab on their notebook to follow along with them.
 
+There is a cheat sheet provided by the official docs, you can find [here](https://pytorch.org/tutorials/beginner/ptcheat.html)
+
 # Precision in DataType
 [Wiki](https://en.wikipedia.org/wiki/Precision_(computer_science)) for precision in Data Science.
 ```
