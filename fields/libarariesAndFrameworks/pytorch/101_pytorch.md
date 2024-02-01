@@ -9,6 +9,9 @@ This blog is mainly designed to get a start with Pytorch, and where to start, so
 - [GPU Properties](#gpu-properties)
   - [Break Down the Output](#break-down-the-output)
     - [Architectures Mentioned](#architectures-mentioned)
+- [Model Saving/Loading](#model-savingloading)
+  - [to Save the Model](#to-save-the-model)
+  - [to Load the Model](#to-load-the-model)
 - [References](#references)
 
 # How to Start?
@@ -66,6 +69,40 @@ sm_70| Volta (Compute Capability 7.0)| GPUs Titan V, Tesla V100
 sm_75| Turing (Compute Capability 7.5)| GPUs GeForce RTX 20 series (e.g., RTX 2080), Tesla T4
 sm_80| Ampere (Compute Capability 8.0)| GPUs GeForce RTX 30 series (e.g., RTX 3080), A100 Tensor Core GPU
 
+
+# Model Saving/Loading
+## to Save the Model
+It is better to save trained parameters instead of saving the whole model.
+```python
+from pathlib import Path
+
+# 1. Create models directory
+MODEL_PATH = Path("models")
+MODEL_PATH.mkdir(parents=True, exist_ok=True)
+
+# 2. Create model save path
+MODEL_NAME = "01_pytorch_workflow_model_1.pth"
+MODEL_SAVE_PATH = MODEL_PATH / MODEL_NAME
+
+# 3. Save the model state dict
+print(f"Saving model to: {MODEL_SAVE_PATH}")
+torch.save(obj=model_1.state_dict(), # only saving the state_dict() only saves the models learned parameters
+           f=MODEL_SAVE_PATH)
+```
+## to Load the Model
+```python
+# Instantiate a fresh instance of LinearRegressionModelV2
+loaded_model_1 = LinearRegressionModelV2()
+
+# Load model state dict
+loaded_model_1.load_state_dict(torch.load(MODEL_SAVE_PATH))
+
+# Put model to target device (if your data is on GPU, model will have to be on GPU to make predictions)
+loaded_model_1.to(device)
+
+print(f"Loaded model:\n{loaded_model_1}")
+print(f"Model on device:\n{next(loaded_model_1.parameters()).device}")
+```
 # References
 - Pytorch official Documentation Tutorials: [link](https://pytorch.org/tutorials/)
     - It provides **open in colab** for more hands-on tutorial
