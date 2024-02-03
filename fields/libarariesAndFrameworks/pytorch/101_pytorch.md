@@ -9,8 +9,9 @@ This blog is mainly designed to get a start with Pytorch, and where to start, so
 - [GPU Properties](#gpu-properties)
   - [Break Down the Output](#break-down-the-output)
     - [Architectures Mentioned](#architectures-mentioned)
-- [Model Saving/Loading](#model-savingloading)
-  - [to Save the Model](#to-save-the-model)
+- [Pytorch Training Loop Steps](#pytorch-training-loop-steps)
+- [Pytorch Output Prediction](#pytorch-output-prediction)
+  - [In Classification problem:](#in-classification-problem)
   - [to Load the Model](#to-load-the-model)
 - [References](#references)
 
@@ -69,6 +70,61 @@ sm_70| Volta (Compute Capability 7.0)| GPUs Titan V, Tesla V100
 sm_75| Turing (Compute Capability 7.5)| GPUs GeForce RTX 20 series (e.g., RTX 2080), Tesla T4
 sm_80| Ampere (Compute Capability 8.0)| GPUs GeForce RTX 30 series (e.g., RTX 3080), A100 Tensor Core GPU
 
+# Pytorch Training Loop Steps
+
+PyTorch training loop steps
+
+1. **Forward pass** - The model goes through all of the training data once, performing its forward() function calculations (model(x_train)).
+2. **Calculate the loss** - The model's outputs (predictions) are compared to the ground truth and evaluated to see how wrong they are (loss = loss_fn(y_pred, y_train).
+3. **Zero gradients** - The optimizers gradients are set to zero (they are accumulated by default) so they can be recalculated for the specific training step (optimizer.zero_grad()).
+4. **Perform backpropagation on the loss** - Computes the gradient of the loss with respect for every model parameter to be updated (each parameter with requires_grad=True). This is known as backpropagation, hence "backwards" (loss.backward()).
+5. **Step the optimizer (gradient descent)** - Update the parameters with requires_grad=True with respect to the loss gradients in order to improve them (optimizer.step()).
+
+# Pytorch Output Prediction
+The output of a neural network is called **logits**, which is the raw output without any modification/passing through the activation functions.
+
+Example of binary class classification [0, 1]:
+- Logit output prediction: The raw output (unmodified)
+    ```
+    tensor([[-0.4279],
+            [-0.3417],
+            [-0.5975],
+            [-0.3801],
+            [-0.5078]], device='cuda:0', grad_fn=<SliceBackward0>)
+  ```
+- Prediction probability (using Softmax): The output now have some kind of consistency (even though they're still random)
+  ```
+  tensor([[0.3946],
+        [0.4154],
+        [0.3549],
+        [0.4061],
+        [0.3757]], device='cuda:0', grad_fn=<SigmoidBackward0>)
+  ```
+- Predictions Labels
+  ```
+  tensor([0., 0., 0., 0., 0.], device='cuda:0', grad_fn=<SqueezeBackward0>)
+  ```
+  
+These logits needs to be converted to a prediction probabilities using on of the activation functions, then converted to predictions labels;
+
+```
+Logits ----> Prediction Probabilities ----> Predictions Labels
+
+In Classification problem:
+--------------------------
+- Binary Classification:
+
+                                  torch.sigmoid()                         torch.round()
+        Raw Output Predictions   ------>    Prediction Probability  ----->  Prediction Labels
+              "Logits"
+
+- Multi-Class Classification:
+
+                                  torch.softmax()                           torch.argmax()
+        Raw Output Predictions   ------>    Prediction Probability  ----->  Prediction Labels
+              "Logits"
+
+```
 
 # Model Saving/Loading
 ## to Save the Model
