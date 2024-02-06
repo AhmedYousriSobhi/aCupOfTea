@@ -13,6 +13,10 @@ This blog is mainly designed to get a start with Pytorch, and where to start, so
 - [Pytorch Output Prediction](#pytorch-output-prediction)
   - [In Classification problem:](#in-classification-problem)
   - [to Load the Model](#to-load-the-model)
+- [Print Model Summary](#print-model-summary)
+- [Download Script to your code](#download-script-to-your-code)
+- [Training on CPU is faster?](#training-on-cpu-is-faster)
+- [Common Deep Learning Issues](#common-deep-learning-issues)
 - [References](#references)
 
 # How to Start?
@@ -159,6 +163,103 @@ loaded_model_1.to(device)
 print(f"Loaded model:\n{loaded_model_1}")
 print(f"Model on device:\n{next(loaded_model_1.parameters()).device}")
 ```
+# Print Model Summary
+Using torchinfo package that has a method to visualize a summary for the model.
+```bash
+# Install torchinfo if it's not available, import it if it is
+try:
+    import torchinfo
+except:
+    !pip install torchinfo
+    import torchinfo
+
+from torchinfo import summary
+summary(model_0, input_size=[1, 3, 64, 64]) # do a test pass through of an example input size
+```
+
+The expected output would be;
+```bash
+==========================================================================================
+Layer (type:depth-idx)                   Output Shape              Param #
+==========================================================================================
+TinyVGG                                  [1, 3]                    --
+├─Sequential: 1-1                        [1, 10, 32, 32]           --
+│    └─Conv2d: 2-1                       [1, 10, 64, 64]           280
+│    └─ReLU: 2-2                         [1, 10, 64, 64]           --
+│    └─Conv2d: 2-3                       [1, 10, 64, 64]           910
+│    └─ReLU: 2-4                         [1, 10, 64, 64]           --
+│    └─MaxPool2d: 2-5                    [1, 10, 32, 32]           --
+├─Sequential: 1-2                        [1, 10, 16, 16]           --
+│    └─Conv2d: 2-6                       [1, 10, 32, 32]           910
+│    └─ReLU: 2-7                         [1, 10, 32, 32]           --
+│    └─Conv2d: 2-8                       [1, 10, 32, 32]           910
+│    └─ReLU: 2-9                         [1, 10, 32, 32]           --
+│    └─MaxPool2d: 2-10                   [1, 10, 16, 16]           --
+├─Sequential: 1-3                        [1, 3]                    --
+│    └─Flatten: 2-11                     [1, 2560]                 --
+│    └─Linear: 2-12                      [1, 3]                    7,683
+==========================================================================================
+Total params: 10,693
+Trainable params: 10,693
+Non-trainable params: 0
+Total mult-adds (M): 6.75
+==========================================================================================
+Input size (MB): 0.05
+Forward/backward pass size (MB): 0.82
+Params size (MB): 0.04
+Estimated Total Size (MB): 0.91
+==========================================================================================
+```
+# Download Script to your code
+Some cases, we need build-in in our code to download a python script and load it normally.
+```python
+import requests
+from pathlib import Path
+
+# Download helper functions from Learn PyTorch repo (if not already downloaded)
+if Path("helper_functions.py").is_file():
+  print("helper_functions.py already exists, skipping download")
+else:
+  print("Downloading helper_functions.py")
+  # Note: you need the "raw" GitHub URL for this to work
+  request = requests.get("https://raw.githubusercontent.com/mrdbourke/pytorch-deep-learning/main/helper_functions.py")
+  with open("helper_functions.py", "wb") as f:
+    f.write(request.content)
+
+from helper_functions import accuracy_fn
+```
+
+# Training on CPU is faster?
+According to [03-notebook] in pytorch deeplearning course, this question was asked as when evaluting the time used on GPU was larger it was on CPU!
+```
+Our model trained but the training time took longer?
+
+Note: The training time on CUDA vs CPU will depend largely on the quality of the CPU/GPU you're using. Read on for a more explained answer.
+
+Question: "I used a a GPU but my model didn't train faster, why might that be?"
+
+Answer: Well, one reason could be because your dataset and model are both so small (like the dataset and model we're working with) the benefits of using a GPU are outweighed by the time it actually takes to transfer the data there.
+
+There's a small bottleneck between copying data from the CPU memory (default) to the GPU memory.
+
+So for smaller models and datasets, the CPU might actually be the optimal place to compute on.
+
+But for larger datasets and models, the speed of computing the GPU can offer usually far outweighs the cost of getting the data there.
+
+However, this is largely dependant on the hardware you're using. With practice, you will get used to where the best place to train your models is.
+```
+
+# Common Deep Learning Issues
+According to the Pytorch Deep Learning course, it try to highlight the most three common issues:
+```
+Note: What we've just gone through are three of the classical and most common deep learning and PyTorch issues:
+
+    Wrong datatypes - our model expects torch.float32 where our original custom image was uint8.
+    Wrong device - our model was on the target device (in our case, the GPU) whereas our target data hadn't been moved to the target device yet.
+    Wrong shapes - our model expected an input image of shape [N, C, H, W] or [batch_size, color_channels, height, width] whereas our custom image tensor was of shape [color_channels, height, width].
+
+```
+
 # References
 - Pytorch official Documentation Tutorials: [link](https://pytorch.org/tutorials/)
     - It provides **open in colab** for more hands-on tutorial
@@ -171,3 +272,7 @@ Zero to Mastery Learn PyTorch for Deep Learning : [link](https://www.learnpytorc
 - Python Pytorch Guide: [link](https://pythonguides.com/pytorch/)
 - Pytorch-ignite: [link](https://pytorch-ignite.ai/tutorials/)
   - Contains beginner, intermediate, and advanced topics, like [distribute training](https://pytorch-ignite.ai/tutorials/intermediate/01-cifar10-distributed/)
+- [CNN explainer](https://poloclub.github.io/cnn-explainer/).
+- Making machine learning models faster by horace-brr_intro, found [here](https://horace.io/brrr_intro.html).
+- The Scalling Hypothesis - by gwren, found [here](https://gwern.net/scaling-hypothesis).
+- Introducing Triton: Open-source GPU programming for neural networks by OpenAI, found [here](https://openai.com/research/triton).

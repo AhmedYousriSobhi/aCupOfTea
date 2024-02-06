@@ -2,48 +2,48 @@
 
 In this blog, we will introduce more practice illustrated in question and answers approach, and will try to explain related aspects and points related to understand more.
 
-## Table of Content
+# Table of Content
 - [Linux Adminstration: Questions \& Answers](#linux-adminstration-questions--answers)
-  - [Table of Content](#table-of-content)
-  - [What is the  location for subdirectories for local programs and executables for user and administrative commands?](#what-is-the--location-for-subdirectories-for-local-programs-and-executables-for-user-and-administrative-commands)
-    - [Examples of how to use /opt directory](#examples-of-how-to-use-opt-directory)
-  - [Which term referes to the operating system that is being virtualized?](#which-term-referes-to-the-operating-system-that-is-being-virtualized)
-    - [What is Hypervisor, Host OST, and VMW?](#what-is-hypervisor-host-ost-and-vmw)
-    - [Relationship diagram](#relationship-diagram)
-  - [What is the command to set the execute permissions to all the files and subdirectories within the directory /home/user1/direct?](#what-is-the-command-to-set-the-execute-permissions-to-all-the-files-and-subdirectories-within-the-directory-homeuser1direct)
-  - [which of the following is a vaild IPv4 address?](#which-of-the-following-is-a-vaild-ipv4-address)
-    - [Comparison between IPv4 \& IPv6](#comparison-between-ipv4--ipv6)
-  - [when real interval timer expires which signal is generated?](#when-real-interval-timer-expires-which-signal-is-generated)
-    - [C Code Example for Real Interval Timer Alarm](#c-code-example-for-real-interval-timer-alarm)
-    - [Other Available Singals](#other-available-singals)
-    - [Excute a Signal: \[Kill, Signal()\]](#excute-a-signal-kill-signal)
-  - [Which command is used to view the current ip address configuration for all network interfaces on a linux system?](#which-command-is-used-to-view-the-current-ip-address-configuration-for-all-network-interfaces-on-a-linux-system)
-    - [How to get Network Address from IP Address \& Subset?](#how-to-get-network-address-from-ip-address--subset)
-  - [In linux everything is stored as a \[executables, file, directory, none of the above\]](#in-linux-everything-is-stored-as-a-executables-file-directory-none-of-the-above)
-  - [Which file contains the configuration for the rsyslogd daemon?](#which-file-contains-the-configuration-for-the-rsyslogd-daemon)
-    - [What is Rsyslogd?](#what-is-rsyslogd)
-  - [what is the role of the free software foundation?](#what-is-the-role-of-the-free-software-foundation)
-    - [Free Software Foundation (FSF)](#free-software-foundation-fsf)
-  - [To create a user account ram, the mail box of ram should lie in the directory /var/temp. What line will you add in the file /etc/login.defs?](#to-create-a-user-account-ram-the-mail-box-of-ram-should-lie-in-the-directory-vartemp-what-line-will-you-add-in-the-file-etclogindefs)
-    - [What is etc/login.defs ?](#what-is-etclogindefs-)
-  - [The switch for displaying hashes during rpM, insllation is? \[-i, -h, -x, -v\]](#the-switch-for-displaying-hashes-during-rpm-insllation-is--i--h--x--v)
-    - [Explaning the Usage of switches \[-i, -h, -x, -v\]](#explaning-the-usage-of-switches--i--h--x--v)
-  - [Signle Unix Specification (SUS) version 2 provides enhanced support for?](#signle-unix-specification-sus-version-2-provides-enhanced-support-for)
-    - [Importance of Enhanced Support](#importance-of-enhanced-support)
-  - [Which command is used to create a new partion on a linux system?](#which-command-is-used-to-create-a-new-partion-on-a-linux-system)
-    - [How to create a new partion using fdisk?](#how-to-create-a-new-partion-using-fdisk)
-    - [fdisk Code Example](#fdisk-code-example)
-  - [Which Command is used to print a file?](#which-command-is-used-to-print-a-file)
-  - [Which of the following commands is used to change the working directory? \[cd, chdir, cdir, changedir\]](#which-of-the-following-commands-is-used-to-change-the-working-directory-cd-chdir-cdir-changedir)
-  - [Which of the following is not a BASH shell built-in command? \[echo, rm, ls, cd\]](#which-of-the-following-is-not-a-bash-shell-built-in-command-echo-rm-ls-cd)
-  - [Maximum how long can a linux filename be?](#maximum-how-long-can-a-linux-filename-be)
-    - [Tips choosing Filenames](#tips-choosing-filenames)
-    - [What is Virtual File System (VFS)?](#what-is-virtual-file-system-vfs)
-  - [What is LLIO?](#what-is-llio)
-  - [Which is the earliest and most widely used shell that came with unix system? \[C shell, Bourne shell, korn shell, smith shell\]](#which-is-the-earliest-and-most-widely-used-shell-that-came-with-unix-system-c-shell-bourne-shell-korn-shell-smith-shell)
-  - [Credits](#credits)
+- [Table of Content](#table-of-content)
+- [What is the  location for subdirectories for local programs and executables for user and administrative commands?](#what-is-the--location-for-subdirectories-for-local-programs-and-executables-for-user-and-administrative-commands)
+  - [Examples of how to use /opt directory](#examples-of-how-to-use-opt-directory)
+- [Which term referes to the operating system that is being virtualized?](#which-term-referes-to-the-operating-system-that-is-being-virtualized)
+  - [What is Hypervisor, Host OST, and VMW?](#what-is-hypervisor-host-ost-and-vmw)
+  - [Relationship diagram](#relationship-diagram)
+- [What is the command to set the execute permissions to all the files and subdirectories within the directory /home/user1/direct?](#what-is-the-command-to-set-the-execute-permissions-to-all-the-files-and-subdirectories-within-the-directory-homeuser1direct)
+- [which of the following is a vaild IPv4 address?](#which-of-the-following-is-a-vaild-ipv4-address)
+  - [Comparison between IPv4 \& IPv6](#comparison-between-ipv4--ipv6)
+- [when real interval timer expires which signal is generated?](#when-real-interval-timer-expires-which-signal-is-generated)
+  - [C Code Example for Real Interval Timer Alarm](#c-code-example-for-real-interval-timer-alarm)
+  - [Other Available Singals](#other-available-singals)
+  - [Excute a Signal: \[Kill, Signal()\]](#excute-a-signal-kill-signal)
+- [Which command is used to view the current ip address configuration for all network interfaces on a linux system?](#which-command-is-used-to-view-the-current-ip-address-configuration-for-all-network-interfaces-on-a-linux-system)
+  - [How to get Network Address from IP Address \& Subset?](#how-to-get-network-address-from-ip-address--subset)
+- [In linux everything is stored as a \[executables, file, directory, none of the above\]](#in-linux-everything-is-stored-as-a-executables-file-directory-none-of-the-above)
+- [Which file contains the configuration for the rsyslogd daemon?](#which-file-contains-the-configuration-for-the-rsyslogd-daemon)
+  - [What is Rsyslogd?](#what-is-rsyslogd)
+- [what is the role of the free software foundation?](#what-is-the-role-of-the-free-software-foundation)
+  - [Free Software Foundation (FSF)](#free-software-foundation-fsf)
+- [To create a user account ram, the mail box of ram should lie in the directory /var/temp. What line will you add in the file /etc/login.defs?](#to-create-a-user-account-ram-the-mail-box-of-ram-should-lie-in-the-directory-vartemp-what-line-will-you-add-in-the-file-etclogindefs)
+  - [What is etc/login.defs ?](#what-is-etclogindefs-)
+- [The switch for displaying hashes during rpM, insllation is? \[-i, -h, -x, -v\]](#the-switch-for-displaying-hashes-during-rpm-insllation-is--i--h--x--v)
+  - [Explaning the Usage of switches \[-i, -h, -x, -v\]](#explaning-the-usage-of-switches--i--h--x--v)
+- [Signle Unix Specification (SUS) version 2 provides enhanced support for?](#signle-unix-specification-sus-version-2-provides-enhanced-support-for)
+  - [Importance of Enhanced Support](#importance-of-enhanced-support)
+- [Which command is used to create a new partion on a linux system?](#which-command-is-used-to-create-a-new-partion-on-a-linux-system)
+  - [How to create a new partion using fdisk?](#how-to-create-a-new-partion-using-fdisk)
+  - [fdisk Code Example](#fdisk-code-example)
+- [Which Command is used to print a file?](#which-command-is-used-to-print-a-file)
+- [Which of the following commands is used to change the working directory? \[cd, chdir, cdir, changedir\]](#which-of-the-following-commands-is-used-to-change-the-working-directory-cd-chdir-cdir-changedir)
+- [Which of the following is not a BASH shell built-in command? \[echo, rm, ls, cd\]](#which-of-the-following-is-not-a-bash-shell-built-in-command-echo-rm-ls-cd)
+- [Maximum how long can a linux filename be?](#maximum-how-long-can-a-linux-filename-be)
+  - [Tips choosing Filenames](#tips-choosing-filenames)
+  - [What is Virtual File System (VFS)?](#what-is-virtual-file-system-vfs)
+- [What is LLIO?](#what-is-llio)
+- [Which is the earliest and most widely used shell that came with unix system? \[C shell, Bourne shell, korn shell, smith shell\]](#which-is-the-earliest-and-most-widely-used-shell-that-came-with-unix-system-c-shell-bourne-shell-korn-shell-smith-shell)
+- [Credits](#credits)
 
-## What is the  location for subdirectories for local programs and executables for user and administrative commands? 
+# What is the  location for subdirectories for local programs and executables for user and administrative commands? 
 Choose from [/mnt, /user, /opt, /tmp]
 
 Answer: The correct answer is **/opt**.
@@ -57,7 +57,7 @@ The other options are not correct:
 
 Here are some examples of how to use the **/opt** directory:
 
-### Examples of how to use /opt directory
+## Examples of how to use /opt directory
 1- To install a locally compiled program called my_program in the **/opt** directory, you would use the following command:
 ```bash
 sudo cp my_program /opt/
@@ -75,20 +75,20 @@ sudo mkdir **/opt**/my_program
 
 4- You can also add the /opt/ directory to the system's PATH environment variable. This will allow you to execute programs that are installed in the /opt directory from anywhere on the system.
 
-## Which term referes to the operating system that is being virtualized?
+# Which term referes to the operating system that is being virtualized?
 Choose from [Guest OD, Hypervisor, Host OS, VMM]
 
 Answer: The correct answer is **Guest OS**.
 
 A **Guest OS** is an operating system that is running on a virtual machine. A Virtual Machine is a software program that creates a simulated computer environment. This allows multiple operating systems to run on the same physical computer.
 
-### What is Hypervisor, Host OST, and VMW?
+## What is Hypervisor, Host OST, and VMW?
 The other options are not correct:
 - A Hypervisor is a software layer that sits between the physical hardware and the guest OS. It is responsible for allocating and managing the physical resources to the guest OSs.
 - A Host OS is the operating system that is installed on the physical hardware. It is responsible for managing the physical hardware and providing services to the guest OSs.
 - A VMM (Virtual Machine Monitor) is another term for a hypervisor.
 
-### Relationship diagram
+## Relationship diagram
 Here is a diagram that shows the relationship between the different components of a virtualized environment:
 ```bash
 Physical Hardware
@@ -100,7 +100,7 @@ Guest OS 1
 Guest OS 2
 ```
 
-## What is the command to set the execute permissions to all the files and subdirectories within the directory /home/user1/direct?
+# What is the command to set the execute permissions to all the files and subdirectories within the directory /home/user1/direct?
 The command to set the execute permissions to all the files and subdirectories within the directory /home/user1/direct is:
 ```bash
 chmod -R o+x /home/user1/direct
@@ -119,7 +119,7 @@ Once you have run this command, all the files and subdirectories within the /hom
 
 Be careful when using this command, as it can give too much power to users who do not need it. It is generally best to only grant the execute permission to files and directories that need to be executed.
 
-## which of the following is a vaild IPv4 address? 
+# which of the following is a vaild IPv4 address? 
 Choose from:
 1. FE80::2E0:81FF:FE9C:EA58
 2. 192.168.1.1
@@ -135,7 +135,7 @@ The other addresses in the list are not valid IPv4 addresses:
 - 2001:0bd8:85a3:0000:0000:8a2e:0370:7334 is another IPv6 address.
 - 127.0.01 is an invalid IPv4 address because the fourth number is not between 0 and 255.
 
-### Comparison between IPv4 & IPv6
+## Comparison between IPv4 & IPv6
 |Feature|	IPv4|	IPv6|
 |--|--|--|
 Address space|	4.3 billion addresses|	340 undecillion addresses|
@@ -161,14 +161,14 @@ Here are some additional key differences between IPv4 and IPv6:
 - IPv4 has built-in security features such as IP checksums and IP security (IPsec). However, these security features are limited. IPv6 has more robust built-in security features, such as IPsec and the use of stateless address autoconfiguration (SLAAC).
 - IPv4 is widely deployed, while IPv6 is still being deployed. However, IPv6 is becoming increasingly important as the number of devices connected to the Internet continues to grow.
 
-## when real interval timer expires which signal is generated?
+# when real interval timer expires which signal is generated?
 When the real interval timer expires in Linux, the **SIGALRM** signal is generated. This signal is sent to the process that created the timer.
 
 The real interval timer is a timer that counts down in real time, also known as wall clock time. When the timer expires, the **SIGALRM** signal is generated and the timer is reset to the specified interval.
 
 The **SIGALRM** signal can be used to implement a variety of features, such as alarms, timeouts, and periodic tasks.
 
-### C Code Example for Real Interval Timer Alarm
+## C Code Example for Real Interval Timer Alarm
 Here is an example of how to use the real interval timer to set an alarm:
 ```C
 #include <signal.h>
@@ -194,7 +194,7 @@ int main() {
 ```
 When the alarm expires, the alarm_handler() function will be called.
 
-### Other Available Singals
+## Other Available Singals
 Signal| Name|	Description|	Number|	When to use|
 |--|--|--|--|--|
 SIGHUP|	Hangup|	Sent to a process when its controlling terminal is hung up.|	1|	To terminate a process gracefully when its controlling terminal is hung up.
@@ -208,7 +208,7 @@ SIGPOLL|	Poll|	Sent to a process when an event occurs on an explicitly watched f
 SIGCHLD|	Child|	Sent to a process when one of its child processes terminates.|	17|	To notify a process that one of its child processes has terminated.
 SIGUSR1 and SIGUSR2|	User|	User-defined signals that can be used for any purpose.|	10 and 12|	To implement custom functionality in a process.
 
-### Excute a Signal: [Kill, Signal()]
+## Excute a Signal: [Kill, Signal()]
 There are two ways to execute each signal in Linux:
 - Using the kill command.
 - Using the signal() function.
@@ -264,7 +264,7 @@ int main() {
 
 When the SIGINT signal is received, the sigint_handler() function will be called.
 
-## Which command is used to view the current ip address configuration for all network interfaces on a linux system? 
+# Which command is used to view the current ip address configuration for all network interfaces on a linux system? 
 Choose From [netstat, ifconfig, route, ipconfig]
 
 The command to view the current IP address configuration for all network interfaces on a Linux system is **ifconfig**.
@@ -303,7 +303,7 @@ This output shows that the system has two network interfaces: eth0 and lo. The e
 
 The IP address for the eth0 interface is 192.168.1.100, and the subnet mask is 255.255.255.0. This means that the system is on the 192.168.1.0 subnet.
 
-### How to get Network Address from IP Address & Subset?
+## How to get Network Address from IP Address & Subset?
 To know where the system is on a subnet, you can use the subnet mask. The subnet mask is a 32-bit number that is used to divide an IP address into two parts: the **network address** and the **host address**.
 
 **The network address** is the portion of the IP address that identifies the subnet. The **host address** is the portion of the IP address that identifies the individual device on the subnet.
@@ -341,7 +341,7 @@ eth0      Link encap:Ethernet  HWaddr 00:00:00:00:00:00
 ```
 The network address and subnet mask for the eth0 interface are listed in the inet addr and Mask lines, respectively.
 
-## In linux everything is stored as a [executables, file, directory, none of the above]
+# In linux everything is stored as a [executables, file, directory, none of the above]
 The correct answer is **file**.
 
 In Linux, everything is stored as a **file**. This includes programs, directories, and even hardware devices. This makes it easy to manage and access all data on the system using a consistent set of tools and commands.
@@ -359,10 +359,10 @@ Files in Linux can also have different permissions, which control who can read, 
 
 The concept of everything being a file is one of the core principles of Linux, and it makes the operating system very powerful and flexible.
 
-## Which file contains the configuration for the rsyslogd daemon?
+# Which file contains the configuration for the rsyslogd daemon?
 The configuration file for the rsyslogd daemon is **/etc/rsyslog.conf**. This file contains the rules that rsyslogd uses to filter and log messages.
 
-### What is Rsyslogd?
+## What is Rsyslogd?
 **Rsyslogd** is a powerful logging tool that can be used to collect and log messages from a variety of sources, including system logs, application logs, and custom logs. Rsyslogd can also be used to forward logs to remote servers, such as a central log server.
 
 The rsyslog.conf file is a text file that is divided into sections. Each section contains a set of rules for filtering and logging messages. The most important section is the global section, which contains global settings for rsyslogd.
@@ -382,7 +382,7 @@ You can customize the rsyslog.conf file to meet your specific needs. For example
 
 For more information on the rsyslog.conf file, please see the rsyslog documentation: https://www.rsyslog.com/doc/v8-stable/configuration/index.html
 
-## what is the role of the free software foundation?
+# what is the role of the free software foundation?
 Choose From:
 1. to promote the use of free software.
 2. to provide legal protection for linux developers.
@@ -391,7 +391,7 @@ Choose From:
 
 The correct answer is **1- to promote the use of free software**.
 
-### Free Software Foundation (FSF)
+## Free Software Foundation (FSF)
 The Free Software Foundation (FSF) is a non-profit organization that promotes the use of free software and defends the rights of software users. The FSF's mission is to "preserve, protect, and promote the freedom to use, study, distribute, and modify computer software."
 
 The other options are not correct:
@@ -416,7 +416,7 @@ Here are some of the FSF's most notable contributions to the free software movem
 - The GNU Debugger (GDB).
 - The GNU Bash shell.
 
-## To create a user account ram, the mail box of ram should lie in the directory /var/temp. What line will you add in the file /etc/login.defs?
+# To create a user account ram, the mail box of ram should lie in the directory /var/temp. What line will you add in the file /etc/login.defs?
 
 To create a user account ram with a mailbox in the directory /var/temp, you would add the following line to the /etc/login.defs file:
 ```bash
@@ -441,7 +441,7 @@ This will create the user account ram with a mailbox in the directory /var/temp.
 
 Note: Be careful when changing the /etc/login.defs file, as it contains important configuration options for the user creation utilities. If you are not sure what you are doing, it is best to consult with a Linux system administrator.
 
-### What is etc/login.defs ?
+## What is etc/login.defs ?
 The /etc/login.defs file is a configuration file that defines the default settings for the login process on Linux systems. It contains a number of settings, such as the maximum number of failed login attempts, the minimum password length, and the password expiration policy.
 
 The /etc/login.defs file is used by the login program, which is the program that is responsible for authenticating users and logging them into the system. When a user attempts to log in, the login program reads the /etc/login.defs file to determine the login settings.
@@ -462,7 +462,7 @@ The /etc/login.defs file is a very important file for controlling the login proc
 
 For example, if you want to make the system more secure, you can increase the minimum password length and reduce the maximum number of failed login attempts. Conversely, if you want to make the system more convenient for users, you can increase the number of days that a password can be used before it expires and reduce the number of days before a user is warned about an expiring password.
 
-## The switch for displaying hashes during rpM, insllation is? [-i, -h, -x, -v]
+# The switch for displaying hashes during rpM, insllation is? [-i, -h, -x, -v]
 The switch for displaying hashes during RPM installation is **-h**.
 
 The -h switch tells RPM to display a hash mark (#) for each file that is unpacked during the installation process. This can be useful for verifying that the files are being installed correctly and that they are not corrupted.
@@ -481,7 +481,7 @@ Here is an example of the output of the rpm -ihv command with the -h switch:
 ```
 This output shows that the vim package is being installed and that all of the files have been successfully unpacked.
 
-### Explaning the Usage of switches [-i, -h, -x, -v]
+## Explaning the Usage of switches [-i, -h, -x, -v]
 The following are the usages of the switches -i, -h, -x, and -v:
 |Switch|Usage|
 |-|-|
@@ -506,7 +506,7 @@ nano -v my_file.txt
 # This will print additional information to the console about the program's execution, such as the key presses that are being detected and the files that are being read and written.
 ```
 
-## Signle Unix Specification (SUS) version 2 provides enhanced support for?  
+# Signle Unix Specification (SUS) version 2 provides enhanced support for?  
 Choose From:
 1. 8 bit unix
 2. 16 bit unix
@@ -515,7 +515,7 @@ Choose From:
 
 The Single UNIX Specification (SUS) Version 2 provides enhanced support for 64-bit UNIX. This means that SUSv2-compliant operating systems must support 64-bit data types and addresses. This is in contrast to SUSv1, which only required support for 32-bit data types and addresses.
 
-### Importance of Enhanced Support
+## Importance of Enhanced Support
 The enhanced support for 64-bit UNIX in SUSv2 is important because it allows applications to take advantage of the larger address space and processing power of modern 64-bit processors. This can lead to significant performance improvements for certain applications, such as scientific computing applications and large database applications.
 
 In addition to enhanced support for 64-bit UNIX, SUSv2 also includes a number of other improvements, such as:
@@ -526,12 +526,12 @@ In addition to enhanced support for 64-bit UNIX, SUSv2 also includes a number of
 
 SUSv2 is the standard for UNIX operating systems, and it is used by a wide variety of vendors, including IBM, Oracle, and Red Hat. This means that SUSv2-compliant operating systems are compatible with a wide range of applications and hardware devices.
 
-## Which command is used to create a new partion on a linux system?
+# Which command is used to create a new partion on a linux system?
 The command used to create a new partition on a Linux system is fdisk.
 
 Fdisk is a text-based program that allows you to manage disk partitions. It can be used to create, delete, and modify partitions.
 
-### How to create a new partion using fdisk?
+## How to create a new partion using fdisk?
 To create a new partition using fdisk, follow these steps:
 
 1- Open fdisk by typing the following command:
@@ -572,7 +572,7 @@ w
 
 Once you have created the new partition, you can format it with a filesystem and mount it.
 
-### fdisk Code Example
+## fdisk Code Example
 Here is an example of how to use fdisk to create a new partition:
 ```bash
 fdisk /dev/sda
@@ -588,7 +588,7 @@ w
 ```
 This will create a new primary partition on the disk /dev/sda that is 1024MB in size.
 
-## Which Command is used to print a file?
+# Which Command is used to print a file?
 The command to print a file in Linux is **lp**.
 
 The lp command sends a file to the print queue. The print queue is a list of files that are waiting to be printed. Once a file is in the print queue, it will be printed when it reaches the front of the queue.
@@ -610,7 +610,7 @@ For more information on the lp command, please see the man page:
 man lp
 ```
 
-## Which of the following commands is used to change the working directory? [cd, chdir, cdir, changedir]
+# Which of the following commands is used to change the working directory? [cd, chdir, cdir, changedir]
 The correct answer is **cd**.
 
 The cd command is used to change the current working directory. The current working directory is the directory that the shell is currently in. When you run a command, the shell will execute it in the current working directory.
@@ -625,7 +625,7 @@ You can also use the cd command to change the current working directory to a sub
 cd /home/Documents
 ```
 
-## Which of the following is not a BASH shell built-in command? [echo, rm, ls, cd]
+# Which of the following is not a BASH shell built-in command? [echo, rm, ls, cd]
 The correct answer is **rm**.
 
 rm is a utility command, not a Bash shell built-in command. Utility commands are external programs that are separate from the Bash shell. Built-in commands, on the other hand, are implemented within the Bash shell itself.
@@ -647,14 +647,14 @@ ls
 cd /home
 ```
 
-## Maximum how long can a linux filename be?
+# Maximum how long can a linux filename be?
 The maximum length of a Linux filename is 255 bytes. This limit is imposed by the **VFS (Virtual File System)** layer of the Linux kernel.
 
 However, it is important to note that some applications and file systems may have their own limits on filename length. For example, the NTFS file system used in Windows has a maximum filename length of 255 characters.
 
 It is therefore generally best to avoid using filenames that are longer than 255 characters, even if the Linux kernel supports them. This will help to ensure that your files are compatible with all applications and file systems.
 
-### Tips choosing Filenames
+## Tips choosing Filenames
 Here are some tips for choosing filenames:
 - Use descriptive filenames that are easy to remember.
 - Avoid using spaces in filenames.
@@ -662,7 +662,7 @@ Here are some tips for choosing filenames:
 - Avoid using special characters in filenames, such as !, @, and #.
 - Keep filenames short and to the point.
 
-### What is Virtual File System (VFS)?
+## What is Virtual File System (VFS)?
 A virtual file system (VFS) is an abstraction layer that sits on top of physical file systems and provides a uniform interface to user applications. This means that user applications do not need to know about the specific physical file system that is being used to store their data. Instead, they can simply interact with the VFS, which will take care of translating their requests into the appropriate calls to the physical file system.
 
 The VFS provides a number of advantages, including:
@@ -682,7 +682,7 @@ Here are some examples of VFS implementations:
 
 VFS are used in a wide variety of applications, including operating systems, database management systems, and file sharing applications.
 
-## What is LLIO?
+# What is LLIO?
 Choose From:
 1. stands for linux loader.
 2. all of these.
@@ -707,7 +707,7 @@ Here are some of the advantages of using LLIO:
 - Lightweight and easy to use
 - Open source and freely distributable
 
-## Which is the earliest and most widely used shell that came with unix system? [C shell, Bourne shell, korn shell, smith shell]
+# Which is the earliest and most widely used shell that came with unix system? [C shell, Bourne shell, korn shell, smith shell]
 The earliest and most widely used shell that came with the Unix system is the **Bourne shell**. It was developed by Stephen R. Bourne in the early 1970s and was the default shell on most Unix systems until the 1990s.
 
 The Bourne shell is a powerful and flexible shell that supports a wide range of features, including:
@@ -725,5 +725,5 @@ The other options are incorrect:
 - Korn shell: The Korn shell was developed in the mid-1980s and is based on the Bourne shell. It adds a number of features to the Bourne shell, such as support for job control and shell scripts.
 - Smith shell: The Smith shell is a relatively new shell that was developed in the early 2000s. It is a lightweight and efficient shell that is designed for use on embedded systems.
 
-## Credits
+# Credits
 - [Intellpaat: Interview Questions](https://intellipaat.com/blog/interview-question/linux-interview-questions/#1)
