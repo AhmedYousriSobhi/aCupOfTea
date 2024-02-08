@@ -270,8 +270,16 @@ conda install scipy=0.15.0 curl conda-forge::numpy
 - Tip: the documentation recommends that it is better to install multiple packages at once, so that all of the dependencies are installed at the same time.
 - Tip: if you want to install a specific python version, it is best to use an environment with that version.
 ### 3.2.2- Install Packages While Creating Environment
-Using configuration user defined file!!.
+Two methods actually!
+1. While creating new environment using command line: *conda create -n <env-name>*
+2. During [creating a project](https://conda.io/projects/conda/en/latest/user-guide/tasks/creating-projects.html), which will be configured through a YAML file.
+    ```bash
+    # To create new project env with its dependancies
+    conda env create --file environment.yml
 
+    # To update current project with new dependancies
+    conda env update --file environment.yml
+    ```
 ## 3.3- Update Conda
 To update conda itself to the latest version use:
 ```bash

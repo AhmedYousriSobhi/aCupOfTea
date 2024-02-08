@@ -15,6 +15,7 @@ This blog is mainly designed to get a start with Pytorch, and where to start, so
   - [to Load the Model](#to-load-the-model)
 - [Print Model Summary](#print-model-summary)
 - [Download Script to your code](#download-script-to-your-code)
+- [Check for Specific Version](#check-for-specific-version)
 - [Training on CPU is faster?](#training-on-cpu-is-faster)
 - [Common Deep Learning Issues](#common-deep-learning-issues)
 - [References](#references)
@@ -227,6 +228,25 @@ else:
     f.write(request.content)
 
 from helper_functions import accuracy_fn
+```
+# Check for Specific Version
+In some codes, it requires some defined specific versions of the pacakges, so we need to first check if they are installed or not.
+```python
+# For this notebook to run with updated APIs, we need torch 1.12+ and torchvision 0.13+
+try:
+    import torch
+    import torchvision
+    assert int(torch.__version__.split(".")[1]) >= 12, "torch version should be 1.12+"
+    assert int(torchvision.__version__.split(".")[1]) >= 13, "torchvision version should be 0.13+"
+    print(f"torch version: {torch.__version__}")
+    print(f"torchvision version: {torchvision.__version__}")
+except:
+    print(f"[INFO] torch/torchvision versions not as required, installing nightly versions.")
+    !pip3 install -U torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu113
+    import torch
+    import torchvision
+    print(f"torch version: {torch.__version__}")
+    print(f"torchvision version: {torchvision.__version__}")
 ```
 
 # Training on CPU is faster?
