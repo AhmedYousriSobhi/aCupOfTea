@@ -9,10 +9,12 @@
   - [1.3- Base Environment](#13--base-environment)
   - [1.4- Create a New Environment](#14--create-a-new-environment)
   - [1.5- Check Envrionment List](#15--check-envrionment-list)
-  - [1.5- Exit an Environment](#15--exit-an-environment)
-  - [1.6- Question](#16--question)
-  - [1.7- Remove an Environment](#17--remove-an-environment)
-  - [1.8- A Note About Executing program](#18--a-note-about-executing-program)
+  - [1.6- Exit an Environment](#16--exit-an-environment)
+  - [1.7- Question](#17--question)
+  - [1.8- Remove an Environment](#18--remove-an-environment)
+  - [1.9- A Note About Executing program](#19--a-note-about-executing-program)
+  - [1.10- Saving Environment Variables](#110--saving-environment-variables)
+  - [1.11- Sharing an Environment](#111--sharing-an-environment)
 - [2- Conda Channels](#2--conda-channels)
   - [2.1- Specifying Channels When Installing Packages](#21--specifying-channels-when-installing-packages)
   - [2.2- Conda .condarc file!](#22--conda-condarc-file)
@@ -25,8 +27,6 @@
     - [3.2.1- Install Packages on Created Environment](#321--install-packages-on-created-environment)
     - [3.2.2- Install Packages While Creating Environment](#322--install-packages-while-creating-environment)
   - [3.3- Update Conda](#33--update-conda)
-- [Troubleshoot](#troubleshoot)
-  - [conda-libmambda-solver Point Error After conda Update](#conda-libmambda-solver-point-error-after-conda-update)
 - [Reference](#reference)
 
 # 1- Conda Environment
@@ -77,7 +77,7 @@ conda environments:
    myenvironment   * /home/username/Anaconda3/envs/myenvironment
 ```
 
-## 1.5- Exit an Environment
+## 1.6- Exit an Environment
 and ofcourse, if you need to exit it, you can simply using the command "conda deactivate"
 ```bash
 conda deactivate
@@ -85,7 +85,7 @@ conda deactivate
 - This will deactivate the current used environment, and gets you back to the "base" environmemt.
 - The environment name is no longer shown in your prompt, and the asterisk(*) returns to 'base'
 
-## 1.6- Question
+## 1.7- Question
 Do you have to deactivate your current env to actiave other env? 
 
 Actually, you don't have to do this, and simply "activate" your next target env to work on.
@@ -100,7 +100,7 @@ python --version
 ```
 > **Note**: Yes you will get an error running the previous code, telling you "there is no python installed in cupoftea_env". That's because, we did not tell conda to install a python packages in our cupoftea_env during creating it.
 
-## 1.7- Remove an Environment
+## 1.8- Remove an Environment
 ```bash
 # First you have to deactivate the environment
 conda deactivate
@@ -110,8 +110,17 @@ conda deactivate
 conda env remove -n cupoftea_env
 ```
 
-## 1.8- A Note About Executing program
-Even when an environment is deactivated, you can still execute programs in that environment by specifying their paths directly, as in *~/anaconda/envs/envname/bin/program_name*. When an environment is activated, you can execute the program in that environment with just *program_name*.
+## 1.9- A Note About Executing program
+Even when an environment is deactivated, you can still execute programs in that environment by specifying their paths directly, as in *~/anaconda/envs/envname/bin/program_name*. When an environment is activated, you can execute the program in that enviro
+
+## 1.10- Saving Environment Variables
+According to the [documentation](https://docs.conda.io/projects/conda/en/4.6.0/user-guide/tasks/manage-environments.html#saving-environment-variables), you can simply save the conda variables, so once you activate the env, these varialbe will be created, and erased when deactivatin.
+
+## 1.11- Sharing an Environment
+Following the steps [docs here](https://docs.conda.io/projects/conda/en/4.6.0/user-guide/tasks/manage-environments.html#sharing-an-environment), we can share an env using the environment.yml file;
+```bash
+conda env export > environment.yml
+```
 
 # 2- Conda Channels
 What are Channels?! According to the [documentation](https://docs.conda.io/projects/conda/en/latest/user-guide/concepts/channels.html):
@@ -193,9 +202,9 @@ conda config
     # To set configuration options using the "--set" key
     conda config --set auto_update_conda False
     ```
-- **Note**: The order you add new channels is considered as priority from lowest to highest priority, so the recent added channel has the highest priority, according to [**bioconda**](https://bioconda.github.io/#usage), the order to add channels is important to avoid probles with solving dependencies.
+    - **Note**: The order you add new channels is considered as priority from lowest to highest priority, so the recent added channel has the highest priority, according to [**bioconda**](https://bioconda.github.io/#usage), the order to add channels is important to avoid probles with solving dependencies.
    
-- For all list of "conda config" parameters, check the [docs](https://conda.io/projects/conda/en/latest/commands/config.html).
+    - For all list of "conda config" parameters, check the [docs](https://conda.io/projects/conda/en/latest/commands/config.html).
   - 2- vim the file and write it manually using YAML syntax. Here is a [sample of .condarc file](https://conda.io/projects/conda/en/latest/user-guide/configuration/use-condarc.html#sample-condarc) from the documents, which you could simply download and edit it.
     ```yml
     # This is a sample .condarc file.
@@ -285,53 +294,6 @@ To update conda itself to the latest version use:
 ```bash
 conda update conda
 ```
-
-# Troubleshoot
-## conda-libmambda-solver Point Error After conda Update
-Scenario:
-> Trying to update conda using *conda update conda*, then everything should be update sucessufly, but this error shows up when using *conda* command:
->
-> Error while loading conda entry point: conda-libmamba-solver (libarchive.so.19: cannot open shared object file: No such file or directory)
-
-Description:
-- There is a problem in the libmamba solver due to conflict in the libarchive package due to being installed from different channels.
-- 
-Solution:
-1. Remove .condarc file created.
-2. Change the solver to *classic*, to do so from this [issue](https://github.com/conda/conda/issues/12868) in github:
-    ```bash
-    conda config --set solver classic
-    ```
-3. Let's install libarchieve one more time but in a clean way:
-    ```bash
-    conda install -n base libarchive -c main --force-reinstall
-    ```
-    - The output was: 
-      ```
-      Error while loading conda entry point: conda-libmamba-solver (libarchive.so.19: cannot open shared object file: No such file or directory)
-      
-      CondaValueError: You have chosen a non-default solver backend (libmamba) but it was not recognized. Choose one of: classic
-      ```
-4. Return the solver again to libmamba
-    ```bash
-    conda config --set solver libmamba
-    ```
-Explanation:
-> The command conda config --set solver classic is used to configure the solver behavior in Conda.
->
-> In Conda, the solver is responsible for resolving package dependencies when creating or updating environments. The solver determines which versions of packages to install, considering constraints such as dependencies, conflicts, and package versions specified in the environment configuration.
->
-> The classic solver is the default solver used in older versions of Conda. It uses an algorithm known as the "legacy" solver, which has been in use for many years. This solver is generally slower and less efficient compared to the newer, default mamba solver.
-> 
-> By running conda config --set solver classic, you're instructing Conda to use the classic solver instead of the default mamba solver for environment resolution. This configuration might be necessary in certain cases, such as when compatibility issues arise with the mamba solver or when you prefer the behavior of the classic solver.
->
-> It's worth noting that unless you have specific reasons for doing so, it's generally recommended to stick with the default mamba solver, as it typically provides faster and more efficient environment resolution compared to the classic solver.
->
-
-A gif from [libmamba](https://www.anaconda.com/blog/a-faster-conda-for-a-growing-community) in Anaconda docs
-![libmamba speed test vs classic](https://www.anaconda.com/wp-content/uploads/2023/02/libmamba_classic_comparison.gif)
-
-User guide for [***conda-libmamba-solver***](https://conda.github.io/conda-libmamba-solver/user-guide/).
 
 # Reference
 - Conda documentation is a great getting-started source, located [here](https://conda.io/projects/conda/en/latest/user-guide/getting-started.html#managing-python).

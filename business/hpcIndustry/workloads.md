@@ -5,19 +5,19 @@ A workload is the amount of work that a computer system or software needs to do 
 ## Table of Content
 - [WorkLoads](#workloads)
   - [Table of Content](#table-of-content)
-  - [Definition](#definition)
-  - [Workloads Common Types](#workloads-common-types)
-  - [Relation between Linux and Workloads](#relation-between-linux-and-workloads)
-  - [RDMA Workloads](#rdma-workloads)
-  - [RDMA \& Data Science](#rdma--data-science)
-  - [Data Science Workloads](#data-science-workloads)
+- [1- Definition](#1--definition)
+- [2- Workloads Common Types](#2--workloads-common-types)
+- [3- Relation between Linux and Workloads](#3--relation-between-linux-and-workloads)
+- [4- RDMA Workloads](#4--rdma-workloads)
+- [5- RDMA \& Data Science](#5--rdma--data-science)
+- [6- Data Science Workloads](#6--data-science-workloads)
 
-## Definition
+# 1- Definition
 In the context of High-Performance Computing (HPC), "workloads" refer to the specific tasks or computations that need to be performed on a computing system. Workloads can vary significantly in terms of their computational complexity and resource requirements.
 
 For More info regarding HPC, please refere to this [blog](https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/business/hpcIndustry/hpc.md) to have more information regarding what is HPC, its task and duties, and even how it is related to Data scinece.
 
-## Workloads Common Types
+# 2- Workloads Common Types
 Workloads are typically categorized into different types based on the nature of the tasks and how they use the resources of an HPC system. Here are some common types of workloads in HPC:
 |Type|Details|
 |--|--|
@@ -32,7 +32,7 @@ Understanding the nature of the workload is crucial when designing and configuri
 
 When discussing HPC, it's essential to consider the workload's characteristics and how well the system can be optimized to meet the specific requirements of the tasks being performed. Workload management and workload scheduling are critical aspects of HPC system administration to ensure efficient utilization of the available resources.
 
-## Relation between Linux and Workloads
+# 3- Relation between Linux and Workloads
 Linux basics are the fundamental concepts and skills that are required to use the Linux operating system. This includes understanding the basic concepts of file systems, directories, and permissions, as well as being able to navigate the operating system using the command line and GUI.
 
 Workloads are the tasks and applications that are run on Linux systems. Linux systems are used to run a wide range of workloads, including web servers, database servers, email servers, and application servers.
@@ -49,7 +49,7 @@ Here are some specific examples of how Linux basics are used to manage Linux wor
 
 If you are interested in managing Linux workloads, it is important to have a good understanding of Linux basics. There are a number of resources available online and in libraries to help you learn about Linux basics. You can also find many helpful articles and tutorials on the websites of Linux vendors and distributors.
 
-## RDMA Workloads
+# 4- RDMA Workloads
 RDMA, which stands for Remote Direct Memory Access, is a technology that allows data to be transferred directly from the memory of one computer into the memory of another computer without involving the processors or operating systems of either computer. This can significantly reduce latency and increase network throughput, making it a valuable technology in High-Performance Computing (HPC) environments.
 
 RDMA workloads typically involve **data-intensive and communication-intensive tasks where low-latency, high-bandwidth data transfer is critical**. Some common examples of RDMA workloads in HPC include:
@@ -66,7 +66,7 @@ RDMA workloads demand specialized hardware and network infrastructure that suppo
 
 In summary, RDMA workloads are characterized by the use of RDMA technology to achieve high-speed, low-latency data transfers, which is essential for many HPC applications and tasks that require fast communication and data movement within a high-performance computing cluster.
 
-## RDMA & Data Science
+# 5- RDMA & Data Science
 RDMA (Remote Direct Memory Access) is not specific to data science work alone; it's a technology used to enhance network performance and reduce latency in data transfer for a wide range of applications, including but not limited to data science. RDMA is a valuable tool in the broader field of High-Performance Computing (HPC), and its applications extend to various domains, each with its specific requirements.
 
 While RDMA can be beneficial for data-intensive tasks, such as those found in data science workloads, it's also valuable for other types of HPC workloads. Here are a few examples:
@@ -80,7 +80,7 @@ While RDMA can be beneficial for data-intensive tasks, such as those found in da
 
 While RDMA is a valuable technology for data science, it has broader applicability in HPC and data-intensive computing in general. Its primary purpose is to improve network performance and reduce communication latency, which can benefit a wide array of applications where efficient data transfer is essential.
 
-## Data Science Workloads
+# 6- Data Science Workloads
 Data science encompasses a wide range of tasks and workloads that involve the analysis, processing, and interpretation of data to extract insights and make data-driven decisions. Workloads in data science can vary depending on the specific goals and techniques being used. Here are some common workloads in data science:
 |Workload|Details|
 |--|--|
