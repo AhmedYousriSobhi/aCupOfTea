@@ -201,6 +201,9 @@ conda config
 
     # To set configuration options using the "--set" key
     conda config --set auto_update_conda False
+
+    # To turn off auto activate base
+    conda config --set auto_activate_
     ```
     - **Note**: The order you add new channels is considered as priority from lowest to highest priority, so the recent added channel has the highest priority, according to [**bioconda**](https://bioconda.github.io/#usage), the order to add channels is important to avoid probles with solving dependencies.
    
