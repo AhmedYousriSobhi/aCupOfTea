@@ -1,11 +1,11 @@
-# Cuda - Nvidia-smi
+# 101 - Cuda - Nvidia-smi
 
 In our daily work, we use GPU alot rather than CPU in the heavy computations, so How to monitor the usage?
 
 In this doc, we will try to talk about main points and the support points for these main points, so please refer to the main source of knowledge "The Official DOCUMENTATION" for [nvidia-smi](https://developer.download.nvidia.com/compute/DCGM/docs/nvidia-smi-367.38.pdf)
 
 # Table of Content
-- [Cuda - Nvidia-smi](#cuda---nvidia-smi)
+- [101 - Cuda - Nvidia-smi](#101---cuda---nvidia-smi)
 - [Table of Content](#table-of-content)
 - [What is NVSMI?](#what-is-nvsmi)
 - [Where to get?](#where-to-get)

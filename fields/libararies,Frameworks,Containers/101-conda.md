@@ -136,24 +136,27 @@ This is not all!! you can also modify which remote channels are automatically se
 - This is very usefull actually!! this feature is beneficial when maintaining a private or internal channel, try to visit ["*modify your channel lists*"](https://docs.conda.io/projects/conda/en/latest/user-guide/configuration/settings.html#config-channels) docs to have more info.
 
 ## 2.1- Specifying Channels When Installing Packages
-- From the command line use *--channel*
-  ```bash
-  conda install scipy --channel conda-forge
-  ```
-- Specify multiple channels; note that priority decreases from left to right.
-  ```bash
-  conda install scipy --channel conda-forge --channel bioconda
-  ```
+From the command line use *--channel*
+```bash
+conda install scipy --channel conda-forge
+```
+
+Specify multiple channels; note that priority decreases from left to right.
+```bash
+conda install scipy --channel conda-forge --channel bioconda
+```
 
 A big note here!!
-> The --channel parameter only make a pirority for the search, so if your package is not located in the channel you defined using --channel, it will automatically continue search for your package in all listed packates in **.condarc** file.
->
-> Here "--override-channels" comes to the rescue.
+```
+The --channel parameter only make a pirority for the search, so if your package is not located in the channel you defined using --channel, it will automatically continue search for your package in all listed packates in **.condarc** file.
 
-- From the command line use *--override-channels* to only search  the specified channel(s) rather than any channels confgiured in *.condarc*. This also ignored conda's default channels
-  ```bash
-  conda search scipy --channel file:/<path to>/local-channel --override-channels
-  ```
+Here "--override-channels" comes to the rescue.
+```
+
+From the command line use *--override-channels* to only search  the specified channel(s) rather than any channels confgiured in *.condarc*. This also ignored conda's default channels
+```bash
+conda search scipy --channel file:/<path to>/local-channel --override-channels
+```
   
 ## 2.2- Conda .condarc file!
 What is ***.condarc***? it is the file where are conda channels are configured.
@@ -168,6 +171,7 @@ Refer to ["*Using the .condarc conda configuration file*"](https://conda.io/proj
 conda config
 ```
 
+- [X] Important Actions to know:
 - To list all available channels in conda's .condarc:
   ```bash
   conda config --show channels
@@ -203,9 +207,9 @@ conda config
     conda config --set auto_update_conda False
 
     # To turn off auto activate base
-    conda config --set auto_activate_
+    conda config --set auto_activate_base False
     ```
-    - **Note**: The order you add new channels is considered as priority from lowest to highest priority, so the recent added channel has the highest priority, according to [**bioconda**](https://bioconda.github.io/#usage), the order to add channels is important to avoid probles with solving dependencies.
+    - **Note**: The order you add new channels is considered as priority from lowest to highest priority, so the recent added channel has the highest priority, according to [**bioconda**](https://bioconda.github.io/#usage), the order to add channels is important to avoid problems with solving dependencies.
    
     - For all list of "conda config" parameters, check the [docs](https://conda.io/projects/conda/en/latest/commands/config.html).
   - 2- vim the file and write it manually using YAML syntax. Here is a [sample of .condarc file](https://conda.io/projects/conda/en/latest/user-guide/configuration/use-condarc.html#sample-condarc) from the documents, which you could simply download and edit it.
@@ -232,14 +236,10 @@ conda config
     # https://conda.io/docs/user-guide/configuration/use-condarc.html
     ```
 ### 2.2.1- Where conda command search for .condarc?
-The conda looks in defined locations for .condarc file.
-
-Refer to the [docs](https://conda.io/projects/conda/en/latest/user-guide/configuration/use-condarc.html#searching-for-condarc) for info.
+The conda looks in defined locations for .condarc file. Refer to the [docs](https://conda.io/projects/conda/en/latest/user-guide/configuration/use-condarc.html#searching-for-condarc) for info.
 
 ### 2.2.2- Want to Configure Channels and Their Priority for a Single Env?
-A simple answer: Make a .condarc file in the **root directory of that environment**.
-
-So this [docs](https://conda.io/projects/conda/en/latest/user-guide/configuration/settings.html#config-channels) is a great place to start.
+A simple answer: Make a .condarc file in the **root directory of that environment**. So this [docs](https://conda.io/projects/conda/en/latest/user-guide/configuration/settings.html#config-channels) is a great place to start.
 
 ## 2.3- Managing Channels
 For more details about how to manage the channels in conda, please refer to the [documentation](https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-channels.html).
