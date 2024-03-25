@@ -54,7 +54,7 @@ Following up the answer above from ChatGPT 3.5, it generated this answer:
 >   The "trees" represent memory locations containing data.
 
 > When threads are grouped together to fetch data from memory, they coordinate their efforts to access contiguous blocks of memory. This allows the memory controller to efficiently fetch the data in a single transaction, rather than making multiple smaller transactions for each individual thread. As a result, memory access is more streamlined, and the overall performance is improved.
-```
+
 
 # Why Thread Does not Fetch Data From Another Thread?
 Continuing chatting with ChatGPT 3.5, this answer was generated:
@@ -70,13 +70,13 @@ Continuing chatting with ChatGPT 3.5, this answer was generated:
 
 > Let's consider your scenario with two threads fetching a block of memory. If both threads need the first part of the data block, here's what happens:
 
->     Memory Access Request: Both threads within the block issue memory access requests for the first part of the data block.
+> Memory Access Request: Both threads within the block issue memory access requests for the first part of the data block.
 
->     Coalesced Access: The memory controller recognizes that the threads within the block are accessing contiguous memory locations (the first part of the data block). It then fetches the entire block of data into a cache or registers. This is the essence of memory coalescing—fetching contiguous memory locations in a single transaction, even if not all threads need all parts of the block.
+> Coalesced Access: The memory controller recognizes that the threads within the block are accessing contiguous memory locations (the first part of the data block). It then fetches the entire block of data into a cache or registers. This is the essence of memory coalescing—fetching contiguous memory locations in a single transaction, even if not all threads need all parts of the block.
 
->     Data Usage: Each thread within the block retrieves the data it needs from the cached or registered block. Threads that need the first part of the block can access it directly, while threads needing other parts may have to do some additional computations to access their required data within the block.
+> Data Usage: Each thread within the block retrieves the data it needs from the cached or registered block. Threads that need the first part of the block can access it directly, while threads needing other parts may have to do some additional computations to access their required data within the block.
 
->     Unused Data: In the case where some threads within the block do not need all parts of the block, there may be some unused data in the cached or registered block. However, this inefficiency is outweighed by the benefits of memory coalescing, which include reduced memory access latency and increased memory bandwidth utilization.
+> Unused Data: In the case where some threads within the block do not need all parts of the block, there may be some unused data in the cached or registered block. However, this inefficiency is outweighed by the benefits of memory coalescing, which include reduced memory access latency and increased memory bandwidth utilization.
 
 # Do Threads Fetch The Data Themselves?
 What I understood so far is that: Threads in a SM they decide all the data they need, and the one responsible for fetching the data is the memory controller and not the threads themselves?
@@ -87,15 +87,15 @@ Answering this question by ChatGPT 3.5:
 
 > Here's how it typically works:
 
->     Thread Execution: Threads within an SM execute instructions as per their program logic. When a thread needs to access data from memory (e.g., read from an array), it issues a memory access request specifying the memory address it wants to access.
+> Thread Execution: Threads within an SM execute instructions as per their program logic. When a thread needs to access data from memory (e.g., read from an array), it issues a memory access request specifying the memory address it wants to access.
 
->     Memory Access Request: This memory access request is sent from the thread to the memory controller. The request includes the memory address the thread wants to access and the type of memory operation (read or write).
+> Memory Access Request: This memory access request is sent from the thread to the memory controller. The request includes the memory address the thread wants to access and the type of memory operation (read or write).
 
->     Memory Controller Operation: The memory controller receives the memory access request from the thread. It is responsible for coordinating memory accesses across multiple threads and ensuring efficient access to memory resources.
+> Memory Controller Operation: The memory controller receives the memory access request from the thread. It is responsible for coordinating memory accesses across multiple threads and ensuring efficient access to memory resources.
 
->     Data Fetching: Based on the memory access request received from the thread, the memory controller fetches the required data from memory. This may involve accessing various levels of memory hierarchy, such as caches or global memory,  depending on the memory access pattern and the memory hierarchy of the GPU architecture.
+> Data Fetching: Based on the memory access request received from the thread, the memory controller fetches the required data from memory. This may involve accessing various levels of memory hierarchy, such as caches or global memory,  depending on the memory access pattern and the memory hierarchy of the GPU architecture.
 
->     Data Delivery: Once the required data is fetched, the memory controller delivers it to the requesting thread. The thread can then continue its execution using the fetched data.
+> Data Delivery: Once the required data is fetched, the memory controller delivers it to the requesting thread. The thread can then continue its execution using the fetched data.
 
 > By centralizing the memory access control and management in the memory controller, GPUs can efficiently handle memory access requests from multiple threads running concurrently on the SMs. This allows for high-throughput memory access operations, which are essential for achieving high-performance computation in GPU-accelerated applications.
 
