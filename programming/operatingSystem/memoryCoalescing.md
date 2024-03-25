@@ -6,6 +6,9 @@
 - [What is Memory Coalescing?](#what-is-memory-coalescing)
 - [Let's hear a story about GPU Kingdom](#lets-hear-a-story-about-gpu-kingdom)
 - [Why so?](#why-so)
+- [Why Thread Does not Fetch Data From Another Thread?](#why-thread-does-not-fetch-data-from-another-thread)
+- [So Threads Fetch Whole block of Data, but Uses a Small Part?](#so-threads-fetch-whole-block-of-data-but-uses-a-small-part)
+- [Do Threads Fetch The Data Themselves?](#do-threads-fetch-the-data-themselves)
 
 # What is Memory Coalescing?
 Memory Coalescing optimizes memory access patterns by fetching contiguous blocks of data, even if not all threads within the block need all parts of the block. This optimization improves overall memory access performance and efficiency in GPU computing
@@ -55,54 +58,44 @@ Following up the answer above from ChatGPT 3.5, it generated this answer:
 
 # Why Thread Does not Fetch Data From Another Thread?
 Continuing chatting with ChatGPT 3.5, this answer was generated:
-```
-Now, regarding your concern about threads fetching data from other threads:
 
-In GPU programming, each thread typically operates independently and doesn't directly fetch data from other threads. Instead, threads access data from global memory, which is shared across all threads. The goal of memory coalescing is to optimize the access pattern to this global memory, ensuring that neighboring threads access contiguous blocks of data. This optimization helps to minimize memory transactions and improve overall performance without threads needing to fetch data from each other directly.
-```
+> Now, regarding your concern about threads fetching data from other threads:
+
+> In GPU programming, each thread typically operates independently and doesn't directly fetch data from other threads. Instead, threads access data from global memory, which is shared across all threads. The goal of memory coalescing is to optimize the access pattern to this global memory, ensuring that neighboring threads access contiguous blocks of data. This optimization helps to minimize memory transactions and improve overall performance without threads needing to fetch data from each other directly.
 
 # So Threads Fetch Whole block of Data, but Uses a Small Part?
 Continuing chatting with ChatGPT 3.5, this answer was generated:
-```
-In GPU programming, threads are often organized into blocks, and these blocks are scheduled to execute on streaming multiprocessors (SMs) in groups. Each thread within a block may have different tasks, but they often access neighboring memory locations. When we talk about memory coalescing, we're aiming to optimize the memory access patterns of these threads.
 
-Let's consider your scenario with two threads fetching a block of memory. If both threads need the first part of the data block, here's what happens:
+> In GPU programming, threads are often organized into blocks, and these blocks are scheduled to execute on streaming multiprocessors (SMs) in groups. Each thread within a block may have different tasks, but they often access neighboring memory locations. When we talk about memory coalescing, we're aiming to optimize the memory access patterns of these threads.
 
-    Memory Access Request: Both threads within the block issue memory access requests for the first part of the data block.
+> Let's consider your scenario with two threads fetching a block of memory. If both threads need the first part of the data block, here's what happens:
 
-    Coalesced Access: The memory controller recognizes that the threads within the block are accessing contiguous memory locations (the first part of the data block). It then fetches the entire block of data into a cache or registers. This is the essence of memory coalescing—fetching contiguous memory locations in a single transaction, even if not all threads need all parts of the block.
+>     Memory Access Request: Both threads within the block issue memory access requests for the first part of the data block.
 
-    Data Usage: Each thread within the block retrieves the data it needs from the cached or registered block. Threads that need the first part of the block can access it directly, while threads needing other parts may have to do some additional computations to access their required data within the block.
+>     Coalesced Access: The memory controller recognizes that the threads within the block are accessing contiguous memory locations (the first part of the data block). It then fetches the entire block of data into a cache or registers. This is the essence of memory coalescing—fetching contiguous memory locations in a single transaction, even if not all threads need all parts of the block.
 
-    Unused Data: In the case where some threads within the block do not need all parts of the block, there may be some unused data in the cached or registered block. However, this inefficiency is outweighed by the benefits of memory coalescing, which include reduced memory access latency and increased memory bandwidth utilization.
-```
+>     Data Usage: Each thread within the block retrieves the data it needs from the cached or registered block. Threads that need the first part of the block can access it directly, while threads needing other parts may have to do some additional computations to access their required data within the block.
+
+>     Unused Data: In the case where some threads within the block do not need all parts of the block, there may be some unused data in the cached or registered block. However, this inefficiency is outweighed by the benefits of memory coalescing, which include reduced memory access latency and increased memory bandwidth utilization.
 
 # Do Threads Fetch The Data Themselves?
 What I understood so far is that: Threads in a SM they decide all the data they need, and the one responsible for fetching the data is the memory controller and not the threads themselves?
 
 Answering this question by ChatGPT 3.5:
-```
-That's correct! In GPU programming, threads within a streaming multiprocessor (SM) do not directly fetch data from memory themselves. Instead, they issue memory access requests, and it's the responsibility of the memory controller to handle these requests and fetch the required data from memory.
 
-Here's how it typically works:
+> That's correct! In GPU programming, threads within a streaming multiprocessor (SM) do not directly fetch data from memory themselves. Instead, they issue memory access requests, and it's the responsibility of the memory controller to handle these requests and fetch the required data from memory.
 
-    Thread Execution: Threads within an SM execute instructions as per their program logic. When a thread needs to access data from memory (e.g., read from an array), it issues a memory access request specifying the memory address it wants to access.
+> Here's how it typically works:
 
-    Memory Access Request: This memory access request is sent from the thread to the memory controller. The request includes the memory address the thread wants to access and the type of memory operation (read or write).
+>     Thread Execution: Threads within an SM execute instructions as per their program logic. When a thread needs to access data from memory (e.g., read from an array), it issues a memory access request specifying the memory address it wants to access.
 
-    Memory Controller Operation: The memory controller receives the memory access request from the thread. 
-                            It is responsible for coordinating memory accesses across multiple threads
-                             and ensuring efficient access to memory resources.
+>     Memory Access Request: This memory access request is sent from the thread to the memory controller. The request includes the memory address the thread wants to access and the type of memory operation (read or write).
 
-    Data Fetching: Based on the memory access request received from the thread, the memory controller fetches the required data from memory. 
-                    This may involve accessing various levels of memory hierarchy, such as caches or global memory, 
-                    depending on the memory access pattern and the memory hierarchy of the GPU architecture.
+>     Memory Controller Operation: The memory controller receives the memory access request from the thread. It is responsible for coordinating memory accesses across multiple threads and ensuring efficient access to memory resources.
 
-    Data Delivery: Once the required data is fetched, the memory controller delivers it to the requesting thread. 
-                The thread can then continue its execution using the fetched data.
+>     Data Fetching: Based on the memory access request received from the thread, the memory controller fetches the required data from memory. This may involve accessing various levels of memory hierarchy, such as caches or global memory,  depending on the memory access pattern and the memory hierarchy of the GPU architecture.
 
-By centralizing the memory access control and management in the memory controller, 
-GPUs can efficiently handle memory access requests from multiple threads running concurrently on the SMs. 
-This allows for high-throughput memory access operations, 
-which are essential for achieving high-performance computation in GPU-accelerated applications.
-```
+>     Data Delivery: Once the required data is fetched, the memory controller delivers it to the requesting thread. The thread can then continue its execution using the fetched data.
+
+> By centralizing the memory access control and management in the memory controller, GPUs can efficiently handle memory access requests from multiple threads running concurrently on the SMs. This allows for high-throughput memory access operations, which are essential for achieving high-performance computation in GPU-accelerated applications.
+
