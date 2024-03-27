@@ -4,7 +4,7 @@
 - [101 - Python](#101---python)
 - [Table of Content](#table-of-content)
 - [Concepts Highlights](#concepts-highlights)
-  - [1. Primitive Datatypes and Operators](#1-primitive-datatypes-and-operators)
+  - [1. Primitive Datatype and Operators](#1-primitive-datatype-and-operators)
     - [Arithmetic](#arithmetic)
   - [2. Variables and Collections](#2-variables-and-collections)
     - [List](#list)
@@ -72,11 +72,11 @@
 - [References](#references)
 
 # Concepts Highlights
-These illustrations are provided from [learnxinyminutes-python](https://learnxinyminutes.com/docs/python/), so they are copied and pasted to be able to add some of my own notes on them. So please refere to the original website for the complete wonderfull tutorial.
+These illustrations are provided from [learnxinyminutes-python](https://learnxinyminutes.com/docs/python/), so they are copied and pasted to be able to add some of my own notes on them. So please refer to the original website for the complete wonderful tutorial.
 
 So in the following sections, we will not cover a full beginning illustration for the python, and we consider that you just want to wrap up and recall the important notes in python.
 
-## 1. Primitive Datatypes and Operators
+## 1. Primitive Datatype and Operators
 ### Arithmetic
 ```python
 # Integer division rounds down for both positive and negative numbers.
@@ -814,7 +814,7 @@ if __name__ == '__main__':
 ```
 ## 7. Advanced
 ### Generator Functions - Yeild
-The **yield** keyword in python is used in the contex of generator functions. It serves the purpose of creating iterators-functions that can be paused and resumed later, maintaining their state across multiple calls. The primary purpose of using **yield** is to produce a sequence of values while retaining the state of the function between calls.
+The **yield** keyword in python is used in the context of generator functions. It serves the purpose of creating iterators-functions that can be paused and resumed later, maintaining their state across multiple calls. The primary purpose of using **yield** is to produce a sequence of values while retaining the state of the function between calls.
 
 #### Breakdown the purpose of using **yield**
 |Purpose|Details|
@@ -827,14 +827,14 @@ Iterating through Large Sequences| Generators are particularly useful for iterat
 ```python
 def my_generator():
     yield 1
-    print("This will be printed in the second iterate next statemet")
+    print("This will be printed in the second iterate next statement")
     yield 2
     yield 3
 
 # Using the generator
 gen = my_generator()
 print(next(gen))  # Outputs: 1
-print(next(gen))  # Outputs: This will be printed in the second iterate next statemet 2
+print(next(gen))  # Outputs: This will be printed in the second iterate next statement 2
 print(next(gen))  # Outputs: 3
 # print(next(gen))  # Raises StopIteration error as all values have been yielded
 ```

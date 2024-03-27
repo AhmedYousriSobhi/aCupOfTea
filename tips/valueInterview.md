@@ -7,9 +7,9 @@ A "values interview" or "values-based interview" is a type of job interview that
 - [Table of Content](#table-of-content)
 - [Points of Focus in Candidate](#points-of-focus-in-candidate)
 - [Objective of Value Interview](#objective-of-value-interview)
-- [Preparation for Value Inteview](#preparation-for-value-inteview)
+- [Preparation for Value Interview](#preparation-for-value-interview)
 - [How to Make Conversation productive](#how-to-make-conversation-productive)
-- [How to Introduce youself](#how-to-introduce-youself)
+- [How to Introduce yourself](#how-to-introduce-yourself)
   - [Example Introduction](#example-introduction)
 - [Real Life Interview Questions](#real-life-interview-questions)
   - [Different Life Style Question](#different-life-style-question)
@@ -30,7 +30,7 @@ Values and Ethics| Questions may explore how the candidate handles ethical dilem
 # Objective of Value Interview
 Values interviews help employers ensure that a candidate not only possesses the necessary technical skills but also aligns with the company's culture and values. It's a way to assess whether a candidate will be a good cultural fit and contribute positively to the company's work environment.
 
-# Preparation for Value Inteview
+# Preparation for Value Interview
 To prepare for a values interview, candidates should research the company's mission, values, and culture, and be ready to discuss their own values and experiences in a way that demonstrates alignment with the company's expectations. It's also essential to provide specific examples from past experiences that showcase how their values have influenced their actions and decision-making.
 
 Preparing for a values-based interview requires research, self-reflection, and authenticity. Here are some steps you can take to get ready:
@@ -65,7 +65,7 @@ During a value HR interview, there are several points to take care of to ensure 
 By following these guidelines, you can conduct a successful value HR interview that provides valuable insights into the candidate's character and suitability for the role within the company's culture.
 
 
-# How to Introduce youself
+# How to Introduce yourself
 This introduction gives a brief overview of the candidate's education, experience, and skills, while also showcasing their passion for [Position] (for example data science) and their ability to communicate complex concepts to non-technical stakeholders. It also highlights their ability to work collaboratively and solve problems, which are important qualities for a data scientist role.
 
 here are some tips on how to introduce yourself in a value interview:
@@ -132,7 +132,7 @@ In summary, when faced with a difficult situation involving conflicting work sty
 
 4. Give an example of a time when you demonstrated initiative in promoting diversity, equity, and inclusion within your organization.
 
-    Answer: "In my previous role, I recognized that our team lacked diverse perspectives, which conflicted with our company's value of inclusivity. I volunteered to lead a diversity and inclusion committee, collaborating with HR and senior leadership to develop strategies for recruiting and retaining diverse talent. We implemented training programs, mentorship initiatives, and outreach efforts to attract a broader range of candidates. As a result, we increased our team's diversity by 30% within six months, enhancing our creativity, innovation, and overall performance."
+    Answer: "In my previous role, I recognized that our team lacked diverse perspectives, which conflicted with our company's value of inclusively. I volunteered to lead a diversity and inclusion committee, collaborating with HR and senior leadership to develop strategies for recruiting and retaining diverse talent. We implemented training programs, mentorship initiatives, and outreach efforts to attract a broader range of candidates. As a result, we increased our team's diversity by 30% within six months, enhancing our creativity, innovation, and overall performance."
 
 5. Can you describe a situation where you had to balance competing priorities and demands while still upholding your personal values and the company's values?
 
@@ -140,7 +140,7 @@ In summary, when faced with a difficult situation involving conflicting work sty
 
 6. Tell me about a time when you had to communicate a difficult message that conflicted with someone else's values or opinions. How did you handle it?
     
-    Answer: "I had to inform a client that their request for a custom feature wasn't feasible within their budget and timeframe. However, they were adamant about having it included. I explained the technical limitations and offered alternatives that better aligned with their original goals. To address their concerns, I also provided data and case studies supporting our recommendation. By being transparent, empathetic, and focused on finding solutions, we maintained a positive partnership despite the initial disagreement."
+    Answer: "I had to inform a client that their request for a custom feature wasn't feasible within their budget and time frame. However, they were adamant about having it included. I explained the technical limitations and offered alternatives that better aligned with their original goals. To address their concerns, I also provided data and case studies supporting our recommendation. By being transparent, empathetic, and focused on finding solutions, we maintained a positive partnership despite the initial disagreement."
 
 7. Describe a scenario where you had to choose between personal gain and upholding your company's values. What did you do, and why?
 

@@ -15,7 +15,7 @@ A workload is the amount of work that a computer system or software needs to do 
 # 1- Definition
 In the context of High-Performance Computing (HPC), "workloads" refer to the specific tasks or computations that need to be performed on a computing system. Workloads can vary significantly in terms of their computational complexity and resource requirements.
 
-For More info regarding HPC, please refere to this [blog](https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/business/hpcIndustry/hpc.md) to have more information regarding what is HPC, its task and duties, and even how it is related to Data scinece.
+For More info regarding HPC, please refere to this [blog](https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/business/hpcIndustry/hpc.md) to have more information regarding what is HPC, its task and duties, and even how it is related to Data science.
 
 # 2- Workloads Common Types
 Workloads are typically categorized into different types based on the nature of the tasks and how they use the resources of an HPC system. Here are some common types of workloads in HPC:

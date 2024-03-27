@@ -58,7 +58,7 @@ In a situation where you are given a new dataset from a company without a specif
 |Understand Data Sources| Seek information about the sources of the data and how it was collected. Understanding the data's origins can provide context and help you identify any data quality or bias issues.
 |Define Objectives| Based on your initial exploration and understanding of the data, define clear objectives for your analysis. Ask yourself what questions you could potentially answer with the data available and how those insights could be valuable to the company.
 |Brainstorm Hypotheses| Formulate hypotheses related to the data and the company's domain. These hypotheses can serve as starting points for deeper analysis.
-|Data Cleaning and Preprocessing| Clean and preprocess the data to ensure it is in a suitable format for analysis. Handle missing values, outliers, and any data inconsistencies that may affect your results.
+|Data Cleaning and Preprocessing| Clean and process the data to ensure it is in a suitable format for analysis. Handle missing values, outliers, and any data inconsistencies that may affect your results.
 |Feature Engineering| If necessary, create new features or variables that might be relevant for your analysis. Feature engineering can enhance the dataset and lead to more informative results.
 |Exploratory Data Analysis (EDA)| Conduct an in-depth exploratory data analysis. Use visualizations and statistical techniques to uncover patterns, correlations, and potential relationships between variables.
 |Identify Interesting Patterns| Look for interesting patterns, anomalies, or trends that could be of significance to the company. Keep an open mind during this stage and be willing to adjust your analysis objectives based on your findings.

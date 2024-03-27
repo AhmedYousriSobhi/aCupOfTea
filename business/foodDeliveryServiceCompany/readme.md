@@ -2,6 +2,17 @@
 
 A food delivery service company is an organization that specializes in delivering food from restaurants, cafes, or other food establishments to customers' doorsteps. These companies act as intermediaries between the customers and the food providers, facilitating the ordering and delivery process.
 
+# Table of Content
+- [Food Delivery Service Company](#food-delivery-service-company)
+- [Table of Content](#table-of-content)
+  - [Workflow](#workflow)
+    - [Workflow - Area Definition](#workflow---area-definition)
+    - [Workflow - EDT](#workflow---edt)
+  - [Target KPIs](#target-kpis)
+  - [Target KPIs Calculation](#target-kpis-calculation)
+  - [Main Projects](#main-projects)
+  - [Related Projects](#related-projects)
+
 ## Workflow
 The typical workflow of a food delivery service company involves the following steps:
 
@@ -22,7 +33,7 @@ The typical workflow of a food delivery service company involves the following s
 8. Customer Support: Food delivery service companies usually have customer support available to address any issues or inquiries related to the order, such as tracking the delivery or resolving any problems with the food.
 
 ### Workflow - Area Definition
-For customers, The geometric region is splitted into __areas__, But for the runners who delivery the order, it is splitted into __pools__ where pool could include multiple areas together.
+For customers, The geometric region is split into __areas__, But for the runners who delivery the order, it is split into __pools__ where pool could include multiple areas together.
 
 ### Workflow - EDT
 EDT is stands for Estimated Delivery Time, which is the time estimated for an order to be delivered. Depending on the company business strategy to determine the EDT and where to let the customer see it, most of the company has two EDTs, one for a pre-order state, and the other for the post-order state.
@@ -34,8 +45,8 @@ The Post-order state is when the order is already placed, so the available infor
 
 During Calculating the EDT in post-order state, there are two methods for that calculation, either calculating the EDT as a whole value, or estimating each step in the EDT and summing them together to get the total EDT value.
 
-EDT could be splitted into multiple stages, which differ from company to another:
-1. First Mile 'FM': The time taken by the runner who deliver the order from __Acceptting the order__ till __Arriving to the restaurant__.
+EDT could be split into multiple stages, which differ from company to another:
+1. First Mile 'FM': The time taken by the runner who deliver the order from __Accepting the order__ till __Arriving to the restaurant__.
 2. Cooking Time 'CT': The time taken by the restaurant preparing the food, which is defined from __restaurant accept the order__ till __The food is ready__.
    - But some the company don't have an indicator from the restaurant to know if they have finished preparing the food, So in this case the CT is calculated from __Runner Arrived to restaurant__ till __Runner Is Out For Delivery__.  
 
@@ -44,8 +55,8 @@ Key Performance Indicators (KPIs) are important metrics that food delivery servi
 
 |KPI|Description|
 |---|---|
-|Runner Occupancy|The total number of available free runners who are not assinged to any orders over the total number of runners in the region.<br/>This gives indication of how free runners available in current time, and help to monitor each region of oversupply and undersupply, and control the region disabling process where a region is disabled so the customers can't place an orders at the current time in that region, as there are no free runners availalbe to deliver.|
-|Runners UTR 'Utilization Rate'|This KPI estimate the rate of number of orders being deliverd by the runner.|
+|Runner Occupancy|The total number of available free runners who are not assigned to any orders over the total number of runners in the region.<br/>This gives indication of how free runners available in current time, and help to monitor each region of oversupply and undersupply, and control the region disabling process where a region is disabled so the customers can't place an orders at the current time in that region, as there are no free runners available to deliver.|
+|Runners UTR 'Utilization Rate'|This KPI estimate the rate of number of orders being delivered by the runner.|
 |Order Volume| The total number of orders processed within a specific time frame (daily, weekly, or monthly). <br/>Increasing order volume indicates growing demand for the service.
 |Customer Retention Rate| The percentage of customers who return to use the service again after their initial order. <br/>A high customer retention rate indicates customer satisfaction and loyalty.
 |Average Order Value (AOV)| The average amount spent by customers on each order. <br/>Increasing the AOV can boost revenue and profitability.
@@ -78,11 +89,11 @@ Key Performance Indicators (KPIs) are important metrics that food delivery servi
 |Customer Acquisition Cost (CAC)|Add up all marketing and sales expenses incurred within a specific time frame to acquire new customers. <br/>Divide this by the number of new customers acquired in that period.<br/>CAC = Total Marketing and Sales Expenses / Number of New Customers Acquired.
 
 ## Main Projects
-|Project|Descriptio|
+|Project|Description|
 |--|--|
 |Demand Forecasting| Develop a demand forecasting model to predict the number of orders and their types (e.g., cuisine, meal time) for specific days or time slots. <br/>This can help food delivery companies allocate resources effectively, optimize inventory management, and ensure timely deliveries during peak hours.<br/>The estimated orders demands could be on hourly basis for long interval of time like a whole week.|
-|EDT "Estimated Delivery Time" Estimation|Develop a model to estimate the EDT for order delivery based on certain features and depending on each pool/area the company delivery to. <br/>There are two possible stages for EDT values to consider, the Pre-order state when the order is not placed yet by the customer, and Post-order state when the order is actually placed.<br/>The EDT has multiple stages which toghether they define the EDT value and differ from company to another|
-|Runners Shift Plannig Automation|Automate the process of runners shifts planning according to their estimated forecasted orders demands, time slots and shifts long|
+|EDT "Estimated Delivery Time" Estimation|Develop a model to estimate the EDT for order delivery based on certain features and depending on each pool/area the company delivery to. <br/>There are two possible stages for EDT values to consider, the Pre-order state when the order is not placed yet by the customer, and Post-order state when the order is actually placed.<br/>The EDT has multiple stages which together they define the EDT value and differ from company to another|
+|Runners Shift Planing Automation|Automate the process of runners shifts planning according to their estimated forecasted orders demands, time slots and shifts long|
 
 ## Related Projects
 |Project|Description|

@@ -1,6 +1,6 @@
 # Technical Info
 
-When you are doing an interview for any techinical position, there are some important questions you should ask the interviewer about, so let's discuss more about these questions.
+When you are doing an interview for any technical position, there are some important questions you should ask the interviewer about, so let's discuss more about these questions.
 
 # Table of Content
 - [Technical Info](#technical-info)
@@ -15,7 +15,7 @@ When you are doing an interview for any techinical position, there are some impo
 Let's assume the applied position is a Data Scientist:
 
 ## What is the data team structure?
-In this question, you are aiming to get more familier about the structure of the overall data team; this will give you some bigger view about how many data scientists, data analytics, and data engineer in the team.
+In this question, you are aiming to get more familiar about the structure of the overall data team; this will give you some bigger view about how many data scientists, data analytics, and data engineer in the team.
 
 Regarding the number of data scientist, this will show you the following:
 1. If the team is small in numbers, this will give you intuition how the work load will be.
@@ -36,7 +36,7 @@ Regarding the number of data engineers, this will show you the following:
 This question will tells you, how good the company in planning, so are they just planning for a single quarter, or they have a far end vision of projects to do in the future which will give huge impact to the company.
 
 ## How many of the data scientist project deployed?
-This question will tells you if the data science team has an impact in the company or not, and their work actually being used in the company by other teams, so the company appreaciated the data science team work.
+This question will tells you if the data science team has an impact in the company or not, and their work actually being used in the company by other teams, so the company appreciated the data science team work.
 
 ## What are they technology tools there using?
 It is good to know about the team tools they are using like where they are training their models in case of machine learning or deep learning. are they using AWS Sagemaker or all the work are done locally in your machine?

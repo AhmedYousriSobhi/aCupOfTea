@@ -1,5 +1,16 @@
 # Real-State Company
 
+# Table of Content
+- [Real-State Company](#real-state-company)
+- [Table of Content](#table-of-content)
+  - [What is a real-state company?](#what-is-a-real-state-company)
+  - [KPIs](#kpis)
+  - [KPI Calculation](#kpi-calculation)
+  - [Possible DS Projects](#possible-ds-projects)
+  - [Projects](#projects)
+    - [Mainly Projects](#mainly-projects)
+    - [Related Projects](#related-projects)
+
 ## What is a real-state company?
 A real estate company, also known as a real estate agency or brokerage, is a business that deals with the buying, selling, renting, or management of properties. These properties can include residential houses, commercial buildings, land, and other real estate assets.
 
@@ -79,7 +90,7 @@ Remember, the specific projects will depend on the company's goals, available da
 |Optimized Property Search| Create algorithms that help customers find properties that best match their preferences and budget, making the property search process more efficient and personalized.
 |Rental Price Prediction| Develop models to predict rental prices based on factors such as location, property type, and local amenities, enabling landlords to set competitive rental rates.
 |Automated Property Appraisal| Build a system to automatically appraise properties based on historical sales data and market trends, streamlining the property valuation process.
-|Real Estate Market Analysis| Conduct comprehensive market analysis to identify emerging trends, hotspots, and investment opportunities for the company and its clients.
+|Real Estate Market Analysis| Conduct comprehensive market analysis to identify emerging trends, hotpots, and investment opportunities for the company and its clients.
 |Image Analysis for Property Photos| Implement computer vision techniques to analyze property images and extract relevant features, improving the property listing quality.
 |Property Portfolio Optimization| Optimize the company's property portfolio by analyzing property performance metrics, return on investment (ROI), and risk factors.
 |Time-to-Sell Prediction| Develop models to predict the time it takes to sell a property, helping real estate agents and sellers set realistic expectations.

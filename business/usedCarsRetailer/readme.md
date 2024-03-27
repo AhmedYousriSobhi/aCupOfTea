@@ -1,12 +1,21 @@
 # Used Cars Retailer Company
 
+## Table of Content
+- [Used Cars Retailer Company](#used-cars-retailer-company)
+  - [Table of Content](#table-of-content)
+  - [Most important suggested KPIs for the company to target](#most-important-suggested-kpis-for-the-company-to-target)
+  - [For calculation of each KPI](#for-calculation-of-each-kpi)
+  - [Projects](#projects)
+    - [Mainly Projects](#mainly-projects)
+    - [Related Projects](#related-projects)
+
 ## Most important suggested KPIs for the company to target
 |KPI| Description|
 |---|------------|
-|Acqusition Cost| Measures the average cost incurred by the company to acquire each used car. <br/>This includes factors such as the purchase price from the seller, any associated fees, and transportation cost. <br/>Company should aim to keep the acquisition cost as low as possible to maximize profitability.| 
-|Profitability| Main kpi the company should aim to maximize the profit margin on each acquaired car. <br/>This could be achieved by accurately estimating the appropriate buying price based on the car's features, condition, market demands, and competitor prices.|
+|Acquisition Cost| Measures the average cost incurred by the company to acquire each used car. <br/>This includes factors such as the purchase price from the seller, any associated fees, and transportation cost. <br/>Company should aim to keep the acquisition cost as low as possible to maximize profitability.| 
+|Profitability| Main kpi the company should aim to maximize the profit margin on each acquired car. <br/>This could be achieved by accurately estimating the appropriate buying price based on the car's features, condition, market demands, and competitor prices.|
 |Quality of Inventory| Can be measured by evaluating the condition of the cars, their maintenance history, and the presence of any significant issues or damages. <br/>Maintaining a high-quality inventory helps attract customers and ensures better resale opportunities. <br/>In this dataset, extra_features column could be considered as quality of inventory.|
-|Turnaround Time| Referes to the duration between acquiring a used car and selling it. <br/>A shorter turnaround time allows the company to quickly recoup their investment and maximize cash flow. <br/>Calculation by dividing the total number of cars sold within a specific period by the average number of cars in inventory during that period.|
+|Turnaround Time| Refers to the duration between acquiring a used car and selling it. <br/>A shorter turnaround time allows the company to quickly recoup their investment and maximize cash flow. <br/>Calculation by dividing the total number of cars sold within a specific period by the average number of cars in inventory during that period.|
 |Inventory Turnover|Measures how quickly the company buys and sells used cars. <br/>A higher inventory turnover indicates efficient operations and a better utilization of resources. <br/>It can be calculated by dividing the total number of cars sold within a specific period by the average number of cars in inventory during that period|
 |Market Demands| Monitoring the market demands is essential for determining the types of used cars that are high in demand. <br/>Analyzing customer preferences and market trends can guide the company in focusing on popular car models, features, and price ranges, which can result in faster sales and higher profits.|
 |Market Share| Monitoring the company's market share in the used car buying market is important to assess its competitive position. <br/>Increasing market share indicates that the company is successfully attracting sellers and outperforming competitors.|
@@ -30,10 +39,10 @@
 |-----|----|
 |Estimating Used cars price|In this project, our focus is estimating the price of used cars based on its selected features.|
 |Estimating Offering time for used cars| In this project, our focus is on offering time of used car, which is the time for a used car take to be sold/bought.|
-|Inspection Engineers Scheduler|The compnay has many timeslots of inspection task for different types of customers cars, So the target of this project, is to schedule the timeslots for the inspection engineers of the company.|
+|Inspection Engineers Scheduler|The company has many time slots of inspection task for different types of customers cars, So the target of this project, is to schedule the time slots for the inspection engineers of the company.|
 
 ### Related Projects
-|Project|Descirption|
+|Project|Description|
 |----|----|
 |Demand Prediction| The company could develop a demand prediction model to forecast the demand for specific car models in the market. <br/>By understanding customer preferences and market trends, the company can optimize its inventory and pricing strategy.|
 |Inventory Management| Developing an inventory management system that optimizes the procurement and allocation of used cars based on market demand and pricing trends. <br/>This system would help the company maintain a well-balanced inventory and reduce holding costs.
