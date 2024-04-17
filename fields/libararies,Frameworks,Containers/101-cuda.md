@@ -3,14 +3,38 @@
 # Table of Content
 - [101- Cuda](#101--cuda)
 - [Table of Content](#table-of-content)
-- [A good to read](#a-good-to-read)
+- [CUDA](#cuda)
+- [Why the name CUDA?](#why-the-name-cuda)
 - [What is a Thread (really)](#what-is-a-thread-really)
 - [Memory Coalescing?](#memory-coalescing)
 - [Code Journey from CPU to GPU](#code-journey-from-cpu-to-gpu)
+- [A good to read](#a-good-to-read)
 - [References](#references)
 
-# A good to read
-- [The supercomputing blog](http://supercomputingblog.com/cuda-tutorials/) for Cuda tutorial.
+# CUDA
+CUDA (Compute Unified Device Architecture) is a parallel computing platform and application programming interface (API) developed by Nvidia. It allows software to leverage certain types of graphics processing units (GPUs) for accelerated general-purpose processing, a concept known as general-purpose computing on GPUs (GPGPU).
+
+In sampler terms, it is a tool developed by Nvidia, to introduce the capabilities of being able to use Graphic cards to do generic computations. This changes the vision of the future GPUs cards to be more general-purpose hardware platforms, for scientific computing and parallel workloads.
+
+
+# Why the name CUDA?
+The name CUDA stands for Compute Unified Device Architecture. It was coined by Nvidia when they introduced their parallel computing platform and API for GPUs. Let’s break down the name:
+
+- Compute:
+  - Refers to the ability of GPUs to perform general-purpose computations beyond graphics rendering.
+  - Nvidia wanted to emphasize that GPUs could be used for more than just graphics-related tasks.
+- Unified:
+  - Highlights the idea of a single programming model that unifies both graphics and general-purpose computing.
+  - Before CUDA, developers had to use separate APIs for graphics (e.g., OpenGL, Direct3D) and compute (e.g., OpenCL).
+  - CUDA unified these into a single framework.
+- Device:
+  - Refers to the GPU itself.
+  - CUDA enables developers to write code that runs directly on the GPU.
+- Architecture:
+  - Signifies the underlying hardware and software design.
+  - CUDA provides an architecture for parallel processing on GPUs.
+
+In summary, CUDA represents Nvidia’s vision of harnessing the immense parallel processing power of GPUs for a wide range of computational tasks, not just graphics. It has become a fundamental tool for scientific simulations, machine learning, and other high-performance computing workloads. 🚀🔥
 
 # What is a Thread (really)
 According to a question in [Stackoverflow regarding what is a thread really](https://stackoverflow.com/a/5201906)!!, the auther pwnall illustrate the following:
@@ -65,6 +89,9 @@ A textual representation of the flow, highlighting the key components and their 
 > Result Retrieval: After GPU computations are completed, the results are retrieved from the GPU memory to the host memory. The GPU driver manages this process and ensures data integrity and correctness.
 
 > Task Completion: Once all GPU tasks are completed, the GPU driver notifies the host CPU, indicating that GPU resources are available for additional tasks or that the GPU can enter a low-power state to conserve energy.
+
+# A good to read
+- [The supercomputing blog](http://supercomputingblog.com/cuda-tutorials/) for Cuda tutorial.
 
 # References
 - Nvidia presentation High-Performance Computing with CUDA and TESLA GPUs, [here](https://intranet.birmingham.ac.uk/it/teams/infrastructure/research/bear/documents/public/CUDA-2013-07-31/CUDA-Tutorial.pdf).
