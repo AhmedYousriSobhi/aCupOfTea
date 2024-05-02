@@ -11,6 +11,7 @@ These are some tips and tricks I usually need in my daily work, so I tried to do
   - [To know Which Shell you Use](#to-know-which-shell-you-use)
   - [To get OS version](#to-get-os-version)
   - [To identify root dir](#to-identify-root-dir)
+  - [tmux Use mouse to scroll](#tmux-use-mouse-to-scroll)
 
 ## To delete file content in ***vi***
 ```bash
@@ -54,3 +55,12 @@ cat /etc/os-release
 ```bash
 findmnt / -o source -n
 ```
+
+## tmux Use mouse to scroll
+```bash
+# To use your mouse in this mode (called copy mode) press ^b + : and enter following:
+
+setw -g mouse on
+```
+
+Reference: Scroll shell output with mouse in tmux. [https://superuser.com/a/217269](https://superuser.com/a/217269)
