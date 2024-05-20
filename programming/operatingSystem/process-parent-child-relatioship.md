@@ -49,13 +49,13 @@ termination
 ```
 
 ## Zombie Processes
-1. *Definition* 
+1. ***Definition*** 
    - A zombie process is a process that has completed execution but still has an entry in the process table. This entry is maintained so the parent process can read the exit status of the child process using system calls like wait() or waitpid().
    - The process is "dead" in terms of execution but "alive" in terms of having an entry in the process table, hence the term "zombie".
-2. **Creation of Zombie Processes**
+2. ***Creation of Zombie Processes***
    - When a child process terminates, it sends a SIGCHLD signal to its parent process. The parent is expected to call wait() to read the child's exit status.
    - If the parent process does not call wait(), the child process remains in the zombie state.
-3. Code Example
+3. ***Code Example***
     ```c
     #include <sys/types.h>
     #include <unistd.h>
@@ -83,15 +83,15 @@ termination
     - The child process will terminate and become a zombie until the parent process calls wait() or exits.
 
 ## Orphan Processes
-1. **Definition**
+1. ***Definition***
    - An orphan process is a process whose parent has terminated before it. When a process becomes an orphan, it is adopted by the *init* process (PID 1 in Unix-like systems), which becomes its new parent.
-2. *Handling of Orphan Processes*
+2. ***Handling of Orphan Processes***
    - The init process periodically performs a wait() call to clean up orphaned processes, ensuring that they do not remain in the process table as zombies.
 3. *Difference from Zombie Processes*
    - A zombie is a terminated process that has not yet been waited on by its parent.
    - An orphan is a live process whose parent has terminated.
    - If an orphan process terminates, init will call wait() on it, preventing it from becoming a zombie.
-4. *Code example*
+4. ***Code example***
     ```c
     #include <sys/types.h>
     #include <unistd.h>
@@ -121,10 +121,10 @@ termination
         - The child process becomes an orphan when the parent terminates, the child process is then adopted by 'init'.
 
 ## Key Differences
-- *Zombie Process*
+- ***Zombie Process***
   - Has terminated but remains in the process table until the parent calls wait().
   - Exists because the parent has not yet retrieved the child's exit status.
-- *Orphan Process*
+- ***Orphan Process***
   - Is still running but its parent has terminated.
   - Adopted by init, which will call wait() when the orphan terminates, preventing it from becoming a zombie.
 
