@@ -1,9 +1,9 @@
-# Operating System - Memory 
+# Operating System - Memory Management
 
-In Main memory, chapter 9 Memory, from Operating System concepts 10th edition reference,
+In Main memory, chapter 9 Memory Management, from Operating System concepts 10th edition reference,
 
 # Table of notes
-- [Operating System - Memory](#operating-system---memory)
+- [Operating System - Memory Management](#operating-system---memory-management)
 - [Table of notes](#table-of-notes)
 - [9.1.1-Memory-Basic Hardware](#911-memory-basic-hardware)
   - [CPU General-Purpose Storage](#cpu-general-purpose-storage)

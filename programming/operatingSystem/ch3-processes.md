@@ -179,9 +179,13 @@ termination
 
 ## Why do child not die when parent dies?
 ```
-CAUSE:The reason that child processes do not die when their parent is killed is that the standard UNIX function fork() was not designed to behave in that way.  When a child process is created, the parent process calls the fork() function.  The fork() function returns 0 in the child and the process ID of the created child in the parent on success, -1 on failure.
+CAUSE:The reason that child processes do not die when their parent is killed is that the standard UNIX function fork() was not designed to behave in that way.  
+When a child process is created, the parent process calls the fork() function.
+The fork() function returns 0 in the child and the process ID of the created child in the parent on success, -1 on failure.
 
-It is the programmers responsibility to write the parent process in such a way to watch it's children, this is called a malice parent. It is a good programming technique to have the parent process monitor it's children behavior and wait on some sort of signal from the child. The wait() function is used to do this. It should be the child's responsibility to exit properly when finished.
+It is the programmers responsibility to write the parent process in such a way to watch it's children, this is called a malice parent.
+It is a good programming technique to have the parent process monitor it's children behavior and wait on some sort of signal from the child. The wait() function is used to do this.
+It should be the child's responsibility to exit properly when finished.
 ```
 ## Resource
 - hpe-Explain why a child process will not automatically die when the parent process is killed or terminates.[https://support.hpe.com/hpesc/public/docDisplay?docId=ns100.0.14972193.3027917en_us&docLocale=en_US](https://support.hpe.com/hpesc/public/docDisplay?docId=ns100.0.14972193.3027917en_us&docLocale=en_US)
