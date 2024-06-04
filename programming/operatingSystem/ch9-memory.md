@@ -5,31 +5,37 @@ In Main memory, chapter 9 Memory, from Operating System concepts 10th edition re
 # Table of notes
 - [Operating System - Memory](#operating-system---memory)
 - [Table of notes](#table-of-notes)
-- [9.1.1 - Basic Hardware](#911---basic-hardware)
+- [9.1.1-Memory-Basic Hardware](#911-memory-basic-hardware)
   - [CPU General-Purpose Storage](#cpu-general-purpose-storage)
   - [Machine Instructions](#machine-instructions)
   - [CPU Stall](#cpu-stall)
-  - [Example Scenario](#example-scenario)
-- [9.1.2 - Address Binding](#912---address-binding)
+    - [Example Scenario](#example-scenario)
+  - [Memory Stall \& Multithreading](#memory-stall--multithreading)
+    - [Memory Stall in Single-Threaded Systems](#memory-stall-in-single-threaded-systems)
+    - [Multithreaded Cores](#multithreaded-cores)
+    - [Switching Threads During Memory Stalls](#switching-threads-during-memory-stalls)
+    - [Example Scenario](#example-scenario-1)
+    - [CPU Stall vs Memory Stall](#cpu-stall-vs-memory-stall)
+- [9.1.2-Memory-Address Binding](#912-memory-address-binding)
   - [Overview](#overview)
   - [Stages of Address Binding](#stages-of-address-binding)
   - [Address Space](#address-space)
   - [Dynamic Address Binding](#dynamic-address-binding)
-  - [Example Scenario](#example-scenario-1)
+  - [Example Scenario](#example-scenario-2)
   - [Benefits and Challenges](#benefits-and-challenges)
-- [9.1.4 - Dynamic Loading](#914---dynamic-loading)
+- [9.1.4-Memory-Dynamic Loading](#914-memory-dynamic-loading)
   - [Dynamic Loading](#dynamic-loading)
   - [How It Works!](#how-it-works)
   - [Use-case](#use-case)
   - [Programmer Responsibility, not OS](#programmer-responsibility-not-os)
-- [9.1.5 - Dynamic Linking and Shared Libraries](#915---dynamic-linking-and-shared-libraries)
+- [9.1.5-Memory-Dynamic Linking and Shared Libraries](#915-memory-dynamic-linking-and-shared-libraries)
   - [Motivation](#motivation)
   - [Static Linking vs Dynamic Linking](#static-linking-vs-dynamic-linking)
   - [How It Works!](#how-it-works-1)
-  - [Advantages](#advantages)
+  - [DLL Advantages](#dll-advantages)
   - [OS Help is Required](#os-help-is-required)
 
-# 9.1.1 - Basic Hardware
+# 9.1.1-Memory-Basic Hardware
 ## CPU General-Purpose Storage
 **The only general-purpose storage that The CPU can access are two!**
 1. Main memory
@@ -50,15 +56,73 @@ The remedy is to add fast memory between the CPU and main memory, which is ***ca
 - This will speed up the memory-access.
 - During a memory stall, a multithreaded core can switch from the stalled hardware thread to another hardware thread.
 
-## Example Scenario
+### Example Scenario
 Imagine a scenario where a program is running on a computer. Here's how the process works in line with the paragraph:
 1. Program Execution: The CPU needs to execute a program that is stored on the disk.
 2. Loading into Memory: The program and any necessary data are loaded from the disk into the main memory.
 3. CPU Operation: The CPU fetches instructions from the main memory, decodes them, and executes them. It also uses data from the main memory during this process.
 4. Data Not in Memory: If the CPU needs data that is not currently in the main memory (perhaps it is still on the disk), the operating system will pause the CPU's execution momentarily, load the required data into memory, and then resume execution.
 
-# 9.1.2 - Address Binding
+## Memory Stall & Multithreading
+```
+during a memory stall, a multithreaded core can switch from the stalled hardware thread to another hardware thread
+```
+- In Main memory, chapter 9.1.1 Basic Hardware, from Operating System concepts 10th edition reference.
 
+### Memory Stall in Single-Threaded Systems
+- In single-threaded systems, when a memory stall occurs, (i.e., the CPU must wait for data to be fetched from the main memory).
+- The CPU remains idle until the required data is available.
+- This waiting period significantly reduces the efficiency and overall performance of the CPU, as the cpu is stalled.
+
+### Multithreaded Cores
+- They are designed to address the inefficiencies associated with memory stalls in single-threaded systems.
+- Multithreading allows a single CPU core to manage and execute multiple hardware threads concurrently.
+
+There are different types of multithreading, including:
+- ***Fine-grained multithreading***: Switches between threads at each instruction cycle.
+- ***Coarse-grained multithreading***: Switches threads only when one thread encounters a long-latency event such as a memory stall.
+- ***Simultaneous multithreading (SMT)***: Executes multiple threads in parallel by utilizing the core’s resources more efficiently.
+
+### Switching Threads During Memory Stalls
+When a memory stall occurs in multithreaded core, the CPU can mitigate the stall's impact by switching from the stalled thread to another thread that is ready to execute.
+
+Here is how this works:
+1. ***Detection of Memory Stall***
+- The CPU detects that the current thread is stalled because it is waiting for data from memory.
+- The data might be coming from the main memory or even from a slower storage medium like a hard drive.
+
+2. ***Thread Context Switching***
+- Instead of idling, the CPU saves the state (context) of the stalled thread. This context includes the current instruction, register states, and other necessary information to resume the thread later.
+- The CPU then loads the state (context) of another thread that is ready to execute. This involves setting up the CPU’s registers and program counter to reflect the new thread’s state.
+
+3. ***Execution of Another Thread***
+- The CPU begins executing instructions from the new thread, effectively utilizing the CPU cycles that would otherwise be wasted during the memory stall.
+- This process continues until the data required by the original thread is available.
+
+4. ***Resumption of Stalled Thread***
+- Once the memory fetch is complete and the required data is available, the CPU can switch back to the original thread.
+- The state of the original thread is restored, and execution resumes from where it left off.
+
+### Example Scenario
+Consider a CPU core capable of handling two threads, Thread A and Thread B:
+- Thread A is executing and encounters a memory stall while waiting for data from the main memory.
+- The CPU detects the stall and switches to Thread B, which has no memory stall and can be executed immediately.
+- Thread B continues executing while the memory fetch for Thread A is completed in the background.
+- Once the data for Thread A is available, the CPU can switch back to Thread A and resume its execution.
+
+### CPU Stall vs Memory Stall
+Feature|	CPU Stall|	Memory Stall
+|-|-|-|
+Definition|	Waiting due to pipeline hazards or dependencies|	Waiting for data to be fetched from memory
+Primary Cause|	- Data Hazards: Dependencies between instructions<br>- Control Hazards: Branch instructions<br>- Resource Hazards: Simultaneous resource requests	|- Cache Misses: Data not found in cache<br>- Memory Latency: Delays in accessing main memory<br>- Page Faults: Data retrieval from disk
+Effects|	- Reduces instruction throughput<br>- Creates pipeline bubbles<br>- Performance degradation	|- Increases instruction latency<br>- Slows overall execution<br>- Lowers throughput
+Mitigation Techniques|	- Out-of-order execution: Executes instructions out of order<br>- Branch prediction: Predicts branch outcomes<br>- Pipeline interleaving: Overlaps execution of instructions	|- Cache hierarchy: Multiple levels of cache<br>- Prefetching: Loads data into cache before needed<br>- Efficient memory management: Optimizes memory access patterns
+Example Scenario|	- Waiting for the result of a previous instruction to use in the current one<br>- Waiting for a branch decision to be made<br>- Waiting for a shared resource to become available	|- Waiting for data to be loaded from main memory when it’s not found in the CPU cache<br>- Waiting for data to be fetched from disk due to a page fault
+Types of Hazards|	- Data Hazards: Read-after-write, Write-after-read, Write-after-write<br>- Control Hazards: Branches, jumps<br>- Resource Hazards: Functional unit contention|	- Cache Misses: Data not in cache<br>- Memory Latency: Time to access RAM<br>- Disk Access: Time to retrieve data from disk (page faults)
+Performance Impact|	- Reduced CPU efficiency<br>- Increased instruction execution time|	- Increased data access time<br>- Potential bottleneck in execution flow
+Hardware/Software Techniques|	- Out-of-order execution<br>- Branch prediction<br>- Speculative execution<br>- Superscalar execution|	- Larger and more levels of cache<br>- Memory prefetching<br>- Use of faster memory technologies (e.g., DRAM vs. SRAM)<br>- Efficient paging and segmentation techniques
+
+# 9.1.2-Memory-Address Binding
 In Main memory, chapter 9.1.2 Address Binding, from Operating System concepts 10th edition reference,
 
 Address Binding is a concept in OS, particularly in the context of memory management.
@@ -117,7 +181,7 @@ Imagine a program that needs to be executed. Here’s how address binding might 
 - Load-Time Binding: More flexible but requires relocation each time the program is loaded.
 - Execution-Time Binding: Highly flexible, supports dynamic memory allocation and virtual memory, but requires sophisticated hardware support.
 
-# 9.1.4 - Dynamic Loading
+# 9.1.4-Memory-Dynamic Loading
 A program is limited to the size of physical memory, as the entire program and all data of a process must be loaded in the physical memory for the process to execute.
 
 How to utilize the memory space more?
@@ -142,7 +206,7 @@ How to utilize the memory space more?
 - It is the responsibility of the users to design their programs to take advantage of such a method. 
 Operating systems may help the programmer, however, by providing library routines to implement dynamic loading.
 
-# 9.1.5 - Dynamic Linking and Shared Libraries
+# 9.1.5-Memory-Dynamic Linking and Shared Libraries
 In this part, it's discussed the concept of ***DLL - Dynamic Linked libraries***, ***which are *system libraries* that are linked to user programs when the programs are run***.
 
 ## Motivation
@@ -163,7 +227,7 @@ Thinking about a solution, why wouldn't system libraries be shared and also link
 - The loader locates the DLL, then loads it into memory if necessary.
 - It then adjusts addresses that reference functions in the dynamic library to the location in memory where the DLL is stored.
 
-## Advantages
+## DLL Advantages
 - DLL libraries can be shared among multiple processes, so that only one instance of DLL in main memory.
     - That's the reason, DLL are also known as ***shared libraries***.
     - Mainly used in Windows, and Linux systems.

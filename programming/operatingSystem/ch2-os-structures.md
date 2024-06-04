@@ -1,7 +1,15 @@
-# Operating System - System Calls
+# Operating Systems - Operating Systems Structures
 
-# System Calls: a Lifeline
+Chapter 2 Operating Systems Structures, from Operating System concepts 10th edition reference
 
+# Mystic Map
+- [Operating Systems - Operating Systems Structures](#operating-systems---operating-systems-structures)
+- [Mystic Map](#mystic-map)
+- [2.3-OSS-System-Calls](#23-oss-system-calls)
+  - [System Calls: a Lifeline](#system-calls-a-lifeline)
+
+# 2.3-OSS-System-Calls
+## System Calls: a Lifeline
 Once upon a time, in the vast digital realm of computing, there existed an intricate kingdom known as the Operating System, ruled by a wise and omnipotent entity called the Kernel. Within this kingdom, there were entities known as processes, each striving to fulfill its designated tasks and quests.
 
 Now, to interact with the grand kingdom of the Operating System, these processes needed a way to communicate with the Kernel, to request services and resources, and to perform various actions. This communication was facilitated through a mystical set of commands known as "system calls.
