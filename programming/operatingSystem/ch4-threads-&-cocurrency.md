@@ -5,13 +5,19 @@ Chapter 4 Threads and Concurrency, from Operating System concepts 10th edition r
 # Mystic Map
 - [Operating Systems - Threads and Concurrency](#operating-systems---threads-and-concurrency)
 - [Mystic Map](#mystic-map)
-- [4.1.1-Thread-Process-Overhead](#411-thread-process-overhead)
-- [4.2.1-Threads-AMDAHL'S LAW](#421-threads-amdahls-law)
-- [4.4-Thread-Sharing-Data](#44-thread-sharing-data)
-  - [Java - Without Notion of Global Data!](#java---without-notion-of-global-data)
-- [4.5-Thread-Implicit-Threading](#45-thread-implicit-threading)
+- [4.1. OverView](#41-overview)
+  - [4.1.1. Process-Overhead](#411-process-overhead)
+- [4.2. Multicore Programming](#42-multicore-programming)
+  - [4.2.1. AMDAHL'S LAW](#421-amdahls-law)
+- [4.4. Thread Libraries](#44-thread-libraries)
+  - [4.4.1 Pthreads - Sharing-Data - Java Without Notion of Global Data!](#441-pthreads---sharing-data---java-without-notion-of-global-data)
+- [4.5. Implicit-Threading](#45-implicit-threading)
+- [4.6. Threading Issues](#46-threading-issues)
+  - [4.6.5. Scheduler Activations](#465-scheduler-activations)
+    - [Lightweight Process - LWP](#lightweight-process---lwp)
 
-# 4.1.1-Thread-Process-Overhead
+# 4.1. OverView
+## 4.1.1. Process-Overhead
 
 ```
 If the new process will perform the same tasks as the existing process, why incur all that overhead?
@@ -103,7 +109,8 @@ Let's explain this concept..
 
 To sum up, Multithreading is often preferred in applications that requires handling numerous concurrent operations.
 
-# 4.2.1-Threads-AMDAHL'S LAW
+# 4.2. Multicore Programming
+## 4.2.1. AMDAHL'S LAW
 
 Amdahl's Law is a principle used to find the maximum improvement possible when only part of a system is improved. It is particularly relevant in parallel computing and is used to predict the theoretical speedup in latency of the execution of a task when the task is executed on a system with multiple processors.
 
@@ -140,10 +147,8 @@ Amdahl's Law is a principle used to find the maximum improvement possible when o
 3. ***Scalability***
         - Amdahl's Law highlights the scalability limitations of parallel computing. As parallelization increases, the serial portion becomes the bottleneck.
 
-
-# 4.4-Thread-Sharing-Data
-
-## Java - Without Notion of Global Data!
+# 4.4. Thread Libraries
+## 4.4.1 Pthreads - Sharing-Data - Java Without Notion of Global Data!
 From reference Operating System Concepts 10th edition, chapter 4.4 - thread libraries:
 ```
 For POSIX and Windows threading, any data declared globally—that is,
@@ -152,7 +157,7 @@ the same process. Because Java has no equivalent notion of global data, access
 to shared data must be explicitly arranged between threads
 ```
 
-Let's first get how Jave handles data sharing among threads compared to language that support global data!
+Let's first get how Java handles data sharing among threads compared to language that support global data!
 
 **Global Data vs Shared Data in Java**
 1. ***Global Data in other language***
@@ -224,7 +229,7 @@ Let's first get how Jave handles data sharing among threads compared to language
     - *counter* is a static variable in *SharedClass*, shared by all instance of *MyThread*.
     - This code might suffer from an issue, that we need to ensure that changes to *counter* are visible to all threads immediately, this suggest adding the *volatile* keyword to *public static volatile int counter = 0;*
 
-# 4.5-Thread-Implicit-Threading
+# 4.5. Implicit-Threading
 
 You don't need to micromanage every task my dear king!!
 
@@ -256,3 +261,9 @@ Implicit threading is like the magical overseer Thready. It refers to the techni
 - Efficiency: Just like how Thready efficiently manages the workers, implicit threading optimizes the use of system resources, leading to better performance and reduced overhead.
 - Simplicity: The King doesn’t have to worry about the nitty-gritty details of task management. Similarly, programmers don’t need to write complex code to manage threads explicitly.
 - Scalability: As the number of tasks increases, Thready can handle them smoothly without overwhelming the King. Implicit threading mechanisms can scale to handle more threads and tasks as needed.
+
+# 4.6. Threading Issues
+## 4.6.5. Scheduler Activations
+### Lightweight Process - LWP
+- Intermediate data structure between user thread and kernel threads.
+- This data structure appears to be a Virtual processor, on which a process can schedule user thread to run. 
