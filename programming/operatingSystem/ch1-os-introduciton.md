@@ -9,13 +9,22 @@ The phrase "An operating system is 'fill in the blanks'" typically means that th
 # Mystic Map
 - [Operating Systems - Operating Systems Introduction](#operating-systems---operating-systems-introduction)
 - [Mystic Map](#mystic-map)
-- [1.1.3. Defining Operating System](#113-defining-operating-system)
+- [1.1. What Operating Systems Do](#11-what-operating-systems-do)
+  - [1.1.3. Defining Operating System](#113-defining-operating-system)
 - [1.2. Computer-System Organization](#12-computer-system-organization)
   - [1.2.1.1. Interrupt Vector Table](#1211-interrupt-vector-table)
-- [1.2.2. Storage Structure](#122-storage-structure)
-- [1.3.2. Multiprocessor Systems](#132-multiprocessor-systems)
+  - [1.2.2. Storage Structure](#122-storage-structure)
+- [1.3. Computer-System Architecture](#13-computer-system-architecture)
+  - [1.3.2. Multiprocessor Systems](#132-multiprocessor-systems)
+- [1.4. Operating-System Operations](#14-operating-system-operations)
+  - [1.4.1. Multiprogramming and Multitasking](#141-multiprogramming-and-multitasking)
+  - [1.4.3. Timer](#143-timer)
+- [1.5. Resource Management](#15-resource-management)
+  - [1.5.2. Memory Management](#152-memory-management)
+  - [1.5.6. I/O System Management](#156-io-system-management)
 
-# 1.1.3. Defining Operating System
+# 1.1. What Operating Systems Do
+## 1.1.3. Defining Operating System
 > Operating system is a resource allocator and control program making efficient use of HW and managing execution of user programs.
 
 > the operating system includes the always-
@@ -61,9 +70,11 @@ Handling the interrupt priority level in important to enable the most urgent wor
   - Scalability issues.
   - Complexity in ISR Management.
 
-# 1.2.2. Storage Structure
+## 1.2.2. Storage Structure
+- Was here stopped
 
-# 1.3.2. Multiprocessor Systems
+# 1.3. Computer-System Architecture
+## 1.3.2. Multiprocessor Systems
 ***Two types***
 - Asymmetric multiprocessing (AMP)ّ
   - It will have a one main ***Master*** processor, which decide which jobs to be done by the ***salve*** processors.
@@ -72,3 +83,41 @@ Handling the interrupt priority level in important to enable the most urgent wor
   - The master processor schedules and allocates work to the slave processors.
 - Symmetric Multiprocessing (SMP)
   - All processors are peers, they perform all tasks, including the operating-system functions and user processes.
+
+# 1.4. Operating-System Operations
+## 1.4.1. Multiprogramming and Multitasking
+***Multiprogramming*** needed for efficiency
+- single job cannot keep CPU and I/O devices busy at all times.
+- Multiprogramming organizes jobs (code and data) so CPU always has
+one to execute.
+- A subset of total jobs in system is kept in memory.
+- One job selected and run via job scheduling.
+- When it has to wait (for io e.g), OS switches to another job.
+
+***Timesharing (multitasking)*** is logical extension in which CPU switches
+job so frequently that users can interact with each job while it is running,
+creating Interactive computing.
+- Response time should be < 1 sec.
+- Each user has at least one program executing in memory -> Process.
+- if several jobs ready to run at the same time -> CPU scheduling.
+- If processes don't fit in memory, swapping moves them in and out to run
+- Virtual memory allows execution of processes not completely in memory.
+
+## 1.4.3. Timer
+***Timer is used to control the execution of the process***!
+- make sure that each process does not exceed its allowed time limit and does not enter a void loop, by setting a counter to some value according to some privileged instructions.
+- each clock cycle, timer starts to decrement the value of the counter till the counter reaches zero.
+- Then an interrupt is issues to the operating system, executing an os code, to check if that process exceeds its resources or not, and can give it extra time or not.
+
+# 1.5. Resource Management
+## 1.5.2. Memory Management
+process address space, set its start and assign it to a register called ***base register***, detect the process size and assign it to a register called ***limit register***.
+
+## 1.5.6. I/O System Management
+***I/O subsystem responsible for***
+- Memory management of I/O including buffering (storing data temporarily while it is being transferred).
+- Caching (storing parts of data in faster storage for performance).
+- Spooling (the overlapping of output of one job with input of other jobs)
+
+
+

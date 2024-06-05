@@ -5,10 +5,11 @@ Chapter 2 Operating Systems Structures, from Operating System concepts 10th edit
 # Mystic Map
 - [Operating Systems - Operating Systems Structures](#operating-systems---operating-systems-structures)
 - [Mystic Map](#mystic-map)
-- [2.3-OSS-System-Calls](#23-oss-system-calls)
+- [2.3. System-Calls](#23-system-calls)
   - [System Calls: a Lifeline](#system-calls-a-lifeline)
+- [Stopping at system calls](#stopping-at-system-calls)
 
-# 2.3-OSS-System-Calls
+# 2.3. System-Calls
 ## System Calls: a Lifeline
 Once upon a time, in the vast digital realm of computing, there existed an intricate kingdom known as the Operating System, ruled by a wise and omnipotent entity called the Kernel. Within this kingdom, there were entities known as processes, each striving to fulfill its designated tasks and quests.
 
@@ -23,3 +24,5 @@ Similarly, should the adventurer desire to forge a new path through the kingdom,
 But beware, for not all system calls are met with success. Just as in any grand adventure, there are perils and pitfalls to navigate. Should the adventurer overstep their bounds or make a request beyond their capabilities, the Kernel may deny their plea, casting them back into the realm of error and uncertainty.
 
 Thus, system calls serve as the enchanted bridge between the realm of processes and the omnipotent Kernel, enabling communication, resource management, and the fulfillment of quests within the mystical kingdom of the Operating System. And so, the saga continues, with each system call weaving another thread in the tapestry of digital adventure.
+
+# Stopping at system calls
