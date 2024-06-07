@@ -35,6 +35,20 @@ In Main memory, chapter 9 Memory Management, from Operating System concepts 10th
     - [How It Works!](#how-it-works-1)
     - [DLL Advantages](#dll-advantages)
     - [OS Help is Required](#os-help-is-required)
+- [9.2. Contiguous Memory Allocation](#92-contiguous-memory-allocation)
+  - [9.2.2. Memory Allocation](#922-memory-allocation)
+- [9.3. Paging](#93-paging)
+  - [9.3.2 Hardware Support](#932-hardware-support)
+    - [9.3.2.1. Translation Look-Aside Buffer](#9321-translation-look-aside-buffer)
+      - [How The TLB Works](#how-the-tlb-works)
+      - [TLB Structure](#tlb-structure)
+      - [Detailed Structure](#detailed-structure)
+      - [Example Page Table Entry (PTE)](#example-page-table-entry-pte)
+      - [TLB Operations](#tlb-operations)
+      - [Benefits of the TLB](#benefits-of-the-tlb)
+      - [Challenges with TLBs](#challenges-with-tlbs)
+- [9.4. Structure of the Page Table](#94-structure-of-the-page-table)
+  - [Problem of Straight-Forward Approach](#problem-of-straight-forward-approach)
 
 # 9.1. Background
 ## 9.1.1. Basic Hardware
@@ -145,7 +159,7 @@ Address binding refers to the process of mapping a program's logical address to 
 3. ***Execution Time***
    - The most flexible binding occurs at execution time, allowing processes to move in the memory.
    - This is used in systems that support virtual memory.
-   - The addresses are bound dynamically using hardware support (e.g., Memory Management unit or MMU).
+   - The addresses are bound dynamically using ***hardware support*** (e.g., Memory Management unit or MMU).
 
 ![multi-step processing of a user program](https://i.postimg.cc/V6PLbQj7/Screenshot-from-2024-05-26-21-22-40.png)
 
@@ -222,7 +236,7 @@ Thinking about a solution, why wouldn't system libraries be shared and also link
 
 ### Static Linking vs Dynamic Linking
 - ***Static Linking***: in which system libraries are treated like any other object module, and are combined by the loader into the binary program image.
-- ***Dynamic Linking***: is similar to dynamic loading, though, linking, rather than loading, is postponed until execution time.
+- ***Dynamic Linking***: is similar to dynamic loading, though, linking, rather than loading, is postponed until execution time. Small piece of code, stub, used to locate the appropriate memory-resident library routine.
 
 ### How It Works!
 - When a program references a routine, that is in a dynamic library. 
@@ -243,3 +257,117 @@ Thinking about a solution, why wouldn't system libraries be shared and also link
 Unlike dynamic loading, dynamic linking and shared libraries generally require help from the operating system. If the processes in memory are protected from one another, then the operating system is the only entity that can check to see whether the needed routine is in another process’s memory space or that can allow multiple processes to access the same memory addresses.
 
 This concept, as well as how DLLs can be shared by multiple processes, are elaborated in paging in Section 9.3.4.
+
+
+# 9.2. Contiguous Memory Allocation
+## 9.2.2. Memory Allocation
+There are two type of allocation in memory:
+- Contiguous Allocation: where the whole process must be loaded into the memory.
+- Non-Contiguous Allocation: dividing the process into parts in the memory, so the process is loaded into different parts in the memory.
+  - Segmentation: Non-equal parts; the process is divided into parts according to the user view of the process. So each segment has different length.
+  - Paging: Equal parts.
+
+# 9.3. Paging
+## 9.3.2 Hardware Support
+### 9.3.2.1. Translation Look-Aside Buffer
+Yes storing the page table in main memory can yield in faster context switches, but it may also results in slower memory access times.
+
+The Purpose of the TLB, is designed to speed up this translation by caching recent address translations.
+
+#### How The TLB Works
+1. Virtual to Physical Address Translation:
+    - When a program needs to access a memory location, it uses a virtual address.
+    - The MMU translates this virtual address into a physical address using the page table.
+
+2. Role of the TLB:
+    - The TLB caches a small number of recent virtual-to-physical address translations.
+    - When a virtual address translation is needed, the MMU first checks the TLB.
+    - If the translation is found in the TLB (a TLB hit), the physical address is returned quickly without accessing the page table.
+    - If the translation is not in the TLB (a TLB miss), the MMU must perform the translation using the page table, and the result is then cached in the TLB for future use.
+      - Note: some entries can be *wired down* for permanent fast access.
+
+![Paging Hardware with TLB](https://i.postimg.cc/fLX6kyJ5/Screenshot-from-2024-06-07-10-26-20.png)
+
+#### TLB Structure
+1. Page Number (Virtual Page Number - VPN): This part of the entry represents a portion of the virtual address. 
+   - In virtual memory systems, the virtual address is divided into two parts: the page number and the offset within that page. The page number is used to identify the virtual page being accessed.
+2. Frame Number (Physical Frame Number - PFN): This part of the entry corresponds to the physical address. Specifically, it is the base address of the physical memory frame that maps to the virtual page. Similar to the virtual address, the physical address is divided into a frame number and an offset within that frame.
+
+#### Detailed Structure
+The structure of a TLB entry can be more elaborated as follows:
+1. Tag (Page Number): This is the virtual page number (VPN) part of the virtual address that is being translated.
+2. Data (Frame Number): This is the physical frame number (PFN) part of the physical address that the virtual page maps to.
+3. Additional Information (optional):
+    - Access Permissions: Information about the permissions associated with the page, such as read, write, and execute permissions.
+    - Valid Bit: A bit that indicates whether the TLB entry is valid and can be used.
+    - Dirty Bit: A bit that indicates if the page has been modified.
+    - Accessed Bit: A bit that indicates if the page has been accessed recently.
+    - Reference Count: A count of how many times the page has been accessed.
+
+#### Example Page Table Entry (PTE)
+
+Here is an example layout of a 32-bit PTE:
+
+Bits|	Field|	Description|
+|-|-|-|
+0|	Valid Bit|	Indicates if the entry is valid
+1-11|	Access Permissions|	Read, write, execute permissions
+12|	Present Bit|	Indicates if the page is in physical memory
+13|	Dirty Bit|	Indicates if the page has been modified
+14|	Accessed Bit|	Indicates if the page has been accessed
+15-31|	Physical Frame Number|	Base address of the physical frame
+
+#### TLB Operations
+1. TLB Hit:
+    - The virtual address is found in the TLB.
+    - The physical address is quickly retrieved from the TLB.
+2. TLB Miss:
+    - The virtual address is not in the TLB.
+    - The MMU performs a page table lookup to find the physical address.
+    - The new translation is stored in the TLB, possibly replacing an older entry.
+
+#### Benefits of the TLB
+- Speed: TLBs significantly reduce the time required for address translation by avoiding frequent accesses to the slower page table in memory.
+- Efficiency: By caching translations, TLBs reduce the overall memory access time, improving the performance of the CPU and the system as a whole.
+
+#### Challenges with TLBs
+- Capacity: TLBs have a limited number of entries and may not always hold the necessary translations, leading to TLB misses.
+- Coherency: Maintaining TLB coherency in multi-core systems can be complex, as changes to page tables must be reflected in all TLBs.
+- Replacement Policies: Deciding which entry to replace on a TLB miss (e.g., Least Recently Used (LRU), Random) impacts performance
+
+# 9.4. Structure of the Page Table
+## Problem of Straight-Forward Approach
+Memory structures for paging can get huge using straight-forward methods!!
+
+Let's break down the problem with example:
+1. 32-bit Logical Address Space:
+  - Modern computers often use a 32-bit addressing scheme, meaning the logical (virtual) addresses are 32 bits long.
+  - This results in a total addressable space of 2^32 bytes (4 GB).
+
+2. Page Size of 4 KB:
+  - Pages are the fixed-size blocks of memory that the virtual address space is divided into.
+  - A page size of 4 KB means each page is 2^12 bytes (4096 bytes).
+
+3. Number of Page Table Entries:
+  - To calculate the number of entries in the page table, divide the total addressable space by the page size.
+  - 2^32 / 2^12 ​=2^20
+  - So, there are 2^20 (1 million) pages in a 32-bit address space with a 4 KB page size.
+
+4. Size of Each Page Table Entry (PTE):
+  - Assume each PTE is 4 bytes (which is common, though it can vary).
+
+5. Total Size of the Page Table:
+  - Multiply the number of entries by the size of each entry.
+  - 2^20 entries × 4 bytes/entry = 2^22 bytes
+  - 2^22 bytes=4 MB
+
+So each process would need a 4MB of physical memory just to store its page table.
+
+***Issues with Straightforward Page Tables***
+- Large Memory Requirement: For each process, the page table alone consumes 4 MB of memory. If you have multiple processes, this requirement scales linearly, leading to a significant amount of memory dedicated solely to page tables.
+- Contiguous Allocation: Allocating 4 MB of contiguous physical memory for each process’s page table can be problematic, especially when there are many processes or when the system is fragmented.
+
+***Possible Solutions***
+- Hierarchical Paging.
+- Hashed Page Tables.
+- Inverted Page Tables.
