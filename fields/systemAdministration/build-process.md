@@ -107,6 +107,7 @@ CMake (short for "Cross-Platform Make") is an open-source tool designed to manag
                     "${PROJECT_SOURCE_DIR}/config.cfg"
                     $<TARGET_FILE_DIR:AdvancedExecutable>)
     ```
+    
     - This example shows a more advanced configuration, specifying the C++ standard, linking Boost libraries, and adding custom build steps.
 
 ### 2- Running CMake
