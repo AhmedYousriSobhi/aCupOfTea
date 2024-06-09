@@ -111,95 +111,95 @@ CMake (short for "Cross-Platform Make") is an open-source tool designed to manag
 
 ### 2- Running CMake
    
-   2.1. ***Approach-01- Manually creating build directory***
-    - Create build directory:
-        ```sh
-        mkdir build
-        cd build
-        ```
-    - Run Cmake to generate the build system files:
-        ```sh
-        cmake ..
-        # Note you must specify the location of the binaries of the source.
-        # specifies the source directory, which is the parent directory ('..'). 
-        ```
-    - Build the project:
-        ```sh
-        make
-        ```
-    - Install the project
-        ```sh
-        make install
-        ```
-    
-    2.2. ***Approach-02- Without manually creating the build directory***
-    - Running Cmake with the specified build directory: instead of creating the build directory and manually navigating to it, you can run CMake in a single command, specifying the build directory.
-        ```sh
-        cmake -S . -B build
-        ```
-        - ***-s .*** : specifies the source directory, which is the current directory ('.').
-        - ***-B build** : specifies the build directory, which will be created if it doesn't exists.
-    - Building the project: Once the build directory is specified, you can invoke the build system from the source directory.
-        ```sh
-        cmake --build build
-        ``` 
-    - Install the project
-        ```sh
-        cmake --install build
-        ```
+2.1. ***Approach-01- Manually creating build directory***
+- Create build directory:
+    ```sh
+    mkdir build
+    cd build
+    ```
+- Run Cmake to generate the build system files:
+    ```sh
+    cmake ..
+    # Note you must specify the location of the binaries of the source.
+    # specifies the source directory, which is the parent directory ('..'). 
+    ```
+- Build the project:
+    ```sh
+    make
+    ```
+- Install the project
+    ```sh
+    make install
+    ```
+
+2.2. ***Approach-02- Without manually creating the build directory***
+- Running Cmake with the specified build directory: instead of creating the build directory and manually navigating to it, you can run CMake in a single command, specifying the build directory.
+    ```sh
+    cmake -S . -B build
+    ```
+    - ***-s .*** : specifies the source directory, which is the current directory ('.').
+    - ***-B build** : specifies the build directory, which will be created if it doesn't exists.
+- Building the project: Once the build directory is specified, you can invoke the build system from the source directory.
+    ```sh
+    cmake --build build
+    ``` 
+- Install the project
+    ```sh
+    cmake --install build
+    ```
 
 ### 3- Common Default Parameters
-  - ***Installation directories specific***
-      ```sh
-      -DCMAKE_INSTALL_PREFIX=/path/to/install/directory
-      # Specifies the installation directory
+- ***Installation directories specific***
+    ```sh
+    -DCMAKE_INSTALL_PREFIX=/path/to/install/directory
+    # Specifies the installation directory
 
-      -DCMAKE_RUNTIME_OUTPUT_DIRECTORY=/path/to/bin
-      # Specifies the directory where runtime files (executables) will be placed.
+    -DCMAKE_RUNTIME_OUTPUT_DIRECTORY=/path/to/bin
+    # Specifies the directory where runtime files (executables) will be placed.
 
-      -DCMAKE_LIBRARY_OUTPUT_DIRECTORY=/path/to/lib
-      # Specifies the directory where library files will be placed.
+    -DCMAKE_LIBRARY_OUTPUT_DIRECTORY=/path/to/lib
+    # Specifies the directory where library files will be placed.
 
-      -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY=/path/to/lib
-      # Specifies the directory where archive files (static libraries) will be placed.
-      ```
-  - ***Compiler specific parameters***
-      ```sh
-      -DCMAKE_BUILD_TYPE=Release
-      # Specifies the build type (e.g, Debug, Release, RelWithDebInfo, MinSizeRel).
+    -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY=/path/to/lib
+    # Specifies the directory where archive files (static libraries) will be placed.
+    ```
+- ***Compiler specific parameters***
+    ```sh
+    -DCMAKE_BUILD_TYPE=Release
+    # Specifies the build type (e.g, Debug, Release, RelWithDebInfo, MinSizeRel).
 
-      -DCMAKE_C_COMPILER=gcc
-      -DCMAKE_CXX_COMPILER=g++
-      -DCMAKE_Fortran_COMPILER=gfortran
-      # Specifies the C, C++, Fortran compilers.
-      
-      -DCMAKE_C_FLAGS="-Wall -02"  
-      -DCMAKE_CXX_FLAGS="-Wall -02"
-      -DCMAKE_Fortran_FLAGS="-Wall -02"
-      # Specifies the Additional compiler flags for C, C++, Fortran files.
-      ```
-  - ***Dependencies specific paramters***
-      ```sh
-      -DCMAKE_PREFIX_PATH=/path/to/dependencies
-      # Lists of directories specifying where to search for dependencies.
+    -DCMAKE_C_COMPILER=gcc
+    -DCMAKE_CXX_COMPILER=g++
+    -DCMAKE_Fortran_COMPILER=gfortran
+    # Specifies the C, C++, Fortran compilers.
+    
+    -DCMAKE_C_FLAGS="-Wall -02"  
+    -DCMAKE_CXX_FLAGS="-Wall -02"
+    -DCMAKE_Fortran_FLAGS="-Wall -02"
+    # Specifies the Additional compiler flags for C, C++, Fortran files.
+    ```
+- ***Dependencies specific paramters***
+    ```sh
+    -DCMAKE_PREFIX_PATH=/path/to/dependencies
+    # Lists of directories specifying where to search for dependencies.
 
-      -DCMAKE_FIND_ROOT_PATH=/path/to/root
-      # Specifies one or more directories to be prepended to all other search directories.
+    -DCMAKE_FIND_ROOT_PATH=/path/to/root
+    # Specifies one or more directories to be prepended to all other search directories.
 
-      -DCMAKE_TOOLCHAIN_FILE=/path/to/toolchain.cmake
-      # Specifies the path to a toolchain file to use for cross-compilation.
-      ```
-  - ***Additional info paramters***
-      ```sh
-      -DBUILD_SHARED_LIBS=ON
-      # Controls whether shared libraries are build [ON, OFF].
+    -DCMAKE_TOOLCHAIN_FILE=/path/to/toolchain.cmake
+    # Specifies the path to a toolchain file to use for cross-compilation.
+    ```
+- ***Additional info paramters***
+    ```sh
+    -DBUILD_SHARED_LIBS=ON
+    # Controls whether shared libraries are build [ON, OFF].
 
-      -DCMAKE_INSTALL_MESSAGE=ALWAYS
-      # Specifies the install message level [ALWAYS, LAZY, NEVER]
+    -DCMAKE_INSTALL_MESSAGE=ALWAYS
+    # Specifies the install message level [ALWAYS, LAZY, NEVER]
 
-      -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
-      # Generates a compile_commands.json file. [ON, OFF]
-      ```
+    -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+    # Generates a compile_commands.json file. [ON, OFF]
+    ```
 
 ## Cleaning the Build Directory
 ### 1- Using *--build* with *--target clean* option
