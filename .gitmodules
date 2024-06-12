@@ -16,3 +16,6 @@
 [submodule "projects/face-off"]
 	path = projects/face-off
 	url = https://github.com/AhmedYousriSobhi/face-off
+[submodule "fields/CSE"]
+	path = fields/CSE
+	url = https://github.com/AhmedYousriSobhi/CSE.git
