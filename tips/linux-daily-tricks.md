@@ -12,6 +12,7 @@ These are some tips and tricks I usually need in my daily work, so I tried to do
   - [To get OS version](#to-get-os-version)
   - [To identify root dir](#to-identify-root-dir)
   - [tmux Use mouse to scroll](#tmux-use-mouse-to-scroll)
+  - [To Update Nvidia Driver](#to-update-nvidia-driver)
 
 ## To delete file content in ***vi***
 ```bash
@@ -64,3 +65,19 @@ setw -g mouse on
 ```
 
 Reference: Scroll shell output with mouse in tmux. [https://superuser.com/a/217269](https://superuser.com/a/217269)
+
+## To Update Nvidia Driver
+```bash
+dpkg -l | grep nvidia
+
+sudo apt-get --purge remove nvidia*
+
+sudo apt-get --purge remove "*nvidia*"
+
+sudo apt autoremove
+
+sudo apt autoclean
+
+sudo reboot
+```
+- Then use the default linux nvidia driver supported.
