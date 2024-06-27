@@ -13,6 +13,7 @@ These are some tips and tricks I usually need in my daily work, so I tried to do
   - [To identify root dir](#to-identify-root-dir)
   - [tmux Use mouse to scroll](#tmux-use-mouse-to-scroll)
   - [To Update Nvidia Driver](#to-update-nvidia-driver)
+  - [Packages Management Related](#packages-management-related)
 
 ## To delete file content in ***vi***
 ```bash
@@ -81,3 +82,26 @@ sudo apt autoclean
 sudo reboot
 ```
 - Then use the default linux nvidia driver supported.
+
+## Packages Management Related
+- Search for package dependencies
+  ```bash
+  dnf repoquery --requires <packag-ename>
+  ```
+- Search for specific package source
+  ```bash
+  yum provides <package>
+  # e.g
+  yum provides ld-linux.so.2
+  ```
+- Search for packages that requires certain <packages>
+  ```bash
+  # For Red Hat/Fedora
+  dnf repoquery --whatrequires gcc
+  # or
+  yum deplist gcc | grep dependent
+
+  # For Debian/Ubuntu based systems
+  sudo apt-get install apt-rdepends
+  dnf repoquery --whatrequires gcc
+  ```
