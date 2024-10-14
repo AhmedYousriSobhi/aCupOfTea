@@ -16,6 +16,7 @@ These are some tips and tricks I usually need in my daily work, so I tried to do
 - [Packages Management Related](#packages-management-related)
 - [Password-less SSH](#password-less-ssh)
 - [LDap](#ldap)
+- [Free a Used Port](#free-a-used-port)
 
 # To delete file content in ***vi***
 ```bash
@@ -122,3 +123,10 @@ module load openldap
 slaptest -u
 # Expected output: config file testing succeeded.
 ```
+
+# Free a Used Port
+- First Check the process that allocated the desired port using
+    ```bash
+    sudo lsof -i :<port-number>
+    ```
+- Then get the corresponding PID, then kill it.
