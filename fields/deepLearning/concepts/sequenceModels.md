@@ -1,8 +1,8 @@
-# Deep Learning - Sequence Models
+# Deep Learning - Concepts - Sequence Models
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/67ff5778-174f-4712-9ad9-67e2e7135ff3)
 
 # Table of Content
-- [Deep Learning - Sequence Models](#deep-learning---sequence-models)
+- [Deep Learning - Concepts - Sequence Models](#deep-learning---concepts---sequence-models)
 - [Table of Content](#table-of-content)
 - [History of Large Language Model](#history-of-large-language-model)
 - [Examples of Sequence Data](#examples-of-sequence-data)

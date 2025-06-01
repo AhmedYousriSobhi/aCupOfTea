@@ -1,9 +1,9 @@
-# Linux Adminstration: Questions & Answers
+# System Administration - Linux Adminstration: Questions & Answers
 
 In this blog, we will introduce more practice illustrated in question and answers approach, and will try to explain related aspects and points related to understand more.
 
 # Table of Content
-- [Linux Adminstration: Questions \& Answers](#linux-adminstration-questions--answers)
+- [System Administration - Linux Adminstration: Questions \& Answers](#system-administration---linux-adminstration-questions--answers)
 - [Table of Content](#table-of-content)
 - [What is the  location for subdirectories for local programs and executables for user and administrative commands?](#what-is-the--location-for-subdirectories-for-local-programs-and-executables-for-user-and-administrative-commands)
   - [Examples of how to use /opt directory](#examples-of-how-to-use-opt-directory)

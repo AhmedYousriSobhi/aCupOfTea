@@ -1,4 +1,4 @@
-# Deep Learning - Basics
+# Deep Learning - Concepts - Basics
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/f0c2a453-6da1-43cf-846d-3c9425b5996b)
 
 
@@ -10,7 +10,7 @@ A neural network tries to represent a given output based on its inputs by learni
 In real life the relation between output and input are not a linear relation, but a non-linear complex one. This force us to choose methods that introduce this non-linearity, these methods are called activation functions.
 
 # Table of Content
-- [Deep Learning - Basics](#deep-learning---basics)
+- [Deep Learning - Concepts - Basics](#deep-learning---concepts---basics)
 - [Table of Content](#table-of-content)
 - [Neural Network](#neural-network)
   - [Loss functions Vs Cost function](#loss-functions-vs-cost-function)

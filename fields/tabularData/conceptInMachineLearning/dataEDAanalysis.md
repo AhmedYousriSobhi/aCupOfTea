@@ -1,7 +1,7 @@
-# Data EDA and Analysis
+# Tabular Data - Concepts in Machine Learning - Data EDA and Analysis
 
 # Table of Content
-- [Data EDA and Analysis](#data-eda-and-analysis)
+- [Tabular Data - Concepts in Machine Learning - Data EDA and Analysis](#tabular-data---concepts-in-machine-learning---data-eda-and-analysis)
 - [Table of Content](#table-of-content)
 - [1. Machine Learning Workflow](#1-machine-learning-workflow)
 - [2. Decisions in analytics are increasingly driven by data and models, and key aspects of our Machine Learning Workflow are getting depend on cleaning data](#2-decisions-in-analytics-are-increasingly-driven-by-data-and-models-and-key-aspects-of-our-machine-learning-workflow-are-getting-depend-on-cleaning-data)

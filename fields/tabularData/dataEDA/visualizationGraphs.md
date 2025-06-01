@@ -1,7 +1,7 @@
-# DATA EDA: VISUALIZATION GRAPHS
+# Tabular Data - DATA EDA - VISUALIZATION GRAPHS
 
 ## Table of Content
-- [DATA EDA: VISUALIZATION GRAPHS](#data-eda-visualization-graphs)
+- [Tabular Data - DATA EDA - VISUALIZATION GRAPHS](#tabular-data---data-eda---visualization-graphs)
   - [Table of Content](#table-of-content)
   - [Insights in Box Plot](#insights-in-box-plot)
   - [Error Bars in Bar Plot](#error-bars-in-bar-plot)

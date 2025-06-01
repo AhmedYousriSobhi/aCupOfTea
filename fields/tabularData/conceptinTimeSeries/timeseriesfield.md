@@ -1,9 +1,9 @@
-# Time Series Analysis
+# Tabular Data - Concepts in Time Series - Time Series Analysis
 
 Time series analysis is a crucial skill in the field of data science, as it allows us to extract valuable insights from data that evolves over time. Let's break down the learning process step by step:
 
 # Table of Content
-- [Time Series Analysis](#time-series-analysis)
+- [Tabular Data - Concepts in Time Series - Time Series Analysis](#tabular-data---concepts-in-time-series---time-series-analysis)
 - [Table of Content](#table-of-content)
 - [Step 1: Understanding The Basics](#step-1-understanding-the-basics)
 - [Step 2: Data Preparation and Exploration](#step-2-data-preparation-and-exploration)

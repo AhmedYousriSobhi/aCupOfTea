@@ -1,9 +1,9 @@
-# Linux Adminstration
+# System Administration - Linux Administration
 
 Linux administration is the art and science of efficiently managing Linux-based computer systems. At its core, Linux administration involves overseeing and maintaining the health, security, and performance of Linux servers and workstations. It encompasses a wide range of tasks, from the installation and configuration of the Linux operating system to the management of users, software, and network services.
 
 # Table of Contents
-- [Linux Adminstration](#linux-adminstration)
+- [System Administration - Linux Administration](#system-administration---linux-administration)
 - [Table of Contents](#table-of-contents)
 - [Indtrocution](#indtrocution)
 - [What is System Administration?](#what-is-system-administration)

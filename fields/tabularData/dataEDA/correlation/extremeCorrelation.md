@@ -1,7 +1,7 @@
-# Extreme Correlation
+# Tabular Data - Data EDA - Correlation - Extreme Correlation
 
 ## Table of Content
-- [Extreme Correlation](#extreme-correlation)
+- [Tabular Data - Data EDA - Correlation - Extreme Correlation](#tabular-data---data-eda---correlation---extreme-correlation)
   - [Table of Content](#table-of-content)
   - [Should we remove features with __high__ correlation between each other?](#should-we-remove-features-with-high-correlation-between-each-other)
   - [Should we remove features with __low__ correlation between each other?](#should-we-remove-features-with-low-correlation-between-each-other)

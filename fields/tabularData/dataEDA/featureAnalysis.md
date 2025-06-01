@@ -1,7 +1,7 @@
-# Data EDA: Feature Analysis
+# Tabular Data - Data EDA - Feature Analysis
 
 ## Table of Content
-- [Data EDA: Feature Analysis](#data-eda-feature-analysis)
+- [Tabular Data - Data EDA - Feature Analysis](#tabular-data---data-eda---feature-analysis)
   - [Table of Content](#table-of-content)
   - [Numerical Signled Valued Feature](#numerical-signled-valued-feature)
   - [Binary Valued feature](#binary-valued-feature)

@@ -1,8 +1,8 @@
-# Deep Learning - Convolution
+# Deep Learning - Concepts - Convolution
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/a575c47c-e668-4d54-b856-833480582ae1)
 
 ## Table of Content
-- [Deep Learning - Convolution](#deep-learning---convolution)
+- [Deep Learning - Concepts - Convolution](#deep-learning---concepts---convolution)
   - [Table of Content](#table-of-content)
 - [Abstract](#abstract)
 - [What made the jump to use deep learning in computer vision field?](#what-made-the-jump-to-use-deep-learning-in-computer-vision-field)
