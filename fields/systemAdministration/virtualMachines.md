@@ -11,10 +11,17 @@
 ### Steps
 1. Make sure your hardware supports the necessary virtualisation extensions for Kernel-based Virtual Machine (KVM). To check this, enter the following from a terminal prompt:
     ```bash
+    # You will need cpu-checker package to be installed
     kvm-ok
     ```
 2. Add your user to the libvirt group:
     ```bash
+    # Make sure the group is created
+    getent group libvirt
+
+    # In case the group does not exist
+    sudo addgroup libvirt
+    
     sudo adduser $USER libvirt
     ```
 3. Make sure to install the following packages
@@ -26,6 +33,11 @@
         ```bash
         wget https://releases.hashicorp.com/vagrant/2.4.6/vagrant_2.4.6-1_amd64.deb
 
+        sudo apt install ./vagrant_2.4.6-1_amd64.deb
+        # Incase of error:
+        N: Download is performed unsandboxed as root as file '/path/vagrant_2.4.6-1_amd64.deb' couldn't be accessed by user '_apt'. - pkgAcquire::Run (13: Permission denied
+        ## Please run
+        sudo chmod a+r /home/asobhy/Downloads/vagrant_2.4.6-1_amd64.deb
         sudo apt install ./vagrant_2.4.6-1_amd64.deb
         ```
 5. Install the vagrant-libvirt plugin for Vagrant
