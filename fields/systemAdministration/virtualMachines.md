@@ -4,11 +4,12 @@
 - [System Administration - Virtual Machines](#system-administration---virtual-machines)
   - [Table of Contents](#table-of-contents)
   - [Vagrant - Provider Libvirt](#vagrant---provider-libvirt)
-    - [Steps](#steps)
+    - [Installation - Steps](#installation---steps)
+    - [Synching Folder between Host and VMs](#synching-folder-between-host-and-vms)
   - [References](#references)
 
 ## Vagrant - Provider Libvirt
-### Steps
+### Installation - Steps
 1. Make sure your hardware supports the necessary virtualisation extensions for Kernel-based Virtual Machine (KVM). To check this, enter the following from a terminal prompt:
     ```bash
     kvm-ok
@@ -32,6 +33,15 @@
     ```bash
     vagrant plugin install vagrant-libvirt
     ```
+### Synching Folder between Host and VMs
+- To sync the folder between host and vms, and to be automatically synched, we will use rsync:
+    ```bash
+    config.vm.synced_folder "~/Workspace/vms/shared", "/vagrant", type: "rsync", rsync__auto: true
+    ```
+- Run:
+    ```bash
+    vagrant rsync-auto
+    ``
 
 ## References
 - [Ubuntu - Libvirt Docs](https://documentation.ubuntu.com/server/how-to/virtualisation/libvirt/)
