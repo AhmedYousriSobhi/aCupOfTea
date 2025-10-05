@@ -10,6 +10,7 @@ In the context of Git, "gh" refers to the GitHub CLI tool, which is a command-li
   - [Usage Examples](#usage-examples)
   - [How to Use?](#how-to-use)
   - [Steps - SSH Key Configuration](#steps---ssh-key-configuration)
+  - [Steps to Manage Multiple Users](#steps-to-manage-multiple-users)
   - [How to Remove Last Pushed Commit ?](#how-to-remove-last-pushed-commit-)
   - [Classic GitHub Workflow (Fork -\> Modify -\> Pull Request -\> Merge)](#classic-github-workflow-fork---modify---pull-request---merge)
     - [Step-1: Fork](#step-1-fork)
@@ -144,6 +145,42 @@ git config --global core.sshCommand "ssh -o IdentityFile=$HOME/.ssh/yousri_per"
     - Once you have completed these steps, you should be able to retry the gh command without any errors.
 
 This process will ensure that you start with a fresh set of SSH keys and that your GitHub account is properly configured to use them.
+
+## Steps to Manage Multiple Users
+1. Create an SSH-Key for the target username and email with:
+    ```bash
+    ssh-keygen -t ed25519 -C 'ahmedyousrisobhi@gmail.com'
+
+    # Expected output:
+    Generating public/private ed25519 key pair.
+    Enter file in which to save the key (/home/asobhy/.ssh/id_ed25519): /home/asobhy/.ssh/id_ed25519_ahmedyousrisobhi
+    Enter passphrase (empty for no passphrase): 
+    Enter same passphrase again: 
+    Your identification has been saved in /home/asobhy/.ssh/id_ed25519_ahmedyousrisobhi
+    Your public key has been saved in /home/asobhy/.ssh/id_ed25519_ahmedyousrisobhi.pub
+    ```
+2. Add the ssh key to the ssh agent with:
+    ```bash
+    ssh-add ~/.ssh/id_ed25519_ahmedyousrisobhi
+    ```
+3. Copy the public key with:
+    ```bash
+    cat ~/.ssh/id_ed25519_ahmedyousrisobhi.pub
+    ```
+4. Add the ssh to the config file; This lets Git know which key to use per account:
+    ```bash
+    # GitHub account: AhmedYousriSobhi
+    Host github.com-ahmedyousrisobhi
+        HostName github.com
+        User git
+        IdentityFile ~/.ssh/id_ed25519_ahmedyousrisobhi
+        IdentitiesOnly yes
+    ```
+5. Change your Git remote to use this Host with:
+    ```bash
+    git remote set-url origin git@github.com-ahmedyousrisobhi:ahmedyousrisobhi/<repo-name>.git
+    ```
+    - To validate using: git remote -v
 
 ## How to Remove Last Pushed Commit ?
 ```bash
