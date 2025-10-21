@@ -7,8 +7,7 @@ let's create a chapter to learn **Docker**. **Docker** is a popular containeriza
 - [Software Skill: Docker](#software-skill-docker)
 - [101 - Docker: Introduction to Docker](#101---docker-introduction-to-docker)
 - [Table of Content](#table-of-content)
-- [Chapter Outline](#chapter-outline)
-- [Section 1: Motivation and Objectives](#section-1-motivation-and-objectives)
+- [Section: Motivation and Objectives](#section-motivation-and-objectives)
   - [Motivation](#motivation)
   - [Challenges that need Solutions](#challenges-that-need-solutions)
   - [Objectives](#objectives)
@@ -47,26 +46,16 @@ let's create a chapter to learn **Docker**. **Docker** is a popular containeriza
     - [Pulling Docker Images](#pulling-docker-images)
     - [Running Docker Containers](#running-docker-containers)
 - [Section: Dockerfile and Building Images](#section-dockerfile-and-building-images)
+- [Section: Docker Scout](#section-docker-scout)
+  - [How to Install?](#how-to-install)
+  - [How to Use?](#how-to-use)
+  - [Sample of Recommendations Report](#sample-of-recommendations-report)
+    - [Report Breakdown](#report-breakdown)
 
-# Chapter Outline
-|Outline|Details|
-|-|-|
-Motivation|Explain the need for containerization and the challenges it addresses.</br>Introduce **Docker** as a leading containerization solution.</br>Highlight the benefits of using **Docker** for application deployment.
-Objectives|Define the core concepts of **Docker**, including containers, images, and **Docker**file.</br>Provide an overview of **Docker**'s architecture and components.</br>Learn how to install **Docker** on a Linux system.
-**Docker** Fundamentals|Explain the concept of containerization.</br>Understand the differences between containers and virtual machines.</br>Introduce **Docker** Hub as a repository for **Docker** images.
-**Docker** Installation|Provide step-by-step instructions for installing **Docker** on various Linux distributions.</br>Explain how to verify the installation and check the **Docker** version.
-**Docker** Images and Containers|Define **Docker** images and containers.</br>Explain how to pull and run **Docker** images.</br>Illustrate the life cycle of a **Docker** container.
-**Dockerfile** and Building Images|Introduce **Docker**files as a means to define container configurations.</br>Explain the structure of **Docker**files and their instructions.</br>Walk through the process of building custom **Docker** images.
-Container Networking and Storage|Describe how **Docker** handles networking for containers.</br>Explore container storage and data management.</br>Discuss container orchestration and **Docker** Compose.
-**Docker** Security and Best Practices|Address security concerns in containerized environments.</br>Share best practices for securing **Docker** containers and images.</br>Discuss user and group management within containers.
-**Docker** in Real-World Scenarios|Provide examples of how **Docker** is used in various industries.</br>Showcase use cases for deploying applications in **Docker** containers.
-**Docker** Ecosystem|Explore **Docker** Compose for defining multi-container applications.</br>Introduce **Docker** Swarm for container orchestration.</br>Mention Kubernetes as a popular container orchestration platform.
-Conclusion|Summarize key takeaways from the chapter.</br>Encourage further exploration and hands-on practice with **Docker**.</br>Provide additional resources for learning **Docker**.
-Exercises and Projects|Offer hands-on exercises and mini-projects to reinforce learning.
 
-This chapter will provide an introduction to **Docker**, covering its fundamental concepts, installation, usage, security, and real-world applications. It will equip you with the knowledge and skills to start working with **Docker** containers effectively.
+This chapter will provide an introduction to **Docker**, covering its fundamental concepts, installation, usage, security, and real-world applications.
 
-# Section 1: Motivation and Objectives
+# Section: Motivation and Objectives
 ## Motivation
 In this section, we'll explore the motivation behind containerization and why **Docker** has become a popular choice for deploying applications. Understanding the challenges it addresses will help you appreciate the benefits of using ****Docker****.
 
@@ -387,3 +376,191 @@ Explain the structure of Dockerfiles and their instructions|Dockerfiles follow a
 Walk through the process of building custom Docker images|Building custom Docker images enables you to tailor containers to your application's exact requirements.|To gain practical knowledge of creating custom Docker images using Dockerfiles, ensuring your applications run within the desired environment.
 
 With an understanding of Dockerfiles and the image-building process, you'll have the foundation needed to develop and manage containers that perfectly match your application needs. The subsequent topics will dive into Dockerfile structure, instructions, and the step-by-step process of building custom images.
+
+# Section: Docker Scout
+## How to Install?
+```bash
+# Create cli-plugins directory
+mkdir -p ~/.docker/cli-plugins
+
+# Download the docker install script, from the official website: https://docs.docker.com/scout/install/#installation-script
+curl -fsSL https://raw.githubusercontent.com/docker/scout-cli/main/install.sh -o install-scout.sh
+
+# Run the installation script
+bash install-scout.sh
+
+# To validate the installation, use:
+docker scout version
+```
+
+> Note: the *~/.docker/cli-plugins/docker-scout* is executable.
+
+## How to Use?
+1. Make sure to login to Docker first:
+    ```bash
+    docker login
+    ```
+2. Check the vulnerabilities for specific image:
+    ```bash
+    docker scout recommendations <image-name>
+    ```
+
+## Sample of Recommendations Report
+An example output from recommendation for image: nvcr.io/nvidia/ai-workbench/python-basic:1.0.8, and and got a recommendation report that shows:
+- What base image your container uses
+- How many vulnerabilities are found in it
+- Which newer or alternative base images can reduce those vulnerabilities
+- And what’s changed (package count, size, OS version, etc.)
+
+```bash
+docker scout recommendations nvcr.io/nvidia/ai-workbench/python-basic:1.0.8
+    ✓ Image stored for indexing
+    ✓ Indexed 368 packages
+
+    i Base image was auto-detected. To get more accurate recommendations, build images with max-mode provenance attestations.
+      Review docs.docker.com ↗ for more information.
+      Alternatively, use  docker scout recommendations --tag <base image tag>  to pass a specific base image tag.
+
+  Target   │  nvcr.io/nvidia/ai-workbench/python-basic:1.0.8   
+    digest │  d077a020500e                                     
+
+## Recommended fixes
+
+  Base image is  ubuntu:22.04 
+
+  Name            │  22.04                                                                     
+  Digest          │  sha256:da5fdf346e5313bef2a3dd2476c0251d48103213a5e3a0cb3afbb8909f3cf50f   
+  Vulnerabilities │    0C     0H     5M    14L                                                 
+  Pushed          │ 3 months ago                                                               
+  Size            │ 30 MB                                                                      
+  Packages        │ 143                                                                        
+  Flavor          │ ubuntu                                                                     
+  OS              │ 22.04                                                                      
+
+                                                                                             
+  │ The base image is also available under the supported tag(s)  jammy . If you want to       
+  │ display recommendations specifically for a different tag, please re-run the command using 
+  │ the  --tag  flag.                                                                         
+
+
+
+Refresh base image
+  Rebuild the image using a newer base image version. Updating this may result in breaking changes.
+
+
+            Tag            │                        Details                        │   Pushed   │       Vulnerabilities        
+───────────────────────────┼───────────────────────────────────────────────────────┼────────────┼──────────────────────────────
+   22.04                   │ Benefits:                                             │ 1 week ago │    0C     0H     2M    12L   
+  Newer image for same tag │ • Newer image for same tag                            │            │                  -3     -2   
+  Also known as:           │ • Tag was pushed more recently                        │            │                              
+  • jammy                  │ • Image has similar size                              │            │                              
+  • jammy-20251001         │ • Image introduces no new vulnerability but removes 5 │            │                              
+                           │ • Image contains equal number of packages             │            │                              
+                           │ • 22.04 was pulled 1.7M times last month              │            │                              
+                           │                                                       │            │                              
+                           │ Image details:                                        │            │                              
+                           │ • Size: 30 MB                                         │            │                              
+                           │ • Flavor: ubuntu                                      │            │                              
+                           │ • OS: 22.04                                           │            │                              
+                           │                                                       │            │                              
+                           │                                                       │            │                              
+                           │                                                       │            │                              
+
+
+Change base image
+  The list displays new recommended tags in descending order, where the top results are rated as most suitable.
+
+
+            Tag           │                        Details                         │   Pushed   │       Vulnerabilities        
+──────────────────────────┼────────────────────────────────────────────────────────┼────────────┼──────────────────────────────
+   24.04                  │ Benefits:                                              │ 1 week ago │    0C     0H     2M     5L   
+  Tag is latest           │ • Image contains 12 fewer packages                     │            │                  -3     -9   
+  Also known as:          │ • Tag was pushed more recently                         │            │                              
+  • noble                 │ • Image has similar size                               │            │                              
+  • latest                │ • Tag is latest                                        │            │                              
+  • noble-20251001        │ • Image introduces no new vulnerability but removes 12 │            │                              
+                          │ • Major OS version update                              │            │                              
+                          │                                                        │            │                              
+                          │ Image details:                                         │            │                              
+                          │ • Size: 30 MB                                          │            │                              
+                          │ • OS: 24.04                                            │            │                              
+                          │                                                        │            │                              
+                          │                                                        │            │                              
+                          │                                                        │            │                              
+   25.10                  │ Benefits:                                              │ 6 days ago │    0C     0H     0M     0L   
+  Major OS version update │ • Image contains 19 fewer packages                     │            │                  -5    -14   
+  Also known as:          │ • Tag was pushed more recently                         │            │                              
+  • rolling               │ • Image has similar size                               │            │                              
+  • questing              │ • Image introduces no new vulnerability but removes 19 │            │                              
+  • questing-20251007     │ • Major OS version update                              │            │                              
+                          │                                                        │            │                              
+                          │ Image details:                                         │            │                              
+                          │ • Size: 34 MB                                          │            │                              
+                          │ • OS: 25.10                                            │            │                              
+                          │                                                        │            │                              
+                          │                                                        │            │                              
+                          │                                                        │            │                              
+   25.04                  │ Benefits:                                              │ 1 week ago │    0C     0H     2M     4L   
+  Major OS version update │ • Image contains 21 fewer packages                     │            │                  -3    -10   
+  Also known as:          │ • Tag was pushed more recently                         │            │                              
+  • plucky                │ • Image has similar size                               │            │                              
+  • plucky-20251001       │ • Image introduces no new vulnerability but removes 13 │            │                              
+                          │ • Major OS version update                              │            │                              
+                          │                                                        │            │                              
+                          │ Image details:                                         │            │                              
+                          │ • Size: 30 MB                                          │            │                              
+                          │ • OS: 25.04                                            │            │                              
+                          │                                                        │            │                              
+                          │                                                        │            │                              
+                          │                                                        │            │                            
+```
+
+### Report Breakdown
+**1. Metadata summary** 
+```bash
+Image stored for indexing
+✓ Indexed 368 packages
+```
+- Scout scanned all dependencies and libraries inside your image.
+- It found 368 packages and analyzed their CVEs.
+
+**2. Base image detection**
+```bash
+i Base image was auto-detected. ...
+  Base image is  ubuntu:22.04 
+```
+- Docker Scout detected your image was built on top of ubuntu:22.04.
+- It also notes that for more accurate recommendations, you can provide SBOM/provenance during the build (using Docker BuildKit attestation).
+- That’s optional — for now, it just infers the base image automatically.
+
+**3. Current base image details**
+```bash
+Name: 22.04
+Vulnerabilities: 0C 0H 5M 14L
+Size: 30 MB
+Pushed: 3 months ago
+```
+
+symbol|	Meaning|
+|-|-|
+C|	Critical vulnerabilities
+H|	High
+M|	Medium
+L|	Low
+
+- So your current Ubuntu 22.04 image has 19 total vulnerabilities (5 Medium, 14 Low).
+
+**4. Recommendation type 1: Refresh base image**
+```bash
+Rebuild the image using a newer base image version.
+```
+- You can stay on the same OS release (22.04) but update it to a newer build.
+- That removes vulnerabilities without breaking compatibility.
+
+**5. Recommendation type 2: Change base image**
+```bash
+Change base image
+The list displays new recommended tags in descending order...
+```
+- The list displays new recommended tags in descending order...
+

@@ -182,6 +182,13 @@ This process will ensure that you start with a fresh set of SSH keys and that yo
     ```
     - To validate using: git remote -v
 
+- To validate the connection, use:
+    ```bash
+    ssh -T git@github.com-ahmedyousrisobhi
+
+    # Expected output: Hi ahmedyousrisobhi! You've successfully authenticated, but GitHub does not provide shell access.
+    # This confirms your SSH key is correctly mapped to that GitHub user.
+    ```
 ## How to Remove Last Pushed Commit ?
 ```bash
 # 1. Remove last commit but keep the changes (so you can fix and recommit)
