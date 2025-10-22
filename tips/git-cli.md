@@ -18,6 +18,7 @@ In the context of Git, "gh" refers to the GitHub CLI tool, which is a command-li
     - [Step-3: Open a Pull Request (PR)](#step-3-open-a-pull-request-pr)
     - [Step-4: Merge (in repo A)](#step-4-merge-in-repo-a)
     - [Workflow Diagram](#workflow-diagram)
+  - [Handy Commands](#handy-commands)
   - [To be Cont....](#to-be-cont)
 
 ## CLI Benefits
@@ -297,5 +298,10 @@ Repo B (fork)
               Repo B deleted ❌
           (but commit3 remains in A)
 ```
+## Handy Commands
+- Visualize git branches, use:
+    ```bash
+    git log --oneline --graph --all --decorate
+    ```
 
 ## To be Cont....
