@@ -1,16 +1,15 @@
-# Git Command Line Interface (CLI)
-
-In the context of Git, "gh" refers to the GitHub CLI tool, which is a command-line interface for interacting with GitHub repositories. It provides a convenient way to manage GitHub-specific features, such as issues, pull requests, and releases, directly from your terminal. The GitHub CLI is available for macOS, Windows, and Linux, and it can be installed using a package manager or by downloading the binary from the GitHub CLI website.
+# Git
 
 ## Table of Contents
-- [Git Command Line Interface (CLI)](#git-command-line-interface-cli)
+- [Git](#git)
   - [Table of Contents](#table-of-contents)
-  - [CLI Benefits](#cli-benefits)
-  - [HTTP vs CLI Cloning](#http-vs-cli-cloning)
-  - [Usage Examples](#usage-examples)
-  - [How to Use?](#how-to-use)
-  - [Steps - SSH Key Configuration](#steps---ssh-key-configuration)
-  - [Steps to Manage Multiple Users](#steps-to-manage-multiple-users)
+  - [Command Line Interface (CLI)](#command-line-interface-cli)
+    - [CLI Benefits](#cli-benefits)
+    - [HTTP vs CLI Cloning](#http-vs-cli-cloning)
+    - [Usage Examples](#usage-examples)
+    - [How to Use?](#how-to-use)
+  - [Git Steps - SSH Key Configuration](#git-steps---ssh-key-configuration)
+  - [Git Steps to Manage Multiple Users](#git-steps-to-manage-multiple-users)
   - [How to Remove Last Pushed Commit ?](#how-to-remove-last-pushed-commit-)
   - [Classic GitHub Workflow (Fork -\> Modify -\> Pull Request -\> Merge)](#classic-github-workflow-fork---modify---pull-request---merge)
     - [Step-1: Fork](#step-1-fork)
@@ -22,10 +21,16 @@ In the context of Git, "gh" refers to the GitHub CLI tool, which is a command-li
     - [Objective](#objective)
     - [Should I Sync My Fork Before Opening a PR, or just create PR as-is?](#should-i-sync-my-fork-before-opening-a-pr-or-just-create-pr-as-is)
     - [Solution - Best Practice](#solution---best-practice)
+  - [Situation - Reviewing Merge PR to my Commit](#situation---reviewing-merge-pr-to-my-commit)
+    - [Objective](#objective-1)
+    - [Solution - Best Practice](#solution---best-practice-1)
   - [Handy Commands](#handy-commands)
   - [To be Cont....](#to-be-cont)
 
-## CLI Benefits
+## Command Line Interface (CLI)
+In the context of Git, "gh" refers to the GitHub CLI tool, which is a command-line interface for interacting with GitHub repositories. It provides a convenient way to manage GitHub-specific features, such as issues, pull requests, and releases, directly from your terminal. The GitHub CLI is available for macOS, Windows, and Linux, and it can be installed using a package manager or by downloading the binary from the GitHub CLI website.
+
+### CLI Benefits
 Here are some of the benefits of using the GitHub CLI:
 |Benefit|Details|
 |-|-|
@@ -33,7 +38,7 @@ Here are some of the benefits of using the GitHub CLI:
 |Automation| You can use scripts to automate repetitive tasks, such as creating issues or updating pull requests.
 |Customization| You can create custom aliases and extensions to personalize your GitHub CLI experience.
 
-## HTTP vs CLI Cloning
+### HTTP vs CLI Cloning
 Normal HTTP cloning and gh clone are both methods for cloning a Git repository, but there are some key differences between the two.
 
 Normal HTTP cloning involves downloading the contents of the repository directly from the Git server using the HTTP protocol. This method is simple to use, but it can be slow and unreliable, especially for large repositories.
@@ -50,7 +55,7 @@ Supported features|	Cloning public repositories|	Cloning public and private repo
 
 In general, it is recommended to use gh clone for cloning Git repositories whenever possible. It is a more efficient, reliable, and feature-rich method than normal HTTP cloning.
 
-## Usage Examples
+### Usage Examples
 Here are some examples of how to use the GitHub CLI:
 |Action|Command|
 |-|-|
@@ -70,7 +75,7 @@ Bash
 gh clone https://github.com/google/bard bard
 ```
 
-## How to Use?
+### How to Use?
 Here are the general steps on how to use the GitHub CLI:
 
 1. Install the GitHub CLI:
@@ -102,7 +107,7 @@ Here are some examples of how to use GitHub CLI commands:
 
 For more information on the GitHub CLI, please refer to the official documentation: https://github.com/cli/cli
 
-## Steps - SSH Key Configuration
+## Git Steps - SSH Key Configuration
 
 1. In case of any unwanted SSH Key file, Start by removing them:
     - Open a terminal window and navigate to the directory where your SSH key files are stored.
@@ -151,7 +156,7 @@ git config --global core.sshCommand "ssh -o IdentityFile=$HOME/.ssh/yousri_per"
 
 This process will ensure that you start with a fresh set of SSH keys and that your GitHub account is properly configured to use them.
 
-## Steps to Manage Multiple Users
+## Git Steps to Manage Multiple Users
 1. Create an SSH-Key for the target username and email with:
     ```bash
     ssh-keygen -t ed25519 -C 'ahmedyousrisobhi@gmail.com'
@@ -363,6 +368,36 @@ Situation|	Recommended Action|
 
     git push origin dev-updated-synched
     ```
+
+## Situation - Reviewing Merge PR to my Commit
+### Objective
+A merge PR from another repo to my commit in a repo. I wanted to check the running the changes he requested locally to verify.
+
+### Solution - Best Practice
+```bash
+git remote -v
+# Add
+git remote add <title> https://github.com/<username>/<repo-name>.git
+
+# To verify adding the repo
+git remote -v
+
+# Fetching the repo
+git fetch kadirc-docs 
+
+# To be safe, create a separate branch to merge with the fetched external repo
+git checkout -b review-kadirc-image
+
+# Merge the external branch to the target branch
+git merge <title>/<branch-name> 
+
+# Check the changes
+git status
+```
+
+> Note: you can commit the change in case of adding/removing modifications.
+
+> Note: You can delete the created branch if the case if just reviewing the requested merged branch
 
 ## Handy Commands
 - Visualize git branches, use:
