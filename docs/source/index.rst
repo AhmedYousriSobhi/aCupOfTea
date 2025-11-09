@@ -15,6 +15,5 @@ documentation for details.
    :maxdepth: 2
    :caption: Contents:
 
-
-   .. include:: ../../README.md
-      :parser: myst_parser.sphinx_
+.. include:: ../../README.md
+   :parser: myst_parser.sphinx_
