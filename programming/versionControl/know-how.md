@@ -22,6 +22,7 @@ Daily works never ends, learning never gets old, so every new day requires a new
   - [Enable and Deploy Pages](#enable-and-deploy-pages)
     - [BrainStorming](#brainstorming)
     - [Steps](#steps-1)
+    - [Notes](#notes)
   - [Handy Commands](#handy-commands)
 
 ## Classic GitHub Workflow (Fork -> Modify -> Pull Request -> Merge)
@@ -331,6 +332,8 @@ So the current structure will be:
 
 > Issue: Referring the markdown guides to the be visible under `docs/source` directory, which will be solved by defining the abs path in the conf.py file.
 
+> Tip: Best-practice to create a temp branch to develop the solution, then merge it with the main. But note there will be some modifications in the deploy-docs.yml below which creates the Github action.
+
 ### Steps
 1. mkdir the docs directory, where it will be keeps using: `mkdir docs`
 2. Initiate the Sphinx quick start using: `sphinx-quickstart`
@@ -456,6 +459,28 @@ So the current structure will be:
     make html
     ```
     - Note: make sure that myst-parser package is installed with pip. (Best practice to build a conda env for Sphinx to use.)
+
+### Notes
+1. In deploy-docs.yml file, This tells GitHub when to run the workflow.
+    - push → run the workflow whenever someone pushes commits to a branch.
+
+    ```yml
+    on:
+    push:
+        branches:
+        - main
+    ```
+2. In deploy-docs.yml, This tells Github which branch to fetch the docs from:
+    ```yml
+    jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        steps:
+        - name: Checkout repository
+            uses: actions/checkout@v4
+            with:
+                ref: main
+    ```
 
 ## Handy Commands
 - Visualize git branches, use:
