@@ -19,6 +19,10 @@ Daily works never ends, learning never gets old, so every new day requires a new
   - [How to Start New Branch from an Upstream Branch?](#how-to-start-new-branch-from-an-upstream-branch)
     - [Example Setup](#example-setup)
     - [Steps](#steps)
+  - [Enable and Deploy Pages](#enable-and-deploy-pages)
+    - [BrainStorming](#brainstorming)
+    - [Steps](#steps-1)
+    - [Notes](#notes)
   - [Handy Commands](#handy-commands)
 
 ## Classic GitHub Workflow (Fork -> Modify -> Pull Request -> Merge)
@@ -290,6 +294,192 @@ git push origin HEAD --force
     ```bash
     git status
     git branch -vv
+    ```
+
+## Enable and Deploy Pages
+This guide to enable and deploy pages in Github using Github actions.
+1. Define Github action yml file.
+2. Create the Sphinx quick start. 
+
+### BrainStorming
+The roles of each branch:
+
+Branch|Role|
+|-|-|
+main|This is your source of truth: all your Markdown files, scripts, and configuration live here.</br>You edit docs here, commit, and push changes.</br>You never manually edit HTML or built artifacts here (those are generated).
+gh-pages|This branch is purely for the generated output — the final HTML site that GitHub Pages serves publicly.</br>GitHub Pages doesn’t build your docs itself (except for simple Jekyll setups).
+It just hosts whatever static files it finds in gh-pages (or /docs in the same branch, if configured that way).
+
+So, the GitHub Actions workflow’s job is:
+1. Build the documentation using Sphinx from main.
+2. Push the resulting _build/html/ directory to the gh-pages branch.
+3. GitHub Pages then serves that branch directly at:
+https://<username>.github.io/<repo>/
+
+That’s the reason the gh-pages branch must exist even if your actual source is somewhere else.
+
+So the current structure will be:
+```bash
+── tips/
+├── README.md
+└── docs/
+    ├── source/
+    │   ├── conf.py
+    │   ├── index.rst
+    │   └── ...
+    └── build/
+```
+
+> Issue: Referring the markdown guides to the be visible under `docs/source` directory, which will be solved by defining the abs path in the conf.py file.
+
+> Tip: Best-practice to create a temp branch to develop the solution, then merge it with the main. But note there will be some modifications in the deploy-docs.yml below which creates the Github action.
+
+### Steps
+1. mkdir the docs directory, where it will be keeps using: `mkdir docs`
+2. Initiate the Sphinx quick start using: `sphinx-quickstart`
+    ```bash
+    sphinx-quickstart 
+
+    # Expected output:
+    Welcome to the Sphinx 8.2.3 quickstart utility.
+
+    Please enter values for the following settings (just press Enter to
+    accept a default value, if one is given in brackets).
+
+    Selected root path: .
+
+    You have two options for placing the build directory for Sphinx output.
+    Either, you use a directory "_build" within the root path, or you separate
+    "source" and "build" directories within the root path.
+    > Separate source and build directories (y/n) [n]: y
+
+    The project name will occur in several places in the built documentation.
+    > Project name: aCupOfTea
+    > Author name(s): Ahmed Yousri Sobhi
+    > Project release []: 1.0
+
+    If the documents are to be written in a language other than English,
+    you can select a language here by its language code. Sphinx will then
+    translate text that it generates into that language.
+
+    For a list of supported codes, see
+    https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-language.
+    > Project language [en]: 
+
+    Creating file ~/workspace/aCupOfTea/docs/source/conf.py.
+    Creating file ~/workspace/aCupOfTea/docs/source/index.rst.
+    Creating file ~/workspace/aCupOfTea/docs/Makefile.
+    Creating file ~/workspace/aCupOfTea/docs/make.bat.
+
+    Finished: An initial directory structure has been created.
+
+    You should now populate your master file /home/asobhy/workflow/workspace/aCupOfTea/docs/source/index.rst and create other documentation
+    source files. Use the Makefile to build the docs, like so:
+    make builder
+    where "builder" is one of the supported builders, e.g. html, latex or linkcheck.
+    ```
+3. Add the `docs/build` to `.gitignore` to avoid committing the build html.
+    ```bash
+    touch .gitignore
+
+    vi .gitignore
+
+    # Ignore Sphinx build output
+    docs/build/
+
+    # Save and exit
+    :wq!
+    ```
+4. Create the Github workflows directory for Github action definition:
+    ```bash
+    mkdir -p .github/workflows
+    ```
+5. Create the Github action using `deploy-docs.yml` file configuration:
+    ```yml
+    name: Deploy Docs to GitHub Pages
+
+    on:
+    push:
+        branches:
+        - main
+    workflow_dispatch:
+
+    permissions:
+    contents: write
+
+    jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        steps:
+        - name: Checkout repository
+            uses: actions/checkout@v4
+
+        - name: Set up Python
+            uses: actions/setup-python@v5
+            with:
+            python-version: '3.11'
+
+        - name: Install dependencies
+            run: |
+            python -m pip install --upgrade pip
+            pip install sphinx sphinx-rtd-theme
+
+        - name: Build documentation
+            run: |
+            make html
+
+        - name: Deploy to gh-pages branch
+            uses: peaceiris/actions-gh-pages@v4
+            with:
+            github_token: ${{ secrets.GITHUB_TOKEN }}
+            publish_branch: gh-pages
+            publish_dir: ./docs/_build/html
+            force_orphan: true
+
+    ```
+6. Add the abs path to the markdown documentation in the docs/source/conf.py file:
+    ```py
+    # Imports
+    import os
+    import sys
+
+    # Add project root to sys.path so we can reference top-level folders
+    sys.path.insert(0, os.path.abspath('../..'))
+    ```
+7. To include a sample markdown in the webpage use:
+    ```bash
+    # inside the docs/source/index.rst file:
+    .. include:: ../../README.md
+       :parser: myst_parser.sphinx_
+    ```
+8. Verify by local html build inside the docs directory
+    ```bash
+    cd docs
+
+    make html
+    ```
+    - Note: make sure that myst-parser package is installed with pip. (Best practice to build a conda env for Sphinx to use.)
+
+### Notes
+1. In deploy-docs.yml file, This tells GitHub when to run the workflow.
+    - push → run the workflow whenever someone pushes commits to a branch.
+
+    ```yml
+    on:
+    push:
+        branches:
+        - main
+    ```
+2. In deploy-docs.yml, This tells Github which branch to fetch the docs from:
+    ```yml
+    jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        steps:
+        - name: Checkout repository
+            uses: actions/checkout@v4
+            with:
+                ref: main
     ```
 
 ## Handy Commands
