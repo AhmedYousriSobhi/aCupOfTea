@@ -13,6 +13,9 @@ The target of this page is to learn more deeper things that come to our minds.
   - [2. Directory is a Logical Container](#2-directory-is-a-logical-container)
     - [1. What the Phrase Assumes?](#1-what-the-phrase-assumes)
     - [2. What's True and what's easy to misunderstand?](#2-whats-true-and-whats-easy-to-misunderstand)
+  - [3. Unix Like System ?!](#3-unix-like-system-)
+    - [1. Historical Context](#1-historical-context)
+    - [2. Core Traits of Unix-like Systems](#2-core-traits-of-unix-like-systems)
 
 ## 1. SCP - Why it's secured?
 - The `cp` in scp comes from the Unix command cp (copy).
@@ -125,3 +128,21 @@ You could reframe it as:
 ```
 A directory is a logical mapping from human-readable names to file metadata (inodes), physically implemented through data structures managed by the filesystem’s metadata service.
 ```
+
+## 3. Unix Like System ?!
+A Unix-like system refers to any os that behaves similarly to the original UNIX, follows its design philosophy, and often implements its standards, but isn't necessarily derived directly from the original UNIX source code.
+
+### 1. Historical Context
+- UNIX was developed in the late 1960s at Bell Labs by Ken Thompson, Dennis Ritchie, and others.
+- Over time, UNIX became both a technical model (its architecture, tools, and philosophy) and a cultural model (its simplicity, modularity, and text-based approach).
+
+> When newer systems adopted its design ideas — but not its code, they became known as “Unix-like.”
+
+### 2. Core Traits of Unix-like Systems
+They generally share these key features:
+- **File system hierarchy**: Everything is a file — devices, sockets, text, all accessed through file-like interfaces.
+- **Multiuser, multitasking model**: Designed from the start for multiple users and concurrent processes.
+- **Command-line shell**: Interaction primarily through text commands (e.g., bash, zsh, tcsh).
+- **Small, composable utilities**: Tools that “do one thing well” and can be combined via pipes (|) and redirection.
+- POSIX compliance: They follow the Portable Operating System Interface standard, which defines UNIX-like APIs and behavior.
+
