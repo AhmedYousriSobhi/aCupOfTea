@@ -1,3 +1,6 @@
 # Ignore Sphinx build output
 docs/build/
+<<<<<<< HEAD
 
+=======
+>>>>>>> 56e05fe (adding underthehood in linux section)
