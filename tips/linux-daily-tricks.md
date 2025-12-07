@@ -107,8 +107,10 @@ sudo reboot
   dnf repoquery --whatrequires gcc
   ```
 ## VPN - To enable openconnect in Network Settings
-```bash
-sudo apt install openconnect
-sudo apt install network-manager-openconnect network-manager-openconnect-gnome
-sudo systemctl restart NetworkManager
-```
+- Objective: Wants to connect to VPN in settings, but `openconnect` does not shows it there.
+- To enable `openconnect` in Linux Network settings.
+  ```bash
+  sudo apt install openconnect
+  sudo apt install network-manager-openconnect network-manager-openconnect-gnome
+  sudo systemctl restart NetworkManager
+  ```
