@@ -51,6 +51,8 @@ let's create a chapter to learn **Docker**. **Docker** is a popular containeriza
   - [How to Use?](#how-to-use)
   - [Sample of Recommendations Report](#sample-of-recommendations-report)
     - [Report Breakdown](#report-breakdown)
+- [Section: Issues](#section-issues)
+  - [Issue: No Select Device Driver GPUs](#issue-no-select-device-driver-gpus)
 
 
 This chapter will provide an introduction to **Docker**, covering its fundamental concepts, installation, usage, security, and real-world applications.
@@ -564,3 +566,40 @@ The list displays new recommended tags in descending order...
 ```
 - The list displays new recommended tags in descending order...
 
+# Section: Issues
+## Issue: No Select Device Driver GPUs
+- This error was raised while trying to run Nvidia GPU inside a container:
+  ```bash
+  docker: Error response from daemon: could not select device driver "" with capabilities: [[gpu]]
+  ```
+- It means:
+  - Docker tried to use --gpus all (or similar)
+  - Docker didn’t find a GPU-capable runtime
+  - So it effectively saw no device driver for GPUs
+  - In other words, your host Docker daemon doesn’t know about NVIDIA GPUs
+
+**Troubleshooting**:
+1. Verify that GPU is detected in your local machine with command: `nvidia-smi`
+2. Install Nvidia container tool kit:
+    ```bash
+    sudo apt update
+    sudo apt install -y nvidia-container-toolkit
+    sudo systemctl restart docker
+    ```
+    > Note: Follow Nvidia user guide: [https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html)
+3. Configure Docker:
+    1. Configure the container runtime by using the nvidia-ctk command:
+        ```bash
+        sudo nvidia-ctk runtime configure --runtime=docker
+        ```
+    2. Restart the Docker daemon:
+        ```bash
+        sudo systemctl restart docker
+        ```
+4. Verify installation:
+    ```bash
+    docker run --gpus all --network=host -it <image>:<tag> bash
+
+    # then run
+    nvidia-smi
+    ```
