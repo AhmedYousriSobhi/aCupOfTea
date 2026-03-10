@@ -24,7 +24,7 @@
    - **Subnet** is a range of IP addresses: (Network Address + Mask) e.g., (`192.168.1.0/24`)
     - Accordingly, for example:
       - Each IP `10.x.x.x (/8)` means that the Network address for this IP range all have a 1 fixed octet; all start with 10.x.x.x, starting from `10.0.0.0` till `10.255.255.255`.
-      - Each IP `192.168.x.x (/16)` means that the Network address for this IP range all have a 1 fixed octet; all start with 10.x.x.x, starting from `192.168.0.0` till `192.168.255.255`.
+      - Each IP `192.168.x.x (/16)` means that the Network address for this IP range all have a 2 fixed octet; all start with 192.168.x.x, starting from `192.168.0.0` till `192.168.255.255`.
 
   ```
   IP: 192.168.1.130
