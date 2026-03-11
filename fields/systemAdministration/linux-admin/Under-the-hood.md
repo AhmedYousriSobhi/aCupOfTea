@@ -112,7 +112,7 @@ So again:
 - Local mode: receive
 
 ## 2. Directory is a Logical Container
-What a catch phrase! It was from Chapter-3 in HPC book.
+What a catch phrase! It was from Chapter-3 in HPC book: "High Performance Computing - Modern Systems and Practices".
 
 ### 1. What the Phrase Assumes?
 1. A directory isn't physical entity; it does not "contain" files on disk the way a folder contains papers.

@@ -14,6 +14,7 @@ These are some tips and tricks I usually need in my daily work, so I tried to do
   - [tmux Use mouse to scroll](#tmux-use-mouse-to-scroll)
   - [To Update Nvidia Driver](#to-update-nvidia-driver)
   - [Packages Management Related](#packages-management-related)
+  - [VPN - To enable openconnect in Network Settings](#vpn---to-enable-openconnect-in-network-settings)
 
 ## To delete file content in ***vi***
 ```bash
@@ -104,4 +105,12 @@ sudo reboot
   # For Debian/Ubuntu based systems
   sudo apt-get install apt-rdepends
   dnf repoquery --whatrequires gcc
+  ```
+## VPN - To enable openconnect in Network Settings
+- Objective: Wants to connect to VPN in settings, but `openconnect` does not shows it there.
+- To enable `openconnect` in Linux Network settings.
+  ```bash
+  sudo apt install openconnect
+  sudo apt install network-manager-openconnect network-manager-openconnect-gnome
+  sudo systemctl restart NetworkManager
   ```
