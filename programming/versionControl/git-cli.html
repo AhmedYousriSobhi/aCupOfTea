@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Git-Cli &#8212; aCupOfTea 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <script src="../../_static/documentation_options.js?v=f2a433a1"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Know-How" href="know-how.html" />
+    <link rel="prev" title="Case-Study" href="case-study.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="git-cli">
+<h1>Git-Cli<a class="headerlink" href="#git-cli" title="Link to this heading">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<section id="id1">
+<h2>Git CLI<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h2>
+<p>In the context of Git, “gh” refers to the GitHub CLI tool, which is a command-line interface for interacting with GitHub repositories. It provides a convenient way to manage GitHub-specific features, such as issues, pull requests, and releases, directly from your terminal. The GitHub CLI is available for macOS, Windows, and Linux, and it can be installed using a package manager or by downloading the binary from the GitHub CLI website.</p>
+<section id="table-of-contents">
+<h3>Table of Contents<a class="headerlink" href="#table-of-contents" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><a class="reference internal" href="#git"><span class="xref myst">Git</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#table-of-contents"><span class="xref myst">Table of Contents</span></a></p></li>
+<li><p><a class="reference internal" href="#command-line-interface-cli"><span class="xref myst">Command Line Interface (CLI)</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#cli-benefits"><span class="xref myst">CLI Benefits</span></a></p></li>
+<li><p><a class="reference internal" href="#http-vs-cli-cloning"><span class="xref myst">HTTP vs CLI Cloning</span></a></p></li>
+<li><p><a class="reference internal" href="#usage-examples"><span class="xref myst">Usage Examples</span></a></p></li>
+<li><p><a class="reference internal" href="#how-to-use"><span class="xref myst">How to Use?</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#git-steps---ssh-key-configuration"><span class="xref myst">Git Steps - SSH Key Configuration</span></a></p></li>
+<li><p><a class="reference internal" href="#git-steps-to-manage-multiple-users"><span class="xref myst">Git Steps to Manage Multiple Users</span></a></p></li>
+<li><p><a class="reference internal" href="#how-to-remove-last-pushed-commit-"><span class="xref myst">How to Remove Last Pushed Commit ?</span></a></p></li>
+<li><p><a class="reference internal" href="#classic-github-workflow-fork---modify---pull-request---merge"><span class="xref myst">Classic GitHub Workflow (Fork -&gt; Modify -&gt; Pull Request -&gt; Merge)</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#step-1-fork"><span class="xref myst">Step-1: Fork</span></a></p></li>
+<li><p><a class="reference internal" href="#step-2-clone-and-modify"><span class="xref myst">Step-2: Clone and Modify</span></a></p></li>
+<li><p><a class="reference internal" href="#step-3-open-a-pull-request-pr"><span class="xref myst">Step-3: Open a Pull Request (PR)</span></a></p></li>
+<li><p><a class="reference internal" href="#step-4-merge-in-repo-a"><span class="xref myst">Step-4: Merge (in repo A)</span></a></p></li>
+<li><p><a class="reference internal" href="#workflow-diagram"><span class="xref myst">Workflow Diagram</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#situation---sync-repo-adev-with-fork-repo-bdev-updated"><span class="xref myst">Situation - Sync Repo-A/dev with Fork Repo-B/dev-updated</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#objective"><span class="xref myst">Objective</span></a></p></li>
+<li><p><a class="reference internal" href="#should-i-sync-my-fork-before-opening-a-pr-or-just-create-pr-as-is"><span class="xref myst">Should I Sync My Fork Before Opening a PR, or just create PR as-is?</span></a></p></li>
+<li><p><a class="reference internal" href="#solution---best-practice"><span class="xref myst">Solution - Best Practice</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#situation---reviewing-merge-pr-to-my-commit"><span class="xref myst">Situation - Reviewing Merge PR to my Commit</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#objective-1"><span class="xref myst">Objective</span></a></p></li>
+<li><p><a class="reference internal" href="#solution---best-practice-1"><span class="xref myst">Solution - Best Practice</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#handy-commands"><span class="xref myst">Handy Commands</span></a></p></li>
+<li><p><a class="reference internal" href="#to-be-cont"><span class="xref myst">To be Cont….</span></a></p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="cli-benefits">
+<h3>CLI Benefits<a class="headerlink" href="#cli-benefits" title="Link to this heading">¶</a></h3>
+<p>Here are some of the benefits of using the GitHub CLI:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Benefit</p></th>
+<th class="head"><p>Details</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Efficiency</p></td>
+<td><p>It allows you to perform GitHub tasks without having to switch between the terminal and a web browser.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Automation</p></td>
+<td><p>You can use scripts to automate repetitive tasks, such as creating issues or updating pull requests.</p></td>
+</tr>
+<tr class="row-even"><td><p>Customization</p></td>
+<td><p>You can create custom aliases and extensions to personalize your GitHub CLI experience.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="http-vs-cli-cloning">
+<h3>HTTP vs CLI Cloning<a class="headerlink" href="#http-vs-cli-cloning" title="Link to this heading">¶</a></h3>
+<p>Normal HTTP cloning and gh clone are both methods for cloning a Git repository, but there are some key differences between the two.</p>
+<p>Normal HTTP cloning involves downloading the contents of the repository directly from the Git server using the HTTP protocol. This method is simple to use, but it can be slow and unreliable, especially for large repositories.</p>
+<p>gh clone is a command provided by the GitHub CLI tool that uses GitHub-specific APIs to clone repositories. This method is more efficient and reliable than normal HTTP cloning, and it also supports additional features, such as cloning private repositories and using SSH authentication.</p>
+<p>Here is a table summarizing the key differences between normal HTTP cloning and gh clone:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Feature</p></th>
+<th class="head"><p>Normal HTTP cloning</p></th>
+<th class="head"><p>gh clone</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Protocol</p></td>
+<td><p>HTTP</p></td>
+<td><p>GitHub-specific APIs</p></td>
+</tr>
+<tr class="row-odd"><td><p>Speed</p></td>
+<td><p>Slow</p></td>
+<td><p>Efficient</p></td>
+</tr>
+<tr class="row-even"><td><p>Reliability</p></td>
+<td><p>Unreliable</p></td>
+<td><p>Reliable</p></td>
+</tr>
+<tr class="row-odd"><td><p>Supported features</p></td>
+<td><p>Cloning public repositories</p></td>
+<td><p>Cloning public and private repositories, using SSH authentication</p></td>
+</tr>
+</tbody>
+</table>
+<p>In general, it is recommended to use gh clone for cloning Git repositories whenever possible. It is a more efficient, reliable, and feature-rich method than normal HTTP cloning.</p>
+</section>
+<section id="usage-examples">
+<h3>Usage Examples<a class="headerlink" href="#usage-examples" title="Link to this heading">¶</a></h3>
+<p>Here are some examples of how to use the GitHub CLI:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Action</p></th>
+<th class="head"><p>Command</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Create an issue</p></td>
+<td><p>gh issue create “Describe the issue here”</p></td>
+</tr>
+<tr class="row-odd"><td><p>List open pull requests</p></td>
+<td><p>gh pr list</p></td>
+</tr>
+<tr class="row-even"><td><p>Create a new release</p></td>
+<td><p>gh release create “Version 1.0.0” -t “v1.0.0”</p></td>
+</tr>
+</tbody>
+</table>
+<p>Here is an example of how to clone a repository using gh clone:
+Bash</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gh</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">google</span><span class="o">/</span><span class="n">bard</span>
+</pre></div>
+</div>
+<p>This will clone the google/bard repository to the current directory. If you want to clone the repository to a different directory, you can specify the directory name as an argument to the gh clone command. For example, the following command will clone the google/bard repository to the directory named bard:
+Bash</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gh</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">google</span><span class="o">/</span><span class="n">bard</span> <span class="n">bard</span>
+</pre></div>
+</div>
+</section>
+<section id="how-to-use-github-cli">
+<h3>How to Use GitHub CLI?<a class="headerlink" href="#how-to-use-github-cli" title="Link to this heading">¶</a></h3>
+<p>Here are the general steps on how to use the GitHub CLI:</p>
+<ol class="arabic simple">
+<li><p>Install the GitHub CLI:</p>
+<ul class="simple">
+<li><p>For macOS, download the binary from the GitHub CLI website or use Homebrew to install it.</p></li>
+<li><p>For Windows, download the installer from the GitHub CLI website or use Chocolatey to install it.</p></li>
+<li><p>For Linux, use your distribution’s package manager to install the GitHub CLI package.</p></li>
+</ul>
+</li>
+<li><p>Authenticate with GitHub:</p>
+<ul class="simple">
+<li><p>Open a terminal window and run the command gh auth login.</p></li>
+<li><p>Follow the on-screen instructions to sign in to your GitHub account.</p></li>
+<li><p>GitHub CLI will store your credentials securely.</p></li>
+</ul>
+</li>
+<li><p>Use GitHub CLI commands:</p>
+<ul class="simple">
+<li><p>There are many different GitHub CLI commands available for managing issues, pull requests, repositories, and other GitHub features.</p></li>
+<li><p>You can find a list of all available commands by running the command gh help.</p></li>
+<li><p>For help with a specific command, run the command gh help <command>.</p></li>
+</ul>
+</li>
+<li><p>Customize your GitHub CLI experience:</p>
+<ul class="simple">
+<li><p>You can create custom aliases for frequently used commands.</p></li>
+<li><p>You can install extensions to add additional features to GitHub CLI.</p></li>
+<li><p>You can configure GitHub CLI settings to personalize your experience.</p></li>
+</ul>
+</li>
+</ol>
+<p>Here are some examples of how to use GitHub CLI commands:</p>
+<ul class="simple">
+<li><p>Create an issue: gh issue create “Describe the issue here”</p></li>
+<li><p>List open pull requests: gh pr list</p></li>
+<li><p>Create a new release: gh release create “Version 1.0.0” -t “v1.0.0”</p></li>
+<li><p>Clone a repository: gh clone https://github.com/google/bard</p></li>
+</ul>
+<p>For more information on the GitHub CLI, please refer to the official documentation: https://github.com/cli/cli</p>
+</section>
+<section id="git-steps-ssh-key-configuration">
+<h3>Git Steps - SSH Key Configuration<a class="headerlink" href="#git-steps-ssh-key-configuration" title="Link to this heading">¶</a></h3>
+<ol class="arabic simple">
+<li><p>In case of any unwanted SSH Key file, Start by removing them:</p>
+<ul class="simple">
+<li><p>Open a terminal window and navigate to the directory where your SSH key files are stored.</p></li>
+<li><p>Locate the id_rsa and id_rsa.pub files.</p></li>
+<li><p>Delete both files using the rm command.</p></li>
+<li><p>For example, to delete the id_rsa and id_rsa.pub files, you would run the following commands:</p></li>
+</ul>
+</li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rm</span> <span class="o">~/.</span><span class="n">ssh</span><span class="o">/</span><span class="n">id_rsa</span>
+<span class="n">rm</span> <span class="o">~/.</span><span class="n">ssh</span><span class="o">/</span><span class="n">id_rsa</span><span class="o">.</span><span class="n">pub</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Remove the SSH key from your GitHub account:</p>
+<ul class="simple">
+<li><p>Go to your GitHub account settings.</p></li>
+<li><p>Click on the “SSH and GPG keys” tab.</p></li>
+<li><p>Find the SSH key that you want to remove and click on the “Delete key” button.</p></li>
+</ul>
+</li>
+<li><p>Re-generate the SSH key:</p>
+<ul class="simple">
+<li><p>Open a terminal window and run the following command:</p></li>
+</ul>
+</li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh-keygen
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>When prompted, enter a filename for the key pair.</p></li>
+<li><p>Then, enter a passphrase for the key. This is optional, but it is recommended for security reasons.</p></li>
+<li><p>Your SSH key pair will be generated.</p></li>
+<li><p>The public key will be saved to a file called id_rsa.pub, and the private key will be saved to a file called id_rsa.</p></li>
+</ul>
+<ol class="arabic simple" start="4">
+<li><p>Add the public key to your GitHub account:</p>
+<ul class="simple">
+<li><p>Copy the contents of the id_rsa.pub file to your clipboard.</p></li>
+<li><p>Go to your GitHub account settings.</p></li>
+<li><p>Click on the “SSH and GPG keys” tab.</p></li>
+<li><p>Click on the “New SSH key” button.</p></li>
+<li><p>Paste the contents of your clipboard into the “Key” field.</p></li>
+<li><p>Give your key a title, such as “My new SSH key for GitHub”.</p></li>
+<li><p>Click on the “Add SSH key” button.</p></li>
+</ul>
+</li>
+<li><p>Re-configure GitHub CLI to use SSH:</p>
+<ul class="simple">
+<li><p>Open a terminal window and run the following command:</p></li>
+</ul>
+</li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>core.sshCommand<span class="w"> </span><span class="s2">&quot;ssh -o IdentityFile=</span><span class="nv">$HOME</span><span class="s2">/.ssh/yousri_per&quot;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>This will configure GitHub CLI to use the id_rsa key for SSH authentication.</p></li>
+</ul>
+<ol class="arabic simple" start="6">
+<li><p>Retry the gh command:</p>
+<ul class="simple">
+<li><p>Once you have completed these steps, you should be able to retry the gh command without any errors.</p></li>
+</ul>
+</li>
+</ol>
+<p>This process will ensure that you start with a fresh set of SSH keys and that your GitHub account is properly configured to use them.</p>
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">aCupOfTea</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../fields/index.html">Fields</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Programming</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../dataStructure/index.html">Datastructure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../oop/index.html">Oop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../operatingSystem/index.html">Operatingsystem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../parallelProgramming/index.html">Parallelprogramming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python/index.html">Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pythonCleanCode/index.html">Pythoncleancode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../softwareGoals/index.html">Softwaregoals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../softwareSkills%26Tools/index.html">Softwareskills&amp;Tools</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Versioncontrol</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="README.html">Readme</a></li>
+<li class="toctree-l3"><a class="reference internal" href="case-study.html">Case-Study</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Git-Cli</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id1">Git CLI</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="know-how.html">Know-How</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../journal/index.html">Journal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tips/index.html">Tips</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Programming</a><ul>
+  <li><a href="index.html">Versioncontrol</a><ul>
+      <li>Previous: <a href="case-study.html" title="previous chapter">Case-Study</a></li>
+      <li>Next: <a href="know-how.html" title="next chapter">Know-How</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Ahmed Yousri Sobhi.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.0.4</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../../_sources/programming/versionControl/git-cli.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

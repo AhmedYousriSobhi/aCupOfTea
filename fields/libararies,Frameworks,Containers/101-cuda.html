@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>101-Cuda &#8212; aCupOfTea 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <script src="../../_static/documentation_options.js?v=f2a433a1"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="101-Dask" href="101-dask.html" />
+    <link rel="prev" title="101-Containers" href="101-containers.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="cuda">
+<h1>101-Cuda<a class="headerlink" href="#cuda" title="Link to this heading">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<section id="id1">
+<h2>101- Cuda<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h2>
+</section>
+<section id="table-of-content">
+<h2>Table of Content<a class="headerlink" href="#table-of-content" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="#101--cuda"><span class="xref myst">101- Cuda</span></a></p></li>
+<li><p><a class="reference internal" href="#table-of-content"><span class="xref myst">Table of Content</span></a></p></li>
+<li><p><a class="reference internal" href="#cuda"><span class="xref myst">CUDA</span></a></p></li>
+<li><p><a class="reference internal" href="#why-the-name-cuda"><span class="xref myst">Why the name CUDA?</span></a></p></li>
+<li><p><a class="reference internal" href="#what-is-a-thread-really"><span class="xref myst">What is a Thread (really)</span></a></p></li>
+<li><p><a class="reference internal" href="#memory-coalescing"><span class="xref myst">Memory Coalescing?</span></a></p></li>
+<li><p><a class="reference internal" href="#code-journey-from-cpu-to-gpu"><span class="xref myst">Code Journey from CPU to GPU</span></a></p></li>
+<li><p><a class="reference internal" href="#a-good-to-read"><span class="xref myst">A good to read</span></a></p></li>
+<li><p><a class="reference internal" href="#references"><span class="xref myst">References</span></a></p></li>
+</ul>
+</section>
+<section id="id2">
+<h2>CUDA<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h2>
+<p>CUDA (Compute Unified Device Architecture) is a parallel computing platform and application programming interface (API) developed by Nvidia. It allows software to leverage certain types of graphics processing units (GPUs) for accelerated general-purpose processing, a concept known as general-purpose computing on GPUs (GPGPU).</p>
+<p>In sampler terms, it is a tool developed by Nvidia, to introduce the capabilities of being able to use Graphic cards to do generic computations. This changes the vision of the future GPUs cards to be more general-purpose hardware platforms, for scientific computing and parallel workloads.</p>
+</section>
+<section id="why-the-name-cuda">
+<h2>Why the name CUDA?<a class="headerlink" href="#why-the-name-cuda" title="Link to this heading">¶</a></h2>
+<p>The name CUDA stands for Compute Unified Device Architecture. It was coined by Nvidia when they introduced their parallel computing platform and API for GPUs. Let’s break down the name:</p>
+<ul class="simple">
+<li><p>Compute:</p>
+<ul>
+<li><p>Refers to the ability of GPUs to perform general-purpose computations beyond graphics rendering.</p></li>
+<li><p>Nvidia wanted to emphasize that GPUs could be used for more than just graphics-related tasks.</p></li>
+</ul>
+</li>
+<li><p>Unified:</p>
+<ul>
+<li><p>Highlights the idea of a single programming model that unifies both graphics and general-purpose computing.</p></li>
+<li><p>Before CUDA, developers had to use separate APIs for graphics (e.g., OpenGL, Direct3D) and compute (e.g., OpenCL).</p></li>
+<li><p>CUDA unified these into a single framework.</p></li>
+</ul>
+</li>
+<li><p>Device:</p>
+<ul>
+<li><p>Refers to the GPU itself.</p></li>
+<li><p>CUDA enables developers to write code that runs directly on the GPU.</p></li>
+</ul>
+</li>
+<li><p>Architecture:</p>
+<ul>
+<li><p>Signifies the underlying hardware and software design.</p></li>
+<li><p>CUDA provides an architecture for parallel processing on GPUs.</p></li>
+</ul>
+</li>
+</ul>
+<p>In summary, CUDA represents Nvidia’s vision of harnessing the immense parallel processing power of GPUs for a wide range of computational tasks, not just graphics. It has become a fundamental tool for scientific simulations, machine learning, and other high-performance computing workloads. 🚀🔥</p>
+</section>
+<section id="what-is-a-thread-really">
+<h2>What is a Thread (really)<a class="headerlink" href="#what-is-a-thread-really" title="Link to this heading">¶</a></h2>
+<p>According to a question in <a class="reference external" href="https://stackoverflow.com/a/5201906">Stackoverflow regarding what is a thread really</a>!!, the auther pwnall illustrate the following:</p>
+<ul class="simple">
+<li><p>Thread is an execution context, where the process is a bunch of resources associated with a computation; so process can have one or many threads.</p></li>
+<li><p>As said, the thread is an execution context, which is all the information a CPU needs to execute a stream of instructions.</p></li>
+<li><p>The CPU knows each execution needs to be done by its thread, so if the cpu needs to continue work on it, it will continue its thread.</p></li>
+<li><p>It’s an illusion by the CPU, that it’s doing multiple computations at the same time.</p></li>
+<li><p>It does that by spending a bit of time on each computation. It can do that because it has an execution context for each computation</p></li>
+</ul>
+<p>Following up the next answer from Ben Voigt, from <a class="reference external" href="https://stackoverflow.com/a/5201879">stackoverflow</a>, who tries to describe what is really a thread:</p>
+<ul class="simple">
+<li><p>A thread is an independent set of values for the processor registers {instruction pointer: program counter that controls what exectures in what order, Stack pointer: points to area of memory for each thread or else they’ll interfere with.}</p></li>
+<li><p>Threads are the software unit affected by control flow (functions call, loops, goto), because these instructions operate on the instruction pointer, and that belongs to a particular thread.</p></li>
+<li><p>The value of instruction pointer, and the instruction stored at that location is sufficient to determine a new value for the instruction pointer.</p></li>
+<li><p>The sequence of values that IP tales on, forms a path of execution weaving throught the program code, giving rise to the name ‘thread’.</p></li>
+</ul>
+</section>
+<section id="memory-coalescing">
+<h2>Memory Coalescing?<a class="headerlink" href="#memory-coalescing" title="Link to this heading">¶</a></h2>
+<p>Memory coalescing is a technique used in parallel computing, particularly in GPU programming, to improve memory access efficiency.</p>
+<p>In GPU architectures, memory access typically occurs in groups called “warps” or “threads”, which are small groups of parallel execution units. When these threads access memory, they often do so in a non-contiguous manner, meaning they may request data from different memory locations.</p>
+<p>Memory coalescing aims to optimize memory access patterns by organizing memory requests from adjacent threads into larger, contiguous memory transactions. By doing so, memory coalescing reduces the number of memory transactions required to fulfill memory requests, which can significantly improve memory access performance and bandwidth utilization.</p>
+<p>For example, suppose multiple threads in a warp need to access consecutive elements of an array. Instead of accessing these elements individually, memory coalescing allows the GPU to fetch them in a single transaction, minimizing the overhead associated with memory accesses.</p>
+<p>Please refer to <a class="reference external" href="https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/programming/operatingSystem/memoryCoalescing.md">memory coalescing</a> blog to get more info explained.</p>
+</section>
+<section id="code-journey-from-cpu-to-gpu">
+<h2>Code Journey from CPU to GPU<a class="headerlink" href="#code-journey-from-cpu-to-gpu" title="Link to this heading">¶</a></h2>
+<p>With the help of ChatGPT 3.5, we try to illustrate an overview of what happen when we want to run code on GPU from CPU.</p>
+<p>A textual representation of the flow, highlighting the key components and their interactions. Let’s break it down:</p>
+<blockquote>
+<div><p>Host CPU: The process begins with the host Central Processing Unit (CPU), which initiates GPU computation by sending commands and data to the GPU.</p>
+</div></blockquote>
+<blockquote>
+<div><p>GPU Driver: The GPU driver, running on the host CPU, acts as a communication bridge between the CPU and the GPU. It manages GPU resources, loads and compiles GPU programs, and schedules GPU tasks.</p>
+</div></blockquote>
+<blockquote>
+<div><p>Application Code: The application code, written by the programmer, contains GPU-accelerated tasks (e.g., CUDA or OpenCL kernels) that need to be executed on the GPU.</p>
+</div></blockquote>
+<blockquote>
+<div><p>Memory Allocation: The GPU driver allocates memory space in both the host and device memory. It manages data transfers between the host and device memory as needed for GPU computations.</p>
+</div></blockquote>
+<blockquote>
+<div><p>Kernel Execution: The GPU driver schedules the execution of GPU kernels (e.g., CUDA or OpenCL kernels) on the GPU. Each kernel is executed by multiple threads in parallel on the GPU cores.</p>
+</div></blockquote>
+<blockquote>
+<div><p>Streaming Multiprocessors (SMs): The GPU contains multiple SMs, each consisting of CUDA cores, registers, shared memory, and other resources. The SMs execute the GPU kernels in parallel, with each SM responsible for executing one or more blocks of threads.</p>
+</div></blockquote>
+<blockquote>
+<div><p>Thread Execution: Within each SM, threads execute instructions from the GPU kernels. Threads access data from global memory, shared memory, or registers as required by the kernel instructions.</p>
+</div></blockquote>
+<blockquote>
+<div><p>Memory Hierarchy: The GPU memory hierarchy includes registers, shared memory, L1 cache, L2 cache, and global memory. Data is moved between these memory levels to minimize memory access latency and maximize memory bandwidth.</p>
+</div></blockquote>
+<blockquote>
+<div><p>Memory Transactions: The memory controller manages memory transactions between the SMs and the memory hierarchy. It coordinates data fetching, caching, and storing operations to optimize memory access performance.</p>
+</div></blockquote>
+<blockquote>
+<div><p>Data Transfer: Data is transferred between the host and device memory as needed for GPU computations. The GPU driver manages these data transfers using DMA (Direct Memory Access) techniques to minimize CPU involvement and maximize data transfer bandwidth.</p>
+</div></blockquote>
+<blockquote>
+<div><p>Result Retrieval: After GPU computations are completed, the results are retrieved from the GPU memory to the host memory. The GPU driver manages this process and ensures data integrity and correctness.</p>
+</div></blockquote>
+<blockquote>
+<div><p>Task Completion: Once all GPU tasks are completed, the GPU driver notifies the host CPU, indicating that GPU resources are available for additional tasks or that the GPU can enter a low-power state to conserve energy.</p>
+</div></blockquote>
+</section>
+<section id="a-good-to-read">
+<h2>A good to read<a class="headerlink" href="#a-good-to-read" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="http://supercomputingblog.com/cuda-tutorials/">The supercomputing blog</a> for Cuda tutorial.</p></li>
+</ul>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Nvidia presentation High-Performance Computing with CUDA and TESLA GPUs, <a class="reference external" href="https://intranet.birmingham.ac.uk/it/teams/infrastructure/research/bear/documents/public/CUDA-2013-07-31/CUDA-Tutorial.pdf">here</a>.</p></li>
+<li><p>High Performance Computing with CUDA, <a class="reference external" href="https://www.nvidia.com/content/PDF/isc-2011/Bradley2.pdf">here</a>.</p></li>
+</ul>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">aCupOfTea</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Fields</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../dataCollection/index.html">Datacollection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../deepLearning/index.html">Deeplearning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../designPatterns/index.html">Designpatterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generativeAI/index.html">Generativeai</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Libararies,Frameworks,Containers</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="101-conda.html">101-Conda</a></li>
+<li class="toctree-l3"><a class="reference internal" href="101-containers.html">101-Containers</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">101-Cuda</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id1">101- Cuda</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#table-of-content">Table of Content</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id2">CUDA</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#why-the-name-cuda">Why the name CUDA?</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#what-is-a-thread-really">What is a Thread (really)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#memory-coalescing">Memory Coalescing?</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#code-journey-from-cpu-to-gpu">Code Journey from CPU to GPU</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#a-good-to-read">A good to read</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="101-dask.html">101-Dask</a></li>
+<li class="toctree-l3"><a class="reference internal" href="101-docker.html">101-Docker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="101-nvdia-smi.html">101-Nvdia-Smi</a></li>
+<li class="toctree-l3"><a class="reference internal" href="101-pandas.html">101-Pandas</a></li>
+<li class="toctree-l3"><a class="reference internal" href="101-pytorch.html">101-Pytorch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="101-singularity.html">101-Singularity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="102-pytorchDDP.html">102-Pytorchddp</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../projectTopics/index.html">Projecttopics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../recommenderSystems/index.html">Recommendersystems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reinforcementLearning/index.html">Reinforcementlearning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../statistics/index.html">Statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../systemAdministration/index.html">Systemadministration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tabularData/index.html">Tabulardata</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../programming/index.html">Programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../journal/index.html">Journal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tips/index.html">Tips</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Fields</a><ul>
+  <li><a href="index.html">Libararies,Frameworks,Containers</a><ul>
+      <li>Previous: <a href="101-containers.html" title="previous chapter">101-Containers</a></li>
+      <li>Next: <a href="101-dask.html" title="next chapter">101-Dask</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Ahmed Yousri Sobhi.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.0.4</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../../_sources/fields/libararies,Frameworks,Containers/101-cuda.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

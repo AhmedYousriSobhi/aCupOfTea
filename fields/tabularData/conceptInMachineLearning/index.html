@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Conceptinmachinelearning &#8212; aCupOfTea 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <script src="../../../_static/documentation_options.js?v=f2a433a1"></script>
+    <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Dataedaanalysis" href="dataEDAanalysis.html" />
+    <link rel="prev" title="Tabulardata" href="../index.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="conceptinmachinelearning">
+<h1>Conceptinmachinelearning<a class="headerlink" href="#conceptinmachinelearning" title="Link to this heading">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="dataEDAanalysis.html">Dataedaanalysis</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="dataEDAanalysis.html#tabular-data-concepts-in-machine-learning-data-eda-and-analysis">Tabular Data - Concepts in Machine Learning - Data EDA and Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dataEDAanalysis.html#table-of-content">Table of Content</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dataEDAanalysis.html#machine-learning-workflow">1. Machine Learning Workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dataEDAanalysis.html#decisions-in-analytics-are-increasingly-driven-by-data-and-models-and-key-aspects-of-our-machine-learning-workflow-are-getting-depend-on-cleaning-data">2. Decisions in analytics are increasingly driven by data and models, and key aspects of our Machine Learning Workflow are getting depend on cleaning data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dataEDAanalysis.html#how-data-can-be-messy">3. How data can be messy:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dataEDAanalysis.html#dealing-with-missing-data">4- Dealing with missing data:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dataEDAanalysis.html#dealing-with-outliers">5- Dealing with outliers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dataEDAanalysis.html#exploratory-data-analysis-eda">6. Exploratory Data Analysis (EDA):</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dataEDAanalysis.html#eda-techniques">7- EDA techniques:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dataEDAanalysis.html#feature-engineering-and-variable-transformation">8- Feature Engineering and Variable Transformation:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dataEDAanalysis.html#transformations">9- Transformations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dataEDAanalysis.html#variable-selection">10- Variable Selection:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dataEDAanalysis.html#notes">11- Notes:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dataEDAanalysis.html#estimation-vs-inference">12- Estimation vs Inference:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dataEDAanalysis.html#machine-learning-and-statistical-inference">13- Machine Learning and Statistical Inference:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dataEDAanalysis.html#parametric-vs-non-parametric">14- Parametric vs. Non-parametric;</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dataEDAanalysis.html#common-distributions">15- Common Distributions:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dataEDAanalysis.html#frequentist-vs-bayesian-statistics">16- Frequentist vs. Bayesian Statistics:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dataEDAanalysis.html#recap">17- Recap:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dataEDAanalysis.html#hypothesis-testing">18- Hypothesis Testing:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dataEDAanalysis.html#type1-and-type2-errors">19- Type1 and Type2 Errors:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dataEDAanalysis.html#hypothesis-terminologies">20- Hypothesis Terminologies:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dataEDAanalysis.html#business-examples">21- Business Examples:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dataEDAanalysis.html#significance-level-and-p-value">22- Significance Level and p-value:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dataEDAanalysis.html#f-statistic">23- F-Statistic:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dataEDAanalysis.html#power-and-sample-size">24- Power and Sample size:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dataEDAanalysis.html#correlation-vs-causation">25- Correlation vs Causation:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dataEDAanalysis.html#credits">Credits:</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="mlSupervisedClassification.html">Mlsupervisedclassification</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="mlSupervisedClassification.html#tabular-data-concepts-in-machine-learning-supervisied-learning-classification">Tabular Data - Concepts in Machine Learning - Supervisied Learning - Classification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mlSupervisedClassification.html#table-of-content">Table of Content</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mlSupervisedClassification.html#one-vs-all-technique">One-vs-All technique</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mlSupervisedClassification.html#choosing-error-metric">Choosing Error Metric</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mlSupervisedClassification.html#confusion-matrix">Confusion Matrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mlSupervisedClassification.html#knn-models">KNN Models:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mlSupervisedClassification.html#support-vector-machines-svm">Support Vector Machines (SVM):</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mlSupervisedClassification.html#decision-trees">Decision Trees:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mlSupervisedClassification.html#multiclass-classifier">MultiClass Classifier</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mlSupervisedClassification.html#unbalanced-classes">Unbalanced Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mlSupervisedClassification.html#model-interpretability">Model Interpretability:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mlSupervisedClassification.html#credits">Credits</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="mlSupervisedRegression.html">Mlsupervisedregression</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="mlSupervisedRegression.html#tabular-data-concepts-in-machine-learning-supervisied-learning-regression">Tabular Data - Concepts in Machine Learning - Supervisied Learning - Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mlSupervisedRegression.html#table-of-content">Table of Content</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mlSupervisedRegression.html#traditional-statistical-modeling-vs-machine-learning">Traditional Statistical Modeling vs Machine Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mlSupervisedRegression.html#machine-learning-in-context-with-ai">Machine Learning in Context with AI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mlSupervisedRegression.html#model-a-learning-algorithm">Model: A Learning Algorithm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mlSupervisedRegression.html#interpretation-and-prediction">Interpretation and Prediction:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mlSupervisedRegression.html#r2-metric">R2 metric:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mlSupervisedRegression.html#features-target-transformation">Features &amp; Target Transformation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mlSupervisedRegression.html#cross-validation">Cross Validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mlSupervisedRegression.html#bias-variance-trade-off">Bias-Variance Trade off:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mlSupervisedRegression.html#sources-of-model-error">Sources of Model Error</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mlSupervisedRegression.html#regularization">Regularization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mlSupervisedRegression.html#feature-selection">Feature Selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mlSupervisedRegression.html#ridge-regression">Ridge Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mlSupervisedRegression.html#lasso-regression">Lasso Regression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mlSupervisedRegression.html#elastic-net">Elastic Net</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mlSupervisedRegression.html#recursive-feature-elimination-rfe">Recursive Feature Elimination (RFE)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mlSupervisedRegression.html#regularization-under-the-hood">Regularization under the hood</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mlSupervisedRegression.html#credits">Credits:</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="mlUnsupervised.html">Mlunsupervised</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="mlUnsupervised.html#tabular-data-concepts-in-machine-learning-unsupervisied-learning">Tabular Data - Concepts in Machine Learning - Unsupervisied Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mlUnsupervised.html#table-of-content">Table of Content</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mlUnsupervised.html#description-of-unspervised-ml">Description of Unspervised ML</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mlUnsupervised.html#two-cases-of-unsupervised-learning">Two cases of unsupervised learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mlUnsupervised.html#the-curse-of-dimensionality">The Curse of dimensionality</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mlUnsupervised.html#k-means">K-means</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mlUnsupervised.html#choosing-the-right-clustering-algorithm">Choosing the right Clustering ALgorithm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mlUnsupervised.html#clustering-algorithms-comparison">Clustering Algorithms Comparison</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mlUnsupervised.html#determining-the-number-of-clusters">Determining The Number of Clusters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mlUnsupervised.html#dimentionality-reduction-techniques">Dimentionality Reduction Techniques</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mlUnsupervised.html#principal-component-analysis-pca">Principal Component Analysis (PCA)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mlUnsupervised.html#credits">Credits</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">aCupOfTea</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Fields</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../dataCollection/index.html">Datacollection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../deepLearning/index.html">Deeplearning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../designPatterns/index.html">Designpatterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generativeAI/index.html">Generativeai</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../libararies%2CFrameworks%2CContainers/index.html">Libararies,Frameworks,Containers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../projectTopics/index.html">Projecttopics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../recommenderSystems/index.html">Recommendersystems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../reinforcementLearning/index.html">Reinforcementlearning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../statistics/index.html">Statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../systemAdministration/index.html">Systemadministration</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Tabulardata</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Conceptinmachinelearning</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="dataEDAanalysis.html">Dataedaanalysis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mlSupervisedClassification.html">Mlsupervisedclassification</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mlSupervisedRegression.html">Mlsupervisedregression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mlUnsupervised.html">Mlunsupervised</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../conceptinTimeSeries/index.html">Conceptintimeseries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../dataEDA/index.html">Dataeda</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../dataEvaluation/index.html">Dataevaluation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../dataFeatureEngineering/index.html">Datafeatureengineering</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../dataModeling/index.html">Datamodeling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../dataProcessing/index.html">Dataprocessing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../tools/index.html">Tools</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../programming/index.html">Programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../journal/index.html">Journal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tips/index.html">Tips</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Fields</a><ul>
+  <li><a href="../index.html">Tabulardata</a><ul>
+      <li>Previous: <a href="../index.html" title="previous chapter">Tabulardata</a></li>
+      <li>Next: <a href="dataEDAanalysis.html" title="next chapter">Dataedaanalysis</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Ahmed Yousri Sobhi.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.0.4</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../../../_sources/fields/tabularData/conceptInMachineLearning/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

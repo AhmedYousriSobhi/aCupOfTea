@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Pca &#8212; aCupOfTea 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <script src="../../../_static/documentation_options.js?v=f2a433a1"></script>
+    <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Datamodeling" href="../dataModeling/index.html" />
+    <link rel="prev" title="Datafeatureengineering" href="index.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="pca">
+<h1>Pca<a class="headerlink" href="#pca" title="Link to this heading">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<section id="data-feature-engineering-pca">
+<h2>DATA FEATURE ENGINEERING: PCA<a class="headerlink" href="#data-feature-engineering-pca" title="Link to this heading">¶</a></h2>
+</section>
+<section id="table-of-content">
+<h2>Table of Content<a class="headerlink" href="#table-of-content" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="#data-feature-engineering-pca"><span class="xref myst">DATA FEATURE ENGINEERING: PCA</span></a></p></li>
+<li><p><a class="reference internal" href="#table-of-content"><span class="xref myst">Table of Content</span></a></p></li>
+<li><p><a class="reference internal" href="#how-to-decide-whether-to-use-pca-or-not"><span class="xref myst">How to decide whether to use PCA or not?</span></a></p></li>
+<li><p><a class="reference internal" href="#should-we-split-the-data-before-appyling-pca"><span class="xref myst">Should we split the data before appyling PCA?</span></a></p></li>
+<li><p><a class="reference internal" href="#choosing-the-number-of-pca-components"><span class="xref myst">Choosing the Number of PCA Components</span></a></p></li>
+<li><p><a class="reference internal" href="#pca---explained-variance"><span class="xref myst">PCA - Explained Variance</span></a></p></li>
+<li><p><a class="reference internal" href="#what-does-these-explained_variance_ratio-means"><span class="xref myst">What does these explained_variance_ratio means?</span></a></p></li>
+<li><p><a class="reference internal" href="#are-these-explained-variance-values-good-or-bad"><span class="xref myst">Are These Explained-Variance Values ‘Good’ or ‘Bad’?</span></a></p></li>
+<li><p><a class="reference internal" href="#pca-vs-kpca"><span class="xref myst">PCA Vs KPCA</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#comparison"><span class="xref myst">Comparison</span></a></p></li>
+<li><p><a class="reference internal" href="#which-one-to-use"><span class="xref myst">Which one to use?</span></a></p></li>
+<li><p><a class="reference internal" href="#usage-examples"><span class="xref myst">Usage Examples</span></a></p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="how-to-decide-whether-to-use-pca-or-not">
+<h2>How to decide whether to use PCA or not?<a class="headerlink" href="#how-to-decide-whether-to-use-pca-or-not" title="Link to this heading">¶</a></h2>
+<p>Deciding whether to use Principal Component Analysis (PCA) for dimensionality reduction depends on your specific dataset, objectives, and constraints. Here are some factors to consider when deciding whether or not to apply PCA:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Factor</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>High Dimensionality</p></td>
+<td><p>PCA is particularly useful when dealing with datasets with a high number of features (variables).</br> If you have many features, PCA can help reduce dimensionality and simplify your analysis.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Correlated Features</p></td>
+<td><p>PCA works well when there is multicollinearity or high correlation among features.</br> It can help in decorrelating the features, making them more orthogonal and easier to interpret.</p></td>
+</tr>
+<tr class="row-even"><td><p>Noise Reduction</p></td>
+<td><p>PCA can be used to reduce the impact of noisy or less informative features.</br> By focusing on the principal components with the most variance, you can retain the most important information while removing noise.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Visualization</p></td>
+<td><p>If you plan to visualize your data in two or three dimensions, PCA can be a useful tool to project high-dimensional data onto a lower-dimensional space while preserving the most important variation.</p></td>
+</tr>
+<tr class="row-even"><td><p>Model Complexity</p></td>
+<td><p>In some cases, high dimensionality can lead to overfitting in machine learning models.</br> Reducing dimensionality with PCA can mitigate this issue.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Interpretability</p></td>
+<td><p>PCA can make your data more interpretable by reducing it to a smaller set of uncorrelated variables (principal components) that often have meaningful interpretations.</p></td>
+</tr>
+<tr class="row-even"><td><p>Computation Time</p></td>
+<td><p>High dimensionality can significantly increase computation time for some algorithms.</br> Reducing dimensionality with PCA can speed up analysis and modeling.</p></td>
+</tr>
+</tbody>
+</table>
+<p>However, there are also considerations against using PCA</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Consideration</p></th>
+<th class="head"><p>Reason Descirption</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Loss of Information</p></td>
+<td><p>PCA reduces dimensionality by projecting the data onto a lower-dimensional space, potentially leading to a loss of information.</br> You should carefully consider how much variance you are willing to sacrifice when selecting the number of principal components to retain.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Interpretability</p></td>
+<td><p>While PCA can make data more interpretable in some cases, the transformed principal components may not have a direct physical or business interpretation.</p></td>
+</tr>
+<tr class="row-even"><td><p>Business Context</p></td>
+<td><p>Consider whether reducing dimensionality aligns with your specific business objectives.</br> In some cases, retaining all features may be necessary to capture domain-specific knowledge.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Loss of Feature Meaning</p></td>
+<td><p>PCA transforms the original features into linear combinations of them. If preserving the meaning of individual features is crucial, PCA may not be suitable.</p></td>
+</tr>
+<tr class="row-even"><td><p>Algorithm Compatibility</p></td>
+<td><p>Some machine learning algorithms may perform well on high-dimensional data without dimensionality reduction.</br> It’s essential to evaluate whether your chosen algorithms can handle high-dimensional data efficiently.</p></td>
+</tr>
+</tbody>
+</table>
+<p>In practice, it’s often a good idea to try both with and without PCA and compare the results. You can measure the explained variance ratio to understand how much information is retained by each principal component. The decision to use PCA should be driven by your specific problem, data characteristics, and the goals of your analysis or modeling.</p>
+</section>
+<section id="should-we-split-the-data-before-appyling-pca">
+<h2>Should we split the data before appyling PCA?<a class="headerlink" href="#should-we-split-the-data-before-appyling-pca" title="Link to this heading">¶</a></h2>
+<p>The decision of whether to split your data into training and testing sets before applying Principal Component Analysis (PCA) depends on your specific objectives and the context of your analysis. Here are some considerations to help you decide:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Factor</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>PCA as a Data Preprocessing Step</p></td>
+<td><p>If your primary goal for PCA is dimensionality reduction and feature engineering, and you intend to use the reduced-dimensional data in downstream tasks such as clustering, regression, or classification, you can perform PCA on the entire dataset without splitting it. In this case, PCA serves as a preprocessing step.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Evaluation of PCA Results</p></td>
+<td><p>If you want to evaluate the impact of PCA on the performance of a machine learning model or assess how well it preserves the information in your data, you may want to split your data into training and testing sets. You can then apply PCA to the training set, transform both the training and testing sets using the PCA model, and train/test your model with the transformed data.</p></td>
+</tr>
+<tr class="row-even"><td><p>Avoid Data Leakage</p></td>
+<td><p>Splitting the data can help you avoid data leakage. If you apply PCA to the entire dataset and then split it, information from the testing set may unintentionally influence the PCA transformation. This can lead to overly optimistic performance estimates.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Cross-Validation</p></td>
+<td><p>In more advanced scenarios, you might want to use techniques like k-fold cross-validation in combination with PCA. In each fold of the cross-validation, you apply PCA to the training data and evaluate the model’s performance on the validation set. This approach helps assess the robustness of PCA and model performance across different subsets of the data.</p></td>
+</tr>
+</tbody>
+</table>
+<p>In summary, whether you split the data before PCA depends on your goals and the context of your analysis. If you’re using PCA for data preprocessing and feature engineering, you can apply it to the entire dataset. However, if you want to evaluate the impact of PCA on model performance or avoid data leakage, it’s advisable to split the data into training and testing sets before applying PCA.</p>
+</section>
+<section id="choosing-the-number-of-pca-components">
+<h2>Choosing the Number of PCA Components<a class="headerlink" href="#choosing-the-number-of-pca-components" title="Link to this heading">¶</a></h2>
+<p>Choosing the number of principal components (n_components) for PCA is an important decision and requires some understanding and consideration. There is no one-size-fits-all answer, and the choice depends on your specific goals and the characteristics of your data. Here are some common approaches to help you decide on the number of components:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Factor</p></th>
+<th class="head"><p>Descriptio</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Explained Variance</p></td>
+<td><p>One of the most common methods is to examine the explained variance ratio for each principal component. This ratio tells you the proportion of variance in the data that is explained by each component.</br>Plot a cumulative explained variance curve and look for an “elbow” point where adding more components does not significantly increase the explained variance. The number of components at the elbow point can be a reasonable choice.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Desired Explained Variance</p></td>
+<td><p>Alternatively, you can set a specific threshold for the explained variance (e.g., 95%) that you want to retain. Then, choose the number of components that achieve or exceed this threshold.</br>This approach allows you to retain a certain amount of information in your data while reducing dimensionality.</p></td>
+</tr>
+<tr class="row-even"><td><p>Cross-Validation</p></td>
+<td><p>If you plan to use PCA as a preprocessing step for a downstream machine learning task (e.g., classification or regression), you can use cross-validation to determine the optimal number of components. </br>This helps assess how well different numbers of components impact your model’s performance.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Business or Domain Knowledge</p></td>
+<td><p>Sometimes, domain knowledge can guide your choice of n_components. For example, in image analysis, you might know that certain features are important, so you include enough components to capture those features.</p></td>
+</tr>
+<tr class="row-even"><td><p>Trial and Error</p></td>
+<td><p>You can experiment with different values of n_components and evaluate the impact on your specific analysis or modeling task. This can involve assessing model performance, visualization, or interpretability.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Incremental PCA (IPCA)</p></td>
+<td><p>If memory constraints are an issue, you can consider using Incremental PCA, which allows you to perform PCA on subsets of your data.</br> This can be useful for large datasets that don’t fit into memory.</p></td>
+</tr>
+</tbody>
+</table>
+<p><img alt="Determine PCA Componenets" src="https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/22b48719-4e82-4e8d-8d0f-6150c94f585c" /></p>
+<p>In practice, it’s often a combination of these methods, and the final choice may involve some trade-offs between dimensionality reduction and information retention. It’s a good practice to document your decision-making process and, if applicable, report the number of components chosen and the rationale behind it in your analysis or project documentation.</p>
+</section>
+<section id="pca-explained-variance">
+<h2>PCA - Explained Variance<a class="headerlink" href="#pca-explained-variance" title="Link to this heading">¶</a></h2>
+<p>In Principal Component Analysis (PCA), the “explained variance” refers to the proportion of the total variance in the original dataset that is explained by each principal component. It quantifies how much information or variability is captured by each component.</p>
+<p>Here’s a more detailed explanation:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Detail</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Variance in Data</p></td>
+<td><p>Variance measures the spread or dispersion of data points around the mean. In a dataset, each feature contributes to the overall variance, and the total variance is the sum of variances across all features.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Principal Components</p></td>
+<td><p>PCA is a dimensionality reduction technique that transforms the original features into a new set of orthogonal (uncorrelated) features called principal components. These components are linear combinations of the original features.</p></td>
+</tr>
+<tr class="row-even"><td><p>Explained Variance per Component</p></td>
+<td><p>When you perform PCA, the principal components are ordered by the amount of variance they explain. The first principal component (PC1) explains the most variance, the second principal component (PC2) explains the second most, and so on.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Explained Variance Ratio</p></td>
+<td><p>The explained variance ratio is the proportion of the total variance in the data that is explained by each principal component. It is computed as the variance of that component divided by the total variance. Mathematically, for the i-th principal component:</p></td>
+</tr>
+<tr class="row-even"><td><p>Equation</p></td>
+<td><p>Explained Variance Ratio (EV_i) = Variance of PC_i / Total Variance</p></td>
+</tr>
+<tr class="row-odd"><td><p>Cumulative Explained Variance</p></td>
+<td><p>You can calculate the cumulative explained variance by summing the explained variance ratios of the components in order of importance. This helps you understand how much of the total variance is explained as you include more components.</p></td>
+</tr>
+<tr class="row-even"><td><p>Interpretation</p></td>
+<td><p>High explained variance ratios indicate that a principal component retains a significant amount of information from the original data. Conversely, low explained variance ratios suggest that the component captures less of the original data’s variability.</p></td>
+</tr>
+</tbody>
+</table>
+<p>The choice of how many principal components to retain often depends on your specific goals. If you want to reduce dimensionality while preserving most of the data’s variance, you might choose to retain a sufficient number of components to reach a desired cumulative explained variance threshold (e.g., 95%). Alternatively, you may analyze the significance of each component and select a smaller subset for interpretability or efficiency.</p>
+<p>In summary, explained variance in PCA provides insights into how much information each principal component captures from the original data, making it a critical factor in dimensionality reduction and feature selection.</p>
+</section>
+<section id="what-does-these-explained-variance-ratio-means">
+<h2>What does these explained_variance_ratio means?<a class="headerlink" href="#what-does-these-explained-variance-ratio-means" title="Link to this heading">¶</a></h2>
+<p>In an example, you decide to use 6 components, and the output explained_variance_ratio were: [0.27459908 0.09744125 0.08654689 0.05797131 0.04523113 0.04380994]</p>
+<p>The explained_variance_ratio_ values you’ve provided indicate the proportion of the total variance in the data that is explained by each principal component when you use n_components = 6 in your PCA analysis. Here’s what you can interpret from this information:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Interpretation</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Variance Explained by Each Component</p></td>
+<td><p>Each value in the explained_variance_ratio_ array represents the proportion of variance explained by one of the six principal components. For example:</br>- The first principal component (PC1) explains approximately 27.46% of the total variance.</br>- The second principal component (PC2) explains approximately 9.74% of the total variance.</br>- The third principal component (PC3) explains approximately 8.65% of the total variance.</br>- And so on for the remaining components.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Cumulative Explained Variance</p></td>
+<td><p>You can also calculate the cumulative explained variance by summing the explained variance ratios cumulatively.</br>This is useful for understanding how much of the total variance is explained as you include more principal components. For example:</br>- PC1 explains 27.46% of the variance.</br>- PC1 + PC2 explains 27.46% + 9.74% = 37.20% of the variance.</br>- PC1 + PC2 + PC3 explains 27.46% + 9.74% + 8.65% = 45.85% of the variance.</br>- And so on for all six components.</p></td>
+</tr>
+<tr class="row-even"><td><p>Dimensionality Reduction</p></td>
+<td><p>These values help you decide how many principal components to retain. For instance, if your goal is to reduce dimensionality while preserving a certain amount of variance, you might choose to retain enough components to achieve, say, 95% of the cumulative explained variance.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Interpretation</p></td>
+<td><p>You can also analyze the interpretation of each component based on the original features to understand what aspects of the data each component captures. Higher explained variance suggests that a component retains more information from the original data.</p></td>
+</tr>
+</tbody>
+</table>
+<p>In your specific case, if you choose to retain six components, you would retain a total of approximately 97.69% of the total variance in the data. This means that you are preserving a substantial portion of the data’s information while reducing its dimensionality. However, the choice of how many components to retain ultimately depends on your specific objectives and trade-offs between dimensionality reduction and information retention.</p>
+</section>
+<section id="are-these-explained-variance-values-good-or-bad">
+<h2>Are These Explained-Variance Values ‘Good’ or ‘Bad’?<a class="headerlink" href="#are-these-explained-variance-values-good-or-bad" title="Link to this heading">¶</a></h2>
+<p>Whether the explained variance values in PCA are considered “good” or “bad” depends on your specific goals and the context of your analysis. There is no universal threshold that defines what is good or bad because it varies based on your objectives. Here’s how to interpret the values:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Value</p></th>
+<th class="head"><p>Interpretation</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>High Explained Variance Values</p></td>
+<td><p>High values indicate that a principal component captures a significant amount of information from the original data.</br>This can be considered “good” if your goal is dimensionality reduction while preserving as much information as possible.</br>High explained variance values suggest that the component retains the underlying structure of the data well.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Low Explained Variance Values</p></td>
+<td><p>Low values indicate that a principal component captures less information from the original data.</br>This can be considered “bad” if you aim to retain most of the original data’s information.</br>Low explained variance values suggest that the component may not be informative and could be discarded.</p></td>
+</tr>
+<tr class="row-even"><td><p>Cumulative Explained Variance</p></td>
+<td><p>Evaluating the cumulative explained variance is often more informative than looking at individual component values.</br>A high cumulative explained variance (e.g., close to 100%) is generally desirable if you want to retain most of the data’s information.</br>Depending on your use case, you may consider different thresholds for the cumulative explained variance (e.g., 95%) to strike a balance between dimensionality reduction and information retention.</p></td>
+</tr>
+</tbody>
+</table>
+<p>In practice, you should consider your specific objectives when evaluating the explained variance values:</p>
+<ul class="simple">
+<li><p>If you are performing dimensionality reduction for a machine learning task, you might aim to retain a sufficient portion of the variance (e.g., 95%) to ensure your model performs well while reducing the dimensionality.</p></li>
+<li><p>If your goal is exploratory data analysis or data visualization, you might choose to retain a smaller number of components that capture the most important patterns in the data.</p></li>
+<li><p>If you are conducting feature engineering, you may use PCA to identify the most relevant features based on their contributions to the explained variance.</p></li>
+</ul>
+<p>Ultimately, the “goodness” of explained variance values depends on how well they align with your specific analytical goals and constraints.</p>
+</section>
+<section id="pca-vs-kpca">
+<h2>PCA Vs KPCA<a class="headerlink" href="#pca-vs-kpca" title="Link to this heading">¶</a></h2>
+<p>PCA is a linear dimensionality reduction technique, meaning that it finds linear combinations of the original features to create new features.</p>
+<p>Kernel Principal Component Analysis (KPCA) is a non-linear extension of PCA. It works by using a kernel function to transform the data into a higher-dimensional space, where PCA is then performed. This allows KPCA to find non-linear relationships in the data.</p>
+<section id="comparison">
+<h3>Comparison<a class="headerlink" href="#comparison" title="Link to this heading">¶</a></h3>
+<p>Comparison of PCA and KPCA:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Characteristic</p></th>
+<th class="head"><p>PCA</p></th>
+<th class="head"><p>KPCA</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Linearity</p></td>
+<td><p>Linear</p></td>
+<td><p>Non-linear</p></td>
+</tr>
+<tr class="row-odd"><td><p>Dimensionality</p></td>
+<td><p>Reduces dimensionality by finding linear combinations of the original features</p></td>
+<td><p>Reduces dimensionality by finding non-linear combinations of the original features</p></td>
+</tr>
+<tr class="row-even"><td><p>Computational complexity</p></td>
+<td><p>Lower</p></td>
+<td><p>Higher</p></td>
+</tr>
+<tr class="row-odd"><td><p>Performance on non-linear data</p></td>
+<td><p>Poor</p></td>
+<td><p>Good</p></td>
+</tr>
+<tr class="row-even"><td><p>Advantages</p></td>
+<td><p>Simple to implement and understand.</br>Fast and efficient.</br>Interpretable results.</p></td>
+<td><p>Can capture non-linear relationships in the data.</br>More robust to outliers than PCA</p></td>
+</tr>
+<tr class="row-odd"><td><p>Disadvantages</p></td>
+<td><p>Cannot capture non-linear relationships in the data.</br>Sensitive to outliers</p></td>
+<td><p>More computationally expensive than PCA.</br>Results can be more difficult to interpret</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="which-one-to-use">
+<h3>Which one to use?<a class="headerlink" href="#which-one-to-use" title="Link to this heading">¶</a></h3>
+<p>If your data is linear or you need a fast and efficient dimensionality reduction technique, then PCA is a good choice. However, if your data is non-linear or you need a technique that is robust to outliers, then KPCA is a better option.</p>
+</section>
+<section id="usage-examples">
+<h3>Usage Examples<a class="headerlink" href="#usage-examples" title="Link to this heading">¶</a></h3>
+<p>Here are some examples of when to use PCA and KPCA:</p>
+<p>PCA:</p>
+<ul class="simple">
+<li><p>Image processing: To reduce the dimensionality of images before performing other tasks such as classification or segmentation.</p></li>
+<li><p>Natural language processing: To reduce the dimensionality of text data before performing other tasks such as topic modeling or sentiment analysis.</p></li>
+<li><p>Financial data analysis: To reduce the dimensionality of financial data before performing other tasks such as risk assessment or portfolio optimization.</p></li>
+</ul>
+<p>KPCA:</p>
+<ul class="simple">
+<li><p>Image recognition: To recognize objects in images that may appear in different orientations or under different lighting conditions.</p></li>
+<li><p>Handwriting recognition: To recognize handwritten characters that may vary in shape and size.</p></li>
+<li><p>Speech recognition: To recognize spoken words that may vary in pronunciation and intonation.</p></li>
+</ul>
+<p>Overall, PCA and KPCA are both powerful dimensionality reduction techniques. The best one to use will depend on the specific characteristics of your data and your needs.</p>
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">aCupOfTea</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Fields</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../dataCollection/index.html">Datacollection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../deepLearning/index.html">Deeplearning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../designPatterns/index.html">Designpatterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generativeAI/index.html">Generativeai</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../libararies%2CFrameworks%2CContainers/index.html">Libararies,Frameworks,Containers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../projectTopics/index.html">Projecttopics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../recommenderSystems/index.html">Recommendersystems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../reinforcementLearning/index.html">Reinforcementlearning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../statistics/index.html">Statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../systemAdministration/index.html">Systemadministration</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Tabulardata</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../conceptInMachineLearning/index.html">Conceptinmachinelearning</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../conceptinTimeSeries/index.html">Conceptintimeseries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../dataEDA/index.html">Dataeda</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../dataEvaluation/index.html">Dataevaluation</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">Datafeatureengineering</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Pca</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../dataModeling/index.html">Datamodeling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../dataProcessing/index.html">Dataprocessing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../tools/index.html">Tools</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../programming/index.html">Programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../journal/index.html">Journal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tips/index.html">Tips</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Fields</a><ul>
+  <li><a href="../index.html">Tabulardata</a><ul>
+  <li><a href="index.html">Datafeatureengineering</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Datafeatureengineering</a></li>
+      <li>Next: <a href="../dataModeling/index.html" title="next chapter">Datamodeling</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Ahmed Yousri Sobhi.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.0.4</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../../../_sources/fields/tabularData/dataFeatureEngineering/PCA.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

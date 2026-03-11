@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>101-Docker &#8212; aCupOfTea 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <script src="../../_static/documentation_options.js?v=f2a433a1"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="101-Nvdia-Smi" href="101-nvdia-smi.html" />
+    <link rel="prev" title="101-Dask" href="101-dask.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="docker">
+<h1>101-Docker<a class="headerlink" href="#docker" title="Link to this heading">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<section id="software-skill-docker">
+<h2>Software Skill: Docker<a class="headerlink" href="#software-skill-docker" title="Link to this heading">¶</a></h2>
+</section>
+<section id="docker-introduction-to-docker">
+<h2>101 - Docker: Introduction to Docker<a class="headerlink" href="#docker-introduction-to-docker" title="Link to this heading">¶</a></h2>
+<p>let’s create a chapter to learn <strong>Docker</strong>. <strong>Docker</strong> is a popular containerization platform that allows you to package and run applications and their dependencies in isolated containers.</p>
+</section>
+<section id="table-of-content">
+<h2>Table of Content<a class="headerlink" href="#table-of-content" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="#software-skill-docker"><span class="xref myst">Software Skill: Docker</span></a></p></li>
+<li><p><a class="reference internal" href="#101---docker-introduction-to-docker"><span class="xref myst">101 - Docker: Introduction to Docker</span></a></p></li>
+<li><p><a class="reference internal" href="#table-of-content"><span class="xref myst">Table of Content</span></a></p></li>
+<li><p><a class="reference internal" href="#section-motivation-and-objectives"><span class="xref myst">Section: Motivation and Objectives</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#motivation"><span class="xref myst">Motivation</span></a></p></li>
+<li><p><a class="reference internal" href="#challenges-that-need-solutions"><span class="xref myst">Challenges that need Solutions</span></a></p></li>
+<li><p><a class="reference internal" href="#objectives"><span class="xref myst">Objectives</span></a></p></li>
+<li><p><a class="reference internal" href="#workspace"><span class="xref myst">Workspace</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#what-is-containerization"><span class="xref myst">What is Containerization?</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#traditional-virtual-machines-vms-vs-containers"><span class="xref myst">Traditional Virtual Machines (VMs) vs. Containers</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#docker"><span class="xref myst">Docker</span></a></p></li>
+<li><p><a class="reference internal" href="#benefits-of-docker"><span class="xref myst">Benefits of Docker</span></a></p></li>
+<li><p><a class="reference internal" href="#example-usage"><span class="xref myst">Example Usage</span></a></p></li>
+<li><p><a class="reference internal" href="#key-features-of-docker"><span class="xref myst">Key Features of Docker</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#keywords-term-definitions"><span class="xref myst">KeyWords Term Definitions</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#section-docker-fundamentals"><span class="xref myst">Section: Docker Fundamentals</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#info"><span class="xref myst">Info</span></a></p></li>
+<li><p><a class="reference internal" href="#commands-table"><span class="xref myst">Commands Table</span></a></p></li>
+<li><p><a class="reference internal" href="#key-concepts"><span class="xref myst">Key Concepts</span></a></p></li>
+<li><p><a class="reference internal" href="#docker-fundamental-container-vs-image"><span class="xref myst">Docker Fundamental: Container Vs Image</span></a></p></li>
+<li><p><a class="reference internal" href="#when-to-use-container--image"><span class="xref myst">When to Use Container &amp; Image</span></a></p></li>
+<li><p><a class="reference internal" href="#key-notes"><span class="xref myst">Key Notes</span></a></p></li>
+<li><p><a class="reference internal" href="#docker-container"><span class="xref myst">Docker Container</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#container-lifecycle"><span class="xref myst">Container LifeCycle</span></a></p></li>
+<li><p><a class="reference internal" href="#command-docker-run"><span class="xref myst">Command: docker run</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#docker-image"><span class="xref myst">Docker Image</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#command-docker-pull"><span class="xref myst">Command: docker pull</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#docker-registry"><span class="xref myst">Docker Registry</span></a></p></li>
+<li><p><a class="reference internal" href="#docker-client-and-server"><span class="xref myst">Docker Client and Server</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#command-docker---version-and-docker-info"><span class="xref myst">Command: docker –version and docker info</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#example-usage-1"><span class="xref myst">Example Usage</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#section-docker-installation"><span class="xref myst">Section: Docker Installation</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#info-1"><span class="xref myst">Info</span></a></p></li>
+<li><p><a class="reference internal" href="#docker-installation-on-linux"><span class="xref myst">Docker Installation on Linux</span></a></p></li>
+<li><p><a class="reference internal" href="#docker-installation-on-windows"><span class="xref myst">Docker Installation on Windows</span></a></p></li>
+<li><p><a class="reference internal" href="#docker-installation-on-macos"><span class="xref myst">Docker Installation on macOS</span></a></p></li>
+<li><p><a class="reference internal" href="#key-features"><span class="xref myst">Key Features</span></a></p></li>
+<li><p><a class="reference internal" href="#example-usage-2"><span class="xref myst">Example Usage</span></a></p></li>
+<li><p><a class="reference internal" href="#docker-pull--run-imagescontainers"><span class="xref myst">Docker Pull &amp; Run Images/Containers</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#pulling-docker-images"><span class="xref myst">Pulling Docker Images</span></a></p></li>
+<li><p><a class="reference internal" href="#running-docker-containers"><span class="xref myst">Running Docker Containers</span></a></p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#section-dockerfile-and-building-images"><span class="xref myst">Section: Dockerfile and Building Images</span></a></p></li>
+<li><p><a class="reference internal" href="#section-docker-scout"><span class="xref myst">Section: Docker Scout</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#how-to-install"><span class="xref myst">How to Install?</span></a></p></li>
+<li><p><a class="reference internal" href="#how-to-use"><span class="xref myst">How to Use?</span></a></p></li>
+<li><p><a class="reference internal" href="#sample-of-recommendations-report"><span class="xref myst">Sample of Recommendations Report</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#report-breakdown"><span class="xref myst">Report Breakdown</span></a></p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#section-issues"><span class="xref myst">Section: Issues</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#issue-no-select-device-driver-gpus"><span class="xref myst">Issue: No Select Device Driver GPUs</span></a></p></li>
+</ul>
+</li>
+</ul>
+<p>This chapter will provide an introduction to <strong>Docker</strong>, covering its fundamental concepts, installation, usage, security, and real-world applications.</p>
+</section>
+<section id="section-motivation-and-objectives">
+<h2>Section: Motivation and Objectives<a class="headerlink" href="#section-motivation-and-objectives" title="Link to this heading">¶</a></h2>
+<section id="motivation">
+<h3>Motivation<a class="headerlink" href="#motivation" title="Link to this heading">¶</a></h3>
+<p>In this section, we’ll explore the motivation behind containerization and why <strong>Docker</strong> has become a popular choice for deploying applications. Understanding the challenges it addresses will help you appreciate the benefits of using <strong><strong>Docker</strong></strong>.</p>
+</section>
+<section id="challenges-that-need-solutions">
+<h3>Challenges that need Solutions<a class="headerlink" href="#challenges-that-need-solutions" title="Link to this heading">¶</a></h3>
+<p>Containerization emerged as a solution to the following challenges:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Solution</p></th>
+<th class="head"><p>Details</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Consistency</p></td>
+<td><p>Ensuring that an application runs consistently across different environments, from development to production.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Isolation</p></td>
+<td><p>Providing a way to isolate applications and their dependencies to prevent conflicts.</p></td>
+</tr>
+<tr class="row-even"><td><p>Portability</p></td>
+<td><p>Allowing applications to run on any system without modification, promoting compatibility.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Resource Efficiency</p></td>
+<td><p>Efficiently using system resources while keeping applications separate.</p></td>
+</tr>
+<tr class="row-even"><td><p>Scalability</p></td>
+<td><p>Enabling easy scaling of applications and services as needed.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="objectives">
+<h3>Objectives<a class="headerlink" href="#objectives" title="Link to this heading">¶</a></h3>
+<p>By the end of this section, you should:</p>
+<ul class="simple">
+<li><p>Understand the concept of containerization and its role in solving software deployment challenges.</p></li>
+<li><p>Comprehend the fundamental differences between traditional VMs and containers.</p></li>
+<li><p>Recognize <strong>Docker</strong> as a leading containerization solution.</p></li>
+<li><p>Gain insight into the benefits of using <strong>Docker</strong> for application deployment.</p></li>
+</ul>
+<p>Now, let’s dive into the details.</p>
+</section>
+<section id="workspace">
+<h3>Workspace<a class="headerlink" href="#workspace" title="Link to this heading">¶</a></h3>
+<section id="what-is-containerization">
+<h4>What is Containerization?<a class="headerlink" href="#what-is-containerization" title="Link to this heading">¶</a></h4>
+<p><strong>Containerization</strong> is a technology that packages an application and its dependencies together into a single unit known as a container. This container can be easily moved, shared, and executed consistently across different environments.</p>
+<p><strong>Docker</strong> is a leading platform for containerization that simplifies the process of creating, deploying, and managing containers.</p>
+</section>
+</section>
+<section id="traditional-virtual-machines-vms-vs-containers">
+<h3>Traditional Virtual Machines (VMs) vs. Containers<a class="headerlink" href="#traditional-virtual-machines-vms-vs-containers" title="Link to this heading">¶</a></h3>
+<p>To understand the significance of containerization, it’s essential to distinguish it from traditional virtualization.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>VMs</p></th>
+<th class="head"><p>Containers</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>In a VM-based environment, the physical hardware is virtualized to create multiple virtual machines, each with its own operating system. This approach is resource-intensive and can lead to overhead.</p></td>
+<td><p>In contrast, containers share the host operating system, which means they are lightweight, start quickly, and consume fewer system resources. <strong>They provide isolation at the process level</strong>, allowing applications to run independently without interfering with each other.</br>In containsers, you don’t actaully install whole operating systems, but only install the required packages that interact with the target kernal.</br><strong>Containers share the OS kernel of the host but run with their own file system, libraries, and configurations</strong></p></td>
+</tr>
+</tbody>
+</table>
+<section id="id1">
+<h4>Docker<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h4>
+<p><strong>Docker</strong> is a containerization platform that simplifies the development, deployment, and management of applications. It uses container technology to package an application and its dependencies, including libraries and configurations, into a single unit. <strong>Docker</strong> containers are consistent and portable, making it easier to move applications between development, testing, and production environments.</p>
+</section>
+<section id="benefits-of-docker">
+<h4>Benefits of Docker<a class="headerlink" href="#benefits-of-docker" title="Link to this heading">¶</a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Benefit</p></th>
+<th class="head"><p>Details</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Consistency</strong></p></td>
+<td><p><strong>Docker</strong> ensures that applications run consistently across different environments, eliminating the “it works on my machine” problem.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Isolation</strong></p></td>
+<td><p>Containers provide strong isolation, preventing conflicts between applications and dependencies.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Portability</strong></p></td>
+<td><p><strong>Docker</strong> containers can run on any system that supports <strong>Docker</strong>, making it easy to move applications between environments.</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Resource Efficiency</strong></p></td>
+<td><p>Containers share the host OS, leading to efficient resource utilization.</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Scalability</strong></p></td>
+<td><p><strong>Docker</strong> allows for easy scaling of applications and services as needed.</p></td>
+</tr>
+</tbody>
+</table>
+<p>By using <strong>Docker</strong>, you can streamline the development process, reduce deployment issues, and manage your infrastructure more efficiently.</p>
+</section>
+<section id="example-usage">
+<h4>Example Usage<a class="headerlink" href="#example-usage" title="Link to this heading">¶</a></h4>
+<p>Here’s a basic example of using <strong>Docker</strong> to run a web server in a container:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span>-p<span class="w"> </span><span class="m">80</span>:80<span class="w"> </span>nginx
+</pre></div>
+</div>
+<p>In this command,</p>
+<ul class="simple">
+<li><p>We use <strong>Docker</strong> run to start a container based on the official Nginx image.</p></li>
+<li><p>The -d flag runs the container in the background.</p></li>
+<li><p>The -p 80:80 maps port 80 on the host to port 80 in the container.</p></li>
+</ul>
+</section>
+<section id="key-features-of-docker">
+<h4>Key Features of Docker<a class="headerlink" href="#key-features-of-docker" title="Link to this heading">¶</a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Feature</p></th>
+<th class="head"><p>Details</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Image-Based</p></td>
+<td><p><strong>Docker</strong> containers are created from images, which are snapshots of a file system and application. These images are versioned, making it easy to manage and distribute applications.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Container Orchestration</p></td>
+<td><p><strong>Docker</strong> offers tools like <strong>Docker Compose</strong> and <strong>Kubernetes</strong> for managing containerized applications at scale.</p></td>
+</tr>
+<tr class="row-even"><td><p>Security</p></td>
+<td><p>Containers offer a level of isolation, and <strong>Docker</strong> provides security features to keep applications and data safe.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Community and Ecosystem</p></td>
+<td><p><strong>Docker</strong> has a large community and extensive ecosystem, including a hub for sharing and distributing container images.</p></td>
+</tr>
+</tbody>
+</table>
+<p>Understanding <strong>Docker</strong> and <strong>containerization</strong> is essential for modern software development and system administration. It simplifies deployment, enhances consistency, and optimizes resource usage, ultimately saving time and reducing potential issues.</p>
+</section>
+</section>
+<section id="keywords-term-definitions">
+<h3>KeyWords Term Definitions<a class="headerlink" href="#keywords-term-definitions" title="Link to this heading">¶</a></h3>
+<p>The following is a breif of the some terms and keywords we will face in the coming section, so let’s have an overhead info about them.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Term</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Container</p></td>
+<td><p>A lightweight, executable package that includes an application and all its dependencies. Containers run isolated from the host system and other containers.</br>Container is an instance of an image.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Image</p></td>
+<td><p>A snapshot of a container, including the application code, runtime, system tools, and libraries. Images are used to create containers.</p></td>
+</tr>
+<tr class="row-even"><td><p>Docker</p></td>
+<td><p>A platform for developing, shipping, and running containers. Docker includes tools and services for building, managing, and deploying containers.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Virtual Machine (VM)</p></td>
+<td><p>A software-based emulation of a physical computer. VMs run a complete operating system, making them heavier and less efficient compared to containers.</p></td>
+</tr>
+<tr class="row-even"><td><p>Orchestration</p></td>
+<td><p>The process of automating the deployment, scaling, and management of containers. Tools like Kubernetes and Docker Swarm are used for container orchestration.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Isolation</p></td>
+<td><p>Containers provide process-level isolation, ensuring that applications do not interfere with each other. VMs offer hardware-level isolation with separate operating systems.</p></td>
+</tr>
+<tr class="row-even"><td><p>Portability</p></td>
+<td><p>Containers are highly portable, allowing applications to run consistently across different environments. VMs can be less portable due to varying configurations.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Overhead</p></td>
+<td><p>Containers have minimal overhead because they share the host OS. VMs can have higher overhead due to the need for multiple OS instances.</p></td>
+</tr>
+<tr class="row-even"><td><p>Resource Efficiency</p></td>
+<td><p>Containers are more resource-efficient compared to VMs, as they consume fewer system resources.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Image Repository</p></td>
+<td><p>A central storage location for container images. Docker Hub is a popular repository for Docker images.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="section-docker-fundamentals">
+<h2>Section: Docker Fundamentals<a class="headerlink" href="#section-docker-fundamentals" title="Link to this heading">¶</a></h2>
+<section id="info">
+<h3>Info<a class="headerlink" href="#info" title="Link to this heading">¶</a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Info</p></th>
+<th class="head"><p>Details</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Motivation</p></td>
+<td><p>Understanding the fundamental concepts of Docker is essential for effective containerization and deployment.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Objective</p></td>
+<td><p>To explore key Docker concepts and commands.</p></td>
+</tr>
+<tr class="row-even"><td><p>Workspace</p></td>
+<td><p>We’ll cover concepts like Docker containers, images, and registries, as well as basic Docker commands.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Illustration</p></td>
+<td><p>We’ll provide explanations, commands, and examples for each fundamental concept.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="commands-table">
+<h3>Commands Table<a class="headerlink" href="#commands-table" title="Link to this heading">¶</a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Command</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>docker –version</p></td>
+<td><p>Check the Docker version.</p></td>
+</tr>
+<tr class="row-odd"><td><p>docker info</p></td>
+<td><p>Display system-wide information.</p></td>
+</tr>
+<tr class="row-even"><td><p>docker run</p></td>
+<td><p>Run a container from an image.</p></td>
+</tr>
+<tr class="row-odd"><td><p>docker pull</p></td>
+<td><p>Download an image from a registry.</p></td>
+</tr>
+<tr class="row-even"><td><p>docker images</p></td>
+<td><p>List available images.</p></td>
+</tr>
+<tr class="row-odd"><td><p>docker ps</p></td>
+<td><p>List running containers.</p></td>
+</tr>
+<tr class="row-even"><td><p>docker ps -a</p></td>
+<td><p>List all containers (including stopped ones).</p></td>
+</tr>
+<tr class="row-odd"><td><p>docker start</p></td>
+<td><p>Start a stopped container.</p></td>
+</tr>
+<tr class="row-even"><td><p>docker stop</p></td>
+<td><p>Stop a running container.</p></td>
+</tr>
+<tr class="row-odd"><td><p>docker rm</p></td>
+<td><p>Remove a container.</p></td>
+</tr>
+<tr class="row-even"><td><p>docker rmi</p></td>
+<td><p>Remove an image.</p></td>
+</tr>
+<tr class="row-odd"><td><p>docker logs</p></td>
+<td><p>View container logs.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="key-concepts">
+<h3>Key Concepts<a class="headerlink" href="#key-concepts" title="Link to this heading">¶</a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Concept</p></th>
+<th class="head"><p>Details</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Docker Container</p></td>
+<td><p>A runnable instance of a Docker image. Containers are isolated, lightweight, and can run various applications.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Docker Image</p></td>
+<td><p>A template for creating containers. Images include everything needed to run an application, such as code, libraries, and dependencies.</p></td>
+</tr>
+<tr class="row-even"><td><p>Docker Registry</p></td>
+<td><p>A centralized repository for Docker images. Docker Hub is a popular public registry, but you can set up private registries as well.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Docker Client and Server</p></td>
+<td><p>The Docker client communicates with the Docker server. The client can run on the same host as the server or connect to a remote Docker server.</p></td>
+</tr>
+<tr class="row-even"><td><p>Dockerfile</p></td>
+<td><p>A text file containing instructions for building a Docker image. Dockerfiles specify the base image, application code, and setup.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="docker-fundamental-container-vs-image">
+<h3>Docker Fundamental: Container Vs Image<a class="headerlink" href="#docker-fundamental-container-vs-image" title="Link to this heading">¶</a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Feature</p></th>
+<th class="head"><p>Docker Container</p></th>
+<th class="head"><p>Docker Image</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Definition</p></td>
+<td><p>Runnable instance of an image.</p></td>
+<td><p>A lightweight, standalone package containing application code, libraries, dependencies, and configuration.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Nature</p></td>
+<td><p>Dynamic and runnable.</p></td>
+<td><p>Static and read-only.</p></td>
+</tr>
+<tr class="row-even"><td><p>Lifecycle</p></td>
+<td><p>Can be created, started, stopped, and deleted.</p></td>
+<td><p>Immutable; it’s a template for containers.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Storage</p></td>
+<td><p>Uses both base image and a writable layer for runtime changes.</p></td>
+<td><p>Stored as multiple layers, with each layer representing a filesystem change.</p></td>
+</tr>
+<tr class="row-even"><td><p>Usage</p></td>
+<td><p>Ideal for running applications or services.</p></td>
+<td><p>Used to create containers that run specific applications.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Portability</p></td>
+<td><p>Contains runtime environment; may vary based on the host.</p></td>
+<td><p>Highly portable; consistent across different hosts.</p></td>
+</tr>
+<tr class="row-even"><td><p>Size</p></td>
+<td><p>Smaller in size.</p></td>
+<td><p>Larger in size (due to multiple layers).</p></td>
+</tr>
+<tr class="row-odd"><td><p>Recommended Use</p></td>
+<td><p>- For running and managing applications.</br>- Suitable for dynamic workloads.</br>- You can have multiple containers from one image, each with unique runtime configurations.</p></td>
+<td><p>- For distributing applications and ensuring consistent environments.</br>- Suitable for a consistent environment in various deployments.</br>- Images are shared across containers, ensuring consistency.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="when-to-use-container-image">
+<h3>When to Use Container &amp; Image<a class="headerlink" href="#when-to-use-container-image" title="Link to this heading">¶</a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Use Docker Containers when</p></th>
+<th class="head"><p>Use Docker Images when</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>You want to run an application or service.</br>You need multiple instances of the same application with different configurations.</br>You want dynamic workloads that can be started, stopped, and scaled.</p></td>
+<td><p>You need a consistent environment for running applications across different hosts.</br>You want to distribute applications and ensure they run with the same dependencies and configurations.</br>You’re building a reproducible deployment pipeline.</p></td>
+</tr>
+</tbody>
+</table>
+<p>In practice, Docker containers are often created from Docker images. Images provide the blueprint for containers, ensuring a consistent environment when deploying applications. This separation allows for efficient image sharing, easier version management, and rapid application deployment.</p>
+</section>
+<section id="key-notes">
+<h3>Key Notes<a class="headerlink" href="#key-notes" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>Images provide the foundation for containers but are not inherently executable.</p></li>
+<li><p>Containers are the actual instances where applications run and can be thought of as lightweight virtual machines.</p></li>
+</ul>
+</section>
+<section id="docker-container">
+<h3>Docker Container<a class="headerlink" href="#docker-container" title="Link to this heading">¶</a></h3>
+<p>Containers are the primary units in Docker. They are lightweight, isolated, and can run applications in a consistent environment. <strong>Containers share the OS kernel of the host but run with their own file system, libraries, and configurations</strong>.</p>
+<section id="container-lifecycle">
+<h4>Container LifeCycle<a class="headerlink" href="#container-lifecycle" title="Link to this heading">¶</a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Stage</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1- Image Creation</p></td>
+<td><p>The Docker container life cycle starts with the creation of a Docker image. The image acts as a template, containing the application code, libraries, configurations, and other dependencies required for the application to run. Images are created from a set of instructions defined in a Dockerfile. You can also pull pre-built images from Docker registries.</p></td>
+</tr>
+<tr class="row-odd"><td><p>2- Container Initialization</p></td>
+<td><p>When you run a Docker container from an image using the docker run command, a new container is initialized. The container inherits all the characteristics of the image. It starts in a clean state, and any changes made to the container are isolated from the image.</p></td>
+</tr>
+<tr class="row-even"><td><p>3- Application Execution</p></td>
+<td><p>Once the container is up and running, the application inside the container is executed. This means the code within the container is executed according to the application’s logic. Containers can run any application, from web servers to databases.</p></td>
+</tr>
+<tr class="row-odd"><td><p>4- State Modification</p></td>
+<td><p>While the application is running, it can modify its internal state. For instance, a web server container may serve web pages, a database container may store data, and so on. These changes are isolated within the container, ensuring that other containers and the host system are not affected.</p></td>
+</tr>
+<tr class="row-even"><td><p>5- Data and Configuration Persistence</p></td>
+<td><p>Docker containers can have data volumes or use bind mounts to store data outside the container. This data can be shared across container instances, ensuring data persistence even if a container is removed or replaced.</p></td>
+</tr>
+<tr class="row-odd"><td><p>6- Pause or Stop</p></td>
+<td><p>At any point, a container can be paused or stopped using the docker pause or docker stop command. Pausing a container halts its execution without terminating it, while stopping a container gracefully shuts it down.</p></td>
+</tr>
+<tr class="row-even"><td><p>7- Termination</p></td>
+<td><p>When you’re done with a container, you can remove it with the docker rm command. This action effectively terminates the container, and any changes made to its file system are discarded.</p></td>
+</tr>
+<tr class="row-odd"><td><p>8- Restart or Replacement</p></td>
+<td><p>Containers can be restarted using the docker restart command or replaced by creating a new container from the same image. When replaced, a new container starts in the same state as the original image.</p></td>
+</tr>
+<tr class="row-even"><td><p>9- Scaling</p></td>
+<td><p>Docker’s flexibility allows you to scale your application by creating multiple containers from the same image. Each container runs independently but shares the same image and can communicate with each other.</p></td>
+</tr>
+<tr class="row-odd"><td><p>10- Continuous Cycle</p></td>
+<td><p>The life cycle of a Docker container can continue as you start, stop, and remove containers based on your application’s requirements. This continuous cycle allows for scalability, flexibility, and efficient resource usage in a Docker environment.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="command-docker-run">
+<h4>Command: docker run<a class="headerlink" href="#command-docker-run" title="Link to this heading">¶</a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Info</p></th>
+<th class="head"><p>Details</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>Create and run a new container based on an image.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Syntax</p></td>
+<td><p>docker run [options] [image] [command] [args]</p></td>
+</tr>
+<tr class="row-even"><td><p>Key Features</p></td>
+<td><p>-d: Run in detached mode (in the background).</br>-it: Start an interactive terminal session.</br>–name: Assign a name to the container.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Example Usage</p></td>
+<td><p>docker run -d –name mycontainer nginx</br># Run an Nginx web server in detached mode with the name “mycontainer.”</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="docker-image">
+<h3>Docker Image<a class="headerlink" href="#docker-image" title="Link to this heading">¶</a></h3>
+<p>Images are read-only templates for creating containers. They include the application code, libraries, dependencies, and configuration files.</p>
+<section id="command-docker-pull">
+<h4>Command: docker pull<a class="headerlink" href="#command-docker-pull" title="Link to this heading">¶</a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Info</p></th>
+<th class="head"><p>Details</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>Download an image from a registry.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Syntax</p></td>
+<td><p>docker pull [image]</p></td>
+</tr>
+<tr class="row-even"><td><p>Key Features</p></td>
+<td><p>docker images: List available images on your system.</br>docker rmi [image]: Remove an image.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Example Usage</p></td>
+<td><p>docker pull ubuntu:20.04</br># Download the Ubuntu 20.04 image from Docker Hub.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="docker-registry">
+<h3>Docker Registry<a class="headerlink" href="#docker-registry" title="Link to this heading">¶</a></h3>
+<p>In the context of Docker, “registries” refer to centralized servers or services that store and distribute Docker images. Registries are essential for sharing and managing container images across different systems and platforms. Here’s what registries mean in the context of Docker:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Concept</p></th>
+<th class="head"><p>Details</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Storage for Docker Images</p></td>
+<td><p>Registries act as storage repositories for Docker images. They store the image files, which include the application code, libraries, dependencies, and configuration needed to run a containerized application.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Distribution</p></td>
+<td><p>Docker images can be easily pushed (uploaded) to registries and pulled (downloaded) from them. This distribution mechanism allows users to share and deploy images across different hosts and environments.</p></td>
+</tr>
+<tr class="row-even"><td><p>Access Control</p></td>
+<td><p>Registries can have access control mechanisms to manage who can upload, download, or modify images. This is important for security and access management, especially in enterprise settings.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Public and Private Registries</p></td>
+<td><p>There are both public and private registries available. Public registries, like Docker Hub, allow anyone to access and use images. Private registries are used for proprietary or sensitive applications and offer more control over image access.</p></td>
+</tr>
+<tr class="row-even"><td><p>Docker Hub</p></td>
+<td><p>Docker Hub is the default and most widely used public registry for Docker images. It hosts a vast collection of pre-built images that can be used by the Docker community.</p></td>
+</tr>
+</tbody>
+</table>
+<p>Overall, registries simplify the process of sharing, distributing, and managing Docker images, making containerization more practical for both individual developers and organizations.</p>
+</section>
+<section id="docker-client-and-server">
+<h3>Docker Client and Server<a class="headerlink" href="#docker-client-and-server" title="Link to this heading">¶</a></h3>
+<p>Docker follows a client-server architecture. The Docker client communicates with the Docker server. The client can be on the same host as the server or connect to a remote server.</p>
+<section id="command-docker-version-and-docker-info">
+<h4>Command: docker –version and docker info<a class="headerlink" href="#command-docker-version-and-docker-info" title="Link to this heading">¶</a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Info</p></th>
+<th class="head"><p>Details</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><p>Check the Docker version and display system-wide information.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Syntax</p></td>
+<td><p>docker –version and docker info</p></td>
+</tr>
+<tr class="row-even"><td><p>Key Features</p></td>
+<td><p>docker version: Display more detailed version information.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Example Usage</p></td>
+<td><p>docker –version: Check your Docker client version.</br>docker info: View system-wide Docker information.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="id2">
+<h3>Example Usage<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h3>
+<p>To start a new container from an image in detached mode (in the background), you can use:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span>--name<span class="w"> </span>my_container<span class="w"> </span>ubuntu:20.04
+</pre></div>
+</div>
+<p>To access a running container’s shell, you can use:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>my_container<span class="w"> </span>/bin/bash
+</pre></div>
+</div>
+</section>
+</section>
+<section id="section-docker-installation">
+<h2>Section: Docker Installation<a class="headerlink" href="#section-docker-installation" title="Link to this heading">¶</a></h2>
+<section id="id3">
+<h3>Info<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Info</p></th>
+<th class="head"><p>Details</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Motivation</p></td>
+<td><p>Installing Docker is the first step towards leveraging the power of containerization. Docker provides a consistent environment for your applications across different systems, making it easier to develop, test, and deploy software.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Objective</p></td>
+<td><p>By the end of this section, you will understand how to install Docker on your specific operating system and be ready to work with Docker containers.</p></td>
+</tr>
+<tr class="row-even"><td><p>Workspace</p></td>
+<td><p>The installation process may vary based on your operating system. Below, I’ll provide an overview of how to install Docker on Linux, Windows, and macOS. For specific details and updates, refer to the official Docker documentation.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="docker-installation-on-linux">
+<h3>Docker Installation on Linux<a class="headerlink" href="#docker-installation-on-linux" title="Link to this heading">¶</a></h3>
+<p>Linux is a natural choice for Docker due to its close integration with the container technology. To install Docker on Linux, follow these general steps:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Step</p></th>
+<th class="head"><p>Details</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1- Check Prerequisites</p></td>
+<td><p>Ensure that your Linux distribution is supported by Docker. Check for any specific prerequisites for your distribution.</p></td>
+</tr>
+<tr class="row-odd"><td><p>2- Install Docker</p></td>
+<td><p>Use your distribution’s package manager to install Docker. For example, on Ubuntu, you can run:</br>sudo apt-get update</br>sudo apt-get install docker-ce</p></td>
+</tr>
+<tr class="row-even"><td><p>3-Start and Enable Docker</p></td>
+<td><p>Start the Docker service and enable it to start at boot:</br>sudo systemctl start docker</br>sudo systemctl enable docker</p></td>
+</tr>
+<tr class="row-odd"><td><p>Test Installation</p></td>
+<td><p>Verify that Docker is correctly installed by running:</br>docker –version</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="docker-installation-on-windows">
+<h3>Docker Installation on Windows<a class="headerlink" href="#docker-installation-on-windows" title="Link to this heading">¶</a></h3>
+<p>On Windows, you can install Docker Desktop, which provides a convenient way to work with Docker containers. Follow these steps:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Step</p></th>
+<th class="head"><p>Details</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>System Requirements</p></td>
+<td><p>Ensure that your Windows version supports Docker Desktop and that virtualization is enabled in your BIOS settings.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Download and Install</p></td>
+<td><p>Download Docker Desktop from the official website and run the installer.</p></td>
+</tr>
+<tr class="row-even"><td><p>Start Docker Desktop</p></td>
+<td><p>After installation, start Docker Desktop. It will set up a Linux-based virtual machine to run Docker containers.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Test Installation</p></td>
+<td><p>Open a command prompt and run:</br>docker –version</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="docker-installation-on-macos">
+<h3>Docker Installation on macOS<a class="headerlink" href="#docker-installation-on-macos" title="Link to this heading">¶</a></h3>
+<p>Docker for Mac provides a user-friendly experience for macOS users. Here’s how to install it:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Step</p></th>
+<th class="head"><p>Details</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>System Requirements</p></td>
+<td><p>Ensure your macOS version is supported, and virtualization is enabled in your system settings.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Download and Install</p></td>
+<td><p>Download Docker for Mac from the official website and follow the installation instructions.</p></td>
+</tr>
+<tr class="row-even"><td><p>Start Docker</p></td>
+<td><p>Launch Docker for Mac. It will set up a Linux-based virtual machine for Docker containers.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Test Installation</p></td>
+<td><p>Open a terminal and run:</br>docker –version</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="key-features">
+<h3>Key Features<a class="headerlink" href="#key-features" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>Docker installation is platform-specific, so make sure to follow the official installation guides for your OS.</p></li>
+<li><p>Docker Desktop for Windows and Docker for Mac offer a user-friendly interface for managing containers.</p></li>
+<li><p>Ensure that virtualization is enabled on your system for optimal Docker performance.</p></li>
+</ul>
+</section>
+<section id="id4">
+<h3>Example Usage<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h3>
+<p>After successfully installing Docker, you can create, run, and manage containers using Docker commands, such as docker run, docker ps, and docker stop.</p>
+<p>Now that you have an overview of Docker installation on different platforms, you can proceed with setting up Docker according to your specific operating system. Once Docker is installed, you can start working with containers and containerized applications.</p>
+</section>
+<section id="docker-pull-run-images-containers">
+<h3>Docker Pull &amp; Run Images/Containers<a class="headerlink" href="#docker-pull-run-images-containers" title="Link to this heading">¶</a></h3>
+<p>One of the fundamental concepts in Docker is the use of images. You can create your own images or pull pre-built images from Docker registries. Here’s how to pull and run Docker images:</p>
+<section id="pulling-docker-images">
+<h4>Pulling Docker Images<a class="headerlink" href="#pulling-docker-images" title="Link to this heading">¶</a></h4>
+<p><strong>1- Search for an Image</strong>: Before pulling an image, you can search for available Docker images using the docker search command. For example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span>search<span class="w"> </span>ubuntu
+</pre></div>
+</div>
+<p><strong>2- Pull an Image</strong>: To pull an image from a Docker registry, use the docker pull command followed by the image name and optional tag (version). If you don’t specify a tag, it will default to “latest.” For example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span>pull<span class="w"> </span>ubuntu
+</pre></div>
+</div>
+<p>This command will download the official Ubuntu image from the Docker Hub.</p>
+<p><strong>3- Check Available Images</strong>: You can list all the images on your system using the docker images command. It will display a list of downloaded images.</p>
+</section>
+<section id="running-docker-containers">
+<h4>Running Docker Containers<a class="headerlink" href="#running-docker-containers" title="Link to this heading">¶</a></h4>
+<p>Once you have the desired Docker image, you can run containers based on it.</p>
+<p><strong>1- Run a Container</strong>: To start a new container from a pulled image, use the docker run command. Specify the image name and any additional options you need. For example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span>run<span class="w"> </span>-it<span class="w"> </span>ubuntu
+</pre></div>
+</div>
+<p>This command creates an interactive (-it) Ubuntu container.</p>
+<p><strong>2- Container Execution</strong>: After running the container, you will be inside the container’s shell, where you can interact with the Ubuntu environment. Any commands you run in this shell will execute within the container.</p>
+<p><strong>3- Exiting a Container</strong>: To exit the container’s shell without stopping the container, you can use the exit command. This will return you to the host system’s shell.</p>
+<p><strong>4- Running in Detached Mode</strong>: You can also run containers in detached mode (in the background) by adding the -d flag to the docker run command. For example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span>ubuntu
+</pre></div>
+</div>
+<p>The container runs in the background, and you regain control of your terminal.</p>
+<p><strong>5- Listing Running Containers</strong>: To see a list of running containers, you can use the docker ps command. To view all containers (including stopped ones), add the -a flag:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span>ps
+docker<span class="w"> </span>ps<span class="w"> </span>-a
+</pre></div>
+</div>
+<p><strong>6- Stopping a Container</strong>: To stop a running container, you can use the docker stop command followed by the container’s ID or name. For example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span>stop<span class="w"> </span>my_container
+</pre></div>
+</div>
+<p>These are the basic steps to pull and run Docker images. Docker makes it easy to manage containers based on various images, allowing you to work with a wide range of applications and services. Remember that you can customize the behavior and configuration of containers by specifying different options when running them.</p>
+</section>
+</section>
+</section>
+<section id="section-dockerfile-and-building-images">
+<h2>Section: Dockerfile and Building Images<a class="headerlink" href="#section-dockerfile-and-building-images" title="Link to this heading">¶</a></h2>
+<p>This section delves into the essential concepts of Dockerfile and image building. Dockerfiles are pivotal in Docker-based development, allowing you to define and configure containers systematically. The main topics covered in this section are as follows:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Topic</p></th>
+<th class="head"><p>Motivation</p></th>
+<th class="head"><p>Objective</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Introduce Dockerfiles as a means to define container configurations</p></td>
+<td><p>Dockerfiles provide a structured and repeatable way to create container images, making application deployment and scaling more efficient.</p></td>
+<td><p>To understand the role of Dockerfiles in containerization and their significance in simplifying image creation and maintenance.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Explain the structure of Dockerfiles and their instructions</p></td>
+<td><p>Dockerfiles follow a specific structure comprising instructions, each serving a unique purpose in defining container configuration.</p></td>
+<td><p>To explore the anatomy of Dockerfiles, comprehend the role of instructions, and learn how to leverage them to design custom containers.</p></td>
+</tr>
+<tr class="row-even"><td><p>Walk through the process of building custom Docker images</p></td>
+<td><p>Building custom Docker images enables you to tailor containers to your application’s exact requirements.</p></td>
+<td><p>To gain practical knowledge of creating custom Docker images using Dockerfiles, ensuring your applications run within the desired environment.</p></td>
+</tr>
+</tbody>
+</table>
+<p>With an understanding of Dockerfiles and the image-building process, you’ll have the foundation needed to develop and manage containers that perfectly match your application needs. The subsequent topics will dive into Dockerfile structure, instructions, and the step-by-step process of building custom images.</p>
+</section>
+<section id="section-docker-scout">
+<h2>Section: Docker Scout<a class="headerlink" href="#section-docker-scout" title="Link to this heading">¶</a></h2>
+<section id="how-to-install">
+<h3>How to Install?<a class="headerlink" href="#how-to-install" title="Link to this heading">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create cli-plugins directory</span>
+mkdir<span class="w"> </span>-p<span class="w"> </span>~/.docker/cli-plugins
+
+<span class="c1"># Download the docker install script, from the official website: https://docs.docker.com/scout/install/#installation-script</span>
+curl<span class="w"> </span>-fsSL<span class="w"> </span>https://raw.githubusercontent.com/docker/scout-cli/main/install.sh<span class="w"> </span>-o<span class="w"> </span>install-scout.sh
+
+<span class="c1"># Run the installation script</span>
+bash<span class="w"> </span>install-scout.sh
+
+<span class="c1"># To validate the installation, use:</span>
+docker<span class="w"> </span>scout<span class="w"> </span>version
+</pre></div>
+</div>
+<blockquote>
+<div><p>Note: the <em>~/.docker/cli-plugins/docker-scout</em> is executable.</p>
+</div></blockquote>
+</section>
+<section id="how-to-use">
+<h3>How to Use?<a class="headerlink" href="#how-to-use" title="Link to this heading">¶</a></h3>
+<ol class="arabic">
+<li><p>Make sure to login to Docker first:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span>login
+</pre></div>
+</div>
+</li>
+<li><p>Check the vulnerabilities for specific image:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span>scout<span class="w"> </span>recommendations<span class="w"> </span>&lt;image-name&gt;
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+<section id="sample-of-recommendations-report">
+<h3>Sample of Recommendations Report<a class="headerlink" href="#sample-of-recommendations-report" title="Link to this heading">¶</a></h3>
+<p>An example output from recommendation for image: nvcr.io/nvidia/ai-workbench/python-basic:1.0.8, and and got a recommendation report that shows:</p>
+<ul class="simple">
+<li><p>What base image your container uses</p></li>
+<li><p>How many vulnerabilities are found in it</p></li>
+<li><p>Which newer or alternative base images can reduce those vulnerabilities</p></li>
+<li><p>And what’s changed (package count, size, OS version, etc.)</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span>scout<span class="w"> </span>recommendations<span class="w"> </span>nvcr.io/nvidia/ai-workbench/python-basic:1.0.8
+<span class="w">    </span>✓<span class="w"> </span>Image<span class="w"> </span>stored<span class="w"> </span><span class="k">for</span><span class="w"> </span>indexing
+<span class="w">    </span>✓<span class="w"> </span>Indexed<span class="w"> </span><span class="m">368</span><span class="w"> </span>packages
+
+<span class="w">    </span>i<span class="w"> </span>Base<span class="w"> </span>image<span class="w"> </span>was<span class="w"> </span>auto-detected.<span class="w"> </span>To<span class="w"> </span>get<span class="w"> </span>more<span class="w"> </span>accurate<span class="w"> </span>recommendations,<span class="w"> </span>build<span class="w"> </span>images<span class="w"> </span>with<span class="w"> </span>max-mode<span class="w"> </span>provenance<span class="w"> </span>attestations.
+<span class="w">      </span>Review<span class="w"> </span>docs.docker.com<span class="w"> </span>↗<span class="w"> </span><span class="k">for</span><span class="w"> </span>more<span class="w"> </span>information.
+<span class="w">      </span>Alternatively,<span class="w"> </span>use<span class="w">  </span>docker<span class="w"> </span>scout<span class="w"> </span>recommendations<span class="w"> </span>--tag<span class="w"> </span>&lt;base<span class="w"> </span>image<span class="w"> </span>tag&gt;<span class="w">  </span>to<span class="w"> </span>pass<span class="w"> </span>a<span class="w"> </span>specific<span class="w"> </span>base<span class="w"> </span>image<span class="w"> </span>tag.
+
+<span class="w">  </span>Target<span class="w">   </span>│<span class="w">  </span>nvcr.io/nvidia/ai-workbench/python-basic:1.0.8<span class="w">   </span>
+<span class="w">    </span>digest<span class="w"> </span>│<span class="w">  </span>d077a020500e<span class="w">                                     </span>
+
+<span class="c1">## Recommended fixes</span>
+
+<span class="w">  </span>Base<span class="w"> </span>image<span class="w"> </span>is<span class="w">  </span>ubuntu:22.04<span class="w"> </span>
+
+<span class="w">  </span>Name<span class="w">            </span>│<span class="w">  </span><span class="m">22</span>.04<span class="w">                                                                     </span>
+<span class="w">  </span>Digest<span class="w">          </span>│<span class="w">  </span>sha256:da5fdf346e5313bef2a3dd2476c0251d48103213a5e3a0cb3afbb8909f3cf50f<span class="w">   </span>
+<span class="w">  </span>Vulnerabilities<span class="w"> </span>│<span class="w">    </span>0C<span class="w">     </span>0H<span class="w">     </span>5M<span class="w">    </span>14L<span class="w">                                                 </span>
+<span class="w">  </span>Pushed<span class="w">          </span>│<span class="w"> </span><span class="m">3</span><span class="w"> </span>months<span class="w"> </span>ago<span class="w">                                                               </span>
+<span class="w">  </span>Size<span class="w">            </span>│<span class="w"> </span><span class="m">30</span><span class="w"> </span>MB<span class="w">                                                                      </span>
+<span class="w">  </span>Packages<span class="w">        </span>│<span class="w"> </span><span class="m">143</span><span class="w">                                                                        </span>
+<span class="w">  </span>Flavor<span class="w">          </span>│<span class="w"> </span>ubuntu<span class="w">                                                                     </span>
+<span class="w">  </span>OS<span class="w">              </span>│<span class="w"> </span><span class="m">22</span>.04<span class="w">                                                                      </span>
+
+<span class="w">                                                                                             </span>
+<span class="w">  </span>│<span class="w"> </span>The<span class="w"> </span>base<span class="w"> </span>image<span class="w"> </span>is<span class="w"> </span>also<span class="w"> </span>available<span class="w"> </span>under<span class="w"> </span>the<span class="w"> </span>supported<span class="w"> </span>tag<span class="o">(</span>s<span class="o">)</span><span class="w">  </span>jammy<span class="w"> </span>.<span class="w"> </span>If<span class="w"> </span>you<span class="w"> </span>want<span class="w"> </span>to<span class="w">       </span>
+<span class="w">  </span>│<span class="w"> </span>display<span class="w"> </span>recommendations<span class="w"> </span>specifically<span class="w"> </span><span class="k">for</span><span class="w"> </span>a<span class="w"> </span>different<span class="w"> </span>tag,<span class="w"> </span>please<span class="w"> </span>re-run<span class="w"> </span>the<span class="w"> </span><span class="nb">command</span><span class="w"> </span>using<span class="w"> </span>
+<span class="w">  </span>│<span class="w"> </span>the<span class="w">  </span>--tag<span class="w">  </span>flag.<span class="w">                                                                         </span>
+
+
+
+Refresh<span class="w"> </span>base<span class="w"> </span>image
+<span class="w">  </span>Rebuild<span class="w"> </span>the<span class="w"> </span>image<span class="w"> </span>using<span class="w"> </span>a<span class="w"> </span>newer<span class="w"> </span>base<span class="w"> </span>image<span class="w"> </span>version.<span class="w"> </span>Updating<span class="w"> </span>this<span class="w"> </span>may<span class="w"> </span>result<span class="w"> </span><span class="k">in</span><span class="w"> </span>breaking<span class="w"> </span>changes.
+
+
+<span class="w">            </span>Tag<span class="w">            </span>│<span class="w">                        </span>Details<span class="w">                        </span>│<span class="w">   </span>Pushed<span class="w">   </span>│<span class="w">       </span>Vulnerabilities<span class="w">        </span>
+───────────────────────────┼───────────────────────────────────────────────────────┼────────────┼──────────────────────────────
+<span class="w">   </span><span class="m">22</span>.04<span class="w">                   </span>│<span class="w"> </span>Benefits:<span class="w">                                             </span>│<span class="w"> </span><span class="m">1</span><span class="w"> </span>week<span class="w"> </span>ago<span class="w"> </span>│<span class="w">    </span>0C<span class="w">     </span>0H<span class="w">     </span>2M<span class="w">    </span>12L<span class="w">   </span>
+<span class="w">  </span>Newer<span class="w"> </span>image<span class="w"> </span><span class="k">for</span><span class="w"> </span>same<span class="w"> </span>tag<span class="w"> </span>│<span class="w"> </span>•<span class="w"> </span>Newer<span class="w"> </span>image<span class="w"> </span><span class="k">for</span><span class="w"> </span>same<span class="w"> </span>tag<span class="w">                            </span>│<span class="w">            </span>│<span class="w">                  </span>-3<span class="w">     </span>-2<span class="w">   </span>
+<span class="w">  </span>Also<span class="w"> </span>known<span class="w"> </span>as:<span class="w">           </span>│<span class="w"> </span>•<span class="w"> </span>Tag<span class="w"> </span>was<span class="w"> </span>pushed<span class="w"> </span>more<span class="w"> </span>recently<span class="w">                        </span>│<span class="w">            </span>│<span class="w">                              </span>
+<span class="w">  </span>•<span class="w"> </span>jammy<span class="w">                  </span>│<span class="w"> </span>•<span class="w"> </span>Image<span class="w"> </span>has<span class="w"> </span>similar<span class="w"> </span>size<span class="w">                              </span>│<span class="w">            </span>│<span class="w">                              </span>
+<span class="w">  </span>•<span class="w"> </span>jammy-20251001<span class="w">         </span>│<span class="w"> </span>•<span class="w"> </span>Image<span class="w"> </span>introduces<span class="w"> </span>no<span class="w"> </span>new<span class="w"> </span>vulnerability<span class="w"> </span>but<span class="w"> </span>removes<span class="w"> </span><span class="m">5</span><span class="w"> </span>│<span class="w">            </span>│<span class="w">                              </span>
+<span class="w">                           </span>│<span class="w"> </span>•<span class="w"> </span>Image<span class="w"> </span>contains<span class="w"> </span>equal<span class="w"> </span>number<span class="w"> </span>of<span class="w"> </span>packages<span class="w">             </span>│<span class="w">            </span>│<span class="w">                              </span>
+<span class="w">                           </span>│<span class="w"> </span>•<span class="w"> </span><span class="m">22</span>.04<span class="w"> </span>was<span class="w"> </span>pulled<span class="w"> </span><span class="m">1</span>.7M<span class="w"> </span><span class="nb">times</span><span class="w"> </span>last<span class="w"> </span>month<span class="w">              </span>│<span class="w">            </span>│<span class="w">                              </span>
+<span class="w">                           </span>│<span class="w">                                                       </span>│<span class="w">            </span>│<span class="w">                              </span>
+<span class="w">                           </span>│<span class="w"> </span>Image<span class="w"> </span>details:<span class="w">                                        </span>│<span class="w">            </span>│<span class="w">                              </span>
+<span class="w">                           </span>│<span class="w"> </span>•<span class="w"> </span>Size:<span class="w"> </span><span class="m">30</span><span class="w"> </span>MB<span class="w">                                         </span>│<span class="w">            </span>│<span class="w">                              </span>
+<span class="w">                           </span>│<span class="w"> </span>•<span class="w"> </span>Flavor:<span class="w"> </span>ubuntu<span class="w">                                      </span>│<span class="w">            </span>│<span class="w">                              </span>
+<span class="w">                           </span>│<span class="w"> </span>•<span class="w"> </span>OS:<span class="w"> </span><span class="m">22</span>.04<span class="w">                                           </span>│<span class="w">            </span>│<span class="w">                              </span>
+<span class="w">                           </span>│<span class="w">                                                       </span>│<span class="w">            </span>│<span class="w">                              </span>
+<span class="w">                           </span>│<span class="w">                                                       </span>│<span class="w">            </span>│<span class="w">                              </span>
+<span class="w">                           </span>│<span class="w">                                                       </span>│<span class="w">            </span>│<span class="w">                              </span>
+
+
+Change<span class="w"> </span>base<span class="w"> </span>image
+<span class="w">  </span>The<span class="w"> </span>list<span class="w"> </span>displays<span class="w"> </span>new<span class="w"> </span>recommended<span class="w"> </span>tags<span class="w"> </span><span class="k">in</span><span class="w"> </span>descending<span class="w"> </span>order,<span class="w"> </span>where<span class="w"> </span>the<span class="w"> </span>top<span class="w"> </span>results<span class="w"> </span>are<span class="w"> </span>rated<span class="w"> </span>as<span class="w"> </span>most<span class="w"> </span>suitable.
+
+
+<span class="w">            </span>Tag<span class="w">           </span>│<span class="w">                        </span>Details<span class="w">                         </span>│<span class="w">   </span>Pushed<span class="w">   </span>│<span class="w">       </span>Vulnerabilities<span class="w">        </span>
+──────────────────────────┼────────────────────────────────────────────────────────┼────────────┼──────────────────────────────
+<span class="w">   </span><span class="m">24</span>.04<span class="w">                  </span>│<span class="w"> </span>Benefits:<span class="w">                                              </span>│<span class="w"> </span><span class="m">1</span><span class="w"> </span>week<span class="w"> </span>ago<span class="w"> </span>│<span class="w">    </span>0C<span class="w">     </span>0H<span class="w">     </span>2M<span class="w">     </span>5L<span class="w">   </span>
+<span class="w">  </span>Tag<span class="w"> </span>is<span class="w"> </span>latest<span class="w">           </span>│<span class="w"> </span>•<span class="w"> </span>Image<span class="w"> </span>contains<span class="w"> </span><span class="m">12</span><span class="w"> </span>fewer<span class="w"> </span>packages<span class="w">                     </span>│<span class="w">            </span>│<span class="w">                  </span>-3<span class="w">     </span>-9<span class="w">   </span>
+<span class="w">  </span>Also<span class="w"> </span>known<span class="w"> </span>as:<span class="w">          </span>│<span class="w"> </span>•<span class="w"> </span>Tag<span class="w"> </span>was<span class="w"> </span>pushed<span class="w"> </span>more<span class="w"> </span>recently<span class="w">                         </span>│<span class="w">            </span>│<span class="w">                              </span>
+<span class="w">  </span>•<span class="w"> </span>noble<span class="w">                 </span>│<span class="w"> </span>•<span class="w"> </span>Image<span class="w"> </span>has<span class="w"> </span>similar<span class="w"> </span>size<span class="w">                               </span>│<span class="w">            </span>│<span class="w">                              </span>
+<span class="w">  </span>•<span class="w"> </span>latest<span class="w">                </span>│<span class="w"> </span>•<span class="w"> </span>Tag<span class="w"> </span>is<span class="w"> </span>latest<span class="w">                                        </span>│<span class="w">            </span>│<span class="w">                              </span>
+<span class="w">  </span>•<span class="w"> </span>noble-20251001<span class="w">        </span>│<span class="w"> </span>•<span class="w"> </span>Image<span class="w"> </span>introduces<span class="w"> </span>no<span class="w"> </span>new<span class="w"> </span>vulnerability<span class="w"> </span>but<span class="w"> </span>removes<span class="w"> </span><span class="m">12</span><span class="w"> </span>│<span class="w">            </span>│<span class="w">                              </span>
+<span class="w">                          </span>│<span class="w"> </span>•<span class="w"> </span>Major<span class="w"> </span>OS<span class="w"> </span>version<span class="w"> </span>update<span class="w">                              </span>│<span class="w">            </span>│<span class="w">                              </span>
+<span class="w">                          </span>│<span class="w">                                                        </span>│<span class="w">            </span>│<span class="w">                              </span>
+<span class="w">                          </span>│<span class="w"> </span>Image<span class="w"> </span>details:<span class="w">                                         </span>│<span class="w">            </span>│<span class="w">                              </span>
+<span class="w">                          </span>│<span class="w"> </span>•<span class="w"> </span>Size:<span class="w"> </span><span class="m">30</span><span class="w"> </span>MB<span class="w">                                          </span>│<span class="w">            </span>│<span class="w">                              </span>
+<span class="w">                          </span>│<span class="w"> </span>•<span class="w"> </span>OS:<span class="w"> </span><span class="m">24</span>.04<span class="w">                                            </span>│<span class="w">            </span>│<span class="w">                              </span>
+<span class="w">                          </span>│<span class="w">                                                        </span>│<span class="w">            </span>│<span class="w">                              </span>
+<span class="w">                          </span>│<span class="w">                                                        </span>│<span class="w">            </span>│<span class="w">                              </span>
+<span class="w">                          </span>│<span class="w">                                                        </span>│<span class="w">            </span>│<span class="w">                              </span>
+<span class="w">   </span><span class="m">25</span>.10<span class="w">                  </span>│<span class="w"> </span>Benefits:<span class="w">                                              </span>│<span class="w"> </span><span class="m">6</span><span class="w"> </span>days<span class="w"> </span>ago<span class="w"> </span>│<span class="w">    </span>0C<span class="w">     </span>0H<span class="w">     </span>0M<span class="w">     </span>0L<span class="w">   </span>
+<span class="w">  </span>Major<span class="w"> </span>OS<span class="w"> </span>version<span class="w"> </span>update<span class="w"> </span>│<span class="w"> </span>•<span class="w"> </span>Image<span class="w"> </span>contains<span class="w"> </span><span class="m">19</span><span class="w"> </span>fewer<span class="w"> </span>packages<span class="w">                     </span>│<span class="w">            </span>│<span class="w">                  </span>-5<span class="w">    </span>-14<span class="w">   </span>
+<span class="w">  </span>Also<span class="w"> </span>known<span class="w"> </span>as:<span class="w">          </span>│<span class="w"> </span>•<span class="w"> </span>Tag<span class="w"> </span>was<span class="w"> </span>pushed<span class="w"> </span>more<span class="w"> </span>recently<span class="w">                         </span>│<span class="w">            </span>│<span class="w">                              </span>
+<span class="w">  </span>•<span class="w"> </span>rolling<span class="w">               </span>│<span class="w"> </span>•<span class="w"> </span>Image<span class="w"> </span>has<span class="w"> </span>similar<span class="w"> </span>size<span class="w">                               </span>│<span class="w">            </span>│<span class="w">                              </span>
+<span class="w">  </span>•<span class="w"> </span>questing<span class="w">              </span>│<span class="w"> </span>•<span class="w"> </span>Image<span class="w"> </span>introduces<span class="w"> </span>no<span class="w"> </span>new<span class="w"> </span>vulnerability<span class="w"> </span>but<span class="w"> </span>removes<span class="w"> </span><span class="m">19</span><span class="w"> </span>│<span class="w">            </span>│<span class="w">                              </span>
+<span class="w">  </span>•<span class="w"> </span>questing-20251007<span class="w">     </span>│<span class="w"> </span>•<span class="w"> </span>Major<span class="w"> </span>OS<span class="w"> </span>version<span class="w"> </span>update<span class="w">                              </span>│<span class="w">            </span>│<span class="w">                              </span>
+<span class="w">                          </span>│<span class="w">                                                        </span>│<span class="w">            </span>│<span class="w">                              </span>
+<span class="w">                          </span>│<span class="w"> </span>Image<span class="w"> </span>details:<span class="w">                                         </span>│<span class="w">            </span>│<span class="w">                              </span>
+<span class="w">                          </span>│<span class="w"> </span>•<span class="w"> </span>Size:<span class="w"> </span><span class="m">34</span><span class="w"> </span>MB<span class="w">                                          </span>│<span class="w">            </span>│<span class="w">                              </span>
+<span class="w">                          </span>│<span class="w"> </span>•<span class="w"> </span>OS:<span class="w"> </span><span class="m">25</span>.10<span class="w">                                            </span>│<span class="w">            </span>│<span class="w">                              </span>
+<span class="w">                          </span>│<span class="w">                                                        </span>│<span class="w">            </span>│<span class="w">                              </span>
+<span class="w">                          </span>│<span class="w">                                                        </span>│<span class="w">            </span>│<span class="w">                              </span>
+<span class="w">                          </span>│<span class="w">                                                        </span>│<span class="w">            </span>│<span class="w">                              </span>
+<span class="w">   </span><span class="m">25</span>.04<span class="w">                  </span>│<span class="w"> </span>Benefits:<span class="w">                                              </span>│<span class="w"> </span><span class="m">1</span><span class="w"> </span>week<span class="w"> </span>ago<span class="w"> </span>│<span class="w">    </span>0C<span class="w">     </span>0H<span class="w">     </span>2M<span class="w">     </span>4L<span class="w">   </span>
+<span class="w">  </span>Major<span class="w"> </span>OS<span class="w"> </span>version<span class="w"> </span>update<span class="w"> </span>│<span class="w"> </span>•<span class="w"> </span>Image<span class="w"> </span>contains<span class="w"> </span><span class="m">21</span><span class="w"> </span>fewer<span class="w"> </span>packages<span class="w">                     </span>│<span class="w">            </span>│<span class="w">                  </span>-3<span class="w">    </span>-10<span class="w">   </span>
+<span class="w">  </span>Also<span class="w"> </span>known<span class="w"> </span>as:<span class="w">          </span>│<span class="w"> </span>•<span class="w"> </span>Tag<span class="w"> </span>was<span class="w"> </span>pushed<span class="w"> </span>more<span class="w"> </span>recently<span class="w">                         </span>│<span class="w">            </span>│<span class="w">                              </span>
+<span class="w">  </span>•<span class="w"> </span>plucky<span class="w">                </span>│<span class="w"> </span>•<span class="w"> </span>Image<span class="w"> </span>has<span class="w"> </span>similar<span class="w"> </span>size<span class="w">                               </span>│<span class="w">            </span>│<span class="w">                              </span>
+<span class="w">  </span>•<span class="w"> </span>plucky-20251001<span class="w">       </span>│<span class="w"> </span>•<span class="w"> </span>Image<span class="w"> </span>introduces<span class="w"> </span>no<span class="w"> </span>new<span class="w"> </span>vulnerability<span class="w"> </span>but<span class="w"> </span>removes<span class="w"> </span><span class="m">13</span><span class="w"> </span>│<span class="w">            </span>│<span class="w">                              </span>
+<span class="w">                          </span>│<span class="w"> </span>•<span class="w"> </span>Major<span class="w"> </span>OS<span class="w"> </span>version<span class="w"> </span>update<span class="w">                              </span>│<span class="w">            </span>│<span class="w">                              </span>
+<span class="w">                          </span>│<span class="w">                                                        </span>│<span class="w">            </span>│<span class="w">                              </span>
+<span class="w">                          </span>│<span class="w"> </span>Image<span class="w"> </span>details:<span class="w">                                         </span>│<span class="w">            </span>│<span class="w">                              </span>
+<span class="w">                          </span>│<span class="w"> </span>•<span class="w"> </span>Size:<span class="w"> </span><span class="m">30</span><span class="w"> </span>MB<span class="w">                                          </span>│<span class="w">            </span>│<span class="w">                              </span>
+<span class="w">                          </span>│<span class="w"> </span>•<span class="w"> </span>OS:<span class="w"> </span><span class="m">25</span>.04<span class="w">                                            </span>│<span class="w">            </span>│<span class="w">                              </span>
+<span class="w">                          </span>│<span class="w">                                                        </span>│<span class="w">            </span>│<span class="w">                              </span>
+<span class="w">                          </span>│<span class="w">                                                        </span>│<span class="w">            </span>│<span class="w">                              </span>
+<span class="w">                          </span>│<span class="w">                                                        </span>│<span class="w">            </span>│<span class="w">                            </span>
+</pre></div>
+</div>
+<section id="report-breakdown">
+<h4>Report Breakdown<a class="headerlink" href="#report-breakdown" title="Link to this heading">¶</a></h4>
+<p><strong>1. Metadata summary</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Image<span class="w"> </span>stored<span class="w"> </span><span class="k">for</span><span class="w"> </span>indexing
+✓<span class="w"> </span>Indexed<span class="w"> </span><span class="m">368</span><span class="w"> </span>packages
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Scout scanned all dependencies and libraries inside your image.</p></li>
+<li><p>It found 368 packages and analyzed their CVEs.</p></li>
+</ul>
+<p><strong>2. Base image detection</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>i<span class="w"> </span>Base<span class="w"> </span>image<span class="w"> </span>was<span class="w"> </span>auto-detected.<span class="w"> </span>...
+<span class="w">  </span>Base<span class="w"> </span>image<span class="w"> </span>is<span class="w">  </span>ubuntu:22.04<span class="w"> </span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Docker Scout detected your image was built on top of ubuntu:22.04.</p></li>
+<li><p>It also notes that for more accurate recommendations, you can provide SBOM/provenance during the build (using Docker BuildKit attestation).</p></li>
+<li><p>That’s optional — for now, it just infers the base image automatically.</p></li>
+</ul>
+<p><strong>3. Current base image details</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Name:<span class="w"> </span><span class="m">22</span>.04
+Vulnerabilities:<span class="w"> </span>0C<span class="w"> </span>0H<span class="w"> </span>5M<span class="w"> </span>14L
+Size:<span class="w"> </span><span class="m">30</span><span class="w"> </span>MB
+Pushed:<span class="w"> </span><span class="m">3</span><span class="w"> </span>months<span class="w"> </span>ago
+</pre></div>
+</div>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>symbol</p></th>
+<th class="head"><p>Meaning</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>C</p></td>
+<td><p>Critical vulnerabilities</p></td>
+</tr>
+<tr class="row-odd"><td><p>H</p></td>
+<td><p>High</p></td>
+</tr>
+<tr class="row-even"><td><p>M</p></td>
+<td><p>Medium</p></td>
+</tr>
+<tr class="row-odd"><td><p>L</p></td>
+<td><p>Low</p></td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li><p>So your current Ubuntu 22.04 image has 19 total vulnerabilities (5 Medium, 14 Low).</p></li>
+</ul>
+<p><strong>4. Recommendation type 1: Refresh base image</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Rebuild<span class="w"> </span>the<span class="w"> </span>image<span class="w"> </span>using<span class="w"> </span>a<span class="w"> </span>newer<span class="w"> </span>base<span class="w"> </span>image<span class="w"> </span>version.
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>You can stay on the same OS release (22.04) but update it to a newer build.</p></li>
+<li><p>That removes vulnerabilities without breaking compatibility.</p></li>
+</ul>
+<p><strong>5. Recommendation type 2: Change base image</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Change<span class="w"> </span>base<span class="w"> </span>image
+The<span class="w"> </span>list<span class="w"> </span>displays<span class="w"> </span>new<span class="w"> </span>recommended<span class="w"> </span>tags<span class="w"> </span><span class="k">in</span><span class="w"> </span>descending<span class="w"> </span>order...
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>The list displays new recommended tags in descending order…</p></li>
+</ul>
+</section>
+</section>
+</section>
+<section id="section-issues">
+<h2>Section: Issues<a class="headerlink" href="#section-issues" title="Link to this heading">¶</a></h2>
+<section id="issue-no-select-device-driver-gpus">
+<h3>Issue: No Select Device Driver GPUs<a class="headerlink" href="#issue-no-select-device-driver-gpus" title="Link to this heading">¶</a></h3>
+<ul>
+<li><p>This error was raised while trying to run Nvidia GPU inside a container:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker:<span class="w"> </span>Error<span class="w"> </span>response<span class="w"> </span>from<span class="w"> </span>daemon:<span class="w"> </span>could<span class="w"> </span>not<span class="w"> </span><span class="k">select</span><span class="w"> </span>device<span class="w"> </span>driver<span class="w"> </span><span class="s2">&quot;&quot;</span><span class="w"> </span>with<span class="w"> </span>capabilities:<span class="w"> </span><span class="o">[[</span>gpu<span class="o">]]</span>
+</pre></div>
+</div>
+</li>
+<li><p>It means:</p>
+<ul class="simple">
+<li><p>Docker tried to use –gpus all (or similar)</p></li>
+<li><p>Docker didn’t find a GPU-capable runtime</p></li>
+<li><p>So it effectively saw no device driver for GPUs</p></li>
+<li><p>In other words, your host Docker daemon doesn’t know about NVIDIA GPUs</p></li>
+</ul>
+</li>
+</ul>
+<p><strong>Troubleshooting</strong>:</p>
+<ol class="arabic">
+<li><p>Verify that GPU is detected in your local machine with command: <code class="docutils literal notranslate"><span class="pre">nvidia-smi</span></code></p></li>
+<li><p>Install Nvidia container tool kit:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt<span class="w"> </span>update
+sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>nvidia-container-toolkit
+sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>docker
+</pre></div>
+</div>
+<blockquote>
+<div><p>Note: Follow Nvidia user guide: <a class="reference external" href="https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html">https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html</a></p>
+</div></blockquote>
+</li>
+<li><p>Configure Docker:</p>
+<ol class="arabic">
+<li><p>Configure the container runtime by using the nvidia-ctk command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>nvidia-ctk<span class="w"> </span>runtime<span class="w"> </span>configure<span class="w"> </span>--runtime<span class="o">=</span>docker
+</pre></div>
+</div>
+</li>
+<li><p>Restart the Docker daemon:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>docker
+</pre></div>
+</div>
+</li>
+</ol>
+</li>
+<li><p>Verify installation:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span>run<span class="w"> </span>--gpus<span class="w"> </span>all<span class="w"> </span>--network<span class="o">=</span>host<span class="w"> </span>-it<span class="w"> </span>&lt;image&gt;:&lt;tag&gt;<span class="w"> </span>bash
+
+<span class="c1"># then run</span>
+nvidia-smi
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">aCupOfTea</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Fields</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../dataCollection/index.html">Datacollection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../deepLearning/index.html">Deeplearning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../designPatterns/index.html">Designpatterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generativeAI/index.html">Generativeai</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Libararies,Frameworks,Containers</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="101-conda.html">101-Conda</a></li>
+<li class="toctree-l3"><a class="reference internal" href="101-containers.html">101-Containers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="101-cuda.html">101-Cuda</a></li>
+<li class="toctree-l3"><a class="reference internal" href="101-dask.html">101-Dask</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">101-Docker</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#software-skill-docker">Software Skill: Docker</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#docker-introduction-to-docker">101 - Docker: Introduction to Docker</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#table-of-content">Table of Content</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#section-motivation-and-objectives">Section: Motivation and Objectives</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#section-docker-fundamentals">Section: Docker Fundamentals</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#section-docker-installation">Section: Docker Installation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#section-dockerfile-and-building-images">Section: Dockerfile and Building Images</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#section-docker-scout">Section: Docker Scout</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#section-issues">Section: Issues</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="101-nvdia-smi.html">101-Nvdia-Smi</a></li>
+<li class="toctree-l3"><a class="reference internal" href="101-pandas.html">101-Pandas</a></li>
+<li class="toctree-l3"><a class="reference internal" href="101-pytorch.html">101-Pytorch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="101-singularity.html">101-Singularity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="102-pytorchDDP.html">102-Pytorchddp</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../projectTopics/index.html">Projecttopics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../recommenderSystems/index.html">Recommendersystems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reinforcementLearning/index.html">Reinforcementlearning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../statistics/index.html">Statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../systemAdministration/index.html">Systemadministration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tabularData/index.html">Tabulardata</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../programming/index.html">Programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../journal/index.html">Journal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tips/index.html">Tips</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Fields</a><ul>
+  <li><a href="index.html">Libararies,Frameworks,Containers</a><ul>
+      <li>Previous: <a href="101-dask.html" title="previous chapter">101-Dask</a></li>
+      <li>Next: <a href="101-nvdia-smi.html" title="next chapter">101-Nvdia-Smi</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Ahmed Yousri Sobhi.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.0.4</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../../_sources/fields/libararies,Frameworks,Containers/101-docker.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

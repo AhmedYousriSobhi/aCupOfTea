@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>101-Containers &#8212; aCupOfTea 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <script src="../../_static/documentation_options.js?v=f2a433a1"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="101-Cuda" href="101-cuda.html" />
+    <link rel="prev" title="101-Conda" href="101-conda.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="containers">
+<h1>101-Containers<a class="headerlink" href="#containers" title="Link to this heading">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<section id="id1">
+<h2>101 - Containers<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h2>
+<p>You mean Docker?!! NOO!! the concept of containerzation was an old concept, even introuced by linux in “C-Groups” which are short for “Controled Groups.”</p>
+</section>
+<section id="table-of-content">
+<h2>Table of Content<a class="headerlink" href="#table-of-content" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="#101---containers"><span class="xref myst">101 - Containers</span></a></p></li>
+<li><p><a class="reference internal" href="#table-of-content"><span class="xref myst">Table of Content</span></a></p></li>
+<li><p><a class="reference internal" href="#what-happens-when-power-is-on"><span class="xref myst">What Happens When Power is on?</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#kernel"><span class="xref myst">Kernel</span></a></p></li>
+<li><p><a class="reference internal" href="#kernel-space--user-space"><span class="xref myst">Kernel Space &amp; User Space</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#hypervisor-virtual-machine"><span class="xref myst">Hypervisor Virtual Machine</span></a></p></li>
+<li><p><a class="reference internal" href="#from-history-to-container"><span class="xref myst">From History to Container!</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#what-is-a-namespace"><span class="xref myst">What is a Namespace?!</span></a></p></li>
+<li><p><a class="reference internal" href="#namespace-in-linux"><span class="xref myst">Namespace in Linux?</span></a></p></li>
+<li><p><a class="reference internal" href="#cgroups"><span class="xref myst">Cgroups</span></a></p></li>
+<li><p><a class="reference internal" href="#linux-containers-lxc"><span class="xref myst">Linux Containers (LXC)</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#os-of-a-container"><span class="xref myst">Os of a Container?!</span></a></p></li>
+<li><p><a class="reference internal" href="#how-container-become-alive"><span class="xref myst">How container become alive?</span></a></p></li>
+<li><p><a class="reference internal" href="#containers-shares-kernel"><span class="xref myst">Containers Shares Kernel?</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#gvisor-independed-kernel"><span class="xref myst">gVisor: Independed Kernel</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#references"><span class="xref myst">References</span></a></p></li>
+</ul>
+</section>
+<section id="what-happens-when-power-is-on">
+<h2>What Happens When Power is on?<a class="headerlink" href="#what-happens-when-power-is-on" title="Link to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Power On and POST (Power-On Self-Test):</p>
+<ul class="simple">
+<li><p>When you press the power button, the system’s power supply provides electricity to the components, and the CPU receives its initial reset signal.</p></li>
+<li><p>The firmware (BIOS or UEFI) initializes, and the CPU executes a small piece of code stored in a special memory location called the BIOS/UEFI firmware.</p></li>
+<li><p>The firmware performs a series of diagnostic tests known as the Power-On Self-Test (POST) to check the hardware components (CPU, memory, storage, etc.) for functionality and ensure they’re working correctly.</p></li>
+</ul>
+</li>
+<li><p>Initialization and Hardware Detection:</p>
+<ul class="simple">
+<li><p>After the POST completes successfully, the firmware initializes various hardware components and devices connected to the system, such as the CPU, memory modules, storage devices (hard disk drives, solid-state drives), input/output devices (keyboard, mouse, display), and peripheral devices (USB drives, network adapters).</p></li>
+<li><p>The firmware identifies and initializes these components by accessing data stored in the system’s BIOS or UEFI firmware settings.</p></li>
+</ul>
+</li>
+<li><p>Boot Device Selection:</p>
+<ul class="simple">
+<li><p>The firmware determines the boot device from which to load the operating system. This can be configured in the system’s BIOS or UEFI settings.</p></li>
+<li><p>The boot device is typically a storage device such as a hard disk drive (HDD), solid-state drive (SSD), or USB flash drive.</p></li>
+</ul>
+</li>
+<li><p>Bootloader Execution:</p>
+<ul class="simple">
+<li><p>The firmware locates and executes the bootloader code stored in the boot sector of the selected boot device.</p></li>
+<li><p>The bootloader is responsible for loading the operating system kernel into memory and initiating its execution. This involves reading the kernel image from the storage device and transferring control to the kernel.</p></li>
+</ul>
+</li>
+<li><p>Kernel Initialization:</p>
+<ul class="simple">
+<li><p>Once the bootloader loads the kernel into memory, the kernel initialization process begins.</p></li>
+<li><p>The kernel initializes various system components, such as the CPU, memory, device drivers, file systems, and networking.</p></li>
+<li><p>It sets up data structures, establishes system parameters, and configures hardware resources to prepare the system for normal operation.</p></li>
+</ul>
+</li>
+<li><p>User Space Initialization:</p>
+<ul class="simple">
+<li><p>After the kernel initialization completes, the operating system transitions to user space.</p></li>
+<li><p>User-space initialization involves launching system services, daemons, and user applications necessary for the user to interact with the system.</p></li>
+<li><p>Graphical user interfaces (GUIs) or command-line interfaces (CLIs) may be started, depending on the system configuration and user preferences.</p></li>
+</ul>
+</li>
+<li><p>User Login and System Operation:</p>
+<ul class="simple">
+<li><p>Finally, the system presents the user with a login prompt or desktop environment, allowing them to log in and start using the computer.</p></li>
+<li><p>Once logged in, the user can run applications, access files, browse the internet, and perform other tasks as needed.</p></li>
+</ul>
+</li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">+------------------------------------+</span>
+<span class="o">|</span>            <span class="n">User</span> <span class="n">Space</span>              <span class="o">|</span>
+<span class="o">|</span>   <span class="o">+--------------------------+</span>     <span class="o">|</span>
+<span class="o">|</span>   <span class="o">|</span>    <span class="n">User</span> <span class="n">Applications</span>     <span class="o">|</span>     <span class="o">|</span>
+<span class="o">|</span>   <span class="o">+--------------------------+</span>     <span class="o">|</span>
+<span class="o">+------------------------------------+</span>
+<span class="o">|</span>            <span class="n">Kernel</span> <span class="n">Space</span>            <span class="o">|</span>
+<span class="o">|</span>   <span class="o">+--------------------------+</span>     <span class="o">|</span>
+<span class="o">|</span>   <span class="o">|</span>       <span class="n">System</span> <span class="n">Calls</span>       <span class="o">|</span>     <span class="o">|</span>
+<span class="o">|</span>   <span class="o">|</span>    <span class="n">Device</span> <span class="n">Drivers</span>        <span class="o">|</span>     <span class="o">|</span>
+<span class="o">|</span>   <span class="o">|</span>    <span class="n">Process</span> <span class="n">Management</span>    <span class="o">|</span>     <span class="o">|</span>
+<span class="o">|</span>   <span class="o">|</span>    <span class="n">Memory</span> <span class="n">Management</span>     <span class="o">|</span>     <span class="o">|</span>
+<span class="o">|</span>   <span class="o">|</span>    <span class="n">File</span> <span class="n">System</span>           <span class="o">|</span>     <span class="o">|</span>
+<span class="o">|</span>   <span class="o">|</span>    <span class="n">Networking</span>            <span class="o">|</span>     <span class="o">|</span>
+<span class="o">|</span>   <span class="o">+--------------------------+</span>     <span class="o">|</span>
+<span class="o">+------------------------------------+</span>
+<span class="o">|</span>              <span class="n">Hardware</span>              <span class="o">|</span>
+<span class="o">|</span>   <span class="o">+--------------------------+</span>     <span class="o">|</span>
+<span class="o">|</span>   <span class="o">|</span>        <span class="n">CPU</span> <span class="p">(</span><span class="n">Processor</span><span class="p">)</span>    <span class="o">|</span>     <span class="o">|</span>
+<span class="o">|</span>   <span class="o">|</span>        <span class="n">Memory</span> <span class="p">(</span><span class="n">RAM</span><span class="p">)</span>       <span class="o">|</span>     <span class="o">|</span>
+<span class="o">|</span>   <span class="o">|</span>        <span class="n">Storage</span> <span class="p">(</span><span class="n">HDD</span><span class="o">/</span><span class="n">SSD</span><span class="p">)</span>  <span class="o">|</span>     <span class="o">|</span>
+<span class="o">|</span>   <span class="o">|</span>        <span class="n">Input</span> <span class="n">Devices</span>      <span class="o">|</span>     <span class="o">|</span>
+<span class="o">|</span>   <span class="o">|</span>        <span class="n">Output</span> <span class="n">Devices</span>     <span class="o">|</span>     <span class="o">|</span>
+<span class="o">|</span>   <span class="o">+--------------------------+</span>     <span class="o">|</span>
+<span class="o">+------------------------------------+</span>
+</pre></div>
+</div>
+<section id="kernel">
+<h3>Kernel<a class="headerlink" href="#kernel" title="Link to this heading">¶</a></h3>
+<p>Kernel is a piece of software in the OS, that serves as the bridge between the hardware and the rest of the system, responsible for shceduling processess to run, managing devices (read/write on disk and memory), … etc.</p>
+</section>
+<section id="kernel-space-user-space">
+<h3>Kernel Space &amp; User Space<a class="headerlink" href="#kernel-space-user-space" title="Link to this heading">¶</a></h3>
+<p>System memory in Linux can be divided into two distinct regions; <em>kernel space</em> and <em>user space</em>
+According to <a class="reference external" href="https://www.linfo.org/user_space.html">LINFO - user space definition</a> &amp; <a class="reference external" href="https://www.linfo.org/kernel_space.html">kernel space definition</a>:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Kernel Space</p></th>
+<th class="head"><p>User Space</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>User space is that portion of system memory in which “user processess” run</p></td>
+<td><p>Kernel space is that portion of memory in which kernel executes and provides its services.</p></td>
+</tr>
+<tr class="row-odd"><td><p>User processess are instances of all programs other than the kernel.</br>When a program is to be run, it is copied from storage into user space so that it can be accessed at high speed by the CPU</p></td>
+<td><p>The kernel program that consititute the central core of a computer os, it is not a process, but rather a controller of processes, and it has complete control over everything that occurs on the system.M</br>This includes managing individual user processess within user space and preventing them from interfering with each other.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="hypervisor-virtual-machine">
+<h2>Hypervisor Virtual Machine<a class="headerlink" href="#hypervisor-virtual-machine" title="Link to this heading">¶</a></h2>
+<p>According to <a class="reference external" href="https://www.freecodecamp.org/news/demystifying-containers-101-a-deep-dive-into-container-technology-for-beginners-d7b60d8511c1/">freecodecamp - demystifying containers 101</a>:</p>
+<p>A virtual machine is comprised of some level of hardware and kernel virtualization on which runs a guest operating system. a VM consist of two main parts [Hypervisor, guest kernel]:</p>
+<ul class="simple">
+<li><p>Hypervisor: is a piece of software that creates the virtualized hardware which may include the virtual [disk, network, CPU, ..etc].</p></li>
+<li><p>Guest Kernel: can talk to this virutal hardware.</p></li>
+</ul>
+<p>A good note is that, Hypervisor can be hosted directly to the hardware without a host OS, in this case it is called <em>Bare Metal Hypervisor VM</em>.</p>
+<p><img alt="comparison" src="https://cdn-media-1.freecodecamp.org/images/y4w7Yvlj0aGyKUDYWnFJLf8jfyUkyKgVfGDN" />
+<em>freecodecamp <a class="reference external" href="https://www.freecodecamp.org/news/demystifying-containers-101-a-deep-dive-into-container-technology-for-beginners-d7b60d8511c1/">img</a></em></p>
+</section>
+<section id="from-history-to-container">
+<h2>From History to Container!<a class="headerlink" href="#from-history-to-container" title="Link to this heading">¶</a></h2>
+<p>The journy as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Cgroup</span> <span class="s2">&quot;Controlled Groups&quot;</span><span class="p">:</span> <span class="n">Linux</span> <span class="n">kernel</span> <span class="n">feature</span> <span class="n">uses</span> <span class="n">Linux</span> <span class="n">namespaces</span> <span class="p">{</span>
+        <span class="n">PID</span><span class="p">:</span> <span class="n">Process</span> <span class="n">ID</span><span class="p">:</span> <span class="n">ps</span> <span class="n">aux</span><span class="p">,</span> 
+        <span class="n">net</span><span class="p">:</span> <span class="n">Network</span><span class="p">:</span> <span class="n">ip</span> <span class="n">addr</span><span class="p">,</span> 
+        <span class="n">mnt</span><span class="p">:</span> <span class="n">Mount</span><span class="p">,</span> 
+        <span class="n">uts</span><span class="p">:</span> <span class="n">Unix</span> <span class="n">Time</span> <span class="n">Sharing</span><span class="p">,</span> 
+        <span class="n">ipc</span><span class="p">:</span> <span class="n">Inter</span><span class="o">-</span><span class="n">Process</span> <span class="n">Communication</span><span class="p">,</span> 
+        <span class="n">user</span><span class="p">,</span> 
+        <span class="p">}</span>
+
+<span class="n">Linux</span> <span class="n">Containers</span> <span class="p">(</span><span class="n">LXC</span><span class="p">)</span>
+
+<span class="n">Docker</span> <span class="o">-</span> <span class="mi">2013</span>
+
+<span class="n">Container</span> <span class="n">Orchestration</span> <span class="ow">and</span> <span class="n">Management</span> <span class="o">-</span> <span class="n">e</span><span class="o">.</span><span class="n">g</span><span class="o">.</span> <span class="n">Kubernetes</span> <span class="mi">2014</span>
+</pre></div>
+</div>
+<section id="what-is-a-namespace">
+<h3>What is a Namespace?!<a class="headerlink" href="#what-is-a-namespace" title="Link to this heading">¶</a></h3>
+<p>From this example from <a class="reference external" href="https://stackoverflow.com/a/991103">‘jwl’</a>:</p>
+<blockquote>
+<div><p>Say my wife has a sister named Sue, and so do I. How can I tell them apart in a conversation? By using their last names (“Sue Larson” vs “Sue Jones”). The last name is the namespace.</p>
+</div></blockquote>
+<p>In programming, namespace is a feature used to :</p>
+<ul class="simple">
+<li><p>organize code elements [classes, functions, variables, types] into logical groups and containers.</p></li>
+<li><p>prevent naming conflicts and provide a way to encapsulate and modularize code.</p></li>
+</ul>
+<p>Namespaces provide an isolation of processes and resources within a system; Linux namespaces are the fundamental feature of containerization!</p>
+<p>From <a class="reference external" href="https://stackoverflow.com/a/991060">mikej</a>:</p>
+<blockquote>
+<div><p>So namespace provides a container to hold things like functions, classes and constants as a way to group them together logically and to help avoid conflicts with functions and classes with the same name that have been written by someone else.</p>
+</div></blockquote>
+</section>
+<section id="namespace-in-linux">
+<h3>Namespace in Linux?<a class="headerlink" href="#namespace-in-linux" title="Link to this heading">¶</a></h3>
+<p>In Linux systems, a namespace refers to a kernel feature that provides process isolation and virtualization of system resources. so Linux namesapce allow multiple processes to have their own unique views of certain system resources, such as process IDs, network interfaces, mount points, and more, within a single operating system instance.</p>
+<p>For more info, check <a class="reference external" href="https://www.linkedin.com/pulse/deep-dive-linux-namespaces-understanding-container-isolation-patil-1f/">Linkedin-bolg</a>.</p>
+<p>Command <em>unshare</em> is used to create a new namespace or unshare an existing one; thereby isolating certain aspects of the system from the rest of the system.</p>
+</section>
+<section id="cgroups">
+<h3>Cgroups<a class="headerlink" href="#cgroups" title="Link to this heading">¶</a></h3>
+<p>It is a Linux kernel feature that uses Linux namespaces to isolate processes and resources. So Cgroups merges multiple namespaces toghether to achieve isolation.</p>
+<p>While not an original feature, cgroups in Linux were eventually reworked to include a feature called <em><strong>namespace isolation</strong></em>.</p>
+<p>The idea of Namespaces isolation in Linux is not new, as Linux has multiple kinds of namespace isolation. But Cgroups isolation is considered to a higher level of isolation to make sure processes within a cgroup namespace are independed.</p>
+<p>So yes some consider cgroup as a namespace.</p>
+</section>
+<section id="linux-containers-lxc">
+<h3>Linux Containers (LXC)<a class="headerlink" href="#linux-containers-lxc" title="Link to this heading">¶</a></h3>
+<p>Taking advantage of cgroups, namespace isolation other kernel features to create a virtual environment with seperate process and networking space.</p>
+<ul class="simple">
+<li><p>[cgroup “merging namespace isolation” + Kernel features instead of creating its own kernel.]</p></li>
+</ul>
+<p>This virutal environment has minimal overhead compared to traditional virtual machines.</p>
+<p>Early version of Docker were build directly on the top of LXC.</p>
+</section>
+</section>
+<section id="os-of-a-container">
+<h2>Os of a Container?!<a class="headerlink" href="#os-of-a-container" title="Link to this heading">¶</a></h2>
+<p>The OS of a container is in the form of an image. The image:</p>
+<ul class="simple">
+<li><p>is not a full operating system as the host.</p></li>
+<li><p>is just the file system and binaries for the OS.</p></li>
+</ul>
+<p>The full host OS includes the file system, binaries, and the kernel.</p>
+</section>
+<section id="how-container-become-alive">
+<h2>How container become alive?<a class="headerlink" href="#how-container-become-alive" title="Link to this heading">¶</a></h2>
+<p>Let’s take an example of Docker:</p>
+<ol class="arabic simple">
+<li><p>When the container is booted, first thing to be done is from the repo, the image and its parent images are downloaded.</p></li>
+<li><p>The cgroup and namesapce are created.</p></li>
+<li><p>The image is used to create a virtual environment.</p></li>
+<li><p>From this point, the only files and binaries specified for the image, are the only files in the entire machine.</p></li>
+<li><p>The container main process is started, and the container is considered alive.</p></li>
+</ol>
+</section>
+<section id="containers-shares-kernel">
+<h2>Containers Shares Kernel?<a class="headerlink" href="#containers-shares-kernel" title="Link to this heading">¶</a></h2>
+<p>Docker says “Docker shares the Kernel of the Host”!! let’s dive deep to explore more about this.</p>
+<section id="gvisor-independed-kernel">
+<h3>gVisor: Independed Kernel<a class="headerlink" href="#gvisor-independed-kernel" title="Link to this heading">¶</a></h3>
+<p>To work on secured, efficient container, we can try to make the container uses an independed kernel, then consider <a class="reference external" href="https://github.com/google/gvisor">gVisor</a> from google.</p>
+<p><img alt="gvisor" src="https://gvisor.dev/docs/Layers.png" /></p>
+</section>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>IBM tutorial to explain the concept of Containerization, found <a class="reference external" href="https://www.youtube.com/watch?v=0qotVMX-J5s">here</a>.</p></li>
+<li><p>LINFO: The Linux Information Project. <a class="reference external" href="https://www.linfo.org/index.html">https://www.linfo.org/index.html</a></p></li>
+<li><p>Demystifying Containers 101: A Deep Dive Into Container Technology for Beginners freeCodeCamp. <a class="reference external" href="https://www.freecodecamp.org/news/demystifying-containers-101-a-deep-dive-into-container-technology-for-beginners-d7b60d8511c1/">https://www.freecodecamp.org/news/demystifying-containers-101-a-deep-dive-into-container-technology-for-beginners-d7b60d8511c1/</a></p></li>
+<li><p>Scott McCarty. Redhat. Architecting Containers Part 1: Why Understanding User Space vs. Kernel Space Matters. 2015. <a class="reference external" href="https://www.redhat.com/en/blog/architecting-containers-part-1-why-understanding-user-space-vs-kernel-space-matters">https://www.redhat.com/en/blog/architecting-containers-part-1-why-understanding-user-space-vs-kernel-space-matters</a></p></li>
+</ul>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">aCupOfTea</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Fields</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../dataCollection/index.html">Datacollection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../deepLearning/index.html">Deeplearning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../designPatterns/index.html">Designpatterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generativeAI/index.html">Generativeai</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Libararies,Frameworks,Containers</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="101-conda.html">101-Conda</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">101-Containers</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id1">101 - Containers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#table-of-content">Table of Content</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#what-happens-when-power-is-on">What Happens When Power is on?</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#hypervisor-virtual-machine">Hypervisor Virtual Machine</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#from-history-to-container">From History to Container!</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#os-of-a-container">Os of a Container?!</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#how-container-become-alive">How container become alive?</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#containers-shares-kernel">Containers Shares Kernel?</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="101-cuda.html">101-Cuda</a></li>
+<li class="toctree-l3"><a class="reference internal" href="101-dask.html">101-Dask</a></li>
+<li class="toctree-l3"><a class="reference internal" href="101-docker.html">101-Docker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="101-nvdia-smi.html">101-Nvdia-Smi</a></li>
+<li class="toctree-l3"><a class="reference internal" href="101-pandas.html">101-Pandas</a></li>
+<li class="toctree-l3"><a class="reference internal" href="101-pytorch.html">101-Pytorch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="101-singularity.html">101-Singularity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="102-pytorchDDP.html">102-Pytorchddp</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../projectTopics/index.html">Projecttopics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../recommenderSystems/index.html">Recommendersystems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reinforcementLearning/index.html">Reinforcementlearning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../statistics/index.html">Statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../systemAdministration/index.html">Systemadministration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tabularData/index.html">Tabulardata</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../programming/index.html">Programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../journal/index.html">Journal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tips/index.html">Tips</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Fields</a><ul>
+  <li><a href="index.html">Libararies,Frameworks,Containers</a><ul>
+      <li>Previous: <a href="101-conda.html" title="previous chapter">101-Conda</a></li>
+      <li>Next: <a href="101-cuda.html" title="next chapter">101-Cuda</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Ahmed Yousri Sobhi.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.0.4</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../../_sources/fields/libararies,Frameworks,Containers/101-containers.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Linux-Create-App-Launcher &#8212; aCupOfTea 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <script src="../_static/documentation_options.js?v=f2a433a1"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Linux-Daily-Tricks" href="linux-daily-tricks.html" />
+    <link rel="prev" title="Kaggle-Tips" href="kaggle-tips.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="linux-create-app-launcher">
+<h1>Linux-Create-App-Launcher<a class="headerlink" href="#linux-create-app-launcher" title="Link to this heading">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<section id="tip-linux-create-app-launcher">
+<h2>Tip: Linux Create App Launcher<a class="headerlink" href="#tip-linux-create-app-launcher" title="Link to this heading">¶</a></h2>
+</section>
+<section id="table-of-content">
+<h2>Table of Content<a class="headerlink" href="#table-of-content" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="#tip-linux-create-app-launcher"><span class="xref myst">Tip: Linux Create App Launcher</span></a></p></li>
+<li><p><a class="reference internal" href="#table-of-content"><span class="xref myst">Table of Content</span></a></p></li>
+<li><p><a class="reference internal" href="#steps-to-create-app-launcher"><span class="xref myst">Steps to Create App Launcher</span></a></p></li>
+<li><p><a class="reference internal" href="#reference"><span class="xref myst">Reference</span></a></p></li>
+</ul>
+</section>
+<section id="steps-to-create-app-launcher">
+<h2>Steps to Create App Launcher<a class="headerlink" href="#steps-to-create-app-launcher" title="Link to this heading">¶</a></h2>
+<ol class="arabic">
+<li><p>Use Gedit to create an app launcher for Iris.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>gedit<span class="w"> </span>/usr/share/applications/iris.desktop
+</pre></div>
+</div>
+</li>
+<li><p>Add the following lines in this file.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">[</span>Desktop<span class="w"> </span>Entry<span class="o">]</span>
+<span class="nv">Name</span><span class="o">=</span>Iris
+<span class="nv">Comment</span><span class="o">=</span>Eye<span class="w"> </span>Protection<span class="w"> </span>Software
+<span class="nv">Exec</span><span class="o">=</span>/opt/iris/Iris.sh
+<span class="nv">Type</span><span class="o">=</span>Application
+<span class="nv">Terminal</span><span class="o">=</span><span class="nb">false</span>
+<span class="nv">Icon</span><span class="o">=</span>/opt/iris/iris.png
+<span class="nv">NoDisplay</span><span class="o">=</span><span class="nb">false</span>
+</pre></div>
+</div>
+</li>
+<li><p>Save and close this file. Then Download the Iris logo file.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wget<span class="w"> </span>-O<span class="w"> </span>iris.png<span class="w"> </span>https://iristech.co/wp-content/themes/iris/img/Logo.png
+</pre></div>
+</div>
+</li>
+<li><p>Move it to /opt/iris/ directory.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>mv<span class="w"> </span>iris.png<span class="w"> </span>/opt/iris/
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+<section id="reference">
+<h2>Reference<a class="headerlink" href="#reference" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>This tutorial was taken from the instructions to setup <a class="reference external" href="https://www.linuxbabe.com/desktop-linux/protect-your-eyes-from-computer-screen-with-iris">Iris eye care app</a> on Linux system</p></li>
+</ul>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">aCupOfTea</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../fields/index.html">Fields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../programming/index.html">Programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../journal/index.html">Journal</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Tips</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="analyticSkill.html">Analyticskill</a></li>
+<li class="toctree-l2"><a class="reference internal" href="concepts.html">Concepts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interview-technical-info.html">Interview-Technical-Info</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kaggle-tips.html">Kaggle-Tips</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Linux-Create-App-Launcher</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tip-linux-create-app-launcher">Tip: Linux Create App Launcher</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#table-of-content">Table of Content</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#steps-to-create-app-launcher">Steps to Create App Launcher</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#reference">Reference</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="linux-daily-tricks.html">Linux-Daily-Tricks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="markdown.html">Markdown</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ubuntu-deb-file-install.html">Ubuntu-Deb-File-Install</a></li>
+<li class="toctree-l2"><a class="reference internal" href="valueInterview.html">Valueinterview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="versionControl-git.html">Versioncontrol-Git</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Tips</a><ul>
+      <li>Previous: <a href="kaggle-tips.html" title="previous chapter">Kaggle-Tips</a></li>
+      <li>Next: <a href="linux-daily-tricks.html" title="next chapter">Linux-Daily-Tricks</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Ahmed Yousri Sobhi.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.0.4</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../_sources/tips/linux-create-app-launcher.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

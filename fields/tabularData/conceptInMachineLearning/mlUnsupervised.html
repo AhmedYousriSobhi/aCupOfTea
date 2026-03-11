@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Mlunsupervised &#8212; aCupOfTea 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <script src="../../../_static/documentation_options.js?v=f2a433a1"></script>
+    <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Conceptintimeseries" href="../conceptinTimeSeries/index.html" />
+    <link rel="prev" title="Mlsupervisedregression" href="mlSupervisedRegression.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="mlunsupervised">
+<h1>Mlunsupervised<a class="headerlink" href="#mlunsupervised" title="Link to this heading">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<section id="tabular-data-concepts-in-machine-learning-unsupervisied-learning">
+<h2>Tabular Data - Concepts in Machine Learning - Unsupervisied Learning<a class="headerlink" href="#tabular-data-concepts-in-machine-learning-unsupervisied-learning" title="Link to this heading">¶</a></h2>
+<p>Unsupervised machine learning is a type of machine learning where the model is trained on a dataset without labeled target values or explicit supervision. In unsupervised learning, the algorithm is tasked with finding patterns, structures, or relationships within the data on its own.</p>
+</section>
+<section id="table-of-content">
+<h2>Table of Content<a class="headerlink" href="#table-of-content" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="#tabular-data---concepts-in-machine-learning---unsupervisied-learning"><span class="xref myst">Tabular Data - Concepts in Machine Learning - Unsupervisied Learning</span></a></p></li>
+<li><p><a class="reference internal" href="#table-of-content"><span class="xref myst">Table of Content</span></a></p></li>
+<li><p><a class="reference internal" href="#description-of-unspervised-ml"><span class="xref myst">Description of Unspervised ML</span></a></p></li>
+<li><p><a class="reference internal" href="#two-cases-of-unsupervised-learning"><span class="xref myst">Two cases of unsupervised learning</span></a></p></li>
+<li><p><a class="reference internal" href="#the-curse-of-dimensionality"><span class="xref myst">The Curse of dimensionality</span></a></p></li>
+<li><p><a class="reference internal" href="#k-means"><span class="xref myst">K-means</span></a></p></li>
+<li><p><a class="reference internal" href="#choosing-the-right-clustering-algorithm"><span class="xref myst">Choosing the right Clustering ALgorithm</span></a></p></li>
+<li><p><a class="reference internal" href="#clustering-algorithms-comparison"><span class="xref myst">Clustering Algorithms Comparison</span></a></p></li>
+<li><p><a class="reference internal" href="#determining-the-number-of-clusters"><span class="xref myst">Determining The Number of Clusters</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#silhouette-score"><span class="xref myst">Silhouette Score</span></a></p></li>
+<li><p><a class="reference internal" href="#elbow-method"><span class="xref myst">Elbow Method</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#python-implementation"><span class="xref myst">Python Implementation</span></a></p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#dimentionality-reduction-techniques"><span class="xref myst">Dimentionality Reduction Techniques</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#techinical-comparison"><span class="xref myst">Techinical Comparison</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#principal-component-analysis-pca"><span class="xref myst">Principal Component Analysis (PCA)</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#example-dimensionality-reduction-using-pca"><span class="xref myst">Example: Dimensionality Reduction using PCA</span></a></p></li>
+<li><p><a class="reference internal" href="#pca-algorithm"><span class="xref myst">PCA Algorithm</span></a></p></li>
+<li><p><a class="reference internal" href="#practice-problems-based-on-principal-component-analysis"><span class="xref myst">PRACTICE PROBLEMS BASED ON PRINCIPAL COMPONENT ANALYSIS</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#problem-01"><span class="xref myst">Problem-01</span></a></p></li>
+<li><p><a class="reference internal" href="#solution"><span class="xref myst">Solution</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#pca-technical-points"><span class="xref myst">PCA Technical Points</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#credits"><span class="xref myst">Credits</span></a></p></li>
+</ul>
+</section>
+<section id="description-of-unspervised-ml">
+<h2>Description of Unspervised ML<a class="headerlink" href="#description-of-unspervised-ml" title="Link to this heading">¶</a></h2>
+<p>Here’s a description of unsupervised machine learning:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Aspect</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>No Labeled Output</p></td>
+<td><p>Unlike supervised learning, where the algorithm is provided with input-output pairs and learns to map inputs to specific outputs, unsupervised learning deals with data where there are no target labels or explicit output values to predict.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Objective</p></td>
+<td><p>The primary objective of unsupervised learning is to discover the inherent structure or organization within the data. This could involve finding clusters of similar data points, reducing the dimensionality of the data, or discovering underlying patterns.</p></td>
+</tr>
+<tr class="row-even"><td><p>Common Tasks</p></td>
+<td><p>Clustering: One common task in unsupervised learning is clustering, where the algorithm groups similar data points together into clusters or categories. Common clustering algorithms include K-Means, hierarchical clustering, and DBSCAN. </br></br>Dimensionality Reduction: Unsupervised learning is also used for dimensionality reduction, which involves reducing the number of features or variables in the data while preserving its essential structure. Principal Component Analysis (PCA) and t-Distributed Stochastic Neighbor Embedding (t-SNE) are popular dimensionality reduction techniques.</br></br>Anomaly Detection: Another task is anomaly detection, where the algorithm identifies data points that are significantly different from the rest of the data. This is useful for detecting outliers or unusual patterns in the data.</br></br>Density Estimation: Unsupervised learning can be used for density estimation, which involves estimating the probability distribution of the data. Kernel Density Estimation (KDE) is an example of a density estimation technique.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Feature Learning</p></td>
+<td><p>Unsupervised learning is often used for feature learning, where the algorithm automatically learns relevant features or representations from the data. This can be particularly beneficial for tasks like image and text analysis.</p></td>
+</tr>
+<tr class="row-even"><td><p>Evaluation</p></td>
+<td><p>Evaluating the performance of unsupervised learning algorithms can be challenging because there are no ground truth labels. Evaluation metrics depend on the specific task; for example, silhouette score for clustering or reconstruction error for dimensionality reduction.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Applications</p></td>
+<td><p>Unsupervised learning finds applications in various domains, including image and speech recognition, recommendation systems, anomaly detection in cybersecurity, customer segmentation in marketing, and more.</br></br>It is particularly useful in exploratory data analysis when you want to gain insights from data that lacks clear labels or when you want to preprocess data before applying supervised learning techniques.</p></td>
+</tr>
+<tr class="row-even"><td><p>Challenges</p></td>
+<td><p>Unsupervised learning can be challenging because it relies on the algorithm’s ability to discover meaningful patterns without explicit guidance.</br></br>The choice of the right algorithm and hyperparameters can significantly impact results.</p></td>
+</tr>
+</tbody>
+</table>
+<p>In summary, unsupervised machine learning is a branch of machine learning focused on finding patterns and structures within data without the use of labeled target values. It is a valuable tool for uncovering hidden insights and knowledge from large and complex datasets.</p>
+</section>
+<section id="two-cases-of-unsupervised-learning">
+<h2>Two cases of unsupervised learning<a class="headerlink" href="#two-cases-of-unsupervised-learning" title="Link to this heading">¶</a></h2>
+<p>One popularly use case is called <strong>clustering</strong>, where we use our unlabeled data to identify an unknown structure and an example of this may be segmenting our customers into different groups.</p>
+<p>The other major use case for unsupervised algorithms is for <strong>dimensionality reduction</strong>. Namely using structural characteristics to reduce the size of our dataset without losing much information contained in that original dataset.</p>
+</section>
+<section id="the-curse-of-dimensionality">
+<h2>The Curse of dimensionality<a class="headerlink" href="#the-curse-of-dimensionality" title="Link to this heading">¶</a></h2>
+<p>The dimensionality refers to the number of features in our dataset, and theortically the more features we have the better the model should perform, since models will have more features to learn from, however in real life there are several reasons why too many features may end up leading to worse performance in practice.</p>
+<p>If we have several features, things can go wrong;</p>
+<ul class="simple">
+<li><p>Maybe some of those features are spurios correlations (meaning they correlate within your dataset, but with new data outside form our training dataset)</p></li>
+<li><p>Too many features may create more noise and signal.</p></li>
+<li><p>Algorithms find it harder to sort through non-meaningful features.</p></li>
+<li><p>The number of training examples required will increase exponentially with the dimensionality</p></li>
+<li><p>On top of that, higher dimensions will often lead to slower performance as dealing with more columns is going to be more computationally expensive.</p></li>
+<li><p>Also it will lead to the incidence of outliers increasing as the dimensionality increases</p></li>
+</ul>
+<p>Here are some of the specific problems that can arise due to the curse of dimensionality:</p>
+<ul class="simple">
+<li><p>Data sparsity: As the number of dimensions increases, the data becomes more and more sparse. This means that there are fewer and fewer data points that are close to each other in high-dimensional space. This can make it difficult to find patterns and relationships in the data.</p></li>
+<li><p>Overfitting: Machine learning models are more likely to overfit high-dimensional data. Overfitting occurs when a model learns the training data too well and is unable to generalize to new data.</p></li>
+<li><p>Computational complexity: Training machine learning models on high-dimensional data can be very computationally expensive. This is because the algorithms need to learn the relationships between all of the different dimensions in the data.</p></li>
+</ul>
+<p>There are a number of techniques that can be used to mitigate the curse of dimensionality, such as:</p>
+<ul class="simple">
+<li><p>Feature selection: Feature selection is the process of selecting a subset of features that are most relevant to the task at hand. This can help to reduce the dimensionality of the data and make it easier to find patterns and relationships.</p></li>
+<li><p>Dimensionality reduction: Dimensionality reduction is the process of transforming the data into a lower-dimensional space while preserving as much information as possible. This can help to make the data more manageable and easier to analyze.</p></li>
+<li><p>Regularization: Regularization is a technique that can help to prevent overfitting. It works by penalizing the model for having complex relationships between the different features.</p></li>
+</ul>
+<p>The curse of dimensionality is a complex topic, and there is no one-size-fits-all solution. The best approach to dealing with the curse of dimensionality will depend on the specific problem that you are trying to solve.</p>
+</section>
+<section id="k-means">
+<h2>K-means<a class="headerlink" href="#k-means" title="Link to this heading">¶</a></h2>
+<p>The process is to take k centroids, find the nearest points, then take the average of each one of those points that are closer to that centroid than any other centroid, and set that average that we have as the new centroid and view the closest points to that new centroid.</p>
+<p>This movement towards that average as we keep reinitiating that centroid after every iteration, is going to stop once that centroid no longer moves and this can happen at different points depending on where we initiate our centroids.</p>
+</section>
+<section id="choosing-the-right-clustering-algorithm">
+<h2>Choosing the right Clustering ALgorithm<a class="headerlink" href="#choosing-the-right-clustering-algorithm" title="Link to this heading">¶</a></h2>
+<p>Choosing the right clustering algorithm depends on the nature of your data, your objectives, and the characteristics you want in your clusters. Here are some considerations to help you choose a clustering algorithm:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Factor</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Data Characteristics</p></td>
+<td><p>Data Distribution: Consider the distribution of your data. K-Means and Gaussian Mixture Models (GMM) assume that clusters have a spherical shape and follow a Gaussian distribution. If your data doesn’t meet these assumptions, other algorithms like DBSCAN or hierarchical clustering might be more suitable.</br>Density: DBSCAN and related algorithms are effective when dealing with clusters of varying shapes and densities.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Number of Clusters</p></td>
+<td><p>K-Means: If you have a good estimate of the number of clusters (K), K-Means can work well. You can use techniques like the Elbow Method or Silhouette Score to help determine the optimal K.</br>Hierarchical Clustering: If you want to explore clusters at different granularities, hierarchical clustering can be useful as it produces a hierarchy of clusters.</p></td>
+</tr>
+<tr class="row-even"><td><p>Scalability</p></td>
+<td><p>Consider the size of your dataset. K-Means and GMM can handle large datasets efficiently. DBSCAN, on the other hand, can be slow for very large datasets due to its density-based nature.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Interpretability</p></td>
+<td><p>Think about how interpretable you want the clusters to be. K-Means and GMM often provide clusters that are easy to understand, while hierarchical clustering produces a hierarchy that may require more interpretation.</p></td>
+</tr>
+<tr class="row-even"><td><p>Outliers</p></td>
+<td><p>If you expect outliers in your data and want to exclude them from clusters, consider algorithms like DBSCAN, which can identify noise points.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Robustness to Noise</p></td>
+<td><p>DBSCAN and other density-based algorithms are robust to noise and can handle datasets with outliers effectively.</p></td>
+</tr>
+<tr class="row-even"><td><p>Non-Euclidean Distances</p></td>
+<td><p>Some algorithms like K-Means and GMM assume Euclidean distances between data points. If your data requires a different distance metric (e.g., cosine similarity for text data), consider algorithms that support custom distance metrics.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Cluster Shape</p></td>
+<td><p>Consider whether your clusters are expected to have arbitrary shapes. Algorithms like DBSCAN, Mean-Shift, or Spectral Clustering can handle non-convex clusters.</p></td>
+</tr>
+<tr class="row-even"><td><p>Hierarchical vs. Partitional</p></td>
+<td><p>Decide if you prefer hierarchical clustering (which produces a tree of clusters) or partitional clustering (which assigns each data point to a single cluster).</p></td>
+</tr>
+<tr class="row-odd"><td><p>Domain Knowledge</p></td>
+<td><p>Your domain expertise and understanding of the problem can also influence the choice of clustering algorithm. Sometimes, a specific algorithm may be known to work well in your domain.</p></td>
+</tr>
+<tr class="row-even"><td><p>Experimentation</p></td>
+<td><p>It’s often a good practice to experiment with multiple clustering algorithms and compare their results in terms of cluster quality and interpretability.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Evaluation Metrics</p></td>
+<td><p>Consider the evaluation metrics you plan to use to assess the quality of clusters. Different algorithms may perform differently in terms of metrics like silhouette score, Davies-Bouldin index, or within-cluster sum of squares (for K-Means).</p></td>
+</tr>
+<tr class="row-even"><td><p>Software and Library Support</p></td>
+<td><p>Ensure that the algorithm you choose is available in your preferred programming language and has good library support (e.g., scikit-learn, scipy).</p></td>
+</tr>
+</tbody>
+</table>
+<p>In practice, it’s common to try several clustering algorithms and evaluate their performance based on your specific objectives and data characteristics. No single algorithm is best for all scenarios, so it’s essential to choose the one that best suits your needs and produces meaningful clusters for your analysis or applications.</p>
+</section>
+<section id="clustering-algorithms-comparison">
+<h2>Clustering Algorithms Comparison<a class="headerlink" href="#clustering-algorithms-comparison" title="Link to this heading">¶</a></h2>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Algorithm</p></th>
+<th class="head"><p>Data Distribution</p></th>
+<th class="head"><p>Number of Clusters</p></th>
+<th class="head"><p>Scalability</p></th>
+<th class="head"><p>Interpretability</p></th>
+<th class="head"><p>Outlier Handling</p></th>
+<th class="head"><p>Robustness to Noise</p></th>
+<th class="head"><p>Cluster Shape</p></th>
+<th class="head"><p>Non-Euclidean Distances</p></th>
+<th class="head"><p>Hierarchical vs. Partitional</p></th>
+<th class="head"><p>Domain Knowledge</p></th>
+<th class="head"><p>Evaluation Metrics</p></th>
+<th class="head"><p>Software Support</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>K-Means</p></td>
+<td><p>Assumes spherical</p></td>
+<td><p>Requires pre-defined K</p></td>
+<td><p>Scalable</p></td>
+<td><p>Easy to interpret</p></td>
+<td><p>Sensitive to outliers</p></td>
+<td><p>Not robust</p></td>
+<td><p>Assumes convex</p></td>
+<td><p>Supports custom distances</p></td>
+<td><p>Partitional</p></td>
+<td><p>Widely used</p></td>
+<td><p>Silhouette Score, Within-cluster SSE</p></td>
+<td><p>scikit-learn, R</p></td>
+</tr>
+<tr class="row-odd"><td><p>Gaussian Mixture Models</p></td>
+<td><p>Assumes Gaussian</p></td>
+<td><p>Requires pre-defined K</p></td>
+<td><p>Scalable</p></td>
+<td><p>Easy to interpret</p></td>
+<td><p>Sensitive to outliers</p></td>
+<td><p>Not robust</p></td>
+<td><p>Assumes convex</p></td>
+<td><p>Supports custom distances</p></td>
+<td><p>Partitional</p></td>
+<td><p>Gaussian data</p></td>
+<td><p>Silhouette Score, BIC</p></td>
+<td><p>scikit-learn, R</p></td>
+</tr>
+<tr class="row-even"><td><p>DBSCAN</p></td>
+<td><p>Does not assume specific shape</p></td>
+<td><p>Adapts to density</p></td>
+<td><p>Limited</p></td>
+<td><p>scalability for large datasets</p></td>
+<td><p>Less interpretable</p></td>
+<td><p>Identifies noise points</p></td>
+<td><p>Robust to noise</p></td>
+<td><p>Handles non-convex</p></td>
+<td><p>Customizable distance metric</p></td>
+<td><p>Partitional</p></td>
+<td><p>Effective for noisy data</p></td>
+<td><p>Silhouette Score</p></td>
+</tr>
+<tr class="row-odd"><td><p>Mean-Shift</p></td>
+<td><p>Does not assume specific shape</p></td>
+<td><p>Adapts to density</p></td>
+<td><p>Moderate scalability</p></td>
+<td><p>Moderate interpretability</p></td>
+<td><p>Identifies modes</p></td>
+<td><p>Robust to noise</p></td>
+<td><p>Handles non-convex</p></td>
+<td><p>Supports custom distances</p></td>
+<td><p>Partitional</p></td>
+<td><p>Mode-seeking</p></td>
+<td><p>Silhouette Score</p></td>
+<td><p>scikit-learn, R</p></td>
+</tr>
+<tr class="row-even"><td><p>Agglomerative Hierarchical</p></td>
+<td><p>Does not assume specific shape</p></td>
+<td><p>Hierarchical hierarchy</p></td>
+<td><p>Moderate scalability</p></td>
+<td><p>Hierarchical structure</p></td>
+<td><p>No explicit outlier handling</p></td>
+<td><p>Moderate robustness</p></td>
+<td><p>Handles non-convex</p></td>
+<td><p>Supports custom distances</p></td>
+<td><p>Hierarchical</p></td>
+<td><p>Hierarchical clustering</p></td>
+<td><p>Silhouette Score, Cophenetic Correlation</p></td>
+<td><p>scikit-learn, scipy</p></td>
+</tr>
+<tr class="row-odd"><td><p>Spectral Clustering</p></td>
+<td><p>Does not assume specific shape</p></td>
+<td><p>Requires pre-defined K</p></td>
+<td><p>Limited scalability for large datasets</p></td>
+<td><p>Moderate interpretability</p></td>
+<td><p>No explicit outlier handling</p></td>
+<td><p>Robust to noise</p></td>
+<td><p>Handles non-convex</p></td>
+<td><p>Supports custom distances</p></td>
+<td><p>Partitional</p></td>
+<td><p>Spectral techniques</p></td>
+<td><p>Silhouette Score</p></td>
+<td><p>scikit-learn</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="determining-the-number-of-clusters">
+<h2>Determining The Number of Clusters<a class="headerlink" href="#determining-the-number-of-clusters" title="Link to this heading">¶</a></h2>
+<p>Choosing the appropriate number of clusters (K) is a crucial step in clustering analysis. Several methods can help you determine the optimal K:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Method</p></th>
+<th class="head"><p>Details</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Elbow Method</p></td>
+<td><p>Plot the within-cluster sum of squares (inertia) against different values of K.</br>Look for an “elbow” point in the plot where the inertia starts to level off. This can be a good choice for K.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Silhouette Score</p></td>
+<td><p>Calculate the silhouette score for different values of K. The silhouette score measures the quality of clustering, and higher values indicate better separation between clusters.Choose the K that maximizes the silhouette score.</br>You can use the silhouette_score function from scikit-learn.</p></td>
+</tr>
+<tr class="row-even"><td><p>Gap Statistics</p></td>
+<td><p>Gap statistics compare the performance of your clustering to a reference (e.g., random data) and can help identify the optimal K.</br>The larger the gap statistic, the better the clustering.</br>You can use libraries like scikit-learn or external packages for gap statistics.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Domain Knowledge</p></td>
+<td><p>In some cases, domain knowledge or business requirements may guide your choice of K.</p></td>
+</tr>
+<tr class="row-even"><td><p>Visual Inspection</p></td>
+<td><p>Visualize the results of different K values and choose the one that makes the most sense based on the distribution of data points.</p></td>
+</tr>
+</tbody>
+</table>
+<p>After determining the optimal number of clusters (K), you can proceed with clustering your data using the chosen algorithm and K value within your pipeline.</p>
+<section id="silhouette-score">
+<h3>Silhouette Score<a class="headerlink" href="#silhouette-score" title="Link to this heading">¶</a></h3>
+<p>The Silhouette Score is a metric for evaluating the quality of clustering results. It measures how well a data point fits into its assigned cluster and how distinct it is from other clusters. The Silhouette Score ranges from -1 to 1, where a high value indicates that the object is well matched to its own cluster and poorly matched to neighboring clusters.</p>
+<p>The Silhouette Score is calculated for each data point in the dataset, and calculated as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Silhouette</span> <span class="n">Score</span> <span class="o">=</span> <span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="n">a</span><span class="p">)</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+
+<span class="n">where</span><span class="p">:</span>
+
+    <span class="n">a</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">average</span> <span class="n">intra</span><span class="o">-</span><span class="n">cluster</span> <span class="n">distance</span> <span class="k">for</span> <span class="n">the</span> <span class="n">data</span> <span class="n">point</span>
+    <span class="n">b</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">average</span> <span class="n">nearest</span><span class="o">-</span><span class="n">cluster</span> <span class="n">distance</span> <span class="k">for</span> <span class="n">the</span> <span class="n">data</span> <span class="n">point</span>
+</pre></div>
+</div>
+<p>The average intra-cluster distance is the average distance between the data point and all other data points in its cluster. The average nearest-cluster distance is the average distance between the data point and the nearest data point in another cluster.</p>
+<p>The Silhouette Score for a cluster is calculated as the average Silhouette Score for all data points in the cluster. The overall Silhouette Score for the clustering is calculated as the average Silhouette Score for all clusters.</p>
+<p>If b &gt; a, then the score is postive, this indicates:</p>
+<ul class="simple">
+<li><p>From b, which is bigger, clusters are far from each others, which means they are seperated.</p></li>
+<li><p>From a, which is smaller, in the same cluster, the data points are near to each others.</p></li>
+</ul>
+<p>A high Silhouette Score indicates that the clustering is well-defined and that the data points are well-assigned to their clusters. A low Silhouette Score indicates that the clustering is not well-defined and that some of the data points may be assigned to the wrong clusters.</p>
+<p>The Silhouette Score is a useful metric for evaluating the quality of clustering results. It is a simple and intuitive metric that can be easily calculated and interpreted.</p>
+<p>Here are some tips for improving the Silhouette Score:</p>
+<ul class="simple">
+<li><p>Choose the right clustering algorithm for your data.</p></li>
+<li><p>Use a variety of hyperparameters and choose the ones that give the highest Silhouette Score.</p></li>
+<li><p>Preprocess the data to remove outliers and noise.</p></li>
+<li><p>Use feature engineering to create new features that are more informative for the clustering task.</p></li>
+<li><p>Merge small clusters or split large clusters.</p></li>
+</ul>
+</section>
+<section id="elbow-method">
+<h3>Elbow Method<a class="headerlink" href="#elbow-method" title="Link to this heading">¶</a></h3>
+<p>The elbow method is a heuristic method for determining the optimal number of clusters in a data set. It involves plotting the <strong>within-cluster sum of squares (WCSS)</strong> for different cluster numbers and identifying the “elbow” point where WCSS starts to level off.</p>
+<p>The WCSS is a measure of how well the data points in a cluster are grouped together. It is calculated as the sum of the squared distances between each data point and the cluster centroid.</p>
+<p>The elbow method is based on the observation that increasing the number of clusters can help to reduce the WCSS. This is because having more clusters allows one to capture finer groups of data objects that are more similar to each other. However, at some point, adding more clusters will not significantly improve the WCSS. This is because the data points are already well-grouped into a smaller number of clusters.</p>
+<p>The elbow point in the WCSS plot is the point where the rate of decrease in WCSS starts to slow down. This point is generally considered to be the optimal number of clusters.</p>
+<p>Here is an example of how to use the elbow method to determine the optimal number of clusters in a data set:</p>
+<ol class="arabic simple">
+<li><p>Calculate the WCSS for different cluster numbers.</p></li>
+<li><p>Plot the WCSS against the cluster number.</p></li>
+<li><p>Identify the “elbow” point in the plot.</p></li>
+<li><p>The cluster number at the elbow point is the optimal number of clusters.</p></li>
+</ol>
+<p>Example of Elbow Method:</p>
+<p><img alt="Elbow Method for Optimal K" src="https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/f8ed701c-f5ff-4181-ab6c-3e873ed7bd01" /></p>
+<p>The elbow method is a simple and intuitive method for determining the optimal number of clusters in a data set. However, it is important to note that it is a heuristic method, and there is no guarantee that it will always find the optimal number of clusters.</p>
+<p>Here are some tips for using the elbow method effectively:</p>
+<ul class="simple">
+<li><p>Use a variety of clustering algorithms and choose the one that gives the best results.</p></li>
+<li><p>Preprocess the data to remove outliers and noise.</p></li>
+<li><p>Use feature engineering to create new features that are more informative for the clustering task.</p></li>
+<li><p>Try different values for the elbow detection threshold.</p></li>
+<li><p>Use other metrics, such as the Silhouette Score, to validate the results of the elbow method.</p></li>
+</ul>
+<section id="python-implementation">
+<h4>Python Implementation<a class="headerlink" href="#python-implementation" title="Link to this heading">¶</a></h4>
+<p>python code provided for Elbow method implementation locatted at <a class="reference external" href="https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/fields/tabularData/dataModeling/clustering/cluster_elbow_method.py">“tabularData/dataModeling/cluster_elbow_method.py”</a></p>
+</section>
+</section>
+</section>
+<section id="dimentionality-reduction-techniques">
+<h2>Dimentionality Reduction Techniques<a class="headerlink" href="#dimentionality-reduction-techniques" title="Link to this heading">¶</a></h2>
+<p>There are many different dimensionality reduction techniques, each with its own strengths and weaknesses. Some of the most common dimensionality reduction techniques include:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Technique</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Principal component analysis (PCA)</p></td>
+<td><p>PCA is a linear dimensionality reduction technique that finds the principal components of the data, which are the directions in which the data varies the most. PCA is a simple and efficient technique, but it is not able to capture non-linear relationships in the data.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Kernel principal component analysis (KPCA)</p></td>
+<td><p>KPCA is a non-linear extension of PCA that uses a kernel function to transform the data into a higher-dimensional space, where PCA is then performed. This allows KPCA to capture non-linear relationships in the data. However, KPCA is more computationally expensive than PCA and the results can be more difficult to interpret.</p></td>
+</tr>
+<tr class="row-even"><td><p>Linear discriminant analysis (LDA)</p></td>
+<td><p>LDA is a supervised dimensionality reduction technique that is used to reduce the dimensionality of the data while preserving the information that is useful for discrimination between different classes. LDA is a powerful technique for classification, but it is not able to capture non-linear relationships in the data.</p></td>
+</tr>
+<tr class="row-odd"><td><p>t-distributed stochastic neighbor embedding (t-SNE)</p></td>
+<td><p>t-SNE is a non-linear dimensionality reduction technique that is used to visualize high-dimensional data in a low-dimensional space. t-SNE is able to preserve the local structure of the data, which makes it well-suited for visualization tasks. However, t-SNE is computationally expensive and the results can be difficult to interpret.</p></td>
+</tr>
+<tr class="row-even"><td><p>Uniform manifold approximation and projection (UMAP)</p></td>
+<td><p>UMAP is a non-linear dimensionality reduction technique that is similar to t-SNE, but it is more efficient and produces more consistent results. UMAP is well-suited for visualization and clustering tasks.</p></td>
+</tr>
+</tbody>
+</table>
+<p>In addition to these general-purpose dimensionality reduction techniques, there are also many specialized techniques that have been developed for specific applications. For example, there are dimensionality reduction techniques for image processing, natural language processing, and financial data analysis.</p>
+<section id="techinical-comparison">
+<h3>Techinical Comparison<a class="headerlink" href="#techinical-comparison" title="Link to this heading">¶</a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Technique</p></th>
+<th class="head"><p>Date of creation</p></th>
+<th class="head"><p>Work principle</p></th>
+<th class="head"><p>Other important comparison points</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Principal component analysis (PCA)</p></td>
+<td><p>1901</p></td>
+<td><p>Finds the principal components of the data, which are the directions in which the data varies the most.</p></td>
+<td><p>Linear, simple to implement and understand, fast and efficient, interpretable results, sensitive to outliers</p></td>
+</tr>
+<tr class="row-odd"><td><p>Kernel principal component analysis (KPCA)</p></td>
+<td><p>1999</p></td>
+<td><p>Uses a kernel function to transform the data into a higher-dimensional space, where PCA is then performed.</p></td>
+<td><p>Non-linear, can capture non-linear relationships in the data, more robust to outliers than PCA, more computationally expensive than PCA, results can be more difficult to interpret</p></td>
+</tr>
+<tr class="row-even"><td><p>Linear discriminant analysis (LDA)</p></td>
+<td><p>1936</p></td>
+<td><p>Finds a linear combination of the features that maximizes the discrimination between different classes.</p></td>
+<td><p>Supervised, powerful for classification, cannot capture non-linear relationships in the data</p></td>
+</tr>
+<tr class="row-odd"><td><p>t-distributed stochastic neighbor embedding (t-SNE)</p></td>
+<td><p>2008</p></td>
+<td><p>Uses a probability distribution to embed the data in a lower-dimensional space while preserving the local structure of the data.</p></td>
+<td><p>Non-linear, well-suited for visualization tasks, computationally expensive, results can be difficult to interpret</p></td>
+</tr>
+<tr class="row-even"><td><p>Uniform manifold approximation and projection (UMAP)</p></td>
+<td><p>2018</p></td>
+<td><p>Uses a fuzzy topological data analysis framework to embed the data in a lower-dimensional space while preserving the local and global structure of the data.</p></td>
+<td><p>Non-linear, well-suited for visualization and clustering tasks, more efficient and produces more consistent results than t-SNE</p></td>
+</tr>
+</tbody>
+</table>
+<p>The best dimensionality reduction technique to use will depend on the specific characteristics of your data and your needs. It is important to experiment with different techniques to find the one that works best for your problem.</p>
+</section>
+</section>
+<section id="principal-component-analysis-pca">
+<h2>Principal Component Analysis (PCA)<a class="headerlink" href="#principal-component-analysis-pca" title="Link to this heading">¶</a></h2>
+<p>Principal component analysis (PCA) is a statistical procedure that uses an orthogonal transformation to convert a set of observations of possibly correlated variables into a set of values of linearly uncorrelated variables called principal components. This transformation is defined in such a way that the first principal component has the largest possible variance (that is, accounts for as much of the variability in the data as possible), and each succeeding component in turn has the largest possible variance given that it is orthogonal to the preceding components. The resulting components are a linear combination of the original variables, and at any given component, information about the original variables is lost.</p>
+<p>PCA is often used to reduce the dimensionality of data while preserving as much of the variation in the data as possible. This can be useful for many purposes, such as:</p>
+<ul class="simple">
+<li><p>Data visualization: PCA can be used to project high-dimensional data into a lower-dimensional space, which can make it easier to visualize and understand the data.</p></li>
+<li><p>Feature extraction: PCA can be used to extract the most important features from a dataset, which can be used to improve the performance of machine learning algorithms.</p></li>
+<li><p>Anomaly detection: PCA can be used to detect anomalies in a dataset, which can be useful for fraud detection and other applications.</p></li>
+</ul>
+<p>PCA is a powerful tool that can be used for a variety of tasks. It is a popular technique in machine learning, statistics, and data science.</p>
+<section id="example-dimensionality-reduction-using-pca">
+<h3>Example: Dimensionality Reduction using PCA<a class="headerlink" href="#example-dimensionality-reduction-using-pca" title="Link to this heading">¶</a></h3>
+<p>Here is an example of how PCA can be used to reduce the dimensionality of data:</p>
+<p>Suppose we have a dataset of images of cats and dogs. Each image is represented by a vector of pixels, where each pixel is a value between 0 and 255. This means that each image is represented by a vector of length 1024 * 1024, which is very high-dimensional.</p>
+<p>We can use PCA to reduce the dimensionality of this dataset while preserving as much of the variation in the data as possible. For example, we can reduce the dimensionality to 100 dimensions without losing too much information. This means that we can now represent each image by a vector of length 100, which is much easier to visualize and process.</p>
+<p>Once we have reduced the dimensionality of the data, we can use PCA to visualize the data. For example, we can create a scatter plot of the first two principal components. This scatter plot will show us how the cats and dogs are distributed in the two-dimensional space.</p>
+<p>We can also use PCA to extract the most important features from the dataset. For example, we can train a machine learning algorithm to classify the images as cats or dogs. We can then use PCA to extract the most important features from the dataset and use those features to train a new machine learning algorithm. This new algorithm will likely be more accurate than the original algorithm because it is trained on the most important features in the data.</p>
+</section>
+<section id="pca-algorithm">
+<h3>PCA Algorithm<a class="headerlink" href="#pca-algorithm" title="Link to this heading">¶</a></h3>
+<p>The steps involved in PCA Algorithm are as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Step</span><span class="o">-</span><span class="mi">01</span><span class="p">:</span> <span class="n">Get</span> <span class="n">data</span><span class="o">.</span>
+<span class="n">Step</span><span class="o">-</span><span class="mi">02</span><span class="p">:</span> <span class="n">Compute</span> <span class="n">the</span> <span class="n">mean</span> <span class="n">vector</span> <span class="p">(</span><span class="n">µ</span><span class="p">)</span><span class="o">.</span>
+<span class="n">Step</span><span class="o">-</span><span class="mi">03</span><span class="p">:</span> <span class="n">Subtract</span> <span class="n">mean</span> <span class="kn">from</span><span class="w"> </span><span class="nn">the</span> <span class="n">given</span> <span class="n">data</span><span class="o">.</span>
+<span class="n">Step</span><span class="o">-</span><span class="mi">04</span><span class="p">:</span> <span class="n">Calculate</span> <span class="n">the</span> <span class="n">covariance</span> <span class="n">matrix</span><span class="o">.</span>
+<span class="n">Step</span><span class="o">-</span><span class="mi">05</span><span class="p">:</span> <span class="n">Calculate</span> <span class="n">the</span> <span class="n">eigen</span> <span class="n">vectors</span> <span class="ow">and</span> <span class="n">eigen</span> <span class="n">values</span> <span class="n">of</span> <span class="n">the</span> <span class="n">covariance</span> <span class="n">matrix</span><span class="o">.</span>
+<span class="n">Step</span><span class="o">-</span><span class="mi">06</span><span class="p">:</span> <span class="n">Choosing</span> <span class="n">components</span> <span class="ow">and</span> <span class="n">forming</span> <span class="n">a</span> <span class="n">feature</span> <span class="n">vector</span><span class="o">.</span>
+<span class="n">Step</span><span class="o">-</span><span class="mi">07</span><span class="p">:</span> <span class="n">Deriving</span> <span class="n">the</span> <span class="n">new</span> <span class="n">data</span> <span class="nb">set</span><span class="o">.</span>
+</pre></div>
+</div>
+</section>
+<section id="practice-problems-based-on-principal-component-analysis">
+<h3>PRACTICE PROBLEMS BASED ON PRINCIPAL COMPONENT ANALYSIS<a class="headerlink" href="#practice-problems-based-on-principal-component-analysis" title="Link to this heading">¶</a></h3>
+<section id="problem-01">
+<h4>Problem-01<a class="headerlink" href="#problem-01" title="Link to this heading">¶</a></h4>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Given</span> <span class="n">data</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span> <span class="p">;</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span> <span class="p">}</span><span class="o">.</span>
+<span class="n">Compute</span> <span class="n">the</span> <span class="n">principal</span> <span class="n">component</span> <span class="n">using</span> <span class="n">PCA</span> <span class="n">Algorithm</span><span class="o">.</span>
+ 
+<span class="n">OR</span>
+ 
+<span class="n">Consider</span> <span class="n">the</span> <span class="n">two</span> <span class="n">dimensional</span> <span class="n">patterns</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">),</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span><span class="o">.</span>
+<span class="n">Compute</span> <span class="n">the</span> <span class="n">principal</span> <span class="n">component</span> <span class="n">using</span> <span class="n">PCA</span> <span class="n">Algorithm</span><span class="o">.</span>
+ 
+<span class="n">OR</span>
+ 
+<span class="n">Compute</span> <span class="n">the</span> <span class="n">principal</span> <span class="n">component</span> <span class="n">of</span> <span class="n">following</span> <span class="n">data</span><span class="o">-</span>
+<span class="n">CLASS</span> <span class="mi">1</span>
+<span class="n">X</span> <span class="o">=</span> <span class="mi">2</span> <span class="p">,</span> <span class="mi">3</span> <span class="p">,</span> <span class="mi">4</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="mi">1</span> <span class="p">,</span> <span class="mi">5</span> <span class="p">,</span> <span class="mi">3</span>
+<span class="n">CLASS</span> <span class="mi">2</span>
+<span class="n">X</span> <span class="o">=</span> <span class="mi">5</span> <span class="p">,</span> <span class="mi">6</span> <span class="p">,</span> <span class="mi">7</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="mi">6</span> <span class="p">,</span> <span class="mi">7</span> <span class="p">,</span> <span class="mi">8</span>
+</pre></div>
+</div>
+</section>
+<section id="solution">
+<h4>Solution<a class="headerlink" href="#solution" title="Link to this heading">¶</a></h4>
+<p>We use the above discussed PCA Algorithm</p>
+<p><strong>Step-01:</strong></p>
+<ul class="simple">
+<li><p>Get data,The given feature vectors are</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">x1</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">x2</span> <span class="o">=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="n">x3</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">x4</span> <span class="o">=</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+<span class="n">x5</span> <span class="o">=</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
+<span class="n">x6</span> <span class="o">=</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><img alt="image" src="https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/59ddbe58-f955-4bc4-b17a-21adad5eff62" /></p>
+<p><strong>Step-02:</strong></p>
+<ul class="simple">
+<li><p>Calculate the mean vector (µ).</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Mean</span> <span class="n">vector</span> <span class="p">(</span><span class="n">µ</span><span class="p">)</span>
+<span class="o">=</span> <span class="p">((</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">4</span> <span class="o">+</span> <span class="mi">5</span> <span class="o">+</span> <span class="mi">6</span> <span class="o">+</span> <span class="mi">7</span><span class="p">)</span> <span class="o">/</span> <span class="mi">6</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">5</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">6</span> <span class="o">+</span> <span class="mi">7</span> <span class="o">+</span> <span class="mi">8</span><span class="p">)</span> <span class="o">/</span> <span class="mi">6</span><span class="p">)</span>
+<span class="o">=</span> <span class="p">(</span><span class="mf">4.5</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Thus,</p>
+<p><img alt="image" src="https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/1ddc6212-d70d-40ab-af32-2dde505ea4d3" /></p>
+<p><strong>Step-03:</strong></p>
+<ul class="simple">
+<li><p>Subtract mean vector (µ) from the given feature vectors.</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>x1 – µ = (2 – 4.5, 1 – 5) = (-2.5, -4)
+x2 – µ = (3 – 4.5, 5 – 5) = (-1.5, 0)
+x3 – µ = (4 – 4.5, 3 – 5) = (-0.5, -2)
+x4 – µ = (5 – 4.5, 6 – 5) = (0.5, 1)
+x5 – µ = (6 – 4.5, 7 – 5) = (1.5, 2)
+x6 – µ = (7 – 4.5, 8 – 5) = (2.5, 3)
+</pre></div>
+</div>
+<p>Feature vectors (xi) after subtracting mean vector (µ) are</p>
+<p><img alt="image" src="https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/9044eef5-fdef-45c0-89dd-1138c9447bfe" /></p>
+<p><strong>Step-04:</strong></p>
+<ul class="simple">
+<li><p>Calculate the covariance matrix. Covariance matrix is given by</p></li>
+</ul>
+<p><img alt="image" src="https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/cdbdb30a-c1f2-43d1-8f2b-d6560156f94f" /></p>
+<p>Now,</p>
+<p><img alt="image" src="https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/29c16d59-d4d0-4499-9190-ff40131287fe" /></p>
+<p>Now,</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Covariance</span> <span class="n">matrix</span>
+<span class="o">=</span> <span class="p">(</span><span class="n">m1</span> <span class="o">+</span> <span class="n">m2</span> <span class="o">+</span> <span class="n">m3</span> <span class="o">+</span> <span class="n">m4</span> <span class="o">+</span> <span class="n">m5</span> <span class="o">+</span> <span class="n">m6</span><span class="p">)</span> <span class="o">/</span> <span class="mi">6</span>
+</pre></div>
+</div>
+<p>On adding the above matrices and dividing by 6, we get:</p>
+<p><img alt="image" src="https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/056a5094-e87a-472c-b6da-2b1dedd49a4a" /></p>
+<p><strong>Step-05:</strong></p>
+<ul class="simple">
+<li><p>Calculate the eigen values and eigen vectors of the covariance matrix.</p></li>
+</ul>
+<p>λ is an eigen value for a matrix M if it is a solution of the characteristic equation |M – λI| = 0. So, we have:</p>
+<p><img alt="image" src="https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/ca7c85d9-e7f4-4787-ab25-38ae4689cfaa" /></p>
+<p>From here,</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>(2.92 – λ)(5.67 – λ) – (3.67 x 3.67) = 0
+16.56 – 2.92λ – 5.67λ + λ2 – 13.47 = 0
+λ2 – 8.59λ + 3.09 = 0
+Solving this quadratic equation, we get λ = 8.22, 0.38
+Thus, two eigen values are λ1 = 8.22 and λ2 = 0.38.
+</pre></div>
+</div>
+<p>Clearly, the second eigen value is very small compared to the first eigen value.
+So, the second eigen vector can be left out.</p>
+<p>Eigen vector corresponding to the greatest eigen value is the principal component for the given data set.
+So. we find the eigen vector corresponding to eigen value λ1.</p>
+<p>We use the following equation to find the eigen vector:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">MX</span> <span class="o">=</span> <span class="n">λX</span>
+<span class="n">where</span><span class="o">-</span>
+<span class="n">M</span> <span class="o">=</span> <span class="n">Covariance</span> <span class="n">Matrix</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">Eigen</span> <span class="n">vector</span>
+<span class="n">λ</span> <span class="o">=</span> <span class="n">Eigen</span> <span class="n">value</span>
+</pre></div>
+</div>
+<p>Substituting the values in the above equation, we get</p>
+<p><img alt="image" src="https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/42410839-6fc9-40ae-8ba0-791c51ae79fe" /></p>
+<p>Solving these, we get:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>2.92X1 + 3.67X2 = 8.22X1
+3.67X1 + 5.67X2 = 8.22X2
+ 
+On simplification, we get-
+5.3X1 = 3.67X2 ………(1)
+3.67X1 = 2.55X2 ………(2)
+</pre></div>
+</div>
+<p>From (1) and (2), <strong>X1 = 0.69X2</strong></p>
+<p>From (2), the eigen vector is</p>
+<p><img alt="image" src="https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/038a4acf-2cf9-4700-8c1f-ecf44325bc90" /></p>
+<p>Thus, principal component for the given data set is</p>
+<p><img alt="image" src="https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/da645fb0-6227-4914-b329-e3b4dd4bd5eb" /></p>
+<p>Lastly, we project the data points onto the new subspace as</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Y = 2.55*C , X = 3.67C -🡪 Y = 2.55/3.67 X
+</pre></div>
+</div>
+<p><img alt="image" src="https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/6155f977-a53f-4274-a123-fe1a872a3ede" /></p>
+</section>
+</section>
+<section id="pca-technical-points">
+<h3>PCA Technical Points<a class="headerlink" href="#pca-technical-points" title="Link to this heading">¶</a></h3>
+<p>There are various of points that one should take care during deciding using PCA, which we refered in <a class="reference external" href="https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/fields/tabularData/dataFeatureEngineering/PCA.md">“tabularData/dataModeling/PCA”</a></p>
+<p>Along with Python script for determining the number of components in PCA <a class="reference external" href="https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/fields/tabularData/dataFeatureEngineering/pca_ncomponent.py">“tabularData/dataModeling/pca_ncomponent.py”</a></p>
+</section>
+</section>
+<section id="credits">
+<h2>Credits<a class="headerlink" href="#credits" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>IBM Coursera Specialization</p></li>
+</ul>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">aCupOfTea</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Fields</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../dataCollection/index.html">Datacollection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../deepLearning/index.html">Deeplearning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../designPatterns/index.html">Designpatterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../generativeAI/index.html">Generativeai</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../libararies%2CFrameworks%2CContainers/index.html">Libararies,Frameworks,Containers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../projectTopics/index.html">Projecttopics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../recommenderSystems/index.html">Recommendersystems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../reinforcementLearning/index.html">Reinforcementlearning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../statistics/index.html">Statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../systemAdministration/index.html">Systemadministration</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Tabulardata</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">Conceptinmachinelearning</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="dataEDAanalysis.html">Dataedaanalysis</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mlSupervisedClassification.html">Mlsupervisedclassification</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mlSupervisedRegression.html">Mlsupervisedregression</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Mlunsupervised</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../conceptinTimeSeries/index.html">Conceptintimeseries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../dataEDA/index.html">Dataeda</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../dataEvaluation/index.html">Dataevaluation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../dataFeatureEngineering/index.html">Datafeatureengineering</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../dataModeling/index.html">Datamodeling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../dataProcessing/index.html">Dataprocessing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../tools/index.html">Tools</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../programming/index.html">Programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../journal/index.html">Journal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tips/index.html">Tips</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Fields</a><ul>
+  <li><a href="../index.html">Tabulardata</a><ul>
+  <li><a href="index.html">Conceptinmachinelearning</a><ul>
+      <li>Previous: <a href="mlSupervisedRegression.html" title="previous chapter">Mlsupervisedregression</a></li>
+      <li>Next: <a href="../conceptinTimeSeries/index.html" title="next chapter">Conceptintimeseries</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Ahmed Yousri Sobhi.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.0.4</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../../../_sources/fields/tabularData/conceptInMachineLearning/mlUnsupervised.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

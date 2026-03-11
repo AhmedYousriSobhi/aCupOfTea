@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Info &#8212; aCupOfTea 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <script src="../../../../_static/documentation_options.js?v=f2a433a1"></script>
+    <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="Dataprocessing" href="../../dataProcessing/index.html" />
+    <link rel="prev" title="Xgboost" href="index.html" />
+   
+  <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="info">
+<h1>Info<a class="headerlink" href="#info" title="Link to this heading">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<section id="xgboost">
+<h2>XGBOOST<a class="headerlink" href="#xgboost" title="Link to this heading">¶</a></h2>
+<section id="abstract">
+<h3>Abstract<a class="headerlink" href="#abstract" title="Link to this heading">¶</a></h3>
+<p>XGBoost (eXtreme Gradient Boosting) is a popular machine learning algorithm that belongs to the gradient boosting framework. It is known for its efficiency, accuracy, and flexibility in handling a variety of data types and problem domains. XGBoost is widely used for both regression and classification tasks.</p>
+</section>
+<section id="historical-defenitions">
+<h3>Historical Defenitions<a class="headerlink" href="#historical-defenitions" title="Link to this heading">¶</a></h3>
+<p><strong>Ensemble</strong>: “Combining multiple models together”</p>
+<ul class="simple">
+<li><p>Referes to the process of combining multiple individual models, called base learners, to form a stronger and more accurate model.</p></li>
+<li><p>The idea behind the ensemble learning is that the collective knowledge of multiple models can often outperform a single model.</p></li>
+<li><p>Ensemble methods can be applied to various machine learning algorithms, such as decision trees, neural networks, or support vector machines.</p></li>
+<li><p>The models that form the ensemble, also known as base learners, could be either from the same learning algorithm or different learning algorithms.</p></li>
+<li><p>Bagging and boosting are two widely used ensemble learners. Though these two techniques can be used with several statistical models, the most predominant usage has been with decision trees</p></li>
+</ul>
+<p><strong>Bagging</strong>: ‘Ensemble but the models are in parallel’</p>
+<ul class="simple">
+<li><p>While decision trees are one of the most easily interpretable models, they exhibit highly variable behavior. Consider a single training dataset that we randomly split into two parts. Now, let’s use each part to train a decision tree in order to obtain two models.</p></li>
+<li><p>When we fit both these models, they would yield different results. Decision trees are said to be associated with high variance due to this behavior.</p></li>
+<li><p>Bagging or boosting aggregation helps to reduce the variance in any learner. Several decision trees which are generated in parallel, form the base learners of bagging technique. Data sampled with replacement is fed to these learners for training. The final prediction is the averaged output from all the learners</p></li>
+</ul>
+<p><img alt="bagging image" src="https://lh3.googleusercontent.com/4svO7UdzXj-JxFwU-_SyrMWMqxp8Al3pVpQYr5A-nzCDXdEqVL_CHeqbeVVW8Kivsq76q5sozAKwGsQuy5qnk5wVYfqWb5LHxhknBm9DSLBjg0ViSRTVjZ3gFQPwiGxJ8wP2usOH" /></p>
+<p><strong>Boosting</strong>: ‘Ensemble but the models are sequentials’</p>
+<ul class="simple">
+<li><p>Boosting is a specific technique within ensemble learning that focuses on sequentially building an ensemble of models in an iterative manner.</p></li>
+<li><p>The key idea of boosting is to train each model in the ensemble to correct the mistakes or misclassifications made by the previous models.</p></li>
+<li><p>Boosting algorithms, such as AdaBoost and Gradient Boosting, iteratively build an ensemble of models, with each model giving more weight to the misclassified or difficult instances.</p></li>
+<li><p>In other words, each subsequent model in the boosting process is designed to improve upon the weaknesses of the previous models, thereby gradually reducing the overall error.</p></li>
+<li><p>Boosting algorithms can be used either for classification or regression.</p></li>
+</ul>
+<p><img alt="boosting image" src="https://i0.wp.com/neptune.ai/wp-content/uploads/2022/10/Ensemble-algorithms-boosting.png?ssl=1" /></p>
+<section id="two-well-known-boosting-algorithms">
+<h4>Two well-known boosting algorithms<a class="headerlink" href="#two-well-known-boosting-algorithms" title="Link to this heading">¶</a></h4>
+</section>
+<section id="adaboost">
+<h4>1- AdaBoost<a class="headerlink" href="#adaboost" title="Link to this heading">¶</a></h4>
+<p>AdaBoost stands for Adaptive Boosting. The logic implemented in the algorithm is:</p>
+<ul class="simple">
+<li><p>First-round classifiers (learners) are all trained using weighted coefficients that are equal,</p></li>
+<li><p>In subsequent boosting rounds the adaptive process <strong>increasingly weighs data points that were misclassified</strong> by the learners in previous rounds and decrease the weights for correctly classified ones.</p></li>
+</ul>
+</section>
+<section id="gradient-boosting-framework">
+<h4>2- Gradient Boosting Framework<a class="headerlink" href="#gradient-boosting-framework" title="Link to this heading">¶</a></h4>
+<p>It is a boosting algorithm, so the base learners are connected sequentially. The word ‘gradient’ is based on the principle of <strong>gradient descent optimization</strong>, which means the model is fitted to the resuduals or errors of the previous models.</p>
+<p>So: it is a special implementation of the boosting.</p>
+<p>Gradient Boosting framework is a machine learning technique that combine multiple weak predictive models to create a strong predictive model. It is a type of ensemble learning where the models are trained sequentailly, each one correcting the mistakes made by the previous one.</p>
+<p>The key idea behind gradient boosting is to iteratively fit the models to the residuals or errors of the previous models. In each iteration, a new model is trained to minimize the loss function by reducing the errors of the ensemble. This process is typically done using gradient descent optimization, where the model is updated in the direction of the steepest descent of the loss function.</p>
+<p>Summary: Gradient Boosting uses differentiable function losses from the weak learners to generalize. At each boosting stage, the learners are used to minimize the loss function given the current model.</p>
+</section>
+</section>
+<section id="xgboost-methadology">
+<h3>XGboost Methadology<a class="headerlink" href="#xgboost-methadology" title="Link to this heading">¶</a></h3>
+<p>The key idea behind XGBoost is to build an ensemble of weak predictive models, typically decision trees, and iteratively improve their performance. It trains these models in a sequential manner, where each new model is trained to correct the mistakes made by the previous models. This iterative process allows XGBoost to learn complex patterns and make accurate predictions.</p>
+</section>
+<section id="xgboost-architecture">
+<h3>XGboost Architecture<a class="headerlink" href="#xgboost-architecture" title="Link to this heading">¶</a></h3>
+<p>XGBoost stands for Extreme Gradient Boosting. It’s a parallelized and carefully optimized version of the gradient boosting algorithm. <strong>Parallelizing the whole boosting process</strong> hugely improves the training time.</p>
+<p>Instead of training the best possible model on the data (like in traditional methods), we train thousands of models on various subsets of the training dataset and then vote for the best-performing model.</p>
+<p>For many cases, XGBoost is better than usual gradient boosting algorithms. The Python implementation gives access to a vast number of inner parameters to tweak for better precision and accuracy.</p>
+</section>
+<section id="xgboost-advantages">
+<h3>XGboost Advantages<a class="headerlink" href="#xgboost-advantages" title="Link to this heading">¶</a></h3>
+<p>Some key features and advantages of XGBoost include:</p>
+<ul class="simple">
+<li><p>Regularization: XGBoost incorporates regularization techniques to prevent overfitting and improve generalization. It includes regularization terms in the objective function that control model complexity.</p></li>
+<li><p>Gradient-based optimization: XGBoost uses gradient descent optimization to minimize the loss function, allowing it to efficiently handle large datasets.</p></li>
+<li><p>Handling missing values: XGBoost has built-in capabilities to handle missing values in the data, reducing the need for preprocessing or imputation techniques.</p></li>
+<li><p>Feature importance: XGBoost provides a measure of feature importance, allowing users to understand which features have the most impact on the model’s predictions.</p></li>
+<li><p>Parallel processing: XGBoost can utilize parallel processing capabilities, making it faster than traditional gradient boosting implementations.</p></li>
+<li><p>Flexibility: XGBoost supports a wide range of objective functions and evaluation metrics, allowing users to customize the model for different problem types.</p></li>
+<li><p>Parallelization: The model is implemented to train with multiple CPU cores.</p></li>
+<li><p>Non-linearity: XGBoost can detect and learn from non-linear data patterns.</p></li>
+<li><p>Cross-validation: Built-in and comes out-of-the-box.</p></li>
+<li><p>Scalability: XGBoost can run distributed thanks to distributed servers and clusters like Hadoop and Spark, so you can process enormous amounts of data. It’s also available for many programming languages like C++, JAVA, Python, and Julia.</p></li>
+</ul>
+<section id="resources">
+<h4>Resources:<a class="headerlink" href="#resources" title="Link to this heading">¶</a></h4>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.simplilearn.com/what-is-xgboost-algorithm-in-machine-learning-article">simplilearn</a></p></li>
+<li><p><a class="reference external" href="https://www.analyticsvidhya.com/blog/2018/09/an-end-to-end-guide-to-understand-the-math-behind-xgboost/#h-why-ensemble-learning">analyticsvidhya</a></p></li>
+<li><p><a class="reference external" href="https://neptune.ai/blog/xgboost-everything-you-need-to-know">neptune</a></p></li>
+</ul>
+</section>
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../../index.html">aCupOfTea</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">Fields</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../../dataCollection/index.html">Datacollection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../deepLearning/index.html">Deeplearning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../designPatterns/index.html">Designpatterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generativeAI/index.html">Generativeai</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../libararies%2CFrameworks%2CContainers/index.html">Libararies,Frameworks,Containers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../projectTopics/index.html">Projecttopics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../recommenderSystems/index.html">Recommendersystems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../reinforcementLearning/index.html">Reinforcementlearning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../statistics/index.html">Statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../systemAdministration/index.html">Systemadministration</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../../index.html">Tabulardata</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../conceptInMachineLearning/index.html">Conceptinmachinelearning</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../conceptinTimeSeries/index.html">Conceptintimeseries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../dataEDA/index.html">Dataeda</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../dataEvaluation/index.html">Dataevaluation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../dataFeatureEngineering/index.html">Datafeatureengineering</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html">Datamodeling</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../pipeline/index.html">Pipeline</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="index.html">Xgboost</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../dataProcessing/index.html">Dataprocessing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tools/index.html">Tools</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../programming/index.html">Programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../journal/index.html">Journal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tips/index.html">Tips</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../index.html">Fields</a><ul>
+  <li><a href="../../index.html">Tabulardata</a><ul>
+  <li><a href="../index.html">Datamodeling</a><ul>
+  <li><a href="index.html">Xgboost</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Xgboost</a></li>
+      <li>Next: <a href="../../dataProcessing/index.html" title="next chapter">Dataprocessing</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Ahmed Yousri Sobhi.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.0.4</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../../../../_sources/fields/tabularData/dataModeling/xgboost/info.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

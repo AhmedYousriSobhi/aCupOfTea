@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Bash-Scripting &#8212; aCupOfTea 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <script src="../../_static/documentation_options.js?v=f2a433a1"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Build-Process" href="build-process.html" />
+    <link rel="prev" title="Ansible" href="ansible.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="bash-scripting">
+<h1>Bash-Scripting<a class="headerlink" href="#bash-scripting" title="Link to this heading">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<section id="system-administration-bash-scripting">
+<h2>System Administration - Bash Scripting<a class="headerlink" href="#system-administration-bash-scripting" title="Link to this heading">¶</a></h2>
+</section>
+<section id="table-of-content">
+<h2>Table of Content<a class="headerlink" href="#table-of-content" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="#system-administration---bash-scripting"><span class="xref myst">System Administration - Bash Scripting</span></a></p></li>
+<li><p><a class="reference internal" href="#table-of-content"><span class="xref myst">Table of Content</span></a></p></li>
+<li><p><a class="reference internal" href="#introduction"><span class="xref myst">Introduction</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#bash-scripting-definition"><span class="xref myst">Bash Scripting Definition</span></a></p></li>
+<li><p><a class="reference internal" href="#advantages"><span class="xref myst">Advantages</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#creating-a-bash-script"><span class="xref myst">Creating a bash script</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#script-naming-conventions"><span class="xref myst">Script naming conventions</span></a></p></li>
+<li><p><a class="reference internal" href="#shebang"><span class="xref myst">Shebang</span></a></p></li>
+<li><p><a class="reference internal" href="#executing-the-bash-script"><span class="xref myst">Executing the Bash Script</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#make-script-executable"><span class="xref myst">Make Script Executable</span></a></p></li>
+<li><p><a class="reference internal" href="#execute"><span class="xref myst">Execute</span></a></p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#basics"><span class="xref myst">Basics</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#1--comments"><span class="xref myst">1- Comments</span></a></p></li>
+<li><p><a class="reference internal" href="#2--variables--data-types"><span class="xref myst">2- Variables &amp; Data Types</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#define-a-varialbe"><span class="xref myst">Define a Varialbe</span></a></p></li>
+<li><p><a class="reference internal" href="#access-a-varialbe"><span class="xref myst">Access a Varialbe</span></a></p></li>
+<li><p><a class="reference internal" href="#naming-convention"><span class="xref myst">Naming Convention</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#tips"><span class="xref myst">Tips</span></a></p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#3--inputs"><span class="xref myst">3- Inputs</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#read-user-input"><span class="xref myst">Read User Input</span></a></p></li>
+<li><p><a class="reference internal" href="#reading-from-file"><span class="xref myst">Reading from File</span></a></p></li>
+<li><p><a class="reference internal" href="#command-line-arguments"><span class="xref myst">Command Line Arguments</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#4--outputs"><span class="xref myst">4- Outputs</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#prinitng-to-the-terminal"><span class="xref myst">Prinitng to the Terminal</span></a></p></li>
+<li><p><a class="reference internal" href="#writing-to-a-file"><span class="xref myst">Writing to a File</span></a></p></li>
+<li><p><a class="reference internal" href="#appending-to-a-file"><span class="xref myst">Appending to a File</span></a></p></li>
+<li><p><a class="reference internal" href="#redirecting-output"><span class="xref myst">Redirecting Output</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#5--conditional-statements-ifelse"><span class="xref myst">5- Conditional Statements (if/else)</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#if"><span class="xref myst">If</span></a></p></li>
+<li><p><a class="reference internal" href="#multiple-conditions"><span class="xref myst">Multiple Conditions</span></a></p></li>
+<li><p><a class="reference internal" href="#case-statements"><span class="xref myst">Case Statements</span></a></p></li>
+<li><p><a class="reference internal" href="#if-flags"><span class="xref myst">If Flags</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#6--looping"><span class="xref myst">6- Looping</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#while-loop"><span class="xref myst">While Loop</span></a></p></li>
+<li><p><a class="reference internal" href="#for-loop"><span class="xref myst">For Loop</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#7--functions"><span class="xref myst">7- Functions</span></a></p></li>
+<li><p><a class="reference internal" href="#8--schedule-scripts-using-cron"><span class="xref myst">8- Schedule Scripts using cron</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#cron"><span class="xref myst">Cron</span></a></p></li>
+<li><p><a class="reference internal" href="#steps-to-shcedule-a-bash-script"><span class="xref myst">Steps to Shcedule a Bash Script</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#1-understand-cron-syntax"><span class="xref myst">1. Understand Cron Syntax</span></a></p></li>
+<li><p><a class="reference internal" href="#2-edit-the-users-cron-jobs"><span class="xref myst">2. Edit the User’s Cron Jobs</span></a></p></li>
+<li><p><a class="reference internal" href="#3schedule-the-bash-script"><span class="xref myst">3.Schedule the Bash Script</span></a></p></li>
+<li><p><a class="reference internal" href="#4-save-and-exit"><span class="xref myst">4. Save and exit</span></a></p></li>
+<li><p><a class="reference internal" href="#5-check-shceduled-scripts"><span class="xref myst">5. Check Shceduled Scripts</span></a></p></li>
+<li><p><a class="reference internal" href="#additional-tips"><span class="xref myst">Additional Tips:</span></a></p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#debug--troubleshoot"><span class="xref myst">Debug &amp; Troubleshoot</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#1-using-set--x"><span class="xref myst">1. Using ‘set -x’</span></a></p></li>
+<li><p><a class="reference internal" href="#2-echo-statements"><span class="xref myst">2. echo Statements:</span></a></p></li>
+<li><p><a class="reference internal" href="#3-redirecting-output-and-errors"><span class="xref myst">3. Redirecting Output and Errors</span></a></p></li>
+<li><p><a class="reference internal" href="#4-set--e"><span class="xref myst">4. set -e</span></a></p></li>
+<li><p><a class="reference internal" href="#5-trap-command"><span class="xref myst">5. trap Command</span></a></p></li>
+<li><p><a class="reference internal" href="#6-shellcheck"><span class="xref myst">6. Shellcheck</span></a></p></li>
+<li><p><a class="reference internal" href="#7-debugging-with-bash--x"><span class="xref myst">7. Debugging with bash -x</span></a></p></li>
+<li><p><a class="reference internal" href="#8-logging"><span class="xref myst">8. Logging</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#tips--tricks"><span class="xref myst">Tips &amp; Tricks</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#braces-expansion"><span class="xref myst">Braces Expansion</span></a></p></li>
+<li><p><a class="reference internal" href="#braces-for-variables"><span class="xref myst">Braces for Variables</span></a></p></li>
+<li><p><a class="reference internal" href="#command-substitution"><span class="xref myst">Command Substitution</span></a></p></li>
+<li><p><a class="reference internal" href="#aliases"><span class="xref myst">Aliases</span></a></p></li>
+<li><p><a class="reference internal" href="#the-watch-command"><span class="xref myst">The Watch Command</span></a></p></li>
+<li><p><a class="reference internal" href="#history-expansion"><span class="xref myst">History Expansion</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#references"><span class="xref myst">References</span></a></p></li>
+</ul>
+</section>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">¶</a></h2>
+<section id="bash-scripting-definition">
+<h3>Bash Scripting Definition<a class="headerlink" href="#bash-scripting-definition" title="Link to this heading">¶</a></h3>
+<p>Working in UNIX operating system, we will face this type of a file which contain a sequence of commands that are executed by the bash program line by line to perfrom a series of actions. These actions performed by commands can be repeated multiple times and execute them by running the script.</p>
+</section>
+<section id="advantages">
+<h3>Advantages<a class="headerlink" href="#advantages" title="Link to this heading">¶</a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Adv</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Automation</p></td>
+<td><p>Bash scripting allows you to automate repetitive tasks, making it incredibly useful for tasks like file manipulation, system maintenance, backups, and more. This automation can significantly save time and reduce human error.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Accessibility</p></td>
+<td><p>Bash is the default shell for most Unix-like operating systems, ensuring its widespread availability. It’s pre-installed on macOS and most Linux distributions, making it easily accessible without the need for additional installations.</p></td>
+</tr>
+<tr class="row-even"><td><p>Customization</p></td>
+<td><p>Users can customize and tailor scripts according to their needs, making it a flexible tool for various tasks. With conditional statements, loops, and functions, it’s possible to create complex and specific workflows.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Integration</p></td>
+<td><p>Bash scripts can integrate with other command-line utilities and programs seamlessly. This integration allows for powerful scripting by combining the functionality of multiple tools into a single script.</p></td>
+</tr>
+<tr class="row-even"><td><p>System Administration</p></td>
+<td><p>Bash scripting is extensively used in system administration tasks. It helps in automating system configurations, user management, log analysis, and other administrative tasks.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Portability</p></td>
+<td><p>Bash scripts are often portable across different Unix-like systems. However, it’s essential to consider the differences in commands and functionalities across different versions of Bash and other shells.</p></td>
+</tr>
+<tr class="row-even"><td><p>Rapid Development</p></td>
+<td><p>Writing scripts in Bash is relatively quick and straightforward due to its simple syntax. For quick solutions or prototyping, it provides a fast development environment.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Learning Curve</p></td>
+<td><p>Compared to more complex programming languages, Bash scripting has a relatively lower learning curve, making it accessible for beginners. It’s a good starting point for those new to scripting or programming concepts.</p></td>
+</tr>
+<tr class="row-even"><td><p>Debugging Tools</p></td>
+<td><p>Bash provides debugging options like tracing execution, setting breakpoints, and displaying error messages, aiding in identifying and fixing issues in scripts.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Community Support</p></td>
+<td><p>There’s a large community of Bash scripters and developers, resulting in an abundance of online resources, forums, and tutorials to seek help from and learn.</p></td>
+</tr>
+</tbody>
+</table>
+<p>Note: It is important to note that, bash scripting might not always be the most suitable tool for every task, for complex projects or tasks requiring extensive data manupulation or advanced data structures.</p>
+</section>
+</section>
+<section id="creating-a-bash-script">
+<h2>Creating a bash script<a class="headerlink" href="#creating-a-bash-script" title="Link to this heading">¶</a></h2>
+<p>Let’s start creating our own script!!</p>
+<section id="script-naming-conventions">
+<h3>Script naming conventions<a class="headerlink" href="#script-naming-conventions" title="Link to this heading">¶</a></h3>
+<p>Bash scripts ends with <strong>.sh</strong>, However, they can run fine without the <strong>sh</strong> extention.</p>
+<p>An Important Observation! In Unix system, a file extention is useless for Unix system, and has no any importants except for the user, to know what is the file type working on. So how does the system knows it is a bash script?</p>
+</section>
+<section id="shebang">
+<h3>Shebang<a class="headerlink" href="#shebang" title="Link to this heading">¶</a></h3>
+<p>A shebang, also known as a hashbang (hash <strong>#</strong> + bang <strong>!</strong>) or a pound-bang, refers to the first line in a script file in Unix-like operating systems. It begins with the characters “#!” followed by the path to the interpreter that should execute the script. For example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bashc</span>
+</pre></div>
+</div>
+<p>Shebang is simply an absoulte path to the bash interpreter</p>
+<p>To find the bash shell path:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>which<span class="w"> </span>bash
+</pre></div>
+</div>
+</section>
+<section id="executing-the-bash-script">
+<h3>Executing the Bash Script<a class="headerlink" href="#executing-the-bash-script" title="Link to this heading">¶</a></h3>
+<p>In Unix system, any created file by default is not executable, which means user can not execute it.</p>
+<section id="make-script-executable">
+<h4>Make Script Executable<a class="headerlink" href="#make-script-executable" title="Link to this heading">¶</a></h4>
+<p>To make a file executable:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>chmod<span class="w"> </span>u+x<span class="w"> </span>my_script.sh
+</pre></div>
+</div>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Command</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>chmod</p></td>
+<td><p>Modifies the ownership of a file</p></td>
+</tr>
+<tr class="row-odd"><td><p>u</p></td>
+<td><p>Modify this ownership for the current user</p></td>
+</tr>
+<tr class="row-even"><td><p>x</p></td>
+<td><p>adds the execution rights</p></td>
+</tr>
+<tr class="row-odd"><td><p>u+x</p></td>
+<td><p>This means that the user who is the owner can now run the script</p></td>
+</tr>
+<tr class="row-even"><td><p>my_script.sh</p></td>
+<td><p>The file which the user want to run</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="execute">
+<h4>Execute<a class="headerlink" href="#execute" title="Link to this heading">¶</a></h4>
+<p>there are several methods to execute the scirpt</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sh<span class="w"> </span>my_script.sh
+bash<span class="w"> </span>my_script.sh
+./my_script.sh
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+<section id="basics">
+<h2>Basics<a class="headerlink" href="#basics" title="Link to this heading">¶</a></h2>
+<p>There are some basics in the bash scripting any user should know</p>
+<section id="comments">
+<h3>1- Comments<a class="headerlink" href="#comments" title="Link to this heading">¶</a></h3>
+<p>A neat bash script is the one that you could understand what is happening inside. To make a script readable, we should add comments.</p>
+<p>Comments starts with <strong>#</strong>, so any line begins with <strong>#</strong> is a comment and will be ignored by the interpreter. There is exception in the <strong>shebang</strong>!!</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+
+<span class="c1"># This line is a comment, and will not be executed</span>
+<span class="c1"># So try to say something usefull to illustrate the mess you are doing.</span>
+</pre></div>
+</div>
+</section>
+<section id="variables-data-types">
+<h3>2- Variables &amp; Data Types<a class="headerlink" href="#variables-data-types" title="Link to this heading">¶</a></h3>
+<p>To easily store, read, and access the data, variables knows how to get this job done.There are no data types in Bash, so variables can easily store any type of data.</p>
+<section id="define-a-varialbe">
+<h4>Define a Varialbe<a class="headerlink" href="#define-a-varialbe" title="Link to this heading">¶</a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+
+<span class="c1"># this is a variable to store a string</span>
+<span class="nv">firstname</span><span class="o">=</span>ahmed
+<span class="nv">lastname</span><span class="o">=</span><span class="s2">&quot;yousri&quot;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>You can enclose the string with quots or just leave it without them, but in case of not using the quotes, make sure the string does not have any spaces</p></li>
+</ul>
+</section>
+<section id="access-a-varialbe">
+<h4>Access a Varialbe<a class="headerlink" href="#access-a-varialbe" title="Link to this heading">¶</a></h4>
+<p>To access the value in a variable, use <strong>$</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+
+<span class="nb">echo</span><span class="w"> </span><span class="nv">$firstname</span>
+</pre></div>
+</div>
+</section>
+<section id="naming-convention">
+<h4>Naming Convention<a class="headerlink" href="#naming-convention" title="Link to this heading">¶</a></h4>
+<p>In Bash scripting, variable names should follow certain conventions for readability and consistency. Here are the commonly recommended naming conventions for variables:</p>
+<ul class="simple">
+<li><p>Should start with a letter or an underscore</p></li>
+<li><p>Can contains letters, numbers, and underscores</p></li>
+<li><p>Case-senstive</p></li>
+<li><p>Should not contain spaces or special characters</p></li>
+</ul>
+<section id="tips">
+<h5>Tips<a class="headerlink" href="#tips" title="Link to this heading">¶</a></h5>
+<ul class="simple">
+<li><p>Avoid using reserved keywords, such as if, then, else, fi, and so on.</p></li>
+<li><p>Avoid using system or Bash reserved variables names like PATH, HOME, PWD, …</p></li>
+<li><p>Use descriptive names that reflect the purpose of the variables.</p></li>
+<li><p>Uppercase for Environment Variables</p></li>
+<li><p>Lowercase or CamelCase for Local Variables</p></li>
+<li><p>Underscores for Multi-word Variable Names</p></li>
+<li><p>Constants in Uppercase</p></li>
+</ul>
+</section>
+</section>
+</section>
+<section id="inputs">
+<h3>3- Inputs<a class="headerlink" href="#inputs" title="Link to this heading">¶</a></h3>
+<section id="read-user-input">
+<h4>Read User Input<a class="headerlink" href="#read-user-input" title="Link to this heading">¶</a></h4>
+<p>You can read user input using the <strong>read</strong> command</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+
+<span class="c1"># Print a message for the user</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;What&#39;s your name?&quot;</span>
+
+<span class="c1"># Read input from user, and store it in varialbe called usernamne</span>
+<span class="nb">read</span><span class="w"> </span>username
+
+<span class="c1"># print user input</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Hello, </span><span class="nv">$username</span><span class="s2">! Welcome&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="reading-from-file">
+<h4>Reading from File<a class="headerlink" href="#reading-from-file" title="Link to this heading">¶</a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+
+<span class="c1"># Reading line by line from user</span>
+<span class="k">while</span><span class="w"> </span><span class="nb">read</span><span class="w"> </span>line
+<span class="k">do</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="nv">$line</span>
+<span class="k">done</span><span class="w"> </span>&lt;<span class="w"> </span>input.txt
+</pre></div>
+</div>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Command</p></th>
+<th class="head"><p>Details</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>while read line</p></td>
+<td><p>This line starts a while loop. The read command reads a line from the input and stores it in the variable line. This loop continues until there are no more lines to read.</p></td>
+</tr>
+<tr class="row-odd"><td><p>do</p></td>
+<td><p>Marks the beginning of the loop body. Commands placed after do and before done will be executed repeatedly as long as the read command successfully reads a line from the file.</p></td>
+</tr>
+<tr class="row-even"><td><p>echo $line</p></td>
+<td><p>This command prints the content of the variable line to the terminal.</p></td>
+</tr>
+<tr class="row-odd"><td><p>done</p></td>
+<td><p>Marks the end of the loop body.</p></td>
+</tr>
+<tr class="row-even"><td><p>&lt; input.txt</p></td>
+<td><p>Redirects the contents of the file input.txt as input to the while loop. So, the read command reads each line of input.txt sequentially, assigns it to the variable line, and then echo $line prints each line to the terminal.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="command-line-arguments">
+<h4>Command Line Arguments<a class="headerlink" href="#command-line-arguments" title="Link to this heading">¶</a></h4>
+<p>In many cases, we add arugments along side with the bash script during the execution, like:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./my_script.sh<span class="w"> </span>ahmed
+</pre></div>
+</div>
+<p>So in the bash script, we can access this using the <strong>$</strong> operator.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Hello, </span><span class="nv">$1</span><span class="s2">!&quot;</span>
+</pre></div>
+</div>
+<p>so the expected output will be: “Hello, Ahmed!”</p>
+<p>The number notation, indecate the argument position, so in our case, <strong>ahmed</strong> was the first arguments in the command line, so we can read it using <strong>$1</strong>. So in case there are other arguments, we can access them using their index number in the command line.</p>
+<p>What about <strong>$0</strong> you may ask?</p>
+<ul class="simple">
+<li><p>This holds the bash script name itself!!.</p></li>
+</ul>
+</section>
+</section>
+<section id="outputs">
+<h3>4- Outputs<a class="headerlink" href="#outputs" title="Link to this heading">¶</a></h3>
+<section id="prinitng-to-the-terminal">
+<h4>Prinitng to the Terminal<a class="headerlink" href="#prinitng-to-the-terminal" title="Link to this heading">¶</a></h4>
+<p>Using Command <strong>echo</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Hello Bash!&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="writing-to-a-file">
+<h4>Writing to a File<a class="headerlink" href="#writing-to-a-file" title="Link to this heading">¶</a></h4>
+<p>Using redirect operator <strong>&gt;</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;This is bash text.&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>my_output.txt
+</pre></div>
+</div>
+</section>
+<section id="appending-to-a-file">
+<h4>Appending to a File<a class="headerlink" href="#appending-to-a-file" title="Link to this heading">¶</a></h4>
+<p>Using the appending operator <strong>&gt;&gt;</strong> :</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;More bash text&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>my_output.txt
+</pre></div>
+</div>
+</section>
+<section id="redirecting-output">
+<h4>Redirecting Output<a class="headerlink" href="#redirecting-output" title="Link to this heading">¶</a></h4>
+<p>You can redirect the output of a command to a file using the redirect operator</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ls<span class="w"> </span>&gt;<span class="w"> </span>my_file.txt
+</pre></div>
+</div>
+</section>
+</section>
+<section id="conditional-statements-if-else">
+<h3>5- Conditional Statements (if/else)<a class="headerlink" href="#conditional-statements-if-else" title="Link to this heading">¶</a></h3>
+<p>TO have a boolean results, with a true or false. this is what is called conditions. To do so using if, if-else, if-elif-else, and nested conitionals.</p>
+<section id="if">
+<h4>If<a class="headerlink" href="#if" title="Link to this heading">¶</a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+
+<span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span>condition<span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span><span class="w"> </span>
+<span class="w">  </span>statement
+<span class="k">elif</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span>condition<span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">  </span>statement
+<span class="k">else</span>
+<span class="w">  </span><span class="k">do</span><span class="w"> </span>this<span class="w"> </span>by<span class="w"> </span>default
+<span class="k">fi</span>
+</pre></div>
+</div>
+</section>
+<section id="multiple-conditions">
+<h4>Multiple Conditions<a class="headerlink" href="#multiple-conditions" title="Link to this heading">¶</a></h4>
+<p>You can combine multiple conditions using AND <strong>-a</strong> and OR <strong>-o</strong> to make comparisons that have more significance:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+
+<span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="nv">$a</span><span class="w"> </span>-gt<span class="w"> </span><span class="m">60</span><span class="w"> </span>-a<span class="w"> </span><span class="nv">$b</span><span class="w"> </span>-lt<span class="w"> </span><span class="m">100</span><span class="o">]</span>
+<span class="c1"># To check if varialbe a is greater than 60 AND variable b is less than 100</span>
+</pre></div>
+</div>
+</section>
+<section id="case-statements">
+<h4>Case Statements<a class="headerlink" href="#case-statements" title="Link to this heading">¶</a></h4>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="k">case</span><span class="w"> </span>expression<span class="w"> </span><span class="k">in</span>
+<span class="w">    </span>pattern1<span class="o">)</span>
+<span class="w">        </span><span class="c1"># code to execute if expression matches pattern1</span>
+<span class="w">        </span><span class="p">;;</span>
+<span class="w">    </span>pattern2<span class="o">)</span>
+<span class="w">        </span><span class="c1"># code to execute if expression matches pattern2</span>
+<span class="w">        </span><span class="p">;;</span>
+<span class="w">    </span>pattern3<span class="o">)</span>
+<span class="w">        </span><span class="c1"># code to execute if expression matches pattern3</span>
+<span class="w">        </span><span class="p">;;</span>
+<span class="w">    </span>*<span class="o">)</span>
+<span class="w">        </span><span class="c1"># code to execute if none of the above patterns match expression</span>
+<span class="w">        </span><span class="p">;;</span>
+<span class="k">esac</span>
+</pre></div>
+</div>
+</section>
+<section id="if-flags">
+<h4>If Flags<a class="headerlink" href="#if-flags" title="Link to this heading">¶</a></h4>
+<p>Refer to <strong>man if</strong> manual page to get more about the supported flags used in the conitions.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="w"> </span>-a<span class="w">    </span>file<span class="w"> </span>exists<span class="w">  </span>This<span class="w"> </span>is<span class="w"> </span>identical<span class="w"> </span><span class="k">in</span><span class="w"> </span>effect<span class="w"> </span>to<span class="w"> </span>-e.<span class="w"> </span>It<span class="w"> </span>has<span class="w"> </span>been<span class="w"> </span><span class="s2">&quot;deprecated,&quot;</span><span class="w"> </span><span class="o">[</span><span class="m">1</span><span class="o">]</span><span class="w"> </span>and<span class="w"> </span>its<span class="w"> </span>use<span class="w"> </span>is<span class="w"> </span>discouraged.
+<span class="w"> </span>-b<span class="w">    </span>file<span class="w"> </span>is<span class="w"> </span>a<span class="w"> </span>block<span class="w"> </span>device
+<span class="w"> </span>-c<span class="w">    </span>file<span class="w"> </span>is<span class="w"> </span>a<span class="w"> </span>character<span class="w"> </span>device<span class="w">  </span><span class="o">[</span><span class="w"> </span>-b<span class="w"> </span><span class="s2">&quot;/dev/sda2&quot;</span><span class="w"> </span><span class="o">]</span>
+<span class="w"> </span>-d<span class="w">    </span>file<span class="w"> </span>is<span class="w"> </span>a<span class="w"> </span>directory
+<span class="w"> </span>-e<span class="w">    </span>file<span class="w"> </span>exists
+<span class="w"> </span>-f<span class="w">    </span>file<span class="w"> </span>is<span class="w"> </span>a<span class="w"> </span>regular<span class="w"> </span>file<span class="w"> </span><span class="o">(</span>not<span class="w"> </span>a<span class="w"> </span>directory<span class="w"> </span>or<span class="w"> </span>device<span class="w"> </span>file<span class="o">)</span>
+<span class="w"> </span>-G<span class="w">    </span>group-id<span class="w"> </span>of<span class="w"> </span>file<span class="w"> </span>same<span class="w"> </span>as<span class="w"> </span>yours
+<span class="w"> </span>-g<span class="w">    </span>set-group-id<span class="w"> </span><span class="o">(</span>sgid<span class="o">)</span><span class="w"> </span>flag<span class="w"> </span><span class="nb">set</span><span class="w"> </span>on<span class="w"> </span>file<span class="w"> </span>or<span class="w"> </span>directory
+<span class="w">          </span>If<span class="w"> </span>a<span class="w"> </span>directory<span class="w"> </span>has<span class="w"> </span>the<span class="w"> </span>sgid<span class="w"> </span>flag<span class="w"> </span>set,<span class="w"> </span><span class="k">then</span><span class="w"> </span>a<span class="w"> </span>file<span class="w"> </span>created<span class="w"> </span>within<span class="w"> </span>that<span class="w"> </span>directory<span class="w"> </span>belongs<span class="w"> </span>to<span class="w"> </span>the<span class="w"> </span>group
+<span class="w">          </span>that<span class="w"> </span>owns<span class="w"> </span>the<span class="w"> </span>directory,<span class="w"> </span>not<span class="w"> </span>necessarily<span class="w"> </span>to<span class="w"> </span>the<span class="w"> </span>group<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>user<span class="w"> </span>who<span class="w"> </span>created<span class="w"> </span>the<span class="w"> </span>file.
+<span class="w"> </span>-h<span class="w">    </span>file<span class="w"> </span>is<span class="w"> </span>a<span class="w"> </span>symbolic<span class="w"> </span>link
+<span class="w"> </span>-k<span class="w">    </span>sticky<span class="w"> </span>bit1<span class="w"> </span><span class="nb">set</span>
+<span class="w"> </span>-L<span class="w">    </span>file<span class="w"> </span>is<span class="w"> </span>a<span class="w"> </span>symbolic<span class="w"> </span>link
+<span class="w"> </span>-N<span class="w">    </span>file<span class="w"> </span>modified<span class="w"> </span>since<span class="w"> </span>it<span class="w"> </span>was<span class="w"> </span>last<span class="w"> </span><span class="nb">read</span>
+<span class="w"> </span>-O<span class="w">    </span>you<span class="w"> </span>are<span class="w"> </span>owner<span class="w"> </span>of<span class="w"> </span>file
+<span class="w"> </span>-p<span class="w">    </span>file<span class="w"> </span>is<span class="w"> </span>a<span class="w"> </span>pipe<span class="w">  </span><span class="o">[</span><span class="w"> </span>-p<span class="w"> </span>/dev/fd/0<span class="w"> </span><span class="o">]</span>
+<span class="w"> </span>-r<span class="w">    </span>file<span class="w"> </span>has<span class="w"> </span><span class="nb">read</span><span class="w"> </span>permission<span class="w"> </span><span class="o">(</span><span class="k">for</span><span class="w"> </span>the<span class="w"> </span>user<span class="w"> </span>running<span class="w"> </span>the<span class="w"> </span><span class="nb">test</span><span class="o">)</span>
+<span class="w"> </span>-S<span class="w">    </span>file<span class="w"> </span>is<span class="w"> </span>a<span class="w"> </span>socket
+<span class="w"> </span>-s<span class="w">    </span>file<span class="w"> </span>is<span class="w"> </span>not<span class="w"> </span>zero<span class="w"> </span>size
+<span class="w"> </span>-t<span class="w">    </span>file<span class="w"> </span><span class="o">(</span>descriptor<span class="o">)</span><span class="w"> </span>is<span class="w"> </span>associated<span class="w"> </span>with<span class="w"> </span>a<span class="w"> </span>terminal<span class="w"> </span>device.
+<span class="w"> </span>-u<span class="w">    </span>set-user-id2<span class="w"> </span><span class="o">(</span>suid<span class="o">)</span><span class="w"> </span>flag<span class="w"> </span><span class="nb">set</span><span class="w"> </span>on<span class="w"> </span>file
+<span class="w"> </span>-w<span class="w">    </span>file<span class="w"> </span>has<span class="w"> </span>write<span class="w"> </span>permission<span class="w"> </span><span class="o">(</span><span class="k">for</span><span class="w"> </span>the<span class="w"> </span>user<span class="w"> </span>running<span class="w"> </span>the<span class="w"> </span><span class="nb">test</span><span class="o">)</span>
+<span class="w"> </span>-x<span class="w">    </span>file<span class="w"> </span>has<span class="w"> </span>execute<span class="w"> </span>permission<span class="w"> </span><span class="o">(</span><span class="k">for</span><span class="w"> </span>the<span class="w"> </span>user<span class="w"> </span>running<span class="w"> </span>the<span class="w"> </span><span class="nb">test</span><span class="o">)</span>
+
+<span class="w"> </span>-nt<span class="w">   </span>file<span class="w"> </span>f1<span class="w"> </span>is<span class="w"> </span>newer<span class="w"> </span>than<span class="w"> </span>f2<span class="w">   </span>f1<span class="w"> </span>-nt<span class="w"> </span>f2
+<span class="w"> </span>-ot<span class="w">   </span>file<span class="w"> </span>f1<span class="w"> </span>is<span class="w"> </span>older<span class="w"> </span>than<span class="w"> </span>f2<span class="w">   </span>f1<span class="w"> </span>-ot<span class="w"> </span>f2
+<span class="w"> </span>-ef<span class="w">   </span>files<span class="w"> </span>f1<span class="w"> </span>and<span class="w"> </span>f2<span class="w"> </span>are<span class="w"> </span>hard<span class="w"> </span>links<span class="w"> </span>to<span class="w"> </span>the<span class="w"> </span>same<span class="w"> </span>file<span class="w">   </span>f1<span class="w"> </span>-ef<span class="w"> </span>f2
+<span class="w">    </span>
+<span class="w"> </span>!<span class="w">     </span><span class="s2">&quot;not&quot;</span><span class="w"> </span>--<span class="w"> </span>reverses<span class="w"> </span>the<span class="w"> </span>sense<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>tests<span class="w"> </span>above<span class="w"> </span><span class="o">(</span>returns<span class="w"> </span><span class="nb">true</span><span class="w"> </span><span class="k">if</span><span class="w"> </span>condition<span class="w"> </span>absent<span class="o">)</span>.
+</pre></div>
+</div>
+</section>
+</section>
+<section id="looping">
+<h3>6- Looping<a class="headerlink" href="#looping" title="Link to this heading">¶</a></h3>
+<p>To repeatily doing same instructions commands as long as a condition is valid (true), you can easily use looping, until a condition become invalid (false) and break the loop.</p>
+<section id="while-loop">
+<h4>While Loop<a class="headerlink" href="#while-loop" title="Link to this heading">¶</a></h4>
+<p>It is used in case you want to repeat some commands as long a condition is valid</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+
+<span class="nv">i</span><span class="o">=</span><span class="m">1</span>
+<span class="k">while</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="nv">$i</span><span class="w"> </span>-ls<span class="w"> </span><span class="m">10</span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="nv">$i</span>
+<span class="w">  </span><span class="o">((</span><span class="w"> </span><span class="nv">i</span><span class="w"> </span><span class="o">+=</span><span class="m">1</span><span class="w"> </span><span class="o">))</span>
+<span class="k">done</span>
+</pre></div>
+</div>
+</section>
+<section id="for-loop">
+<h4>For Loop<a class="headerlink" href="#for-loop" title="Link to this heading">¶</a></h4>
+<p>It is more used in case if you know how many times you need to iterate and repeatly do the same commands, so this even used in case of reading a file line by line.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+
+<span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="o">[</span><span class="m">1</span>..5<span class="o">]</span>
+<span class="k">do</span>
+<span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="nv">$i</span>
+<span class="k">done</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="functions">
+<h3>7- Functions<a class="headerlink" href="#functions" title="Link to this heading">¶</a></h3>
+<p>In Bash scripting, functions are blocks of code that can be defined once and executed multiple times within a script. They offer modularity, reusability, and help organize code. Here’s an overview of using functions in Bash:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="k">function</span><span class="w"> </span>function_name<span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="c1"># Commands or code block</span>
+<span class="w">    </span><span class="c1"># Within the function</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>Example for a cslculator:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+
+<span class="c1"># Define functions to perform calculations</span>
+<span class="k">function</span><span class="w"> </span>add<span class="w"> </span><span class="o">{</span>
+<span class="nb">echo</span><span class="w"> </span><span class="k">$((</span><span class="nv">$1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nv">$2</span><span class="k">))</span>
+<span class="o">}</span>
+
+<span class="k">function</span><span class="w"> </span>subtract<span class="w"> </span><span class="o">{</span>
+<span class="nb">echo</span><span class="w"> </span><span class="k">$((</span><span class="nv">$1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nv">$2</span><span class="k">))</span>
+<span class="o">}</span>
+
+<span class="k">function</span><span class="w"> </span>multiply<span class="w"> </span><span class="o">{</span>
+<span class="nb">echo</span><span class="w"> </span><span class="k">$((</span><span class="nv">$1</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nv">$2</span><span class="k">))</span>
+<span class="o">}</span>
+
+<span class="k">function</span><span class="w"> </span>divide<span class="w"> </span><span class="o">{</span>
+<span class="nb">echo</span><span class="w"> </span><span class="k">$((</span><span class="nv">$1</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="nv">$2</span><span class="k">))</span>
+<span class="o">}</span>
+
+<span class="c1"># Get input numbers from command-line arguments</span>
+<span class="nv">num1</span><span class="o">=</span><span class="nv">$1</span>
+<span class="nv">num2</span><span class="o">=</span><span class="nv">$2</span>
+
+<span class="c1"># Call the functions with input numbers</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Addition: </span><span class="k">$(</span>add<span class="w"> </span><span class="nv">$num1</span><span class="w"> </span><span class="nv">$num2</span><span class="k">)</span><span class="s2">&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Subtraction: </span><span class="k">$(</span>subtract<span class="w"> </span><span class="nv">$num1</span><span class="w"> </span><span class="nv">$num2</span><span class="k">)</span><span class="s2">&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Multiplication: </span><span class="k">$(</span>multiply<span class="w"> </span><span class="nv">$num1</span><span class="w"> </span><span class="nv">$num2</span><span class="k">)</span><span class="s2">&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Division: </span><span class="k">$(</span>divide<span class="w"> </span><span class="nv">$num1</span><span class="w"> </span><span class="nv">$num2</span><span class="k">)</span><span class="s2">&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="schedule-scripts-using-cron">
+<h3>8- Schedule Scripts using cron<a class="headerlink" href="#schedule-scripts-using-cron" title="Link to this heading">¶</a></h3>
+<p>Not all scripts are meant to be immediatly run to do their task, some time we need to set a schedule to automate their work on a specific time. We will use cron to do this schedule feature.</p>
+<section id="cron">
+<h4>Cron<a class="headerlink" href="#cron" title="Link to this heading">¶</a></h4>
+<p>Cron is a time-based job scheduler in Unix-like operating systems, including Linux and macOS. It allows users to schedule tasks, commands, or shell scripts to run automatically at predefined intervals or specific times without manual intervention.</p>
+</section>
+<section id="steps-to-shcedule-a-bash-script">
+<h4>Steps to Shcedule a Bash Script<a class="headerlink" href="#steps-to-shcedule-a-bash-script" title="Link to this heading">¶</a></h4>
+<section id="understand-cron-syntax">
+<h5>1. Understand Cron Syntax<a class="headerlink" href="#understand-cron-syntax" title="Link to this heading">¶</a></h5>
+<p>Cron uses a specific syntax to define the schedule. It comprises five fields followed by the command/script to be executed. The fields represent minute, hour, day of the month, month, and day of the week. Here’s the syntax:</p>
+<div class="highlight-plaintext notranslate"><div class="highlight"><pre><span></span>* * * * * command_to_execute
+- - - - -
+| | | | |
+| | | | +----- Day of the week (0 - 7) (Sunday is 0 or 7)
+| | | +------- Month (1 - 12)
+| | +--------- Day of the month (1 - 31)
+| +----------- Hour (0 - 23)
++------------- Minute (0 - 59)
+</pre></div>
+</div>
+</section>
+<section id="edit-the-user-s-cron-jobs">
+<h5>2. Edit the User’s Cron Jobs<a class="headerlink" href="#edit-the-user-s-cron-jobs" title="Link to this heading">¶</a></h5>
+<p>Use the <strong>crontab -e</strong> command to open the cron job editor for the current user. This command opens the user’s crontabe file for editting in the default text editor.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>crontab<span class="w"> </span>-e
+</pre></div>
+</div>
+</section>
+<section id="schedule-the-bash-script">
+<h5>3.Schedule the Bash Script<a class="headerlink" href="#schedule-the-bash-script" title="Link to this heading">¶</a></h5>
+<p>Add an entry to schedule your bash script by specifying the schedule and the command to execute:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Schdule a script to run every 0 mins, 4 hours, for every day, month, day of week</span>
+<span class="m">0</span><span class="w"> </span><span class="m">4</span><span class="w"> </span>*<span class="w"> </span>*<span class="w"> </span>*<span class="w"> </span>/path/to/your/script.sh
+</pre></div>
+</div>
+</section>
+<section id="save-and-exit">
+<h5>4. Save and exit<a class="headerlink" href="#save-and-exit" title="Link to this heading">¶</a></h5>
+<p>After adding the entry, save the changes and exit the editor</p>
+</section>
+<section id="check-shceduled-scripts">
+<h5>5. Check Shceduled Scripts<a class="headerlink" href="#check-shceduled-scripts" title="Link to this heading">¶</a></h5>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>crontab<span class="w"> </span>-l
+</pre></div>
+</div>
+</section>
+<section id="additional-tips">
+<h5>Additional Tips:<a class="headerlink" href="#additional-tips" title="Link to this heading">¶</a></h5>
+<ul class="simple">
+<li><p>Ensure that the script has executable permissions (chmod +x script.sh).</p></li>
+<li><p>Specify absolute paths for files, as cron might not use the same environment variables as your interactive shell.</p></li>
+<li><p>Redirect output (if necessary) to a specific file within the script itself to capture any output or errors that might occur during execution.</p></li>
+</ul>
+</section>
+</section>
+</section>
+</section>
+<section id="debug-troubleshoot">
+<h2>Debug &amp; Troubleshoot<a class="headerlink" href="#debug-troubleshoot" title="Link to this heading">¶</a></h2>
+<p>“Do it work just fine? then do not touch it!!”, we need to be able to debug our script, and can catch the error, so we need to be able to deubg our script.</p>
+<p>Debugging Bash scripts involves identifying and resolving issues or errors that occur during script execution. There are several techniques and tools available to debug Bash scripts effectively:</p>
+<section id="using-set-x">
+<h3>1. Using ‘set -x’<a class="headerlink" href="#using-set-x" title="Link to this heading">¶</a></h3>
+<p>Add ‘<strong>set -x</strong>’ at the beginning of your script to enable debugging mode. This mode displays each command before executing it, allowing you to see the sequence of commands executed.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+
+<span class="nb">set</span><span class="w"> </span>-x
+<span class="c1"># Your script commands here</span>
+</pre></div>
+</div>
+</section>
+<section id="echo-statements">
+<h3>2. echo Statements:<a class="headerlink" href="#echo-statements" title="Link to this heading">¶</a></h3>
+<p>Use ‘<strong>echo</strong>’ statements within the script to print variables, messages, or checkpoints to the terminal. This helps track the flow of the script and identify where issues might occur.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Starting script...&quot;</span>
+<span class="c1"># Your script commands here</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Script completed.&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="redirecting-output-and-errors">
+<h3>3. Redirecting Output and Errors<a class="headerlink" href="#redirecting-output-and-errors" title="Link to this heading">¶</a></h3>
+<p>Redirect standard output and errors to separate files to capture any issues or messages that might not be displayed in the terminal.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+
+<span class="c1"># Redirect standard output to a file</span>
+<span class="nb">exec</span><span class="w"> </span>&gt;<span class="w"> </span>output.log
+
+<span class="c1"># Redirect errors to a file</span>
+<span class="nb">exec</span><span class="w"> </span><span class="m">2</span>&gt;<span class="w"> </span>error.log
+
+<span class="c1"># Your script commands here</span>
+</pre></div>
+</div>
+</section>
+<section id="set-e">
+<h3>4. set -e<a class="headerlink" href="#set-e" title="Link to this heading">¶</a></h3>
+<p>Use ‘<strong>set -e</strong>’ to exit immediately if any command returns a non-zero exit status. This helps in catching errors early in the script execution.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+
+<span class="nb">set</span><span class="w"> </span>-e
+<span class="c1"># Your script commands here</span>
+</pre></div>
+</div>
+</section>
+<section id="trap-command">
+<h3>5. trap Command<a class="headerlink" href="#trap-command" title="Link to this heading">¶</a></h3>
+<p>Use trap to catch and handle signals or errors that occur during script execution. This helps perform specific actions when an error occurs.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+
+<span class="nb">trap</span><span class="w"> </span><span class="s1">&#39;echo &quot;Error occurred&quot;; exit 1&#39;</span><span class="w"> </span>ERR
+
+<span class="c1"># Your script commands here</span>
+</pre></div>
+</div>
+</section>
+<section id="shellcheck">
+<h3>6. Shellcheck<a class="headerlink" href="#shellcheck" title="Link to this heading">¶</a></h3>
+<p>Use external tools like Shellcheck to statically analyze your Bash script for common issues, syntax errors, and pitfalls</p>
+</section>
+<section id="debugging-with-bash-x">
+<h3>7. Debugging with bash -x<a class="headerlink" href="#debugging-with-bash-x" title="Link to this heading">¶</a></h3>
+<p>Run your script with bash -x script.sh to debug it directly from the command line, enabling debugging mode only for that execution.</p>
+</section>
+<section id="logging">
+<h3>8. Logging<a class="headerlink" href="#logging" title="Link to this heading">¶</a></h3>
+<p>Implement logging mechanisms within your script to track the execution flow, variable values, and errors encountered during script execution.</p>
+</section>
+</section>
+<section id="tips-tricks">
+<h2>Tips &amp; Tricks<a class="headerlink" href="#tips-tricks" title="Link to this heading">¶</a></h2>
+<section id="braces-expansion">
+<h3>Braces Expansion<a class="headerlink" href="#braces-expansion" title="Link to this heading">¶</a></h3>
+<p>You can use brace expansion feature to allow user to generate list of words or commands.</p>
+<p>To use it, enclose a comma-seperated list of workds or command in curly braces.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>touch<span class="w"> </span>file.<span class="o">{</span>txt,doc,pdf<span class="o">}</span>
+
+mkdir<span class="w"> </span>/var/tmp/<span class="o">{</span>one,two,three<span class="o">}</span>
+</pre></div>
+</div>
+</section>
+<section id="braces-for-variables">
+<h3>Braces for Variables<a class="headerlink" href="#braces-for-variables" title="Link to this heading">¶</a></h3>
+<p>Using braces around a variable name can help to avoid ambiguity and improve readability.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">output_dir</span><span class="o">=</span>/path/to/directory
+
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;The output file is: </span><span class="si">${</span><span class="nv">output_dir</span><span class="si">}</span><span class="s2">&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="command-substitution">
+<h3>Command Substitution<a class="headerlink" href="#command-substitution" title="Link to this heading">¶</a></h3>
+<p>It is a good programming tip to use variables for commands substitution instead of</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">current_time</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>+%Y-%m-%d_%H:%M:%S<span class="k">)</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;The current time is: </span><span class="nv">$current_time</span><span class="s2">&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="aliases">
+<h3>Aliases<a class="headerlink" href="#aliases" title="Link to this heading">¶</a></h3>
+<p>You can use aliases as shortcuts for commands or command sequences. This could save time and typing by allowing user to use a shorter or more intuitive command.</p>
+<p>To create an alias, use the alias command followed by the name of the alias and the command or command sequence you want to alias.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">alias</span><span class="w"> </span><span class="nv">ll</span><span class="o">=</span><span class="s2">&quot;ls -la&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="the-watch-command">
+<h3>The Watch Command<a class="headerlink" href="#the-watch-command" title="Link to this heading">¶</a></h3>
+<p>Use watch command to allows you to execute a command periodically and display the output in real-time.</p>
+<p>Useful for monitoring system resources or processess.</p>
+<p>To use watch command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># display the output of ps aux command every second.</span>
+watch<span class="w"> </span>-n<span class="w"> </span><span class="m">1</span><span class="w"> </span>ps<span class="w"> </span>aux
+</pre></div>
+</div>
+</section>
+<section id="history-expansion">
+<h3>History Expansion<a class="headerlink" href="#history-expansion" title="Link to this heading">¶</a></h3>
+<p>History expansion allows user to reuse commands from your command history.</p>
+<p>To use it:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># return the last command</span>
+!!
+
+<span class="c1"># return the command two commands ago</span>
+!-2
+</pre></div>
+</div>
+</section>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>freeCodeCamp - Bash Scripting Tutorial – Linux Shell Script and Command Line for Beginners: <a class="reference external" href="https://www.freecodecamp.org/news/bash-scripting-tutorial-linux-shell-script-and-command-line-for-beginners/">link</a></p></li>
+<li><p>10 must-known Bash shell scripting tips and tricks for beginners - <a class="reference external" href="https://www.fosslinux.com/105140/10-must-know-bash-shell-scripting-tips-and-tricks-for-beginners.htm">Foos Linux</a></p></li>
+<li><p>10 Bash Tricks Every Developer Should Know - <a class="reference external" href="https://tecadmin.net/bash-tricks-every-developer-should-know/#google_vignette">tecadmin</a></p></li>
+<li><p>Chatgpt - openAI: <a class="reference external" href="https://chat.openai.com">link</a></p></li>
+</ul>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">aCupOfTea</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Fields</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../dataCollection/index.html">Datacollection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../deepLearning/index.html">Deeplearning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../designPatterns/index.html">Designpatterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generativeAI/index.html">Generativeai</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../libararies%2CFrameworks%2CContainers/index.html">Libararies,Frameworks,Containers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../projectTopics/index.html">Projecttopics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../recommenderSystems/index.html">Recommendersystems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reinforcementLearning/index.html">Reinforcementlearning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../statistics/index.html">Statistics</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Systemadministration</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="linux-admin/index.html">Linux-Admin</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Q%26A.html">Q&amp;A</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ansible.html">Ansible</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Bash-Scripting</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#system-administration-bash-scripting">System Administration - Bash Scripting</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#table-of-content">Table of Content</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#introduction">Introduction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#creating-a-bash-script">Creating a bash script</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#basics">Basics</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#debug-troubleshoot">Debug &amp; Troubleshoot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tips-tricks">Tips &amp; Tricks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="build-process.html">Build-Process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ldap.html">Ldap</a></li>
+<li class="toctree-l3"><a class="reference internal" href="memory.html">Memory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="network.html">Network</a></li>
+<li class="toctree-l3"><a class="reference internal" href="virtualMachines.html">Virtualmachines</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../tabularData/index.html">Tabulardata</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../programming/index.html">Programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../journal/index.html">Journal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tips/index.html">Tips</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Fields</a><ul>
+  <li><a href="index.html">Systemadministration</a><ul>
+      <li>Previous: <a href="ansible.html" title="previous chapter">Ansible</a></li>
+      <li>Next: <a href="build-process.html" title="next chapter">Build-Process</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Ahmed Yousri Sobhi.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.0.4</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../../_sources/fields/systemAdministration/bash-scripting.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

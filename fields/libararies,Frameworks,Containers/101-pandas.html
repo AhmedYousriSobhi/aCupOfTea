@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>101-Pandas &#8212; aCupOfTea 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <script src="../../_static/documentation_options.js?v=f2a433a1"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="101-Pytorch" href="101-pytorch.html" />
+    <link rel="prev" title="101-Nvdia-Smi" href="101-nvdia-smi.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="pandas">
+<h1>101-Pandas<a class="headerlink" href="#pandas" title="Link to this heading">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<section id="id1">
+<h2>101 - Pandas<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h2>
+</section>
+<section id="table-of-content">
+<h2>Table of Content<a class="headerlink" href="#table-of-content" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="#101---pandas"><span class="xref myst">101 - Pandas</span></a></p></li>
+<li><p><a class="reference internal" href="#table-of-content"><span class="xref myst">Table of Content</span></a></p></li>
+<li><p><a class="reference internal" href="#pandas-basics"><span class="xref myst">Pandas Basics</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#concepts-and-definitions"><span class="xref myst">Concepts and Definitions</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#dataframe"><span class="xref myst">DataFrame</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#setting-display-options"><span class="xref myst">Setting Display Options</span></a></p></li>
+<li><p><a class="reference internal" href="#methods-to-create-a-dataframe"><span class="xref myst">Methods to Create a DataFrame</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#from-lists-or-arrays"><span class="xref myst">from Lists or Arrays</span></a></p></li>
+<li><p><a class="reference internal" href="#from-list-of-dictionaries"><span class="xref myst">from List of Dictionaries</span></a></p></li>
+<li><p><a class="reference internal" href="#from-a-numpy-array"><span class="xref myst">from a Numpy Array</span></a></p></li>
+<li><p><a class="reference internal" href="#from-a-series-or-dictionary-of-series"><span class="xref myst">from a Series or Dictionary of Series</span></a></p></li>
+<li><p><a class="reference internal" href="#from-a-list-of-tuples"><span class="xref myst">from a List of Tuples</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#reading-a-csv-file"><span class="xref myst">Reading a CSV file</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#to-read-data-from-csv-file"><span class="xref myst">To Read Data from CSV File</span></a></p></li>
+<li><p><a class="reference internal" href="#to-read-csv-file-from-url"><span class="xref myst">To Read CSV File from URL</span></a></p></li>
+<li><p><a class="reference internal" href="#pdread_csv-method"><span class="xref myst">pd.read_csv Method</span></a></p></li>
+<li><p><a class="reference internal" href="#assign-operations-while-reading-a-csv-file"><span class="xref myst">Assign Operations while reading a CSV File</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#saving-dataframe-as-csv-file"><span class="xref myst">Saving DataFrame as CSV File</span></a></p></li>
+<li><p><a class="reference internal" href="#data-exploring-retrieving-rows-from-a-dataframe"><span class="xref myst">Data Exploring: Retrieving rows from a dataframe</span></a></p></li>
+<li><p><a class="reference internal" href="#data-exploring-dataframe-schema"><span class="xref myst">Data Exploring: DataFrame Schema</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#reference"><span class="xref myst">Reference</span></a></p></li>
+</ul>
+</section>
+<section id="pandas-basics">
+<h2>Pandas Basics<a class="headerlink" href="#pandas-basics" title="Link to this heading">¶</a></h2>
+<section id="concepts-and-definitions">
+<h3>Concepts and Definitions<a class="headerlink" href="#concepts-and-definitions" title="Link to this heading">¶</a></h3>
+<section id="dataframe">
+<h4>DataFrame<a class="headerlink" href="#dataframe" title="Link to this heading">¶</a></h4>
+<p>A DataFrame is a two-dimensional, size-mutable, and potentially heterogeneous tabular data structure.</p>
+<p>Key features of a DataFrame:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Feature</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Tabular Data Structure</p></td>
+<td><p>It represents data in a table format with rows and columns, much like a spreadsheet or SQL table.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Two-Dimensional</p></td>
+<td><p>Data is arranged in rows and columns. Each row typically represents an observation or an individual data point, while each column represents a different variable or feature.</p></td>
+</tr>
+<tr class="row-even"><td><p>Size-Mutable</p></td>
+<td><p>The DataFrame object’s size can be modified after creation, meaning rows and columns can be added, removed, or modified.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Heterogeneous Data Types</p></td>
+<td><p>Unlike arrays or lists in Python, a DataFrame can contain different data types (e.g., integers, floats, strings, etc.) within the same DataFrame.</p></td>
+</tr>
+<tr class="row-even"><td><p>Labels and Indexing</p></td>
+<td><p>Each row and column in a DataFrame has a label or index associated with it, allowing for easy data retrieval, manipulation, and alignment.</p></td>
+</tr>
+</tbody>
+</table>
+<p>The pandas DataFrame is a fundamental data structure used extensively for data cleaning, data analysis, manipulation, transformation, and computation in various fields, including data science, machine learning, finance, and more.</p>
+<p>Creating a DataFrame usually involves importing the pandas library and constructing it from various data sources, such as lists, dictionaries, NumPy arrays, or reading data from CSV files, databases, Excel files, etc. Pandas provides a wide range of functionalities to handle, analyze, and process data stored in DataFrames efficiently.</p>
+</section>
+</section>
+<section id="setting-display-options">
+<h3>Setting Display Options<a class="headerlink" href="#setting-display-options" title="Link to this heading">¶</a></h3>
+<p>When exploring the dataframe, it will be displayed like a table with rows and columns. By default pandas displays a default number of rows=15 and columns=15, so some times our data are much bigger, so the  inbetween rows and columns will be trimmed from the display.</p>
+<p>In case you need to fully visualize a specific number of rows and columns, we can do that by setting the options for that!:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># we can set numbers for how many rows and columns will be displayed</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">&#39;display.min_rows&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span> <span class="c1">#default will be 10 </span>
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">&#39;display.max_columns&#39;</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Refer to pandas documents to know more about <a class="reference external" href="https://pandas.pydata.org/docs/user_guide/options.html">options and settings</a></p>
+</section>
+<section id="methods-to-create-a-dataframe">
+<h3>Methods to Create a DataFrame<a class="headerlink" href="#methods-to-create-a-dataframe" title="Link to this heading">¶</a></h3>
+<p>In pandas there are various methods to create a dataframe depending on the shape of the data you have.</p>
+<section id="from-lists-or-arrays">
+<h4>from Lists or Arrays<a class="headerlink" href="#from-lists-or-arrays" title="Link to this heading">¶</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Creating a DataFrame from lists</span>
+<span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Column1&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s1">&#39;Column2&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">]}</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+<span class="c1"># Output:</span>
+<span class="c1">#   Column1	Column2</span>
+<span class="c1"># 0	1	A</span>
+<span class="c1"># 1	2	B</span>
+<span class="c1"># 2	3	C</span>
+</pre></div>
+</div>
+</section>
+<section id="from-list-of-dictionaries">
+<h4>from List of Dictionaries<a class="headerlink" href="#from-list-of-dictionaries" title="Link to this heading">¶</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Creating a DataFrame from a list of dictionaries</span>
+<span class="n">data</span> <span class="o">=</span> <span class="p">[{</span><span class="s1">&#39;Column1&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;Column2&#39;</span><span class="p">:</span> <span class="s1">&#39;A&#39;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s1">&#39;Column1&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;Column2&#39;</span><span class="p">:</span> <span class="s1">&#39;B&#39;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s1">&#39;Column1&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;Column2&#39;</span><span class="p">:</span> <span class="s1">&#39;C&#39;</span><span class="p">}]</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+<span class="c1"># Output:</span>
+<span class="c1">#   Column1	Column2</span>
+<span class="c1"># 0	1	A</span>
+<span class="c1"># 1	2	B</span>
+<span class="c1"># 2	3	C</span>
+</pre></div>
+</div>
+</section>
+<section id="from-a-numpy-array">
+<h4>from a Numpy Array<a class="headerlink" href="#from-a-numpy-array" title="Link to this heading">¶</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="c1"># Creating a DataFrame from a NumPy array</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">]])</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Column1&#39;</span><span class="p">,</span> <span class="s1">&#39;Column2&#39;</span><span class="p">])</span>
+
+<span class="c1"># Output:</span>
+<span class="c1">#   Column1	Column2</span>
+<span class="c1"># 0	1	A</span>
+<span class="c1"># 1	2	B</span>
+<span class="c1"># 2	3	C</span>
+</pre></div>
+</div>
+</section>
+<section id="from-a-series-or-dictionary-of-series">
+<h4>from a Series or Dictionary of Series<a class="headerlink" href="#from-a-series-or-dictionary-of-series" title="Link to this heading">¶</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Creating a DataFrame from pandas Series</span>
+<span class="n">series1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="n">series2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">])</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;Column1&#39;</span><span class="p">:</span> <span class="n">series1</span><span class="p">,</span> <span class="s1">&#39;Column2&#39;</span><span class="p">:</span> <span class="n">series2</span><span class="p">})</span>
+
+<span class="c1"># Output:</span>
+<span class="c1">#   Column1	Column2</span>
+<span class="c1"># 0	1	A</span>
+<span class="c1"># 1	2	B</span>
+<span class="c1"># 2	3	C</span>
+</pre></div>
+</div>
+</section>
+<section id="from-a-list-of-tuples">
+<h4>from a List of Tuples<a class="headerlink" href="#from-a-list-of-tuples" title="Link to this heading">¶</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Creating a DataFrame from a list of tuples</span>
+<span class="n">data</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;A&#39;</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">)]</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Column1&#39;</span><span class="p">,</span> <span class="s1">&#39;Column2&#39;</span><span class="p">])</span>
+
+<span class="c1"># Output:</span>
+<span class="c1">#   Column1	Column2</span>
+<span class="c1"># 0	1	A</span>
+<span class="c1"># 1	2	B</span>
+<span class="c1"># 2	3	C</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="reading-a-csv-file">
+<h3>Reading a CSV file<a class="headerlink" href="#reading-a-csv-file" title="Link to this heading">¶</a></h3>
+<p>As a Data Scientist, most of our works depends on data, these data are mostly stored as a CSV “Comma Seperated Values” files. The data are called a tabular data as they are have a tabular structure represents a data in a table format with raw and columns. In most common practice, we usually call the data in CSV a <strong>DataFrame</strong>.</p>
+<section id="to-read-data-from-csv-file">
+<h4>To Read Data from CSV File<a class="headerlink" href="#to-read-data-from-csv-file" title="Link to this heading">¶</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Importing pandas libarary</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="c1"># Load the data into a varaible called df &quot;dataframe&quot;</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;data.csv&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="to-read-csv-file-from-url">
+<h4>To Read CSV File from URL<a class="headerlink" href="#to-read-csv-file-from-url" title="Link to this heading">¶</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;https://Some.url-to/file.csv&quot;</span>
+<span class="n">df_url</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="pd-read-csv-method">
+<h4>pd.read_csv Method<a class="headerlink" href="#pd-read-csv-method" title="Link to this heading">¶</a></h4>
+<p>According to the <a class="reference external" href="https://pandas.pydata.org/docs/reference/api/pandas.read_csv.html">documentation</a>, there are multiple provided parameters regarding the reading of the CSV file which pandas support. Let’s talk about the most common used ones.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Paramter</p></th>
+<th class="head"><p>Details</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>File Path or URL</p></td>
+<td><p>Provide the file path or URL correctly as the first argument. This can be a local file path or a URL pointing to the CSV file.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Header</p></td>
+<td><p>Specify whether the CSV file contains a header row. Use the <strong>header</strong> parameter (default is infer) to indicate whether the first row should be used as column names (header=0) or not (header=None).</p></td>
+</tr>
+<tr class="row-even"><td><p>Index Column</p></td>
+<td><p>Define which column(s) to use as the DataFrame index. Use the <strong>index_col</strong> parameter to specify the column number or name to set as the index. For multiple indices, pass a list of column names/numbers.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Specify Columns</p></td>
+<td><p>Use the <strong>usecols</strong> parameter to select specific columns from the CSV file. This can be a list of column names or indices to include in the DataFrame.</p></td>
+</tr>
+<tr class="row-even"><td><p>Data Types</p></td>
+<td><p>Use the <strong>dtype</strong> parameter to specify the data types of columns explicitly. This can be a dictionary where keys are column names and values are the desired data types.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Parsing Dates</p></td>
+<td><p>If the CSV contains date/time data, use the <strong>parse_dates</strong> parameter to specify which columns to parse as dates. Pass either a list of column names or indices.</p></td>
+</tr>
+<tr class="row-even"><td><p>Missing Values Handling</p></td>
+<td><p>Use the <strong>na_values</strong> parameter to define the values considered as missing (NaN) during parsing. It can be a string, list, or dictionary of columns and their respective missing values.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Skip Rows</p></td>
+<td><p>To skip initial rows in the CSV file (e.g., for skipping headers or metadata), use the <strong>skiprows</strong> parameter.</p></td>
+</tr>
+<tr class="row-even"><td><p>Handling Quotes</p></td>
+<td><p>If the CSV file uses quotes to enclose fields, use the <strong>quotechar</strong> parameter to specify the quote character.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Chunking and Memory Optimization</p></td>
+<td><p>For large datasets, consider using <strong>chunksize</strong> to read the file in smaller chunks, allowing for efficient memory usage when processing large files.</p></td>
+</tr>
+<tr class="row-even"><td><p>Encoding</p></td>
+<td><p>Use the <strong>encoding</strong> parameter to specify the character encoding of the CSV file, especially if it’s not in UTF-8 format (encoding=’utf-8’).</p></td>
+</tr>
+<tr class="row-odd"><td><p>Custom Delimiter</p></td>
+<td><p>Use the <strong>delimiter</strong> or <strong>sep</strong> parameter to specify a custom delimiter if the CSV file is not comma-separated (e.g., tab-separated: delimiter=’\t’).</p></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="c1"># Reading CSV file with specific options</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;file.csv&#39;</span><span class="p">,</span> 
+                   <span class="n">header</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                   <span class="n">index_col</span><span class="o">=</span><span class="s1">&#39;ID&#39;</span><span class="p">,</span>
+                   <span class="n">usecols</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;ID&#39;</span><span class="p">,</span> <span class="s1">&#39;Name&#39;</span><span class="p">,</span> <span class="s1">&#39;Age&#39;</span><span class="p">],</span>
+                   <span class="n">dtype</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;ID&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="s1">&#39;Age&#39;</span><span class="p">:</span> <span class="nb">float</span><span class="p">},</span>
+                   <span class="n">parse_dates</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Date&#39;</span><span class="p">],</span>
+                   <span class="n">na_values</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Age&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">},</span>
+                   <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="assign-operations-while-reading-a-csv-file">
+<h4>Assign Operations while reading a CSV File<a class="headerlink" href="#assign-operations-while-reading-a-csv-file" title="Link to this heading">¶</a></h4>
+<p>In some cases, during the reading process, we need to perform an operation on a specific column in our data, like for example; let’s assume we have a datetime column (which values represent dates/timestamps), these values are by default stored as an <strong>object</strong> (Strings) datatype, so we need to convert them to the correct datatype again.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Using pandas method .assign, to apply a certain function to each raw of a column.</span>
+<span class="c1"># It takes a lambda expression to apply a certain function on the target column.</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;data.csv&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">date_col</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">date_col</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Let’s assume another case, where we want to rename some columns to a different naming:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Using pandas method .rename, to change the name of columns by giving a dictionary to where the keys are the original column name, and the values are the target new names.</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;data.csv&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;data_col&#39;</span><span class="p">:</span><span class="s1">&#39;Date&#39;</span><span class="p">})</span>
+</pre></div>
+</div>
+<p>Now, let’s warp these two methods together into a single line of command:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Using () enclosure to be able to split the code line into several lines</span>
+<span class="n">df</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;data.csv&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">assign</span><span class="p">(</span>
+        <span class="n">data_col</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">data_col</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="o">.</span><span class="n">rename</span><span class="p">(</span>
+        <span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;date_col&#39;</span><span class="p">:</span><span class="s1">&#39;Date&#39;</span><span class="p">}</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>A note here, in the .assign method, you can simply create a new column by setting is name as you like instead of <strong>data_col</strong>, like: <strong>my_data = lambda x: pd.to_datetime(x.data_col)</strong>, so this will create a new column called my_data, and the old column data_col still exists in our data. But it has no benefit to have a two columns, and one of them (the Object datatype one) will not be used in this string format.</p>
+</section>
+</section>
+<section id="saving-dataframe-as-csv-file">
+<h3>Saving DataFrame as CSV File<a class="headerlink" href="#saving-dataframe-as-csv-file" title="Link to this heading">¶</a></h3>
+<p>After working on your project, some times we may clean, process, or even feature engineer our data, so we have to be able to store these new modified/created dataframe in a CSV file, so we could simply load that data to continue work on it.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Save dataframe as csv format</span>
+<span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;/Path/to/save/df.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="c1"># Adding parameter: as_index and assign a False value to it, so this will not create an index for these dataframe while storing.</span>
+</pre></div>
+</div>
+</section>
+<section id="data-exploring-retrieving-rows-from-a-dataframe">
+<h3>Data Exploring: Retrieving rows from a dataframe<a class="headerlink" href="#data-exploring-retrieving-rows-from-a-dataframe" title="Link to this heading">¶</a></h3>
+<p>After we load the dataframe, we need to take a look to check our data, even this look is a glance look, but it is a catchy one, which helps us to make sure that everything is loaded correctly so far.</p>
+<p>To do this, we simply could use <strong>.head</strong>/<strong>.tail</strong> method to display the first/last n number of rows</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># display first 3 rows</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="c1"># int_column	float_column	str_column	bool_column	date_column	category_column	object_column	nullable_column</span>
+<span class="c1"># 0	1	1.5	a	True	2023-01-01	x	&lt;object object at 0x7f12538191d0&gt;	1.5</span>
+<span class="c1"># 1	2	2.5	b	False	2023-01-02	y	&lt;object object at 0x7f1253819230&gt;	NaN</span>
+
+<span class="c1"># display the last 6 rows</span>
+<span class="n">df</span><span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="data-exploring-dataframe-schema">
+<h3>Data Exploring: DataFrame Schema<a class="headerlink" href="#data-exploring-dataframe-schema" title="Link to this heading">¶</a></h3>
+<p>To know the schema about the dataframe, we could use <strong>.info</strong> method:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+
+<span class="c1"># &lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;</span>
+<span class="c1"># RangeIndex: 4 entries, 0 to 3</span>
+<span class="c1"># Data columns (total 8 columns):</span>
+<span class="c1">#  #   Column           Non-Null Count  Dtype         </span>
+<span class="c1"># ---  ------           --------------  -----         </span>
+<span class="c1">#  0   int_column       4 non-null      int64         </span>
+<span class="c1">#  1   float_column     4 non-null      float64       </span>
+<span class="c1">#  2   str_column       4 non-null      object        </span>
+<span class="c1">#  3   bool_column      4 non-null      bool          </span>
+<span class="c1">#  4   date_column      4 non-null      datetime64[ns]</span>
+<span class="c1">#  5   category_column  4 non-null      category      </span>
+<span class="c1">#  6   object_column    4 non-null      object        </span>
+<span class="c1">#  7   nullable_column  3 non-null      float64       </span>
+<span class="c1"># dtypes: bool(1), category(1), datetime64[ns](1), float64(2), int64(1), object(2)</span>
+<span class="c1"># memory usage: 464.0+ bytes</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="reference">
+<h2>Reference<a class="headerlink" href="#reference" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Pandas Docs - Cummunity Tutorials: <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/getting_started/tutorials.html">link</a></p></li>
+<li><p>Towardsai-Pandas Complete Tutprial for Data Science in 2022: <a class="reference external" href="https://towardsai.net/p/data-science/pandas-complete-tutorial-for-data-science-in-2022">link</a></p></li>
+<li><p>kdnuggets - 5 Advanced Features Pandas: <a class="reference external" href="https://www.kdnuggets.com/2019/10/5-advanced-features-pandas.html">link</a></p></li>
+<li><p>bitbucket - learn pandas: <a class="reference external" href="https://bitbucket.org/hrojas/learn-pandas/src/master/">link</a></p></li>
+<li><p>Github - pandas cookbook: <a class="reference external" href="https://github.com/jvns/pandas-cookbook">link</a></p></li>
+</ul>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">aCupOfTea</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Fields</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../dataCollection/index.html">Datacollection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../deepLearning/index.html">Deeplearning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../designPatterns/index.html">Designpatterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generativeAI/index.html">Generativeai</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Libararies,Frameworks,Containers</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="101-conda.html">101-Conda</a></li>
+<li class="toctree-l3"><a class="reference internal" href="101-containers.html">101-Containers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="101-cuda.html">101-Cuda</a></li>
+<li class="toctree-l3"><a class="reference internal" href="101-dask.html">101-Dask</a></li>
+<li class="toctree-l3"><a class="reference internal" href="101-docker.html">101-Docker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="101-nvdia-smi.html">101-Nvdia-Smi</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">101-Pandas</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id1">101 - Pandas</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#table-of-content">Table of Content</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pandas-basics">Pandas Basics</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#reference">Reference</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="101-pytorch.html">101-Pytorch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="101-singularity.html">101-Singularity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="102-pytorchDDP.html">102-Pytorchddp</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../projectTopics/index.html">Projecttopics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../recommenderSystems/index.html">Recommendersystems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reinforcementLearning/index.html">Reinforcementlearning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../statistics/index.html">Statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../systemAdministration/index.html">Systemadministration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tabularData/index.html">Tabulardata</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../programming/index.html">Programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../journal/index.html">Journal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tips/index.html">Tips</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Fields</a><ul>
+  <li><a href="index.html">Libararies,Frameworks,Containers</a><ul>
+      <li>Previous: <a href="101-nvdia-smi.html" title="previous chapter">101-Nvdia-Smi</a></li>
+      <li>Next: <a href="101-pytorch.html" title="next chapter">101-Pytorch</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Ahmed Yousri Sobhi.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.0.4</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../../_sources/fields/libararies,Frameworks,Containers/101-pandas.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

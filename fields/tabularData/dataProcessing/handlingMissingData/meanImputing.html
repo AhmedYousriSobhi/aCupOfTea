@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Meanimputing &#8212; aCupOfTea 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <script src="../../../../_static/documentation_options.js?v=f2a433a1"></script>
+    <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="Regressionimputing" href="regressionImputing.html" />
+    <link rel="prev" title="Determinemissingvalues" href="determineMissingValues.html" />
+   
+  <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="meanimputing">
+<h1>Meanimputing<a class="headerlink" href="#meanimputing" title="Link to this heading">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<section id="missing-data-mean-imputing">
+<h2>Missing Data - Mean Imputing<a class="headerlink" href="#missing-data-mean-imputing" title="Link to this heading">¶</a></h2>
+<p>It is recommened to read <strong>determineMissingValues</strong> before starting.</p>
+<section id="methods-for-handling-missing-values-mean-imputing">
+<h3>Methods for Handling Missing Values: <strong>Mean Imputing</strong><a class="headerlink" href="#methods-for-handling-missing-values-mean-imputing" title="Link to this heading">¶</a></h3>
+<p>The Idea here is to get the average value of certain column to fill the missing values with it.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">A</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">A</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>But In case that, the average value is depending on other certain categorical values, So it is recommended to calculate each mean for each unique categorical value</p>
+<section id="step-1-calculate-the-average-value-per-categorical-feature">
+<h4>Step#1: Calculate the average value per categorical feature<a class="headerlink" href="#step-1-calculate-the-average-value-per-categorical-feature" title="Link to this heading">¶</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Calculate the average value for feature numeical_col &#39;A&#39; based on each categorical_col unique value &#39;B&#39;.</span>
+<span class="n">fill_value</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;B&#39;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">agg</span><span class="p">({</span><span class="s1">&#39;A&#39;</span><span class="p">:</span><span class="s1">&#39;mean&#39;</span><span class="p">})</span>
+    <span class="c1"># In case, it&#39;s required to have integer values only</span>
+    <span class="o">.</span><span class="n">round</span><span class="p">()</span>
+    <span class="c1"># Convert the dataframe into dictionary with list values</span>
+    <span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="s1">&#39;list&#39;</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">display</span><span class="p">(</span><span class="n">fill_value</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The output should be like:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;Apartment&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">965.0</span><span class="p">],</span>
+ <span class="s1">&#39;Cabin&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">688.0</span><span class="p">],</span>
+ <span class="s1">&#39;Chalet&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1207.0</span><span class="p">],</span>
+ <span class="s1">&#39;Clinic&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1159.0</span><span class="p">],</span>
+ <span class="s1">&#39;Duplex&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1127.0</span><span class="p">],</span>
+ <span class="s1">&#39;Family House&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">228.0</span><span class="p">],</span>
+ <span class="s1">&#39;Office&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1121.0</span><span class="p">],</span>
+ <span class="s1">&#39;Penthouse&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">989.0</span><span class="p">],</span>
+ <span class="s1">&#39;Retail&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1023.0</span><span class="p">],</span>
+ <span class="s1">&#39;Serviced Apartment&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">823.0</span><span class="p">],</span>
+ <span class="s1">&#39;Studio&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">887.0</span><span class="p">],</span>
+ <span class="s1">&#39;Townhouse&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1201.0</span><span class="p">],</span>
+ <span class="s1">&#39;Twinhouse&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1151.0</span><span class="p">],</span>
+ <span class="s1">&#39;Villa&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1093.0</span><span class="p">]}</span>
+</pre></div>
+</div>
+</section>
+<section id="step-2-impute-the-missing-values-based-on-that-dictionary">
+<h4>Step#2: Impute the missing values based on that dictionary<a class="headerlink" href="#step-2-impute-the-missing-values-based-on-that-dictionary" title="Link to this heading">¶</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">A</span>
+    <span class="o">.</span><span class="n">fillna</span><span class="p">(</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">B</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">fill_value</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">x</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../../index.html">aCupOfTea</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">Fields</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../../dataCollection/index.html">Datacollection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../deepLearning/index.html">Deeplearning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../designPatterns/index.html">Designpatterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generativeAI/index.html">Generativeai</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../libararies%2CFrameworks%2CContainers/index.html">Libararies,Frameworks,Containers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../projectTopics/index.html">Projecttopics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../recommenderSystems/index.html">Recommendersystems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../reinforcementLearning/index.html">Reinforcementlearning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../statistics/index.html">Statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../systemAdministration/index.html">Systemadministration</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../../index.html">Tabulardata</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../conceptInMachineLearning/index.html">Conceptinmachinelearning</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../conceptinTimeSeries/index.html">Conceptintimeseries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../dataEDA/index.html">Dataeda</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../dataEvaluation/index.html">Dataevaluation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../dataFeatureEngineering/index.html">Datafeatureengineering</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../dataModeling/index.html">Datamodeling</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html">Dataprocessing</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="index.html">Handlingmissingdata</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../handlingObjectData/index.html">Handlingobjectdata</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../handlingOutliers/index.html">Handlingoutliers</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../tools/index.html">Tools</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../programming/index.html">Programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../journal/index.html">Journal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tips/index.html">Tips</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../index.html">Fields</a><ul>
+  <li><a href="../../index.html">Tabulardata</a><ul>
+  <li><a href="../index.html">Dataprocessing</a><ul>
+  <li><a href="index.html">Handlingmissingdata</a><ul>
+      <li>Previous: <a href="determineMissingValues.html" title="previous chapter">Determinemissingvalues</a></li>
+      <li>Next: <a href="regressionImputing.html" title="next chapter">Regressionimputing</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Ahmed Yousri Sobhi.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.0.4</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../../../../_sources/fields/tabularData/dataProcessing/handlingMissingData/meanImputing.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

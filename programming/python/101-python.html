@@ -1,0 +1,1339 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>101-Python &#8212; aCupOfTea 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <script src="../../_static/documentation_options.js?v=f2a433a1"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Pythoncleancode" href="../pythonCleanCode/index.html" />
+    <link rel="prev" title="Python" href="index.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="python">
+<h1>101-Python<a class="headerlink" href="#python" title="Link to this heading">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<section id="id1">
+<h2>101 - Python<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h2>
+</section>
+<section id="table-of-content">
+<h2>Table of Content<a class="headerlink" href="#table-of-content" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="#101---python"><span class="xref myst">101 - Python</span></a></p></li>
+<li><p><a class="reference internal" href="#table-of-content"><span class="xref myst">Table of Content</span></a></p></li>
+<li><p><a class="reference internal" href="#concepts-highlights"><span class="xref myst">Concepts Highlights</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#1-primitive-datatype-and-operators"><span class="xref myst">1. Primitive Datatype and Operators</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#arithmetic"><span class="xref myst">Arithmetic</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#2-variables-and-collections"><span class="xref myst">2. Variables and Collections</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#list"><span class="xref myst">List</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#none-object"><span class="xref myst">None Object</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#tuple"><span class="xref myst">Tuple</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#default-type-is-tuple"><span class="xref myst">Default type is Tuple</span></a></p></li>
+<li><p><a class="reference internal" href="#extended-unpacking"><span class="xref myst">Extended Unpacking</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#dictionaries"><span class="xref myst">Dictionaries</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#immutable-type-key"><span class="xref myst">Immutable Type Key</span></a></p></li>
+<li><p><a class="reference internal" href="#how-keysvalues-are-stored"><span class="xref myst">How Keys|Values are stored</span></a></p></li>
+<li><p><a class="reference internal" href="#get-value-by-key"><span class="xref myst">Get Value by Key</span></a></p></li>
+<li><p><a class="reference internal" href="#add-new-key"><span class="xref myst">Add New Key</span></a></p></li>
+<li><p><a class="reference internal" href="#unpacking-options"><span class="xref myst">Unpacking Options</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#sets"><span class="xref myst">Sets</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#immutable-elements"><span class="xref myst">Immutable Elements</span></a></p></li>
+<li><p><a class="reference internal" href="#add-more-items"><span class="xref myst">Add More Items</span></a></p></li>
+<li><p><a class="reference internal" href="#intersectionuniondifferencesymmetric"><span class="xref myst">Intersection/Union/Difference/Symmetric</span></a></p></li>
+<li><p><a class="reference internal" href="#supersetsubset"><span class="xref myst">Superset/Subset</span></a></p></li>
+<li><p><a class="reference internal" href="#deep-copy"><span class="xref myst">Deep Copy</span></a></p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#3-control-flow-and-iterables"><span class="xref myst">3. Control Flow and Iterables</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#handle-exceptions"><span class="xref myst">Handle Exceptions</span></a></p></li>
+<li><p><a class="reference internal" href="#readingwriting-to-files"><span class="xref myst">Reading/Writing to Files</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#with-clause"><span class="xref myst">with Clause</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#iterable"><span class="xref myst">Iterable</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#cant-access-elements-by-index"><span class="xref myst">Can’t Access Elements by Index</span></a></p></li>
+<li><p><a class="reference internal" href="#iterator"><span class="xref myst">Iterator</span></a></p></li>
+<li><p><a class="reference internal" href="#for-loop-does-iteration-implicitly"><span class="xref myst">For Loop does Iteration Implicitly</span></a></p></li>
+<li><p><a class="reference internal" href="#grab-iterables-elements-using-list"><span class="xref myst">Grab Iterable’s elements using list()</span></a></p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#4-functions"><span class="xref myst">4. Functions</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#variable-positional-arguments"><span class="xref myst">Variable Positional Arguments</span></a></p></li>
+<li><p><a class="reference internal" href="#variable-keyword-arguments"><span class="xref myst">Variable Keyword Arguments</span></a></p></li>
+<li><p><a class="reference internal" href="#calling-function-expanding"><span class="xref myst">Calling Function Expanding</span></a></p></li>
+<li><p><a class="reference internal" href="#default-output-type-is-tuple"><span class="xref myst">Default Output Type is Tuple</span></a></p></li>
+<li><p><a class="reference internal" href="#first-class-function"><span class="xref myst">First Class Function</span></a></p></li>
+<li><p><a class="reference internal" href="#closure-in-nested-functions"><span class="xref myst">Closure in Nested Functions</span></a></p></li>
+<li><p><a class="reference internal" href="#anonymous-functions"><span class="xref myst">Anonymous Functions</span></a></p></li>
+<li><p><a class="reference internal" href="#built-in-higher-order-functions"><span class="xref myst">Built-in Higher Order Functions</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#diagram-explanation"><span class="xref myst">Diagram Explanation</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#comprehensions"><span class="xref myst">Comprehensions</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#list-1"><span class="xref myst">List</span></a></p></li>
+<li><p><a class="reference internal" href="#construct-set-and-dict"><span class="xref myst">Construct set and dict</span></a></p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#5-modules"><span class="xref myst">5. Modules</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#note-loading-module-priority"><span class="xref myst">Note: Loading Module Priority</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#6-classes"><span class="xref myst">6. Classes</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#define-a-class"><span class="xref myst">Define a Class</span></a></p></li>
+<li><p><a class="reference internal" href="#create-an-instance-of-a-class"><span class="xref myst">Create an Instance of a Class</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#61-inheritance"><span class="xref myst">6.1 Inheritance</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#importing-parent-class"><span class="xref myst">Importing Parent Class</span></a></p></li>
+<li><p><a class="reference internal" href="#define-child-class"><span class="xref myst">Define Child Class</span></a></p></li>
+<li><p><a class="reference internal" href="#create-an-instance-of-the-child"><span class="xref myst">Create an Instance of the Child</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#62-multiple-inheritance"><span class="xref myst">6.2 Multiple Inheritance</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#another-parent-class"><span class="xref myst">Another Parent Class</span></a></p></li>
+<li><p><a class="reference internal" href="#child-class-inherit-from-multiple-parent-classes"><span class="xref myst">Child Class Inherit from multiple Parent Classes</span></a></p></li>
+<li><p><a class="reference internal" href="#create-an-instance-of-the-child-1"><span class="xref myst">Create an Instance of the Child</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#7-advanced"><span class="xref myst">7. Advanced</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#generator-functions---yeild"><span class="xref myst">Generator Functions - Yeild</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#breakdown-the-purpose-of-using-yield"><span class="xref myst">Breakdown the purpose of using <strong>yield</strong></span></a></p></li>
+<li><p><a class="reference internal" href="#code-example"><span class="xref myst">Code Example</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#generators"><span class="xref myst">Generators</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#diagrammatic"><span class="xref myst">Diagrammatic</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#decorators"><span class="xref myst">Decorators</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#wrappers"><span class="xref myst">Wrappers</span></a></p></li>
+<li><p><a class="reference internal" href="#problem-of-this-method"><span class="xref myst">Problem of this Method</span></a></p></li>
+<li><p><a class="reference internal" href="#solution-using-wraps"><span class="xref myst">Solution using <strong>wraps</strong></span></a></p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#references"><span class="xref myst">References</span></a></p></li>
+</ul>
+</section>
+<section id="concepts-highlights">
+<h2>Concepts Highlights<a class="headerlink" href="#concepts-highlights" title="Link to this heading">¶</a></h2>
+<p>These illustrations are provided from <a class="reference external" href="https://learnxinyminutes.com/docs/python/">learnxinyminutes-python</a>, so they are copied and pasted to be able to add some of my own notes on them. So please refer to the original website for the complete wonderful tutorial.</p>
+<p>So in the following sections, we will not cover a full beginning illustration for the python, and we consider that you just want to wrap up and recall the important notes in python.</p>
+<section id="primitive-datatype-and-operators">
+<h3>1. Primitive Datatype and Operators<a class="headerlink" href="#primitive-datatype-and-operators" title="Link to this heading">¶</a></h3>
+<section id="arithmetic">
+<h4>Arithmetic<a class="headerlink" href="#arithmetic" title="Link to this heading">¶</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Integer division rounds down for both positive and negative numbers.</span>
+<span class="mi">5</span> <span class="o">//</span> <span class="mi">3</span>       <span class="c1"># =&gt; 1</span>
+<span class="o">-</span><span class="mi">5</span> <span class="o">//</span> <span class="mi">3</span>      <span class="c1"># =&gt; -2</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># i % j have the same sign as j, unlike C</span>
+<span class="o">-</span><span class="mi">7</span> <span class="o">%</span> <span class="mi">3</span>  <span class="c1"># =&gt; 2</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="variables-and-collections">
+<h3>2. Variables and Collections<a class="headerlink" href="#variables-and-collections" title="Link to this heading">¶</a></h3>
+<section id="list">
+<h4>List<a class="headerlink" href="#list" title="Link to this heading">¶</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># (is vs. ==) is checks if two variables refer to the same object, but == checks</span>
+<span class="c1"># if the objects pointed to have the same values.</span>
+<span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>  <span class="c1"># Point a at a new list, [1, 2, 3, 4]</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">a</span>             <span class="c1"># Point b at what a is pointing to</span>
+<span class="n">b</span> <span class="ow">is</span> <span class="n">a</span>            <span class="c1"># =&gt; True, a and b refer to the same object</span>
+<span class="n">b</span> <span class="o">==</span> <span class="n">a</span>            <span class="c1"># =&gt; True, a&#39;s and b&#39;s objects are equal</span>
+<span class="n">b</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>  <span class="c1"># Point b at a new list, [1, 2, 3, 4]</span>
+<span class="n">b</span> <span class="ow">is</span> <span class="n">a</span>            <span class="c1"># =&gt; False, a and b do not refer to the same object</span>
+<span class="n">b</span> <span class="o">==</span> <span class="n">a</span>            <span class="c1"># =&gt; True, a&#39;s and b&#39;s objects are equal</span>
+</pre></div>
+</div>
+<section id="none-object">
+<h5>None Object<a class="headerlink" href="#none-object" title="Link to this heading">¶</a></h5>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Don&#39;t use the equality &quot;==&quot; symbol to compare objects to None</span>
+<span class="c1"># Use &quot;is&quot; instead. This checks for equality of object identity.</span>
+<span class="s2">&quot;etc&quot;</span> <span class="ow">is</span> <span class="kc">None</span>  <span class="c1"># =&gt; False</span>
+<span class="kc">None</span> <span class="ow">is</span> <span class="kc">None</span>   <span class="c1"># =&gt; True</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="tuple">
+<h4>Tuple<a class="headerlink" href="#tuple" title="Link to this heading">¶</a></h4>
+<section id="default-type-is-tuple">
+<h5>Default type is Tuple<a class="headerlink" href="#default-type-is-tuple" title="Link to this heading">¶</a></h5>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Note that a tuple of length one has to have a comma after the last element but</span>
+<span class="c1"># tuples of other lengths, even zero, do not.</span>
+<span class="nb">type</span><span class="p">((</span><span class="mi">1</span><span class="p">))</span>   <span class="c1"># =&gt; &lt;class &#39;int&#39;&gt;</span>
+<span class="nb">type</span><span class="p">((</span><span class="mi">1</span><span class="p">,))</span>  <span class="c1"># =&gt; &lt;class &#39;tuple&#39;&gt;</span>
+<span class="nb">type</span><span class="p">(())</span>    <span class="c1"># =&gt; &lt;class &#39;tuple&#39;&gt;</span>
+</pre></div>
+</div>
+</section>
+<section id="extended-unpacking">
+<h5>Extended Unpacking<a class="headerlink" href="#extended-unpacking" title="Link to this heading">¶</a></h5>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># You can also do extended unpacking</span>
+<span class="n">a</span><span class="p">,</span> <span class="o">*</span><span class="n">b</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>  <span class="c1"># a is now 1, b is now [2, 3] and c is now 4</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="dictionaries">
+<h4>Dictionaries<a class="headerlink" href="#dictionaries" title="Link to this heading">¶</a></h4>
+<section id="immutable-type-key">
+<h5>Immutable Type Key<a class="headerlink" href="#immutable-type-key" title="Link to this heading">¶</a></h5>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Note keys for dictionaries have to be immutable types. This is to ensure that</span>
+<span class="c1"># the key can be converted to a constant hash value for quick look-ups.</span>
+<span class="c1"># Immutable types include ints, floats, strings, tuples.</span>
+<span class="n">invalid_dict</span> <span class="o">=</span> <span class="p">{[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]:</span> <span class="s2">&quot;123&quot;</span><span class="p">}</span>  <span class="c1"># =&gt; Yield a TypeError: unhashable type: &#39;list&#39;</span>
+<span class="n">valid_dict</span> <span class="o">=</span> <span class="p">{(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">):[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]}</span>   <span class="c1"># Values can be of any type, however.</span>
+</pre></div>
+</div>
+</section>
+<section id="how-keys-values-are-stored">
+<h5>How Keys|Values are stored<a class="headerlink" href="#how-keys-values-are-stored" title="Link to this heading">¶</a></h5>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Here is a prefilled dictionary</span>
+<span class="n">filled_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;one&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;two&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;three&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">}</span>
+<span class="c1"># Get all values as an iterable with &quot;values()&quot;. Once again we need to wrap it</span>
+<span class="c1"># in list() to get it out of the iterable. Note - Same as above regarding key</span>
+<span class="c1"># ordering.</span>
+<span class="nb">list</span><span class="p">(</span><span class="n">filled_dict</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>  <span class="c1"># =&gt; [3, 2, 1]  in Python &lt;3.7</span>
+<span class="nb">list</span><span class="p">(</span><span class="n">filled_dict</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>  <span class="c1"># =&gt; [1, 2, 3] in Python 3.7+</span>
+</pre></div>
+</div>
+</section>
+<section id="get-value-by-key">
+<h5>Get Value by Key<a class="headerlink" href="#get-value-by-key" title="Link to this heading">¶</a></h5>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Use &quot;get()&quot; method to avoid the KeyError</span>
+<span class="n">filled_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;one&quot;</span><span class="p">)</span>      <span class="c1"># =&gt; 1</span>
+<span class="n">filled_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;four&quot;</span><span class="p">)</span>     <span class="c1"># =&gt; None</span>
+<span class="c1"># The get method supports a default argument when the value is missing</span>
+<span class="n">filled_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;one&quot;</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>   <span class="c1"># =&gt; 1</span>
+<span class="n">filled_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;four&quot;</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>  <span class="c1"># =&gt; 4</span>
+
+<span class="c1"># &quot;setdefault()&quot; inserts into a dictionary only if the given key isn&#39;t present</span>
+<span class="n">filled_dict</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;five&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>  <span class="c1"># filled_dict[&quot;five&quot;] is set to 5</span>
+<span class="n">filled_dict</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;five&quot;</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>  <span class="c1"># filled_dict[&quot;five&quot;] is still 5</span>
+</pre></div>
+</div>
+</section>
+<section id="add-new-key">
+<h5>Add New Key<a class="headerlink" href="#add-new-key" title="Link to this heading">¶</a></h5>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Adding to a dictionary</span>
+<span class="n">filled_dict</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;four&quot;</span><span class="p">:</span><span class="mi">4</span><span class="p">})</span>  <span class="c1"># =&gt; {&quot;one&quot;: 1, &quot;two&quot;: 2, &quot;three&quot;: 3, &quot;four&quot;: 4}</span>
+<span class="n">filled_dict</span><span class="p">[</span><span class="s2">&quot;four&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">4</span>         <span class="c1"># another way to add to dict</span>
+</pre></div>
+</div>
+</section>
+<section id="unpacking-options">
+<h5>Unpacking Options<a class="headerlink" href="#unpacking-options" title="Link to this heading">¶</a></h5>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># From Python 3.5 you can also use the additional unpacking options</span>
+<span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="p">{</span><span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}}</span>  <span class="c1"># =&gt; {&#39;a&#39;: 1, &#39;b&#39;: 2}</span>
+<span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}}</span>  <span class="c1"># =&gt; {&#39;a&#39;: 2}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="sets">
+<h4>Sets<a class="headerlink" href="#sets" title="Link to this heading">¶</a></h4>
+<section id="immutable-elements">
+<h5>Immutable Elements<a class="headerlink" href="#immutable-elements" title="Link to this heading">¶</a></h5>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Similar to keys of a dictionary, elements of a set have to be immutable.</span>
+<span class="n">invalid_set</span> <span class="o">=</span> <span class="p">{[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1</span><span class="p">}</span>  <span class="c1"># =&gt; Raises a TypeError: unhashable type: &#39;list&#39;</span>
+<span class="n">valid_set</span> <span class="o">=</span> <span class="p">{(</span><span class="mi">1</span><span class="p">,),</span> <span class="mi">1</span><span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="add-more-items">
+<h5>Add More Items<a class="headerlink" href="#add-more-items" title="Link to this heading">¶</a></h5>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Initialize a set with a bunch of values.</span>
+<span class="n">some_set</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">}</span>  <span class="c1"># some_set is now {1, 2, 3, 4}</span>
+
+<span class="c1"># Add one more item to the set</span>
+<span class="n">filled_set</span> <span class="o">=</span> <span class="n">some_set</span>
+<span class="n">filled_set</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>  <span class="c1"># filled_set is now {1, 2, 3, 4, 5}</span>
+<span class="c1"># Sets do not have duplicate elements</span>
+<span class="n">filled_set</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>  <span class="c1"># it remains as before {1, 2, 3, 4, 5}</span>
+</pre></div>
+</div>
+</section>
+<section id="intersection-union-difference-symmetric">
+<h5>Intersection/Union/Difference/Symmetric<a class="headerlink" href="#intersection-union-difference-symmetric" title="Link to this heading">¶</a></h5>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Do set intersection with &amp;</span>
+<span class="n">other_set</span> <span class="o">=</span> <span class="p">{</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">}</span>
+<span class="n">filled_set</span> <span class="o">&amp;</span> <span class="n">other_set</span>  <span class="c1"># =&gt; {3, 4, 5}</span>
+
+<span class="c1"># Do set union with |</span>
+<span class="n">filled_set</span> <span class="o">|</span> <span class="n">other_set</span>  <span class="c1"># =&gt; {1, 2, 3, 4, 5, 6}</span>
+
+
+<span class="c1"># Do set difference with -</span>
+<span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">}</span> <span class="o">-</span> <span class="p">{</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">}</span>  <span class="c1"># =&gt; {1, 4}</span>
+
+<span class="c1"># Do set symmetric difference with ^</span>
+<span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">}</span> <span class="o">^</span> <span class="p">{</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">}</span>  <span class="c1"># =&gt; {1, 4, 5}</span>
+</pre></div>
+</div>
+</section>
+<section id="superset-subset">
+<h5>Superset/Subset<a class="headerlink" href="#superset-subset" title="Link to this heading">¶</a></h5>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check if set on the left is a superset of set on the right</span>
+<span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">}</span> <span class="o">&gt;=</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">}</span> <span class="c1"># =&gt; False</span>
+
+<span class="c1"># Check if set on the left is a subset of set on the right</span>
+<span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">}</span> <span class="o">&lt;=</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">}</span> <span class="c1"># =&gt; True</span>
+</pre></div>
+</div>
+</section>
+<section id="deep-copy">
+<h5>Deep Copy<a class="headerlink" href="#deep-copy" title="Link to this heading">¶</a></h5>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Make a one layer deep copy</span>
+<span class="n">filled_set</span> <span class="o">=</span> <span class="n">some_set</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>  <span class="c1"># filled_set is {1, 2, 3, 4, 5}</span>
+<span class="n">filled_set</span> <span class="ow">is</span> <span class="n">some_set</span>        <span class="c1"># =&gt; False</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+<section id="control-flow-and-iterables">
+<h3>3. Control Flow and Iterables<a class="headerlink" href="#control-flow-and-iterables" title="Link to this heading">¶</a></h3>
+<section id="handle-exceptions">
+<h4>Handle Exceptions<a class="headerlink" href="#handle-exceptions" title="Link to this heading">¶</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Handle exceptions with a try/except block</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="c1"># Use &quot;raise&quot; to raise an error</span>
+    <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span><span class="s2">&quot;This is an index error&quot;</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">IndexError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="k">pass</span>                 <span class="c1"># Refrain from this, provide a recovery (next example).</span>
+<span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">NameError</span><span class="p">):</span>
+    <span class="k">pass</span>                 <span class="c1"># Multiple exceptions can be processed jointly.</span>
+<span class="k">else</span><span class="p">:</span>                    <span class="c1"># Optional clause to the try/except block. Must follow</span>
+                         <span class="c1"># all except blocks.</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;All good!&quot;</span><span class="p">)</span>   <span class="c1"># Runs only if the code in try raises no exceptions</span>
+<span class="k">finally</span><span class="p">:</span>                 <span class="c1"># Execute under all circumstances</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;We can clean up resources here&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="reading-writing-to-files">
+<h4>Reading/Writing to Files<a class="headerlink" href="#reading-writing-to-files" title="Link to this heading">¶</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Writing to a file</span>
+<span class="n">contents</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;aa&quot;</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span> <span class="s2">&quot;bb&quot;</span><span class="p">:</span> <span class="mi">21</span><span class="p">}</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;myfile1.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;w+&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+    <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">contents</span><span class="p">))</span>        <span class="c1"># writes a string to a file</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;myfile2.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;w+&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+    <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">contents</span><span class="p">))</span> <span class="c1"># writes an object to a file</span>
+
+<span class="c1"># Reading from a file</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;myfile1.txt&#39;</span><span class="p">,</span> <span class="s2">&quot;r+&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+    <span class="n">contents</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>           <span class="c1"># reads a string from a file</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">contents</span><span class="p">)</span>
+<span class="c1"># print: {&quot;aa&quot;: 12, &quot;bb&quot;: 21}</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;myfile2.txt&#39;</span><span class="p">,</span> <span class="s2">&quot;r+&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+    <span class="n">contents</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>       <span class="c1"># reads a json object from a file</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">contents</span><span class="p">)</span>
+<span class="c1"># print: {&quot;aa&quot;: 12, &quot;bb&quot;: 21}</span>
+</pre></div>
+</div>
+<p>Note: difference between ‘r’ and ‘r+’, answer <a class="reference external" href="https://stackoverflow.com/questions/1466000/difference-between-modes-a-a-w-w-and-r-in-built-in-open-function">source</a></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
+ <span class="err">``</span><span class="sa">r</span><span class="s1">&#39;&#39;</span>   <span class="n">Open</span> <span class="n">text</span> <span class="n">file</span> <span class="k">for</span> <span class="n">reading</span><span class="o">.</span>  <span class="n">The</span> <span class="n">stream</span> <span class="ow">is</span> <span class="n">positioned</span> <span class="n">at</span> <span class="n">the</span>
+         <span class="n">beginning</span> <span class="n">of</span> <span class="n">the</span> <span class="n">file</span><span class="o">.</span>
+
+ <span class="err">``</span><span class="n">r</span><span class="o">+</span><span class="s1">&#39;&#39;</span>  <span class="n">Open</span> <span class="k">for</span> <span class="n">reading</span> <span class="ow">and</span> <span class="n">writing</span><span class="o">.</span>  <span class="n">The</span> <span class="n">stream</span> <span class="ow">is</span> <span class="n">positioned</span> <span class="n">at</span> <span class="n">the</span>
+         <span class="n">beginning</span> <span class="n">of</span> <span class="n">the</span> <span class="n">file</span><span class="o">.</span>
+</pre></div>
+</div>
+<section id="with-clause">
+<h5>with Clause<a class="headerlink" href="#with-clause" title="Link to this heading">¶</a></h5>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Instead of try/finally to cleanup resources you can use a with statement</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;myfile.txt&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="iterable">
+<h4>Iterable<a class="headerlink" href="#iterable" title="Link to this heading">¶</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Python offers a fundamental abstraction called the Iterable.</span>
+<span class="c1"># An iterable is an object that can be treated as a sequence.</span>
+<span class="c1"># The object returned by the range function, is an iterable.</span>
+
+<span class="n">filled_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;one&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;two&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;three&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">}</span>
+<span class="n">our_iterable</span> <span class="o">=</span> <span class="n">filled_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">our_iterable</span><span class="p">)</span>  <span class="c1"># =&gt; dict_keys([&#39;one&#39;, &#39;two&#39;, &#39;three&#39;]). This is an object</span>
+                     <span class="c1"># that implements our Iterable interface.</span>
+
+<span class="c1"># We can loop over it.</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">our_iterable</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>  <span class="c1"># Prints one, two, three</span>
+</pre></div>
+</div>
+<section id="can-t-access-elements-by-index">
+<h5>Can’t Access Elements by Index<a class="headerlink" href="#can-t-access-elements-by-index" title="Link to this heading">¶</a></h5>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># However we cannot address elements by index.</span>
+<span class="n">our_iterable</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># Raises a TypeError</span>
+</pre></div>
+</div>
+</section>
+<section id="iterator">
+<h5>Iterator<a class="headerlink" href="#iterator" title="Link to this heading">¶</a></h5>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># An iterable is an object that knows how to create an iterator.</span>
+<span class="n">our_iterator</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">our_iterable</span><span class="p">)</span>
+
+<span class="c1"># Our iterator is an object that can remember the state as we traverse through</span>
+<span class="c1"># it. We get the next object with &quot;next()&quot;.</span>
+<span class="nb">next</span><span class="p">(</span><span class="n">our_iterator</span><span class="p">)</span>  <span class="c1"># =&gt; &quot;one&quot;</span>
+
+<span class="c1"># It maintains state as we iterate.</span>
+<span class="nb">next</span><span class="p">(</span><span class="n">our_iterator</span><span class="p">)</span>  <span class="c1"># =&gt; &quot;two&quot;</span>
+<span class="nb">next</span><span class="p">(</span><span class="n">our_iterator</span><span class="p">)</span>  <span class="c1"># =&gt; &quot;three&quot;</span>
+
+<span class="c1"># After the iterator has returned all of its data, it raises a</span>
+<span class="c1"># StopIteration exception</span>
+<span class="nb">next</span><span class="p">(</span><span class="n">our_iterator</span><span class="p">)</span>  <span class="c1"># Raises StopIteration</span>
+</pre></div>
+</div>
+</section>
+<section id="for-loop-does-iteration-implicitly">
+<h5>For Loop does Iteration Implicitly<a class="headerlink" href="#for-loop-does-iteration-implicitly" title="Link to this heading">¶</a></h5>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># We can also loop over it, in fact, &quot;for&quot; does this implicitly!</span>
+<span class="n">our_iterator</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">our_iterable</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">our_iterator</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>  <span class="c1"># Prints one, two, three</span>
+
+</pre></div>
+</div>
+</section>
+<section id="grab-iterable-s-elements-using-list">
+<h5>Grab Iterable’s elements using list()<a class="headerlink" href="#grab-iterable-s-elements-using-list" title="Link to this heading">¶</a></h5>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># You can grab all the elements of an iterable or iterator by call of list().</span>
+<span class="nb">list</span><span class="p">(</span><span class="n">our_iterable</span><span class="p">)</span>  <span class="c1"># =&gt; Returns [&quot;one&quot;, &quot;two&quot;, &quot;three&quot;]</span>
+<span class="nb">list</span><span class="p">(</span><span class="n">our_iterator</span><span class="p">)</span>  <span class="c1"># =&gt; Returns [] because state is saved</span>
+</pre></div>
+</div>
+<p>Note: the iterator of the iterable saves its state, so it will return the remaining elements that it doesn’t iter over yet.</p>
+</section>
+</section>
+</section>
+<section id="functions">
+<h3>4. Functions<a class="headerlink" href="#functions" title="Link to this heading">¶</a></h3>
+<section id="variable-positional-arguments">
+<h4>Variable Positional Arguments<a class="headerlink" href="#variable-positional-arguments" title="Link to this heading">¶</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># You can define functions that take a variable number of</span>
+<span class="c1"># positional arguments</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">varargs</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">args</span>
+
+<span class="n">varargs</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>  <span class="c1"># =&gt; (1, 2, 3)</span>
+</pre></div>
+</div>
+</section>
+<section id="variable-keyword-arguments">
+<h4>Variable Keyword Arguments<a class="headerlink" href="#variable-keyword-arguments" title="Link to this heading">¶</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># You can define functions that take a variable number of</span>
+<span class="c1"># keyword arguments, as well</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">keyword_args</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">kwargs</span>
+
+
+<span class="c1"># Let&#39;s call it to see what happens</span>
+<span class="n">keyword_args</span><span class="p">(</span><span class="n">big</span><span class="o">=</span><span class="s2">&quot;foot&quot;</span><span class="p">,</span> <span class="n">loch</span><span class="o">=</span><span class="s2">&quot;ness&quot;</span><span class="p">)</span>  <span class="c1"># =&gt; {&quot;big&quot;: &quot;foot&quot;, &quot;loch&quot;: &quot;ness&quot;}</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># You can do both at once, if you like</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">all_the_args</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">all_the_args(1, 2, a=3, b=4) prints:</span>
+<span class="sd">    (1, 2)</span>
+<span class="sd">    {&quot;a&quot;: 3, &quot;b&quot;: 4}</span>
+<span class="sd">&quot;&quot;&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="calling-function-expanding">
+<h4>Calling Function Expanding<a class="headerlink" href="#calling-function-expanding" title="Link to this heading">¶</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># When calling functions, you can do the opposite of args/kwargs!</span>
+<span class="c1"># Use * to expand args (tuples) and use ** to expand kwargs (dictionaries).</span>
+<span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;a&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">}</span>
+<span class="n">all_the_args</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>            <span class="c1"># equivalent: all_the_args(1, 2, 3, 4)</span>
+<span class="n">all_the_args</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>         <span class="c1"># equivalent: all_the_args(a=3, b=4)</span>
+<span class="n">all_the_args</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>  <span class="c1"># equivalent: all_the_args(1, 2, 3, 4, a=3, b=4)</span>
+</pre></div>
+</div>
+</section>
+<section id="default-output-type-is-tuple">
+<h4>Default Output Type is Tuple<a class="headerlink" href="#default-output-type-is-tuple" title="Link to this heading">¶</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Returning multiple values (with tuple assignments)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">swap</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">y</span><span class="p">,</span> <span class="n">x</span>  <span class="c1"># Return multiple values as a tuple without the parenthesis.</span>
+                 <span class="c1"># (Note: parenthesis have been excluded but can be included)</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">y</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">swap</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>     <span class="c1"># =&gt; x = 2, y = 1</span>
+<span class="c1"># (x, y) = swap(x,y)  # Again the use of parenthesis is optional.</span>
+</pre></div>
+</div>
+</section>
+<section id="first-class-function">
+<h4>First Class Function<a class="headerlink" href="#first-class-function" title="Link to this heading">¶</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Python has first class functions</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_adder</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">adder</span><span class="p">(</span><span class="n">y</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+    <span class="k">return</span> <span class="n">adder</span>
+
+<span class="n">add_10</span> <span class="o">=</span> <span class="n">create_adder</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">add_10</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>   <span class="c1"># =&gt; 13</span>
+</pre></div>
+</div>
+</section>
+<section id="closure-in-nested-functions">
+<h4>Closure in Nested Functions<a class="headerlink" href="#closure-in-nested-functions" title="Link to this heading">¶</a></h4>
+<ul class="simple">
+<li><p>Allowing inner functions to “remember” the environment in which they were created</p></li>
+<li><p>We will have to use <strong>nonlocal</strong>: The nonlocal keyword in Python is used within nested functions to modify variables that are defined in the nearest enclosing scope, excluding the global scope.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Closures in nested functions:</span>
+<span class="c1"># We can use the nonlocal keyword to work with variables in nested scope which shouldn&#39;t be declared in the inner functions.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_avg</span><span class="p">():</span>
+    <span class="n">total</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">avg</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="k">nonlocal</span> <span class="n">total</span><span class="p">,</span> <span class="n">count</span>
+        <span class="n">total</span> <span class="o">+=</span> <span class="n">n</span>
+        <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">total</span><span class="o">/</span><span class="n">count</span>
+    <span class="k">return</span> <span class="n">avg</span>
+<span class="n">avg</span> <span class="o">=</span> <span class="n">create_avg</span><span class="p">()</span>
+<span class="n">avg</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="c1"># =&gt; 3.0</span>
+<span class="n">avg</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span> <span class="c1"># (3+5)/2 =&gt; 4.0</span>
+<span class="n">avg</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span> <span class="c1"># (8+7)/3 =&gt; 5.0</span>
+</pre></div>
+</div>
+</section>
+<section id="anonymous-functions">
+<h4>Anonymous Functions<a class="headerlink" href="#anonymous-functions" title="Link to this heading">¶</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># There are also anonymous functions</span>
+<span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">)(</span><span class="mi">3</span><span class="p">)</span>                  <span class="c1"># =&gt; True</span>
+<span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">x</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">y</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># =&gt; 5</span>
+</pre></div>
+</div>
+</section>
+<section id="built-in-higher-order-functions">
+<h4>Built-in Higher Order Functions<a class="headerlink" href="#built-in-higher-order-functions" title="Link to this heading">¶</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># There are built-in higher order functions</span>
+<span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">add_10</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]))</span>          <span class="c1"># =&gt; [11, 12, 13]</span>
+<span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">max</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>  <span class="c1"># =&gt; [4, 2, 3]</span>
+
+<span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="p">,</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">]))</span>  <span class="c1"># =&gt; [6, 7]</span>
+</pre></div>
+</div>
+<section id="diagram-explanation">
+<h5>Diagram Explanation<a class="headerlink" href="#diagram-explanation" title="Link to this heading">¶</a></h5>
+<ul>
+<li><p>list(map(max, [1, 2, 3], [4, 2, 1]))</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">Lists</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">]</span><span class="w">   </span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span>
+
+<span class="w">            </span><span class="o">+</span><span class="c1">------+      +------+</span>
+<span class="w">            </span><span class="o">|</span><span class="w">  </span><span class="mi">1</span><span class="w">   </span><span class="o">|</span><span class="w">      </span><span class="o">|</span><span class="w">  </span><span class="mi">4</span><span class="w">   </span><span class="o">|</span>
+<span class="w">            </span><span class="o">+</span><span class="c1">------+      +------+</span>
+<span class="w">            </span><span class="o">|</span><span class="w">  </span><span class="mi">2</span><span class="w">   </span><span class="o">|</span><span class="w">      </span><span class="o">|</span><span class="w">  </span><span class="mi">2</span><span class="w">   </span><span class="o">|</span>
+<span class="w">            </span><span class="o">+</span><span class="c1">------+      +------+</span>
+<span class="w">            </span><span class="o">|</span><span class="w">  </span><span class="mi">3</span><span class="w">   </span><span class="o">|</span><span class="w">      </span><span class="o">|</span><span class="w">  </span><span class="mi">1</span><span class="w">   </span><span class="o">|</span>
+<span class="w">            </span><span class="o">+</span><span class="c1">------+      +------+</span>
+<span class="w">              </span><span class="o">|</span><span class="w">            </span><span class="o">|</span>
+<span class="w">              </span><span class="n">V</span><span class="w">            </span><span class="n">V</span>
+
+<span class="w">     </span><span class="k">map</span><span class="p">(</span><span class="k">max</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">],</span><span class="w"> </span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">])</span>
+
+<span class="w">              </span><span class="o">|</span><span class="w">            </span><span class="o">|</span>
+<span class="w">              </span><span class="n">V</span><span class="w">            </span><span class="n">V</span>
+
+<span class="w">       </span><span class="p">[</span><span class="k">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">),</span><span class="w"> </span><span class="k">max</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">),</span><span class="w"> </span><span class="k">max</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)]</span>
+
+<span class="w">              </span><span class="o">|</span><span class="w">            </span><span class="o">|</span>
+<span class="w">              </span><span class="n">V</span><span class="w">            </span><span class="n">V</span>
+
+<span class="w">             </span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">]</span>
+
+<span class="w">              </span><span class="o">|</span><span class="w">            </span><span class="o">|</span>
+<span class="w">              </span><span class="n">V</span><span class="w">            </span><span class="n">V</span>
+
+<span class="n">list</span><span class="p">(</span><span class="k">map</span><span class="p">(</span><span class="k">max</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">],</span><span class="w"> </span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">]))</span>
+
+<span class="w">              </span><span class="o">|</span><span class="w">            </span><span class="o">|</span>
+<span class="w">              </span><span class="n">V</span><span class="w">            </span><span class="n">V</span>
+
+<span class="w">            </span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">]</span><span class="w"> </span><span class="p">(</span><span class="k">Final</span><span class="w"> </span><span class="k">Result</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">List</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p>list(filter(lambda x: x &gt; 5, [3, 4, 5, 6, 7]))</p>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">Initial</span><span class="w"> </span><span class="n">List</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w"> </span><span class="mi">7</span><span class="p">]</span>
+
+<span class="w">            </span><span class="o">+</span><span class="c1">-------+</span>
+<span class="w">            </span><span class="o">|</span><span class="w">  </span><span class="mi">3</span><span class="w">    </span><span class="o">|</span>
+<span class="w">            </span><span class="o">+</span><span class="c1">-------+</span>
+<span class="w">            </span><span class="o">|</span><span class="w">  </span><span class="mi">4</span><span class="w">    </span><span class="o">|</span>
+<span class="w">            </span><span class="o">+</span><span class="c1">-------+</span>
+<span class="w">            </span><span class="o">|</span><span class="w">  </span><span class="mi">5</span><span class="w">    </span><span class="o">|</span>
+<span class="w">            </span><span class="o">+</span><span class="c1">-------+</span>
+<span class="w">            </span><span class="o">|</span><span class="w">  </span><span class="mi">6</span><span class="w">    </span><span class="o">|</span>
+<span class="w">            </span><span class="o">+</span><span class="c1">-------+</span>
+<span class="w">            </span><span class="o">|</span><span class="w">  </span><span class="mi">7</span><span class="w">    </span><span class="o">|</span>
+<span class="w">            </span><span class="o">+</span><span class="c1">-------+</span>
+<span class="w">                </span><span class="o">|</span>
+<span class="w">                </span><span class="n">V</span>
+
+<span class="w">    </span><span class="n">filter</span><span class="p">(</span><span class="n">lambda</span><span class="w"> </span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span>
+
+<span class="w">                </span><span class="o">|</span>
+<span class="w">                </span><span class="n">V</span>
+
+<span class="w">    </span><span class="p">[</span><span class="mi">6</span><span class="p">,</span><span class="w"> </span><span class="mi">7</span><span class="p">]</span><span class="w"> </span><span class="p">(</span><span class="n">Filtered</span><span class="w"> </span><span class="k">Result</span><span class="p">)</span>
+
+<span class="w">                </span><span class="o">|</span>
+<span class="w">                </span><span class="n">V</span>
+
+<span class="w">    </span><span class="n">list</span><span class="p">(</span><span class="n">filter</span><span class="p">(</span><span class="n">lambda</span><span class="w"> </span><span class="n">x</span><span class="p">:</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">5</span><span class="p">))</span>
+
+<span class="w">                </span><span class="o">|</span>
+<span class="w">                </span><span class="n">V</span>
+
+<span class="w">    </span><span class="p">[</span><span class="mi">6</span><span class="p">,</span><span class="w"> </span><span class="mi">7</span><span class="p">]</span><span class="w"> </span><span class="p">(</span><span class="k">Final</span><span class="w"> </span><span class="k">Result</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">List</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+</section>
+<section id="comprehensions">
+<h4>Comprehensions<a class="headerlink" href="#comprehensions" title="Link to this heading">¶</a></h4>
+<p>In Python, comprehension refers to a concise and efficient way to create new sequences, such as lists, sets, or dictionaries, based on existing ones. It enables developers to generate these sequences using a compact syntax within a single line of code.</p>
+<section id="id2">
+<h5>List<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h5>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># List comprehension stores the output as a list (which itself may be nested).</span>
+<span class="p">[</span><span class="n">add_10</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]]</span>         <span class="c1"># =&gt; [11, 12, 13]</span>
+<span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">]</span> <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="p">]</span>  <span class="c1"># =&gt; [6, 7]</span>
+</pre></div>
+</div>
+</section>
+<section id="construct-set-and-dict">
+<h5>Construct set and dict<a class="headerlink" href="#construct-set-and-dict" title="Link to this heading">¶</a></h5>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># You can construct set and dict comprehensions as well.</span>
+<span class="p">{</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="s1">&#39;abcddeef&#39;</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">not</span> <span class="ow">in</span> <span class="s1">&#39;abc&#39;</span><span class="p">}</span>  <span class="c1"># =&gt; {&#39;d&#39;, &#39;e&#39;, &#39;f&#39;}</span>
+<span class="p">{</span><span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">)}</span>  <span class="c1"># =&gt; {0: 0, 1: 1, 2: 4, 3: 9, 4: 16}</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+<section id="modules">
+<h3>5. Modules<a class="headerlink" href="#modules" title="Link to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import Modules</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+
+<span class="c1"># Get Specific function from a module</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">floor</span>
+
+<span class="c1"># Import all functions from a module, but not recommended</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+
+<span class="c1"># Shorten module name</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">m</span>
+
+<span class="c1"># To find out which functions and attributes are defined in a module</span>
+<span class="nb">dir</span><span class="p">(</span><span class="n">math</span><span class="p">)</span>
+</pre></div>
+</div>
+<section id="note-loading-module-priority">
+<h4>Note: Loading Module Priority<a class="headerlink" href="#note-loading-module-priority" title="Link to this heading">¶</a></h4>
+<p>If you have a Python script named math.py in the same folder as your current script, the file math.py will be loaded instead of the built-in Python module. This happens because the local folder has priority over Python’s built-in libraries.</p>
+</section>
+</section>
+<section id="classes">
+<h3>6. Classes<a class="headerlink" href="#classes" title="Link to this heading">¶</a></h3>
+<section id="define-a-class">
+<h4>Define a Class<a class="headerlink" href="#define-a-class" title="Link to this heading">¶</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># We use the &quot;class&quot; statement to create a class</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Human</span><span class="p">:</span>
+
+    <span class="c1"># A class attribute. It is shared by all instances of this class</span>
+    <span class="n">species</span> <span class="o">=</span> <span class="s2">&quot;H. sapiens&quot;</span>
+
+    <span class="c1"># Basic initializer, this is called when this class is instantiated.</span>
+    <span class="c1"># Note that the double leading and trailing underscores denote objects</span>
+    <span class="c1"># or attributes that are used by Python but that live in user-controlled</span>
+    <span class="c1"># namespaces. Methods(or objects or attributes) like: __init__, __str__,</span>
+    <span class="c1"># __repr__ etc. are called special methods (or sometimes called dunder</span>
+    <span class="c1"># methods). You should not invent such names on your own.</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="c1"># Assign the argument to the instance&#39;s name attribute</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+
+        <span class="c1"># Initialize property</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_age</span> <span class="o">=</span> <span class="mi">0</span>   <span class="c1"># the leading underscore indicates the &quot;age&quot; property is </span>
+                        <span class="c1"># intended to be used internally</span>
+                        <span class="c1"># do not rely on this to be enforced: it&#39;s a hint to other devs</span>
+
+    <span class="c1"># An instance method. All methods take &quot;self&quot; as the first argument</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">say</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{name}</span><span class="s2">: </span><span class="si">{message}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="n">msg</span><span class="p">))</span>
+
+    <span class="c1"># Another instance method</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;yo... yo... microphone check... one two... one two...&#39;</span>
+
+    <span class="c1"># A class method is shared among all instances</span>
+    <span class="c1"># They are called with the calling class as the first argument</span>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_species</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">species</span>
+
+    <span class="c1"># A static method is called without a class or instance reference</span>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">grunt</span><span class="p">():</span>
+        <span class="k">return</span> <span class="s2">&quot;*grunt*&quot;</span>
+
+    <span class="c1"># A property is just like a getter.</span>
+    <span class="c1"># It turns the method age() into a read-only attribute of the same name.</span>
+    <span class="c1"># There&#39;s no need to write trivial getters and setters in Python, though.</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">age</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_age</span>
+
+    <span class="c1"># This allows the property to be set</span>
+    <span class="nd">@age</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">age</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">age</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_age</span> <span class="o">=</span> <span class="n">age</span>
+
+    <span class="c1"># This allows the property to be deleted</span>
+    <span class="nd">@age</span><span class="o">.</span><span class="n">deleter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">age</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_age</span>
+</pre></div>
+</div>
+</section>
+<section id="create-an-instance-of-a-class">
+<h4>Create an Instance of a Class<a class="headerlink" href="#create-an-instance-of-a-class" title="Link to this heading">¶</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># When a Python interpreter reads a source file it executes all its code.</span>
+<span class="c1"># This __name__ check makes sure this code block is only executed when this</span>
+<span class="c1"># module is the main program.</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="c1"># Instantiate a class</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">Human</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Ian&quot;</span><span class="p">)</span>
+    <span class="n">i</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="s2">&quot;hi&quot;</span><span class="p">)</span>                     <span class="c1"># &quot;Ian: hi&quot;</span>
+    <span class="n">j</span> <span class="o">=</span> <span class="n">Human</span><span class="p">(</span><span class="s2">&quot;Joel&quot;</span><span class="p">)</span>
+    <span class="n">j</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">)</span>                  <span class="c1"># &quot;Joel: hello&quot;</span>
+    <span class="c1"># i and j are instances of type Human; i.e., they are Human objects.</span>
+
+    <span class="c1"># Call our class method</span>
+    <span class="n">i</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">get_species</span><span class="p">())</span>          <span class="c1"># &quot;Ian: H. sapiens&quot;</span>
+    <span class="c1"># Change the shared attribute</span>
+    <span class="n">Human</span><span class="o">.</span><span class="n">species</span> <span class="o">=</span> <span class="s2">&quot;H. neanderthalensis&quot;</span>
+    <span class="n">i</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">get_species</span><span class="p">())</span>          <span class="c1"># =&gt; &quot;Ian: H. neanderthalensis&quot;</span>
+    <span class="n">j</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="n">j</span><span class="o">.</span><span class="n">get_species</span><span class="p">())</span>          <span class="c1"># =&gt; &quot;Joel: H. neanderthalensis&quot;</span>
+
+    <span class="c1"># Call the static method</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">Human</span><span class="o">.</span><span class="n">grunt</span><span class="p">())</span>            <span class="c1"># =&gt; &quot;*grunt*&quot;</span>
+
+    <span class="c1"># Static methods can be called by instances too</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">grunt</span><span class="p">())</span>                <span class="c1"># =&gt; &quot;*grunt*&quot;</span>
+
+    <span class="c1"># Update the property for this instance</span>
+    <span class="n">i</span><span class="o">.</span><span class="n">age</span> <span class="o">=</span> <span class="mi">42</span>
+    <span class="c1"># Get the property</span>
+    <span class="n">i</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">age</span><span class="p">)</span>                    <span class="c1"># =&gt; &quot;Ian: 42&quot;</span>
+    <span class="n">j</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="n">j</span><span class="o">.</span><span class="n">age</span><span class="p">)</span>                    <span class="c1"># =&gt; &quot;Joel: 0&quot;</span>
+    <span class="c1"># Delete the property</span>
+    <span class="k">del</span> <span class="n">i</span><span class="o">.</span><span class="n">age</span>
+    <span class="c1"># i.age                         # =&gt; this would raise an AttributeError</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="inheritance">
+<h3>6.1 Inheritance<a class="headerlink" href="#inheritance" title="Link to this heading">¶</a></h3>
+<p>Inheritance allows new child classes to be defined that inherit methods and variables from their parent class.</p>
+<p>Using the Human class defined above as the base or parent class, we can define a child class, Superhero, which inherits the class variables like “species”, “name”, and “age”, as well as methods, like “sing” and “grunt” from the Human class, but can also have its own unique properties.</p>
+<p>To take advantage of modularization by file you could place the classes above in their own files, say, human.py</p>
+<section id="importing-parent-class">
+<h4>Importing Parent Class<a class="headerlink" href="#importing-parent-class" title="Link to this heading">¶</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># To import functions from other files use the following format</span>
+<span class="c1"># from &quot;filename-without-extension&quot; import &quot;function-or-class&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">human</span><span class="w"> </span><span class="kn">import</span> <span class="n">Human</span>
+</pre></div>
+</div>
+</section>
+<section id="define-child-class">
+<h4>Define Child Class<a class="headerlink" href="#define-child-class" title="Link to this heading">¶</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Specify the parent class(es) as parameters to the class definition</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Superhero</span><span class="p">(</span><span class="n">Human</span><span class="p">):</span>
+
+    <span class="c1"># If the child class should inherit all of the parent&#39;s definitions without</span>
+    <span class="c1"># any modifications, you can just use the &quot;pass&quot; keyword (and nothing else)</span>
+    <span class="c1"># but in this case it is commented out to allow for a unique child class:</span>
+    <span class="c1"># pass</span>
+
+    <span class="c1"># Child classes can override their parents&#39; attributes</span>
+    <span class="n">species</span> <span class="o">=</span> <span class="s1">&#39;Superhuman&#39;</span>
+
+    <span class="c1"># Children automatically inherit their parent class&#39;s constructor including</span>
+    <span class="c1"># its arguments, but can also define additional arguments or definitions</span>
+    <span class="c1"># and override its methods such as the class constructor.</span>
+    <span class="c1"># This constructor inherits the &quot;name&quot; argument from the &quot;Human&quot; class and</span>
+    <span class="c1"># adds the &quot;superpower&quot; and &quot;movie&quot; arguments:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">movie</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">superpowers</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;super strength&quot;</span><span class="p">,</span> <span class="s2">&quot;bulletproofing&quot;</span><span class="p">]):</span>
+
+        <span class="c1"># add additional class attributes:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fictional</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">movie</span> <span class="o">=</span> <span class="n">movie</span>
+        <span class="c1"># be aware of mutable default values, since defaults are shared</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">superpowers</span> <span class="o">=</span> <span class="n">superpowers</span>
+
+        <span class="c1"># The &quot;super&quot; function lets you access the parent class&#39;s methods</span>
+        <span class="c1"># that are overridden by the child, in this case, the __init__ method.</span>
+        <span class="c1"># This calls the parent class constructor:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="c1"># override the sing method</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;Dun, dun, DUN!&#39;</span>
+
+    <span class="c1"># add an additional instance method</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">boast</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">power</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">superpowers</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;I wield the power of </span><span class="si">{pow}</span><span class="s2">!&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">pow</span><span class="o">=</span><span class="n">power</span><span class="p">))</span>
+</pre></div>
+</div>
+</section>
+<section id="create-an-instance-of-the-child">
+<h4>Create an Instance of the Child<a class="headerlink" href="#create-an-instance-of-the-child" title="Link to this heading">¶</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">sup</span> <span class="o">=</span> <span class="n">Superhero</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Tick&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Instance type checks</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sup</span><span class="p">,</span> <span class="n">Human</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;I am human&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">sup</span><span class="p">)</span> <span class="ow">is</span> <span class="n">Superhero</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;I am a superhero&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Get the &quot;Method Resolution Order&quot; used by both getattr() and super()</span>
+    <span class="c1"># (the order in which classes are searched for an attribute or method)</span>
+    <span class="c1"># This attribute is dynamic and can be updated</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">Superhero</span><span class="o">.</span><span class="vm">__mro__</span><span class="p">)</span>    <span class="c1"># =&gt; (&lt;class &#39;__main__.Superhero&#39;&gt;,</span>
+                                <span class="c1"># =&gt; &lt;class &#39;human.Human&#39;&gt;, &lt;class &#39;object&#39;&gt;)</span>
+
+    <span class="c1"># Calls parent method but uses its own class attribute</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">sup</span><span class="o">.</span><span class="n">get_species</span><span class="p">())</span>    <span class="c1"># =&gt; Superhuman</span>
+
+    <span class="c1"># Calls overridden method</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">sup</span><span class="o">.</span><span class="n">sing</span><span class="p">())</span>           <span class="c1"># =&gt; Dun, dun, DUN!</span>
+
+    <span class="c1"># Calls method from Human</span>
+    <span class="n">sup</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="s1">&#39;Spoon&#39;</span><span class="p">)</span>            <span class="c1"># =&gt; Tick: Spoon</span>
+
+    <span class="c1"># Call method that exists only in Superhero</span>
+    <span class="n">sup</span><span class="o">.</span><span class="n">boast</span><span class="p">()</span>                 <span class="c1"># =&gt; I wield the power of super strength!</span>
+                                <span class="c1"># =&gt; I wield the power of bulletproofing!</span>
+
+    <span class="c1"># Inherited class attribute</span>
+    <span class="n">sup</span><span class="o">.</span><span class="n">age</span> <span class="o">=</span> <span class="mi">31</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">sup</span><span class="o">.</span><span class="n">age</span><span class="p">)</span>              <span class="c1"># =&gt; 31</span>
+
+    <span class="c1"># Attribute that only exists within Superhero</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Am I Oscar eligible? &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">sup</span><span class="o">.</span><span class="n">movie</span><span class="p">))</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="multiple-inheritance">
+<h3>6.2 Multiple Inheritance<a class="headerlink" href="#multiple-inheritance" title="Link to this heading">¶</a></h3>
+<section id="another-parent-class">
+<h4>Another Parent Class<a class="headerlink" href="#another-parent-class" title="Link to this heading">¶</a></h4>
+<p>Let’s assume we have another class called “Bat” which included in a module file called “bat.py”</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Another class definition</span>
+<span class="c1"># bat.py</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Bat</span><span class="p">:</span>
+
+    <span class="n">species</span> <span class="o">=</span> <span class="s1">&#39;Baty&#39;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">can_fly</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fly</span> <span class="o">=</span> <span class="n">can_fly</span>
+
+    <span class="c1"># This class also has a say method</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">say</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;... ... ...&#39;</span>
+        <span class="k">return</span> <span class="n">msg</span>
+
+    <span class="c1"># And its own method as well</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sonar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;))) ... (((&#39;</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">Bat</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="s1">&#39;hello&#39;</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">fly</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="child-class-inherit-from-multiple-parent-classes">
+<h4>Child Class Inherit from multiple Parent Classes<a class="headerlink" href="#child-class-inherit-from-multiple-parent-classes" title="Link to this heading">¶</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
+<span class="c1"># And yet another class definition that inherits from Superhero and Bat</span>
+<span class="c1"># superhero.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">superhero</span><span class="w"> </span><span class="kn">import</span> <span class="n">Superhero</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">bat</span><span class="w"> </span><span class="kn">import</span> <span class="n">Bat</span>
+
+<span class="c1"># Define Batman as a child that inherits from both Superhero and Bat</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Batman</span><span class="p">(</span><span class="n">Superhero</span><span class="p">,</span> <span class="n">Bat</span><span class="p">):</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="c1"># Typically to inherit attributes you have to call super:</span>
+        <span class="c1"># super(Batman, self).__init__(*args, **kwargs)</span>
+        <span class="c1"># However we are dealing with multiple inheritance here, and super()</span>
+        <span class="c1"># only works with the next base class in the MRO list.</span>
+        <span class="c1"># So instead we explicitly call __init__ for all ancestors.</span>
+        <span class="c1"># The use of *args and **kwargs allows for a clean way to pass</span>
+        <span class="c1"># arguments, with each parent &quot;peeling a layer of the onion&quot;.</span>
+        <span class="n">Superhero</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;anonymous&#39;</span><span class="p">,</span> <span class="n">movie</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                           <span class="n">superpowers</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Wealthy&#39;</span><span class="p">],</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">Bat</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">can_fly</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="c1"># override the value for the name attribute</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Sad Affleck&#39;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">sing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;nan nan nan nan nan batman!&#39;</span>
+</pre></div>
+</div>
+</section>
+<section id="id3">
+<h4>Create an Instance of the Child<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">sup</span> <span class="o">=</span> <span class="n">Batman</span><span class="p">()</span>
+
+    <span class="c1"># The Method Resolution Order</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">Batman</span><span class="o">.</span><span class="vm">__mro__</span><span class="p">)</span>       <span class="c1"># =&gt; (&lt;class &#39;__main__.Batman&#39;&gt;,</span>
+                                <span class="c1"># =&gt; &lt;class &#39;superhero.Superhero&#39;&gt;,</span>
+                                <span class="c1"># =&gt; &lt;class &#39;human.Human&#39;&gt;,</span>
+                                <span class="c1"># =&gt; &lt;class &#39;bat.Bat&#39;&gt;, &lt;class &#39;object&#39;&gt;)</span>
+
+    <span class="c1"># Calls parent method but uses its own class attribute</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">sup</span><span class="o">.</span><span class="n">get_species</span><span class="p">())</span>    <span class="c1"># =&gt; Superhuman</span>
+
+    <span class="c1"># Calls overridden method</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">sup</span><span class="o">.</span><span class="n">sing</span><span class="p">())</span>           <span class="c1"># =&gt; nan nan nan nan nan batman!</span>
+
+    <span class="c1"># Calls method from Human, because inheritance order matters</span>
+    <span class="n">sup</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="s1">&#39;I agree&#39;</span><span class="p">)</span>          <span class="c1"># =&gt; Sad Affleck: I agree</span>
+
+    <span class="c1"># Call method that exists only in 2nd ancestor</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">sup</span><span class="o">.</span><span class="n">sonar</span><span class="p">())</span>          <span class="c1"># =&gt; ))) ... (((</span>
+
+    <span class="c1"># Inherited class attribute</span>
+    <span class="n">sup</span><span class="o">.</span><span class="n">age</span> <span class="o">=</span> <span class="mi">100</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">sup</span><span class="o">.</span><span class="n">age</span><span class="p">)</span>              <span class="c1"># =&gt; 100</span>
+
+    <span class="c1"># Inherited attribute from 2nd ancestor whose default value was overridden.</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Can I fly? &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">sup</span><span class="o">.</span><span class="n">fly</span><span class="p">))</span> <span class="c1"># =&gt; Can I fly? False</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="advanced">
+<h3>7. Advanced<a class="headerlink" href="#advanced" title="Link to this heading">¶</a></h3>
+<section id="generator-functions-yeild">
+<h4>Generator Functions - Yeild<a class="headerlink" href="#generator-functions-yeild" title="Link to this heading">¶</a></h4>
+<p>The <strong>yield</strong> keyword in python is used in the context of generator functions. It serves the purpose of creating iterators-functions that can be paused and resumed later, maintaining their state across multiple calls. The primary purpose of using <strong>yield</strong> is to produce a sequence of values while retaining the state of the function between calls.</p>
+<section id="breakdown-the-purpose-of-using-yield">
+<h5>Breakdown the purpose of using <strong>yield</strong><a class="headerlink" href="#breakdown-the-purpose-of-using-yield" title="Link to this heading">¶</a></h5>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Purpose</p></th>
+<th class="head"><p>Details</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Generators</p></td>
+<td><p>Functions containing yield are known as generator functions. They generate a sequence of values lazily, one at a time, on-demand, rather than generating all values at once. This is beneficial when dealing with large datasets or infinite sequences because it saves memory by only computing the values as needed.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Stateful Iteration</p></td>
+<td><p>When a generator function is called, it returns a generator object. When iterated upon (e.g., using a for loop or manually calling next() on the generator object), the function’s execution starts. The function runs until it reaches a yield statement, at which point it pauses, and the yielded value is returned. The state of the function is maintained, allowing it to resume execution from the same point on the next iteration.</p></td>
+</tr>
+<tr class="row-even"><td><p>Efficient Memory Usage</p></td>
+<td><p>Generators are memory-efficient because they don’t store all the generated values in memory at once. Instead, they produce values on-the-fly and retain local variables’ state, allowing them to continue execution and yield the next value when asked.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Iterating through Large Sequences</p></td>
+<td><p>Generators are particularly useful for iterating through large sequences of data, such as processing large files line by line or dealing with large numerical ranges. They allow processing elements one by one without storing the entire sequence in memory.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="code-example">
+<h5>Code Example<a class="headerlink" href="#code-example" title="Link to this heading">¶</a></h5>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">my_generator</span><span class="p">():</span>
+    <span class="k">yield</span> <span class="mi">1</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;This will be printed in the second iterate next statement&quot;</span><span class="p">)</span>
+    <span class="k">yield</span> <span class="mi">2</span>
+    <span class="k">yield</span> <span class="mi">3</span>
+
+<span class="c1"># Using the generator</span>
+<span class="n">gen</span> <span class="o">=</span> <span class="n">my_generator</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">gen</span><span class="p">))</span>  <span class="c1"># Outputs: 1</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">gen</span><span class="p">))</span>  <span class="c1"># Outputs: This will be printed in the second iterate next statement 2</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">gen</span><span class="p">))</span>  <span class="c1"># Outputs: 3</span>
+<span class="c1"># print(next(gen))  # Raises StopIteration error as all values have been yielded</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="generators">
+<h4>Generators<a class="headerlink" href="#generators" title="Link to this heading">¶</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
+<span class="c1"># Generators help you make lazy code.</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">double_numbers</span><span class="p">(</span><span class="n">iterable</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">iterable</span><span class="p">:</span>
+        <span class="k">yield</span> <span class="n">i</span> <span class="o">+</span> <span class="n">i</span>
+
+<span class="c1"># Generators are memory-efficient because they only load the data needed to</span>
+<span class="c1"># process the next value in the iterable. This allows them to perform</span>
+<span class="c1"># operations on otherwise prohibitively large value ranges.</span>
+<span class="c1"># NOTE: `range` replaces `xrange` in Python 3.</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">double_numbers</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">900000000</span><span class="p">)):</span>  <span class="c1"># `range` is a generator.</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">30</span><span class="p">:</span>
+        <span class="k">break</span>
+</pre></div>
+</div>
+<section id="diagrammatic">
+<h5>Diagrammatic<a class="headerlink" href="#diagrammatic" title="Link to this heading">¶</a></h5>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">double_numbers</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">900000000</span><span class="p">)):</span>
+    <span class="o">+------------+</span>
+    <span class="o">|</span>            <span class="o">|</span>
+    <span class="o">|</span>            <span class="o">|</span>
+    <span class="o">|</span>            <span class="o">|</span>
+    <span class="o">|</span>            <span class="o">|</span>
+    <span class="o">|</span>            <span class="o">|</span>
+    <span class="o">|</span>            <span class="o">|</span>
+    <span class="o">|</span>            <span class="o">|</span>
+    <span class="o">|</span>            <span class="o">|</span>
+    <span class="o">|</span>            <span class="o">|</span>
+    <span class="o">|</span>   <span class="n">Generator</span> <span class="n">Function</span> <span class="p">(</span><span class="n">double_numbers</span><span class="p">)</span>  <span class="o">|</span>
+    <span class="o">|</span>            <span class="o">|</span>
+    <span class="o">|</span>            <span class="o">|</span>
+    <span class="o">|</span>            <span class="o">|</span>
+    <span class="o">|</span>            <span class="o">|</span>
+    <span class="o">|</span>            <span class="o">|</span>
+    <span class="o">|</span>            <span class="o">|</span>
+    <span class="o">+------------+</span>
+           <span class="o">|</span>
+           <span class="o">|</span>               <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span>
+           <span class="n">V</span>
+     <span class="k">yield</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">=</span> <span class="mi">2</span>
+           <span class="o">|</span>
+           <span class="o">|</span>
+           <span class="n">V</span>
+     <span class="n">Printing</span><span class="p">:</span> <span class="mi">2</span>
+           <span class="o">|</span>
+           <span class="o">|</span>
+           <span class="n">V</span>
+           <span class="n">i</span> <span class="o">=</span> <span class="mi">2</span>
+           <span class="o">|</span>
+           <span class="n">V</span>
+     <span class="k">yield</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">=</span> <span class="mi">4</span>
+           <span class="o">|</span>
+           <span class="o">|</span>
+           <span class="n">V</span>
+     <span class="n">Printing</span><span class="p">:</span> <span class="mi">4</span>
+           <span class="o">|</span>
+           <span class="o">|</span>
+           <span class="n">V</span>
+           <span class="n">i</span> <span class="o">=</span> <span class="mi">3</span>
+           <span class="o">|</span>
+           <span class="n">V</span>
+     <span class="k">yield</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">=</span> <span class="mi">6</span>
+           <span class="o">|</span>
+           <span class="o">|</span>
+           <span class="n">V</span>
+     <span class="n">Printing</span><span class="p">:</span> <span class="mi">6</span>
+           <span class="o">|</span>
+           <span class="o">|</span>
+           <span class="n">V</span>
+           <span class="o">...</span>
+           <span class="o">|</span>
+           <span class="o">|</span>
+           <span class="n">V</span>
+           <span class="n">i</span> <span class="o">=</span> <span class="mi">30</span>
+           <span class="o">|</span>
+           <span class="n">V</span>
+     <span class="k">yield</span> <span class="mi">30</span> <span class="o">+</span> <span class="mi">30</span> <span class="o">=</span> <span class="mi">60</span>
+           <span class="o">|</span>
+           <span class="o">|</span>
+           <span class="n">V</span>
+     <span class="n">Printing</span><span class="p">:</span> <span class="mi">60</span>
+           <span class="o">|</span>
+           <span class="o">|</span>
+           <span class="n">V</span>
+     <span class="n">Breaking</span> <span class="n">the</span> <span class="n">loop</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="decorators">
+<h4>Decorators<a class="headerlink" href="#decorators" title="Link to this heading">¶</a></h4>
+<p>Decorators are a form of syntactic sugar, They make code easier to read while accomplishing clunky syntax.</p>
+<p>The term “syntactic sugar” refers to a feature in a programming language that doesn’t introduce new functionality but provides a more convenient or expressive way to use existing features.</p>
+<section id="wrappers">
+<h5>Wrappers<a class="headerlink" href="#wrappers" title="Link to this heading">¶</a></h5>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Wrappers are one type of decorator.</span>
+<span class="c1"># They&#39;re really useful for adding logging to existing functions without needing to modify them.</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">log_function</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Entering function&quot;</span><span class="p">,</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Exiting function&quot;</span><span class="p">,</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span>
+    <span class="k">return</span> <span class="n">wrapper</span>
+
+<span class="nd">@log_function</span>               <span class="c1"># equivalent:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">my_function</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">):</span>       <span class="c1"># def my_function(x,y):</span>
+    <span class="k">return</span> <span class="n">x</span><span class="o">+</span><span class="n">y</span>              <span class="c1">#   return x+y</span>
+                            <span class="c1"># my_function = log_function(my_function)</span>
+<span class="c1"># The decorator @log_function tells us as we begin reading the function definition</span>
+<span class="c1"># for my_function that this function will be wrapped with log_function.</span>
+<span class="c1"># When function definitions are long, it can be hard to parse the non-decorated</span>
+<span class="c1"># assignment at the end of the definition.</span>
+
+<span class="n">my_function</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># =&gt; &quot;Entering function my_function&quot;</span>
+                 <span class="c1"># =&gt; &quot;3&quot;</span>
+                 <span class="c1"># =&gt; &quot;Exiting function my_function&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="problem-of-this-method">
+<h5>Problem of this Method<a class="headerlink" href="#problem-of-this-method" title="Link to this heading">¶</a></h5>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># But there&#39;s a problem.</span>
+<span class="c1"># What happens if we try to get some information about my_function?</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">my_function</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span> <span class="c1"># =&gt; &#39;wrapper&#39;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">my_function</span><span class="o">.</span><span class="vm">__code__</span><span class="o">.</span><span class="n">co_argcount</span><span class="p">)</span> <span class="c1"># =&gt; 0. The argcount is 0 because both arguments in wrapper()&#39;s signature are optional.</span>
+</pre></div>
+</div>
+</section>
+<section id="solution-using-wraps">
+<h5>Solution using <strong>wraps</strong><a class="headerlink" href="#solution-using-wraps" title="Link to this heading">¶</a></h5>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Because our decorator is equivalent to my_function = log_function(my_function)</span>
+<span class="c1"># we&#39;ve replaced information about my_function with information from wrapper</span>
+
+<span class="c1"># Fix this using functools</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">wraps</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">log_function</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+    <span class="nd">@wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span> <span class="c1"># this ensures docstring, function name, arguments list, etc. are all copied</span>
+                 <span class="c1"># to the wrapped function - instead of being replaced with wrapper&#39;s info</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Entering function&quot;</span><span class="p">,</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Exiting function&quot;</span><span class="p">,</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span>
+    <span class="k">return</span> <span class="n">wrapper</span>
+
+<span class="nd">@log_function</span>               
+<span class="k">def</span><span class="w"> </span><span class="nf">my_function</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">):</span>       
+    <span class="k">return</span> <span class="n">x</span><span class="o">+</span><span class="n">y</span>              
+
+<span class="n">my_function</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># =&gt; &quot;Entering function my_function&quot;</span>
+                 <span class="c1"># =&gt; &quot;3&quot;</span>
+                 <span class="c1"># =&gt; &quot;Exiting function my_function&quot;</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">my_function</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span> <span class="c1"># =&gt; &#39;my_function&#39;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">my_function</span><span class="o">.</span><span class="vm">__code__</span><span class="o">.</span><span class="n">co_argcount</span><span class="p">)</span> <span class="c1"># =&gt; 2</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Learnxinyminutes - Python: <a class="reference external" href="https://learnxinyminutes.com/docs/python/">link</a></p></li>
+<li><p>PythonSpot: <a class="reference external" href="https://pythonspot.com/">link</a></p></li>
+<li><p>CodeAcademy - Learn Python: <a class="reference external" href="https://www.codecademy.com/learn/learn-python-3">link</a></p></li>
+<li><p>Google For Education - Google’s Python Class: <a class="reference external" href="https://developers.google.com/edu/python?hl=en">link</a></p></li>
+</ul>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">aCupOfTea</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../fields/index.html">Fields</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Programming</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../dataStructure/index.html">Datastructure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../oop/index.html">Oop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../operatingSystem/index.html">Operatingsystem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../parallelProgramming/index.html">Parallelprogramming</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Python</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">101-Python</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id1">101 - Python</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#table-of-content">Table of Content</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#concepts-highlights">Concepts Highlights</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../pythonCleanCode/index.html">Pythoncleancode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../softwareGoals/index.html">Softwaregoals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../softwareSkills%26Tools/index.html">Softwareskills&amp;Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../versionControl/index.html">Versioncontrol</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../journal/index.html">Journal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tips/index.html">Tips</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Programming</a><ul>
+  <li><a href="index.html">Python</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Python</a></li>
+      <li>Next: <a href="../pythonCleanCode/index.html" title="next chapter">Pythoncleancode</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Ahmed Yousri Sobhi.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.0.4</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../../_sources/programming/python/101-python.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

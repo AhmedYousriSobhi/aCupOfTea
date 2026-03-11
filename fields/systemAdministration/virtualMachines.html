@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Virtualmachines &#8212; aCupOfTea 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <script src="../../_static/documentation_options.js?v=f2a433a1"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Tabulardata" href="../tabularData/index.html" />
+    <link rel="prev" title="Network" href="network.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="virtualmachines">
+<h1>Virtualmachines<a class="headerlink" href="#virtualmachines" title="Link to this heading">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<section id="system-administration-virtual-machines">
+<h2>System Administration - Virtual Machines<a class="headerlink" href="#system-administration-virtual-machines" title="Link to this heading">¶</a></h2>
+<section id="table-of-contents">
+<h3>Table of Contents<a class="headerlink" href="#table-of-contents" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><a class="reference internal" href="#system-administration---virtual-machines"><span class="xref myst">System Administration - Virtual Machines</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#table-of-contents"><span class="xref myst">Table of Contents</span></a></p></li>
+<li><p><a class="reference internal" href="#vagrant---provider-libvirt"><span class="xref myst">Vagrant - Provider Libvirt</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#installation---steps"><span class="xref myst">Installation - Steps</span></a></p></li>
+<li><p><a class="reference internal" href="#synching-folder-between-host-and-vms"><span class="xref myst">Synching Folder between Host and VMs</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#references"><span class="xref myst">References</span></a></p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="vagrant-provider-libvirt">
+<h3>Vagrant - Provider Libvirt<a class="headerlink" href="#vagrant-provider-libvirt" title="Link to this heading">¶</a></h3>
+<section id="installation-steps">
+<h4>Installation - Steps<a class="headerlink" href="#installation-steps" title="Link to this heading">¶</a></h4>
+<ol class="arabic">
+<li><p>Make sure your hardware supports the necessary virtualisation extensions for Kernel-based Virtual Machine (KVM). To check this, enter the following from a terminal prompt:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># You will need cpu-checker package to be installed</span>
+kvm-ok
+</pre></div>
+</div>
+</li>
+<li><p>Add your user to the libvirt group:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Make sure the group is created</span>
+getent<span class="w"> </span>group<span class="w"> </span>libvirt
+
+<span class="c1"># In case the group does not exist</span>
+sudo<span class="w"> </span>addgroup<span class="w"> </span>libvirt
+
+sudo<span class="w"> </span>adduser<span class="w"> </span><span class="nv">$USER</span><span class="w"> </span>libvirt
+</pre></div>
+</div>
+</li>
+<li><p>Make sure to install the following packages</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>libvirt-daemon-system<span class="w"> </span>libvirt-clients<span class="w"> </span>bridge-utils<span class="w"> </span>virt-manager<span class="w"> </span>libvirt-dev<span class="w"> </span>qemu-kvm<span class="w"> </span>libvirt-daemon-system
+</pre></div>
+</div>
+</li>
+<li><p>Install Vagrant</p>
+<ul>
+<li><p>To install Vagrant, you can download the Vagrant deb package from <a class="reference external" href="https://releases.hashicorp.com/vagrant/2.4.6/">https://releases.hashicorp.com/vagrant/2.4.6/</a></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wget<span class="w"> </span>https://releases.hashicorp.com/vagrant/2.4.6/vagrant_2.4.6-1_amd64.deb
+
+sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>./vagrant_2.4.6-1_amd64.deb
+<span class="c1"># Incase of error:</span>
+N:<span class="w"> </span>Download<span class="w"> </span>is<span class="w"> </span>performed<span class="w"> </span>unsandboxed<span class="w"> </span>as<span class="w"> </span>root<span class="w"> </span>as<span class="w"> </span>file<span class="w"> </span><span class="s1">&#39;/path/vagrant_2.4.6-1_amd64.deb&#39;</span><span class="w"> </span>couldn<span class="s1">&#39;t be accessed by user &#39;</span>_apt<span class="err">&#39;</span>.<span class="w"> </span>-<span class="w"> </span>pkgAcquire::Run<span class="w"> </span><span class="o">(</span><span class="m">13</span>:<span class="w"> </span>Permission<span class="w"> </span>denied
+<span class="c1">## Please run</span>
+sudo<span class="w"> </span>chmod<span class="w"> </span>a+r<span class="w"> </span>/home/asobhy/Downloads/vagrant_2.4.6-1_amd64.deb
+sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>./vagrant_2.4.6-1_amd64.deb
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p>Install the vagrant-libvirt plugin for Vagrant</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vagrant<span class="w"> </span>plugin<span class="w"> </span>install<span class="w"> </span>vagrant-libvirt
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+<section id="synching-folder-between-host-and-vms">
+<h4>Synching Folder between Host and VMs<a class="headerlink" href="#synching-folder-between-host-and-vms" title="Link to this heading">¶</a></h4>
+<ul>
+<li><p>To sync the folder between host and vms, and to be automatically synched, we will use rsync:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>config.vm.synced_folder<span class="w"> </span><span class="s2">&quot;~/Workspace/vms/shared&quot;</span>,<span class="w"> </span><span class="s2">&quot;/vagrant&quot;</span>,<span class="w"> </span>type:<span class="w"> </span><span class="s2">&quot;rsync&quot;</span>,<span class="w"> </span>rsync__auto:<span class="w"> </span><span class="nb">true</span>
+</pre></div>
+</div>
+</li>
+<li><p>Run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vagrant<span class="w"> </span>rsync-auto
+<span class="sb">``</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+</section>
+<section id="references">
+<h3>References<a class="headerlink" href="#references" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://documentation.ubuntu.com/server/how-to/virtualisation/libvirt/">Ubuntu - Libvirt Docs</a></p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">aCupOfTea</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Fields</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../dataCollection/index.html">Datacollection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../deepLearning/index.html">Deeplearning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../designPatterns/index.html">Designpatterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generativeAI/index.html">Generativeai</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../libararies%2CFrameworks%2CContainers/index.html">Libararies,Frameworks,Containers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../projectTopics/index.html">Projecttopics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../recommenderSystems/index.html">Recommendersystems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reinforcementLearning/index.html">Reinforcementlearning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../statistics/index.html">Statistics</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Systemadministration</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="linux-admin/index.html">Linux-Admin</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Q%26A.html">Q&amp;A</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ansible.html">Ansible</a></li>
+<li class="toctree-l3"><a class="reference internal" href="bash-scripting.html">Bash-Scripting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="build-process.html">Build-Process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ldap.html">Ldap</a></li>
+<li class="toctree-l3"><a class="reference internal" href="memory.html">Memory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="network.html">Network</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Virtualmachines</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#system-administration-virtual-machines">System Administration - Virtual Machines</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../tabularData/index.html">Tabulardata</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../programming/index.html">Programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../journal/index.html">Journal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tips/index.html">Tips</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Fields</a><ul>
+  <li><a href="index.html">Systemadministration</a><ul>
+      <li>Previous: <a href="network.html" title="previous chapter">Network</a></li>
+      <li>Next: <a href="../tabularData/index.html" title="next chapter">Tabulardata</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Ahmed Yousri Sobhi.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.0.4</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../../_sources/fields/systemAdministration/virtualMachines.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

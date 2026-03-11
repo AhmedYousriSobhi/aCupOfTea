@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>101-Pytorch &#8212; aCupOfTea 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <script src="../../_static/documentation_options.js?v=f2a433a1"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="101-Singularity" href="101-singularity.html" />
+    <link rel="prev" title="101-Pandas" href="101-pandas.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="pytorch">
+<h1>101-Pytorch<a class="headerlink" href="#pytorch" title="Link to this heading">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<section id="id1">
+<h2>101 - Pytorch<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h2>
+<p>This blog is mainly designed to get a start with Pytorch, and where to start, so it does not have a complete guide, but the approach I used so far to study Pytorch, also adding some notes and information to document.</p>
+</section>
+<section id="table-of-content">
+<h2>Table of Content<a class="headerlink" href="#table-of-content" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="#101---pytorch"><span class="xref myst">101 - Pytorch</span></a></p></li>
+<li><p><a class="reference internal" href="#table-of-content"><span class="xref myst">Table of Content</span></a></p></li>
+<li><p><a class="reference internal" href="#how-to-start"><span class="xref myst">How to Start?</span></a></p></li>
+<li><p><a class="reference internal" href="#precision-in-datatype"><span class="xref myst">Precision in DataType</span></a></p></li>
+<li><p><a class="reference internal" href="#gpu-properties"><span class="xref myst">GPU Properties</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#break-down-the-output"><span class="xref myst">Break Down the Output</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#architectures-mentioned"><span class="xref myst">Architectures Mentioned</span></a></p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#pytorch-training-loop-steps"><span class="xref myst">Pytorch Training Loop Steps</span></a></p></li>
+<li><p><a class="reference internal" href="#pytorch-output-prediction"><span class="xref myst">Pytorch Output Prediction</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#in-classification-problem"><span class="xref myst">In Classification problem:</span></a></p></li>
+<li><p><a class="reference internal" href="#to-load-the-model"><span class="xref myst">to Load the Model</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#print-model-summary"><span class="xref myst">Print Model Summary</span></a></p></li>
+<li><p><a class="reference internal" href="#download-script-to-your-code"><span class="xref myst">Download Script to your code</span></a></p></li>
+<li><p><a class="reference internal" href="#check-for-specific-version"><span class="xref myst">Check for Specific Version</span></a></p></li>
+<li><p><a class="reference internal" href="#training-on-cpu-is-faster"><span class="xref myst">Training on CPU is faster?</span></a></p></li>
+<li><p><a class="reference internal" href="#common-deep-learning-issues"><span class="xref myst">Common Deep Learning Issues</span></a></p></li>
+<li><p><a class="reference internal" href="#references"><span class="xref myst">References</span></a></p></li>
+</ul>
+</section>
+<section id="how-to-start">
+<h2>How to Start?<a class="headerlink" href="#how-to-start" title="Link to this heading">¶</a></h2>
+<p>If you are like me love to learn from books and articles rather than watching records and videos, so one of the most recommended start in Pytorch by following up with <a class="reference external" href="https://github.com/mrdbourke/pytorch-deep-learning/tree/main">learnpytorch - Zero to Mastery Learn PyTorch for Deep Learning</a>;</p>
+<ul class="simple">
+<li><p>They provide a free course tutorial, explained with a great effort with many interesting notes.</p></li>
+<li><p>You can follow up with them on colab on their notebook to follow along with them.</p></li>
+</ul>
+<p>There is a cheat sheet provided by the official docs, you can find <a class="reference external" href="https://pytorch.org/tutorials/beginner/ptcheat.html">here</a></p>
+</section>
+<section id="precision-in-datatype">
+<h2>Precision in DataType<a class="headerlink" href="#precision-in-datatype" title="Link to this heading">¶</a></h2>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Precision_(computer_science)">Wiki</a> for precision in Data Science.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Different</span> <span class="n">datatypes</span> <span class="n">can</span> <span class="n">be</span> <span class="n">confusing</span> <span class="n">to</span> <span class="n">begin</span> <span class="k">with</span><span class="o">.</span> <span class="n">But</span> <span class="n">think</span> <span class="n">of</span> <span class="n">it</span> <span class="n">like</span> <span class="n">this</span><span class="p">,</span> <span class="n">the</span> <span class="n">lower</span> <span class="n">the</span> <span class="n">number</span> <span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">g</span><span class="o">.</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="n">the</span> <span class="n">less</span> <span class="n">precise</span> <span class="n">a</span> <span class="n">computer</span> <span class="n">stores</span> <span class="n">the</span> <span class="n">value</span><span class="o">.</span> <span class="n">And</span> <span class="k">with</span> <span class="n">a</span> <span class="n">lower</span> <span class="n">amount</span> <span class="n">of</span> <span class="n">storage</span><span class="p">,</span> <span class="n">this</span> <span class="n">generally</span> <span class="n">results</span> <span class="ow">in</span> <span class="n">faster</span> <span class="n">computation</span> <span class="ow">and</span> <span class="n">a</span> <span class="n">smaller</span> <span class="n">overall</span> <span class="n">model</span><span class="o">.</span> <span class="n">Mobile</span><span class="o">-</span><span class="n">based</span> <span class="n">neural</span> <span class="n">networks</span> <span class="n">often</span> <span class="n">operate</span> <span class="k">with</span> <span class="mi">8</span><span class="o">-</span><span class="n">bit</span> <span class="n">integers</span><span class="p">,</span> <span class="n">smaller</span> <span class="ow">and</span> <span class="n">faster</span> <span class="n">to</span> <span class="n">run</span> <span class="n">but</span> <span class="n">less</span> <span class="n">accurate</span> <span class="n">than</span> <span class="n">their</span> <span class="n">float32</span> <span class="n">counterparts</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Reference: <a class="reference external" href="https://github.com/mrdbourke/pytorch-deep-learning/tree/main">learnpytorch - 00_pytorch_foundation</a></p></li>
+</ul>
+</section>
+<section id="gpu-properties">
+<h2>GPU Properties<a class="headerlink" href="#gpu-properties" title="Link to this heading">¶</a></h2>
+<p>It is important to know the information about current GPUs available on the system you are using. We can check it using the pre-defined methods in pytorch:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Is there a GPU?                                  &#39;</span><span class="p">,</span><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;How many GPUs do we have                         &#39;</span><span class="p">,</span><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">device_count</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;GPU properties                                   &#39;</span><span class="p">,</span><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">get_device_properties</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">current_device</span><span class="p">()))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Supported GPU micro-architectures                &#39;</span><span class="p">,</span><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">get_arch_list</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Which GPU micro-architecture is this?            &#39;</span><span class="p">,</span><span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">get_device_capability</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Number of threads available on host              &#39;</span><span class="p">,</span><span class="n">torch</span><span class="o">.</span><span class="n">get_num_threads</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>The output of running on Colab was:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Is</span> <span class="n">there</span> <span class="n">a</span> <span class="n">GPU</span><span class="err">?</span>                                   <span class="kc">True</span>
+<span class="n">How</span> <span class="n">many</span> <span class="n">GPUs</span> <span class="n">do</span> <span class="n">we</span> <span class="n">have</span>                          <span class="mi">1</span>
+<span class="n">GPU</span> <span class="n">properties</span>                                    <span class="n">_CudaDeviceProperties</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Tesla T4&#39;</span><span class="p">,</span> <span class="n">major</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">minor</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">total_memory</span><span class="o">=</span><span class="mi">15102</span><span class="n">MB</span><span class="p">,</span> <span class="n">multi_processor_count</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+<span class="n">Supported</span> <span class="n">GPU</span> <span class="n">micro</span><span class="o">-</span><span class="n">architectures</span>                 <span class="p">[</span><span class="s1">&#39;sm_50&#39;</span><span class="p">,</span> <span class="s1">&#39;sm_60&#39;</span><span class="p">,</span> <span class="s1">&#39;sm_70&#39;</span><span class="p">,</span> <span class="s1">&#39;sm_75&#39;</span><span class="p">,</span> <span class="s1">&#39;sm_80&#39;</span><span class="p">,</span> <span class="s1">&#39;sm_86&#39;</span><span class="p">,</span> <span class="s1">&#39;sm_90&#39;</span><span class="p">]</span>
+<span class="n">Which</span> <span class="n">GPU</span> <span class="n">micro</span><span class="o">-</span><span class="n">architecture</span> <span class="ow">is</span> <span class="n">this</span><span class="err">?</span>             <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="n">Number</span> <span class="n">of</span> <span class="n">threads</span> <span class="n">available</span> <span class="n">on</span> <span class="n">host</span>               <span class="mi">1</span>
+</pre></div>
+</div>
+<section id="break-down-the-output">
+<h3>Break Down the Output<a class="headerlink" href="#break-down-the-output" title="Link to this heading">¶</a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Part</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Is there a GPU?</p></td>
+<td><p>torch.cuda.is_available() returns True, indicating that a GPU is available for use in your system.</p></td>
+</tr>
+<tr class="row-odd"><td><p>How many GPUs do we have?</p></td>
+<td><p>torch.cuda.device_count() returns 1, indicating that there is one GPU in the system.</p></td>
+</tr>
+<tr class="row-even"><td><p>GPU properties</p></td>
+<td><p>torch.cuda.get_device_properties(torch.cuda.current_device()) provides information about the GPU. In this case:</br> - Name: ‘Tesla T4’</br> - Major version: 7</br> - Minor version: 5</br> - Total memory: 15102MB</br> - Multi-processor count: 40</p></td>
+</tr>
+<tr class="row-odd"><td><p>Supported GPU micro-architectures</p></td>
+<td><p>torch.cuda.get_arch_list() returns a list of supported GPU micro-architectures. In this case, the list includes architectures like ‘sm_50’, ‘sm_60’, ‘sm_70’, ‘sm_75’, ‘sm_80’, ‘sm_86’, ‘sm_90’.</p></td>
+</tr>
+<tr class="row-even"><td><p>Which GPU micro-architecture is this?</p></td>
+<td><p>torch.cuda.get_device_capability() returns the micro-architecture of the current GPU. In this case, it is (7, 5), indicating a major version of 7 and a minor version of 5.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Number of threads available on host:</p></td>
+<td><p>torch.get_num_threads() returns the number of threads available on the host. In this case, it is 1.</p></td>
+</tr>
+</tbody>
+</table>
+<section id="architectures-mentioned">
+<h4>Architectures Mentioned<a class="headerlink" href="#architectures-mentioned" title="Link to this heading">¶</a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Architecture</p></th>
+<th class="head"><p>Name</p></th>
+<th class="head"><p>Example</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>sm_50</p></td>
+<td><p>Maxwell (Compute Capability 5.0)</p></td>
+<td><p>GPUs GeForce GTX 970/980, Tesla M40/M60</p></td>
+</tr>
+<tr class="row-odd"><td><p>sm_60</p></td>
+<td><p>Pascal (Compute Capability 6.0)</p></td>
+<td><p>GPUs GeForce GTX 1080/1080 Ti, Tesla P100</p></td>
+</tr>
+<tr class="row-even"><td><p>sm_70</p></td>
+<td><p>Volta (Compute Capability 7.0)</p></td>
+<td><p>GPUs Titan V, Tesla V100</p></td>
+</tr>
+<tr class="row-odd"><td><p>sm_75</p></td>
+<td><p>Turing (Compute Capability 7.5)</p></td>
+<td><p>GPUs GeForce RTX 20 series (e.g., RTX 2080), Tesla T4</p></td>
+</tr>
+<tr class="row-even"><td><p>sm_80</p></td>
+<td><p>Ampere (Compute Capability 8.0)</p></td>
+<td><p>GPUs GeForce RTX 30 series (e.g., RTX 3080), A100 Tensor Core GPU</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+</section>
+<section id="pytorch-training-loop-steps">
+<h2>Pytorch Training Loop Steps<a class="headerlink" href="#pytorch-training-loop-steps" title="Link to this heading">¶</a></h2>
+<p>PyTorch training loop steps</p>
+<ol class="arabic simple">
+<li><p><strong>Forward pass</strong> - The model goes through all of the training data once, performing its forward() function calculations (model(x_train)).</p></li>
+<li><p><strong>Calculate the loss</strong> - The model’s outputs (predictions) are compared to the ground truth and evaluated to see how wrong they are (loss = loss_fn(y_pred, y_train).</p></li>
+<li><p><strong>Zero gradients</strong> - The optimizers gradients are set to zero (they are accumulated by default) so they can be recalculated for the specific training step (optimizer.zero_grad()).</p></li>
+<li><p><strong>Perform backpropagation on the loss</strong> - Computes the gradient of the loss with respect for every model parameter to be updated (each parameter with requires_grad=True). This is known as backpropagation, hence “backwards” (loss.backward()).</p></li>
+<li><p><strong>Step the optimizer (gradient descent)</strong> - Update the parameters with requires_grad=True with respect to the loss gradients in order to improve them (optimizer.step()).</p></li>
+</ol>
+</section>
+<section id="pytorch-output-prediction">
+<h2>Pytorch Output Prediction<a class="headerlink" href="#pytorch-output-prediction" title="Link to this heading">¶</a></h2>
+<p>The output of a neural network is called <strong>logits</strong>, which is the raw output without any modification/passing through the activation functions.</p>
+<p>Example of binary class classification [0, 1]:</p>
+<ul>
+<li><p>Logit output prediction: The raw output (unmodified)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">tensor</span><span class="p">([[</span><span class="o">-</span><span class="mf">0.4279</span><span class="p">],</span>
+        <span class="p">[</span><span class="o">-</span><span class="mf">0.3417</span><span class="p">],</span>
+        <span class="p">[</span><span class="o">-</span><span class="mf">0.5975</span><span class="p">],</span>
+        <span class="p">[</span><span class="o">-</span><span class="mf">0.3801</span><span class="p">],</span>
+        <span class="p">[</span><span class="o">-</span><span class="mf">0.5078</span><span class="p">]],</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda:0&#39;</span><span class="p">,</span> <span class="n">grad_fn</span><span class="o">=&lt;</span><span class="n">SliceBackward0</span><span class="o">&gt;</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p>Prediction probability (using Softmax): The output now have some kind of consistency (even though they’re still random)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">tensor</span><span class="p">([[</span><span class="mf">0.3946</span><span class="p">],</span>
+      <span class="p">[</span><span class="mf">0.4154</span><span class="p">],</span>
+      <span class="p">[</span><span class="mf">0.3549</span><span class="p">],</span>
+      <span class="p">[</span><span class="mf">0.4061</span><span class="p">],</span>
+      <span class="p">[</span><span class="mf">0.3757</span><span class="p">]],</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda:0&#39;</span><span class="p">,</span> <span class="n">grad_fn</span><span class="o">=&lt;</span><span class="n">SigmoidBackward0</span><span class="o">&gt;</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+<li><p>Predictions Labels</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">tensor</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">],</span> <span class="n">device</span><span class="o">=</span><span class="s1">&#39;cuda:0&#39;</span><span class="p">,</span> <span class="n">grad_fn</span><span class="o">=&lt;</span><span class="n">SqueezeBackward0</span><span class="o">&gt;</span><span class="p">)</span>
+</pre></div>
+</div>
+</li>
+</ul>
+<p>These logits needs to be converted to a prediction probabilities using on of the activation functions, then converted to predictions labels;</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Logits</span> <span class="o">----&gt;</span> <span class="n">Prediction</span> <span class="n">Probabilities</span> <span class="o">----&gt;</span> <span class="n">Predictions</span> <span class="n">Labels</span>
+
+<span class="n">In</span> <span class="n">Classification</span> <span class="n">problem</span><span class="p">:</span>
+<span class="o">--------------------------</span>
+<span class="o">-</span> <span class="n">Binary</span> <span class="n">Classification</span><span class="p">:</span>
+
+                                  <span class="n">torch</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">()</span>                         <span class="n">torch</span><span class="o">.</span><span class="n">round</span><span class="p">()</span>
+        <span class="n">Raw</span> <span class="n">Output</span> <span class="n">Predictions</span>   <span class="o">------&gt;</span>    <span class="n">Prediction</span> <span class="n">Probability</span>  <span class="o">-----&gt;</span>  <span class="n">Prediction</span> <span class="n">Labels</span>
+              <span class="s2">&quot;Logits&quot;</span>
+
+<span class="o">-</span> <span class="n">Multi</span><span class="o">-</span><span class="n">Class</span> <span class="n">Classification</span><span class="p">:</span>
+
+                                  <span class="n">torch</span><span class="o">.</span><span class="n">softmax</span><span class="p">()</span>                           <span class="n">torch</span><span class="o">.</span><span class="n">argmax</span><span class="p">()</span>
+        <span class="n">Raw</span> <span class="n">Output</span> <span class="n">Predictions</span>   <span class="o">------&gt;</span>    <span class="n">Prediction</span> <span class="n">Probability</span>  <span class="o">-----&gt;</span>  <span class="n">Prediction</span> <span class="n">Labels</span>
+              <span class="s2">&quot;Logits&quot;</span>
+
+</pre></div>
+</div>
+</section>
+<section id="model-saving-loading">
+<h2>Model Saving/Loading<a class="headerlink" href="#model-saving-loading" title="Link to this heading">¶</a></h2>
+<section id="to-save-the-model">
+<h3>to Save the Model<a class="headerlink" href="#to-save-the-model" title="Link to this heading">¶</a></h3>
+<p>It is better to save trained parameters instead of saving the whole model.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="c1"># 1. Create models directory</span>
+<span class="n">MODEL_PATH</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;models&quot;</span><span class="p">)</span>
+<span class="n">MODEL_PATH</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># 2. Create model save path</span>
+<span class="n">MODEL_NAME</span> <span class="o">=</span> <span class="s2">&quot;01_pytorch_workflow_model_1.pth&quot;</span>
+<span class="n">MODEL_SAVE_PATH</span> <span class="o">=</span> <span class="n">MODEL_PATH</span> <span class="o">/</span> <span class="n">MODEL_NAME</span>
+
+<span class="c1"># 3. Save the model state dict</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saving model to: </span><span class="si">{</span><span class="n">MODEL_SAVE_PATH</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">obj</span><span class="o">=</span><span class="n">model_1</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span> <span class="c1"># only saving the state_dict() only saves the models learned parameters</span>
+           <span class="n">f</span><span class="o">=</span><span class="n">MODEL_SAVE_PATH</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="to-load-the-model">
+<h3>to Load the Model<a class="headerlink" href="#to-load-the-model" title="Link to this heading">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Instantiate a fresh instance of LinearRegressionModelV2</span>
+<span class="n">loaded_model_1</span> <span class="o">=</span> <span class="n">LinearRegressionModelV2</span><span class="p">()</span>
+
+<span class="c1"># Load model state dict</span>
+<span class="n">loaded_model_1</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">MODEL_SAVE_PATH</span><span class="p">))</span>
+
+<span class="c1"># Put model to target device (if your data is on GPU, model will have to be on GPU to make predictions)</span>
+<span class="n">loaded_model_1</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loaded model:</span><span class="se">\n</span><span class="si">{</span><span class="n">loaded_model_1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Model on device:</span><span class="se">\n</span><span class="si">{</span><span class="nb">next</span><span class="p">(</span><span class="n">loaded_model_1</span><span class="o">.</span><span class="n">parameters</span><span class="p">())</span><span class="o">.</span><span class="n">device</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="print-model-summary">
+<h2>Print Model Summary<a class="headerlink" href="#print-model-summary" title="Link to this heading">¶</a></h2>
+<p>Using torchinfo package that has a method to visualize a summary for the model.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Install torchinfo if it&#39;s not available, import it if it is</span>
+try:
+<span class="w">    </span>import<span class="w"> </span>torchinfo
+except:
+<span class="w">    </span>!pip<span class="w"> </span>install<span class="w"> </span>torchinfo
+<span class="w">    </span>import<span class="w"> </span>torchinfo
+
+from<span class="w"> </span>torchinfo<span class="w"> </span>import<span class="w"> </span>summary
+summary<span class="o">(</span>model_0,<span class="w"> </span><span class="nv">input_size</span><span class="o">=[</span><span class="m">1</span>,<span class="w"> </span><span class="m">3</span>,<span class="w"> </span><span class="m">64</span>,<span class="w"> </span><span class="m">64</span><span class="o">])</span><span class="w"> </span><span class="c1"># do a test pass through of an example input size</span>
+</pre></div>
+</div>
+<p>The expected output would be;</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">==========================================================================================</span>
+Layer<span class="w"> </span><span class="o">(</span>type:depth-idx<span class="o">)</span><span class="w">                   </span>Output<span class="w"> </span>Shape<span class="w">              </span>Param<span class="w"> </span><span class="c1">#</span>
+<span class="o">==========================================================================================</span>
+TinyVGG<span class="w">                                  </span><span class="o">[</span><span class="m">1</span>,<span class="w"> </span><span class="m">3</span><span class="o">]</span><span class="w">                    </span>--
+├─Sequential:<span class="w"> </span><span class="m">1</span>-1<span class="w">                        </span><span class="o">[</span><span class="m">1</span>,<span class="w"> </span><span class="m">10</span>,<span class="w"> </span><span class="m">32</span>,<span class="w"> </span><span class="m">32</span><span class="o">]</span><span class="w">           </span>--
+│<span class="w">    </span>└─Conv2d:<span class="w"> </span><span class="m">2</span>-1<span class="w">                       </span><span class="o">[</span><span class="m">1</span>,<span class="w"> </span><span class="m">10</span>,<span class="w"> </span><span class="m">64</span>,<span class="w"> </span><span class="m">64</span><span class="o">]</span><span class="w">           </span><span class="m">280</span>
+│<span class="w">    </span>└─ReLU:<span class="w"> </span><span class="m">2</span>-2<span class="w">                         </span><span class="o">[</span><span class="m">1</span>,<span class="w"> </span><span class="m">10</span>,<span class="w"> </span><span class="m">64</span>,<span class="w"> </span><span class="m">64</span><span class="o">]</span><span class="w">           </span>--
+│<span class="w">    </span>└─Conv2d:<span class="w"> </span><span class="m">2</span>-3<span class="w">                       </span><span class="o">[</span><span class="m">1</span>,<span class="w"> </span><span class="m">10</span>,<span class="w"> </span><span class="m">64</span>,<span class="w"> </span><span class="m">64</span><span class="o">]</span><span class="w">           </span><span class="m">910</span>
+│<span class="w">    </span>└─ReLU:<span class="w"> </span><span class="m">2</span>-4<span class="w">                         </span><span class="o">[</span><span class="m">1</span>,<span class="w"> </span><span class="m">10</span>,<span class="w"> </span><span class="m">64</span>,<span class="w"> </span><span class="m">64</span><span class="o">]</span><span class="w">           </span>--
+│<span class="w">    </span>└─MaxPool2d:<span class="w"> </span><span class="m">2</span>-5<span class="w">                    </span><span class="o">[</span><span class="m">1</span>,<span class="w"> </span><span class="m">10</span>,<span class="w"> </span><span class="m">32</span>,<span class="w"> </span><span class="m">32</span><span class="o">]</span><span class="w">           </span>--
+├─Sequential:<span class="w"> </span><span class="m">1</span>-2<span class="w">                        </span><span class="o">[</span><span class="m">1</span>,<span class="w"> </span><span class="m">10</span>,<span class="w"> </span><span class="m">16</span>,<span class="w"> </span><span class="m">16</span><span class="o">]</span><span class="w">           </span>--
+│<span class="w">    </span>└─Conv2d:<span class="w"> </span><span class="m">2</span>-6<span class="w">                       </span><span class="o">[</span><span class="m">1</span>,<span class="w"> </span><span class="m">10</span>,<span class="w"> </span><span class="m">32</span>,<span class="w"> </span><span class="m">32</span><span class="o">]</span><span class="w">           </span><span class="m">910</span>
+│<span class="w">    </span>└─ReLU:<span class="w"> </span><span class="m">2</span>-7<span class="w">                         </span><span class="o">[</span><span class="m">1</span>,<span class="w"> </span><span class="m">10</span>,<span class="w"> </span><span class="m">32</span>,<span class="w"> </span><span class="m">32</span><span class="o">]</span><span class="w">           </span>--
+│<span class="w">    </span>└─Conv2d:<span class="w"> </span><span class="m">2</span>-8<span class="w">                       </span><span class="o">[</span><span class="m">1</span>,<span class="w"> </span><span class="m">10</span>,<span class="w"> </span><span class="m">32</span>,<span class="w"> </span><span class="m">32</span><span class="o">]</span><span class="w">           </span><span class="m">910</span>
+│<span class="w">    </span>└─ReLU:<span class="w"> </span><span class="m">2</span>-9<span class="w">                         </span><span class="o">[</span><span class="m">1</span>,<span class="w"> </span><span class="m">10</span>,<span class="w"> </span><span class="m">32</span>,<span class="w"> </span><span class="m">32</span><span class="o">]</span><span class="w">           </span>--
+│<span class="w">    </span>└─MaxPool2d:<span class="w"> </span><span class="m">2</span>-10<span class="w">                   </span><span class="o">[</span><span class="m">1</span>,<span class="w"> </span><span class="m">10</span>,<span class="w"> </span><span class="m">16</span>,<span class="w"> </span><span class="m">16</span><span class="o">]</span><span class="w">           </span>--
+├─Sequential:<span class="w"> </span><span class="m">1</span>-3<span class="w">                        </span><span class="o">[</span><span class="m">1</span>,<span class="w"> </span><span class="m">3</span><span class="o">]</span><span class="w">                    </span>--
+│<span class="w">    </span>└─Flatten:<span class="w"> </span><span class="m">2</span>-11<span class="w">                     </span><span class="o">[</span><span class="m">1</span>,<span class="w"> </span><span class="m">2560</span><span class="o">]</span><span class="w">                 </span>--
+│<span class="w">    </span>└─Linear:<span class="w"> </span><span class="m">2</span>-12<span class="w">                      </span><span class="o">[</span><span class="m">1</span>,<span class="w"> </span><span class="m">3</span><span class="o">]</span><span class="w">                    </span><span class="m">7</span>,683
+<span class="o">==========================================================================================</span>
+Total<span class="w"> </span>params:<span class="w"> </span><span class="m">10</span>,693
+Trainable<span class="w"> </span>params:<span class="w"> </span><span class="m">10</span>,693
+Non-trainable<span class="w"> </span>params:<span class="w"> </span><span class="m">0</span>
+Total<span class="w"> </span>mult-adds<span class="w"> </span><span class="o">(</span>M<span class="o">)</span>:<span class="w"> </span><span class="m">6</span>.75
+<span class="o">==========================================================================================</span>
+Input<span class="w"> </span>size<span class="w"> </span><span class="o">(</span>MB<span class="o">)</span>:<span class="w"> </span><span class="m">0</span>.05
+Forward/backward<span class="w"> </span>pass<span class="w"> </span>size<span class="w"> </span><span class="o">(</span>MB<span class="o">)</span>:<span class="w"> </span><span class="m">0</span>.82
+Params<span class="w"> </span>size<span class="w"> </span><span class="o">(</span>MB<span class="o">)</span>:<span class="w"> </span><span class="m">0</span>.04
+Estimated<span class="w"> </span>Total<span class="w"> </span>Size<span class="w"> </span><span class="o">(</span>MB<span class="o">)</span>:<span class="w"> </span><span class="m">0</span>.91
+<span class="o">==========================================================================================</span>
+</pre></div>
+</div>
+</section>
+<section id="download-script-to-your-code">
+<h2>Download Script to your code<a class="headerlink" href="#download-script-to-your-code" title="Link to this heading">¶</a></h2>
+<p>Some cases, we need build-in in our code to download a python script and load it normally.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="c1"># Download helper functions from Learn PyTorch repo (if not already downloaded)</span>
+<span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;helper_functions.py&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;helper_functions.py already exists, skipping download&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Downloading helper_functions.py&quot;</span><span class="p">)</span>
+  <span class="c1"># Note: you need the &quot;raw&quot; GitHub URL for this to work</span>
+  <span class="n">request</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;https://raw.githubusercontent.com/mrdbourke/pytorch-deep-learning/main/helper_functions.py&quot;</span><span class="p">)</span>
+  <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;helper_functions.py&quot;</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">helper_functions</span><span class="w"> </span><span class="kn">import</span> <span class="n">accuracy_fn</span>
+</pre></div>
+</div>
+</section>
+<section id="check-for-specific-version">
+<h2>Check for Specific Version<a class="headerlink" href="#check-for-specific-version" title="Link to this heading">¶</a></h2>
+<p>In some codes, it requires some defined specific versions of the pacakges, so we need to first check if they are installed or not.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># For this notebook to run with updated APIs, we need torch 1.12+ and torchvision 0.13+</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">torchvision</span>
+    <span class="k">assert</span> <span class="nb">int</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">__version__</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="mi">12</span><span class="p">,</span> <span class="s2">&quot;torch version should be 1.12+&quot;</span>
+    <span class="k">assert</span> <span class="nb">int</span><span class="p">(</span><span class="n">torchvision</span><span class="o">.</span><span class="n">__version__</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="mi">13</span><span class="p">,</span> <span class="s2">&quot;torchvision version should be 0.13+&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;torch version: </span><span class="si">{</span><span class="n">torch</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;torchvision version: </span><span class="si">{</span><span class="n">torchvision</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[INFO] torch/torchvision versions not as required, installing nightly versions.&quot;</span><span class="p">)</span>
+    <span class="err">!</span><span class="n">pip3</span> <span class="n">install</span> <span class="o">-</span><span class="n">U</span> <span class="n">torch</span> <span class="n">torchvision</span> <span class="n">torchaudio</span> <span class="o">--</span><span class="n">extra</span><span class="o">-</span><span class="n">index</span><span class="o">-</span><span class="n">url</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">download</span><span class="o">.</span><span class="n">pytorch</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">whl</span><span class="o">/</span><span class="n">cu113</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">torchvision</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;torch version: </span><span class="si">{</span><span class="n">torch</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;torchvision version: </span><span class="si">{</span><span class="n">torchvision</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="training-on-cpu-is-faster">
+<h2>Training on CPU is faster?<a class="headerlink" href="#training-on-cpu-is-faster" title="Link to this heading">¶</a></h2>
+<p>According to [03-notebook] in pytorch deeplearning course, this question was asked as when evaluting the time used on GPU was larger it was on CPU!</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Our model trained but the training time took longer?
+
+Note: The training time on CUDA vs CPU will depend largely on the quality of the CPU/GPU you&#39;re using. Read on for a more explained answer.
+
+Question: &quot;I used a a GPU but my model didn&#39;t train faster, why might that be?&quot;
+
+Answer: Well, one reason could be because your dataset and model are both so small (like the dataset and model we&#39;re working with) the benefits of using a GPU are outweighed by the time it actually takes to transfer the data there.
+
+There&#39;s a small bottleneck between copying data from the CPU memory (default) to the GPU memory.
+
+So for smaller models and datasets, the CPU might actually be the optimal place to compute on.
+
+But for larger datasets and models, the speed of computing the GPU can offer usually far outweighs the cost of getting the data there.
+
+However, this is largely dependant on the hardware you&#39;re using. With practice, you will get used to where the best place to train your models is.
+</pre></div>
+</div>
+</section>
+<section id="common-deep-learning-issues">
+<h2>Common Deep Learning Issues<a class="headerlink" href="#common-deep-learning-issues" title="Link to this heading">¶</a></h2>
+<p>According to the Pytorch Deep Learning course, it try to highlight the most three common issues:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Note</span><span class="p">:</span> <span class="n">What</span> <span class="n">we</span><span class="s1">&#39;ve just gone through are three of the classical and most common deep learning and PyTorch issues:</span>
+
+    <span class="n">Wrong</span> <span class="n">datatypes</span> <span class="o">-</span> <span class="n">our</span> <span class="n">model</span> <span class="n">expects</span> <span class="n">torch</span><span class="o">.</span><span class="n">float32</span> <span class="n">where</span> <span class="n">our</span> <span class="n">original</span> <span class="n">custom</span> <span class="n">image</span> <span class="n">was</span> <span class="n">uint8</span><span class="o">.</span>
+    <span class="n">Wrong</span> <span class="n">device</span> <span class="o">-</span> <span class="n">our</span> <span class="n">model</span> <span class="n">was</span> <span class="n">on</span> <span class="n">the</span> <span class="n">target</span> <span class="n">device</span> <span class="p">(</span><span class="ow">in</span> <span class="n">our</span> <span class="n">case</span><span class="p">,</span> <span class="n">the</span> <span class="n">GPU</span><span class="p">)</span> <span class="n">whereas</span> <span class="n">our</span> <span class="n">target</span> <span class="n">data</span> <span class="n">hadn</span><span class="s1">&#39;t been moved to the target device yet.</span>
+    <span class="n">Wrong</span> <span class="n">shapes</span> <span class="o">-</span> <span class="n">our</span> <span class="n">model</span> <span class="n">expected</span> <span class="n">an</span> <span class="nb">input</span> <span class="n">image</span> <span class="n">of</span> <span class="n">shape</span> <span class="p">[</span><span class="n">N</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="n">W</span><span class="p">]</span> <span class="ow">or</span> <span class="p">[</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">color_channels</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="p">]</span> <span class="n">whereas</span> <span class="n">our</span> <span class="n">custom</span> <span class="n">image</span> <span class="n">tensor</span> <span class="n">was</span> <span class="n">of</span> <span class="n">shape</span> <span class="p">[</span><span class="n">color_channels</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="p">]</span><span class="o">.</span>
+
+</pre></div>
+</div>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Pytorch official Documentation Tutorials: <a class="reference external" href="https://pytorch.org/tutorials/">link</a></p>
+<ul>
+<li><p>It provides <strong>open in colab</strong> for more hands-on tutorial</p></li>
+</ul>
+</li>
+<li><p>Pytorch official Docs BLITZ: <a class="reference external" href="https://pytorch.org/tutorials/beginner/deep_learning_60min_blitz.html">link</a></p>
+<ul>
+<li><p>It provides <strong>open in colab</strong> for more hands-on tutorial</p></li>
+</ul>
+</li>
+<li><p>[RECOMMENDED] learnpytorch -
+Zero to Mastery Learn PyTorch for Deep Learning : <a class="reference external" href="https://www.learnpytorch.io/">link</a>, <a class="reference external" href="https://github.com/mrdbourke/pytorch-deep-learning/tree/main">Github</a></p>
+<ul>
+<li><p>It provides <strong>open in colab</strong> for more hands-on tutorial</p></li>
+</ul>
+</li>
+<li><p>[RECOMMENDED] Javapoint - pytorch tutorial: <a class="reference external" href="https://www.javatpoint.com/pytorch">link</a></p></li>
+<li><p>Python Pytorch Guide: <a class="reference external" href="https://pythonguides.com/pytorch/">link</a></p></li>
+<li><p>Pytorch-ignite: <a class="reference external" href="https://pytorch-ignite.ai/tutorials/">link</a></p>
+<ul>
+<li><p>Contains beginner, intermediate, and advanced topics, like <a class="reference external" href="https://pytorch-ignite.ai/tutorials/intermediate/01-cifar10-distributed/">distribute training</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference external" href="https://poloclub.github.io/cnn-explainer/">CNN explainer</a>.</p></li>
+<li><p>Making machine learning models faster by horace-brr_intro, found <a class="reference external" href="https://horace.io/brrr_intro.html">here</a>.</p></li>
+<li><p>The Scalling Hypothesis - by gwren, found <a class="reference external" href="https://gwern.net/scaling-hypothesis">here</a>.</p></li>
+<li><p>Introducing Triton: Open-source GPU programming for neural networks by OpenAI, found <a class="reference external" href="https://openai.com/research/triton">here</a>.</p></li>
+</ul>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">aCupOfTea</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Fields</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../dataCollection/index.html">Datacollection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../deepLearning/index.html">Deeplearning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../designPatterns/index.html">Designpatterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generativeAI/index.html">Generativeai</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Libararies,Frameworks,Containers</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="101-conda.html">101-Conda</a></li>
+<li class="toctree-l3"><a class="reference internal" href="101-containers.html">101-Containers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="101-cuda.html">101-Cuda</a></li>
+<li class="toctree-l3"><a class="reference internal" href="101-dask.html">101-Dask</a></li>
+<li class="toctree-l3"><a class="reference internal" href="101-docker.html">101-Docker</a></li>
+<li class="toctree-l3"><a class="reference internal" href="101-nvdia-smi.html">101-Nvdia-Smi</a></li>
+<li class="toctree-l3"><a class="reference internal" href="101-pandas.html">101-Pandas</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">101-Pytorch</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id1">101 - Pytorch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#table-of-content">Table of Content</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#how-to-start">How to Start?</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#precision-in-datatype">Precision in DataType</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gpu-properties">GPU Properties</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pytorch-training-loop-steps">Pytorch Training Loop Steps</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pytorch-output-prediction">Pytorch Output Prediction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#model-saving-loading">Model Saving/Loading</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#print-model-summary">Print Model Summary</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#download-script-to-your-code">Download Script to your code</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#check-for-specific-version">Check for Specific Version</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#training-on-cpu-is-faster">Training on CPU is faster?</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#common-deep-learning-issues">Common Deep Learning Issues</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="101-singularity.html">101-Singularity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="102-pytorchDDP.html">102-Pytorchddp</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../projectTopics/index.html">Projecttopics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../recommenderSystems/index.html">Recommendersystems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reinforcementLearning/index.html">Reinforcementlearning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../statistics/index.html">Statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../systemAdministration/index.html">Systemadministration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tabularData/index.html">Tabulardata</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../programming/index.html">Programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../journal/index.html">Journal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tips/index.html">Tips</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Fields</a><ul>
+  <li><a href="index.html">Libararies,Frameworks,Containers</a><ul>
+      <li>Previous: <a href="101-pandas.html" title="previous chapter">101-Pandas</a></li>
+      <li>Next: <a href="101-singularity.html" title="next chapter">101-Singularity</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Ahmed Yousri Sobhi.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.0.4</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../../_sources/fields/libararies,Frameworks,Containers/101-pytorch.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

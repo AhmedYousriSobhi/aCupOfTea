@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Ansible &#8212; aCupOfTea 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <script src="../../_static/documentation_options.js?v=f2a433a1"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Bash-Scripting" href="bash-scripting.html" />
+    <link rel="prev" title="Q&amp;A" href="Q%26A.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="ansible">
+<h1>Ansible<a class="headerlink" href="#ansible" title="Link to this heading">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<section id="system-administration-ansible">
+<h2>System Administration - Ansible<a class="headerlink" href="#system-administration-ansible" title="Link to this heading">¶</a></h2>
+<section id="table-of-contents">
+<h3>Table of Contents<a class="headerlink" href="#table-of-contents" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><a class="reference internal" href="#system-administration---ansible"><span class="xref myst">System Administration - Ansible</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#table-of-contents"><span class="xref myst">Table of Contents</span></a></p></li>
+<li><p><a class="reference internal" href="#0--prerequisites"><span class="xref myst">0- Prerequisites</span></a></p></li>
+<li><p><a class="reference internal" href="#1--installation---steps"><span class="xref myst">1- Installation - Steps</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#11--ubuntu-not-recommended"><span class="xref myst">1.1- Ubuntu [Not Recommended]</span></a></p></li>
+<li><p><a class="reference internal" href="#12--mamba---isolated-environment"><span class="xref myst">1.2- Mamba - Isolated Environment</span></a></p></li>
+<li><p><a class="reference internal" href="#note---config-file"><span class="xref myst">Note - Config File</span></a></p></li>
+<li><p><a class="reference internal" href="#vscode---ansible-interpreter-configuration"><span class="xref myst">VSCode - Ansible Interpreter Configuration</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#2--installation---verification"><span class="xref myst">2- Installation - Verification</span></a></p></li>
+<li><p><a class="reference internal" href="#3-getting-ready-to-rock"><span class="xref myst">3. Getting Ready to Rock</span></a></p></li>
+<li><p><a class="reference internal" href="#errors--issues"><span class="xref myst">Errors &amp; Issues</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#1-ping-node---something-nasty"><span class="xref myst">1. Ping Node - Something Nasty</span></a></p></li>
+<li><p><a class="reference internal" href="#2-syntaxerror-future-feature-annotations-is-not-defined"><span class="xref myst">2. SyntaxError: future feature annotations is not defined</span></a></p></li>
+<li><p><a class="reference internal" href="#3-ansible-facts---discovered_interpreter_python"><span class="xref myst">3. Ansible Facts - discovered_interpreter_python</span></a></p></li>
+<li><p><a class="reference internal" href="#4-ansible_os_family-dynamic-structure"><span class="xref myst">4. Ansible_os_family Dynamic Structure</span></a></p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="prerequisites">
+<h3>0- Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading">¶</a></h3>
+<ul>
+<li><p>Make sure Python version is 3.7 or above in the target hosts.</p></li>
+<li><p>Also install python3-dnf in case you’re working with RedHat OS, on your host machine.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>python3-dnf
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="installation-steps">
+<h3>1- Installation - Steps<a class="headerlink" href="#installation-steps" title="Link to this heading">¶</a></h3>
+<section id="ubuntu-not-recommended">
+<h4>1.1- Ubuntu [Not Recommended]<a class="headerlink" href="#ubuntu-not-recommended" title="Link to this heading">¶</a></h4>
+<ul class="simple">
+<li><p>The following steps are for debian based systems.</p></li>
+</ul>
+<ol class="arabic">
+<li><p>Update the system:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>sudo<span class="w"> </span>apt<span class="w"> </span>upgrade<span class="w"> </span>-y
+</pre></div>
+</div>
+</li>
+<li><p>Install the software-properties-common package:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>software-properties-common<span class="w"> </span>-y
+</pre></div>
+</div>
+</li>
+<li><p>Add the official Ansible to PPA:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>add-apt-repository<span class="w"> </span>--yes<span class="w"> </span>--update<span class="w"> </span>ppa:ansible/ansible
+</pre></div>
+</div>
+</li>
+<li><p>Install Ansible:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>ansible<span class="w"> </span>-y
+</pre></div>
+</div>
+</li>
+<li><p>Verify the installation:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ansible<span class="w"> </span>--version
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+<section id="mamba-isolated-environment">
+<h4>1.2- Mamba - Isolated Environment<a class="headerlink" href="#mamba-isolated-environment" title="Link to this heading">¶</a></h4>
+<ol class="arabic">
+<li><p>Install Miniforge:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wget<span class="w"> </span>-O<span class="w"> </span>Miniforge3.sh<span class="w"> </span><span class="s2">&quot;https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-</span><span class="k">$(</span>uname<span class="k">)</span><span class="s2">-</span><span class="k">$(</span>uname<span class="w"> </span>-m<span class="k">)</span><span class="s2">.sh&quot;</span>
+
+bash<span class="w"> </span>Miniforge3.sh<span class="w"> </span>-b<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">HOME</span><span class="si">}</span><span class="s2">/conda&quot;</span>
+
+<span class="nb">source</span><span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">HOME</span><span class="si">}</span><span class="s2">/conda/etc/profile.d/conda.sh&quot;</span>
+
+mamba<span class="w"> </span>shell<span class="w"> </span>init
+</pre></div>
+</div>
+</li>
+<li><p>Create Ansible environment:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mamba<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>ansible<span class="w"> </span>python
+
+mamba<span class="w"> </span>activate<span class="w"> </span>ansible
+</pre></div>
+</div>
+</li>
+<li><p>Install the Ansible packages:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mamba<span class="w"> </span>install<span class="w"> </span>ansible
+mamba<span class="w"> </span>install<span class="w"> </span>ansible-lint
+</pre></div>
+</div>
+</li>
+<li><p>Verify the installation:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ansible<span class="w"> </span>--version
+
+which<span class="w"> </span>ansible
+<span class="c1"># To validate that it&#39;s using the conda </span>
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+<section id="note-config-file">
+<h4>Note - Config File<a class="headerlink" href="#note-config-file" title="Link to this heading">¶</a></h4>
+<ul class="simple">
+<li><p>About config file = None in ansible –version</p></li>
+<li><p>This is not a problem and is actually normal in a fresh setup. It just means Ansible isn’t currently using a custom configuration file (ansible.cfg) — it will fall back to its default internal settings.</p></li>
+<li><p>Ansible looks for ansible.cfg in this order:</p>
+<ul>
+<li><p>ANSIBLE_CONFIG environment variable (if set)</p></li>
+<li><p>./ansible.cfg in the current working directory</p></li>
+<li><p>~/.ansible.cfg in your home directory</p></li>
+<li><p>/etc/ansible/ansible.cfg (the global default)</p></li>
+</ul>
+</li>
+<li><p>So if you don’t explicitly create one, Ansible just uses defaults. You won’t face issues, but if you want to customize behavior later (e.g., inventory path, privilege escalation, retry behavior), then creating your own config file is useful.</p></li>
+</ul>
+</section>
+<section id="vscode-ansible-interpreter-configuration">
+<h4>VSCode - Ansible Interpreter Configuration<a class="headerlink" href="#vscode-ansible-interpreter-configuration" title="Link to this heading">¶</a></h4>
+<ol class="arabic">
+<li><p>Get the path for the module ansible:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Activate the Ansible environment</span>
+mamba<span class="w"> </span>activate<span class="w"> </span>ansible
+
+which<span class="w"> </span>ansible
+which<span class="w"> </span>ansible-lint
+
+<span class="c1"># Expected output</span>
+<span class="si">${</span><span class="nv">HOME</span><span class="si">}</span>/conda/envs/ansible/bin/ansible
+</pre></div>
+</div>
+</li>
+<li><p>Edit the configuration settings in VScode: Files &gt; Preferences &gt; settings &gt; search for ansible. Edit the following parameters:</p>
+<ul class="simple">
+<li><p>Ansible Path</p></li>
+<li><p>Python: Interpreter Path</p></li>
+<li><p>Validation &gt; Lint: Path with ansible-lint path.</p></li>
+</ul>
+</li>
+</ol>
+</section>
+</section>
+<section id="installation-verification">
+<h3>2- Installation - Verification<a class="headerlink" href="#installation-verification" title="Link to this heading">¶</a></h3>
+<ol class="arabic">
+<li><p>Create the working directory for testing</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>-p<span class="w"> </span>~/ansible/test
+<span class="nb">cd</span><span class="w"> </span>~/ansible/test
+</pre></div>
+</div>
+</li>
+<li><p>Create a quick inventory file for testing:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;localhost ansible_connection=local&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>hosts
+</pre></div>
+</div>
+</li>
+<li><p>Run a simple ping-pong module:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ansible<span class="w"> </span>-i<span class="w"> </span>hosts<span class="w"> </span>all<span class="w"> </span>-m<span class="w"> </span>ping
+</pre></div>
+</div>
+</li>
+</ol>
+<ul>
+<li><p>Expected Output should like this:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>localhost<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="nv">SUCCESS</span><span class="w"> </span><span class="o">=</span>&gt;<span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="s2">&quot;changed&quot;</span>:<span class="w"> </span>false,
+<span class="w">    </span><span class="s2">&quot;ping&quot;</span>:<span class="w"> </span><span class="s2">&quot;pong&quot;</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="getting-ready-to-rock">
+<h3>3. Getting Ready to Rock<a class="headerlink" href="#getting-ready-to-rock" title="Link to this heading">¶</a></h3>
+<ul>
+<li><p>Create a basic Ansible folder structure:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>-p<span class="w"> </span>~/ansible/<span class="o">{</span>inventories,playbooks,roles<span class="o">}</span>
+<span class="nb">cd</span><span class="w"> </span>~/ansible
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="errors-issues">
+<h3>Errors &amp; Issues<a class="headerlink" href="#errors-issues" title="Link to this heading">¶</a></h3>
+<section id="ping-node-something-nasty">
+<h4>1. Ping Node - Something Nasty<a class="headerlink" href="#ping-node-something-nasty" title="Link to this heading">¶</a></h4>
+<ul>
+<li><p>The issue happened during ssh to a node:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mgmt-01<span class="w"> </span><span class="p">|</span><span class="w"> </span>UNREACHABLE!<span class="w"> </span><span class="o">=</span>&gt;<span class="w"> </span><span class="o">{</span>
+<span class="w">    </span><span class="s2">&quot;changed&quot;</span>:<span class="w"> </span>false,
+<span class="w">    </span><span class="s2">&quot;msg&quot;</span>:<span class="w"> </span><span class="s2">&quot;Failed to connect to the host via ssh: @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\r\n@    WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!     @\r\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\r\nIT IS POSSIBLE THAT SOMEONE IS DOING SOMETHING NASTY!\r\nSomeone could be eavesdropping on you right now (man-in-the-middle attack)!\r\nIt is also possible that a host key has just been changed.\r\nThe fingerprint for the RSA key sent by the remote host is\nSHA256:4Nyl3fOKnDrBTahvLW9Kp9LZm+k+gZ1WTGC1JmNlaJg.\r\nPlease contact your system administrator.\r\nAdd correct host key in /home/ahmed-yousri/.ssh/known_hosts to get rid of this message.\r\nOffending RSA key in /home/ahmed-yousri/.ssh/known_hosts:5\r\n  remove with:\r\n  ssh-keygen -f &#39;/home/ahmed-yousri/.ssh/known_hosts&#39; -R &#39;192.168.121.60&#39;\r\nHost key for 192.168.121.60 has changed and you have requested strict checking.\r\nHost key verification failed.&quot;</span>,
+<span class="w">    </span><span class="s2">&quot;unreachable&quot;</span>:<span class="w"> </span><span class="nb">true</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</li>
+<li><p>It happens when the SSH host key of a machine has changed — likely because you destroyed and re-created the VM.</p></li>
+</ul>
+<p><strong>SOLUTION</strong></p>
+<ol class="arabic">
+<li><p>Remove the outdated key by run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh-keygen<span class="w"> </span>-f<span class="w"> </span>~/.ssh/known_hosts<span class="w"> </span>-R<span class="w"> </span>&lt;NODE_IP&gt;
+</pre></div>
+</div>
+</li>
+<li><p>Run again the ping test:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ansible<span class="w"> </span>-i<span class="w"> </span>&lt;INVENTORY&gt;<span class="w"> </span>&lt;NODE_HOSTNAME&gt;<span class="w"> </span>-m<span class="w"> </span>ping
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+<section id="syntaxerror-future-feature-annotations-is-not-defined">
+<h4>2. SyntaxError: future feature annotations is not defined<a class="headerlink" href="#syntaxerror-future-feature-annotations-is-not-defined" title="Link to this heading">¶</a></h4>
+<ul>
+<li><p>The following error happened during trying to ping a node</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ansible<span class="w"> </span>-i<span class="w"> </span>&lt;INVENTORY&gt;<span class="w"> </span>&lt;NODE_HOSTNAME&gt;<span class="w"> </span>-m<span class="w"> </span>ping
+
+<span class="c1"># Error Output</span>
+An<span class="w"> </span>exception<span class="w"> </span>occurred<span class="w"> </span>during<span class="w"> </span>task<span class="w"> </span>execution.<span class="w"> </span>To<span class="w"> </span>see<span class="w"> </span>the<span class="w"> </span>full<span class="w"> </span>traceback,<span class="w"> </span>use<span class="w"> </span>-vvv.<span class="w"> </span>The<span class="w"> </span>error<span class="w"> </span>was:<span class="w"> </span>SyntaxError:<span class="w"> </span>future<span class="w"> </span>feature<span class="w"> </span>annotations<span class="w"> </span>is<span class="w"> </span>not<span class="w"> </span>defined
+</pre></div>
+</div>
+</li>
+</ul>
+<p><strong>EXPLANATION</strong></p>
+<ul>
+<li><p>Ansible modules use newer Python syntax — including this line:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>from<span class="w"> </span>__future__<span class="w"> </span>import<span class="w"> </span>annotations
+</pre></div>
+</div>
+</li>
+<li><p>CentOS VM is using Python 2.7 (the system default on CentOS 7).</p></li>
+</ul>
+<p><strong>SOLUTION</strong></p>
+<ul>
+<li><p>Upgrade to higher Python version on the node:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>yum<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>gcc<span class="w"> </span>openssl-devel<span class="w"> </span>bzip2-devel<span class="w"> </span>libffi-devel<span class="w"> </span>wget
+<span class="nb">cd</span><span class="w"> </span>/usr/src
+sudo<span class="w"> </span>wget<span class="w"> </span>https://www.python.org/ftp/python/3.9.18/Python-3.9.18.tgz
+sudo<span class="w"> </span>tar<span class="w"> </span>xzf<span class="w"> </span>Python-3.9.18.tgz
+<span class="nb">cd</span><span class="w"> </span>Python-3.9.18
+sudo<span class="w"> </span>./configure<span class="w"> </span>--enable-optimizations
+sudo<span class="w"> </span>make<span class="w"> </span>altinstall
+</pre></div>
+</div>
+</li>
+<li><p>Validation: Try to import the <em>annotation</em> package:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>from<span class="w"> </span>__future__<span class="w"> </span>import<span class="w"> </span>annotations
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="ansible-facts-discovered-interpreter-python">
+<h4>3. Ansible Facts - discovered_interpreter_python<a class="headerlink" href="#ansible-facts-discovered-interpreter-python" title="Link to this heading">¶</a></h4>
+<p><strong>ISSUE</strong></p>
+<ul>
+<li><p>The error below was shown during running the following playbook:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>-<span class="w"> </span>name:<span class="w"> </span>Check<span class="w"> </span>Python<span class="w"> </span>interpreter
+<span class="w">  </span>hosts:<span class="w"> </span>headnode
+<span class="w">  </span>gather_facts:<span class="w"> </span><span class="nb">true</span>
+<span class="w">  </span>tasks:
+<span class="w">      </span>-<span class="w"> </span>name:<span class="w"> </span>Show<span class="w"> </span>discovered<span class="w"> </span>Python<span class="w"> </span>interpreter
+<span class="w">      </span>debug:
+<span class="w">          </span>msg:<span class="w"> </span><span class="s2">&quot;Using Python interpreter: {{ ansible_facts.discovered_interpreter_python }}&quot;</span>
+</pre></div>
+</div>
+</li>
+<li><p>The output error:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>inventories/hosts<span class="w"> </span>playbooks/check_python.yml
+
+<span class="s1">&#39;task includes an option with an undefined variable.. &#39;</span>dict<span class="w"> </span>object<span class="s1">&#39; has no attribute &#39;</span>discovered_interpreter_python<span class="s1">&#39;&#39;</span>
+</pre></div>
+</div>
+</li>
+<li><p>This means the fact ansible_facts.discovered_interpreter_python does not exist at the point you’re trying to use it.</p></li>
+</ul>
+<p><strong>EXPLANATION</strong></p>
+<ul>
+<li><p><em>discovered_interpreter_python</em> is only available if Ansible had to guess the interpreter (typically when ansible_python_interpreter is not explicitly defined in your inventory).</p></li>
+<li><p>But we already specified the Python interpreter in the Inventory:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">ansible_python_interpreter</span><span class="o">=</span>/usr/local/bin/python3.9
+</pre></div>
+</div>
+</li>
+<li><p>then Ansible doesn’t need to “discover” the interpreter — and so the discovered_interpreter_python fact will not exist.</p></li>
+</ul>
+<p><strong>SOLUTION</strong></p>
+<ul>
+<li><p>Modify the playbook to:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>-<span class="w"> </span>name:<span class="w"> </span>Check<span class="w"> </span>Python<span class="w"> </span>interpreter
+<span class="w">  </span>hosts:<span class="w"> </span>headnode
+<span class="w">  </span>gather_facts:<span class="w"> </span><span class="nb">true</span>
+<span class="w">  </span>tasks:
+<span class="w">      </span>-<span class="w"> </span>name:<span class="w"> </span>Show<span class="w"> </span>discovered<span class="w"> </span>Python<span class="w"> </span>interpreter
+<span class="w">      </span>debug:
+<span class="w">          </span>msg:<span class="w"> </span><span class="s2">&quot;Using Python interpreter: {{ ansible_python_interpreter }}&quot;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Use hostvars as fallback with default: If you want to print both auto-discovered and manually set interpreters in one playbook, you can do</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>-<span class="w"> </span>name:<span class="w"> </span>Check<span class="w"> </span>Python<span class="w"> </span>interpreter
+<span class="w">  </span>hosts:<span class="w"> </span>headnode
+<span class="w">  </span>gather_facts:<span class="w"> </span><span class="nb">true</span>
+<span class="w">  </span>tasks:
+<span class="w">      </span>-<span class="w"> </span>name:<span class="w"> </span>Show<span class="w"> </span>Python<span class="w"> </span>interpreter<span class="w"> </span>used
+<span class="w">      </span>debug:
+<span class="w">          </span>msg:<span class="w"> </span>&gt;-
+<span class="w">          </span>Python<span class="w"> </span>used:<span class="w"> </span><span class="o">{{</span>
+<span class="w">              </span>ansible_facts.discovered_interpreter_python
+<span class="w">              </span><span class="k">if</span><span class="w"> </span>ansible_facts.discovered_interpreter_python<span class="w"> </span>is<span class="w"> </span>defined
+<span class="w">              </span><span class="k">else</span><span class="w"> </span>ansible_python_interpreter
+<span class="w">          </span><span class="o">}}</span>
+<span class="w">  </span><span class="sb">```</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="ansible-os-family-dynamic-structure">
+<h4>4. Ansible_os_family Dynamic Structure<a class="headerlink" href="#ansible-os-family-dynamic-structure" title="Link to this heading">¶</a></h4>
+<p><strong>Objective</strong></p>
+<ul>
+<li><p>I was trying to make the playbook to be more dynamic, so based on the detected OS Family of the nodes, it will accordingly select the correct roles. For more illustration, let’s check the below directory structure:</p>
+<div class="highlight-yml notranslate"><div class="highlight"><pre><span></span>playbook:
+    install_x.yml
+roles:
+    x:
+        tasks:
+            main.yml
+        redhat:
+            tasks:
+                main.yml
+                install_x.yml
+        debian:
+            tasks:
+                main.yml
+                install_x.yml
+</pre></div>
+</div>
+</li>
+</ul>
+<p><strong>Issue</strong></p>
+<ul>
+<li><p>I got this error:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ERROR!<span class="w"> </span>Error<span class="w"> </span>when<span class="w"> </span>evaluating<span class="w"> </span>variable<span class="w"> </span><span class="k">in</span><span class="w"> </span>dynamic<span class="w"> </span>parent<span class="w"> </span>include<span class="w"> </span>path:<span class="w"> </span>../roles/slurm/<span class="o">{{</span><span class="w"> </span>ansible_os_family<span class="w"> </span><span class="p">|</span><span class="w"> </span>lower<span class="w"> </span><span class="o">}}</span>/tasks/main.yml.<span class="w"> </span>When<span class="w"> </span>using<span class="w"> </span>static<span class="w"> </span>imports,<span class="w"> </span>the<span class="w"> </span>parent<span class="w"> </span>dynamic<span class="w"> </span>include<span class="w"> </span>cannot<span class="w"> </span>utilize<span class="w"> </span>host<span class="w"> </span>facts<span class="w"> </span>or<span class="w"> </span>variables<span class="w"> </span>from<span class="w"> </span>inventory.<span class="w"> </span><span class="s1">&#39;ansible_os_family&#39;</span><span class="w"> </span>is<span class="w"> </span>undefined
+</pre></div>
+</div>
+</li>
+<li><p>This error occurs because ansible_os_family is a fact that’s only available after gather_facts runs, but Ansible is trying to evaluate the path during the static parsing phase.</p></li>
+</ul>
+<p><strong>Solution</strong></p>
+<ol class="arabic simple">
+<li><p>Make sure to use include_tasks instead of import_tasks.</p>
+<ul class="simple">
+<li><p>Explanation: using include_tasks (dynamic) not import_tasks (static).</p></li>
+</ul>
+</li>
+<li><p>Use the absolute path for every included tasks in any roles included.</p>
+<ul class="simple">
+<li><p>Explanation: When you use variables like {{ ansible_os_family | lower }} in the path, Ansible can’t resolve the relative path during the static parsing phase, so it needs an absolute reference point.</p></li>
+</ul>
+</li>
+</ol>
+<p><strong>Code Snippet</strong></p>
+<ul>
+<li><p>playbook/install_x.yml</p>
+<div class="highlight-yml notranslate"><div class="highlight"><pre><span></span># playbook/install_x.yml
+- name: Install and configure x
+hosts: cluster
+gather_facts: true
+become: true
+roles:
+    - role: ../roles/x
+</pre></div>
+</div>
+</li>
+<li><p>roles/tasks/main.yml</p>
+<div class="highlight-yml notranslate"><div class="highlight"><pre><span></span># Dynamic Path Structure
+- name: Include OS-specific x tasks
+  ansible.builtin.include_tasks: &quot;../roles/x/{{ ansible_os_family | lower }}/tasks/main.yml&quot;
+  ```
+</pre></div>
+</div>
+</li>
+<li><p>roles/redhat/tasks/main.yml</p>
+<div class="highlight-yml notranslate"><div class="highlight"><pre><span></span># Dynamic Path Structure
+- name: Install x on Rocky
+  ansible.builtin.include_tasks: ../roles/x/{{ ansible_os_family | lower }}/tasks/x_install.yml
+</pre></div>
+</div>
+</li>
+</ul>
+<p><strong>Best Practice</strong></p>
+<ul>
+<li><p>Static path with when clause is generally better, like:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Static Path Structure</span>
+-<span class="w"> </span>name:<span class="w"> </span>Include<span class="w"> </span>RedHat-specific<span class="w"> </span>SLURM<span class="w"> </span>tasks
+<span class="w">  </span>ansible.builtin.include_tasks:<span class="w"> </span>../redhat/tasks/main.yml
+<span class="w">  </span>when:<span class="w"> </span><span class="nv">ansible_os_family</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;RedHat&quot;</span>
+
+-<span class="w"> </span>name:<span class="w"> </span>Include<span class="w"> </span>Debian-specific<span class="w"> </span>SLURM<span class="w"> </span>tasks
+<span class="w">  </span>ansible.builtin.include_tasks:<span class="w"> </span>../debian/tasks/main.yml
+<span class="w">  </span>when:<span class="w"> </span><span class="nv">ansible_os_family</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;Debian&quot;</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">aCupOfTea</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Fields</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../dataCollection/index.html">Datacollection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../deepLearning/index.html">Deeplearning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../designPatterns/index.html">Designpatterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generativeAI/index.html">Generativeai</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../libararies%2CFrameworks%2CContainers/index.html">Libararies,Frameworks,Containers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../projectTopics/index.html">Projecttopics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../recommenderSystems/index.html">Recommendersystems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reinforcementLearning/index.html">Reinforcementlearning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../statistics/index.html">Statistics</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Systemadministration</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="linux-admin/index.html">Linux-Admin</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Q%26A.html">Q&amp;A</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Ansible</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#system-administration-ansible">System Administration - Ansible</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="bash-scripting.html">Bash-Scripting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="build-process.html">Build-Process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ldap.html">Ldap</a></li>
+<li class="toctree-l3"><a class="reference internal" href="memory.html">Memory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="network.html">Network</a></li>
+<li class="toctree-l3"><a class="reference internal" href="virtualMachines.html">Virtualmachines</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../tabularData/index.html">Tabulardata</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../programming/index.html">Programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../journal/index.html">Journal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tips/index.html">Tips</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Fields</a><ul>
+  <li><a href="index.html">Systemadministration</a><ul>
+      <li>Previous: <a href="Q%26A.html" title="previous chapter">Q&amp;A</a></li>
+      <li>Next: <a href="bash-scripting.html" title="next chapter">Bash-Scripting</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Ahmed Yousri Sobhi.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.0.4</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../../_sources/fields/systemAdministration/ansible.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

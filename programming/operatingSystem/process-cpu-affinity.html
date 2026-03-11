@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Process-Cpu-Affinity &#8212; aCupOfTea 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <script src="../../_static/documentation_options.js?v=f2a433a1"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Parallelprogramming" href="../parallelProgramming/index.html" />
+    <link rel="prev" title="Memory-Emptyzerofilling" href="memory-emptyZeroFilling.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="process-cpu-affinity">
+<h1>Process-Cpu-Affinity<a class="headerlink" href="#process-cpu-affinity" title="Link to this heading">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<section id="operating-system-cpu-affinity">
+<h2>Operating System - CPU Affinity<a class="headerlink" href="#operating-system-cpu-affinity" title="Link to this heading">¶</a></h2>
+<p>This terminology came up in front of me during my work with benchmark tests, from its name it describes that it is related to managing the CPU processes of certain degree, and again it gets me back to why we should learn the foundation of Operating System (OS). This topic is related to performance tuning in OS.</p>
+<p>In the coming up sections, I will try to explain what I learned and needed about it.</p>
+</section>
+<section id="table-of-notes">
+<h2>Table of Notes<a class="headerlink" href="#table-of-notes" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="#operating-system---cpu-affinity"><span class="xref myst">Operating System - CPU Affinity</span></a></p></li>
+<li><p><a class="reference internal" href="#table-of-notes"><span class="xref myst">Table of Notes</span></a></p></li>
+<li><p><a class="reference internal" href="#cpu-affinity"><span class="xref myst">CPU Affinity</span></a></p></li>
+<li><p><a class="reference internal" href="#why"><span class="xref myst">Why?!</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#useful-for-various-reasons"><span class="xref myst">Useful for Various Reasons!</span></a></p></li>
+<li><p><a class="reference internal" href="#what-is-the-challenges-in-multitasking-systems"><span class="xref myst">What is the challenges in Multitasking Systems?</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#how-to-set-cpu-affinity"><span class="xref myst">How to Set CPU Affinity?!</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#typical-affinity-setups"><span class="xref myst">Typical Affinity Setups</span></a></p></li>
+<li><p><a class="reference internal" href="#how-to-set"><span class="xref myst">How to Set?</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#resources"><span class="xref myst">Resources</span></a></p></li>
+</ul>
+</section>
+<section id="cpu-affinity">
+<h2>CPU Affinity<a class="headerlink" href="#cpu-affinity" title="Link to this heading">¶</a></h2>
+<p>The capability of assign a process or a thread to certain CPU cores.</p>
+<p>On the normal default scenario, the OS’ scheduler decides which core to use for each process, and of course it’s depending on factors like:</p>
+<ul class="simple">
+<li><p>load balancing</p></li>
+<li><p>priority</p></li>
+<li><p>resources available</p></li>
+</ul>
+<p>So the ability to override this decision by setting the CPU affinity of a process, either manually or programmatically, this is what’s called <strong><strong>CPU Affinity</strong></strong>; this means restriction or preferring certain cores for a process, or assign different cores to different processes.</p>
+</section>
+<section id="why">
+<h2>Why?!<a class="headerlink" href="#why" title="Link to this heading">¶</a></h2>
+<p>There are lots of overhead that we might be interested to reduce, so we can improve the performance!!</p>
+<p>Ones of the biggest overhead a process faces, are the <strong><strong>context switching, Cache Misses, Memory Access latency, &amp; Synchronization</strong></strong>.</p>
+<p>So we are interested in <strong><strong>The Locality of Data and Instructions</strong></strong> where every data and instructions are now local wrt to the process and CPU it works on, so there is no overhead, resulting in a higher cache hit rate and memory bandwidth.</p>
+<section id="useful-for-various-reasons">
+<h3>Useful for Various Reasons!<a class="headerlink" href="#useful-for-various-reasons" title="Link to this heading">¶</a></h3>
+<p>Here are a list of Reasons what are the benefits of CPU affinity?</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Reason</p></th>
+<th class="head"><p>Details</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Performance Optimization</p></td>
+<td><p>Assigning specific threads or processes to dedicated CPU cores can improve performance by reducing contention of shared resources and minimizing cache trashing.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Resource Utilization</p></td>
+<td><p>Used to isolate tasks from others.</p></td>
+</tr>
+<tr class="row-even"><td><p>Hardware Utilization</p></td>
+<td><p>Maximize hardware utilization and system throughput.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="what-is-the-challenges-in-multitasking-systems">
+<h3>What is the challenges in Multitasking Systems?<a class="headerlink" href="#what-is-the-challenges-in-multitasking-systems" title="Link to this heading">¶</a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Challenge</p></th>
+<th class="head"><p>Problem</p></th>
+<th class="head"><p>CPU Affinity Solution</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>CPU Contention</p></td>
+<td><p>In multitasking environments, multiple processes or threads compete for CPU resources, leading to CPU contention. This contention can result in inefficient CPU utilization and degraded performance for individual tasks.</p></td>
+<td><p>CPU affinity allows specific processes or threads to be bound to particular dedicated CPU cores, without contention from other tasks.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Cache Effects</p></td>
+<td><p>Modern CPUs have multiple levels of cache memory, which are shared among CPU cores. When tasks are switched between cores, it can lead to cache <strong>thrashing</strong>, where cache contents are frequently invalidated, causing cache misses and degraded.</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p>NUMA effects</p></td>
+<td><p>In NUMA systems, memory access latency varies depending on the distance between CPU cores and memory banks. Tasks accessing memory that is local to their assigned CPU cores have lower latency compared to accessing remote memory.</p></td>
+<td><p>CPU affinity can be used to schedule tasks on CPU cores that are closer to the memory banks containing the data they need. This will helps reduce memory access latency and improve overall system performance in NUMA architectures.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Thread migration overhead</p></td>
+<td><p>When tasks are migrated between CPU cores frequently, it incurs overhead due to context switching and cache invalidation. This overhead can degrade system performance, especially for latency-sensitive applications.</p></td>
+<td><p>CPU affinity minimizes thread migration overhead by keeping tasks bound to specific CPU cores.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="how-to-set-cpu-affinity">
+<h2>How to Set CPU Affinity?!<a class="headerlink" href="#how-to-set-cpu-affinity" title="Link to this heading">¶</a></h2>
+<p>In RHEL, Affinity is represented by a bit mask, where each bit in the mask represents a CPU core, so {1: the thread or interrupt runs on that core, 0: the thread or interrupt in excluded from running on the core}. The default value for an affinity bit mask is all ones, meaning the thread or interrupt can run on any core in the system.</p>
+<ul class="simple">
+<li><p>Note child processes inherit the CPU affinities of their parents.</p></li>
+</ul>
+<section id="typical-affinity-setups">
+<h3>Typical Affinity Setups<a class="headerlink" href="#typical-affinity-setups" title="Link to this heading">¶</a></h3>
+<p>There are several setups to achieve maximum possible performance using CPU affinity:</p>
+<ol class="arabic simple">
+<li><p>We can use a single CPU core dedicated to specific type of processes, for example, we can set a single CPU core for all system processes, and setting the remaining CPU cores for the applications to run on.</p></li>
+<li><p>Configure a thread application and specific kernel thread to work on the same CPU.</p></li>
+<li><p>Pairing the producer-consumer threads on each CPU?!</p>
+<ul class="simple">
+<li><p>A producer &amp; consumer are two classes of threads, where producers are responsible for insert data into the buffer, where consumers are responsible for remote it from the buffer.</p></li>
+<li><p>So Utilizing CPU affinity to setup the producers and consumers to work on the same CPU core, will optimize performance by reducing cache misses and improving cache locality, as the threads share the same CPU cache and can communicate more efficiently.</p></li>
+</ul>
+</li>
+</ol>
+</section>
+<section id="how-to-set">
+<h3>How to Set?<a class="headerlink" href="#how-to-set" title="Link to this heading">¶</a></h3>
+<p>A typical good practice is to estimate the correct number of CPUs cores required for certain application/process, then isolates these cores.</p>
+<p>This could be achieved using several methods like:</p>
+<ul class="simple">
+<li><p>Tuna tool, please refer to <a class="reference external" href="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/performance_tuning_guide/chap-tuna">docs</a>.</p></li>
+<li><p>Shell scripts to modify bit mask, like <em>taskset</em>command.</p></li>
+</ul>
+<p>Please refer to RHEL chapter 8 <a class="reference external" href="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux_for_real_time/8/html/optimizing_rhel_8_for_real_time_for_low_latency_operation/assembly_setting-cpu-affinity-on-rhel-for-real-time_optimizing-rhel8-for-real-time-for-low-latency-operation#proc_tuning-processor-affinity-using-the-taskset-command_assembly_setting-cpu-affinity-on-rhel-for-real-time">docs</a> for better info related to how to set CPU affinity.</p>
+</section>
+</section>
+<section id="resources">
+<h2>Resources<a class="headerlink" href="#resources" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>What are the advantages and disadvantages of using CPU affinity and pinning for process scheduling?, Linkedin System Monitoring, <a class="reference external" href="https://www.linkedin.com/advice/1/what-advantages-disadvantages-using-cpu-affinity">https://www.linkedin.com/advice/1/what-advantages-disadvantages-using-cpu-affinity</a></p></li>
+<li><p>Chapter 8. Setting CPU affinity on RHEL, Red Hat Customer Portal, <a class="reference external" href="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux_for_real_time/8/html/optimizing_rhel_8_for_real_time_for_low_latency_operation/assembly_setting-cpu-affinity-on-rhel-for-real-time_optimizing-rhel8-for-real-time-for-low-latency-operation">https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux_for_real_time/8/html/optimizing_rhel_8_for_real_time_for_low_latency_operation/assembly_setting-cpu-affinity-on-rhel-for-real-time_optimizing-rhel8-for-real-time-for-low-latency-operation</a></p></li>
+<li><p>Chapter 4. Tuna, Red Hat Customer Portal, <a class="reference external" href="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/performance_tuning_guide/chap-tuna">https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/performance_tuning_guide/chap-tuna</a></p></li>
+</ul>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">aCupOfTea</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../fields/index.html">Fields</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Programming</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../dataStructure/index.html">Datastructure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../oop/index.html">Oop</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Operatingsystem</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="computerArchitecutresTechnologies.html">Computerarchitecutrestechnologies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="memory-coalescing.html">Memory-Coalescing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="memory-emptyZeroFilling.html">Memory-Emptyzerofilling</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Process-Cpu-Affinity</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#operating-system-cpu-affinity">Operating System - CPU Affinity</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#table-of-notes">Table of Notes</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpu-affinity">CPU Affinity</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#why">Why?!</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#how-to-set-cpu-affinity">How to Set CPU Affinity?!</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#resources">Resources</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../parallelProgramming/index.html">Parallelprogramming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python/index.html">Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pythonCleanCode/index.html">Pythoncleancode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../softwareGoals/index.html">Softwaregoals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../softwareSkills%26Tools/index.html">Softwareskills&amp;Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../versionControl/index.html">Versioncontrol</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../journal/index.html">Journal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tips/index.html">Tips</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Programming</a><ul>
+  <li><a href="index.html">Operatingsystem</a><ul>
+      <li>Previous: <a href="memory-emptyZeroFilling.html" title="previous chapter">Memory-Emptyzerofilling</a></li>
+      <li>Next: <a href="../parallelProgramming/index.html" title="next chapter">Parallelprogramming</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Ahmed Yousri Sobhi.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.0.4</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../../_sources/programming/operatingSystem/process-cpu-affinity.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

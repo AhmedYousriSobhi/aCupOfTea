@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Memory &#8212; aCupOfTea 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <script src="../../_static/documentation_options.js?v=f2a433a1"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Network" href="network.html" />
+    <link rel="prev" title="Ldap" href="ldap.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="memory">
+<h1>Memory<a class="headerlink" href="#memory" title="Link to this heading">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<section id="system-administration-memory">
+<h2>System Administration - Memory<a class="headerlink" href="#system-administration-memory" title="Link to this heading">¶</a></h2>
+<section id="table-of-contents">
+<h3>Table of Contents<a class="headerlink" href="#table-of-contents" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><a class="reference internal" href="#system-administration---memory"><span class="xref myst">System Administration - Memory</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#table-of-contents"><span class="xref myst">Table of Contents</span></a></p></li>
+<li><p><a class="reference internal" href="#1--memory-issues-in-linux-application"><span class="xref myst">1- Memory Issues in Linux Application</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#11--segmentation-faults-segfaults"><span class="xref myst">1.1- Segmentation Faults (segfaults)</span></a></p></li>
+<li><p><a class="reference internal" href="#12--memory-leaks"><span class="xref myst">1.2- Memory Leaks</span></a></p></li>
+<li><p><a class="reference internal" href="#13--buffer-overflow"><span class="xref myst">1.3- Buffer Overflow</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#2--memory-debugging-tools"><span class="xref myst">2- Memory Debugging Tools</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#21--what-is-static-analysis"><span class="xref myst">2.1- What is Static Analysis?</span></a></p></li>
+<li><p><a class="reference internal" href="#22--static-analysis-tools-clang-analyzer"><span class="xref myst">2.2- Static Analysis Tools (Clang Analyzer)</span></a></p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="memory-issues-in-linux-application">
+<h3>1- Memory Issues in Linux Application<a class="headerlink" href="#memory-issues-in-linux-application" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>Common memory issue:</p>
+<ol class="arabic simple">
+<li><p>Segmentation faults (segfaults).</p></li>
+<li><p>Memory leaks.</p></li>
+<li><p>Buffer overflow.</p></li>
+<li><p>Use after free (dangling pointer dereference).</p></li>
+</ol>
+</li>
+</ul>
+<section id="segmentation-faults-segfaults">
+<h4>1.1- Segmentation Faults (segfaults)<a class="headerlink" href="#segmentation-faults-segfaults" title="Link to this heading">¶</a></h4>
+<ul>
+<li><p>Causes Can happen when a program tries to access :</p>
+<ul class="simple">
+<li><p>A non-existing virtual memory segment.</p></li>
+<li><p>An existing virtual memory segment in a different way as defined by its attribute.</p></li>
+<li><p>Execute data in non-executable segment.</p></li>
+<li><p>Write data in read only segment.</p></li>
+</ul>
+</li>
+<li><p>As a consequence; the kernel delivers the <em>SIGSEGV</em> signal to the offending process, and it usually results in the termination of the process.</p></li>
+<li><p>Code example:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="n">example_ptr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">;</span>
+
+<span class="o">*</span><span class="n">example_ptr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span><span class="w"> </span><span class="c1">// Trying to store 5 in invalid memory location.</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="memory-leaks">
+<h4>1.2- Memory Leaks<a class="headerlink" href="#memory-leaks" title="Link to this heading">¶</a></h4>
+<ul>
+<li><p>Memory leaks is a condition that occurs when a program fails to release memory that is no longer needed.</p></li>
+<li><p>memory leaks gradually consume available memory resources over time causing performance degradation and eventual program crashes.</p></li>
+<li><p>Common causes:</p>
+<ul class="simple">
+<li><p>Not deallocating dynamically allocated memory.</p></li>
+<li><p>Losing references to memory blocks.</p></li>
+<li><p>Failing to release resources properly.</p></li>
+</ul>
+</li>
+<li><p>Code example:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// Allocate memory for an integer array</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="n">arr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">malloc</span><span class="p">(</span><span class="mi">5</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">));</span>
+<span class="w">    </span><span class="c1">// Initialize the array</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="mi">5</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">){</span>
+<span class="w">        </span><span class="n">arr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="c1">// No explicit free() call to deallocate the memory.</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="buffer-overflow">
+<h4>1.3- Buffer Overflow<a class="headerlink" href="#buffer-overflow" title="Link to this heading">¶</a></h4>
+<ul>
+<li><p>Buffer overflow is a type of software vulnerability that occurs when a program writes more data to a buffer (a temporary storage area) than it can hold, causing the excess data to overflow into adjacent memory locations.</p></li>
+<li><p>Two common types of buffer overflows are [<em>Stack-based</em>, <em>heap-based</em>], depending on where the buffer is located in memory.</p></li>
+<li><p>It can lead to memory corruption, program crashes, or unauthorized access to a system, making it a significant security risk.</p></li>
+<li><p>Code Example:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="c1">// Create an integer array with a size of 5 elements</span>
+<span class="kt">int</span><span class="w"> </span><span class="n">buffer</span><span class="p">[</span><span class="mi">5</span><span class="p">];</span>
+
+<span class="c1">// Writing to the 6th location of buffer will result in a buffer overflow.</span>
+<span class="n">buffer</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">15</span><span class="p">;</span>
+
+<span class="c1">// Print the content of buffer[5]</span>
+<span class="n">print</span><span class="p">(</span><span class="s">&quot;Buffer[%d]: %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="n">buffer</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+</section>
+<section id="memory-debugging-tools">
+<h3>2- Memory Debugging Tools<a class="headerlink" href="#memory-debugging-tools" title="Link to this heading">¶</a></h3>
+<section id="what-is-static-analysis">
+<h4>2.1- What is Static Analysis?<a class="headerlink" href="#what-is-static-analysis" title="Link to this heading">¶</a></h4>
+<ul class="simple">
+<li><p>Static analysis is a method of debugging by examining source code before a program is run.</p></li>
+<li><p>This is especially useful in system-level programming (like C/C++ under Linux) where memory management is manual and prone to errors.</p></li>
+</ul>
+</section>
+<section id="static-analysis-tools-clang-analyzer">
+<h4>2.2- Static Analysis Tools (Clang Analyzer)<a class="headerlink" href="#static-analysis-tools-clang-analyzer" title="Link to this heading">¶</a></h4>
+<ul class="simple">
+<li><p>A tool built into the Clang/LLVM compiler suite.</p></li>
+<li><p>It analyzes C, C++, and Objective-C programs.</p></li>
+<li><p>It focuses on finding bugs without running the code, which makes it very helpful in early development and CI/CD pipelines.</p></li>
+</ul>
+</section>
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">aCupOfTea</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Fields</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../dataCollection/index.html">Datacollection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../deepLearning/index.html">Deeplearning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../designPatterns/index.html">Designpatterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generativeAI/index.html">Generativeai</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../libararies%2CFrameworks%2CContainers/index.html">Libararies,Frameworks,Containers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../projectTopics/index.html">Projecttopics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../recommenderSystems/index.html">Recommendersystems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reinforcementLearning/index.html">Reinforcementlearning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../statistics/index.html">Statistics</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Systemadministration</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="linux-admin/index.html">Linux-Admin</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Q%26A.html">Q&amp;A</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ansible.html">Ansible</a></li>
+<li class="toctree-l3"><a class="reference internal" href="bash-scripting.html">Bash-Scripting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="build-process.html">Build-Process</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ldap.html">Ldap</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Memory</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#system-administration-memory">System Administration - Memory</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="network.html">Network</a></li>
+<li class="toctree-l3"><a class="reference internal" href="virtualMachines.html">Virtualmachines</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../tabularData/index.html">Tabulardata</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../programming/index.html">Programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../journal/index.html">Journal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tips/index.html">Tips</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Fields</a><ul>
+  <li><a href="index.html">Systemadministration</a><ul>
+      <li>Previous: <a href="ldap.html" title="previous chapter">Ldap</a></li>
+      <li>Next: <a href="network.html" title="next chapter">Network</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Ahmed Yousri Sobhi.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.0.4</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../../_sources/fields/systemAdministration/memory.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

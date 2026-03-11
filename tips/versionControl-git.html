@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Versioncontrol-Git &#8212; aCupOfTea 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <script src="../_static/documentation_options.js?v=f2a433a1"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Valueinterview" href="valueInterview.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="versioncontrol-git">
+<h1>Versioncontrol-Git<a class="headerlink" href="#versioncontrol-git" title="Link to this heading">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<section id="tips-version-control-git">
+<h2>Tips - Version Control - Git<a class="headerlink" href="#tips-version-control-git" title="Link to this heading">¶</a></h2>
+<section id="table-of-contents">
+<h3>Table of Contents<a class="headerlink" href="#table-of-contents" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><a class="reference internal" href="#tips---version-control---git"><span class="xref myst">Tips - Version Control - Git</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#table-of-contents"><span class="xref myst">Table of Contents</span></a></p></li>
+<li><p><a class="reference internal" href="#remove-commit-from-a-repo"><span class="xref myst">Remove Commit from a Repo</span></a></p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="remove-commit-from-a-repo">
+<h3>Remove Commit from a Repo<a class="headerlink" href="#remove-commit-from-a-repo" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>Our case is that, we want to remove an old commit from the repo, but to keep the main commit persists.</p></li>
+</ul>
+<ol class="arabic">
+<li><p>Get the git log using:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>log<span class="w"> </span>--oneline
+
+<span class="c1"># Output Example:</span>
+abc1234<span class="w"> </span><span class="o">(</span>HEAD<span class="w"> </span>-&gt;<span class="w"> </span>main<span class="o">)</span><span class="w">   </span>Your<span class="w"> </span>latest<span class="w"> </span>commit
+def5678<span class="w">                   </span>Commit<span class="w"> </span>you<span class="w"> </span>want<span class="w"> </span>to<span class="w"> </span>delete
+</pre></div>
+</div>
+</li>
+<li><p>Use an interactive rebase to edit history. You want to rebase to two commits back (to edit the one before the latest):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>rebase<span class="w"> </span>-i<span class="w"> </span>HEAD~2
+</pre></div>
+</div>
+</li>
+<li><p>In the interactive editor, it should be something like:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pick<span class="w"> </span>def5678<span class="w"> </span>Commit<span class="w"> </span>to<span class="w"> </span>delete
+pick<span class="w"> </span>abc1234<span class="w"> </span>Your<span class="w"> </span>latest<span class="w"> </span>commit
+</pre></div>
+</div>
+<ul>
+<li><p>Change it to:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>drop<span class="w"> </span>def5678<span class="w"> </span>Commit<span class="w"> </span>to<span class="w"> </span>delete
+pick<span class="w"> </span>abc1234<span class="w"> </span>Your<span class="w"> </span>latest<span class="w"> </span>commit
+</pre></div>
+</div>
+</li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</li>
+<li><p>Force-push the new history to GitHub</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>main<span class="w"> </span>--force
+</pre></div>
+</div>
+</li>
+</ol>
+<ul>
+<li><p>Optional Backup Before Starting:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>backup-before-rebase
+git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>backup-before-rebase
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">aCupOfTea</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../fields/index.html">Fields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../programming/index.html">Programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../journal/index.html">Journal</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Tips</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="analyticSkill.html">Analyticskill</a></li>
+<li class="toctree-l2"><a class="reference internal" href="concepts.html">Concepts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interview-technical-info.html">Interview-Technical-Info</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kaggle-tips.html">Kaggle-Tips</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux-create-app-launcher.html">Linux-Create-App-Launcher</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux-daily-tricks.html">Linux-Daily-Tricks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="markdown.html">Markdown</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ubuntu-deb-file-install.html">Ubuntu-Deb-File-Install</a></li>
+<li class="toctree-l2"><a class="reference internal" href="valueInterview.html">Valueinterview</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Versioncontrol-Git</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tips-version-control-git">Tips - Version Control - Git</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#table-of-contents">Table of Contents</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#remove-commit-from-a-repo">Remove Commit from a Repo</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Tips</a><ul>
+      <li>Previous: <a href="valueInterview.html" title="previous chapter">Valueinterview</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Ahmed Yousri Sobhi.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.0.4</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../_sources/tips/versionControl-git.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

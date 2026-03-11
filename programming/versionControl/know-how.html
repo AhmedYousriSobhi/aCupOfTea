@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Know-How &#8212; aCupOfTea 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <script src="../../_static/documentation_options.js?v=f2a433a1"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Journal" href="../../journal/index.html" />
+    <link rel="prev" title="Git-Cli" href="git-cli.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="know-how">
+<h1>Know-How<a class="headerlink" href="#know-how" title="Link to this heading">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<section id="git-know-how">
+<h2>Git - Know How?<a class="headerlink" href="#git-know-how" title="Link to this heading">¶</a></h2>
+<p>Daily works never ends, learning never gets old, so every new day requires a new thing to do, here let’s know the how to do for git and github.</p>
+<section id="table-of-contents">
+<h3>Table of Contents<a class="headerlink" href="#table-of-contents" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><a class="reference internal" href="#git---know-how"><span class="xref myst">Git - Know How?</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#table-of-contents"><span class="xref myst">Table of Contents</span></a></p></li>
+<li><p><a class="reference internal" href="#classic-github-workflow-fork---modify---pull-request---merge"><span class="xref myst">Classic GitHub Workflow (Fork -&gt; Modify -&gt; Pull Request -&gt; Merge)</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#step-1-fork"><span class="xref myst">Step-1: Fork</span></a></p></li>
+<li><p><a class="reference internal" href="#step-2-clone-and-modify"><span class="xref myst">Step-2: Clone and Modify</span></a></p></li>
+<li><p><a class="reference internal" href="#step-3-open-a-pull-request-pr"><span class="xref myst">Step-3: Open a Pull Request (PR)</span></a></p></li>
+<li><p><a class="reference internal" href="#step-4-merge-in-repo-a"><span class="xref myst">Step-4: Merge (in repo A)</span></a></p></li>
+<li><p><a class="reference internal" href="#workflow-diagram"><span class="xref myst">Workflow Diagram</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#how-to-manage-multiple-users-"><span class="xref myst">How to Manage Multiple Users ?</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#1-who-makes-the-commits--global-vs-local-git-user"><span class="xref myst">1. Who Makes the Commits ? (Global vs Local Git User)</span></a></p></li>
+<li><p><a class="reference internal" href="#2-commits-vs-pullpush"><span class="xref myst">2. Commits Vs Pull/Push</span></a></p></li>
+<li><p><a class="reference internal" href="#3-steps-to-manage-multiple-users"><span class="xref myst">3. Steps to Manage Multiple Users</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#how-to-remove-last-pushed-commit-"><span class="xref myst">How to Remove Last Pushed Commit ?</span></a></p></li>
+<li><p><a class="reference internal" href="#how-to-start-new-branch-from-an-upstream-branch"><span class="xref myst">How to Start New Branch from an Upstream Branch?</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#example-setup"><span class="xref myst">Example Setup</span></a></p></li>
+<li><p><a class="reference internal" href="#steps"><span class="xref myst">Steps</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#enable-and-deploy-pages"><span class="xref myst">Enable and Deploy Pages</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#brainstorming"><span class="xref myst">BrainStorming</span></a></p></li>
+<li><p><a class="reference internal" href="#steps-1"><span class="xref myst">Steps</span></a></p></li>
+<li><p><a class="reference internal" href="#notes"><span class="xref myst">Notes</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#handy-commands"><span class="xref myst">Handy Commands</span></a></p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="classic-github-workflow-fork-modify-pull-request-merge">
+<h3>Classic GitHub Workflow (Fork -&gt; Modify -&gt; Pull Request -&gt; Merge)<a class="headerlink" href="#classic-github-workflow-fork-modify-pull-request-merge" title="Link to this heading">¶</a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Role</p></th>
+<th class="head"><p>Repo</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Repo A</p></td>
+<td><p>github.com/original-owner/projectA</p></td>
+<td><p>The original repository (upstream).</p></td>
+</tr>
+<tr class="row-odd"><td><p>Repo B</p></td>
+<td><p>github.com/your-username/projectA</p></td>
+<td><p>Your <strong>fork</strong> – a full copy of the Repo A under your account.</p></td>
+</tr>
+</tbody>
+</table>
+<section id="step-1-fork">
+<h4>Step-1: Fork<a class="headerlink" href="#step-1-fork" title="Link to this heading">¶</a></h4>
+<ul>
+<li><p>Click Fork on github to fork Repo A into repo B</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>GitHub
+│
+├── Repo A (original)
+│    ├── commit1
+│    └── commit2
+│
+└── Repo B (your fork, copied from A)
+    ├── commit1
+    └── commit2
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="step-2-clone-and-modify">
+<h4>Step-2: Clone and Modify<a class="headerlink" href="#step-2-clone-and-modify" title="Link to this heading">¶</a></h4>
+<ol class="arabic">
+<li><p>Clone the forked repo B locally, with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/your-username/projectA.git
+</pre></div>
+</div>
+</li>
+<li><p>Make the changes, then commit and push:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>add<span class="w"> </span>.
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;add feature X&quot;</span>
+git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>main
+</pre></div>
+</div>
+</li>
+</ol>
+<ul>
+<li><p>Diagram:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Repo A (original)
+├── commit1
+└── commit2
+
+Repo B (your fork)
+├── commit1
+├── commit2
+└── commit3 ← your new commit
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="step-3-open-a-pull-request-pr">
+<h4>Step-3: Open a Pull Request (PR)<a class="headerlink" href="#step-3-open-a-pull-request-pr" title="Link to this heading">¶</a></h4>
+<ul>
+<li><p>On GitHub, you go to Repo B -&gt; click <strong>Compare &amp; pull request</strong>.</p></li>
+<li><p>This creates a <strong>pull request</strong> targeting Repo A’s main branch e.g:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>your-username:main  →  original-owner:main
+</pre></div>
+</div>
+</li>
+<li><p>This Pull Request (PR) says: Please merge my commit from Repo B into Repo A.</p></li>
+</ul>
+</section>
+<section id="step-4-merge-in-repo-a">
+<h4>Step-4: Merge (in repo A)<a class="headerlink" href="#step-4-merge-in-repo-a" title="Link to this heading">¶</a></h4>
+<ul class="simple">
+<li><p>When the repo A maintainer clicks “Merge Pull Request”:</p>
+<ul>
+<li><p>GitHub merges commit3 from Repo B into Repo A.</p></li>
+<li><p>The new commit now physically lives inside Repo A’s history.</p></li>
+</ul>
+</li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Repo A (after merge)
+  ├── commit1
+  ├── commit2
+  └── commit3 ← now part of Repo A!
+
+Repo B (fork)
+  ├── commit1
+  ├── commit2
+  └── commit3
+</pre></div>
+</div>
+</section>
+<section id="workflow-diagram">
+<h4>Workflow Diagram<a class="headerlink" href="#workflow-diagram" title="Link to this heading">¶</a></h4>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>        ┌──────────────────────────┐
+        │      Repo A (Original)   │
+        │  commit1 → commit2       │
+        └────────────┬─────────────┘
+                     │  (fork)
+                     ▼
+        ┌──────────────────────────┐
+        │      Repo B (Forked)     │
+        │  commit1 → commit2 → ✨commit3✨ │
+        └────────────┬─────────────┘
+                     │  (pull request)
+                     ▼
+        ┌──────────────────────────┐
+        │ Repo A after merge       │
+        │  commit1 → commit2 → commit3 │
+        └──────────────────────────┘
+                     │
+                     ▼
+              Repo B deleted ❌
+          (but commit3 remains in A)
+</pre></div>
+</div>
+</section>
+</section>
+<section id="how-to-manage-multiple-users">
+<h3>How to Manage Multiple Users ?<a class="headerlink" href="#how-to-manage-multiple-users" title="Link to this heading">¶</a></h3>
+<p>This is a classic multi-user / multi-repo Git setup problem.</p>
+<p>Before jumping to the steps, there are two main points should be understood first:</p>
+<ol class="arabic simple">
+<li><p>Who makes the commits?</p></li>
+<li><p>What is the difference between commits and pull/push?</p></li>
+</ol>
+<section id="who-makes-the-commits-global-vs-local-git-user">
+<h4>1. Who Makes the Commits ? (Global vs Local Git User)<a class="headerlink" href="#who-makes-the-commits-global-vs-local-git-user" title="Link to this heading">¶</a></h4>
+<ul>
+<li><p>When you run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>user.name<span class="w"> </span><span class="s2">&quot;Alice&quot;</span>
+git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>user.email<span class="w"> </span><span class="s2">&quot;alice@example.com&quot;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><strong>–global user =</strong> default identity for all repos for this system user.</p></li>
+<li><p>It’s stored in <code class="docutils literal notranslate"><span class="pre">~/.gitconfig</span></code>.</p></li>
+<li><p>If you don’t override it, Git will always use this identity for commits.</p></li>
+</ul>
+</li>
+<li><p>But Git also supports per-repository identity:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>/path/to/repo
+git<span class="w"> </span>config<span class="w"> </span>user.name<span class="w"> </span><span class="s2">&quot;Bob&quot;</span>
+git<span class="w"> </span>config<span class="w"> </span>user.email<span class="w"> </span><span class="s2">&quot;bob@example.com&quot;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Local <strong>user =</strong> identity for this repo only.</p></li>
+<li><p>It’s stored in <code class="docutils literal notranslate"><span class="pre">.git/config</span></code> inside that repo.</p></li>
+<li><p>It overrides the global settings.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="commits-vs-pull-push">
+<h4>2. Commits Vs Pull/Push<a class="headerlink" href="#commits-vs-pull-push" title="Link to this heading">¶</a></h4>
+<ul class="simple">
+<li><p><strong>Commit identity</strong> is set by <code class="docutils literal notranslate"><span class="pre">user.name</span></code> and <code class="docutils literal notranslate"><span class="pre">user.email</span></code>.</p></li>
+<li><p><strong>Pull/Push authentication</strong> depends on credentials (SSH keys, HTTPS tokens).</p></li>
+</ul>
+<p>So you need to handle two layers:</p>
+<ul class="simple">
+<li><p>Git identity (<code class="docutils literal notranslate"><span class="pre">user.name</span></code>, <code class="docutils literal notranslate"><span class="pre">user.email</span></code>)</p></li>
+<li><p>GitHub authentication (SSH key or HTTPS token)</p></li>
+</ul>
+</section>
+<section id="steps-to-manage-multiple-users">
+<h4>3. Steps to Manage Multiple Users<a class="headerlink" href="#steps-to-manage-multiple-users" title="Link to this heading">¶</a></h4>
+<ol class="arabic">
+<li><p>Create an SSH-Key for the target username and email using <em>ssh-keygen</em> command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh-keygen<span class="w"> </span>-t<span class="w"> </span>ed25519<span class="w"> </span>-C<span class="w"> </span><span class="s1">&#39;ahmedyousrisobhi@gmail.com&#39;</span>
+
+<span class="c1"># Expected output:</span>
+Generating<span class="w"> </span>public/private<span class="w"> </span>ed25519<span class="w"> </span>key<span class="w"> </span>pair.
+Enter<span class="w"> </span>file<span class="w"> </span><span class="k">in</span><span class="w"> </span>which<span class="w"> </span>to<span class="w"> </span>save<span class="w"> </span>the<span class="w"> </span>key<span class="w"> </span><span class="o">(</span>/home/asobhy/.ssh/id_ed25519<span class="o">)</span>:<span class="w"> </span>/home/asobhy/.ssh/id_ed25519_ahmedyousrisobhi
+Enter<span class="w"> </span>passphrase<span class="w"> </span><span class="o">(</span>empty<span class="w"> </span><span class="k">for</span><span class="w"> </span>no<span class="w"> </span>passphrase<span class="o">)</span>:<span class="w"> </span>
+Enter<span class="w"> </span>same<span class="w"> </span>passphrase<span class="w"> </span>again:<span class="w"> </span>
+Your<span class="w"> </span>identification<span class="w"> </span>has<span class="w"> </span>been<span class="w"> </span>saved<span class="w"> </span><span class="k">in</span><span class="w"> </span>/home/asobhy/.ssh/id_ed25519_ahmedyousrisobhi
+Your<span class="w"> </span>public<span class="w"> </span>key<span class="w"> </span>has<span class="w"> </span>been<span class="w"> </span>saved<span class="w"> </span><span class="k">in</span><span class="w"> </span>/home/asobhy/.ssh/id_ed25519_ahmedyousrisobhi.pub
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>The generated keys are: [id_ed25519_ahmedyousrisobhi.pub, id_ed25519_ahmedyousrisobhi]</p></li>
+</ul>
+<blockquote>
+<div><p>📝 Note: the keys are generated under <code class="docutils literal notranslate"><span class="pre">*~/.ssh*</span></code> directory.</p>
+</div></blockquote>
+<blockquote>
+<div><p>📝 Note: Running ssh-keygen command without any additional options gets you id_rsa and id_rsa.pub</p>
+</div></blockquote>
+<blockquote>
+<div><p>📝 Note: You can use option <code class="docutils literal notranslate"><span class="pre">-f</span> <span class="pre">&lt;key-name&gt;</span></code> instead of using -C for comment, e.g: <em><strong>ssh-keygen -f work_id_rsa</strong></em>, this will create keys: [work_id_rsa, work_id_rsa.pub].</p>
+</div></blockquote>
+</li>
+<li><p>For account #2: Let’s create another key for work account:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh-keygen<span class="w"> </span>-f<span class="w"> </span>work_id_rsa
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Same if you want to set passphrase you can do it, but using default here.</p></li>
+<li><p>Generated keys are: [work_id_rsa, work_id_rsa.pub].</p></li>
+</ul>
+<blockquote>
+<div><p>💡 Pro Tip: Try to choose a descriptive naming for the key, like define the which work mail your refer to.</p>
+</div></blockquote>
+</li>
+<li><p>Add the ssh key to the ssh agent with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh-add<span class="w"> </span>~/.ssh/id_ed25519_ahmedyousrisobhi
+ssh-add<span class="w"> </span>~/.ssh/work_id_rsa
+</pre></div>
+</div>
+<blockquote>
+<div><p>📝 Note: You can verify the keys listed using command: <em><strong>ssh-add -l</strong></em></p>
+</div></blockquote>
+<blockquote>
+<div><p>📝 Note: ssh-add is used in the cases: The key is not the default one (~/.ssh/id_rsa or ~/.ssh/id_ed25519), and you use a custom SSH config with multiple IdentityFiles.</p>
+</div></blockquote>
+</li>
+<li><p>Add the ssh to the config file; This lets Git know which key to use per account:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># GitHub account: AhmedYousriSobhi</span>
+Host<span class="w"> </span>github.com-ahmedyousrisobhi
+<span class="w">    </span>HostName<span class="w"> </span>github.com
+<span class="w">    </span>User<span class="w"> </span>git
+<span class="w">    </span>IdentityFile<span class="w"> </span>~/.ssh/id_ed25519_ahmedyousrisobhi
+<span class="w">    </span>IdentitiesOnly<span class="w"> </span>yes
+
+<span class="c1"># my work account</span>
+Host<span class="w"> </span>github.com-work
+<span class="w">    </span>HostName<span class="w"> </span>github.com
+<span class="w">    </span>IdentityFile<span class="w"> </span>~/.ssh/work_id_rsa
+<span class="w">    </span>IdentitiesOnly<span class="w"> </span>yes
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Using of <code class="docutils literal notranslate"><span class="pre">IdentitiesOnly</span> <span class="pre">yes</span></code>:</p>
+<ul>
+<li><p>Tells ssh to use only the key(s) explicitly listed under IdentityFile for this host — and ignore all other keys in the agent or defaults.</p></li>
+<li><p>In case of removing it; When you connect to GitHub, SSH may try all keys loaded under <code class="docutils literal notranslate"><span class="pre">~/.ssh</span></code> in order until one matches. That’s inefficient and sometimes leads to <code class="docutils literal notranslate"><span class="pre">Too</span> <span class="pre">many</span> <span class="pre">authentication</span> <span class="pre">failures</span></code> error.</p></li>
+<li><p>Using it ensures no cross-contamination.</p></li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<div><p>📝 Note: this can work with gitlab, you need to change github to gitlab, can work with both at the same time too.</p>
+</div></blockquote>
+</li>
+<li><p>Copy the public key with to be added as a key in Github account:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cat<span class="w"> </span>~/.ssh/id_ed25519_ahmedyousrisobhi.pub
+</pre></div>
+</div>
+</li>
+<li><p>To validate the connection, use:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh<span class="w"> </span>-T<span class="w"> </span>git@github.com-ahmedyousrisobhi
+
+<span class="c1"># Expected output: Hi ahmedyousrisobhi! You&#39;ve successfully authenticated, but GitHub does not provide shell access.</span>
+<span class="c1"># This confirms your SSH key is correctly mapped to that GitHub user.</span>
+</pre></div>
+</div>
+</li>
+<li><p>If you want to clone from personal, you use default ssh you copy from github</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>git@github.com-ahmedyousrisobhi:AhmedYousriSobhi/aCupOfTea.git
+</pre></div>
+</div>
+<ul>
+<li><p>If you want to use your work then:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>git@github.com-work:AhmedYousriSobhi/aCupOfTea.git
+</pre></div>
+</div>
+</li>
+</ul>
+<blockquote>
+<div><p>📝 Note: You can clone the repo normally using its http url, then update the git remote url to the correct host. Illustrated in step #8.</p>
+</div></blockquote>
+</li>
+<li><p>When you clone a repo for the first time using this method you need to set the name and email so it won’t use the default name and email which here is personal</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>config<span class="w"> </span>user.name<span class="w"> </span><span class="s2">&quot;github account name&quot;</span>
+git<span class="w"> </span>config<span class="w"> </span>user.email<span class="w"> </span><span class="s2">&quot;github email&quot;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Change your Git remote to use this Host:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>remote<span class="w"> </span>set-url<span class="w"> </span>origin<span class="w"> </span>git@github.com-ahmedyousrisobhi:ahmedyousrisobhi/&lt;repo-name&gt;.git
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>To validate using: git remote -v</p></li>
+</ul>
+</li>
+</ol>
+</section>
+</section>
+<section id="how-to-remove-last-pushed-commit">
+<h3>How to Remove Last Pushed Commit ?<a class="headerlink" href="#how-to-remove-last-pushed-commit" title="Link to this heading">¶</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1. Remove last commit but keep the changes (so you can fix and recommit)</span>
+<span class="c1"># This moves the branch pointer back by one commit, but your changes stay staged.</span>
+git<span class="w"> </span>reset<span class="w"> </span>--soft<span class="w"> </span>HEAD~1
+
+<span class="c1"># If you want them unstaged</span>
+<span class="c1"># git reset HEAD</span>
+
+<span class="c1"># 2. Remove last commit and discard the changes completely</span>
+<span class="c1"># This rewinds history by one commit and throws away those changes.</span>
+git<span class="w"> </span>reset<span class="w"> </span>--hard<span class="w"> </span>HEAD~1
+
+<span class="c1"># 3. Push the corrected history to remote</span>
+<span class="c1"># Since the commit is already pushed, you need to force push</span>
+git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>HEAD<span class="w"> </span>--force
+</pre></div>
+</div>
+</section>
+<section id="how-to-start-new-branch-from-an-upstream-branch">
+<h3>How to Start New Branch from an Upstream Branch?<a class="headerlink" href="#how-to-start-new-branch-from-an-upstream-branch" title="Link to this heading">¶</a></h3>
+<section id="example-setup">
+<h4>Example Setup<a class="headerlink" href="#example-setup" title="Link to this heading">¶</a></h4>
+<ul class="simple">
+<li><p>Your fork: origin</p></li>
+<li><p>The main/original repo: upstream</p></li>
+<li><p>You want to create a new branch (say feature-x) from an upstream branch (say dev)</p></li>
+</ul>
+</section>
+<section id="steps">
+<h4>Steps<a class="headerlink" href="#steps" title="Link to this heading">¶</a></h4>
+<ol class="arabic">
+<li><p>Make sure you have the latest refs from upstream; This updates your local knowledge of all upstream branches without modifying your working directory:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>fetch<span class="w"> </span>upstream
+</pre></div>
+</div>
+</li>
+<li><p>Check which upstream branches exist:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>branch<span class="w"> </span>-r
+</pre></div>
+</div>
+</li>
+<li><p>Create your new branch from the upstream branch:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>feature-x<span class="w"> </span>upstream/dev
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>This means:</p>
+<ul>
+<li><p>Create a new branch called feature-x</p></li>
+<li><p>Start it from the state of upstream/dev</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Verify:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>status
+git<span class="w"> </span>branch<span class="w"> </span>-vv
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+</section>
+<section id="enable-and-deploy-pages">
+<h3>Enable and Deploy Pages<a class="headerlink" href="#enable-and-deploy-pages" title="Link to this heading">¶</a></h3>
+<p>This guide to enable and deploy pages in Github using Github actions.</p>
+<ol class="arabic simple">
+<li><p>Define Github action yml file.</p></li>
+<li><p>Create the Sphinx quick start.</p></li>
+</ol>
+<section id="brainstorming">
+<h4>BrainStorming<a class="headerlink" href="#brainstorming" title="Link to this heading">¶</a></h4>
+<p>The roles of each branch:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Branch</p></th>
+<th class="head"><p>Role</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>main</p></td>
+<td><p>This is your source of truth: all your Markdown files, scripts, and configuration live here.</br>You edit docs here, commit, and push changes.</br>You never manually edit HTML or built artifacts here (those are generated).</p></td>
+</tr>
+<tr class="row-odd"><td><p>gh-pages</p></td>
+<td><p>This branch is purely for the generated output — the final HTML site that GitHub Pages serves publicly.</br>GitHub Pages doesn’t build your docs itself (except for simple Jekyll setups).</p></td>
+</tr>
+<tr class="row-even"><td><p>It just hosts whatever static files it finds in gh-pages (or /docs in the same branch, if configured that way).</p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<p>So, the GitHub Actions workflow’s job is:</p>
+<ol class="arabic simple">
+<li><p>Build the documentation using Sphinx from main.</p></li>
+<li><p>Push the resulting _build/html/ directory to the gh-pages branch.</p></li>
+<li><p>GitHub Pages then serves that branch directly at:
+https://<username>.github.io/<repo>/</p></li>
+</ol>
+<p>That’s the reason the gh-pages branch must exist even if your actual source is somewhere else.</p>
+<p>So the current structure will be:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>──<span class="w"> </span>tips/
+├──<span class="w"> </span>README.md
+└──<span class="w"> </span>docs/
+<span class="w">    </span>├──<span class="w"> </span>source/
+<span class="w">    </span>│<span class="w">   </span>├──<span class="w"> </span>conf.py
+<span class="w">    </span>│<span class="w">   </span>├──<span class="w"> </span>index.rst
+<span class="w">    </span>│<span class="w">   </span>└──<span class="w"> </span>...
+<span class="w">    </span>└──<span class="w"> </span>build/
+</pre></div>
+</div>
+<blockquote>
+<div><p>Issue: Referring the markdown guides to the be visible under <code class="docutils literal notranslate"><span class="pre">docs/source</span></code> directory, which will be solved by defining the abs path in the conf.py file.</p>
+</div></blockquote>
+<blockquote>
+<div><p>Tip: Best-practice to create a temp branch to develop the solution, then merge it with the main. But note there will be some modifications in the deploy-docs.yml below which creates the Github action.</p>
+</div></blockquote>
+</section>
+<section id="id1">
+<h4>Steps<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h4>
+<ol class="arabic">
+<li><p>mkdir the docs directory, where it will be keeps using: <code class="docutils literal notranslate"><span class="pre">mkdir</span> <span class="pre">docs</span></code></p></li>
+<li><p>Initiate the Sphinx quick start using: <code class="docutils literal notranslate"><span class="pre">sphinx-quickstart</span></code></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sphinx-quickstart<span class="w"> </span>
+
+<span class="c1"># Expected output:</span>
+Welcome<span class="w"> </span>to<span class="w"> </span>the<span class="w"> </span>Sphinx<span class="w"> </span><span class="m">8</span>.2.3<span class="w"> </span>quickstart<span class="w"> </span>utility.
+
+Please<span class="w"> </span>enter<span class="w"> </span>values<span class="w"> </span><span class="k">for</span><span class="w"> </span>the<span class="w"> </span>following<span class="w"> </span>settings<span class="w"> </span><span class="o">(</span>just<span class="w"> </span>press<span class="w"> </span>Enter<span class="w"> </span>to
+accept<span class="w"> </span>a<span class="w"> </span>default<span class="w"> </span>value,<span class="w"> </span><span class="k">if</span><span class="w"> </span>one<span class="w"> </span>is<span class="w"> </span>given<span class="w"> </span><span class="k">in</span><span class="w"> </span>brackets<span class="o">)</span>.
+
+Selected<span class="w"> </span>root<span class="w"> </span>path:<span class="w"> </span>.
+
+You<span class="w"> </span>have<span class="w"> </span>two<span class="w"> </span>options<span class="w"> </span><span class="k">for</span><span class="w"> </span>placing<span class="w"> </span>the<span class="w"> </span>build<span class="w"> </span>directory<span class="w"> </span><span class="k">for</span><span class="w"> </span>Sphinx<span class="w"> </span>output.
+Either,<span class="w"> </span>you<span class="w"> </span>use<span class="w"> </span>a<span class="w"> </span>directory<span class="w"> </span><span class="s2">&quot;_build&quot;</span><span class="w"> </span>within<span class="w"> </span>the<span class="w"> </span>root<span class="w"> </span>path,<span class="w"> </span>or<span class="w"> </span>you<span class="w"> </span>separate
+<span class="s2">&quot;source&quot;</span><span class="w"> </span>and<span class="w"> </span><span class="s2">&quot;build&quot;</span><span class="w"> </span>directories<span class="w"> </span>within<span class="w"> </span>the<span class="w"> </span>root<span class="w"> </span>path.
+&gt;<span class="w"> </span>Separate<span class="w"> </span><span class="nb">source</span><span class="w"> </span>and<span class="w"> </span>build<span class="w"> </span>directories<span class="w"> </span><span class="o">(</span>y/n<span class="o">)</span><span class="w"> </span><span class="o">[</span>n<span class="o">]</span>:<span class="w"> </span>y
+
+The<span class="w"> </span>project<span class="w"> </span>name<span class="w"> </span>will<span class="w"> </span>occur<span class="w"> </span><span class="k">in</span><span class="w"> </span>several<span class="w"> </span>places<span class="w"> </span><span class="k">in</span><span class="w"> </span>the<span class="w"> </span>built<span class="w"> </span>documentation.
+&gt;<span class="w"> </span>Project<span class="w"> </span>name:<span class="w"> </span>aCupOfTea
+&gt;<span class="w"> </span>Author<span class="w"> </span>name<span class="o">(</span>s<span class="o">)</span>:<span class="w"> </span>Ahmed<span class="w"> </span>Yousri<span class="w"> </span>Sobhi
+&gt;<span class="w"> </span>Project<span class="w"> </span>release<span class="w"> </span><span class="o">[]</span>:<span class="w"> </span><span class="m">1</span>.0
+
+If<span class="w"> </span>the<span class="w"> </span>documents<span class="w"> </span>are<span class="w"> </span>to<span class="w"> </span>be<span class="w"> </span>written<span class="w"> </span><span class="k">in</span><span class="w"> </span>a<span class="w"> </span>language<span class="w"> </span>other<span class="w"> </span>than<span class="w"> </span>English,
+you<span class="w"> </span>can<span class="w"> </span><span class="k">select</span><span class="w"> </span>a<span class="w"> </span>language<span class="w"> </span>here<span class="w"> </span>by<span class="w"> </span>its<span class="w"> </span>language<span class="w"> </span>code.<span class="w"> </span>Sphinx<span class="w"> </span>will<span class="w"> </span><span class="k">then</span>
+translate<span class="w"> </span>text<span class="w"> </span>that<span class="w"> </span>it<span class="w"> </span>generates<span class="w"> </span>into<span class="w"> </span>that<span class="w"> </span>language.
+
+For<span class="w"> </span>a<span class="w"> </span>list<span class="w"> </span>of<span class="w"> </span>supported<span class="w"> </span>codes,<span class="w"> </span>see
+https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-language.
+&gt;<span class="w"> </span>Project<span class="w"> </span>language<span class="w"> </span><span class="o">[</span>en<span class="o">]</span>:<span class="w"> </span>
+
+Creating<span class="w"> </span>file<span class="w"> </span>~/workspace/aCupOfTea/docs/source/conf.py.
+Creating<span class="w"> </span>file<span class="w"> </span>~/workspace/aCupOfTea/docs/source/index.rst.
+Creating<span class="w"> </span>file<span class="w"> </span>~/workspace/aCupOfTea/docs/Makefile.
+Creating<span class="w"> </span>file<span class="w"> </span>~/workspace/aCupOfTea/docs/make.bat.
+
+Finished:<span class="w"> </span>An<span class="w"> </span>initial<span class="w"> </span>directory<span class="w"> </span>structure<span class="w"> </span>has<span class="w"> </span>been<span class="w"> </span>created.
+
+You<span class="w"> </span>should<span class="w"> </span>now<span class="w"> </span>populate<span class="w"> </span>your<span class="w"> </span>master<span class="w"> </span>file<span class="w"> </span>/home/asobhy/workflow/workspace/aCupOfTea/docs/source/index.rst<span class="w"> </span>and<span class="w"> </span>create<span class="w"> </span>other<span class="w"> </span>documentation
+<span class="nb">source</span><span class="w"> </span>files.<span class="w"> </span>Use<span class="w"> </span>the<span class="w"> </span>Makefile<span class="w"> </span>to<span class="w"> </span>build<span class="w"> </span>the<span class="w"> </span>docs,<span class="w"> </span>like<span class="w"> </span>so:
+make<span class="w"> </span>builder
+where<span class="w"> </span><span class="s2">&quot;builder&quot;</span><span class="w"> </span>is<span class="w"> </span>one<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>supported<span class="w"> </span>builders,<span class="w"> </span>e.g.<span class="w"> </span>html,<span class="w"> </span>latex<span class="w"> </span>or<span class="w"> </span>linkcheck.
+</pre></div>
+</div>
+</li>
+<li><p>Add the <code class="docutils literal notranslate"><span class="pre">docs/build</span></code> to <code class="docutils literal notranslate"><span class="pre">.gitignore</span></code> to avoid committing the build html.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>touch<span class="w"> </span>.gitignore
+
+vi<span class="w"> </span>.gitignore
+
+<span class="c1"># Ignore Sphinx build output</span>
+docs/build/
+
+<span class="c1"># Save and exit</span>
+:wq!
+</pre></div>
+</div>
+</li>
+<li><p>Create the Github workflows directory for Github action definition:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>-p<span class="w"> </span>.github/workflows
+</pre></div>
+</div>
+</li>
+<li><p>Create the Github action using <code class="docutils literal notranslate"><span class="pre">deploy-docs.yml</span></code> file configuration:</p>
+<div class="highlight-yml notranslate"><div class="highlight"><pre><span></span>name: Deploy Docs to GitHub Pages
+
+on:
+push:
+    branches:
+    - main
+workflow_dispatch:
+
+permissions:
+contents: write
+
+jobs:
+deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+        uses: actions/checkout@v4
+
+    - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+        python-version: &#39;3.11&#39;
+
+    - name: Install dependencies
+        run: |
+        python -m pip install --upgrade pip
+        pip install sphinx sphinx-rtd-theme
+
+    - name: Build documentation
+        run: |
+        make html
+
+    - name: Deploy to gh-pages branch
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_branch: gh-pages
+        publish_dir: ./docs/_build/html
+        force_orphan: true
+
+</pre></div>
+</div>
+</li>
+<li><p>Add the abs path to the markdown documentation in the docs/source/conf.py file:</p>
+<div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="c1"># Imports</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+
+<span class="c1"># Add project root to sys.path so we can reference top-level folders</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="s1">&#39;../..&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+</li>
+<li><p>To include a sample markdown in the webpage use:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># inside the docs/source/index.rst file:</span>
+..<span class="w"> </span>include::<span class="w"> </span>../../README.md
+<span class="w">   </span>:parser:<span class="w"> </span>myst_parser.sphinx_
+</pre></div>
+</div>
+</li>
+<li><p>Verify by local html build inside the docs directory</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>docs
+
+make<span class="w"> </span>html
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Note: make sure that myst-parser package is installed with pip. (Best practice to build a conda env for Sphinx to use.)</p></li>
+</ul>
+</li>
+</ol>
+</section>
+<section id="notes">
+<h4>Notes<a class="headerlink" href="#notes" title="Link to this heading">¶</a></h4>
+<ol class="arabic">
+<li><p>In deploy-docs.yml file, This tells GitHub when to run the workflow.</p>
+<ul class="simple">
+<li><p>push → run the workflow whenever someone pushes commits to a branch.</p></li>
+</ul>
+<div class="highlight-yml notranslate"><div class="highlight"><pre><span></span>on:
+push:
+    branches:
+    - main
+</pre></div>
+</div>
+</li>
+<li><p>In deploy-docs.yml, This tells Github which branch to fetch the docs from:</p>
+<div class="highlight-yml notranslate"><div class="highlight"><pre><span></span>jobs:
+deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+            ref: main
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+</section>
+<section id="handy-commands">
+<h3>Handy Commands<a class="headerlink" href="#handy-commands" title="Link to this heading">¶</a></h3>
+<ul>
+<li><p>Visualize git branches, use:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>log<span class="w"> </span>--oneline<span class="w"> </span>--graph<span class="w"> </span>--all<span class="w"> </span>--decorate
+</pre></div>
+</div>
+</li>
+<li><p>Reset a repo from the origin branch, use:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>reset<span class="w"> </span>--hard<span class="w"> </span>origin/&lt;branch-name&gt;
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">aCupOfTea</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../fields/index.html">Fields</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Programming</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../dataStructure/index.html">Datastructure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../oop/index.html">Oop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../operatingSystem/index.html">Operatingsystem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../parallelProgramming/index.html">Parallelprogramming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../python/index.html">Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pythonCleanCode/index.html">Pythoncleancode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../softwareGoals/index.html">Softwaregoals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../softwareSkills%26Tools/index.html">Softwareskills&amp;Tools</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Versioncontrol</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="README.html">Readme</a></li>
+<li class="toctree-l3"><a class="reference internal" href="case-study.html">Case-Study</a></li>
+<li class="toctree-l3"><a class="reference internal" href="git-cli.html">Git-Cli</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Know-How</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#git-know-how">Git - Know How?</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../journal/index.html">Journal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tips/index.html">Tips</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Programming</a><ul>
+  <li><a href="index.html">Versioncontrol</a><ul>
+      <li>Previous: <a href="git-cli.html" title="previous chapter">Git-Cli</a></li>
+      <li>Next: <a href="../../journal/index.html" title="next chapter">Journal</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Ahmed Yousri Sobhi.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.0.4</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../../_sources/programming/versionControl/know-how.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

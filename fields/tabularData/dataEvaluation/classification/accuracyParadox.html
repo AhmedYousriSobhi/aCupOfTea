@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Accuracyparadox &#8212; aCupOfTea 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <script src="../../../../_static/documentation_options.js?v=f2a433a1"></script>
+    <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+    <link rel="next" title="Clustering" href="../clustering/index.html" />
+    <link rel="prev" title="Classification" href="index.html" />
+   
+  <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="accuracyparadox">
+<h1>Accuracyparadox<a class="headerlink" href="#accuracyparadox" title="Link to this heading">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<section id="accuracy-paradox">
+<h2>Accuracy Paradox<a class="headerlink" href="#accuracy-paradox" title="Link to this heading">¶</a></h2>
+<section id="table-of-content">
+<h3>Table of Content<a class="headerlink" href="#table-of-content" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><a class="reference internal" href="#accuracy-paradox"><span class="xref myst">Accuracy Paradox</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#table-of-content"><span class="xref myst">Table of Content</span></a></p></li>
+<li><p><a class="reference internal" href="#accuracy-fails-for-imbalanced-classification"><span class="xref myst">Accuracy Fails for Imbalanced Classification</span></a></p></li>
+<li><p><a class="reference internal" href="#accuracy-paradox-1"><span class="xref myst">Accuracy Paradox</span></a></p></li>
+<li><p><a class="reference internal" href="#credits"><span class="xref myst">Credits</span></a></p></li>
+</ul>
+</li>
+</ul>
+<p>In a Classification machine learning problem, one of the common most-used evaluation metric is <strong>Accuracy</strong>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Accuracy</span> <span class="o">=</span> <span class="n">Number</span> <span class="n">of</span> <span class="n">correct</span> <span class="n">predictions</span> <span class="o">/</span> <span class="n">Total</span> <span class="n">number</span> <span class="n">of</span> <span class="n">predictions</span>
+</pre></div>
+</div>
+<p>The reason for its wide use is because it is easy to calculate, easy to interpret, and is a single number to summarize the model’s capability.</p>
+</section>
+<section id="accuracy-fails-for-imbalanced-classification">
+<h3>Accuracy Fails for Imbalanced Classification<a class="headerlink" href="#accuracy-fails-for-imbalanced-classification" title="Link to this heading">¶</a></h3>
+<p>As such, it is natural to use it on imbalanced classification problems, where the distribution of examples in the training dataset across the classes is not equal.</p>
+<p>This is the most common mistake made by beginners to imbalanced classification.</p>
+<p>When the class distribution is slightly skewed, accuracy can still be a useful metric. When the skew in the class distributions are severe, accuracy can become an unreliable measure of model performance.</p>
+<p>The reason for this unreliability is centered around the average machine learning practitioner and the intuitions for classification accuracy.</p>
+<p>Typically, classification predictive modeling is practiced with small datasets where the class distribution is equal or very close to equal. Therefore, most practitioners develop an intuition that large accuracy score (or conversely small error rate scores) are good, and values above 90 percent are great.</p>
+<p>Achieving 90 percent classification accuracy, or even 99 percent classification accuracy, may be trivial on an imbalanced classification problem.</p>
+<p>This means that intuitions for classification accuracy developed on balanced class distributions will be applied and will be wrong, misleading the practitioner into thinking that a model has good or even excellent performance when it, in fact, does not.</p>
+</section>
+<section id="id1">
+<h3>Accuracy Paradox<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h3>
+<p>Consider the case of an imbalanced dataset with a 1:100 class imbalance.</p>
+<p>In this problem, each example of the minority class (class 1) will have a corresponding 100 examples for the majority class (class 0).</p>
+<p>In problems of this type, the majority class represents “normal” and the minority class represents “abnormal,” such as a fault, a diagnosis, or a fraud. Good performance on the minority class will be preferred over good performance on both classes.</p>
+<p>“””
+Considering a user preference bias towards the minority (positive) class examples, accuracy is not suitable because the impact of the least represented, but more important examples, is reduced when compared to that of the majority class.”””</p>
+<ul class="simple">
+<li><p>A Survey of Predictive Modelling under Imbalanced Distributions, 2015.</p></li>
+</ul>
+<p>On this problem, a model that predicts the majority class (class 0) for all examples in the test set will have a classification accuracy of 99 percent, mirroring the distribution of major and minor examples expected in the test set on average.</p>
+<p>Many machine learning models are designed around the assumption of balanced class distribution, and often learn simple rules (explicit or otherwise) like always predict the majority class, causing them to achieve an accuracy of 99 percent, although in practice performing no better than an unskilled majority class classifier.</p>
+<p>A beginner will see the performance of a sophisticated model achieving 99 percent on an imbalanced dataset of this type and believe their work is done, when in fact, they have been misled.</p>
+<p>This situation is so common that it has a name, referred to as the “<strong>accuracy paradox</strong>”.</p>
+<p>“””in the framework of imbalanced data-sets, accuracy is no longer a proper measure, since it does not distinguish between the numbers of correctly classified examples of different classes. Hence, it may lead to erroneous conclusions “””</p>
+<ul class="simple">
+<li><p>A Review on Ensembles for the Class Imbalance Problem: Bagging-, Boosting-, and Hybrid-Based Approaches, 2011.</p></li>
+</ul>
+<p>Strictly speaking, accuracy does report a correct result; it is only the practitioner’s intuition of high accuracy scores that is the point of failure. Instead of correcting faulty intuitions, it is common to use alternative metrics to summarize model performance for imbalanced classification problems.</p>
+</section>
+<section id="credits">
+<h3>Credits<a class="headerlink" href="#credits" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://machinelearningmastery.com/failure-of-accuracy-for-imbalanced-class-distributions/">Machine Learning Mastery</a>.</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../../index.html">aCupOfTea</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">Fields</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../../dataCollection/index.html">Datacollection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../deepLearning/index.html">Deeplearning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../designPatterns/index.html">Designpatterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../generativeAI/index.html">Generativeai</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../libararies%2CFrameworks%2CContainers/index.html">Libararies,Frameworks,Containers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../projectTopics/index.html">Projecttopics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../recommenderSystems/index.html">Recommendersystems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../reinforcementLearning/index.html">Reinforcementlearning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../statistics/index.html">Statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../systemAdministration/index.html">Systemadministration</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../../index.html">Tabulardata</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../conceptInMachineLearning/index.html">Conceptinmachinelearning</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../conceptinTimeSeries/index.html">Conceptintimeseries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../dataEDA/index.html">Dataeda</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html">Dataevaluation</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="index.html">Classification</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../clustering/index.html">Clustering</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../modelBehaviour/index.html">Modelbehaviour</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../regression/index.html">Regression</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../dataFeatureEngineering/index.html">Datafeatureengineering</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../dataModeling/index.html">Datamodeling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../dataProcessing/index.html">Dataprocessing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tools/index.html">Tools</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../programming/index.html">Programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../journal/index.html">Journal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tips/index.html">Tips</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../index.html">Fields</a><ul>
+  <li><a href="../../index.html">Tabulardata</a><ul>
+  <li><a href="../index.html">Dataevaluation</a><ul>
+  <li><a href="index.html">Classification</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Classification</a></li>
+      <li>Next: <a href="../clustering/index.html" title="next chapter">Clustering</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Ahmed Yousri Sobhi.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.0.4</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../../../../_sources/fields/tabularData/dataEvaluation/classification/accuracyParadox.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

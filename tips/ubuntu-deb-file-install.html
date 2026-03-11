@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Ubuntu-Deb-File-Install &#8212; aCupOfTea 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <script src="../_static/documentation_options.js?v=f2a433a1"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Valueinterview" href="valueInterview.html" />
+    <link rel="prev" title="Markdown" href="markdown.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="ubuntu-deb-file-install">
+<h1>Ubuntu-Deb-File-Install<a class="headerlink" href="#ubuntu-deb-file-install" title="Link to this heading">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<section id="ubuntu-debian-file-installation">
+<h2>Ubuntu Debian File Installation<a class="headerlink" href="#ubuntu-debian-file-installation" title="Link to this heading">¶</a></h2>
+<section id="table-of-content">
+<h3>Table of Content<a class="headerlink" href="#table-of-content" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><a class="reference internal" href="#ubuntu-debian-file-installation"><span class="xref myst">Ubuntu Debian File Installation</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#table-of-content"><span class="xref myst">Table of Content</span></a></p></li>
+<li><p><a class="reference internal" href="#install-deb-file-from-command-line"><span class="xref myst">Install deb file from Command Line</span></a></p></li>
+<li><p><a class="reference internal" href="#steps-to-fix-dependencies-error"><span class="xref myst">Steps to Fix Dependencies Error</span></a></p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="install-deb-file-from-command-line">
+<h3>Install deb file from Command Line<a class="headerlink" href="#install-deb-file-from-command-line" title="Link to this heading">¶</a></h3>
+<p>To install deb package from CL, simply run:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudp</span> <span class="n">dpkg</span> <span class="o">-</span><span class="n">i</span> <span class="o">&lt;</span><span class="n">package</span><span class="o">.</span><span class="n">deb</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</section>
+<section id="steps-to-fix-dependencies-error">
+<h3>Steps to Fix Dependencies Error<a class="headerlink" href="#steps-to-fix-dependencies-error" title="Link to this heading">¶</a></h3>
+<ol class="arabic">
+<li><p>Instruct dpkg to “fix” itself.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">dpkg</span> <span class="o">--</span><span class="n">configure</span> <span class="o">-</span><span class="n">a</span>
+</pre></div>
+</div>
+</li>
+<li><p>This will instruct apt-get to correct dependencies and continue to configure your packages</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="o">-</span><span class="n">f</span> <span class="n">install</span>
+</pre></div>
+</div>
+</li>
+<li><p>Reinstall the package</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">dpkg</span> <span class="o">-</span><span class="n">i</span> <span class="o">&lt;</span><span class="n">package</span><span class="o">.</span><span class="n">deb</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<p>Note:</p>
+<ul>
+<li><p>In case of using apt install:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>  <span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="o">&lt;</span><span class="n">package</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">reinstall</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">aCupOfTea</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../fields/index.html">Fields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../programming/index.html">Programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../journal/index.html">Journal</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Tips</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="analyticSkill.html">Analyticskill</a></li>
+<li class="toctree-l2"><a class="reference internal" href="concepts.html">Concepts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interview-technical-info.html">Interview-Technical-Info</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kaggle-tips.html">Kaggle-Tips</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux-create-app-launcher.html">Linux-Create-App-Launcher</a></li>
+<li class="toctree-l2"><a class="reference internal" href="linux-daily-tricks.html">Linux-Daily-Tricks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="markdown.html">Markdown</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Ubuntu-Deb-File-Install</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#ubuntu-debian-file-installation">Ubuntu Debian File Installation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#table-of-content">Table of Content</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#install-deb-file-from-command-line">Install deb file from Command Line</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#steps-to-fix-dependencies-error">Steps to Fix Dependencies Error</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="valueInterview.html">Valueinterview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="versionControl-git.html">Versioncontrol-Git</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Tips</a><ul>
+      <li>Previous: <a href="markdown.html" title="previous chapter">Markdown</a></li>
+      <li>Next: <a href="valueInterview.html" title="next chapter">Valueinterview</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Ahmed Yousri Sobhi.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.0.4</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../_sources/tips/ubuntu-deb-file-install.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Readme &#8212; aCupOfTea 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <script src="../../../_static/documentation_options.js?v=f2a433a1"></script>
+    <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Langchain" href="../langchain/index.html" />
+    <link rel="prev" title="Run-20230803 150849-Cd9Zv846" href="wandb_sklearnProject/wandb/run-20230803_150849-cd9zv846/index.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="readme">
+<h1>Readme<a class="headerlink" href="#readme" title="Link to this heading">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<section id="generative-ai-evaluation-and-debugging-using-weights-biases-tools">
+<h2>Generative AI - Evaluation and Debugging Using Weights &amp; Biases Tools<a class="headerlink" href="#generative-ai-evaluation-and-debugging-using-weights-biases-tools" title="Link to this heading">¶</a></h2>
+<section id="table-of-content">
+<h3>Table of Content<a class="headerlink" href="#table-of-content" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><a class="reference internal" href="#generative-ai---evaluation-and-debugging-using-weights--biases-tools"><span class="xref myst">Generative AI - Evaluation and Debugging Using Weights &amp; Biases Tools</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#table-of-content"><span class="xref myst">Table of Content</span></a></p></li>
+<li><p><a class="reference internal" href="#motivation"><span class="xref myst">Motivation</span></a></p></li>
+<li><p><a class="reference internal" href="#topic-covered"><span class="xref myst">Topic Covered</span></a></p></li>
+<li><p><a class="reference internal" href="#instrument-wb"><span class="xref myst">Instrument W&amp;B</span></a></p>
+<ul>
+<li><p><a class="reference internal" href="#why-use-weights--biases"><span class="xref myst">Why use Weights &amp; Biases?</span></a></p></li>
+<li><p><a class="reference internal" href="#integrate-with-any-python-script"><span class="xref myst">Integrate with any Python script</span></a></p></li>
+<li><p><a class="reference internal" href="#overview"><span class="xref myst">Overview</span></a></p></li>
+<li><p><a class="reference internal" href="#overview---pick-a-run"><span class="xref myst">Overview - pick a run</span></a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#credits"><span class="xref myst">Credits</span></a></p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="motivation">
+<h3>Motivation<a class="headerlink" href="#motivation" title="Link to this heading">¶</a></h3>
+<p>We all have that case, when we train a model, tune the architecture, changing in the training dataset, then iterating more and more, then we decide to go back to last week model which had better performance, but what were the tuning parameters used, and even what was the dataset used for that training, did I saved them?</p>
+<p>Many teams have a large difficulty to manage these process during training a model, and more complexity in bigger teams.</p>
+<p>So In this article, we will cover tools and best practices to solve these problems.</p>
+<p>Also all experimental projects are saved in our <a class="reference external" href="https://wandb.ai/acupoftea/projects">https://wandb.ai/acupoftea/projects</a> page for public usage.</p>
+</section>
+<section id="topic-covered">
+<h3>Topic Covered<a class="headerlink" href="#topic-covered" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>Instrument W&amp;B in an ML training pipeline.</p></li>
+<li><p>Training diffusion models.</p></li>
+<li><p>Evaluating diffusion models.</p></li>
+<li><p>Evaluating LLMs.</p></li>
+<li><p>Fine-Tuning LLMs.</p></li>
+</ul>
+<p>Availalbe wide range of tools:
+<img alt="image" src="https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/2b732645-1964-4542-bbe2-7ccb620ac486" /></p>
+<p>These tools could work with wide range of ML frameworks:
+<img alt="image" src="https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/82d89226-a8a6-4695-a123-e9cacdcdecbf" /></p>
+</section>
+<section id="instrument-w-b">
+<h3>Instrument W&amp;B<a class="headerlink" href="#instrument-w-b" title="Link to this heading">¶</a></h3>
+<section id="why-use-weights-biases">
+<h4>Why use Weights &amp; Biases?<a class="headerlink" href="#why-use-weights-biases" title="Link to this heading">¶</a></h4>
+<ul class="simple">
+<li><p>Integrate quickly, track &amp; version automatically.</p></li>
+<li><p>Visualize your data &amp; uncover critical insights.</p></li>
+<li><p>Improve performance so you can evaluate and deploy with confidence.</p></li>
+</ul>
+</section>
+<section id="integrate-with-any-python-script">
+<h4>Integrate with any Python script<a class="headerlink" href="#integrate-with-any-python-script" title="Link to this heading">¶</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># pip install wandb</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">wandb</span>
+
+<span class="c1"># 1. Organize your hyperparameters</span>
+<span class="n">config</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;learning_rate&#39;</span><span class="p">:</span> <span class="mf">0.001</span><span class="p">}</span>
+
+<span class="c1"># 2. Start wandb run</span>
+<span class="n">wandb</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">project</span><span class="o">=</span><span class="s1">&#39;gpt5&#39;</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
+
+<span class="c1"># Model Training here.</span>
+
+<span class="c1"># 3. Log metrics over time to visualize performance</span>
+<span class="n">wandb</span><span class="o">.</span><span class="n">log</span><span class="p">({</span><span class="s1">&#39;loss&#39;</span><span class="p">:</span><span class="n">loss</span><span class="p">})</span>
+
+<span class="c1"># 4. When working in notebook, finish</span>
+<span class="n">wandb</span><span class="o">.</span><span class="n">finish</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>In some step, you will need an account for W&amp;B to store the results of your experiments and use advanced W&amp;B features. You can also continue to learn in anonymous mode.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">wandb</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">anonymous</span><span class="o">=</span><span class="s1">&#39;allow&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Note: you can find your API key in your browser throught: <a class="reference external" href="https://wandb.ai.authorize">https://wandb.ai.authorize</a></p>
+</section>
+<section id="overview">
+<h4>Overview<a class="headerlink" href="#overview" title="Link to this heading">¶</a></h4>
+<p><a class="reference external" href="https://wandb.ai/acupoftea/projects">Experimental Projects</a></p>
+<p>The idea during using this tool, is to just update the configuration for the model, then simply run again the training model process, the W&amp;B tool will create a new run, save it, and compare it with other previous runs.</p>
+</section>
+<section id="overview-pick-a-run">
+<h4>Overview - pick a run<a class="headerlink" href="#overview-pick-a-run" title="Link to this heading">¶</a></h4>
+<p><img alt="image" src="https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/20fd2555-afbf-4e32-a406-484c350ed69f" />
+<img alt="image" src="https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/71d49258-453b-4de1-ad04-236ec719f1f5" /></p>
+<p>You can see that W&amp;B catches the Git repository that you are in, and commits your works, so you can easily pull back to this stage where this run was made.</p>
+<p><img alt="image" src="https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/723db61c-5251-452f-b20e-5ad050cc592d" />
+Even it saves the commit diff of files changes, also all the parameters and configuration used.</p>
+</section>
+</section>
+<section id="credits">
+<h3>Credits<a class="headerlink" href="#credits" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.deeplearning.ai/short-courses/evaluating-debugging-generative-ai/">DeepLearning.AI - Evaluating and Debugging Generative AI course</a></p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">aCupOfTea</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Fields</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../dataCollection/index.html">Datacollection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../deepLearning/index.html">Deeplearning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../designPatterns/index.html">Designpatterns</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Generativeai</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">Evaluation And Debugging</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="wandb_sklearnProject/index.html">Wandb Sklearnproject</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Readme</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../langchain/index.html">Langchain</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../llm_VsCode/index.html">Llm Vscode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../machine_translator/index.html">Machine Translator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../readme.html">Readme</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../libararies%2CFrameworks%2CContainers/index.html">Libararies,Frameworks,Containers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../projectTopics/index.html">Projecttopics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../recommenderSystems/index.html">Recommendersystems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../reinforcementLearning/index.html">Reinforcementlearning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../statistics/index.html">Statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../systemAdministration/index.html">Systemadministration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tabularData/index.html">Tabulardata</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../programming/index.html">Programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../journal/index.html">Journal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tips/index.html">Tips</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Fields</a><ul>
+  <li><a href="../index.html">Generativeai</a><ul>
+  <li><a href="index.html">Evaluation And Debugging</a><ul>
+      <li>Previous: <a href="wandb_sklearnProject/wandb/run-20230803_150849-cd9zv846/index.html" title="previous chapter">Run-20230803 150849-Cd9Zv846</a></li>
+      <li>Next: <a href="../langchain/index.html" title="next chapter">Langchain</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Ahmed Yousri Sobhi.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.0.4</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../../../_sources/fields/generativeAI/evaluation_and_debugging/readme.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

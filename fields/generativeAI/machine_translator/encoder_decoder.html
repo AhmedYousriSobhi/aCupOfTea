@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Encoder Decoder &#8212; aCupOfTea 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <script src="../../../_static/documentation_options.js?v=f2a433a1"></script>
+    <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Readme" href="../readme.html" />
+    <link rel="prev" title="Machine Translator" href="index.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="encoder-decoder">
+<h1>Encoder Decoder<a class="headerlink" href="#encoder-decoder" title="Link to this heading">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<section id="mt-machine-translator">
+<h2>MT - Machine Translator<a class="headerlink" href="#mt-machine-translator" title="Link to this heading">¶</a></h2>
+<p>In the journy of NLP, short for Natural Langauge Processing, starting with basic architecture of an encoder-decoder model, that we will apply a neural network in.</p>
+<section id="what-is-machine-translator">
+<h3>What is Machine Translator?<a class="headerlink" href="#what-is-machine-translator" title="Link to this heading">¶</a></h3>
+<p>Machine translation is the task of automatically converting source text in one language to text in another language. Given a sequence of text in a source language, there is no one single best translation of that text to another language. This is because of the natural ambiguity and flexibility of human language. This makes the challenge of automatic machine translation difficult, perhaps one of the most difficult in artificial intelligence.</br>
+— “Machine Learning Mastery” by Jason Brownlee, Ph.D. [1]</p>
+<section id="what-is-neural-machine-translator">
+<h4>What is Neural Machine Translator?<a class="headerlink" href="#what-is-neural-machine-translator" title="Link to this heading">¶</a></h4>
+<p>Initially machine translation (MT) problems were faced using statistical approaches, based mainly on Bayes probabilities. But when neural networks became more powerful and popular, researchers began to explore the capabilities of this technology and new solutions were found. It is called neural machine translation (NMT).</p>
+<p>From the above, we can deduce that NMT is a problem where we process an input sequence to produce an output sequence — that is, a sequence-to-sequence (seq2seq) problem. The encoder-decoder architecture for recurrent neural networks is the standard method.</p>
+</section>
+</section>
+<section id="encoder-decoder-a-basic-approach">
+<h3>Encoder-Decoder A Basic Approach<a class="headerlink" href="#encoder-decoder-a-basic-approach" title="Link to this heading">¶</a></h3>
+<p><img alt="seq2seq" src="https://miro.medium.com/v2/resize:fit:4800/format:webp/1*aDDhDYhipj5owgPKmuSs2Q.png" />
+Image source: <a class="reference external" href="http://static.googleusercontent.com/media/research.google.com/en//pubs/archive/43155.pdf">Sequence to Sequence Learning with Neural Networks</a></p>
+<p>The seq2seq model consists of two subnetworks, the encoder and the decoder. The encoder, on the left hand, receives sequences from the source language as inputs and produces, as a result, a compact representation of the input sequence, trying to summarize or condense all of its information. Then that output becomes an input or initial state to the decoder, which can also receive another external input.</p>
+<p>At each time step, the decoder generates an element of its output sequence based on the input received and its current state, as well as updating its own state for the next time step.</p>
+<ul class="simple">
+<li><p>This illustate the 4 arrows (two inputs: input received &amp; its current state, two outputs: output sequence &amp; updating its own state for next step) from a decoder unit.</p></li>
+</ul>
+<section id="input-output-shape">
+<h4>Input &amp; Output Shape<a class="headerlink" href="#input-output-shape" title="Link to this heading">¶</a></h4>
+<p>The input and output sequences are of fixed size, but they don’t have to match the length of the input sequence may differ from that of the output sequence.</p>
+</section>
+<section id="critical-point-input-vector">
+<h4>Critical Point: Input Vector<a class="headerlink" href="#critical-point-input-vector" title="Link to this heading">¶</a></h4>
+<p>The critical point of this model is how to get the encoder to provide the most complete and meaningful representation of its input sequence in a single output element to the decoder because this vector or state is the only information the decoder will receive from the input to generate the corresponding output. The longer the input, the harder it’ll be to compress into a single vector.</p>
+</section>
+</section>
+<section id="tensorflow-implementation">
+<h3>Tensorflow Implementation<a class="headerlink" href="#tensorflow-implementation" title="Link to this heading">¶</a></h3>
+<p>https://www.tensorflow.org/text/tutorials/nmt_with_attention</p>
+</section>
+<section id="credits">
+<h3>Credits<a class="headerlink" href="#credits" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p>https://betterprogramming.pub/a-guide-on-the-encoder-decoder-model-and-the-attention-mechanism-401c836e2cdb</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">aCupOfTea</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Fields</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../dataCollection/index.html">Datacollection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../deepLearning/index.html">Deeplearning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../designPatterns/index.html">Designpatterns</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Generativeai</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../evaluation_and_debugging/index.html">Evaluation And Debugging</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../langchain/index.html">Langchain</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../llm_VsCode/index.html">Llm Vscode</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">Machine Translator</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Encoder Decoder</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../readme.html">Readme</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../libararies%2CFrameworks%2CContainers/index.html">Libararies,Frameworks,Containers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../projectTopics/index.html">Projecttopics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../recommenderSystems/index.html">Recommendersystems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../reinforcementLearning/index.html">Reinforcementlearning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../statistics/index.html">Statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../systemAdministration/index.html">Systemadministration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tabularData/index.html">Tabulardata</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../programming/index.html">Programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../journal/index.html">Journal</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tips/index.html">Tips</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Fields</a><ul>
+  <li><a href="../index.html">Generativeai</a><ul>
+  <li><a href="index.html">Machine Translator</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Machine Translator</a></li>
+      <li>Next: <a href="../readme.html" title="next chapter">Readme</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Ahmed Yousri Sobhi.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.0.4</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../../../_sources/fields/generativeAI/machine_translator/encoder_decoder.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
