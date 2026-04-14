@@ -5,6 +5,7 @@
 - [Add "Open in Colab" Button](#add-open-in-colab-button)
 - [Add General Button](#add-general-button)
 - [Convert Markdown to .rst format](#convert-markdown-to-rst-format)
+- [Convert Markdown to pdf with Mathematic Formula](#convert-markdown-to-pdf-with-mathematic-formula)
 - [Resources](#resources)
 
 # Add "Open in Colab" Button
@@ -42,6 +43,16 @@ Here is the markdown syntax to create a "General Button"
 - To convert .rst file into html file to review, use *rst2html* command:
    ```bash
    rst2html input.rst output.html
+   ```
+
+# Convert Markdown to pdf with Mathematic Formula
+- There are no suppoprt for Tex, Latex, Katex, MathJax.
+- Solution following this [github issue](https://github.com/yzane/vscode-markdown-pdf/issues/355#issuecomment-2040722446): Add the following line in the top of your md file:
+   ```
+   <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+   <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({ tex2jax: {inlineMath: [['$', '$']]}, messageStyle: "none" });
+   </script>
    ```
 
 # Resources
