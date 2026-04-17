@@ -7,17 +7,18 @@ on:
       - chor_docsify_integration
   workflow_dispatch:
 
-permissions:
+permissions:  
   contents: write
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      # Fixes the deprecation warning and ensures future-proofing
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-            ref: main
 
       - name: Generate Navigation
         run: |
