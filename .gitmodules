@@ -1,0 +1,21 @@
+[submodule "projects/used_cars_price_estimation"]
+	path = projects/used_cars_price_estimation
+	url = https://github.com/AhmedYousriSobhi/used_cars_price_estimation.git
+[submodule "projects/market_campain_imapct"]
+	path = projects/market_campain_imapct
+	url = https://github.com/AhmedYousriSobhi/market_campain_imapct.git
+[submodule "problems/problem_solving"]
+	path = problems/problem_solving
+	url = https://github.com/AhmedYousriSobhi/problem_solving.git
+[submodule "projects/BEV-Project"]
+	path = projects/BEV-Project
+	url = https://github.com/oforomar/BEV-Project.git
+[submodule "projects/customer_segmentation"]
+	path = projects/customer_segmentation
+	url = https://github.com/AhmedYousriSobhi/customer_segmentation
+[submodule "projects/face-off"]
+	path = projects/face-off
+	url = https://github.com/AhmedYousriSobhi/face-off
+[submodule "fields/CSE"]
+	path = fields/CSE
+	url = https://github.com/AhmedYousriSobhi/CSE.git

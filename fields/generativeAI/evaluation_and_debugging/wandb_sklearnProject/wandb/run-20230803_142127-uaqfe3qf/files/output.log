@@ -1,0 +1,9 @@
+/home/yousri/Workspace/aCupOfTea/generativeAI/evaluation_and_debugging/wandb_sklearnProject/tools/pipelinetransformers.py:62: RuntimeWarning: Precision loss occurred in moment calculation due to catastrophic cancellation. This occurs when the data are nearly identical. Results may be unreliable.
+  skew_vals = np.abs(stats.skew(X, axis=0))
+{'No Fix': [0, 2, 3, 4]}
+/home/yousri/Workspace/aCupOfTea/generativeAI/evaluation_and_debugging/wandb_sklearnProject/tools/pipelinetransformers.py:62: RuntimeWarning: Precision loss occurred in moment calculation due to catastrophic cancellation. This occurs when the data are nearly identical. Results may be unreliable.
+  skew_vals = np.abs(stats.skew(X, axis=0))
+{'No Fix': [0, 2, 3, 4]}
+/home/yousri/Workspace/aCupOfTea/generativeAI/evaluation_and_debugging/wandb_sklearnProject/tools/pipelinetransformers.py:62: RuntimeWarning: Precision loss occurred in moment calculation due to catastrophic cancellation. This occurs when the data are nearly identical. Results may be unreliable.
+  skew_vals = np.abs(stats.skew(X, axis=0))
+{'No Fix': [0, 2, 3, 4]}

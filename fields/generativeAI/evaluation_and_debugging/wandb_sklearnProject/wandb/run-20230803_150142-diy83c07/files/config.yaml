@@ -1,0 +1,58 @@
+wandb_version: 1
+
+objective:
+  desc: null
+  value: binary:logistic
+colsample_bytree:
+  desc: null
+  value: 0.5
+learning_rate:
+  desc: null
+  value: 0.1
+max_depth:
+  desc: null
+  value: 6
+min_child_weight:
+  desc: null
+  value: 1
+n_estimators:
+  desc: null
+  value: 1000
+subsample:
+  desc: null
+  value: 0.99
+verbosity:
+  desc: null
+  value: 1
+n_jobs:
+  desc: null
+  value: -1
+_wandb:
+  desc: null
+  value:
+    python_version: 3.9.0
+    cli_version: 0.15.8
+    framework: xgboost
+    is_jupyter_run: true
+    is_kaggle_kernel: false
+    start_time: 1691064102.861478
+    t:
+      1:
+      - 5
+      - 6
+      - 53
+      - 55
+      2:
+      - 5
+      - 6
+      - 53
+      - 55
+      3:
+      - 2
+      - 16
+      - 23
+      4: 3.9.0
+      5: 0.15.8
+      8:
+      - 1
+      - 5
