@@ -1,9 +1,10 @@
-name: Deploy Docs to GitHub Pages
+name: Deploy Docsify to GitHub Pages
 
 on:
   push:
     branches:
       - main
+      - chor_docsify_integration
   workflow_dispatch:
 
 permissions:
@@ -18,26 +19,26 @@ jobs:
         with:
             ref: main
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: Install dependencies
+      - name: Generate Navigation
         run: |
-          python -m pip install --upgrade pip
-          python -m pip install -r docs/source/requirements.txt
+          # Make scripts executable
+          chmod +x .docs/gen_sidebar.sh
+          chmod +x .docs/gen_navbar.sh
+          
+          # Run scripts from within the .docs directory
+          cd .docs
+          ./gen_sidebar.sh
+          ./gen_navbar.sh
+          cd ..
 
-      - name: Build documentation
-        run: |
-          cd docs
-          make html
+      - name: Ensure .nojekyll exists
+        run: touch .nojekyll
 
       - name: Deploy to gh-pages branch
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
-          publish_dir: ./docs/build/html
+          # Since index.html is in root, we publish the whole directory
+          publish_dir: .
           force_orphan: true
-
