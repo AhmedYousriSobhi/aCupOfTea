@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - chor_docsify_integration
+
   workflow_dispatch:
 
 permissions:  
