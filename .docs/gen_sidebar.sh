@@ -3,12 +3,13 @@
 # Configuration - Output stays in the current directory (.docs/)
 OUTPUT="_sidebar.md"
 
-# Updated Exclusions: now ignoring .docs and .github
+# Updated Exclusions
 EXCLUDE_DIRS="\.git|\.github|node_modules|\.docs|docs" 
 EXCLUDE_FILES="_sidebar.md|_navbar.md|index.html"
 
 # Initialize the sidebar file with the Home link
-echo "* [Home](README.md)" > $OUTPUT
+# Prepending ../ here as well to keep it consistent
+echo "* [Home](../README.md)" > $OUTPUT
 
 generate_sidebar() {
     local dir=$1
@@ -34,7 +35,7 @@ generate_sidebar() {
             generate_sidebar "$path" "  $indent"
         elif [[ "$base" == *.md ]]; then
             
-            # Skip only the root README.md (which is ../README.md from here)
+            # Skip the specific root README if it's already handled
             if [[ "$path" == "../README.md" ]]; then continue; fi
 
             # File: Try to extract the first # Header
@@ -45,10 +46,15 @@ generate_sidebar() {
                 header=$(echo "${base%.md}" | sed 's/[-_]/ /g' | awk '{for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) substr($i,2)} 1')
             fi
 
-            # --- CRITICAL MODIFICATION ---
-            # Remove the "../" prefix so the link is correct for index.html in root
-            local clean_link="${path#../}"
-            echo "${indent}* [$header]($clean_link)" >> $OUTPUT
+            # --- UPDATED MODIFICATION ---
+            # Ensure path starts with ../ if it doesn't already
+            if [[ "$path" == ../* ]]; then
+                local final_link="$path"
+            else
+                local final_link="../$path"
+            fi
+            
+            echo "${indent}* [$header]($final_link)" >> $OUTPUT
         fi
     done
 }
@@ -56,4 +62,4 @@ generate_sidebar() {
 # Start recursion from the parent directory
 generate_sidebar ".." ""
 
-echo "Sidebar updated inside .docs/ using paths relative to root."
+echo "Sidebar updated with relative ../ paths."

@@ -1,6 +1,6 @@
-# System Administration - Bash Scripting
+# Bash Scripting
 # Table of Content
-- [System Administration - Bash Scripting](#system-administration---bash-scripting)
+- [Bash Scripting](#bash-scripting)
 - [Table of Content](#table-of-content)
 - [Introduction](#introduction)
   - [Bash Scripting Definition](#bash-scripting-definition)

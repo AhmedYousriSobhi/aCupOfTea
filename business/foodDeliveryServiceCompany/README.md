@@ -2,9 +2,9 @@
 
 A food delivery service company is an organization that specializes in delivering food from restaurants, cafes, or other food establishments to customers' doorsteps. These companies act as intermediaries between the customers and the food providers, facilitating the ordering and delivery process.
 
-# Table of Content
+## Table of Content
 - [Food Delivery Service Company](#food-delivery-service-company)
-- [Table of Content](#table-of-content)
+  - [Table of Content](#table-of-content)
   - [Workflow](#workflow)
     - [Workflow - Area Definition](#workflow---area-definition)
     - [Workflow - EDT](#workflow---edt)
