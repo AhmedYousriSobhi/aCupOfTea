@@ -1,39 +1,49 @@
 * [Home](README.md)
 * **Business**
   * **FoodDeliveryServiceCompany**
-    * [Food Delivery Service Company](business/foodDeliveryServiceCompany/readme.md)
+    * [Food Delivery Service Company](business/foodDeliveryServiceCompany/README.md)
   * **HpcIndustry**
     * [HPC Systems: High-Performance Computing Systems](business/hpcIndustry/101-hpc.md)
     * [102 - HPC - A More Gentle Introduction](business/hpcIndustry/102-hpc.md)
     * [Business - HPC: Interview Questions](business/hpcIndustry/hpcInterviewQuestions.md)
+    * [HPC Industry](business/hpcIndustry/README.md)
     * [WorkLoads](business/hpcIndustry/workloads.md)
   * [Data Science in Business](business/README.md)
   * **RealStateCompnay**
-    * [Real-State Company](business/realStateCompnay/readme.md)
+    * [Real-State Company](business/realStateCompnay/README.md)
   * **UsedCarsRetailer**
-    * [Used Cars Retailer Company](business/usedCarsRetailer/readme.md)
+    * [Used Cars Retailer Company](business/usedCarsRetailer/README.md)
 * **Fields**
   * **CSE**
+    * [Computer Science Engineering](fields/CSE/README.md)
   * **DataCollection**
     * [Data Collection - Data Intelligence](fields/dataCollection/dataIntelligence.md)
+    * [Data Collection](fields/dataCollection/README.md)
   * **DeepLearning**
     * **Concepts**
       * [Deep Learning - Concepts - Basics](fields/deepLearning/concepts/basics.md)
       * [Deep Learning - Concepts - Convolution](fields/deepLearning/concepts/convolution.md)
       * [Deep Learning - Concepts - History of AI](fields/deepLearning/concepts/historyOfAI.md)
+      * [Deep Learning Concepts](fields/deepLearning/concepts/README.md)
       * [Deep Learning - Concepts - Sequence Models](fields/deepLearning/concepts/sequenceModels.md)
       * [Deep Learning - Concepts -  State of Art](fields/deepLearning/concepts/stateOfArt.md)
+    * [Deep Learning](fields/deepLearning/README.md)
     * **Workspace**
       * **Convolution**
         * **Data**
+        * [Convolution](fields/deepLearning/workspace/convolution/README.md)
+      * [Workspace](fields/deepLearning/workspace/README.md)
   * **DesignPatterns**
     * **FeaturesCross**
       * [Design Pattern - Feature Cross](fields/designPatterns/featuresCross/info.md)
+      * [Feature Cross](fields/designPatterns/featuresCross/README.md)
+    * [Design Patterns](fields/designPatterns/README.md)
   * **GenerativeAI**
     * **Evaluation And Debugging**
-      * [Generative AI - Evaluation and Debugging Using Weights & Biases Tools](fields/generativeAI/evaluation_and_debugging/readme.md)
+      * [Generative AI - Evaluation and Debugging Using Weights & Biases Tools](fields/generativeAI/evaluation_and_debugging/README.md)
       * **Wandb SklearnProject**
         * **Data**
+        * [W&B Scikit-Learn Project](fields/generativeAI/evaluation_and_debugging/wandb_sklearnProject/README.md)
         * **Tools**
           * **Pycache**
         * **Wandb**
@@ -61,11 +71,13 @@
             * **Logs**
     * **Langchain**
       * [Langchain](fields/generativeAI/langchain/langchain.md)
+      * [LangChain](fields/generativeAI/langchain/README.md)
     * **Llm VsCode**
-      * [LLM VSCode](fields/generativeAI/llm_VsCode/readme.md)
+      * [LLM VSCode](fields/generativeAI/llm_VsCode/README.md)
     * **Machine Translator**
       * [MT - Machine Translator](fields/generativeAI/machine_translator/encoder_decoder.md)
-    * [Generative AI](fields/generativeAI/readme.md)
+      * [Machine Translator](fields/generativeAI/machine_translator/README.md)
+    * [Generative AI](fields/generativeAI/README.md)
   * **Libararies,Frameworks,Containers**
     * [Packages - Conda](fields/libararies,Frameworks,Containers/101-conda.md)
     * [101 - Containers](fields/libararies,Frameworks,Containers/101-containers.md)
@@ -77,15 +89,20 @@
     * [101 - Pytorch](fields/libararies,Frameworks,Containers/101-pytorch.md)
     * [101 - Singularity](fields/libararies,Frameworks,Containers/101-singularity.md)
     * [102- Pytorch DDP](fields/libararies,Frameworks,Containers/102-pytorchDDP.md)
+    * [Libraries, Frameworks & Containers](fields/libararies,Frameworks,Containers/README.md)
   * **ProjectTopics**
     * [Customer Segmentation](fields/projectTopics/customerSegmentation.md)
+    * [Project Topics](fields/projectTopics/README.md)
+  * [Fields](fields/README.md)
   * **RecommenderSystems**
-    * [Recommender Systems](fields/recommenderSystems/readme.md)
+    * [Recommender Systems](fields/recommenderSystems/README.md)
   * **ReinforcementLearning**
     * **ConceptsInReinforcementLearning**
       * [Reinforcement Learning](fields/reinforcementLearning/conceptsInReinforcementLearning/basics.md)
+      * [Concepts in Reinforcement Learning](fields/reinforcementLearning/conceptsInReinforcementLearning/README.md)
+    * [Reinforcement Learning](fields/reinforcementLearning/README.md)
   * **Statistics**
-    * [Statistics](fields/statistics/readme.md)
+    * [Statistics](fields/statistics/README.md)
   * **SystemAdministration**
     * [System Administration - Ansible](fields/systemAdministration/ansible.md)
     * [System Administration - Bash Scripting](fields/systemAdministration/bash-scripting.md)
@@ -93,10 +110,12 @@
     * [System Administration - LDAP](fields/systemAdministration/ldap.md)
     * **Linux Admin**
       * [System Administration - Linux Administration](fields/systemAdministration/linux-admin/linux-administration-I.md)
+      * [Linux Administration](fields/systemAdministration/linux-admin/README.md)
       * [Linux Admin - Under the Hood](fields/systemAdministration/linux-admin/Under-the-hood.md)
     * [System Administration - Memory](fields/systemAdministration/memory.md)
     * [System Administration - Network](fields/systemAdministration/network.md)
     * [System Administration - Linux Adminstration: Questions & Answers](fields/systemAdministration/Q&A.md)
+    * [System Administration](fields/systemAdministration/README.md)
     * [System Administration - Virtual Machines](fields/systemAdministration/virtualMachines.md)
   * **TabularData**
     * **ConceptInMachineLearning**
@@ -104,80 +123,115 @@
       * [Tabular Data - Concepts in Machine Learning - Supervisied Learning - Classification](fields/tabularData/conceptInMachineLearning/mlSupervisedClassification.md)
       * [Tabular Data - Concepts in Machine Learning - Supervisied Learning - Regression](fields/tabularData/conceptInMachineLearning/mlSupervisedRegression.md)
       * [Tabular Data - Concepts in Machine Learning - Unsupervisied Learning](fields/tabularData/conceptInMachineLearning/mlUnsupervised.md)
+      * [Concept in Machine Learning](fields/tabularData/conceptInMachineLearning/README.md)
     * **ConceptinTimeSeries**
+      * [Concept in Time Series](fields/tabularData/conceptinTimeSeries/README.md)
       * [Tabular Data - Concepts in Time Series - Time Series Analysis](fields/tabularData/conceptinTimeSeries/timeseriesfield.md)
     * **DataEDA**
       * **Correlation**
         * [Tabular Data - Data EDA - Correlation - Detect Multicollinearity](fields/tabularData/dataEDA/correlation/detectMulticollinearity.md)
         * [Tabular Data - Data EDA - Correlation - Extreme Correlation](fields/tabularData/dataEDA/correlation/extremeCorrelation.md)
+        * [Correlation](fields/tabularData/dataEDA/correlation/README.md)
       * [Tabular Data - Data EDA - Feature Analysis](fields/tabularData/dataEDA/featureAnalysis.md)
+      * [Data EDA](fields/tabularData/dataEDA/README.md)
       * [Tabular Data - DATA EDA - VISUALIZATION GRAPHS](fields/tabularData/dataEDA/visualizationGraphs.md)
     * **DataEvaluation**
       * **Classification**
         * [Accuracy Paradox](fields/tabularData/dataEvaluation/classification/accuracyParadox.md)
+        * [Classification Evaluation](fields/tabularData/dataEvaluation/classification/README.md)
       * **Clustering**
-        * [DATA EVALUATION: CLUSTERING](fields/tabularData/dataEvaluation/clustering/readme.md)
+        * [DATA EVALUATION: CLUSTERING](fields/tabularData/dataEvaluation/clustering/README.md)
       * **ModelBehaviour**
         * [Bias & Variance Trade Off](fields/tabularData/dataEvaluation/modelBehaviour/biasVarienceTradeOff.md)
+        * [Model Behaviour](fields/tabularData/dataEvaluation/modelBehaviour/README.md)
+      * [Data Evaluation](fields/tabularData/dataEvaluation/README.md)
       * **Regression**
+        * [Regression Evaluation](fields/tabularData/dataEvaluation/regression/README.md)
         * [Regression Evalulation Metrics](fields/tabularData/dataEvaluation/regression/regressionEvaluationMetrics.md)
     * **DataFeatureEngineering**
       * [DATA FEATURE ENGINEERING: PCA](fields/tabularData/dataFeatureEngineering/PCA.md)
+      * [Data Feature Engineering](fields/tabularData/dataFeatureEngineering/README.md)
     * **DataModeling**
       * **Clustering**
+        * [Clustering](fields/tabularData/dataModeling/clustering/README.md)
       * **Pipeline**
         * [DATA MODELING: PIPELINE](fields/tabularData/dataModeling/pipeline/pipeline.md)
+        * [Pipeline](fields/tabularData/dataModeling/pipeline/README.md)
+      * [Data Modeling](fields/tabularData/dataModeling/README.md)
       * **Xgboost**
         * [XGBOOST](fields/tabularData/dataModeling/xgboost/info.md)
+        * [XGBoost](fields/tabularData/dataModeling/xgboost/README.md)
     * **DataProcessing**
       * **HandleDuplicatedData**
+        * [Handle Duplicated Data](fields/tabularData/dataProcessing/handleDuplicatedData/README.md)
       * **HandlingMissingData**
         * [Missing Data](fields/tabularData/dataProcessing/handlingMissingData/determineMissingValues.md)
         * [Missing Data - Mean Imputing](fields/tabularData/dataProcessing/handlingMissingData/meanImputing.md)
+        * [Handling Missing Data](fields/tabularData/dataProcessing/handlingMissingData/README.md)
         * [Missing Data - Regression Imputing](fields/tabularData/dataProcessing/handlingMissingData/regressionImputing.md)
       * **HandlingObjectData**
+        * [Handling Object Data](fields/tabularData/dataProcessing/handlingObjectData/README.md)
         * [Words Similarity](fields/tabularData/dataProcessing/handlingObjectData/wordsSimilarity.md)
       * **HandlingOutliers**
-        * [Handling Outliers](fields/tabularData/dataProcessing/handlingOutliers/readme.md)
+        * [Handling Outliers](fields/tabularData/dataProcessing/handlingOutliers/README.md)
       * **HandlingSkewness**
+        * [Handling Skewness](fields/tabularData/dataProcessing/handlingSkewness/README.md)
+      * [Data Processing](fields/tabularData/dataProcessing/README.md)
+    * [Tabular Data](fields/tabularData/README.md)
     * **Tools**
       * **Pycache**
+      * [Tools](fields/tabularData/tools/README.md)
 * **Journal**
   * [This is a daily notes in our life](journal/daily-notes.md)
+  * [Journal](journal/README.md)
 * **Problems**
   * **InterviewAssessmentProblems**
     * **Question CheapestFlatsPerCityUsingSQL**
-      * [Readme](problems/interviewAssessmentProblems/question-CheapestFlatsPerCityUsingSQL/readme.md)
+      * [README](problems/interviewAssessmentProblems/question-CheapestFlatsPerCityUsingSQL/README.md)
     * **Question JobCounterUsingPySpark**
-      * [Question - Job Counter Using PySpark](problems/interviewAssessmentProblems/question-JobCounterUsingPySpark/readme.md)
+      * [Question - Job Counter Using PySpark](problems/interviewAssessmentProblems/question-JobCounterUsingPySpark/README.md)
     * **Question MachineLearningClassifier**
       * **Data**
-      * [Question - Machine Learning Classifier](problems/interviewAssessmentProblems/question-MachineLearningClassifier/readme.md)
+      * [Question - Machine Learning Classifier](problems/interviewAssessmentProblems/question-MachineLearningClassifier/README.md)
+    * [Interview Assessment Problems](problems/interviewAssessmentProblems/README.md)
   * **Problem Solving**
-  * [Problems](problems/readme.md)
+    * [Problem Solving](problems/problem_solving/README.md)
+  * [Problems](problems/README.md)
 * **Programming**
   * **DataStructure**
     * [Data Structure](programming/dataStructure/dataStructure.md)
+    * [Data Structures](programming/dataStructure/README.md)
   * **Decorators**
+    * [Decorators](programming/decorators/README.md)
   * **Oop**
     * [Object Oriented Programming](programming/oop/objectOrientedProgramming.md)
+    * [Object-Oriented Programming](programming/oop/README.md)
   * **OperatingSystem**
     * [Technologies](programming/operatingSystem/computerArchitecutresTechnologies.md)
     * [Operating System - Memory Coalescing](programming/operatingSystem/memory-coalescing.md)
     * [Empty Memory Fill with Zeros ?!](programming/operatingSystem/memory-emptyZeroFilling.md)
     * [Operating System - CPU Affinity](programming/operatingSystem/process-cpu-affinity.md)
+    * [Operating System](programming/operatingSystem/README.md)
   * **ParallelProgramming**
     * [MPI - Message Passing Interface](programming/parallelProgramming/mpi.md)
+    * [Parallel Programming](programming/parallelProgramming/README.md)
   * **Python**
     * [101 - Python](programming/python/101-python.md)
+    * [Python](programming/python/README.md)
   * **PythonCleanCode**
     * [Python Clean Code](programming/pythonCleanCode/cleanCode.md)
+    * [Python Clean Code](programming/pythonCleanCode/README.md)
+  * [Programming](programming/README.md)
   * **SoftwareGoals**
+    * [Software Goals](programming/softwareGoals/README.md)
     * **Robustness**
       * **Pycache**
+      * [Robustness](programming/softwareGoals/robustness/README.md)
   * **SoftwareSkills&Tools**
     * **Aws**
       * [Software Tool: AWS Services for HPC Systems](programming/softwareSkills&Tools/aws/AWSServicesForHPCSystems.md)
+      * [AWS](programming/softwareSkills&Tools/aws/README.md)
+    * [Software Skills & Tools](programming/softwareSkills&Tools/README.md)
   * **VersionControl**
     * [Git - Case Study](programming/versionControl/case-study.md)
     * [Git CLI](programming/versionControl/git-cli.md)
@@ -188,7 +242,7 @@
   * **Customer Segmentation**
   * **Face Off**
   * **Market Campain Imapct**
-  * [Projects](projects/readme.md)
+  * [Projects](projects/README.md)
   * **Used Cars Price Estimation**
 * **Tips**
   * [Tips: Analytic Skill for a Data Scientist](tips/analyticSkill.md)
@@ -198,6 +252,7 @@
   * [Tip: Linux Create App Launcher](tips/linux-create-app-launcher.md)
   * [Tips - Linux daily Tricks](tips/linux-daily-tricks.md)
   * [Tips: Markdown](tips/markdown.md)
+  * [Tips](tips/README.md)
   * [Ubuntu Debian File Installation](tips/ubuntu-deb-file-install.md)
   * [Tips: Value Interview](tips/valueInterview.md)
   * [Tips - Version Control - Git](tips/versionControl-git.md)

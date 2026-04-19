@@ -2,13 +2,12 @@
 
 * 📂 Categories
   * [Business](business/README.md)
-  * [Docs](docs/)
-  * [Fields](fields/)
-  * [Journal](journal/)
-  * [Problems](problems/)
-  * [Programming](programming/)
-  * [Projects](projects/)
-  * [Tips](tips/)
+  * [Fields](fields/README.md)
+  * [Journal](journal/README.md)
+  * [Problems](problems/README.md)
+  * [Programming](programming/README.md)
+  * [Projects](projects/README.md)
+  * [Tips](tips/README.md)
 
 * 🔗 External
   * [GitHub](https://github.com/AhmedYousriSobhi/aCupOfTea)
