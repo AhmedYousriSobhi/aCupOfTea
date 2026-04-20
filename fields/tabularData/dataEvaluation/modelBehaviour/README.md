@@ -6,6 +6,6 @@ Understanding model behavior and performance characteristics.
 
 | File | Description |
 |------|-------------|
-| [biasVarienceTradeOff](fields/tabularData/dataEvaluation/modelBehaviour/biasVarienceTradeOff.md) | Bias-variance tradeoff explained |
+| [biasVarienceTradeOff](/fields/tabularData/dataEvaluation/modelBehaviour/biasVarienceTradeOff.md) | Bias-variance tradeoff explained |
 
 Diagnosing overfitting, underfitting, and model stability.

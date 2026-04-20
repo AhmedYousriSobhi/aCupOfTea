@@ -9,7 +9,7 @@ Version control is like a time machine for your projects. It keeps track of ever
 
 ## Meet Git
 Then comes Git, the superhero behind it all.
-Git lets you create “checkpoints” of your project (called commits) and experiment on new ideas (branches) without fear. If something doesn’t work out, you can always go back — no panic, no mess.
+Git lets you create “checkpoints” of your project (/called commits) and experiment on new ideas (/branches) without fear. If something doesn’t work out, you can always go back — no panic, no mess.
 
 It’s fast, it’s flexible, and it works right on your machine — even without an internet connection.
 
@@ -25,6 +25,6 @@ Learning Git and GitHub isn’t just about managing code — it’s about buildi
 So, let’s dive in and start mastering version control — one commit at a time!
 
 ## What is Covered?
-- [Git CLI](rogramming/versionControl/git-cli.md)
-- [Know How Guide](rogramming/versionControl/know-how.md)
-- [Case Study and Situation](rogramming/versionControl/case-study.md)
+- [Git CLI](/rogramming/versionControl/git-cli.md)
+- [Know How Guide](/rogramming/versionControl/know-how.md)
+- [Case Study and Situation](/rogramming/versionControl/case-study.md)
