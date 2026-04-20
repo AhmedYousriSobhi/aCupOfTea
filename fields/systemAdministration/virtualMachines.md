@@ -1,7 +1,7 @@
-# Virtual Machines
+# System Administration - Virtual Machines
 
 ## Table of Contents
-- [Virtual Machines](#virtual-machines)
+- [System Administration - Virtual Machines](#system-administration---virtual-machines)
   - [Table of Contents](#table-of-contents)
   - [Vagrant - Provider Libvirt](#vagrant---provider-libvirt)
     - [Installation - Steps](#installation---steps)

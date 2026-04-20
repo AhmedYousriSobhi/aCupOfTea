@@ -6,6 +6,6 @@ LangChain framework for building LLM applications.
 
 | File | Description |
 |------|-------------|
-| [langchain](../../../fields/generativeAI/langchain/langchain.md) | LangChain concepts and usage |
+| [langchain](fields/generativeAI/langchain/langchain.md) | LangChain concepts and usage |
 
 Building chains, agents, and applications with LangChain.

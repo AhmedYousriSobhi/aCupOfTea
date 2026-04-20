@@ -1,9 +1,9 @@
-# Questions & Answers
+# System Administration - Questions & Answers
 
 In this blog, we will introduce more practice illustrated in question and answers approach, and will try to explain related aspects and points related to understand more.
 
 # Table of Content
-- [Questions \& Answers](#questions--answers)
+- [System Administration - Questions \& Answers](#system-administration---questions--answers)
 - [Table of Content](#table-of-content)
 - [What is the  location for subdirectories for local programs and executables for user and administrative commands?](#what-is-the--location-for-subdirectories-for-local-programs-and-executables-for-user-and-administrative-commands)
   - [Examples of how to use /opt directory](#examples-of-how-to-use-opt-directory)

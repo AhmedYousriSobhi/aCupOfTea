@@ -6,6 +6,6 @@ Transforming skewed distributions.
 
 | File | Description |
 |------|-------------|
-| [script-SkewFix](../../../../fields/tabularData/dataProcessing/handlingSkewness/script-SkewFix.py) | Skewness correction script |
+| [script-SkewFix](fields/tabularData/dataProcessing/handlingSkewness/script-SkewFix.py) | Skewness correction script |
 
 Techniques to normalize skewed data distributions.

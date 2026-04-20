@@ -6,6 +6,6 @@ Software engineering objectives and quality attributes.
 
 | Directory | Description |
 |-----------|-------------|
-| [robustness](../../programming/softwareGoals/robustness/README.md) | Building robust software systems |
+| [robustness](programming/softwareGoals/robustness/README.md) | Building robust software systems |
 
 Covers reliability, maintainability, scalability, and other quality attributes.

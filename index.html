@@ -22,6 +22,7 @@
       // basePath: '../', // Tell docsify to look for the markdown files in the parent directory
       loadSidebar: './.docs/_sidebar.md',
       loadNavbar: './.docs/_navbar.md',
+      relativePath: false, // Use relative paths for sidebar and navbar links
       subMaxLevel: 0,
       sidebarDisplayLevel: 0, // 0 = collapse all, 1 = show top level only
       auto2top: true,
@@ -47,7 +48,8 @@
       },
       // Add this to help Docsify match URLs to the sidebar entries
       alias: {
-        '/.*./.docs/_sidebar.md': './.docs/_sidebar.md'
+        '/(.*)/_sidebar.md': './.docs/_sidebar.md',
+        '/(.*)/_navbar.md': './.docs/_navbar.md'
       },
     }
   </script>

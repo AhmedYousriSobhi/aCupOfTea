@@ -6,7 +6,7 @@ Working with structured datasets, feature engineering, and traditional ML.
 
 | Directory | Description |
 |-----------|-------------|
-| [conceptInMachineLearning](../../fields/tabularData/conceptInMachineLearning/README.md) | ML concepts for tabular data |
+| [conceptInMachineLearning](/fields/tabularData/conceptInMachineLearning/README.md) | ML concepts for tabular data |
 | [conceptinTimeSeries](../../fields/tabularData/conceptinTimeSeries/README.md) | Time series analysis |
 | [dataEDA](../../fields/tabularData/dataEDA/README.md) | Exploratory Data Analysis |
 | [dataEvaluation](../../fields/tabularData/dataEvaluation/README.md) | Model evaluation techniques |

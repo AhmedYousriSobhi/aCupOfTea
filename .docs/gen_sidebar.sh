@@ -8,8 +8,8 @@ EXCLUDE_DIRS="\.git|\.github|node_modules|\.docs|docs"
 EXCLUDE_FILES="_sidebar.md|_navbar.md|index.html"
 
 # Initialize the sidebar file with the Home link
-# Prepending ../ here as well to keep it consistent
-echo "* [Home](../README.md)" > $OUTPUT
+# Prepending here as well to keep it consistent
+echo "* [Home](README.md)" > $OUTPUT
 
 generate_sidebar() {
     local dir=$1
@@ -48,11 +48,7 @@ generate_sidebar() {
 
             # --- UPDATED MODIFICATION ---
             # Ensure path starts with ../ if it doesn't already
-            if [[ "$path" == ../* ]]; then
-                local final_link="$path"
-            else
-                local final_link="../$path"
-            fi
+            local final_link="${path#../}"
             
             echo "${indent}* [$header]($final_link)" >> $OUTPUT
         fi

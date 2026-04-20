@@ -1,7 +1,7 @@
-# Network
+# System Administration - Network
 
 ## Table of Contents
-- [Network](#network)
+- [System Administration - Network](#system-administration---network)
   - [Table of Contents](#table-of-contents)
   - [What is what?](#what-is-what)
   - [Switch](#switch)

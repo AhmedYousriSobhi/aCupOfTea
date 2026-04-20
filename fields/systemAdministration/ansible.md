@@ -1,7 +1,7 @@
-# Ansible
+# System Administration - Ansible
 
 ## Table of Contents
-- [Ansible](#ansible)
+- [System Administration - Ansible](#system-administration---ansible)
   - [Table of Contents](#table-of-contents)
   - [0- Prerequisites](#0--prerequisites)
   - [1- Installation - Steps](#1--installation---steps)

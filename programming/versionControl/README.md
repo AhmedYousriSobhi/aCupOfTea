@@ -25,6 +25,6 @@ Learning Git and GitHub isn’t just about managing code — it’s about buildi
 So, let’s dive in and start mastering version control — one commit at a time!
 
 ## What is Covered?
-- [Git CLI](../../programming/versionControl/git-cli.md)
-- [Know How Guide](../../programming/versionControl/know-how.md)
-- [Case Study and Situation](../../programming/versionControl/case-study.md)
+- [Git CLI](rogramming/versionControl/git-cli.md)
+- [Know How Guide](rogramming/versionControl/know-how.md)
+- [Case Study and Situation](rogramming/versionControl/case-study.md)
