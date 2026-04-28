@@ -1,4 +1,4 @@
-# Version Control
+# Version Control - Overview
 
 ## Introduction
 Imagine you’re working on a project — maybe writing some code, editing a document, or building something cool. A few days later, you realize something broke, and you wish you could go back to the version that worked perfectly.

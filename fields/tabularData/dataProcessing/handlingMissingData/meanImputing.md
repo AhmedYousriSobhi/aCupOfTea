@@ -1,6 +1,6 @@
-# Missing Data - Mean Imputing
+# Tabular Data - Data Processing - Handling Missing Data - Mean Imputing
 
-It is recommened to read __determineMissingValues__ before starting.
+It is recommend to read __determineMissingValues__ before starting.
 
 ## Methods for Handling Missing Values: __Mean Imputing__
 The Idea here is to get the average value of certain column to fill the missing values with it.

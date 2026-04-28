@@ -1,4 +1,4 @@
-# Parallel Programming
+# Parallel Programming - Overview
 
 Techniques for concurrent and parallel execution in Python and other languages.
 

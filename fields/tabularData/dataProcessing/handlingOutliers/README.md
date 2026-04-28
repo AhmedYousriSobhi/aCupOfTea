@@ -1,7 +1,7 @@
-# Handling Outliers
+# Tabular Data - Data Processing - Handling Outliers
 
 ## Table of Content
-- [Handling Outliers](#handling-outliers)
+- [Tabular Data - Data Processing - Handling Outliers](#tabular-data---data-processing---handling-outliers)
   - [Table of Content](#table-of-content)
   - [Removing outliers in Customer Segmentation Task](#removing-outliers-in-customer-segmentation-task)
 

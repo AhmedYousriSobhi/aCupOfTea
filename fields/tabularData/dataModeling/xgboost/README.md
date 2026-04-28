@@ -1,4 +1,4 @@
-# XGBOOST
+# Tabular Data - Data Modeling - XGBOOST
 
 ## Abstract
 XGBoost (eXtreme Gradient Boosting) is a popular machine learning algorithm that belongs to the gradient boosting framework. It is known for its efficiency, accuracy, and flexibility in handling a variety of data types and problem domains. XGBoost is widely used for both regression and classification tasks.

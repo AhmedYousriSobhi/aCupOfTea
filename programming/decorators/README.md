@@ -1,4 +1,4 @@
-# Decorators
+# Decorators - Overview
 
 Python decorators and their applications in data science.
 

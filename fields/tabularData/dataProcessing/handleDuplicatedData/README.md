@@ -1,4 +1,4 @@
-# Handle Duplicated Data
+# Tabular Data - Data Processing - Handle Duplicated Data
 
 Detecting and handling duplicate records.
 

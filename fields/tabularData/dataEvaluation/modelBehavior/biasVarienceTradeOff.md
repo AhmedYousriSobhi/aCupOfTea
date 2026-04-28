@@ -1,7 +1,7 @@
-# Bias & Variance Trade Off
+# Date Evaluation - Model Behavior - Bias & Variance Trade Off
 
 # Table of Content
-- [Bias \& Variance Trade Off](#bias--variance-trade-off)
+- [Date Evaluation - Model Behavior - Bias \& Variance Trade Off](#date-evaluation---model-behavior---bias--variance-trade-off)
 - [Table of Content](#table-of-content)
 - [Bias](#bias)
 - [Variance](#variance)

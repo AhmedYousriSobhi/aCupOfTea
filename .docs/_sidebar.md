@@ -1,11 +1,11 @@
 * [Home](README.md)
 * [aCupOfTea](README.md)
-* **Business**
+* **Data Science in Business**
   * [Overview](business/README.md)
   * [Food Delivery Service Company](business/foodDeliveryServiceCompany.md)
   * [State Company](business/realStateCompnay.md)
   * [Used Cars Retailer Company](business/usedCarsRetailer.md)
-  * **HpcIndustry**
+  * **HPC Industry**
     * [Overview](business/hpcIndustry/README.md)
     * [Performance Computing Systems](business/hpcIndustry/101-hpc.md)
     * [A More Gentle Introduction](business/hpcIndustry/102-hpc.md)
@@ -13,14 +13,14 @@
     * [WorkLoads](business/hpcIndustry/workloads.md)
 * **Fields**
   * [Overview](fields/README.md)
-  * **CSE**
+  * **Computer Science Engineering**
     * [Computer Science Engineering](fields/CSE/README.md)
-  * **DataCollection**
+  * **Data Collection**
     * [Overview](fields/dataCollection/README.md)
     * [Data Intelligence](fields/dataCollection/dataIntelligence.md)
-  * **DeepLearning**
+  * **Deep Learning**
     * [Overview](fields/deepLearning/README.md)
-    * **Concepts**
+    * **Deep Learning - Concepts**
       * [Overview](fields/deepLearning/concepts/README.md)
       * [Basics](fields/deepLearning/concepts/basics.md)
       * [Convolution](fields/deepLearning/concepts/convolution.md)
@@ -32,15 +32,15 @@
       * **Convolution**
         * [Convolution](fields/deepLearning/workspace/convolution/README.md)
         * **Data**
-  * **DesignPatterns**
+  * **Design Patterns**
     * [Overview](fields/designPatterns/README.md)
-    * **FeaturesCross**
+    * **Design Pattern**
       * [Feature Cross](fields/designPatterns/featuresCross/README.md)
-  * **GenerativeAI**
+  * **Generative AI**
     * [Overview](fields/generativeAI/README.md)
-    * **Evaluation And Debugging**
+    * **Generative AI**
       * [Evaluation and Debugging Using Weights & Biases Tools](fields/generativeAI/evaluation_and_debugging/README.md)
-      * **Wandb SklearnProject**
+      * **W&B Scikit**
         * [Learn Project](fields/generativeAI/evaluation_and_debugging/wandb_sklearnProject/README.md)
         * **Data**
         * **Tools**
@@ -68,14 +68,14 @@
           * **Run 20230803 150849 Cd9zv846**
             * **Files**
             * **Logs**
-    * **Langchain**
+    * **Generative AI**
       * [Langchain](fields/generativeAI/langchain/README.md)
-    * **Llm VsCode**
+    * **Generative AI**
       * [LLM VSCode](fields/generativeAI/llm_VsCode/README.md)
-    * **Machine Translator**
+    * **Generative AI**
       * [Machine Translator](fields/generativeAI/machine_translator/encoder_decoder.md)
       * [Machine Translator](fields/generativeAI/machine_translator/README.md)
-  * **LibarariesFrameworksContainers**
+  * **Libraries, Frameworks & Containers**
     * [Overview](fields/libarariesFrameworksContainers/README.md)
     * [Conda](fields/libarariesFrameworksContainers/101-conda.md)
     * [Containers](fields/libarariesFrameworksContainers/101-containers.md)
@@ -87,19 +87,19 @@
     * [Pytorch](fields/libarariesFrameworksContainers/101-pytorch.md)
     * [Singularity](fields/libarariesFrameworksContainers/101-singularity.md)
     * [Pytorch DDP](fields/libarariesFrameworksContainers/102-pytorchDDP.md)
-  * **ProjectTopics**
+  * **Project Topics**
     * [Overview](fields/projectTopics/README.md)
     * [Customer Segmentation](fields/projectTopics/customerSegmentation.md)
-  * **RecommenderSystems**
+  * **Recommender Systems**
     * [Overview](fields/recommenderSystems/README.md)
-  * **ReinforcementLearning**
+  * **Reinforcement Learning**
     * [Overview](fields/reinforcementLearning/README.md)
-    * **ConceptsInReinforcementLearning**
+    * **Concepts in Reinforcement Learning**
       * [Overview](fields/reinforcementLearning/conceptsInReinforcementLearning/README.md)
       * [Reinforcement Learning](fields/reinforcementLearning/conceptsInReinforcementLearning/basics.md)
   * **Statistics**
     * [Statistics](fields/statistics/README.md)
-  * **SystemAdministration**
+  * **System Administration**
     * [Overview](fields/systemAdministration/README.md)
     * [Ansible](fields/systemAdministration/ansible.md)
     * [Bash Scripting](fields/systemAdministration/bash-scripting.md)
@@ -110,22 +110,22 @@
     * [Network](fields/systemAdministration/network.md)
     * [Questions & Answers](fields/systemAdministration/Q&A.md)
     * [Virtual Machines](fields/systemAdministration/virtualMachines.md)
-    * **Linux Admin**
+    * **Linux Administration**
       * [Overview](fields/systemAdministration/linux-admin/README.md)
       * [Linux Administration](fields/systemAdministration/linux-admin/linux-administration-I.md)
       * [Under the Hood](fields/systemAdministration/linux-admin/Under-the-hood.md)
-  * **TabularData**
-    * [Tabular Data](fields/tabularData/README.md)
-    * **ConceptInMachineLearning**
+  * **Fields - Tabular Data**
+    * [Overview](fields/tabularData/README.md)
+    * **Concept in Machine Learning**
       * [Overview](fields/tabularData/conceptInMachineLearning/README.md)
       * [Data EDA and Analysis](fields/tabularData/conceptInMachineLearning/dataEDAanalysis.md)
       * [Supervised Learning: Classification](fields/tabularData/conceptInMachineLearning/mlSupervisedClassification.md)
       * [Supervised Learning: Regression](fields/tabularData/conceptInMachineLearning/mlSupervisedRegression.md)
       * [Unsupervised Learning](fields/tabularData/conceptInMachineLearning/mlUnsupervised.md)
-    * **ConceptinTimeSeries**
+    * **Concept in Time Series**
       * [Overview](fields/tabularData/conceptinTimeSeries/README.md)
       * [Time Series Analysis](fields/tabularData/conceptinTimeSeries/timeseriesfield.md)
-    * **DataEDA**
+    * **Data EDA**
       * [Overview](fields/tabularData/dataEDA/README.md)
       * [Feature Analysis](fields/tabularData/dataEDA/featureAnalysis.md)
       * [VISUALIZATION GRAPHS](fields/tabularData/dataEDA/visualizationGraphs.md)
@@ -133,100 +133,99 @@
         * [Detect Multicollinearity](fields/tabularData/dataEDA/correlation/detectMulticollinearity.md)
         * [Extreme Correlation](fields/tabularData/dataEDA/correlation/extremeCorrelation.md)
         * [Correlation](fields/tabularData/dataEDA/correlation/README.md)
-    * **DataEvaluation**
-      * [Data Evaluation](fields/tabularData/dataEvaluation/README.md)
-      * **Classification**
+    * **Tabular Data - Data Evaluation**
+      * [Overview](fields/tabularData/dataEvaluation/README.md)
+      * **Tabular Data - Data Evaluation - Classification**
+        * [Overview](fields/tabularData/dataEvaluation/classification/README.md)
         * [Accuracy Paradox](fields/tabularData/dataEvaluation/classification/accuracyParadox.md)
-        * [Classification Evaluation](fields/tabularData/dataEvaluation/classification/README.md)
-      * **Clustering**
-        * [DATA EVALUATION: CLUSTERING](fields/tabularData/dataEvaluation/clustering/README.md)
-      * **ModelBehaviour**
-        * [Bias & Variance Trade Off](fields/tabularData/dataEvaluation/modelBehaviour/biasVarienceTradeOff.md)
-        * [Model Behaviour](fields/tabularData/dataEvaluation/modelBehaviour/README.md)
-      * **Regression**
-        * [Regression Evalulation Metrics](fields/tabularData/dataEvaluation/regression/README.md)
-    * **DataFeatureEngineering**
-      * [DATA FEATURE ENGINEERING: PCA](fields/tabularData/dataFeatureEngineering/PCA.md)
-      * [Data Feature Engineering](fields/tabularData/dataFeatureEngineering/README.md)
-    * **DataModeling**
-      * [Data Modeling](fields/tabularData/dataModeling/README.md)
-      * **Clustering**
+      * **Tabular Data - DATA EVALUATION**
+        * [CLUSTERING](fields/tabularData/dataEvaluation/clustering/README.md)
+      * **Tabular Data - Data Evaluation - Model Behavior**
+        * [Overview](fields/tabularData/dataEvaluation/modelBehavior/README.md)
+        * [Bias & Variance Trade Off](fields/tabularData/dataEvaluation/modelBehavior/biasVarienceTradeOff.md)
+      * **Tabular Data - Data Evaluation**
+        * [Regression Evaluation Metrics](fields/tabularData/dataEvaluation/regression/README.md)
+    * **Tabular Data - Data Feature Engineering**
+      * [Overview](fields/tabularData/dataFeatureEngineering/README.md)
+      * [PCA](fields/tabularData/dataFeatureEngineering/PCA.md)
+    * **Tabular Data - Data Modeling**
+      * [Overview](fields/tabularData/dataModeling/README.md)
+      * **Tabular Data - Data Modeling**
         * [Clustering](fields/tabularData/dataModeling/clustering/README.md)
-      * **Pipeline**
-        * [DATA MODELING: PIPELINE](fields/tabularData/dataModeling/pipeline/pipeline.md)
-        * [Pipeline](fields/tabularData/dataModeling/pipeline/README.md)
-      * **Xgboost**
+      * **Tabular Data - DATA MODELING**
+        * [PIPELINE](fields/tabularData/dataModeling/pipeline/README.md)
+      * **Tabular Data - Data Modeling**
         * [XGBOOST](fields/tabularData/dataModeling/xgboost/README.md)
-    * **DataProcessing**
-      * [Data Processing](fields/tabularData/dataProcessing/README.md)
-      * **HandleDuplicatedData**
+    * **Tabular Data - Data Processing**
+      * [Overview](fields/tabularData/dataProcessing/README.md)
+      * **Tabular Data - Data Processing**
         * [Handle Duplicated Data](fields/tabularData/dataProcessing/handleDuplicatedData/README.md)
-      * **HandlingMissingData**
-        * [Missing Data](fields/tabularData/dataProcessing/handlingMissingData/determineMissingValues.md)
+      * **Tabular Data - Data Processing - Handling Missing Data**
+        * [Overview](fields/tabularData/dataProcessing/handlingMissingData/README.md)
+        * [Determining Missing Data](fields/tabularData/dataProcessing/handlingMissingData/determineMissingValues.md)
         * [Mean Imputing](fields/tabularData/dataProcessing/handlingMissingData/meanImputing.md)
-        * [Handling Missing Data](fields/tabularData/dataProcessing/handlingMissingData/README.md)
         * [Regression Imputing](fields/tabularData/dataProcessing/handlingMissingData/regressionImputing.md)
-      * **HandlingObjectData**
+      * **Tabular Data - Data Processing**
         * [Handling Object Data](fields/tabularData/dataProcessing/handlingObjectData/README.md)
         * [Words Similarity](fields/tabularData/dataProcessing/handlingObjectData/wordsSimilarity.md)
-      * **HandlingOutliers**
+      * **Tabular Data - Data Processing**
         * [Handling Outliers](fields/tabularData/dataProcessing/handlingOutliers/README.md)
-      * **HandlingSkewness**
+      * **Tabular Data - Data Processing**
         * [Handling Skewness](fields/tabularData/dataProcessing/handlingSkewness/README.md)
-    * **Tools**
-      * [Tools](fields/tabularData/tools/README.md)
+    * **Tabular Data - Tools**
+      * [Overview](fields/tabularData/tools/README.md)
       * **Pycache**
 * **Journal**
   * [Journal](journal/README.md)
 * **Problems**
   * [Overview](problems/README.md)
-  * **InterviewAssessmentProblems**
+  * **Interview Assessment Problems**
     * [Interview Assessment Problems](problems/interviewAssessmentProblems/README.md)
     * **Question CheapestFlatsPerCityUsingSQL**
       * [README](problems/interviewAssessmentProblems/question-CheapestFlatsPerCityUsingSQL/README.md)
-    * **Question JobCounterUsingPySpark**
+    * **Question**
       * [Job Counter Using PySpark](problems/interviewAssessmentProblems/question-JobCounterUsingPySpark/README.md)
-    * **Question MachineLearningClassifier**
+    * **Question**
       * [Machine Learning Classifier](problems/interviewAssessmentProblems/question-MachineLearningClassifier/README.md)
       * **Data**
   * **Problem Solving**
     * [Problem Solving](problems/problem_solving/README.md)
 * **Programming**
   * [Overview](programming/README.md)
-  * **DataStructure**
+  * **Data Structure**
     * [Data Structure](programming/dataStructure/README.md)
   * **Decorators**
-    * [Decorators](programming/decorators/README.md)
-  * **Oop**
+    * [Overview](programming/decorators/README.md)
+  * **Object Oriented Programming**
     * [Object Oriented Programming](programming/oop/README.md)
-  * **OperatingSystem**
+  * **Operating System**
+    * [Overview](programming/operatingSystem/README.md)
     * [Technologies](programming/operatingSystem/computerArchitecutresTechnologies.md)
     * [Memory Coalescing](programming/operatingSystem/memory-coalescing.md)
     * [Empty Memory Fill with Zeros ?!](programming/operatingSystem/memory-emptyZeroFilling.md)
     * [CPU Affinity](programming/operatingSystem/process-cpu-affinity.md)
-    * [Operating System](programming/operatingSystem/README.md)
-  * **ParallelProgramming**
+  * **Parallel Programming**
+    * [Overview](programming/parallelProgramming/README.md)
     * [Message Passing Interface](programming/parallelProgramming/mpi.md)
-    * [Parallel Programming](programming/parallelProgramming/README.md)
   * **Python**
+    * [Overview](programming/python/README.md)
     * [Python](programming/python/101-python.md)
-    * [Python](programming/python/README.md)
-  * **PythonCleanCode**
+  * **Python Clean Code**
     * [Python Clean Code](programming/pythonCleanCode/README.md)
-  * **SoftwareGoals**
-    * [Software Goals](programming/softwareGoals/README.md)
+  * **Software Goals**
+    * [Overview](programming/softwareGoals/README.md)
     * **Robustness**
-      * [Robustness](programming/softwareGoals/robustness/README.md)
+      * [Overview](programming/softwareGoals/robustness/README.md)
       * **Pycache**
-  * **SoftwareSkills&Tools**
-    * [Software Skills & Tools](programming/softwareSkills&Tools/README.md)
-    * **Aws**
+  * **Software Skills & Tools**
+    * [Overview](programming/softwareSkills&Tools/README.md)
+    * **Software Tool: AWS Services for HPC Systems**
       * [Software Tool: AWS Services for HPC Systems](programming/softwareSkills&Tools/aws/README.md)
-  * **VersionControl**
+  * **Version Control**
+    * [Overview](programming/versionControl/README.md)
     * [Case Study](programming/versionControl/case-study.md)
     * [Git CLI](programming/versionControl/git-cli.md)
     * [Know How?](programming/versionControl/know-how.md)
-    * [Version Control](programming/versionControl/README.md)
 * **Projects**
   * [Overview](projects/README.md)
   * **BEV Project**

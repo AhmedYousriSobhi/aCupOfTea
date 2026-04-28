@@ -1,7 +1,7 @@
-# Regression Evalulation Metrics
+# Tabular Data - Data Evaluation - Regression Evaluation Metrics
 
 # Table of Content
-- [Regression Evalulation Metrics](#regression-evalulation-metrics)
+- [Tabular Data - Data Evaluation - Regression Evaluation Metrics](#tabular-data---data-evaluation---regression-evaluation-metrics)
 - [Table of Content](#table-of-content)
 - [Abstract](#abstract)
 - [MSE - Mean Squared Error](#mse---mean-squared-error)

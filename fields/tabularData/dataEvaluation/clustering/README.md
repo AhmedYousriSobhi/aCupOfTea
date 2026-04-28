@@ -1,7 +1,7 @@
-# DATA EVALUATION: CLUSTERING
+# Tabular Data - DATA EVALUATION - CLUSTERING
 
 # Table of Content
-- [DATA EVALUATION: CLUSTERING](#data-evaluation-clustering)
+- [Tabular Data - DATA EVALUATION - CLUSTERING](#tabular-data---data-evaluation---clustering)
 - [Table of Content](#table-of-content)
 - [Why just plot the first two PCA components?](#why-just-plot-the-first-two-pca-components)
 - [Defining Customers Groups from Clusters](#defining-customers-groups-from-clusters)

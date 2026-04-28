@@ -20,7 +20,6 @@ generate_sidebar() {
     local overview_item=""
 
     # 1. Collect and categorize items in the current directory
-    # Use while loop to fill arrays, handling spaces in filenames safely
     while IFS= read -r path; do
         if [ "$path" == "$dir" ]; then continue; fi
         
@@ -30,28 +29,26 @@ generate_sidebar() {
         if [ -d "$path" ]; then
             folders+=("$path")
         elif [[ "$base" == *.md ]]; then
-            # --- MODIFICATION 1: Extraction Logic ---
+            # --- FILE HEADER EXTRACTION ---
             local header=$(grep -m 1 "^# " "$path" | sed 's/^# //')
             
-            # If dash exists, take everything after the LAST dash
+            local file_title="$header"
+            # If dash exists, take the part AFTER the last dash
             if [[ "$header" == *"-"* ]]; then
-                header="${header##*-}"
+                file_title="${header##*-}"
             fi
-            
-            # Trim leading/trailing whitespace
-            header=$(echo "$header" | xargs)
+            file_title=$(echo "$file_title" | xargs) # Trim whitespace
 
-            # Fallback to cleaned filename if header is empty
-            if [ -z "$header" ]; then
-                header=$(echo "${base%.md}" | sed 's/[-_]/ /g' | awk '{for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) substr($i,2)} 1')
+            # Fallback for file title if header is missing
+            if [ -z "$file_title" ]; then
+                file_title=$(echo "${base%.md}" | sed 's/[-_]/ /g' | awk '{for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) substr($i,2)} 1')
             fi
 
             local final_link="${path#../}"
-            local entry="${indent}* [$header]($final_link)"
+            local entry="${indent}* [$file_title]($final_link)"
 
-            # --- MODIFICATION 2: Order "Overview" to top ---
-            # Check if title is "Overview" (case-insensitive)
-            if [[ "${header,,}" == "overview" ]]; then
+            # --- ORDERING: Force "Overview" to top ---
+            if [[ "${file_title,,}" == "overview" ]]; then
                 overview_item="$entry"
             else
                 files+=("$entry")
@@ -59,28 +56,49 @@ generate_sidebar() {
         fi
     done < <(find "$dir" -maxdepth 1 -not -path '*/.*' | sort)
 
-    # 2. Output to _sidebar.md in specific order
-    
-    # First: The Overview file for this directory
+    # 2. Output files (Overview always first)
     if [ -n "$overview_item" ]; then
         echo "$overview_item" >> $OUTPUT
     fi
-
-    # Second: All other Markdown files
     for f in "${files[@]}"; do
         echo "$f" >> $OUTPUT
     done
 
-    # Third: Directories (and recurse)
+    # 3. Process Directories
     for d in "${folders[@]}"; do
         local base=$(basename "$d")
-        local folder_name=$(echo "$base" | sed 's/[-_]/ /g' | awk '{for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) substr($i,2)} 1')
-        echo "${indent}* **$folder_name**" >> $OUTPUT
+        local folder_display_name=""
+
+        # --- FOLDER NAMING LOGIC ---
+        local readme_file="$d/README.md"
+        if [ -f "$readme_file" ]; then
+            local readme_header=$(grep -m 1 "^# " "$readme_file" | sed 's/^# //')
+            
+            if [ -n "$readme_header" ]; then
+                if [[ "$readme_header" == *"-"* ]]; then
+                    # If dash exists, take everything BEFORE the last dash
+                    folder_display_name="${readme_header%-*}"
+                else
+                    # If no dash exists (e.g., just "# Business"), take the whole header
+                    folder_display_name="$readme_header"
+                fi
+                folder_display_name=$(echo "$folder_display_name" | xargs)
+            fi
+        fi
+
+        # Final Fallback to folder name from filesystem
+        if [ -z "$folder_display_name" ]; then
+            folder_display_name=$(echo "$base" | sed 's/[-_]/ /g' | awk '{for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) substr($i,2)} 1')
+        fi
+
+        echo "${indent}* **$folder_display_name**" >> $OUTPUT
+        
+        # Recurse
         generate_sidebar "$d" "  $indent"
     done
 }
 
-# Start recursion from the parent directory
+# Start recursion
 generate_sidebar ".." ""
 
-echo "Sidebar updated: Titles parsed after last dash and 'Overview' prioritized."
+echo "Sidebar updated: Logic applied for single-word headers and dash-separated titles."
