@@ -1,4 +1,4 @@
-# HPC Industry
+# HPC Industry - Overview
 
 High-Performance Computing (/HPC) industry knowledge, including system architectures, workloads, and interview preparation.
 

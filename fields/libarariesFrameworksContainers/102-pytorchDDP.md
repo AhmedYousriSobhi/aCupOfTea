@@ -1,8 +1,8 @@
-# 102- Pytorch DDP
+# 102 - Pytorch DDP
 # Distributed Data Parallel
 
 # Table of Contents
-- [102- Pytorch DDP](#102--pytorch-ddp)
+- [102 - Pytorch DDP](#102---pytorch-ddp)
 - [Distributed Data Parallel](#distributed-data-parallel)
 - [Table of Contents](#table-of-contents)
 - [Intro](#intro)

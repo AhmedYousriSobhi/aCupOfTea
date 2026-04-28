@@ -1,14 +1,15 @@
-# Tips: Markdown
-# Table of Content
-- [Tips: Markdown](#tips-markdown)
-- [Table of Content](#table-of-content)
-- [Add "Open in Colab" Button](#add-open-in-colab-button)
-- [Add General Button](#add-general-button)
-- [Convert Markdown to .rst format](#convert-markdown-to-rst-format)
-- [Convert Markdown to pdf with Mathematic Formula](#convert-markdown-to-pdf-with-mathematic-formula)
-- [Resources](#resources)
+# Tips - Markdown
 
-# Add "Open in Colab" Button
+## Table of Content
+- [Tips - Markdown](#tips---markdown)
+  - [Table of Content](#table-of-content)
+  - [Add "Open in Colab" Button](#add-open-in-colab-button)
+  - [Add General Button](#add-general-button)
+  - [Convert Markdown to .rst format](#convert-markdown-to-rst-format)
+  - [Convert Markdown to pdf with Mathematic Formula](#convert-markdown-to-pdf-with-mathematic-formula)
+  - [Resources](#resources)
+
+## Add "Open in Colab" Button
 Here is a markdown syntax to create a "Open in Colab" button
 ```md
 <a href="NOTEBOOK_URL" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
@@ -18,7 +19,7 @@ Here is an example for Notebook-04 in [Pytorch DeepLearning course](https://gith
 
 <a href="https://colab.research.google.com/github/mrdbourke/pytorch-deep-learning/blob/main/04_pytorch_custom_datasets.ipynb" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
 
-# Add General Button
+## Add General Button
 Here is the markdown syntax to create a "General Button"
 ```md
 <a href="https://nbviewer.org/github/user/repo/blob/main/notebook.ipynb" target="_blank" 
@@ -34,7 +35,7 @@ Here is the markdown syntax to create a "General Button"
    View on nbviewer
 </a>
 
-# Convert Markdown to .rst format
+## Convert Markdown to .rst format
 - To convert .md file format to .rst file, this could be done with:
    ```bash
    pandoc input.md -f markdown -t rst -o output.rst
@@ -45,7 +46,7 @@ Here is the markdown syntax to create a "General Button"
    rst2html input.rst output.html
    ```
 
-# Convert Markdown to pdf with Mathematic Formula
+## Convert Markdown to pdf with Mathematic Formula
 - There are no suppoprt for Tex, Latex, Katex, MathJax.
 - Solution following this [github issue](https://github.com/yzane/vscode-markdown-pdf/issues/355#issuecomment-2040722446): Add the following line in the top of your md file:
    ```
@@ -55,5 +56,5 @@ Here is the markdown syntax to create a "General Button"
    </script>
    ```
 
-# Resources
+## Resources
 - In [markdownguide](https://www.markdownguide.org/basic-syntax/#overview), illustrate the basic syntax in markdown design, including all tips to do and not to do.

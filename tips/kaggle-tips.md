@@ -1,4 +1,4 @@
-# Kaggle Tips & Tricks
+# Tips - Kaggle Tips & Tricks
 
 ## Connecting Kaggle Api (Linux)
 In case of downloading dataset from Kaggle into Google Colab notebook using Kaggle Api, It is required to have user credentials to be able to connect using the Api.

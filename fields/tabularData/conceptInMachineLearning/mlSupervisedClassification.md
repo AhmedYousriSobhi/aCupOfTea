@@ -1,7 +1,7 @@
-# Tabular Data - Concepts in Machine Learning - Supervisied Learning - Classification
+# Tabular Data - Concepts in Machine Learning - Supervised Learning: Classification
 
 # Table of Content
-- [Tabular Data - Concepts in Machine Learning - Supervisied Learning - Classification](#tabular-data---concepts-in-machine-learning---supervisied-learning---classification)
+- [Tabular Data - Concepts in Machine Learning - Supervised Learning: Classification](#tabular-data---concepts-in-machine-learning---supervised-learning-classification)
 - [Table of Content](#table-of-content)
 - [One-vs-All technique](#one-vs-all-technique)
 - [Choosing Error Metric](#choosing-error-metric)

@@ -1,7 +1,7 @@
-# Concepts
+# Tips Concepts
 
 ## Table of Contents
-- [Concepts](#concepts)
+- [Tips Concepts](#tips-concepts)
   - [Table of Contents](#table-of-contents)
   - [CPLD "Complex Programmable Logic Device"](#cpld-complex-programmable-logic-device)
   - [PCI -- and Why It's Called a "Link"?](#pci----and-why-its-called-a-link)

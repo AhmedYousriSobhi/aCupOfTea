@@ -1,4 +1,4 @@
-# Data Science in Business
+# Data Science in Business - Overview
 
 As a data scientist, we get in touch a lot with business in any company regarding its focus.
 

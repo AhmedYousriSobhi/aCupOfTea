@@ -1,4 +1,4 @@
-# Design Patterns
+# Design Patterns - Overview
 
 Software design patterns for machine learning and AI systems.
 

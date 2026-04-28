@@ -1,7 +1,9 @@
-# This is a daily notes in our life
+# Journal
+
+This is a daily notes in our life
 
 # Table of Notes
-- [This is a daily notes in our life](#this-is-a-daily-notes-in-our-life)
+- [Journal](#journal)
 - [Table of Notes](#table-of-notes)
 - [17 Apr 2024 - Pytorch Deprecation for MacOS Intel X64](#17-apr-2024---pytorch-deprecation-for-macos-intel-x64)
 - [17 Apr 2024 - The Zen of Python](#17-apr-2024---the-zen-of-python)

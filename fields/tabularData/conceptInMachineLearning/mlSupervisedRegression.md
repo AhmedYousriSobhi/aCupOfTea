@@ -1,7 +1,7 @@
-# Tabular Data - Concepts in Machine Learning - Supervisied Learning - Regression
+# Tabular Data - Concepts in Machine Learning - Supervised Learning: Regression
 
 # Table of Content
-- [Tabular Data - Concepts in Machine Learning - Supervisied Learning - Regression](#tabular-data---concepts-in-machine-learning---supervisied-learning---regression)
+- [Tabular Data - Concepts in Machine Learning - Supervised Learning: Regression](#tabular-data---concepts-in-machine-learning---supervised-learning-regression)
 - [Table of Content](#table-of-content)
 - [Traditional Statistical Modeling vs Machine Learning](#traditional-statistical-modeling-vs-machine-learning)
 - [Machine Learning in Context with AI](#machine-learning-in-context-with-ai)

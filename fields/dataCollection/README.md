@@ -1,4 +1,4 @@
-# Data Collection
+# Data Collection - Overview
 
 Techniques and methods for gathering, scraping, and acquiring data for machine learning projects.
 

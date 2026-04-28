@@ -1,4 +1,4 @@
-# Concepts in Reinforcement Learning
+# Concepts in Reinforcement Learning - Overview
 
 Core concepts and theory behind reinforcement learning algorithms.
 

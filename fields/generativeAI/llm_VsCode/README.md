@@ -1,13 +1,13 @@
-# LLM VSCode
+# Generative AI - LLM VSCode
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/75ad3a82-9415-45eb-bfe4-0a2c8d1af200)
 
 Large language models (LLMs) have the potential to revolutionize programming, making it more efficient, accessible, and creative. 
 
 # Table of Content
-- [LLM VSCode](#llm-vscode)
+- [Generative AI - LLM VSCode](#generative-ai---llm-vscode)
 - [Table of Content](#table-of-content)
 - [Motivation](#motivation)
-- [Llm-VsCode](#llm-vscode-1)
+- [Llm-VsCode](#llm-vscode)
   - [Promoting and Suggesstions](#promoting-and-suggesstions)
   - [Rate Limit Reached Warning](#rate-limit-reached-warning)
 - [StarCoder](#starcoder)

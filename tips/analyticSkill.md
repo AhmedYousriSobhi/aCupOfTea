@@ -1,9 +1,9 @@
-# Tips: Analytic Skill for a Data Scientist
+# Tips - Analytic Skill for a Data Scientist
 
 The analysis part is a crucial aspect of a data scientist's work. 
 
 # Table of Content
-- [Tips: Analytic Skill for a Data Scientist](#tips-analytic-skill-for-a-data-scientist)
+- [Tips - Analytic Skill for a Data Scientist](#tips---analytic-skill-for-a-data-scientist)
 - [Table of Content](#table-of-content)
 - [Steps to Consider](#steps-to-consider)
 - [Getting Into Domain Knowledge](#getting-into-domain-knowledge)

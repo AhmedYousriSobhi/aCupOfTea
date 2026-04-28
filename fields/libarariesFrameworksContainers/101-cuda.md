@@ -1,7 +1,7 @@
-# 101- Cuda
+# 101 - Cuda
 
 # Table of Content
-- [101- Cuda](#101--cuda)
+- [101 - Cuda](#101---cuda)
 - [Table of Content](#table-of-content)
 - [CUDA](#cuda)
 - [Why the name CUDA?](#why-the-name-cuda)

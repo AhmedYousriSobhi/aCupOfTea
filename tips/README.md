@@ -1,4 +1,4 @@
-# Tips
+# Tips - Overview
 
 A curated collection of practical tips, tricks, and quick references for daily data science and AI work.
 

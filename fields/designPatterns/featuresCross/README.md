@@ -1,12 +1,18 @@
-# Feature Cross
+# Design Pattern - Feature Cross
 
-Feature crossing patterns for machine learning.
+## Abstract
+In Machine Learning, Feature engineering is the process of using domain knowledge to create new features that aid the machine learning process and increase the predictive power of our model. One commonly used feature engineering technique is creating a feature cross.
 
-## Contents
+The Feature Cross design pattern helps the models learn relationships between inputs faster by explicitly making each combination of input values a separate feature.
 
-| File | Description |
-|------|-------------|
-| [info](/fields/designPatterns/featuresCross/info.md) | Feature crossing concepts |
-| [nb_FeatureCross](/fields/designPatterns/featuresCross/nb_FeatureCross.ipynb) | Feature cross implementations |
 
-Techniques for creating synthetic features by combining existing features.
+## Definition
+A feature cross is a synthetic feature formed by concatenating two or more categorical features in order to capture the interaction between them.
+
+## Important
+By joining two features in this way, it is possible to encode nonlinearity into the model, which can allow for predictive abilities beyond what each of the features would have been able to provide individually.
+
+Feature Crosses provide a way to have the ML model learn relationships between the features faster. While in complex models like neural networks and trees can learn feature crosses on their own, using feature crosses explicitly can allow us to get away with training just a linear model. Consequently, feature crosses can speed up model training (less expensive) and reduce model complexity (less data is needed).
+
+## Credits
+- This Previous illustration is summarized from chapter-2, design pattern #3 in book: __Machine Learning Design Patterns - Solutions to Common challenges in Data Preparation, Model Building, and MLOps__

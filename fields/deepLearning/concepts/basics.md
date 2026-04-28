@@ -1,8 +1,6 @@
 # Deep Learning - Concepts - Basics
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/f0c2a453-6da1-43cf-846d-3c9425b5996b)
 
-
-
 In this article, we'll start explaining the important basics in deep learning
 
 A neural network tries to represent a given output based on its inputs by learning the appropaite parameters that could map the input to the target output.

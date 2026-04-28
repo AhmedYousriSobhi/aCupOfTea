@@ -1,11 +1,9 @@
-# Software Skill: Docker
-# 101 - Docker: Introduction to Docker
+# 101 - Docker
 
 let's create a chapter to learn **Docker**. **Docker** is a popular containerization platform that allows you to package and run applications and their dependencies in isolated containers.
 
 # Table of Content
-- [Software Skill: Docker](#software-skill-docker)
-- [101 - Docker: Introduction to Docker](#101---docker-introduction-to-docker)
+- [101 - Docker](#101---docker)
 - [Table of Content](#table-of-content)
 - [Section: Motivation and Objectives](#section-motivation-and-objectives)
   - [Motivation](#motivation)

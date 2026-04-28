@@ -1,7 +1,6 @@
 # Deep Learning - Concepts -  State of Art
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/b621b4da-f2ac-4c7e-ab3e-d6780dbbc8b6)
 
-
 # Table of Content
 - [Deep Learning - Concepts -  State of Art](#deep-learning---concepts----state-of-art)
 - [Table of Content](#table-of-content)

@@ -1,4 +1,4 @@
-# Deep Learning Concepts
+# Deep Learning - Concepts - Overview
 
 Core concepts and theory behind deep learning and neural networks.
 
