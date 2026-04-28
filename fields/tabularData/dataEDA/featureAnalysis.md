@@ -10,7 +10,8 @@
 
 ## Numerical Signled Valued Feature
 If a column in your dataset contains only a single value throughout, it can provide some insights, although they may be limited. Here's how you can describe the insights from such a column:
-|Insight|Descriptio|
+
+|Insight|Description|
 |--|--|
 Constant Value| The column represents a constant or uniform value for all data points in the dataset.
 Lack of Variability| Since the column has no variability, it doesn't contribute to any differentiation among data points. In other words, this column doesn't provide any distinguishing information within the dataset.
@@ -23,6 +24,7 @@ In summary, a column with a single constant value may not provide substantial in
 
 ## Binary Valued feature
 When a dataset contains binary features with values of 0 and 1, it typically indicates that these features represent binary or categorical variables. Here are some insights and considerations for such binary features:
+
 |Insight|Description|
 |--|--|
 Binary Representation| These features represent two distinct states or categories, often denoted as 0 and 1. Each value has a specific meaning or interpretation within the context of the dataset.
@@ -40,7 +42,8 @@ In summary, binary features in a dataset represent categorical variables with tw
 
 ## Uniform Distribution features
 When a feature exhibits a uniform distribution, it means that its values are evenly spread across its entire range, and there is no significant skew or concentration of data points in any specific region. Here are some analysis insights and considerations for a feature with a uniform distribution:
-|Insight|Descrition|
+
+|Insight|Description|
 |--|--|
 Lack of Bias| A uniform distribution suggests that there is no bias or preference for specific values within the feature. All values are equally likely.
 Predictive Power| In some cases, a feature with a uniform distribution may not provide strong predictive power on its own because it doesn't differentiate between data points effectively. However, it can still be useful when combined with other features in a predictive model.
@@ -56,8 +59,9 @@ In summary, a uniform distribution in a feature suggests that all values are equ
 
 ## Non Perfect Uniform Distribution Feature
 When a feature exhibits an almost uniform distribution but is not perfectly uniform, it can provide some valuable insights during data analysis. Here are several analysis insights you can draw from such a feature:
+
 |Insight|Description|
-|--|--
+|--|--|
 Lack of Discriminatory Power| The feature may not provide strong discriminatory power for predicting or explaining the target variable. Its values are distributed relatively evenly across categories or classes, indicating that it doesn't strongly differentiate between them.
 Low Information Gain| In classification tasks, a feature with an almost uniform distribution is likely to have low information gain. Information gain measures the reduction in uncertainty about the target variable when you know the value of the feature.
 Potential Noise or Randomness| The feature's distribution might suggest that it contains noise or randomness, especially if there's no clear pattern or trend in its values concerning the target variable.

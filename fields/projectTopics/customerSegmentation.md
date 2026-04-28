@@ -10,6 +10,7 @@ Customer segmentation is a crucial marketing strategy that involves dividing a c
   - [Key Concepts \& Consideration](#key-concepts--consideration)
 
 ## Key Points to Consider when Exploring Customer Segmentation
+
 |Key Point|Description|
 |--|--|
 |Segmentation Criteria| Customer segments can be defined based on various criteria such as demographics (age, gender, income), psychographics (lifestyle, values, interests), geographic location, behavior (purchase history, online activity), and more. The choice of criteria depends on your business and its goals.|

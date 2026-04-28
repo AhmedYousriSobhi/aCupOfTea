@@ -1,12 +1,7 @@
-# Data Structures
+# Data Structure
 
-Fundamental data structures and algorithms for efficient programming.
+The illustrated content are extracted from book: __Data Structures & Algorithms in Python__
 
-## Contents
+The book is free to use.
 
-| File | Description |
-|------|-------------|
-| [dataStructure](/programming/dataStructure/dataStructure.md) | Data structures overview and concepts |
-| [nb_DataStructure](/programming/dataStructure/nb_DataStructure.ipynb) | Jupyter notebook with implementations |
-
-Covers arrays, linked lists, trees, graphs, hash tables, and algorithm complexity analysis.
+Book Link: http://xpzhang.me/teach/DS19_Fall/book.pdf

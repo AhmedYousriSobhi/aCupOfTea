@@ -66,6 +66,7 @@ The objective of using advanced techniques in time series analysis is to improve
 In essence, the objective of using advanced techniques in time series analysis is to elevate your ability to extract meaningful insights, make accurate forecasts, and handle the unique challenges posed by time-evolving data. However, it's important to note that while these techniques offer great potential, they might also require a deeper understanding and careful parameter tuning to achieve optimal results. It's recommended to start with basic techniques and progressively incorporate advanced ones as you become more comfortable with the concepts and practical implementations.
 
 ## Techniques
+
 |Technique|Details|
 |--|--|
 |__Seasonal Decomposition of Time Series (STL)__| A more sophisticated decomposition method that handles irregular seasonality.

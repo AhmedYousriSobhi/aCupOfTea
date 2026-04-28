@@ -85,6 +85,7 @@ Kernel is a piece of software in the OS, that serves as the bridge between the h
 ## Kernel Space & User Space
 System memory in Linux can be divided into two distinct regions; *kernel space* and *user space*
 According to [LINFO - user space definition](https://www.linfo.org/user_space.html) & [kernel space definition](https://www.linfo.org/kernel_space.html):
+
 |Kernel Space|User Space
 |-|-|
 User space is that portion of system memory in which "user processess" run|Kernel space is that portion of memory in which kernel executes and provides its services.

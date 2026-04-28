@@ -57,6 +57,7 @@ Which GPU micro-architecture is this?             (7, 5)
 Number of threads available on host               1
 ```
 ## Break Down the Output
+
 |Part|Description|
 |-|-|
 Is there a GPU?|torch.cuda.is_available() returns True, indicating that a GPU is available for use in your system.
@@ -67,6 +68,7 @@ Which GPU micro-architecture is this?|torch.cuda.get_device_capability() returns
 Number of threads available on host:|torch.get_num_threads() returns the number of threads available on the host. In this case, it is 1.
 
 ### Architectures Mentioned
+
 |Architecture|Name|Example
 |-|-|-|
 sm_50| Maxwell (Compute Capability 5.0)| GPUs GeForce GTX 970/980, Tesla M40/M60

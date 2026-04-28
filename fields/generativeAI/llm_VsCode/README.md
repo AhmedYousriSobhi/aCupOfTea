@@ -49,6 +49,7 @@ Overall, LLM models have the potential to make programming more efficient, acces
 The acronym "LLM" stands for "Language Learning Machine," which reflects the extension's focus on natural language processing and machine learning tasks.
 
 Here are some of the key features and capabilities of LLM-VSCode:
+
 |Key Feature|Details|
 |--|--|
 |Multi-language support| LLM-VSCode supports a wide range of programming languages, including Python, R, Julia, MATLAB, and JavaScript. It also provides syntax highlighting, autocompletion, and debugging tools for each language.
@@ -79,6 +80,7 @@ Note: in case of logging out, you will have to login again and enter your huggin
 [Starcoder](https://huggingface.co/blog/starcoder) is a Visual Studio Code extension that provides a comprehensive set of features and tools for developers working with the Hugging Face Transformers library. The extension is designed to simplify the process of building, training, and deploying machine learning models using the Transformers library, and it includes a range of functionality to enhance productivity and streamline development workflows.
 
 Some of the key features and functionalities provided by the Starcoder extension include:
+
 |Key Feature|Details|
 |-|-|
 |Syntax highlighting and autocompletion| Starcoder provides syntax highlighting and autocompletion support for the Transformers library, making it easier to write and read code.

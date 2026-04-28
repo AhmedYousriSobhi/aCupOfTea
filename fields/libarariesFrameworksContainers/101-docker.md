@@ -63,6 +63,7 @@ In this section, we'll explore the motivation behind containerization and why **
 
 ## Challenges that need Solutions
 Containerization emerged as a solution to the following challenges:
+
 |Solution|Details|
 |-|-|
 Consistency| Ensuring that an application runs consistently across different environments, from development to production.
@@ -88,7 +89,8 @@ Now, let's dive into the details.
 
 ## Traditional Virtual Machines (VMs) vs. Containers
 
-To understand the significance of containerization, it's essential to distinguish it from traditional virtualization. 
+To understand the significance of containerization, it's essential to distinguish it from traditional virtualization.
+
 |VMs|Containers|
 |-|-|
 In a VM-based environment, the physical hardware is virtualized to create multiple virtual machines, each with its own operating system. This approach is resource-intensive and can lead to overhead.|In contrast, containers share the host operating system, which means they are lightweight, start quickly, and consume fewer system resources. **They provide isolation at the process level**, allowing applications to run independently without interfering with each other.</br>In containsers, you don't actaully install whole operating systems, but only install the required packages that interact with the target kernal.</br>**Containers share the OS kernel of the host but run with their own file system, libraries, and configurations**
@@ -98,6 +100,7 @@ In a VM-based environment, the physical hardware is virtualized to create multip
 **Docker** is a containerization platform that simplifies the development, deployment, and management of applications. It uses container technology to package an application and its dependencies, including libraries and configurations, into a single unit. **Docker** containers are consistent and portable, making it easier to move applications between development, testing, and production environments.
 
 ### Benefits of Docker
+
 |Benefit|Details|
 |-|-|
 **Consistency**| **Docker** ensures that applications run consistently across different environments, eliminating the "it works on my machine" problem.
@@ -122,6 +125,7 @@ In this command,
 - The -p 80:80 maps port 80 on the host to port 80 in the container.
 
 ### Key Features of Docker
+
 |Feature|Details|
 |-|-|
 Image-Based| **Docker** containers are created from images, which are snapshots of a file system and application. These images are versioned, making it easy to manage and distribute applications.
@@ -132,7 +136,8 @@ Community and Ecosystem| **Docker** has a large community and extensive ecosyste
 Understanding **Docker** and **containerization** is essential for modern software development and system administration. It simplifies deployment, enhances consistency, and optimizes resource usage, ultimately saving time and reducing potential issues.
 
 ## KeyWords Term Definitions
-The following is a breif of the some terms and keywords we will face in the coming section, so let's have an overhead info about them.
+The following is a brief of the some terms and keywords we will face in the coming section, so let's have an overhead info about them.
+
 |Term|	Description|
 |-|-|
 Container|	A lightweight, executable package that includes an application and all its dependencies. Containers run isolated from the host system and other containers.</br>Container is an instance of an image.
@@ -148,6 +153,7 @@ Image Repository|	A central storage location for container images. Docker Hub is
 
 # Section: Docker Fundamentals
 ## Info
+
 |Info|Details|
 |-|-|
 Motivation| Understanding the fundamental concepts of Docker is essential for effective containerization and deployment.
@@ -156,6 +162,7 @@ Workspace| We'll cover concepts like Docker containers, images, and registries, 
 Illustration| We'll provide explanations, commands, and examples for each fundamental concept.
 
 ## Commands Table
+
 |Command|	Description|
 |-|-|
 docker --version|	Check the Docker version.

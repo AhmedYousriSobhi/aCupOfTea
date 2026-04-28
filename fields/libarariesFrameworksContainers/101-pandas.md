@@ -28,6 +28,7 @@
 A DataFrame is a two-dimensional, size-mutable, and potentially heterogeneous tabular data structure.
 
 Key features of a DataFrame:
+
 |Feature|Description|
 |-|-|
 Tabular Data Structure| It represents data in a table format with rows and columns, much like a spreadsheet or SQL table.

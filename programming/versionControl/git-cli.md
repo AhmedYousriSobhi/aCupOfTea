@@ -30,6 +30,7 @@ In the context of Git, "gh" refers to the GitHub CLI tool, which is a command-li
 
 ## CLI Benefits
 Here are some of the benefits of using the GitHub CLI:
+
 |Benefit|Details|
 |-|-|
 |Efficiency| It allows you to perform GitHub tasks without having to switch between the terminal and a web browser.
@@ -44,6 +45,7 @@ Normal HTTP cloning involves downloading the contents of the repository directly
 gh clone is a command provided by the GitHub CLI tool that uses GitHub-specific APIs to clone repositories. This method is more efficient and reliable than normal HTTP cloning, and it also supports additional features, such as cloning private repositories and using SSH authentication.
 
 Here is a table summarizing the key differences between normal HTTP cloning and gh clone:
+
 |Feature|	Normal HTTP cloning|	gh clone|
 |-|-|-|
 Protocol|	HTTP|	GitHub-specific APIs|
@@ -55,6 +57,7 @@ In general, it is recommended to use gh clone for cloning Git repositories whene
 
 ## Usage Examples
 Here are some examples of how to use the GitHub CLI:
+
 |Action|Command|
 |-|-|
 |Create an issue| gh issue create "Describe the issue here"

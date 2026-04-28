@@ -249,6 +249,7 @@ Here are some cases where the absolute activation function is used:
 To conclude: If you will use abs(x), adjust your calculation such that, when a zero input is used, add some small fraction to zero to make it differentiable.
 
 ### Comparison between Activation Functions
+
 |Activation Function|Full Name|	Working Principle|	Equation|	Derivative|	Advantages|	Disadvantages|	Where is commoly uses|
 |--|--|--|--|--|--|--|--|
 Sigmoid|Sigmoid function|S-shaped curve that outputs a value between 0 and 1.| sigmoid(x) = 1 / (1 + exp(-x))| sigmoid'(x) = sigmoid(x) * (1 - sigmoid(x))| Smooth and easy to interpret| Sensitive to outliers. </br> Slow convergence| Binary classification problems|
@@ -359,6 +360,7 @@ There are a number of solutions to the exploding gradient problem.
 
 ## 1.4- Summary
 Here is a table that summarizes the key differences between the two problems:
+
 |Problem| Description|
 |--|--|
 |Vanishing Gradient Problem|	The gradients of the activation function become very small as the network learns.
@@ -461,7 +463,7 @@ Tip: Build your system quickly then iterate.
 
 End-to_end deep leanring is a techinque where a single neural network trained to perform a task directly from the input data, without any manual feature extraction. This is in contrast to traditional machine learning approaches , which typically involve manually extraction features from the input data and then training a seperate machine learning model on those features.
 
-Comapred to a multiple stage approach, where there are more than one stage, and each stage takes an input and result to an output which is the input to the next stage. This is similir to mappping and input X to a final output Y.
+Compared to a multiple stage approach, where there are more than one stage, and each stage takes an input and result to an output which is the input to the next stage. This is similir to mappping and input X to a final output Y.
 
 Briefly, there have been some data processing systems, or learning systems that require multiple stages of processing. And what end-to-end deep learning does, is it can take all those multiple stages, and replace it usually with just a single neural network.
 

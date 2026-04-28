@@ -18,6 +18,7 @@ A "values interview" or "values-based interview" is a type of job interview that
 
 # Points of Focus in Candidate
 In a values interview, the interviewer may ask questions designed to understand the candidate's:
+
 |Point|Description|
 |--|--|
 Values and Ethics| Questions may explore how the candidate handles ethical dilemmas, makes decisions in challenging situations, and whether their personal values align with the company's values and code of ethics.
@@ -34,6 +35,7 @@ Values interviews help employers ensure that a candidate not only possesses the 
 To prepare for a values interview, candidates should research the company's mission, values, and culture, and be ready to discuss their own values and experiences in a way that demonstrates alignment with the company's expectations. It's also essential to provide specific examples from past experiences that showcase how their values have influenced their actions and decision-making.
 
 Preparing for a values-based interview requires research, self-reflection, and authenticity. Here are some steps you can take to get ready:
+
 |Step|Details|
 |--|--|
 |Research the company's values and culture| Visit the company's website, social media pages, and review sites to learn about their mission, vision, and values. Look for keywords that reflect their culture and ethos.
@@ -49,6 +51,7 @@ Preparing for a values-based interview requires research, self-reflection, and a
 
 # How to Make Conversation productive
 During a value HR interview, there are several points to take care of to ensure that the conversation is productive and effective. Here are some key considerations:
+
 |Point|Details|
 |--|--|
 |Understand the company's core values| Before conducting a values interview, make sure you have a clear understanding of the company's core values and culture. This will help you tailor your questions to reflect the company's values and assess whether the candidate's values align with them.
@@ -69,6 +72,7 @@ By following these guidelines, you can conduct a successful value HR interview t
 This introduction gives a brief overview of the candidate's education, experience, and skills, while also showcasing their passion for [Position] (for example data science) and their ability to communicate complex concepts to non-technical stakeholders. It also highlights their ability to work collaboratively and solve problems, which are important qualities for a data scientist role.
 
 here are some tips on how to introduce yourself in a value interview:
+
 |Tip|Description|
 |--|--|
 |Start with a polite greeting| Begin by greeting the interviewer with a friendly smile and a firm handshake. This sets the tone for a positive and professional interaction.

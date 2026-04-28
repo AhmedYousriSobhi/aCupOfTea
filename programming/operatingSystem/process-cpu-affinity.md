@@ -35,6 +35,7 @@ So we are interested in ****The Locality of Data and Instructions**** where ever
 
 ## Useful for Various Reasons!
 Here are a list of Reasons what are the benefits of CPU affinity?
+
 |Reason|Details|
 -|-|
 Performance Optimization|Assigning specific threads or processes to dedicated CPU cores can improve performance by reducing contention of shared resources and minimizing cache trashing.
@@ -42,6 +43,7 @@ Resource Utilization|Used to isolate tasks from others.
 Hardware Utilization|Maximize hardware utilization and system throughput.
 
 ## What is the challenges in Multitasking Systems?
+
 |Challenge|Problem|CPU Affinity Solution|
 |-|-|-|
 CPU Contention|In multitasking environments, multiple processes or threads compete for CPU resources, leading to CPU contention. This contention can result in inefficient CPU utilization and degraded performance for individual tasks.|CPU affinity allows specific processes or threads to be bound to particular dedicated CPU cores, without contention from other tasks.

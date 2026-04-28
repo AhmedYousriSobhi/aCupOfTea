@@ -11,9 +11,9 @@ The main objective of this section, is to get more information regarding domain 
 | Directory | Description |
 |-----------|-------------|
 | [foodDeliveryServiceCompany](/business/foodDeliveryServiceCompany/README.md) | Food delivery service domain |
-| [hpcIndustry](/business/hpcIndustry/README.md) | High-Performance Computing industry |
-| [realStateCompnay](/business/realStateCompnay/README.md) | Real estate and property domain |
-| [usedCarsRetailer](/business/usedCarsRetailer/README.md) | Used car retail business |
+| [hpcIndustry](/business/hpcIndustry.md) | High-Performance Computing industry |
+| [realStateCompnay](/business/realStateCompnay.md) | Real estate and property domain |
+| [usedCarsRetailer](/business/usedCarsRetailer.md) | Used car retail business |
 
 What you can gain actually is getting more familiar with their domain knowledge, investigate their projects.
 

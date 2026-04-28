@@ -18,7 +18,8 @@ I’ve forked repo-b from repo-a and updated a specific branch, creating repo-b/
 This is a common situation when working with forks and multiple branches. 
 
 ### Should I Sync My Fork Before Opening a PR, or just create PR as-is?
-Situation|	Recommended Action|
+
+|Situation|	Recommended Action|
 |-|-|
 ✅ Your branch (dev-uodated) is based on upstream/dev and only a few commits behind|	Continue without syncing — just open the PR. GitHub will handle showing the diff correctly.
 ⚠️ Your branch is significantly behind (many commits, structural changes, or conflicts likely)|	Sync first (merge or rebase from upstream/dev), then open the PR.

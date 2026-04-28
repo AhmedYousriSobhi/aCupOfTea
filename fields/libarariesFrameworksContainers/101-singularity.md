@@ -107,6 +107,7 @@ singularity run adder.sif 5 10
 # 5- More Deeper Singularity Tech
 Now we have our first impression of using Singularity, let's go deeper and understand more.
 ## 5.1- Two Ways to Build a Container
+
 ||Sandbox|Image|
 |-|-|-|
 |Details|"Which is really just a directory"!! Singularity support create a directory with the entire OS and some Singularity metadata in your current working directory.| "Immutable Images"!! we can build an image where the container encapsulates everything that cannot be modified, so our developing environment becomes eternal.
@@ -297,6 +298,7 @@ You can set any value you want even if it's a environment variable of the local 
 ![--build-arg](https://i.postimg.cc/RVsyfhxJ/Screenshot-from-2024-02-29-13-18-30.png)
 
 # 6- Tips, Notes & Troubleshooting
+
 |Tip, Note, Troubleshoot|Details|
 |-|-|
 Troubleshoot| If you receive warnings from the Perl language about the locale being incorrect, you can usually fix them with export LC_ALL=C

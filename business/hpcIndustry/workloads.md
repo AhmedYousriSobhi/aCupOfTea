@@ -19,6 +19,7 @@ For More info regarding HPC, please refere to this [blog](https://github.com/Ahm
 
 # 2- Workloads Common Types
 Workloads are typically categorized into different types based on the nature of the tasks and how they use the resources of an HPC system. Here are some common types of workloads in HPC:
+
 |Type|Details|
 |--|--|
 |Compute-Intensive Workloads| These workloads require a high amount of computational power but may not necessarily need a significant amount of data movement. Scientific simulations, weather forecasting, and some data analytics tasks often fall into this category.
@@ -53,6 +54,7 @@ If you are interested in managing Linux workloads, it is important to have a goo
 RDMA, which stands for Remote Direct Memory Access, is a technology that allows data to be transferred directly from the memory of one computer into the memory of another computer without involving the processors or operating systems of either computer. This can significantly reduce latency and increase network throughput, making it a valuable technology in High-Performance Computing (HPC) environments.
 
 RDMA workloads typically involve **data-intensive and communication-intensive tasks where low-latency, high-bandwidth data transfer is critical**. Some common examples of RDMA workloads in HPC include:
+
 |RDMA Workload|Description|
 |--|--|
 |Parallel File Systems| RDMA is often used to improve the performance of parallel file systems like Lustre and GPFS. These file systems are commonly employed in HPC environments to manage and store large datasets. RDMA allows for faster data transfers between storage nodes and compute nodes.
@@ -70,6 +72,7 @@ In summary, RDMA workloads are characterized by the use of RDMA technology to ac
 RDMA (Remote Direct Memory Access) is not specific to data science work alone; it's a technology used to enhance network performance and reduce latency in data transfer for a wide range of applications, including but not limited to data science. RDMA is a valuable tool in the broader field of High-Performance Computing (HPC), and its applications extend to various domains, each with its specific requirements.
 
 While RDMA can be beneficial for data-intensive tasks, such as those found in data science workloads, it's also valuable for other types of HPC workloads. Here are a few examples:
+
 |Workload Type|Details|
 |--|--|
 |Data Science| In data science, particularly for distributed data analytics and machine learning, fast data transfer between nodes is crucial. RDMA can significantly accelerate data movement in distributed data processing frameworks like Apache Spark or Hadoop.
@@ -82,6 +85,7 @@ While RDMA is a valuable technology for data science, it has broader applicabili
 
 # 6- Data Science Workloads
 Data science encompasses a wide range of tasks and workloads that involve the analysis, processing, and interpretation of data to extract insights and make data-driven decisions. Workloads in data science can vary depending on the specific goals and techniques being used. Here are some common workloads in data science:
+
 |Workload|Details|
 |--|--|
 |Data Cleaning and Preprocessing| This workload involves cleaning and preparing raw data for analysis. It includes tasks such as handling missing values, data imputation, data normalization, and data transformation.

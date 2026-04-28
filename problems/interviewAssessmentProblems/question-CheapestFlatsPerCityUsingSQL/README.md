@@ -16,6 +16,7 @@ Please use an OVER clause to simplify your solution.
 
 Example:</br>
 1.Given:</br>
+
 |id|city|price|
 |--|--|--|
 |25|London|200000|
@@ -28,6 +29,7 @@ Example:</br>
 |9|London|500000|
 
 One of the possible outputs is:</br>
+
 |id|city|price|
 |--|--|--|
 |2|London|170000|

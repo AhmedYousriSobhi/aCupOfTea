@@ -10,6 +10,7 @@
     - [Related Projects](#related-projects)
 
 ## Most important suggested KPIs for the company to target
+
 |KPI| Description|
 |---|------------|
 |Acquisition Cost| Measures the average cost incurred by the company to acquire each used car. <br/>This includes factors such as the purchase price from the seller, any associated fees, and transportation cost. <br/>Company should aim to keep the acquisition cost as low as possible to maximize profitability.| 
@@ -22,6 +23,7 @@
 |Customer Satisfaction| Although the company focuses on buying used cars, maintaining good relationships with sellers is crucial. <br/>Positive customer experiences can lead to word-of-mouth referrals and a larger pool of potential sellers. <br/>Gathering feedback from sellers can provide insights into their satisfaction level and identify areas for improvement.|
 
 ## For calculation of each KPI
+
 |KPI| Calculation Method|
 |---|-------------------|
 |Acquisition Cost| Calculate the total cost incurred to acquire used cars (purchase price, fees, transportation costs, etc.). <br/>Divide the total acquisition cost by the number of cars acquired to get the average acquisition cost per car.|
@@ -34,7 +36,8 @@
 |Customer Satisfaction| Gather feedback from sellers after the transaction, either through surveys or direct communication. <br/>Design a satisfaction rating scale (e.g., 1 to 5) or collect qualitative feedback to assess seller satisfaction. <br/>Calculate the average satisfaction rating or percentage of satisfied sellers based on the collected feedback.|
 
 ## Projects
-### Mainly Projects 
+### Mainly Projects
+
 |Project|Description|
 |-----|----|
 |Estimating Used cars price|In this project, our focus is estimating the price of used cars based on its selected features.|
@@ -42,6 +45,7 @@
 |Inspection Engineers Scheduler|The company has many time slots of inspection task for different types of customers cars, So the target of this project, is to schedule the time slots for the inspection engineers of the company.|
 
 ### Related Projects
+
 |Project|Description|
 |----|----|
 |Demand Prediction| The company could develop a demand prediction model to forecast the demand for specific car models in the market. <br/>By understanding customer preferences and market trends, the company can optimize its inventory and pricing strategy.|

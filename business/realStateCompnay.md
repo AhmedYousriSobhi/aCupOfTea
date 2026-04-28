@@ -1,8 +1,8 @@
 # Real-State Company
 
-# Table of Content
+## Table of Content
 - [Real-State Company](#real-state-company)
-- [Table of Content](#table-of-content)
+  - [Table of Content](#table-of-content)
   - [What is a real-state company?](#what-is-a-real-state-company)
   - [KPIs](#kpis)
   - [KPI Calculation](#kpi-calculation)
@@ -74,6 +74,7 @@ Remember, the specific projects will depend on the company's goals, available da
 
 ## Projects
 ### Mainly Projects 
+
 |Project|Description|
 |-----|----|
 |Property's Offering Time| Estimating the offering time for a property, it is the time when a property will be sold or rent after once it is announced in the market.<br/>This time will be calculated based on selected features.<br/>This project will help the company to determine its inventory and depended profit from these property.|
@@ -81,6 +82,7 @@ Remember, the specific projects will depend on the company's goals, available da
 |Property Current Price|Estimating current price for property based on corresponding features.|
 
 ### Related Projects
+
 |Projects|Description|
 |---|---|
 |Predictive Property Valuation| Build a model to predict property values based on various features like location, size, amenities, and historical sales data. <br/>This can help in accurately pricing properties and understanding market trends.

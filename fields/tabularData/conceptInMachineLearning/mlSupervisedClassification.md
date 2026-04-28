@@ -73,6 +73,7 @@ Thus we see the importance in understanding our data and choosing the appropriat
 Note: Check markdown note regarding accuracy failure in classification in 'tabularData/dataEvaluation/classificationAccuracy'.
 
 # Confusion Matrix
+
 |               | Positive Prediction | Negative Prediction|
 |---------------|---------------------|--------------------|
 | Actual Positive | True Positive (TP)  | False Negative (FN)|
@@ -198,6 +199,7 @@ The prediction of multiple classes is quite simple for KNNs, for other ML method
 Note that in multiple classes, choosing a K is preferred to be equal to a multiple of the number of labels (classes), for example a 3 label data we choose some multiples of 3 aka n3 + 1, that + 1 to ensure that one always has the majority vote.
 
 ## Pros and Cons of KNN:
+
 |||
 |--|--|
 |Pros|Simple to implement (doesn't rquire estimation).</br>Adapts well on new data.</br>Easy to interpret.</br>The fitting is fast since with KNN the training data is the model and there's going to be no computation needed at fit time (no parameters to learn, no iteration process), just store the data.
@@ -262,6 +264,7 @@ First step is to select the feature, and ask a question with a true, or false an
 Then, we continue splitting with our available features to create further subsets of our data and can continue to spilt, and think about when can we actually stop splitting and declare we've made a decision.
 
 ## When to Stop Splitting?
+
 ||
 |-|
 One idea in terms of determining when we should stop splitting is to continue splitting until the leaves are pure (only one class remains).|
@@ -356,6 +359,7 @@ On the other hand, if the learning rate is too high, then we can easily overfit 
 - Common implementation uses binomial log likelihood loss function (deviance: log(1 + e^(- margin))), the reduced value of the log likelihood loss function for large margins (for misclassified points) makes this version of boosting more robust to outliers than AdaBoost.
 
 ## Bagging vs. Boosting
+
 |||
 |--|--|
 |__Bagging__|We use subsamples that we would only train each classifier on one bootstrapped sample.</br>Base learners (each one of those smaller trees) are independent from one another, and usually they are not going to be stumps but rather full trees</br>Bagging only takes into account the data of the bootstrapped sample.</br>All samples are going to be equal and comming up with that final classification, so it can be an equal vote.</br>We don't have to worry about excess trees causing overfitting
@@ -420,6 +424,7 @@ With unbalanced classes, the data often isn't easily separable, we have to choos
 So as our ability to catch all the minority classes goes up (Recall increases), as a propotion of our predicted values of our actual predictions, we're more likely to have a given value predicted incorrectly (Precision decreases)
 
 ## Downsampling vs. Upsampling
+
 |||
 |--|--|
 |__Downsampling__|Downsampling will add tremendous importance to our minority class, but will typically raise up our recall, but also brings down precision, we're definitely going to be increasing the ability of our model to correctly predict that minority class, but at the cost of losing a lot of valuable data that can help us predict that majority class.
@@ -435,6 +440,7 @@ We can choose the best model using any criteria (accuracy here is not a good opt
 Once a model is choosen, you can walk along the ROC curve and pick any point on it (threshold), each point has different precision/recall  values you can pick what best suits your business objectives.
 
 ## Oversampling Techniques
+
 |Technique|Details|
 |--|--|
 |__Random Oversampling__|Simplest Oversampling approach, what we do is that we just randomly resample with replacement the rows from our minority class.</br></br>In this approach there is no concerns about where these points (new data) lie in feature space, and whether cerain points will be more or less indicative of the cluster of the actual minority class.</br></br>This random Oversampling will work best for categorical data where our features distance from other samples may not have as much interpretive underlying similarity, so we don't have to worry about whether or not there's a cluster and whether or not we're trying to define that cluster as correctly when we're working with categorical data.
@@ -443,6 +449,7 @@ Once a model is choosen, you can walk along the ROC curve and pick any point on 
 There's two main approaches for the synthetic Oversampling both based on K nearest neighbors as its foundation:
 
 __SMOTE (Synthetic Minority Oversampling Technique)__:
+
 |Technique|Details|
 |--|--|    
 |Regular SMOTE|Regular SMOTE is where we connect to the minority class points to any neighbors even those of other classes as long as they are nearest neighbors.</br></br>We use those connected lines to randomly generate our new points somewhere in between those connected lines.
@@ -450,6 +457,7 @@ __SMOTE (Synthetic Minority Oversampling Technique)__:
 |__ADASYN (ADAptive SYNthetic sampling)__|It works very similarly to SMOTE, it starts off by looking at the classes in the neighborhood of each minority point.</br></br>However, the number of samples generated for each point is going to be proportional to the number of samples which are not from the same class as that point in a given neighborhood.</br></br>Therefore, with ADASYN more samples will be generated in the area that the nearest neighbor rule is not respected, thus putting more weight on values that would have been originally misclassified.
 
 ## Undersampling Techniques: NearMiss Methods
+
 |Technique|Details|
 |--|--|
 |__NearMiss-1__|Here we'll look through different means of keeping points that are closest to nearby minority points, consider positive is the majority class and negative is the minority class, the goal here is to only select the positive samples (from the majority class) for which the average distance to the N closest samples of the negative class are the smallest. We're generally trying to keep points that are near our decision boundaries.</br></br>Remove the majority samples which close enough to minority class.</br></br>Be aware that, with this type of downsampling, it can easily be skewed by the presence of some outliers or noise that may cause those clusters to stick together far from that boundary.
@@ -472,6 +480,7 @@ Interpretability is an important aspect of machine learning because it allows da
 
 ## Important of Model Interpretability
 Model interpretability is crucial for several reasons:
+
 |Reason|Details|
 |--|--|
 |Transparency|Understanding how a model arrives at predictions is important for building trust with users, stakeholders, and regulatory bodies.
@@ -481,6 +490,7 @@ Model interpretability is crucial for several reasons:
 
 ## Types of Model Interpretability
 There are various ways to achieve model interpretability, including:
+
 |Way|Details|
 |--|--|
 |Feature Importance|Identifying which features or variables are most influential in a model's predictions.|
@@ -492,6 +502,7 @@ There are various ways to achieve model interpretability, including:
 
 ## Techniques of Model Interpretability
 There are several techniques used to improve model interpretability, such as:
+
 |Technique|Details|
 |--|--|
 |Feature importance| This method helps to identify the most influential features in a model, allowing users to understand which variables the model relies on most heavily when making predictions.
@@ -533,6 +544,7 @@ The trade-off between accuracy and interpretability is a fundamental considerati
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/468f8b2a-deb3-42b6-947d-303c181cacc9)
 
 Here's a detailed description of this trade-off:
+
 |||
 |--|--|
 |Accuracy|Accuracy refers to how well a model can make predictions or classify data points correctly. In machine learning, the ultimate goal is often to build models that achieve the highest possible accuracy, especially in applications where performance is critical, such as medical diagnosis or autonomous vehicles.
@@ -540,6 +552,7 @@ Here's a detailed description of this trade-off:
 |Interpretability|Interpretability refers to the extent to which a model's predictions and decision-making process can be easily understood and explained by humans. Interpretable models are typically simpler and have transparent rules or relationships between inputs and outputs.
 
 ### Trade-off Considerations
+
 |||
 |--|--|
 Transparency vs. Black-Box Models|Simple, interpretable models like linear regression or decision trees are often transparent and easy to understand. However, they may lack the complexity to capture subtle patterns in data.</br></br>Complex models like deep neural networks can achieve remarkable accuracy but are often considered black-box models because their internal workings are less transparent and harder to explain.
@@ -549,6 +562,7 @@ Transparency vs. Black-Box Models|Simple, interpretable models like linear regre
 |Model Validation|It's crucial to validate models carefully to ensure that increased complexity leads to actual gains in accuracy. Complex models may overfit to noise in the training data, reducing their generalization performance.
 
 ### Strategies to Balance Accuracy and Interpretability:
+
 |Strategy|Description|
 |--|--|
 Feature Engineering| Careful feature selection and engineering can improve the accuracy of interpretable models by providing relevant information.

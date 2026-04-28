@@ -1,12 +1,7 @@
-# Object-Oriented Programming
+# Object Oriented Programming
 
-OOP principles, patterns, and Python implementations.
+The illustrated content are extracted from book: __Data Structures & Algorithms in Python__, Chapter #2.
 
-## Contents
+The book is free to use.
 
-| File | Description |
-|------|-------------|
-| [objectOrientedProgramming](/programming/oop/objectOrientedProgramming.md) | OOP concepts and principles |
-| [nb_OOP](/programming/oop/nb_OOP.ipynb) | Jupyter notebook with OOP examples |
-
-Topics include classes, inheritance, polymorphism, encapsulation, and design patterns.
+Book Link: http://xpzhang.me/teach/DS19_Fall/book.pdf

@@ -7,6 +7,7 @@
 
 ## Removing outliers in Customer Segmentation Task
 Removing outliers in a customer segmentation task depends on the specific context and goals of your analysis. It's not a one-size-fits-all decision, and you should carefully consider whether outlier removal is appropriate for your particular case. Here are some factors to consider:
+
 |Factor|Description|
 |--|--|
 Nature of Outliers| Consider the nature of the outliers in your dataset. Are they genuinely erroneous data points, or do they represent extreme but valid customer behaviors? Valid extreme behaviors may be important for certain types of customer segments (e.g., high-value customers).

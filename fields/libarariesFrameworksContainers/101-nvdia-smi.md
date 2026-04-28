@@ -48,6 +48,7 @@ They are the Processes using GPUs, this table lists all the processes having Com
 - Graphical processes is limited to the supported products starting with Kepler architecture.
 
 There are some values for each entity we should be aware of:
+
 |Parameter|Description|Value|
 |-|-|-|
 <GPU Index>|Represents NVML Index of the device.
@@ -76,6 +77,7 @@ Microsoft and NVIDIA offer two driver modes for Windows;
 A great start of using the nvidia-smi command line, in through the tutorial illustrated by *Eliot Eshelman* in [Microway-Nvidia-smi-Control_Your_GPUs](https://www.microway.com/hpc-tech-tips/nvidia-smi_control-your-gpus/).
 
 Let's write down the most might-look important ones for our reference;
+
 |Objective|Details|Command|
 |-|-|-|
 Query GPU devices|To get all available Nvidia devices|*nvidia-smi -L*

@@ -32,6 +32,7 @@ To strengthen your data analysis skills and go deeper into this area, consider t
 
 # Getting Into Domain Knowledge
 Getting up to speed with the domain knowledge of a new company is essential for a data scientist to effectively work on their analysis. Here are some steps to quickly acquire domain knowledge:
+
 |Step|Description|
 |--|--|
 |Company Materials| Start by reading any documentation or materials provided by the company. This could include reports, whitepapers, manuals, or internal wiki pages. It will give you an overview of the company's products, services, and objectives.

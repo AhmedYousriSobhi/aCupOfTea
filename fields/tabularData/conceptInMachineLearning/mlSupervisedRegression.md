@@ -117,6 +117,7 @@ When doing train-test splits make sure that your splits are independent from one
 
 ## One-Hot Encoding
 When we do linear regrssion with one-hot encoding, for example; one-hot encoding if the location is beachfront or not .
+
 | | | |
 |-|-|-|
 |1|0|5|
@@ -175,6 +176,7 @@ We want to think about this tendency of our models as the expectation of out-of-
 For Better Explanation of Bias-Variance, Please refer to chapter: [fields/tabularData/dataEvaluation/modelBehaviour/biasVarianceTradeOff](https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/fields/tabularData/dataEvaluation/modelBehaviour/biasVarienceTradeOff.md)
 
 # Sources of Model Error
+
 |Source|Explanation|
 |--|--|
 |__The model itself can be wrong (Bias)__|This will generally refer to models that are not doing well in identifying the relationship between our feature and target. This will generally be a bias model where our predictions are fairly consistent, but due to the model choice not properly defining the relationship between the X and y variable, we are consistently getting the wrong prediction.|

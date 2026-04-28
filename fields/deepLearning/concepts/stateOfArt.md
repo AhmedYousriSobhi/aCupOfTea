@@ -40,6 +40,7 @@ For example, in image recognition, the "state of the art" model might refer to t
 "State of the art" is often used to highlight the cutting-edge advancements in a particular field and represents the highest standard of performance or innovation at a given point in time.
 
 # Architecture Vs Model
+
 |KeyWord|Definition|
 |--|--|
 |__Architecture__|An architecture refers to the overall design and structure of a neural network or a machine learning algorithm.It encompasses the arrangement of layers, types of layers, and how they are connected.</br></br>Architectures define the high-level framework of the model, including the flow of data and the transformations applied to that data. </br></br>Different architectures are designed to address specific types of problems or challenges. They can have various configurations of layers, connections, and operations.</br></br>Examples of architectures include convolutional neural networks (CNNs), recurrent neural networks (RNNs), and transformer architectures.
@@ -65,6 +66,7 @@ ID face extraction can be used for a variety of applications, such as:
 ID face extraction is a challenging task because ID images can be of poor quality, and the faces in the images can be obscured by sunglasses, hats, or other objects. However, recent advances in computer vision have made ID face extraction more accurate and reliable.
 
 Here are some of the challenges of ID face extraction:
+
 |Challenge|Description|
 |-|-|
 |__Variation in ID document formats__| ID documents come in a variety of formats, such as driver's licenses, passports, and ID cards. This can make it difficult to develop a single algorithm that can extract faces from all types of ID documents.
@@ -81,6 +83,7 @@ The task of ID face extraction typically involves several key steps:
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/1a66c3a2-bbae-4694-ae28-4872376d201d)
 
 ### History Timeline
+
 |TimeLine|Event|
 |--|--|
 |__Early Days: Viola-Jones Algorithm (2001)__|Our story begins in the early 2000s when Paul Viola and Michael Jones introduced the Viola-Jones algorithm. This algorithm laid the foundation for modern face detection. Using Haar-like features and a cascading architecture, it could quickly identify faces in real-time. Although simple by today's standards, the Viola-Jones algorithm showcased the potential of machine learning in solving complex tasks like face detection.
@@ -122,6 +125,7 @@ RetinaFace is a single-stage face detection model developed by the InsightFace t
 RetinaFace is based on a feature pyramid network (FPN), which allows it to extract features at multiple scales from the input image. This is important for face detection, as faces can vary greatly in size and appearance.
 
 __The RetinaFace architecture consists of three main components:__
+
 |Component|Details|
 |--|--|
 |Feature pyramid network (FPN)| The FPN extracts features from the input image at multiple scales. This is done by combining the outputs of different layers of a convolutional neural network (CNN).

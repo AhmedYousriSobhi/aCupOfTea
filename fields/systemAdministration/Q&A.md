@@ -27,8 +27,8 @@ In this blog, we will introduce more practice illustrated in question and answer
 - [To create a user account ram, the mail box of ram should lie in the directory /var/temp. What line will you add in the file /etc/login.defs?](#to-create-a-user-account-ram-the-mail-box-of-ram-should-lie-in-the-directory-vartemp-what-line-will-you-add-in-the-file-etclogindefs)
   - [What is etc/login.defs ?](#what-is-etclogindefs-)
 - [The switch for displaying hashes during rpM, insllation is? \[-i, -h, -x, -v\]](#the-switch-for-displaying-hashes-during-rpm-insllation-is--i--h--x--v)
-  - [Explaning the Usage of switches \[-i, -h, -x, -v\]](#explaning-the-usage-of-switches--i--h--x--v)
-- [Signle Unix Specification (SUS) version 2 provides enhanced support for?](#signle-unix-specification-sus-version-2-provides-enhanced-support-for)
+  - [Explaining the Usage of switches \[-i, -h, -x, -v\]](#explaining-the-usage-of-switches--i--h--x--v)
+- [Single Unix Specification (SUS) version 2 provides enhanced support for?](#single-unix-specification-sus-version-2-provides-enhanced-support-for)
   - [Importance of Enhanced Support](#importance-of-enhanced-support)
 - [Which command is used to create a new partion on a linux system?](#which-command-is-used-to-create-a-new-partion-on-a-linux-system)
   - [How to create a new partion using fdisk?](#how-to-create-a-new-partion-using-fdisk)
@@ -136,6 +136,7 @@ The other addresses in the list are not valid IPv4 addresses:
 - 127.0.01 is an invalid IPv4 address because the fourth number is not between 0 and 255.
 
 ## Comparison between IPv4 & IPv6
+
 |Feature|	IPv4|	IPv6|
 |--|--|--|
 Address space|	4.3 billion addresses|	340 undecillion addresses|
@@ -195,6 +196,7 @@ int main() {
 When the alarm expires, the alarm_handler() function will be called.
 
 ## Other Available Singals
+
 Signal| Name|	Description|	Number|	When to use|
 |--|--|--|--|--|
 SIGHUP|	Hangup|	Sent to a process when its controlling terminal is hung up.|	1|	To terminate a process gracefully when its controlling terminal is hung up.
@@ -447,6 +449,7 @@ The /etc/login.defs file is a configuration file that defines the default settin
 The /etc/login.defs file is used by the login program, which is the program that is responsible for authenticating users and logging them into the system. When a user attempts to log in, the login program reads the /etc/login.defs file to determine the login settings.
 
 Here is a list of some of the important settings in the /etc/login.defs file:
+
 |Setting|Description|
 |--|--|
 |PASS_MAX_DAYS| This setting specifies the maximum number of days that a password can be used before it expires.
@@ -481,8 +484,9 @@ Here is an example of the output of the rpm -ihv command with the -h switch:
 ```
 This output shows that the vim package is being installed and that all of the files have been successfully unpacked.
 
-## Explaning the Usage of switches [-i, -h, -x, -v]
+## Explaining the Usage of switches [-i, -h, -x, -v]
 The following are the usages of the switches -i, -h, -x, and -v:
+
 |Switch|Usage|
 |-|-|
 **-i**|The -i switch is used to enable interactive mode. When interactive mode is enabled, the program will prompt the user for input before continuing. This is useful for programs that require the user to make decisions during execution.
@@ -506,7 +510,7 @@ nano -v my_file.txt
 # This will print additional information to the console about the program's execution, such as the key presses that are being detected and the files that are being read and written.
 ```
 
-# Signle Unix Specification (SUS) version 2 provides enhanced support for?  
+# Single Unix Specification (SUS) version 2 provides enhanced support for?    
 Choose From:
 1. 8 bit unix
 2. 16 bit unix

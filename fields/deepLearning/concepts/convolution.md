@@ -235,6 +235,7 @@ Vertocal Edge filter must be have Bright Pixels in the left, and Dark Pixels in 
 3. Can even train the Neural Network to make filter that detect edges with line angle like 45, 70, or even 73 degrees.
    
 ### Other Common Used Filters for Vertical Edge Detection
+
 |Kernel|	Matrix|	Advantages|	Disadvantages|	When to Use|
 |--|--|--|--|--|
 |Sobel Vertical|	-1 0 1<br>-2 0 2<br>-1 0 1|	- Emphasizes edges effectively<br>- Computationally efficient|	- Sensitive to noise|	General edge detection, real-time applications|
@@ -330,7 +331,7 @@ Remember that Striding is in Horizontal and Vertical axises.
 The main effect of using a strode larger than 1 is a reduction in the spatial dimentions of the output feature map. A larger stride means the filter "Skips" over more pixels, leading to fewer output values. This reduction is spatial dimensions can be useful for downsampling or reducing computational complexity.
 
 ## Why to use Stride?
-For varous reasons:
+For various reasons:
 1. __Downsampling__: Using a larger stride reduces the spatial resolution of the feature map, which can be useful for downsampling and dimensionality reduction in the networks.
 2. __Reduced Computational Complexity__: Larger strides results in fewer computations, making the process faster and less memory-intense.
 3. __Feature Reduciotn__: Strided convolutions can help reduce overfitting by forcing the network to capture more important features due to the reduced number of computations.
@@ -389,8 +390,8 @@ When you convolute a filter with shape (3x3x3) with RBG image with shape (6x6x3)
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/6080c854-4d7f-48f3-a59a-bfacae2d0bb0)
 
 Let's see how this actually happens under the hood:
-- The filter applied has a three channels, so each channel will be applied to each channel of the RGB image indevidually, each of the multiplication is element-wise, resulting in three separate feature maps (one for each channel). These feature maps represent the response of the filter to each color channel.
-- Each of these features map are summed together into a single featuere map which will have a shape of (4x4x1).
+- The filter applied has a three channels, so each channel will be applied to each channel of the RGB image individually, each of the multiplication is element-wise, resulting in three separate feature maps (one for each channel). These feature maps represent the response of the filter to each color channel.
+- Each of these features map are summed together into a single feature map which will have a shape of (4x4x1).
 - Adding a bias term to the output.
 - Applying activation function like Relu, to have a final output feature map.
 
@@ -403,8 +404,8 @@ Where:
 ## Number of Parameters Calculation
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/8729ab7b-26e8-4b53-8c7c-a9b47bdde759)
 
-To calculate the total paratmeters required for training in the convolution neural network:
-- Weights paramters = 3 * 3 * 3 = 27 paramters.
+To calculate the total parameters required for training in the convolution neural network:
+- Weights parameters = 3 * 3 * 3 = 27 parameters.
 - Bias Term = 1
 
 So the total number of parameters will = 27 + 1 = 28 
@@ -416,7 +417,7 @@ If we have two filters, how the convolutions work between an input image, and th
 
 The figures below illustrate how the process works:
 
-1- Calculating the ouptut of the first applied filter.
+1- Calculating the output of the first applied filter.
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/e624607e-8238-4e8a-9047-e3429c3ab860)
 
 2- Calculating the second output from the second filter.
@@ -434,12 +435,12 @@ Note: As we go deep in CNN
 - Number of filters increase.
   
 ## Convolution Multiplication Visuale Example
-A great guide for [visuale illustration](https://cs231n.github.io/assets/conv-demo/index.html) descripted in the [CS231n: Convolutional Neural Networks for Visual Recognition](https://cs231n.github.io/convolutional-networks/#conv)
+A great guide for [visual illustration](https://cs231n.github.io/assets/conv-demo/index.html) described in the [CS231n: Convolution Neural Networks for Visual Recognition](https://cs231n.github.io/convolutional-networks/#conv)
 
 # Pooling Layer
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/21ee794c-9d0d-40d7-bcb9-53ffbdd6e427)
 
-Pooling operates on individual feature maps produced by the convolutional layers. It replaces a group of adjacent pixels with a single value, thus reducing the spatial resolution of the feature map. The general idea is to capture the most important information while reducing the computational complexity and the risk of overfitting
+Pooling operates on individual feature maps produced by the convolutional layers. It replaces a group of adjacent pixels with a single value, thus reducing the spatial resolution of the feature map. The general idea is to capture the most important information while reducing the computational complexity and the risk of over-fitting
 So it is a technique to reduce the information in an image while maintaining features.
 
  ConvNets often also use pooling layers to: 
@@ -490,17 +491,17 @@ Note: Here, the bias is for the fully connected layer.  In fully connected layer
 # Why Convolution
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/309d9bc8-2a0f-47f6-8c2e-cd2b832cd39e)
 
-Compared to fully conceted layer where if we pass an image, so all pixels are converted to a single vector, where each pixel has a neuron for it (assuming that), so for example if we have an image with shape [32 * 32 * 3] which equals to 3072 parameters + 3072 bias.
-So the convolution neuron network have in contrast a low number of parameters, which reduce the complexity of comuptation process, and also reduce overfitting.
+Compared to fully connected layer where if we pass an image, so all pixels are converted to a single vector, where each pixel has a neuron for it (assuming that), so for example if we have an image with shape [32 * 32 * 3] which equals to 3072 parameters + 3072 bias.
+So the convolution neuron network have in contrast a low number of parameters, which reduce the complexity of computation process, and also reduce over-fitting.
 
 There are two most common reasons for why convolutions:
 
-1- __Parameters Sharing__: means that the same set of learnable weights (paramters) is used for multiple positions within the input data. This concept is valuable in computer vision & image processing for the following task:
-- __Local Feature Detection__: in images, local patters, such as edges, textures, and corners, often occure repeateally in different regions. For instance, a feature detector (such as vertical edge detector) that's usefull in one part of the image is problably usefull in another part of the image. Parameter sharing allows a single set of weights to be applied across different parts of the image, making in possible for the network to learn to detect these local features more efficiently.
-- __Reduced Model Complexity__: without parameter sharing, a fully connected layer would require a large number of unique parameters, especially when dealling with high-resolution images. This leads to a high computational & memory burden. Convolution layers alleviate this issue by resuing the same weights across the input, resulting in a much more compact model.
+1- __Parameters Sharing__: means that the same set of learnable weights (parameters) is used for multiple positions within the input data. This concept is valuable in computer vision & image processing for the following task:
+- __Local Feature Detection__: in images, local patters, such as edges, textures, and corners, often occur repeatedly in different regions. For instance, a feature detector (such as vertical edge detector) that's useful in one part of the image is probably useful in another part of the image. Parameter sharing allows a single set of weights to be applied across different parts of the image, making in possible for the network to learn to detect these local features more efficiently.
+- __Reduced Model Complexity__: without parameter sharing, a fully connected layer would require a large number of unique parameters, especially when dealing with high-resolution images. This leads to a high computational & memory burden. Convolution layers alleviate this issue by reusing the same weights across the input, resulting in a much more compact model.
 - __Translation Invariance__: parameters sharing contributes to a property called translation invariance. This means that the network can recognize the same feature or pattern regardless of its exact location in the input. For example, if an edge detector filter detects a vertical edge in one part of the image, it can also recognize the same vertical edge in a different location.
 
-2- __Sparsity of Connections__: Convolutional layers enforce a sparsity of connections, which means that each output value depends only on a small, local subset of input values, unlike in a fully conected layer where each output node is connected to all input nodes. 
+2- __Sparsity of Connections__: Convolutional layers enforce a sparsity of connections, which means that each output value depends only on a small, local subset of input values, unlike in a fully connected layer where each output node is connected to all input nodes. 
 
 The idea of sparsity of connections is that only the input nodes that are relevant to the output node need to be connected. By sparsifying the connections, the model can learn more efficiently
 
@@ -1232,6 +1233,7 @@ YOLO works by predicting the bounding boxes and class probabilities of all objec
 YOLO takes an input image and divides it into a grid, then predicts bounding boxes and class probabilities for objects in each grid cell in a single forward pass through a neural network. Here's an overview of the YOLO algorithm:
 
 Key Characteristics of YOLO:
+
 |Characteristic|Description|
 |-|-|
 |Single Pass Detection| YOLO performs object detection in a single pass through the neural network, as opposed to two-stage detectors that first propose regions of interest and then classify them. This makes YOLO much faster.
@@ -1273,7 +1275,9 @@ The input to the fully connected layer is a feature map with dimensions (height,
 The output of the global average pooling operation is then passed to a convolution layer with a kernel size of 1x1. This convolution layer outputs a feature map with dimensions (1, 1, channels).
 
 ### Steps for Convertion
+
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/7399bf10-0f50-45c6-8736-c28aeb722773)
+
 |Step|Details|
 |-|-|
 |Replace Fully Connected Layers with Global Average Pooling (GAP)|The first step in converting fully connected layers is to replace the final few fully connected layers in the network with a Global Average Pooling (GAP) layer.</br>GAP computes the spatial average of each feature map, resulting in a fixed-size feature map regardless of the input image's size.
@@ -1296,6 +1300,7 @@ If the center/midpoint of an object falls into a grid cell, that grid cell is re
 The next step is predicting the bounding box inside each grid cell, then determining the location of the object according to the predicted bounding box, and also prediction the class of that object.
 
 To summarized these steps:
+
 |Step|Details|
 |-|-|
 |Bounding Box Predictions|For each grid cell, YOLO predicts multiple bounding boxes (often 3 or 4, depending on the configuration). These bounding boxes are defined relative to the grid cell's coordinates and dimensions.
@@ -1309,6 +1314,7 @@ After object detection, YOLO applies a post-processing step called non-maximum s
 YOLO uses anchor boxes, which are predefined boxes with different aspect ratios and sizes. The network predicts offsets to these anchor boxes. The anchor boxes serve as templates for the predicted bounding boxes and help improve localization accuracy.
 
 ## Summerized Yolo Steps
+
 |Step|Details|
 |-|-|
 |Grid Cells| YOLO divides the input image into a grid of cells. Each grid cell is responsible for predicting objects that are present within its boundaries. The grid is typically uniform, and the number of cells along the height and width of the image is determined by the network architecture.

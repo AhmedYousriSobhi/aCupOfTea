@@ -28,6 +28,7 @@ There are some use cases and trade-offs between Dask and Spark:
   - Unlike Spark which has its own set of APIs and abstractions which may require a steeper learning curve for Python-focused data scientists.
 
 Here are some comparison between Dask and Spark:
+
 |Point of Difference|Details|
 |-|-|
 APIs|- Dask DataFrame reuses the Pandas API and memory model.</br>- Spark DataFrame has its own API and memory model, it also implements a large subset of SQL language.
@@ -59,6 +60,7 @@ A parallelized versions of common Python data structure!; They are high-level co
 These make then easier for users to transition from single-machine to parallel and distributed computing without significant changes to their code.
 
 An overview of their 4 main collections:
+
 |Data Collection|Specs|
 |-|-|
 Dask Arrays|Parallelized versions of NumPy arrays.</br> They implement a subset of the NumPy ndarray interface using blocked algorithms, breaking up the large array into many small arrays
@@ -96,6 +98,7 @@ Dask could be constructed into three main components; [Client, Scheduler, Worker
  |  Worker |  |  Worker |  |  Worker |
  +---------+  +---------+  +---------+
 ```
+
 |Component|Sub-Component|Functionality|
 |-|-|-|
 Dask Client|Main|Developer interact with Dask through the Client.</br>Dask Client creates the Directed Acyclic Graph (DAG) of tasks by analyzing the code.</br>Responsible for instructing the scheduler what to compute.</br>Gather results from the workers and aggregate the results in the Client Process.

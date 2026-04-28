@@ -10,7 +10,7 @@ But the case here, some of the featurs are duplicated because of different synta
 
 So we need to do something like normalizing the features in that column, and re-assign the normalized keywords for all the features.
 
-## Methadology: Levenshtein Distance
+## Methodology: Levenshtein Distance
 A required here, is to measure the similarity between words, so the matched words should be reduced into a single words.
 
 This problem is converted to the number of edits to convert from word to the other, a solution for this is Levenshtein Distance.
@@ -58,7 +58,6 @@ In Python, there is a developed package designed to do that similatity calculati
 ```python
 from fuzzywuzzy import fuzz
 ```
-
 
 ## Resources
 - [medium](https://medium.com/@ethannam/understanding-the-levenshtein-distance-equation-for-beginners-c4285a5604f0)

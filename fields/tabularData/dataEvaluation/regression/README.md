@@ -140,7 +140,9 @@ Formula:
 ```
 BIC = K * log(n) - 2 * log(L)
 ```
+
 # Comparison
+
 |Evaluation Function|	Description|	Advantages|	Disadvantages|	Best suited for|	Date of creation|
 |--|--|--|--|--|--|
 |Mean Squared Error (MSE)|	Measures the average squared difference between the predicted and actual values|	Easy to understand and interpret|	Sensitive to outliers|	Linear regression models|	1823|

@@ -96,6 +96,7 @@ Key Performance Indicators (KPIs) are important metrics that food delivery servi
 |Runners Shift Planing Automation|Automate the process of runners shifts planning according to their estimated forecasted orders demands, time slots and shifts long|
 
 ## Related Projects
+
 |Project|Description|
 |--|--|
 |Recommender System| Build a personalized recommender system that suggests restaurants and food items based on a customer's previous orders, preferences, and user behavior. <br/>This can enhance customer engagement, increase average order values, and improve customer retention.|

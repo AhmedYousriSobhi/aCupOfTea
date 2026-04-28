@@ -21,6 +21,7 @@ In case we decide to see how each cluster will be in case we used different pair
 
 # Defining Customers Groups from Clusters
 Once you have clustered your customers using Agglomerative Clustering or any other clustering algorithm, you can define customer groups or segments by analyzing the characteristics of each cluster. Here's how you can approach it:
+
 |Approach|Description|
 |--|--|
 |Cluster Profiling| Calculate summary statistics for each cluster. For example, compute the mean, median, or mode of various features (e.g., income, purchase behavior) within each cluster. </br>This will provide you with an overview of the typical characteristics of customers in each cluster.

@@ -14,8 +14,8 @@ Unsupervised machine learning is a type of machine learning where the model is t
   - [Silhouette Score](#silhouette-score)
   - [Elbow Method](#elbow-method)
     - [Python Implementation](#python-implementation)
-- [Dimentionality Reduction Techniques](#dimentionality-reduction-techniques)
-  - [Techinical Comparison](#techinical-comparison)
+- [Dimensionality Reduction Techniques](#dimensionality-reduction-techniques)
+  - [Technical Comparison](#technical-comparison)
 - [Principal Component Analysis (PCA)](#principal-component-analysis-pca)
   - [Example: Dimensionality Reduction using PCA](#example-dimensionality-reduction-using-pca)
   - [PCA Algorithm](#pca-algorithm)
@@ -27,6 +27,7 @@ Unsupervised machine learning is a type of machine learning where the model is t
   
 # Description of Unspervised ML
 Here's a description of unsupervised machine learning:
+
 |Aspect|Description|
 |--|--|
 |No Labeled Output| Unlike supervised learning, where the algorithm is provided with input-output pairs and learns to map inputs to specific outputs, unsupervised learning deals with data where there are no target labels or explicit output values to predict.|
@@ -100,6 +101,7 @@ Software and Library Support|Ensure that the algorithm you choose is available i
 In practice, it's common to try several clustering algorithms and evaluate their performance based on your specific objectives and data characteristics. No single algorithm is best for all scenarios, so it's essential to choose the one that best suits your needs and produces meaningful clusters for your analysis or applications.
 
 # Clustering Algorithms Comparison
+
 Algorithm|	Data Distribution|	Number of Clusters|	Scalability|	Interpretability|	Outlier Handling|	Robustness to Noise|	Cluster Shape|	Non-Euclidean Distances|	Hierarchical vs. Partitional|	Domain Knowledge|	Evaluation Metrics|	Software Support|
 |--|--|--|--|--|--|--|--|--|--|--|--|--|
 |K-Means|	Assumes spherical|	Requires pre-defined K|	Scalable|	Easy to interpret|	Sensitive to outliers|	Not robust|	Assumes convex|	Supports custom distances|	Partitional|	Widely used| Silhouette Score, Within-cluster SSE|	scikit-learn, R|
@@ -111,6 +113,7 @@ Algorithm|	Data Distribution|	Number of Clusters|	Scalability|	Interpretability|
 
 # Determining The Number of Clusters
 Choosing the appropriate number of clusters (K) is a crucial step in clustering analysis. Several methods can help you determine the optimal K:
+
 |Method|Details|
 |--|--|
 |Elbow Method|Plot the within-cluster sum of squares (inertia) against different values of K.</br>Look for an "elbow" point in the plot where the inertia starts to level off. This can be a good choice for K.
@@ -187,8 +190,9 @@ Here are some tips for using the elbow method effectively:
 ### Python Implementation
 python code provided for Elbow method implementation locatted at ["tabularData/dataModeling/cluster_elbow_method.py"](https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/fields/tabularData/dataModeling/clustering/cluster_elbow_method.py)
 
-# Dimentionality Reduction Techniques
+# Dimensionality Reduction Techniques
 There are many different dimensionality reduction techniques, each with its own strengths and weaknesses. Some of the most common dimensionality reduction techniques include:
+
 |Technique|Description|
 |--|--|
 |Principal component analysis (PCA)| PCA is a linear dimensionality reduction technique that finds the principal components of the data, which are the directions in which the data varies the most. PCA is a simple and efficient technique, but it is not able to capture non-linear relationships in the data.
@@ -199,7 +203,8 @@ There are many different dimensionality reduction techniques, each with its own 
 
 In addition to these general-purpose dimensionality reduction techniques, there are also many specialized techniques that have been developed for specific applications. For example, there are dimensionality reduction techniques for image processing, natural language processing, and financial data analysis.
 
-## Techinical Comparison
+## Technical Comparison
+
 |Technique|	Date of creation|	Work principle|	Other important comparison points|
 |--|--|--|--|
 Principal component analysis (PCA)|	1901|	Finds the principal components of the data, which are the directions in which the data varies the most.|	Linear, simple to implement and understand, fast and efficient, interpretable results, sensitive to outliers|

@@ -58,6 +58,7 @@ Many enthusiastic people who love to have a great challenge, jump to the unbound
 The field of statistics is a branch of mathematics that deals with the collection, analysis, interpretation, presentation, and organization of data. It involves the use of mathematical techniques to summarize and describe data, as well as to draw conclusions and make decisions based on data.
 
 Statistics is a diverse field that encompasses a wide range of topics, including:
+
 |Topic|Description|
 |--|--|
 |Descriptive statistics| This area of statistics focuses on summarizing and describing the main features of a dataset, such as measures of central tendency (mean, median, mode) and variability (range, variance, standard deviation).
@@ -77,6 +78,7 @@ Overall, the field of statistics is essential in today's data-driven world, as i
 Statistics provides valuable tools for making data-driven decisions, drawing insights from data, and testing hypotheses in a rigorous and systematic way. It plays a crucial role in research, decision-making, and problem-solving across various domains.
 
 Here are the key aspects of statistics:
+
 |Aspect|Description|
 |--|--|
 |Data Collection| Statistics begins with the collection of data. Data can be in the form of numbers, measurements, observations, or responses to surveys and experiments. Collecting data can involve various methods, such as surveys, experiments, observations, or mining existing datasets.
@@ -96,7 +98,7 @@ In is the real challenge to face!!
 
 There are many reasons why learning statistics is important, especially in today's data-driven world. Here are some key points highlighted in the provided context:
 
-|Reason|Highligh|
+|Reason|Highlight|
 |--|--|
 |Making informed decisions| Statistics helps you analyze data and draw meaningful conclusions, allowing you to make informed decisions based on facts rather than intuition or guesswork.
 |Problem-solving| Statistics has the power to solve complex problems in various fields, including business, science, and society. By understanding statistical concepts, you can better understand the variables involved in a problem and develop effective solutions.
@@ -113,6 +115,7 @@ In summary, learning statistics can benefit you in numerous ways, both personall
 
 # How to get started?
 Studying statistics can be a fascinating and rewarding pursuit, as it involves the use of mathematical techniques to analyze and interpret data. Here are some steps you can take to get started:
+
 |Step|Details|
 |--|--|
 |Learn the basics| Before diving into statistics, it's important to have a solid understanding of basic math concepts such as algebra, geometry, and calculus. Brush up on these subjects if you need to, or take a refresher course to make sure you have a strong foundation.
@@ -130,6 +133,7 @@ Remember that learning statistics takes time and practice, so don't get discoura
 There are various of books and courses explaining how to study Statistics, but they are all agree on common topics one should study well.
 
 The curriculum in studying statistics typically covers a range of topics, including:
+
 |Topic|Description|
 |--|--|
 |Introduction to Statistics| This course provides an overview of statistical concepts, methods, and applications. Students learn how to summarize and describe data, visualize data using graphs and plots, and understand basic probability concepts.
@@ -151,6 +155,7 @@ The curriculum in studying statistics typically covers a range of topics, includ
 These courses provide a well-rounded education in statistics, preparing students for careers in data analysis, research, and academia. Elective courses may also be available in specialized areas like biostatistics, computational statistics, or quantitative finance.
 
 # Introduction to Statistics
+
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/fd4f017f-7dd8-410e-b60c-97d6b503a594)
 
 The following illustration is taken from Stanford Statiscs Course (see Credit section below), with various illustrations from different sources to facilate and make the illustration simple to study.
@@ -159,6 +164,7 @@ Stanford's "Introduction to Statistics" teaches you statistical thinking concept
 
 ## Module 1 - Introduction and Descriptive Statiscs for Exploring Data
 ### Descriptive Statistics
+
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/bf9dc2ce-a673-45a7-a458-a5a5c0dced02)
 
 **"It is best to communicate informatio with figures whenever possible rather than numbers"**
@@ -166,6 +172,7 @@ Stanford's "Introduction to Statistics" teaches you statistical thinking concept
 Descriptive statistics is a branch of statistics that focuses on the methods and techniques used to summarize and describe data. It involves organizing, presenting, and summarizing data in a meaningful and informative way. Descriptive statistics are used to provide a concise overview of data sets, making it easier to understand and interpret the underlying information
 
 #### Why are Descriptive Statiscs important?
+
 "In January 1986, the space shuttle Challenger broke apart shortly after liftoff. The
 accident was caused by a part that was not designed to fly at the unusually cold
 temperature of 29◦ F at launch", engineers discussed before the launch.

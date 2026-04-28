@@ -817,6 +817,7 @@ if __name__ == '__main__':
 The **yield** keyword in python is used in the context of generator functions. It serves the purpose of creating iterators-functions that can be paused and resumed later, maintaining their state across multiple calls. The primary purpose of using **yield** is to produce a sequence of values while retaining the state of the function between calls.
 
 #### Breakdown the purpose of using **yield**
+
 |Purpose|Details|
 |-|-|
 Generators| Functions containing yield are known as generator functions. They generate a sequence of values lazily, one at a time, on-demand, rather than generating all values at once. This is beneficial when dealing with large datasets or infinite sequences because it saves memory by only computing the values as needed.
