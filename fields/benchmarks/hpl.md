@@ -1,10 +1,54 @@
-# Benchmarks - HPL-CPU
+# Benchmarks - HPL
 
 ## Table of Contents
 - [Benchmarks - HPL-CPU](#benchmarks---hpl-cpu)
   - [Table of Contents](#table-of-contents)
 
-## Understanding Theoretical HPL Performance on an Intel Xeon Platinum 8568Y+ Node
+## HPL Benchmark Concept
+
+### 1. What HPL Measures
+
+HPL (High Performance Linpack) measures floating-point performance while solving a dense system of linear equations.
+
+Results are typically reported as:
+
+* GFLOPS = Giga Floating Point Operations Per Second
+* TFLOPS = Tera Floating Point Operations Per Second
+
+Definitions:
+
+| Metric | Meaning                        |
+| ------ | ------------------------------ |
+| Rpeak  | Theoretical peak performance   |
+| Rmax   | Measured benchmark performance |
+
+---
+
+### 2. Understanding the Difference Between P and Q
+
+In the High-Performance Linpack (HPL) benchmark, the total number of MPI processes (or GPUs) is organized into a 2D Cartesian grid denoted as P×Q, where:
+- P represents the number of process rows.
+- Q represents the number of process columns.
+
+The matrix is sliced into small blocks (NB) and distributed across this grid using a block-cyclic distribution method. The algorithm alternates between two main phases, and how you balance P and Q dictates how communication bottlenecks form.
+1. Column Operations (Factorization) → Governed by P: To solve the linear system, HPL must perform LU factorization on a vertical slice of the matrix (a block column).
+    - This operation requires heavy, synchronous communication among all processes residing in the same grid column.
+    - Because these messages are relatively small but happen frequently, this phase is highly sensitive to network latency.
+    - If P is large (e.g., P=4,Q=2): More processes are forced to synchronize and communicate within each column. This increases latency overhead and stalls the GPUs while they wait for data handshakes.
+
+2. Row Operations (Broadcast & Update) → Governed by Q: Once a column is factorized, it must be broadcast horizontally across the process row so that all other processes can update their remaining portions of the matrix using dense matrix multiplication (GEMM).
+   - This phase is highly data-parallel and is bound by computational bandwidth and raw floating-point speed.
+   - HPL uses a lookahead algorithm, which means while one column row is broadcasting and updating, the next column factorization is already starting. This hides the row broadcast time behind matrix computation.
+   - If Q is large (e.g., P=2,Q=4): You have fewer processes stalling during column factorization (P=2), and you have more process breadth (Q=4) to parallelize the heavy matrix update calculations.
+
+**Summary: Why P<Q (P=2,Q=4) is preferred**</br>
+As a hard rule of thumb in HPC engineering, you should almost always configure P≤Q (and ideally, P should be as small as practically possible while keeping the grid roughly square).
+- Setting P>Q (P=4,Q=2): Exposes your benchmark to severe column-factorization latency. It will almost always result in lower GFLOPS scores because the GPUs spend too much time synchronizing.
+- Setting P<Q (P=2,Q=4): Minimizes column synchronization overhead while giving the lookahead pipeline more row processes to effectively stream and overlap matrix updates. Your script's selection of P=2, Q=4 for the 8-GPU run is the mathematically superior choice.
+
+---
+
+## HPL-CPU: Understanding Theoretical HPL Performance on an Intel Xeon Platinum 8568Y+ Node
 
 ### 1. System Information
 
@@ -34,25 +78,7 @@
 
 ---
 
-### 2. What HPL Measures
-
-HPL (High Performance Linpack) measures floating-point performance while solving a dense system of linear equations.
-
-Results are typically reported as:
-
-* GFLOPS = Giga Floating Point Operations Per Second
-* TFLOPS = Tera Floating Point Operations Per Second
-
-Definitions:
-
-| Metric | Meaning                        |
-| ------ | ------------------------------ |
-| Rpeak  | Theoretical peak performance   |
-| Rmax   | Measured benchmark performance |
-
----
-
-### 3. Important CPU Concepts
+### 2. Important CPU Concepts
 
 **3.1. Core:**</br>
 A core is an independent compute engine inside the CPU.</br>
@@ -125,29 +151,16 @@ Mathematically this counts as:
 
 ---
 
-### 4. Calculations
+### 3. Calculations
 
-**4.1. FLOPs Produced by One AVX-512 FMA:**</br>
+**3.1. FLOPs Produced by One AVX-512 FMA:**</br>
 One AVX-512 register contains: 8 FP64 values.</br>
-Each FMA performs:
+Each FMA performs: 8 multiplications + 8 additions = 16 FLOPs
 
-```text
-8 multiplications
-+
-8 additions
-=
-16 FLOPs
-```
+Therefore: 1 AVX-512 FMA instruction = 16 FP64 FLOPs
 
-Therefore:
 
-```text
-1 AVX-512 FMA instruction
-=
-16 FP64 FLOPs
-```
-
-**4.2. Why Do We Multiply by 2 Again?**</br>
+**3.2. Why Do We Multiply by 2 Again?**</br>
 The Intel Xeon Platinum 8568Y+ core contains: **2 independent AVX-512 FMA execution units**.</br>
 This information does NOT come from `lscpu`.</br>
 It comes from Intel microarchitecture documentation for Sapphire Rapids / Emerald Rapids.</br>
@@ -161,14 +174,14 @@ Therefore:
 32 FLOPs/cycle/core
 ```
 
-**4.3. Deriving FLOPs per Cycle per Core:**</br>
+**3.3. Deriving FLOPs per Cycle per Core:**</br>
 1.  **512-bit register** contains **8 FP64 values**.
 2.  **FMA** produces: 8 × 2 = **16 FLOPs**
 3.  **2 FMA units** produce **16 × 2 = 32 FLOPs**
 4.  Final result: **32 FLOPs/cycle/core**
 
-### 5. Theoretical Peak Performance Formula
-**5.1. Formula:**</br>
+### 4. Theoretical Peak Performance Formula
+**4.1. Formula:**</br>
 The standard HPL theoretical peak formula is:
 
 ```text
@@ -180,20 +193,20 @@ Rpeak =
 (FLOPs per Cycle per Core)
 ```
 
-**5.2. Applying the Formula**</br>
+**4.2. Applying the Formula**</br>
 1. Total FLOPs per Cycle: 96 cores × 32 FLOPs/cycle/core = 3072 FLOPs/cycle
 2. Total FLOPs per Second: 3072 × 2.301 × 10^9 = 7.068672 × 10^12 FLOPs/sec
 3. Convert to TFLOPS: 7.068672 × 10^12 = 7.07 TFLOPS
 4. Therefore: Rpeak ≈ 7.07 TFLOPS
 
-**5.3. Adjusting for Slurm Allocation:**</br>
+**4.3. Adjusting for Slurm Allocation:**</br>
 The benchmark job saw: 94 CPUs instead of: 96 CPUs</br>
 Corrected theoretical peak: 94 × 32 × 2.301 GHz = 6.92 TFLOPS
 
-**5.4. Comparing Against Actual HPL Result:**</br>
+**4.4. Comparing Against Actual HPL Result:**</br>
 Measured result: 5590.64 GFLOPS = 5.59 TFLOPS
 
-**5.5. Efficiency vs Full Node Peak:**</br>
+**4.5. Efficiency vs Full Node Peak:**</br>
 
 ```text
 Efficiency =
@@ -202,10 +215,10 @@ Efficiency =
 79.1%
 ```
 
-**5.6. Efficiency vs Allocated 94-Core Peak:**</br>
+**4.6. Efficiency vs Allocated 94-Core Peak:**</br>
 Efficiency = 5.59 / 6.92 = 80.8%
 
-**5.7. Why Actual Performance Is Lower Than Theoretical:**</br>
+**4.7. Why Actual Performance Is Lower Than Theoretical:**</br>
 Theoretical calculations assume:
 
 * Every core active
@@ -225,7 +238,7 @@ Therefore: Rmax < Rpeak is expected.
 
 ---
 
-### 6. AVX Frequency Caveat
+### 5. AVX Frequency Caveat
 The formula above uses: **2.301 GHz** which is the maximum advertised frequency.</br>
 Under sustained AVX-512 workloads, CPUs often run at lower frequencies.</br>
 Example:
@@ -242,7 +255,7 @@ If the CPU sustained approximately 1.9–2.0 GHz during HPL, then a measured res
 
 ---
 
-### 7. Quick Reference Summary
+### 6. Quick Reference Summary
 
 | Item                   | Value                      |
 | ---------------------- | -------------------------- |
@@ -262,20 +275,13 @@ If the CPU sustained approximately 1.9–2.0 GHz during HPL, then a measured res
 
 ---
 
-### 8. Key Takeaways
+### 7. Key Takeaways
 1. HPL theoretical peak depends primarily on:
-
-   * Number of cores
-   * SIMD width
-   * Number of FMA units
-   * Sustained frequency
-
+   - Number of cores
+   - SIMD width
+   - Number of FMA units
+   - Sustained frequency
 2. AVX-512 allows one instruction to operate on eight FP64 values simultaneously.
-
 3. FMA doubles throughput by performing a multiply and add in a single instruction.
-
-4. The Xeon Platinum 8568Y+ can theoretically produce:
-
-   * 32 FP64 FLOPs/cycle/core
-
+4. The Xeon Platinum 8568Y+ can theoretically produce: 32 FP64 FLOPs/cycle/core
 5. A measured HPL result of 5.59 TFLOPS on this node is consistent with a well-tuned CPU-only benchmark run.
