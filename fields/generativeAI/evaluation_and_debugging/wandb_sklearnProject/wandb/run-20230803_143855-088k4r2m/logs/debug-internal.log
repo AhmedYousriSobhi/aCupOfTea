@@ -1,0 +1,185 @@
+2023-08-03 14:38:55,332 INFO    StreamThr :64352 [internal.py:wandb_internal():86] W&B internal server running at pid: 64352, started at: 2023-08-03 14:38:55.330786
+2023-08-03 14:38:55,335 DEBUG   HandlerThread:64352 [handler.py:handle_request():144] handle_request: status
+2023-08-03 14:38:55,371 INFO    WriterThread:64352 [datastore.py:open_for_write():85] open: /home/yousri/Workspace/aCupOfTea/generativeAI/evaluation_and_debugging/wandb_sklearnProject/wandb/run-20230803_143855-088k4r2m/run-088k4r2m.wandb
+2023-08-03 14:38:55,373 DEBUG   SenderThread:64352 [sender.py:send():379] send: header
+2023-08-03 14:38:55,418 DEBUG   SenderThread:64352 [sender.py:send():379] send: run
+2023-08-03 14:38:56,090 INFO    SenderThread:64352 [dir_watcher.py:__init__():211] watching files in: /home/yousri/Workspace/aCupOfTea/generativeAI/evaluation_and_debugging/wandb_sklearnProject/wandb/run-20230803_143855-088k4r2m/files
+2023-08-03 14:38:56,091 INFO    SenderThread:64352 [sender.py:_start_run_threads():1121] run started: 088k4r2m with start time 1691062735.329322
+2023-08-03 14:38:56,101 DEBUG   SenderThread:64352 [sender.py:send_request():406] send_request: summary_record
+2023-08-03 14:38:56,102 INFO    SenderThread:64352 [sender.py:_save_file():1375] saving file wandb-summary.json with policy end
+2023-08-03 14:38:56,123 DEBUG   HandlerThread:64352 [handler.py:handle_request():144] handle_request: check_version
+2023-08-03 14:38:56,124 DEBUG   SenderThread:64352 [sender.py:send_request():406] send_request: check_version
+2023-08-03 14:38:56,491 DEBUG   HandlerThread:64352 [handler.py:handle_request():144] handle_request: run_start
+2023-08-03 14:38:56,492 DEBUG   HandlerThread:64352 [system_info.py:__init__():31] System info init
+2023-08-03 14:38:56,492 DEBUG   HandlerThread:64352 [system_info.py:__init__():46] System info init done
+2023-08-03 14:38:56,492 INFO    HandlerThread:64352 [system_monitor.py:start():181] Starting system monitor
+2023-08-03 14:38:56,492 INFO    SystemMonitor:64352 [system_monitor.py:_start():145] Starting system asset monitoring threads
+2023-08-03 14:38:56,492 INFO    HandlerThread:64352 [system_monitor.py:probe():201] Collecting system info
+2023-08-03 14:38:56,492 INFO    SystemMonitor:64352 [interfaces.py:start():190] Started cpu monitoring
+2023-08-03 14:38:56,493 INFO    SystemMonitor:64352 [interfaces.py:start():190] Started disk monitoring
+2023-08-03 14:38:56,493 INFO    SystemMonitor:64352 [interfaces.py:start():190] Started gpu monitoring
+2023-08-03 14:38:56,494 INFO    SystemMonitor:64352 [interfaces.py:start():190] Started memory monitoring
+2023-08-03 14:38:56,494 INFO    SystemMonitor:64352 [interfaces.py:start():190] Started network monitoring
+2023-08-03 14:38:56,497 DEBUG   HandlerThread:64352 [system_info.py:probe():195] Probing system
+2023-08-03 14:38:56,498 DEBUG   HandlerThread:64352 [system_info.py:_probe_git():180] Probing git
+2023-08-03 14:38:56,514 DEBUG   HandlerThread:64352 [system_info.py:_probe_git():188] Probing git done
+2023-08-03 14:38:56,514 DEBUG   HandlerThread:64352 [system_info.py:probe():240] Probing system done
+2023-08-03 14:38:56,514 DEBUG   HandlerThread:64352 [system_monitor.py:probe():210] {'os': 'Linux-6.2.6-76060206-generic-x86_64-with-glibc2.35', 'python': '3.9.0', 'heartbeatAt': '2023-08-03T11:38:56.497660', 'startedAt': '2023-08-03T11:38:55.314024', 'docker': None, 'cuda': None, 'args': (), 'state': 'running', 'program': '<python with no main file>', 'git': {'remote': 'https://github.com/AhmedYousriSobhi/aCupOfTea.git', 'commit': 'b9d9c9e516e468a92436cb4ddc3ef0332e8d404a'}, 'email': 'ahmedyousrisobhi@gmail.com', 'root': '/home/yousri/Workspace/aCupOfTea', 'host': 'yousri-Lenovo-Legion-5-15IMH05H', 'username': 'yousri', 'executable': '/home/yousri/anaconda3/envs/fixedsolution/bin/python', 'cpu_count': 6, 'cpu_count_logical': 12, 'cpu_freq': {'current': 4.4007499999999995, 'min': 800.0, 'max': 5000.0}, 'cpu_freq_per_core': [{'current': 4.483, 'min': 800.0, 'max': 5000.0}, {'current': 4.372, 'min': 800.0, 'max': 5000.0}, {'current': 4.429, 'min': 800.0, 'max': 5000.0}, {'current': 4.297, 'min': 800.0, 'max': 5000.0}, {'current': 4.378, 'min': 800.0, 'max': 5000.0}, {'current': 4.472, 'min': 800.0, 'max': 5000.0}, {'current': 4.437, 'min': 800.0, 'max': 5000.0}, {'current': 4.445, 'min': 800.0, 'max': 5000.0}, {'current': 4.442, 'min': 800.0, 'max': 5000.0}, {'current': 4.218, 'min': 800.0, 'max': 5000.0}, {'current': 4.489, 'min': 800.0, 'max': 5000.0}, {'current': 4.347, 'min': 800.0, 'max': 5000.0}], 'disk': {'total': 380.18306732177734, 'used': 148.6810531616211}, 'gpu': 'NVIDIA GeForce RTX 2060', 'gpu_count': 1, 'gpu_devices': [{'name': 'NVIDIA GeForce RTX 2060', 'memory_total': 6442450944}], 'memory': {'total': 15.479839324951172}}
+2023-08-03 14:38:56,514 INFO    HandlerThread:64352 [system_monitor.py:probe():211] Finished collecting system info
+2023-08-03 14:38:56,514 INFO    HandlerThread:64352 [system_monitor.py:probe():214] Publishing system info
+2023-08-03 14:38:56,514 DEBUG   HandlerThread:64352 [system_info.py:_save_pip():51] Saving list of pip packages installed into the current environment
+2023-08-03 14:38:56,515 DEBUG   HandlerThread:64352 [system_info.py:_save_pip():67] Saving pip packages done
+2023-08-03 14:38:56,515 DEBUG   HandlerThread:64352 [system_info.py:_save_conda():74] Saving list of conda packages installed into the current environment
+2023-08-03 14:38:57,091 INFO    Thread-37 :64352 [dir_watcher.py:_on_file_created():271] file/dir created: /home/yousri/Workspace/aCupOfTea/generativeAI/evaluation_and_debugging/wandb_sklearnProject/wandb/run-20230803_143855-088k4r2m/files/wandb-summary.json
+2023-08-03 14:38:57,092 INFO    Thread-37 :64352 [dir_watcher.py:_on_file_created():271] file/dir created: /home/yousri/Workspace/aCupOfTea/generativeAI/evaluation_and_debugging/wandb_sklearnProject/wandb/run-20230803_143855-088k4r2m/files/requirements.txt
+2023-08-03 14:38:57,092 INFO    Thread-37 :64352 [dir_watcher.py:_on_file_created():271] file/dir created: /home/yousri/Workspace/aCupOfTea/generativeAI/evaluation_and_debugging/wandb_sklearnProject/wandb/run-20230803_143855-088k4r2m/files/conda-environment.yaml
+2023-08-03 14:38:58,090 INFO    Thread-37 :64352 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/yousri/Workspace/aCupOfTea/generativeAI/evaluation_and_debugging/wandb_sklearnProject/wandb/run-20230803_143855-088k4r2m/files/conda-environment.yaml
+2023-08-03 14:38:58,150 DEBUG   HandlerThread:64352 [system_info.py:_save_conda():86] Saving conda packages done
+2023-08-03 14:38:58,150 INFO    HandlerThread:64352 [system_monitor.py:probe():216] Finished publishing system info
+2023-08-03 14:38:58,150 DEBUG   SenderThread:64352 [sender.py:send():379] send: files
+2023-08-03 14:38:58,151 INFO    SenderThread:64352 [sender.py:_save_file():1375] saving file wandb-metadata.json with policy now
+2023-08-03 14:38:58,162 DEBUG   HandlerThread:64352 [handler.py:handle_request():144] handle_request: stop_status
+2023-08-03 14:38:58,163 DEBUG   SenderThread:64352 [sender.py:send_request():406] send_request: stop_status
+2023-08-03 14:38:58,659 DEBUG   SenderThread:64352 [sender.py:send():379] send: telemetry
+2023-08-03 14:38:59,091 INFO    Thread-37 :64352 [dir_watcher.py:_on_file_created():271] file/dir created: /home/yousri/Workspace/aCupOfTea/generativeAI/evaluation_and_debugging/wandb_sklearnProject/wandb/run-20230803_143855-088k4r2m/files/wandb-metadata.json
+2023-08-03 14:38:59,099 INFO    wandb-upload_0:64352 [upload_job.py:push():131] Uploaded file /tmp/tmpxmba5tslwandb/n3fjjbr4-wandb-metadata.json
+2023-08-03 14:39:00,660 DEBUG   HandlerThread:64352 [handler.py:handle_request():144] handle_request: status_report
+2023-08-03 14:39:02,327 DEBUG   HandlerThread:64352 [handler.py:handle_request():144] handle_request: partial_history
+2023-08-03 14:39:02,328 DEBUG   SenderThread:64352 [sender.py:send():379] send: history
+2023-08-03 14:39:02,328 DEBUG   SenderThread:64352 [sender.py:send_request():406] send_request: summary_record
+2023-08-03 14:39:02,329 INFO    SenderThread:64352 [sender.py:_save_file():1375] saving file wandb-summary.json with policy end
+2023-08-03 14:39:02,330 DEBUG   SenderThread:64352 [sender.py:send():379] send: telemetry
+2023-08-03 14:39:02,331 DEBUG   SenderThread:64352 [sender.py:send():379] send: exit
+2023-08-03 14:39:02,331 INFO    SenderThread:64352 [sender.py:send_exit():584] handling exit code: 0
+2023-08-03 14:39:02,331 INFO    SenderThread:64352 [sender.py:send_exit():586] handling runtime: 5
+2023-08-03 14:39:02,331 INFO    SenderThread:64352 [sender.py:_save_file():1375] saving file wandb-summary.json with policy end
+2023-08-03 14:39:02,332 INFO    SenderThread:64352 [sender.py:send_exit():592] send defer
+2023-08-03 14:39:02,332 DEBUG   HandlerThread:64352 [handler.py:handle_request():144] handle_request: defer
+2023-08-03 14:39:02,332 INFO    HandlerThread:64352 [handler.py:handle_request_defer():170] handle defer: 0
+2023-08-03 14:39:02,332 DEBUG   SenderThread:64352 [sender.py:send_request():406] send_request: defer
+2023-08-03 14:39:02,332 INFO    SenderThread:64352 [sender.py:send_request_defer():608] handle sender defer: 0
+2023-08-03 14:39:02,332 INFO    SenderThread:64352 [sender.py:transition_state():612] send defer: 1
+2023-08-03 14:39:02,332 DEBUG   HandlerThread:64352 [handler.py:handle_request():144] handle_request: defer
+2023-08-03 14:39:02,332 INFO    HandlerThread:64352 [handler.py:handle_request_defer():170] handle defer: 1
+2023-08-03 14:39:02,332 DEBUG   SenderThread:64352 [sender.py:send_request():406] send_request: defer
+2023-08-03 14:39:02,332 INFO    SenderThread:64352 [sender.py:send_request_defer():608] handle sender defer: 1
+2023-08-03 14:39:02,332 INFO    SenderThread:64352 [sender.py:transition_state():612] send defer: 2
+2023-08-03 14:39:02,332 DEBUG   HandlerThread:64352 [handler.py:handle_request():144] handle_request: defer
+2023-08-03 14:39:02,332 INFO    HandlerThread:64352 [handler.py:handle_request_defer():170] handle defer: 2
+2023-08-03 14:39:02,332 INFO    HandlerThread:64352 [system_monitor.py:finish():190] Stopping system monitor
+2023-08-03 14:39:02,336 INFO    HandlerThread:64352 [interfaces.py:finish():202] Joined cpu monitor
+2023-08-03 14:39:02,336 INFO    HandlerThread:64352 [interfaces.py:finish():202] Joined disk monitor
+2023-08-03 14:39:02,336 DEBUG   SystemMonitor:64352 [system_monitor.py:_start():159] Starting system metrics aggregation loop
+2023-08-03 14:39:02,336 DEBUG   SystemMonitor:64352 [system_monitor.py:_start():166] Finished system metrics aggregation loop
+2023-08-03 14:39:02,336 DEBUG   SystemMonitor:64352 [system_monitor.py:_start():170] Publishing last batch of metrics
+2023-08-03 14:39:02,380 INFO    HandlerThread:64352 [interfaces.py:finish():202] Joined gpu monitor
+2023-08-03 14:39:02,380 INFO    HandlerThread:64352 [interfaces.py:finish():202] Joined memory monitor
+2023-08-03 14:39:02,380 INFO    HandlerThread:64352 [interfaces.py:finish():202] Joined network monitor
+2023-08-03 14:39:02,380 DEBUG   SenderThread:64352 [sender.py:send_request():406] send_request: defer
+2023-08-03 14:39:02,380 INFO    SenderThread:64352 [sender.py:send_request_defer():608] handle sender defer: 2
+2023-08-03 14:39:02,380 INFO    SenderThread:64352 [sender.py:transition_state():612] send defer: 3
+2023-08-03 14:39:02,380 DEBUG   SenderThread:64352 [sender.py:send():379] send: stats
+2023-08-03 14:39:02,380 DEBUG   HandlerThread:64352 [handler.py:handle_request():144] handle_request: defer
+2023-08-03 14:39:02,381 INFO    HandlerThread:64352 [handler.py:handle_request_defer():170] handle defer: 3
+2023-08-03 14:39:02,381 DEBUG   SenderThread:64352 [sender.py:send_request():406] send_request: defer
+2023-08-03 14:39:02,381 INFO    SenderThread:64352 [sender.py:send_request_defer():608] handle sender defer: 3
+2023-08-03 14:39:02,381 INFO    SenderThread:64352 [sender.py:transition_state():612] send defer: 4
+2023-08-03 14:39:02,381 DEBUG   HandlerThread:64352 [handler.py:handle_request():144] handle_request: defer
+2023-08-03 14:39:02,381 INFO    HandlerThread:64352 [handler.py:handle_request_defer():170] handle defer: 4
+2023-08-03 14:39:02,381 DEBUG   SenderThread:64352 [sender.py:send_request():406] send_request: defer
+2023-08-03 14:39:02,381 INFO    SenderThread:64352 [sender.py:send_request_defer():608] handle sender defer: 4
+2023-08-03 14:39:02,381 INFO    SenderThread:64352 [sender.py:transition_state():612] send defer: 5
+2023-08-03 14:39:02,382 DEBUG   HandlerThread:64352 [handler.py:handle_request():144] handle_request: defer
+2023-08-03 14:39:02,382 INFO    HandlerThread:64352 [handler.py:handle_request_defer():170] handle defer: 5
+2023-08-03 14:39:02,382 DEBUG   SenderThread:64352 [sender.py:send():379] send: summary
+2023-08-03 14:39:02,382 INFO    SenderThread:64352 [sender.py:_save_file():1375] saving file wandb-summary.json with policy end
+2023-08-03 14:39:02,382 DEBUG   SenderThread:64352 [sender.py:send_request():406] send_request: defer
+2023-08-03 14:39:02,382 INFO    SenderThread:64352 [sender.py:send_request_defer():608] handle sender defer: 5
+2023-08-03 14:39:02,383 INFO    SenderThread:64352 [sender.py:transition_state():612] send defer: 6
+2023-08-03 14:39:02,383 DEBUG   HandlerThread:64352 [handler.py:handle_request():144] handle_request: defer
+2023-08-03 14:39:02,383 INFO    HandlerThread:64352 [handler.py:handle_request_defer():170] handle defer: 6
+2023-08-03 14:39:02,383 DEBUG   SenderThread:64352 [sender.py:send_request():406] send_request: defer
+2023-08-03 14:39:02,383 INFO    SenderThread:64352 [sender.py:send_request_defer():608] handle sender defer: 6
+2023-08-03 14:39:02,386 DEBUG   HandlerThread:64352 [handler.py:handle_request():144] handle_request: status_report
+2023-08-03 14:39:02,631 INFO    SenderThread:64352 [sender.py:transition_state():612] send defer: 7
+2023-08-03 14:39:02,631 DEBUG   HandlerThread:64352 [handler.py:handle_request():144] handle_request: defer
+2023-08-03 14:39:02,632 INFO    HandlerThread:64352 [handler.py:handle_request_defer():170] handle defer: 7
+2023-08-03 14:39:02,632 DEBUG   SenderThread:64352 [sender.py:send_request():406] send_request: defer
+2023-08-03 14:39:02,632 INFO    SenderThread:64352 [sender.py:send_request_defer():608] handle sender defer: 7
+2023-08-03 14:39:02,632 INFO    SenderThread:64352 [sender.py:transition_state():612] send defer: 8
+2023-08-03 14:39:02,632 DEBUG   HandlerThread:64352 [handler.py:handle_request():144] handle_request: defer
+2023-08-03 14:39:02,632 INFO    HandlerThread:64352 [handler.py:handle_request_defer():170] handle defer: 8
+2023-08-03 14:39:02,632 DEBUG   SenderThread:64352 [sender.py:send_request():406] send_request: defer
+2023-08-03 14:39:02,632 INFO    SenderThread:64352 [sender.py:send_request_defer():608] handle sender defer: 8
+2023-08-03 14:39:02,632 INFO    SenderThread:64352 [job_builder.py:build():281] Attempting to build job artifact
+2023-08-03 14:39:02,632 INFO    SenderThread:64352 [job_builder.py:build():297] run is notebook based run
+2023-08-03 14:39:02,632 INFO    SenderThread:64352 [job_builder.py:_get_source_type():400] is repo sourced job
+2023-08-03 14:39:02,632 INFO    SenderThread:64352 [sender.py:transition_state():612] send defer: 9
+2023-08-03 14:39:02,632 DEBUG   HandlerThread:64352 [handler.py:handle_request():144] handle_request: defer
+2023-08-03 14:39:02,633 INFO    HandlerThread:64352 [handler.py:handle_request_defer():170] handle defer: 9
+2023-08-03 14:39:02,633 DEBUG   SenderThread:64352 [sender.py:send_request():406] send_request: defer
+2023-08-03 14:39:02,633 INFO    SenderThread:64352 [sender.py:send_request_defer():608] handle sender defer: 9
+2023-08-03 14:39:02,633 INFO    SenderThread:64352 [dir_watcher.py:finish():358] shutting down directory watcher
+2023-08-03 14:39:03,092 INFO    SenderThread:64352 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/yousri/Workspace/aCupOfTea/generativeAI/evaluation_and_debugging/wandb_sklearnProject/wandb/run-20230803_143855-088k4r2m/files/wandb-summary.json
+2023-08-03 14:39:03,092 INFO    SenderThread:64352 [dir_watcher.py:_on_file_modified():288] file/dir modified: /home/yousri/Workspace/aCupOfTea/generativeAI/evaluation_and_debugging/wandb_sklearnProject/wandb/run-20230803_143855-088k4r2m/files/config.yaml
+2023-08-03 14:39:03,092 INFO    SenderThread:64352 [dir_watcher.py:finish():388] scan: /home/yousri/Workspace/aCupOfTea/generativeAI/evaluation_and_debugging/wandb_sklearnProject/wandb/run-20230803_143855-088k4r2m/files
+2023-08-03 14:39:03,092 INFO    SenderThread:64352 [dir_watcher.py:finish():402] scan save: /home/yousri/Workspace/aCupOfTea/generativeAI/evaluation_and_debugging/wandb_sklearnProject/wandb/run-20230803_143855-088k4r2m/files/wandb-metadata.json wandb-metadata.json
+2023-08-03 14:39:03,093 INFO    SenderThread:64352 [dir_watcher.py:finish():402] scan save: /home/yousri/Workspace/aCupOfTea/generativeAI/evaluation_and_debugging/wandb_sklearnProject/wandb/run-20230803_143855-088k4r2m/files/requirements.txt requirements.txt
+2023-08-03 14:39:03,093 INFO    SenderThread:64352 [dir_watcher.py:finish():402] scan save: /home/yousri/Workspace/aCupOfTea/generativeAI/evaluation_and_debugging/wandb_sklearnProject/wandb/run-20230803_143855-088k4r2m/files/wandb-summary.json wandb-summary.json
+2023-08-03 14:39:03,093 INFO    SenderThread:64352 [dir_watcher.py:finish():402] scan save: /home/yousri/Workspace/aCupOfTea/generativeAI/evaluation_and_debugging/wandb_sklearnProject/wandb/run-20230803_143855-088k4r2m/files/config.yaml config.yaml
+2023-08-03 14:39:03,093 INFO    SenderThread:64352 [dir_watcher.py:finish():402] scan save: /home/yousri/Workspace/aCupOfTea/generativeAI/evaluation_and_debugging/wandb_sklearnProject/wandb/run-20230803_143855-088k4r2m/files/conda-environment.yaml conda-environment.yaml
+2023-08-03 14:39:03,093 INFO    SenderThread:64352 [sender.py:transition_state():612] send defer: 10
+2023-08-03 14:39:03,093 DEBUG   HandlerThread:64352 [handler.py:handle_request():144] handle_request: defer
+2023-08-03 14:39:03,093 INFO    HandlerThread:64352 [handler.py:handle_request_defer():170] handle defer: 10
+2023-08-03 14:39:03,100 DEBUG   SenderThread:64352 [sender.py:send_request():406] send_request: defer
+2023-08-03 14:39:03,100 INFO    SenderThread:64352 [sender.py:send_request_defer():608] handle sender defer: 10
+2023-08-03 14:39:03,101 INFO    SenderThread:64352 [file_pusher.py:finish():159] shutting down file pusher
+2023-08-03 14:39:03,334 DEBUG   HandlerThread:64352 [handler.py:handle_request():144] handle_request: poll_exit
+2023-08-03 14:39:03,334 DEBUG   SenderThread:64352 [sender.py:send_request():406] send_request: poll_exit
+2023-08-03 14:39:03,715 INFO    wandb-upload_1:64352 [upload_job.py:push():131] Uploaded file /home/yousri/Workspace/aCupOfTea/generativeAI/evaluation_and_debugging/wandb_sklearnProject/wandb/run-20230803_143855-088k4r2m/files/wandb-summary.json
+2023-08-03 14:39:03,906 INFO    wandb-upload_3:64352 [upload_job.py:push():131] Uploaded file /home/yousri/Workspace/aCupOfTea/generativeAI/evaluation_and_debugging/wandb_sklearnProject/wandb/run-20230803_143855-088k4r2m/files/conda-environment.yaml
+2023-08-03 14:39:03,929 INFO    wandb-upload_2:64352 [upload_job.py:push():131] Uploaded file /home/yousri/Workspace/aCupOfTea/generativeAI/evaluation_and_debugging/wandb_sklearnProject/wandb/run-20230803_143855-088k4r2m/files/config.yaml
+2023-08-03 14:39:04,334 DEBUG   HandlerThread:64352 [handler.py:handle_request():144] handle_request: poll_exit
+2023-08-03 14:39:04,335 DEBUG   SenderThread:64352 [sender.py:send_request():406] send_request: poll_exit
+2023-08-03 14:39:05,194 INFO    wandb-upload_0:64352 [upload_job.py:push():131] Uploaded file /home/yousri/Workspace/aCupOfTea/generativeAI/evaluation_and_debugging/wandb_sklearnProject/wandb/run-20230803_143855-088k4r2m/files/requirements.txt
+2023-08-03 14:39:05,337 DEBUG   HandlerThread:64352 [handler.py:handle_request():144] handle_request: poll_exit
+2023-08-03 14:39:05,337 DEBUG   SenderThread:64352 [sender.py:send_request():406] send_request: poll_exit
+2023-08-03 14:39:05,395 INFO    Thread-36 :64352 [sender.py:transition_state():612] send defer: 11
+2023-08-03 14:39:05,396 DEBUG   HandlerThread:64352 [handler.py:handle_request():144] handle_request: defer
+2023-08-03 14:39:05,396 INFO    HandlerThread:64352 [handler.py:handle_request_defer():170] handle defer: 11
+2023-08-03 14:39:05,396 DEBUG   SenderThread:64352 [sender.py:send_request():406] send_request: defer
+2023-08-03 14:39:05,396 INFO    SenderThread:64352 [sender.py:send_request_defer():608] handle sender defer: 11
+2023-08-03 14:39:05,396 INFO    SenderThread:64352 [file_pusher.py:join():164] waiting for file pusher
+2023-08-03 14:39:05,396 INFO    SenderThread:64352 [sender.py:transition_state():612] send defer: 12
+2023-08-03 14:39:05,397 DEBUG   HandlerThread:64352 [handler.py:handle_request():144] handle_request: defer
+2023-08-03 14:39:05,397 INFO    HandlerThread:64352 [handler.py:handle_request_defer():170] handle defer: 12
+2023-08-03 14:39:05,397 DEBUG   SenderThread:64352 [sender.py:send_request():406] send_request: defer
+2023-08-03 14:39:05,397 INFO    SenderThread:64352 [sender.py:send_request_defer():608] handle sender defer: 12
+2023-08-03 14:39:05,397 INFO    SenderThread:64352 [file_stream.py:finish():593] file stream finish called
+2023-08-03 14:39:05,963 INFO    SenderThread:64352 [file_stream.py:finish():597] file stream finish is done
+2023-08-03 14:39:05,963 INFO    SenderThread:64352 [sender.py:transition_state():612] send defer: 13
+2023-08-03 14:39:05,964 DEBUG   HandlerThread:64352 [handler.py:handle_request():144] handle_request: defer
+2023-08-03 14:39:05,964 INFO    HandlerThread:64352 [handler.py:handle_request_defer():170] handle defer: 13
+2023-08-03 14:39:05,965 DEBUG   SenderThread:64352 [sender.py:send_request():406] send_request: defer
+2023-08-03 14:39:05,965 INFO    SenderThread:64352 [sender.py:send_request_defer():608] handle sender defer: 13
+2023-08-03 14:39:05,966 INFO    SenderThread:64352 [sender.py:transition_state():612] send defer: 14
+2023-08-03 14:39:05,966 DEBUG   HandlerThread:64352 [handler.py:handle_request():144] handle_request: defer
+2023-08-03 14:39:05,967 INFO    HandlerThread:64352 [handler.py:handle_request_defer():170] handle defer: 14
+2023-08-03 14:39:05,967 DEBUG   SenderThread:64352 [sender.py:send():379] send: final
+2023-08-03 14:39:05,969 DEBUG   SenderThread:64352 [sender.py:send():379] send: footer
+2023-08-03 14:39:05,969 DEBUG   SenderThread:64352 [sender.py:send_request():406] send_request: defer
+2023-08-03 14:39:05,969 INFO    SenderThread:64352 [sender.py:send_request_defer():608] handle sender defer: 14
+2023-08-03 14:39:05,971 DEBUG   HandlerThread:64352 [handler.py:handle_request():144] handle_request: poll_exit
+2023-08-03 14:39:05,972 DEBUG   SenderThread:64352 [sender.py:send_request():406] send_request: poll_exit
+2023-08-03 14:39:05,974 DEBUG   HandlerThread:64352 [handler.py:handle_request():144] handle_request: server_info
+2023-08-03 14:39:05,974 DEBUG   HandlerThread:64352 [handler.py:handle_request():144] handle_request: get_summary
+2023-08-03 14:39:05,975 DEBUG   HandlerThread:64352 [handler.py:handle_request():144] handle_request: sampled_history
+2023-08-03 14:39:05,975 DEBUG   HandlerThread:64352 [handler.py:handle_request():144] handle_request: job_info
+2023-08-03 14:39:05,978 DEBUG   SenderThread:64352 [sender.py:send_request():406] send_request: server_info
+2023-08-03 14:39:06,255 DEBUG   SenderThread:64352 [sender.py:send_request():406] send_request: job_info
+2023-08-03 14:39:06,257 DEBUG   HandlerThread:64352 [handler.py:handle_request():144] handle_request: shutdown
+2023-08-03 14:39:06,258 INFO    HandlerThread:64352 [handler.py:finish():857] shutting down handler
+2023-08-03 14:39:06,984 INFO    WriterThread:64352 [datastore.py:close():294] close: /home/yousri/Workspace/aCupOfTea/generativeAI/evaluation_and_debugging/wandb_sklearnProject/wandb/run-20230803_143855-088k4r2m/run-088k4r2m.wandb
+2023-08-03 14:39:07,255 INFO    SenderThread:64352 [sender.py:finish():1552] shutting down sender
+2023-08-03 14:39:07,255 INFO    SenderThread:64352 [file_pusher.py:finish():159] shutting down file pusher
+2023-08-03 14:39:07,255 INFO    SenderThread:64352 [file_pusher.py:join():164] waiting for file pusher
