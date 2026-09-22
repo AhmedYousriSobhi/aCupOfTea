@@ -1,7 +1,7 @@
-# DATA FEATURE ENGINEERING: PCA
+# Tabular Data - DATA FEATURE ENGINEERING - PCA
 
 # Table of Content
-- [DATA FEATURE ENGINEERING: PCA](#data-feature-engineering-pca)
+- [Tabular Data - DATA FEATURE ENGINEERING - PCA](#tabular-data---data-feature-engineering---pca)
 - [Table of Content](#table-of-content)
 - [How to decide whether to use PCA or not?](#how-to-decide-whether-to-use-pca-or-not)
 - [Should we split the data before appyling PCA?](#should-we-split-the-data-before-appyling-pca)

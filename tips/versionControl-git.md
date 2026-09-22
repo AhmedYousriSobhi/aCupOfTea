@@ -4,6 +4,7 @@
 - [Tips - Version Control - Git](#tips---version-control---git)
   - [Table of Contents](#table-of-contents)
   - [Remove Commit from a Repo](#remove-commit-from-a-repo)
+  - [.gitignore](#gitignore)
 
 ## Remove Commit from a Repo
 - Our case is that, we want to remove an old commit from the repo, but to keep the main commit persists.
@@ -38,3 +39,128 @@
     git checkout -b backup-before-rebase
     git push origin backup-before-rebase
     ```
+
+## .gitignore
+A .gitignore should usually ignore:
+- generated artifacts,
+- caches,
+- secrets,
+- large binaries,
+- environment-specific files.
+
+An example for `.gitignore` file content:</br>
+```bash
+# =========================
+# Python cache / bytecode
+# =========================
+__pycache__/
+*.py[cod]
+*$py.class
+
+# =========================
+# Virtual environments
+# =========================
+.env
+.venv
+venv/
+ENV/
+env/
+
+# =========================
+# Conda / Mamba environments
+# =========================
+conda-meta/
+*.conda
+*.tar.bz2
+
+# =========================
+# Jupyter Notebook
+# =========================
+.ipynb_checkpoints/
+
+# =========================
+# Logs
+# =========================
+*.log
+logs/
+
+# =========================
+# Build / distribution
+# =========================
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# =========================
+# PyTorch model artifacts
+# =========================
+*.pth
+*.pt
+*.ckpt
+checkpoints/
+weights/
+
+# =========================
+# Dataset / generated data
+# =========================
+data/
+datasets/
+outputs/
+results/
+predictions/
+
+# =========================
+# IDE / Editor
+# =========================
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# =========================
+# OS files
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# Testing / coverage
+# =========================
+.pytest_cache/
+.coverage
+htmlcov/
+
+# =========================
+# Temporary files
+# =========================
+tmp/
+temp/
+*.tmp
+
+# =========================
+# Environment variables
+# =========================
+.env.*
+!.env.example
+
+# =========================
+# FastAPI / Uvicorn
+# =========================
+*.pid
+
+# =========================
+# Mypy / Ruff / Pyright
+# =========================
+.mypy_cache/
+.ruff_cache/
+.pyright/
+
+# =========================
+# Ignore local secrets
+# =========================
+secrets/
+credentials/
+*.pem
+*.key
+```

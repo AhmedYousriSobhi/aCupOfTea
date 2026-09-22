@@ -241,6 +241,7 @@ cmake --build build --target clean-all
 ```
 
 ## Advanced Tips and Tricks for CMake Command Line
+
 |Title|objective|Command|
 |-|-|-|
 Out-of-Source Builds|Always use out-of-source builds to keep your source directory clean.|***cmake -S . -B build***

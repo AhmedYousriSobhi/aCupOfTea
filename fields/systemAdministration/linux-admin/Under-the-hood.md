@@ -1,9 +1,9 @@
-# Linux Admin - Under the Hood
+# System Administration - Under the Hood
 
 The target of this page is to learn more deeper things that come to our minds.
 
 ## Table of Contents
-- [Linux Admin - Under the Hood](#linux-admin---under-the-hood)
+- [System Administration - Under the Hood](#system-administration---under-the-hood)
   - [Table of Contents](#table-of-contents)
   - [1. SCP - Why it's secured?](#1-scp---why-its-secured)
     - [How it Works Under The Hood?](#how-it-works-under-the-hood)
