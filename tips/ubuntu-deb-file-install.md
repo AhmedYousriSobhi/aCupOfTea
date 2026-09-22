@@ -1,7 +1,7 @@
-# Ubuntu Debian File Installation
+# Tips - Ubuntu Debian File Installation
 
 ## Table of Content
-- [Ubuntu Debian File Installation](#ubuntu-debian-file-installation)
+- [Tips - Ubuntu Debian File Installation](#tips---ubuntu-debian-file-installation)
   - [Table of Content](#table-of-content)
   - [Install deb file from Command Line](#install-deb-file-from-command-line)
   - [Steps to Fix Dependencies Error](#steps-to-fix-dependencies-error)

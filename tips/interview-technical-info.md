@@ -1,9 +1,9 @@
-# Technical Info
+# Tips - Technical Info
 
 When you are doing an interview for any technical position, there are some important questions you should ask the interviewer about, so let's discuss more about these questions.
 
 # Table of Content
-- [Technical Info](#technical-info)
+- [Tips - Technical Info](#tips---technical-info)
 - [Table of Content](#table-of-content)
 - [As a Data Scientist](#as-a-data-scientist)
   - [What is the data team structure?](#what-is-the-data-team-structure)

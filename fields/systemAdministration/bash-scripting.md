@@ -23,7 +23,7 @@
     - [Reading from File](#reading-from-file)
     - [Command Line Arguments](#command-line-arguments)
   - [4- Outputs](#4--outputs)
-    - [Prinitng to the Terminal](#prinitng-to-the-terminal)
+    - [Printing to the Terminal](#printing-to-the-terminal)
     - [Writing to a File](#writing-to-a-file)
     - [Appending to a File](#appending-to-a-file)
     - [Redirecting Output](#redirecting-output)
@@ -68,6 +68,7 @@
 Working in UNIX operating system, we will face this type of a file which contain a sequence of commands that are executed by the bash program line by line to perfrom a series of actions. These actions performed by commands can be repeated multiple times and execute them by running the script.
 
 ## Advantages
+
 Adv|Description|
 |-|-|
 Automation| Bash scripting allows you to automate repetitive tasks, making it incredibly useful for tasks like file manipulation, system maintenance, backups, and more. This automation can significantly save time and reduce human error.
@@ -108,10 +109,11 @@ which bash
 In Unix system, any created file by default is not executable, which means user can not execute it.
 
 ### Make Script Executable
-To make a file executable:
-```bash
-chmod u+x my_script.sh
-```
+- To make a file executable:
+  ```bash
+  chmod u+x my_script.sh
+  ```
+
 |Command|Description|
 |-|-|
 chmod|Modifies the ownership of a file
@@ -119,20 +121,23 @@ u|Modify this ownership for the current user
 x| adds the execution rights
 u+x|This means that the user who is the owner can now run the script
 my_script.sh| The file which the user want to run
+
 ### Execute
-there are several methods to execute the scirpt
-```bash
-sh my_script.sh
-bash my_script.sh
-./my_script.sh
-```
+- there are several methods to execute the scirpt
+  ```bash
+  sh my_script.sh
+  bash my_script.sh
+  ./my_script.sh
+  ```
 
 # Basics
 There are some basics in the bash scripting any user should know
+
 ## 1- Comments
 A neat bash script is the one that you could understand what is happening inside. To make a script readable, we should add comments.
 
 Comments starts with **#**, so any line begins with **#** is a comment and will be ignored by the interpreter. There is exception in the **shebang**!!
+
 ```bash
 #!/bin/bash
 
@@ -151,7 +156,9 @@ To easily store, read, and access the data, variables knows how to get this job 
 firstname=ahmed
 lastname="yousri"
 ```
+
 - You can enclose the string with quots or just leave it without them, but in case of not using the quotes, make sure the string does not have any spaces
+
 ### Access a Varialbe
 To access the value in a variable, use **$**
 ```bash
@@ -159,6 +166,7 @@ To access the value in a variable, use **$**
 
 echo $firstname
 ```
+
 ### Naming Convention
 In Bash scripting, variable names should follow certain conventions for readability and consistency. Here are the commonly recommended naming conventions for variables:
 - Should start with a letter or an underscore
@@ -178,6 +186,7 @@ In Bash scripting, variable names should follow certain conventions for readabil
 ## 3- Inputs
 ### Read User Input
 You can read user input using the **read** command
+
 ```bash
 #!/bin/bash
 
@@ -190,7 +199,9 @@ read username
 # print user input
 echo "Hello, $username! Welcome"
 ```
+
 ### Reading from File
+
 ```bash
 #!/bin/bash
 
@@ -200,6 +211,7 @@ do
   echo $line
 done < input.txt
 ```
+
 |Command|Details|
 |-|-|
 while read line| This line starts a while loop. The read command reads a line from the input and stores it in the variable line. This loop continues until there are no more lines to read.
@@ -207,8 +219,10 @@ do| Marks the beginning of the loop body. Commands placed after do and before do
 echo $line| This command prints the content of the variable line to the terminal.
 done| Marks the end of the loop body.
 < input.txt| Redirects the contents of the file input.txt as input to the while loop. So, the read command reads each line of input.txt sequentially, assigns it to the variable line, and then echo $line prints each line to the terminal.
+
 ### Command Line Arguments
 In many cases, we add arugments along side with the bash script during the execution, like:
+
 ```bash
 ./my_script.sh ahmed
 ```
@@ -226,20 +240,24 @@ What about **$0** you may ask?
 - This holds the bash script name itself!!.
 
 ## 4- Outputs
-### Prinitng to the Terminal
+### Printing to the Terminal
 Using Command **echo**
+
 ```bash
 #!/bin/bash
 
 echo "Hello Bash!"
 ```
+
 ### Writing to a File
 Using redirect operator **>**
+
 ```bash
 #!/bin/bash
 
 echo "This is bash text." > my_output.txt
 ```
+
 ### Appending to a File
 Using the appending operator **>>** :
 ```bash
@@ -247,15 +265,19 @@ Using the appending operator **>>** :
 
 echo "More bash text" >> my_output.txt
 ```
+
 ### Redirecting Output
 You can redirect the output of a command to a file using the redirect operator
+
 ```bash
 ls > my_file.txt
 ```
+
 ## 5- Conditional Statements (if/else)
 TO have a boolean results, with a true or false. this is what is called conditions. To do so using if, if-else, if-elif-else, and nested conitionals.
 
 ### If
+
 ```bash
 #!/bin/bash
 
@@ -269,6 +291,7 @@ fi
 ```
 
 ### Multiple Conditions
+
 You can combine multiple conditions using AND **-a** and OR **-o** to make comparisons that have more significance:
 ```bash
 #!/bin/bash
@@ -276,7 +299,9 @@ You can combine multiple conditions using AND **-a** and OR **-o** to make compa
 if [ $a -gt 60 -a $b -lt 100]
 # To check if varialbe a is greater than 60 AND variable b is less than 100
 ```
+
 ### Case Statements
+
 ```bash
 case expression in
     pattern1)

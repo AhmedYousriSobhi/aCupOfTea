@@ -1,7 +1,7 @@
-# Tip: Linux Create App Launcher
+# Tips - Linux Create App Launcher
 
 # Table of Content
-- [Tip: Linux Create App Launcher](#tip-linux-create-app-launcher)
+- [Tips - Linux Create App Launcher](#tips---linux-create-app-launcher)
 - [Table of Content](#table-of-content)
 - [Steps to Create App Launcher](#steps-to-create-app-launcher)
 - [Reference](#reference)

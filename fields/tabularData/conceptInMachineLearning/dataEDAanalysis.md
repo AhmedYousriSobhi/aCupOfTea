@@ -16,6 +16,7 @@
 - [Credits:](#credits)
 
 # 1. Machine Learning Workflow
+
 |Step|Description|
 |--|--|
 |Problem Statement|What problem are we trying to solve.</br></br>“A problem well-stated is a problem half-solved" by Charles Kettering, the head of research at General Motors 
@@ -26,6 +27,7 @@
 |Decision Making and Deployment|Putting the model into production
 
 # 2. Decisions in analytics are increasingly driven by data and models, and key aspects of our Machine Learning Workflow are getting depend on cleaning data
+
 |Aspect|Description|
 |--|--|
 |Ovservations| An instance of the data (usually a row of the dataset), if a row "an obsevation" is not clean, we are misrepresenting, to our model, the relationship between our features and our targets.

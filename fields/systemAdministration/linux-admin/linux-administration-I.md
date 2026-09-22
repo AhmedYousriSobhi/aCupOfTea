@@ -277,6 +277,7 @@ With the ever-expanding use of Linux in various domains, from cloud computing to
 System administration, often referred to as sysadmin or system administration, is a critical discipline in the field of information technology (IT). It involves the management, configuration, maintenance, and overall operation of computer systems and networks. System administrators, or sysadmins, are responsible for ensuring that IT infrastructure and services are running smoothly and efficiently to meet the needs of organizations and users.
 
 The core tasks and responsibilities of a system administrator may include:
+
 |Task/Responsibilities|Description|
 |--|--|
 Hardware Maintenance| Sysadmins are responsible for the upkeep, repair, and replacement of hardware components such as servers, desktops, laptops, and network devices. This includes routine maintenance, hardware upgrades, and troubleshooting hardware issues.
@@ -298,6 +299,7 @@ Hardware Maintenance| Sysadmins are responsible for the upkeep, repair, and repl
 Sysadmins play a vital role in maintaining the reliability, security, and functionality of IT environments, whether in an enterprise setting, government agency, or small business. Their work ensures that computers and networks operate smoothly, reducing downtime, protecting data, and enabling users to perform their tasks effectively.
 
 # History of Operating Systems
+
 |Year|Release|
 |-|-|
 1950s - 1960s| The earliest computers had no operating systems. Users interacted directly with the hardware using machine language. Batch processing systems were developed to automate tasks.
@@ -309,6 +311,7 @@ Late 1980s - Early 1990s| Linux, a Unix-like OS, was created by Linus Torvalds, 
 2000s - Present| Mobile operating systems like iOS and Android became essential for smartphones and tablets. Virtualization technologies, cloud computing, and containerization have reshaped the landscape.
 
 ## Unix & Linux
+
 |Aspect|Information|
 |-|-|
 Unix|Unix is an operating system developed in the late 1960s at AT&T's Bell Labs.</br>Unix is known for its multitasking and multi-user capabilities.</br>It introduced many fundamental concepts in computing, like the shell, pipelines, and the hierarchical file system.</br>Unix became the basis for many other operating systems, such as Linux and macOS.
@@ -316,7 +319,9 @@ Unix|Unix is an operating system developed in the late 1960s at AT&T's Bell Labs
 |Key Differences|Unix refers to the original operating system developed at AT&T's Bell Labs and its various descendants, including commercial Unix versions.</br>Linux is a Unix-like kernel that is part of a complete operating system, usually provided by a Linux distribution.</br>Unix systems are typically commercial and may have licensing costs, while Linux is open-source and often free to use.</br>Linux has a more diverse and active development community, leading to rapid innovation and adaptation.
 
 # Linux System Layers
+
 Linux, like other modern operating systems, is organized into several layers, each serving a specific role in the system's operation. These layers are typically organized as follows:
+
 |Layer|Description|
 |-|-|
 Hardware Layer|This is the lowest layer and consists of the physical hardware components of the computer, such as the CPU, memory, storage devices, and peripherals.
@@ -330,6 +335,7 @@ These layers are interconnected, with each layer building on the capabilities an
 
 # Linux System Startup process 
 The startup process of a Linux system, also known as the boot process, is a series of steps that occur when the computer is powered on or restarted. Here's a simplified version of what happens during the boot process:
+
 process|details|
 |-|-|
 BIOS/UEFI Initialization|When you power on your computer, the Basic Input/Output System (BIOS) or Unified Extensible Firmware Interface (UEFI) firmware is the first software that runs.</br>The firmware conducts a Power-On Self-Test (POST) to check hardware components like the CPU, memory, and storage devices.</br>It then locates the boot device, typically a hard drive or SSD.
@@ -348,6 +354,7 @@ Red Hat is a leading provider of open-source software solutions, particularly kn
 
 # RedHat Book Chapters
 Let's break down how you might approach learning the content of the first four chapters in detail:
+
 |Chapter|Content|
 |--|--|
 |Chapter 1: Accessing the Command Line|This chapter is a fundamental starting point for Linux administration. It introduces you to accessing the command line, which is essential for managing Linux systems.</br>You'll learn how to use the local console and the GNOME desktop environment to interact with the command line.</br>Understanding basic Bash shell commands and keyboard shortcuts is crucial for working in a command-line environment.
@@ -374,6 +381,7 @@ Let's dive deeper into the first chapter, "Accessing the Command Line." This cha
 
 ## Section 1: Accessing the Command Line Using the Local Console
 ### Info
+
 |Info|Details|
 |-|-|
 |**Motivation**| Understanding how to access the command line from the local console is crucial. It provides you with a direct way to interact with your Linux system, which is essential for both system administrators and power users.
@@ -392,6 +400,7 @@ Let's dive deeper into the first chapter, "Accessing the Command Line." This cha
 
 ## Section 2: Accessing the Command Line Using the Desktop
 ### Info
+
 |Info|Details|
 |-|-|
 |**Motivation**| Accessing the command line from the desktop environment is valuable when working on Linux systems with a graphical user interface (GUI). It allows you to switch between graphical and command-line tasks seamlessly.
@@ -411,6 +420,7 @@ Let's dive deeper into the first chapter, "Accessing the Command Line." This cha
 
 ## Section 3: Executing Commands Using the Bash Shell
 ### Info
+
 |Info|Details|
 |-|-|
 |**Motivation**| The Bash shell is the workhorse of the command line. It provides a powerful environment for executing commands, scripting, and automation. Understanding how to use it is essential for effective Linux administration.
@@ -418,6 +428,7 @@ Let's dive deeper into the first chapter, "Accessing the Command Line." This cha
 |**Workspace**|Learn to run simple commands like ls (list files) and pwd (print working directory) to navigate and inspect the file system.</br>Understand command structure and options.
 
 ### Commands: ls, pwd
+
 |Command|	Description|	Usage|
 |--|--|--|
 |ls|	List files and directories in the current directory.|	ls [options] [directory]
@@ -441,6 +452,7 @@ Example commands include ls (list files) and pwd (print working directory). Thes
 
 ## Section 4: Lab: Accessing the Command Line
 ### Info
+
 |Info|Details|
 |-|-|
 |**Motivation**| Hands-on labs are essential for reinforcing your learning and building confidence in your command-line skills.
@@ -475,6 +487,7 @@ In this chapter, you'll embark on a journey through the intricacies of managing 
 
 ## Section 1: The Linux File System Hierarchy
 ### Info
+
 |Info|Details|
 |-|-|
 **Motivation**| Understanding the Linux file system hierarchy is fundamental to effective file and system management. It provides the structure for where data and system files are located.
@@ -516,6 +529,7 @@ Common directories in the Linux file system hierarchy include:
 
 ## Section 2: Locating Files by Name
 ### Info
+
 |Info|Details|
 |-|-|
 |**Motivation**| The ability to locate files by name is essential for efficient file management and data retrieval. This skill saves time and effort when dealing with a large number of files.
@@ -523,7 +537,8 @@ Common directories in the Linux file system hierarchy include:
 **Workspace**| Continue using the terminal emulator.
 
 ### Command: find
-|Commnad|Description|
+
+|Command|Description|
 |-|-|
 |find|Used to locate files by its name|
 
@@ -552,6 +567,7 @@ Keep in mind that the find command is very flexible and can be used to search fo
 
 ## Section 3: Managing Files Using Command-Line Tools
 ### Info
+
 |Info|Details|
 |-|-|
 **Motivation**| Learning to manage files using command-line tools is vital for Linux administrators. These tools provide efficient ways to handle files and directories.
@@ -559,6 +575,7 @@ Keep in mind that the find command is very flexible and can be used to search fo
 **Workspace**| Stay within the terminal emulator.
 
 ### Commands: cp, mv, rm
+
 |Command|	Description|
 |--|--|
 |cp|	Copies files or directories from one location to another.</br>It creates a duplicate of the source file or directory in the destination.
@@ -604,6 +621,7 @@ rm -r directory/
 
 ## Section 4: Matching File Names Using Path Name Expansion
 ### Info
+
 |Info|Details|
 |-|-|
 **Motivation**| Path name expansion is a handy feature for quickly working with files based on their names. It simplifies file operations and saves time.
@@ -612,6 +630,7 @@ rm -r directory/
 
 ### Wildcards
 In the Bash shell, there are several wildcards, also known as glob patterns, that you can use to match files and directories based on patterns. Here are the most commonly used wildcards:
+
 |Wildcard|Description|
 |--|--|
 |* (Asterisk)| Matches any sequence of characters. For example, *.txt matches all files with a .txt extension.
@@ -705,6 +724,7 @@ In Chapter 3, we explore the essential skill of seeking help and documentation i
 
 ## Section 1: Reading Documentation Using man Command
 ### Info
+
 |Info|Details|
 |-|-|
 Motivation| Accessing the built-in manual pages is fundamental for understanding command usage and options.
@@ -712,6 +732,7 @@ Objective| Learn how to use the man command to access command documentation.
 Explanation|The man command is a vital tool for accessing manual pages in Linux. These pages provide detailed information about command usage, options, and functionality. 
 
 ### Command: man
+
 |Command|	Description|
 |-|-|
 |man|	Displays the manual page for a specified command.
@@ -729,6 +750,7 @@ This command displays the manual page for the ls command. You can navigate throu
 
 ## Section 2: Reading Documentation Using info Command
 ### Info
+
 |Info|Details|
 |-|-|
 Motivation| Learn about an alternative documentation system, "info," which provides more extensive documentation for certain commands.
@@ -736,6 +758,7 @@ Objective| Learn how to use the info command to access detailed documentation.
 Explanation|The info command provides a more extensive documentation system compared to man. It's often used for commands and concepts that require in-depth explanations. 
 
 ### Command: info
+
 |Command|	Description|
 |-|-|
 |info|	Displays detailed documentation for a specified command or concept.|
@@ -757,6 +780,7 @@ info tar
 
 ## Section 3: Reading Documentation in /usr/share/doc
 ### Info
+
 |Info|Details|
 |-|-|
 |Motivation| Discover additional documentation stored in the /usr/share/doc directory.
@@ -764,6 +788,7 @@ info tar
 |Explanation|Many Linux packages come with additional documentation stored in the /usr/share/doc directory. This documentation includes README files, changelogs, and usage guides. 
 
 ### Commands: cd, ls, less
+
 |Command|	Description|
 |-|-|
 |cd|	Change directory to access package documentation.
@@ -787,6 +812,7 @@ Example of reading gcc/README.Debian documentation:
 
 ## Section 4: Getting Help From Red Hat
 ### Info
+
 |Info|Details|
 |--|--|
 |Motivation|Learn how to access support and resources from Red Hat for assistance with Red Hat Enterprise Linux.|
@@ -794,6 +820,7 @@ Example of reading gcc/README.Debian documentation:
 |Explanation|Red Hat offers various resources for support and assistance. You can access Red Hat's customer support portal for documentation, knowledge base articles, and support tickets. Additionally, you can create an SOS report to provide system information for troubleshooting.
 
 ### Command: sosreport
+
 |Command|	Description|
 |--|--|
 |sosreport|	Generate an SOS report for troubleshooting.
@@ -814,18 +841,18 @@ This generates a compressed tarball containing system information that can be sh
 Searching for information about a command in Linux is a common task, especially when you need to understand its usage, options, and examples. Here's how you can search for information about a command:
 
 **1- Man Pages (Manual Pages)**:
-- The primary source of information for most Linux commands is the manual pages, or man pages. You can access the man page for a command by typing man followed by the command's name. For example:
-```bash
-    man ls
-```
+- The primary source of information for most Linux commands is the manual pages, or man pages. You can access the man page for a command by typing man followed by the command's name. For example:  
+  ```bash
+  man ls
+  ```
+
 - This will display a detailed manual page with information about the command's usage, options, and often examples.
 
 **2- Info Pages**:
 - Some commands have info pages in addition to man pages. You can access info pages by typing info followed by the command's name. For example:
-
-```bash
-    info cp
-```
+  ```bash
+  info cp
+  ```
 - Info pages often provide more detailed and structured information compared to man pages.
 
 **3- Online Documentation**:
@@ -833,9 +860,9 @@ Searching for information about a command in Linux is a common task, especially 
 
 **4- Command Help**:
 - Many commands have built-in help options that you can access by using the --help or -h switch. For example:
-```bash
-    ls --help
-```
+  ```bash
+  ls --help
+  ```
 - This will provide a brief overview of the command's options.
 
 **5- Online Forums and Communities**:
@@ -870,6 +897,7 @@ Chapter 4 delves into working with text files in Red Hat Enterprise Linux. Text 
 
 ## Section 1: Redirecting Output to a File or Program
 ### Info
+
 |Info|Details|
 |-|-|
 Motivation| Understand how to capture and redirect command output to a file.
@@ -877,6 +905,7 @@ Objective| Learn how to use redirection to save command output to a file or send
 Explanation|Redirecting output allows you to save the results of a command or send them to another program or file. The **>** and **>>** operators are used for this purpose. Use **>** to create a new file or overwrite an existing one, and **>>** to append to an existing file.
 
 ### Commands: >, >>
+
 |Command|	Description|
 |-|-|
 |>|	Redirect output to a file (overwrite if it exists).
@@ -896,6 +925,7 @@ command >> output.txt
 
 ## Section 2: Editing Text Files from the Shell Prompt
 ### Info
+
 |Info|Details|
 |-|-|
 Motivation| Learn how to create and edit text files directly from the command line.
@@ -903,6 +933,7 @@ Objective| Understand the basics of text editing with command-line tools.
 Explanation|Linux provides text editors like vi and nano for creating and editing text files from the command line. For example, to create a new file or edit an existing one:
 
 ### Commands: vi, nano
+
 |Command|	Description|
 |-|-|
 vi (vim)|	Opens the Vim text editor for file editing.</br>Vim is a powerful, modal text editor with modes for navigating, inserting, and command execution.
@@ -922,6 +953,7 @@ nano filename.txt
 
 ## Section 3: Editing Text Files with a Graphical Editor
 ### Info
+
 |Info|Details|
 |-|-|
 Motivation| Explore the use of graphical text editors for editing text files.
@@ -929,6 +961,7 @@ Objective| Learn how to use graphical editors to work with text files.
 Explanation|In a graphical environment, tools like Gedit or Mousepad provide a user-friendly way to edit text files. To open a file using Gedit:
 
 ### Command: getit, mousepad
+
 |Command|	Description|
 |-|-|
 |gedit|	Opens the Gedit graphical text editor for file editing.
@@ -962,11 +995,13 @@ Q: What are the advantages of using vim over other text editors, and how would y
 
 # Chapter 5: Managing Local Linux Users and Groups
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/664202a2-70b7-4f4b-b259-b2e9e53d19e5)
+
 ## Abstract Introduction
 Chapter 5 explores the fundamental concepts of user and group management in Red Hat Enterprise Linux. Proper user and group management is essential for system security and access control. This chapter covers creating, managing, and configuring user accounts and groups.
 
 ## Section 1: Users and Groups
 ### Info
+
 |Info|Details|
 |-|-|
 Motivation| Understand the role of users and groups in Linux and why they are essential for system administration.
@@ -984,6 +1019,7 @@ Explanation|In Linux, users and groups play a vital role in system security and 
 
 ## Section 2: Gaining Superuser Access
 ### Info
+
 |Info|Details|
 |-|-|
 Motivation| Understand the concept of superuser access and how it differs from regular user privileges.
@@ -991,6 +1027,7 @@ Objective| Learn how to gain superuser access to perform administrative tasks.
 Explanation|The superuser, often referred to as "root," has elevated privileges and can perform administrative tasks that regular users cannot. To gain superuser access, you can use the su (substitute user) command or log in directly as the root user.
 
 ### Command: su
+
 |Command	|Description|
 |-|-|
 |su|	Substitute user command for gaining superuser access.
@@ -999,7 +1036,7 @@ Explanation|The superuser, often referred to as "root," has elevated privileges 
 su -
 ```
 
-This command allows you to switch to the root user, provided you know the root password.
+- This command allows you to switch to the root user, provided you know the root password.
 
 ### Tips
 - Exercise caution when using superuser privileges, as they allow unrestricted access to the system.
@@ -1007,6 +1044,7 @@ This command allows you to switch to the root user, provided you know the root p
 
 ## Section 3: Managing Local User Accounts
 ### Info
+
 |Info|Details|
 |-|-|
 Motivation| Understand how to create and manage user accounts for system users.
@@ -1014,6 +1052,7 @@ Objective| Learn how to create, modify, and delete user accounts using command-l
 Explanation|You can create, modify, and delete user accounts in Linux using commands like useradd, usermod, and userdel. For example, to create a new user:
 
 ### Commands: useradd, usermod, userdel, passwd
+
 Command|	Description|
 |--|--|
 useradd|	Create a new user account.
@@ -1041,9 +1080,11 @@ To add a user to a group using the usermod command, you must specify the followi
 - The name of the group to add the user to
 
 For example, to add the user bard to the group developers, you would run the following command:
+
 ```bash
 usermod -a -G developers bard
 ```
+
 - The -G option tells the usermod command to modify the user's group memberships. The developers argument is the name of the group to add the user to.
 - The -a option in the usermod command tells the command to append the group to the list of groups that the user belongs to. This means that the user will be added to the group, but they will not be removed from any other groups that they belong to.
 
@@ -1054,12 +1095,15 @@ To add a user to a group using the groupadd command, you must specify the follow
 - The name of the user to add to the group
 
 For example, to add the user bard to the group developers, you would run the following command:
+
 ```bash
 groupadd -f -m developers
 ```
+
 The -f option tells the groupadd command to force the creation of the group, even if it already exists. The -m option tells the groupadd command to create a home directory for the group.
 
 Once you have added the user to the group, you can check to make sure that the user has been added to the group by running the following command:
+
 ```bash
 groups bard
 ```
@@ -1091,6 +1135,7 @@ Chapter 6 delves into the critical aspect of file system permissions in Red Hat 
 
 ## Section 1: Linux File System Permissions
 ### Info
+
 |Info|Details|
 |-|-|
 Motivation| Understand the significance of file system permissions in maintaining system security.
@@ -1098,6 +1143,7 @@ Objective| Learn how Linux file system permissions work and their role in access
 Explanation|File system permissions in Linux determine who can access, modify, or execute files and directories. Permissions are assigned to three categories: owner, group, and others, and can be set as read (r), write (w), and execute (x).
 
 ### Permissions
+
 |Term|	Description|
 |--|--|
 |Permissions|	Access control settings for files and directories.
@@ -1115,6 +1161,7 @@ Execute (x)|For files: Execute permission allows users to run the file as a prog
 
 #### Permissions Assignation: u, g, o
 Permissions are assigned to three categories:
+
 |Assigned To|Details|
 |-|-|
 |Owner (u)| These permissions apply to the user who owns the file or directory.
@@ -1182,6 +1229,7 @@ With SGID set on the sgid_example directory, when a user creates a file within i
 ### Notation
 #### Symbolic Notation
 Symbolic notation is a human-readable representation of file permissions using letters and symbols. It consists of three parts: the user, the group, and others, each represented by 'u,' 'g,' and 'o' respectively. The permissions themselves are represented by 'r' for read, 'w' for write, and 'x' for execute. Here's how it works:
+
 |Notation|Description|
 |--|--|
 |u| stands for the user/owner|
@@ -1275,6 +1323,7 @@ Using these values, you can easily represent the different combinations of permi
 
 ## Section 2: Managing File System Permissions from the Command Line
 ### Info
+
 |Info|Details|
 |-|-|
 Motivation| Learn how to manage file system permissions using command-line tools.
@@ -1301,6 +1350,7 @@ Same as explained in the above sections.
 
 ## Section 3: Managing Default Permissions and File Access
 ### Info
+
 |Info|Details|
 |-|-|
 Motivation| Understand how to control default permissions for newly created files and directories.
@@ -1308,6 +1358,7 @@ Objective| Learn how to manage default permissions and access for new files and 
 Explanation|Default permissions for new files and directories can be controlled using the umask command. The umask value subtracts from the maximum permissions to set default restrictions. For example, to set a default umask of 077:
 
 ### Command: umask
+
 |Command|	Description|
 |-|-|
 umask|	Set default permissions for newly created files and directories.
@@ -1315,12 +1366,14 @@ umask|	Set default permissions for newly created files and directories.
 ```bash
 umask
 ```
+
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/47903ab1-f72e-416b-a9f5-16afd673c994)
 
 The umask value determines the default permissions to be removed from newly created files and directories. In this case, "0002" restricts write permissions for group and others.
 
 ### umask Value
 The umask is represented by a four-digit number, where each digit represents a specific set of permissions:
+
 |Digit|Details|
 |-|-|
 |First Digit| Represents the permissions for the owner (user).
@@ -1329,6 +1382,7 @@ The umask is represented by a four-digit number, where each digit represents a s
 |Fourth Digit| Represents special permissions (like the sticky bit), but it's rarely used with umask.
 
 The value of each digit in the umask is subtracted from the maximum possible permissions (which is 7 for read, write, and execute) to determine the default permissions for newly created files and directories. Here's how it works:
+
 |Possible Value|Details|
 |-|-|
 |0| No permission will be removed. It leaves the corresponding group with full permissions.
@@ -1341,6 +1395,7 @@ The value of each digit in the umask is subtracted from the maximum possible per
 |7| All permissions (read, write, and execute) will be removed. This leaves the corresponding group with no permissions on newly created files or directories.
 
 Here's a breakdown of what each digit in "0002" represents:
+
 |Digit|Description|
 |-|-|
 |First Digit (0)| This digit corresponds to the owner's permissions. In "0002," it's set to "0," meaning no permissions are removed from the owner. The owner can retain full read, write, and execute permissions.
@@ -1375,6 +1430,7 @@ Q: You need to set file permissions in such a way that the owner can read, write
 
 # Chapter 7: Monitoring and Managing Linux Processes
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/1a638030-516a-42ab-a968-67788e085372)
+
 |Info|Details|
 |--|--|
 |Chapter Introduction| In Chapter 7, we delve into the world of Linux processes. Understanding how to monitor and manage processes is crucial for system administrators and users alike. This chapter covers the basics of processes, controlling jobs, killing processes, and monitoring process activity.
@@ -1384,6 +1440,7 @@ Q: You need to set file permissions in such a way that the owner can read, write
 
 ## Section 1: Processes
 ### Command: ps
+
 |Command|Description|
 |--|--|
 |ps|Used to list the currently running processes.</br>Provides valuable information about each process, including its process ID (PID), CPU, and memory usage, and more.</br>You can customize the output to view specific details.
@@ -1396,6 +1453,7 @@ ps aux | grep <process_name>
 ```
 
 Here's a breakdown of what each part of the command does:
+
 |Code Breakdown|Description|
 |--|--|
 ps| The ps command stands for "process status" and is used to list information about running processes on a Linux system.
@@ -1422,6 +1480,7 @@ ps aux | grep myapp
 The resulting output will display information about the "myapp" process, including its PID, owner, and other details, making it easier to identify and manage that specific process.
 
 ### Command: pstree
+
 |Command|Description|
 |--|--|
 |pstree| The pstree command displays processes in a hierarchical tree structure, making it easier to visualize the relationships between parent and child processes.
@@ -1492,6 +1551,7 @@ Running Jobs in the Background:
 In summary, choosing whether to run a job in the foreground or background depends on your workflow and the nature of the task. Foreground jobs are suited for tasks that require direct interaction and quick feedback, while background jobs are ideal for multitasking and managing long-running or automated tasks efficiently. The flexibility to control when a job runs in the foreground or background allows you to tailor your workflow to your specific needs.
 
 ### Command: jobs
+
 |Command|Description|
 |--|--|
 jobs| Used to list the jobs that are currently running in the background or stopped. It provides information about these jobs, including their job IDs.</br>The jobs command lists the jobs associated with your current shell session, making it easier to keep track of running tasks.
@@ -1518,6 +1578,7 @@ Here, [1]+ indicates the job's job ID (which is 1 in this case), and it is curre
 
 ## Section 3: Killing Processes
 ### Command: kill
+
 |Command|Description|
 |-|-|
 |kill| The kill command is used to terminate processes by sending signals. It's a powerful tool for managing misbehaving or unresponsive processes.
@@ -1530,6 +1591,7 @@ kill <PID>
 ```
 
 ### Command: pkill
+
 |Command|Description|
 |-|-|
 |pkill| The pkill command allows you to kill processes based on their name or other attributes, making it more convenient for terminating multiple processes at once.|
@@ -1572,6 +1634,7 @@ Remember to replace 1234 with the actual PID of the process you want to terminat
 
 ### Available Signals
 The kill command can send various signals to processes by specifying their signal names or signal numbers. Here are some common signals used with the kill command:
+
 |Signal|Descripition|
 |-|-|
 SIGHUP (1)| The hang-up signal is often used to instruct a process to reload its configuration or restart. For example, to send the SIGHUP signal to a process with PID 5678
@@ -1594,6 +1657,7 @@ Here's a more detailed explanation:
 The reason for caution is that using kill -9 should be a last resort when a process is unresponsive or can't be terminated through regular means. While it ensures that the process is stopped, it does so in a way that can potentially lead to undesirable outcomes. It's generally better to try the TERM signal first and give the process a chance to shut down gracefully.
 
 Here are some considerations:
+
 |Consideration|Details|
 |-|-|
 Data Corruption| If the process was in the middle of writing or modifying data, abruptly terminating it using "kill -9" can leave the data in an inconsistent state, potentially leading to data corruption.
@@ -1604,6 +1668,7 @@ In summary, "Be cautious when using this, as it doesn't allow the process to per
 
 ### Tips to Fix kill-9 Problems
 Fixing the problems that may arise after using "kill -9" to forcefully terminate a process can be challenging because the process was abruptly terminated without an opportunity to clean up or release resources. Here are some steps you can take to address potential issues:
+
 |Issue|Solution|
 |-|-|
 |Data Recovery|If data corruption occurred, you may need to restore data from backups, if available. Data consistency is crucial, especially if the process was working with critical data.
@@ -1633,6 +1698,7 @@ Replace [options] with the specific options you want to use, and [device] with t
 Options can include various switches such as -f, -y, and others, each with its specific functionality.
 
 #### Key Features
+
 |Feature|Destails|
 |-|-|
 Filesystem Consistency Check|fsck checks the filesystem for errors and inconsistencies and attempts to repair them.
@@ -1642,7 +1708,6 @@ To perform a basic check on the root filesystem with automatic repair if possibl
 ```bash
 sudo fsck -y /
 ```
-
 
 ```bash
 sudo e2fsck -f /dev/sdXY
@@ -1672,6 +1737,7 @@ Pass 5: Checking group summary information
 /dev/sdXY: XXX/YYY files (ZZ.Z% non-contiguous), PPP/RRR blocks
 [...]
 ```
+
 The output will indicate the number of files checked, blocks checked, and any actions taken to fix issues. The "FILE SYSTEM WAS MODIFIED" message indicates that changes were made to the file system to correct inconsistencies.
 
 Please replace /dev/sdXY with the correct device and partition that you want to check. Running file system checks on mounted partitions can lead to data corruption, so it's crucial to unmount the file system or perform checks during system boot.
@@ -1681,6 +1747,7 @@ The fsck command is typically used in scenarios where you suspect filesystem err
 
 ## Section 4: Monitoring Process Activity
 ### Command: top
+
 |Command|Description|
 |--|--|
 |top| The top command is a dynamic and interactive tool that provides real-time information about system processes. It displays CPU and memory usage, process details, and more.
@@ -1697,6 +1764,7 @@ top
 ```
 
 When you run the top command without any options, it opens an interactive real-time system monitoring screen. Here's an explanation of some key features and interactions within the top interface:
+
 |Key Feature|Details|
 |--|--|
 Load Averages| At the top of the screen, you'll see load averages, which provide an overview of system activity.
@@ -1710,6 +1778,7 @@ Tasks| The list of running processes is displayed, sorted by various criteria (e
 |Help| Press "h" to view the help screen, which provides a list of keyboard shortcuts.
 
 ### Adjust Process Priority using Command: nice
+
 |Command|Details|
 |-|-|
 |nice| used to adjust the scheduling priority of processes in Linux. It allows you to control the execution priority of a command or process. 
@@ -1731,6 +1800,7 @@ By using nice, you can influence the scheduling priority of a process. Lower val
 
 #### Why the priority level vary from -20 to 19 ?
 The priority level in the nice command varies from -20 to 19 for historical and compatibility reasons. This range is based on the traditional Unix and Linux process scheduling model, which uses a priority value that can be adjusted within this range. Here's why the range extends from -20 to 19:
+
 |Reason|Details|
 |-|-|
 |Compatibility with Unix| The priority range was inherited from the Unix operating system, where it has been used for decades. This compatibility allows Unix and Unix-like systems to understand and interpret the same priority values.
@@ -1754,12 +1824,15 @@ Q: How can you prioritize a specific process over others without killing them?
 
 # Chapter 8: Controlling Services and Daemons
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/f278feb9-a104-478e-b776-ebdf34efb657)
+
 ## Info
+
 |Info|Description|
 |-|-|
 Abstract|In this chapter, you'll learn how to manage system services and daemons on a Linux system. System services are background processes that run continuously and provide various functionalities. You'll explore how to identify automatically started system processes, control system services, and use the systemctl command for managing services.
 |Motivation|Controlling services and daemons is essential for ensuring the proper functioning of a Linux system. You may need to start, stop, restart, enable, or disable various services to meet the system's requirements. Understanding how to manage services is a fundamental part of Linux administration.
 Objective| This chapter covers the following key tasks:</br>- Identifying automatically started system processes.</br>- Controlling system services using the systemctl command.</br>- Enabling and disabling services.</br>- Managing service units.</br>- Investigating service unit status and logs.
+
 ## What is a Daemon?
 A daemon (pronounced "dee-mun") is a background process or service in a computer's operating system that runs without direct interaction with a user. Daemons perform various tasks and functions, such as handling system services, background jobs, or providing network services. They typically run continuously, waiting for specific events or conditions to trigger their actions. Daemons are an essential part of the Unix-like operating systems, and they play a crucial role in managing and maintaining the system's functionality.
 
@@ -1774,6 +1847,7 @@ Daemons often run in the background, don't have a user interface, and typically 
 
 ## Command Definitions
 Here are some commands and their descriptions that you'll encounter in this chapter:
+
 |Command	|Description|
 |-|-|
 systemctl|	A command used to control and manage system services.
@@ -1813,6 +1887,7 @@ To disable the httpd service from starting at boot:
 ```bash
 systemctl disable httpd
 ```
+
 These commands allow you to control the httpd service, making it start, stop, or restart as needed, and configure it to run automatically at system boot or not.
 
 ## Frequently Asked Questions (FAQ)
@@ -1833,7 +1908,9 @@ Q5: Can I customize service startup options?
 
 # Chapter 9: Configuring and Securing OpenSSH Service
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/b5d179aa-8ed2-4ffe-838b-f1a5bcd1f77f)
+
 ## Info
+
 |Info|Details|
 |-|-|
 |Abstract|Chapter 9 delves into configuring and securing the OpenSSH service, which is a critical component of remote access and management in Linux. You'll learn how to set up secure remote connections using SSH (Secure Shell), configure SSH key-based authentication for improved security, and customize the OpenSSH service to fit your specific requirements.
@@ -1842,6 +1919,7 @@ Q5: Can I customize service startup options?
 
 ## Command Definitions
 Here are some commands and their descriptions that you'll encounter in this chapter:
+
 Command	|Description|
 |-|-|
 ssh	|A command used to connect to a remote system using SSH.
@@ -1856,17 +1934,21 @@ To illustrate the concepts in this chapter, let's consider configuring SSH key-b
 
 1- **Generate SSH Key Pair**:
 - You can generate an SSH key pair using the ssh-keygen command:
-```bash
-    ssh-keygen -t rsa -b 2048
-    # This command generates an RSA key pair with a key length of 2048 bits.
-```
+  ```bash
+  ssh-keygen -t rsa -b 2048
+  # This command generates an RSA key pair with a key length of 2048 bits.
+  ```
+
 2- **Copy the Public Key**:
+
 - After generating the key pair, you should copy the public key to the remote server. You can use the ssh-copy-id command or manually copy the contents of the public key file to the ~/.ssh/authorized_keys file on the remote server.
 
 3- **Configure SSH**:
+
 - You can customize the SSH service by editing the /etc/ssh/sshd_config file. For example, you can change the default SSH port, disable password authentication, and enforce specific security settings.
 
 4- **Restart SSH Service**:
+
 - To apply the changes made to the SSH configuration, you'll need to restart the SSH service using a command like systemctl restart sshd.
 
 By following these steps, you can configure SSH key-based authentication, which enhances the security of your remote connections by eliminating the need for passwords and relying on cryptographic keys.
@@ -1889,7 +1971,9 @@ Q5: What is the purpose of changing the default SSH port?
 
 # Chapter 10: Analyzing and Storing Logs
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/6e85762b-4ad4-4a16-b4b0-ac215e2e681d)
+
 ## Info
+
 |Info|Details|
 |-|-|
 Abstract|Chapter 10 explores the world of system logs and how to analyze and store them effectively. Logs are crucial for troubleshooting, monitoring, and maintaining a healthy Linux system. You'll learn about the system log architecture, various log files, and tools for reviewing and preserving log data.
@@ -1898,6 +1982,7 @@ Objective| This chapter covers the following key tasks:</br>1- Understanding the
 
 ## Command Definitions
 Here are some commands and their descriptions that you'll encounter in this chapter:
+
 Command	|Description|
 |-|-|
 journalctl|	A command for querying and displaying log entries from the systemd journal.
@@ -1912,15 +1997,17 @@ To understand the concepts related to log analysis and storage, let's look at an
 
 ### Viewing Journal Entries
 - You can use journalctl to display log entries from the systemd journal. For instance, to view the last 50 log entries, you can use the following command:
-```bash
-journalctl -n 50
-```
+  
+  ```bash
+  journalctl -n 50
+  ```
 
 ### Searching for Specific Entries
 To search for log entries related to a specific service or application, you can use the -u option. For example, to see logs for the SSH service:
-```bash
-    journalctl -u ssh
-```
+  
+  ```bash
+      journalctl -u ssh
+  ```
 
 ### Persistent Journal
 You can configure your system to maintain a persistent journal that stores log entries across reboots. This can be set using systemd and journalctl options, ensuring log data is preserved for historical analysis.
@@ -1950,6 +2037,7 @@ Q5: How can I configure log rotation for specific log files?
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/a7b637ea-d505-4728-b69e-e3ceb7ac659b)
 
 ## Info
+
 |Info|Details|
 |-|-|
 Abstract|Chapter 11 focuses on managing networking in Red Hat Enterprise Linux. Networking is a fundamental aspect of system administration, and understanding how to configure, validate, and troubleshoot network settings is essential for maintaining a smoothly functioning Linux system.
@@ -1958,6 +2046,7 @@ Objective| This chapter covers the following key tasks:</br>1- Exploring network
 
 ## Command Definitions
 Here are some commands and their descriptions that you'll encounter in this chapter:
+
 Command|	Description|
 |-|-|
 ifconfig|	A command for viewing and configuring network interfaces.
@@ -1982,7 +2071,8 @@ To create a new network connection, you can use a command like this:
 ```bash
 nmcli connection add type ethernet ifname eth0
 ```
-This command creates a new Ethernet connection named eth0.
+
+- This command creates a new Ethernet connection named eth0.
 
 ### Modify Connection Settings
 To modify connection settings, use the nmcli connection modify command. For instance, to set a static IP address:
@@ -1997,6 +2087,7 @@ After configuring a connection, you can activate it using the nmcli connection u
 ```bash
 nmcli connection up eth0
 ```
+
 By understanding these commands, you can effectively manage network connections in Red Hat Enterprise Linux, ensuring that your system is properly connected and able to communicate with other devices.
 
 ## Frequently Asked Questions (FAQ)
@@ -2022,6 +2113,7 @@ Q5: Can I configure network connections through a graphical interface in Red Hat
 In this chapter, you'll learn about archiving and copying files between systems, a fundamental skill for system administrators. You'll understand how to create compressed archives using tar, copy files securely using scp, and synchronize directories with rsync. These tools are essential for backing up, transferring, and managing files efficiently.
 
 ## Section 1: Managing Compressed tar Archives
+
 |Info|Details|
 |-|-|
 Motivation| Efficiently store and transfer groups of files and directories while preserving file permissions and structure.
@@ -2029,6 +2121,7 @@ Objective| Learn how to create and manage tar archives.
 Illustration| Imagine you have a directory with multiple files, and you want to create an archive of these files.
 
 ### Command: tar
+
 Command|	Description|
 |--|--|
 **tar**|Used for creating, extracting, and managing archive files. It stands for "**tape archive**" and is commonly used on Unix-like operating systems.
@@ -2038,10 +2131,12 @@ Command|	Description|
 ```bash
 tar -cvf archive.tar files/
 ```
+
 Expected Output: The command will create an archive named "archive.tar" containing the files from the "files/" directory.
 
 #### Switchs
 The tar command in Linux and Unix-like operating systems supports various switches (options) that allow you to control its behavior when creating, extracting, or managing archive files. Here's an explanation of some commonly used tar switches:
+
 |Switch|Description|
 |-|-|
 |-c (Create)|Description: This switch is used to create a new archive file. You typically use it when you want to bundle a set of files or directories into a single archive.</br>Example: tar -cf archive.tar file1.txt file2.txt
@@ -2058,6 +2153,7 @@ The tar command in Linux and Unix-like operating systems supports various switch
 
 #### Key Features
 Command Description: The tar command is used for creating, extracting, and managing archive files. It stands for "tape archive" and is commonly used on Unix-like operating systems.
+
 |Feature|Description|
 |-|-|
 Create an Archive|Syntax: tar -cf archive.tar files...</br>Description: This command creates a new archive file named archive.tar and adds the specified files to it.</br>Example: tar -cf mydata.tar file1.txt file2.txt</br>Key Note: You can use the -c option to create a new archive.
@@ -2072,6 +2168,7 @@ Create an Archive|Syntax: tar -cf archive.tar files...</br>Description: This com
 |Append Files to an Archive|Syntax: tar -rf archive.tar files...</br>Description: This command appends new files to an existing archive.</br>Example: tar -rf mydata.tar additional_file.txt</br>Key Note: Use the -r option to append files to an archive.
 
 ## Section 2: Copying Files Between Systems Securely with scp
+
 |Info|Details|
 |-|-|
 Motivation| Safely and securely copy files between local and remote systems using secure shell (SSH).
@@ -2079,19 +2176,23 @@ Objective| Learn how to use the scp command for secure file copy.
 Illustration| You need to copy a file from your local system to a remote server.
 
 ### Command: scp
+
 Command|	Description|
 |-|-|
 |scp|Stands for "secure copy," and it is a command-line utility in Unix-like operating systems used for securely copying files and directories between local and remote hosts. It uses the SSH (Secure Shell) protocol for secure data transfer.
 scp localfile.txt user@remote_server:/path/to/destination/|	Copy "localfile.txt" to a remote server using the SSH protocol. Replace "user," "remote_server," and the destination path as needed.
 
 Code Example:
+
 ```bash
 scp localfile.txt user@remote_server:/path/to/destination/
 ```
+
 Expected Output: The file "localfile.txt" is securely copied to the specified destination on the remote server.
 
 #### Commonly Used Switches
 Here are some commonly used switches with scp:
+
 |Switch|Details|
 |-|-|
 -P (Port)|Syntax: -P port</br>Description: Use this switch to specify a custom SSH port when connecting to the remote host. The default SSH port is 22.</br>Example: scp -P 2222 local_file.txt remote_user@remote_host:/path/
@@ -2105,6 +2206,7 @@ Here are some commonly used switches with scp:
 -i (Identity File)|Syntax: -i identity_file</br>Description: The -i switch allows you to specify the path to an SSH identity (private key) file for authentication.</br>Example: scp -i /path/to/private_key local_file.txt remote_user@remote_host:/path/
 
 ### Key Features
+
 |Feature|Description|
 |-|-|
 |Secure File Transfer|scp ensures secure file transfers over an encrypted SSH connection, making it suitable for sensitive data.
@@ -2116,25 +2218,27 @@ Preservation of Permissions|scp can preserve file permissions and ownership duri
 |Recursively Copy Directories|Description: The -r switch (explained later) allows you to recursively copy entire directories and their contents.</br>Example: scp -r local_directory remote_user@remote_host:/path/
 
 #### Basic Usage
-Copy from Local to Remote:
+- Copy from Local to Remote:
+  
+  ```typescript
+  scp file.txt user@remote-host:/path/to/destination
+  ```
 
-```typescript
-scp file.txt user@remote-host:/path/to/destination
-```
+- Copy from Remote to Local:
 
-Copy from Remote to Local:
+  ```perl
+  scp user@remote-host:/path/to/file.txt /local/destination
+  ```
 
-```perl
-scp user@remote-host:/path/to/file.txt /local/destination
-```
+**Example with Custom Port**:
 
-Example with Custom Port:
 - Copy with Custom SSH Port:
-```typescript
-scp -P 2222 file.txt user@remote-host:/path/to/destination
-```
+  ```typescript
+  scp -P 2222 file.txt user@remote-host:/path/to/destination
+  ```
 
 ## Section 3: Synchronizing Files Between Systems Securely with rsync
+
 |Info|Details|
 |-|-|
 Motivation| Keep files and directories in sync between systems efficiently.
@@ -2142,17 +2246,20 @@ Objective| Learn how to use rsync for synchronization.
 Illustration| You have a directory with critical files on your local system, and you want to synchronize it with a remote server regularly.
 
 ### Command: rsync
+
 |Command|	Description|
 |-|-|
 |rsync|a command-line utility for efficiently copying and synchronizing files and directories between a source and a destination. It is particularly useful for remote file synchronization and for maintaining the same data on multiple systems.|
 rsync -avz source/ user@remote_server:/path/to/destination/|	Synchronize files and directories from "source/" to the remote server using SSH. Options include archive mode (-a), verbose output (-v), and compression (-z).
 
 #### Command Syntax
+
 ```bash
 rsync [options] source destination
 ```
 
 ### Switches
+
 |Switch|Details|
 |-|-|
 |-a, --archive|Syntax: rsync -a source destination</br>Description: The -a switch stands for archive mode and is a common choice for most synchronization tasks. It preserves permissions, timestamps, and other file attributes.
@@ -2163,6 +2270,7 @@ rsync [options] source destination
 -n, --dry-run|Syntax: rsync -n source destination</br>Description: The -n switch performs a dry run, showing what would be done without actually making changes. It's useful for previewing the synchronization operation.
 
 #### Key Features
+
 |Feature|Description|
 |-|-|
 Incremental Transfer| Rsync only transfers the differences between the source and destination, reducing data transfer time.
@@ -2173,23 +2281,23 @@ Filtering| Rsync allows you to include or exclude specific files or directories 
 
 #### Example Usage
 
-Synchronize a local directory to a remote server:
-```ruby
-rsync -avz /local/directory/ user@remote_server:/remote/directory/
-```
+- Synchronize a local directory to a remote server:
+  ```ruby
+  rsync -avz /local/directory/ user@remote_server:/remote/directory/
+  ```
 
-Synchronize a remote directory to a local directory:
-
-```ruby
-rsync -avz user@remote_server:/remote/directory/ /local/directory/
-```
+- Synchronize a remote directory to a local directory:
+  ```ruby
+  rsync -avz user@remote_server:/remote/directory/ /local/directory/
+  ```
 
 #### Code Example
 
 ```bash
 rsync -avz source/ user@remote_server:/path/to/destination/
 ```
-Expected Output: Files and directories from the "source/" directory are synchronized with the specified location on the remote server.
+
+- Expected Output: Files and directories from the "source/" directory are synchronized with the specified location on the remote server.
 
 ## Additional Important Notes
 - When using scp and rsync, it's essential to have the appropriate SSH key or password access for secure file transfer.
@@ -2199,6 +2307,7 @@ Expected Output: Files and directories from the "source/" directory are synchron
   - rsync is ideal for regular backups, mirroring directories, and keeping multiple systems in sync. It's also good for remote synchronization over SSH.
 
 ### When to Use [scp, rsync]
+
 |Command|Use Case|
 |-|-|
 |Use scp when|You need to perform a one-time secure file copy.</br> You want to send a single or a few files securely to another system.</br> The task is simple and doesn't require ongoing synchronization.
@@ -2224,6 +2333,7 @@ Q: What are the advantages of using compression when creating tar archives?
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/717f6b3b-9f27-4fd5-b2e3-d2b8ec8ab12e)
 
 ## Chapter Info
+
 |Info|Details|
 |-|-|
 Abstract Introduction|Chapter 13 dives into the critical task of managing software packages on a Linux system. Efficiently installing, updating, and maintaining software is essential for a well-functioning system. In this chapter, you'll learn how to attach systems to subscriptions, work with RPM software packages, and use Yum for software management.
@@ -2231,6 +2341,7 @@ Chapter Motivation|Software is the heart of a computer system, and its proper ma
 
 ## Section 1: Attaching Systems to Subscriptions for Software Updates
 ### Info
+
 |Info|Details|
 |-|-|
 Motivation| Attaching systems to subscriptions allows you to receive software updates, security patches, and support from software providers.
@@ -2239,12 +2350,13 @@ Workspace| You'll need a system running a Linux distribution that uses subscript
 Illustration| We'll illustrate the process of attaching a system to a Red Hat subscription, including the commands to use.
 
 ### Command: subscription-manager
+
 |Command| Description|
 |-|-|
-|subscription-manager| is a command-line tool for attaching systems to subscriptions.
+|subscription-manager| is a command-line tool for attaching systems to subscriptions.        
         
-        
-#### Syntax 
+#### Syntax
+
 ```bash
 subscription-manager [options]
 ```
@@ -2252,10 +2364,12 @@ subscription-manager [options]
 #### Example Usage
 - Attach a system to a Red Hat subscription:
 
-```bash
-subscription-manager register --username=myusername --password=mypassword
-```
+  ```bash
+  subscription-manager register --username=myusername --password=mypassword
+  ```
+
 #### Key Features
+
 |Feature|Details|
 |-|-|
 register| Register a system.
@@ -2263,6 +2377,7 @@ register| Register a system.
 
 ## Section 2: RPM Software Packages and Yum
 ### Info
+
 |Info|Details|
 |-|-|
 Motivation| RPM packages are a common way to distribute software on Linux. Yum is a package manager that simplifies package installation, update, and removal.
@@ -2271,6 +2386,7 @@ Workspace| Ensure you have a Linux system with Yum installed.
 Illustration| We'll explore how to work with RPM packages, install software, and use Yum for software management.
 
 ### Command: rpm, yum
+
 |Command| Description| 
 rpm| is a command-line tool for working with RPM packages. 
 yum| is a package manager for software installation and management.
@@ -2281,16 +2397,17 @@ rpm [options] package.rpm, yum [options] command.
 ```
 #### Example Usage
 - Install an RPM package:
-```bash
-rpm -ivh package.rpm
-```
+  ```bash
+  rpm -ivh package.rpm
+  ```
 
-Update software with Yum:
-```bash
-yum update package-name
-```
+- Update software with Yum:
+  ```bash
+  yum update package-name
+  ```
 
 #### Key Features
+
 |Feature|Details|
 |-|-|
 |rpm -i| This switch indicates that you want to install the specified package.
@@ -2301,9 +2418,10 @@ yum update package-name
 ## Frequently Asked Questions (FAQ)
 Q: How do I attach a Linux system to a subscription for software updates using subscription-manager?
 - Answer: You can attach a system to a subscription using a command like: 
-```bash
-   subscription-manager register --username=myusername --password=mypassword, 
-```
+  ```bash
+  subscription-manager register --username=myusername --password=mypassword, 
+  ```
+
 - where myusername and mypassword should be replaced with your credentials.
 
 Q: What is the basic syntax for installing an RPM package using rpm?
@@ -2320,7 +2438,9 @@ Q: What is RPM and Yum, and how do they differ in package management?
 
 # Chapter 14: Accessing Linux File Systems
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/4e710e43-103f-4c12-a4c7-61f7afb86f00)
+
 ## Info
+
 |Info|Detials|
 |-|-|
 |Abstract Introduction|Chapter 14 focuses on accessing and interacting with Linux file systems. Understanding how to identify, mount, unmount, make links, and locate files on the system is crucial for effective system administration.
@@ -2331,6 +2451,7 @@ Motivation|Accessing and managing file systems is a fundamental aspect of Linux 
 
 ## Commands Used: [ds, lsblk, mount, unmount, ln, find]
 Here are the key commands used in this chapter:
+
 |Command|Detials|
 |-|-|
 |df| Display disk space usage.
@@ -2346,44 +2467,46 @@ Here are the key commands used in this chapter:
 - The find command is a powerful tool for locating files on the system based on various criteria.
 
 ## Section 1: Identifying File Systems and Devices
+
 |Info|Details|
 |-|-|
 |Motivation|Identifying file systems and devices is crucial for understanding the storage infrastructure of a Linux system. This knowledge is fundamental for effective system administration.
 |Objective|In this section, you will learn how to identify different file systems and block devices used on your Linux system.
 
 ### Commands Used: df, lsblk
+
 |Command|Description|Syntax|Key Feature|Switchs|
 |-|-|-|-|-|
 df| Stands for "disk free" and is used to display information about disk space usage on your system. It provides details about the file system, total space, used space, available space, and mount points.|df [options] [file\|directory]|- Helps you monitor disk space usage on mounted file systems.</br>- Useful for identifying file systems and their mount points.|-h: Human-readable format. Display sizes in a more understandable format, such as kilobytes, megabytes, etc.
 lsblk| Used to list information about block devices in a tree-like structure. It provides details about disks, partitions, and their relationships.|lsblk [options]|- Lists block devices in a structured format, making it easy to understand the hierarchy.</br>- Useful for identifying disks and partitions on your system.|    -a: Show all devices.</br>-b: Display sizes in bytes.</br>-d: List all entries, including empty ones.</br>-f: Display full device names.
 
 ### Example Usage 
-df command: 
+**df command**: 
 - Display disk space usage for all mounted file systems in human-readable format:
-```bash
+  ```bash
   df -h
-```
+  ```
 - Display disk space usage for a specific directory:
-```bash
-   df -h /path/to/directory
-```
+  ```bash
+  df -h /path/to/directory
+  ```
 
-lsblk command:
+**lsblk command**:
 
 - List all block devices, including empty ones:
-```css
-   lsblk -a
-```
+  ```css
+  lsblk -a
+  ```
 
 - Display sizes in bytes for all block devices:
-```css
-   lsblk -b
-```
+  ```css
+  lsblk -b
+  ```
 
 - Show full device names for all block devices:
-```
-   lsblk -f
-```
+  ```
+  lsblk -f
+  ```
 
 ### Illustration the Usage
 Let's illustrate the use of these commands:
@@ -2395,12 +2518,14 @@ Let's illustrate the use of these commands:
 Properly identifying file systems and block devices is the first step in managing storage efficiently. This knowledge helps administrators make informed decisions about disk space allocation and organization.
 
 ## Section 2: Mounting and Unmounting File Systems
+
 |Info|Details|
 |-|-|
 |Motivation|Mounting and unmounting file systems are essential tasks for a Linux system administrator. Understanding how to attach and detach file systems ensures efficient data management and accessibility.
 |Objective|In this section, you will learn how to mount and unmount file systems in Linux.
 
 ### Commands Used: mount, unmount
+
 |Command|Description|Syntax|Key Feature|Swithes|
 |-|-|-|-|-|
 mount| used to attach (mount) a file system to the system's directory tree. It allows you to access and interact with the files and directories within that file system.|mount [options] device_name directory|- Enables access to data stored on a device or partition.</br>- Important for incorporating external drives, network shares, and additional storage.|-t: Specify the file system type.</br>-o: Mount options.
@@ -2408,26 +2533,27 @@ umount| used to detach (unmount) a previously mounted file system from the syste
 
 ### Example Usage 
 For mount command:
+
 - Mount an ext4 file system on /dev/sdb1 to the directory /mnt/data:
-```bash
-   mount -t ext4 /dev/sdb1 /mnt/data
-```
+  ```bash
+  mount -t ext4 /dev/sdb1 /mnt/data
+  ```
 
 - Mount an NFS share from a remote server with specific options:
-```bash
-   mount -t nfs -o rw,hard,intr server:/share /mnt/nfs
-```
+  ```bash
+  mount -t nfs -o rw,hard,intr server:/share /mnt/nfs
+  ```
 
 For umount command:
 - Unmount a file system:
-```bash
-   umount /mnt/data
-```
+  ```bash
+  umount /mnt/data
+  ```
 
 - Forcefully unmount a file system:
-```bash
-   umount -f /mnt/data
-```
+  ```bash
+  umount -f /mnt/data
+  ```
 
 ### Illustration of Usage
 Let's illustrate how to use these commands:
@@ -2436,9 +2562,10 @@ Let's illustrate how to use these commands:
 
 ### What is the Default File system Type in Mount Command?
 In this Example: mounts the file system on /dev/sdb1 to the directory /mnt/data.
-```bash
-   mount /dev/sdb1 /mnt/data
-```
+  ```bash
+  mount /dev/sdb1 /mnt/data
+  ```
+
 The mount command does not have a default file system type. When you use the mount command without specifying the file system type with the -t switch, it typically relies on the /etc/fstab file to determine the correct file system type based on the device or file you are trying to mount.
 
 The /etc/fstab file is a system configuration file that contains information about disk drives and partitions and their associated file system types. It's used by the mount command to determine the appropriate file system type when mounting devices.
@@ -2451,45 +2578,48 @@ So, in summary, the default file system type for the mount command is determined
 Properly mounting and unmounting file systems is crucial to avoid data corruption and maintain system stability.
 
 ## Section 3: Making Links Between Files
+
 |Info|Details|
 |-|-|
 Motivation|Creating links between files in Linux allows you to reference and access the same data from multiple locations. This can be useful for creating shortcuts or managing files efficiently.
 Objective|In this section, you will learn how to create hard and symbolic links between files and directories.
 
 ### Commands Used: ln
+
 |Command|Description|Syntax|Key Feature|Switches|
 |-|-|-|-|-|
 ln|used to create links between files and directories. There are two main types of links in Linux:</br>- **Hard Links**: Hard links are essentially multiple directory entries that point to the same inode, which contains the file's data. Changes made to one hard link affect all other hard links to the same inode.</br>- **Symbolic Links (Symlinks)**: Symbolic links, also known as symlinks, are special files that point to another file or directory. They are more like shortcuts in Windows. Changes made to the original file do not affect symlinks.|ln [options] target link_name</br></br>SoflLink: ln -s target link_name|- Hard links don't occupy additional disk space.</br>- Changes made to one hard link are reflected in all hard links.</br>- Symlinks occupy their own disk space.</br>- Changes to the original file do not affect symlinks.|-s: Create symbolic links (symlinks) instead of hard links.</br>-t: Specify the target directory where the link should be created.
 
 ### Code Example
 
-Hard Links
-```bash
-ln /path/to/original-file /path/to/hard-link
-```
+- Hard Link:
+  ```bash
+  ln /path/to/original-file /path/to/hard-link
+  ```
 
-```bash
-ln -s /path/to/original-file /path/to/symlink
-```
+- Soft Link:
+  ```bash
+  ln -s /path/to/original-file /path/to/symlink
+  ```
 
 ### Example Usage
-1- Create a hard link named "backup.txt" for an existing file named "data.txt" in the same directory:
-```bash
-# This creates a hard link in the same directory.
-ln data.txt backup.txt
-```
+1. Create a hard link named "backup.txt" for an existing file named "data.txt" in the same directory:
+  ```bash
+  # This creates a hard link in the same directory.
+  ln data.txt backup.txt
+  ```
 
-2- Create a symbolic link named "shortcut" for an existing file named "document.pdf" in a specific directory, /home/user/documents:
-```bash
-# This creates a symbolic link in a different directory.
-ln -s /home/user/documents/document.pdf /path/to/shortcut
-```
+2. Create a symbolic link named "shortcut" for an existing file named "document.pdf" in a specific directory, /home/user/documents:
+  ```bash
+  # This creates a symbolic link in a different directory.
+  ln -s /home/user/documents/document.pdf /path/to/shortcut
+  ```
 
-3- Create a symbolic link for a directory, specifying the target directory using the -t switch:
-```bash
-# This creates a symbolic link in the specified target directory.
-ln -s -t /path/to/target-directory /path/to/symlink-directory
-```
+3. Create a symbolic link for a directory, specifying the target directory using the -t switch:
+  ```bash
+  # This creates a symbolic link in the specified target directory.
+  ln -s -t /path/to/target-directory /path/to/symlink-directory
+  ```
 
 ### Illustration
 Let's illustrate the creation of hard and symbolic links:
@@ -2506,12 +2636,14 @@ Creating links allows you to access and manage files more efficiently, and it's 
 
 ## Section 4: Locating Files on the System
 ### Info
+
 |Info|Details|
 |-|-|
 Motivation|Locating files on the Linux system is an essential skill for system administrators. Whether you're searching for configuration files or specific data, understanding how to locate files efficiently is crucial.
 Objective|In this section, you will learn how to search for files and directories using commands like find and locate.
 
 ### Commands Used: find. locate
+
 |Command|Description|Syntax|Key Feature|Switches|
 |-|-|-|-|-
 |find| The find command is a powerful tool for searching and locating files and directories on the file system.</br>It searches for files and directories based on various criteria like names, types, sizes, and more.|find [path] [expression]</br></br>[path] is the directory to start the search from, and [expression] specifies the search criteria.| - Powerful and flexible file search and location capabilities.</br>- Supports various search criteria like name, type, size, and timestamps.</br>- Allows executing commands on the found items using -exec.| -name pattern: Search for files and directories with a specific name pattern.</br>-type type: Specify the type of files to search for (e.g., -type f for files, -type d for directories).</br>-size size: Search for files of a specific size.</br>-exec command {} \;: Execute a command on the found items.</br>-ctime n: Search for files created within the last n days.</br>-mtime n: Search for files modified within the last n days.</br>-maxdepth levels: Limit the search depth to a specified number of directory levels.</br>-mindepth levels: Specify the minimum directory depth for the search.
@@ -2519,62 +2651,64 @@ Objective|In this section, you will learn how to search for files and directorie
 
 ### Illustration
 Let's illustrate the usage of the find and locate commands:
+
 - To find all files and directories with a specific name, you can use the find command:
 
-```bash
-find /path/to/search -name "filename"
-```
+  ```bash
+  find /path/to/search -name "filename"
+  ```
 
 - To search for files containing a particular text pattern, you can use the grep command with find:
 
-```bash
-find /path/to/search -type f -exec grep -l "pattern" {} \;
-```
+  ```bash
+  find /path/to/search -type f -exec grep -l "pattern" {} \;
+  ```
 
 - To use the locate command to quickly find files with a given pattern:
 
-```bash
-locate pattern
-```
+  ```bash
+  locate pattern
+  ```
 
 - Update the locate database if it's not up-to-date:
-```bash
-sudo updatedb
-```
+  ```bash
+  sudo updatedb
+  ```
+
 **find Comand**:
 
 - Search for all files and directories with the name "file.txt" under the current directory:
 
-```bash
-find . -name "file.txt"
-```
+  ```bash
+  find . -name "file.txt"
+  ```
 
 - Find all files modified in the last 7 days in the /data directory and execute the ls -l command on them:
-```bash
-find /data -type f -mtime -7 -exec ls -l {} \;
-```
+  ```bash
+  find /data -type f -mtime -7 -exec ls -l {} \;
+  ```
 
 - Search for all files larger than 10MB under the home directory:
-```bash
-find ~/ -type f -size +10M
-```
+  ```bash
+  find ~/ -type f -size +10M
+  ```
 
 **locate Command:**
 - Search for all files and directories containing "document" in their name:
 
-```bash
-locate document
-```
+  ```bash
+  locate document
+  ```
 
 - Perform a case-insensitive search for files containing "backup" at the beginning of their names:
-```bash
-locate -i -b "^backup"
-```
+  ```bash
+  locate -i -b "^backup"
+  ```
 
 - Show statistics about the database:
-```bash
-locate -S
-```
+  ```bash
+  locate -S
+  ```
 
 ### Key Notes
 - The find command provides more advanced and flexible search capabilities compared to locate.
@@ -2613,6 +2747,7 @@ Q5: What are symbolic links (symlinks)?
 # Chapter 15: Using Virtualized Systems
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/5e3638b4-33e6-4594-9ace-1fa24678e18d)
 ## Info
+
 |Info|Details|
 |-|-|
 |Abstract Introduction|Chapter 15 explores the world of virtualization on Linux. Virtualization allows you to run multiple operating systems on a single physical machine. It's widely used for server consolidation, testing environments, and development. This chapter delves into managing and creating virtual machines using tools like **KVM (Kernel-Based Virtual Machine)**.
@@ -2624,6 +2759,7 @@ Q5: What are symbolic links (symlinks)?
 |Key Features|Creating and managing virtual machines.</br>Understanding KVM and libvirt.</br>Practical experience in virtualization.
 
 ## Section: Installing a New Virtual Machine
+
 |Info|Detials|
 |-|-|
 Motivation|In this section, you'll learn how to install a new virtual machine. Whether you're setting up a testing environment, running a different Linux distribution, or creating a dedicated development environment, understanding the process is essential.
@@ -2632,6 +2768,7 @@ Motivation|In this section, you'll learn how to install a new virtual machine. W
 |Illustration|You'll understand how to use the virt-install command to create a virtual machine and install an operating system. The provided code examples will guide you through the process.
 
 ### Commands: virt-install
+
 |Command|Description|Syntax|Key Features|Switches|
 |-|-|-|-|-|
 virt-install|Command-line tool for creating and installing virtual machines. It provides a convenient way to create, configure, and install virtualized instances of various operating systems. It's commonly used in KVM (Kernel-Based Virtual Machine) environments.|virt-install [OPTIONS]|- Creating a new virtual machine.</br>- Installing an operating system.</br>-Customizing virtual machine settings.|--name: Specifies the name of the virtual machine.</br>--memory: Sets the amount of memory allocated to the virtual machine.</br>--vcpus: Specifies the number of virtual CPUs.</br>--cdrom: Points to the ISO image for the operating system installation.</br>--disk: Defines the virtual disk's storage.</br>--network NETWORK: Configures the virtual machine's network.
@@ -2667,6 +2804,7 @@ Q5: How can I access the virtual machine after it's created?
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/fd83e237-9b56-46a6-ac31-16eda2f30cd8)
 
 ## Info
+
 |Info|Details|
 |-|-|
 Abstract Introduction|In this chapter, you will engage in a comprehensive review of the concepts, commands, and techniques you've learned throughout the course. It's an opportunity to test your knowledge and skills in system administration, file management, user and group management, permissions, process management, networking, and much more.
@@ -2676,6 +2814,7 @@ Sections|This chapter doesn't have specific sections, but it's structured as a s
 Key Features|Self-assessment: You can assess your understanding of the material.</br>Practical exercises: You can practice solving real-world Linux system administration challenges.</br>Solidifying knowledge: It's an opportunity to reinforce your expertise in Linux administration.
 
 ## Commands Summerize
+
 Command|	Description|	Syntax|	Switches|	Key Features|
 |-|-|-|-|-|
 |cd|	Change the current working directory.|	cd [directory]|	N/A|	Navigating between directories.

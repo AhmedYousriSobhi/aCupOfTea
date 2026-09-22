@@ -15,6 +15,7 @@
 An Instruction Set Architecture (ISA) refers to the interface between the hardware of a computer and the software that runs on it. It defines the set of instructions that a processor can execute, the way those instructions are encoded, and how they manipulate data.
 
 An ISA encompasses several key components:
+
 |Key Component|Details|
 |-|-|
 Instruction Set| The specific set of instructions that a processor can execute. These instructions can perform basic operations like arithmetic, logic, data movement, control flow, and more.
@@ -25,6 +26,7 @@ Execution Behavior| Describes how instructions are executed and how they interac
 Privilege Levels| Specifies different modes of operation (e.g., user mode, supervisor mode) and the permissions or privileges granted to different software components.
 
 ISAs can be classified into different categories based on their design principles, such as:
+
 |Category|Details|
 |-|-|
 RISC (Reduced Instruction Set Computer)| Focuses on a smaller, simpler set of instructions, aiming for efficiency and speed.
@@ -40,6 +42,7 @@ RISC stands for Reduced Instruction Set Computer. RISC is a type of computer arc
 In a RISC architecture, the emphasis is on a small, highly optimized set of instructions that can be executed with minimal processing cycles. This contrasts with Complex Instruction Set Computers (CISC), which have more complex and varied instructions, sometimes including multi-step operations.
 
 The key principles of RISC architecture include:
+
 Key|Description
 |-|-|
 Simplicity| RISC architectures aim to have a simple and streamlined instruction set, reducing complexity in hardware design and instruction execution.
@@ -51,6 +54,7 @@ RISC architectures, including the RISC-V ISA, have found applications in various
 
 ### RISC-V
 RISC-V is an open-source instruction set architecture (ISA) designed to be simple, modular, and adaptable for various computing devices. RISC-V targets refer to the different architectures or platforms that can implement the RISC-V ISA. These targets cover a wide range of computing systems, from embedded devices to high-performance computing. Some of the common RISC-V targets include:
+
 |Target|Details
 |-|-|
 RV32I and RV64I|RV32I and RV64I refer to the base integer instruction set for 32-bit and 64-bit RISC-V architectures, respectively. They provide a fundamental set of instructions common to all RISC-V implementations.
@@ -66,12 +70,14 @@ RISC-V's open-source nature and modularity encourage innovation and experimentat
 In the evolving time we are living in today, there are three main compute power, which are CPU, GPU, and TPU
 
 ## Brief History
+
 |Power|Evolution|
 |-|-|
 CPU (Central Processing Unit)|- 1950s-1960s: The concept of a Central Processing Unit (CPU) emerged during the development of early computers like UNIVAC and ENIAC. These computers used vacuum tubes and later transistors to perform basic arithmetic and logical operations.</br>- 1970s-1980s: Intel introduced the first microprocessor, the Intel 4004, in 1971, marking the beginning of modern CPUs. Subsequent iterations, like the Intel 8008, 8080, and 8086, followed, leading to the birth of the x86 architecture.</br>- 1990s-2000s: CPU development focused on increasing clock speeds and the number of cores. Companies like Intel and AMD competed in this space, with the introduction of CPUs like Intel Pentium, AMD Athlon, and later Intel Core series, which further enhanced performance and power efficiency.</br>- 2010s-2020s: With technological advancements hitting the limits of Moore's Law (which predicted the doubling of transistors on a chip every two years), CPU manufacturers shifted focus towards power efficiency, parallel processing, and specialized instructions for specific tasks, while also exploring new architectures like ARM for mobile devices.
 GPU (Graphics Processing Unit)|- 1980s-1990s: Graphics Processing Units (GPUs) initially emerged for rendering graphics in computers. Companies like Nvidia and ATI (later acquired by AMD) introduced early GPUs optimized for accelerating graphics-related tasks.</br>- Late 1990s-2000s: GPUs evolved from fixed-function graphics accelerators to programmable shaders, allowing developers to use GPUs for more general-purpose computations. Nvidia's GeForce series and AMD's Radeon series gained popularity in both gaming and computational applications.</br>- 2010s-2020s: The demand for parallel processing in scientific simulations, machine learning, and AI applications surged. GPUs became widely adopted for these tasks due to their high parallel computing capabilities. Nvidia's CUDA platform and AMD's OpenCL provided programming interfaces to leverage GPU computing.
 TPU (Tensor Processing Unit)|- 2016: Google introduced the first Tensor Processing Unit (TPU) as a custom ASIC (Application-Specific Integrated Circuit) designed to accelerate machine learning tasks, especially neural networks, by optimizing matrix operations.</br>- 2017-2020s: Google refined and introduced subsequent versions of TPUs, focusing on improving performance, efficiency, and scalability. TPUs were deployed in Google's data centers to power various AI services, including Google Search, Google Translate, and more.</br>- 2020s: Other companies, inspired by Google's success with TPUs, began exploring and developing their own AI-specific hardware accelerators to improve the efficiency and speed of machine learning workloads.
 ## Basic Comparison
+
 Aspect|	CPU|	GPU|	TPU|
 |-|-|-|-|
 Purpose|	General-purpose processing|	Graphics rendering & parallel tasks|	Specialized for accelerating ML workloads
@@ -79,7 +85,9 @@ Architecture|	Few powerful cores|	Many smaller cores optimized for parallel task
 Performance|	Well-suited for sequential tasks|	High throughput for parallel operations|	High-speed matrix operations for ML tasks
 Usage|	Widely used in various applications|	Graphics-heavy, parallel computations, scientific simulations|	AI/ML tasks: training & inference
 Key Features|	Versatility, complex logic|	Parallel processing, high throughput|	Optimized for matrix operations in ML tasks
+
 ## Deeper Technical Comparison
+
 Aspect|	CPU|	GPU|	TPU|
 |-|-|-|-|
 Core Design|	Few powerful cores optimized for sequential tasks|	Numerous smaller cores optimized for parallel tasks|	Specialized matrix multiplication units for ML tasks
