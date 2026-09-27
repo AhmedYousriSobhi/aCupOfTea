@@ -6,7 +6,7 @@ A curated collection of practical tips, tricks, and quick references for daily d
 
 | File | Description |
 |------|-------------|
-| [analyticSkill](/tips/analyticSkill.md) | Analytical thinking and problem-solving |
+| [analytic-skill](/tips/analytic-skill.md) | Analytical thinking and problem-solving |
 | [concepts](/tips/concepts.md) | Core concepts and definitions |
 | [interview-technical-info](/tips/interview-technical-info.md) | Technical interview preparation |
 | [kaggle-tips](/tips/kaggle-tips.md) | Kaggle competition strategies |
@@ -14,7 +14,7 @@ A curated collection of practical tips, tricks, and quick references for daily d
 | [linux-daily-tricks](/tips/linux-daily-tricks.md) | Daily Linux productivity tricks |
 | [markdown](/tips/markdown.md) | Markdown syntax and best practices |
 | [ubuntu-deb-file-install](/tips/ubuntu-deb-file-install.md) | Installing .deb packages on Ubuntu |
-| [valueInterview](/tips/valueInterview.md) | Company values and culture fit interviews |
-| [versionControl-git](/tips/versionControl-git.md) | Git tips and workflows |
+| [value-interview](/tips/value-interview.md) | Company values and culture fit interviews |
+| [version-control-git](/tips/version-control-git.md) | Git tips and workflows |
 
 These quick references help streamline workflows and boost productivity.
