@@ -25,6 +25,8 @@ generate_sidebar() {
         
         local base=$(basename "$path")
         if [[ "$base" =~ $EXCLUDE_DIRS || "$base" =~ $EXCLUDE_FILES ]]; then continue; fi
+        # Root README is already linked as "Home"
+        if [ "$dir" == ".." ] && [ "$base" == "README.md" ]; then continue; fi
 
         if [ -d "$path" ]; then
             folders+=("$path")
@@ -37,7 +39,7 @@ generate_sidebar() {
             if [[ "$header" == *"-"* ]]; then
                 file_title="${header##*-}"
             fi
-            file_title=$(echo "$file_title" | xargs) # Trim whitespace
+            file_title=$(echo "$file_title" | sed 's/^[[:space:]]*//; s/[[:space:]]*$//') # Trim whitespace (xargs breaks on apostrophes)
 
             # Fallback for file title if header is missing
             if [ -z "$file_title" ]; then
@@ -69,6 +71,19 @@ generate_sidebar() {
         local base=$(basename "$d")
         local folder_display_name=""
 
+        # --- SUBMODULES: not checked out in CI, so link to their repo instead ---
+        local rel="${d#../}"
+        local sub_key=$(git config -f ../.gitmodules --get-regexp '\.path$' 2>/dev/null | awk -v p="$rel" '$2==p {print $1}')
+        if [ -n "$sub_key" ]; then
+            local sub_url=$(git config -f ../.gitmodules --get "${sub_key%.path}.url")
+            local sub_name=$(echo "$base" | sed 's/[-_]/ /g' | awk '{for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) substr($i,2)} 1')
+            echo "${indent}* [$sub_name ↗](${sub_url%.git})" >> $OUTPUT
+            continue
+        fi
+
+        # --- Skip folders with no pages (data/, __pycache__/, run logs, ...) ---
+        if [ -z "$(find "$d" -name '*.md' -not -path '*/.*' -print -quit)" ]; then continue; fi
+
         # --- FOLDER NAMING LOGIC ---
         local readme_file="$d/README.md"
         if [ -f "$readme_file" ]; then
@@ -82,7 +97,7 @@ generate_sidebar() {
                     # If no dash exists (e.g., just "# Business"), take the whole header
                     folder_display_name="$readme_header"
                 fi
-                folder_display_name=$(echo "$folder_display_name" | xargs)
+                folder_display_name=$(echo "$folder_display_name" | sed 's/^[[:space:]]*//; s/[[:space:]]*$//')
             fi
         fi
 
