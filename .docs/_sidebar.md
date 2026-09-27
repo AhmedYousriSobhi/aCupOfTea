@@ -176,38 +176,38 @@
 * **Programming**
   * [Overview](programming/README.md)
   * **Data Structure**
-    * [Data Structure](programming/dataStructure/README.md)
+    * [Data Structure](programming/data-structure/README.md)
   * **Decorators**
     * [Overview](programming/decorators/README.md)
   * **Object Oriented Programming**
     * [Object Oriented Programming](programming/oop/README.md)
   * **Operating System**
-    * [Overview](programming/operatingSystem/README.md)
-    * [Technologies](programming/operatingSystem/computerArchitecutresTechnologies.md)
-    * [Memory Coalescing](programming/operatingSystem/memory-coalescing.md)
-    * [Empty Memory Fill with Zeros ?!](programming/operatingSystem/memory-emptyZeroFilling.md)
-    * [CPU Affinity](programming/operatingSystem/process-cpu-affinity.md)
+    * [Overview](programming/operating-system/README.md)
+    * [Technologies](programming/operating-system/computer-architectures-technologies.md)
+    * [Memory Coalescing](programming/operating-system/memory-coalescing.md)
+    * [Empty Memory Fill with Zeros ?!](programming/operating-system/memory-empty-zero-filling.md)
+    * [CPU Affinity](programming/operating-system/process-cpu-affinity.md)
   * **Parallel Programming**
-    * [Overview](programming/parallelProgramming/README.md)
-    * [Message Passing Interface](programming/parallelProgramming/mpi.md)
+    * [Overview](programming/parallel-programming/README.md)
+    * [Message Passing Interface](programming/parallel-programming/mpi.md)
   * **Python**
     * [Overview](programming/python/README.md)
     * [Python](programming/python/101-python.md)
   * **Python Clean Code**
-    * [Python Clean Code](programming/pythonCleanCode/README.md)
+    * [Python Clean Code](programming/python-clean-code/README.md)
   * **Software Goals**
-    * [Overview](programming/softwareGoals/README.md)
+    * [Overview](programming/software-goals/README.md)
     * **Robustness**
-      * [Overview](programming/softwareGoals/robustness/README.md)
+      * [Overview](programming/software-goals/robustness/README.md)
   * **Software Skills & Tools**
-    * [Overview](programming/softwareSkills&Tools/README.md)
+    * [Overview](programming/software-skills-and-tools/README.md)
     * **Software Tool: AWS Services for HPC Systems**
-      * [Software Tool: AWS Services for HPC Systems](programming/softwareSkills&Tools/aws/README.md)
+      * [Software Tool: AWS Services for HPC Systems](programming/software-skills-and-tools/aws/README.md)
   * **Version Control**
-    * [Overview](programming/versionControl/README.md)
-    * [Case Study](programming/versionControl/case-study.md)
-    * [Git CLI](programming/versionControl/git-cli.md)
-    * [Know How?](programming/versionControl/know-how.md)
+    * [Overview](programming/version-control/README.md)
+    * [Case Study](programming/version-control/case-study.md)
+    * [Git CLI](programming/version-control/git-cli.md)
+    * [Know How?](programming/version-control/know-how.md)
 * **Projects**
   * [Overview](projects/README.md)
   * [BEV Project ↗](https://github.com/oforomar/BEV-Project)

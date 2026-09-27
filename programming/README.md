@@ -6,15 +6,15 @@ A collection of programming concepts, best practices, and technical skills essen
 
 | Directory | Description |
 |-----------|-------------|
-| [dataStructure](/programming/dataStructure/README.md) | Data structures and algorithms |
+| [data-structure](/programming/data-structure/README.md) | Data structures and algorithms |
 | [decorators](/programming/decorators/README.md) | Python decorators and their applications |
 | [oop](/programming/oop/README.md) | Object-oriented programming principles |
-| [operatingSystem](/programming/operatingSystem/README.md) | OS concepts for developers |
-| [parallelProgramming](/programming/parallelProgramming/README.md) | Concurrent and parallel execution |
+| [operating-system](/programming/operating-system/README.md) | OS concepts for developers |
+| [parallel-programming](/programming/parallel-programming/README.md) | Concurrent and parallel execution |
 | [python](/programming/python/README.md) | Python language specifics |
-| [pythonCleanCode](/programming/pythonCleanCode/README.md) | Writing clean, maintainable Python code |
-| [softwareGoals](/programming/softwareGoals/README.md) | Software engineering objectives |
-| [softwareSkills&Tools](/programming/softwareSkills&Tools/README.md) | Essential software tools and skills |
-| [versionControl](/programming/versionControl/README.md) | Git and version control practices |
+| [python-clean-code](/programming/python-clean-code/README.md) | Writing clean, maintainable Python code |
+| [software-goals](/programming/software-goals/README.md) | Software engineering objectives |
+| [software-skills-and-tools](/programming/software-skills-and-tools/README.md) | Essential software tools and skills |
+| [version-control](/programming/version-control/README.md) | Git and version control practices |
 
 Mastering these programming fundamentals is crucial for building robust AI and data science solutions.
