@@ -1,5 +1,4 @@
 * [Home](README.md)
-* [aCupOfTea](README.md)
 * **Data Science in Business**
   * [Overview](business/README.md)
   * [Food Delivery Service Company](business/foodDeliveryServiceCompany.md)
@@ -13,8 +12,15 @@
     * [WorkLoads](business/hpcIndustry/workloads.md)
 * **Fields**
   * [Overview](fields/README.md)
-  * **Computer Science Engineering**
-    * [Computer Science Engineering](fields/CSE/README.md)
+  * **Benchmarks**
+    * [The HPC Benchmarking Landscape: A Field Guide](fields/benchmarks/benchmarking-guide.md)
+    * [Why Does Intel's HPL Binary Beat Netlib by 60% — Then Suddenly Not?](fields/benchmarks/hpl-cpu-comparison.md)
+    * [HPL: The Benchmark That Built the TOP500 (and Why Your GFLOPS Number Lies a Little)](fields/benchmarks/hpl.md)
+    * [NCCL](fields/benchmarks/nccl.md)
+    * [OSU Benchmarks, Explained Like You're Debugging Them at 2 AM](fields/benchmarks/osu.md)
+    * [Parallel Execution & Affinity: The Layer Cake Nobody Draws Correctly](fields/benchmarks/parallel_execution_affinity_master_guide.md)
+    * [STREAM & BabelStream: Measuring the Thing Everyone Forgets to Measure](fields/benchmarks/stream.md)
+  * [CSE ↗](https://github.com/AhmedYousriSobhi/CSE)
   * **Data Collection**
     * [Overview](fields/dataCollection/README.md)
     * [Data Intelligence](fields/dataCollection/dataIntelligence.md)
@@ -31,7 +37,6 @@
       * [Workspace](fields/deepLearning/workspace/README.md)
       * **Convolution**
         * [Convolution](fields/deepLearning/workspace/convolution/README.md)
-        * **Data**
   * **Design Patterns**
     * [Overview](fields/designPatterns/README.md)
     * **Design Pattern**
@@ -42,32 +47,6 @@
       * [Evaluation and Debugging Using Weights & Biases Tools](fields/generativeAI/evaluation_and_debugging/README.md)
       * **W&B Scikit**
         * [Learn Project](fields/generativeAI/evaluation_and_debugging/wandb_sklearnProject/README.md)
-        * **Data**
-        * **Tools**
-          * **Pycache**
-        * **Wandb**
-          * **Latest Run**
-          * **Run 20230803 142127 Uaqfe3qf**
-            * **Files**
-            * **Logs**
-          * **Run 20230803 143609 O3vw1r8z**
-            * **Files**
-            * **Logs**
-          * **Run 20230803 143855 088k4r2m**
-            * **Files**
-            * **Logs**
-          * **Run 20230803 144053 P38on8lc**
-            * **Files**
-            * **Logs**
-          * **Run 20230803 150017 Efyiwngs**
-            * **Files**
-            * **Logs**
-          * **Run 20230803 150142 Diy83c07**
-            * **Files**
-            * **Logs**
-          * **Run 20230803 150849 Cd9zv846**
-            * **Files**
-            * **Logs**
     * **Generative AI**
       * [Langchain](fields/generativeAI/langchain/README.md)
     * **Generative AI**
@@ -97,10 +76,16 @@
     * **Concepts in Reinforcement Learning**
       * [Overview](fields/reinforcementLearning/conceptsInReinforcementLearning/README.md)
       * [Reinforcement Learning](fields/reinforcementLearning/conceptsInReinforcementLearning/basics.md)
+  * **Schedulers**
+    * [Schedulers: The Traffic Controller Nobody Thanks Until It Breaks](fields/schedulers/intro.md)
+    * [Slurm Job Script Tale](fields/schedulers/slurm-job-script-tale.md)
+    * [The SSH Backdoor Every Slurm Cluster Has (Until You Close It)](fields/schedulers/slurm-pam-adapt.md)
+    * [Rebooting a Slurm Cluster Without Losing Your Job (Or Anyone Else's)](fields/schedulers/slurm-reboot-order.md)
   * **Statistics**
     * [Statistics](fields/statistics/README.md)
   * **System Administration**
     * [Overview](fields/systemAdministration/README.md)
+    * [Active Directory — The Senior Engineer's Reference Card](fields/systemAdministration/active_direcotry.md)
     * [Ansible](fields/systemAdministration/ansible.md)
     * [Bash Scripting](fields/systemAdministration/bash-scripting.md)
     * [Build Process](fields/systemAdministration/build-process.md)
@@ -113,6 +98,7 @@
     * **Linux Administration**
       * [Overview](fields/systemAdministration/linux-admin/README.md)
       * [Linux Administration](fields/systemAdministration/linux-admin/linux-administration-I.md)
+      * [MPI](fields/systemAdministration/linux-admin/mpi.md)
       * [Under the Hood](fields/systemAdministration/linux-admin/Under-the-hood.md)
   * **Fields - Tabular Data**
     * [Overview](fields/tabularData/README.md)
@@ -174,7 +160,6 @@
         * [Handling Skewness](fields/tabularData/dataProcessing/handlingSkewness/README.md)
     * **Tabular Data - Tools**
       * [Overview](fields/tabularData/tools/README.md)
-      * **Pycache**
 * **Journal**
   * [Journal](journal/README.md)
 * **Problems**
@@ -187,9 +172,7 @@
       * [Job Counter Using PySpark](problems/interviewAssessmentProblems/question-JobCounterUsingPySpark/README.md)
     * **Question**
       * [Machine Learning Classifier](problems/interviewAssessmentProblems/question-MachineLearningClassifier/README.md)
-      * **Data**
-  * **Problem Solving**
-    * [Problem Solving](problems/problem_solving/README.md)
+  * [Problem Solving ↗](https://github.com/AhmedYousriSobhi/problem_solving)
 * **Programming**
   * [Overview](programming/README.md)
   * **Data Structure**
@@ -216,7 +199,6 @@
     * [Overview](programming/softwareGoals/README.md)
     * **Robustness**
       * [Overview](programming/softwareGoals/robustness/README.md)
-      * **Pycache**
   * **Software Skills & Tools**
     * [Overview](programming/softwareSkills&Tools/README.md)
     * **Software Tool: AWS Services for HPC Systems**
@@ -228,11 +210,11 @@
     * [Know How?](programming/versionControl/know-how.md)
 * **Projects**
   * [Overview](projects/README.md)
-  * **BEV Project**
-  * **Customer Segmentation**
-  * **Face Off**
-  * **Market Campain Imapct**
-  * **Used Cars Price Estimation**
+  * [BEV Project ↗](https://github.com/oforomar/BEV-Project)
+  * [Customer Segmentation ↗](https://github.com/AhmedYousriSobhi/customer_segmentation)
+  * [Face Off ↗](https://github.com/AhmedYousriSobhi/face-off)
+  * [Market Campain Imapct ↗](https://github.com/AhmedYousriSobhi/market_campain_imapct)
+  * [Used Cars Price Estimation ↗](https://github.com/AhmedYousriSobhi/used_cars_price_estimation)
 * **Tips**
   * [Overview](tips/README.md)
   * [Analytic Skill for a Data Scientist](tips/analyticSkill.md)
