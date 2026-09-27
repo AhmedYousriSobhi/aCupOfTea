@@ -6,6 +6,6 @@ Techniques and methods for gathering, scraping, and acquiring data for machine l
 
 | File | Description |
 |------|-------------|
-| [dataIntelligence](/fields/dataCollection/dataIntelligence.md) | Data intelligence and collection strategies |
+| [data-intelligence](/fields/data-collection/data-intelligence.md) | Data intelligence and collection strategies |
 
 Topics include web scraping, APIs, data warehousing, and data acquisition best practices.

@@ -6,7 +6,7 @@ Linux system administration guides and resources.
 
 | File | Description |
 |------|-------------|
-| [linux-administration-I](/fields/systemAdministration/linux-admin/linux-administration-I.md) | Linux administration fundamentals |
-| [Under-the-hood](/fields/systemAdministration/linux-admin/Under-the-hood.md) | Deep dive into Linux internals |
+| [linux-administration-i](/fields/system-administration/linux-admin/linux-administration-i.md) | Linux administration fundamentals |
+| [under-the-hood](/fields/system-administration/linux-admin/under-the-hood.md) | Deep dive into Linux internals |
 
 Essential Linux skills for managing AI/ML infrastructure.

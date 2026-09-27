@@ -6,7 +6,7 @@ Correlation analysis and multicollinearity detection.
 
 | File | Description |
 |------|-------------|
-| [detectMulticollinearity](/fields/tabularData/dataEDA/correlation/detectMulticollinearity.md) | Detecting multicollinearity in features |
-| [extremeCorrelation](/fields/tabularData/dataEDA/correlation/extremeCorrelation.md) | Handling extreme correlation cases |
+| [detect-multicollinearity](/fields/tabular-data/data-eda/correlation/detect-multicollinearity.md) | Detecting multicollinearity in features |
+| [extreme-correlation](/fields/tabular-data/data-eda/correlation/extreme-correlation.md) | Handling extreme correlation cases |
 
 Understanding relationships between variables in your dataset.

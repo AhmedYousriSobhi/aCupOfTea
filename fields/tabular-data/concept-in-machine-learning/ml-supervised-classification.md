@@ -379,7 +379,7 @@ Note that in order to optimize the meta step parameters (optimize each of the pa
 We want to be aware that such models can get pretty complex pretty quickly, and as usual, higher complexity generally means that we are more likely to overfit.
 
 ## Addtional Explaining about XGBOOST
-For More exploration about these techniques and how XGBOOST works, Please Jumpt to this topic of XGBOOST Model located [here](/fields/tabularData/dataModeling/xgboost/README.md).
+For More exploration about these techniques and how XGBOOST works, Please Jumpt to this topic of XGBOOST Model located [here](/fields/tabular-data/data-modeling/xgboost/README.md).
 
 # MultiClass Classifier
 MultiClass Classifier (aka : multinomial classifiers) is used to distinguish between More than Two classes.

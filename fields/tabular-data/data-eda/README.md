@@ -6,9 +6,9 @@ Exploratory Data Analysis techniques and visualization.
 
 | Directory/File | Description |
 |----------------|-------------|
-| [correlation](/fields/tabularData/dataEDA/correlation/README.md) | Correlation analysis |
-| [analysisPlot](/fields/tabularData/dataEDA/analysisPlot.py) | EDA plotting script |
-| [featureAnalysis](/fields/tabularData/dataEDA/featureAnalysis.md) | Feature analysis guide |
-| [visualizationGraphs](/fields/tabularData/dataEDA/visualizationGraphs.md) | Visualization techniques |
+| [correlation](/fields/tabular-data/data-eda/correlation/README.md) | Correlation analysis |
+| [analysisPlot](/fields/tabular-data/data-eda/analysisPlot.py) | EDA plotting script |
+| [feature-analysis](/fields/tabular-data/data-eda/feature-analysis.md) | Feature analysis guide |
+| [visualization-graphs](/fields/tabular-data/data-eda/visualization-graphs.md) | Visualization techniques |
 
 Understanding data through statistical analysis and visualization.

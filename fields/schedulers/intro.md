@@ -35,7 +35,7 @@ This word gets overloaded constantly, and it's worth separating the two meanings
 | **Unit of work** | A thread or process | A job (which itself spawns many processes/threads) |
 | **Visibility** | Invisible to the end user — it just happens | Extremely visible — users wait in a queue and watch it happen |
 
-**This directory is about the second kind** — cluster/workload managers, with Slurm as the primary subject, since that's what the majority of production HPC and AI-training clusters run today. The OS-level scheduler still matters (it's *why* CPU affinity and NUMA binding are worth caring about — see the [parallel execution & affinity guide](/fields/benchmarks/parallel_execution_affinity_master_guide.md) in the benchmarks series), but it's not what `schedulers/` is documenting.
+**This directory is about the second kind** — cluster/workload managers, with Slurm as the primary subject, since that's what the majority of production HPC and AI-training clusters run today. The OS-level scheduler still matters (it's *why* CPU affinity and NUMA binding are worth caring about — see the [parallel execution & affinity guide](/fields/benchmarks/parallel-execution-affinity-master-guide.md) in the benchmarks series), but it's not what `schedulers/` is documenting.
 
 ---
 
@@ -67,7 +67,7 @@ Regardless of which tool sits on top, these ideas show up everywhere — learn t
 - **Backfill scheduling** — letting *smaller* jobs jump ahead in the queue and fill idle gaps, as long as doing so doesn't delay the start time already promised to a larger, higher-priority job waiting for enough nodes to free up. This is why a tiny job sometimes starts before a big one that's been queued longer — it's not favoritism, it's gap-filling.
 - **Reservations** — blocking off nodes for a specific purpose (maintenance, a guaranteed-start job, a demo) ahead of time, bypassing normal queue ordering for that block.
 - **Node health checking** — automated pre/post-job verification that a node is actually healthy (memory, GPUs, filesystem mounts, network) before the scheduler trusts it with real work. NHC is the common open-source tool for this on Slurm clusters.
-- **Accounting / cgroup containment** — tracking and *enforcing* what a job actually consumes, not just what it requested — this is exactly the gap [`pam_slurm_adopt`](/fields/schedulers/slurm-pam-adapt.md) closes for SSH sessions that would otherwise slip outside this accounting entirely.
+- **Accounting / cgroup containment** — tracking and *enforcing* what a job actually consumes, not just what it requested — this is exactly the gap [`pam_slurm_adopt`](/fields/schedulers/slurm-pam-adopt.md) closes for SSH sessions that would otherwise slip outside this accounting entirely.
 
 ---
 
@@ -117,6 +117,6 @@ Every operational task you'll do — a rolling reboot, a security hardening pass
 ## Where to go from here
 
 - New to Slurm entirely? Start with the [official Slurm quickstart](https://slurm.schedmd.com/quickstart.html) for the user-facing side (`sbatch`, `srun`, `squeue`) before diving into the admin-focused posts here.
-- Already running a cluster and hardening it? Start with [`slurm-pam-adopt-blog.md`](/fields/schedulers/slurm-pam-adapt.md) — it's a small config change that closes a real, commonly-overlooked gap.
+- Already running a cluster and hardening it? Start with [`slurm-pam-adopt-blog.md`](/fields/schedulers/slurm-pam-adopt.md) — it's a small config change that closes a real, commonly-overlooked gap.
 - Planning your next maintenance window? [`slurm-reboot-order-blog.md`](/fields/schedulers/slurm-reboot-order.md) is the checklist to have open in a second tab while you work.
-- Wondering how scheduler decisions (rank placement, node allocation) connect to the performance numbers you actually measure? That's where this directory hands off to the [benchmarks series](/fields/benchmarks/benchmarking-guide.md) — specifically the [parallel execution & affinity guide](/fields/benchmarks/parallel_execution_affinity_master_guide.md), which picks up exactly where Slurm's node allocation leaves off.
+- Wondering how scheduler decisions (rank placement, node allocation) connect to the performance numbers you actually measure? That's where this directory hands off to the [benchmarks series](/fields/benchmarks/benchmarking-guide.md) — specifically the [parallel execution & affinity guide](/fields/benchmarks/parallel-execution-affinity-master-guide.md), which picks up exactly where Slurm's node allocation leaves off.

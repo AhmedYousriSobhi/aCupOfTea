@@ -6,6 +6,6 @@ Software design patterns for machine learning and AI systems.
 
 | Directory | Description |
 |-----------|-------------|
-| [featuresCross](/fields/designPatterns/featuresCross/README.md) | Feature crossing patterns |
+| [feature-cross](/fields/design-patterns/feature-cross/README.md) | Feature crossing patterns |
 
 ML-specific design patterns for scalable and maintainable systems.

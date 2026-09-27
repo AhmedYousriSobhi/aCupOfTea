@@ -173,7 +173,7 @@ Idealy, we want to have low bias -less tendency to miss- and low variance -less 
 
 We want to think about this tendency of our models as the expectation of out-of-sample behavior over many training set samples, so something like cross-validation would refer to our tendency to have high or low variance as well as high or low bias given our hold out sets. So that's going to allow us to understand whether or not we have high bias, high variance, both high, or both low.
 
-For Better Explanation of Bias-Variance, Please refer to chapter: [fields/tabularData/dataEvaluation/modelBehaviour/biasVarianceTradeOff](/fields/tabularData/dataEvaluation/modelBehavior/biasVarienceTradeOff.md)
+For Better Explanation of Bias-Variance, Please refer to chapter: [fields/tabularData/dataEvaluation/modelBehaviour/biasVarianceTradeOff](/fields/tabular-data/data-evaluation/model-behavior/bias-variance-trade-off.md)
 
 # Sources of Model Error
 

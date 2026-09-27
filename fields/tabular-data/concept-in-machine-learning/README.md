@@ -6,9 +6,9 @@ Core machine learning concepts for tabular data.
 
 | File | Description |
 |------|-------------|
-| [dataEDAanalysis](/fields/tabularData/conceptInMachineLearning/dataEDAanalysis.md) | EDA for ML workflows |
-| [mlSupervisedClassification](/fields/tabularData/conceptInMachineLearning/mlSupervisedClassification.md) | Classification algorithms |
-| [mlSupervisedRegression](/fields/tabularData/conceptInMachineLearning/mlSupervisedRegression.md) | Regression algorithms |
-| [mlUnsupervised](/fields/tabularData/conceptInMachineLearning/mlUnsupervised.md) | Unsupervised learning methods |
+| [data-eda-analysis](/fields/tabular-data/concept-in-machine-learning/data-eda-analysis.md) | EDA for ML workflows |
+| [ml-supervised-classification](/fields/tabular-data/concept-in-machine-learning/ml-supervised-classification.md) | Classification algorithms |
+| [ml-supervised-regression](/fields/tabular-data/concept-in-machine-learning/ml-supervised-regression.md) | Regression algorithms |
+| [ml-unsupervised](/fields/tabular-data/concept-in-machine-learning/ml-unsupervised.md) | Unsupervised learning methods |
 
 Fundamental ML concepts for structured data analysis.

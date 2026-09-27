@@ -6,4 +6,4 @@ Exploratory, one-off investigations: notebooks and small codebases built to try 
 
 | Directory | Description |
 |-----------|-------------|
-| [wandb-sklearn-project](/experiments/wandb-sklearn-project/README.md) | Weights & Biases experiment tracking with a scikit-learn pipeline (background: [Evaluation and Debugging with W&B](/fields/generativeAI/evaluation_and_debugging/README.md)) |
+| [wandb-sklearn-project](/experiments/wandb-sklearn-project/README.md) | Weights & Biases experiment tracking with a scikit-learn pipeline (background: [Evaluation and Debugging with W&B](/fields/generative-ai/evaluation-and-debugging/README.md)) |

@@ -6,7 +6,7 @@ Convolutional Neural Network implementations and examples.
 
 | File/Directory | Description |
 |----------------|-------------|
-| [convolution](/fields/deepLearning/workspace/convolution/convolution.ipynb) | CNN implementation notebook |
-| [data](/fields/deepLearning/workspace/convolution/data) | Dataset directory |
+| [convolution](/fields/deep-learning/workspace/convolution/convolution.ipynb) | CNN implementation notebook |
+| [data](/fields/deep-learning/workspace/convolution/data) | Dataset directory |
 
 Practical CNN examples for image classification and feature extraction.
