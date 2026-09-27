@@ -2,41 +2,41 @@
 # AI Tea Lounge: Sipping Knowledge in AI Domains
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/4a033ba8-5aac-475d-9b27-ec13e68746ba)
 
-Welcome to the AI Tea Lounge, a cozy space to settle down, share experiences, and indulge in the world of artificial intelligence. In this repository, we've brewed a blend of insights and expertise spanning across Data Science, Machine Learning, Deep Learning, and a wide spectrum of AI-related topics. From programming and clean code practices to design patterns and business implications, we invite you to join us for a cup of wisdom.
+> **Knowledge, served in short sips.** Notes on AI, machine learning, software engineering and the business around them. Each page is short enough to finish before your tea goes cold.
 
-## Table of Contents
-- [aCupOfTea](#acupoftea)
-- [AI Tea Lounge: Sipping Knowledge in AI Domains](#ai-tea-lounge-sipping-knowledge-in-ai-domains)
-  - [Table of Contents](#table-of-contents)
-  - [About](#about)
-  - [Fields](#fields)
-  - [Topics](#topics)
-  - [Structure](#structure)
-  - [Contributing](#contributing)
-  - [Sip and Support](#sip-and-support)
+## ☕ What's brewing
 
-## About
-The AI Tea Lounge is your hub for expanding your understanding of various AI domains. Whether you're an AI enthusiast, a curious learner, or a seasoned practitioner, you'll find a comfortable space to explore, share, and learn from the collective experiences of the community.
+aCupOfTea is a personal knowledge base built during day-to-day work in data science and engineering. It collects:
 
-## Fields
-Dive into the depths of AI through the lenses of different fields:
+- **Concepts**: the ideas behind ML, deep learning, statistics and generative AI.
+- **Engineering**: clean code, design patterns, version control, parallel programming and systems.
+- **Problems and projects**: reusable problem write-ups and the projects that solved them.
+- **Business context**: how the technical work connects to real decisions.
 
-- Data Science: Unearth insights from data, transform raw information into actionable intelligence, and make informed decisions.
+It is written for practitioners who want the core of a topic quickly, and for anyone who likes to learn something new on a coffee break.
 
-- Machine Learning: Unveil the magic of algorithms that learn from data and improve their performance over time.
+## 🍵 The menu
 
-- Deep Learning: Delve into the intricacies of neural networks, artificial neural pathways that mimic the human brain's way of processing information.
+| Section | What you'll find | Best with |
+|---|---|---|
+| [Fields](/fields/README.md) | Deep learning, generative AI, statistics, recommender systems, RL, tabular data, benchmarks, schedulers, sysadmin | A long black |
+| [Programming](/programming/README.md) | Python, clean code, OOP, data structures, decorators, OS, parallel programming, Git | A flat white |
+| [Problems](/problems/README.md) | Interview and assessment problems, problem formulations, problem solving | A double espresso |
+| [Projects](/projects/README.md) | End-to-end projects: customer segmentation, used-car pricing, campaign impact, BEV, face-off | A full pot |
+| [Experiments](/experiments/README.md) | Small, exploratory work that isn't a project (yet) | A tasting flight |
+| [Business](/business/README.md) | Data science in business, industry notes (HPC) | A board-meeting latte |
+| [Tips](/tips/README.md) | Linux tricks, Git, Markdown, Kaggle, interview prep | A quick sip |
+| [Journal](/journal/README.md) | Running notes and reflections | Whatever's in the pot |
 
-## Topics
-From the aroma of well-structured code to the rich flavors of design patterns and real-world business implications, our repository covers a wide array of topics:
+## 🗺️ How to read it
 
-- Programming and Clean Code: Discover the art of writing elegant, efficient, and maintainable code that stands the test of time.
+- **On the website:** use the sidebar. It is generated from the folder structure, so it always matches the repo.
+- **On GitHub:** every folder has a `README.md` that lists its pages.
+- **Projects** marked ↗ are separate repositories, linked as git submodules. Clone with `git clone --recursive` to get them locally.
 
-- Design Patterns: Explore tried-and-true design solutions to common problems, fostering scalability, flexibility, and maintainability.
+<details>
+<summary><b>Repository layout</b></summary>
 
-- Business Interference: Grasp the intricate dance between AI and business, how AI technologies impact decision-making, and the potential for innovation.
-
-## Structure
 ```bash
 .
 ├── business
@@ -83,14 +83,23 @@ From the aroma of well-structured code to the rich flavors of design patterns an
 └── README.md
 ```
 
-## Contributing
-The AI A Cup of Tea thrives on collaboration and diverse perspectives. If you have insights to share, solutions to optimize, or new topics to add to the menu, we encourage you to contribute. Open a pull request and let's continue building this cozy haven of knowledge together.
+</details>
 
-## Sip and Support
-If you find a thought-provoking idea or a solution that resonates with you, consider offering us a cup of tea by sharing your thoughts, insights, or even improvements. Let's nurture a space where ideas flow freely, and our collective sips of wisdom create a harmonious symphony of AI knowledge.
+## 🤝 Pull up a chair
 
-<div id="header">
-  <img src="https://media.giphy.com/media/KZMRyVjEtdv8AU6mIr/giphy.gif" width="350"/>
+Contributions are welcome: a correction, a clearer explanation or a whole new topic.
+
+1. Branch from `dev` and keep one topic per branch.
+2. Put the page where it belongs. [`SPEC.md`](/SPEC.md) describes the structure, and folder and page names use `kebab-case`.
+3. Open a pull request against `dev`.
+
+Found something off but no time to fix it? [Open an issue](https://github.com/AhmedYousriSobhi/aCupOfTea/issues). That helps too.
+
+## 💬 Sip and support
+
+If a page saved you some time, ⭐ the repo or share it with someone who'd enjoy it. Feedback and ideas are always welcome.
+
+<div align="center">
+  <img src="https://media.giphy.com/media/KZMRyVjEtdv8AU6mIr/giphy.gif" width="300" alt="Cheers"/>
+  <p><b>Cheers to knowledge, growth, and a well-brewed cup. 🍵</b></p>
 </div>
-
-__Cheers to knowledge, growth, and a cup of AI-infused tea! 🍵🤖__
