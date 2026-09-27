@@ -165,13 +165,13 @@
   * [Overview](problems/README.md)
   * [Customer Segmentation](problems/customer-segmentation.md)
   * **Interview Assessment Problems**
-    * [Interview Assessment Problems](problems/interviewAssessmentProblems/README.md)
-    * **Question CheapestFlatsPerCityUsingSQL**
-      * [README](problems/interviewAssessmentProblems/question-CheapestFlatsPerCityUsingSQL/README.md)
+    * [Interview Assessment Problems](problems/interview-assessment-problems/README.md)
+    * **Question Cheapest Flats Per City Using Sql**
+      * [README](problems/interview-assessment-problems/question-cheapest-flats-per-city-using-sql/README.md)
     * **Question**
-      * [Job Counter Using PySpark](problems/interviewAssessmentProblems/question-JobCounterUsingPySpark/README.md)
+      * [Job Counter Using PySpark](problems/interview-assessment-problems/question-job-counter-using-pyspark/README.md)
     * **Question**
-      * [Machine Learning Classifier](problems/interviewAssessmentProblems/question-MachineLearningClassifier/README.md)
+      * [Machine Learning Classifier](problems/interview-assessment-problems/question-machine-learning-classifier/README.md)
   * [Problem Solving ↗](https://github.com/AhmedYousriSobhi/problem_solving)
 * **Programming**
   * [Overview](programming/README.md)
@@ -210,14 +210,14 @@
     * [Know How?](programming/version-control/know-how.md)
 * **Projects**
   * [Overview](projects/README.md)
-  * [BEV Project ↗](https://github.com/oforomar/BEV-Project)
+  * [Bev Project ↗](https://github.com/oforomar/BEV-Project)
   * [Customer Segmentation ↗](https://github.com/AhmedYousriSobhi/customer_segmentation)
   * [Face Off ↗](https://github.com/AhmedYousriSobhi/face-off)
-  * [Market Campain Imapct ↗](https://github.com/AhmedYousriSobhi/market_campain_imapct)
+  * [Market Campaign Impact ↗](https://github.com/AhmedYousriSobhi/market_campain_imapct)
   * [Used Cars Price Estimation ↗](https://github.com/AhmedYousriSobhi/used_cars_price_estimation)
 * **Tips**
   * [Overview](tips/README.md)
-  * [Analytic Skill for a Data Scientist](tips/analyticSkill.md)
+  * [Analytic Skill for a Data Scientist](tips/analytic-skill.md)
   * [Tips Concepts](tips/concepts.md)
   * [Technical Info](tips/interview-technical-info.md)
   * [Kaggle Tips & Tricks](tips/kaggle-tips.md)
@@ -225,5 +225,5 @@
   * [Linux daily Tricks](tips/linux-daily-tricks.md)
   * [Markdown](tips/markdown.md)
   * [Ubuntu Debian File Installation](tips/ubuntu-deb-file-install.md)
-  * [Value Interview](tips/valueInterview.md)
-  * [Git](tips/versionControl-git.md)
+  * [Value Interview](tips/value-interview.md)
+  * [Git](tips/version-control-git.md)

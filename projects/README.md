@@ -6,10 +6,10 @@ In this section, we will give some spot to the projects either we faced during i
 
 | Directory | Description |
 |-----------|-------------|
-| [BEV-Project](/projects/BEV-Project/) | Battery Electric Vehicle project |
-| [customer_segmentation](/projects/customer_segmentation/) | Customer segmentation analysis |
+| [bev-project](/projects/bev-project/) | Battery Electric Vehicle project |
+| [customer-segmentation](/projects/customer-segmentation/) | Customer segmentation analysis |
 | [face-off](/projects/face-off/) | Face recognition/detection project |
-| [market_campain_imapct](/projects/market_campain_imapct/) | Marketing campaign impact analysis |
-| [used_cars_price_estimation](/projects/used_cars_price_estimation/) | Used car price prediction |
+| [market-campaign-impact](/projects/market-campaign-impact/) | Marketing campaign impact analysis |
+| [used-cars-price-estimation](/projects/used-cars-price-estimation/) | Used car price prediction |
 
 End-to-end ML projects showcasing various techniques and domains.
