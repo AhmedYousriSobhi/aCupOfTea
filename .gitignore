@@ -1,0 +1,9 @@
+# Ignore Sphinx build output
+docs/build/
+
+# Python bytecode caches
+__pycache__/
+*.pyc
+
+# Weights & Biases local run logs
+wandb/
