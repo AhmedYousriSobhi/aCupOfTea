@@ -1,15 +1,15 @@
 * [Home](README.md)
 * **Data Science in Business**
   * [Overview](business/README.md)
-  * [Food Delivery Service Company](business/foodDeliveryServiceCompany.md)
-  * [State Company](business/realStateCompnay.md)
-  * [Used Cars Retailer Company](business/usedCarsRetailer.md)
+  * [Food Delivery Service Company](business/food-delivery-service-company.md)
+  * [State Company](business/real-estate-company.md)
+  * [Used Cars Retailer Company](business/used-cars-retailer.md)
   * **HPC Industry**
-    * [Overview](business/hpcIndustry/README.md)
-    * [Performance Computing Systems](business/hpcIndustry/101-hpc.md)
-    * [A More Gentle Introduction](business/hpcIndustry/102-hpc.md)
-    * [HPC: Interview Questions](business/hpcIndustry/hpcInterviewQuestions.md)
-    * [WorkLoads](business/hpcIndustry/workloads.md)
+    * [Overview](business/hpc-industry/README.md)
+    * [Performance Computing Systems](business/hpc-industry/101-hpc.md)
+    * [A More Gentle Introduction](business/hpc-industry/102-hpc.md)
+    * [HPC: Interview Questions](business/hpc-industry/hpc-interview-questions.md)
+    * [WorkLoads](business/hpc-industry/workloads.md)
 * **Experiments**
   * [Overview](experiments/README.md)
   * **W&B Scikit**

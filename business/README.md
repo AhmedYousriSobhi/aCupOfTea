@@ -10,10 +10,10 @@ The main objective of this section, is to get more information regarding domain 
 
 | Directory | Description |
 |-----------|-------------|
-| [foodDeliveryServiceCompany](/business/foodDeliveryServiceCompany.md) | Food delivery service domain |
-| [hpcIndustry](/business/hpcIndustry/README.md) | High-Performance Computing industry |
-| [realStateCompnay](/business/realStateCompnay.md) | Real estate and property domain |
-| [usedCarsRetailer](/business/usedCarsRetailer.md) | Used car retail business |
+| [food-delivery-service-company](/business/food-delivery-service-company.md) | Food delivery service domain |
+| [hpc-industry](/business/hpc-industry/README.md) | High-Performance Computing industry |
+| [real-estate-company](/business/real-estate-company.md) | Real estate and property domain |
+| [used-cars-retailer](/business/used-cars-retailer.md) | Used car retail business |
 
 What you can gain actually is getting more familiar with their domain knowledge, investigate their projects.
 
