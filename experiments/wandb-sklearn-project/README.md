@@ -6,9 +6,8 @@ Example project demonstrating Weights & Biases integration with scikit-learn.
 
 | File/Directory | Description |
 |----------------|-------------|
-| [data](data/) | Project datasets |
-| [data_modeling](data_modeling.ipynb) | Modeling notebook with W&B logging |
-| [tools](tools/) | Helper utilities |
-| [wandb](wandb/) | W&B experiment logs |
+| [data](/experiments/wandb-sklearn-project/data/) | Project datasets |
+| [data_modeling](/experiments/wandb-sklearn-project/data_modeling.ipynb) | Modeling notebook with W&B logging |
+| [tools](/experiments/wandb-sklearn-project/tools/) | Helper utilities |
 
 Demonstrates experiment tracking, hyperparameter tuning, and model evaluation with W&B.

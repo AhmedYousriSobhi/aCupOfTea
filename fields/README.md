@@ -12,7 +12,6 @@ This directory contains various domains and fields within AI, Machine Learning, 
 | [designPatterns](/fields/designPatterns/README.md) | Software design patterns for ML/AI systems |
 | [generativeAI](/fields/generativeAI/README.md) | LLMs, LangChain, and generative models |
 | [libararies,Frameworks,Containers](/fields/libarariesFrameworksContainers/README.md) | Tools like Pandas, PyTorch, Docker |
-| [projectTopics](/fields/projectTopics/README.md) | Ideas and topics for data science projects |
 | [recommenderSystems](/fields/recommenderSystems/README.md) | Recommendation algorithms and systems |
 | [reinforcementLearning](/fields/reinforcementLearning/README.md) | RL concepts and algorithms |
 | [statistics](/fields/statistics/README.md) | Statistical methods and theory |

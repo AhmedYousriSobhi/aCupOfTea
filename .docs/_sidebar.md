@@ -10,6 +10,10 @@
     * [A More Gentle Introduction](business/hpcIndustry/102-hpc.md)
     * [HPC: Interview Questions](business/hpcIndustry/hpcInterviewQuestions.md)
     * [WorkLoads](business/hpcIndustry/workloads.md)
+* **Experiments**
+  * [Overview](experiments/README.md)
+  * **W&B Scikit**
+    * [Learn Project](experiments/wandb-sklearn-project/README.md)
 * **Fields**
   * [Overview](fields/README.md)
   * **Benchmarks**
@@ -45,8 +49,6 @@
     * [Overview](fields/generativeAI/README.md)
     * **Generative AI**
       * [Evaluation and Debugging Using Weights & Biases Tools](fields/generativeAI/evaluation_and_debugging/README.md)
-      * **W&B Scikit**
-        * [Learn Project](fields/generativeAI/evaluation_and_debugging/wandb_sklearnProject/README.md)
     * **Generative AI**
       * [Langchain](fields/generativeAI/langchain/README.md)
     * **Generative AI**
@@ -66,9 +68,6 @@
     * [Pytorch](fields/libarariesFrameworksContainers/101-pytorch.md)
     * [Singularity](fields/libarariesFrameworksContainers/101-singularity.md)
     * [Pytorch DDP](fields/libarariesFrameworksContainers/102-pytorchDDP.md)
-  * **Project Topics**
-    * [Overview](fields/projectTopics/README.md)
-    * [Customer Segmentation](fields/projectTopics/customerSegmentation.md)
   * **Recommender Systems**
     * [Overview](fields/recommenderSystems/README.md)
   * **Reinforcement Learning**
@@ -164,6 +163,7 @@
   * [Journal](journal/README.md)
 * **Problems**
   * [Overview](problems/README.md)
+  * [Customer Segmentation](problems/customer-segmentation.md)
   * **Interview Assessment Problems**
     * [Interview Assessment Problems](problems/interviewAssessmentProblems/README.md)
     * **Question CheapestFlatsPerCityUsingSQL**
