@@ -10,8 +10,8 @@ The main objective of this section, is to get more information regarding domain 
 
 | Directory | Description |
 |-----------|-------------|
-| [foodDeliveryServiceCompany](/business/foodDeliveryServiceCompany/README.md) | Food delivery service domain |
-| [hpcIndustry](/business/hpcIndustry.md) | High-Performance Computing industry |
+| [foodDeliveryServiceCompany](/business/foodDeliveryServiceCompany.md) | Food delivery service domain |
+| [hpcIndustry](/business/hpcIndustry/README.md) | High-Performance Computing industry |
 | [realStateCompnay](/business/realStateCompnay.md) | Real estate and property domain |
 | [usedCarsRetailer](/business/usedCarsRetailer.md) | Used car retail business |
 
