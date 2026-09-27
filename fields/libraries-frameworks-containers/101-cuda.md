@@ -59,7 +59,7 @@ Memory coalescing aims to optimize memory access patterns by organizing memory r
 
 For example, suppose multiple threads in a warp need to access consecutive elements of an array. Instead of accessing these elements individually, memory coalescing allows the GPU to fetch them in a single transaction, minimizing the overhead associated with memory accesses.
 
-Please refer to [memory coalescing](/programming/operatingSystem/memory-coalescing.md) blog to get more info explained.
+Please refer to [memory coalescing](/programming/operating-system/memory-coalescing.md) blog to get more info explained.
 
 # Code Journey from CPU to GPU
 With the help of ChatGPT 3.5, we try to illustrate an overview of what happen when we want to run code on GPU from CPU. 

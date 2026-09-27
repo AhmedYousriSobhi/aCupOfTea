@@ -6,6 +6,6 @@ Essential software development tools and skills.
 
 | Directory | Description |
 |-----------|-------------|
-| [aws](/programming/softwareSkills&Tools/aws/README.md) | Amazon Web Services for ML |
+| [aws](/programming/software-skills-and-tools/aws/README.md) | Amazon Web Services for ML |
 
 Cloud platforms, development tools, and deployment technologies.
