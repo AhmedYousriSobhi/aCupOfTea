@@ -2,7 +2,7 @@
 
 ## Repository
 
-`aCupOfTea` — a personal knowledge base covering AI, machine learning, software engineering, programming, business, and applied projects. Published as a **Docsify** site: `.github/workflows/deploy-docs.yml` deploys `main` to the `gh-pages` branch on every push.
+`aCupOfTea` — a personal knowledge base covering AI, machine learning, software engineering, programming, business, and applied projects. Published as a **Docsify** site: `.github/workflows/deploy-docs.yml` deploys `main` to the `gh-pages` branch on every push. Day-to-day work lands on `dev` first (§11).
 
 Repository organization is governed by `SPEC.md`. Read it before making any structural change.
 
@@ -73,6 +73,12 @@ Prefer `git mv old/path new/path`. After moving:
 ## 11. Git Safety
 
 Before: `git status`. After: `git status`, `git diff --stat`, `git diff`. Don't mix unrelated changes into a structural migration. Avoid destructive Git operations unless explicitly requested.
+
+**Branching flow:** `feature branch → dev → main`.
+
+- Cut every feature branch from `dev`, one branch and one PR per feature, and open the PR against `dev`.
+- Never push or open PRs directly to `main`. `main` only receives changes through a `dev → main` PR.
+- Pushing to `main` redeploys the public site, so merge the `dev → main` PR only when the owner approves the release.
 
 ## 12. Root Directory
 

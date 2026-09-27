@@ -149,6 +149,8 @@ This distinction MUST guide all future placement decisions.
 
 Structural migrations MUST: preserve file content · prefer `git mv` · preserve project boundaries · update internal references (including absolute self-repo GitHub URLs) AND regenerate the sidebar/navbar · check for broken links · avoid unnecessary renames · avoid deleting substantive material · stay reviewable · be incremental rather than one giant restructure.
 
+Changes flow `feature branch → dev → main`: each feature is developed on its own branch cut from `dev` and merged into `dev` by PR. `main` MUST only be updated by a `dev → main` PR, because every push to `main` redeploys the published site.
+
 ## 20. Ambiguous Content
 
 If classification is unclear: **do not silently guess.** Record the ambiguity, list the plausible classifications, and let a human decide.
