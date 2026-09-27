@@ -398,9 +398,9 @@ Y = 2.55*C , X = 3.67C -🡪 Y = 2.55/3.67 X
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/6155f977-a53f-4274-a123-fe1a872a3ede)
 
 ## PCA Technical Points
-There are various of points that one should take care during deciding using PCA, which we refered in ["tabularData/dataModeling/PCA"](https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/fields/tabularData/dataFeatureEngineering/PCA.md)
+There are various of points that one should take care during deciding using PCA, which we refered in ["tabularData/dataModeling/PCA"](/fields/tabularData/dataFeatureEngineering/PCA.md)
 
-Along with Python script for determining the number of components in PCA ["tabularData/dataModeling/pca_ncomponent.py"](https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/fields/tabularData/dataFeatureEngineering/pca_ncomponent.py)
+Along with Python script for determining the number of components in PCA ["tabularData/dataModeling/pca_ncomponent.py"](https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/fields/tabularData/dataFeatureEngineering/pca-ncomponent.py)
 
 # Credits
 - IBM Coursera Specialization

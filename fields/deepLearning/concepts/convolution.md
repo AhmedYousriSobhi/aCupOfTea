@@ -1423,7 +1423,7 @@ Siamese networks are a powerful tool for one-shot learning. They have been used 
 
 The term "state of the art" refers to the current highest level of development or advancement in a particular field or technology. It describes the most advanced and innovative techniques, methods, or models that are currently being used or recognized as the best solutions to a specific problem. In the context of machine learning and deep learning, the "state of the art" refers to the most advanced and effective models, algorithms, and approaches that have been developed to tackle various challenges.
 
-Please refere to the following chapter of [STATE-OF-ART](https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/fields/deepLearning/stateOfArt.md)
+Please refere to the following chapter of [STATE-OF-ART](/fields/deepLearning/concepts/stateOfArt.md)
 
 # Credits
 [CS231n: Convolutional Neural Networks for Visual Recognition](https://cs231n.github.io/convolutional-networks/).
