@@ -40,94 +40,46 @@ From the aroma of well-structured code to the rich flavors of design patterns an
 ```bash
 .
 ├── business
-|   ├── foodDeliveryServiceCompany
-|   ├── realStateCompany
-|   ├── usedCarsRetailer
+│   └── hpc-industry
+├── experiments
+│   └── wandb-sklearn-project
 ├── fields
-|   ├── dataCollection
-|   ├── deepLearning
-|   |   ├── conceptsInDeepLearning
-|   |   |   ├── basics
-|   |   |   ├── convolution
-|   |   |   ├── sequenceModels
-|   |   |   ├── historyOfAI
-|   |   |   ├── stateOfArt
-|   |   ├── workspace
-|   ├── designPatterns
-|   |   ├── featureCross
-|   ├── generativeAI
-|   |   ├── evaluation_and_debugging
-|   |   ├── langchain
-|   |   ├── llm_VsCode
-|   |   ├── Machine_translator
-|   ├── libarariesAndFrameworks
-|   |   ├── pandas
-|   |   ├── pytorch
-|   ├── projectTopics
-|   |   ├── CustomerSegmentation
-|   ├── recommenderSystems
-|   ├── reinforcementLearning
-|   |   ├── conceptsInReinforcementLearning
-|   |   |   ├── basics
-|   ├── statistics
-|   ├── tabularData
-|   |   ├── conceptInMachineLearning
-|   |   |   ├── dataEDAanalysis
-|   |   |   ├── mlSupervisedClassification
-|   |   |   ├── mlSupervisedRegression
-|   |   |   ├── mlUnsupervised
-|   |   ├── conceptInTimeSeries
-|   |   ├── dataProcessing
-|   |   |   ├── handleDuplicatedData
-|   |   |   ├── handlingMissingData
-|   |   |   |   ├── determineMissingValues
-|   |   |   |   ├── regressionImputing
-|   |   |   |   ├── meanImputing
-|   |   |   ├── handlingObjectdata
-|   |   |   |   ├── wordsSimilarity
-|   |   |   ├── handlingOutliers
-|   |   |   ├── handlingSkewness
-|   |   ├── dataEDA
-|   |   |   ├── correlalstion
-|   |   |   |   ├── detectmulticollinearity
-|   |   |   |   ├── extremeCorrelation
-|   |   |   ├── analysisPloting
-|   |   |   ├── featureAnalysis
-|   |   |   ├── visualizationGraphs
-|   |   ├── dataEvaluation
-|   |   |   ├── classification
-|   |   |   |   ├── accuracyParadox
-|   |   |   ├── clustering
-|   |   |   ├── modelBehaviour
-|   |   |   |   ├── biasVarienceTradeOff
-|   |   |   ├── regression
-|   |   ├── dataFeatureEngineering
-|   |   |   |   ├── PCA
-|   |   ├── dataModeling
-|   |   |   ├── clustering
-|   |   |   ├── pipeline
-|   |   |   ├── xgboost
-├── Problems
-|   ├── problem_solving
-|   ├── question_CheapestFlatsPerCityUsingSQL
-|   ├── question_JobCounterUsingPySpark
-|   ├── question_MachineLearningClassifier
+│   ├── benchmarks
+│   ├── computer-science-engineering  (submodule)
+│   ├── data-collection
+│   ├── deep-learning
+│   ├── design-patterns
+│   ├── generative-ai
+│   ├── libraries-frameworks-containers
+│   ├── recommender-systems
+│   ├── reinforcement-learning
+│   ├── schedulers
+│   ├── statistics
+│   ├── system-administration
+│   └── tabular-data
+├── journal
+├── problems
+│   ├── interview-assessment-problems
+│   └── problem-solving  (submodule)
 ├── programming
-|   ├── dataStructure
-|   ├── decorators
-|   ├── languages
-|   ├── oop
-|   ├── python
-|   ├── pythonCleanCode
-|   ├── softwareGoals
-|   |   ├── robustness
+│   ├── data-structure
+│   ├── decorators
+│   ├── oop
+│   ├── operating-system
+│   ├── parallel-programming
+│   ├── python
+│   ├── python-clean-code
+│   ├── software-goals
+│   ├── software-skills-and-tools
+│   └── version-control
 ├── projects
-|   ├── BEV-Project
-|   ├── customer_segmentation
-|   ├── face-off
-|   ├── market_campain_imapct
-|   ├── used_cars_price_estimation
+│   ├── bev-project  (submodule)
+│   ├── customer-segmentation  (submodule)
+│   ├── face-off  (submodule)
+│   ├── market-campaign-impact  (submodule)
+│   └── used-cars-price-estimation  (submodule)
 ├── tips
+├── index.html   (Docsify entry point)
 └── README.md
 ```
 

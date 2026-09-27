@@ -1,4 +1,5 @@
 * [Home](README.md)
+* [aCupOfTea Repository Specification](SPEC.md)
 * **Data Science in Business**
   * [Overview](business/README.md)
   * [Food Delivery Service Company](business/food-delivery-service-company.md)
