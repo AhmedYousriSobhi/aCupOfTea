@@ -17,5 +17,5 @@
 	path = projects/face-off
 	url = https://github.com/AhmedYousriSobhi/face-off
 [submodule "fields/CSE"]
-	path = fields/CSE
+	path = fields/computer-science-engineering
 	url = https://github.com/AhmedYousriSobhi/CSE.git
