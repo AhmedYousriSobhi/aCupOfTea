@@ -2,6 +2,7 @@
 
 * 📂 Categories
   * [Business](business/README.md)
+  * [Experiments](experiments/README.md)
   * [Fields](fields/README.md)
   * [Journal](journal/README.md)
   * [Problems](problems/README.md)
