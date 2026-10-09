@@ -175,6 +175,8 @@ An optional **overlay** on top of the folder structure: pages can carry YAML fro
 ---
 id: sequence-models            # explicit, unique, kebab-case; required if the page has or receives relations
 title: Sequence Models
+summary: How models handle ordered data like text, from RNNs to transformers.   # optional, one line, max 200 chars
+level: intermediate            # optional: beginner | intermediate | advanced
 type: concept                  # concept | guide | reference | note | tutorial | experiment | resource
 status: stable                 # draft | stable | deprecated
 domains: [deep-learning]       # from taxonomy.yaml
@@ -184,6 +186,8 @@ relations:                     # optional; targets are explicit ids
   related: [encoder-decoder-machine-translation]
 ---
 ```
+
+Reading time is computed (200 wpm over the body, code excluded), never authored. `summary` and `level` feed the Explore lists and the **Start here** page (learning paths from `prerequisites`, quick reads of 10 minutes or less, beginner picks); prerequisites must not form a cycle.
 
 Rules: no YAML comments inside front matter (`gen_sidebar.sh` reads the first `# ` line as the page label); the path-derived fallback id of legacy pages is never a relation target; relations never target git submodule content (submodules are skipped entirely).
 

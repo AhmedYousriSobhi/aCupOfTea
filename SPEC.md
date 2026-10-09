@@ -200,6 +200,7 @@ Content type, location and navigation are unchanged; metadata is an **overlay** 
 
 - **Optional:** pages without front matter remain valid and keep working; coverage grows incrementally (§20).
 - **Identity:** a page that participates in relations needs an explicit, repo-unique, kebab-case `id`. Ids are independent of the path, so moving a file does not break relations. The path-derived fallback id is read-only and is never a relation target. Any id collision (explicit vs explicit, or explicit vs fallback) is an error.
+- **Reader aids:** optional `summary` (one line, max 200 chars) and `level` (beginner, intermediate, advanced) are authored; reading time is computed. They drive the Explore lists and a generated **Start here** page (learning paths from prerequisite chains, quick reads, beginner picks). Prerequisites must be acyclic.
 - **Vocabulary:** `type` ∈ concept, guide, reference, note, tutorial, experiment, resource; `status` ∈ draft, stable, deprecated; relation types are exactly `related` and `prerequisites`; domains and tags are defined in `.docs/metadata/taxonomy.yaml`.
 - **Location:** schema, taxonomy, tools and generated data live under `.docs/` (served by GitHub Pages), so the root allowlist (§13) is unchanged.
 - **Generated, deterministic:** `.docs/generated/` holds `objects.json`, `domains.json`, `tags.json`, `relationships.json` (with reverse links), `related.json` and the Explore pages. The sidebar gains an additive **Explore** section (Domains, Tags); the folder tree is untouched.
