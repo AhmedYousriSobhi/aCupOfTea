@@ -1,4 +1,8 @@
 * [Home](README.md)
+* **Explore**
+  * [Start here](.docs/generated/explore/start-here.md)
+  * [Domains](.docs/generated/explore/domains.md)
+  * [Tags](.docs/generated/explore/tags.md)
 * [aCupOfTea Repository Specification](SPEC.md)
 * **Data Science in Business**
   * [Overview](business/README.md)
@@ -55,8 +59,8 @@
     * **Generative AI**
       * [LLM VSCode](fields/generative-ai/llm-vscode/README.md)
     * **Generative AI**
-      * [Machine Translator](fields/generative-ai/machine-translator/encoder-decoder.md)
       * [Machine Translator](fields/generative-ai/machine-translator/README.md)
+      * [Machine Translator](fields/generative-ai/machine-translator/encoder-decoder.md)
   * **Libraries, Frameworks & Containers**
     * [Overview](fields/libraries-frameworks-containers/README.md)
     * [Conda](fields/libraries-frameworks-containers/101-conda.md)
@@ -116,9 +120,9 @@
       * [Feature Analysis](fields/tabular-data/data-eda/feature-analysis.md)
       * [VISUALIZATION GRAPHS](fields/tabular-data/data-eda/visualization-graphs.md)
       * **Correlation**
+        * [Correlation](fields/tabular-data/data-eda/correlation/README.md)
         * [Detect Multicollinearity](fields/tabular-data/data-eda/correlation/detect-multicollinearity.md)
         * [Extreme Correlation](fields/tabular-data/data-eda/correlation/extreme-correlation.md)
-        * [Correlation](fields/tabular-data/data-eda/correlation/README.md)
     * **Tabular Data - Data Evaluation**
       * [Overview](fields/tabular-data/data-evaluation/README.md)
       * **Tabular Data - Data Evaluation - Classification**

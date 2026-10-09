@@ -6,6 +6,12 @@ on:
       - main
 
   workflow_dispatch:
+    inputs:
+      target_branch:
+        description: "Branch to publish to. Leave as gh-pages for the live site (main only); use gh-pages-preview to inspect a build without touching the live site."
+        required: false
+        default: gh-pages
+        type: string
 
 permissions:  
   contents: write
@@ -17,8 +23,37 @@ jobs:
       # Fixes the deprecation warning and ensures future-proofing
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
+      - name: Guard the publish target
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          TARGET: ${{ inputs.target_branch }}
+          REF: ${{ github.ref }}
+        run: |
+          # Only gh-pages or gh-pages-<suffix> may be force-published; never main or dev.
+          if ! [[ "$TARGET" =~ ^gh-pages(-[A-Za-z0-9._-]+)?$ ]]; then
+            echo "::error::target_branch must be gh-pages or gh-pages-<name>"
+            exit 1
+          fi
+          if [ "$TARGET" = "gh-pages" ] && [ "$REF" != "refs/heads/main" ]; then
+            echo "::error::The live gh-pages branch can only be published from main; use gh-pages-preview for other branches"
+            exit 1
+          fi
+
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install PyYAML
+        run: pip install PyYAML==6.0.2
+
+      - name: Validate and generate metadata indexes
+        run: |
+          python3 -I .docs/tools/validate.py
+          python3 -I .docs/tools/generate_index.py
 
       - name: Generate Navigation
         run: |
@@ -32,14 +67,18 @@ jobs:
           ./gen_navbar.sh
           cd ..
 
-      - name: Ensure .nojekyll exists
-        run: touch .nojekyll
+      - name: Stage site (strip front matter, append Related blocks)
+        run: |
+          python3 -I .docs/tools/stage_site.py --out _site
+          rm -f _site/.stage-site
+          touch _site/.nojekyll
 
       - name: Deploy to gh-pages branch
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: gh-pages
-          # Since index.html is in root, we publish the whole directory
-          publish_dir: .
+          # push events carry no inputs, so they still publish to gh-pages
+          publish_branch: ${{ inputs.target_branch || 'gh-pages' }}
+          # The staging copy: sources in the repo are never rewritten
+          publish_dir: _site
           force_orphan: true

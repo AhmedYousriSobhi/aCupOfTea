@@ -1,0 +1,77 @@
+# Controlled vocabulary. Add a value here before using it in a page.
+# Keys are kebab-case ids; label is for display.
+
+version: 1
+
+types:
+  - concept
+  - guide
+  - reference
+  - note
+  - tutorial
+  - experiment
+  - resource
+
+statuses:
+  - draft
+  - stable
+  - deprecated
+
+levels:
+  - beginner
+  - intermediate
+  - advanced
+
+relation_types:      # exact names used in front matter
+  - related
+  - prerequisites
+
+domains:
+  machine-learning:
+    label: Machine Learning
+    description: Learning from data, general ML theory and practice.
+  deep-learning:
+    label: Deep Learning
+    description: Neural networks and deep architectures.
+  generative-ai:
+    label: Generative AI
+    description: Generative models, LLMs and their tooling.
+  natural-language-processing:
+    label: Natural Language Processing
+    description: Text and language modelling, translation, sequence tasks.
+  reinforcement-learning:
+    label: Reinforcement Learning
+    description: Agents learning through reward and interaction.
+  statistics:
+    label: Statistics
+    description: Statistical methods and probability.
+  recommender-systems:
+    label: Recommender Systems
+    description: Recommendation and ranking techniques.
+  tabular-data:
+    label: Tabular Data
+    description: Modelling and processing of structured data.
+  software-engineering:
+    label: Software Engineering
+    description: Engineering practice, patterns and tooling.
+  systems-and-hpc:
+    label: Systems and HPC
+    description: Benchmarks, schedulers, system administration, high-performance computing.
+
+tags:
+  attention:
+    label: Attention
+  encoder-decoder:
+    label: Encoder-Decoder
+  llm:
+    label: Large Language Models
+  machine-translation:
+    label: Machine Translation
+  neural-networks:
+    label: Neural Networks
+  rnn:
+    label: Recurrent Neural Networks
+  sequence-modeling:
+    label: Sequence Modeling
+  transformers:
+    label: Transformers

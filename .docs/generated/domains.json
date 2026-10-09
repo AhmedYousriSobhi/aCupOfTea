@@ -1,0 +1,64 @@
+{
+  "deep-learning": {
+    "description": "Neural networks and deep architectures.",
+    "label": "Deep Learning",
+    "objects": [
+      "deep-learning-basics",
+      "encoder-decoder-machine-translation",
+      "sequence-models"
+    ]
+  },
+  "generative-ai": {
+    "description": "Generative models, LLMs and their tooling.",
+    "label": "Generative AI",
+    "objects": [
+      "encoder-decoder-machine-translation",
+      "sequence-models"
+    ]
+  },
+  "machine-learning": {
+    "description": "Learning from data, general ML theory and practice.",
+    "label": "Machine Learning",
+    "objects": [
+      "deep-learning-basics"
+    ]
+  },
+  "natural-language-processing": {
+    "description": "Text and language modelling, translation, sequence tasks.",
+    "label": "Natural Language Processing",
+    "objects": [
+      "encoder-decoder-machine-translation",
+      "sequence-models"
+    ]
+  },
+  "recommender-systems": {
+    "description": "Recommendation and ranking techniques.",
+    "label": "Recommender Systems",
+    "objects": []
+  },
+  "reinforcement-learning": {
+    "description": "Agents learning through reward and interaction.",
+    "label": "Reinforcement Learning",
+    "objects": []
+  },
+  "software-engineering": {
+    "description": "Engineering practice, patterns and tooling.",
+    "label": "Software Engineering",
+    "objects": []
+  },
+  "statistics": {
+    "description": "Statistical methods and probability.",
+    "label": "Statistics",
+    "objects": []
+  },
+  "systems-and-hpc": {
+    "description": "Benchmarks, schedulers, system administration, high-performance computing.",
+    "label": "Systems and HPC",
+    "objects": []
+  },
+  "tabular-data": {
+    "description": "Modelling and processing of structured data.",
+    "label": "Tabular Data",
+    "objects": []
+  }
+}

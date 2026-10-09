@@ -1,3 +1,23 @@
+---
+id: encoder-decoder-machine-translation
+title: Encoder-Decoder for Machine Translation
+summary: The encoder-decoder idea behind neural machine translation, with a basic seq2seq model.
+level: intermediate
+type: concept
+status: stable
+domains:
+  - generative-ai
+  - natural-language-processing
+  - deep-learning
+tags:
+  - encoder-decoder
+  - machine-translation
+  - rnn
+relations:
+  prerequisites:
+    - sequence-models
+---
+
 # Generative AI - Machine Translator
 
 In the journey of NLP, short for Natural Langauge Processing, starting with basic architecture of an encoder-decoder model, that we will apply a neural network in.
