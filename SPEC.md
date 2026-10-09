@@ -100,7 +100,6 @@ CLAUDE.md
 LICENSE
 .gitignore
 .nojekyll           — required by Docsify on GitHub Pages
-index.html           — Docsify entry point
 index.html           — Docsify entry point + config (window.$docsify)
 .docs/               — _sidebar.md / _navbar.md (generated) + gen_sidebar.sh / gen_navbar.sh
 .github/             — deploy workflow (regenerates navigation, publishes gh-pages)
