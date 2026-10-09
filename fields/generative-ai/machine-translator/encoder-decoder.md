@@ -1,6 +1,8 @@
 ---
 id: encoder-decoder-machine-translation
 title: Encoder-Decoder for Machine Translation
+summary: The encoder-decoder idea behind neural machine translation, with a basic seq2seq model.
+level: intermediate
 type: concept
 status: stable
 domains:

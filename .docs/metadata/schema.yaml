@@ -27,6 +27,18 @@ fields:
   title:
     type: string
     required: true
+  summary:
+    type: string
+    required: false
+    max_length: 200
+    note: >
+      One plain sentence on a single line telling a casual reader what the page
+      gives them. Shown in Explore lists and Start here.
+  level:
+    type: enum
+    values_from: taxonomy.yaml#levels
+    required: false
+    note: Reader difficulty. Used to group pages in Start here.
   type:
     type: enum
     values_from: taxonomy.yaml#types
@@ -57,6 +69,7 @@ fields:
       - targets may not be the page itself
       - targets may not point into git submodules
       - a page that declares relations must have an explicit id
+      - prerequisites must not form a cycle
 
 fallback_id:
   applies_to: pages without an explicit id
@@ -64,5 +77,8 @@ fallback_id:
   example: fields/deep-learning/concepts/basics.md -> fields-deep-learning-concepts-basics
   uses: collision detection and display only
   relation_target: false
+
+computed:                      # never authored; derived by generate_index.py
+  reading_time_min: ceil(words / 200) of the page body, fenced code excluded, minimum 1
 
 unknown_keys: error

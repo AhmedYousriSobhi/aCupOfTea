@@ -1,6 +1,8 @@
 ---
 id: sequence-models
 title: Sequence Models
+summary: How models handle ordered data like text, from RNNs and LSTMs to transformers and LLMs.
+level: intermediate
 type: concept
 status: stable
 domains:

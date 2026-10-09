@@ -16,7 +16,8 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from common import (DupKeyLoader, ID_RE, RELATION_KEYS, fallback_id, list_pages,  # noqa: E402
                     read_text, split_front_matter, submodule_paths)
 
-ALLOWED_KEYS = {"id", "title", "type", "status", "domains", "tags", "relations"}
+ALLOWED_KEYS = {"id", "title", "summary", "level", "type", "status", "domains", "tags", "relations"}
+SUMMARY_MAX = 200
 REQUIRED_KEYS = ("title", "type", "status", "domains")
 
 
@@ -85,6 +86,7 @@ def load_taxonomy(root, rep):
     return {
         "types": set(tax["types"]),
         "statuses": set(tax["statuses"]),
+        "levels": set(tax.get("levels") or []),
         "domains": set(tax["domains"]),
         "tags": set(tax["tags"]),
     }
@@ -150,6 +152,16 @@ def validate_page(path, text, tax, rep):
             page_id = None
     if "title" in data and (not isinstance(data["title"], str) or not data["title"].strip()):
         rep.error(path, lines.get(("title",), 1), "title must be a non-empty string")
+    if "summary" in data:
+        sm = data["summary"]
+        if not isinstance(sm, str) or not sm.strip():
+            rep.error(path, lines.get(("summary",), 1), "summary must be a non-empty string")
+        elif "\n" in sm.strip() or len(sm) > SUMMARY_MAX:
+            rep.error(path, lines.get(("summary",), 1),
+                      f"summary must be one line of at most {SUMMARY_MAX} characters")
+    if "level" in data and data["level"] not in tax["levels"]:
+        rep.error(path, lines.get(("level",), 1),
+                  f"invalid level {data['level']!r}; allowed: {', '.join(sorted(tax['levels']))}")
     if "type" in data and data["type"] not in tax["types"]:
         rep.error(path, lines.get(("type",), 1),
                   f"invalid type {data['type']!r}; allowed: {', '.join(sorted(tax['types']))}")
@@ -233,6 +245,29 @@ def run(root):
                                             "give the target page an explicit 'id'")
                     else:
                         rep.error(path, ln, f"relations.{rk}: unknown id {target!r}")
+    # prerequisites must not form a cycle
+    graph = {}
+    where = {}
+    for path in sorted(fm_pages):
+        info = fm_pages[path]
+        if info["id"]:
+            where[info["id"]] = path
+            graph[info["id"]] = [t for t, _ in info["relations"].get("prerequisites", []) if t in explicit]
+    state = {}
+
+    def visit(node, stack):
+        state[node] = 1
+        for nxt in sorted(graph.get(node, [])):
+            if state.get(nxt) == 1:
+                cycle = stack[stack.index(nxt):] + [nxt] if nxt in stack else [node, nxt]
+                rep.error(where[node], 1, "prerequisites form a cycle: " + " -> ".join(cycle))
+            elif state.get(nxt) is None:
+                visit(nxt, stack + [nxt])
+        state[node] = 2
+
+    for node in sorted(graph):
+        if state.get(node) is None:
+            visit(node, [node])
     return rep, len(pages), len(fm_pages)
 
 

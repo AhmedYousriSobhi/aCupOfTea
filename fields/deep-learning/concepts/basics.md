@@ -1,6 +1,8 @@
 ---
 id: deep-learning-basics
 title: Deep Learning Basics
+summary: Neurons, loss and cost, and the common activation functions, explained from first principles.
+level: beginner
 type: concept
 status: stable
 domains:

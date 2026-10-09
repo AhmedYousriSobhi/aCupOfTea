@@ -17,6 +17,11 @@ statuses:
   - stable
   - deprecated
 
+levels:
+  - beginner
+  - intermediate
+  - advanced
+
 relation_types:      # exact names used in front matter
   - related
   - prerequisites
