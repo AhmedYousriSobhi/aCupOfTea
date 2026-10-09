@@ -7,7 +7,6 @@ type: concept
 status: stable
 domains:
   - deep-learning
-  - machine-learning
 tags:
   - neural-networks
 relations:

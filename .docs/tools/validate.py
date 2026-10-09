@@ -19,6 +19,7 @@ from common import (DupKeyLoader, ID_RE, RELATION_KEYS, fallback_id, list_pages,
 ALLOWED_KEYS = {"id", "title", "summary", "level", "type", "status", "domains", "tags", "relations"}
 SUMMARY_MAX = 200
 REQUIRED_KEYS = ("title", "type", "status", "domains")
+MAX_TAGS = 5
 
 
 class Report:
@@ -85,6 +86,8 @@ def load_taxonomy(root, rep):
         rep.error(path, 1, f"relation_types must be exactly {list(RELATION_KEYS)}")
     return {
         "types": set(tax["types"]),
+        "tags_all": set(tax["tags"]),
+        "tech_tags": {t for t, m in tax["tags"].items() if isinstance(m, dict) and m.get("kind") == "technology"},
         "statuses": set(tax["statuses"]),
         "levels": set(tax.get("levels") or []),
         "domains": set(tax["domains"]),
@@ -172,6 +175,8 @@ def validate_page(path, text, tax, rep):
         check_enum_list(rep, path, lines, "domains", data["domains"], tax["domains"], True)
     if "tags" in data:
         check_enum_list(rep, path, lines, "tags", data["tags"], tax["tags"], False)
+        if isinstance(data["tags"], list) and len(data["tags"]) > MAX_TAGS:
+            rep.error(path, lines.get(("tags",), 1), f"at most {MAX_TAGS} tags per page ({len(data['tags'])} given)")
 
     relations = {}
     rel = data.get("relations")
@@ -190,7 +195,9 @@ def validate_page(path, text, tax, rep):
         if any(relations.values()) and "id" not in data:
             rep.error(path, lines.get(("relations",), 1),
                       "pages that declare relations need an explicit 'id'")
-    return {"id": page_id, "relations": relations}
+    tags = data.get("tags") if isinstance(data.get("tags"), list) else []
+    return {"id": page_id, "relations": relations, "tags": [t for t in tags if isinstance(t, str)],
+            "tags_line": lines.get(("tags",), 1)}
 
 
 def run(root):
@@ -229,6 +236,16 @@ def run(root):
     for fid, paths in sorted(fallbacks.items()):
         if len(paths) > 1:
             rep.warn(paths[0], 1, f"legacy fallback ids collide: {fid!r} for {', '.join(paths)}")
+
+    # tag rule: single-use tags must name a concrete technology (warning only)
+    tag_use = {}
+    for path in sorted(fm_pages):
+        for t in set(fm_pages[path]["tags"]):
+            tag_use.setdefault(t, []).append(path)
+    for t, paths in sorted(tag_use.items()):
+        if len(paths) == 1 and t in tax["tags_all"] and t not in tax["tech_tags"]:
+            rep.warn(paths[0], fm_pages[paths[0]]["tags_line"],
+                     f"tag {t!r} is used by only one page and is not marked kind: technology")
 
     # relation targets
     for path in sorted(fm_pages):

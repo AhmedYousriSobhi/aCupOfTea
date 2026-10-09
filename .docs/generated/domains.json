@@ -1,4 +1,9 @@
 {
+  "business": {
+    "description": "Business context, KPIs and domain knowledge around the technical work.",
+    "label": "Business",
+    "objects": []
+  },
   "deep-learning": {
     "description": "Neural networks and deep architectures.",
     "label": "Deep Learning",
@@ -19,9 +24,7 @@
   "machine-learning": {
     "description": "Learning from data, general ML theory and practice.",
     "label": "Machine Learning",
-    "objects": [
-      "deep-learning-basics"
-    ]
+    "objects": []
   },
   "natural-language-processing": {
     "description": "Text and language modelling, translation, sequence tasks.",
@@ -41,6 +44,11 @@
     "label": "Reinforcement Learning",
     "objects": []
   },
+  "security": {
+    "description": "Access control, authentication and hardening.",
+    "label": "Security",
+    "objects": []
+  },
   "software-engineering": {
     "description": "Engineering practice, patterns and tooling.",
     "label": "Software Engineering",
@@ -54,11 +62,6 @@
   "systems-and-hpc": {
     "description": "Benchmarks, schedulers, system administration, high-performance computing.",
     "label": "Systems and HPC",
-    "objects": []
-  },
-  "tabular-data": {
-    "description": "Modelling and processing of structured data.",
-    "label": "Tabular Data",
     "objects": []
   }
 }

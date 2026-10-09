@@ -1,8 +1,7 @@
 {
   "deep-learning-basics": {
     "domains": [
-      "deep-learning",
-      "machine-learning"
+      "deep-learning"
     ],
     "id": "deep-learning-basics",
     "level": "beginner",
@@ -42,7 +41,6 @@
     "summary": "The encoder-decoder idea behind neural machine translation, with a basic seq2seq model.",
     "tags": [
       "encoder-decoder",
-      "machine-translation",
       "rnn"
     ],
     "title": "Encoder-Decoder for Machine Translation",
@@ -71,7 +69,6 @@
     "tags": [
       "llm",
       "rnn",
-      "sequence-modeling",
       "transformers"
     ],
     "title": "Sequence Models",

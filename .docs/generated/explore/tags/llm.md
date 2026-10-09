@@ -3,6 +3,6 @@
 # Large Language Models
 
 - [Sequence Models](/fields/deep-learning/concepts/sequence-models.md) — How models handle ordered data like text, from RNNs and LSTMs to transformers and LLMs. *(intermediate · 6 min)*  
-  [`llm`](/.docs/generated/explore/tags/llm.md) [`rnn`](/.docs/generated/explore/tags/rnn.md) [`sequence-modeling`](/.docs/generated/explore/tags/sequence-modeling.md) [`transformers`](/.docs/generated/explore/tags/transformers.md)
+  [`llm`](/.docs/generated/explore/tags/llm.md) [`rnn`](/.docs/generated/explore/tags/rnn.md) [`transformers`](/.docs/generated/explore/tags/transformers.md)
 
 [All tags](/.docs/generated/explore/tags.md)

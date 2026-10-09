@@ -1,6 +1,18 @@
 {
-  "attention": {
-    "label": "Attention",
+  "affinity": {
+    "label": "Affinity",
+    "objects": []
+  },
+  "clustering": {
+    "label": "Clustering",
+    "objects": []
+  },
+  "containers": {
+    "label": "Containers",
+    "objects": []
+  },
+  "distributed-training": {
+    "label": "Distributed Training",
     "objects": []
   },
   "encoder-decoder": {
@@ -9,23 +21,33 @@
       "encoder-decoder-machine-translation"
     ]
   },
+  "gpu": {
+    "label": "GPU",
+    "objects": []
+  },
   "llm": {
     "label": "Large Language Models",
     "objects": [
       "sequence-models"
     ]
   },
-  "machine-translation": {
-    "label": "Machine Translation",
-    "objects": [
-      "encoder-decoder-machine-translation"
-    ]
+  "model-evaluation": {
+    "label": "Model Evaluation",
+    "objects": []
+  },
+  "mpi": {
+    "label": "MPI",
+    "objects": []
   },
   "neural-networks": {
     "label": "Neural Networks",
     "objects": [
       "deep-learning-basics"
     ]
+  },
+  "pytorch": {
+    "label": "PyTorch",
+    "objects": []
   },
   "rnn": {
     "label": "Recurrent Neural Networks",
@@ -34,11 +56,9 @@
       "sequence-models"
     ]
   },
-  "sequence-modeling": {
-    "label": "Sequence Modeling",
-    "objects": [
-      "sequence-models"
-    ]
+  "slurm": {
+    "label": "Slurm",
+    "objects": []
   },
   "transformers": {
     "label": "Transformers",
