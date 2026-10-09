@@ -4,8 +4,7 @@
 
 Learning from data, general ML theory and practice.
 
-| Page | Type | Status | Tags |
-|---|---|---|---|
-| [Deep Learning Basics](/fields/deep-learning/concepts/basics.md) | concept | stable | [neural-networks](/.docs/generated/explore/tags/neural-networks.md) |
+- [Deep Learning Basics](/fields/deep-learning/concepts/basics.md) — Neurons, loss and cost, and the common activation functions, explained from first principles. *(beginner · 28 min)*  
+  [`neural-networks`](/.docs/generated/explore/tags/neural-networks.md)
 
 [All domains](/.docs/generated/explore/domains.md)

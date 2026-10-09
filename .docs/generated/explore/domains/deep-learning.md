@@ -4,10 +4,11 @@
 
 Neural networks and deep architectures.
 
-| Page | Type | Status | Tags |
-|---|---|---|---|
-| [Deep Learning Basics](/fields/deep-learning/concepts/basics.md) | concept | stable | [neural-networks](/.docs/generated/explore/tags/neural-networks.md) |
-| [Encoder-Decoder for Machine Translation](/fields/generative-ai/machine-translator/encoder-decoder.md) | concept | stable | [encoder-decoder](/.docs/generated/explore/tags/encoder-decoder.md), [machine-translation](/.docs/generated/explore/tags/machine-translation.md), [rnn](/.docs/generated/explore/tags/rnn.md) |
-| [Sequence Models](/fields/deep-learning/concepts/sequence-models.md) | concept | stable | [llm](/.docs/generated/explore/tags/llm.md), [rnn](/.docs/generated/explore/tags/rnn.md), [sequence-modeling](/.docs/generated/explore/tags/sequence-modeling.md), [transformers](/.docs/generated/explore/tags/transformers.md) |
+- [Deep Learning Basics](/fields/deep-learning/concepts/basics.md) — Neurons, loss and cost, and the common activation functions, explained from first principles. *(beginner · 28 min)*  
+  [`neural-networks`](/.docs/generated/explore/tags/neural-networks.md)
+- [Encoder-Decoder for Machine Translation](/fields/generative-ai/machine-translator/encoder-decoder.md) — The encoder-decoder idea behind neural machine translation, with a basic seq2seq model. *(intermediate · 3 min)*  
+  [`encoder-decoder`](/.docs/generated/explore/tags/encoder-decoder.md) [`machine-translation`](/.docs/generated/explore/tags/machine-translation.md) [`rnn`](/.docs/generated/explore/tags/rnn.md)
+- [Sequence Models](/fields/deep-learning/concepts/sequence-models.md) — How models handle ordered data like text, from RNNs and LSTMs to transformers and LLMs. *(intermediate · 6 min)*  
+  [`llm`](/.docs/generated/explore/tags/llm.md) [`rnn`](/.docs/generated/explore/tags/rnn.md) [`sequence-modeling`](/.docs/generated/explore/tags/sequence-modeling.md) [`transformers`](/.docs/generated/explore/tags/transformers.md)
 
 [All domains](/.docs/generated/explore/domains.md)

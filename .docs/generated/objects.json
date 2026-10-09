@@ -5,7 +5,9 @@
       "machine-learning"
     ],
     "id": "deep-learning-basics",
+    "level": "beginner",
     "path": "fields/deep-learning/concepts/basics.md",
+    "reading_time_min": 28,
     "relations": {
       "prerequisites": [],
       "related": [
@@ -13,6 +15,7 @@
       ]
     },
     "status": "stable",
+    "summary": "Neurons, loss and cost, and the common activation functions, explained from first principles.",
     "tags": [
       "neural-networks"
     ],
@@ -26,7 +29,9 @@
       "natural-language-processing"
     ],
     "id": "encoder-decoder-machine-translation",
+    "level": "intermediate",
     "path": "fields/generative-ai/machine-translator/encoder-decoder.md",
+    "reading_time_min": 3,
     "relations": {
       "prerequisites": [
         "sequence-models"
@@ -34,6 +39,7 @@
       "related": []
     },
     "status": "stable",
+    "summary": "The encoder-decoder idea behind neural machine translation, with a basic seq2seq model.",
     "tags": [
       "encoder-decoder",
       "machine-translation",
@@ -49,7 +55,9 @@
       "natural-language-processing"
     ],
     "id": "sequence-models",
+    "level": "intermediate",
     "path": "fields/deep-learning/concepts/sequence-models.md",
+    "reading_time_min": 6,
     "relations": {
       "prerequisites": [
         "deep-learning-basics"
@@ -59,6 +67,7 @@
       ]
     },
     "status": "stable",
+    "summary": "How models handle ordered data like text, from RNNs and LSTMs to transformers and LLMs.",
     "tags": [
       "llm",
       "rnn",

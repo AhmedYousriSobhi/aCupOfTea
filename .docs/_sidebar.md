@@ -1,5 +1,6 @@
 * [Home](README.md)
 * **Explore**
+  * [Start here](.docs/generated/explore/start-here.md)
   * [Domains](.docs/generated/explore/domains.md)
   * [Tags](.docs/generated/explore/tags.md)
 * [aCupOfTea Repository Specification](SPEC.md)

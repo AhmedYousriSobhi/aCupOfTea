@@ -14,6 +14,9 @@ echo "* [Home](README.md)" > $OUTPUT
 # Additive to the folder tree below; skipped when the pages were not generated.
 if [ -f "generated/explore/domains.md" ] && [ -f "generated/explore/tags.md" ]; then
     echo "* **Explore**" >> $OUTPUT
+    if [ -f "generated/explore/start-here.md" ]; then
+        echo "  * [Start here](.docs/generated/explore/start-here.md)" >> $OUTPUT
+    fi
     echo "  * [Domains](.docs/generated/explore/domains.md)" >> $OUTPUT
     echo "  * [Tags](.docs/generated/explore/tags.md)" >> $OUTPUT
 fi
