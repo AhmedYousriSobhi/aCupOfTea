@@ -177,10 +177,10 @@ id: sequence-models            # explicit, unique, kebab-case; required if the p
 title: Sequence Models
 summary: How models handle ordered data like text, from RNNs to transformers.   # optional, one line, max 200 chars
 level: intermediate            # optional: beginner | intermediate | advanced
-type: concept                  # concept | guide | reference | note | tutorial | experiment | resource
+type: concept                  # concept | guide | reference | note | problem | project | experiment (definitions in taxonomy.yaml)
 status: stable                 # draft | stable | deprecated
 domains: [deep-learning]       # from taxonomy.yaml
-tags: [rnn]                    # optional, from taxonomy.yaml
+tags: [rnn]                    # optional, max 5, from taxonomy.yaml
 relations:                     # optional; targets are explicit ids
   prerequisites: [deep-learning-basics]
   related: [encoder-decoder-machine-translation]
@@ -188,6 +188,15 @@ relations:                     # optional; targets are explicit ids
 ```
 
 Reading time is computed (200 wpm over the body, code excluded), never authored. `summary` and `level` feed the Explore lists and the **Start here** page (learning paths from `prerequisites`, quick reads of 10 minutes or less, beginner picks); prerequisites must not form a cycle.
+
+**Choosing domains and tags**
+
+- Domains describe the subject, not the folder. Most pages need one or two.
+- A `deep-learning` page does not also get `machine-learning` unless it teaches general ML.
+- LLM pages may carry both `generative-ai` and `natural-language-processing`.
+- `tabular-data` is a folder, not a domain: pages under `fields/tabular-data/` default to `machine-learning` and `statistics` (recorded under `folder_defaults` in `taxonomy.yaml`).
+- A tag needs 2+ pages, or must name a concrete technology (`kind: technology` in `taxonomy.yaml`). Max 5 tags per page; the validator errors above that and warns on single-use tags that are not marked as technology.
+- Merge, don't multiply: prefer an existing tag (for example `gpu` covers CUDA, `clustering` covers segmentation) over adding a near-duplicate.
 
 Rules: no YAML comments inside front matter (`gen_sidebar.sh` reads the first `# ` line as the page label); the path-derived fallback id of legacy pages is never a relation target; relations never target git submodule content (submodules are skipped entirely).
 
