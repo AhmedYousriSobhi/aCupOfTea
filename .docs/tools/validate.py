@@ -8,35 +8,16 @@ Usage: python3 .docs/tools/validate.py [--root PATH]
 """
 import argparse
 import os
-import re
-import subprocess
 import sys
 
 import yaml
 
-ID_RE = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from common import (DupKeyLoader, ID_RE, RELATION_KEYS, fallback_id, list_pages,  # noqa: E402
+                    read_text, split_front_matter, submodule_paths)
+
 ALLOWED_KEYS = {"id", "title", "type", "status", "domains", "tags", "relations"}
 REQUIRED_KEYS = ("title", "type", "status", "domains")
-RELATION_KEYS = ("related", "prerequisites")
-
-
-class DupKeyLoader(yaml.SafeLoader):
-    """SafeLoader that rejects duplicate mapping keys."""
-
-
-def _construct_mapping(loader, node, deep=False):
-    seen = set()
-    for key_node, _ in node.value:
-        key = loader.construct_object(key_node, deep=deep)
-        if key in seen:
-            raise yaml.constructor.ConstructorError(
-                None, None, f"duplicate key {key!r}", key_node.start_mark)
-        seen.add(key)
-    return yaml.SafeLoader.construct_mapping(loader, node, deep)
-
-
-DupKeyLoader.add_constructor(
-    yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG, _construct_mapping)
 
 
 class Report:
@@ -57,52 +38,6 @@ class Report:
                 print(f"{path}:{line}: {level}: {msg}")
                 if gha:
                     print(f"::{level} file={path},line={line}::{msg}")
-
-
-def submodule_paths(root):
-    gm = os.path.join(root, ".gitmodules")
-    if not os.path.exists(gm):
-        return []
-    out = subprocess.run(
-        ["git", "config", "-f", gm, "--get-regexp", r"\.path$"],
-        capture_output=True, text=True).stdout
-    return sorted(line.split(None, 1)[1].strip() for line in out.splitlines() if line.strip())
-
-
-def list_pages(root, submodules):
-    pages = []
-    for dirpath, dirnames, filenames in os.walk(root):
-        rel_dir = os.path.relpath(dirpath, root).replace(os.sep, "/")
-        dirnames[:] = sorted(
-            d for d in dirnames
-            if not d.startswith(".")
-            and d != "node_modules"
-            and (d if rel_dir == "." else f"{rel_dir}/{d}") not in submodules)
-        for name in sorted(filenames):
-            if name.endswith(".md"):
-                rel = name if rel_dir == "." else f"{rel_dir}/{name}"
-                pages.append(rel)
-    return pages
-
-
-def fallback_id(path):
-    p = path[:-3]
-    if p == "README":
-        return "readme"
-    if p.endswith("/README"):
-        p = p[: -len("/README")]
-    return p.replace("/", "-").lower()
-
-
-def split_front_matter(text):
-    """Return (yaml_text, first_body_line) or None; raises ValueError if unterminated."""
-    lines = text.lstrip("﻿").splitlines()
-    if not lines or lines[0].rstrip() != "---":
-        return None
-    for i in range(1, len(lines)):
-        if lines[i].rstrip() == "---":
-            return "\n".join(lines[1:i]), 1
-    raise ValueError("front matter opened with '---' on line 1 but never closed")
 
 
 def key_lines(yaml_text):
@@ -260,8 +195,7 @@ def run(root):
     fallbacks = {}   # fallback id -> [paths]
     for path in pages:
         fallbacks.setdefault(fallback_id(path), []).append(path)
-        with open(os.path.join(root, path), encoding="utf-8", errors="replace") as f:
-            text = f.read()
+        text = read_text(root, path)
         info = validate_page(path, text, tax, rep)
         if info is not None:
             fm_pages[path] = info

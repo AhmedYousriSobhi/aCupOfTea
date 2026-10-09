@@ -1,0 +1,71 @@
+{
+  "deep-learning-basics": {
+    "domains": [
+      "deep-learning",
+      "machine-learning"
+    ],
+    "id": "deep-learning-basics",
+    "path": "fields/deep-learning/concepts/basics.md",
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "sequence-models"
+      ]
+    },
+    "status": "stable",
+    "tags": [
+      "neural-networks"
+    ],
+    "title": "Deep Learning Basics",
+    "type": "concept"
+  },
+  "encoder-decoder-machine-translation": {
+    "domains": [
+      "deep-learning",
+      "generative-ai",
+      "natural-language-processing"
+    ],
+    "id": "encoder-decoder-machine-translation",
+    "path": "fields/generative-ai/machine-translator/encoder-decoder.md",
+    "relations": {
+      "prerequisites": [
+        "sequence-models"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "tags": [
+      "encoder-decoder",
+      "machine-translation",
+      "rnn"
+    ],
+    "title": "Encoder-Decoder for Machine Translation",
+    "type": "concept"
+  },
+  "sequence-models": {
+    "domains": [
+      "deep-learning",
+      "generative-ai",
+      "natural-language-processing"
+    ],
+    "id": "sequence-models",
+    "path": "fields/deep-learning/concepts/sequence-models.md",
+    "relations": {
+      "prerequisites": [
+        "deep-learning-basics"
+      ],
+      "related": [
+        "encoder-decoder-machine-translation"
+      ]
+    },
+    "status": "stable",
+    "tags": [
+      "llm",
+      "rnn",
+      "sequence-modeling",
+      "transformers"
+    ],
+    "title": "Sequence Models",
+    "type": "concept"
+  }
+}
