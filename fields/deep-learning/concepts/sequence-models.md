@@ -1,3 +1,24 @@
+---
+id: sequence-models
+title: Sequence Models
+type: concept
+status: stable
+domains:
+  - deep-learning
+  - natural-language-processing
+  - generative-ai
+tags:
+  - llm
+  - rnn
+  - sequence-modeling
+  - transformers
+relations:
+  prerequisites:
+    - deep-learning-basics
+  related:
+    - encoder-decoder-machine-translation
+---
+
 # Deep Learning - Concepts - Sequence Models
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/67ff5778-174f-4712-9ad9-67e2e7135ff3)
 
