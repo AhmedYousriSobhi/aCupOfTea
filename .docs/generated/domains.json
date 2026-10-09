@@ -2,14 +2,23 @@
   "business": {
     "description": "Business context, KPIs and domain knowledge around the technical work.",
     "label": "Business",
-    "objects": []
+    "objects": [
+      "customer-segmentation-problem",
+      "hpc-systems-overview",
+      "hpc-workloads",
+      "used-cars-retailer-kpis"
+    ]
   },
   "deep-learning": {
     "description": "Neural networks and deep architectures.",
     "label": "Deep Learning",
     "objects": [
+      "cuda-101",
       "deep-learning-basics",
       "encoder-decoder-machine-translation",
+      "nccl-collective-communication",
+      "pytorch-101",
+      "pytorch-ddp",
       "sequence-models"
     ]
   },
@@ -24,7 +33,17 @@
   "machine-learning": {
     "description": "Learning from data, general ML theory and practice.",
     "label": "Machine Learning",
-    "objects": []
+    "objects": [
+      "accuracy-paradox",
+      "bias-variance-trade-off",
+      "customer-segmentation-problem",
+      "principal-component-analysis",
+      "regression-imputing",
+      "reinforcement-learning-basics",
+      "time-series-analysis",
+      "unsupervised-learning",
+      "used-cars-retailer-kpis"
+    ]
   },
   "natural-language-processing": {
     "description": "Text and language modelling, translation, sequence tasks.",
@@ -42,26 +61,54 @@
   "reinforcement-learning": {
     "description": "Agents learning through reward and interaction.",
     "label": "Reinforcement Learning",
-    "objects": []
+    "objects": [
+      "reinforcement-learning-basics"
+    ]
   },
   "security": {
     "description": "Access control, authentication and hardening.",
     "label": "Security",
-    "objects": []
+    "objects": [
+      "slurm-pam-adopt-ssh-access"
+    ]
   },
   "software-engineering": {
     "description": "Engineering practice, patterns and tooling.",
     "label": "Software Engineering",
-    "objects": []
+    "objects": [
+      "containers-101",
+      "cpu-affinity",
+      "parallel-execution-and-affinity",
+      "pytorch-101",
+      "singularity-containers"
+    ]
   },
   "statistics": {
     "description": "Statistical methods and probability.",
     "label": "Statistics",
-    "objects": []
+    "objects": [
+      "accuracy-paradox",
+      "bias-variance-trade-off",
+      "principal-component-analysis",
+      "regression-imputing",
+      "time-series-analysis",
+      "unsupervised-learning"
+    ]
   },
   "systems-and-hpc": {
     "description": "Benchmarks, schedulers, system administration, high-performance computing.",
     "label": "Systems and HPC",
-    "objects": []
+    "objects": [
+      "containers-101",
+      "cpu-affinity",
+      "cuda-101",
+      "hpc-systems-overview",
+      "hpc-workloads",
+      "nccl-collective-communication",
+      "parallel-execution-and-affinity",
+      "pytorch-ddp",
+      "singularity-containers",
+      "slurm-pam-adopt-ssh-access"
+    ]
   }
 }

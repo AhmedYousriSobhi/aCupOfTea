@@ -1,3 +1,13 @@
+---
+id: time-series-analysis
+title: Time Series Analysis
+type: concept
+status: stable
+domains:
+  - statistics
+  - machine-learning
+---
+
 # Tabular Data - Concepts in Time Series - Time Series Analysis
 
 Time series analysis is a crucial skill in the field of data science, as it allows us to extract valuable insights from data that evolves over time. Let's break down the learning process step by step:

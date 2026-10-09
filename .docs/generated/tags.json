@@ -1,19 +1,31 @@
 {
   "affinity": {
     "label": "Affinity",
-    "objects": []
+    "objects": [
+      "cpu-affinity",
+      "parallel-execution-and-affinity"
+    ]
   },
   "clustering": {
     "label": "Clustering",
-    "objects": []
+    "objects": [
+      "customer-segmentation-problem",
+      "unsupervised-learning"
+    ]
   },
   "containers": {
     "label": "Containers",
-    "objects": []
+    "objects": [
+      "containers-101",
+      "singularity-containers"
+    ]
   },
   "distributed-training": {
     "label": "Distributed Training",
-    "objects": []
+    "objects": [
+      "nccl-collective-communication",
+      "pytorch-ddp"
+    ]
   },
   "encoder-decoder": {
     "label": "Encoder-Decoder",
@@ -23,7 +35,10 @@
   },
   "gpu": {
     "label": "GPU",
-    "objects": []
+    "objects": [
+      "cuda-101",
+      "nccl-collective-communication"
+    ]
   },
   "llm": {
     "label": "Large Language Models",
@@ -33,11 +48,16 @@
   },
   "model-evaluation": {
     "label": "Model Evaluation",
-    "objects": []
+    "objects": [
+      "accuracy-paradox",
+      "bias-variance-trade-off"
+    ]
   },
   "mpi": {
     "label": "MPI",
-    "objects": []
+    "objects": [
+      "parallel-execution-and-affinity"
+    ]
   },
   "neural-networks": {
     "label": "Neural Networks",
@@ -47,7 +67,10 @@
   },
   "pytorch": {
     "label": "PyTorch",
-    "objects": []
+    "objects": [
+      "pytorch-101",
+      "pytorch-ddp"
+    ]
   },
   "rnn": {
     "label": "Recurrent Neural Networks",
@@ -58,7 +81,10 @@
   },
   "slurm": {
     "label": "Slurm",
-    "objects": []
+    "objects": [
+      "parallel-execution-and-affinity",
+      "slurm-pam-adopt-ssh-access"
+    ]
   },
   "transformers": {
     "label": "Transformers",

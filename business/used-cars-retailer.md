@@ -1,3 +1,13 @@
+---
+id: used-cars-retailer-kpis
+title: Used Cars Retailer Company
+type: note
+status: stable
+domains:
+  - business
+  - machine-learning
+---
+
 # Used Cars Retailer Company
 
 ## Table of Content

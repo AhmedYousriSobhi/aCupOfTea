@@ -1,4 +1,134 @@
 {
+  "accuracy-paradox": {
+    "domains": [
+      "machine-learning",
+      "statistics"
+    ],
+    "id": "accuracy-paradox",
+    "level": "",
+    "path": "fields/tabular-data/data-evaluation/classification/accuracy-paradox.md",
+    "reading_time_min": 4,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "",
+    "tags": [
+      "model-evaluation"
+    ],
+    "title": "Accuracy Paradox",
+    "type": "concept"
+  },
+  "bias-variance-trade-off": {
+    "domains": [
+      "machine-learning",
+      "statistics"
+    ],
+    "id": "bias-variance-trade-off",
+    "level": "",
+    "path": "fields/tabular-data/data-evaluation/model-behavior/bias-variance-trade-off.md",
+    "reading_time_min": 7,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "accuracy-paradox"
+      ]
+    },
+    "status": "stable",
+    "summary": "",
+    "tags": [
+      "model-evaluation"
+    ],
+    "title": "Bias and Variance Trade-Off",
+    "type": "concept"
+  },
+  "containers-101": {
+    "domains": [
+      "software-engineering",
+      "systems-and-hpc"
+    ],
+    "id": "containers-101",
+    "level": "",
+    "path": "fields/libraries-frameworks-containers/101-containers.md",
+    "reading_time_min": 8,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "",
+    "tags": [
+      "containers"
+    ],
+    "title": "Containers 101",
+    "type": "concept"
+  },
+  "cpu-affinity": {
+    "domains": [
+      "software-engineering",
+      "systems-and-hpc"
+    ],
+    "id": "cpu-affinity",
+    "level": "",
+    "path": "programming/operating-system/process-cpu-affinity.md",
+    "reading_time_min": 5,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "",
+    "tags": [
+      "affinity"
+    ],
+    "title": "CPU Affinity",
+    "type": "concept"
+  },
+  "cuda-101": {
+    "domains": [
+      "deep-learning",
+      "systems-and-hpc"
+    ],
+    "id": "cuda-101",
+    "level": "",
+    "path": "fields/libraries-frameworks-containers/101-cuda.md",
+    "reading_time_min": 7,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "",
+    "tags": [
+      "gpu"
+    ],
+    "title": "CUDA 101",
+    "type": "concept"
+  },
+  "customer-segmentation-problem": {
+    "domains": [
+      "business",
+      "machine-learning"
+    ],
+    "id": "customer-segmentation-problem",
+    "level": "",
+    "path": "problems/customer-segmentation.md",
+    "reading_time_min": 6,
+    "relations": {
+      "prerequisites": [
+        "unsupervised-learning"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "",
+    "tags": [
+      "clustering"
+    ],
+    "title": "Customer Segmentation",
+    "type": "problem"
+  },
   "deep-learning-basics": {
     "domains": [
       "deep-learning"
@@ -46,6 +176,197 @@
     "title": "Encoder-Decoder for Machine Translation",
     "type": "concept"
   },
+  "hpc-systems-overview": {
+    "domains": [
+      "business",
+      "systems-and-hpc"
+    ],
+    "id": "hpc-systems-overview",
+    "level": "",
+    "path": "business/hpc-industry/101-hpc.md",
+    "reading_time_min": 29,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "hpc-workloads"
+      ]
+    },
+    "status": "stable",
+    "summary": "",
+    "tags": [],
+    "title": "HPC Systems",
+    "type": "concept"
+  },
+  "hpc-workloads": {
+    "domains": [
+      "business",
+      "systems-and-hpc"
+    ],
+    "id": "hpc-workloads",
+    "level": "",
+    "path": "business/hpc-industry/workloads.md",
+    "reading_time_min": 10,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "",
+    "tags": [],
+    "title": "HPC Workloads",
+    "type": "concept"
+  },
+  "nccl-collective-communication": {
+    "domains": [
+      "deep-learning",
+      "systems-and-hpc"
+    ],
+    "id": "nccl-collective-communication",
+    "level": "",
+    "path": "fields/benchmarks/nccl.md",
+    "reading_time_min": 19,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "pytorch-ddp"
+      ]
+    },
+    "status": "stable",
+    "summary": "",
+    "tags": [
+      "distributed-training",
+      "gpu"
+    ],
+    "title": "NCCL",
+    "type": "concept"
+  },
+  "parallel-execution-and-affinity": {
+    "domains": [
+      "software-engineering",
+      "systems-and-hpc"
+    ],
+    "id": "parallel-execution-and-affinity",
+    "level": "",
+    "path": "fields/benchmarks/parallel-execution-affinity-master-guide.md",
+    "reading_time_min": 5,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "cpu-affinity"
+      ]
+    },
+    "status": "stable",
+    "summary": "",
+    "tags": [
+      "affinity",
+      "mpi",
+      "slurm"
+    ],
+    "title": "Parallel Execution and Affinity",
+    "type": "guide"
+  },
+  "principal-component-analysis": {
+    "domains": [
+      "machine-learning",
+      "statistics"
+    ],
+    "id": "principal-component-analysis",
+    "level": "",
+    "path": "fields/tabular-data/data-feature-engineering/pca.md",
+    "reading_time_min": 14,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "",
+    "tags": [],
+    "title": "Principal Component Analysis (PCA)",
+    "type": "concept"
+  },
+  "pytorch-101": {
+    "domains": [
+      "deep-learning",
+      "software-engineering"
+    ],
+    "id": "pytorch-101",
+    "level": "",
+    "path": "fields/libraries-frameworks-containers/101-pytorch.md",
+    "reading_time_min": 6,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "",
+    "tags": [
+      "pytorch"
+    ],
+    "title": "PyTorch 101",
+    "type": "guide"
+  },
+  "pytorch-ddp": {
+    "domains": [
+      "deep-learning",
+      "systems-and-hpc"
+    ],
+    "id": "pytorch-ddp",
+    "level": "",
+    "path": "fields/libraries-frameworks-containers/102-pytorch-ddp.md",
+    "reading_time_min": 1,
+    "relations": {
+      "prerequisites": [
+        "pytorch-101"
+      ],
+      "related": []
+    },
+    "status": "draft",
+    "summary": "",
+    "tags": [
+      "distributed-training",
+      "pytorch"
+    ],
+    "title": "PyTorch DDP",
+    "type": "note"
+  },
+  "regression-imputing": {
+    "domains": [
+      "machine-learning",
+      "statistics"
+    ],
+    "id": "regression-imputing",
+    "level": "",
+    "path": "fields/tabular-data/data-processing/handling-missing-data/regression-imputing.md",
+    "reading_time_min": 3,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "",
+    "tags": [],
+    "title": "Regression Imputing",
+    "type": "concept"
+  },
+  "reinforcement-learning-basics": {
+    "domains": [
+      "machine-learning",
+      "reinforcement-learning"
+    ],
+    "id": "reinforcement-learning-basics",
+    "level": "",
+    "path": "fields/reinforcement-learning/concepts-in-reinforcement-learning/basics.md",
+    "reading_time_min": 8,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "",
+    "tags": [],
+    "title": "Reinforcement Learning Basics",
+    "type": "concept"
+  },
   "sequence-models": {
     "domains": [
       "deep-learning",
@@ -73,5 +394,108 @@
     ],
     "title": "Sequence Models",
     "type": "concept"
+  },
+  "singularity-containers": {
+    "domains": [
+      "software-engineering",
+      "systems-and-hpc"
+    ],
+    "id": "singularity-containers",
+    "level": "",
+    "path": "fields/libraries-frameworks-containers/101-singularity.md",
+    "reading_time_min": 10,
+    "relations": {
+      "prerequisites": [
+        "containers-101"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "",
+    "tags": [
+      "containers"
+    ],
+    "title": "Singularity",
+    "type": "guide"
+  },
+  "slurm-pam-adopt-ssh-access": {
+    "domains": [
+      "security",
+      "systems-and-hpc"
+    ],
+    "id": "slurm-pam-adopt-ssh-access",
+    "level": "",
+    "path": "fields/schedulers/slurm-pam-adopt.md",
+    "reading_time_min": 4,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "",
+    "tags": [
+      "slurm"
+    ],
+    "title": "pam_slurm_adopt: Closing the Slurm SSH Backdoor",
+    "type": "guide"
+  },
+  "time-series-analysis": {
+    "domains": [
+      "machine-learning",
+      "statistics"
+    ],
+    "id": "time-series-analysis",
+    "level": "",
+    "path": "fields/tabular-data/concept-in-time-series/timeseriesfield.md",
+    "reading_time_min": 7,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "",
+    "tags": [],
+    "title": "Time Series Analysis",
+    "type": "concept"
+  },
+  "unsupervised-learning": {
+    "domains": [
+      "machine-learning",
+      "statistics"
+    ],
+    "id": "unsupervised-learning",
+    "level": "",
+    "path": "fields/tabular-data/concept-in-machine-learning/ml-unsupervised.md",
+    "reading_time_min": 22,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "",
+    "tags": [
+      "clustering"
+    ],
+    "title": "Unsupervised Learning",
+    "type": "concept"
+  },
+  "used-cars-retailer-kpis": {
+    "domains": [
+      "business",
+      "machine-learning"
+    ],
+    "id": "used-cars-retailer-kpis",
+    "level": "",
+    "path": "business/used-cars-retailer.md",
+    "reading_time_min": 7,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "",
+    "tags": [],
+    "title": "Used Cars Retailer Company",
+    "type": "note"
   }
 }

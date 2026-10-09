@@ -1,3 +1,19 @@
+---
+id: pytorch-ddp
+title: PyTorch DDP
+type: note
+status: draft
+domains:
+  - deep-learning
+  - systems-and-hpc
+tags:
+  - pytorch
+  - distributed-training
+relations:
+  prerequisites:
+    - pytorch-101
+---
+
 # 102 - Pytorch DDP
 # Distributed Data Parallel
 

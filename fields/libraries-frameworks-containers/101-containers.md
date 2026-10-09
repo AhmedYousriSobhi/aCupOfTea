@@ -1,3 +1,15 @@
+---
+id: containers-101
+title: Containers 101
+type: concept
+status: stable
+domains:
+  - software-engineering
+  - systems-and-hpc
+tags:
+  - containers
+---
+
 # 101 - Containers
 
 You mean Docker?!! NOO!! the concept of containerzation was an old concept, even introuced by linux in "C-Groups" which are short for "Controled Groups."

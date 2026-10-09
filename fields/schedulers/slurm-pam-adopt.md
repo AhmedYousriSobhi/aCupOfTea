@@ -1,3 +1,15 @@
+---
+id: slurm-pam-adopt-ssh-access
+title: "pam_slurm_adopt: Closing the Slurm SSH Backdoor"
+type: guide
+status: stable
+domains:
+  - systems-and-hpc
+  - security
+tags:
+  - slurm
+---
+
 # The SSH Backdoor Every Slurm Cluster Has (Until You Close It)
 
 > **Part of the `schedulers/` series.** Status: 🚧 living document — this one grows as more Slurm internals get explored.
