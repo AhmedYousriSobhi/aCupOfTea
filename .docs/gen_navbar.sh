@@ -14,7 +14,7 @@ echo "* 📂 Categories" >> $OUTPUT
 
 # Find top-level directories (depth 1) and create dropdown links
 # We exclude hidden folders and common config folders
-find .. -maxdepth 1 -type d -not -path '*/.*' -not -path '..' | sort | while read -r dir; do
+find .. -maxdepth 1 -type d -not -path '*/.*' -not -path '..' | LC_ALL=C sort | while read -r dir; do
     name=$(basename "$dir")
     
     # Clean the name (e.g., "hpc_storage" -> "Hpc Storage")

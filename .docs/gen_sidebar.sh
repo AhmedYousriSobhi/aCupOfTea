@@ -56,7 +56,7 @@ generate_sidebar() {
                 files+=("$entry")
             fi
         fi
-    done < <(find "$dir" -maxdepth 1 -not -path '*/.*' | sort)
+    done < <(find "$dir" -maxdepth 1 -not -path '*/.*' | LC_ALL=C sort)
 
     # 2. Output files (Overview always first)
     if [ -n "$overview_item" ]; then
