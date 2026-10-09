@@ -1,0 +1,68 @@
+# Front-matter schema for aCupOfTea pages.
+# Consumed by .docs/tools/validate.py and .docs/tools/generate_index.py (later phases).
+# Controlled values live in taxonomy.yaml; this file defines shape and rules.
+# Do not put YAML comments inside page front matter: gen_sidebar.sh derives
+# page labels from the first "# " line it finds.
+
+version: 1
+
+# Front matter is optional. Pages without it are "legacy": they stay valid, are
+# not indexed, and cannot be relation targets.
+placement:
+  delimiter: "---"          # first line of the file, closing "---" on its own line
+  line_endings: [lf, crlf]  # both accepted
+  excluded_paths:           # never carry front matter (separate repos, read via .gitmodules)
+    source: .gitmodules
+
+fields:
+  id:
+    type: string
+    pattern: "^[a-z0-9]+(-[a-z0-9]+)*$"   # semantic kebab-case, e.g. sequence-models
+    required: false
+    note: >
+      Required on any page that declares relations or is the target of one.
+      Must be unique repo-wide. When absent, a read-only fallback id is derived
+      from the path (see fallback_id); a fallback id is NOT a valid relation
+      target and must not collide with any explicit id.
+  title:
+    type: string
+    required: true
+  type:
+    type: enum
+    values_from: taxonomy.yaml#types
+    required: true
+  status:
+    type: enum
+    values_from: taxonomy.yaml#statuses
+    required: true
+  domains:
+    type: list[enum]
+    values_from: taxonomy.yaml#domains
+    required: true
+    min_items: 1
+  tags:
+    type: list[enum]
+    values_from: taxonomy.yaml#tags
+    required: false
+  relations:
+    type: mapping
+    required: false
+    keys:                      # exact names; no other keys allowed
+      related:
+        type: list[id]
+      prerequisites:
+        type: list[id]
+    rules:
+      - targets are explicit ids of pages that have front matter
+      - targets may not be the page itself
+      - targets may not point into git submodules
+      - a page that declares relations must have an explicit id
+
+fallback_id:
+  applies_to: pages without an explicit id
+  derivation: path without ".md", "/" replaced by "-", lowercased; "README" maps to its folder
+  example: fields/deep-learning/concepts/basics.md -> fields-deep-learning-concepts-basics
+  uses: collision detection and display only
+  relation_target: false
+
+unknown_keys: error
