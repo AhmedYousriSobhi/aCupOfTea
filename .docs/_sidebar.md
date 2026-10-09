@@ -1,4 +1,7 @@
 * [Home](README.md)
+* **Explore**
+  * [Domains](.docs/generated/explore/domains.md)
+  * [Tags](.docs/generated/explore/tags.md)
 * [aCupOfTea Repository Specification](SPEC.md)
 * **Data Science in Business**
   * [Overview](business/README.md)

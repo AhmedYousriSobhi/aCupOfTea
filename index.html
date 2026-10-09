@@ -45,6 +45,15 @@
       name: 'aCupOfTea',
       repo: 'AhmedYousriSobhi/aCupOfTea',
       // basePath: '../', // Tell docsify to look for the markdown files in the parent directory
+      // Hide YAML front matter (metadata layer) when serving the repo directly.
+      // The deployed copy is already stripped by .docs/tools/stage_site.py.
+      plugins: [
+        function (hook) {
+          hook.beforeEach(function (content) {
+            return content.replace(/^\ufeff?---[ \t]*\r?\n(?:[\s\S]*?\r?\n)?---[ \t]*(?:\r?\n|$)/, '');
+          });
+        }
+      ],
       loadSidebar: './.docs/_sidebar.md',
       loadNavbar: './.docs/_navbar.md',
       relativePath: false, // Use relative paths for sidebar and navbar links
