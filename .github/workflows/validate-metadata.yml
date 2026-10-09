@@ -29,3 +29,12 @@ jobs:
 
       - name: Validate front matter
         run: python3 -I .docs/tools/validate.py
+
+      - name: Check generated indexes are up to date
+        run: |
+          python3 -I .docs/tools/generate_index.py
+          git status --porcelain -- .docs/generated
+          test -z "$(git status --porcelain -- .docs/generated)" || {
+            echo "::error::.docs/generated is stale; run python3 .docs/tools/generate_index.py and commit"
+            exit 1
+          }

@@ -20,6 +20,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install PyYAML
+        run: pip install PyYAML==6.0.2
+
+      - name: Validate and generate metadata indexes
+        run: |
+          python3 -I .docs/tools/validate.py
+          python3 -I .docs/tools/generate_index.py
+
       - name: Generate Navigation
         run: |
           # Make scripts executable
@@ -32,14 +45,17 @@ jobs:
           ./gen_navbar.sh
           cd ..
 
-      - name: Ensure .nojekyll exists
-        run: touch .nojekyll
+      - name: Stage site (strip front matter, append Related blocks)
+        run: |
+          python3 -I .docs/tools/stage_site.py --out _site
+          rm -f _site/.stage-site
+          touch _site/.nojekyll
 
       - name: Deploy to gh-pages branch
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
-          # Since index.html is in root, we publish the whole directory
-          publish_dir: .
+          # The staging copy: sources in the repo are never rewritten
+          publish_dir: _site
           force_orphan: true
