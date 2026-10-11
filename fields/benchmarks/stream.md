@@ -1,3 +1,6 @@
+---
+sidebar_label: STREAM and BabelStream
+---
 # STREAM & BabelStream: Measuring the Thing Everyone Forgets to Measure
 
 > **TL;DR** — Compute (HPL) gets all the glory. Communication (OSU/NCCL) gets all the debugging attention. Memory bandwidth quietly decides how fast *everything else* actually runs, and almost nobody benchmarks it first.

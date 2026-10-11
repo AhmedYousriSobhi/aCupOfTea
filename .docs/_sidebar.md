@@ -7,7 +7,7 @@
 * **Data Science in Business**
   * [Overview](business/README.md)
   * [Food Delivery Service Company](business/food-delivery-service-company.md)
-  * [State Company](business/real-estate-company.md)
+  * [Real Estate Company](business/real-estate-company.md)
   * [Used Cars Retailer Company](business/used-cars-retailer.md)
   * **HPC Industry**
     * [Overview](business/hpc-industry/README.md)
@@ -23,12 +23,12 @@
   * [Overview](fields/README.md)
   * **Benchmarks**
     * [The HPC Benchmarking Landscape: A Field Guide](fields/benchmarks/benchmarking-guide.md)
-    * [Why Does Intel's HPL Binary Beat Netlib by 60% — Then Suddenly Not?](fields/benchmarks/hpl-cpu-comparison.md)
-    * [HPL: The Benchmark That Built the TOP500 (and Why Your GFLOPS Number Lies a Little)](fields/benchmarks/hpl.md)
+    * [HPL: Intel vs Netlib](fields/benchmarks/hpl-cpu-comparison.md)
+    * [HPL and the TOP500](fields/benchmarks/hpl.md)
     * [NCCL](fields/benchmarks/nccl.md)
-    * [OSU Benchmarks, Explained Like You're Debugging Them at 2 AM](fields/benchmarks/osu.md)
-    * [Parallel Execution & Affinity: The Layer Cake Nobody Draws Correctly](fields/benchmarks/parallel-execution-affinity-master-guide.md)
-    * [STREAM & BabelStream: Measuring the Thing Everyone Forgets to Measure](fields/benchmarks/stream.md)
+    * [OSU Benchmarks](fields/benchmarks/osu.md)
+    * [Parallel Execution and Affinity](fields/benchmarks/parallel-execution-affinity-master-guide.md)
+    * [STREAM and BabelStream](fields/benchmarks/stream.md)
   * [Computer Science Engineering ↗](https://github.com/AhmedYousriSobhi/CSE)
   * **Data Collection**
     * [Overview](fields/data-collection/README.md)
@@ -43,9 +43,9 @@
       * [Sequence Models](fields/deep-learning/concepts/sequence-models.md)
       * [State of Art](fields/deep-learning/concepts/state-of-art.md)
     * **Workspace**
-      * [Workspace](fields/deep-learning/workspace/README.md)
+      * [Workspace Overview](fields/deep-learning/workspace/README.md)
       * **Convolution**
-        * [Convolution](fields/deep-learning/workspace/convolution/README.md)
+        * [Convolution Workspace](fields/deep-learning/workspace/convolution/README.md)
   * **Design Patterns**
     * [Overview](fields/design-patterns/README.md)
     * **Design Pattern**
@@ -53,14 +53,14 @@
   * **Generative AI**
     * [Overview](fields/generative-ai/README.md)
     * **Generative AI**
-      * [Evaluation and Debugging Using Weights & Biases Tools](fields/generative-ai/evaluation-and-debugging/README.md)
+      * [Evaluation with Weights and Biases](fields/generative-ai/evaluation-and-debugging/README.md)
     * **Generative AI**
       * [Langchain](fields/generative-ai/langchain/README.md)
     * **Generative AI**
       * [LLM VSCode](fields/generative-ai/llm-vscode/README.md)
     * **Generative AI**
       * [Machine Translator](fields/generative-ai/machine-translator/README.md)
-      * [Machine Translator](fields/generative-ai/machine-translator/encoder-decoder.md)
+      * [Encoder-Decoder](fields/generative-ai/machine-translator/encoder-decoder.md)
   * **Libraries, Frameworks & Containers**
     * [Overview](fields/libraries-frameworks-containers/README.md)
     * [Conda](fields/libraries-frameworks-containers/101-conda.md)
@@ -81,15 +81,15 @@
       * [Overview](fields/reinforcement-learning/concepts-in-reinforcement-learning/README.md)
       * [Reinforcement Learning](fields/reinforcement-learning/concepts-in-reinforcement-learning/basics.md)
   * **Schedulers**
-    * [Schedulers: The Traffic Controller Nobody Thanks Until It Breaks](fields/schedulers/intro.md)
+    * [Schedulers Intro](fields/schedulers/intro.md)
     * [Slurm Job Script Tale](fields/schedulers/slurm-job-script-tale.md)
-    * [The SSH Backdoor Every Slurm Cluster Has (Until You Close It)](fields/schedulers/slurm-pam-adopt.md)
-    * [Rebooting a Slurm Cluster Without Losing Your Job (Or Anyone Else's)](fields/schedulers/slurm-reboot-order.md)
+    * [Slurm SSH Access](fields/schedulers/slurm-pam-adopt.md)
+    * [Rebooting a Slurm Cluster](fields/schedulers/slurm-reboot-order.md)
   * **Statistics**
     * [Statistics](fields/statistics/README.md)
   * **System Administration**
     * [Overview](fields/system-administration/README.md)
-    * [Active Directory — The Senior Engineer's Reference Card](fields/system-administration/active-directory.md)
+    * [Active Directory Reference](fields/system-administration/active-directory.md)
     * [Ansible](fields/system-administration/ansible.md)
     * [Bash Scripting](fields/system-administration/bash-scripting.md)
     * [Build Process](fields/system-administration/build-process.md)
