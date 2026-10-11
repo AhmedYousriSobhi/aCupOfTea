@@ -35,6 +35,14 @@
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     color: #adbac7;
   }
+  /* Phones and narrow windows: the floating page outline covers the text,
+     and the top bar (menu, theme toggle) overlaps the page title. */
+  @media (max-width: 1100px) {
+    aside.toc-nav { display: none !important; }
+  }
+  @media (max-width: 768px) {
+    section.content { padding-top: 80px !important; }
+  }
   
 </style>
 
