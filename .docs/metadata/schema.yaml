@@ -41,6 +41,15 @@ fields:
       never edited. Must be unique among sidebar_labels in the same folder.
       Quote it if it contains ": ". A page with only sidebar_label has no id and
       no domains, so it is not indexed and no domain is inferred for it.
+  sidebar_group:
+    type: string
+    required: false
+    one_line: true
+    warn_over: 40
+    note: >
+      Only on a folder's README.md. Names that folder's group in the generated
+      sidebar (otherwise the text before the last hyphen in the README's H1).
+      Must be unique among sibling folders.
   summary:
     type: string
     required: false

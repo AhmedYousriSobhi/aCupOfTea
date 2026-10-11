@@ -21,12 +21,12 @@ if [ -f "generated/explore/domains.md" ] && [ -f "generated/explore/tags.md" ]; 
     echo "  * [Tags](.docs/generated/explore/tags.md)" >> $OUTPUT
 fi
 
-# Print the sidebar_label from a page's YAML front matter (nothing if absent).
+# Print a front-matter key's value (default sidebar_label; nothing if absent).
 fm_label() {
-    awk 'NR==1 && $0 !~ /^---[ \t\r]*$/ {exit}
+    awk -v key="${2:-sidebar_label}" 'NR==1 && $0 !~ /^---[ \t\r]*$/ {exit}
          NR>1 && /^---[ \t\r]*$/ {exit}
-         /^sidebar_label:/ {
-             sub(/^sidebar_label:[ \t]*/, ""); sub(/[ \t\r]*$/, "")
+         index($0, key ":") == 1 {
+             sub("^" key ":[ \t]*", ""); sub(/[ \t\r]*$/, "")
              if ($0 ~ /^".*"$/ || $0 ~ /^\x27.*\x27$/) $0 = substr($0, 2, length($0) - 2)
              print; exit
          }' "$1"
@@ -126,6 +126,13 @@ generate_sidebar() {
                 fi
                 folder_display_name=$(echo "$folder_display_name" | sed 's/^[[:space:]]*//; s/[[:space:]]*$//')
             fi
+        fi
+
+        # Front-matter override on the folder's README names the group
+        if [ -f "$readme_file" ]; then
+            local fm_group
+            fm_group=$(fm_label "$readme_file" sidebar_group)
+            if [ -n "$fm_group" ]; then folder_display_name="$fm_group"; fi
         fi
 
         # Final Fallback to folder name from filesystem

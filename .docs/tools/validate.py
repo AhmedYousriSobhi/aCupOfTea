@@ -16,7 +16,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from common import (DupKeyLoader, ID_RE, RELATION_KEYS, fallback_id, list_pages,  # noqa: E402
                     read_text, split_front_matter, submodule_paths)
 
-ALLOWED_KEYS = {"id", "title", "sidebar_label", "summary", "level", "type", "status", "domains", "tags", "relations"}
+ALLOWED_KEYS = {"id", "title", "sidebar_label", "sidebar_group", "summary", "level", "type", "status", "domains", "tags", "relations"}
 SUMMARY_MAX = 200
 LABEL_WARN = 40
 
@@ -159,6 +159,18 @@ def validate_page(path, text, tax, rep):
             if len(label) > LABEL_WARN:
                 rep.warn(path, lines.get(("sidebar_label",), 1),
                          f"sidebar_label is {len(label)} characters; keep it under {LABEL_WARN} so it fits the sidebar")
+    group = None
+    if "sidebar_group" in data:
+        sg = data["sidebar_group"]
+        gl = lines.get(("sidebar_group",), 1)
+        if os.path.basename(path) != "README.md":
+            rep.error(path, gl, "sidebar_group only applies to a folder's README.md")
+        elif not isinstance(sg, str) or not sg.strip() or "\n" in sg.strip():
+            rep.error(path, gl, "sidebar_group must be one non-empty line")
+        else:
+            group = sg.strip()
+            if len(group) > LABEL_WARN:
+                rep.warn(path, gl, f"sidebar_group is {len(group)} characters; keep it under {LABEL_WARN}")
     if "summary" in data:
         sm = data["summary"]
         if not isinstance(sm, str) or not sm.strip():
@@ -197,7 +209,7 @@ def validate_page(path, text, tax, rep):
         if any(relations.values()) and "id" not in data:
             rep.error(path, lines.get(("relations",), 1),
                       "pages that declare relations need an explicit 'id'")
-    return {"id": page_id, "relations": relations, "label": label,
+    return {"id": page_id, "relations": relations, "label": label, "group": group, "group_line": lines.get(("sidebar_group",), 1),
             "label_line": lines.get(("sidebar_label",), 1)}
 
 
@@ -249,6 +261,18 @@ def run(root):
             for p in paths:
                 rep.error(p, fm_pages[p]["label_line"],
                           f"duplicate sidebar_label {fm_pages[p]['label']!r} in {folder or '.'} "
+                          f"(also in {', '.join(x for x in paths if x != p)})")
+
+    groups = {}
+    for path in sorted(fm_pages):
+        grp = fm_pages[path]["group"]
+        if grp:
+            groups.setdefault((os.path.dirname(os.path.dirname(path)), grp.lower()), []).append(path)
+    for (parent, _), paths in sorted(groups.items()):
+        if len(paths) > 1:
+            for p in paths:
+                rep.error(p, fm_pages[p]["group_line"],
+                          f"duplicate sidebar_group {fm_pages[p]['group']!r} in {parent or '.'} "
                           f"(also in {', '.join(x for x in paths if x != p)})")
 
     # relation targets
