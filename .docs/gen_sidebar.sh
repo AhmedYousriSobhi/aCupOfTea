@@ -21,6 +21,17 @@ if [ -f "generated/explore/domains.md" ] && [ -f "generated/explore/tags.md" ]; 
     echo "  * [Tags](.docs/generated/explore/tags.md)" >> $OUTPUT
 fi
 
+# Print the sidebar_label from a page's YAML front matter (nothing if absent).
+fm_label() {
+    awk 'NR==1 && $0 !~ /^---[ \t\r]*$/ {exit}
+         NR>1 && /^---[ \t\r]*$/ {exit}
+         /^sidebar_label:/ {
+             sub(/^sidebar_label:[ \t]*/, ""); sub(/[ \t\r]*$/, "")
+             if ($0 ~ /^".*"$/ || $0 ~ /^\x27.*\x27$/) $0 = substr($0, 2, length($0) - 2)
+             print; exit
+         }' "$1"
+}
+
 generate_sidebar() {
     local dir=$1
     local indent=$2
@@ -56,6 +67,11 @@ generate_sidebar() {
             if [ -z "$file_title" ]; then
                 file_title=$(echo "${base%.md}" | sed 's/[-_]/ /g' | awk '{for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) substr($i,2)} 1')
             fi
+
+            # Optional front-matter override of the label (this page's own sidebar entry)
+            local fm_lbl
+            fm_lbl=$(fm_label "$path")
+            if [ -n "$fm_lbl" ]; then file_title="$fm_lbl"; fi
 
             local final_link="${path#../}"
             local entry="${indent}* [$file_title]($final_link)"

@@ -52,6 +52,11 @@ def reading_time_min(body):
     return max(1, math.ceil(words / WORDS_PER_MIN))
 
 
+def first_h1(body):
+    m = re.search(r"^# +(.+?)\s*$", body, re.M)
+    return m.group(1) if m else ""
+
+
 def load_objects(root):
     objects = {}
     subs = set(submodule_paths(root))
@@ -67,13 +72,13 @@ def load_objects(root):
         objects[data["id"]] = {
             "id": data["id"],
             "path": path,
-            "title": data["title"],
+            "title": data.get("title") or first_h1(text[split[1]:]) or data["id"],
             "summary": (data.get("summary") or "").strip(),
             "level": data.get("level") or "",
             "reading_time_min": reading_time_min(text[split[1]:]),
-            "type": data["type"],
-            "status": data["status"],
-            "domains": sorted(data["domains"]),
+            "type": data.get("type") or "note",
+            "status": data.get("status") or "stable",
+            "domains": sorted(data.get("domains") or []),
             "tags": sorted(data.get("tags") or []),
             "relations": {
                 "prerequisites": sorted(rel.get("prerequisites") or []),
