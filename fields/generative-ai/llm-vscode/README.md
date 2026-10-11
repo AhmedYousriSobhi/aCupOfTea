@@ -1,3 +1,6 @@
+---
+sidebar_group: LLM VSCode
+---
 # Generative AI - LLM VSCode
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/75ad3a82-9415-45eb-bfe4-0a2c8d1af200)
 

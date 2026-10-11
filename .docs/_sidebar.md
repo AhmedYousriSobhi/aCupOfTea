@@ -52,13 +52,13 @@
       * [Feature Cross](fields/design-patterns/feature-cross/README.md)
   * **Generative AI**
     * [Overview](fields/generative-ai/README.md)
-    * **Generative AI**
+    * **Evaluation and Debugging**
       * [Evaluation with Weights and Biases](fields/generative-ai/evaluation-and-debugging/README.md)
-    * **Generative AI**
+    * **Langchain**
       * [Langchain](fields/generative-ai/langchain/README.md)
-    * **Generative AI**
+    * **LLM VSCode**
       * [LLM VSCode](fields/generative-ai/llm-vscode/README.md)
-    * **Generative AI**
+    * **Machine Translator**
       * [Machine Translator](fields/generative-ai/machine-translator/README.md)
       * [Encoder-Decoder](fields/generative-ai/machine-translator/encoder-decoder.md)
   * **Libraries, Frameworks & Containers**
