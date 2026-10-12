@@ -1,3 +1,6 @@
+---
+sidebar_group: Data Processing
+---
 # Tabular Data - Data Processing - Overview
 
 Data preprocessing and cleaning techniques.

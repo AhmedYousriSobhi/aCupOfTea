@@ -1,3 +1,6 @@
+---
+sidebar_group: Classification
+---
 # Tabular Data - Data Evaluation - Classification - Overview
 
 Metrics and techniques for evaluating classification models.

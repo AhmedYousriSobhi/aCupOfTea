@@ -1,3 +1,6 @@
+---
+sidebar_group: Clustering Evaluation
+---
 # Tabular Data - DATA EVALUATION - CLUSTERING
 
 # Table of Content

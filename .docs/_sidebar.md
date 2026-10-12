@@ -123,46 +123,46 @@
         * [Correlation](fields/tabular-data/data-eda/correlation/README.md)
         * [Detect Multicollinearity](fields/tabular-data/data-eda/correlation/detect-multicollinearity.md)
         * [Extreme Correlation](fields/tabular-data/data-eda/correlation/extreme-correlation.md)
-    * **Tabular Data - Data Evaluation**
+    * **Data Evaluation**
       * [Overview](fields/tabular-data/data-evaluation/README.md)
-      * **Tabular Data - Data Evaluation - Classification**
+      * **Classification**
         * [Overview](fields/tabular-data/data-evaluation/classification/README.md)
         * [Accuracy Paradox](fields/tabular-data/data-evaluation/classification/accuracy-paradox.md)
-      * **Tabular Data - DATA EVALUATION**
+      * **Clustering Evaluation**
         * [CLUSTERING](fields/tabular-data/data-evaluation/clustering/README.md)
-      * **Tabular Data - Data Evaluation - Model Behavior**
+      * **Model Behavior**
         * [Overview](fields/tabular-data/data-evaluation/model-behavior/README.md)
         * [Bias & Variance Trade Off](fields/tabular-data/data-evaluation/model-behavior/bias-variance-trade-off.md)
-      * **Tabular Data - Data Evaluation**
+      * **Regression Evaluation**
         * [Regression Evaluation Metrics](fields/tabular-data/data-evaluation/regression/README.md)
-    * **Tabular Data - Data Feature Engineering**
+    * **Feature Engineering**
       * [Overview](fields/tabular-data/data-feature-engineering/README.md)
       * [PCA](fields/tabular-data/data-feature-engineering/pca.md)
-    * **Tabular Data - Data Modeling**
+    * **Data Modeling**
       * [Overview](fields/tabular-data/data-modeling/README.md)
-      * **Tabular Data - Data Modeling**
+      * **Clustering**
         * [Clustering](fields/tabular-data/data-modeling/clustering/README.md)
-      * **Tabular Data - DATA MODELING**
+      * **Pipeline**
         * [PIPELINE](fields/tabular-data/data-modeling/pipeline/README.md)
-      * **Tabular Data - Data Modeling**
+      * **XGBoost**
         * [XGBOOST](fields/tabular-data/data-modeling/xgboost/README.md)
-    * **Tabular Data - Data Processing**
+    * **Data Processing**
       * [Overview](fields/tabular-data/data-processing/README.md)
-      * **Tabular Data - Data Processing**
+      * **Duplicated Data**
         * [Handle Duplicated Data](fields/tabular-data/data-processing/handle-duplicated-data/README.md)
-      * **Tabular Data - Data Processing - Handling Missing Data**
+      * **Missing Data**
         * [Overview](fields/tabular-data/data-processing/handling-missing-data/README.md)
         * [Determining Missing Data](fields/tabular-data/data-processing/handling-missing-data/determine-missing-values.md)
         * [Mean Imputing](fields/tabular-data/data-processing/handling-missing-data/mean-imputing.md)
         * [Regression Imputing](fields/tabular-data/data-processing/handling-missing-data/regression-imputing.md)
-      * **Tabular Data - Data Processing**
+      * **Object Data**
         * [Handling Object Data](fields/tabular-data/data-processing/handling-object-data/README.md)
         * [Words Similarity](fields/tabular-data/data-processing/handling-object-data/words-similarity.md)
-      * **Tabular Data - Data Processing**
+      * **Outliers**
         * [Handling Outliers](fields/tabular-data/data-processing/handling-outliers/README.md)
-      * **Tabular Data - Data Processing**
+      * **Skewness**
         * [Handling Skewness](fields/tabular-data/data-processing/handling-skewness/README.md)
-    * **Tabular Data - Tools**
+    * **Tools**
       * [Overview](fields/tabular-data/tools/README.md)
 * **Journal**
   * [Journal](journal/README.md)
@@ -171,11 +171,11 @@
   * [Customer Segmentation](problems/customer-segmentation.md)
   * **Interview Assessment Problems**
     * [Interview Assessment Problems](problems/interview-assessment-problems/README.md)
-    * **Question Cheapest Flats Per City Using Sql**
+    * **Cheapest Flats per City (SQL)**
       * [README](problems/interview-assessment-problems/question-cheapest-flats-per-city-using-sql/README.md)
-    * **Question**
+    * **Job Counter (PySpark)**
       * [Job Counter Using PySpark](problems/interview-assessment-problems/question-job-counter-using-pyspark/README.md)
-    * **Question**
+    * **ML Classifier**
       * [Machine Learning Classifier](problems/interview-assessment-problems/question-machine-learning-classifier/README.md)
   * [Problem Solving ↗](https://github.com/AhmedYousriSobhi/problem_solving)
 * **Programming**
