@@ -96,15 +96,15 @@
   }
   function render(panel, q, res, all) {
     var h = '';
-    h += '<div class="srch-group"><h3>Pages</h3>';
-    if (!res.titles.length) h += '<p class="srch-none">No page title matches.</p>';
+    h += '<div class="srch-group"><h3>Pages<span>' + res.titles.length + '</span></h3>';
+    if (!res.titles.length) h += '<p class="srch-none">No page titles match.</p>';
     res.titles.slice(0, 10).forEach(function (x) {
       h += '<a class="srch-item" href="' + href(x.p) + '"><b>' + mark(x.p.label, res.ts) + '</b>' +
            '<span class="srch-path">' + esc(x.p.path.replace(/\/[^/]*$/, '') || 'home') + '</span>' +
            (x.p.desc ? '<span class="srch-desc">' + esc(x.p.desc) + '…</span>' : '') + '</a>';
     });
-    h += '</div><div class="srch-group"><h3>Inside pages</h3>';
-    if (!res.passages.length) h += '<p class="srch-none">No passages match.</p>';
+    h += '</div><div class="srch-group"><h3>Inside pages<span>' + res.passages.length + ' pages</span></h3>';
+    if (!res.passages.length) h += '<p class="srch-none">Nothing found inside pages.</p>';
     var list = all ? res.passages : res.passages.slice(0, MAX_PAGES);
     list.forEach(function (x) {
       h += '<div class="srch-page"><span class="srch-page-name">' + esc(x.p.label) + '</span>';
@@ -123,16 +123,28 @@
     if (btn) btn.addEventListener('click', function () { render(panel, q, res, true); });
   }
 
-  var css = '.search .results-panel{display:none;max-height:70vh;overflow:auto;text-align:left}' +
-    '.search .results-panel.show{display:block}' +
-    '.srch-group h3{font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;margin:.9rem 0 .3rem;opacity:.65}' +
-    '.srch-item{color:inherit;display:block;padding:.35rem 0;border-bottom:1px solid rgba(128,128,128,.2);text-decoration:none}' +
-    '.srch-item b{display:block;font-weight:600;color:var(--theme-color,#42b983)}' +
-    '.sidebar.srch-open .sidebar-nav{display:none}' +
-    '.srch-path,.srch-desc,.srch-more,.srch-none{display:block;font-size:.8rem;opacity:.75;overflow-wrap:anywhere}' +
-    '.srch-page-name{display:block;font-size:.75rem;opacity:.6;margin-top:.6rem}' +
-    '.srch-all{margin:.6rem 0;padding:.3rem .6rem;cursor:pointer}' +
-    '.srch-item mark,.srch-desc mark{background:rgba(201,166,107,.35);color:inherit;padding:0 1px}';
+  var ICON = "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2.2' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='M20 20l-3.5-3.5'/%3E%3C/svg%3E\")";
+  var css = '.srch{padding:.4rem 15px .6rem}' +
+    '.srch input{box-sizing:border-box;width:100%;margin:0;padding:.65rem .8rem .65rem 2.4rem;font:inherit;font-size:16px;' +
+      'color:inherit;background:rgba(128,128,128,.1) ' + ICON + ' no-repeat .8rem 50%;' +
+      'border:1px solid rgba(128,128,128,.3);border-radius:.7rem;outline:none;-webkit-appearance:none;appearance:none}' +
+    '.srch input::placeholder{color:inherit;opacity:.55}' +
+    '.srch input:focus{border-color:var(--theme-color,#42b983);box-shadow:0 0 0 3px rgba(66,185,131,.2)}' +
+    '.srch-panel{display:none;max-height:calc(100vh - 9rem);overflow:auto;margin-top:.5rem;text-align:left;-webkit-overflow-scrolling:touch}' +
+    '.srch-panel.show{display:block}' +
+    '.srch-group h3{display:flex;justify-content:space-between;font-size:.7rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin:1rem 0 .35rem;opacity:.7}' +
+    '.srch-group h3 span{font-weight:400}' +
+    '.srch-item{display:block;padding:.5rem .6rem;margin:0 -.6rem;border-radius:.5rem;color:inherit;text-decoration:none}' +
+    '.srch-item:hover,.srch-item:focus{background:rgba(128,128,128,.14)}' +
+    '.srch-item b{display:block;font-weight:600;line-height:1.3;color:var(--theme-color,#42b983)}' +
+    '.srch-path,.srch-desc,.srch-more,.srch-none{display:block;font-size:.8rem;line-height:1.45;opacity:.78;overflow-wrap:anywhere}' +
+    '.srch-path{font-size:.72rem;opacity:.55;margin-top:.1rem}' +
+    '.srch-none{padding:.3rem 0;font-style:italic}' +
+    '.srch-page-name{display:block;font-size:.72rem;font-weight:600;opacity:.6;margin:.8rem 0 .15rem;overflow-wrap:anywhere}' +
+    '.srch-more{padding-left:.6rem;opacity:.55}' +
+    '.srch-all{width:100%;margin:.7rem 0;padding:.55rem;font:inherit;font-size:.85rem;color:inherit;cursor:pointer;background:rgba(128,128,128,.1);border:1px solid rgba(128,128,128,.3);border-radius:.6rem}' +
+    '.srch mark,.srch-panel mark{background:rgba(201,166,107,.4);color:inherit;border-radius:2px;padding:0 1px}' +
+    '.sidebar.srch-open .sidebar-nav{display:none}';
 
   function install(hook) {
     hook.mounted(function () {
@@ -142,10 +154,10 @@
       var side = document.querySelector('.sidebar');
       if (!side || side.querySelector('.search')) return;
       var box = document.createElement('div');
-      box.className = 'search';
-      box.innerHTML = '<div class="input-wrap"><input type="search" aria-label="Search" placeholder="Search pages and content"></div><div class="results-panel"></div>';
+      box.className = 'srch';
+      box.innerHTML = '<input type="search" aria-label="Search" placeholder="Search pages and content" autocomplete="off" enterkeyhint="search"><div class="srch-panel"></div>';
       side.insertBefore(box, side.querySelector('.sidebar-nav') || side.firstChild);
-      var input = box.querySelector('input'), panel = box.querySelector('.results-panel'), timer;
+      var input = box.querySelector('input'), panel = box.querySelector('.srch-panel'), timer;
       function go() {
         var q = input.value.trim();
         if (!q) { panel.classList.remove('show'); side.classList.remove('srch-open'); panel.innerHTML = ''; return; }
@@ -153,6 +165,10 @@
         if (!index) panel.innerHTML = '<p class="srch-none">Loading pages…</p>';
         build().then(function () { if (input.value.trim() === q) render(panel, q, run(q), false); });
       }
+      // On phones Docsify closes the sidebar on any click that reaches <body>;
+      // keep taps on the search box here, but let result links through so
+      // choosing a result still closes the sidebar.
+      box.addEventListener('click', function (e) { if (!e.target.closest('a')) e.stopPropagation(); });
       input.addEventListener('input', function () { clearTimeout(timer); timer = setTimeout(go, 150); });
       input.addEventListener('focus', function () { build(); });
       input.addEventListener('keydown', function (e) { if (e.key === 'Escape') { input.value = ''; go(); } });
