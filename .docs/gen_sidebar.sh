@@ -4,7 +4,7 @@
 OUTPUT="_sidebar.md"
 
 # Updated Exclusions
-EXCLUDE_DIRS="\.git|\.github|node_modules|\.docs|docs" 
+EXCLUDE_DIRS="^(\.git|\.github|node_modules|\.docs|docs)$"
 EXCLUDE_FILES="_sidebar.md|_navbar.md|index.html|CLAUDE.md"
 
 # Initialize the sidebar file with the Home link
