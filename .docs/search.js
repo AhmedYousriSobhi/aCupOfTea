@@ -152,7 +152,7 @@
     });
     hook.doneEach(function () {
       var side = document.querySelector('.sidebar');
-      if (!side || side.querySelector('.search')) return;
+      if (!side || side.querySelector('.srch')) return;
       var box = document.createElement('div');
       box.className = 'srch';
       box.innerHTML = '<input type="search" aria-label="Search" placeholder="Search pages and content" autocomplete="off" enterkeyhint="search"><div class="srch-panel"></div>';
