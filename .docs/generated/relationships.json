@@ -1,0 +1,36 @@
+{
+  "deep-learning-basics": {
+    "prerequisite_of": [
+      "sequence-models"
+    ],
+    "prerequisites": [],
+    "related": [
+      "sequence-models"
+    ],
+    "related_by": []
+  },
+  "encoder-decoder-machine-translation": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "sequence-models"
+    ],
+    "related": [],
+    "related_by": [
+      "sequence-models"
+    ]
+  },
+  "sequence-models": {
+    "prerequisite_of": [
+      "encoder-decoder-machine-translation"
+    ],
+    "prerequisites": [
+      "deep-learning-basics"
+    ],
+    "related": [
+      "encoder-decoder-machine-translation"
+    ],
+    "related_by": [
+      "deep-learning-basics"
+    ]
+  }
+}

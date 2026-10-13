@@ -1,3 +1,20 @@
+---
+id: deep-learning-basics
+title: Deep Learning Basics
+summary: Neurons, loss and cost, and the common activation functions, explained from first principles.
+level: beginner
+type: concept
+status: stable
+domains:
+  - deep-learning
+  - machine-learning
+tags:
+  - neural-networks
+relations:
+  related:
+    - sequence-models
+---
+
 # Deep Learning - Concepts - Basics
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/f0c2a453-6da1-43cf-846d-3c9425b5996b)
 

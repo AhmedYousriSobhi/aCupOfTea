@@ -1,0 +1,49 @@
+{
+  "attention": {
+    "label": "Attention",
+    "objects": []
+  },
+  "encoder-decoder": {
+    "label": "Encoder-Decoder",
+    "objects": [
+      "encoder-decoder-machine-translation"
+    ]
+  },
+  "llm": {
+    "label": "Large Language Models",
+    "objects": [
+      "sequence-models"
+    ]
+  },
+  "machine-translation": {
+    "label": "Machine Translation",
+    "objects": [
+      "encoder-decoder-machine-translation"
+    ]
+  },
+  "neural-networks": {
+    "label": "Neural Networks",
+    "objects": [
+      "deep-learning-basics"
+    ]
+  },
+  "rnn": {
+    "label": "Recurrent Neural Networks",
+    "objects": [
+      "encoder-decoder-machine-translation",
+      "sequence-models"
+    ]
+  },
+  "sequence-modeling": {
+    "label": "Sequence Modeling",
+    "objects": [
+      "sequence-models"
+    ]
+  },
+  "transformers": {
+    "label": "Transformers",
+    "objects": [
+      "sequence-models"
+    ]
+  }
+}

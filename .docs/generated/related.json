@@ -1,0 +1,41 @@
+{
+  "fields/deep-learning/concepts/basics.md": {
+    "prerequisites": [],
+    "related": [],
+    "required_by": [
+      {
+        "id": "sequence-models",
+        "path": "fields/deep-learning/concepts/sequence-models.md",
+        "title": "Sequence Models"
+      }
+    ]
+  },
+  "fields/deep-learning/concepts/sequence-models.md": {
+    "prerequisites": [
+      {
+        "id": "deep-learning-basics",
+        "path": "fields/deep-learning/concepts/basics.md",
+        "title": "Deep Learning Basics"
+      }
+    ],
+    "related": [],
+    "required_by": [
+      {
+        "id": "encoder-decoder-machine-translation",
+        "path": "fields/generative-ai/machine-translator/encoder-decoder.md",
+        "title": "Encoder-Decoder for Machine Translation"
+      }
+    ]
+  },
+  "fields/generative-ai/machine-translator/encoder-decoder.md": {
+    "prerequisites": [
+      {
+        "id": "sequence-models",
+        "path": "fields/deep-learning/concepts/sequence-models.md",
+        "title": "Sequence Models"
+      }
+    ],
+    "related": [],
+    "required_by": []
+  }
+}

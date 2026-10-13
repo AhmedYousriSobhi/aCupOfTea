@@ -1,0 +1,40 @@
+name: Validate metadata
+
+on:
+  pull_request:
+    branches:
+      - dev
+      - main
+  push:
+    branches:
+      - dev
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install PyYAML
+        run: pip install PyYAML==6.0.2
+
+      - name: Validate front matter
+        run: python3 -I .docs/tools/validate.py
+
+      - name: Check generated indexes are up to date
+        run: |
+          python3 -I .docs/tools/generate_index.py
+          git status --porcelain -- .docs/generated
+          test -z "$(git status --porcelain -- .docs/generated)" || {
+            echo "::error::.docs/generated is stale; run python3 .docs/tools/generate_index.py and commit"
+            exit 1
+          }
