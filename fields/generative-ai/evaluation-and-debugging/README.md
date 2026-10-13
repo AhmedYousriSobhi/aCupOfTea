@@ -1,3 +1,7 @@
+---
+sidebar_group: Evaluation and Debugging
+sidebar_label: Evaluation with Weights and Biases
+---
 # Generative AI - Evaluation and Debugging Using Weights & Biases Tools
 
 ## Table of Content

@@ -1,3 +1,6 @@
+---
+sidebar_label: Schedulers Intro
+---
 # Schedulers: The Traffic Controller Nobody Thanks Until It Breaks
 
 > **Directory index for `schedulers/`.** Everything in here assumes you already know *what* a scheduler is in the abstract — this is the "here's the actual landscape, here's how the pieces fit, here's what to read next" primer.

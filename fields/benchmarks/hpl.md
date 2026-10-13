@@ -1,3 +1,6 @@
+---
+sidebar_label: HPL and the TOP500
+---
 # HPL: The Benchmark That Built the TOP500 (and Why Your GFLOPS Number Lies a Little)
 
 > HPL is the benchmark everyone's heard of and almost nobody fully understands. This is the deep dive — from "what is DGEMM" to "why is my node only getting 80% of theoretical peak" — written the way I actually think about it when a job finishes and the number on screen doesn't match what I expected.

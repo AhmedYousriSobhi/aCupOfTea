@@ -1,3 +1,6 @@
+---
+sidebar_label: Slurm SSH Access
+---
 # The SSH Backdoor Every Slurm Cluster Has (Until You Close It)
 
 > **Part of the `schedulers/` series.** Status: 🚧 living document — this one grows as more Slurm internals get explored.

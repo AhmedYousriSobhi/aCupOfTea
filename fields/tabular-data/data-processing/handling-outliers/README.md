@@ -1,3 +1,6 @@
+---
+sidebar_group: Outliers
+---
 # Tabular Data - Data Processing - Handling Outliers
 
 ## Table of Content

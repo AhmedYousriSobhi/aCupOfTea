@@ -191,6 +191,8 @@ relations:                     # optional; targets are explicit ids
 ---
 ```
 
+Front matter may be partial: every field is optional (defaults: `title` = first H1, `type` = note, `status` = stable); `id` is needed only for pages that take part in relations. `sidebar_label` overrides a page's label in the generated sidebar without touching its heading (one line, warned over 40 characters, unique within its folder, quoted if it contains `: `). `sidebar_group` (on a folder's `README.md` only) names that folder's group in the sidebar instead of the text before the last hyphen in its H1; use it when sibling folders would otherwise share a group name. Same limits as `sidebar_label`. A page that carries only these fields is not indexed.
+
 Reading time is computed (200 wpm over the body, code excluded), never authored. `summary` and `level` feed the Explore lists and the **Start here** page (learning paths from `prerequisites`, quick reads of 10 minutes or less, beginner picks); prerequisites must not form a cycle.
 
 Rules: no YAML comments inside front matter (`gen_sidebar.sh` reads the first `# ` line as the page label); the path-derived fallback id of legacy pages is never a relation target; relations never target git submodule content (submodules are skipped entirely).

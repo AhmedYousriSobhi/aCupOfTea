@@ -7,7 +7,7 @@
 * **Data Science in Business**
   * [Overview](business/README.md)
   * [Food Delivery Service Company](business/food-delivery-service-company.md)
-  * [State Company](business/real-estate-company.md)
+  * [Real Estate Company](business/real-estate-company.md)
   * [Used Cars Retailer Company](business/used-cars-retailer.md)
   * **HPC Industry**
     * [Overview](business/hpc-industry/README.md)
@@ -23,12 +23,12 @@
   * [Overview](fields/README.md)
   * **Benchmarks**
     * [The HPC Benchmarking Landscape: A Field Guide](fields/benchmarks/benchmarking-guide.md)
-    * [Why Does Intel's HPL Binary Beat Netlib by 60% — Then Suddenly Not?](fields/benchmarks/hpl-cpu-comparison.md)
-    * [HPL: The Benchmark That Built the TOP500 (and Why Your GFLOPS Number Lies a Little)](fields/benchmarks/hpl.md)
+    * [HPL: Intel vs Netlib](fields/benchmarks/hpl-cpu-comparison.md)
+    * [HPL and the TOP500](fields/benchmarks/hpl.md)
     * [NCCL](fields/benchmarks/nccl.md)
-    * [OSU Benchmarks, Explained Like You're Debugging Them at 2 AM](fields/benchmarks/osu.md)
-    * [Parallel Execution & Affinity: The Layer Cake Nobody Draws Correctly](fields/benchmarks/parallel-execution-affinity-master-guide.md)
-    * [STREAM & BabelStream: Measuring the Thing Everyone Forgets to Measure](fields/benchmarks/stream.md)
+    * [OSU Benchmarks](fields/benchmarks/osu.md)
+    * [Parallel Execution and Affinity](fields/benchmarks/parallel-execution-affinity-master-guide.md)
+    * [STREAM and BabelStream](fields/benchmarks/stream.md)
   * [Computer Science Engineering ↗](https://github.com/AhmedYousriSobhi/CSE)
   * **Data Collection**
     * [Overview](fields/data-collection/README.md)
@@ -43,24 +43,24 @@
       * [Sequence Models](fields/deep-learning/concepts/sequence-models.md)
       * [State of Art](fields/deep-learning/concepts/state-of-art.md)
     * **Workspace**
-      * [Workspace](fields/deep-learning/workspace/README.md)
+      * [Workspace Overview](fields/deep-learning/workspace/README.md)
       * **Convolution**
-        * [Convolution](fields/deep-learning/workspace/convolution/README.md)
+        * [Convolution Workspace](fields/deep-learning/workspace/convolution/README.md)
   * **Design Patterns**
     * [Overview](fields/design-patterns/README.md)
     * **Design Pattern**
       * [Feature Cross](fields/design-patterns/feature-cross/README.md)
   * **Generative AI**
     * [Overview](fields/generative-ai/README.md)
-    * **Generative AI**
-      * [Evaluation and Debugging Using Weights & Biases Tools](fields/generative-ai/evaluation-and-debugging/README.md)
-    * **Generative AI**
+    * **Evaluation and Debugging**
+      * [Evaluation with Weights and Biases](fields/generative-ai/evaluation-and-debugging/README.md)
+    * **Langchain**
       * [Langchain](fields/generative-ai/langchain/README.md)
-    * **Generative AI**
+    * **LLM VSCode**
       * [LLM VSCode](fields/generative-ai/llm-vscode/README.md)
-    * **Generative AI**
+    * **Machine Translator**
       * [Machine Translator](fields/generative-ai/machine-translator/README.md)
-      * [Machine Translator](fields/generative-ai/machine-translator/encoder-decoder.md)
+      * [Encoder-Decoder](fields/generative-ai/machine-translator/encoder-decoder.md)
   * **Libraries, Frameworks & Containers**
     * [Overview](fields/libraries-frameworks-containers/README.md)
     * [Conda](fields/libraries-frameworks-containers/101-conda.md)
@@ -81,15 +81,15 @@
       * [Overview](fields/reinforcement-learning/concepts-in-reinforcement-learning/README.md)
       * [Reinforcement Learning](fields/reinforcement-learning/concepts-in-reinforcement-learning/basics.md)
   * **Schedulers**
-    * [Schedulers: The Traffic Controller Nobody Thanks Until It Breaks](fields/schedulers/intro.md)
+    * [Schedulers Intro](fields/schedulers/intro.md)
     * [The Tale of job.sh and the Snapshot](fields/schedulers/slurm-job-script-tale.md)
-    * [The SSH Backdoor Every Slurm Cluster Has (Until You Close It)](fields/schedulers/slurm-pam-adopt.md)
-    * [Rebooting a Slurm Cluster Without Losing Your Job (Or Anyone Else's)](fields/schedulers/slurm-reboot-order.md)
+    * [Slurm SSH Access](fields/schedulers/slurm-pam-adopt.md)
+    * [Rebooting a Slurm Cluster](fields/schedulers/slurm-reboot-order.md)
   * **Statistics**
     * [Statistics](fields/statistics/README.md)
   * **System Administration**
     * [Overview](fields/system-administration/README.md)
-    * [Active Directory — The Senior Engineer's Reference Card](fields/system-administration/active-directory.md)
+    * [Active Directory Reference](fields/system-administration/active-directory.md)
     * [Ansible](fields/system-administration/ansible.md)
     * [Bash Scripting](fields/system-administration/bash-scripting.md)
     * [Build Process](fields/system-administration/build-process.md)
@@ -123,46 +123,46 @@
         * [Correlation](fields/tabular-data/data-eda/correlation/README.md)
         * [Detect Multicollinearity](fields/tabular-data/data-eda/correlation/detect-multicollinearity.md)
         * [Extreme Correlation](fields/tabular-data/data-eda/correlation/extreme-correlation.md)
-    * **Tabular Data - Data Evaluation**
+    * **Data Evaluation**
       * [Overview](fields/tabular-data/data-evaluation/README.md)
-      * **Tabular Data - Data Evaluation - Classification**
+      * **Classification**
         * [Overview](fields/tabular-data/data-evaluation/classification/README.md)
         * [Accuracy Paradox](fields/tabular-data/data-evaluation/classification/accuracy-paradox.md)
-      * **Tabular Data - DATA EVALUATION**
+      * **Clustering Evaluation**
         * [CLUSTERING](fields/tabular-data/data-evaluation/clustering/README.md)
-      * **Tabular Data - Data Evaluation - Model Behavior**
+      * **Model Behavior**
         * [Overview](fields/tabular-data/data-evaluation/model-behavior/README.md)
         * [Bias & Variance Trade Off](fields/tabular-data/data-evaluation/model-behavior/bias-variance-trade-off.md)
-      * **Tabular Data - Data Evaluation**
+      * **Regression Evaluation**
         * [Regression Evaluation Metrics](fields/tabular-data/data-evaluation/regression/README.md)
-    * **Tabular Data - Data Feature Engineering**
+    * **Feature Engineering**
       * [Overview](fields/tabular-data/data-feature-engineering/README.md)
       * [PCA](fields/tabular-data/data-feature-engineering/pca.md)
-    * **Tabular Data - Data Modeling**
+    * **Data Modeling**
       * [Overview](fields/tabular-data/data-modeling/README.md)
-      * **Tabular Data - Data Modeling**
+      * **Clustering**
         * [Clustering](fields/tabular-data/data-modeling/clustering/README.md)
-      * **Tabular Data - DATA MODELING**
+      * **Pipeline**
         * [PIPELINE](fields/tabular-data/data-modeling/pipeline/README.md)
-      * **Tabular Data - Data Modeling**
+      * **XGBoost**
         * [XGBOOST](fields/tabular-data/data-modeling/xgboost/README.md)
-    * **Tabular Data - Data Processing**
+    * **Data Processing**
       * [Overview](fields/tabular-data/data-processing/README.md)
-      * **Tabular Data - Data Processing**
+      * **Duplicated Data**
         * [Handle Duplicated Data](fields/tabular-data/data-processing/handle-duplicated-data/README.md)
-      * **Tabular Data - Data Processing - Handling Missing Data**
+      * **Missing Data**
         * [Overview](fields/tabular-data/data-processing/handling-missing-data/README.md)
         * [Determining Missing Data](fields/tabular-data/data-processing/handling-missing-data/determine-missing-values.md)
         * [Mean Imputing](fields/tabular-data/data-processing/handling-missing-data/mean-imputing.md)
         * [Regression Imputing](fields/tabular-data/data-processing/handling-missing-data/regression-imputing.md)
-      * **Tabular Data - Data Processing**
+      * **Object Data**
         * [Handling Object Data](fields/tabular-data/data-processing/handling-object-data/README.md)
         * [Words Similarity](fields/tabular-data/data-processing/handling-object-data/words-similarity.md)
-      * **Tabular Data - Data Processing**
+      * **Outliers**
         * [Handling Outliers](fields/tabular-data/data-processing/handling-outliers/README.md)
-      * **Tabular Data - Data Processing**
+      * **Skewness**
         * [Handling Skewness](fields/tabular-data/data-processing/handling-skewness/README.md)
-    * **Tabular Data - Tools**
+    * **Tools**
       * [Overview](fields/tabular-data/tools/README.md)
 * **Journal**
   * [Journal](journal/README.md)
@@ -171,11 +171,11 @@
   * [Customer Segmentation](problems/customer-segmentation.md)
   * **Interview Assessment Problems**
     * [Interview Assessment Problems](problems/interview-assessment-problems/README.md)
-    * **Question**
+    * **Cheapest Flats per City (SQL)**
       * [Cheapest Flats per city using SQL](problems/interview-assessment-problems/question-cheapest-flats-per-city-using-sql/README.md)
-    * **Question**
+    * **Job Counter (PySpark)**
       * [Job Counter Using PySpark](problems/interview-assessment-problems/question-job-counter-using-pyspark/README.md)
-    * **Question**
+    * **ML Classifier**
       * [Machine Learning Classifier](problems/interview-assessment-problems/question-machine-learning-classifier/README.md)
   * [Problem Solving ↗](https://github.com/AhmedYousriSobhi/problem_solving)
 * **Programming**

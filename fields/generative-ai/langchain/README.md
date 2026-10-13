@@ -1,3 +1,6 @@
+---
+sidebar_group: Langchain
+---
 # Generative AI - Langchain
 ![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/04b06b02-0b65-4736-a448-a3c6246a0d3c)
 

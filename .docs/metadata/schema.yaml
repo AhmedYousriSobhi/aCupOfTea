@@ -1,6 +1,8 @@
 # Front-matter schema for aCupOfTea pages.
 # Consumed by .docs/tools/validate.py and .docs/tools/generate_index.py (later phases).
 # Controlled values live in taxonomy.yaml; this file defines shape and rules.
+# Front matter may be partial: every field is optional, absent fields take the
+# defaults below. An id is needed only when the page takes part in relations.
 # Do not put YAML comments inside page front matter: gen_sidebar.sh derives
 # page labels from the first "# " line it finds.
 
@@ -26,7 +28,28 @@ fields:
       target and must not collide with any explicit id.
   title:
     type: string
-    required: true
+    required: false
+    default: the first "# " heading of the page
+  sidebar_label:
+    type: string
+    required: false
+    one_line: true
+    warn_over: 40
+    note: >
+      Overrides the label gen_sidebar.sh derives from the page's H1, for this
+      page's own sidebar entry only (also on a README.md). The heading itself is
+      never edited. Must be unique among sidebar_labels in the same folder.
+      Quote it if it contains ": ". A page with only sidebar_label has no id and
+      no domains, so it is not indexed and no domain is inferred for it.
+  sidebar_group:
+    type: string
+    required: false
+    one_line: true
+    warn_over: 40
+    note: >
+      Only on a folder's README.md. Names that folder's group in the generated
+      sidebar (otherwise the text before the last hyphen in the README's H1).
+      Must be unique among sibling folders.
   summary:
     type: string
     required: false
@@ -42,16 +65,18 @@ fields:
   type:
     type: enum
     values_from: taxonomy.yaml#types
-    required: true
+    required: false
+    default: note
   status:
     type: enum
     values_from: taxonomy.yaml#statuses
-    required: true
+    required: false
+    default: stable
   domains:
     type: list[enum]
     values_from: taxonomy.yaml#domains
-    required: true
-    min_items: 1
+    required: false
+    min_items: 1             # when the key is present
   tags:
     type: list[enum]
     values_from: taxonomy.yaml#tags

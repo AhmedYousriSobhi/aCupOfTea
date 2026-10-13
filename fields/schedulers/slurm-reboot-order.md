@@ -1,3 +1,6 @@
+---
+sidebar_label: Rebooting a Slurm Cluster
+---
 # Rebooting a Slurm Cluster Without Losing Your Job (Or Anyone Else's)
 
 > **Part of the `schedulers/` series.** Sourced and expanded from a [classic r/HPC thread](https://www.reddit.com/r/HPC/comments/ipij91/slurm_reboot_order/) that every cluster admin eventually rediscovers the hard way.
