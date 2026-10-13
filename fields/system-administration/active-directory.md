@@ -1,3 +1,6 @@
+---
+sidebar_label: Active Directory Reference
+---
 # Active Directory — The Senior Engineer's Reference Card
 > Scope: history & motivation → internals → PAM/NSS primer → build → Linux/HPC integration → debugging
 > Assumes: zero prior PAM/NSS knowledge, solid Linux sysadmin background

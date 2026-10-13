@@ -1,3 +1,6 @@
+---
+sidebar_label: Convolution Workspace
+---
 # Convolution
 
 Convolutional Neural Network implementations and examples.

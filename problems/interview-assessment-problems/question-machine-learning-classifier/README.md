@@ -1,3 +1,6 @@
+---
+sidebar_group: ML Classifier
+---
 # Question - Machine Learning Classifier
 
 Implement a function, identify_customers, which will build two classifier models based on financial data. The identify_customers functions accepts two arguments:

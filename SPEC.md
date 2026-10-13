@@ -100,7 +100,6 @@ CLAUDE.md
 LICENSE
 .gitignore
 .nojekyll           — required by Docsify on GitHub Pages
-index.html           — Docsify entry point
 index.html           — Docsify entry point + config (window.$docsify)
 .docs/               — _sidebar.md / _navbar.md (generated) + gen_sidebar.sh / gen_navbar.sh
 .github/             — deploy workflow (regenerates navigation, publishes gh-pages)
@@ -206,5 +205,6 @@ Content type, location and navigation are unchanged; metadata is an **overlay** 
 - **Generated, deterministic:** `.docs/generated/` holds `objects.json`, `domains.json`, `tags.json`, `relationships.json` (with reverse links), `related.json` and the Explore pages. The sidebar gains an additive **Explore** section (Domains, Tags); the folder tree is untouched.
 - **Submodules** are never written into and are skipped by the tools; relations may not target their content.
 - **Deployment:** the published site is a staging copy with front matter stripped and a "Related" block appended; repository sources are never rewritten.
+- **Partial front matter and `sidebar_label`:** every field is optional (defaults: title = first H1, type = note, status = stable); `id` only for pages in relations. `sidebar_label` overrides a page's sidebar label without editing its heading; a page with only that field is not indexed and gets no domain.
 
 See `CLAUDE.md` §21 for the contributor how-to.

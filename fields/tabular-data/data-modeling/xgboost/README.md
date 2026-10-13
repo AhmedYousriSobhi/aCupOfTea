@@ -1,3 +1,6 @@
+---
+sidebar_group: XGBoost
+---
 # Tabular Data - Data Modeling - XGBOOST
 
 ## Abstract

@@ -1,3 +1,6 @@
+---
+sidebar_group: Regression Evaluation
+---
 # Tabular Data - Data Evaluation - Regression Evaluation Metrics
 
 # Table of Content

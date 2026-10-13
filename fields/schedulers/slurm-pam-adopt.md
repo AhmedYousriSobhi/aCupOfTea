@@ -1,6 +1,7 @@
 ---
 id: slurm-pam-adopt-ssh-access
 title: "pam_slurm_adopt: Closing the Slurm SSH Backdoor"
+sidebar_label: Slurm SSH Access
 type: guide
 status: stable
 domains:

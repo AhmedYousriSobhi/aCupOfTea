@@ -1,3 +1,6 @@
+---
+sidebar_label: Real Estate Company
+---
 # Real-State Company
 
 ## Table of Content

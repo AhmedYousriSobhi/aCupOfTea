@@ -1,6 +1,7 @@
 ---
 id: parallel-execution-and-affinity
 title: Parallel Execution and Affinity
+sidebar_label: Parallel Execution and Affinity
 type: guide
 status: stable
 domains:

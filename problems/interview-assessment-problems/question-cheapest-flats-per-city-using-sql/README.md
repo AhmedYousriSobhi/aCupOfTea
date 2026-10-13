@@ -1,3 +1,8 @@
+---
+sidebar_group: "Cheapest Flats per City (SQL)"
+---
+# Question - Cheapest Flats per city using SQL
+
 ## Question - Cheapest Flats per city using SQL
 
 You are given a table of flats with the following structure: </br>

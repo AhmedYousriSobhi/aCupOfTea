@@ -28,6 +28,19 @@ It is written for practitioners who want the core of a topic quickly, and for an
 | [Tips](/tips/README.md) | Linux tricks, Git, Markdown, Kaggle, interview prep | A quick sip |
 | [Journal](/journal/README.md) | Running notes and reflections | Whatever's in the pot |
 
+## ☕ Start here: short sips
+
+Not sure where to begin? Each of these takes one cup, roughly the reading time shown.
+
+| Time | Page | Why read it |
+|---|---|---|
+| ~4 min | [The accuracy paradox](/fields/tabular-data/data-evaluation/classification/accuracy-paradox.md) | Why a model can score 95% and still be useless |
+| ~6 min | [Sequence models](/fields/deep-learning/concepts/sequence-models.md) | How models handle ordered data like text, from RNNs onward |
+| ~3 min | [Encoder-decoder for translation](/fields/generative-ai/machine-translator/encoder-decoder.md) | The architecture behind machine translation, in a few paragraphs |
+| ~7 min | [Bias and variance](/fields/tabular-data/data-evaluation/model-behavior/bias-variance-trade-off.md) | The trade-off behind overfitting and underfitting |
+| ~6 min | [Customer segmentation](/problems/customer-segmentation.md) | A business problem, framed the way a data scientist would |
+| ~7 min | [Schedulers, the traffic controller](/fields/schedulers/intro.md) | What a cluster scheduler does and why it matters |
+
 ## 🗺️ How to read it
 
 - **On the website:** use the sidebar. It is generated from the folder structure, so it always matches the repo.

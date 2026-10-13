@@ -90,7 +90,11 @@ Keep the root clean: `README.md`, `SPEC.md`, `CLAUDE.md`, `LICENSE`, `.gitignore
 
 `.docs/_sidebar.md` and `.docs/_navbar.md` are **generated** from the file tree by `.docs/gen_sidebar.sh` / `.docs/gen_navbar.sh`, which CI re-runs on every push to `main`. **Never hand-edit them**: CI overwrites manual edits. To change the site's navigation, change the structure, the page's `# H1` heading (used as its label), or the generator. After any structural change, regenerate them locally and commit the output so the repo matches what CI publishes.
 
+Site search is `.docs/search.js` (loaded from `index.html`, replacing Docsify's built-in search): results come in two groups, page-title matches and passages inside pages, built from the pages listed in the generated sidebar, so new pages are searchable with no extra step.
+
 Generator behavior worth knowing: folders without any `.md` page are skipped; git submodules (not checked out in CI) are rendered as external links to their repositories; a `README.md` titled `Overview` is listed first.
+
+**New pages:** create them with `python3 .docs/tools/new_page.py` (steps in `.github/CONTRIBUTING.md`). It picks the folder and kebab-case file name, writes front matter (`id`, `title`, optional `summary`, `tags` from `.docs/metadata/taxonomy.yaml`), adds the row to the folder `README.md` table, and regenerates the sidebar and navbar. Front matter is hidden on the site by Docsify's official front-matter plugin; keep YAML comments out of it.
 
 ## 14. Ambiguity
 
@@ -187,6 +191,8 @@ relations:                     # optional; targets are explicit ids
 ---
 ```
 
+Front matter may be partial: every field is optional (defaults: `title` = first H1, `type` = note, `status` = stable); `id` is needed only for pages that take part in relations. `sidebar_label` overrides a page's label in the generated sidebar without touching its heading (one line, warned over 40 characters, unique within its folder, quoted if it contains `: `). `sidebar_group` (on a folder's `README.md` only) names that folder's group in the sidebar instead of the text before the last hyphen in its H1; use it when sibling folders would otherwise share a group name. Same limits as `sidebar_label`. A page that carries only these fields is not indexed.
+
 Reading time is computed (200 wpm over the body, code excluded), never authored. `summary` and `level` feed the Explore lists and the **Start here** page (learning paths from `prerequisites`, quick reads of 10 minutes or less, beginner picks); prerequisites must not form a cycle.
 
 **Choosing domains and tags**
@@ -210,4 +216,4 @@ cd .docs && ./gen_sidebar.sh && ./gen_navbar.sh   # only if structure/titles cha
 
 CI (`validate-metadata.yml`) runs on PRs to `dev`/`main` and pushes to `dev`, and fails on validation errors or stale `.docs/generated`.
 
-**Deploy:** CI builds a staging copy (`stage_site.py --out _site`) that strips front matter and appends a "Related" block, and publishes that copy. Sources are never rewritten. A local `docsify serve` of the repo hides the front matter on the page (via a small plugin in `index.html`) but does **not** show the Related block and still leaks front matter into search; to preview the deployed result run `python3 .docs/tools/stage_site.py --out _site` and serve `_site/` (git-ignored).
+**Deploy:** CI builds a staging copy (`stage_site.py --out _site`) that strips front matter and appends a "Related" block, and publishes that copy. Sources are never rewritten. A local `docsify serve` of the repo hides the front matter on the page (Docsify's front-matter plugin) and in search (`.docs/search.js` strips it), but does **not** show the Related block; to preview the deployed result run `python3 .docs/tools/stage_site.py --out _site` and serve `_site/` (git-ignored).
