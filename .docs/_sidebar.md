@@ -82,7 +82,7 @@
       * [Reinforcement Learning](fields/reinforcement-learning/concepts-in-reinforcement-learning/basics.md)
   * **Schedulers**
     * [Schedulers Intro](fields/schedulers/intro.md)
-    * [Slurm Job Script Tale](fields/schedulers/slurm-job-script-tale.md)
+    * [The Tale of job.sh and the Snapshot](fields/schedulers/slurm-job-script-tale.md)
     * [Slurm SSH Access](fields/schedulers/slurm-pam-adopt.md)
     * [Rebooting a Slurm Cluster](fields/schedulers/slurm-reboot-order.md)
   * **Statistics**
@@ -172,7 +172,7 @@
   * **Interview Assessment Problems**
     * [Interview Assessment Problems](problems/interview-assessment-problems/README.md)
     * **Cheapest Flats per City (SQL)**
-      * [README](problems/interview-assessment-problems/question-cheapest-flats-per-city-using-sql/README.md)
+      * [Cheapest Flats per city using SQL](problems/interview-assessment-problems/question-cheapest-flats-per-city-using-sql/README.md)
     * **Job Counter (PySpark)**
       * [Job Counter Using PySpark](problems/interview-assessment-problems/question-job-counter-using-pyspark/README.md)
     * **ML Classifier**
