@@ -94,6 +94,8 @@ Site search is `.docs/search.js` (loaded from `index.html`, replacing Docsify's 
 
 Generator behavior worth knowing: folders without any `.md` page are skipped; git submodules (not checked out in CI) are rendered as external links to their repositories; a `README.md` titled `Overview` is listed first.
 
+**New pages:** create them with `python3 .docs/tools/new_page.py` (steps in `.github/CONTRIBUTING.md`). It picks the folder and kebab-case file name, writes front matter (`id`, `title`, optional `summary`, `tags` from `.docs/metadata/taxonomy.yaml`), adds the row to the folder `README.md` table, and regenerates the sidebar and navbar. Front matter is hidden on the site by Docsify's official front-matter plugin; keep YAML comments out of it.
+
 ## 14. Ambiguity
 
 When classification is uncertain: **STOP.** Don't silently make a judgment call. Report:
