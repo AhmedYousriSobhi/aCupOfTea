@@ -1,3 +1,18 @@
+---
+id: bias-variance-trade-off
+title: Bias and Variance Trade-Off
+type: concept
+status: stable
+domains:
+  - machine-learning
+  - statistics
+tags:
+  - model-evaluation
+relations:
+  related:
+    - accuracy-paradox
+---
+
 # Date Evaluation - Model Behavior - Bias & Variance Trade Off
 
 # Table of Content

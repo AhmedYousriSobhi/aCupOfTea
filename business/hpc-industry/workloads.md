@@ -1,3 +1,13 @@
+---
+id: hpc-workloads
+title: HPC Workloads
+type: concept
+status: stable
+domains:
+  - business
+  - systems-and-hpc
+---
+
 # WorkLoads
 
 A workload is the amount of work that a computer system or software needs to do in a given period of time. It is measured in terms of the resources that are required, such as CPU time, memory, storage, and network bandwidth.

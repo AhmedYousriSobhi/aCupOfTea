@@ -1,3 +1,13 @@
+---
+id: regression-imputing
+title: Regression Imputing
+type: concept
+status: stable
+domains:
+  - statistics
+  - machine-learning
+---
+
 # Tabular Data - Data Processing - Handling Missing Data - Regression Imputing
 
 It is recommened to read __determineMissingValues__ before starting.

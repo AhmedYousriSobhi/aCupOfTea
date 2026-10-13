@@ -12,7 +12,6 @@ domains:
 tags:
   - llm
   - rnn
-  - sequence-modeling
   - transformers
 relations:
   prerequisites:

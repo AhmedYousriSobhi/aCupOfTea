@@ -1,3 +1,15 @@
+---
+id: accuracy-paradox
+title: Accuracy Paradox
+type: concept
+status: stable
+domains:
+  - machine-learning
+  - statistics
+tags:
+  - model-evaluation
+---
+
 # Tabular Data - Data Evaluation - Classification - Accuracy Paradox
 
 ## Table of Content

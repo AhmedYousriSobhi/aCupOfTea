@@ -4,7 +4,13 @@
 
 Pages grouped by subject. Folders stay the primary location; this is an overlay.
 
-- [Deep Learning](/.docs/generated/explore/domains/deep-learning.md) (3): Neural networks and deep architectures.
+- [Business](/.docs/generated/explore/domains/business.md) (4): Business context, KPIs and domain knowledge around the technical work.
+- [Deep Learning](/.docs/generated/explore/domains/deep-learning.md) (7): Neural networks and deep architectures.
 - [Generative AI](/.docs/generated/explore/domains/generative-ai.md) (2): Generative models, LLMs and their tooling.
-- [Machine Learning](/.docs/generated/explore/domains/machine-learning.md) (1): Learning from data, general ML theory and practice.
+- [Machine Learning](/.docs/generated/explore/domains/machine-learning.md) (9): Learning from data, general ML theory and practice.
 - [Natural Language Processing](/.docs/generated/explore/domains/natural-language-processing.md) (2): Text and language modelling, translation, sequence tasks.
+- [Reinforcement Learning](/.docs/generated/explore/domains/reinforcement-learning.md) (1): Agents learning through reward and interaction.
+- [Security](/.docs/generated/explore/domains/security.md) (1): Access control, authentication and hardening.
+- [Software Engineering](/.docs/generated/explore/domains/software-engineering.md) (5): Engineering practice, patterns and tooling.
+- [Statistics](/.docs/generated/explore/domains/statistics.md) (6): Statistical methods and probability.
+- [Systems and HPC](/.docs/generated/explore/domains/systems-and-hpc.md) (10): Benchmarks, schedulers, system administration, high-performance computing.

@@ -8,16 +8,47 @@ Pick a cup: follow a path, grab a quick read, or start with the basics.
 
 Read each path in order; every step builds on the one before.
 
+### Software Engineering · 2 steps · 18 min
+
+1. [Containers 101](/fields/libraries-frameworks-containers/101-containers.md) *(8 min)*
+2. [Singularity](/fields/libraries-frameworks-containers/101-singularity.md) *(10 min)*
+
 ### Deep Learning · 3 steps · 37 min
 
 1. [Deep Learning Basics](/fields/deep-learning/concepts/basics.md) — Neurons, loss and cost, and the common activation functions, explained from first principles. *(beginner · 28 min)*
 2. [Sequence Models](/fields/deep-learning/concepts/sequence-models.md) — How models handle ordered data like text, from RNNs and LSTMs to transformers and LLMs. *(intermediate · 6 min)*
 3. [Encoder-Decoder for Machine Translation](/fields/generative-ai/machine-translator/encoder-decoder.md) — The encoder-decoder idea behind neural machine translation, with a basic seq2seq model. *(intermediate · 3 min)*
 
+### Deep Learning · 2 steps · 7 min
+
+1. [PyTorch 101](/fields/libraries-frameworks-containers/101-pytorch.md) *(6 min)*
+2. [PyTorch DDP](/fields/libraries-frameworks-containers/102-pytorch-ddp.md) *(1 min)*
+
+### Machine Learning · 2 steps · 28 min
+
+1. [Unsupervised Learning](/fields/tabular-data/concept-in-machine-learning/ml-unsupervised.md) *(22 min)*
+2. [Customer Segmentation](/problems/customer-segmentation.md) *(6 min)*
+
 ## Quick reads (10 minutes or less)
 
+- [PyTorch DDP](/fields/libraries-frameworks-containers/102-pytorch-ddp.md) *(1 min)*
 - [Encoder-Decoder for Machine Translation](/fields/generative-ai/machine-translator/encoder-decoder.md) — The encoder-decoder idea behind neural machine translation, with a basic seq2seq model. *(intermediate · 3 min)*
+- [Regression Imputing](/fields/tabular-data/data-processing/handling-missing-data/regression-imputing.md) *(3 min)*
+- [Accuracy Paradox](/fields/tabular-data/data-evaluation/classification/accuracy-paradox.md) *(4 min)*
+- [pam_slurm_adopt: Closing the Slurm SSH Backdoor](/fields/schedulers/slurm-pam-adopt.md) *(4 min)*
+- [CPU Affinity](/programming/operating-system/process-cpu-affinity.md) *(5 min)*
+- [Parallel Execution and Affinity](/fields/benchmarks/parallel-execution-affinity-master-guide.md) *(5 min)*
+- [Customer Segmentation](/problems/customer-segmentation.md) *(6 min)*
+- [PyTorch 101](/fields/libraries-frameworks-containers/101-pytorch.md) *(6 min)*
 - [Sequence Models](/fields/deep-learning/concepts/sequence-models.md) — How models handle ordered data like text, from RNNs and LSTMs to transformers and LLMs. *(intermediate · 6 min)*
+- [Bias and Variance Trade-Off](/fields/tabular-data/data-evaluation/model-behavior/bias-variance-trade-off.md) *(7 min)*
+- [CUDA 101](/fields/libraries-frameworks-containers/101-cuda.md) *(7 min)*
+- [Time Series Analysis](/fields/tabular-data/concept-in-time-series/timeseriesfield.md) *(7 min)*
+- [Used Cars Retailer Company](/business/used-cars-retailer.md) *(7 min)*
+- [Containers 101](/fields/libraries-frameworks-containers/101-containers.md) *(8 min)*
+- [Reinforcement Learning Basics](/fields/reinforcement-learning/concepts-in-reinforcement-learning/basics.md) *(8 min)*
+- [HPC Workloads](/business/hpc-industry/workloads.md) *(10 min)*
+- [Singularity](/fields/libraries-frameworks-containers/101-singularity.md) *(10 min)*
 
 ## Beginner friendly
 

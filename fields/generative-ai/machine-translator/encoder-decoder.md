@@ -12,7 +12,6 @@ domains:
   - deep-learning
 tags:
   - encoder-decoder
-  - machine-translation
   - rnn
 relations:
   prerequisites:

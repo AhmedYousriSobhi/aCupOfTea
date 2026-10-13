@@ -81,6 +81,11 @@ fields:
     type: list[enum]
     values_from: taxonomy.yaml#tags
     required: false
+    max_items: 5
+    note: >
+      A tag needs 2+ pages or must name a concrete technology
+      (kind: technology in taxonomy.yaml). Single-use tags without that
+      marker produce a validator warning.
   relations:
     type: mapping
     required: false

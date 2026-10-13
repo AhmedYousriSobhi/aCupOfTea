@@ -1,3 +1,15 @@
+---
+id: cpu-affinity
+title: CPU Affinity
+type: concept
+status: stable
+domains:
+  - software-engineering
+  - systems-and-hpc
+tags:
+  - affinity
+---
+
 # Operating System - CPU Affinity
 
 This terminology came up in front of me during my work with benchmark tests, from its name it describes that it is related to managing the CPU processes of certain degree, and again it gets me back to why we should learn the foundation of Operating System (OS). This topic is related to performance tuning in OS.

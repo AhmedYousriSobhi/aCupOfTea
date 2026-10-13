@@ -4,7 +4,18 @@
 
 Learning from data, general ML theory and practice.
 
-- [Deep Learning Basics](/fields/deep-learning/concepts/basics.md) — Neurons, loss and cost, and the common activation functions, explained from first principles. *(beginner · 28 min)*  
-  [`neural-networks`](/.docs/generated/explore/tags/neural-networks.md)
+- [Accuracy Paradox](/fields/tabular-data/data-evaluation/classification/accuracy-paradox.md) *(4 min)*  
+  [`model-evaluation`](/.docs/generated/explore/tags/model-evaluation.md)
+- [Bias and Variance Trade-Off](/fields/tabular-data/data-evaluation/model-behavior/bias-variance-trade-off.md) *(7 min)*  
+  [`model-evaluation`](/.docs/generated/explore/tags/model-evaluation.md)
+- [Customer Segmentation](/problems/customer-segmentation.md) *(6 min)*  
+  [`clustering`](/.docs/generated/explore/tags/clustering.md)
+- [Principal Component Analysis (PCA)](/fields/tabular-data/data-feature-engineering/pca.md) *(14 min)*
+- [Regression Imputing](/fields/tabular-data/data-processing/handling-missing-data/regression-imputing.md) *(3 min)*
+- [Reinforcement Learning Basics](/fields/reinforcement-learning/concepts-in-reinforcement-learning/basics.md) *(8 min)*
+- [Time Series Analysis](/fields/tabular-data/concept-in-time-series/timeseriesfield.md) *(7 min)*
+- [Unsupervised Learning](/fields/tabular-data/concept-in-machine-learning/ml-unsupervised.md) *(22 min)*  
+  [`clustering`](/.docs/generated/explore/tags/clustering.md)
+- [Used Cars Retailer Company](/business/used-cars-retailer.md) *(7 min)*
 
 [All domains](/.docs/generated/explore/domains.md)

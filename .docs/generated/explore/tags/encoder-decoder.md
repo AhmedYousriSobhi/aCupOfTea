@@ -3,6 +3,6 @@
 # Encoder-Decoder
 
 - [Encoder-Decoder for Machine Translation](/fields/generative-ai/machine-translator/encoder-decoder.md) — The encoder-decoder idea behind neural machine translation, with a basic seq2seq model. *(intermediate · 3 min)*  
-  [`encoder-decoder`](/.docs/generated/explore/tags/encoder-decoder.md) [`machine-translation`](/.docs/generated/explore/tags/machine-translation.md) [`rnn`](/.docs/generated/explore/tags/rnn.md)
+  [`encoder-decoder`](/.docs/generated/explore/tags/encoder-decoder.md) [`rnn`](/.docs/generated/explore/tags/rnn.md)
 
 [All tags](/.docs/generated/explore/tags.md)

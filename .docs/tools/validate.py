@@ -19,6 +19,7 @@ from common import (DupKeyLoader, ID_RE, RELATION_KEYS, fallback_id, list_pages,
 ALLOWED_KEYS = {"id", "title", "sidebar_label", "sidebar_group", "summary", "level", "type", "status", "domains", "tags", "relations"}
 SUMMARY_MAX = 200
 LABEL_WARN = 40
+MAX_TAGS = 5
 
 
 class Report:
@@ -85,6 +86,8 @@ def load_taxonomy(root, rep):
         rep.error(path, 1, f"relation_types must be exactly {list(RELATION_KEYS)}")
     return {
         "types": set(tax["types"]),
+        "tags_all": set(tax["tags"]),
+        "tech_tags": {t for t, m in tax["tags"].items() if isinstance(m, dict) and m.get("kind") == "technology"},
         "statuses": set(tax["statuses"]),
         "levels": set(tax.get("levels") or []),
         "domains": set(tax["domains"]),
@@ -191,6 +194,8 @@ def validate_page(path, text, tax, rep):
         check_enum_list(rep, path, lines, "domains", data["domains"], tax["domains"], True)
     if "tags" in data:
         check_enum_list(rep, path, lines, "tags", data["tags"], tax["tags"], False)
+        if isinstance(data["tags"], list) and len(data["tags"]) > MAX_TAGS:
+            rep.error(path, lines.get(("tags",), 1), f"at most {MAX_TAGS} tags per page ({len(data['tags'])} given)")
 
     relations = {}
     rel = data.get("relations")
@@ -209,8 +214,10 @@ def validate_page(path, text, tax, rep):
         if any(relations.values()) and "id" not in data:
             rep.error(path, lines.get(("relations",), 1),
                       "pages that declare relations need an explicit 'id'")
-    return {"id": page_id, "relations": relations, "label": label, "group": group, "group_line": lines.get(("sidebar_group",), 1),
-            "label_line": lines.get(("sidebar_label",), 1)}
+    tags = data.get("tags") if isinstance(data.get("tags"), list) else []
+    return {"id": page_id, "relations": relations, "label": label, "group": group,
+            "group_line": lines.get(("sidebar_group",), 1), "label_line": lines.get(("sidebar_label",), 1),
+            "tags": [t for t in tags if isinstance(t, str)], "tags_line": lines.get(("tags",), 1)}
 
 
 def run(root):
@@ -274,6 +281,15 @@ def run(root):
                 rep.error(p, fm_pages[p]["group_line"],
                           f"duplicate sidebar_group {fm_pages[p]['group']!r} in {parent or '.'} "
                           f"(also in {', '.join(x for x in paths if x != p)})")
+    # tag rule: single-use tags must name a concrete technology (warning only)
+    tag_use = {}
+    for path in sorted(fm_pages):
+        for t in set(fm_pages[path]["tags"]):
+            tag_use.setdefault(t, []).append(path)
+    for t, paths in sorted(tag_use.items()):
+        if len(paths) == 1 and t in tax["tags_all"] and t not in tax["tech_tags"]:
+            rep.warn(paths[0], fm_pages[paths[0]]["tags_line"],
+                     f"tag {t!r} is used by only one page and is not marked kind: technology")
 
     # relation targets
     for path in sorted(fm_pages):
