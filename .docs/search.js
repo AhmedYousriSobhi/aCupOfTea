@@ -28,7 +28,7 @@
       return Promise.all(pages.map(function (p) {
         return fetch('./' + p.path).then(function (r) { return r.ok ? r.text() : ''; }).catch(function () { return ''; })
           .then(function (t) {
-            t = t.replace(/^﻿?---[ \t]*\r?\n[\s\S]*?\r?\n---[ \t]*(\r?\n|$)/, '').replace(/```[\s\S]*?```/g, ' ');
+            t = t.replace(/^\uFEFF?---[ \t]*\r?\n[\s\S]*?\r?\n---[ \t]*(\r?\n|$)/, '').replace(/```[\s\S]*?```/g, ' ');
             var lines = t.split(/\r?\n/), secs = [], cur = {head: '', id: '', text: []}, h1 = '';
             lines.forEach(function (ln) {
               var m = /^(#{1,3}) +(.+?)\s*#*\s*$/.exec(ln);
@@ -70,7 +70,7 @@
     ts.forEach(function (t) { var i = low.indexOf(t); if (i >= 0 && (at < 0 || i < at)) at = i; });
     if (at < 0) return s.body.slice(0, 120);
     var from = Math.max(0, at - 40);
-    return (from > 0 ? '…' : '') + text.slice(from, from + 130) + (from + 130 < text.length ? '…' : '');
+    return (from > 0 ? '\u2026' : '') + text.slice(from, from + 130) + (from + 130 < text.length ? '\u2026' : '');
   }
   function href(p, id) { return '#/' + p.path.replace(/\.md$/, '') + (id ? '?id=' + id : ''); }
 
@@ -101,7 +101,7 @@
     res.titles.slice(0, 10).forEach(function (x) {
       h += '<a class="srch-item" href="' + href(x.p) + '"><b>' + mark(x.p.label, res.ts) + '</b>' +
            '<span class="srch-path">' + esc(x.p.path.replace(/\/[^/]*$/, '') || 'home') + '</span>' +
-           (x.p.desc ? '<span class="srch-desc">' + esc(x.p.desc) + '…</span>' : '') + '</a>';
+           (x.p.desc ? '<span class="srch-desc">' + esc(x.p.desc) + '\u2026</span>' : '') + '</a>';
     });
     h += '</div><div class="srch-group"><h3>Inside pages<span>' + res.passages.length + ' pages</span></h3>';
     if (!res.passages.length) h += '<p class="srch-none">Nothing found inside pages.</p>';
@@ -162,7 +162,7 @@
         var q = input.value.trim();
         if (!q) { panel.classList.remove('show'); side.classList.remove('srch-open'); panel.innerHTML = ''; return; }
         panel.classList.add('show'); side.classList.add('srch-open');
-        if (!index) panel.innerHTML = '<p class="srch-none">Loading pages…</p>';
+        if (!index) panel.innerHTML = '<p class="srch-none">Loading pages\u2026</p>';
         build().then(function () { if (input.value.trim() === q) render(panel, q, run(q), false); });
       }
       // On phones Docsify closes the sidebar on any click that reaches <body>;
