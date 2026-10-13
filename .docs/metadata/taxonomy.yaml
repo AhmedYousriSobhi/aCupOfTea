@@ -1,0 +1,111 @@
+# Controlled vocabulary. Add a value here before using it in a page.
+# Keys are kebab-case ids; label is for display.
+#
+# Tag rule: a tag needs 2+ pages, or must name a concrete technology
+# (marked `kind: technology`). Max 5 tags per page.
+
+version: 1
+
+types:
+  concept: Explains an idea, theory, principle or technique.
+  guide: Shows how to do something; practical steps, setup or procedures.
+  reference: Lookup material such as cheat sheets, terminology or command lists.
+  note: Short informal write-up, summary or context that is not a full explanation.
+  problem: A reusable problem formulation, with or without a solution.
+  project: A concrete implementation addressing a defined problem.
+  experiment: Exploratory or temporary investigation.
+
+statuses:
+  - draft
+  - stable
+  - deprecated
+
+levels:
+  - beginner
+  - intermediate
+  - advanced
+
+relation_types:      # exact names used in front matter
+  - related
+  - prerequisites
+
+domains:
+  machine-learning:
+    label: Machine Learning
+    description: Learning from data, general ML theory and practice.
+  deep-learning:
+    label: Deep Learning
+    description: Neural networks and deep architectures.
+  generative-ai:
+    label: Generative AI
+    description: Generative models, LLMs and their tooling.
+  natural-language-processing:
+    label: Natural Language Processing
+    description: Text and language modelling, translation, sequence tasks.
+  reinforcement-learning:
+    label: Reinforcement Learning
+    description: Agents learning through reward and interaction.
+  statistics:
+    label: Statistics
+    description: Statistical methods and probability.
+  recommender-systems:
+    label: Recommender Systems
+    description: Recommendation and ranking techniques.
+  software-engineering:
+    label: Software Engineering
+    description: Engineering practice, patterns and tooling.
+  systems-and-hpc:
+    label: Systems and HPC
+    description: Benchmarks, schedulers, system administration, high-performance computing.
+  business:
+    label: Business
+    description: Business context, KPIs and domain knowledge around the technical work.
+  security:
+    label: Security
+    description: Access control, authentication and hardening.
+
+tags:
+  affinity:
+    label: Affinity
+  clustering:
+    label: Clustering
+  containers:
+    label: Containers
+  distributed-training:
+    label: Distributed Training
+  encoder-decoder:
+    label: Encoder-Decoder
+    kind: technology
+  gpu:
+    label: GPU
+    kind: technology
+  llm:
+    label: Large Language Models
+    kind: technology
+  model-evaluation:
+    label: Model Evaluation
+  mpi:
+    label: MPI
+    kind: technology
+  neural-networks:
+    label: Neural Networks
+    kind: technology
+  pytorch:
+    label: PyTorch
+    kind: technology
+  rnn:
+    label: Recurrent Neural Networks
+    kind: technology
+  slurm:
+    label: Slurm
+    kind: technology
+  transformers:
+    label: Transformers
+    kind: technology
+
+# Default domains suggested for pages in a folder (used by the future scaffold
+# command; not read by the validator or generator).
+folder_defaults:
+  fields/tabular-data:
+    - machine-learning
+    - statistics
