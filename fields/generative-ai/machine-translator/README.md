@@ -1,3 +1,6 @@
+---
+sidebar_group: Machine Translator
+---
 # Generative AI - Machine Translator
 
 Neural machine translation implementations.

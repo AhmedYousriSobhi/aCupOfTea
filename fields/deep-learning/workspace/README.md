@@ -1,3 +1,6 @@
+---
+sidebar_label: Workspace Overview
+---
 # Workspace
 
 Practical implementations and notebooks for deep learning.

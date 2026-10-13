@@ -1,3 +1,15 @@
+---
+id: pytorch-101
+title: PyTorch 101
+type: guide
+status: stable
+domains:
+  - deep-learning
+  - software-engineering
+tags:
+  - pytorch
+---
+
 # 101 - Pytorch
 This blog is mainly designed to get a start with Pytorch, and where to start, so it does not have a complete guide, but the approach I used so far to study Pytorch, also adding some notes and information to document.
 

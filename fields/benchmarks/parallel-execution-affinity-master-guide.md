@@ -1,3 +1,21 @@
+---
+id: parallel-execution-and-affinity
+title: Parallel Execution and Affinity
+sidebar_label: Parallel Execution and Affinity
+type: guide
+status: stable
+domains:
+  - systems-and-hpc
+  - software-engineering
+tags:
+  - affinity
+  - mpi
+  - slurm
+relations:
+  related:
+    - cpu-affinity
+---
+
 # Parallel Execution & Affinity: The Layer Cake Nobody Draws Correctly
 
 > **Objective:** master topology-aware execution, process-to-core mapping, NUMA boundary alignment, and launcher behavior across SLURM, OpenMPI, and MPICH — because 90% of "mysterious" HPC performance problems are actually a misalignment between these layers, not a hardware fault.

@@ -1,3 +1,13 @@
+---
+id: principal-component-analysis
+title: Principal Component Analysis (PCA)
+type: concept
+status: stable
+domains:
+  - machine-learning
+  - statistics
+---
+
 # Tabular Data - DATA FEATURE ENGINEERING - PCA
 
 # Table of Content

@@ -1,3 +1,6 @@
+---
+sidebar_group: Pipeline
+---
 # Tabular Data - DATA MODELING - PIPELINE
 
 # Table of Content

@@ -1,3 +1,6 @@
+---
+sidebar_group: Model Behavior
+---
 # Tabular Data - Data Evaluation - Model Behavior - Overview
 
 Understanding model behavior and performance characteristics.

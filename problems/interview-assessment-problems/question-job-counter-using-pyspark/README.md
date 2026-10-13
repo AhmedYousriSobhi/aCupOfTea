@@ -1,3 +1,6 @@
+---
+sidebar_group: "Job Counter (PySpark)"
+---
 # Question - Job Counter Using PySpark
 
 Group & sort data using PySpark.

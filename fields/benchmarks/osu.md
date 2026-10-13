@@ -1,3 +1,6 @@
+---
+sidebar_label: OSU Benchmarks
+---
 # OSU Benchmarks, Explained Like You're Debugging Them at 2 AM
 
 If you work in HPC long enough, someone eventually hands you a ticket that says "network seems slow, can you run OSU?" and walks away. This is the guide I wish someone had given me before I had to Google what `osu_bibw` even meant.

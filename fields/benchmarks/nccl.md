@@ -1,3 +1,19 @@
+---
+id: nccl-collective-communication
+title: NCCL
+type: concept
+status: stable
+domains:
+  - systems-and-hpc
+  - deep-learning
+tags:
+  - gpu
+  - distributed-training
+relations:
+  related:
+    - pytorch-ddp
+---
+
 # Benchmarks - NCCL
 
 This document summarizes key concepts, interpretations, and practical guidance derived from NCCL AllReduce benchmarking on an 8×H200 NVLink system.

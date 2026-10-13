@@ -100,7 +100,6 @@ CLAUDE.md
 LICENSE
 .gitignore
 .nojekyll           — required by Docsify on GitHub Pages
-index.html           — Docsify entry point
 index.html           — Docsify entry point + config (window.$docsify)
 .docs/               — _sidebar.md / _navbar.md (generated) + gen_sidebar.sh / gen_navbar.sh
 .github/             — deploy workflow (regenerates navigation, publishes gh-pages)
@@ -194,3 +193,18 @@ SPEC.md → CLAUDE.md → repository structure (and its generated navigation) �
 ## 25. Change Philosophy
 
 The goal is not a "perfect" directory tree — it's a structure that is understandable, predictable, searchable, maintainable, scalable, and renders correctly as a Docsify site. Structural simplicity beats theoretical purity.
+## 26. Metadata Layer
+
+Content type, location and navigation are unchanged; metadata is an **overlay** that lets one page be discovered under several domains/tags and linked to related pages. Markdown + YAML front matter is the only source of truth; there is no database or service.
+
+- **Optional:** pages without front matter remain valid and keep working; coverage grows incrementally (§20).
+- **Identity:** a page that participates in relations needs an explicit, repo-unique, kebab-case `id`. Ids are independent of the path, so moving a file does not break relations. The path-derived fallback id is read-only and is never a relation target. Any id collision (explicit vs explicit, or explicit vs fallback) is an error.
+- **Reader aids:** optional `summary` (one line, max 200 chars) and `level` (beginner, intermediate, advanced) are authored; reading time is computed. They drive the Explore lists and a generated **Start here** page (learning paths from prerequisite chains, quick reads, beginner picks). Prerequisites must be acyclic.
+- **Vocabulary:** `type` ∈ concept, guide, reference, note, problem, project, experiment (short definitions live in `taxonomy.yaml`); `status` ∈ draft, stable, deprecated; relation types are exactly `related` and `prerequisites`; domains and tags are defined in `.docs/metadata/taxonomy.yaml`. A tag needs 2+ pages or must name a concrete technology, and a page carries at most 5 tags. Domain overlap rules (deep-learning vs machine-learning, generative-ai with natural-language-processing) are in `CLAUDE.md` §21.
+- **Location:** schema, taxonomy, tools and generated data live under `.docs/` (served by GitHub Pages), so the root allowlist (§13) is unchanged.
+- **Generated, deterministic:** `.docs/generated/` holds `objects.json`, `domains.json`, `tags.json`, `relationships.json` (with reverse links), `related.json` and the Explore pages. The sidebar gains an additive **Explore** section (Domains, Tags); the folder tree is untouched.
+- **Submodules** are never written into and are skipped by the tools; relations may not target their content.
+- **Deployment:** the published site is a staging copy with front matter stripped and a "Related" block appended; repository sources are never rewritten.
+- **Partial front matter and `sidebar_label`:** every field is optional (defaults: title = first H1, type = note, status = stable); `id` only for pages in relations. `sidebar_label` overrides a page's sidebar label without editing its heading; a page with only that field is not indexed and gets no domain.
+
+See `CLAUDE.md` §21 for the contributor how-to.

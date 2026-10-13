@@ -1,3 +1,15 @@
+---
+id: unsupervised-learning
+title: Unsupervised Learning
+type: concept
+status: stable
+domains:
+  - machine-learning
+  - statistics
+tags:
+  - clustering
+---
+
 # Tabular Data - Concepts in Machine Learning - Unsupervised Learning
 Unsupervised machine learning is a type of machine learning where the model is trained on a dataset without labeled target values or explicit supervision. In unsupervised learning, the algorithm is tasked with finding patterns, structures, or relationships within the data on its own. 
 

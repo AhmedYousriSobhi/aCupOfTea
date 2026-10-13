@@ -1,3 +1,13 @@
+---
+id: reinforcement-learning-basics
+title: Reinforcement Learning Basics
+type: concept
+status: stable
+domains:
+  - reinforcement-learning
+  - machine-learning
+---
+
 # Reinforcement Learning
 
 ![gif](https://coolinventor.com/wiki/images/0/03/Reinforcement-learning-pacman.gif)

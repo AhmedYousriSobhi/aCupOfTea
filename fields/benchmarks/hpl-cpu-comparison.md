@@ -1,3 +1,6 @@
+---
+sidebar_label: "HPL: Intel vs Netlib"
+---
 # Why Does Intel's HPL Binary Beat Netlib by 60% — Then Suddenly Not?
 
 > **The setup:** same 94-core node, same fixed block size (NB=384), two different `xhpl` binaries — Intel's optimized container vs. plain-vanilla Netlib. At small problem sizes Intel crushes it. At large problem sizes... it basically doesn't matter. Here's why.

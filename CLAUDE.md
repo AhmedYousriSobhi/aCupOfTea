@@ -90,7 +90,11 @@ Keep the root clean: `README.md`, `SPEC.md`, `CLAUDE.md`, `LICENSE`, `.gitignore
 
 `.docs/_sidebar.md` and `.docs/_navbar.md` are **generated** from the file tree by `.docs/gen_sidebar.sh` / `.docs/gen_navbar.sh`, which CI re-runs on every push to `main`. **Never hand-edit them**: CI overwrites manual edits. To change the site's navigation, change the structure, the page's `# H1` heading (used as its label), or the generator. After any structural change, regenerate them locally and commit the output so the repo matches what CI publishes.
 
+Site search is `.docs/search.js` (loaded from `index.html`, replacing Docsify's built-in search): results come in two groups, page-title matches and passages inside pages, built from the pages listed in the generated sidebar, so new pages are searchable with no extra step.
+
 Generator behavior worth knowing: folders without any `.md` page are skipped; git submodules (not checked out in CI) are rendered as external links to their repositories; a `README.md` titled `Overview` is listed first.
+
+**New pages:** create them with `python3 .docs/tools/new_page.py` (steps in `.github/CONTRIBUTING.md`). It picks the folder and kebab-case file name, writes front matter (`id`, `title`, optional `summary`, `tags` from `.docs/metadata/taxonomy.yaml`), adds the row to the folder `README.md` table, and regenerates the sidebar and navbar. Front matter is hidden on the site by Docsify's official front-matter plugin; keep YAML comments out of it.
 
 ## 14. Ambiguity
 
@@ -161,3 +165,55 @@ Don't optimize for the shortest path alone.
 Every artifact should answer: *What is this? Why does it exist? Where should similar things go? How can I find it later — on GitHub, and on the Docsify site?*
 
 If the repository can't answer those through its structure, improve the structure — don't compensate with more content.
+## 21. Metadata Layer
+
+An optional **overlay** on top of the folder structure: pages can carry YAML front matter so they are discoverable by domain and tag and linked to related pages. Folders remain the primary location; files never move for metadata's sake. Pages without front matter are valid ("legacy").
+
+- Schema and controlled vocabulary: `.docs/metadata/schema.yaml`, `.docs/metadata/taxonomy.yaml`. Add a new domain/tag there *before* using it.
+- Tools: `.docs/tools/validate.py`, `generate_index.py`, `stage_site.py` (Python + PyYAML 6.0.2).
+- Generated output (never hand-edit, deterministic): `.docs/generated/` — JSON indexes plus Explore pages. Commit it with the change.
+
+**Add metadata to a page** — put front matter at the very top of the file, nothing else changes:
+
+```yaml
+---
+id: sequence-models            # explicit, unique, kebab-case; required if the page has or receives relations
+title: Sequence Models
+summary: How models handle ordered data like text, from RNNs to transformers.   # optional, one line, max 200 chars
+level: intermediate            # optional: beginner | intermediate | advanced
+type: concept                  # concept | guide | reference | note | problem | project | experiment (definitions in taxonomy.yaml)
+status: stable                 # draft | stable | deprecated
+domains: [deep-learning]       # from taxonomy.yaml
+tags: [rnn]                    # optional, max 5, from taxonomy.yaml
+relations:                     # optional; targets are explicit ids
+  prerequisites: [deep-learning-basics]
+  related: [encoder-decoder-machine-translation]
+---
+```
+
+Front matter may be partial: every field is optional (defaults: `title` = first H1, `type` = note, `status` = stable); `id` is needed only for pages that take part in relations. `sidebar_label` overrides a page's label in the generated sidebar without touching its heading (one line, warned over 40 characters, unique within its folder, quoted if it contains `: `). `sidebar_group` (on a folder's `README.md` only) names that folder's group in the sidebar instead of the text before the last hyphen in its H1; use it when sibling folders would otherwise share a group name. Same limits as `sidebar_label`. A page that carries only these fields is not indexed.
+
+Reading time is computed (200 wpm over the body, code excluded), never authored. `summary` and `level` feed the Explore lists and the **Start here** page (learning paths from `prerequisites`, quick reads of 10 minutes or less, beginner picks); prerequisites must not form a cycle.
+
+**Choosing domains and tags**
+
+- Domains describe the subject, not the folder. Most pages need one or two.
+- A `deep-learning` page does not also get `machine-learning` unless it teaches general ML.
+- LLM pages may carry both `generative-ai` and `natural-language-processing`.
+- `tabular-data` is a folder, not a domain: pages under `fields/tabular-data/` default to `machine-learning` and `statistics` (recorded under `folder_defaults` in `taxonomy.yaml`).
+- A tag needs 2+ pages, or must name a concrete technology (`kind: technology` in `taxonomy.yaml`). Max 5 tags per page; the validator errors above that and warns on single-use tags that are not marked as technology.
+- Merge, don't multiply: prefer an existing tag (for example `gpu` covers CUDA, `clustering` covers segmentation) over adding a near-duplicate.
+
+Rules: no YAML comments inside front matter (`gen_sidebar.sh` reads the first `# ` line as the page label); the path-derived fallback id of legacy pages is never a relation target; relations never target git submodule content (submodules are skipped entirely).
+
+**Before pushing:**
+
+```bash
+python3 .docs/tools/validate.py        # must report 0 errors
+python3 .docs/tools/generate_index.py  # then commit .docs/generated
+cd .docs && ./gen_sidebar.sh && ./gen_navbar.sh   # only if structure/titles changed
+```
+
+CI (`validate-metadata.yml`) runs on PRs to `dev`/`main` and pushes to `dev`, and fails on validation errors or stale `.docs/generated`.
+
+**Deploy:** CI builds a staging copy (`stage_site.py --out _site`) that strips front matter and appends a "Related" block, and publishes that copy. Sources are never rewritten. A local `docsify serve` of the repo hides the front matter on the page (Docsify's front-matter plugin) and in search (`.docs/search.js` strips it), but does **not** show the Related block; to preview the deployed result run `python3 .docs/tools/stage_site.py --out _site` and serve `_site/` (git-ignored).
