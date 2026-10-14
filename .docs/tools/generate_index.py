@@ -105,7 +105,7 @@ def build_relationships(objects):
 
 
 def build_related(objects, rels):
-    """Per page path: the data behind the 'Related' block rendered at deploy time."""
+    """Per page path: the data behind the related-pages strip rendered at deploy time."""
     def ref(i):
         return {"id": i, "path": objects[i]["path"], "title": objects[i]["title"]}
 

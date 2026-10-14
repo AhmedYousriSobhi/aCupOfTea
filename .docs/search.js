@@ -27,7 +27,7 @@
       return Promise.all(pages.map(function (p) {
         return fetch('./' + p.path).then(function (r) { return r.ok ? r.text() : ''; }).catch(function () { return ''; })
           .then(function (t) {
-            t = t.replace(/^\uFEFF?---[ \t]*\r?\n[\s\S]*?\r?\n---[ \t]*(\r?\n|$)/, '').replace(/```[\s\S]*?```/g, ' ');
+            t = t.replace(/^\uFEFF?---[ \t]*\r?\n[\s\S]*?\r?\n---[ \t]*(\r?\n|$)/, '').replace(/<!-- related-block -->[\s\S]*?<\/div>/g, ' ').replace(/```[\s\S]*?```/g, ' ');
             var lines = t.split(/\r?\n/), secs = [], cur = {head: '', id: '', text: []}, h1 = '';
             lines.forEach(function (ln) {
               var m = /^(#{1,3}) +(.+?)\s*#*\s*$/.exec(ln);

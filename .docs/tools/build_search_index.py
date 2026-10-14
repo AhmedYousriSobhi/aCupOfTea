@@ -4,7 +4,7 @@
 The site search (.docs/search.js) needs the text of every page. Without this
 file it fetches all ~155 pages in the browser on first use (about 2 MB). With
 it, one request is enough. The index is built from the staged pages, so it holds
-exactly the text the site serves (front matter stripped, Related block added).
+exactly the text the site serves (front matter stripped, related-pages strip added; the strip itself is left out of the index).
 
 The parsing here mirrors the crawl in search.js on purpose: the same pages, the
 same sections, the same plain-text rules. Change one and change the other.
@@ -58,6 +58,7 @@ def sidebar_pages(site):
 
 def index_page(page, text):
     text = re.sub(r"^﻿?---[ \t]*\r?\n[\s\S]*?\r?\n---[ \t]*(\r?\n|$)", "", text, count=1)
+    text = re.sub(r"<!-- related-block -->[\s\S]*?</div>", " ", text)  # links to other pages are not page text
     text = re.sub(r"```[\s\S]*?```", " ", text)
     secs, cur, h1 = [], {"head": "", "id": "", "text": []}, ""
     for line in re.split(r"\r?\n", text):
