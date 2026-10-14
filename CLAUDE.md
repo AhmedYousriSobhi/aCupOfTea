@@ -102,6 +102,8 @@ A line that is only `$$...$$` is shown as a display formula with KaTeX (`.docs/m
 
 Every content page ends with "Edit this page" (the file on GitHub, branch `dev`) and, on the deployed site, "Last updated" (`.docs/page-footer.js`). The dates come from `.docs/last-updated.json`, which `stage_site.py` writes from git history (so the deploy checkout uses `fetch-depth: 0`); a local preview shows only the edit link.
 
+**Folder README convention (best practice):** a folder `README.md` is the start of that folder: a one-line purpose, then `## Contents` with a `| File | Description |` table for pages and a `| Directory | Description |` table for subfolders, one short description per row. A README that is itself a topic page (a single question, a project) is content, not an index, and is left as written. `new_page.py` adds each new page's row (or a link in a bullet list).
+
 Generator behavior worth knowing: folders without any `.md` page are skipped; git submodules (not checked out in CI) are rendered as external links to their repositories; a `README.md` titled `Overview` is listed first.
 
 **New pages:** create them with `python3 .docs/tools/new_page.py` (steps in `.github/CONTRIBUTING.md`). It picks the folder and kebab-case file name, writes front matter (`id`, `title`, optional `summary`, `tags` from `.docs/metadata/taxonomy.yaml`), adds the row to the folder `README.md` table, and regenerates the sidebar and navbar. Front matter is hidden on the site by Docsify's official front-matter plugin; keep YAML comments out of it.
