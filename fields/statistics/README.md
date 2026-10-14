@@ -1,9 +1,9 @@
 # Statistics
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/9b41e1ca-0645-4831-8299-623ad5425274)
+![image](images/statistics-01.png)
 
 Many enthusiastic people who love to have a great challenge, jump to the unbounded realm of AI, and get amazed by its titles like machine learning, deep learning, architecture, and other words related to this field. But what they don't know is that, the real challenge if where all of this came from?
 
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/0674047d-5edc-429a-bd9e-da2cb987c9fb)
+![image](images/statistics-02.png)
 
 # Table of Content
 - [Statistics](#statistics)
@@ -156,7 +156,7 @@ These courses provide a well-rounded education in statistics, preparing students
 
 # Introduction to Statistics
 
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/fd4f017f-7dd8-410e-b60c-97d6b503a594)
+![image](images/statistics-03.png)
 
 The following illustration is taken from Stanford Statiscs Course (see Credit section below), with various illustrations from different sources to facilate and make the illustration simple to study.
 
@@ -165,7 +165,7 @@ Stanford's "Introduction to Statistics" teaches you statistical thinking concept
 ## Module 1 - Introduction and Descriptive Statiscs for Exploring Data
 ### Descriptive Statistics
 
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/bf9dc2ce-a673-45a7-a458-a5a5c0dced02)
+![image](images/statistics-04.png)
 
 **"It is best to communicate informatio with figures whenever possible rather than numbers"**
 
@@ -182,7 +182,7 @@ If we now summerize the numbers of temperatures of the first 25 shuttle missions
 
 It is not easy to take a closer look at these numbers, you won't easily get the temperatures overview. Unlike if we decided to plot these numbers into a simple __bar plot__, which will represent the following:
 
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/9b5b9f82-f01c-4747-a561-319d86541d8d)
+![image](images/statistics-05.png)
 
 The plot tells us that there are some temperatures values which are below from the common values we have.
 
