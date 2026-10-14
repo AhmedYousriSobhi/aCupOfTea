@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="aCupOfTea">
+  <rect width="64" height="64" rx="14" fill="#1f7a52"/>
+  <!-- steam -->
+  <path d="M25 14c-3 3 3 5 0 9M33 12c-3 3 3 5 0 9M41 14c-3 3 3 5 0 9" fill="none" stroke="#bfeed7" stroke-width="2.6" stroke-linecap="round"/>
+  <!-- cup and handle -->
+  <path d="M15 28h32v8c0 8-6 14-16 14s-16-6-16-14z" fill="#ffffff"/>
+  <path d="M47 31h3.5a5.5 5.5 0 0 1 0 11H46" fill="none" stroke="#ffffff" stroke-width="3.4" stroke-linecap="round"/>
+  <!-- tea -->
+  <path d="M18 31h26v4c0 5.5-5 9.5-13 9.5S18 40.5 18 35z" fill="#d98b3a"/>
+  <!-- saucer -->
+  <ellipse cx="31" cy="52.5" rx="21" ry="3.2" fill="#ffffff" opacity="0.95"/>
+</svg>
