@@ -341,7 +341,13 @@ async function reducedMotion(browser, base) {
       try { await run(browser, base, label, size, phone); }
       catch (e) { check(`[${engine} ${label}] run finished`, false, e.message.split('\n')[0]); }
     }
-    await offline(browser, base).catch((e) => check(`[${engine} desktop] read offline run finished`, false, e.message.split('\n')[0]));
+    // Playwright's WebKit cannot reload a service-worker page with the network
+    // emulated off ("internal error"); Safari itself supports service workers.
+    if (engine === 'chromium') {
+      await offline(browser, base).catch((e) => check(`[${engine} desktop] read offline run finished`, false, e.message.split('\n')[0]));
+    } else {
+      console.log(`SKIP [${engine} desktop] read offline (not supported by Playwright's WebKit)`);
+    }
     await reducedMotion(browser, base).catch((e) => check(`[${engine} phone] reduced motion run finished`, false, e.message.split('\n')[0]));
   } finally {
     await browser.close();
