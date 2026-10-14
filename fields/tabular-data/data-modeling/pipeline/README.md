@@ -9,4 +9,4 @@ sidebar_group: Pipeline
 - [PipeLine](#pipeline)
 
 # PipeLine
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/f62882f8-27d0-4211-8281-44a317d34a61)
+![image](images/pipeline-01.png)
