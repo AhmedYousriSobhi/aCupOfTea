@@ -93,6 +93,8 @@ Keep the root clean: `README.md`, `SPEC.md`, `CLAUDE.md`, `LICENSE` (CC BY 4.0, 
 
 Site search is `.docs/search.js` (loaded from `index.html`, replacing Docsify's built-in search): results come in two groups, page-title matches and passages inside pages, built from the pages listed in the generated sidebar, so new pages are searchable with no extra step. On the deployed site it loads one prebuilt `.docs/search-index.json` (written by `stage_site.py` via `build_search_index.py`, not committed); without it (local preview) it fetches every page. `build_search_index.py` mirrors the page parsing in `search.js`; change both together.
 
+**Browser smoke test:** `.docs/tests/smoke.js` opens the staged site in headless Chromium at a desktop and a phone size and checks the menu, a long page and its images, search, the page footer, the 404 page, formulas, diagrams, alerts, phone table cards, the phone image viewer, the theme button, sideways scrolling and script errors. `smoke-test.yml` runs it on PRs that touch `index.html` or `.docs/`. Locally: `python3 .docs/tools/stage_site.py --out _site && node .docs/tests/smoke.js _site` (needs the `playwright` package).
+
 Every script and stylesheet in `index.html` is pinned to an exact version. `.docs/tools/check_pins.py` compares the pins with npm's latest (the monthly workflow `check-pins.yml` prints the table in its summary and fails on a deprecated package). Bump pins deliberately, one at a time, and re-check the site in a browser.
 
 On phones (up to 768px) a tap on a page image opens it large in a pan-and-pinch layer (`.docs/image-viewer.js`, loaded from `index.html`); desktop keeps Docsify's zoom-image plugin.
