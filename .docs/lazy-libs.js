@@ -2,15 +2,21 @@
 // a page with a ```mermaid block, KaTeX for a page with a $$ formula line
 // (.docs/math.js marks those). Versions stay pinned here, like in index.html.
 (function () {
+  // [address, integrity hash]; `check_pins.py --sri --write` fills the hashes
   var LIBS = {
     mermaid: {
-      js: 'https://cdn.jsdelivr.net/npm/mermaid@12.2.0/dist/mermaid.min.js',
+      js: ['https://cdn.jsdelivr.net/npm/mermaid@12.2.0/dist/mermaid.min.js', 'sha384-8xUhuLNMjW/cI2Dacg3DR4WliYznvIg0LVG1stctThKD/YVrJFI9TNCFxft5NYgp'],
     },
     katex: {
-      css: 'https://cdn.jsdelivr.net/npm/katex@0.19.0/dist/katex.min.css',
-      js: 'https://cdn.jsdelivr.net/npm/katex@0.19.0/dist/katex.min.js',
+      css: ['https://cdn.jsdelivr.net/npm/katex@0.19.0/dist/katex.min.css', 'sha384-3rdsX6e5mueWyoweR9NIVmtEsUkokpBT/0ALqKKIBMr9j4qhHkaIkAcGgsE6uVlp'],
+      js: ['https://cdn.jsdelivr.net/npm/katex@0.19.0/dist/katex.min.js', 'sha384-QFFtAGzvvj+bfgCGxXJlNZZR1nXEZgvG8tDLCCY1F19xl20WlfTYgguB4VcNdxYk'],
     },
   };
+  function attach(el, attr, pair) {
+    el[attr] = pair[0];
+    if (pair[1]) { el.integrity = pair[1]; el.crossOrigin = 'anonymous'; }
+    document.head.appendChild(el);
+  }
   var loading = {};
 
   // Loads a library once and resolves when its script has run.
@@ -21,16 +27,12 @@
       if (lib.css) {
         var link = document.createElement('link');
         link.rel = 'stylesheet';
-        link.href = lib.css;
-        if (lib.cssIntegrity) { link.integrity = lib.cssIntegrity; link.crossOrigin = 'anonymous'; }
-        document.head.appendChild(link);
+        attach(link, 'href', lib.css);
       }
       var s = document.createElement('script');
-      s.src = lib.js;
-      if (lib.integrity) { s.integrity = lib.integrity; s.crossOrigin = 'anonymous'; }
       s.onload = resolve;
       s.onerror = function () { delete loading[name]; reject(new Error('could not load ' + name)); };
-      document.head.appendChild(s);
+      attach(s, 'src', lib.js);
     });
     return loading[name];
   }
