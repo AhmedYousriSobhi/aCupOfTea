@@ -3,13 +3,20 @@
 **Status:** Active
 **Scope:** Repository organization and information architecture
 **Content modification:** Out of scope unless explicitly requested
-**Related infra:** Docsify site deployed from `main` via `.github/workflows/deploy-docs.yml` — see §13, §16
+**Related infra:** Docsify site deployed from `main` via `.github/workflows/deploy-docs.yml` — see §13, §16, §26, §27
 
 ## 1. Purpose
 
 `aCupOfTea` is a personal knowledge repository covering AI, machine learning, software engineering, programming, business context, and applied projects.
 
 It is intended to function as a **long-term, searchable knowledge system** — increasingly served as a browsable **Docsify site**, not just a folder tree read on GitHub.
+
+Two goals guide every structural decision:
+
+1. **Share knowledge.** Pages are written from real experience and read like a short blog: a reader (first of all the author, coming back to recall something) should find a page, finish it in a coffee break, and find the next related page. The rendered site, including on a phone, is the primary reading surface.
+2. **Make adding knowledge easy.** A new page should take one command or one markdown file, with navigation, indexes and search updating without hand-editing (§27).
+
+When a proposal does not serve one of these goals, prefer not doing it (§25).
 
 This spec defines how information is *organized*. It does not define the technical correctness of any individual document's content.
 
@@ -62,7 +69,7 @@ aCupOfTea/
 └── decisions/
 ```
 
-This is the **target** conceptual architecture, not a mandate to migrate everything immediately. Migration is incremental and evidence-based (§20).
+This is the **target** conceptual architecture, not a mandate to migrate everything immediately. Migration is incremental and evidence-based (§19).
 
 **Current top-level layout** (the implementation today):
 
@@ -97,14 +104,20 @@ The root SHOULD contain only genuinely repository-wide files:
 README.md          — repo overview AND Docsify homepage
 SPEC.md
 CLAUDE.md
-LICENSE
+LICENSE             — not added yet; the license choice is open in issue #76
 .gitignore
-.nojekyll           — required by Docsify on GitHub Pages
 index.html           — Docsify entry point + config (window.$docsify)
-.docs/               — _sidebar.md / _navbar.md (generated) + gen_sidebar.sh / gen_navbar.sh
-.github/             — deploy workflow (regenerates navigation, publishes gh-pages)
+.docs/               — site infrastructure:
+                         _sidebar.md / _navbar.md (generated) + gen_sidebar.sh / gen_navbar.sh
+                         search.js (site search)
+                         metadata/ (schema.yaml, taxonomy.yaml)
+                         tools/ (validate, generate_index, stage_site, new_page)
+                         generated/ (indexes and Explore pages, generated)
+.github/             — workflows (validate metadata; deploy a staged copy to gh-pages) and CONTRIBUTING.md
 .gitmodules          — project/knowledge submodules
 ```
+
+`.nojekyll` is not committed: the deploy workflow creates it in the published copy.
 
 Do not treat the Docsify infra files as clutter to be moved — they are load-bearing for the hosted site. Do not place temporary notes, experiments, or project-specific docs at the root.
 
@@ -121,7 +134,14 @@ Hierarchy MUST communicate meaningful distinctions. Avoid nesting like `knowledg
 Two navigation layers exist and both must stay accurate:
 
 1. **`README.md` indexes** inside a folder — description, subcategories, links, related projects/technologies. Should not duplicate large amounts of underlying content.
-2. **`.docs/_sidebar.md`** — the navigation tree for the rendered Docsify site. It is **generated** from the file tree by `.docs/gen_sidebar.sh` (labels come from each page's `# H1`), and CI regenerates it on every push to `main`. It MUST NOT be hand-edited; regenerate and commit it in the same change as any move/rename/new section so the repo matches what's published.
+2. **`.docs/_sidebar.md`** — the navigation tree for the rendered Docsify site. It is **generated** from the file tree by `.docs/gen_sidebar.sh`, and CI regenerates it on every push to `main`. It MUST NOT be hand-edited; regenerate and commit it in the same change as any move/rename/new section so the repo matches what's published.
+   - A page's label is the text after the last hyphen of its `# H1` (the whole H1 if it has none). A `sidebar_label` in front matter overrides it without editing the heading.
+   - A folder's group name is the text before the last hyphen of its `README.md` H1. A `sidebar_group` in that README overrides it; use it when sibling folders would share a name.
+   - An additive **Explore** section (Start here, Domains, Tags) comes from the metadata layer (§26); the folder tree below it is untouched.
+
+Folder `README.md` indexes SHOULD list their pages in a `| File | Description |` table under `## Contents`, the format `new_page.py` updates automatically (§27). Converging the remaining list-style indexes is tracked in issue #77.
+
+**Search** (`.docs/search.js`) indexes the pages listed in the generated sidebar, so any page reachable from the sidebar is searchable with no extra step.
 
 The sidebar governs what's reachable on the site; the folder `README.md` governs what's understandable when browsing the raw repo. Keep README indexes in sync with the folder contents.
 
@@ -172,6 +192,7 @@ Before considering a structural change complete, verify:
 [ ] Directory depth reasonable
 [ ] Root directory still clean (incl. Docsify infra intact)
 [ ] README.md indexes / generated sidebar reflect current structure
+[ ] .docs/tools/validate.py reports 0 errors; .docs/generated is regenerated and committed
 [ ] SPEC.md and CLAUDE.md remain accurate
 [ ] Git history preserved where practical
 ```
@@ -197,14 +218,23 @@ The goal is not a "perfect" directory tree — it's a structure that is understa
 
 Content type, location and navigation are unchanged; metadata is an **overlay** that lets one page be discovered under several domains/tags and linked to related pages. Markdown + YAML front matter is the only source of truth; there is no database or service.
 
-- **Optional:** pages without front matter remain valid and keep working; coverage grows incrementally (§20).
+- **Optional:** pages without front matter remain valid and keep working; coverage grows incrementally (§19, §23).
 - **Identity:** a page that participates in relations needs an explicit, repo-unique, kebab-case `id`. Ids are independent of the path, so moving a file does not break relations. The path-derived fallback id is read-only and is never a relation target. Any id collision (explicit vs explicit, or explicit vs fallback) is an error.
 - **Reader aids:** optional `summary` (one line, max 200 chars) and `level` (beginner, intermediate, advanced) are authored; reading time is computed. They drive the Explore lists and a generated **Start here** page (learning paths from prerequisite chains, quick reads, beginner picks). Prerequisites must be acyclic.
 - **Vocabulary:** `type` ∈ concept, guide, reference, note, problem, project, experiment (short definitions live in `taxonomy.yaml`); `status` ∈ draft, stable, deprecated; relation types are exactly `related` and `prerequisites`; domains and tags are defined in `.docs/metadata/taxonomy.yaml`. A tag needs 2+ pages or must name a concrete technology, and a page carries at most 5 tags. Domain overlap rules (deep-learning vs machine-learning, generative-ai with natural-language-processing) are in `CLAUDE.md` §21.
 - **Location:** schema, taxonomy, tools and generated data live under `.docs/` (served by GitHub Pages), so the root allowlist (§13) is unchanged.
-- **Generated, deterministic:** `.docs/generated/` holds `objects.json`, `domains.json`, `tags.json`, `relationships.json` (with reverse links), `related.json` and the Explore pages. The sidebar gains an additive **Explore** section (Domains, Tags); the folder tree is untouched.
+- **Generated, deterministic:** `.docs/generated/` holds `objects.json`, `domains.json`, `tags.json`, `relationships.json` (with reverse links), `related.json` and the Explore pages. The sidebar gains an additive **Explore** section (Start here, Domains, Tags); the folder tree is untouched.
 - **Submodules** are never written into and are skipped by the tools; relations may not target their content.
 - **Deployment:** the published site is a staging copy with front matter stripped and a "Related" block appended; repository sources are never rewritten.
-- **Partial front matter and `sidebar_label`:** every field is optional (defaults: title = first H1, type = note, status = stable); `id` only for pages in relations. `sidebar_label` overrides a page's sidebar label without editing its heading; a page with only that field is not indexed and gets no domain.
+- **Partial front matter, `sidebar_label` and `sidebar_group`:** every field is optional (defaults: title = first H1, type = note, status = stable); `id` only for pages in relations. `sidebar_label` overrides a page's sidebar label without editing its heading; `sidebar_group` (folder `README.md` only) overrides the folder's group name. Labels must be unique within a folder and groups among sibling folders. A page with only these fields is not indexed and gets no domain.
 
 See `CLAUDE.md` §21 for the contributor how-to.
+
+## 27. Adding New Knowledge
+
+Adding a page MUST stay a small, repeatable step for a solo author or an outside contributor:
+
+- **Preferred:** `python3 .docs/tools/new_page.py`. It asks for a title, optional summary, folder and tags, then creates the kebab-case file with front matter and a short outline, adds the page to the folder's `README.md` table, and regenerates the sidebar and navbar. It suggests the closest existing folders, warns about similar existing pages (§17), never overwrites a file, and never creates a folder without confirmation (§15). New tags are added to `taxonomy.yaml` only after confirmation (§26).
+- **Without the script:** create a kebab-case `.md` file with one `# H1`, add it to the folder's `README.md` index, and regenerate the sidebar. Front matter stays optional.
+- **Images** for new pages SHOULD be committed next to the page (for example `images/` in the same folder) rather than linked from other sites, which can disappear. Moving existing linked images into the repo is tracked in issue #82.
+- **Contributor steps** live in `.github/CONTRIBUTING.md`; changes go through a feature branch and a PR into `dev` (CLAUDE.md §11).
