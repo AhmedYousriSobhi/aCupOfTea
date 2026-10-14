@@ -113,6 +113,8 @@ On phones the top menu is one bar that stays on screen, with the theme button (t
 
 Images after the first on a page are lazy-loaded (`.docs/lazy-images.js` adds `loading="lazy"` before the page is inserted), so long pages fetch pictures as you scroll.
 
+Pages read once can be read again offline: `stage_site.py` writes `sw.js` (a service worker) into the root of the staged site from `.docs/sw-template.js`, versioned with the git commit so each deploy gets a fresh cache (older ones are deleted). It caches the shell (index.html, its scripts, the menu files, the search index, the pinned CDN files) on install, then answers same-origin requests network-first and the CDN cache-first. `.docs/offline.js` registers it on https or localhost only, and only when `sw.js` exists, so a local `docsify serve` of the repo is unaffected. No `sw.js` is committed (root stays clean, §12).
+
 The homepage has a "Recently added" block between `<!-- recent:start -->` and `<!-- recent:end -->` in `README.md`; `stage_site.py` fills it at deploy time with the newest added pages from git history (renames do not count), and the committed file keeps the empty markers.
 
 A line that is only `$$...$$` is shown as a display formula with KaTeX (`.docs/math.js`, KaTeX loaded by `lazy-libs.js`); inline `$...$` and anything inside code fences is left alone. Pages stay plain LaTeX, which GitHub also renders.

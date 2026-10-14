@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <!-- Content-Security-Policy: scripts only from this site and the pinned CDN (no inline scripts),
        no plugins or frames. GitHub Pages cannot send headers, so it is set here. -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; font-src 'self' data: https://cdn.jsdelivr.net https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self'; manifest-src 'self'; object-src 'none'; frame-src 'none'; base-uri 'self'; form-action 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; font-src 'self' data: https://cdn.jsdelivr.net https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; frame-src 'none'; base-uri 'self'; form-action 'none'">
   <title>aCupOfTea: knowledge in short sips</title>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="description" content="Notes on AI, machine learning, software engineering and the business around them, short enough to read on a coffee break.">
@@ -291,6 +291,8 @@
   <script src="./.docs/reading-progress.js"></script>
   <script src="./.docs/surprise-me.js"></script>
   <script src="./.docs/section-links.js"></script>
+  <!-- Read offline: keeps a copy of each page opened (service worker, deployed site only) -->
+  <script src="./.docs/offline.js"></script>
   <!-- Two-group search (replaces the built-in Docsify search) -->
   <script src="./.docs/search.js"></script>
   <!-- Docsify v5 -->

@@ -8,7 +8,7 @@
 // desktop and a phone size, and checks what a reader would notice: the menu,
 // a long page with its images, search, the page footer, the 404 page, formulas,
 // diagrams, phone table cards, the phone image viewer, the theme button and
-// sideways scrolling. Needs the `playwright` npm package (with the browser).
+// sideways scrolling, and reading a visited page offline. Needs the `playwright` npm package (with the browser).
 // Every check name starts with the engine, so a failure says where it broke.
 // Exits 1 and names each failed check.
 const http = require('http');
@@ -22,7 +22,9 @@ const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/cs
   '.md': 'text/markdown; charset=utf-8', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg',
   '.gif': 'image/gif', '.svg': 'image/svg+xml', '.webp': 'image/webp' };
 
+let serverDown = false; // the offline check also stops the server, so nothing can come from the network
 const server = http.createServer((req, res) => {
+  if (serverDown) return req.socket.destroy();
   const file = path.join(root, decodeURIComponent(req.url.split('?')[0]));
   if (!file.startsWith(root)) { res.writeHead(403); return res.end(); }
   fs.stat(file, (err, st) => {
@@ -275,6 +277,47 @@ async function run(browser, base, label, size, phone) {
   await page.context().close();
 }
 
+// Read offline: the service worker (sw.js, written by stage_site.py) takes
+// over, keeps the pages that were read, and shows one again with no network.
+async function offline(browser, base) {
+  const c = (name, ok, detail) => check(`[${engine} desktop] ${name}`, ok, detail);
+  if (!fs.existsSync(path.join(root, 'sw.js'))) return c('staged site has a service worker (sw.js)', false, 'no sw.js in ' + root);
+  const ctx = await browser.newContext({ viewport: { width: 1280, height: 800 }, colorScheme: 'light' });
+  const page = await ctx.newPage();
+  page.setDefaultTimeout(10000);
+  const h1 = () => page.evaluate(() => ({
+    h1: ((document.querySelector('.markdown-section h1') || {}).textContent || '').trim(),
+    lost: /This page is not here|You are offline/.test(document.body.textContent),
+  }));
+  try {
+    await page.goto(base + '/#/');
+    const active = await page.evaluate(() => Promise.race([
+      navigator.serviceWorker.ready.then((r) => !!r.active),
+      new Promise((r) => setTimeout(() => r(false), 15000)),
+    ]));
+    await page.reload();
+    await page.waitForTimeout(2000);
+    const controlled = await page.evaluate(() => !!navigator.serviceWorker.controller);
+    c('a service worker is registered and controls the page after a reload', active && controlled, JSON.stringify({ active, controlled }));
+    await page.goto(base + '/#/fields/benchmarks/hpl');
+    await page.waitForTimeout(3000);
+    const online = await h1();
+    serverDown = true;
+    await ctx.setOffline(true);
+    await page.reload();
+    await page.waitForFunction(() => document.querySelector('.markdown-section h1'), null, { timeout: 10000 }).catch(() => {});
+    await page.waitForTimeout(1000);
+    const off = await h1();
+    c('a page read before opens again offline', !!online.h1 && off.h1 === online.h1 && !off.lost, JSON.stringify({ online, off }));
+  } catch (e) {
+    c('read offline run finished', false, e.message.split('\n')[0]);
+  } finally {
+    serverDown = false;
+    await ctx.setOffline(false).catch(() => {});
+    await ctx.close();
+  }
+}
+
 async function reducedMotion(browser, base) {
   const ctx = await browser.newContext({ viewport: { width: 390, height: 800 }, isMobile: true, hasTouch: true, reducedMotion: 'reduce' });
   const page = await ctx.newPage();
@@ -298,6 +341,7 @@ async function reducedMotion(browser, base) {
       try { await run(browser, base, label, size, phone); }
       catch (e) { check(`[${engine} ${label}] run finished`, false, e.message.split('\n')[0]); }
     }
+    await offline(browser, base).catch((e) => check(`[${engine} desktop] read offline run finished`, false, e.message.split('\n')[0]));
     await reducedMotion(browser, base).catch((e) => check(`[${engine} phone] reduced motion run finished`, false, e.message.split('\n')[0]));
   } finally {
     await browser.close();

@@ -122,6 +122,7 @@ index.html           — Docsify entry point: page shell, styles, Content-Securi
                          reading-progress.js (progress bar, back-to-top button)
                          surprise-me.js (random page link in the menu)
                          section-links.js (copy a link to an h2/h3 section)
+                         offline.js + sw-template.js (read offline; stage_site.py writes sw.js into the published copy)
                          theme-toggle.js (theme list: light, sepia, dark, midnight, black)
                          sidebar-groups.js (open/close menu folders)
                          page-outline.js (On this page list, wide screens)
