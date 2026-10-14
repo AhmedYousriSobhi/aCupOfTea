@@ -22,7 +22,8 @@ BRANCH = "main"  # the site is built from main
 LANGS = {".py": "python", ".sh": "bash", ".r": "r", ".sql": "sql", ".js": "javascript",
          ".c": "c", ".cpp": "cpp", ".java": "java", ".go": "go", ".ts": "typescript"}
 MAX_OUTPUT_LINES = 60
-ANSI_RE = re.compile(r"\x1b\[[0-9;]*[A-Za-z]")
+ANSI_RE = re.compile(r"\x1b\[[0-9;?]*[ -/]*[@-~]|\x1b[@-_]")
+CONTROL_RE = re.compile(r"[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]")  # left after ANSI codes are removed
 STYLE_RE = re.compile(r"<style[\s\S]*?</style>", re.I)
 UNSAFE_HTML_RE = re.compile(r"<\s*(script|iframe|object|embed)\b|<[a-z][^>]*\son\w+\s*=|javascript:", re.I)
 IMAGE_TYPES = {"image/png": "png", "image/jpeg": "jpg"}
@@ -132,6 +133,8 @@ def write_code_pages(out_root, skip_dirs):
                 continue
             path = name if rel_dir == "." else f"{rel_dir}/{name}"
             text = notebook_page(out_root, path) if ext == ".ipynb" else script_page(out_root, path, LANGS[ext])
+            # terminal colour codes and other control characters never reach the page
+            text = CONTROL_RE.sub("", ANSI_RE.sub("", text))
             with open(os.path.join(out_root, path + ".md"), "w", encoding="utf-8") as f:
                 f.write(text)
             count += 1
