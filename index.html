@@ -30,18 +30,18 @@
     font-family: 'JetBrains Mono', monospace !important;
     font-size: 0.92em !important;
   }
-  /* Dark mode: .docs/theme-toggle.js sets data-theme on <html>. */
-  html[data-theme="dark"] .markdown-section code {
+  /* Themes: .docs/theme-toggle.js sets data-theme (which one) and data-mode (light or dark) on <html>. */
+  html[data-mode="dark"] .markdown-section code {
     color: #ff8fc0; /* default pink is 3.3:1 on the code background */
   }
-  html[data-theme="dark"] .alert.callout.attention .title { color: #ff7b86; }
-  html[data-theme="dark"] .alert.callout.important .title { color: #b79af5; }
+  html[data-mode="dark"] .alert.callout.attention .title { color: #ff7b86; }
+  html[data-mode="dark"] .alert.callout.important .title { color: #b79af5; }
   /* Mermaid draws arrows and lines in black, invisible on the dark page */
-  html[data-theme="dark"] .mermaid .flowchart-link,
-  html[data-theme="dark"] .mermaid .edgePath path {
+  html[data-mode="dark"] .mermaid .flowchart-link,
+  html[data-mode="dark"] .mermaid .edgePath path {
     stroke: #c9d4de !important;
   }
-  html[data-theme="dark"] .mermaid marker path {
+  html[data-mode="dark"] .mermaid marker path {
     fill: #c9d4de !important;
     stroke: #c9d4de !important;
   }
@@ -49,6 +49,7 @@
   @media (max-width: 768px) {
     :root { --scroll-padding-top: 100px; }
     #theme-toggle { right: auto; left: 40px; top: 12px; }
+    #theme-menu { right: auto; left: 40px; top: 54px; }
     section.content { padding-top: 80px !important; }
     /* keep the theme toggle (moon) off the first heading */
     .markdown-section > h1:first-of-type { margin-top: 40px !important; }
@@ -106,19 +107,27 @@
     --sidebar-toggle-color: var(--accent);
     --sidebar-toggle-margin-block: 12px;
   }
-  html[data-theme="dark"] {
-    --color-bg: #091a28;
-    --color-text: #c4ccd3;
-    --border-color: #2b4257;
-    --link: #5cc99a;
-    color-scheme: dark;
-  }
+  /* One block per theme. --link is the text colour for links (4.5:1 or better on that ground). */
   html[data-theme="light"] { color-scheme: light; }
+  html[data-theme="sepia"] {
+    --color-bg: #f4ecd8; --color-text: #3b2f20; --border-color: #d9cbb0; --link: #7a4a0e;
+    --blockquote-color: #5c4d3a; color-scheme: light;
+  }
+  html[data-theme="dark"] {
+    --color-bg: #16181c; --color-text: #d3d6da; --border-color: #3a3f46; --link: #5cc99a; color-scheme: dark;
+  }
+  html[data-theme="midnight"] {
+    --color-bg: #091a28; --color-text: #c4ccd3; --border-color: #2b4257; --link: #5cc99a; color-scheme: dark;
+  }
+  html[data-theme="black"] {
+    --color-bg: #000000; --color-text: #d4d4d4; --border-color: #383838; --link: #5cc99a; color-scheme: dark;
+  }
   .sidebar-nav li.active > a, .sidebar-nav a.active { color: var(--link) !important; }
   /* Light theme text that was under 4.5:1 */
-  html:not([data-theme="dark"]) { --blockquote-color: #55616d; }
-  html:not([data-theme="dark"]) .markdown-section code { color: #a8420a; }
-  html:not([data-theme="dark"]) .alert.callout.tip .title { color: #1f7a35; }
+  html[data-mode="light"] { --blockquote-color: #55616d; }
+  html[data-mode="light"] .markdown-section code { color: #a8420a; }
+  html[data-mode="light"] .alert.callout.tip .title { color: #1f7a35; }
+  html[data-mode="light"] .alert.callout.important .title { color: #6a38b8; }
   :root { --link: #1a7f52; } /* 5:1 on white; the old green was 2.5:1 */
   /* Say the page colours outright, so nothing around the page (an embedding
      frame, a browser default) can leave dark text on a dark ground or the reverse. */
@@ -156,6 +165,19 @@
     background: transparent; color: var(--color-text); cursor: pointer; opacity: 0.8;
   }
   #theme-toggle:hover { opacity: 1; }
+  #theme-menu {
+    position: absolute; top: 114px; right: 16px; z-index: 61; min-width: 170px; padding: 6px;
+    background: var(--color-bg); color: var(--color-text); border: 1px solid var(--border-color);
+    border-radius: 10px; box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+  }
+  #theme-menu[hidden] { display: none; }
+  #theme-menu button {
+    display: flex; align-items: center; gap: 10px; width: 100%; padding: 8px 10px; border: 0; border-radius: 6px;
+    background: transparent; color: inherit; font: inherit; font-size: 0.95rem; text-align: left; cursor: pointer;
+  }
+  #theme-menu button:hover { background: var(--color-mono-2, rgba(128, 128, 128, 0.15)); }
+  #theme-menu button[aria-checked="true"] { font-weight: 700; color: var(--link); }
+  #theme-menu .swatch { width: 18px; height: 18px; border-radius: 50%; border: 1px solid var(--border-color); flex: none; }
   #theme-toggle svg { display: block; }
   /* Sidebar groups (see .docs/sidebar-groups.js) */
   .sidebar-nav li.group > strong { cursor: pointer; position: relative; }
