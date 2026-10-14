@@ -48,7 +48,7 @@
   /* Phones: the top bar (menu, theme toggle) overlaps the page title. */
   @media (max-width: 768px) {
     :root { --scroll-padding-top: 100px; }
-    #theme-toggle { right: auto; left: 8px; top: 12px; }
+    #theme-toggle { right: auto; left: 40px; top: 12px; }
     section.content { padding-top: 80px !important; }
     /* keep the theme toggle (moon) off the first heading */
     .markdown-section > h1:first-of-type { margin-top: 40px !important; }
@@ -151,7 +151,7 @@
   nav.app-nav { background: var(--color-bg); border-radius: 8px; padding: 2px 10px; }
   /* Theme button (see .docs/theme-toggle.js) */
   #theme-toggle {
-    position: absolute; top: 74px; right: 16px; z-index: 5;
+    position: absolute; top: 74px; right: 16px; z-index: 60;
     width: 36px; height: 36px; padding: 6px; border: 0; border-radius: 50%;
     background: transparent; color: var(--color-text); cursor: pointer; opacity: 0.8;
   }
