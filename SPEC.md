@@ -104,7 +104,8 @@ The root SHOULD contain only genuinely repository-wide files:
 README.md          — repo overview AND Docsify homepage
 SPEC.md
 CLAUDE.md
-LICENSE             — not added yet; the license choice is open in issue #76
+LICENSE             — CC BY 4.0, for writing and diagrams
+LICENSE-CODE        — MIT, for code (scripts, notebooks, .docs/ tooling)
 .gitignore
 index.html           — Docsify entry point + config (window.$docsify)
 .docs/               — site infrastructure:

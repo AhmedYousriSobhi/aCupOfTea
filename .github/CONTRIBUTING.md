@@ -36,3 +36,5 @@ Add `--dry-run` to see the result without writing anything. Only Python 3 is nee
 ## Sending it
 
 Commit on a branch cut from `dev` and open a pull request into `dev`.
+
+By contributing, you agree that your writing is licensed under [CC BY 4.0](../LICENSE) and your code under the [MIT License](../LICENSE-CODE), as described in the README.
