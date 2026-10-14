@@ -108,9 +108,22 @@
   }
   html[data-theme="dark"] {
     --color-bg: #091a28;
-    --color-text: #b4b4b4;
-    --border-color: #0d2538;
+    --color-text: #c4ccd3;
+    --border-color: #2b4257;
+    --link: #5cc99a;
+    color-scheme: dark;
   }
+  html[data-theme="light"] { color-scheme: light; }
+  .sidebar-nav li.active > a, .sidebar-nav a.active { color: var(--link) !important; }
+  /* Light theme text that was under 4.5:1 */
+  html:not([data-theme="dark"]) { --blockquote-color: #55616d; }
+  html:not([data-theme="dark"]) .markdown-section code { color: #a8420a; }
+  html:not([data-theme="dark"]) .alert.callout.tip .title { color: #1f7a35; }
+  :root { --link: #1a7f52; } /* 5:1 on white; the old green was 2.5:1 */
+  /* Say the page colours outright, so nothing around the page (an embedding
+     frame, a browser default) can leave dark text on a dark ground or the reverse. */
+  html, body { background: var(--color-bg); color: var(--color-text); }
+  .sidebar input::placeholder, .search input::placeholder { color: var(--color-text); opacity: 0.7; }
   /* Docsify 5 layout: keep the text column inside the screen. */
   .markdown-section {
     width: auto !important;
@@ -131,7 +144,7 @@
   aside.page-outline p { margin: 0 0 6px; opacity: 0.65; text-transform: uppercase; letter-spacing: 0.06em; font-size: 0.72rem; }
   aside.page-outline a { display: block; padding: 2px 0; color: var(--textColor, inherit); opacity: 0.75; text-decoration: none; }
   aside.page-outline a.sub { padding-left: 12px; }
-  aside.page-outline a.active { opacity: 1; color: var(--accent, #42b983); font-weight: 600; }
+  aside.page-outline a.active { opacity: 1; color: var(--link); font-weight: 600; }
   .markdown-section pre, .markdown-section table, .markdown-section .math-block { max-width: 100%; box-sizing: border-box; }
   html, body { overflow-x: hidden; }
   /* The top menu stays on screen in Docsify 5; give it a background so text does not run through it */
@@ -155,7 +168,7 @@
   .sidebar-nav li.group.collapsed > ul { display: none; }
   /* Look of Docsify 4 kept: green bold links, no underline, compact menu */
   .markdown-section a:not(.anchor) {
-    color: var(--accent); font-weight: 600; text-decoration: none !important;
+    color: var(--link); font-weight: 600; text-decoration: none !important;
     background: none !important;
   }
   .markdown-section a:not(.anchor):hover { text-decoration: underline !important; }
