@@ -16,9 +16,8 @@
     return s.replace(/!\[[^\]]*\]\([^)]*\)/g, ' ').replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
       .replace(/[`*_>|#]/g, ' ').replace(/\s+/g, ' ').trim();
   }
-  function build() {
-    if (loading) return loading;
-    loading = fetch(typeof window.$docsify.loadSidebar === 'string' ? window.$docsify.loadSidebar : './.docs/_sidebar.md').then(function (r) { return r.text(); }).then(function (side) {
+  function crawl() {
+    return fetch(typeof window.$docsify.loadSidebar === 'string' ? window.$docsify.loadSidebar : './.docs/_sidebar.md').then(function (r) { return r.text(); }).then(function (side) {
       var pages = [], seen = {};
       side.replace(/\[([^\]]+)\]\(([^)\s]+\.md)\)/g, function (_, label, path) {
         path = path.replace(/^\/+/, '');
@@ -45,11 +44,26 @@
               .filter(function (s) { return (s.head || s.body) && !/^table of contents?$/i.test(s.head); });
             var first = p.secs.filter(function (s) { return s.body.length > 40; })[0];
             if (first) p.desc = first.body.slice(0, 120);
-            p.hay = (p.label + ' ' + p.title + ' ' + p.path.replace(/[-_\/.]/g, ' ')).toLowerCase();
-            return p;
+            return hay(p);
           });
       }));
-    }).then(function (pages) { index = pages; return pages; });
+    });
+  }
+  function hay(p) { p.hay = (p.label + ' ' + p.title + ' ' + p.path.replace(/[-_\/.]/g, ' ')).toLowerCase(); return p; }
+  // The deployed site ships one prebuilt file (see .docs/tools/build_search_index.py).
+  // A local preview has none, so fall back to reading every page.
+  function prebuilt() {
+    return fetch('./.docs/search-index.json').then(function (r) {
+      if (!r.ok) throw new Error('no prebuilt index');
+      return r.json();
+    }).then(function (pages) {
+      if (!Array.isArray(pages) || !pages.length) throw new Error('empty prebuilt index');
+      return pages.map(hay);
+    });
+  }
+  function build() {
+    if (loading) return loading;
+    loading = prebuilt().catch(crawl).then(function (pages) { index = pages; return pages; });
     return loading;
   }
   function terms(q) {
