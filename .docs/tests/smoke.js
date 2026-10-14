@@ -183,6 +183,18 @@ async function run(browser, base, label, size, phone) {
     }
     const after = await x();
     c('phone menu opens', before < 0 && after >= 0, `x ${before} -> ${after}`);
+    // a page link in the menu opens the page and closes the menu
+    try {
+      await page.evaluate(() => { const g = [...document.querySelectorAll('.sidebar-nav li.group > strong')].find((s) => /Tips/.test(s.textContent)); if (g) g.click(); });
+      await page.waitForTimeout(300);
+      await page.tap('.sidebar-nav a[href*="tips/kaggle"]', { timeout: 3000 });
+      await page.waitForTimeout(1200);
+      const after = await page.evaluate(() => ({ hash: location.hash, open: document.querySelector('aside.sidebar').classList.contains('show') }));
+      c('a page link in the phone menu opens the page and closes the menu', /kaggle/.test(after.hash) && !after.open, JSON.stringify(after));
+      await go('');
+      await page.tap('.sidebar-toggle-button', { timeout: 2000 }).catch(() => {});
+      await page.waitForTimeout(800);
+    } catch (e) { c('a page link in the phone menu opens the page and closes the menu', false, e.message.split('\n')[0]); }
     // the menu stays open: on a phone the search box lives inside it
   }
   try {

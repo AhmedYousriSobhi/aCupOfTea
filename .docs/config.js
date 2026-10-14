@@ -34,10 +34,11 @@ window.$docsify = Object.assign(window.$docsify || {}, {
   },
 });
 
-// On phones the sidebar covers the page: close it after a section link is
-// tapped so the reader lands on the heading, not on the menu.
+// On phones the sidebar covers the page: close it after any page or section
+// link in it is tapped (and "Surprise me"), so the reader sees the page they
+// chose, not the menu. Docsify 5 leaves the menu open otherwise.
 document.addEventListener('click', function (e) {
-  var link = e.target.closest && e.target.closest('.sidebar-nav a.section-link');
+  var link = e.target.closest && e.target.closest('.sidebar-nav a[href^="#/"], #surprise-me');
   if (!link || window.innerWidth > 768) return;
   setTimeout(function () {
     var open = document.querySelector('aside.sidebar.show');
