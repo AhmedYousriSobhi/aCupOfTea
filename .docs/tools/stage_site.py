@@ -6,6 +6,8 @@ Copies the repo to --out, then in the COPY only:
     rendering and its search index stay clean;
   * appends a "Related" block to pages that have relations, from
     .docs/generated/related.json (run generate_index.py first);
+  * writes .docs/last-updated.json (page -> date of its last git commit) for
+    the page footer, when the checkout has git history;
   * writes .docs/search-index.json (build_search_index.py) so the site search
     loads one file instead of fetching every page.
 Source files are never modified. Local `docsify serve` on the repo itself
@@ -17,6 +19,7 @@ import argparse
 import json
 import os
 import shutil
+import subprocess
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -39,6 +42,22 @@ def render_related(block):
         parts += [f"- [{i['title']}](/{i['path']})" for i in items]
         parts.append("")
     return "\n".join(parts)
+
+
+def last_updated(src, pages):
+    """{page: 'YYYY-MM-DD'} from one git log pass; {} when there is no usable history."""
+    try:
+        log = subprocess.run(["git", "-C", src, "log", "--format=@%cs", "--name-only", "-M"],
+                             capture_output=True, text=True, check=True).stdout
+    except (OSError, subprocess.CalledProcessError):
+        return {}
+    wanted, dates, day = set(pages), {}, None
+    for line in log.splitlines():
+        if line.startswith("@"):
+            day = line[1:]
+        elif line in wanted and line not in dates:
+            dates[line] = day  # newest commit comes first
+    return dates
 
 
 def stage(src, out):
@@ -89,12 +108,18 @@ def stage(src, out):
             with open(full, "w", encoding="utf-8", newline="") as f:
                 f.write(new)
 
+    dates = last_updated(src, list_pages(out, set(subs)))
+    if dates:
+        with open(os.path.join(out, ".docs/last-updated.json"), "w", encoding="utf-8") as f:
+            json.dump(dates, f, sort_keys=True, separators=(",", ":"))
+
     n_idx, idx_size = build_search_index(out)
 
     open(os.path.join(out, ".nojekyll"), "w").close()
     open(os.path.join(out, MARKER), "w").close()
     print(f"staged {out}: stripped front matter from {stripped} pages, "
           f"appended Related to {appended} pages, "
+          f"last-updated dates for {len(dates)} pages, "
           f"search index of {n_idx} pages ({idx_size // 1024} KB)")
 
 
