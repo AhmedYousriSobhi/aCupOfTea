@@ -24,7 +24,7 @@ LANGS = {".py": "python", ".sh": "bash", ".r": "r", ".sql": "sql", ".js": "javas
 MAX_OUTPUT_LINES = 60
 ANSI_RE = re.compile(r"\x1b\[[0-9;]*[A-Za-z]")
 STYLE_RE = re.compile(r"<style[\s\S]*?</style>", re.I)
-UNSAFE_HTML_RE = re.compile(r"<(script|iframe|object|embed)\b|\son\w+\s*=", re.I)
+UNSAFE_HTML_RE = re.compile(r"<\s*(script|iframe|object|embed)\b|<[a-z][^>]*\son\w+\s*=|javascript:", re.I)
 IMAGE_TYPES = {"image/png": "png", "image/jpeg": "jpg"}
 
 
@@ -102,7 +102,8 @@ def notebook_page(out_root, path):
     for cell in nb.get("cells", []):
         src = text_of(cell.get("source"))
         if cell.get("cell_type") == "markdown":
-            page.append(src)
+            # a cell with script-like HTML is shown as text, never run on the site
+            page.append(fence(src, "markdown") if UNSAFE_HTML_RE.search(src) else src)
         elif cell.get("cell_type") == "code":
             if src.strip():
                 page.append(fence(src, lang))

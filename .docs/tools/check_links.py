@@ -5,6 +5,10 @@
 - A ./ or ../ link breaks on the site (CLAUDE.md section 7) and is an error.
 - An image (![](images/x.png)) is relative to the page and must exist.
 - Git submodule paths, external links, #anchors, mailto: and code are skipped.
+- Raw HTML that would run in readers' browsers is an error outside code:
+  <script>, <iframe>, <object>, <embed>, on...= handlers in a tag, and
+  javascript: links. A deliberate case is allowed by an
+  `<!-- allow-html -->` comment on the line before it.
 
 Standard library only. Exits 1 on any problem.
 
@@ -23,6 +27,12 @@ LINK_RE = re.compile(r"(!?)\[(?:[^\[\]]|\[[^\]]*\])*\]\(\s*<?([^)\s>]+)>?(?:\s+(
 FENCE_RE = re.compile(r"^\s*(```|~~~)")
 INLINE_CODE_RE = re.compile(r"`[^`\n]*`")
 EXTERNAL_RE = re.compile(r"^(?:[a-z][a-z0-9+.-]*:|//)", re.I)
+UNSAFE_HTML = [
+    (re.compile(r"<\s*(script|iframe|object|embed)\b", re.I), "raw <{0}> runs in readers' browsers"),
+    (re.compile(r"<[a-z][^>]*\s(on[a-z]+)\s*=", re.I), "{0}= handler runs in readers' browsers"),
+    (re.compile(r"(?:\]\(|href\s*=\s*[\"']?)\s*(javascript):", re.I), "{0}: link runs in readers' browsers"),
+]
+ALLOW = "<!-- allow-html -->"
 
 
 def links_in(text):
@@ -38,6 +48,26 @@ def links_in(text):
             yield n, bool(m.group(1)), m.group(2)
 
 
+def unsafe_html(text):
+    """Yield (line, message) for script-like raw HTML outside fenced and inline code."""
+    fence, allowed = False, False
+    for n, line in enumerate(text.splitlines(), 1):
+        if FENCE_RE.match(line):
+            fence = not fence
+            continue
+        if fence:
+            continue
+        if ALLOW in line:
+            allowed = True
+            continue
+        plain = INLINE_CODE_RE.sub(lambda c: " " * len(c.group(0)), line)
+        for rx, msg in UNSAFE_HTML:
+            m = rx.search(plain)
+            if m and not allowed:
+                yield n, m.group(0).strip()[:40], msg.format(m.group(1).lower())
+        allowed = False
+
+
 def exists(root, rel):
     path = os.path.join(root, rel)
     return os.path.exists(path) or os.path.exists(path + ".md")
@@ -49,6 +79,8 @@ def check(root):
     for page in list_pages(root, subs):
         with open(os.path.join(root, page), encoding="utf-8") as fh:
             text = fh.read()
+        for line, found, msg in unsafe_html(text):
+            problems.append((page, line, found, msg + f"; remove it, or put {ALLOW} on the line before"))
         for line, is_image, target in links_in(text):
             if target.startswith("#") or EXTERNAL_RE.match(target):
                 continue
@@ -79,7 +111,7 @@ def main():
         print(f"{page}:{line}: error: {target}: {msg}")
         if gha:
             print(f"::error file={page},line={line}::{target}: {msg}")
-    print(f"{len(problems)} broken link(s)")
+    print(f"{len(problems)} broken link(s) or unsafe HTML")
     return 1 if problems else 0
 
 
