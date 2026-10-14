@@ -4,6 +4,8 @@
 Copies the repo to --out, then in the COPY only:
   * strips YAML front matter from every page (LF or CRLF), so Docsify
     rendering and its search index stay clean;
+  * puts the reading time ("6 min read") under the title of every content page
+    (not the homepage and not folder indexes with a "## Contents" list);
   * puts a one-line "Read first / See also / Read next" strip under the title of pages
     that have relations, from
     .docs/generated/related.json (run generate_index.py first);
@@ -29,12 +31,14 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from build_search_index import build as build_search_index  # noqa: E402
 from common import list_pages, split_front_matter, submodule_paths  # noqa: E402
+from generate_index import reading_time_min  # noqa: E402
 
 MARKER = ".stage-site"
 RELATED_MARK = "<!-- related-block -->"
 RECENT_RE = re.compile(r"<!-- recent:start -->.*?<!-- recent:end -->", re.S)
 RECENT_COUNT = 6
 NOT_RECENT = {"README.md", "SPEC.md", "CLAUDE.md"}
+INDEX_RE = re.compile(r"^## +Contents\s*$", re.M)
 
 
 def render_related(block):
@@ -50,6 +54,14 @@ def render_related(block):
     if not groups:
         return ""
     return "\n".join([RELATED_MARK, '<div class="related-strip">', "", "  \u00b7  ".join(groups), "", "</div>", ""])
+
+
+def render_reading_time(path, body):
+    """'N min read' block for a content page; '' for the root docs and folder indexes."""
+    if path in NOT_RECENT or (path.endswith("README.md") and INDEX_RE.search(body)):
+        return ""
+    # same marker as the related strip: search drops it from the page text
+    return f'{RELATED_MARK}\n<div class="reading-time">{reading_time_min(body)} min read</div>\n'
 
 
 def put_related(text, strip):
@@ -146,7 +158,7 @@ def stage(src, out):
         with open(rpath, encoding="utf-8") as f:
             related = json.load(f)
 
-    stripped = appended = 0
+    stripped = appended = timed = 0
     for path in list_pages(out, set(subs)):
         full = os.path.join(out, path)
         with open(full, encoding="utf-8", newline="") as f:
@@ -156,9 +168,12 @@ def stage(src, out):
         if split is not None:
             new = text[split[1]:]
             stripped += 1
+        under_title = render_reading_time(path, new)
+        timed += bool(under_title)
         if path in related:
-            new = put_related(new, render_related(related[path]))
+            under_title += render_related(related[path])
             appended += 1
+        new = put_related(new, under_title)
         if new != text:
             with open(full, "w", encoding="utf-8", newline="") as f:
                 f.write(new)
@@ -182,7 +197,7 @@ def stage(src, out):
     open(os.path.join(out, ".nojekyll"), "w").close()
     open(os.path.join(out, MARKER), "w").close()
     print(f"staged {out}: stripped front matter from {stripped} pages, "
-          f"related strip on {appended} pages, "
+          f"reading time on {timed} pages, related strip on {appended} pages, "
           f"{len(recent)} recent pages, "
           f"last-updated dates for {len(dates)} pages, "
           f"search index of {n_idx} pages ({idx_size // 1024} KB)")

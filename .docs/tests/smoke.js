@@ -60,9 +60,11 @@ async function run(browser, base, label, size, phone) {
     nav: document.querySelectorAll('.sidebar-nav li').length,
     recent: /Recently added/.test(document.body.textContent),
     cards: document.querySelectorAll('table.stack').length,
+    time: !!document.querySelector('.reading-time'),
   }));
   c('home page renders with the menu', home.h1 === 'aCupOfTea' && home.nav > 50, JSON.stringify(home));
   c('home page lists recently added pages', home.recent);
+  c('home page has no reading time', !home.time);
   if (phone) c('tables become cards on a phone', home.cards >= 1, 'stack tables: ' + home.cards);
 
   await go('fields/deep-learning/concepts/convolution', 4000);
@@ -96,6 +98,8 @@ async function run(browser, base, label, size, phone) {
     const h1 = document.querySelector('.markdown-section h1');
     return { links: el ? el.querySelectorAll('a').length : 0, underTitle: !!el && !!h1 && h1.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING && el.getBoundingClientRect().top - h1.getBoundingClientRect().bottom < 120 };
   });
+  const time = await page.evaluate(() => (document.querySelector('.markdown-section h1 ~ .reading-time') || {}).textContent || '');
+  c('reading time is shown under the title', /^\d+ min read$/.test(time.trim()), time);
   c('related pages are linked right under the title', strip.links >= 1 && strip.underTitle, JSON.stringify(strip));
 
   await go('fields/benchmarks/hpl');
