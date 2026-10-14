@@ -4,7 +4,8 @@
 Copies the repo to --out, then in the COPY only:
   * strips YAML front matter from every page (LF or CRLF), so Docsify
     rendering and its search index stay clean;
-  * appends a "Related" block to pages that have relations, from
+  * puts a one-line "Read first / See also / Read next" strip under the title of pages
+    that have relations, from
     .docs/generated/related.json (run generate_index.py first);
   * writes .docs/last-updated.json (page -> date of its last git commit) for
     the page footer, when the checkout has git history;
@@ -13,7 +14,7 @@ Copies the repo to --out, then in the COPY only:
   * writes .docs/search-index.json (build_search_index.py) so the site search
     loads one file instead of fetching every page.
 Source files are never modified. Local `docsify serve` on the repo itself
-shows neither the stripping nor the Related block; serve --out to see them.
+shows neither the stripping nor the related-pages strip; serve --out to see them.
 
 Usage: python3 .docs/tools/stage_site.py --out _site [--src PATH]
 """
@@ -37,17 +38,33 @@ NOT_RECENT = {"README.md", "SPEC.md", "CLAUDE.md"}
 
 
 def render_related(block):
-    parts = [RELATED_MARK, "", "---", "", "## Related", ""]
-    for key, label in (("prerequisites", "Prerequisites"),
-                       ("required_by", "Required by"),
-                       ("related", "See also")):
+    """One line of links for the top of a page: read first, see also, read next."""
+    groups = []
+    for key, label in (("prerequisites", "Read first"),
+                       ("related", "See also"),
+                       ("required_by", "Read next")):
         items = block.get(key) or []
-        if not items:
-            continue
-        parts += [f"**{label}**", ""]
-        parts += [f"- [{i['title']}](/{i['path']})" for i in items]
-        parts.append("")
-    return "\n".join(parts)
+        if items:
+            links = ", ".join(f"[{i['title']}](/{i['path']})" for i in items)
+            groups.append(f"**{label}:** {links}")
+    if not groups:
+        return ""
+    return "\n".join([RELATED_MARK, '<div class="related-strip">', "", "  \u00b7  ".join(groups), "", "</div>", ""])
+
+
+def put_related(text, strip):
+    """Insert the strip right under the page's first # heading (at the top when there is none)."""
+    if not strip:
+        return text
+    lines = text.splitlines(keepends=True)
+    fence = False
+    for i, line in enumerate(lines):
+        if line.lstrip().startswith(("```", "~~~")):
+            fence = not fence
+        if not fence and line.startswith("# "):
+            nl = "\r\n" if line.endswith("\r\n") else "\n"
+            return "".join(lines[:i + 1]) + nl + strip.replace("\n", nl) + nl + "".join(lines[i + 1:])
+    return strip + "\n" + text
 
 
 def last_updated(src, pages):
@@ -140,7 +157,7 @@ def stage(src, out):
             new = text[split[1]:]
             stripped += 1
         if path in related:
-            new = new.rstrip("\r\n") + "\n\n" + render_related(related[path]) + "\n"
+            new = put_related(new, render_related(related[path]))
             appended += 1
         if new != text:
             with open(full, "w", encoding="utf-8", newline="") as f:
@@ -165,7 +182,7 @@ def stage(src, out):
     open(os.path.join(out, ".nojekyll"), "w").close()
     open(os.path.join(out, MARKER), "w").close()
     print(f"staged {out}: stripped front matter from {stripped} pages, "
-          f"appended Related to {appended} pages, "
+          f"related strip on {appended} pages, "
           f"{len(recent)} recent pages, "
           f"last-updated dates for {len(dates)} pages, "
           f"search index of {n_idx} pages ({idx_size // 1024} KB)")
