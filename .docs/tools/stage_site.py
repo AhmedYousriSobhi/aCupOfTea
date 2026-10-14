@@ -8,6 +8,8 @@ Copies the repo to --out, then in the COPY only:
     .docs/generated/related.json (run generate_index.py first);
   * writes .docs/last-updated.json (page -> date of its last git commit) for
     the page footer, when the checkout has git history;
+  * fills the homepage block between <!-- recent:start --> and <!-- recent:end -->
+    with the pages most recently added (git history, renames excluded);
   * writes .docs/search-index.json (build_search_index.py) so the site search
     loads one file instead of fetching every page.
 Source files are never modified. Local `docsify serve` on the repo itself
@@ -18,6 +20,7 @@ Usage: python3 .docs/tools/stage_site.py --out _site [--src PATH]
 import argparse
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -28,6 +31,9 @@ from common import list_pages, split_front_matter, submodule_paths  # noqa: E402
 
 MARKER = ".stage-site"
 RELATED_MARK = "<!-- related-block -->"
+RECENT_RE = re.compile(r"<!-- recent:start -->.*?<!-- recent:end -->", re.S)
+RECENT_COUNT = 6
+NOT_RECENT = {"README.md", "SPEC.md", "CLAUDE.md"}
 
 
 def render_related(block):
@@ -58,6 +64,38 @@ def last_updated(src, pages):
         elif line in wanted and line not in dates:
             dates[line] = day  # newest commit comes first
     return dates
+
+
+def recent_pages(src, pages, count=RECENT_COUNT):
+    """[(date, page)] newest first: pages added (not renamed) in git history."""
+    try:
+        log = subprocess.run(["git", "-C", src, "log", "--diff-filter=A", "-M", "--format=@%cs",
+                              "--name-only", "--", "*.md"],
+                             capture_output=True, text=True, check=True).stdout
+    except (OSError, subprocess.CalledProcessError):
+        return []
+    wanted = {p for p in pages if p not in NOT_RECENT and not p.endswith("/README.md")}
+    found, day = [], None
+    for line in log.splitlines():
+        if line.startswith("@"):
+            day = line[1:]
+        elif line in wanted:
+            found.append((day, line))
+    return found[:count]
+
+
+def page_title(out, page):
+    with open(os.path.join(out, page), encoding="utf-8") as f:
+        for line in f:
+            if line.startswith("# "):
+                return line[2:].strip().rsplit(" - ", 1)[-1].strip()
+    return os.path.basename(page)[:-3]
+
+
+def render_recent(out, recent):
+    lines = ["<!-- recent:start -->", "", "## \U0001F195 Recently added", ""]
+    lines += [f"- {day} \u00b7 [{page_title(out, page)}](/{page})" for day, page in recent]
+    return "\n".join(lines + ["", "<!-- recent:end -->"])
 
 
 def stage(src, out):
@@ -108,6 +146,15 @@ def stage(src, out):
             with open(full, "w", encoding="utf-8", newline="") as f:
                 f.write(new)
 
+    recent = recent_pages(src, list_pages(out, set(subs)))
+    home = os.path.join(out, "README.md")
+    if recent and os.path.exists(home):
+        with open(home, encoding="utf-8", newline="") as f:
+            text = f.read()
+        if RECENT_RE.search(text):
+            with open(home, "w", encoding="utf-8", newline="") as f:
+                f.write(RECENT_RE.sub(lambda m: render_recent(out, recent), text, count=1))
+
     dates = last_updated(src, list_pages(out, set(subs)))
     if dates:
         with open(os.path.join(out, ".docs/last-updated.json"), "w", encoding="utf-8") as f:
@@ -119,6 +166,7 @@ def stage(src, out):
     open(os.path.join(out, MARKER), "w").close()
     print(f"staged {out}: stripped front matter from {stripped} pages, "
           f"appended Related to {appended} pages, "
+          f"{len(recent)} recent pages, "
           f"last-updated dates for {len(dates)} pages, "
           f"search index of {n_idx} pages ({idx_size // 1024} KB)")
 
