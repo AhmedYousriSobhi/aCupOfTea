@@ -50,6 +50,7 @@
     :root { --scroll-padding-top: 100px; }
     #theme-toggle { right: auto; left: 40px; top: 12px; }
     #theme-menu { right: auto; left: 40px; top: 54px; }
+    body:has(.sidebar.show) #theme-toggle, body:has(.sidebar.show) #theme-menu { display: none; }
     section.content { padding-top: 80px !important; }
     /* keep the theme toggle (moon) off the first heading */
     .markdown-section > h1:first-of-type { margin-top: 40px !important; }
@@ -123,6 +124,12 @@
     --color-bg: #000000; --color-text: #d4d4d4; --border-color: #383838; --link: #5cc99a; color-scheme: dark;
   }
   .sidebar-nav li.active > a, .sidebar-nav a.active { color: var(--link) !important; }
+  /* "You are here" in the menu: set by .docs/sidebar-groups.js from the address */
+  .sidebar-nav a.here {
+    color: var(--link) !important; font-weight: 700;
+    background: color-mix(in srgb, var(--link) 14%, transparent);
+    border-left: 3px solid var(--link); border-radius: 0 6px 6px 0; padding-left: 8px; margin-left: -11px;
+  }
   /* Light theme text that was under 4.5:1 */
   html[data-mode="light"] { --blockquote-color: #55616d; }
   html[data-mode="light"] .markdown-section code { color: #a8420a; }

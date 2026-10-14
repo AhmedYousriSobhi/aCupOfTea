@@ -120,10 +120,10 @@ async function run(browser, base, label, size, phone) {
     await page.evaluate(() => document.querySelector('.srch-panel a.srch-item').click());
     await page.waitForTimeout(2000);
     const where = await page.evaluate(() => {
-      const here = document.querySelector('.sidebar-nav li.active > a');
+      const here = document.querySelector('.sidebar-nav a.here') || document.querySelector('.sidebar-nav li.active > a');
       return { found: !!here, hidden: !!here && !!here.closest('li.group.collapsed, li.group.collapsed *') && !!here.closest('ul') && [...document.querySelectorAll('.sidebar-nav li.group.collapsed')].some((g) => g.contains(here)) };
     });
-    c('after a search result the menu shows where the page is', where.found && !where.hidden, JSON.stringify(where));
+    c('after a search result the menu marks and shows the current page', where.found && !where.hidden && (await page.locator('.sidebar-nav a.here').count()) === 1, JSON.stringify(where));
   } catch (e) { c('search finds pages', false, 'search box not usable: ' + e.message.split('\n')[0]); }
 
   const menu = await page.evaluate(() => !!document.getElementById('theme-toggle'));

@@ -26,6 +26,11 @@
   }
   function decorate() {
     var here = currentLink();
+    // mark the page being read ourselves (Docsify's own "active" mark comes late or not at all)
+    Array.prototype.forEach.call(document.querySelectorAll('.sidebar-nav a.here'), function (a) {
+      if (a !== here) a.classList.remove('here');
+    });
+    if (here) here.classList.add('here');
     Array.prototype.forEach.call(groups(), function (li) {
       var sub = li.querySelector(':scope > ul:not(.app-sub-sidebar)');
       if (!sub) return;
@@ -46,6 +51,14 @@
       }
     }
   }
+  // opening the menu (on a phone it was closed when the page changed) brings the entry into view again
+  function watchSidebar() {
+    var side = document.querySelector('aside.sidebar');
+    if (!side || side.__groupsWatched) return;
+    side.__groupsWatched = true;
+    new MutationObserver(function () { if (side.classList.contains('show')) setTimeout(reveal, 260); })
+      .observe(side, { attributes: true, attributeFilter: ['class'] });
+  }
   window.addEventListener('hashchange', function () {
     setTimeout(reveal, 50);
     setTimeout(reveal, 400); // Docsify redraws the menu after the page loads
@@ -59,6 +72,6 @@
   });
   var cfg = window.$docsify = window.$docsify || {};
   cfg.plugins = [].concat(cfg.plugins || [], function (hook) {
-    hook.doneEach(function () { reveal(); setTimeout(reveal, 300); });
+    hook.doneEach(function () { watchSidebar(); reveal(); setTimeout(reveal, 300); });
   });
 })();
