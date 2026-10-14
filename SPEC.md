@@ -124,7 +124,7 @@ index.html           — Docsify entry point + config (window.$docsify)
                          icons/ (favicon.svg, PNG sizes, site.webmanifest)
                          tests/smoke.js (browser smoke test of the staged site)
                          metadata/ (schema.yaml, taxonomy.yaml)
-                         tools/ (validate, generate_index, stage_site, build_search_index, check_links, update_recent, check_pins, new_page)
+                         tools/ (validate, generate_index, stage_site, code_pages, build_search_index, check_links, update_recent, check_pins, new_page)
                          generated/ (indexes and Explore pages, generated)
 .github/             — workflows (validate metadata, smoke test, pin check; deploy a staged copy to gh-pages), dependabot.yml (action updates) and CONTRIBUTING.md
 .gitmodules          — project/knowledge submodules

@@ -9,6 +9,8 @@ Copies the repo to --out, then in the COPY only:
   * puts a one-line "Read first / See also / Read next" strip under the title of pages
     that have relations, from
     .docs/generated/related.json (run generate_index.py first);
+  * writes a readable page next to every code file and notebook
+    (name.py -> name.py.md, the address a Docsify link asks for; code_pages.py);
   * writes .docs/last-updated.json (page -> date of its last git commit) for
     the page footer, when the checkout has git history;
   * fills the homepage block between <!-- recent:start --> and <!-- recent:end -->
@@ -30,6 +32,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from build_search_index import build as build_search_index  # noqa: E402
+from code_pages import write_code_pages  # noqa: E402
 from common import list_pages, split_front_matter, submodule_paths  # noqa: E402
 from generate_index import reading_time_min  # noqa: E402
 
@@ -178,6 +181,8 @@ def stage(src, out):
             with open(full, "w", encoding="utf-8", newline="") as f:
                 f.write(new)
 
+    n_code = write_code_pages(out, subs)
+
     recent = recent_pages(src, list_pages(out, set(subs)))
     home = os.path.join(out, "README.md")
     if recent and os.path.exists(home):
@@ -198,7 +203,7 @@ def stage(src, out):
     open(os.path.join(out, MARKER), "w").close()
     print(f"staged {out}: stripped front matter from {stripped} pages, "
           f"reading time on {timed} pages, related strip on {appended} pages, "
-          f"{len(recent)} recent pages, "
+          f"{n_code} code and notebook pages, {len(recent)} recent pages, "
           f"last-updated dates for {len(dates)} pages, "
           f"search index of {n_idx} pages ({idx_size // 1024} KB)")
 

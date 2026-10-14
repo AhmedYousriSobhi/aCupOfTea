@@ -109,6 +109,17 @@ async function run(browser, base, label, size, phone) {
   await go('fields/benchmarks/stream');
   c('alerts render', (await page.locator('.alert.callout').count()) >= 1);
 
+  for (const [kind, route] of [['script', 'programming/software-goals/robustness/script_RectangleClass.py'],
+    ['notebook', 'programming/software-goals/robustness/nb_Robustness.ipynb']]) {
+    await go(route);
+    const code = await page.evaluate(() => ({
+      head: !!document.querySelector('.code-file a[href*="github.com"]'),
+      blocks: document.querySelectorAll('.markdown-section pre[data-lang="python"]').length,
+      missing: /This page is not here/.test(document.body.textContent),
+    }));
+    c(`a ${kind} link opens a readable page`, code.head && code.blocks >= 1 && !code.missing, JSON.stringify(code));
+  }
+
   await go('this-page-does-not-exist');
   c('missing page shows the friendly 404', /This page is not here/.test(await page.locator('.markdown-section').innerText()));
 

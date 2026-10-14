@@ -103,6 +103,8 @@ On phones (up to 768px) a tap on a page image opens it large in a pan-and-pinch 
 
 On phones, tables with 2-4 columns show each row as a card and wider tables scroll sideways (`.docs/phone-tables.js` adds the classes, the CSS is in `index.html`); desktop is unchanged.
 
+Code files and notebooks linked from a page (`/folder/script.py`, `/folder/notebook.ipynb`) open as readable pages on the site: Docsify asks for `script.py.md`, and `stage_site.py` writes that file in the staged copy (`.docs/tools/code_pages.py`: the source highlighted; a notebook's text, code, outputs and output pictures, with links to GitHub and Colab). Link code files root-absolute like pages; nothing else is needed.
+
 Images after the first on a page are lazy-loaded (`.docs/lazy-images.js` adds `loading="lazy"` before the page is inserted), so long pages fetch pictures as you scroll.
 
 The homepage has a "Recently added" block between `<!-- recent:start -->` and `<!-- recent:end -->` in `README.md`; `stage_site.py` fills it at deploy time with the newest added pages from git history (renames do not count), and the committed file keeps the empty markers.
