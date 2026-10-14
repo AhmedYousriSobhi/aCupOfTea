@@ -108,6 +108,20 @@ Contributions are welcome: a correction, a clearer explanation or a whole new to
 
 Found something off but no time to fix it? [Open an issue](https://github.com/AhmedYousriSobhi/aCupOfTea/issues). That helps too.
 
+## 📜 License
+
+© 2023–2026 Ahmed Yousri Sobhi and aCupOfTea contributors.
+
+- **Writing and diagrams** (the pages) are licensed under [CC BY 4.0](https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/LICENSE). You may share and adapt them, including commercially, as long as you credit **aCupOfTea** and link back to the page.
+- **Code** (scripts, notebooks and the site tooling in `.docs/`) is licensed under the [MIT License](https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/LICENSE-CODE).
+- **Not covered:** material that already carries its own license or belongs to someone else keeps it:
+  - `fields/generative-ai/machine-translator/nmt_with_attention.ipynb` (TensorFlow Authors, Apache 2.0)
+  - the linked project repositories (git submodules)
+  - the CSV datasets
+  - images and quotes taken from other sites
+
+By contributing, you agree that your contribution is licensed under the same terms.
+
 ## 💬 Sip and support
 
 If a page saved you some time, ⭐ the repo or share it with someone who'd enjoy it. Feedback and ideas are always welcome.
