@@ -61,6 +61,12 @@
   }
   .markdown-section .math-block { overflow-x: auto; padding: 0.2em 0; }
   /* Links to related pages, one line under the page title (added when the site is built) */
+  /* Reading progress bar and back-to-top button (.docs/reading-progress.js) */
+  #read-progress { position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 70; background: var(--theme-color); transform-origin: 0 50%; transform: scaleX(0); pointer-events: none; }
+  #back-to-top { position: fixed; right: 16px; bottom: 20px; z-index: 55; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--borderColor, #ddd); background: var(--color-bg); color: var(--theme-color); display: flex; align-items: center; justify-content: center; padding: 0; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+  #back-to-top svg { flex: none; }
+  #back-to-top[hidden] { display: none; }
+  @media (max-width: 768px) { body:has(.sidebar.show) #back-to-top { display: none; } }
   /* Pages built for code files and notebooks (see .docs/tools/code_pages.py) */
   .markdown-section h1 { overflow-wrap: anywhere; }
   .markdown-section .code-file p { margin: 0 0 1.4em; padding: 0.35em 0.8em; border-left: 3px solid var(--theme-color); font-size: 0.92em; }
@@ -178,7 +184,9 @@
   aside.page-outline a.sub { padding-left: 12px; }
   aside.page-outline a.active { opacity: 1; color: var(--link); font-weight: 600; }
   .markdown-section pre, .markdown-section table, .markdown-section .math-block { max-width: 100%; box-sizing: border-box; }
-  html, body { overflow-x: hidden; }
+  html, body { overflow-x: clip; }  /* clip, not hidden: hidden would make <body> the scroller and window scroll events would stop */
+  /* the top menu and the GitHub corner stay on screen while the page scrolls */
+  nav.app-nav, .github-corner { position: fixed; }
   /* The top menu stays on screen in Docsify 5; give it a background so text does not run through it */
   nav.app-nav { background: var(--color-bg); border-radius: 8px; padding: 2px 10px; }
   /* Theme button (see .docs/theme-toggle.js) */
@@ -282,6 +290,7 @@
   <script src="./.docs/lazy-images.js"></script>
   <script src="./.docs/page-footer.js"></script>
   <script src="./.docs/page-outline.js"></script>
+  <script src="./.docs/reading-progress.js"></script>
   <!-- Two-group search (replaces the built-in Docsify search) -->
   <script src="./.docs/search.js"></script>
   <!-- Docsify v5 -->
