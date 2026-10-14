@@ -52,9 +52,9 @@ Another challenge is that reinforcement learning algorithms can be sensitive to 
 # Mathematical Games
 In this paper from 1960: http://cs.williams.edu/~freund/cs136-073/GardnerHexapawn.pdf
 
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/d5c39880-f086-43aa-a227-38204c747519)
+![image](images/basics-01.png)
 
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/ac0f5cf0-f143-4426-b003-67b5ee4d2b69)
+![image](images/basics-02.png)
 
 # Components of RL
 In RL, there are three main components:

@@ -15,7 +15,7 @@ relations:
 ---
 
 # Deep Learning - Concepts - Basics
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/f0c2a453-6da1-43cf-846d-3c9425b5996b)
+![image](images/basics-01.png)
 
 In this article, we'll start explaining the important basics in deep learning
 
@@ -104,7 +104,7 @@ So Let's define a deep network to be :
 DEEP Networks are gigantic Non-Linear or implicit sophisticated look-up table.
 ```
 
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/c1c6b6f4-a4ef-4243-bf09-88d640a40969)
+![image](images/basics-02.png)
 
 Here are some of the key features of a neural network:
 
@@ -138,7 +138,7 @@ Assume removing the intercept, then the line will go through the origin wherein 
 An activation function is a function that is applied to the output of a neuron in a neural network. It is used to introduce non-linearity into the network, which is essential for learning complex patterns.
 
 ## Linear Function
-![image](https://github.com/AhmedYousriSobhi/insightMe/assets/66730765/83c07aba-45d4-4d1a-a392-3b4e1259e1e2)
+![image](images/basics-03.png)
 
 The linear activation function is not commonly used in neural networks. It is a simple function that outputs the input value unchanged. This means that the output of each neuron is simply a linear combination of the inputs. As a result, the network cannot learn any non-linear relationships between the inputs and the outputs.
 
@@ -157,7 +157,7 @@ The ReLU function is a non-linear function that outputs the input value if it is
 
 It is computationally efficient and does not suffer from the vanishing gradient problem, but it can lead to the dying ReLU problem.
 
-![image](https://github.com/AhmedYousriSobhi/insightMe/assets/66730765/15a061bb-5677-44a6-ac11-af8d8bc30e2f)
+![image](images/basics-04.png)
 
 #### What is Dying Relu Problem?
 - It can occur when the weights of neural network are initialized in a way that causes many of the neurons to output zero. This can happen if the weights are initialized to be too small or if the data is not well-scalled.
@@ -175,7 +175,7 @@ The Leaky ReLU function is a variant of the ReLU function that outputs a small p
 
 This prevents the dying ReLU problem.
 
-![image](https://github.com/AhmedYousriSobhi/insightMe/assets/66730765/7ae77c0c-a7f0-4850-8115-e565fb2a14b4)
+![image](images/basics-05.png)
 
 ### Sigmoid
 The sigmoid function is a special activation function because it has a few properties that make it useful for neural networks.
@@ -183,7 +183,7 @@ The sigmoid function is a special activation function because it has a few prope
 - Smooth and continuous: The sigmoid function is smooth and continuous, which makes it easy to differentiate. This is important for the backpropagation algorithm, which is used to update the weights of the network during training.
 - Interpretable: The sigmoid function is relatively easy to interpret, which can be helpful for debugging and understanding the behavior of the network.
 
-![sigmoid](https://github.com/AhmedYousriSobhi/insightMe/assets/66730765/1c9404c7-1888-4265-ba9b-76a7b2f8c2da)
+![sigmoid](images/basics-06.png)
 
 However, the sigmoid function also has some limitations.
 - Vanishing gradient problem: The sigmoid function has a derivative that approaches zero as the input approaches 0 or 1. This can make it difficult for the network to learn, as the updates to the weights become very small.
@@ -199,7 +199,7 @@ Here are some of the reasons why the tanh function is preferred over the sigmoid
 - Sensitivity to outliers: The tanh function is less sensitive to outliers than the sigmoid function. This is because the tanh function is symmetric around 0, while the sigmoid function is not.
 - Smoothness: The tanh function is a smooth function, which makes it easier to train neural networks. The sigmoid function is not as smooth, which can make it more difficult to train neural networks.
 
-![image](https://github.com/AhmedYousriSobhi/insightMe/assets/66730765/d5f4bfd9-7223-490e-a2f0-60d1137b5c9a)
+![image](images/basics-07.png)
 
 Here are some cases where the tanh function is preferred over the sigmoid function:
 - Regression problems: The tanh function is a good choice for regression problems where the output should be a continuous value.
@@ -215,7 +215,7 @@ The softmax function is a special activation function because it is used in clas
 
 The softmax function is a versatile and useful activation function. It is a good choice for classification problems with multiple output classes.
 
-![image](https://github.com/AhmedYousriSobhi/insightMe/assets/66730765/e4213589-5943-4b58-8003-4caafad0d414)
+![image](images/basics-08.png)
 
 Here are some of the reasons why the softmax function is special:
 - Normalization: The softmax function is a normalization function, which means that the sum of the outputs is always equal to 1. This is important for classification problems, where the output should represent the probability of the input belonging to a particular class.
@@ -246,7 +246,7 @@ The absolute activation function is a simple function, but it can be useful in s
 
 The absolute activation function is also less sensitive to the vanishing gradient problem than some other activation functions, such as the sigmoid function. __The vanishing gradient problem is a problem that can occur when the derivatives of the activation function approach zero__. This can make it difficult for the network to learn, as the updates to the weights become very small.
 
-![image](https://github.com/AhmedYousriSobhi/insightMe/assets/66730765/87408356-e779-46ef-bbca-f85bcde915a1)
+![image](images/basics-09.png)
 
 However, the absolute activation function also has some limitations. It is not as interpretable as some other activation functions, such as the sigmoid function. This can make it more difficult to debug and understand the behavior of the network.
 
@@ -256,9 +256,9 @@ Here are some cases where the absolute activation function is used:
 - Image processing: The absolute activation function can be used to remove noise from images.
 
 #### Can ABS() be used as activation function?
-![image](https://github.com/AhmedYousriSobhi/insightMe/assets/66730765/ce98192b-df96-4da0-9088-204c5e33dc82)
+![image](images/basics-10.png)
 
-![image](https://github.com/AhmedYousriSobhi/insightMe/assets/66730765/fec721ff-b6fc-4e25-8943-aa9259bbaeb5)
+![image](images/basics-11.png)
 
 To conclude: If you will use abs(x), adjust your calculation such that, when a zero input is used, add some small fraction to zero to make it differentiable.
 
@@ -288,7 +288,7 @@ For Output Laysers: Depends on the task whether it is classification or regressi
   - Multi-Class Classifier: SoftMax.
 
 # The PERCEPTRION ERROR
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/7cbc3b81-3ac1-4129-9e12-6807593f3e59)
+![image](images/basics-12.png)
 
 # Gradient in Neural Network
 ## 1- What is a Gradient?
@@ -332,7 +332,7 @@ Here are some of the most common variations of gradient descent:
 - RMSprop: RMSprop is a technique that is similar to Adagrad, but it is more efficient. It works by averaging the squared gradients over time.
 
 # Vanishing/Exploding Gradient
-![image](https://github.com/AhmedYousriSobhi/insightMe/assets/66730765/f5d744d2-83c5-45aa-9d93-3e9daf6abad7)
+![image](images/basics-13.png)
 
 The vanishing gradient and exploding gradient problems are two common problems that can occur in neural networks. The vanishing gradient problem occurs when the gradients of the activation function become very small as the network learns. This can make it difficult for the network to learn, as the updates to the weights become very small.
 
@@ -366,11 +366,11 @@ There are a number of solutions to the exploding gradient problem.
 
 ## 1.3- Common Solution for Both [Vanishing/Exploding] Gradient
 1. Batch Normalization: It occurs after the activation function.
-    ![image](https://github.com/AhmedYousriSobhi/insightMe/assets/66730765/0aa8a7ee-c737-4ae3-9eac-b93b83c32ed4)
-    ![image](https://github.com/AhmedYousriSobhi/insightMe/assets/66730765/dae1df13-d1bc-4cc6-914d-7aab6c457447)
+    ![image](images/basics-14.png)
+    ![image](images/basics-15.png)
     - Note: We can't use normalizer paramters of the test set, and instead we use the parameters of the training set, As if we use the test set normalizer parameters, there will be __Data Leakage__.
 2. Weight Initialization: 
-    ![image](https://github.com/AhmedYousriSobhi/insightMe/assets/66730765/874d52a3-6947-484c-b8ad-531142995fe4)
+    ![image](images/basics-16.png)
 
 ## 1.4- Summary
 Here is a table that summarizes the key differences between the two problems:
@@ -384,7 +384,7 @@ Here is a table that summarizes the key differences between the two problems:
 
 
 ## 2- Vanishing/Exploding Gradient in NN
-![image](https://github.com/AhmedYousriSobhi/insightMe/assets/66730765/917be651-4416-498b-ae30-64188dbd9762)
+![image](images/basics-17.png)
 
 If we start with weights so large, so y-pred will have total of large value due to weight multiplication. Same if we start with weights so small.
 This will lead us to Exploding and vanishing of gradient respectively .
@@ -402,78 +402,78 @@ Initialize the weights and biases to be zero:
 - This will cause the inputs of the tanh to also be very large, thus causing gradients to be close to zero. The optimization algorithm will thus become slow.
 
 # Regularization
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/a8808f25-1ec8-4e80-a21e-d9d847654466)
+![image](images/basics-18.png)
 
 # Normalization
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/df5de503-2d57-4081-b8f5-2cafc63f36b9)
+![image](images/basics-19.png)
 
 # Parameters Initialization
-![image](https://github.com/AhmedYousriSobhi/insightMe/assets/66730765/7a7d5cd3-8ab9-46a0-8b24-b874d2c2eb1d)
+![image](images/basics-20.png)
 
 # Gradient Checking
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/e176e115-c10f-455a-9b6e-4f87a226661c)
+![image](images/basics-21.png)
 
 # Optimizers
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/f33a9f39-4784-4f6a-83b1-2e40f313cef9)
+![image](images/basics-22.png)
 
 ## Mini-Batch
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/d641dbe7-5996-499f-bed6-60d8c2d610b6)
+![image](images/basics-23.png)
 
 ## Exponential Weighted Average
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/e2028315-967b-408d-b91d-064dba175f77)
+![image](images/basics-24.png)
 
 ## Momentum GD
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/ebf7fb38-f529-495f-b58b-1ad5354055c9)
+![image](images/basics-25.png)
 
 ## RMSPROP GD
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/5bc03172-77ff-4149-800c-6f6d18fcb418)
+![image](images/basics-26.png)
 
 ## ADAM
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/7e76f734-9f22-4030-a76e-2dcd64798082)
+![image](images/basics-27.png)
 
 ## Learning Rate
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/b553002f-a591-4d36-b6c2-c5cfcd378132)
+![image](images/basics-28.png)
 
 ## ADAGRAD
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/eadda4e7-5df6-48cb-a9a4-72a6387dc5dc)
+![image](images/basics-29.png)
 
 ## Local Minima
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/3236fef4-d76f-4c26-82a7-9fbc3493441d)
+![image](images/basics-30.png)
 
 ## Transfer Learning
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/4da95f84-bf2e-4cd6-80c2-e61110ee3e0b)
+![image](images/basics-31.png)
 
 # Hyper-Parameters Tuning
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/2c0fb4e3-cdb5-4411-8deb-8d61a03ebfda)
+![image](images/basics-32.png)
 
 # Batch Normalization
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/3a54e166-239f-44eb-bbb9-5f38be712f8f)
+![image](images/basics-33.png)
 
 # Multi-Class Classification
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/25daacc3-43e1-4198-9f16-f56b619f094f)
+![image](images/basics-34.png)
 
 # BIAS - Variance
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/68ce6a70-b616-4659-8f9f-c79bab3b9b54)
+![image](images/basics-35.png)
 
 # Single Number Evaluation Metric
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/341da905-b0d8-4c66-839b-2823fa6afebd)
+![image](images/basics-36.png)
 
 # Avoidable Bias
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/7402b25f-a4dc-4e28-b518-409abd8881f6)
+![image](images/basics-37.png)
 
 # Error Analysis
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/f27ae9c2-88bb-4e0a-a2d0-71987381e76c)
+![image](images/basics-38.png)
 
 Tip: Build your system quickly then iterate.
 
 # Mismatched Training & Dev/Test Sets
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/d384acf1-01c0-4dba-98b8-2d96de07a55b)
+![image](images/basics-39.png)
 
 # Learning From Multiple Tasks
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/aa70563e-3fd0-41e6-946c-56fb18715c12)
+![image](images/basics-40.png)
 
 # End-To-End Deep Learning
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/bf085b8a-07e7-4a69-b954-b58e8a7fea19)
+![image](images/basics-41.png)
 
 End-to_end deep leanring is a techinque where a single neural network trained to perform a task directly from the input data, without any manual feature extraction. This is in contrast to traditional machine learning approaches , which typically involve manually extraction features from the input data and then training a seperate machine learning model on those features.
 
@@ -488,7 +488,7 @@ We could create a single neaural network to be able to detect the input image an
 
 Alternatively, We could uses a two stage approach, where the first stage is face detection for the input image, and extract that face, then pass this output face detected into a second stage which is face recognition, where the detected face is comapred with a predefined database of labeld faces vectores and measure the similarity between these two faces. 
 
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/d4b8a3a1-4ac6-4817-a0ad-6c1415248040)
+![image](images/basics-42.png)
 
 Two reasons for why two stages NN is better than one stage NN to determine Identity of employee:
 - Each of two problem you’re solving is much simpler (one to detect faces, second to determine  employee).

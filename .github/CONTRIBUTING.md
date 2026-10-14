@@ -30,7 +30,7 @@ Add `--dry-run` to see the result without writing anything. Only Python 3 is nee
 - Use a lowercase-kebab-case file name: `my-topic.md`.
 - Start the page with one `# Heading`. The sidebar shows the text after the last hyphen, so `# Deep Learning - Attention` appears as **Attention**.
 - Write links root-absolute: `/fields/deep-learning/concepts/basics.md`.
-- Commit images next to the page instead of linking to other sites.
+- Keep your own images in the repo: put them in an `images/` folder next to the page and link them relative to the page, `![caption](images/my-topic-01.png)`. Root-absolute paths do not work for images on the site. Pictures that belong to someone else stay links to their source.
 - Add the page to its folder's `README.md` and run `cd .docs && ./gen_sidebar.sh`.
 
 ## Sending it

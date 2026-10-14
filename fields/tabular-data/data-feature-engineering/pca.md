@@ -69,7 +69,7 @@ Explained Variance|One of the most common methods is to examine the explained va
 |Trial and Error|You can experiment with different values of n_components and evaluate the impact on your specific analysis or modeling task. This can involve assessing model performance, visualization, or interpretability.
 |Incremental PCA (IPCA)|If memory constraints are an issue, you can consider using Incremental PCA, which allows you to perform PCA on subsets of your data.</br> This can be useful for large datasets that don't fit into memory.
 
-![Determine PCA Componenets](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/22b48719-4e82-4e8d-8d0f-6150c94f585c)
+![Determine PCA Componenets](images/pca-01.jpg)
 
 In practice, it's often a combination of these methods, and the final choice may involve some trade-offs between dimensionality reduction and information retention. It's a good practice to document your decision-making process and, if applicable, report the number of components chosen and the rationale behind it in your analysis or project documentation.
 

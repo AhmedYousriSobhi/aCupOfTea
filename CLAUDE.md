@@ -51,7 +51,7 @@ New names use `lowercase-kebab-case`. Avoid `camelCase`, `PascalCase`, mixed cas
 
 Kebab-case applies to **directories and `.md` pages**. Code, notebook, and data files (`.py`, `.ipynb`, `.csv`, ...) keep their names: Python modules can't be kebab-case, and notebooks/scripts reference each other and their data by filename. `README.md` stays `README.md`.
 
-Write internal links **root-absolute** (`/fields/benchmarks/hpl.md`). They resolve on both GitHub and Docsify (`relativePath: false`); `./` and `../` links break on the site.
+Write internal links **root-absolute** (`/fields/benchmarks/hpl.md`). They resolve on both GitHub and Docsify (`relativePath: false`); `./` and `../` links break on the site. **Images are the exception**: Docsify prepends the page's folder to root-absolute image paths, so link images relative to the page (`images/name.png`, in an `images/` folder next to it).
 
 ## 8. Directory Rules
 
@@ -90,7 +90,9 @@ Keep the root clean: `README.md`, `SPEC.md`, `CLAUDE.md`, `LICENSE` (CC BY 4.0, 
 
 `.docs/_sidebar.md` and `.docs/_navbar.md` are **generated** from the file tree by `.docs/gen_sidebar.sh` / `.docs/gen_navbar.sh`, which CI re-runs on every push to `main`. **Never hand-edit them**: CI overwrites manual edits. To change the site's navigation, change the structure, the page's `# H1` heading (used as its label), or the generator. After any structural change, regenerate them locally and commit the output so the repo matches what CI publishes.
 
-Site search is `.docs/search.js` (loaded from `index.html`, replacing Docsify's built-in search): results come in two groups, page-title matches and passages inside pages, built from the pages listed in the generated sidebar, so new pages are searchable with no extra step.
+Site search is `.docs/search.js` (loaded from `index.html`, replacing Docsify's built-in search): results come in two groups, page-title matches and passages inside pages, built from the pages listed in the generated sidebar, so new pages are searchable with no extra step. On the deployed site it loads one prebuilt `.docs/search-index.json` (written by `stage_site.py` via `build_search_index.py`, not committed); without it (local preview) it fetches every page. `build_search_index.py` mirrors the page parsing in `search.js`; change both together.
+
+On phones (up to 768px) a tap on a page image opens it large in a pan-and-pinch layer (`.docs/image-viewer.js`, loaded from `index.html`); desktop keeps Docsify's zoom-image plugin.
 
 Generator behavior worth knowing: folders without any `.md` page are skipped; git submodules (not checked out in CI) are rendered as external links to their repositories; a `README.md` titled `Overview` is listed first.
 

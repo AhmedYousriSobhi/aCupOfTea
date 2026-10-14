@@ -136,7 +136,7 @@ Also called the harmonic mean, the F1-score is a nice metric to use because it u
 $$F1-score = \frac{2*(Precision * Recall)}{Precision + Recall}$$
 
 ## Receiver Operating Characteristic curve (ROC curve):
-![ROC Curve](https://github.com/AhmedYousriSobhi/Intro-to-ML-with-Tensorflow-Scholarship-Program/assets/66730765/e0516d9a-7aac-4f13-be1c-376bc18e7369)
+![ROC Curve](images/ml-supervised-classification-01.png)
 
 The ROC curve indicates the senstivity or the recall out of all of our actual positives (how many did we get correct on y-axis),and then the false positive rate or (1 - Specificity) on our x-axis.
 
@@ -534,14 +534,14 @@ Using anchors can help us identify patterns in the data that we wouldn't have no
 ## Model Complexity vs. Interpretability
 There is often a trade-off between model complexity and interpretability. Simple models like linear regression are highly interpretable but may not capture complex patterns. Complex models like deep neural networks can offer high accuracy but are less interpretable.
 
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/3ea4768c-ccde-4f24-bbf2-f591a8f36c9b)
+![image](images/ml-supervised-classification-02.png)
 
 Note: As the model complexity increases, the required amount of training data increases as well.
 
 ## Model Interpretability Vs. Accuracy
 The trade-off between accuracy and interpretability is a fundamental consideration in machine learning and model development. It involves finding the right balance between building highly accurate but complex models and models that are more interpretable but potentially less accurate. 
 
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/468f8b2a-deb3-42b6-947d-303c181cacc9)
+![image](images/ml-supervised-classification-03.png)
 
 Here's a detailed description of this trade-off:
 

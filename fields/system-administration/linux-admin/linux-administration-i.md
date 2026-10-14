@@ -375,7 +375,7 @@ Let's break down how you might approach learning the content of the first four c
 |Chapter 16: Comprehensive Review|A comprehensive review chapter helps you consolidate and test your knowledge of the topics covered in the preceding chapters.
 
 # Chapter 1: Accessing the Command Line
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/dd44a59a-76f9-4624-a075-e1c8b31758a1)
+![image](images/linux-administration-i-01.png)
 
 Let's dive deeper into the first chapter, "Accessing the Command Line." This chapter serves as an introduction to the command-line interface in Linux, an essential skill for any Linux administrator. I'll provide you with a tutorial-style breakdown of the key topics covered in this chapter.
 
@@ -407,7 +407,7 @@ Let's dive deeper into the first chapter, "Accessing the Command Line." This cha
 |**Objective**| To teach you how to access the command line from the desktop environment (GNOME).
 |**Workspace**|Open a terminal emulator from the GNOME desktop, you can typically find it in the applications menu or by using a keyboard shortcut, often **Ctrl + Alt + T**. 
 
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/3a86672e-86e8-42c7-b193-6087c8d5ac28)
+![image](images/linux-administration-i-02.png)
 
 ### Command: Ctrl + Alt + T
 - The terminal emulator provides a graphical interface for the command line.
@@ -439,11 +439,11 @@ The Bash shell is your command-line interface. You'll use it to execute commands
 
 Example commands include ls (list files) and pwd (print working directory). These commands help you navigate and inspect the file system.
 
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/3c5fc020-4aae-45ff-8684-f0c8a1a8b5a0)
+![image](images/linux-administration-i-03.png)
 
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/b1b58747-25ea-4d47-8a6a-193e049b9eb6)
+![image](images/linux-administration-i-04.png)
 
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/e3941b3d-72a1-49b5-9b3b-29ce8ad36e75)
+![image](images/linux-administration-i-05.png)
 
 ### Tips
 - Create aliases for frequently used commands to save time and reduce typing errors. For example, alias ll='ls -l' makes ll equivalent to ls -l.
@@ -481,7 +481,7 @@ How do you navigate through directories using the command line, and what are som
 - Answer: Use commands like cd to change directories and ls to list files. File management commands include cp, mv, and rm.
 
 # Chapter 2: Managing Files From the Command Line
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/41c2c3cc-0ecc-4737-972d-f46861153ba2)
+![image](images/linux-administration-i-06.png)
 
 In this chapter, you'll embark on a journey through the intricacies of managing files from the Linux command line. Effective file management is a fundamental skill for Linux administrators and users alike. Understanding the structure of the Linux file system, how to locate files, and mastering key file management commands are essential. From organizing your own projects to finding important data efficiently, these skills will serve you well in your Linux journey.
 
@@ -505,23 +505,23 @@ Common directories in the Linux file system hierarchy include:
 
 |Directory|Details|
 |--|--|
-|/ (Root Directory)| The root of the file system. Everything on a Linux system, including all files and directories, stems from this directory.</br>![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/141a5e7d-b176-4152-8517-4bdd8931bcc2)
-|/bin (Binary Programs)| Essential binary files required for booting and repairing the system. It contains fundamental commands, such as ls (list files), cp (copy), and mv (move).</br>![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/c4bbeaa2-de57-4c59-b730-5eadccbc8822)
-|/boot (Boot Files)| Contains boot loader and kernel files necessary for system startup.</br>![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/38848143-6194-4e98-bfad-f756e0fd8710)
-|/dev (Device Files)| Contains special files representing devices connected to the system, such as hard drives, partitions, and peripheral devices.</br>Within the /dev directory, you can find various devices, including disks and disk drives, which are known as block devices in Linux. The hard disks (mass storage devices) connected to the system are represented by device files such as /dev/sda (1,2,3, etc.), while USB devices are denoted by device files like /dev/usb (1,2,3, etc.).</br>![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/42662a52-6b75-44d8-83ef-a3cfe78f2022)
-|/etc (System Configuration Files)| Houses system-wide configuration files and scripts. Important system configuration files, including network settings and software configurations, are stored here. These configuration files control various aspects of the Linux system, including network configuration, authentication, services, and hardware settings.</br>![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/92dc0681-0a41-4158-9f8d-d2f188022839)</br>Important files housed in the /etc direcotry:</br>&ensp;&ensp;&ensp;passwd: contains user account information.</br>&ensp;&ensp;&ensp;hosts: responsible for Domain Name System (DNS) resolution.</br>&ensp;&ensp;&ensp;fstab: contains file system mount information.</br>&ensp;&ensp;&ensp;Sudoers: contains the information for sudo users.
-|/home (User Home Directories)| Contains user home directories. Each user has a subdirectory in /home where they can store personal files and configuration settings.</br>![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/9ab4483c-fd1b-4cd0-85a5-dc720d6bb964)
-|/lib (Libraries)| Essential shared libraries, including the C programming code library, and kernel modules used by various programs. These files are essential in booting the file system and executing commands within the root file system.</br>Shared libraries are identified by their file extension *.so. The Windows equivalent would be a Dynamic Link Library (.DLL). These libraries are vital for the normal functioning of the system.</br>![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/a17c4673-973e-4ead-95ab-ce83c0c7d97a)
-|/media (Removable Media)| Used for mounting removable media devices like USB drives and optical discs. When a removable device is attached, it is typically mounted in a subdirectory here.</br>![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/d6257d41-a43c-4081-97ea-aa7db642313d)
+|/ (Root Directory)| The root of the file system. Everything on a Linux system, including all files and directories, stems from this directory.</br>![image](images/linux-administration-i-07.png)
+|/bin (Binary Programs)| Essential binary files required for booting and repairing the system. It contains fundamental commands, such as ls (list files), cp (copy), and mv (move).</br>![image](images/linux-administration-i-08.png)
+|/boot (Boot Files)| Contains boot loader and kernel files necessary for system startup.</br>![image](images/linux-administration-i-09.png)
+|/dev (Device Files)| Contains special files representing devices connected to the system, such as hard drives, partitions, and peripheral devices.</br>Within the /dev directory, you can find various devices, including disks and disk drives, which are known as block devices in Linux. The hard disks (mass storage devices) connected to the system are represented by device files such as /dev/sda (1,2,3, etc.), while USB devices are denoted by device files like /dev/usb (1,2,3, etc.).</br>![image](images/linux-administration-i-10.png)
+|/etc (System Configuration Files)| Houses system-wide configuration files and scripts. Important system configuration files, including network settings and software configurations, are stored here. These configuration files control various aspects of the Linux system, including network configuration, authentication, services, and hardware settings.</br>![image](images/linux-administration-i-11.png)</br>Important files housed in the /etc direcotry:</br>&ensp;&ensp;&ensp;passwd: contains user account information.</br>&ensp;&ensp;&ensp;hosts: responsible for Domain Name System (DNS) resolution.</br>&ensp;&ensp;&ensp;fstab: contains file system mount information.</br>&ensp;&ensp;&ensp;Sudoers: contains the information for sudo users.
+|/home (User Home Directories)| Contains user home directories. Each user has a subdirectory in /home where they can store personal files and configuration settings.</br>![image](images/linux-administration-i-12.png)
+|/lib (Libraries)| Essential shared libraries, including the C programming code library, and kernel modules used by various programs. These files are essential in booting the file system and executing commands within the root file system.</br>Shared libraries are identified by their file extension *.so. The Windows equivalent would be a Dynamic Link Library (.DLL). These libraries are vital for the normal functioning of the system.</br>![image](images/linux-administration-i-13.png)
+|/media (Removable Media)| Used for mounting removable media devices like USB drives and optical discs. When a removable device is attached, it is typically mounted in a subdirectory here.</br>![image](images/linux-administration-i-14.png)
 |/mnt (Mount Points)| A directory often used for mounting temporary file systems or network shares. System administrators can choose to mount various resources in subdirectories under /mnt.
-|/opt (Optional Software)| A location for optional or add-on software packages, often from third-party sources.</br>![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/c3aa1587-2b7a-4961-b445-a79bfbfab149)
+|/opt (Optional Software)| A location for optional or add-on software packages, often from third-party sources.</br>![image](images/linux-administration-i-15.png)
 |/proc (Kernel and Process Information)| A pseudo-file system that provides information about running processes and kernel parameters. It is used for interacting with and monitoring system processes.
-|/root (Root User's Home)| The home directory of the root user, typically used for system administration tasks.</br>![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/b26dfeb3-5ebf-4ffa-8fd1-aaa29e7dcbae)
+|/root (Root User's Home)| The home directory of the root user, typically used for system administration tasks.</br>![image](images/linux-administration-i-16.png)
 |/sbin (System Binaries)| Contains essential system administration binaries. These binaries are required for system maintenance and recovery.
 |/srv (Service Data)| This directory is used for data related to services provided by the system, such as web server content.
-|/tmp (Temporary Files)| A directory for storing temporary files created by various applications and users. The contents of /tmp are typically volatile and often deleted on system reboot.</br>By using the /tmp directory, programs can share temporary data without encumbering other directories, thus promoting system stability.</br>![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/9b69f336-e17f-4122-b66a-fabf6d37aa72)
-|/usr (User Binaries and Libraries)| Contains user binaries, libraries, and data files. This directory can be shared among multiple systems over a network. The contents within the /usr directory are usually read-only. </br>![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/4806b894-4063-4ef7-a07c-114f1050cb8f)</br>Important Direcotries found in the /usr directory include the following:</br>&ensp;&ensp;&ensp;~ /usr/bin: non-essential binary files for user programs (if you can’t find a user binary under /bin, look in /usr/bin)</br>&ensp;&ensp;&ensp;~ /usr/sbin: non-essential binaries intended for use by the system administrator (if you can’t find a system binary under /sbin, look in /usr/sbin).</br>&ensp;&ensp;&ensp;~ /usr/lib: shared libraries used by /usr/bin and /usr/sbin</br>&ensp;&ensp;&ensp;~ /usr/include: C++ header files for C++ development</br>&ensp;&ensp;&ensp;~ /usr/local: user programs that you install from source (e.g., when you install Apache from source, it goes under /usr/local/apache2)</br>&ensp;&ensp;&ensp;~ /usr/src: Linux kernel sources, header-files, and documentation</br>&ensp;&ensp;&ensp;~ /usr/share: architecture-dependent data that is shared by applications
-|/var (Variable Data)| Used for variable data files that change during the operation of the system, such as log files, mail spools, and other frequently changing data. It also includes system and application logs.</br>Other subdirectories within the /var directory include /var/spool for storing data that is awaiting processing by programs or users, such as print jobs queues and mail queues; /var/tmp for holding temporary files that are typically not preserved during system reboots; and /var/cache, which contains cached data from applications.</br>![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/72ea5e2c-d267-4d02-b632-21084b925650)
+|/tmp (Temporary Files)| A directory for storing temporary files created by various applications and users. The contents of /tmp are typically volatile and often deleted on system reboot.</br>By using the /tmp directory, programs can share temporary data without encumbering other directories, thus promoting system stability.</br>![image](images/linux-administration-i-17.png)
+|/usr (User Binaries and Libraries)| Contains user binaries, libraries, and data files. This directory can be shared among multiple systems over a network. The contents within the /usr directory are usually read-only. </br>![image](images/linux-administration-i-18.png)</br>Important Direcotries found in the /usr directory include the following:</br>&ensp;&ensp;&ensp;~ /usr/bin: non-essential binary files for user programs (if you can’t find a user binary under /bin, look in /usr/bin)</br>&ensp;&ensp;&ensp;~ /usr/sbin: non-essential binaries intended for use by the system administrator (if you can’t find a system binary under /sbin, look in /usr/sbin).</br>&ensp;&ensp;&ensp;~ /usr/lib: shared libraries used by /usr/bin and /usr/sbin</br>&ensp;&ensp;&ensp;~ /usr/include: C++ header files for C++ development</br>&ensp;&ensp;&ensp;~ /usr/local: user programs that you install from source (e.g., when you install Apache from source, it goes under /usr/local/apache2)</br>&ensp;&ensp;&ensp;~ /usr/src: Linux kernel sources, header-files, and documentation</br>&ensp;&ensp;&ensp;~ /usr/share: architecture-dependent data that is shared by applications
+|/var (Variable Data)| Used for variable data files that change during the operation of the system, such as log files, mail spools, and other frequently changing data. It also includes system and application logs.</br>Other subdirectories within the /var directory include /var/spool for storing data that is awaiting processing by programs or users, such as print jobs queues and mail queues; /var/tmp for holding temporary files that are typically not preserved during system reboots; and /var/cache, which contains cached data from applications.</br>![image](images/linux-administration-i-19.png)
 
 ### Tips
 - Use descriptive and well-organized directory structures for your own projects.
@@ -718,7 +718,7 @@ Q: Explain the purpose of file permissions in Linux and provide an example of ch
 - Answer: File permissions control who can access and modify files. You can change file permissions using the chmod command. For example, chmod 644 file.txt sets read and write permissions for the owner and read-only permissions for others.
 
 # Chapter 3: Getting Help in Red Hat Enterprise Linux
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/52102ef2-618c-4af8-b950-0297230406b2)
+![image](images/linux-administration-i-20.png)
 ## Abstarct Introduction
 In Chapter 3, we explore the essential skill of seeking help and documentation in Red Hat Enterprise Linux. As a system administrator, it's crucial to know how to access and utilize various resources to find solutions, troubleshoot problems, and learn about the system.
 
@@ -742,7 +742,7 @@ To use man, simply type man followed by the command you want to learn about:
 man ls
 ```
 This command displays the manual page for the ls command. You can navigate through the manual using arrow keys, and press 'q' to exit.
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/8255a889-d0ad-4a73-a65f-8a94dc93f17a)
+![image](images/linux-administration-i-21.png)
 
 ### Tips
 - Use the man command to quickly access command documentation.
@@ -772,7 +772,7 @@ For example:
 ```bash
 info tar
 ```
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/105f922c-59ba-4ca7-936c-ca622e3a9108)
+![image](images/linux-administration-i-22.png)
 
 ### Tips
 - info pages are structured, and you navigate them using arrow keys and commands like 'n' (next) and 'p' (previous).
@@ -804,7 +804,7 @@ less package_name/README
 ```
 Example of reading gcc/README.Debian documentation:
 
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/c05f0fae-48a2-4019-b5aa-c2c9519db556)
+![image](images/linux-administration-i-23.png)
 
 ### Tips
 - /usr/share/doc contains valuable information about installed packages, configurations, and usage.
@@ -890,7 +890,7 @@ Q: What is the purpose of an SOS report, and how do you generate one in Red Hat 
 - Answer: An SOS report is used to gather system information for troubleshooting complex issues. To generate an SOS report, you can use the sosreport command. It creates a compressed tarball containing system information that can be shared with Red Hat support.
 
 # Chapter 4: Creating, Viewing, and Editing Text Files
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/62d775bb-f85d-4245-b4b0-57e13ad21d86)
+![image](images/linux-administration-i-24.png)
 
 ## Abstract Introduction:
 Chapter 4 delves into working with text files in Red Hat Enterprise Linux. Text files are fundamental components for configuration, scripting, and system management. This chapter covers creating, viewing, and editing text files using command-line and graphical tools.
@@ -994,7 +994,7 @@ Q: What are the advantages of using vim over other text editors, and how would y
 - Answer: Vim is highly configurable, provides powerful text manipulation features, and has a strong community. To save and exit a file in Vim, press 'Esc' to enter Normal mode and then type :wq and press 'Enter'.
 
 # Chapter 5: Managing Local Linux Users and Groups
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/664202a2-70b7-4f4b-b259-b2e9e53d19e5)
+![image](images/linux-administration-i-25.png)
 
 ## Abstract Introduction
 Chapter 5 explores the fundamental concepts of user and group management in Red Hat Enterprise Linux. Proper user and group management is essential for system security and access control. This chapter covers creating, managing, and configuring user accounts and groups.
@@ -1129,7 +1129,7 @@ Q: Describe how to set or change a user's password in Linux. What command is use
 - Answer: To set or change a user's password, you can use the passwd command. Security considerations include using strong passwords, ensuring regular password changes, and protecting password hashes.
 
 # Chapter 6: Controlling Access to Files with Linux File System Permissions
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/eeafb85d-435a-4417-a3b0-ffdcc00dd915)
+![image](images/linux-administration-i-26.png)
 ## Abstract Introduction
 Chapter 6 delves into the critical aspect of file system permissions in Red Hat Enterprise Linux. Properly configured file permissions are essential for securing data and resources. This chapter covers the concepts of Linux file permissions and how to control access to files and directories.
 
@@ -1253,7 +1253,7 @@ chmod u=rw-,g=r--,o=r-- sample_file
 # Check the permissions
 ls -l sample_file
 ```
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/b36164eb-b94f-409e-8204-2d849e13901d)
+![image](images/linux-administration-i-27.png)
 
 Illustration:
 
@@ -1273,7 +1273,7 @@ You can use the same symbolic notation with the chmod command to set or modify p
 - chmod g-x sample_file removes execute permission for the group.
 - chmod o+rwx sample_file grants read, write, and execute permissions for others.
 
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/d74e0781-77a1-455e-a381-168ce88ef705)
+![image](images/linux-administration-i-28.png)
 
 #### Numeric Notation
 **Numeric notation** assigns values to each permission: 
@@ -1295,7 +1295,7 @@ chmod 644 sample_file
 # Check the permissions
 ls -l sample_file
 ```
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/090210f9-ea99-477e-a5da-df0a67bb882b)
+![image](images/linux-administration-i-29.png)
 
 ### Why read = 4, write = 2, and excute = 1 ?
 The values of 4 for read, 2 for write, and 1 for execute in numeric notation are historical conventions, and they are based on a system of binary representation of permissions. Let me explain:
@@ -1367,7 +1367,7 @@ umask|	Set default permissions for newly created files and directories.
 umask
 ```
 
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/47903ab1-f72e-416b-a9f5-16afd673c994)
+![image](images/linux-administration-i-30.png)
 
 The umask value determines the default permissions to be removed from newly created files and directories. In this case, "0002" restricts write permissions for group and others.
 
@@ -1429,7 +1429,7 @@ Q: You need to set file permissions in such a way that the owner can read, write
 - Answer: You can use the following command to achieve this: chmod 744 filename. This sets the owner's permissions to read, write, and execute (4 + 2 + 1 = 7) and the group and others to read-only (4).
 
 # Chapter 7: Monitoring and Managing Linux Processes
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/1a638030-516a-42ab-a968-67788e085372)
+![image](images/linux-administration-i-31.png)
 
 |Info|Details|
 |--|--|
@@ -1473,9 +1473,9 @@ For example, if you want to find a process named "myapp," you would run:
 ```bash
 ps aux | grep myapp
 ```
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/cdef0a99-e73e-43b4-8baa-1fbef250cffd)
+![image](images/linux-administration-i-32.png)
 
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/c4cd9892-966a-4939-9df5-f9fa845db9fd)
+![image](images/linux-administration-i-33.png)
 
 The resulting output will display information about the "myapp" process, including its PID, owner, and other details, making it easier to identify and manage that specific process.
 
@@ -1485,7 +1485,7 @@ The resulting output will display information about the "myapp" process, includi
 |--|--|
 |pstree| The pstree command displays processes in a hierarchical tree structure, making it easier to visualize the relationships between parent and child processes.
 
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/370459a1-9c92-48df-bf17-5d3937cbd653)
+![image](images/linux-administration-i-34.png)
 
 ### Tips
 - Using ps and pstree commands can assist in diagnosing issues and understanding how processes are connected in your system.
@@ -1556,7 +1556,7 @@ In summary, choosing whether to run a job in the foreground or background depend
 |--|--|
 jobs| Used to list the jobs that are currently running in the background or stopped. It provides information about these jobs, including their job IDs.</br>The jobs command lists the jobs associated with your current shell session, making it easier to keep track of running tasks.
 
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/e5e104a6-2b13-4dc0-9b0c-15584046ead6)
+![image](images/linux-administration-i-35.png)
 
 ere's a code example of how to use the jobs command:
 
@@ -1752,7 +1752,7 @@ The fsck command is typically used in scenarios where you suspect filesystem err
 |--|--|
 |top| The top command is a dynamic and interactive tool that provides real-time information about system processes. It displays CPU and memory usage, process details, and more.
 
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/b0d0b303-907b-4eca-ab01-0df3d3557f11)
+![image](images/linux-administration-i-36.png)
 
 #### Illustration
 Running the top command allows you to monitor the system's performance in real time, helping you identify processes consuming excessive resources.
@@ -1823,7 +1823,7 @@ Q: How can you prioritize a specific process over others without killing them?
 - Answer: You can use the nice command to change the priority of a process. A higher nice value gives lower priority, while a lower nice value gives higher priority. For example, to increase the priority of a process with PID 123, you can use nice -n -10 -p 123.
 
 # Chapter 8: Controlling Services and Daemons
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/f278feb9-a104-478e-b776-ebdf34efb657)
+![image](images/linux-administration-i-37.png)
 
 ## Info
 
@@ -1907,7 +1907,7 @@ Q5: Can I customize service startup options?
 - A5: Yes, you can customize service startup options by editing the service unit file. These files are usually found in /etc/systemd/system/ and can be adjusted to set specific behaviors for services.
 
 # Chapter 9: Configuring and Securing OpenSSH Service
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/b5d179aa-8ed2-4ffe-838b-f1a5bcd1f77f)
+![image](images/linux-administration-i-38.png)
 
 ## Info
 
@@ -1970,7 +1970,7 @@ Q5: What is the purpose of changing the default SSH port?
 - A5: Changing the default SSH port (22) is a security measure to make it harder for unauthorized users to find your SSH service. It's a basic security practice to minimize exposure to common attacks.
 
 # Chapter 10: Analyzing and Storing Logs
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/6e85762b-4ad4-4a16-b4b0-ac215e2e681d)
+![image](images/linux-administration-i-39.png)
 
 ## Info
 
@@ -2034,7 +2034,7 @@ Q5: How can I configure log rotation for specific log files?
 - A5: You can configure log rotation for specific log files by creating custom log rotation configuration files in /etc/logrotate.d/. These files define rules for rotating and managing specific log files.
 
 # Chapter 11: Managing Red Hat Enterprise Linux Networking
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/a7b637ea-d505-4728-b69e-e3ceb7ac659b)
+![image](images/linux-administration-i-40.png)
 
 ## Info
 
@@ -2107,7 +2107,7 @@ Q5: Can I configure network connections through a graphical interface in Red Hat
 - A5: Yes, you can use the nm-connection-editor tool to configure network connections through a graphical interface, making it more user-friendly for those who prefer GUI interactions.
 
 # Chapter 12: Archiving and Copying Files Between Systems
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/0fc018e8-409a-494e-a1bc-3110601f2fd6)
+![image](images/linux-administration-i-41.png)
 
 ## Abstract Introduction
 In this chapter, you'll learn about archiving and copying files between systems, a fundamental skill for system administrators. You'll understand how to create compressed archives using tar, copy files securely using scp, and synchronize directories with rsync. These tools are essential for backing up, transferring, and managing files efficiently.
@@ -2330,7 +2330,7 @@ Q: What are the advantages of using compression when creating tar archives?
 - Answer: Using compression with tar archives reduces the size of the archive, making it more efficient for storage and transfer. Compression can also save bandwidth and time during file transfers.
 
 # Chapter 13: Installing and Updating Software Packages
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/717f6b3b-9f27-4fd5-b2e3-d2b8ec8ab12e)
+![image](images/linux-administration-i-42.png)
 
 ## Chapter Info
 
@@ -2437,7 +2437,7 @@ Q: What is RPM and Yum, and how do they differ in package management?
 - A: RPM is a low-level package manager for individual packages, while Yum is a high-level package manager that handles dependencies and simplifies package installation and updates on Red Hat-based systems.
 
 # Chapter 14: Accessing Linux File Systems
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/4e710e43-103f-4c12-a4c7-61f7afb86f00)
+![image](images/linux-administration-i-43.png)
 
 ## Info
 
@@ -2745,7 +2745,7 @@ Q5: What are symbolic links (symlinks)?
 - Answer: Symbolic links, often referred to as symlinks, are files that act as pointers or references to other files or directories. They provide a convenient way to reference files and directories without duplicating data. Symlinks are created using the ln command with the -s switch.
 
 # Chapter 15: Using Virtualized Systems
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/5e3638b4-33e6-4594-9ace-1fa24678e18d)
+![image](images/linux-administration-i-44.png)
 ## Info
 
 |Info|Details|
@@ -2801,7 +2801,7 @@ Q5: How can I access the virtual machine after it's created?
 - Answer: Once a virtual machine is created, you can access it through various methods, including remote desktop access or SSH. The specific method depends on the operating system you installed and its configuration.
 
 # Chapter 16: Comprehensive Review
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/fd83e237-9b56-46a6-ac31-16eda2f30cd8)
+![image](images/linux-administration-i-45.png)
 
 ## Info
 
