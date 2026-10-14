@@ -33,6 +33,9 @@ jobs:
       - name: Check internal links
         run: python3 -I .docs/tools/check_links.py
 
+      - name: Test new_page.py
+        run: python3 -I .docs/tools/test_new_page.py
+
       - name: Check generated indexes are up to date
         run: |
           python3 -I .docs/tools/generate_index.py

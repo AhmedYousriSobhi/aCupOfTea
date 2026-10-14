@@ -12,15 +12,16 @@ It asks for:
 2. **Summary**, optional. One line, shown in search results and in the folder index.
 3. **Folder.** The closest existing folders are suggested first. It warns you if a similar page already exists, and it never creates a folder without asking.
 4. **Tags**, optional. Pick from the tag list in `.docs/metadata/taxonomy.yaml` (Tab completes). A new tag is added only if you confirm.
+5. **Level** and **prerequisites**, optional. `beginner` makes the page show under "Beginner friendly" in Start here. Prerequisites are ids of pages to read first (Tab completes), which builds a learning path.
 
-It then creates the page with a short outline to fill in, adds it to the folder's `README.md` index, and regenerates the site sidebar.
+It then creates the page with a short outline to fill in, adds it to the folder's `README.md` index (a `File | Description` table, or a list of links), and regenerates the site sidebar.
 
 To skip the questions, pass the answers as options:
 
 ```bash
 python3 .docs/tools/new_page.py --title "Attention in Transformers" \
   --folder fields/deep-learning/concepts --tags transformers \
-  --summary "How attention lets a model weigh every token." --yes
+  --summary "How attention lets a model weigh every token." --level intermediate --yes
 ```
 
 Add `--dry-run` to see the result without writing anything. Only Python 3 is needed.
