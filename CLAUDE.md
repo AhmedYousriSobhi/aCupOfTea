@@ -82,7 +82,7 @@ Before: `git status`. After: `git status`, `git diff --stat`, `git diff`. Don't 
 
 ## 12. Root Directory
 
-Keep the root clean: `README.md`, `SPEC.md`, `CLAUDE.md`, `LICENSE`, `.gitignore`, and Docsify/CI infra (`index.html` with the Docsify config, `.docs/` holding the sidebar/navbar and their generators, `.github/`, `.gitmodules`). `.nojekyll` is created by CI at deploy time. No temporary notes, experiments, or project-specific files at the root.
+Keep the root clean: `README.md`, `SPEC.md`, `CLAUDE.md`, `LICENSE` (not added yet, see issue #76), `.gitignore`, and Docsify/CI infra (`index.html` with the Docsify config, `.docs/` holding the sidebar/navbar and their generators, `.github/`, `.gitmodules`). `.nojekyll` is created by CI at deploy time. No temporary notes, experiments, or project-specific files at the root.
 
 ## 13. README and Docsify Navigation
 
