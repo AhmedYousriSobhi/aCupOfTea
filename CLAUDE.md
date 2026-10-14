@@ -83,7 +83,7 @@ Before: `git status`. After: `git status`, `git diff --stat`, `git diff`. Don't 
 
 ## 12. Root Directory
 
-Keep the root clean: `README.md`, `SPEC.md`, `CLAUDE.md`, `LICENSE` (CC BY 4.0, content), `LICENSE-CODE` (MIT, code), `.gitignore`, and Docsify/CI infra (`index.html` with the Docsify config, `.docs/` holding the sidebar/navbar and their generators, `.github/`, `.gitmodules`). `.nojekyll` is created by CI at deploy time. No temporary notes, experiments, or project-specific files at the root.
+Keep the root clean: `README.md`, `SPEC.md`, `CLAUDE.md`, `LICENSE` (CC BY 4.0, content), `LICENSE-CODE` (MIT, code), `.gitignore`, and Docsify/CI infra (`index.html` with the page shell and styles, its Docsify settings in `.docs/config.js`, `.docs/` holding the sidebar/navbar and their generators, `.github/`, `.gitmodules`). `.nojekyll` is created by CI at deploy time. No temporary notes, experiments, or project-specific files at the root.
 
 ## 13. README and Docsify Navigation
 
@@ -104,6 +104,8 @@ On phones (up to 768px) a tap on a page image opens it large in a pan-and-pinch 
 On phones, tables with 2-4 columns show each row as a card and wider tables scroll sideways (`.docs/phone-tables.js` adds the classes, the CSS is in `index.html`); desktop is unchanged.
 
 Code files and notebooks linked from a page (`/folder/script.py`, `/folder/notebook.ipynb`) open as readable pages on the site: Docsify asks for `script.py.md`, and `stage_site.py` writes that file in the staged copy (`.docs/tools/code_pages.py`: the source highlighted; a notebook's text, code, outputs and output pictures, with links to GitHub and Colab). Link code files root-absolute like pages; nothing else is needed.
+
+`index.html` sets a Content-Security-Policy (a `<meta>` tag, since GitHub Pages cannot send headers): scripts only from the site and `cdn.jsdelivr.net`, **no inline scripts** (so a script injected into a page cannot run; put any new script in a file under `.docs/`), styles also inline and from Google Fonts, pictures from anywhere over https, no plugins or frames. A new script or font host must be added to the policy, or it is silently blocked; the smoke test fails on any violation (it ignores one harmless `eval` probe in docsify-pagination).
 
 Code blocks are coloured by Docsify's Prism; `index.html` adds the Prism language files the pages use (bash, python, powershell, yaml, c, ini, sql). A new fence language needs its `prism-<lang>.min.js` added the same way (then `check_pins.py --sri --write`).
 

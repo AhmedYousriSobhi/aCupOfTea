@@ -47,6 +47,11 @@ async function open(browser, size, phone) {
   page.errors = [];
   page.setDefaultTimeout(8000);
   page.on('pageerror', (e) => page.errors.push(e.message.slice(0, 120)));
+  // the Content-Security-Policy blocks silently; record every refusal
+  await page.addInitScript(() => {
+    window.__csp = [];
+    document.addEventListener('securitypolicyviolation', (e) => window.__csp.push(e.violatedDirective + ' ' + (e.blockedURI || 'inline') + ' at ' + (e.sourceFile || '').split('/').pop() + ':' + e.lineNumber + ' on ' + location.hash));
+  });
   page.libs = [];
   page.on('request', (r) => { const m = r.url().match(/\/npm\/(mermaid|katex)@/); if (m) page.libs.push(m[1]); });
   return page;
@@ -207,6 +212,17 @@ async function run(browser, base, label, size, phone) {
       c('theme button switches the colours', a !== (await page.evaluate(() => getComputedStyle(document.body).backgroundColor)));
     }
   }
+  const csp = await page.evaluate(() => {
+    // docsify-pagination probes for `global` with eval inside try/catch and falls back; harmless
+    const before = window.__csp.filter((v) => !/^script-src eval\b.*docsify-pagination/.test(v));
+    const s = document.createElement('script');
+    s.textContent = 'window.__injected = true';
+    document.body.appendChild(s);
+    return { before, injected: !!window.__injected };
+  });
+  c('previous / next page links work under the policy', (await page.evaluate(() => document.querySelectorAll('.pagination-item a').length)) >= 1);
+  c('security policy blocks nothing the site needs', csp.before.length === 0, csp.before.slice(0, 5).join(' | '));
+  c('security policy blocks an injected inline script', !csp.injected);
   c('no script errors', page.errors.length === 0, page.errors.join(' | '));
   await page.context().close();
 }

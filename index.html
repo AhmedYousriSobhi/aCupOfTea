@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <!-- Content-Security-Policy: scripts only from this site and the pinned CDN (no inline scripts),
+       no plugins or frames. GitHub Pages cannot send headers, so it is set here. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; font-src 'self' data: https://cdn.jsdelivr.net https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self'; manifest-src 'self'; object-src 'none'; frame-src 'none'; base-uri 'self'; form-action 'none'">
   <title>aCupOfTea: knowledge in short sips</title>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="description" content="Notes on AI, machine learning, software engineering and the business around them, short enough to read on a coffee break.">
@@ -245,52 +248,8 @@
       <a href="https://github.com/AhmedYousriSobhi/aCupOfTea">repository on GitHub</a>.</p>
     </div>
   </noscript>
-  <script>
-    window.$docsify = {
-      name: 'aCupOfTea',
-      repo: 'AhmedYousriSobhi/aCupOfTea',
-      // basePath: '../', // Tell docsify to look for the markdown files in the parent directory
-      loadSidebar: './.docs/_sidebar.md',
-      loadNavbar: './.docs/_navbar.md',
-      notFoundPage: './.docs/_404.md',
-      relativePath: false, // Use relative paths for sidebar and navbar links
-      // Below 1400px the right-hand outline is hidden, so list the page's
-      // sections (h2, h3) under it in the sidebar instead.
-      subMaxLevel: window.matchMedia('(max-width: 1399px)').matches ? 3 : 0,
-      auto2top: true,
-      plugins: [window.themeToggle],
-       pagination: {
-        previousText: 'Previous',
-        nextText: 'Next',
-        crossChapter: true,
-        crossChapterText: true,
-      },
-      // Configure the tabs plugin
-      tabs: {
-        persist: true,      // stay on the same tab when refreshing
-        sync: true,         // sync tabs with same label across page
-        theme: 'classic',   // 'classic' or 'material'
-      },
-      // Add this to help Docsify match URLs to the sidebar entries
-      alias: {
-        '/(.*)/_sidebar.md': './.docs/_sidebar.md',
-        '/(.*)/_navbar.md': './.docs/_navbar.md'
-      },
-    }
-  </script>
-  <script>
-    // On phones the sidebar covers the page: close it after a section link is
-    // tapped so the reader lands on the heading, not on the menu.
-    document.addEventListener('click', function (e) {
-      var link = e.target.closest && e.target.closest('.sidebar-nav a.section-link');
-      if (!link || window.innerWidth > 768) return;
-      setTimeout(function () {
-        var open = document.querySelector('aside.sidebar.show');
-        var toggle = document.querySelector('button.sidebar-toggle');
-        if (open && toggle) toggle.click();
-      }, 0);
-    });
-  </script>
+  <!-- Docsify settings (window.$docsify) -->
+  <script src="./.docs/config.js"></script>
   <script src="./.docs/math.js"></script>
   <!-- Mermaid and KaTeX load only on pages that use them -->
   <script src="./.docs/lazy-libs.js"></script>

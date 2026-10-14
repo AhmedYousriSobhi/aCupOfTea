@@ -107,7 +107,7 @@ CLAUDE.md
 LICENSE             — CC BY 4.0, for writing and diagrams
 LICENSE-CODE        — MIT, for code (scripts, notebooks, .docs/ tooling)
 .gitignore
-index.html           — Docsify entry point + config (window.$docsify)
+index.html           — Docsify entry point: page shell, styles, Content-Security-Policy; settings in .docs/config.js
 .docs/               — site infrastructure:
                          _sidebar.md / _navbar.md (generated) + gen_sidebar.sh / gen_navbar.sh
                          search.js (site search)
@@ -117,6 +117,7 @@ index.html           — Docsify entry point + config (window.$docsify)
                          _404.md (page shown for a missing link)
                          page-footer.js (Edit this page, Last updated)
                          math.js (display formulas with KaTeX)
+                         config.js (Docsify settings, window.$docsify)
                          lazy-libs.js (loads Mermaid and KaTeX only on pages that use them)
                          reading-progress.js (progress bar, back-to-top button)
                          theme-toggle.js (theme list: light, sepia, dark, midnight, black)
