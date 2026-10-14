@@ -6,6 +6,7 @@ System administration, DevOps, and infrastructure management for AI/ML environme
 
 | File | Description |
 |------|-------------|
+| [active-directory](/fields/system-administration/active-directory.md) | Active Directory reference for Linux and HPC engineers |
 | [ansible](/fields/system-administration/ansible.md) | Configuration management with Ansible |
 | [bash-scripting](/fields/system-administration/bash-scripting.md) | Bash scripting for automation |
 | [build-process](/fields/system-administration/build-process.md) | Software build and CI/CD processes |
