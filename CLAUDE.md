@@ -79,6 +79,7 @@ Before: `git status`. After: `git status`, `git diff --stat`, `git diff`. Don't 
 - Cut every feature branch from `dev`, one branch and one PR per feature, and open the PR against `dev`.
 - Never push or open PRs directly to `main`. `main` only receives changes through a `dev → main` PR.
 - Pushing to `main` redeploys the public site, so merge the `dev → main` PR only when the owner approves the release.
+- **Before opening the `dev → main` PR**, run `python3 .docs/tools/update_recent.py` and commit the README on `dev`: it writes the "Recently added" list (the newest pages added, from git history) so GitHub shows it too. The release PR's CI fails if it is stale. The site fills the same block itself at deploy time.
 
 ## 12. Root Directory
 
@@ -94,9 +95,15 @@ Site search is `.docs/search.js` (loaded from `index.html`, replacing Docsify's 
 
 The site runs on **Docsify 5.0.0**, pinned in `index.html`. Three abandoned Docsify 4 plugins were replaced by small scripts of ours, so there is nothing left to break on its own: `.docs/theme-toggle.js` (light/dark button; the dark stylesheet is Docsify's own addon, and the choice is saved in the browser, default from the device), `.docs/sidebar-groups.js` (menu folders open and close) and `.docs/page-outline.js` (the "On this page" list at 1400px and wider; narrower screens get the section list in the menu). Docsify 5 reads its colours from `--color-bg`, `--color-text` and `--theme-color`; `index.html` also defines the older `--background`, `--textColor`, `--borderColor` and `--accent` from them, which the rest of the page and `search.js` use. The previous Docsify 4 version is the last commit on `main` before the upgrade release, if a rollback is ever needed.
 
+**Browser smoke test:** `.docs/tests/smoke.js` opens the staged site in headless Chromium at a desktop and a phone size and checks the menu, a long page and its images, search, the page footer, the 404 page, formulas, diagrams, alerts, phone table cards, the phone image viewer, the theme button, sideways scrolling and script errors. `smoke-test.yml` runs it on PRs that touch `index.html` or `.docs/`. Locally: `python3 .docs/tools/stage_site.py --out _site && node .docs/tests/smoke.js _site` (needs the `playwright` package).
+
+Every script and stylesheet in `index.html` is pinned to an exact version. `.docs/tools/check_pins.py` compares the pins with npm's latest (the monthly workflow `check-pins.yml` prints the table in its summary and fails on a deprecated package). Bump pins deliberately, one at a time, and re-check the site in a browser.
+
 On phones (up to 768px) a tap on a page image opens it large in a pan-and-pinch layer (`.docs/image-viewer.js`, loaded from `index.html`); desktop keeps Docsify's zoom-image plugin.
 
 On phones, tables with 2-4 columns show each row as a card and wider tables scroll sideways (`.docs/phone-tables.js` adds the classes, the CSS is in `index.html`); desktop is unchanged.
+
+Images after the first on a page are lazy-loaded (`.docs/lazy-images.js` adds `loading="lazy"` before the page is inserted), so long pages fetch pictures as you scroll.
 
 The homepage has a "Recently added" block between `<!-- recent:start -->` and `<!-- recent:end -->` in `README.md`; `stage_site.py` fills it at deploy time with the newest added pages from git history (renames do not count), and the committed file keeps the empty markers.
 
@@ -184,7 +191,7 @@ If the repository can't answer those through its structure, improve the structur
 An optional **overlay** on top of the folder structure: pages can carry YAML front matter so they are discoverable by domain and tag and linked to related pages. Folders remain the primary location; files never move for metadata's sake. Pages without front matter are valid ("legacy").
 
 - Schema and controlled vocabulary: `.docs/metadata/schema.yaml`, `.docs/metadata/taxonomy.yaml`. Add a new domain/tag there *before* using it.
-- Tools: `.docs/tools/validate.py`, `check_links.py`, `test_new_page.py`, `generate_index.py`, `stage_site.py` (Python + PyYAML 6.0.2).
+- Tools: `.docs/tools/validate.py`, `check_links.py`, `update_recent.py`, `check_pins.py`, `test_new_page.py`, `generate_index.py`, `stage_site.py` (Python + PyYAML 6.0.2).
 - Generated output (never hand-edit, deterministic): `.docs/generated/` — JSON indexes plus Explore pages. Commit it with the change.
 
 **Add metadata to a page** — put front matter at the very top of the file, nothing else changes:

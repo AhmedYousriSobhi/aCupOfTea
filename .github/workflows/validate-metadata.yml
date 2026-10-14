@@ -18,6 +18,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # the release check reads git history
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -33,8 +35,14 @@ jobs:
       - name: Check internal links
         run: python3 -I .docs/tools/check_links.py
 
-      - name: Test new_page.py
-        run: python3 -I .docs/tools/test_new_page.py
+      - name: Test new_page.py and check_pins.py
+        run: |
+          python3 -I .docs/tools/test_new_page.py
+          python3 -I .docs/tools/test_check_pins.py
+
+      - name: Check the README "Recently added" list (release PRs to main)
+        if: github.base_ref == 'main'
+        run: python3 -I .docs/tools/update_recent.py --check
 
       - name: Check generated indexes are up to date
         run: |

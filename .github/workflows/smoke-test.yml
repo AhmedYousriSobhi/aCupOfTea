@@ -1,0 +1,51 @@
+name: Smoke test
+
+on:
+  pull_request:
+    branches:
+      - dev
+      - main
+    paths:
+      - "index.html"
+      - ".docs/**"
+      - ".github/workflows/smoke-test.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # page footers and "Recently added" read git history
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install PyYAML
+        run: pip install PyYAML==6.0.2
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install Playwright and Chromium
+        run: |
+          npm install --prefix "$RUNNER_TEMP/pw" playwright@1.63.0
+          "$RUNNER_TEMP/pw/node_modules/.bin/playwright" install --with-deps chromium
+
+      - name: Stage the site
+        run: python3 -I .docs/tools/stage_site.py --out _site
+
+      - name: Run the browser checks
+        env:
+          NODE_PATH: ${{ runner.temp }}/pw/node_modules
+        run: node .docs/tests/smoke.js _site
