@@ -79,6 +79,7 @@ Before: `git status`. After: `git status`, `git diff --stat`, `git diff`. Don't 
 - Cut every feature branch from `dev`, one branch and one PR per feature, and open the PR against `dev`.
 - Never push or open PRs directly to `main`. `main` only receives changes through a `dev → main` PR.
 - Pushing to `main` redeploys the public site, so merge the `dev → main` PR only when the owner approves the release.
+- **Before opening the `dev → main` PR**, run `python3 .docs/tools/update_recent.py` and commit the README on `dev`: it writes the "Recently added" list (the newest pages added, from git history) so GitHub shows it too. The release PR's CI fails if it is stale. The site fills the same block itself at deploy time.
 
 ## 12. Root Directory
 
@@ -182,7 +183,7 @@ If the repository can't answer those through its structure, improve the structur
 An optional **overlay** on top of the folder structure: pages can carry YAML front matter so they are discoverable by domain and tag and linked to related pages. Folders remain the primary location; files never move for metadata's sake. Pages without front matter are valid ("legacy").
 
 - Schema and controlled vocabulary: `.docs/metadata/schema.yaml`, `.docs/metadata/taxonomy.yaml`. Add a new domain/tag there *before* using it.
-- Tools: `.docs/tools/validate.py`, `check_links.py`, `test_new_page.py`, `generate_index.py`, `stage_site.py` (Python + PyYAML 6.0.2).
+- Tools: `.docs/tools/validate.py`, `check_links.py`, `update_recent.py`, `test_new_page.py`, `generate_index.py`, `stage_site.py` (Python + PyYAML 6.0.2).
 - Generated output (never hand-edit, deterministic): `.docs/generated/` — JSON indexes plus Explore pages. Commit it with the change.
 
 **Add metadata to a page** — put front matter at the very top of the file, nothing else changes:

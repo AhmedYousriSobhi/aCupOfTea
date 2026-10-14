@@ -42,6 +42,16 @@ Not sure where to begin? Each of these takes one cup, roughly the reading time s
 | ~7 min | [Schedulers, the traffic controller](/fields/schedulers/intro.md) | What a cluster scheduler does and why it matters |
 
 <!-- recent:start -->
+
+## 🆕 Recently added
+
+- 2026-09-07 · [The HPC Benchmarking Landscape: A Field Guide](/fields/benchmarks/benchmarking-guide.md)
+- 2026-09-07 · [Schedulers: The Traffic Controller Nobody Thanks Until It Breaks](/fields/schedulers/intro.md)
+- 2026-09-07 · [The Tale of job.sh and the Snapshot](/fields/schedulers/slurm-job-script-tale.md)
+- 2026-09-07 · [Rebooting a Slurm Cluster Without Losing Your Job (Or Anyone Else's)](/fields/schedulers/slurm-reboot-order.md)
+- 2026-08-20 · [OSU Benchmarks, Explained Like You're Debugging Them at 2 AM](/fields/benchmarks/osu.md)
+- 2026-08-04 · [Why Does Intel's HPL Binary Beat Netlib by 60% — Then Suddenly Not?](/fields/benchmarks/hpl-cpu-comparison.md)
+
 <!-- recent:end -->
 
 ## 🗺️ How to read it
