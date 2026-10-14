@@ -44,6 +44,8 @@ async function open(browser, size, phone) {
   page.errors = [];
   page.setDefaultTimeout(8000);
   page.on('pageerror', (e) => page.errors.push(e.message.slice(0, 120)));
+  page.libs = [];
+  page.on('request', (r) => { const m = r.url().match(/\/npm\/(mermaid|katex)@/); if (m) page.libs.push(m[1]); });
   return page;
 }
 
@@ -76,6 +78,7 @@ async function run(browser, base, label, size, phone) {
     window.scrollTo(200, 0); await new Promise((r) => setTimeout(r, 150)); return window.scrollX;
   });
   c('no sideways scrolling', sideways === 0, 'scrollX ' + sideways);
+  c('pages without diagrams or formulas skip Mermaid and KaTeX', page.libs.length === 0, page.libs.join(', '));
 
   if (phone) {
     await page.evaluate(() => { const i = document.querySelector('.markdown-section img[src*="convolution-0"]'); if (i) i.scrollIntoView({ block: 'center' }); });

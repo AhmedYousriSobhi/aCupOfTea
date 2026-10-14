@@ -97,7 +97,7 @@ The site runs on **Docsify 5.0.0**, pinned in `index.html`. Three abandoned Docs
 
 **Browser smoke test:** `.docs/tests/smoke.js` opens the staged site in headless Chromium at a desktop and a phone size and checks the menu, a long page and its images, search, the page footer, the 404 page, formulas, diagrams, alerts, phone table cards, the phone image viewer, the theme button, sideways scrolling and script errors. `smoke-test.yml` runs it on PRs that touch `index.html` or `.docs/`. Locally: `python3 .docs/tools/stage_site.py --out _site && node .docs/tests/smoke.js _site` (needs the `playwright` package).
 
-Every script and stylesheet in `index.html` is pinned to an exact version. `.docs/tools/check_pins.py` compares the pins with npm's latest (the monthly workflow `check-pins.yml` prints the table in its summary and fails on a deprecated package). Bump pins deliberately, one at a time, and re-check the site in a browser.
+Every script and stylesheet in `index.html` is pinned to an exact version, and so are the two libraries loaded only on demand: Mermaid and KaTeX are fetched by `.docs/lazy-libs.js` only on a page with a diagram or a formula. `.docs/tools/check_pins.py` compares the pins (in `index.html` and `.docs/*.js`) with npm's latest (the monthly workflow `check-pins.yml` prints the table in its summary and fails on a deprecated package). Bump pins deliberately, one at a time, and re-check the site in a browser.
 
 On phones (up to 768px) a tap on a page image opens it large in a pan-and-pinch layer (`.docs/image-viewer.js`, loaded from `index.html`); desktop keeps Docsify's zoom-image plugin.
 
@@ -107,7 +107,7 @@ Images after the first on a page are lazy-loaded (`.docs/lazy-images.js` adds `l
 
 The homepage has a "Recently added" block between `<!-- recent:start -->` and `<!-- recent:end -->` in `README.md`; `stage_site.py` fills it at deploy time with the newest added pages from git history (renames do not count), and the committed file keeps the empty markers.
 
-A line that is only `$$...$$` is shown as a display formula with KaTeX (`.docs/math.js`); inline `$...$` and anything inside code fences is left alone. Pages stay plain LaTeX, which GitHub also renders.
+A line that is only `$$...$$` is shown as a display formula with KaTeX (`.docs/math.js`, KaTeX loaded by `lazy-libs.js`); inline `$...$` and anything inside code fences is left alone. Pages stay plain LaTeX, which GitHub also renders.
 
 Every content page ends with "Edit this page" (the file on GitHub, branch `dev`) and, on the deployed site, "Last updated" (`.docs/page-footer.js`). The dates come from `.docs/last-updated.json`, which `stage_site.py` writes from git history (so the deploy checkout uses `fetch-depth: 0`); a local preview shows only the edit link.
 

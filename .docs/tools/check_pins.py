@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Compare the versions pinned in index.html with the latest npm releases.
 
-Reads every cdn.jsdelivr.net/npm/<package>@<version> URL in index.html, asks
+Reads every cdn.jsdelivr.net/npm/<package>@<version> URL in index.html and in
+the site scripts .docs/*.js (some libraries load only when a page needs them), asks
 the npm registry for the latest version, its release date and any deprecation
 notice, and prints a table. It never changes anything.
 
@@ -38,12 +39,23 @@ def latest(name):
     return ver, data["time"].get(ver, "")[:10], data["versions"][ver].get("deprecated", "")
 
 
+def site_sources():
+    """index.html plus the site's own scripts, as one text."""
+    docs = os.path.join(ROOT, ".docs")
+    files = [os.path.join(ROOT, "index.html")] + sorted(
+        os.path.join(docs, n) for n in os.listdir(docs) if n.endswith(".js"))
+    text = []
+    for path in files:
+        with open(path, encoding="utf-8") as f:
+            text.append(f.read())
+    return "\n".join(text)
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--markdown", action="store_true", help="print a markdown table (for a job summary)")
     args = ap.parse_args()
-    with open(os.path.join(ROOT, "index.html"), encoding="utf-8") as f:
-        found = pins(f.read())
+    found = pins(site_sources())
 
     rows, bad = [], 0
     for name in sorted(found):
