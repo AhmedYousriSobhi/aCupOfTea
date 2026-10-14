@@ -27,6 +27,9 @@ TAXONOMY = os.path.join(ROOT, ".docs", "metadata", "taxonomy.yaml")
 SKIP_DIRS = {"__pycache__", "node_modules", "_site", "docs", "data"}
 STOP = set("a an and are as at be by for from how in into is it of on or the to vs what why with".split())
 MAX_TAGS = 5
+LEVELS = ("beginner", "intermediate", "advanced")
+TABLE_HEAD = re.compile(r"^\|\s*(File|Directory)(/(File|Directory))?\s*\|")
+BULLET_LINK = re.compile(r"^[-*]\s+\[")
 
 BODY = """# {title}
 
@@ -363,14 +366,17 @@ def yaml_value(v):
 
 
 def link_in_readme(folder, page_rel, title, summary):
-    """Add a row to the folder README's file table. Returns a message."""
+    """Add the page to the folder README's index: a File/Directory table, or
+    failing that the last bullet list of links. Returns a message."""
     readme = os.path.join(ROOT, folder, "README.md")
-    row = "| [%s](/%s) | %s |" % (os.path.basename(page_rel)[:-3], page_rel, summary or title)
+    stem = os.path.basename(page_rel)[:-3]
+    row = "| [%s](/%s) | %s |" % (stem, page_rel, summary or title)
+    bullet = "- [%s](/%s)" % (title, page_rel)
     if not os.path.exists(readme):
         return "No README.md in %s; the sidebar still lists the page." % folder
     lines = read(readme).splitlines(keepends=True)
     for i, line in enumerate(lines):
-        if re.match(r"^\|\s*File(/Directory)?\s*\|", line):
+        if TABLE_HEAD.match(line):
             start = end = i + 2
             while end < len(lines) and lines[end].startswith("|"):
                 end += 1
@@ -380,12 +386,25 @@ def link_in_readme(folder, page_rel, title, summary):
             keys = [re.sub(r"^\|\s*\[([^\]]*)\].*", r"\1", l).lower() for l in lines[start:end]]
             pos = end
             if keys == sorted(keys):
-                pos = start + sum(1 for k in keys if k < os.path.basename(page_rel)[:-3])
+                pos = start + sum(1 for k in keys if k < stem)
             lines.insert(pos, row + "\n")
-            with open(readme, "w", encoding="utf-8") as f:
-                f.writelines(lines)
-            return "Linked   in %s/README.md" % folder
-    return "Add this line to %s/README.md yourself:\n  %s" % (folder, row)
+            break
+    else:
+        last = None
+        in_code = False
+        for i, line in enumerate(lines):
+            if line.lstrip().startswith("```"):
+                in_code = not in_code
+            if not in_code and BULLET_LINK.match(line):
+                last = i
+        if last is None:
+            return "Add this line to %s/README.md yourself:\n  %s" % (folder, row)
+        if not lines[last].endswith("\n"):
+            lines[last] += "\n"
+        lines.insert(last + 1, bullet + "\n")
+    with open(readme, "w", encoding="utf-8") as f:
+        f.writelines(lines)
+    return "Linked   in %s/README.md" % folder
 
 
 def main():
@@ -395,6 +414,8 @@ def main():
     p.add_argument("--folder", help="e.g. fields/deep-learning/concepts")
     p.add_argument("--name", help="file name without .md (default: from the title)")
     p.add_argument("--tags", help="comma separated, e.g. transformers,attention")
+    p.add_argument("--level", choices=LEVELS, help="beginner pages show under 'Beginner friendly'")
+    p.add_argument("--prerequisites", help="comma separated page ids to read first, e.g. deep-learning-basics")
     p.add_argument("--yes", action="store_true", help="accept defaults and suggestions without asking")
     p.add_argument("--dry-run", action="store_true", help="show what would be written, change nothing")
     args = p.parse_args()
@@ -421,17 +442,42 @@ def main():
 
     tags, new_tags = choose_tags(args, ask, title, load_tags())
 
-    page_id = name if name not in existing_ids(folders) else slug(folder.split("/")[-1] + "-" + name)
+    level = args.level
+    if level is None:
+        level = ask.text("Level (%s, optional)" % "/".join(LEVELS), required=False).strip().lower()
+        if level and level not in LEVELS:
+            sys.exit("error: level must be one of %s" % ", ".join(LEVELS))
+    ids = existing_ids(folders)
+    if args.prerequisites is not None:
+        raw = args.prerequisites
+    else:
+        print("\nPrerequisites: ids of pages to read first (comma separated, Tab completes).")
+        complete_with(sorted(ids))
+        raw = ask.text("Prerequisites", required=False)
+    prereqs = []
+    for r in raw.split(","):
+        r = r.strip()
+        if r and r not in prereqs:
+            prereqs.append(r)
+    unknown = [r for r in prereqs if r not in ids]
+    if unknown:
+        sys.exit("error: no page has the id %s; only pages with an id in their front matter can be a prerequisite" % ", ".join(unknown))
+
+    page_id = name if name not in ids else slug(folder.split("/")[-1] + "-" + name)
     fm = ["---", "id: %s" % page_id, "title: %s" % yaml_value(title)]
     label = sidebar_label(title)
     if label != title:
         print("\nNote: the sidebar shows the text after the last hyphen (\"%s\")." % label)
-        print("      sidebar_label is set so the full title is used once labels are supported.")
+        print("      sidebar_label is set, so the sidebar shows the full title.")
         fm.append("sidebar_label: %s" % yaml_value(title))
     if summary:
         fm.append("summary: %s" % yaml_value(summary))
+    if level:
+        fm.append("level: %s" % level)
     if tags:
         fm.append("tags: [%s]" % ", ".join(tags))
+    if prereqs:
+        fm += ["relations:", "  prerequisites: [%s]" % ", ".join(prereqs)]
     fm.append("---")
     intro = summary or "<!-- One or two sentences: what will the reader learn? -->"
     content = "\n".join(fm) + "\n\n" + BODY.format(title=title, intro=intro)
