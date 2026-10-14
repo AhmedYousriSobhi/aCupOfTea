@@ -30,14 +30,30 @@
     font-family: 'JetBrains Mono', monospace !important;
     font-size: 0.92em !important;
   }
-  body.dark {
-    --glass-bg: rgba(15, 15, 15, 0.8);
-    background-color: #0b0e14 !important;
+  /* Dark mode. The darklight theme marks dark mode with color-scheme and the
+     --background / --textColor variables on <html>, not with a body class. */
+  html[style*="color-scheme: dark"] .markdown-section code {
+    color: #ff8fc0; /* default pink is 3.3:1 on the code background */
   }
-  body.dark .markdown-section {
-    background: #161b22;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    color: #adbac7;
+  html[style*="color-scheme: dark"] .alert.callout.attention .title { color: #ff7b86; }
+  html[style*="color-scheme: dark"] .alert.callout.important .title { color: #b79af5; }
+  /* Mermaid draws arrows and lines in black, invisible on the dark page */
+  html[style*="color-scheme: dark"] .mermaid .flowchart-link,
+  html[style*="color-scheme: dark"] .mermaid .edgePath path {
+    stroke: #c9d4de !important;
+  }
+  html[style*="color-scheme: dark"] .mermaid marker path {
+    fill: #c9d4de !important;
+    stroke: #c9d4de !important;
+  }
+  /* Page outline: follow the theme instead of staying a light panel */
+  html[style*="color-scheme: dark"] aside.toc-nav {
+    background: var(--background);
+    border: 1px solid var(--borderColor);
+  }
+  html[style*="color-scheme: dark"] aside.toc-nav a,
+  html[style*="color-scheme: dark"] aside.toc-nav span {
+    color: var(--textColor);
   }
   /* Phones and narrow windows: the floating page outline covers the text,
      and the top bar (menu, theme toggle) overlaps the page title. */
