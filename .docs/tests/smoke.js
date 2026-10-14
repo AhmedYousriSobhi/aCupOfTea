@@ -117,22 +117,48 @@ async function run(browser, base, label, size, phone) {
     }
     const after = await x();
     c('phone menu opens', before < 0 && after >= 0, `x ${before} -> ${after}`);
-    await page.tap('.sidebar-toggle-button', { timeout: 2000 }).catch(() => {});
-    await page.waitForTimeout(600);
+    // the menu stays open: on a phone the search box lives inside it
   }
   try {
     await page.locator('.srch input').fill('convolution');
     await page.waitForTimeout(3000);
     c('search finds pages', (await page.locator('.srch-panel a').count()) >= 3);
+    await page.fill('.srch input', 'bias variance');
+    await page.waitForTimeout(2500);
+    await page.evaluate(() => document.querySelector('.srch-panel a.srch-item').click());
+    await page.waitForTimeout(2000);
+    const where = await page.evaluate(() => {
+      const here = document.querySelector('.sidebar-nav a.here') || document.querySelector('.sidebar-nav li.active > a');
+      return { found: !!here, hidden: !!here && !!here.closest('li.group.collapsed, li.group.collapsed *') && !!here.closest('ul') && [...document.querySelectorAll('.sidebar-nav li.group.collapsed')].some((g) => g.contains(here)) };
+    });
+    c('after a search result the menu marks and shows the current page', where.found && !where.hidden && (await page.locator('.sidebar-nav a.here').count()) === 1, JSON.stringify(where));
   } catch (e) { c('search finds pages', false, 'search box not usable: ' + e.message.split('\n')[0]); }
 
-  const dark = await page.evaluate(() => !!(document.getElementById('theme-toggle') || document.getElementById('docsify-darklight-theme')));
-  if (dark) {
-    const bg = () => page.evaluate(() => getComputedStyle(document.body).backgroundColor + getComputedStyle(document.querySelector('.sidebar')).backgroundColor);
-    const a = await bg();
-    await page.evaluate(() => (document.getElementById('theme-toggle') || document.getElementById('docsify-darklight-theme')).click());
-    await page.waitForTimeout(500);
-    c('theme button switches the colours', a !== (await bg()));
+  const menu = await page.evaluate(() => !!document.getElementById('theme-toggle'));
+  if (menu) {
+    const look = () => page.evaluate(() => getComputedStyle(document.body).backgroundColor + '|' + getComputedStyle(document.querySelector('.sidebar')).backgroundColor);
+    const seen = { light: await look() };
+    for (const id of ['black', 'sepia', 'dark', 'midnight']) {
+      await page.evaluate(() => document.getElementById('theme-toggle').click());
+      await page.evaluate((t) => document.querySelector(`#theme-menu [data-choice="${t}"]`).click(), id);
+      await page.waitForTimeout(300);
+      seen[id] = await look();
+    }
+    const colours = new Set(Object.values(seen));
+    c('theme list switches to five different looks', colours.size === 5, JSON.stringify(seen));
+    c('black theme is really black', seen.black.startsWith('rgb(0, 0, 0)'), seen.black);
+    await page.reload();
+    await page.waitForTimeout(2500);
+    c('theme choice survives a reload', (await look()) === seen.midnight);
+  } else {
+    // pages built before the theme list: the older single button
+    const old = await page.evaluate(() => !!document.getElementById('docsify-darklight-theme'));
+    if (old) {
+      const a = await page.evaluate(() => getComputedStyle(document.body).backgroundColor);
+      await page.evaluate(() => document.getElementById('docsify-darklight-theme').click());
+      await page.waitForTimeout(500);
+      c('theme button switches the colours', a !== (await page.evaluate(() => getComputedStyle(document.body).backgroundColor)));
+    }
   }
   c('no script errors', page.errors.length === 0, page.errors.join(' | '));
   await page.context().close();
