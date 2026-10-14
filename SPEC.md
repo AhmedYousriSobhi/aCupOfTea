@@ -126,7 +126,7 @@ index.html           — Docsify entry point + config (window.$docsify)
                          metadata/ (schema.yaml, taxonomy.yaml)
                          tools/ (validate, generate_index, stage_site, build_search_index, check_links, update_recent, check_pins, new_page)
                          generated/ (indexes and Explore pages, generated)
-.github/             — workflows (validate metadata; deploy a staged copy to gh-pages) and CONTRIBUTING.md
+.github/             — workflows (validate metadata, smoke test, pin check; deploy a staged copy to gh-pages), dependabot.yml (action updates) and CONTRIBUTING.md
 .gitmodules          — project/knowledge submodules
 ```
 
