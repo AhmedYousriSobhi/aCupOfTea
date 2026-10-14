@@ -93,6 +93,8 @@ Keep the root clean: `README.md`, `SPEC.md`, `CLAUDE.md`, `LICENSE` (CC BY 4.0, 
 
 Site search is `.docs/search.js` (loaded from `index.html`, replacing Docsify's built-in search): results come in two groups, page-title matches and passages inside pages, built from the pages listed in the generated sidebar, so new pages are searchable with no extra step. On the deployed site it loads one prebuilt `.docs/search-index.json` (written by `stage_site.py` via `build_search_index.py`, not committed); without it (local preview) it fetches every page. `build_search_index.py` mirrors the page parsing in `search.js`; change both together.
 
+Every script and stylesheet in `index.html` is pinned to an exact version. `.docs/tools/check_pins.py` compares the pins with npm's latest (the monthly workflow `check-pins.yml` prints the table in its summary and fails on a deprecated package). Bump pins deliberately, one at a time, and re-check the site in a browser.
+
 On phones (up to 768px) a tap on a page image opens it large in a pan-and-pinch layer (`.docs/image-viewer.js`, loaded from `index.html`); desktop keeps Docsify's zoom-image plugin.
 
 On phones, tables with 2-4 columns show each row as a card and wider tables scroll sideways (`.docs/phone-tables.js` adds the classes, the CSS is in `index.html`); desktop is unchanged.
@@ -185,7 +187,7 @@ If the repository can't answer those through its structure, improve the structur
 An optional **overlay** on top of the folder structure: pages can carry YAML front matter so they are discoverable by domain and tag and linked to related pages. Folders remain the primary location; files never move for metadata's sake. Pages without front matter are valid ("legacy").
 
 - Schema and controlled vocabulary: `.docs/metadata/schema.yaml`, `.docs/metadata/taxonomy.yaml`. Add a new domain/tag there *before* using it.
-- Tools: `.docs/tools/validate.py`, `check_links.py`, `update_recent.py`, `test_new_page.py`, `generate_index.py`, `stage_site.py` (Python + PyYAML 6.0.2).
+- Tools: `.docs/tools/validate.py`, `check_links.py`, `update_recent.py`, `check_pins.py`, `test_new_page.py`, `generate_index.py`, `stage_site.py` (Python + PyYAML 6.0.2).
 - Generated output (never hand-edit, deterministic): `.docs/generated/` — JSON indexes plus Explore pages. Commit it with the change.
 
 **Add metadata to a page** — put front matter at the very top of the file, nothing else changes:

@@ -118,7 +118,7 @@ index.html           — Docsify entry point + config (window.$docsify)
                          page-footer.js (Edit this page, Last updated)
                          math.js (display formulas with KaTeX)
                          metadata/ (schema.yaml, taxonomy.yaml)
-                         tools/ (validate, generate_index, stage_site, build_search_index, check_links, update_recent, new_page)
+                         tools/ (validate, generate_index, stage_site, build_search_index, check_links, update_recent, check_pins, new_page)
                          generated/ (indexes and Explore pages, generated)
 .github/             — workflows (validate metadata; deploy a staged copy to gh-pages) and CONTRIBUTING.md
 .gitmodules          — project/knowledge submodules
