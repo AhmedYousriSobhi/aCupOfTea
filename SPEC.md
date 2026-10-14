@@ -113,7 +113,7 @@ index.html           — Docsify entry point + config (window.$docsify)
                          search.js (site search)
                          image-viewer.js (phone image viewer)
                          metadata/ (schema.yaml, taxonomy.yaml)
-                         tools/ (validate, generate_index, stage_site, build_search_index, new_page)
+                         tools/ (validate, generate_index, stage_site, build_search_index, check_links, new_page)
                          generated/ (indexes and Explore pages, generated)
 .github/             — workflows (validate metadata; deploy a staged copy to gh-pages) and CONTRIBUTING.md
 .gitmodules          — project/knowledge submodules
