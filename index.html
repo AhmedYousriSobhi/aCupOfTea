@@ -64,7 +64,33 @@
     /* keep the theme toggle (moon) off the first heading */
     .markdown-section > h1:first-of-type { margin-top: 40px !important; }
   }
-  
+  /* Tables on phones: 2-4 column tables become cards (see .docs/phone-tables.js),
+     wider ones scroll sideways instead of squeezing every column. */
+  @media (max-width: 768px) {
+    .markdown-section table:not(.stack) { display: block; overflow-x: auto; }
+    .markdown-section table.stack,
+    .markdown-section table.stack tbody,
+    .markdown-section table.stack tr,
+    .markdown-section table.stack td { display: block; width: 100%; box-sizing: border-box; }
+    .markdown-section table.stack thead { display: none; }
+    .markdown-section table.stack tr {
+      border: 1px solid var(--borderColor, #ddd);
+      border-radius: 8px;
+      margin: 0 0 12px;
+      padding: 8px 14px;
+    }
+    .markdown-section table.stack td { border: 0; padding: 4px 0; text-align: left; }
+    .markdown-section table.stack td:first-child { font-weight: 600; font-size: 1.05em; }
+    .markdown-section table.stack td[data-label]::before {
+      content: attr(data-label);
+      display: block;
+      font-size: 0.72em;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      opacity: 0.65;
+    }
+    .markdown-section table.stack tr:nth-child(2n) { background: transparent; }
+  }
 </style>
 
 <body>
@@ -125,6 +151,7 @@
       }, 0);
     });
   </script>
+  <script src="./.docs/phone-tables.js"></script>
   <!-- Two-group search (replaces the built-in Docsify search) -->
   <script src="./.docs/search.js"></script>
   <!-- Docsify v4 -->

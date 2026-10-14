@@ -112,6 +112,7 @@ index.html           — Docsify entry point + config (window.$docsify)
                          _sidebar.md / _navbar.md (generated) + gen_sidebar.sh / gen_navbar.sh
                          search.js (site search)
                          image-viewer.js (phone image viewer)
+                         phone-tables.js (phone table cards)
                          metadata/ (schema.yaml, taxonomy.yaml)
                          tools/ (validate, generate_index, stage_site, build_search_index, check_links, new_page)
                          generated/ (indexes and Explore pages, generated)
