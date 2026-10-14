@@ -64,6 +64,14 @@
     /* keep the theme toggle (moon) off the first heading */
     .markdown-section > h1:first-of-type { margin-top: 40px !important; }
   }
+  /* Footer under each page: edit link and last-updated date */
+  .markdown-section .page-footer {
+    margin-top: 3em;
+    padding-top: 0.8em;
+    border-top: 1px solid var(--borderColor, #ddd);
+    font-size: 0.85em;
+    opacity: 0.8;
+  }
   /* Tables on phones: 2-4 column tables become cards (see .docs/phone-tables.js),
      wider ones scroll sideways instead of squeezing every column. */
   @media (max-width: 768px) {
@@ -153,6 +161,7 @@
     });
   </script>
   <script src="./.docs/phone-tables.js"></script>
+  <script src="./.docs/page-footer.js"></script>
   <!-- Two-group search (replaces the built-in Docsify search) -->
   <script src="./.docs/search.js"></script>
   <!-- Docsify v4 -->
