@@ -5,7 +5,9 @@ Copies the repo to --out, then in the COPY only:
   * strips YAML front matter from every page (LF or CRLF), so Docsify
     rendering and its search index stay clean;
   * appends a "Related" block to pages that have relations, from
-    .docs/generated/related.json (run generate_index.py first).
+    .docs/generated/related.json (run generate_index.py first);
+  * writes .docs/search-index.json (build_search_index.py) so the site search
+    loads one file instead of fetching every page.
 Source files are never modified. Local `docsify serve` on the repo itself
 shows neither the stripping nor the Related block; serve --out to see them.
 
@@ -18,6 +20,7 @@ import shutil
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from build_search_index import build as build_search_index  # noqa: E402
 from common import list_pages, split_front_matter, submodule_paths  # noqa: E402
 
 MARKER = ".stage-site"
@@ -86,10 +89,13 @@ def stage(src, out):
             with open(full, "w", encoding="utf-8", newline="") as f:
                 f.write(new)
 
+    n_idx, idx_size = build_search_index(out)
+
     open(os.path.join(out, ".nojekyll"), "w").close()
     open(os.path.join(out, MARKER), "w").close()
     print(f"staged {out}: stripped front matter from {stripped} pages, "
-          f"appended Related to {appended} pages")
+          f"appended Related to {appended} pages, "
+          f"search index of {n_idx} pages ({idx_size // 1024} KB)")
 
 
 def main():

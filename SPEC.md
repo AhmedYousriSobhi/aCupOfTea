@@ -112,7 +112,7 @@ index.html           — Docsify entry point + config (window.$docsify)
                          _sidebar.md / _navbar.md (generated) + gen_sidebar.sh / gen_navbar.sh
                          search.js (site search)
                          metadata/ (schema.yaml, taxonomy.yaml)
-                         tools/ (validate, generate_index, stage_site, new_page)
+                         tools/ (validate, generate_index, stage_site, build_search_index, new_page)
                          generated/ (indexes and Explore pages, generated)
 .github/             — workflows (validate metadata; deploy a staged copy to gh-pages) and CONTRIBUTING.md
 .gitmodules          — project/knowledge submodules
@@ -142,7 +142,7 @@ Two navigation layers exist and both must stay accurate:
 
 Folder `README.md` indexes SHOULD list their pages in a `| File | Description |` table under `## Contents`, the format `new_page.py` updates automatically (§27). Converging the remaining list-style indexes is tracked in issue #77.
 
-**Search** (`.docs/search.js`) indexes the pages listed in the generated sidebar, so any page reachable from the sidebar is searchable with no extra step.
+**Search** (`.docs/search.js`) indexes the pages listed in the generated sidebar, so any page reachable from the sidebar is searchable with no extra step. On the deployed site the text comes from one prebuilt file, `.docs/search-index.json`, which `stage_site.py` writes into the published copy (never committed); a local preview has no such file, so the search reads every page instead and gives the same results.
 
 The sidebar governs what's reachable on the site; the folder `README.md` governs what's understandable when browsing the raw repo. Keep README indexes in sync with the folder contents.
 
