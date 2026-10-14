@@ -187,7 +187,7 @@ Here is an example of how to use the elbow method to determine the optimal numbe
 
 Example of Elbow Method:
 
-![Elbow Method for Optimal K](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/f8ed701c-f5ff-4181-ab6c-3e873ed7bd01)
+![Elbow Method for Optimal K](images/ml-unsupervised-01.jpg)
 
 The elbow method is a simple and intuitive method for determining the optimal number of clusters in a data set. However, it is important to note that it is a heuristic method, and there is no guarantee that it will always find the optimal number of clusters.
 
@@ -298,7 +298,7 @@ x5 = (6, 7)
 x6 = (7, 8)
 ```
 
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/59ddbe58-f955-4bc4-b17a-21adad5eff62)
+![image](images/ml-unsupervised-02.png)
 
 
 **Step-02:**
@@ -310,7 +310,7 @@ Mean vector (µ)
 ```
 Thus,
 
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/1ddc6212-d70d-40ab-af32-2dde505ea4d3)
+![image](images/ml-unsupervised-03.png)
 
 **Step-03:**
 - Subtract mean vector (µ) from the given feature vectors.
@@ -325,16 +325,16 @@ x6 – µ = (7 – 4.5, 8 – 5) = (2.5, 3)
 
 Feature vectors (xi) after subtracting mean vector (µ) are
  
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/9044eef5-fdef-45c0-89dd-1138c9447bfe)
+![image](images/ml-unsupervised-04.png)
 
 **Step-04:**
 - Calculate the covariance matrix. Covariance matrix is given by
  
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/cdbdb30a-c1f2-43d1-8f2b-d6560156f94f)
+![image](images/ml-unsupervised-05.png)
 
 Now,
 
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/29c16d59-d4d0-4499-9190-ff40131287fe)
+![image](images/ml-unsupervised-06.png)
 
 Now,
 ```
@@ -343,14 +343,14 @@ Covariance matrix
 ```
 On adding the above matrices and dividing by 6, we get:
 
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/056a5094-e87a-472c-b6da-2b1dedd49a4a)
+![image](images/ml-unsupervised-07.png)
 
 **Step-05:**
 - Calculate the eigen values and eigen vectors of the covariance matrix.
 
 λ is an eigen value for a matrix M if it is a solution of the characteristic equation |M – λI| = 0. So, we have:
  
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/ca7c85d9-e7f4-4787-ab25-38ae4689cfaa)
+![image](images/ml-unsupervised-08.png)
 
 From here,
 ```
@@ -378,7 +378,7 @@ X = Eigen vector
 
 Substituting the values in the above equation, we get 
 
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/42410839-6fc9-40ae-8ba0-791c51ae79fe)
+![image](images/ml-unsupervised-09.png)
 
 Solving these, we get:
 ```
@@ -393,12 +393,12 @@ From (1) and (2), **X1 = 0.69X2**
 
 From (2), the eigen vector is
 
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/038a4acf-2cf9-4700-8c1f-ecf44325bc90)
+![image](images/ml-unsupervised-10.png)
 
  
 Thus, principal component for the given data set is
  
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/da645fb0-6227-4914-b329-e3b4dd4bd5eb)
+![image](images/ml-unsupervised-11.png)
 
  
 Lastly, we project the data points onto the new subspace as
@@ -407,7 +407,7 @@ Lastly, we project the data points onto the new subspace as
 Y = 2.55*C , X = 3.67C -🡪 Y = 2.55/3.67 X
 ```
 
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/6155f977-a53f-4274-a123-fe1a872a3ede)
+![image](images/ml-unsupervised-12.png)
 
 ## PCA Technical Points
 There are various of points that one should take care during deciding using PCA, which we refered in ["tabularData/dataModeling/PCA"](/fields/tabular-data/data-feature-engineering/pca.md)
