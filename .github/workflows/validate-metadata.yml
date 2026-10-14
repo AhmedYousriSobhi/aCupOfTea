@@ -35,8 +35,10 @@ jobs:
       - name: Check internal links
         run: python3 -I .docs/tools/check_links.py
 
-      - name: Test new_page.py
-        run: python3 -I .docs/tools/test_new_page.py
+      - name: Test new_page.py and check_pins.py
+        run: |
+          python3 -I .docs/tools/test_new_page.py
+          python3 -I .docs/tools/test_check_pins.py
 
       - name: Check the README "Recently added" list (release PRs to main)
         if: github.base_ref == 'main'

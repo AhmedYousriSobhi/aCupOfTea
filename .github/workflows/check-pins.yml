@@ -1,0 +1,24 @@
+name: Check pinned versions
+
+on:
+  schedule:
+    - cron: "0 6 1 * *"   # the 1st of each month
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pins:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Compare pins with the latest npm releases
+        run: |
+          python3 -I .docs/tools/check_pins.py --markdown | tee -a "$GITHUB_STEP_SUMMARY"
+          exit "${PIPESTATUS[0]}"
