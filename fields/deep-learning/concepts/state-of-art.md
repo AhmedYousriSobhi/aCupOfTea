@@ -1,5 +1,5 @@
 # Deep Learning - Concepts -  State of Art
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/b621b4da-f2ac-4c7e-ab3e-d6780dbbc8b6)
+![image](images/state-of-art-01.png)
 
 # Table of Content
 - [Deep Learning - Concepts -  State of Art](#deep-learning---concepts----state-of-art)
@@ -46,7 +46,7 @@ For example, in image recognition, the "state of the art" model might refer to t
 |__Model__|A model is a specific instance or implementation of an architecture with specific weights and parameters trained on a dataset.</br></br>Models are the learned representations that result from training an architecture on a specific task or dataset. While architectures provide the blueprint, models have actual numerical values assigned to the parameters that make the architecture capable of performing tasks.</br></br>Models are what get deployed and used for inference on new, unseen data.
 
 # Id Face Extraction
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/cc5bd3a3-fb89-4456-9778-8c15fd25322f)
+![image](images/state-of-art-02.png)
 
 
 ##  Introduction
@@ -79,7 +79,7 @@ The task of ID face extraction typically involves several key steps:
 3. __Face Recognition__: After face detection, the next step is to recognize and extract the face region accurately. This can involve tasks like aligning the face to a standardized orientation and cropping it for further processing
 
 ## Face Detection
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/1a66c3a2-bbae-4694-ae28-4872376d201d)
+![image](images/state-of-art-03.png)
 
 ### History Timeline
 
@@ -103,7 +103,7 @@ Table 1: Face Detection Architectures
 |YOLO (You Only Look Once)|	Varies|	Original YOLO Paper by Redmon et al.	|Unified object detection, real-time |Single-stage architecture that simultaneously predicts bounding boxes and class probabilities|	Fast and accurate|	[GitHub](https://github.com/AlexeyAB/darknet)
 
 ## Face Recognition
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/380af5b9-bcd8-4b31-9b2f-b78d10fb0525)
+![image](images/state-of-art-04.png)
 
 ### Current Models
 Table 2: Face Recognition Models

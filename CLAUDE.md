@@ -51,7 +51,7 @@ New names use `lowercase-kebab-case`. Avoid `camelCase`, `PascalCase`, mixed cas
 
 Kebab-case applies to **directories and `.md` pages**. Code, notebook, and data files (`.py`, `.ipynb`, `.csv`, ...) keep their names: Python modules can't be kebab-case, and notebooks/scripts reference each other and their data by filename. `README.md` stays `README.md`.
 
-Write internal links **root-absolute** (`/fields/benchmarks/hpl.md`). They resolve on both GitHub and Docsify (`relativePath: false`); `./` and `../` links break on the site.
+Write internal links **root-absolute** (`/fields/benchmarks/hpl.md`). They resolve on both GitHub and Docsify (`relativePath: false`); `./` and `../` links break on the site. **Images are the exception**: Docsify prepends the page's folder to root-absolute image paths, so link images relative to the page (`images/name.png`, in an `images/` folder next to it).
 
 ## 8. Directory Rules
 
