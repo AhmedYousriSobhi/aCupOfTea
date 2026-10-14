@@ -52,11 +52,21 @@
     fill: #c9d4de !important;
     stroke: #c9d4de !important;
   }
-  /* Phones: the top bar (menu, theme toggle) overlaps the page title. */
+  /* Phones: one top bar that stays on screen, links on the left and the theme
+     button at its right end (where phone readers look for settings). The
+     GitHub corner would cover that spot, so on phones the GitHub link moves to
+     the end of the side menu (.docs/config.js). */
   @media (max-width: 768px) {
-    :root { --scroll-padding-top: 100px; }
-    #theme-toggle { right: auto; left: 48px; top: 8px; }
-    #theme-menu { right: auto; left: 48px; top: 56px; }
+    :root { --scroll-padding-top: 72px; }
+    nav.app-nav {
+      top: 0 !important; left: 0 !important; right: 0 !important; margin: 0 !important;
+      min-height: 52px; padding: 4px 60px 4px 14px !important; border-radius: 0 !important;
+      justify-content: flex-start !important; align-items: center; gap: 4px 12px !important;
+      border-bottom: 1px solid var(--border-color); z-index: 45;
+    }
+    .github-corner { display: none !important; }
+    html body #theme-toggle { position: fixed; top: 4px; right: 8px; left: auto; }
+    html body #theme-menu { position: fixed; top: 54px; right: 8px; left: auto; max-height: calc(100vh - 70px); overflow-y: auto; }
     /* Menu button: Docsify makes the whole left edge (35px, full height) the tap
        target, so taps on text near the edge opened the menu. Keep it 44px wide
        but only over its button at the bottom; while the menu is open it still
@@ -66,9 +76,8 @@
       height: calc(var(--sidebar-toggle-height) + 2 * var(--sidebar-toggle-margin-block));
     }
     body:has(.sidebar.show) #theme-toggle, body:has(.sidebar.show) #theme-menu { display: none; }
-    section.content { padding-top: 80px !important; }
-    /* keep the theme toggle (moon) off the first heading */
-    .markdown-section > h1:first-of-type { margin-top: 40px !important; }
+    section.content { padding-top: 52px !important; }
+    .markdown-section { padding-top: 12px !important; }
   }
   .markdown-section .math-block { overflow-x: auto; padding: 0.2em 0; }
   /* Links to related pages, one line under the page title (added when the site is built) */
@@ -185,7 +194,7 @@
     padding: 30px 0 40px !important;
   }
   @media (max-width: 768px) {
-    app-nav, nav.app-nav { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 4px 14px; }
+    app-nav, nav.app-nav { display: flex; flex-wrap: wrap; }
   }
   @media (min-width: 1400px) { section.content { padding-right: 240px; } }
   /* Page outline (wide screens), see .docs/page-outline.js */
@@ -204,6 +213,8 @@
   nav.app-nav, .github-corner { position: fixed; }
   /* The top menu stays on screen in Docsify 5; give it a background so text does not run through it */
   nav.app-nav { background: var(--color-bg); border-radius: 8px; padding: 2px 10px; }
+  #menu-github { display: none; margin: 1.5em 20px 2em; padding-top: 1em; border-top: 1px solid var(--border-color); font-size: 0.9em; }
+  @media (max-width: 768px) { #menu-github { display: block; } }
   /* Theme button (see .docs/theme-toggle.js) */
   #theme-toggle {
     position: absolute; top: 74px; right: 16px; z-index: 60;

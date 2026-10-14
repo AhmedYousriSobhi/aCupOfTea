@@ -45,3 +45,21 @@ document.addEventListener('click', function (e) {
     if (open && toggle) toggle.click();
   }, 0);
 });
+
+// Phones hide the GitHub corner (the theme button takes its place in the top
+// bar), so the side menu ends with a link to the repository instead.
+window.$docsify.plugins = [].concat(window.$docsify.plugins || [], function (hook) {
+  hook.doneEach(function () {
+    var nav = document.querySelector('.sidebar-nav');
+    if (!nav || document.getElementById('menu-github')) return;
+    var p = document.createElement('p');
+    p.id = 'menu-github';
+    var a = document.createElement('a');
+    a.href = 'https://github.com/AhmedYousriSobhi/aCupOfTea';
+    a.target = '_blank';
+    a.rel = 'noopener';
+    a.textContent = 'Source on GitHub';
+    p.appendChild(a);
+    nav.parentNode.insertBefore(p, nav.nextSibling);
+  });
+});

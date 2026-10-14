@@ -103,6 +103,17 @@ async function run(browser, base, label, size, phone) {
   });
   c('progress bar and back-to-top work on a long page', !prog.before && prog.bar && prog.shown && prog.icon > 10 && prog.back < 20, JSON.stringify(prog));
   c('top menu stays on screen while scrolling', prog.nav === 0, 'menu top ' + prog.nav);
+  if (phone) {
+    const bar = await page.evaluate(async () => {
+      window.scrollTo(0, 3000); await new Promise((r) => setTimeout(r, 300));
+      const t = document.getElementById('theme-toggle').getBoundingClientRect();
+      const corner = document.querySelector('.github-corner');
+      return { top: Math.round(t.top), right: Math.round(window.innerWidth - t.right),
+        corner: !!corner && corner.getBoundingClientRect().width > 0, github: !!document.querySelector('#menu-github a[href*="github.com"]') };
+    });
+    c('theme button sits in the top bar on the right and stays there', bar.top >= 0 && bar.top < 12 && bar.right < 20, JSON.stringify(bar));
+    c('GitHub link moves from the corner into the menu', !bar.corner && bar.github, JSON.stringify(bar));
+  }
   c('pages without diagrams or formulas skip Mermaid and KaTeX', page.libs.length === 0, page.libs.join(', '));
 
   if (phone) {
