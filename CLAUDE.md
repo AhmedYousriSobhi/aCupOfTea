@@ -123,7 +123,7 @@ Every content page ends with "Edit this page" (the file on GitHub, branch `dev`)
 
 Generator behavior worth knowing: folders without any `.md` page are skipped; git submodules (not checked out in CI) are rendered as external links to their repositories; a `README.md` titled `Overview` is listed first.
 
-**New pages:** create them with `python3 .docs/tools/new_page.py` (steps in `.github/CONTRIBUTING.md`). It picks the folder and kebab-case file name, writes front matter (`id`, `title`, optional `summary`, `tags` from `.docs/metadata/taxonomy.yaml`), adds the row to the folder `README.md` table, and regenerates the sidebar and navbar. Front matter is hidden on the site by Docsify's official front-matter plugin; keep YAML comments out of it.
+**New pages:** create them with `python3 .docs/tools/new_page.py` (steps in `.github/CONTRIBUTING.md`). It picks the folder and kebab-case file name, writes front matter (`id`, `title`, `type`, `domains` (suggested from the folder's pages), optional `summary`, `level`, `tags` from `.docs/metadata/taxonomy.yaml`, `prerequisites` and `related`), adds the row to the folder `README.md` table, and regenerates the sidebar and navbar. Front matter is hidden on the site by Docsify's official front-matter plugin; keep YAML comments out of it. Reading time is never asked: `new_page.py --check PAGE` shows it once the page is written, with what is still missing.
 
 ## 14. Ambiguity
 
