@@ -120,6 +120,7 @@ index.html           — Docsify entry point: page shell, styles, Content-Securi
                          config.js (Docsify settings, window.$docsify)
                          lazy-libs.js (loads Mermaid and KaTeX only on pages that use them)
                          reading-progress.js (progress bar, back-to-top button)
+                         surprise-me.js (random page link in the menu)
                          theme-toggle.js (theme list: light, sepia, dark, midnight, black)
                          sidebar-groups.js (open/close menu folders)
                          page-outline.js (On this page list, wide screens)

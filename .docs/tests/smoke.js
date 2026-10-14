@@ -244,6 +244,16 @@ async function run(browser, base, label, size, phone) {
   c('previous / next page links work under the policy', (await page.evaluate(() => document.querySelectorAll('.pagination-item a').length)) >= 1);
   c('security policy blocks nothing the site needs', csp.before.length === 0, csp.before.slice(0, 5).join(' | '));
   c('security policy blocks an injected inline script', !csp.injected);
+  if (!phone) {
+    const landed = new Set();
+    for (let i = 0; i < 4; i++) {
+      await page.evaluate(() => document.getElementById('surprise-me').click());
+      await page.waitForTimeout(1200);
+      const at = await page.evaluate(() => ({ hash: location.hash, h1: !!document.querySelector('.markdown-section h1'), lost: /This page is not here/.test(document.body.textContent) }));
+      if (at.h1 && !at.lost && !/README/.test(at.hash)) landed.add(at.hash);
+    }
+    c('"Surprise me" opens different real pages', landed.size >= 3, [...landed].join(' '));
+  }
   c('no script errors', page.errors.length === 0, page.errors.join(' | '));
   await page.context().close();
 }
