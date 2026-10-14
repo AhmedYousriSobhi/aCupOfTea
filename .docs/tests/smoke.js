@@ -1,20 +1,23 @@
 // Browser smoke test for the built site.
 //
 //   python3 .docs/tools/stage_site.py --out _site
-//   node .docs/tests/smoke.js _site
+//   node .docs/tests/smoke.js _site [chromium|webkit]
 //
-// Serves the staged site on a free port, opens it in headless Chromium at a
+// Serves the staged site on a free port, opens it in headless Chromium (or
+// WebKit, the engine of every iPhone browser) at a
 // desktop and a phone size, and checks what a reader would notice: the menu,
 // a long page with its images, search, the page footer, the 404 page, formulas,
 // diagrams, phone table cards, the phone image viewer, the theme button and
-// sideways scrolling. Needs the `playwright` npm package (with Chromium).
+// sideways scrolling. Needs the `playwright` npm package (with the browser).
+// Every check name starts with the engine, so a failure says where it broke.
 // Exits 1 and names each failed check.
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
-const { chromium } = require('playwright');
+const playwright = require('playwright');
 
 const root = path.resolve(process.argv[2] || '_site');
+const engine = process.argv[3] || 'chromium';
 const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json',
   '.md': 'text/markdown; charset=utf-8', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg',
   '.gif': 'image/gif', '.svg': 'image/svg+xml', '.webp': 'image/webp' };
@@ -52,7 +55,7 @@ async function open(browser, size, phone) {
 async function run(browser, base, label, size, phone) {
   const page = await open(browser, size, phone);
   const go = async (hash, wait = 3000) => { await page.goto(base + '/#/' + hash); await page.waitForTimeout(wait); };
-  const c = (name, ok, detail) => check(`[${label}] ${name}`, ok, detail);
+  const c = (name, ok, detail) => check(`[${engine} ${label}] ${name}`, ok, detail);
 
   await go('');
   const home = await page.evaluate(() => ({
@@ -212,17 +215,18 @@ async function run(browser, base, label, size, phone) {
   if (!fs.existsSync(path.join(root, 'index.html'))) { console.error('no index.html in ' + root); process.exit(2); }
   await new Promise((r) => server.listen(0, '127.0.0.1', r));
   const base = 'http://127.0.0.1:' + server.address().port;
-  const browser = await chromium.launch();
+  if (!['chromium', 'webkit'].includes(engine)) { console.error('engine must be chromium or webkit'); process.exit(2); }
+  const browser = await playwright[engine].launch();
   try {
     for (const [label, size, phone] of [['desktop', { width: 1280, height: 800 }, false], ['phone', { width: 390, height: 800 }, true]]) {
       try { await run(browser, base, label, size, phone); }
-      catch (e) { check(`[${label}] run finished`, false, e.message.split('\n')[0]); }
+      catch (e) { check(`[${engine} ${label}] run finished`, false, e.message.split('\n')[0]); }
     }
   } finally {
     await browser.close();
     server.close();
   }
   const failed = results.filter((r) => !r.ok);
-  console.log(`\n${results.length - failed.length} of ${results.length} checks passed`);
+  console.log(`\n${engine}: ${results.length - failed.length} of ${results.length} checks passed`);
   process.exit(failed.length ? 1 : 0);
 })();
