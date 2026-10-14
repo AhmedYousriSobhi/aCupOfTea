@@ -55,8 +55,16 @@
   /* Phones: the top bar (menu, theme toggle) overlaps the page title. */
   @media (max-width: 768px) {
     :root { --scroll-padding-top: 100px; }
-    #theme-toggle { right: auto; left: 40px; top: 12px; }
-    #theme-menu { right: auto; left: 40px; top: 54px; }
+    #theme-toggle { right: auto; left: 48px; top: 8px; }
+    #theme-menu { right: auto; left: 48px; top: 56px; }
+    /* Menu button: Docsify makes the whole left edge (35px, full height) the tap
+       target, so taps on text near the edge opened the menu. Keep it 44px wide
+       but only over its button at the bottom; while the menu is open it still
+       covers the rest of the screen, so a tap outside closes the menu. */
+    body:not(:has(.sidebar.show)) .sidebar-toggle {
+      width: 44px; top: auto !important; bottom: 0;
+      height: calc(var(--sidebar-toggle-height) + 2 * var(--sidebar-toggle-margin-block));
+    }
     body:has(.sidebar.show) #theme-toggle, body:has(.sidebar.show) #theme-menu { display: none; }
     section.content { padding-top: 80px !important; }
     /* keep the theme toggle (moon) off the first heading */
@@ -64,6 +72,10 @@
   }
   .markdown-section .math-block { overflow-x: auto; padding: 0.2em 0; }
   /* Links to related pages, one line under the page title (added when the site is built) */
+  /* Readers who ask for less motion: no sliding menu, fades or smooth scrolling */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; }
+  }
   /* Reading progress bar and back-to-top button (.docs/reading-progress.js) */
   #read-progress { position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 70; background: var(--theme-color); transform-origin: 0 50%; transform: scaleX(0); pointer-events: none; }
   #back-to-top { position: fixed; right: 16px; bottom: 20px; z-index: 55; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--borderColor, #ddd); background: var(--color-bg); color: var(--theme-color); display: flex; align-items: center; justify-content: center; padding: 0; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
@@ -195,12 +207,12 @@
   /* Theme button (see .docs/theme-toggle.js) */
   #theme-toggle {
     position: absolute; top: 74px; right: 16px; z-index: 60;
-    width: 36px; height: 36px; padding: 6px; border: 0; border-radius: 50%;
+    width: 44px; height: 44px; padding: 10px; border: 0; border-radius: 50%;
     background: transparent; color: var(--color-text); cursor: pointer; opacity: 0.8;
   }
   #theme-toggle:hover { opacity: 1; }
   #theme-menu {
-    position: absolute; top: 114px; right: 16px; z-index: 61; min-width: 170px; padding: 6px;
+    position: absolute; top: 122px; right: 16px; z-index: 61; min-width: 170px; padding: 6px;
     background: var(--color-bg); color: var(--color-text); border: 1px solid var(--border-color);
     border-radius: 10px; box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
   }

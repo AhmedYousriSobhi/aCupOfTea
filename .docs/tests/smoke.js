@@ -150,6 +150,16 @@ async function run(browser, base, label, size, phone) {
 
   await go('');
   if (phone) {
+    const sizes = await page.evaluate(() => ['button.sidebar-toggle', '#theme-toggle'].map((sel) => {
+      const r = document.querySelector(sel).getBoundingClientRect();
+      return [sel, Math.round(r.width), Math.round(r.height)];
+    }));
+    c('menu and theme buttons are at least 44px to tap', sizes.every(([, w, h]) => w >= 44 && h >= 44), JSON.stringify(sizes));
+    const edge = await page.evaluate(() => {
+      const el = document.elementFromPoint(20, window.innerHeight / 3);
+      return !!el && !el.closest('.sidebar-toggle');
+    });
+    c('text near the left edge is not covered by the menu button', edge);
     const x = () => page.evaluate(() => Math.round(document.querySelector('aside.sidebar').getBoundingClientRect().x));
     const before = await x();
     // the menu button is `.sidebar-toggle-button` on Docsify 5; older builds also had an overlay `.sidebar-pin`
@@ -227,6 +237,18 @@ async function run(browser, base, label, size, phone) {
   await page.context().close();
 }
 
+async function reducedMotion(browser, base) {
+  const ctx = await browser.newContext({ viewport: { width: 390, height: 800 }, isMobile: true, hasTouch: true, reducedMotion: 'reduce' });
+  const page = await ctx.newPage();
+  await page.goto(base + '/#/');
+  await page.waitForTimeout(2500);
+  const t = await page.evaluate(() => [getComputedStyle(document.querySelector('aside.sidebar')).transitionDuration,
+    getComputedStyle(document.documentElement).scrollBehavior]);
+  check(`[${engine} phone] reduced motion turns off the menu slide and smooth scrolling`,
+    t[0].split(',').every((d) => parseFloat(d) < 0.01) && t[1] !== 'smooth', JSON.stringify(t));
+  await ctx.close();
+}
+
 (async () => {
   if (!fs.existsSync(path.join(root, 'index.html'))) { console.error('no index.html in ' + root); process.exit(2); }
   await new Promise((r) => server.listen(0, '127.0.0.1', r));
@@ -238,6 +260,7 @@ async function run(browser, base, label, size, phone) {
       try { await run(browser, base, label, size, phone); }
       catch (e) { check(`[${engine} ${label}] run finished`, false, e.message.split('\n')[0]); }
     }
+    await reducedMotion(browser, base).catch((e) => check(`[${engine} phone] reduced motion run finished`, false, e.message.split('\n')[0]));
   } finally {
     await browser.close();
     server.close();
