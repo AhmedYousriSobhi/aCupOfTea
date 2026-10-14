@@ -11,7 +11,7 @@ sidebar_group: Clustering Evaluation
 
 # Why just plot the first two PCA components?
 
-![Agglomerative Clustering Results](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/d346691c-9539-495b-b327-10dc34462143)
+![Agglomerative Clustering Results](images/clustering-01.jpg)
 
 Visualizing data in two dimensions (using the first two PCA components) is a common approach because it allows us to create scatter plots that are easy to interpret and provide insights into the data's structure. 
 
@@ -19,7 +19,7 @@ These two components typically capture the most significant sources of variation
 
 In case we decide to see how each cluster will be in case we used different pair of principle components
 
-![Pairplot of PCA Components with Cluster Assignments](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/19f6c4f9-911a-4fc0-b197-7efd22c73440)
+![Pairplot of PCA Components with Cluster Assignments](images/clustering-02.jpg)
 
 
 # Defining Customers Groups from Clusters
