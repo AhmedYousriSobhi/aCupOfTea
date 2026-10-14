@@ -210,6 +210,14 @@
   #theme-menu button[aria-checked="true"] { font-weight: 700; color: var(--link); }
   #theme-menu .swatch { width: 18px; height: 18px; border-radius: 50%; border: 1px solid var(--border-color); flex: none; }
   #theme-toggle svg { display: block; }
+  #theme-menu .size-row { display: flex; align-items: center; gap: 2px; margin-top: 6px; padding: 8px 4px 2px 10px; border-top: 1px solid var(--border-color); }
+  #theme-menu .size-row span { flex: 1; font-size: 0.85rem; opacity: 0.75; }
+  #theme-menu .size-row button { width: 34px; height: 34px; padding: 0; justify-content: center; line-height: 1; }
+  /* Text size from the theme menu; the top menu keeps its size so it fits on a phone */
+  html[data-size="s"] { --font-size: 15px; }
+  html[data-size="l"] { --font-size: 19px; }
+  html[data-size="xl"] { --font-size: 21px; }
+  nav.app-nav, nav.app-nav a, nav.app-nav li, nav.app-nav p { font-size: 17px !important; }
   /* Sidebar groups (see .docs/sidebar-groups.js) */
   .sidebar-nav li.group > strong { cursor: pointer; position: relative; }
   .sidebar-nav li.group > strong::before {

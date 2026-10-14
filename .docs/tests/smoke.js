@@ -185,6 +185,15 @@ async function run(browser, base, label, size, phone) {
     await page.reload();
     await page.waitForTimeout(2500);
     c('theme choice survives a reload', (await look()) === seen.midnight);
+    await page.evaluate(() => document.getElementById('theme-toggle').click());
+    await page.evaluate(() => document.querySelector('#theme-menu [data-size="xl"]').click());
+    await go('fields/deep-learning/concepts/sequence-models');
+    const big = await page.evaluate(async () => {
+      const px = parseFloat(getComputedStyle(document.querySelector('.markdown-section p')).fontSize);
+      window.scrollTo(200, 0); await new Promise((r) => setTimeout(r, 150));
+      return { px, wide: document.documentElement.scrollWidth - window.innerWidth, x: window.scrollX };
+    });
+    c('largest text size applies, fits the screen and is remembered', big.px >= 19 && big.wide <= 0 && big.x === 0, JSON.stringify(big));
   } else {
     // pages built before the theme list: the older single button
     const old = await page.evaluate(() => !!document.getElementById('docsify-darklight-theme'));

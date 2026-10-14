@@ -5,9 +5,18 @@
 // switches it on for the dark themes. Each theme's colours live in index.html
 // under html[data-theme="..."]; data-mode ("light" or "dark") marks the family
 // so rules shared by all dark themes (code colour, diagrams) stay in one place.
+// The same menu has a text size row (four sizes, remembered like the theme;
+// html[data-size] sets --font-size in index.html).
 // Loaded in <head> so the right theme is on screen from the first paint.
 (function () {
   var KEY = 'aCupOfTea-theme';
+  var SIZE_KEY = 'aCupOfTea-size';
+  var SIZES = [
+    { id: 's', label: 'Small text', px: 13 },
+    { id: 'm', label: 'Normal text', px: 15 },
+    { id: 'l', label: 'Large text', px: 17 },
+    { id: 'xl', label: 'Extra large text', px: 19 }
+  ];
   var root = document.documentElement;
   var THEMES = [
     { id: 'light',    label: 'Light',    mode: 'light', bg: '#ffffff', fg: '#34495e' },
@@ -22,11 +31,15 @@
     for (var i = 0; i < THEMES.length; i++) if (THEMES[i].id === id) return THEMES[i];
     return null;
   }
-  function stored() {
-    try { return localStorage.getItem(KEY); } catch (e) { return null; }
+  function stored(key) {
+    try { return localStorage.getItem(key || KEY); } catch (e) { return null; }
   }
-  function save(id) {
-    try { if (id) localStorage.setItem(KEY, id); else localStorage.removeItem(KEY); } catch (e) { /* private mode: still switches */ }
+  function save(id, key) {
+    try { if (id) localStorage.setItem(key || KEY, id); else localStorage.removeItem(key || KEY); } catch (e) { /* private mode: still switches */ }
+  }
+  function size() {
+    var s = stored(SIZE_KEY);
+    return /^(s|l|xl)$/.test(s || '') ? s : 'm';
   }
   function systemDark() {
     return !!(window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches);
@@ -43,11 +56,15 @@
     var theme = find(resolve(chosen()));
     root.setAttribute('data-theme', theme.id);
     root.setAttribute('data-mode', theme.mode);
+    if (size() === 'm') root.removeAttribute('data-size'); else root.setAttribute('data-size', size());
     var css = document.getElementById('dark-css');
     if (css) css.disabled = theme.mode !== 'dark';
     var items = document.querySelectorAll('#theme-menu [data-choice]');
     Array.prototype.forEach.call(items, function (el) {
       el.setAttribute('aria-checked', el.getAttribute('data-choice') === chosen() ? 'true' : 'false');
+    });
+    Array.prototype.forEach.call(document.querySelectorAll('#theme-menu [data-size]'), function (el) {
+      el.setAttribute('aria-checked', el.getAttribute('data-size') === size() ? 'true' : 'false');
     });
   }
   function closeMenu() {
@@ -68,7 +85,7 @@
     btn.id = 'theme-toggle';
     btn.type = 'button';
     btn.innerHTML = ICON;
-    btn.setAttribute('aria-label', 'Choose a theme');
+    btn.setAttribute('aria-label', 'Theme and text size');
     btn.setAttribute('aria-haspopup', 'true');
     btn.setAttribute('aria-expanded', 'false');
 
@@ -89,6 +106,28 @@
       item.addEventListener('click', function () { choose(t.id); });
       menu.appendChild(item);
     });
+
+    var row = document.createElement('div');
+    row.className = 'size-row';
+    row.setAttribute('role', 'group');
+    row.setAttribute('aria-label', 'Text size');
+    var label = document.createElement('span');
+    label.textContent = 'Text';
+    row.appendChild(label);
+    SIZES.forEach(function (z) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.setAttribute('role', 'menuitemradio');
+      b.setAttribute('data-size', z.id);
+      b.setAttribute('aria-label', z.label);
+      b.title = z.label;
+      b.textContent = 'A';
+      b.style.fontSize = z.px + 'px';
+      // stays open, so a reader can try the sizes one after another
+      b.addEventListener('click', function () { save(z.id === 'm' ? null : z.id, SIZE_KEY); apply(); });
+      row.appendChild(b);
+    });
+    menu.appendChild(row);
 
     btn.addEventListener('click', function (e) {
       e.stopPropagation();
