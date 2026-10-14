@@ -41,6 +41,9 @@ Not sure where to begin? Each of these takes one cup, roughly the reading time s
 | ~6 min | [Customer segmentation](/problems/customer-segmentation.md) | A business problem, framed the way a data scientist would |
 | ~7 min | [Schedulers, the traffic controller](/fields/schedulers/intro.md) | What a cluster scheduler does and why it matters |
 
+<!-- recent:start -->
+<!-- recent:end -->
+
 ## 🗺️ How to read it
 
 - **On the website:** use the sidebar. It is generated from the folder structure, so it always matches the repo.

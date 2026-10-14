@@ -96,6 +96,8 @@ On phones (up to 768px) a tap on a page image opens it large in a pan-and-pinch 
 
 On phones, tables with 2-4 columns show each row as a card and wider tables scroll sideways (`.docs/phone-tables.js` adds the classes, the CSS is in `index.html`); desktop is unchanged.
 
+The homepage has a "Recently added" block between `<!-- recent:start -->` and `<!-- recent:end -->` in `README.md`; `stage_site.py` fills it at deploy time with the newest added pages from git history (renames do not count), and the committed file keeps the empty markers.
+
 Every content page ends with "Edit this page" (the file on GitHub, branch `dev`) and, on the deployed site, "Last updated" (`.docs/page-footer.js`). The dates come from `.docs/last-updated.json`, which `stage_site.py` writes from git history (so the deploy checkout uses `fetch-depth: 0`); a local preview shows only the edit link.
 
 Generator behavior worth knowing: folders without any `.md` page are skipped; git submodules (not checked out in CI) are rendered as external links to their repositories; a `README.md` titled `Overview` is listed first.
