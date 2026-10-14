@@ -252,7 +252,24 @@ async function run(browser, base, label, size, phone) {
       const at = await page.evaluate(() => ({ hash: location.hash, h1: !!document.querySelector('.markdown-section h1'), lost: /This page is not here/.test(document.body.textContent) }));
       if (at.h1 && !at.lost && !/README/.test(at.hash)) landed.add(at.hash);
     }
-    c('"Surprise me" opens different real pages', landed.size >= 3, [...landed].join(' '));
+      await go('fields/benchmarks/hpl');
+    await page.context().grantPermissions(['clipboard-read', 'clipboard-write']).catch(() => {});
+    const link = await page.evaluate(async () => {
+      const b = document.querySelector('.markdown-section h2 .section-link-copy');
+      if (!b) return {};
+      b.click();
+      await new Promise((r) => setTimeout(r, 300));
+      return { url: b.getAttribute('data-url'), note: b.getAttribute('data-note') };
+    });
+    c('copy-a-link button copies the section address', /#\/fields\/benchmarks\/hpl\?id=/.test(link.url || '') && link.note === 'Copied', JSON.stringify(link));
+    if (link.url) {
+      await page.goto(link.url);
+      await page.waitForTimeout(2500);
+      const id = decodeURIComponent(link.url.split('?id=')[1]);
+      const top = await page.evaluate((i) => Math.round(document.getElementById(i).getBoundingClientRect().top), id);
+      c('a copied section link opens with that section on screen', top >= 0 && top < 800, 'heading top ' + top);
+    }
+  c('"Surprise me" opens different real pages', landed.size >= 3, [...landed].join(' '));
   }
   c('no script errors', page.errors.length === 0, page.errors.join(' | '));
   await page.context().close();
