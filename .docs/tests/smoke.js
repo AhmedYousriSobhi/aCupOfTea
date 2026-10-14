@@ -87,6 +87,14 @@ async function run(browser, base, label, size, phone) {
     } catch (e) { c('tapping an image opens the viewer', false, e.message.split('\n')[0]); }
   }
 
+  await go('fields/deep-learning/concepts/sequence-models');
+  const strip = await page.evaluate(() => {
+    const el = document.querySelector('.related-strip');
+    const h1 = document.querySelector('.markdown-section h1');
+    return { links: el ? el.querySelectorAll('a').length : 0, underTitle: !!el && !!h1 && h1.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING && el.getBoundingClientRect().top - h1.getBoundingClientRect().bottom < 120 };
+  });
+  c('related pages are linked right under the title', strip.links >= 1 && strip.underTitle, JSON.stringify(strip));
+
   await go('fields/benchmarks/hpl');
   c('formulas render', (await page.locator('.math-block .katex').count()) >= 8);
   await go('fields/system-administration/network', 4000);

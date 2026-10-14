@@ -10,6 +10,11 @@
   <meta property="og:description" content="Notes on AI, machine learning, software engineering and the business around them, short enough to read on a coffee break.">
   <meta name="twitter:card" content="summary">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="./.docs/icons/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="./.docs/icons/favicon-32.png">
+  <link rel="apple-touch-icon" href="./.docs/icons/apple-touch-icon.png">
+  <link rel="manifest" href="./.docs/icons/site.webmanifest">
+  <meta name="theme-color" content="#1f7a52">
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@5.0.0/dist/themes/core.min.css">
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@5.0.0/dist/themes/addons/vue.min.css">
   <link rel="stylesheet" id="dark-css" href="//cdn.jsdelivr.net/npm/docsify@5.0.0/dist/themes/addons/core-dark.min.css">
@@ -56,7 +61,10 @@
     .markdown-section > h1:first-of-type { margin-top: 40px !important; }
   }
   .markdown-section .math-block { overflow-x: auto; padding: 0.2em 0; }
-  /* Footer under each page: edit link and last-updated date */
+  /* Links to related pages, one line under the page title (added when the site is built) */
+  .markdown-section .related-strip { margin: 0.4em 0 1.4em; font-size: 0.92em; line-height: 1.7; color: var(--textColor); opacity: 0.95; }
+  .markdown-section .related-strip p { margin: 0; padding: 0.35em 0.8em; border-left: 3px solid var(--borderColor, #ccc); }
+    /* Footer under each page: edit link and last-updated date */
   .markdown-section .page-footer {
     margin-top: 3em;
     padding-top: 0.8em;
