@@ -23,6 +23,8 @@ Copies the repo to --out, then in the COPY only:
   * writes sw.js (the read-offline service worker) at the site root from
     .docs/sw-template.js, versioned with the git commit so each deploy gets a
     new cache; it has to sit at the root to control every page.
+  * losslessly recompresses PNG and JPEG images (optimize_images.py; skipped
+    when Pillow is not installed).
 Source files are never modified. Local `docsify serve` on the repo itself
 shows neither the stripping nor the related-pages strip; serve --out to see them.
 
@@ -43,6 +45,7 @@ from code_pages import write_code_pages  # noqa: E402
 from common import list_pages, split_front_matter, submodule_paths  # noqa: E402
 from generate_index import reading_time_min  # noqa: E402
 from share_pages import DEFAULT_BASE, write_share_pages  # noqa: E402
+from optimize_images import optimize_tree  # noqa: E402
 
 MARKER = ".stage-site"
 RELATED_MARK = "<!-- related-block -->"
@@ -244,6 +247,7 @@ def stage(src, out, base_url=DEFAULT_BASE):
 
     n_idx, idx_size = build_search_index(out)
     sw = write_service_worker(src, out)
+    images = optimize_tree(out)
 
     open(os.path.join(out, ".nojekyll"), "w").close()
     open(os.path.join(out, MARKER), "w").close()
@@ -252,7 +256,8 @@ def stage(src, out, base_url=DEFAULT_BASE):
           f"{n_code} code and notebook pages, {n_share} share pages, {len(recent)} recent pages, "
           f"last-updated dates for {len(dates)} pages, "
           f"search index of {n_idx} pages ({idx_size // 1024} KB), "
-          + (f"service worker {sw[0]} with {sw[1]} shell files" if sw else "no service worker"))
+          + (f"service worker {sw[0]} with {sw[1]} shell files" if sw else "no service worker")
+          + f"; {images}")
 
 
 def main():
