@@ -116,8 +116,10 @@ async function run(browser, base, label, size, phone) {
       head: !!document.querySelector('.code-file a[href*="github.com"]'),
       blocks: document.querySelectorAll('.markdown-section pre[data-lang="python"]').length,
       missing: /This page is not here/.test(document.body.textContent),
+      colours: document.querySelectorAll('.markdown-section pre[data-lang="python"] .token.keyword').length,
     }));
     c(`a ${kind} link opens a readable page`, code.head && code.blocks >= 1 && !code.missing, JSON.stringify(code));
+    if (kind === 'script') c('Python code is highlighted', code.colours >= 3, 'keywords: ' + code.colours);
   }
 
   await go('this-page-does-not-exist');
