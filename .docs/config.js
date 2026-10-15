@@ -14,7 +14,14 @@ window.$docsify = Object.assign(window.$docsify || {}, {
   // sections (h2, h3) under it in the sidebar instead.
   subMaxLevel: window.matchMedia('(max-width: 1399px)').matches ? 3 : 0,
   auto2top: true,
-  plugins: [window.themeToggle],
+  plugins: [window.themeToggle, function (hook) {
+    // Docsify 5's auto2top leaves the window where it was (the window, not an
+    // inner box, is the scroller), so Next opened the next page mid-page:
+    // start every page at its top unless the link names a section.
+    hook.doneEach(function () {
+      if (!/[?&]id=/.test(location.hash)) window.scrollTo(0, 0);
+    });
+  }],
    pagination: {
     previousText: 'Previous',
     nextText: 'Next',

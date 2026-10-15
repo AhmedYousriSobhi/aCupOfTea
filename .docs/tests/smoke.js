@@ -127,6 +127,21 @@ async function run(browser, base, label, size, phone) {
       c('tapping an image opens the viewer', await page.evaluate(() => document.documentElement.style.overflow === 'hidden'));
     } catch (e) { c('tapping an image opens the viewer', false, e.message.split('\n')[0]); }
   }
+  const nxt = await page.evaluate(async () => {
+    const a = document.querySelector('.pagination-item--next a');
+    if (!a) return null;
+    for (let i = 0; i < 3; i++) {  // late images move the end of the page: scroll until Next is steady
+      a.scrollIntoView({ block: 'end' });
+      await new Promise((r) => setTimeout(r, 500));
+    }
+    window.scrollTo(0, document.documentElement.scrollHeight);
+    await new Promise((r) => setTimeout(r, 400));
+    const gap = document.getElementById('back-to-top').getBoundingClientRect().top - document.querySelector('.pagination-item--next').getBoundingClientRect().bottom;
+    a.click();
+    await new Promise((r) => setTimeout(r, 2000));
+    return { y: Math.round(window.scrollY), gap: Math.round(gap) };
+  });
+  c('Next opens the next page at its top, clear of back-to-top', nxt && nxt.y < 20 && nxt.gap >= 0, JSON.stringify(nxt));
 
   await go('fields/deep-learning/concepts/sequence-models');
   const strip = await page.evaluate(() => {
@@ -285,6 +300,13 @@ async function run(browser, base, label, size, phone) {
     }
   c('"Surprise me" opens different real pages', landed.size >= 3, [...landed].join(' '));
   }
+  const nested = await page.evaluate(() => {
+    const label = (t) => [...document.querySelectorAll('.sidebar-nav li.group')].find((l) => l.firstElementChild.textContent.trim() === t);
+    ['Fields', 'Benchmarks'].forEach((t) => { const l = label(t); if (l && l.classList.contains('collapsed')) l.firstElementChild.click(); });
+    const b = label('Benchmarks');
+    return !!b && !b.classList.contains('collapsed') && b.querySelectorAll('a').length > 1;
+  });
+  c('a folder inside a folder in the menu opens when tapped', nested);
   c('no script errors', page.errors.length === 0, page.errors.join(' | '));
   await page.context().close();
 }
