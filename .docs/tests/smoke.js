@@ -300,6 +300,13 @@ async function run(browser, base, label, size, phone) {
     }
   c('"Surprise me" opens different real pages', landed.size >= 3, [...landed].join(' '));
   }
+  const nested = await page.evaluate(() => {
+    const label = (t) => [...document.querySelectorAll('.sidebar-nav li.group')].find((l) => l.firstElementChild.textContent.trim() === t);
+    ['Fields', 'Benchmarks'].forEach((t) => { const l = label(t); if (l && l.classList.contains('collapsed')) l.firstElementChild.click(); });
+    const b = label('Benchmarks');
+    return !!b && !b.classList.contains('collapsed') && b.querySelectorAll('a').length > 1;
+  });
+  c('a folder inside a folder in the menu opens when tapped', nested);
   c('no script errors', page.errors.length === 0, page.errors.join(' | '));
   await page.context().close();
 }
