@@ -95,7 +95,7 @@ python3 -m http.server 8000 --directory _site     # then open http://localhost:8
 | `validate.py` | check front matter, domains, tags and relations |
 | `check_links.py` | find broken internal links, unsafe HTML and pictures without a description |
 | `generate_index.py` | rebuild the Explore and Start here pages in `.docs/generated` |
-| `stage_site.py` | build the deployed copy of the site locally |
+| `stage_site.py` | build the deployed copy of the site locally, into `_site/` (git-ignored) |
 | `update_recent.py` | refresh the "Recently added" list in the README; the maintainer runs it before a release |
 | `check_pins.py` | compare the pinned CDN versions with npm and update their hashes (site maintenance) |
 
