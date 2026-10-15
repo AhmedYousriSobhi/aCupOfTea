@@ -1,0 +1,190 @@
+{
+  "business/hpc-industry/101-hpc.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "hpc-workloads",
+        "path": "business/hpc-industry/workloads.md",
+        "title": "HPC Workloads"
+      }
+    ],
+    "required_by": []
+  },
+  "business/hpc-industry/workloads.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "hpc-systems-overview",
+        "path": "business/hpc-industry/101-hpc.md",
+        "title": "HPC Systems"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/benchmarks/nccl.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "pytorch-ddp",
+        "path": "fields/libraries-frameworks-containers/102-pytorch-ddp.md",
+        "title": "PyTorch DDP"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/benchmarks/parallel-execution-affinity-master-guide.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "cpu-affinity",
+        "path": "programming/operating-system/process-cpu-affinity.md",
+        "title": "CPU Affinity"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/deep-learning/concepts/basics.md": {
+    "prerequisites": [],
+    "related": [],
+    "required_by": [
+      {
+        "id": "sequence-models",
+        "path": "fields/deep-learning/concepts/sequence-models.md",
+        "title": "Sequence Models"
+      }
+    ]
+  },
+  "fields/deep-learning/concepts/sequence-models.md": {
+    "prerequisites": [
+      {
+        "id": "deep-learning-basics",
+        "path": "fields/deep-learning/concepts/basics.md",
+        "title": "Deep Learning Basics"
+      }
+    ],
+    "related": [],
+    "required_by": [
+      {
+        "id": "encoder-decoder-machine-translation",
+        "path": "fields/generative-ai/machine-translator/encoder-decoder.md",
+        "title": "Encoder-Decoder for Machine Translation"
+      }
+    ]
+  },
+  "fields/generative-ai/machine-translator/encoder-decoder.md": {
+    "prerequisites": [
+      {
+        "id": "sequence-models",
+        "path": "fields/deep-learning/concepts/sequence-models.md",
+        "title": "Sequence Models"
+      }
+    ],
+    "related": [],
+    "required_by": []
+  },
+  "fields/libraries-frameworks-containers/101-containers.md": {
+    "prerequisites": [],
+    "related": [],
+    "required_by": [
+      {
+        "id": "singularity-containers",
+        "path": "fields/libraries-frameworks-containers/101-singularity.md",
+        "title": "Singularity"
+      }
+    ]
+  },
+  "fields/libraries-frameworks-containers/101-pytorch.md": {
+    "prerequisites": [],
+    "related": [],
+    "required_by": [
+      {
+        "id": "pytorch-ddp",
+        "path": "fields/libraries-frameworks-containers/102-pytorch-ddp.md",
+        "title": "PyTorch DDP"
+      }
+    ]
+  },
+  "fields/libraries-frameworks-containers/101-singularity.md": {
+    "prerequisites": [
+      {
+        "id": "containers-101",
+        "path": "fields/libraries-frameworks-containers/101-containers.md",
+        "title": "Containers 101"
+      }
+    ],
+    "related": [],
+    "required_by": []
+  },
+  "fields/libraries-frameworks-containers/102-pytorch-ddp.md": {
+    "prerequisites": [
+      {
+        "id": "pytorch-101",
+        "path": "fields/libraries-frameworks-containers/101-pytorch.md",
+        "title": "PyTorch 101"
+      }
+    ],
+    "related": [
+      {
+        "id": "nccl-collective-communication",
+        "path": "fields/benchmarks/nccl.md",
+        "title": "NCCL"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/tabular-data/concept-in-machine-learning/ml-unsupervised.md": {
+    "prerequisites": [],
+    "related": [],
+    "required_by": [
+      {
+        "id": "customer-segmentation-problem",
+        "path": "problems/customer-segmentation.md",
+        "title": "Customer Segmentation"
+      }
+    ]
+  },
+  "fields/tabular-data/data-evaluation/classification/accuracy-paradox.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "bias-variance-trade-off",
+        "path": "fields/tabular-data/data-evaluation/model-behavior/bias-variance-trade-off.md",
+        "title": "Bias and Variance Trade-Off"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/tabular-data/data-evaluation/model-behavior/bias-variance-trade-off.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "accuracy-paradox",
+        "path": "fields/tabular-data/data-evaluation/classification/accuracy-paradox.md",
+        "title": "Accuracy Paradox"
+      }
+    ],
+    "required_by": []
+  },
+  "problems/customer-segmentation.md": {
+    "prerequisites": [
+      {
+        "id": "unsupervised-learning",
+        "path": "fields/tabular-data/concept-in-machine-learning/ml-unsupervised.md",
+        "title": "Unsupervised Learning"
+      }
+    ],
+    "related": [],
+    "required_by": []
+  },
+  "programming/operating-system/process-cpu-affinity.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "parallel-execution-and-affinity",
+        "path": "fields/benchmarks/parallel-execution-affinity-master-guide.md",
+        "title": "Parallel Execution and Affinity"
+      }
+    ],
+    "required_by": []
+  }
+}
