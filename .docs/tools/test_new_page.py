@@ -39,9 +39,50 @@ class DryRun(unittest.TestCase):
         r = dry_run("--title", "Deep Learning - Tips", "--folder", "fields/schedulers")
         self.assertIn("the sidebar shows the full title", r.stdout)
 
+    def test_type_domains_and_related(self):
+        r = dry_run("--title", "A Quick Look", "--folder", "fields/schedulers", "--type", "guide",
+                    "--domains", "systems-and-hpc", "--related", "sequence-models")
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertIn("type: guide", r.stdout)
+        self.assertIn("domains: [systems-and-hpc]", r.stdout)
+        self.assertIn("  related: [sequence-models]", r.stdout)
+
+    def test_domains_suggested_from_neighbours(self):
+        r = dry_run("--title", "Slurm Job Arrays", "--folder", "fields/schedulers")
+        self.assertIn("domains: [systems-and-hpc", r.stdout)
+
+    def test_unknown_domain_is_refused(self):
+        r = dry_run("--title", "A Quick Look", "--folder", "fields/schedulers", "--domains", "cooking")
+        self.assertNotEqual(r.returncode, 0)
+        self.assertIn("cooking", r.stderr)
+
     def test_folder_ranking(self):
         folders = new_page.scan()
         self.assertEqual(new_page.suggest_folders("Slurm job arrays", folders)[0], "fields/schedulers")
+
+
+class Check(unittest.TestCase):
+    def test_reading_time_and_todos(self):
+        page = ("---\nid: x\ntitle: X\n---\n\n# X\n\n" + "word " * 450
+                + "\n\n## Example\n\n<!-- Code, commands -->\n\n![image](images/a.png)\n\n```\n" + "code " * 900 + "\n```\n")
+        with tempfile.TemporaryDirectory() as root:
+            with open(os.path.join(root, "x.md"), "w", encoding="utf-8") as fh:
+                fh.write(page)
+            old, new_page.ROOT = new_page.ROOT, root
+            try:
+                import contextlib
+                import io
+                out = io.StringIO()
+                with contextlib.redirect_stdout(out):
+                    todos = new_page.check_page("x.md")
+            finally:
+                new_page.ROOT = old
+        text = out.getvalue()
+        self.assertIn("Reading time: 3 min", text)   # 450+ words, code not counted
+        self.assertIn("outline note", text)
+        self.assertIn("without a description", text)
+        self.assertIn("no domains", text)
+        self.assertGreaterEqual(todos, 4)
 
 
 class IndexLink(unittest.TestCase):

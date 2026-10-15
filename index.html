@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <!-- Content-Security-Policy: scripts only from this site and the pinned CDN (no inline scripts),
+       no plugins or frames. GitHub Pages cannot send headers, so it is set here. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; font-src 'self' data: https://cdn.jsdelivr.net https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; frame-src 'none'; base-uri 'self'; form-action 'none'">
   <title>aCupOfTea: knowledge in short sips</title>
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="description" content="Notes on AI, machine learning, software engineering and the business around them, short enough to read on a coffee break.">
@@ -15,11 +18,10 @@
   <link rel="apple-touch-icon" href="./.docs/icons/apple-touch-icon.png">
   <link rel="manifest" href="./.docs/icons/site.webmanifest">
   <meta name="theme-color" content="#1f7a52">
-  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@5.0.0/dist/themes/core.min.css">
-  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@5.0.0/dist/themes/addons/vue.min.css">
-  <link rel="stylesheet" id="dark-css" href="//cdn.jsdelivr.net/npm/docsify@5.0.0/dist/themes/addons/core-dark.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify@5.0.0/dist/themes/core.min.css" integrity="sha384-u1ltA0BWEetQbGokjUjglT9sN702RQwy8JESh3Ha4GNlyzMU57usk6duY0/BOTMj" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify@5.0.0/dist/themes/addons/vue.min.css" integrity="sha384-Juf4pwILpOysilbsFQxO8a3Ct3yDvSPolGmartfG+QQRLj6m7c1mYWV38WDI1N93" crossorigin="anonymous">
+  <link rel="stylesheet" id="dark-css" href="https://cdn.jsdelivr.net/npm/docsify@5.0.0/dist/themes/addons/core-dark.min.css" integrity="sha384-g9crfHW8IcGuSHfca3iTqOPPx2uRbodq5uKkC9CiXVqnNVszeNEYKIs5nYc8wUXY" crossorigin="anonymous">
   <script src="./.docs/theme-toggle.js"></script>
-  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex@0.19.0/dist/katex.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=PT+Sans&family=JetBrains+Mono&display=swap" rel="stylesheet">
@@ -50,18 +52,54 @@
     fill: #c9d4de !important;
     stroke: #c9d4de !important;
   }
-  /* Phones: the top bar (menu, theme toggle) overlaps the page title. */
+  /* Phones: one top bar that stays on screen, links on the left and the theme
+     button at its right end (where phone readers look for settings). The
+     GitHub corner would cover that spot, so on phones the GitHub link moves to
+     the end of the side menu (.docs/config.js). */
   @media (max-width: 768px) {
-    :root { --scroll-padding-top: 100px; }
-    #theme-toggle { right: auto; left: 40px; top: 12px; }
-    #theme-menu { right: auto; left: 40px; top: 54px; }
+    :root { --scroll-padding-top: 72px; }
+    nav.app-nav {
+      top: 0 !important; left: 0 !important; right: 0 !important; margin: 0 !important;
+      min-height: 52px; padding: 4px 60px 4px 14px !important; border-radius: 0 !important;
+      justify-content: flex-start !important; align-items: center; gap: 4px 12px !important;
+      border-bottom: 1px solid var(--border-color); z-index: 45;
+    }
+    .github-corner { display: none !important; }
+    html body #theme-toggle { position: fixed; top: 4px; right: 8px; left: auto; }
+    html body #theme-menu { position: fixed; top: 54px; right: 8px; left: auto; max-height: calc(100vh - 70px); overflow-y: auto; }
+    /* Menu button: Docsify makes the whole left edge (35px, full height) the tap
+       target, so taps on text near the edge opened the menu. Keep it 44px wide
+       but only over its button at the bottom; while the menu is open it still
+       covers the rest of the screen, so a tap outside closes the menu. */
+    body:not(:has(.sidebar.show)) .sidebar-toggle {
+      width: 44px; top: auto !important; bottom: 0;
+      height: calc(var(--sidebar-toggle-height) + 2 * var(--sidebar-toggle-margin-block));
+    }
     body:has(.sidebar.show) #theme-toggle, body:has(.sidebar.show) #theme-menu { display: none; }
-    section.content { padding-top: 80px !important; }
-    /* keep the theme toggle (moon) off the first heading */
-    .markdown-section > h1:first-of-type { margin-top: 40px !important; }
+    section.content { padding-top: 52px !important; }
+    .markdown-section { padding-top: 12px !important; }
   }
   .markdown-section .math-block { overflow-x: auto; padding: 0.2em 0; }
   /* Links to related pages, one line under the page title (added when the site is built) */
+  /* Readers who ask for less motion: no sliding menu, fades or smooth scrolling */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; }
+  }
+  /* Reading progress bar and back-to-top button (.docs/reading-progress.js) */
+  #read-progress { position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 70; background: var(--theme-color); transform-origin: 0 50%; transform: scaleX(0); pointer-events: none; }
+  #back-to-top { position: fixed; right: 16px; bottom: 20px; z-index: 55; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--borderColor, #ddd); background: var(--color-bg); color: var(--theme-color); display: flex; align-items: center; justify-content: center; padding: 0; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+  #back-to-top svg { flex: none; }
+  #back-to-top[hidden] { display: none; }
+  @media (max-width: 768px) { body:has(.sidebar.show) #back-to-top { display: none; } }
+  /* Pages built for code files and notebooks (see .docs/tools/code_pages.py) */
+  .markdown-section h1 { overflow-wrap: anywhere; }
+  .markdown-section .code-file p { margin: 0 0 1.4em; padding: 0.35em 0.8em; border-left: 3px solid var(--theme-color); font-size: 0.92em; }
+  .markdown-section pre[data-lang="output"] { background: transparent; border: 1px solid var(--borderColor, #ddd); margin-top: -0.6em; }
+  .markdown-section pre[data-lang="output"]::after { content: "Output"; }
+  .markdown-section .nb-output { overflow-x: auto; max-width: 100%; margin: -0.4em 0 1em; font-size: 0.9em; }
+  /* Reading time, one quiet line under the page title (added when the site is built) */
+  .markdown-section .reading-time { margin: -0.4em 0 1em; font-size: 0.85em; opacity: 0.75; }
+  .markdown-section .reading-time + .related-strip { margin-top: 0; }
   .markdown-section .related-strip { margin: 0.4em 0 1.4em; font-size: 0.92em; line-height: 1.7; color: var(--textColor); opacity: 0.95; }
   .markdown-section .related-strip p { margin: 0; padding: 0.35em 0.8em; border-left: 3px solid var(--borderColor, #ccc); }
     /* Footer under each page: edit link and last-updated date */
@@ -156,7 +194,7 @@
     padding: 30px 0 40px !important;
   }
   @media (max-width: 768px) {
-    app-nav, nav.app-nav { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 4px 14px; }
+    app-nav, nav.app-nav { display: flex; flex-wrap: wrap; }
   }
   @media (min-width: 1400px) { section.content { padding-right: 240px; } }
   /* Page outline (wide screens), see .docs/page-outline.js */
@@ -170,18 +208,30 @@
   aside.page-outline a.sub { padding-left: 12px; }
   aside.page-outline a.active { opacity: 1; color: var(--link); font-weight: 600; }
   .markdown-section pre, .markdown-section table, .markdown-section .math-block { max-width: 100%; box-sizing: border-box; }
-  html, body { overflow-x: hidden; }
+  html, body { overflow-x: clip; }  /* clip, not hidden: hidden would make <body> the scroller and window scroll events would stop */
+  /* the top menu and the GitHub corner stay on screen while the page scrolls */
+  nav.app-nav, .github-corner { position: fixed; }
   /* The top menu stays on screen in Docsify 5; give it a background so text does not run through it */
   nav.app-nav { background: var(--color-bg); border-radius: 8px; padding: 2px 10px; }
+  /* Copy-a-link button after h2/h3 (.docs/section-links.js) */
+  .section-link-copy { position: relative; margin-left: 0.35em; padding: 4px; border: 0; background: transparent; color: var(--link); vertical-align: middle; cursor: pointer; opacity: 0; transition: opacity 0.15s; }
+  .section-link-copy svg { display: block; }
+  h2:hover .section-link-copy, h3:hover .section-link-copy, .section-link-copy:focus-visible, .section-link-copy[data-note] { opacity: 0.8; }
+  @media (hover: none) { .section-link-copy { opacity: 0.45; } }
+  .section-link-copy[data-note]::after { content: attr(data-note); position: absolute; left: 100%; top: 50%; transform: translateY(-50%); margin-left: 6px; padding: 2px 8px; border-radius: 6px; background: var(--color-text); color: var(--color-bg); font-size: 12px; font-weight: 400; white-space: nowrap; }
+  #surprise-me { display: block; margin: 0 20px 0.8em; padding: 8px 12px; border: 1px dashed var(--border-color); border-radius: 8px; color: var(--link); font-weight: 600; text-decoration: none; text-align: center; font-size: 0.95em; }
+  #surprise-me:hover { border-style: solid; }
+  #menu-github { display: none; margin: 1.5em 20px 2em; padding-top: 1em; border-top: 1px solid var(--border-color); font-size: 0.9em; }
+  @media (max-width: 768px) { #menu-github { display: block; } }
   /* Theme button (see .docs/theme-toggle.js) */
   #theme-toggle {
     position: absolute; top: 74px; right: 16px; z-index: 60;
-    width: 36px; height: 36px; padding: 6px; border: 0; border-radius: 50%;
+    width: 44px; height: 44px; padding: 10px; border: 0; border-radius: 50%;
     background: transparent; color: var(--color-text); cursor: pointer; opacity: 0.8;
   }
   #theme-toggle:hover { opacity: 1; }
   #theme-menu {
-    position: absolute; top: 114px; right: 16px; z-index: 61; min-width: 170px; padding: 6px;
+    position: absolute; top: 122px; right: 16px; z-index: 61; min-width: 170px; padding: 6px;
     background: var(--color-bg); color: var(--color-text); border: 1px solid var(--border-color);
     border-radius: 10px; box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
   }
@@ -194,6 +244,14 @@
   #theme-menu button[aria-checked="true"] { font-weight: 700; color: var(--link); }
   #theme-menu .swatch { width: 18px; height: 18px; border-radius: 50%; border: 1px solid var(--border-color); flex: none; }
   #theme-toggle svg { display: block; }
+  #theme-menu .size-row { display: flex; align-items: center; gap: 2px; margin-top: 6px; padding: 8px 4px 2px 10px; border-top: 1px solid var(--border-color); }
+  #theme-menu .size-row span { flex: 1; font-size: 0.85rem; opacity: 0.75; }
+  #theme-menu .size-row button { width: 34px; height: 34px; padding: 0; justify-content: center; line-height: 1; }
+  /* Text size from the theme menu; the top menu keeps its size so it fits on a phone */
+  html[data-size="s"] { --font-size: 15px; }
+  html[data-size="l"] { --font-size: 19px; }
+  html[data-size="xl"] { --font-size: 21px; }
+  nav.app-nav, nav.app-nav a, nav.app-nav li, nav.app-nav p { font-size: 17px !important; }
   /* Sidebar groups (see .docs/sidebar-groups.js) */
   .sidebar-nav li.group > strong { cursor: pointer; position: relative; }
   .sidebar-nav li.group > strong::before {
@@ -214,75 +272,49 @@
 
 <body>
   <div id="app"></div>
-  <script>
-    window.$docsify = {
-      name: 'aCupOfTea',
-      repo: 'AhmedYousriSobhi/aCupOfTea',
-      // basePath: '../', // Tell docsify to look for the markdown files in the parent directory
-      loadSidebar: './.docs/_sidebar.md',
-      loadNavbar: './.docs/_navbar.md',
-      notFoundPage: './.docs/_404.md',
-      relativePath: false, // Use relative paths for sidebar and navbar links
-      // Below 1400px the right-hand outline is hidden, so list the page's
-      // sections (h2, h3) under it in the sidebar instead.
-      subMaxLevel: window.matchMedia('(max-width: 1399px)').matches ? 3 : 0,
-      auto2top: true,
-      plugins: [window.themeToggle],
-       pagination: {
-        previousText: 'Previous',
-        nextText: 'Next',
-        crossChapter: true,
-        crossChapterText: true,
-      },
-      // Configure the tabs plugin
-      tabs: {
-        persist: true,      // stay on the same tab when refreshing
-        sync: true,         // sync tabs with same label across page
-        theme: 'classic',   // 'classic' or 'material'
-      },
-      // Add this to help Docsify match URLs to the sidebar entries
-      alias: {
-        '/(.*)/_sidebar.md': './.docs/_sidebar.md',
-        '/(.*)/_navbar.md': './.docs/_navbar.md'
-      },
-    }
-  </script>
-  <script>
-    // On phones the sidebar covers the page: close it after a section link is
-    // tapped so the reader lands on the heading, not on the menu.
-    document.addEventListener('click', function (e) {
-      var link = e.target.closest && e.target.closest('.sidebar-nav a.section-link');
-      if (!link || window.innerWidth > 768) return;
-      setTimeout(function () {
-        var open = document.querySelector('aside.sidebar.show');
-        var toggle = document.querySelector('button.sidebar-toggle');
-        if (open && toggle) toggle.click();
-      }, 0);
-    });
-  </script>
-  <script src="//cdn.jsdelivr.net/npm/katex@0.19.0/dist/katex.min.js"></script>
+  <noscript>
+    <div style="max-width:640px;margin:15vh auto;padding:0 16px;font:17px/1.6 sans-serif;color:#34495e">
+      <h1 style="font-size:1.6em">aCupOfTea</h1>
+      <p>This site needs JavaScript to show its pages. Every page can also be read as plain markdown in the
+      <a href="https://github.com/AhmedYousriSobhi/aCupOfTea">repository on GitHub</a>.</p>
+    </div>
+  </noscript>
+  <!-- Docsify settings (window.$docsify) -->
+  <script src="./.docs/config.js"></script>
   <script src="./.docs/math.js"></script>
+  <!-- Mermaid and KaTeX load only on pages that use them -->
+  <script src="./.docs/lazy-libs.js"></script>
   <script src="./.docs/phone-tables.js"></script>
   <script src="./.docs/lazy-images.js"></script>
   <script src="./.docs/page-footer.js"></script>
   <script src="./.docs/page-outline.js"></script>
+  <script src="./.docs/reading-progress.js"></script>
+  <script src="./.docs/surprise-me.js"></script>
+  <script src="./.docs/section-links.js"></script>
+  <!-- Read offline: keeps a copy of each page opened (service worker, deployed site only) -->
+  <script src="./.docs/offline.js"></script>
   <!-- Two-group search (replaces the built-in Docsify search) -->
   <script src="./.docs/search.js"></script>
   <!-- Docsify v5 -->
-  <script src="//cdn.jsdelivr.net/npm/docsify@5.0.0/dist/docsify.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/docsify@5.0.0/dist/plugins/zoom-image.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify@5.0.0/dist/docsify.min.js" integrity="sha384-w6yZXzkazsxmservgGooUY9zjEHzIFHubRNZMLJ3enj/JD+Z8BvAGBqdrjfnLNhu" crossorigin="anonymous"></script>
+  <!-- Code colours for the languages the pages use (Docsify bundles Prism with web languages only) -->
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-bash.min.js" integrity="sha384-9WmlN8ABpoFSSHvBGGjhvB3E/D8UkNB9HpLJjBQFC2VSQsM1odiQDv4NbEo+7l15" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-python.min.js" integrity="sha384-WJdEkJKrbsqw0evQ4GB6mlsKe5cGTxBOw4KAEIa52ZLB7DDpliGkwdme/HMa5n1m" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-powershell.min.js" integrity="sha384-xbI9krqyYp4npK9Cn94XyNoSR+TYZKddrk0NUVZ44zZ+OVpKz/LL0U1PB0MjR7Vx" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-yaml.min.js" integrity="sha384-AKAiycghK0jDCjD+aavMHzDkLzRR7Yzcwh3+xL/295cvyVMe+cxQfyQC8xxGGcI8" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-c.min.js" integrity="sha384-gaD4ncierlmWk42Z3BmTp37/z+Dqt8V4Wf74UjTvFeo+M+SgnEI6Ysd98pWhksQv" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-ini.min.js" integrity="sha384-IzgZExoq7muPnVEjP/MVubbALJ4d+D++YULBQxvKKWLSoXut91gFAg36n+5WAFf6" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-sql.min.js" integrity="sha384-/MKWdycCDliku23mP5sYXbZNuXrzgmQO/jsVxwPFn99dVOaXRyKsqDjarqpueGAp" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify@5.0.0/dist/plugins/zoom-image.min.js" integrity="sha384-fEfrGm33VrJRIHLahu6V+6z/ko0yy5DuXngjAfwUDYN9jlYLwxTySLCReKmEh6vo" crossorigin="anonymous"></script>
   <!-- On phones, tapping a picture opens it full size to pan and pinch -->
   <script src="./.docs/image-viewer.js"></script>
   <!-- Hides YAML front matter (title, summary, tags) from the rendered page -->
-  <script src="//cdn.jsdelivr.net/npm/docsify@5.0.0/dist/plugins/front-matter.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/docsify-copy-code@3.0.2/dist/docsify-copy-code.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/docsify-tabs@1.6.3/dist/docsify-tabs.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify@5.0.0/dist/plugins/front-matter.min.js" integrity="sha384-q8Wjf/FHh26HTvmdZvJLHedWqYyJqQIEiUUQgGuIM8Efquoyrs3G5lxd619gLhvl" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify-copy-code@3.0.2/dist/docsify-copy-code.min.js" integrity="sha384-xvU4Qmx14Fe/3hDKuOUUQ8eOzoa7OVTL0vp3amTSv2KY8lCjlrga7DoqecFFOT7j" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify-tabs@1.6.3/dist/docsify-tabs.min.js" integrity="sha384-QA3IVKzXq6xcKR8yQJHgDbI1FcJiQ137Cuetl1VWzUxJ6BQ7ew0MMq5fg2HbFK1o" crossorigin="anonymous"></script>
   <script src="./.docs/sidebar-groups.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/docsify-pagination@2.10.1/dist/docsify-pagination.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/docsify-plugin-flexible-alerts@1.3.0/dist/docsify-plugin-flexible-alerts.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/mermaid@12.2.0/dist/mermaid.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/docsify-mermaid@2.0.1/dist/docsify-mermaid.js"></script>
-  <script>mermaid.initialize({ startOnLoad: true });</script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify-pagination@2.10.1/dist/docsify-pagination.min.js" integrity="sha384-uFEp18/1vv2dYlO64J2lOcnbhirAQZPtruqAZZ7PZYoXenm5c+tIs3AqSMjVMRe8" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify-plugin-flexible-alerts@1.3.0/dist/docsify-plugin-flexible-alerts.min.js" integrity="sha384-62mB0esH4v+xjk8v2AlYluN29nnWLddo1FVuCmZJQJE3ULtg6NbWOPGyX4TWutgu" crossorigin="anonymous"></script>
 
 </body>
 </html>

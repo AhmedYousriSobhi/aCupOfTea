@@ -27,6 +27,9 @@
       el.removeAttribute('data-tex');
     });
   }
+  // KaTeX itself is loaded by .docs/lazy-libs.js only on pages with a formula,
+  // which then calls this.
+  window.renderMath = render;
   var cfg = window.$docsify = window.$docsify || {};
   cfg.plugins = [].concat(cfg.plugins || [], function (hook) {
     hook.beforeEach(protect);

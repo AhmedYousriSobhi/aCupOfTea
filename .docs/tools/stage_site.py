@@ -4,15 +4,22 @@
 Copies the repo to --out, then in the COPY only:
   * strips YAML front matter from every page (LF or CRLF), so Docsify
     rendering and its search index stay clean;
+  * puts the reading time ("6 min read") under the title of every content page
+    (not the homepage and not folder indexes with a "## Contents" list);
   * puts a one-line "Read first / See also / Read next" strip under the title of pages
     that have relations, from
     .docs/generated/related.json (run generate_index.py first);
+  * writes a readable page next to every code file and notebook
+    (name.py -> name.py.md, the address a Docsify link asks for; code_pages.py);
   * writes .docs/last-updated.json (page -> date of its last git commit) for
     the page footer, when the checkout has git history;
   * fills the homepage block between <!-- recent:start --> and <!-- recent:end -->
     with the pages most recently added (git history, renames excluded);
   * writes .docs/search-index.json (build_search_index.py) so the site search
-    loads one file instead of fetching every page.
+    loads one file instead of fetching every page;
+  * writes sw.js (the read-offline service worker) at the site root from
+    .docs/sw-template.js, versioned with the git commit so each deploy gets a
+    new cache; it has to sit at the root to control every page.
 Source files are never modified. Local `docsify serve` on the repo itself
 shows neither the stripping nor the related-pages strip; serve --out to see them.
 
@@ -25,16 +32,23 @@ import re
 import shutil
 import subprocess
 import sys
+import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from build_search_index import build as build_search_index  # noqa: E402
+from code_pages import write_code_pages  # noqa: E402
 from common import list_pages, split_front_matter, submodule_paths  # noqa: E402
+from generate_index import reading_time_min  # noqa: E402
 
 MARKER = ".stage-site"
 RELATED_MARK = "<!-- related-block -->"
 RECENT_RE = re.compile(r"<!-- recent:start -->.*?<!-- recent:end -->", re.S)
 RECENT_COUNT = 6
 NOT_RECENT = {"README.md", "SPEC.md", "CLAUDE.md"}
+INDEX_RE = re.compile(r"^## +Contents\s*$", re.M)
+SW_TEMPLATE = ".docs/sw-template.js"
+# local scripts/stylesheets and pinned CDN files that index.html loads (the offline shell)
+ASSET_RE = re.compile(r'<(?:script|link)\b[^>]*?\b(?:src|href)="((?:\./|https://cdn\.jsdelivr\.net/)[^"]+)"')
 
 
 def render_related(block):
@@ -50,6 +64,14 @@ def render_related(block):
     if not groups:
         return ""
     return "\n".join([RELATED_MARK, '<div class="related-strip">', "", "  \u00b7  ".join(groups), "", "</div>", ""])
+
+
+def render_reading_time(path, body):
+    """'N min read' block for a content page; '' for the root docs and folder indexes."""
+    if path in NOT_RECENT or (path.endswith("README.md") and INDEX_RE.search(body)):
+        return ""
+    # same marker as the related strip: search drops it from the page text
+    return f'{RELATED_MARK}\n<div class="reading-time">{reading_time_min(body)} min read</div>\n'
 
 
 def put_related(text, strip):
@@ -115,6 +137,37 @@ def render_recent(out, recent):
     return "\n".join(lines + ["", "<!-- recent:end -->"])
 
 
+def site_version(src):
+    """The git commit of the source (short), or a timestamp without git."""
+    try:
+        return subprocess.run(["git", "-C", src, "rev-parse", "--short=12", "HEAD"],
+                              capture_output=True, text=True, check=True).stdout.strip()
+    except (OSError, subprocess.CalledProcessError):
+        return time.strftime("%Y%m%d%H%M%S", time.gmtime())
+
+
+def write_service_worker(src, out):
+    """sw.js at the root of the staged site; (version, shell file count), or None without a template."""
+    template = os.path.join(out, SW_TEMPLATE)
+    index = os.path.join(out, "index.html")
+    if not (os.path.exists(template) and os.path.exists(index)):
+        return None
+    with open(index, encoding="utf-8") as f:
+        assets = [u[2:] if u.startswith("./") else u for u in ASSET_RE.findall(f.read())]
+    shell = ["./", "index.html", ".docs/_sidebar.md", ".docs/_navbar.md", ".docs/_404.md", "README.md"]
+    shell += [p for p in (".docs/search-index.json", ".docs/last-updated.json")
+              if os.path.exists(os.path.join(out, p))]
+    shell += [a for a in assets
+              if a not in shell and (a.startswith("https://") or os.path.exists(os.path.join(out, a)))]
+    version = site_version(src)
+    with open(template, encoding="utf-8") as f:
+        code = f.read()
+    code = code.replace("'__SW_VERSION__'", json.dumps(version)).replace("['__SW_SHELL__']", json.dumps(shell))
+    with open(os.path.join(out, "sw.js"), "w", encoding="utf-8") as f:
+        f.write(code)
+    return version, len(shell)
+
+
 def stage(src, out):
     src, out = os.path.abspath(src), os.path.abspath(out)
     if out == src or src.startswith(out + os.sep):
@@ -146,7 +199,7 @@ def stage(src, out):
         with open(rpath, encoding="utf-8") as f:
             related = json.load(f)
 
-    stripped = appended = 0
+    stripped = appended = timed = 0
     for path in list_pages(out, set(subs)):
         full = os.path.join(out, path)
         with open(full, encoding="utf-8", newline="") as f:
@@ -156,12 +209,17 @@ def stage(src, out):
         if split is not None:
             new = text[split[1]:]
             stripped += 1
+        under_title = render_reading_time(path, new)
+        timed += bool(under_title)
         if path in related:
-            new = put_related(new, render_related(related[path]))
+            under_title += render_related(related[path])
             appended += 1
+        new = put_related(new, under_title)
         if new != text:
             with open(full, "w", encoding="utf-8", newline="") as f:
                 f.write(new)
+
+    n_code = write_code_pages(out, subs)
 
     recent = recent_pages(src, list_pages(out, set(subs)))
     home = os.path.join(out, "README.md")
@@ -178,14 +236,16 @@ def stage(src, out):
             json.dump(dates, f, sort_keys=True, separators=(",", ":"))
 
     n_idx, idx_size = build_search_index(out)
+    sw = write_service_worker(src, out)
 
     open(os.path.join(out, ".nojekyll"), "w").close()
     open(os.path.join(out, MARKER), "w").close()
     print(f"staged {out}: stripped front matter from {stripped} pages, "
-          f"related strip on {appended} pages, "
-          f"{len(recent)} recent pages, "
+          f"reading time on {timed} pages, related strip on {appended} pages, "
+          f"{n_code} code and notebook pages, {len(recent)} recent pages, "
           f"last-updated dates for {len(dates)} pages, "
-          f"search index of {n_idx} pages ({idx_size // 1024} KB)")
+          f"search index of {n_idx} pages ({idx_size // 1024} KB), "
+          + (f"service worker {sw[0]} with {sw[1]} shell files" if sw else "no service worker"))
 
 
 def main():

@@ -1,0 +1,13 @@
+# Proposes a pull request into dev when a GitHub Action used by the workflows
+# has a new release. Workflows pin each action to a commit hash (a tag can be
+# moved to other code); Dependabot updates the hash and the version comment.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    target-branch: dev
+    schedule:
+      interval: monthly
+    groups:
+      actions:
+        patterns: ["*"]
