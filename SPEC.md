@@ -127,9 +127,9 @@ index.html           — Docsify entry point: page shell, styles, Content-Securi
                          sidebar-groups.js (open/close menu folders)
                          page-outline.js (On this page list, wide screens)
                          icons/ (favicon.svg, PNG sizes, site.webmanifest)
-                         tests/smoke.js (browser smoke test of the staged site)
+                         tests/smoke.js (browser smoke test of the staged site, run in Chromium and WebKit)
                          metadata/ (schema.yaml, taxonomy.yaml)
-                         tools/ (validate, generate_index, stage_site, code_pages, build_search_index, check_links, update_recent, check_pins, new_page)
+                         tools/ (validate, generate_index, stage_site, code_pages, build_search_index, check_links, update_recent, check_pins, new_page, and the test_*.py files that CI runs)
                          generated/ (indexes and Explore pages, generated)
 .github/             — workflows (validate metadata, smoke test, pin check; deploy a staged copy to gh-pages), dependabot.yml (action updates) and CONTRIBUTING.md
 .gitmodules          — project/knowledge submodules
@@ -252,7 +252,8 @@ See `CLAUDE.md` §21 for the contributor how-to.
 
 Adding a page MUST stay a small, repeatable step for a solo author or an outside contributor:
 
-- **Preferred:** `python3 .docs/tools/new_page.py`. It asks for a title, optional summary, folder and tags, then creates the kebab-case file with front matter and a short outline, adds the page to the folder's `README.md` table, and regenerates the sidebar and navbar. It suggests the closest existing folders, warns about similar existing pages (§17), never overwrites a file, and never creates a folder without confirmation (§15). New tags are added to `taxonomy.yaml` only after confirmation (§26).
+- **Preferred:** `python3 .docs/tools/new_page.py`. It asks for a title, optional summary, folder, type, domains (suggested from the folder), tags, level, prerequisites and related pages, then creates the kebab-case file with front matter and a short outline, adds the page to the folder's `README.md` table, and regenerates the sidebar and navbar. It suggests the closest existing folders, warns about similar existing pages (§17), never overwrites a file, and never creates a folder without confirmation (§15). New tags are added to `taxonomy.yaml` only after confirmation (§26). Reading time is never entered: the site computes it from the text, and `new_page.py --check PAGE` shows it together with what is still missing.
 - **Without the script:** create a kebab-case `.md` file with one `# H1`, add it to the folder's `README.md` index, and regenerate the sidebar. Front matter stays optional.
+- **Code files and notebooks** (`.py`, `.ipynb`, ...) linked from a page open as readable pages on the site: `stage_site.py` writes `name.py.md` / `name.ipynb.md` in the published copy (`code_pages.py`), so link them root-absolute like pages and nothing else is needed.
 - **Images** for new pages SHOULD be committed next to the page (for example `images/` in the same folder) rather than linked from other sites, which can disappear. Moving existing linked images into the repo is tracked in issue #82.
 - **Contributor steps** live in `.github/CONTRIBUTING.md`; changes go through a feature branch and a PR into `dev` (CLAUDE.md §11).
