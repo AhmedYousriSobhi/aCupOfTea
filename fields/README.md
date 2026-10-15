@@ -7,6 +7,7 @@ This directory contains various domains and fields within AI, Machine Learning, 
 | Directory | Description |
 |-----------|-------------|
 | [computer-science-engineering](/fields/computer-science-engineering/README.md) | Computer Science Engineering fundamentals |
+| [benchmarks](/fields/benchmarks/README.md) | HPC benchmarks: HPL, STREAM, OSU, NCCL and how to read them |
 | [data-collection](/fields/data-collection/README.md) | Data gathering and scraping techniques |
 | [deep-learning](/fields/deep-learning/README.md) | Neural networks, CNNs, RNNs, and deep learning concepts |
 | [design-patterns](/fields/design-patterns/README.md) | Software design patterns for ML/AI systems |
@@ -14,6 +15,7 @@ This directory contains various domains and fields within AI, Machine Learning, 
 | [libararies,Frameworks,Containers](/fields/libraries-frameworks-containers/README.md) | Tools like Pandas, PyTorch, Docker |
 | [recommender-systems](/fields/recommender-systems/README.md) | Recommendation algorithms and systems |
 | [reinforcement-learning](/fields/reinforcement-learning/README.md) | RL concepts and algorithms |
+| [schedulers](/fields/schedulers/README.md) | How cluster schedulers such as Slurm work |
 | [statistics](/fields/statistics/README.md) | Statistical methods and theory |
 | [system-administration](/fields/system-administration/README.md) | System admin and DevOps for AI |
 | [tabular-data](/fields/tabular-data/README.md) | Working with structured/tabular datasets |

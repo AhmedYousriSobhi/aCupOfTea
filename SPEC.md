@@ -107,15 +107,31 @@ CLAUDE.md
 LICENSE             — CC BY 4.0, for writing and diagrams
 LICENSE-CODE        — MIT, for code (scripts, notebooks, .docs/ tooling)
 .gitignore
-index.html           — Docsify entry point + config (window.$docsify)
+index.html           — Docsify entry point: page shell, styles, Content-Security-Policy; settings in .docs/config.js
 .docs/               — site infrastructure:
                          _sidebar.md / _navbar.md (generated) + gen_sidebar.sh / gen_navbar.sh
                          search.js (site search)
                          image-viewer.js (phone image viewer)
+                         phone-tables.js (phone table cards)
+                         lazy-images.js (images load as you scroll)
+                         _404.md (page shown for a missing link)
+                         page-footer.js (Edit this page, Last updated)
+                         math.js (display formulas with KaTeX)
+                         config.js (Docsify settings, window.$docsify)
+                         lazy-libs.js (loads Mermaid and KaTeX only on pages that use them)
+                         reading-progress.js (progress bar, back-to-top button)
+                         surprise-me.js (random page link in the menu)
+                         section-links.js (copy a link to an h2/h3 section)
+                         offline.js + sw-template.js (read offline; stage_site.py writes sw.js into the published copy)
+                         theme-toggle.js (theme list: light, sepia, dark, midnight, black)
+                         sidebar-groups.js (open/close menu folders)
+                         page-outline.js (On this page list, wide screens)
+                         icons/ (favicon.svg, PNG sizes, site.webmanifest)
+                         tests/smoke.js (browser smoke test of the staged site)
                          metadata/ (schema.yaml, taxonomy.yaml)
-                         tools/ (validate, generate_index, stage_site, build_search_index, new_page)
+                         tools/ (validate, generate_index, stage_site, code_pages, build_search_index, check_links, update_recent, check_pins, new_page)
                          generated/ (indexes and Explore pages, generated)
-.github/             — workflows (validate metadata; deploy a staged copy to gh-pages) and CONTRIBUTING.md
+.github/             — workflows (validate metadata, smoke test, pin check; deploy a staged copy to gh-pages), dependabot.yml (action updates) and CONTRIBUTING.md
 .gitmodules          — project/knowledge submodules
 ```
 
@@ -227,7 +243,7 @@ Content type, location and navigation are unchanged; metadata is an **overlay** 
 - **Location:** schema, taxonomy, tools and generated data live under `.docs/` (served by GitHub Pages), so the root allowlist (§13) is unchanged.
 - **Generated, deterministic:** `.docs/generated/` holds `objects.json`, `domains.json`, `tags.json`, `relationships.json` (with reverse links), `related.json` and the Explore pages. The sidebar gains an additive **Explore** section (Start here, Domains, Tags); the folder tree is untouched.
 - **Submodules** are never written into and are skipped by the tools; relations may not target their content.
-- **Deployment:** the published site is a staging copy with front matter stripped and a "Related" block appended; repository sources are never rewritten.
+- **Deployment:** the published site is a staging copy with front matter stripped and a "Read first / See also / Read next" strip under the title; repository sources are never rewritten.
 - **Partial front matter, `sidebar_label` and `sidebar_group`:** every field is optional (defaults: title = first H1, type = note, status = stable); `id` only for pages in relations. `sidebar_label` overrides a page's sidebar label without editing its heading; `sidebar_group` (folder `README.md` only) overrides the folder's group name. Labels must be unique within a folder and groups among sibling folders. A page with only these fields is not indexed and gets no domain.
 
 See `CLAUDE.md` §21 for the contributor how-to.

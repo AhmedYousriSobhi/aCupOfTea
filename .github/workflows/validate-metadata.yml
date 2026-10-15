@@ -17,10 +17,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          fetch-depth: 0  # the release check reads git history
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
         with:
           python-version: "3.12"
 
@@ -29,6 +31,19 @@ jobs:
 
       - name: Validate front matter
         run: python3 -I .docs/tools/validate.py
+
+      - name: Check internal links
+        run: python3 -I .docs/tools/check_links.py
+
+      - name: Test new_page.py, check_pins.py and check_links.py
+        run: |
+          python3 -I .docs/tools/test_new_page.py
+          python3 -I .docs/tools/test_check_pins.py
+          python3 -I .docs/tools/test_check_links.py
+
+      - name: Check the README "Recently added" list (release PRs to main)
+        if: github.base_ref == 'main'
+        run: python3 -I .docs/tools/update_recent.py --check
 
       - name: Check generated indexes are up to date
         run: |

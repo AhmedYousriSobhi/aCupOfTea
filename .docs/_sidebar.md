@@ -22,6 +22,7 @@
 * **Fields**
   * [Overview](fields/README.md)
   * **Benchmarks**
+    * [Overview](fields/benchmarks/README.md)
     * [The HPC Benchmarking Landscape: A Field Guide](fields/benchmarks/benchmarking-guide.md)
     * [HPL: Intel vs Netlib](fields/benchmarks/hpl-cpu-comparison.md)
     * [HPL and the TOP500](fields/benchmarks/hpl.md)
@@ -81,6 +82,7 @@
       * [Overview](fields/reinforcement-learning/concepts-in-reinforcement-learning/README.md)
       * [Reinforcement Learning](fields/reinforcement-learning/concepts-in-reinforcement-learning/basics.md)
   * **Schedulers**
+    * [Overview](fields/schedulers/README.md)
     * [Schedulers Intro](fields/schedulers/intro.md)
     * [The Tale of job.sh and the Snapshot](fields/schedulers/slurm-job-script-tale.md)
     * [Slurm SSH Access](fields/schedulers/slurm-pam-adopt.md)

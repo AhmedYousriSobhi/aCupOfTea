@@ -1,0 +1,57 @@
+name: Smoke test
+
+on:
+  pull_request:
+    branches:
+      - dev
+      - main
+    paths:
+      - "index.html"
+      - ".docs/**"
+      - ".github/workflows/smoke-test.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          fetch-depth: 0  # page footers and "Recently added" read git history
+
+      - name: Set up Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: "3.12"
+
+      - name: Install PyYAML
+        run: pip install PyYAML==6.0.2
+
+      - name: Set up Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: "22"
+
+      - name: Install Playwright, Chromium and WebKit
+        run: |
+          npm install --prefix "$RUNNER_TEMP/pw" playwright@1.63.0
+          "$RUNNER_TEMP/pw/node_modules/.bin/playwright" install --with-deps chromium webkit
+
+      - name: Stage the site
+        run: python3 -I .docs/tools/stage_site.py --out _site
+
+      - name: Browser checks in Chromium (Android, desktop Chrome and Edge)
+        env:
+          NODE_PATH: ${{ runner.temp }}/pw/node_modules
+        run: node .docs/tests/smoke.js _site chromium
+
+      - name: Browser checks in WebKit (every iPhone browser, Safari)
+        if: ${{ !cancelled() }}
+        env:
+          NODE_PATH: ${{ runner.temp }}/pw/node_modules
+        run: node .docs/tests/smoke.js _site webkit
