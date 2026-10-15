@@ -291,6 +291,19 @@ async function run(browser, base, label, size, phone) {
       return { url: b.getAttribute('data-url'), note: b.getAttribute('data-note') };
     });
     c('copy-a-link button copies the section address', /#\/fields\/benchmarks\/hpl\?id=/.test(link.url || '') && link.note === 'Copied', JSON.stringify(link));
+    await go('fields/system-administration/q-and-a');
+    const code = await page.evaluate(async () => {
+      const pre = document.querySelector('.markdown-section pre[data-lang="bash"]');
+      const b = pre && pre.querySelector('.code-copy');
+      if (!b) return { buttons: 0 };
+      b.click();
+      await new Promise((r) => setTimeout(r, 300));
+      let text = '';
+      try { text = await navigator.clipboard.readText(); } catch (e) { /* not readable */ }
+      return { buttons: document.querySelectorAll('.code-copy').length, old: document.querySelectorAll('.docsify-copy-code-button').length,
+        note: b.getAttribute('data-note'), same: text === pre.querySelector('code').textContent.replace(/\n$/, '') };
+    });
+    c('code block copy button copies the code', code.buttons >= 1 && !code.old && code.note === 'Copied' && code.same, JSON.stringify(code));
     if (link.url) {
       await page.goto(link.url);
       await page.waitForTimeout(2500);
