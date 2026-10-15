@@ -119,6 +119,8 @@ Contributions are welcome: a correction, a clearer explanation or a whole new to
 2. Put the page where it belongs. [`SPEC.md`](/SPEC.md) describes the structure, and folder and page names use `kebab-case`.
 3. Open a pull request against `dev`.
 
+The step-by-step guide, with the script that creates a page and the checks to run, is in [CONTRIBUTING.md](/.github/CONTRIBUTING.md).
+
 Found something off but no time to fix it? [Open an issue](https://github.com/AhmedYousriSobhi/aCupOfTea/issues). That helps too.
 
 ## 📜 License

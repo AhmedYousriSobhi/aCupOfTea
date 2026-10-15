@@ -1,4 +1,23 @@
-# Adding a page
+# Contributing
+
+This guide covers the whole path for a new page: set up, write it, check it, preview it and send it. The repository layout is described in [SPEC.md](../SPEC.md).
+
+## 1. Set up (once)
+
+```bash
+git clone https://github.com/AhmedYousriSobhi/aCupOfTea.git
+cd aCupOfTea
+pip install PyYAML==6.0.2     # the only requirement of the scripts (Python 3.12 in CI)
+```
+
+For each new topic, start from an up-to-date `dev` and give it its own branch (never work on `dev` or `main` directly):
+
+```bash
+git checkout dev && git pull
+git checkout -b content/attention-in-transformers
+```
+
+## 2. Add the page
 
 Every page is a markdown file in a folder. One command does the setup:
 
@@ -47,8 +66,50 @@ It shows the reading time readers will see, whether the page counts as a quick r
 - Keep your own images in the repo: put them in an `images/` folder next to the page and link them relative to the page, `![caption](images/my-topic-01.png)`. Root-absolute paths do not work for images on the site. Pictures that belong to someone else stay links to their source.
 - Add the page to its folder's `README.md` and run `cd .docs && ./gen_sidebar.sh`.
 
-## Sending it
+## 3. Check before you push
 
-Commit on a branch cut from `dev` and open a pull request into `dev`.
+Run these from the repository root. CI runs the same checks and fails the pull request if one does not pass.
+
+```bash
+python3 .docs/tools/validate.py         # front matter and relations: must report 0 errors
+python3 .docs/tools/check_links.py      # internal links and unsafe HTML: must report 0 broken links
+python3 .docs/tools/generate_index.py   # rebuilds .docs/generated (Explore pages); commit the result
+```
+
+If you added, renamed or retitled a page by hand, also run `cd .docs && ./gen_sidebar.sh && ./gen_navbar.sh` and commit the result. `new_page.py` already does this for pages it creates. Never edit the generated files (`.docs/_sidebar.md`, `.docs/_navbar.md`, `.docs/generated/`) by hand.
+
+## 4. Preview as readers will see it (optional)
+
+```bash
+python3 .docs/tools/stage_site.py --out _site     # the deployed version: reading time, Related strip, code pages
+python3 -m http.server 8000 --directory _site     # then open http://localhost:8000
+```
+
+`_site/` is git-ignored. A plain `docsify serve` of the repository also works, but it does not show the reading time or the Related strip.
+
+## All the scripts
+
+| Script | Use it to |
+|---|---|
+| `new_page.py` | create a page, add it to its folder index and the sidebar; `--check PAGE` reviews a finished page |
+| `validate.py` | check front matter, domains, tags and relations |
+| `check_links.py` | find broken internal links, unsafe HTML and pictures without a description |
+| `generate_index.py` | rebuild the Explore and Start here pages in `.docs/generated` |
+| `stage_site.py` | build the deployed copy of the site locally |
+| `update_recent.py` | refresh the "Recently added" list in the README; the maintainer runs it before a release |
+| `check_pins.py` | compare the pinned CDN versions with npm and update their hashes (site maintenance) |
+
+## Rules that save a review round
+
+- Pages are content. Add or move things, but do not rewrite other people's pages in a structure PR.
+- Put a page where it belongs; do not duplicate knowledge to make it visible twice, link to it instead. A project stays a project even when it uses a technology.
+- Code files and notebooks keep their names and open as readable pages when linked root-absolute (`/folder/notebook.ipynb`).
+- A new domain or tag goes into `.docs/metadata/taxonomy.yaml` before a page uses it.
+- Raw `<script>`, `<iframe>` and `on...=` handlers are rejected by `check_links.py`.
+- Do not commit generated or temporary files (`_site/`, caches, notes at the root).
+
+## 5. Sending it
+
+Commit on your branch and open a pull request into `dev`, one topic per pull request. The maintainer merges it and later releases `dev` to `main`, which redeploys the site. Never open a pull request directly to `main`.
 
 By contributing, you agree that your writing is licensed under [CC BY 4.0](../LICENSE) and your code under the [MIT License](../LICENSE-CODE), as described in the README.
