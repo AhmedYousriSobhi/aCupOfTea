@@ -65,7 +65,10 @@
   });
   document.addEventListener('click', function (e) {
     var li = e.target.closest && e.target.closest('.sidebar-nav li.group');
-    if (!li || e.target.closest('li.group > ul')) return;
+    if (!li) return;
+    // a click inside this folder's own list belongs to its entries; a folder's label inside another folder's list still toggles
+    var list = e.target.closest('ul');
+    if (list && li.contains(list)) return;
     if (e.target.closest('a[href]')) return;
     li.classList.toggle('collapsed');
     open[label(li)] = !li.classList.contains('collapsed');
