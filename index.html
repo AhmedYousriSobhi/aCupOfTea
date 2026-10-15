@@ -222,12 +222,12 @@
     background: transparent; color: var(--color-text); font: 600 12px/1 'Inter', sans-serif;
     opacity: 0; transition: opacity 0.15s, background 0.15s;
   }
-  .code-copy svg { display: block; flex: none; }
-  pre:hover .code-copy, .code-copy:focus-visible, .code-copy[data-note] { opacity: 0.85; }
-  .code-copy:hover { background: color-mix(in srgb, var(--color-text) 14%, transparent); opacity: 1; }
-  .code-copy[data-note]::after { content: attr(data-note); }
-  .code-copy[data-note="Copied"] { color: var(--link); }
-  @media (hover: none) { .code-copy { opacity: 0.6; } }
+  body .markdown-section pre[data-lang] .code-copy svg { display: block; flex: none; }
+  body .markdown-section pre[data-lang] .code-copy:focus-visible, body .markdown-section pre[data-lang] .code-copy[data-note], body .markdown-section pre[data-lang]:hover .code-copy { opacity: 0.85; }
+  body .markdown-section pre[data-lang] .code-copy:hover { background: color-mix(in srgb, var(--color-text) 14%, transparent); opacity: 1; }
+  body .markdown-section pre[data-lang] .code-copy[data-note]::after { content: attr(data-note); }
+  body .markdown-section pre[data-lang] .code-copy[data-note="Copied"] { color: var(--link); }
+  @media (hover: none) { body .markdown-section pre[data-lang] .code-copy { opacity: 0.6; } }
   /* Copy-a-link button after h2/h3 (.docs/section-links.js) */
   .markdown-section .section-link-copy { background: transparent !important; box-shadow: none; position: relative; margin-left: 0.35em; padding: 4px; border: 0; background: transparent; color: var(--link); vertical-align: middle; cursor: pointer; opacity: 0; transition: opacity 0.15s; }
   .section-link-copy svg { display: block; }
