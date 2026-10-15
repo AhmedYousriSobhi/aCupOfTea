@@ -237,6 +237,19 @@
   nav.app-nav, .github-corner { position: fixed; }
   /* The top menu stays on screen in Docsify 5; give it a background so text does not run through it */
   nav.app-nav { background: var(--color-bg); border-radius: 8px; padding: 2px 10px; }
+  /* Copy button on code blocks (.docs/copy-code.js) */
+  body .markdown-section pre[data-lang] .code-copy {
+    position: absolute; top: 4px; right: 8px; z-index: 2; display: flex; align-items: center; gap: 6px;
+    height: 28px; padding: 0 7px; border: 1px solid transparent; border-radius: 6px; cursor: pointer;
+    background: transparent; color: var(--color-text); font: 600 12px/1 'Inter', sans-serif;
+    opacity: 0; transition: opacity 0.15s, background 0.15s;
+  }
+  body .markdown-section pre[data-lang] .code-copy svg { display: block; flex: none; }
+  body .markdown-section pre[data-lang] .code-copy:focus-visible, body .markdown-section pre[data-lang] .code-copy[data-note], body .markdown-section pre[data-lang]:hover .code-copy { opacity: 0.85; }
+  body .markdown-section pre[data-lang] .code-copy:hover { background: color-mix(in srgb, var(--color-text) 14%, transparent); opacity: 1; }
+  body .markdown-section pre[data-lang] .code-copy[data-note]::after { content: attr(data-note); }
+  body .markdown-section pre[data-lang] .code-copy[data-note="Copied"] { color: var(--link); }
+  @media (hover: none) { body .markdown-section pre[data-lang] .code-copy { opacity: 0.6; } }
   /* Copy-a-link button after h2/h3 (.docs/section-links.js) */
   .markdown-section .section-link-copy { background: transparent !important; box-shadow: none; position: relative; margin-left: 0.35em; padding: 4px; border: 0; background: transparent; color: var(--link); vertical-align: middle; cursor: pointer; opacity: 0; transition: opacity 0.15s; }
   .section-link-copy svg { display: block; }
@@ -334,7 +347,7 @@
   <script src="./.docs/image-viewer.js"></script>
   <!-- Hides YAML front matter (title, summary, tags) from the rendered page -->
   <script src="https://cdn.jsdelivr.net/npm/docsify@5.0.0/dist/plugins/front-matter.min.js" integrity="sha384-q8Wjf/FHh26HTvmdZvJLHedWqYyJqQIEiUUQgGuIM8Efquoyrs3G5lxd619gLhvl" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/docsify-copy-code@3.0.2/dist/docsify-copy-code.min.js" integrity="sha384-xvU4Qmx14Fe/3hDKuOUUQ8eOzoa7OVTL0vp3amTSv2KY8lCjlrga7DoqecFFOT7j" crossorigin="anonymous"></script>
+  <script src="./.docs/copy-code.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/docsify-tabs@1.6.3/dist/docsify-tabs.min.js" integrity="sha384-QA3IVKzXq6xcKR8yQJHgDbI1FcJiQ137Cuetl1VWzUxJ6BQ7ew0MMq5fg2HbFK1o" crossorigin="anonymous"></script>
   <script src="./.docs/sidebar-groups.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/docsify-pagination@2.10.1/dist/docsify-pagination.min.js" integrity="sha384-uFEp18/1vv2dYlO64J2lOcnbhirAQZPtruqAZZ7PZYoXenm5c+tIs3AqSMjVMRe8" crossorigin="anonymous"></script>
