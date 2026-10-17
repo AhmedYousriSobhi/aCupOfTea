@@ -145,6 +145,73 @@ class Fixes(Tree):
         self.assertIn("kind: technology", i["hint"])
 
 
+class Extras(Tree):
+    def write(self, rel, text):
+        full = os.path.join(pd.ROOT, rel)
+        os.makedirs(os.path.dirname(full), exist_ok=True)
+        with open(full, "w", encoding="utf-8") as fh:
+            fh.write(text)
+
+    def test_stale_index_is_found_and_regenerated_without_touching_files_first(self):
+        import shutil
+        shutil.rmtree(os.path.join(pd.ROOT, "fields"))                  # the fixture pages use tags the real taxonomy lacks
+        for name in ("taxonomy.yaml", "schema.yaml"):
+            shutil.copy(os.path.join(HERE, "..", "metadata", name), os.path.join(pd.ROOT, ".docs", "metadata", name))
+        self.write(".docs/generated/objects.json", "{}")
+        self.write("notes/a.md", "---\nid: a-page\ntype: note\ndomains: [security]\n---\n\n# A\n\nText.\n")
+        found = pd.stale_index_issue(None)
+        self.assertEqual(len(found), 1, found)
+        self.assertEqual(found[0]["level"], "error")
+        self.assertEqual(pd.read_rel(".docs/generated/objects.json"), "{}")            # looking changed nothing
+        self.assertFalse(os.path.exists(os.path.join(pd.ROOT, ".docs/generated/domains.json")))
+        pd.apply_fix(found[0]["fixes"][0])                                             # the fix runs the generator
+        self.assertIn("a-page", pd.read_rel(".docs/generated/objects.json"))
+        self.assertEqual(pd.stale_index_issue(None), [])
+
+    def test_a_picture_without_a_description_asks_for_one(self):
+        self.write("notes/p.md", "# P\n\nA ![](a.png) and ![image](b.png) and ![ok text](c.png)\n")
+        issues = pd.picture_issues({"notes/p.md"})
+        self.assertEqual([i["line"] for i in issues], [3, 3])
+        fix = issues[1]["fixes"][0]
+        self.assertTrue(fix["input"])
+        built = fix["build"]("the second one [with brackets]")
+        self.assertIn("![](a.png) and ![the second one (with brackets)](b.png)", built["files"]["notes/p.md"])
+        self.assertIsNone(fix["build"]("   "))
+        pd.apply_fix(fix, "a cup of tea")
+        self.assertIn("![a cup of tea](b.png)", pd.read_rel("notes/p.md"))
+
+    def test_swapped_readmes_are_found_and_swapped_back(self):
+        self.write("fields/devops/README.md", "# Kubernetes, for People Who Have Other Things to Do\n")
+        self.write("fields/devops/kubernetes/README.md", "# DevOps: Where Code Meets the Machines\n")
+        found = pd.readme_swap_issues(None)
+        self.assertEqual(len(found), 1, found)
+        pd.apply_fix(found[0]["fixes"][0])
+        self.assertIn("DevOps", pd.read_rel("fields/devops/README.md"))
+        self.assertEqual(pd.readme_swap_issues(None), [])
+
+    def test_correct_readmes_are_left_alone(self):
+        self.write("fields/devops/README.md", "# DevOps: Where Code Meets the Machines\n")
+        self.write("fields/devops/kubernetes/README.md", "# Kubernetes, for People Who Have Other Things to Do\n")
+        self.assertEqual(pd.readme_swap_issues(None), [])
+
+    def test_hook_is_installed_once_and_never_over_someone_elses(self):
+        import subprocess
+        subprocess.run(["git", "init", "-q", pd.ROOT], check=True)
+        with contextlib.redirect_stdout(io.StringIO()):
+            pd.install_hook()
+            pd.install_hook()                                    # again: same hook, fine
+        path = pd.hook_path()
+        self.assertTrue(os.access(path, os.X_OK))
+        self.assertIn("--pre-push", pd.read_rel(os.path.relpath(path, pd.ROOT)))
+        with contextlib.redirect_stdout(io.StringIO()):
+            pd.uninstall_hook()
+        self.assertFalse(os.path.exists(path))
+        self.write(os.path.relpath(path, pd.ROOT), "#!/bin/sh\necho mine\n")
+        with self.assertRaises(SystemExit):
+            pd.install_hook()
+        self.assertIn("mine", pd.read_rel(os.path.relpath(path, pd.ROOT)))
+
+
 class Pure(unittest.TestCase):
     def test_numeronym_and_typo(self):
         self.assertEqual(pd.suggest_word("k8s", [["explained", "kubernetes"]]), "kubernetes")
