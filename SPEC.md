@@ -129,7 +129,7 @@ index.html           — Docsify entry point: page shell, styles, Content-Securi
                          icons/ (favicon.svg, PNG sizes, site.webmanifest)
                          tests/smoke.js (browser smoke test of the staged site, run in Chromium and WebKit)
                          metadata/ (schema.yaml, taxonomy.yaml)
-                         tools/ (validate, generate_index, stage_site, code_pages, build_search_index, check_links, update_recent, check_pins, new_page, and the test_*.py files that CI runs)
+                         tools/ (validate, generate_index, stage_site, code_pages, build_search_index, check_links, update_recent, check_pins, new_page, page_doctor, and the test_*.py files that CI runs)
                          generated/ (indexes and Explore pages, generated)
 .github/             — workflows (validate metadata, smoke test, pin check; deploy a staged copy to gh-pages), dependabot.yml (action updates) and CONTRIBUTING.md
 .gitmodules          — project/knowledge submodules

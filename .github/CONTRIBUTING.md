@@ -60,6 +60,17 @@ python3 .docs/tools/new_page.py --adopt fields/deep-learning/concepts/attention-
 
 The title comes from the page's `# ` heading and the folder from its path. It asks the same questions as a new page (summary, type, domains, tags, level, prerequisites, related), puts the front matter on top, adds the page to the folder `README.md` unless it is already listed, regenerates the sidebar and then shows the `--check` report. If the page already has front matter (for example only a `sidebar_label`), it keeps what is there and asks only for the missing fields; it says so when there is nothing to add. The page text is never changed. Add `--dry-run` to preview.
 
+## Fixing what the checks report
+
+`validate.py` and `check_links.py` print a list; `page_doctor.py` turns it into a to-do list for the pages you changed, with the page, the line and what to do:
+
+```bash
+python3 .docs/tools/page_doctor.py             # files changed since dev, interactive
+python3 .docs/tools/page_doctor.py fields/devops   # one page or folder
+```
+
+Type a problem's number to open it in your editor at that line (`$VISUAL` or `$EDITOR`; VS Code, vim and nano get the line number), `f1` to apply the first suggested fix (it shows the change and asks first), `r` to check again, `q` to quit. Fixes it can make: a `../` link written root-absolute (or pointed at the file of that name), a misspelt or abbreviated tag or subject replaced (`kubernates`, `k8s` become `kubernetes`), a single-use tag that names a tool marked `kind: technology`. Use `--list` to print only, `--apply-safe` to apply the fixes marked `[safe]`, and `--json` for scripts.
+
 ## When the page is written
 
 ```bash
