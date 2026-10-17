@@ -115,7 +115,7 @@ index.html           — Docsify entry point: page shell, styles, Content-Securi
                          phone-tables.js (phone table cards)
                          lazy-images.js (images load as you scroll)
                          _404.md (page shown for a missing link)
-                         page-footer.js (Edit this page, Last updated)
+                         page-footer.js (Edit this page, Last updated, Copy share link)
                          math.js (display formulas with KaTeX)
                          config.js (Docsify settings, window.$docsify)
                          lazy-libs.js (loads Mermaid and KaTeX only on pages that use them)
@@ -130,7 +130,7 @@ index.html           — Docsify entry point: page shell, styles, Content-Securi
                          icons/ (favicon.svg, PNG sizes, site.webmanifest)
                          tests/smoke.js (browser smoke test of the staged site, run in Chromium and WebKit)
                          metadata/ (schema.yaml, taxonomy.yaml)
-                         tools/ (validate, generate_index, stage_site, code_pages, build_search_index, check_links, update_recent, check_pins, new_page, page_doctor, page_gui (+ page_gui.html), and the test_*.py files that CI runs)
+                         tools/ (validate, generate_index, stage_site, code_pages, build_search_index, share_pages, check_links, update_recent, check_pins, new_page, page_doctor, page_gui (+ page_gui.html), and the test_*.py files that CI runs)
                          generated/ (indexes and Explore pages, generated)
 .github/             — workflows (validate metadata, smoke test, pin check; deploy a staged copy to gh-pages), dependabot.yml (action updates) and CONTRIBUTING.md
 .gitmodules          — project/knowledge submodules
@@ -244,6 +244,7 @@ Content type, location and navigation are unchanged; metadata is an **overlay** 
 - **Location:** schema, taxonomy, tools and generated data live under `.docs/` (served by GitHub Pages), so the root allowlist (§13) is unchanged.
 - **Generated, deterministic:** `.docs/generated/` holds `objects.json`, `domains.json`, `tags.json`, `relationships.json` (with reverse links), `related.json` and the Explore pages. The sidebar gains an additive **Explore** section (Start here, Domains, Tags); the folder tree is untouched.
 - **Submodules** are never written into and are skipped by the tools; relations may not target their content.
+- **Link previews:** the staged copy also holds a share page per content page at its folder address (title and summary as Open Graph tags, then a redirect to the `#/` page), so a shared link previews that page; `summary` in front matter feeds the description, else the first paragraph is used.
 - **Deployment:** the published site is a staging copy with front matter stripped and a "Read first / See also / Read next" strip under the title; repository sources are never rewritten.
 - **Partial front matter, `sidebar_label` and `sidebar_group`:** every field is optional (defaults: title = first H1, type = note, status = stable); `id` only for pages in relations. `sidebar_label` overrides a page's sidebar label without editing its heading; `sidebar_group` (folder `README.md` only) overrides the folder's group name. Labels must be unique within a folder and groups among sibling folders. A page with only these fields is not indexed and gets no domain.
 
