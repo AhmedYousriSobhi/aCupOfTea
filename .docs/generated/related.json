@@ -71,6 +71,95 @@
       }
     ]
   },
+  "fields/devops/kubernetes/broken-pods-rogues-gallery.md": {
+    "prerequisites": [
+      {
+        "id": "kubernetes-in-five-nouns",
+        "path": "fields/devops/kubernetes/kubernetes-in-five-nouns.md",
+        "title": "Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster"
+      }
+    ],
+    "related": [
+      {
+        "id": "containers-101",
+        "path": "fields/libraries-frameworks-containers/101-containers.md",
+        "title": "Containers 101"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/devops/kubernetes/build-a-two-node-k3s-lab.md": {
+    "prerequisites": [
+      {
+        "id": "kubernetes-in-five-nouns",
+        "path": "fields/devops/kubernetes/kubernetes-in-five-nouns.md",
+        "title": "Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster"
+      }
+    ],
+    "related": [
+      {
+        "id": "containers-101",
+        "path": "fields/libraries-frameworks-containers/101-containers.md",
+        "title": "Containers 101"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "gpu-allocation-vs-utilization",
+        "path": "fields/devops/kubernetes/gpu-allocation-vs-utilization.md",
+        "title": "Booked Is Not Busy: GPU Allocation vs Utilization"
+      },
+      {
+        "id": "fake-gpus-in-kubernetes",
+        "path": "fields/devops/kubernetes/fake-gpus-in-kubernetes.md",
+        "title": "Fake GPUs in Kubernetes: Learn GPU Scheduling Without Owning a GPU"
+      }
+    ]
+  },
+  "fields/devops/kubernetes/fake-gpus-in-kubernetes.md": {
+    "prerequisites": [
+      {
+        "id": "build-a-two-node-k3s-lab",
+        "path": "fields/devops/kubernetes/build-a-two-node-k3s-lab.md",
+        "title": "Build a Two-Node Kubernetes Lab on Your Laptop (and Survive the DNS Pothole)"
+      },
+      {
+        "id": "kubernetes-in-five-nouns",
+        "path": "fields/devops/kubernetes/kubernetes-in-five-nouns.md",
+        "title": "Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster"
+      }
+    ],
+    "related": [
+      {
+        "id": "containers-101",
+        "path": "fields/libraries-frameworks-containers/101-containers.md",
+        "title": "Containers 101"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/devops/kubernetes/gpu-allocation-vs-utilization.md": {
+    "prerequisites": [
+      {
+        "id": "build-a-two-node-k3s-lab",
+        "path": "fields/devops/kubernetes/build-a-two-node-k3s-lab.md",
+        "title": "Build a Two-Node Kubernetes Lab on Your Laptop (and Survive the DNS Pothole)"
+      },
+      {
+        "id": "kubernetes-in-five-nouns",
+        "path": "fields/devops/kubernetes/kubernetes-in-five-nouns.md",
+        "title": "Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster"
+      }
+    ],
+    "related": [
+      {
+        "id": "containers-101",
+        "path": "fields/libraries-frameworks-containers/101-containers.md",
+        "title": "Containers 101"
+      }
+    ],
+    "required_by": []
+  },
   "fields/devops/kubernetes/kubernetes-in-five-nouns.md": {
     "prerequisites": [
       {
@@ -80,6 +169,49 @@
       }
     ],
     "related": [],
+    "required_by": [
+      {
+        "id": "gpu-allocation-vs-utilization",
+        "path": "fields/devops/kubernetes/gpu-allocation-vs-utilization.md",
+        "title": "Booked Is Not Busy: GPU Allocation vs Utilization"
+      },
+      {
+        "id": "broken-pods-rogues-gallery",
+        "path": "fields/devops/kubernetes/broken-pods-rogues-gallery.md",
+        "title": "Broken Pods: A Rogues' Gallery (and the One Command That Catches Them All)"
+      },
+      {
+        "id": "build-a-two-node-k3s-lab",
+        "path": "fields/devops/kubernetes/build-a-two-node-k3s-lab.md",
+        "title": "Build a Two-Node Kubernetes Lab on Your Laptop (and Survive the DNS Pothole)"
+      },
+      {
+        "id": "fake-gpus-in-kubernetes",
+        "path": "fields/devops/kubernetes/fake-gpus-in-kubernetes.md",
+        "title": "Fake GPUs in Kubernetes: Learn GPU Scheduling Without Owning a GPU"
+      },
+      {
+        "id": "nvidia-cluster-readiness-engine",
+        "path": "fields/devops/kubernetes/nvidia-cluster-readiness-engine.md",
+        "title": "The Cluster That Passed Every Test Except the One That Mattered"
+      }
+    ]
+  },
+  "fields/devops/kubernetes/nvidia-cluster-readiness-engine.md": {
+    "prerequisites": [
+      {
+        "id": "kubernetes-in-five-nouns",
+        "path": "fields/devops/kubernetes/kubernetes-in-five-nouns.md",
+        "title": "Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster"
+      }
+    ],
+    "related": [
+      {
+        "id": "containers-101",
+        "path": "fields/libraries-frameworks-containers/101-containers.md",
+        "title": "Containers 101"
+      }
+    ],
     "required_by": []
   },
   "fields/generative-ai/machine-translator/encoder-decoder.md": {
@@ -95,7 +227,33 @@
   },
   "fields/libraries-frameworks-containers/101-containers.md": {
     "prerequisites": [],
-    "related": [],
+    "related": [
+      {
+        "id": "gpu-allocation-vs-utilization",
+        "path": "fields/devops/kubernetes/gpu-allocation-vs-utilization.md",
+        "title": "Booked Is Not Busy: GPU Allocation vs Utilization"
+      },
+      {
+        "id": "broken-pods-rogues-gallery",
+        "path": "fields/devops/kubernetes/broken-pods-rogues-gallery.md",
+        "title": "Broken Pods: A Rogues' Gallery (and the One Command That Catches Them All)"
+      },
+      {
+        "id": "build-a-two-node-k3s-lab",
+        "path": "fields/devops/kubernetes/build-a-two-node-k3s-lab.md",
+        "title": "Build a Two-Node Kubernetes Lab on Your Laptop (and Survive the DNS Pothole)"
+      },
+      {
+        "id": "fake-gpus-in-kubernetes",
+        "path": "fields/devops/kubernetes/fake-gpus-in-kubernetes.md",
+        "title": "Fake GPUs in Kubernetes: Learn GPU Scheduling Without Owning a GPU"
+      },
+      {
+        "id": "nvidia-cluster-readiness-engine",
+        "path": "fields/devops/kubernetes/nvidia-cluster-readiness-engine.md",
+        "title": "The Cluster That Passed Every Test Except the One That Mattered"
+      }
+    ],
     "required_by": [
       {
         "id": "kubernetes-in-five-nouns",

@@ -8,11 +8,16 @@ Pick a cup: follow a path, grab a quick read, or start with the basics.
 
 Read each path in order; every step builds on the one before.
 
-### Systems and HPC · 3 steps · 26 min
+### Systems and HPC · 8 steps · 62 min
 
 1. [Containers 101](/fields/libraries-frameworks-containers/101-containers.md) *(8 min)*
 2. [Singularity](/fields/libraries-frameworks-containers/101-singularity.md) *(10 min)*
 3. [Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster](/fields/devops/kubernetes/kubernetes-in-five-nouns.md) — The five Kubernetes nouns (node, pod, namespace, event, API server) explained through HPC analogies, for someone who just inherited a cluster. *(advanced · 8 min)*
+4. [Broken Pods: A Rogues' Gallery (and the One Command That Catches Them All)](/fields/devops/kubernetes/broken-pods-rogues-gallery.md) — How to recognise CrashLoop, OOMKilled, ImagePull and Pending pods by reading status, events and previous logs. *(intermediate · 6 min)*
+5. [Build a Two-Node Kubernetes Lab on Your Laptop (and Survive the DNS Pothole)](/fields/devops/kubernetes/build-a-two-node-k3s-lab.md) — Build a two-VM Kubernetes lab on your laptop with Vagrant, libvirt and k3s, and dodge the DNS and network potholes. *(intermediate · 7 min)*
+6. [Booked Is Not Busy: GPU Allocation vs Utilization](/fields/devops/kubernetes/gpu-allocation-vs-utilization.md) — The scheduler knows who has booked the GPUs, not whether they’re busy, so use kubectl for the first question and DCGM-style telemetry for the second. *(intermediate · 7 min)*
+7. [Fake GPUs in Kubernetes: Learn GPU Scheduling Without Owning a GPU](/fields/devops/kubernetes/fake-gpus-in-kubernetes.md) — Patch a node with a fake nvidia.com/gpu counter to learn GPU scheduling without owning a GPU. *(intermediate · 6 min)*
+8. [The Cluster That Passed Every Test Except the One That Mattered](/fields/devops/kubernetes/nvidia-cluster-readiness-engine.md) — Even when traditional monitoring tools show all GPUs and networks operating normally, subtle bottlenecks—like a single slow GPU or a degraded network link—can silently drag down the performance of an *(intermediate · 10 min)*
 
 ### Deep Learning · 3 steps · 37 min
 
@@ -39,10 +44,14 @@ Read each path in order; every step builds on the one before.
 - [pam_slurm_adopt: Closing the Slurm SSH Backdoor](/fields/schedulers/slurm-pam-adopt.md) *(4 min)*
 - [CPU Affinity](/programming/operating-system/process-cpu-affinity.md) *(5 min)*
 - [Parallel Execution and Affinity](/fields/benchmarks/parallel-execution-affinity-master-guide.md) *(5 min)*
+- [Broken Pods: A Rogues' Gallery (and the One Command That Catches Them All)](/fields/devops/kubernetes/broken-pods-rogues-gallery.md) — How to recognise CrashLoop, OOMKilled, ImagePull and Pending pods by reading status, events and previous logs. *(intermediate · 6 min)*
 - [Customer Segmentation](/problems/customer-segmentation.md) *(6 min)*
+- [Fake GPUs in Kubernetes: Learn GPU Scheduling Without Owning a GPU](/fields/devops/kubernetes/fake-gpus-in-kubernetes.md) — Patch a node with a fake nvidia.com/gpu counter to learn GPU scheduling without owning a GPU. *(intermediate · 6 min)*
 - [PyTorch 101](/fields/libraries-frameworks-containers/101-pytorch.md) *(6 min)*
 - [Sequence Models](/fields/deep-learning/concepts/sequence-models.md) — How models handle ordered data like text, from RNNs and LSTMs to transformers and LLMs. *(intermediate · 6 min)*
 - [Bias and Variance Trade-Off](/fields/tabular-data/data-evaluation/model-behavior/bias-variance-trade-off.md) *(7 min)*
+- [Booked Is Not Busy: GPU Allocation vs Utilization](/fields/devops/kubernetes/gpu-allocation-vs-utilization.md) — The scheduler knows who has booked the GPUs, not whether they’re busy, so use kubectl for the first question and DCGM-style telemetry for the second. *(intermediate · 7 min)*
+- [Build a Two-Node Kubernetes Lab on Your Laptop (and Survive the DNS Pothole)](/fields/devops/kubernetes/build-a-two-node-k3s-lab.md) — Build a two-VM Kubernetes lab on your laptop with Vagrant, libvirt and k3s, and dodge the DNS and network potholes. *(intermediate · 7 min)*
 - [CUDA 101](/fields/libraries-frameworks-containers/101-cuda.md) *(7 min)*
 - [Time Series Analysis](/fields/tabular-data/concept-in-time-series/timeseriesfield.md) *(7 min)*
 - [Used Cars Retailer Company](/business/used-cars-retailer.md) *(7 min)*
@@ -51,6 +60,7 @@ Read each path in order; every step builds on the one before.
 - [Reinforcement Learning Basics](/fields/reinforcement-learning/concepts-in-reinforcement-learning/basics.md) *(8 min)*
 - [HPC Workloads](/business/hpc-industry/workloads.md) *(10 min)*
 - [Singularity](/fields/libraries-frameworks-containers/101-singularity.md) *(10 min)*
+- [The Cluster That Passed Every Test Except the One That Mattered](/fields/devops/kubernetes/nvidia-cluster-readiness-engine.md) — Even when traditional monitoring tools show all GPUs and networks operating normally, subtle bottlenecks—like a single slow GPU or a degraded network link—can silently drag down the performance of an *(intermediate · 10 min)*
 
 ## Beginner friendly
 
