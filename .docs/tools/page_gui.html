@@ -1,0 +1,506 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>aCupOfTea page form</title>
+<style>
+  :root { --bg:#fbf8f3; --card:#fff; --text:#2b2622; --muted:#665b52; --line:#e3dbd0; --accent:#8a5a2b; --accent-text:#fff;
+          --ok:#25672a; --warn:#8f5000; --err:#b3261e; --code:#f4efe7; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#1d1a17; --card:#262220; --text:#ece6de; --muted:#a39689; --line:#3a342f; --accent:#d9a066; --accent-text:#1d1a17;
+            --ok:#7bc67e; --warn:#e5a84b; --err:#f2877f; --code:#2d2824; } }
+  :root { color-scheme: light dark; }
+  * { box-sizing: border-box; }
+  html { scroll-padding-bottom: 96px; }
+  :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+  .sr-only { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+  body { margin:0; background:var(--bg); color:var(--text); font:16px/1.5 system-ui, sans-serif; }
+  header { display:flex; align-items:center; gap:16px; padding:12px 16px; border-bottom:1px solid var(--line); flex-wrap:wrap; }
+  header h1 { font-size:1.1rem; margin:0; flex:1; }
+  nav { display:flex; gap:4px; }
+  nav button, button { font:inherit; min-height:40px; padding:6px 14px; border:1px solid var(--line); background:var(--card); color:var(--text); border-radius:6px; cursor:pointer; }
+  nav button[aria-selected=true] { background:var(--accent); color:var(--accent-text); border-color:var(--accent); }
+  button.primary { background:var(--accent); color:var(--accent-text); border-color:var(--accent); }
+  button:disabled { opacity:.5; cursor:default; }
+  main { max-width:860px; margin:0 auto; padding:16px; }
+  fieldset { border:1px solid var(--line); background:var(--card); border-radius:8px; margin:0 0 14px; padding:12px 14px; }
+  legend { font-weight:600; padding:0 6px; }
+  label { display:block; font-weight:600; margin:8px 0 2px; }
+  .hint { color:var(--muted); font-size:.875rem; font-weight:400; }
+  input[type=text], textarea, select { width:100%; font:inherit; padding:6px 8px; border:1px solid var(--line); border-radius:6px; background:var(--bg); color:var(--text); }
+  .row { display:flex; gap:12px; flex-wrap:wrap; } .row > * { flex:1 1 220px; }
+  .checks { display:flex; flex-wrap:wrap; gap:4px 16px; } .checks label { font-weight:400; margin:2px 0; display:flex; gap:6px; align-items:flex-start; }
+  .chips { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:6px; }
+  .chip { background:var(--code); border:1px solid var(--line); border-radius:999px; padding:1px 4px 1px 10px; font-size:.875rem; }
+  .chip { display:inline-flex; align-items:center; }
+  .chip button { border:0; background:none; min-height:28px; min-width:28px; padding:0; color:var(--muted); font-size:1.1rem; }
+  .chip.new { border-color:var(--warn); }
+  .box { border-left:4px solid var(--warn); background:var(--card); padding:8px 12px; margin:8px 0; border-radius:4px; }
+  .box.err { border-color:var(--err); } .box.ok { border-color:var(--ok); }
+  pre { background:var(--code); border:1px solid var(--line); border-radius:6px; padding:10px; overflow:auto; white-space:pre-wrap; margin:6px 0; font-size:.85rem; }
+  .actions { display:flex; gap:8px; flex-wrap:wrap; margin:14px 0; }
+  .actions.sticky { position:sticky; bottom:0; background:var(--bg); padding:10px 0; margin:0; border-top:1px solid var(--line); z-index:2; }
+  .req { color:var(--err); }
+  .err-text { color:var(--err); font-size:.875rem; margin-top:2px; }
+  select[size] option { padding:4px 6px; }
+  input[aria-invalid=true] { border-color:var(--err); }
+  button[aria-busy=true] { cursor:progress; }
+  .issue { background:var(--card); border:1px solid var(--line); border-radius:8px; padding:10px 14px; margin-bottom:10px; }
+  .badge { font-size:.75rem; text-transform:uppercase; padding:1px 8px; border-radius:999px; border:1px solid currentColor; margin-right:6px; }
+  .badge.error { color:var(--err); } .badge.warning { color:var(--warn); } .badge.todo { color:var(--muted); }
+  .path { font-family:ui-monospace, monospace; font-size:.875rem; }
+  .diff .add { color:var(--ok); } .diff .del { color:var(--err); }
+  .chipset { display:flex; flex-wrap:wrap; gap:8px; }
+  .chipset label { position:relative; display:inline-flex; margin:0; font-weight:500; }
+  .chipset input { position:absolute; inset:0; width:100%; height:100%; margin:0; opacity:0; cursor:pointer; }
+  .chipset .pill { border:1px solid var(--line); border-radius:999px; padding:6px 14px; min-height:36px; background:var(--card); display:inline-flex; align-items:center; }
+  .chipset input:checked + .pill { background:var(--accent); color:var(--accent-text); border-color:var(--accent); }
+  .chipset input:focus-visible + .pill { outline:3px solid var(--accent); outline-offset:2px; }
+  .chipset input:disabled + .pill { opacity:.45; cursor:not-allowed; }
+  .chipset input:disabled { cursor:not-allowed; }
+  .what { min-height:1.5em; }
+  details.more { border:1px solid var(--line); background:var(--card); border-radius:8px; margin:0 0 14px; padding:0 14px; }
+  details.more > summary { cursor:pointer; padding:10px 0; font-weight:600; list-style-position:inside; }
+  details.more > summary .hint { font-weight:400; }
+  details.more[open] > summary { border-bottom:1px solid var(--line); margin-bottom:8px; }
+  .step { display:inline-block; min-width:1.6em; text-align:center; border-radius:999px; background:var(--accent); color:var(--accent-text); margin-right:6px; font-size:.85rem; }
+  .sumline { flex:1 1 240px; align-self:center; font-size:.875rem; color:var(--muted); overflow-wrap:anywhere; }
+  .sumline strong { color:var(--text); }
+  .banner { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .banner span { flex:1 1 240px; }
+  [hidden] { display:none !important; }
+  @media (pointer:coarse), (max-width:600px) { button, nav button { min-height:44px; } .chipset .pill { min-height:44px; } .checks label { padding:4px 0; } header { padding:8px 12px; } main { padding:12px; } }
+  @media (prefers-reduced-motion: no-preference) { button { transition: background-color .15s, border-color .15s; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>aCupOfTea page form</h1>
+  <nav role="tablist" aria-label="What to do">
+    <button role="tab" id="tab-new" aria-selected="true" aria-controls="view-new" tabindex="0">New page</button>
+    <button role="tab" id="tab-adopt" aria-selected="false" aria-controls="view-adopt" tabindex="-1">Adopt a page</button>
+    <button role="tab" id="tab-fix" aria-selected="false" aria-controls="view-fix" tabindex="-1">Fix problems</button>
+  </nav>
+  <button id="quit" title="Stop the local server">Close</button>
+</header>
+<main>
+  <section id="view-new" role="tabpanel" aria-labelledby="tab-new"></section>
+  <section id="view-adopt" role="tabpanel" aria-labelledby="tab-adopt" hidden></section>
+  <section id="view-fix" role="tabpanel" aria-labelledby="tab-fix" hidden></section>
+</main>
+<script>
+"use strict";
+let TOKEN = new URLSearchParams(location.search).get("t") || "";
+try { if (TOKEN) sessionStorage.setItem("t", TOKEN); else TOKEN = sessionStorage.getItem("t") || ""; } catch (e) { /* no session storage */ }
+history.replaceState(null, "", location.pathname);              // keep the token out of the address bar; a refresh keeps working
+
+async function api(path, body) {
+  const res = await fetch(path, body === undefined ? { headers: { "X-Token": TOKEN } } :
+    { method: "POST", headers: { "X-Token": TOKEN, "Content-Type": "application/json" }, body: JSON.stringify(body) });
+  const data = await res.json();
+  if (res.status === 403) throw new Error("This page has no access key (it was opened without one, or the server was restarted). Open the address printed in the terminal again.");
+  if (!res.ok) throw new Error(data.error || res.statusText);
+  return data;
+}
+function h(tag, attrs, ...kids) {
+  const el = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs || {})) {
+    if (k === "class") el.className = v; else if (k.startsWith("on")) el.addEventListener(k.slice(2), v);
+    else if (v !== false && v != null) el.setAttribute(k, v === true ? "" : v);
+  }
+  for (const kid of kids.flat()) if (kid != null) el.append(kid.nodeType ? kid : document.createTextNode(kid));
+  return el;
+}
+const slug = t => t.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+const titleCase = k => k.split("-").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+const debounce = (fn, ms) => { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; };
+let uidN = 0;
+const uid = p => p + (++uidN);
+function message(kind, text) {
+  return h("div", { class: "box " + kind, role: kind === "err" ? "alert" : "status" }, h("pre", {}, text));
+}
+/* A label tied to its control: `control` is the input (or a group labelled by the text). */
+function field(name, hint, control, input) {
+  const id = uid("f");
+  const label = h("label", { id: id + "l" }, name, hint ? " " : null, hint ? h("span", { class: "hint" }, hint) : null);
+  if (input) { input.id = input.id || id; label.setAttribute("for", input.id); }
+  else { control.setAttribute("role", "group"); control.setAttribute("aria-labelledby", id + "l"); }
+  return h("div", {}, label, control);
+}
+/* Run `fn` with the buttons disabled and "Working..." on the one clicked. */
+async function busy(btn, fn) {
+  const all = [...document.querySelectorAll("button")].filter(b => !b.disabled);
+  const text = btn.textContent;
+  all.forEach(b => { b.disabled = true; });
+  btn.setAttribute("aria-busy", "true"); btn.textContent = "Working...";
+  try { return await fn(); } finally {
+    all.forEach(b => { b.disabled = false; }); btn.removeAttribute("aria-busy"); btn.textContent = text;
+  }
+}
+
+/* A list of chips with a text box; `known` is [{value,label}] offered by the browser's own suggestions. */
+function chipInput({ known, max, onChange, newLabel }) {
+  const state = { items: [], isNew: new Set() };
+  const chips = h("div", { class: "chips" });
+  const listId = "dl" + Math.random().toString(36).slice(2);
+  const list = h("datalist", { id: listId }, known.map(k => h("option", { value: k.value }, k.label)));
+  const input = h("input", { type: "text", list: listId, placeholder: "type, then Enter", autocomplete: "off" });
+  const note = h("div", { class: "hint" });
+  function render() {
+    chips.replaceChildren(...state.items.map(v => h("span", { class: "chip" + (state.isNew.has(v) ? " new" : "") },
+      v + (state.isNew.has(v) ? " (new)" : ""),
+      h("button", { type: "button", "aria-label": "remove " + v, onclick: () => { state.items = state.items.filter(x => x !== v); state.isNew.delete(v); render(); onChange && onChange(); } }, "×"))));
+    note.textContent = max ? state.items.length + " of at most " + max : "";
+  }
+  function add(raw) {
+    for (const part of raw.split(",")) {
+      const v = slug(part);
+      if (!v || state.items.includes(v)) continue;
+      if (max && state.items.length >= max) { note.textContent = "At most " + max + "."; break; }
+      state.items.push(v);
+      if (!known.some(k => k.value === v)) { if (newLabel) state.isNew.add(v); else { state.items.pop(); note.textContent = v + " is not a known page id."; } }
+    }
+    input.value = ""; render(); onChange && onChange();
+  }
+  input.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === ",") { e.preventDefault(); add(input.value); } });
+  input.addEventListener("change", () => input.value && add(input.value));
+  render();
+  note.setAttribute("aria-live", "polite");
+  return { el: h("div", {}, chips, input, list, note), input, state, set(values) { state.items = []; state.isNew.clear(); add(values.join(",")); } };
+}
+
+/* Choices as toggle chips, at most `max` on. Pointing at or tabbing to one says what it means. */
+function checkGroup({ items, max, onChange }) {
+  const boxes = items.map(it => h("input", { type: "checkbox", value: it.key }));
+  const base = "Point at a choice, or move to it with the keyboard, to see what it means.";
+  const what = h("div", { class: "hint what", "aria-live": "polite" }, base);
+  const limit = h("div", { class: "hint", "aria-live": "polite" });
+  const tell = it => { what.textContent = it ? (it.label || it.key) + ": " + (it.description || "") : base; };
+  const chip = (it, box, text) => {
+    const l = h("label", { title: it.description || "" }, box, h("span", { class: "pill" }, text));
+    l.addEventListener("mouseenter", () => tell(it)); l.addEventListener("mouseleave", () => tell(null));
+    box.addEventListener("focus", () => tell(it)); box.addEventListener("blur", () => tell(null));
+    return l;
+  };
+  const grid = h("div", { class: "chipset" }, items.map((it, i) => chip(it, boxes[i], it.label || it.key)));
+  const el = h("div", {}, grid, what, limit);
+  function sync() {
+    const n = boxes.filter(b => b.checked).length;
+    boxes.forEach(b => { b.disabled = !b.checked && n >= max; });
+    limit.textContent = n >= max ? "Limit of " + max + " reached: untick one to choose another." : "";
+    onChange && onChange();
+  }
+  el.addEventListener("change", sync);
+  return { el, add(it) { const b = h("input", { type: "checkbox", value: it.key, checked: true });
+      boxes.push(b); grid.append(chip(it, b, it.key + " (new)")); sync(); },
+    get: () => boxes.filter(b => b.checked).map(b => b.value),
+    has: key => boxes.some(b => b.value === key),
+    set(keys) { boxes.forEach(b => { b.checked = keys.includes(b.value); }); sync(); } };
+}
+
+/* The questions about a page. The essentials (summary, kind, subjects) come first; tags, level and related
+   pages are folded into "More options". Fields in `have` are already in the page and left alone. */
+function metaForm(opts, have = [], onChange = () => {}) {
+  const limits = opts.limits;
+  const summary = h("input", { type: "text", maxlength: "200" });
+  const count = h("span", { class: "hint", "aria-live": "off" }, "0/200");
+  summary.addEventListener("input", () => { count.textContent = summary.value.length + "/200"; onChange(); });
+  const types = checkGroup({ items: opts.types, max: limits.types, onChange: () => onChange() });
+  const domains = checkGroup({ items: opts.domains, max: limits.domains, onChange: () => onChange() });
+  const newDomains = [];
+  const nd = { key: h("input", { type: "text", "aria-label": "New subject key", placeholder: "key, e.g. devops" }),
+               description: h("input", { type: "text", "aria-label": "New subject description", placeholder: "one line: what is this subject?" }) };
+  const ndError = h("div", { class: "err-text", role: "alert" });
+  const newDomainBox = h("div", { hidden: true }, h("div", { class: "row" }, nd.key, nd.description,
+    h("button", { type: "button", onclick() {
+      const key = slug(nd.key.value);
+      if (!key || !nd.description.value.trim()) { ndError.textContent = "Give the subject a key and a one-line description."; return; }
+      ndError.textContent = "";
+      newDomains.push({ key, label: titleCase(key), description: nd.description.value.trim() });
+      domains.add({ key, label: titleCase(key), description: nd.description.value.trim() }); nd.key.value = nd.description.value = ""; newDomainBox.hidden = true; } }, "Add subject")), ndError);
+  const addDomainBtn = h("button", { type: "button", "aria-expanded": "false", onclick() {
+    newDomainBox.hidden = !newDomainBox.hidden; addDomainBtn.setAttribute("aria-expanded", String(!newDomainBox.hidden)); if (!newDomainBox.hidden) nd.key.focus(); } },
+    "+ a subject that does not exist yet");
+  const moreNote = h("span", { class: "hint" });
+  const tags = chipInput({ known: opts.tags.map(t => ({ value: t.key, label: t.label })), max: limits.tags, newLabel: true, onChange: () => { moreChanged(); onChange(); } });
+  const level = h("select", {}, h("option", { value: "" }, "(none)"), opts.levels.map(l => h("option", { value: l }, l)));
+  level.addEventListener("change", () => { moreChanged(); onChange(); });
+  const ids = opts.pages.map(p => ({ value: p.id, label: p.title }));
+  const prereq = chipInput({ known: ids, onChange: () => { moreChanged(); onChange(); } });
+  const related = chipInput({ known: ids, onChange: () => { moreChanged(); onChange(); } });
+  const keep = (key, make) => have.includes(key) ? null : make();
+  const moreParts = [
+    keep("tags", () => field("Tags", "up to " + limits.tags + "; a new tag is added to taxonomy.yaml", tags.el, tags.input)),
+    keep("level", () => field("Level", "beginner pages show under Beginner friendly", level, level)),
+    keep("relations", () => h("div", {},
+      field("Read first (prerequisites)", "ids of pages", prereq.el, prereq.input),
+      field("See also (related)", "ids of pages", related.el, related.input)))].filter(Boolean);
+  function moreChanged() {
+    const bits = [];
+    if (tags.state.items.length) bits.push(tags.state.items.length + " tag" + (tags.state.items.length > 1 ? "s" : ""));
+    if (level.value) bits.push(level.value);
+    if (prereq.state.items.length + related.state.items.length) bits.push((prereq.state.items.length + related.state.items.length) + " related");
+    moreNote.textContent = bits.length ? " – " + bits.join(", ") : " – tags, level, related pages";
+  }
+  moreChanged();
+  const more = moreParts.length ? h("details", { class: "more" }, h("summary", {}, "More options (optional)", moreNote), ...moreParts) : null;
+  const keepNote = have.length ? h("div", { class: "box", role: "status" }, "Already in the front matter, kept as it is: " + have.join(", ")) : null;
+  const el = h("div", {},
+    keepNote,
+    keep("summary", () => field("Summary", "one line shown in search and Explore", h("div", {}, summary, count), summary)),
+    keep("type", () => field("Kind of page", "one or two; the first you pick is the main one", types.el)),
+    keep("domains", () => field("Subjects", "one or two; they put the page in Explore by subject", h("div", {}, domains.el, addDomainBtn, newDomainBox))),
+    more);
+  const values = () => ({ summary: summary.value, types: types.get(), domains: domains.get(), tags: tags.state.items,
+    level: level.value, prerequisites: prereq.state.items, related: related.state.items,
+    new_domains: newDomains.filter(d => domains.get().includes(d.key)),
+    new_tags: tags.state.items.filter(t => tags.state.isNew.has(t)).map(t => ({ key: t, label: titleCase(t) })) });
+  return { el, more, types, domains, tags, level, summary, prereq, related, values,
+    /* put saved answers back (a draft) */
+    restore(v) {
+      summary.value = v.summary || ""; count.textContent = summary.value.length + "/200";
+      for (const d of v.new_domains || []) if (!domains.has(d.key)) { newDomains.push(d); domains.add(d); }
+      types.set(v.types || []); domains.set(v.domains || []);
+      tags.set(v.tags || []); level.value = v.level || ""; prereq.set(v.prerequisites || []); related.set(v.related || []);
+      moreChanged();
+    } };
+}
+
+/* Show a result (or error) where the person is looking, and move focus there for screen readers. */
+function resultBox(host) {
+  return (result) => {
+    host.replaceChildren(message(result.ok === false ? "err" : "ok", result.output || ""));
+    if (result.check) host.append(h("div", { class: "hint" }, "Checklist for the page:"), h("pre", {}, result.check));
+    if (result.page) {
+      const note = h("div");
+      host.append(h("div", { class: "actions" },
+        h("button", { type: "button", onclick: async () => note.replaceChildren(message("ok", (await api("/api/open", { path: result.page, line: 1 })).output)) }, "Open in editor"),
+        h("button", { type: "button", onclick: () => { loaded.new = false; show("new"); } }, "Start another page")), note);
+    }
+    host.setAttribute("tabindex", "-1"); host.focus({ preventScroll: true }); host.scrollIntoView({ block: "nearest" });
+  };
+}
+
+/* A draft of the New page form kept in this browser, so a closed tab or a stopped server loses nothing. */
+const Draft = {
+  key: "acupoftea-page-form-new-v1",
+  load() { try { return JSON.parse(localStorage.getItem(this.key) || "null"); } catch (e) { return null; } },
+  save(v) { try { localStorage.setItem(this.key, JSON.stringify(v)); } catch (e) { /* private window: no draft */ } },
+  clear() { try { localStorage.removeItem(this.key); } catch (e) { /* nothing to clear */ } },
+};
+
+/* ---------- New page ---------- */
+async function newTab(view) {
+  let opts = await api("/api/options");
+  const title = h("input", { type: "text", placeholder: "e.g. Attention in Transformers", required: true, "aria-required": "true" });
+  const folder = h("input", { type: "text", list: "folders", autocomplete: "off", required: true, "aria-required": "true" });
+  const folders = h("datalist", { id: "folders" });
+  const name = h("input", { type: "text" });
+  let nameEdited = false;
+  const createFolder = h("input", { type: "checkbox" });
+  const createRow = h("label", { hidden: true }, createFolder, " This folder does not exist yet: create it");
+  const similar = h("div", { "aria-live": "polite" });
+  const titleErr = h("div", { class: "err-text", role: "alert" }), folderErr = h("div", { class: "err-text", role: "alert" });
+  const out = h("div"), banner = h("div"), sumline = h("div", { class: "sumline", "aria-live": "polite" });
+  const holder = h("div");
+  let touched = false, restoring = false;
+  const meta = metaForm(opts, [], () => { touched = true; changed(); });
+  holder.replaceChildren(meta.el);
+  const fileLine = () => (folder.value.trim() || "folder") + "/" + (name.value.trim() || "file-name") + ".md";
+
+  function changed() {                                        // keep the draft and the one-line summary current
+    if (restoring) return;
+    const v = meta.values();
+    const bits = [v.types.join(" + ") || "no kind yet", v.domains.join(" + ") || "no subject yet"];
+    if (v.tags.length) bits.push(v.tags.length + " tag" + (v.tags.length > 1 ? "s" : ""));
+    sumline.replaceChildren("Will create ", h("strong", {}, fileLine()), " – " + bits.join(" · "));
+    if (title.value.trim() || v.summary.trim() || v.domains.length) {
+      Draft.save(Object.assign({ title: title.value, folder: folder.value, name: name.value, nameEdited, create_folder: createFolder.checked }, v));
+    }
+  }
+  const refresh = debounce(async () => {
+    const o = await api("/api/options?title=" + encodeURIComponent(title.value) + "&folder=" + encodeURIComponent(folder.value));
+    folders.replaceChildren(...[...o.suggested_folders, ...o.folders.filter(f => !o.suggested_folders.includes(f))].map(f => h("option", { value: f })));
+    if (!nameEdited) name.value = o.slug;
+    createRow.hidden = o.folder_exists !== false;
+    similar.replaceChildren(...(o.similar.length ? [h("div", { class: "box" }, "Similar pages already exist: ", o.similar.map(s => h("div", { class: "path" }, s.path + "  \"" + s.title + "\"")), "Consider extending one of them instead (the repo keeps one page per topic).")] : []));
+    if (!touched && folder.value.trim()) { restoring = true; meta.domains.set(o.default_domains); meta.types.set(o.default_type); restoring = false; }
+    changed();
+  }, 300);
+  title.addEventListener("input", refresh); folder.addEventListener("input", refresh);
+  name.addEventListener("input", () => { nameEdited = true; changed(); });
+  createFolder.addEventListener("change", changed);
+  function valid() {
+    titleErr.textContent = title.value.trim() ? "" : "Give the page a title.";
+    folderErr.textContent = folder.value.trim() ? "" : "Choose a folder (closest ones are suggested once you type a title).";
+    title.setAttribute("aria-invalid", String(!title.value.trim())); folder.setAttribute("aria-invalid", String(!folder.value.trim()));
+    if (!title.value.trim()) { title.focus(); return false; }
+    if (!folder.value.trim()) { folder.focus(); return false; }
+    return true;
+  }
+  const submit = async (btn, dry) => {
+    if (!valid()) return;
+    await busy(btn, async () => {
+      const r = await api("/api/create", Object.assign({ title: title.value, folder: folder.value, name: name.value,
+        create_folder: createFolder.checked, dry_run: dry }, meta.values()));
+      resultBox(out)(r);
+      if (r.ok && !dry) { Draft.clear(); opts = await api("/api/options"); }
+    });
+  };
+  const previewBtn = h("button", { type: "button", onclick: () => submit(previewBtn, true) }, "Preview");
+  const createBtn = h("button", { type: "button", class: "primary", onclick: () => submit(createBtn, false) }, "Create page");
+
+  const saved = Draft.load();
+  if (saved && (saved.title || saved.summary)) {
+    banner.replaceChildren(h("div", { class: "box banner", role: "status" },
+      h("span", {}, "Your last draft was kept: “" + (saved.title || "untitled") + "”."),
+      h("button", { type: "button", onclick() {
+        restoring = true;
+        title.value = saved.title || ""; folder.value = saved.folder || ""; name.value = saved.name || ""; nameEdited = !!saved.nameEdited;
+        createFolder.checked = !!saved.create_folder; meta.restore(saved); touched = true; restoring = false;
+        banner.replaceChildren(); refresh(); } }, "Restore it"),
+      h("button", { type: "button", onclick: () => { Draft.clear(); banner.replaceChildren(); } }, "Discard")));
+  }
+  view.replaceChildren(banner,
+    h("fieldset", {}, h("legend", {}, h("span", { class: "step", "aria-hidden": "true" }, "1"), "Where it goes"),
+      field(h("span", {}, "Title ", h("span", { class: "req", "aria-hidden": "true" }, "*")), "", h("div", {}, title, titleErr), title), similar,
+      field(h("span", {}, "Folder ", h("span", { class: "req", "aria-hidden": "true" }, "*")), "closest folders first as you type the title", h("div", {}, folder, folders, folderErr, createRow), folder),
+      h("details", {}, h("summary", { class: "hint" }, "File name (made from the title; change it only if you need to)"), field("File name", "without .md", name, name))),
+    h("fieldset", {}, h("legend", {}, h("span", { class: "step", "aria-hidden": "true" }, "2"), "What it is"), holder),
+    h("div", { class: "actions sticky" }, sumline, previewBtn, createBtn),
+    out);
+  refresh();
+}
+
+/* ---------- Adopt ---------- */
+async function adoptTab(view) {
+  const opts = await api("/api/options");
+  const pages = await api("/api/adoptable");
+  const filter = h("input", { type: "text", placeholder: "Type to filter: path, title or a missing field (e.g. devops summary)", autocomplete: "off" });
+  const list = h("select", { size: "8", "aria-label": "Pages that can be completed" });
+  const count = h("div", { class: "hint", "aria-live": "polite" });
+  const chosen = h("div", { class: "hint" });
+  const holder = h("div"), out = h("div");
+  let meta = null, current = "";
+  const label = p => p.path + (p.title ? "  \u2013  " + p.title : "") + (p.missing.length ? "   [missing: " + p.missing.join(", ") + "]" : "");
+  const matches = () => {                                 // every word typed must appear in the path, title or missing fields
+    const words = filter.value.toLowerCase().split(/\s+/).filter(Boolean);
+    return pages.filter(p => { const hay = (p.path + " " + p.title + " missing " + p.missing.join(" ")).toLowerCase(); return words.every(w => hay.includes(w)); });
+  };
+  function render() {
+    const found = matches();
+    list.replaceChildren(...found.map(p => { const o = h("option", { value: p.path }, label(p)); if (p.path === current) o.selected = true; return o; }));
+    count.textContent = found.length === pages.length ? pages.length + " pages" : found.length + " of " + pages.length + " pages" + (found.length ? "; Enter picks the first, \u2193 moves into the list" : "; nothing matches");
+  }
+  function choose(path) {
+    const p = pages.find(x => x.path === path);
+    if (!p || path === current) return;
+    current = path; out.replaceChildren();
+    meta = metaForm(opts, p.have);
+    holder.replaceChildren(meta.el);
+    chosen.textContent = "Adopting: " + path;
+  }
+  filter.addEventListener("input", render);
+  filter.addEventListener("keydown", e => {
+    if (e.key === "Enter") { e.preventDefault(); const first = matches()[0]; if (first) { choose(first.path); render(); } }
+    else if (e.key === "ArrowDown" && list.options.length) { e.preventDefault(); list.focus(); if (list.selectedIndex < 0) list.selectedIndex = 0; }
+    else if (e.key === "Escape") { filter.value = ""; render(); }
+  });
+  list.addEventListener("change", () => choose(list.value));
+  const submit = async (btn, dry) => {
+    if (!meta) { resultBox(out)({ ok: false, output: "Choose a page first." }); filter.focus(); return; }
+    await busy(btn, async () => resultBox(out)(await api("/api/adopt", Object.assign({ page: current, dry_run: dry }, meta.values()))));
+  };
+  const previewBtn = h("button", { type: "button", onclick: () => submit(previewBtn, true) }, "Preview");
+  const adoptBtn = h("button", { type: "button", class: "primary", onclick: () => submit(adoptBtn, false) }, "Add front matter");
+  view.replaceChildren(
+    h("p", { class: "hint" }, "For a page you wrote by hand: this adds the front matter and the folder index row. The text of the page is never changed."),
+    h("fieldset", {}, h("legend", {}, "Page"),
+      field("Find a page", "", filter, filter), count, h("div", { class: "hint" }, "Pick one:"), list, chosen),
+    h("fieldset", {}, h("legend", {}, "About the page"), holder),
+    h("div", { class: "actions sticky" }, previewBtn, adoptBtn),
+    out);
+  render();
+}
+
+/* ---------- Fix problems ---------- */
+function diffEl(text) {
+  return h("pre", { class: "diff", tabindex: "0", "aria-label": "Suggested change" }, text.split("\n").map(l => h("div", { class: l.startsWith("+") && !l.startsWith("+++") ? "add" : l.startsWith("-") && !l.startsWith("---") ? "del" : "" }, l || " ")));
+}
+async function fixTab(view) {
+  const scope = h("select", {}, h("option", { value: "changed" }, "Files changed since dev"), h("option", { value: "all" }, "Whole repository"));
+  const custom = h("input", { type: "text", placeholder: "or a path, then Enter" });
+  const list = h("div", { "aria-live": "polite" }), status = h("div", { "aria-live": "polite" });
+  const notice = h("div");              // what the last applied fix changed; stays while the list refreshes
+  const current = () => custom.value.trim() || scope.value;
+  async function load() {
+    list.setAttribute("aria-busy", "true");
+    list.replaceChildren(h("div", { class: "hint" }, "Checking..."));
+    try {
+      const issues = await api("/api/issues?scope=" + encodeURIComponent(current()));
+      status.replaceChildren(message(issues.length ? "box" : "ok", issues.length ? issues.length + " problem(s)" : "Nothing to fix."));
+      list.replaceChildren(...issues.map(card));
+    } catch (e) { list.replaceChildren(message("err", e.message)); }
+    list.removeAttribute("aria-busy");
+  }
+  function card(i) {
+    const detail = h("div");
+    return h("article", { class: "issue" },
+      h("div", {}, h("span", { class: "badge " + i.level }, i.level), h("span", { class: "path" }, i.path + ":" + i.line)),
+      h("div", {}, i.message), i.hint ? h("div", { class: "hint" }, i.hint) : null,
+      h("div", { class: "actions" },
+        i.path.endsWith(".md") ? h("button", { type: "button", onclick: async () => detail.replaceChildren(message("ok", (await api("/api/open", { path: i.path, line: i.line })).output)) }, "Open in editor") : null,
+        i.fixes.map((f, n) => h("button", { type: "button", onclick() {
+          const apply = h("button", { type: "button", class: "primary", onclick: () => busy(apply, async () => {
+            const r = await api("/api/fix", { id: i.id, fix: n, scope: current() });
+            notice.replaceChildren(message(r.ok ? "ok" : "err", r.output));
+            if (r.ok) await load(); else detail.replaceChildren(message("err", r.output)); }) }, "Apply this change");
+          detail.replaceChildren(h("div", { class: "hint" }, f.label), diffEl(f.diff), h("div", { class: "actions" }, apply,
+            h("button", { type: "button", onclick: () => detail.replaceChildren() }, "Cancel")));
+          apply.focus(); } }, "Fix: " + f.label))),
+      detail);
+  }
+  const recheck = () => { notice.replaceChildren(); load(); };
+  scope.addEventListener("change", () => { custom.value = ""; recheck(); });
+  custom.addEventListener("keydown", e => { if (e.key === "Enter") recheck(); });
+  scope.setAttribute("aria-label", "Which files to check"); custom.setAttribute("aria-label", "Page or folder path");
+  view.replaceChildren(h("div", { class: "row" }, scope, custom, h("button", { type: "button", onclick: recheck }, "Check again")), notice, status, list);
+  load();
+}
+
+/* ---------- tabs ---------- */
+const tabs = { new: newTab, adopt: adoptTab, fix: fixTab };
+const loaded = {};
+async function show(name, focus) {
+  for (const k of Object.keys(tabs)) {
+    const t = document.getElementById("tab-" + k);
+    t.setAttribute("aria-selected", k === name); t.tabIndex = k === name ? 0 : -1;
+    document.getElementById("view-" + k).hidden = k !== name;
+  }
+  if (focus) document.getElementById("tab-" + name).focus();
+  const view = document.getElementById("view-" + name);
+  if (loaded[name] && name === "new") return;
+  loaded[name] = true;
+  try { await tabs[name](view); } catch (e) { view.replaceChildren(message("err", e.message)); }
+}
+const order = Object.keys(tabs);
+for (const k of order) {
+  const t = document.getElementById("tab-" + k);
+  t.addEventListener("click", () => show(k));
+  t.addEventListener("keydown", e => {
+    const i = order.indexOf(k);
+    const to = e.key === "ArrowRight" ? order[(i + 1) % order.length] : e.key === "ArrowLeft" ? order[(i + order.length - 1) % order.length]
+      : e.key === "Home" ? order[0] : e.key === "End" ? order[order.length - 1] : null;
+    if (to) { e.preventDefault(); show(to, true); }
+  });
+}
+document.getElementById("quit").addEventListener("click", async () => {
+  try { await api("/api/quit", {}); } catch (e) { /* the server is gone */ }
+  document.body.replaceChildren(h("main", {}, h("p", {}, "Stopped. You can close this tab.")));
+});
+show("new");
+</script>
+</body>
+</html>

@@ -129,7 +129,7 @@ index.html           — Docsify entry point: page shell, styles, Content-Securi
                          icons/ (favicon.svg, PNG sizes, site.webmanifest)
                          tests/smoke.js (browser smoke test of the staged site, run in Chromium and WebKit)
                          metadata/ (schema.yaml, taxonomy.yaml)
-                         tools/ (validate, generate_index, stage_site, code_pages, build_search_index, check_links, update_recent, check_pins, new_page, page_doctor, and the test_*.py files that CI runs)
+                         tools/ (validate, generate_index, stage_site, code_pages, build_search_index, check_links, update_recent, check_pins, new_page, page_doctor, page_gui (+ page_gui.html), and the test_*.py files that CI runs)
                          generated/ (indexes and Explore pages, generated)
 .github/             — workflows (validate metadata, smoke test, pin check; deploy a staged copy to gh-pages), dependabot.yml (action updates) and CONTRIBUTING.md
 .gitmodules          — project/knowledge submodules
@@ -253,6 +253,7 @@ See `CLAUDE.md` §21 for the contributor how-to.
 Adding a page MUST stay a small, repeatable step for a solo author or an outside contributor:
 
 - **Preferred:** `python3 .docs/tools/new_page.py`. It asks for a title, optional summary, folder, type, domains (suggested from the folder), tags, level, prerequisites and related pages, then creates the kebab-case file with front matter and a short outline, adds the page to the folder's `README.md` table, and regenerates the sidebar and navbar. It suggests the closest existing folders, warns about similar existing pages (§17), never overwrites a file, and never creates a folder without confirmation (§15). New tags are added to `taxonomy.yaml` only after confirmation (§26). Reading time is never entered: the site computes it from the text, and `new_page.py --check PAGE` shows it together with what is still missing.
+- **In the browser:** `new_page.py --gui` serves the same questions, the hand-written-page flow and the `page_doctor.py` list as a form on 127.0.0.1 only (`page_gui.py`, `page_gui.html`); it runs `new_page.py` with options, so the rules are the same.
 - **Changing metadata later:** `new_page.py --update PAGE` changes the summary, kind, subjects, tags, level or relations of a page that has front matter, keeping every other field and the page text.
 - **A page written by hand:** `python3 .docs/tools/new_page.py --adopt PAGE` adds the front matter and index link to an existing page without changing its text, and, for a page with partial front matter, keeps it and adds only the missing fields.
 - **Without the script:** create a kebab-case `.md` file with one `# H1`, add it to the folder's `README.md` index, and regenerate the sidebar. Front matter stays optional.

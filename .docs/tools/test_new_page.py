@@ -71,6 +71,22 @@ class DryRun(unittest.TestCase):
         self.assertNotEqual(r.returncode, 0)
         self.assertIn("did you mean systems-and-hpc", r.stderr)
 
+    def test_new_subject_and_tag_can_be_confirmed_by_option(self):
+        r = dry_run("--title", "A Quick Look", "--folder", "fields/schedulers", "--domains", "devops",
+                    "--new-domain", "devops=Running software on clusters", "--tags", "fresh-tag",
+                    "--new-tag", "fresh-tag=Fresh Tag")
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertIn("domains: [devops]", r.stdout)
+        self.assertIn("tags: [fresh-tag]", r.stdout)
+        self.assertIn("New subjects for taxonomy.yaml: devops", r.stdout)
+
+    def test_missing_folder_needs_create_folder_with_yes(self):
+        r = dry_run("--title", "A Quick Look", "--folder", "fields/schedulers/brand-new-sub")
+        self.assertNotEqual(r.returncode, 0)
+        self.assertIn("no folder created", r.stderr)
+        r = dry_run("--title", "A Quick Look", "--folder", "fields/schedulers/brand-new-sub", "--create-folder")
+        self.assertEqual(r.returncode, 0, r.stderr)
+
     def test_a_folder_that_leaves_the_repository_is_refused(self):
         for bad in ("fields/../..", "fields/schedulers/../../..", "fields//schedulers", "fields/./schedulers", "fields\\schedulers"):
             r = dry_run("--title", "A Quick Look", "--folder", bad)
