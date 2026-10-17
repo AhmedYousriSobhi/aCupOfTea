@@ -200,7 +200,7 @@ async function run(browser, base, label, size, phone) {
     c('phone menu opens', before < 0 && after >= 0, `x ${before} -> ${after}`);
     // a page link in the menu opens the page and closes the menu
     try {
-      await page.evaluate(() => { const g = [...document.querySelectorAll('.sidebar-nav li.group > strong')].find((s) => /Tips/.test(s.textContent)); if (g) g.click(); });
+      await page.evaluate(() => { const g = [...document.querySelectorAll('.sidebar-nav li.group')].find((l) => /Tips/.test(l.firstElementChild.textContent)); if (g) g.click(); });
       await page.waitForTimeout(300);
       await page.tap('.sidebar-nav a[href*="tips/kaggle"]', { timeout: 3000 });
       await page.waitForTimeout(1200);
@@ -315,11 +315,13 @@ async function run(browser, base, label, size, phone) {
   }
   const nested = await page.evaluate(() => {
     const label = (t) => [...document.querySelectorAll('.sidebar-nav li.group')].find((l) => l.firstElementChild.textContent.trim() === t);
-    ['Fields', 'Benchmarks'].forEach((t) => { const l = label(t); if (l && l.classList.contains('collapsed')) l.firstElementChild.click(); });
+    ['Fields', 'Benchmarks'].forEach((t) => { const l = label(t); if (l && l.classList.contains('collapsed')) l.click(); });
     const b = label('Benchmarks');
     return !!b && !b.classList.contains('collapsed') && b.querySelectorAll('a').length > 1;
   });
   c('a folder inside a folder in the menu opens when tapped', nested);
+  const twice = await page.evaluate(() => [...document.querySelectorAll('.sidebar-nav li.group > a')].filter((a) => [...a.parentNode.querySelectorAll(':scope > ul > li > a')].some((k) => k.getAttribute('href') === a.getAttribute('href'))).length);
+  c('a folder heading and its index page are one menu entry, not two', twice === 0, twice + ' folders list their index twice');
   c('no script errors', page.errors.length === 0, page.errors.join(' | '));
   await page.context().close();
 }
