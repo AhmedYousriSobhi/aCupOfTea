@@ -3,6 +3,7 @@
 
 Standard library only. Run: python3 .docs/tools/test_page_gui.py
 """
+import base64
 import json
 import os
 import sys
@@ -160,6 +161,18 @@ class Api(unittest.TestCase):
         self.assertTrue(note["ok"], note)
         self.assertIn("business and security is not marked as related", note["output"])
 
+    def test_two_subjects_can_be_marked_as_related(self):
+        before = self.json("/api/options")["related"]
+        self.assertNotIn("security", before["business"])
+        r = self.json("/api/relate", {"a": "business", "b": "security"})
+        self.assertTrue(r["ok"], r)
+        after = self.json("/api/options")["related"]
+        self.assertIn("security", after["business"])
+        self.assertIn("business", after["security"])
+        self.assertTrue(self.json("/api/relate", {"a": "business", "b": "security"})["ok"])   # twice is fine
+        self.assertFalse(self.json("/api/relate", {"a": "business", "b": "nonsense"})["ok"])
+        self.assertFalse(self.json("/api/relate", {"a": "business", "b": "business"})["ok"])
+
     # ---- adopt
     def test_adoptable_lists_what_is_missing(self):
         pages = {p["path"]: p for p in self.json("/api/adoptable")}
@@ -174,6 +187,73 @@ class Api(unittest.TestCase):
             text = fh.read()
         self.assertTrue(text.endswith("\n# Hand Made\n\nSome text.\n"))
         self.assertIn("summary: Made by hand.", text)
+
+    # ---- edit
+    def test_editable_lists_pages_with_front_matter_and_their_values(self):
+        pages = {p["path"]: p for p in self.json("/api/editable")}
+        self.assertNotIn("notes/hand-made.md", pages)                       # no front matter: that is Adopt
+        self.assertEqual(pages["notes/a.md"]["values"]["types"], ["note"])
+        self.assertEqual(pages["notes/a.md"]["values"]["tags"], [])
+
+    def test_update_changes_and_clears_fields_and_keeps_the_text(self):
+        r = self.json("/api/update", {"page": "notes/a.md", "summary": "Now with a summary.", "types": ["concept"],
+                                      "domains": ["security"], "tags": [], "level": "beginner"})
+        self.assertTrue(r["ok"], r)
+        with open(os.path.join(new_page.ROOT, "notes", "a.md"), encoding="utf-8") as fh:
+            text = fh.read()
+        self.assertIn("summary: Now with a summary.", text)
+        self.assertIn("type: concept", text)
+        self.assertIn("level: beginner", text)
+        self.assertTrue(text.endswith("# A Page\n\nText.\n"))
+        r = self.json("/api/update", {"page": "notes/a.md", "summary": "", "types": ["concept"], "domains": ["security"],
+                                      "tags": [], "level": ""})             # clear summary and level
+        self.assertTrue(r["ok"], r)
+        with open(os.path.join(new_page.ROOT, "notes", "a.md"), encoding="utf-8") as fh:
+            after = fh.read()
+        self.assertNotIn("summary:", after)
+        self.assertNotIn("level:", after)
+
+    # ---- pictures
+    PNG = base64.b64encode(b"\x89PNG\r\n\x1a\n" + b"0" * 20).decode()
+
+    def upload(self, **kw):
+        body = {"page": "notes/a.md", "filename": "My Photo.PNG", "alt": "A cup of tea", "data": self.PNG}
+        body.update(kw)
+        return self.json("/api/image", body)
+
+    def test_a_picture_is_saved_next_to_the_page_and_never_overwritten(self):
+        first = self.upload()
+        self.assertTrue(first["ok"], first)
+        self.assertEqual(first["path"], "notes/images/my-photo.png")
+        self.assertEqual(first["snippet"], "![A cup of tea](images/my-photo.png)")
+        self.assertTrue(os.path.isfile(os.path.join(new_page.ROOT, "notes", "images", "my-photo.png")))
+        self.assertEqual(self.upload()["path"], "notes/images/my-photo-2.png")
+
+    def test_pictures_that_are_unsafe_or_undescribed_are_refused(self):
+        for kw, word in ((dict(filename="x.svg"), "SVG"), (dict(alt=" "), "shows"), (dict(filename="x.png", data=base64.b64encode(b"not an image").decode()), "not really"),
+                         (dict(page="../outside.md"), "page"), (dict(data="!!!"), "read")):
+            r = self.upload(**kw)
+            self.assertFalse(r["ok"], (kw, r))
+            self.assertIn(word, r["output"])
+        self.assertFalse(os.path.exists(os.path.join(new_page.ROOT, "notes", "images")))
+
+    def test_brackets_in_the_description_are_made_safe(self):
+        self.assertEqual(self.upload(alt="a [cup]")["snippet"], "![a (cup)](images/my-photo.png)")
+
+    # ---- editor and indexes
+    def test_terminal_editor_opens_in_a_terminal_only_on_a_desktop(self):
+        with mock.patch.dict(os.environ, {"DISPLAY": ":0"}), mock.patch.object(page_gui.shutil, "which", lambda e: "/usr/bin/" + e if e == "xterm" else None):
+            self.assertEqual(page_gui.terminal_prefix(), ["xterm", "-e"])
+        with mock.patch.dict(os.environ, {}, clear=True):
+            self.assertIsNone(page_gui.terminal_prefix())
+
+    def test_reindex_runs_the_generator(self):
+        import shutil
+        shutil.copy(os.path.join(HERE, "..", "metadata", "schema.yaml"), os.path.join(new_page.ROOT, ".docs", "metadata", "schema.yaml"))
+        os.makedirs(os.path.join(new_page.ROOT, ".docs", "generated"), exist_ok=True)
+        r = self.json("/api/reindex", {})
+        self.assertTrue(r["ok"], r)
+        self.assertTrue(os.path.isfile(os.path.join(new_page.ROOT, ".docs", "generated", "objects.json")))
 
     # ---- problems
     def test_open_refuses_paths_outside_the_repo(self):

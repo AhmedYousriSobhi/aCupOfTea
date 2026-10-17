@@ -2,6 +2,19 @@
 
 This guide covers the whole path for a new page: set up, write it, check it, preview it and send it. The repository layout is described in [SPEC.md](../SPEC.md).
 
+## Which tool for what
+
+| You want to | Use |
+|---|---|
+| write a new page | `new_page.py` (terminal) or `new_page.py --gui` (browser form) |
+| add metadata to a page you wrote by hand | `new_page.py --adopt PAGE` (or the Adopt tab) |
+| change a page's summary, kind, subjects, tags, level or related pages | `new_page.py --update PAGE` (or the Edit tab) |
+| add pictures to a page | the Add pictures tab (or put them in `images/` by hand, see "Without the script") |
+| see what to fix before pushing | `page_doctor.py` (or the Fix problems tab) |
+| review a finished page | `new_page.py --check PAGE` |
+
+Every tool works in the terminal and most also in the browser form; nothing needs more than Python 3 and PyYAML.
+
 ## 1. Set up (once)
 
 ```bash
@@ -56,7 +69,25 @@ Add `--dry-run` to see the result without writing anything. Only Python 3 is nee
 python3 .docs/tools/new_page.py --gui
 ```
 
-It starts a small server on your own computer (127.0.0.1, a random port, protected by a token), prints the address and opens it. Three tabs: **New page** (the same questions as above as a form, with folder suggestions while you type the title, a warning about similar pages, tick boxes for kind and subjects, new subjects and tags added on the spot, Preview, Create), **Adopt a page** (the hand-written page flow below, with a filter box: type words of the path, title or a missing field, Enter picks the first match, the down arrow moves into the list) and **Fix problems** (the list of `page_doctor.py` below: open a problem in your editor, see the suggested fix as a diff, apply it). The form only fills in the options of `new_page.py` and runs it, so the rules are the same. The New page tab asks only for the essentials first (title, folder, summary, kind, subjects); tags, level and related pages are folded into "More options", a line at the bottom says what will be created, and your answers are kept as a draft in the browser, so closing the tab or stopping the server loses nothing (the address is the same each run: port 47931, unless it is taken). Stop it with Ctrl+C or the Close button. The same options work in a script: `--create-folder`, `--new-domain KEY=DESCRIPTION` and `--new-tag KEY=LABEL` confirm what the questions would ask.
+This starts a small server on your own computer (127.0.0.1 only, protected by a token; the address is the same each run, port 47931 unless it is taken), prints the address and opens it. It only fills in the options of `new_page.py` and `page_doctor.py` and runs them, so the rules are the same. Stop it with Ctrl+C or the Close button. Five tabs:
+
+| Tab | What it does |
+|---|---|
+| **New page** | The questions above as a form: title and folder first, then summary, kind and subjects; tags, level and related pages are folded into "More options". A cup fills as the essentials are in, a card shows how the page will look in search and Explore, and a line at the bottom says what will be created. Preview, then Create. |
+| **Adopt a page** | The hand-written page flow below. Filter the list by words of the path, title or a missing field (Enter picks the first match). |
+| **Edit a page** | The same form prefilled from a page that has front matter, with Preview and Save. Only what you change is rewritten, like `--update`. |
+| **Add pictures** | Saves PNG, JPEG, GIF or WebP files (up to 5 MB) into the page's own `images/` folder under an unused name, asks what each one shows, and gives the line to paste (with a Copy button). SVG is refused because it can carry scripts. |
+| **Fix problems** | The `page_doctor.py` list below: open a problem in your editor, see the fix as a diff, apply it. |
+
+Things the form does for you:
+
+- **Subjects:** a small map shows whether the chosen subjects go together. A related pair is joined by a line shading between their two colours; an unrelated pair is a dashed, labelled line with a button that marks the pair as related in `taxonomy.yaml`.
+- **Tags and new entries:** a new tag that looks like a known one (or a word of the title) offers "Use kubernetes" instead; a new subject, kind or tag can be added on the spot.
+- **Drafts:** your answers are kept in the browser, so closing the tab or stopping the server loses nothing.
+- **After creating:** a short "brewed" moment and a button that updates the generated indexes (no motion if your system asks for less).
+- **Editors:** a problem opens in `$VISUAL` or `$EDITOR`; a terminal editor (vim, nano) opens in a new terminal window when there is a desktop, otherwise the command to run is shown.
+
+The same choices work in a script: `--create-folder`, `--new-domain KEY=DESCRIPTION`, `--new-type KEY=DESCRIPTION` and `--new-tag KEY=LABEL` confirm what the questions would ask.
 
 ## A page you wrote by hand
 
@@ -143,11 +174,14 @@ python3 -m http.server 8000 --directory _site     # then open http://localhost:8
 | Script | Use it to |
 |---|---|
 | `new_page.py` | create a page, add it to its folder index and the sidebar; `--check PAGE` reviews a finished page |
+| `page_gui.py` | the browser form (`new_page.py --gui`): the same flows as `new_page.py` and `page_doctor.py` |
+| `page_doctor.py` | turn the check results into a to-do list for the changed pages, with fixes and an optional pre-push hook |
 | `validate.py` | check front matter, domains, tags and relations |
 | `check_links.py` | find broken internal links, unsafe HTML and pictures without a description |
 | `generate_index.py` | rebuild the Explore and Start here pages in `.docs/generated` |
 | `stage_site.py` | build the deployed copy of the site locally, into `_site/` (git-ignored) |
 | `update_recent.py` | refresh the "Recently added" list in the README; the maintainer runs it before a release |
+| `test_new_page.py`, `test_page_doctor.py`, `test_page_gui.py` | the tests of the authoring tools (CI runs them; run one with `python3 .docs/tools/test_new_page.py`) |
 | `check_pins.py` | compare the pinned CDN versions with npm and update their hashes (site maintenance) |
 
 ## Rules that save a review round
