@@ -154,7 +154,7 @@ Two navigation layers exist and both must stay accurate:
 1. **`README.md` indexes** inside a folder — description, subcategories, links, related projects/technologies. Should not duplicate large amounts of underlying content.
 2. **`.docs/_sidebar.md`** — the navigation tree for the rendered Docsify site. It is **generated** from the file tree by `.docs/gen_sidebar.sh`, and CI regenerates it on every push to `main`. It MUST NOT be hand-edited; regenerate and commit it in the same change as any move/rename/new section so the repo matches what's published.
    - A page's label is the text after the last hyphen of its `# H1` (the whole H1 if it has none). A `sidebar_label` in front matter overrides it without editing the heading.
-   - A folder's group name is the text before the last hyphen of its `README.md` H1. A `sidebar_group` in that README overrides it; use it when sibling folders would share a name.
+   - A folder's group name is the text before the last hyphen of its `README.md` H1, and the group heading links to that README (the README is not repeated as a child entry; the chevron folds the group). A `sidebar_group` in that README overrides it; use it when sibling folders would share a name.
    - An additive **Explore** section (Start here, Domains, Tags) comes from the metadata layer (§26); the folder tree below it is untouched.
 
 Folder `README.md` indexes SHOULD list their pages in a `| File | Description |` table under `## Contents`, the format `new_page.py` updates automatically (§27). Converging the remaining list-style indexes is tracked in issue #77.
