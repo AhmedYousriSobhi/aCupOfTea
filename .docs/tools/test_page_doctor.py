@@ -166,6 +166,8 @@ class Pure(unittest.TestCase):
         with mock.patch.object(pd.subprocess, "run", return_value=fake):
             lines = pd.run_tool("validate.py")
         self.assertIn("crashed (TypeError: boom)", lines[0])
+        got = pd.parse("validate", lines)
+        self.assertTrue(pd.in_scope(got[0]["path"], {"fields/x"}))      # not hidden by the scope
 
 
 class Interactive(unittest.TestCase):

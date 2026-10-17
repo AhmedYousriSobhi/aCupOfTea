@@ -39,6 +39,7 @@ import new_page  # noqa: E402
 ROOT = new_page.ROOT
 TOOLS = os.path.dirname(os.path.abspath(__file__))
 TAXONOMY_REL = ".docs/metadata/taxonomy.yaml"
+CRASH = "(a check crashed)"        # path of the issue made from a crash; never filtered out by scope
 
 LINE_RE = re.compile(r"^(?P<path>[^:\n]+?):(?P<line>\d+): (?P<level>error|warning): (?P<msg>.*)$")
 ALT_RE = re.compile(r"^(?P<path>[^:\n]+?): warning: (?P<msg>\d+ picture\(s\) without a description "
@@ -54,7 +55,7 @@ def run_tool(script):
     lines = r.stdout.splitlines()
     if "Traceback" in r.stderr:
         lines.append("%s:1: error: %s crashed (%s); its other results are missing"
-                     % (script, script, r.stderr.strip().splitlines()[-1]))
+                     % (CRASH, script, r.stderr.strip().splitlines()[-1]))
     return lines
 
 
@@ -87,7 +88,7 @@ def changed_paths():
 
 
 def in_scope(path, scope):
-    return scope is None or any(path == s or path.startswith(s.rstrip("/") + "/") for s in scope)
+    return scope is None or path == CRASH or any(path == s or path.startswith(s.rstrip("/") + "/") for s in scope)
 
 
 def read_rel(rel):
@@ -318,8 +319,15 @@ def describe(issue):
     if "picture(s) without a description" in msg:
         hint = "Write what each picture shows between the brackets: ![what it shows](path). Screen readers and search use it."
     if issue["tool"] == "page":
-        hint = ("Run python3 .docs/tools/new_page.py --adopt %s to be asked for the missing fields." % issue["path"]
-                if hasattr(new_page, "adopt") else "Add it to the front matter (CLAUDE.md section 21).")
+        if msg.startswith("relative link"):
+            hint = "Write the links from the site root, e.g. /fields/x/page.md (python3 .docs/tools/check_links.py names the lines)."
+        elif msg.startswith(("no front matter", "no summary", "no type", "no domains", "no tags", "no level")):
+            hint = ("Run python3 .docs/tools/new_page.py --adopt %s to be asked for the missing fields." % issue["path"]
+                    if hasattr(new_page, "adopt") else "Add it to the front matter (CLAUDE.md section 21).")
+        else:
+            hint = "See python3 .docs/tools/new_page.py --check %s." % issue["path"]
+    if issue["path"] == CRASH:
+        hint = "Fix the crash first: until then this check reports nothing. Often the branch is behind dev, or a page uses a field the checker does not know yet."
     issue["hint"], issue["fixes"] = hint, fixes
     return issue
 
@@ -352,8 +360,8 @@ def pages_in(scope):
                 pages |= {os.path.relpath(os.path.join(d, f), ROOT).replace(os.sep, "/") for f in files if f.endswith(".md")}
         elif entry.endswith(".md") and os.path.isfile(full):
             pages.add(entry)
-    return sorted(p for p in pages if not p.endswith("README.md") and p.split("/")[0] != ".docs"
-                  and p.split("/")[0] not in ("CLAUDE.md", "SPEC.md"))
+    return sorted(p for p in pages if not p.endswith("README.md") and "/" in p
+                  and not p.startswith((".docs/", ".github/")))
 
 
 def page_issues(scope=None):
