@@ -104,7 +104,7 @@ def fm_span(text):
 
 
 def replace_in_list(text, key, old, new):
-    """Replace one value in a one-line `key: [a, b]` list of the front matter; None if not possible."""
+    """Replace one value in a one-line `key: [a, b]` list of the front matter ("" removes it); None if not possible."""
     span = fm_span(text)
     if not span:
         return None
@@ -118,7 +118,7 @@ def replace_in_list(text, key, old, new):
     out = []
     for x in items:
         x = new if x == old else x
-        if x not in out:
+        if x and x not in out:
             out.append(x)
     block = block[:m.start(2)] + ", ".join(out) + block[m.end(2):]
     return text[:span[0]] + block + text[span[1]:]
@@ -249,11 +249,12 @@ def enum_fixes(issue, key, value):
     page = issue["path"]
     allowed = list(new_page.load_tags()) if key == "tags" else new_page.load_section("domains")
     guess = closest(value, allowed)
-    if not guess:
-        return []
-    new_text = replace_in_list(read_rel(page), key, value, guess)
-    fix = make_fix("use '%s' instead of '%s'" % (guess, value), {page: new_text})
-    return [fix] if fix else []
+    fixes = []
+    if guess:
+        fixes.append(make_fix("use '%s' instead of '%s'" % (guess, value),
+                              {page: replace_in_list(read_rel(page), key, value, guess)}))
+    fixes.append(make_fix("remove '%s' from %s" % (value, key), {page: replace_in_list(read_rel(page), key, value, "")}))
+    return [f for f in fixes if f]
 
 
 def find_by_name(clean):
@@ -308,7 +309,9 @@ def describe(issue):
     m = re.match(r"invalid (domain|tag) '([^']+)'", msg)
     if m:
         key = "domains" if m.group(1) == "domain" else "tags"
-        hint = "Not in .docs/metadata/taxonomy.yaml. Use a known value, or add it there first."
+        hint = ("Not in .docs/metadata/taxonomy.yaml. Use a known value, or add it there first."
+                + (" (\"technology\" is not a tag: it is the kind: technology marker inside taxonomy.yaml.)"
+                   if m.group(2) == "technology" else ""))
         fixes = enum_fixes(issue, key, m.group(2))
     if issue["tool"] == "check_links" and issue["level"] == "error":
         target, _, what = msg.partition(": ")

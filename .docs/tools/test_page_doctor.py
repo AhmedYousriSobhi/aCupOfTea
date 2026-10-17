@@ -136,6 +136,15 @@ class Fixes(Tree):
         self.assertIn("domains: [systems-and-hpc]", i["fixes"][0]["files"][self.page])
 
 
+    def test_unknown_tag_can_be_removed(self):
+        text = PAGE.replace("tags: [k8s, kubernates, gpu]", "tags: [gpu, technology]")
+        with open(os.path.join(pd.ROOT, self.page), "w", encoding="utf-8") as fh:
+            fh.write(text)
+        i = pd.describe(self.issue(5, "invalid tag 'technology'; not in taxonomy (gpu)", "validate"))
+        self.assertIn("tags: [gpu]", i["fixes"][-1]["files"][self.page])
+        self.assertIn("kind: technology", i["hint"])
+
+
 class Pure(unittest.TestCase):
     def test_numeronym_and_typo(self):
         self.assertEqual(pd.suggest_word("k8s", [["explained", "kubernetes"]]), "kubernetes")
