@@ -321,16 +321,18 @@ function diffEl(text) {
   return h("pre", { class: "diff", tabindex: "0", "aria-label": "Suggested change" }, text.split("\n").map(l => h("div", { class: l.startsWith("+") && !l.startsWith("+++") ? "add" : l.startsWith("-") && !l.startsWith("---") ? "del" : "" }, l || " ")));
 }
 async function fixTab(view) {
-  const scope = h("select", {}, h("option", { value: "changed" }, "Files changed since dev"), h("option", { value: "all" }, "Whole repository"));
+  const scope = h("select", {}, h("option", { value: "changed" }, "Files changed since dev"), h("option", { value: "all" }, "Whole repository"), h("option", { value: "pictures" }, "Pictures without a description"));
   const custom = h("input", { type: "text", placeholder: "or a path, then Enter" });
   const list = h("div", { "aria-live": "polite" }), status = h("div", { "aria-live": "polite" });
   const notice = h("div");              // what the last applied fix changed; stays while the list refreshes
-  const current = () => custom.value.trim() || scope.value;
+  const current = () => custom.value.trim() || (scope.value === "pictures" ? "all" : scope.value);
+  const pics = () => !custom.value.trim() && scope.value === "pictures";
+  const query = () => "scope=" + encodeURIComponent(current()) + (pics() ? "&pictures=1" : "");
   async function load() {
     list.setAttribute("aria-busy", "true");
     list.replaceChildren(h("div", { class: "hint" }, "Checking..."));
     try {
-      const issues = await api("/api/issues?scope=" + encodeURIComponent(current()));
+      const issues = await api("/api/issues?" + query());
       status.replaceChildren(message(issues.length ? "box" : "ok", issues.length ? issues.length + " problem(s)" : "Nothing to fix."));
       list.replaceChildren(...issues.map(card));
     } catch (e) { list.replaceChildren(message("err", e.message)); }
@@ -344,13 +346,14 @@ async function fixTab(view) {
       h("div", { class: "actions" },
         i.path.endsWith(".md") ? h("button", { type: "button", onclick: async () => detail.replaceChildren(message("ok", (await api("/api/open", { path: i.path, line: i.line })).output)) }, "Open in editor") : null,
         i.fixes.map((f, n) => h("button", { type: "button", onclick() {
+          const valueBox = f.input ? h("input", { type: "text", "aria-label": f.input, placeholder: f.input }) : null;
           const apply = h("button", { type: "button", class: "primary", onclick: () => busy(apply, async () => {
-            const r = await api("/api/fix", { id: i.id, fix: n, scope: current() });
+            const r = await api("/api/fix", { id: i.id, fix: n, scope: current(), pictures: pics(), value: valueBox ? valueBox.value : undefined });
             notice.replaceChildren(message(r.ok ? "ok" : "err", r.output));
             if (r.ok) await load(); else detail.replaceChildren(message("err", r.output)); }) }, "Apply this change");
-          detail.replaceChildren(h("div", { class: "hint" }, f.label), diffEl(f.diff), h("div", { class: "actions" }, apply,
+          detail.replaceChildren(h("div", { class: "hint" }, f.label), valueBox || diffEl(f.diff), h("div", { class: "actions" }, apply,
             h("button", { type: "button", onclick: () => detail.replaceChildren() }, "Cancel")));
-          apply.focus(); } }, "Fix: " + f.label))),
+          (valueBox || apply).focus(); } }, "Fix: " + f.label))),
       detail);
   }
   const recheck = () => { notice.replaceChildren(); load(); };
