@@ -269,12 +269,13 @@ class Handler(BaseHTTPRequestHandler):
         self.wfile.write(data)
 
     def allowed(self):
-        """A local Host header (stops DNS rebinding) and the token (stops other pages and programs)."""
+        """A local Host header (stops DNS rebinding) for everything, and the token (stops other pages and
+        programs) for the API. The page itself is static and holds nothing secret, so a refresh may load it."""
         port = self.server.server_address[1]
         if self.headers.get("Host") not in ("127.0.0.1:%d" % port, "localhost:%d" % port):
             return False
         if urlparse(self.path).path == "/":
-            return parse_qs(urlparse(self.path).query).get("t", [""])[0] == self.server.token
+            return True
         return self.headers.get("X-Token") == self.server.token
 
     def do_GET(self):
@@ -310,14 +311,24 @@ class Handler(BaseHTTPRequestHandler):
             self.send(500, {"error": "%s: %s" % (type(e).__name__, e)})
 
 
+DEFAULT_PORT = 47931          # the same address each run, so the draft the page keeps in the browser is found again
+
+
 def make_server(port=0):
     httpd = ThreadingHTTPServer(("127.0.0.1", port), Handler)
     httpd.token = token_urlsafe(24)
     return httpd
 
 
+def make_default_server():
+    try:
+        return make_server(DEFAULT_PORT)
+    except OSError:              # taken (another copy running): any free port
+        return make_server(0)
+
+
 def serve(open_browser=True):
-    httpd = make_server()
+    httpd = make_default_server()
     url = "http://127.0.0.1:%d/?t=%s" % (httpd.server_address[1], httpd.token)
     print("Page form running at %s\nPress Ctrl+C (or the Close button) to stop." % url)
     if open_browser:

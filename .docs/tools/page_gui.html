@@ -52,8 +52,26 @@
   .badge.error { color:var(--err); } .badge.warning { color:var(--warn); } .badge.todo { color:var(--muted); }
   .path { font-family:ui-monospace, monospace; font-size:.875rem; }
   .diff .add { color:var(--ok); } .diff .del { color:var(--err); }
+  .chipset { display:flex; flex-wrap:wrap; gap:8px; }
+  .chipset label { position:relative; display:inline-flex; margin:0; font-weight:500; }
+  .chipset input { position:absolute; inset:0; width:100%; height:100%; margin:0; opacity:0; cursor:pointer; }
+  .chipset .pill { border:1px solid var(--line); border-radius:999px; padding:6px 14px; min-height:36px; background:var(--card); display:inline-flex; align-items:center; }
+  .chipset input:checked + .pill { background:var(--accent); color:var(--accent-text); border-color:var(--accent); }
+  .chipset input:focus-visible + .pill { outline:3px solid var(--accent); outline-offset:2px; }
+  .chipset input:disabled + .pill { opacity:.45; cursor:not-allowed; }
+  .chipset input:disabled { cursor:not-allowed; }
+  .what { min-height:1.5em; }
+  details.more { border:1px solid var(--line); background:var(--card); border-radius:8px; margin:0 0 14px; padding:0 14px; }
+  details.more > summary { cursor:pointer; padding:10px 0; font-weight:600; list-style-position:inside; }
+  details.more > summary .hint { font-weight:400; }
+  details.more[open] > summary { border-bottom:1px solid var(--line); margin-bottom:8px; }
+  .step { display:inline-block; min-width:1.6em; text-align:center; border-radius:999px; background:var(--accent); color:var(--accent-text); margin-right:6px; font-size:.85rem; }
+  .sumline { flex:1 1 240px; align-self:center; font-size:.875rem; color:var(--muted); overflow-wrap:anywhere; }
+  .sumline strong { color:var(--text); }
+  .banner { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .banner span { flex:1 1 240px; }
   [hidden] { display:none !important; }
-  @media (pointer:coarse), (max-width:600px) { button, nav button { min-height:44px; } .checks label { padding:4px 0; } header { padding:8px 12px; } main { padding:12px; } }
+  @media (pointer:coarse), (max-width:600px) { button, nav button { min-height:44px; } .chipset .pill { min-height:44px; } .checks label { padding:4px 0; } header { padding:8px 12px; } main { padding:12px; } }
   @media (prefers-reduced-motion: no-preference) { button { transition: background-color .15s, border-color .15s; } }
 </style>
 </head>
@@ -74,13 +92,15 @@
 </main>
 <script>
 "use strict";
-const TOKEN = new URLSearchParams(location.search).get("t") || "";
-history.replaceState(null, "", location.pathname);              // keep the token out of the address bar
+let TOKEN = new URLSearchParams(location.search).get("t") || "";
+try { if (TOKEN) sessionStorage.setItem("t", TOKEN); else TOKEN = sessionStorage.getItem("t") || ""; } catch (e) { /* no session storage */ }
+history.replaceState(null, "", location.pathname);              // keep the token out of the address bar; a refresh keeps working
 
 async function api(path, body) {
   const res = await fetch(path, body === undefined ? { headers: { "X-Token": TOKEN } } :
     { method: "POST", headers: { "X-Token": TOKEN, "Content-Type": "application/json" }, body: JSON.stringify(body) });
   const data = await res.json();
+  if (res.status === 403) throw new Error("This page has no access key (it was opened without one, or the server was restarted). Open the address printed in the terminal again.");
   if (!res.ok) throw new Error(data.error || res.statusText);
   return data;
 }
@@ -151,13 +171,21 @@ function chipInput({ known, max, onChange, newLabel }) {
   return { el: h("div", {}, chips, input, list, note), input, state, set(values) { state.items = []; state.isNew.clear(); add(values.join(",")); } };
 }
 
-/* Checkboxes limited to `max` ticked. */
+/* Choices as toggle chips, at most `max` on. Pointing at or tabbing to one says what it means. */
 function checkGroup({ items, max, onChange }) {
   const boxes = items.map(it => h("input", { type: "checkbox", value: it.key }));
+  const base = "Point at a choice, or move to it with the keyboard, to see what it means.";
+  const what = h("div", { class: "hint what", "aria-live": "polite" }, base);
   const limit = h("div", { class: "hint", "aria-live": "polite" });
-  const grid = h("div", { class: "checks" }, items.map((it, i) =>
-    h("label", {}, boxes[i], h("span", {}, it.label || it.key, it.description ? h("span", { class: "hint" }, " – " + it.description) : null))));
-  const el = h("div", {}, grid, limit);
+  const tell = it => { what.textContent = it ? (it.label || it.key) + ": " + (it.description || "") : base; };
+  const chip = (it, box, text) => {
+    const l = h("label", { title: it.description || "" }, box, h("span", { class: "pill" }, text));
+    l.addEventListener("mouseenter", () => tell(it)); l.addEventListener("mouseleave", () => tell(null));
+    box.addEventListener("focus", () => tell(it)); box.addEventListener("blur", () => tell(null));
+    return l;
+  };
+  const grid = h("div", { class: "chipset" }, items.map((it, i) => chip(it, boxes[i], it.label || it.key)));
+  const el = h("div", {}, grid, what, limit);
   function sync() {
     const n = boxes.filter(b => b.checked).length;
     boxes.forEach(b => { b.disabled = !b.checked && n >= max; });
@@ -166,19 +194,21 @@ function checkGroup({ items, max, onChange }) {
   }
   el.addEventListener("change", sync);
   return { el, add(it) { const b = h("input", { type: "checkbox", value: it.key, checked: true });
-      boxes.push(b); grid.append(h("label", {}, b, h("span", {}, it.key + " (new)"))); sync(); },
+      boxes.push(b); grid.append(chip(it, b, it.key + " (new)")); sync(); },
     get: () => boxes.filter(b => b.checked).map(b => b.value),
+    has: key => boxes.some(b => b.value === key),
     set(keys) { boxes.forEach(b => { b.checked = keys.includes(b.value); }); sync(); } };
 }
 
-/* The shared questions: summary, kind, subjects, tags, level, prerequisites, related. `have` fields are left alone. */
-function metaForm(opts, have = []) {
+/* The questions about a page. The essentials (summary, kind, subjects) come first; tags, level and related
+   pages are folded into "More options". Fields in `have` are already in the page and left alone. */
+function metaForm(opts, have = [], onChange = () => {}) {
   const limits = opts.limits;
   const summary = h("input", { type: "text", maxlength: "200" });
   const count = h("span", { class: "hint", "aria-live": "off" }, "0/200");
-  summary.addEventListener("input", () => { count.textContent = summary.value.length + "/200"; });
-  const types = checkGroup({ items: opts.types, max: limits.types });
-  const domains = checkGroup({ items: opts.domains, max: limits.domains });
+  summary.addEventListener("input", () => { count.textContent = summary.value.length + "/200"; onChange(); });
+  const types = checkGroup({ items: opts.types, max: limits.types, onChange: () => onChange() });
+  const domains = checkGroup({ items: opts.domains, max: limits.domains, onChange: () => onChange() });
   const newDomains = [];
   const nd = { key: h("input", { type: "text", "aria-label": "New subject key", placeholder: "key, e.g. devops" }),
                description: h("input", { type: "text", "aria-label": "New subject description", placeholder: "one line: what is this subject?" }) };
@@ -189,31 +219,52 @@ function metaForm(opts, have = []) {
       if (!key || !nd.description.value.trim()) { ndError.textContent = "Give the subject a key and a one-line description."; return; }
       ndError.textContent = "";
       newDomains.push({ key, label: titleCase(key), description: nd.description.value.trim() });
-      domains.add({ key }); nd.key.value = nd.description.value = ""; newDomainBox.hidden = true; } }, "Add subject")), ndError);
+      domains.add({ key, label: titleCase(key), description: nd.description.value.trim() }); nd.key.value = nd.description.value = ""; newDomainBox.hidden = true; } }, "Add subject")), ndError);
   const addDomainBtn = h("button", { type: "button", "aria-expanded": "false", onclick() {
     newDomainBox.hidden = !newDomainBox.hidden; addDomainBtn.setAttribute("aria-expanded", String(!newDomainBox.hidden)); if (!newDomainBox.hidden) nd.key.focus(); } },
     "+ a subject that does not exist yet");
-  const tags = chipInput({ known: opts.tags.map(t => ({ value: t.key, label: t.label })), max: limits.tags, newLabel: true });
+  const moreNote = h("span", { class: "hint" });
+  const tags = chipInput({ known: opts.tags.map(t => ({ value: t.key, label: t.label })), max: limits.tags, newLabel: true, onChange: () => { moreChanged(); onChange(); } });
   const level = h("select", {}, h("option", { value: "" }, "(none)"), opts.levels.map(l => h("option", { value: l }, l)));
+  level.addEventListener("change", () => { moreChanged(); onChange(); });
   const ids = opts.pages.map(p => ({ value: p.id, label: p.title }));
-  const prereq = chipInput({ known: ids }), related = chipInput({ known: ids });
+  const prereq = chipInput({ known: ids, onChange: () => { moreChanged(); onChange(); } });
+  const related = chipInput({ known: ids, onChange: () => { moreChanged(); onChange(); } });
   const keep = (key, make) => have.includes(key) ? null : make();
-  const el = h("div", {},
-    have.length ? h("div", { class: "box", role: "status" }, "Already in the front matter, kept as it is: " + have.join(", ")) : null,
-    keep("summary", () => field("Summary", "one line shown in search and Explore", h("div", {}, summary, count), summary)),
-    keep("type", () => field("Kind of page", "one or two; the first you tick is the main one", types.el)),
-    keep("domains", () => field("Subjects", "one or two; they put the page in Explore by subject", h("div", {}, domains.el, addDomainBtn, newDomainBox))),
+  const moreParts = [
     keep("tags", () => field("Tags", "up to " + limits.tags + "; a new tag is added to taxonomy.yaml", tags.el, tags.input)),
     keep("level", () => field("Level", "beginner pages show under Beginner friendly", level, level)),
     keep("relations", () => h("div", {},
       field("Read first (prerequisites)", "ids of pages", prereq.el, prereq.input),
-      field("See also (related)", "ids of pages", related.el, related.input))));
-  return { el, types, domains, tags, level, summary, prereq, related,
-    values() {
-      return { summary: summary.value, types: types.get(), domains: domains.get(), tags: tags.state.items,
-        level: level.value, prerequisites: prereq.state.items, related: related.state.items,
-        new_domains: newDomains.filter(d => domains.get().includes(d.key)),
-        new_tags: tags.state.items.filter(t => tags.state.isNew.has(t)).map(t => ({ key: t, label: titleCase(t) })) };
+      field("See also (related)", "ids of pages", related.el, related.input)))].filter(Boolean);
+  function moreChanged() {
+    const bits = [];
+    if (tags.state.items.length) bits.push(tags.state.items.length + " tag" + (tags.state.items.length > 1 ? "s" : ""));
+    if (level.value) bits.push(level.value);
+    if (prereq.state.items.length + related.state.items.length) bits.push((prereq.state.items.length + related.state.items.length) + " related");
+    moreNote.textContent = bits.length ? " – " + bits.join(", ") : " – tags, level, related pages";
+  }
+  moreChanged();
+  const more = moreParts.length ? h("details", { class: "more" }, h("summary", {}, "More options (optional)", moreNote), ...moreParts) : null;
+  const keepNote = have.length ? h("div", { class: "box", role: "status" }, "Already in the front matter, kept as it is: " + have.join(", ")) : null;
+  const el = h("div", {},
+    keepNote,
+    keep("summary", () => field("Summary", "one line shown in search and Explore", h("div", {}, summary, count), summary)),
+    keep("type", () => field("Kind of page", "one or two; the first you pick is the main one", types.el)),
+    keep("domains", () => field("Subjects", "one or two; they put the page in Explore by subject", h("div", {}, domains.el, addDomainBtn, newDomainBox))),
+    more);
+  const values = () => ({ summary: summary.value, types: types.get(), domains: domains.get(), tags: tags.state.items,
+    level: level.value, prerequisites: prereq.state.items, related: related.state.items,
+    new_domains: newDomains.filter(d => domains.get().includes(d.key)),
+    new_tags: tags.state.items.filter(t => tags.state.isNew.has(t)).map(t => ({ key: t, label: titleCase(t) })) });
+  return { el, more, types, domains, tags, level, summary, prereq, related, values,
+    /* put saved answers back (a draft) */
+    restore(v) {
+      summary.value = v.summary || ""; count.textContent = summary.value.length + "/200";
+      for (const d of v.new_domains || []) if (!domains.has(d.key)) { newDomains.push(d); domains.add(d); }
+      types.set(v.types || []); domains.set(v.domains || []);
+      tags.set(v.tags || []); level.value = v.level || ""; prereq.set(v.prerequisites || []); related.set(v.related || []);
+      moreChanged();
     } };
 }
 
@@ -232,6 +283,14 @@ function resultBox(host) {
   };
 }
 
+/* A draft of the New page form kept in this browser, so a closed tab or a stopped server loses nothing. */
+const Draft = {
+  key: "acupoftea-page-form-new-v1",
+  load() { try { return JSON.parse(localStorage.getItem(this.key) || "null"); } catch (e) { return null; } },
+  save(v) { try { localStorage.setItem(this.key, JSON.stringify(v)); } catch (e) { /* private window: no draft */ } },
+  clear() { try { localStorage.removeItem(this.key); } catch (e) { /* nothing to clear */ } },
+};
+
 /* ---------- New page ---------- */
 async function newTab(view) {
   let opts = await api("/api/options");
@@ -244,21 +303,35 @@ async function newTab(view) {
   const createRow = h("label", { hidden: true }, createFolder, " This folder does not exist yet: create it");
   const similar = h("div", { "aria-live": "polite" });
   const titleErr = h("div", { class: "err-text", role: "alert" }), folderErr = h("div", { class: "err-text", role: "alert" });
-  const out = h("div");
+  const out = h("div"), banner = h("div"), sumline = h("div", { class: "sumline", "aria-live": "polite" });
   const holder = h("div");
-  let meta = metaForm(opts), touched = false;
+  let touched = false, restoring = false;
+  const meta = metaForm(opts, [], () => { touched = true; changed(); });
   holder.replaceChildren(meta.el);
-  holder.addEventListener("change", () => { touched = true; });
+  const fileLine = () => (folder.value.trim() || "folder") + "/" + (name.value.trim() || "file-name") + ".md";
+
+  function changed() {                                        // keep the draft and the one-line summary current
+    if (restoring) return;
+    const v = meta.values();
+    const bits = [v.types.join(" + ") || "no kind yet", v.domains.join(" + ") || "no subject yet"];
+    if (v.tags.length) bits.push(v.tags.length + " tag" + (v.tags.length > 1 ? "s" : ""));
+    sumline.replaceChildren("Will create ", h("strong", {}, fileLine()), " – " + bits.join(" · "));
+    if (title.value.trim() || v.summary.trim() || v.domains.length) {
+      Draft.save(Object.assign({ title: title.value, folder: folder.value, name: name.value, nameEdited, create_folder: createFolder.checked }, v));
+    }
+  }
   const refresh = debounce(async () => {
     const o = await api("/api/options?title=" + encodeURIComponent(title.value) + "&folder=" + encodeURIComponent(folder.value));
     folders.replaceChildren(...[...o.suggested_folders, ...o.folders.filter(f => !o.suggested_folders.includes(f))].map(f => h("option", { value: f })));
     if (!nameEdited) name.value = o.slug;
     createRow.hidden = o.folder_exists !== false;
     similar.replaceChildren(...(o.similar.length ? [h("div", { class: "box" }, "Similar pages already exist: ", o.similar.map(s => h("div", { class: "path" }, s.path + "  \"" + s.title + "\"")), "Consider extending one of them instead (the repo keeps one page per topic).")] : []));
-    if (!touched && folder.value.trim()) { meta.domains.set(o.default_domains); meta.types.set(o.default_type); }
+    if (!touched && folder.value.trim()) { restoring = true; meta.domains.set(o.default_domains); meta.types.set(o.default_type); restoring = false; }
+    changed();
   }, 300);
   title.addEventListener("input", refresh); folder.addEventListener("input", refresh);
-  name.addEventListener("input", () => { nameEdited = true; });
+  name.addEventListener("input", () => { nameEdited = true; changed(); });
+  createFolder.addEventListener("change", changed);
   function valid() {
     titleErr.textContent = title.value.trim() ? "" : "Give the page a title.";
     folderErr.textContent = folder.value.trim() ? "" : "Choose a folder (closest ones are suggested once you type a title).";
@@ -273,19 +346,30 @@ async function newTab(view) {
       const r = await api("/api/create", Object.assign({ title: title.value, folder: folder.value, name: name.value,
         create_folder: createFolder.checked, dry_run: dry }, meta.values()));
       resultBox(out)(r);
-      if (r.ok && !dry) opts = await api("/api/options");
+      if (r.ok && !dry) { Draft.clear(); opts = await api("/api/options"); }
     });
   };
   const previewBtn = h("button", { type: "button", onclick: () => submit(previewBtn, true) }, "Preview");
   const createBtn = h("button", { type: "button", class: "primary", onclick: () => submit(createBtn, false) }, "Create page");
-  view.replaceChildren(
-    h("fieldset", {}, h("legend", {}, "Page"),
+
+  const saved = Draft.load();
+  if (saved && (saved.title || saved.summary)) {
+    banner.replaceChildren(h("div", { class: "box banner", role: "status" },
+      h("span", {}, "Your last draft was kept: “" + (saved.title || "untitled") + "”."),
+      h("button", { type: "button", onclick() {
+        restoring = true;
+        title.value = saved.title || ""; folder.value = saved.folder || ""; name.value = saved.name || ""; nameEdited = !!saved.nameEdited;
+        createFolder.checked = !!saved.create_folder; meta.restore(saved); touched = true; restoring = false;
+        banner.replaceChildren(); refresh(); } }, "Restore it"),
+      h("button", { type: "button", onclick: () => { Draft.clear(); banner.replaceChildren(); } }, "Discard")));
+  }
+  view.replaceChildren(banner,
+    h("fieldset", {}, h("legend", {}, h("span", { class: "step", "aria-hidden": "true" }, "1"), "Where it goes"),
       field(h("span", {}, "Title ", h("span", { class: "req", "aria-hidden": "true" }, "*")), "", h("div", {}, title, titleErr), title), similar,
-      h("div", { class: "row" },
-        field(h("span", {}, "Folder ", h("span", { class: "req", "aria-hidden": "true" }, "*")), "closest folders first as you type the title", h("div", {}, folder, folders, folderErr, createRow), folder),
-        field("File name", "without .md", name, name))),
-    h("fieldset", {}, h("legend", {}, "About the page"), holder),
-    h("div", { class: "actions sticky" }, previewBtn, createBtn),
+      field(h("span", {}, "Folder ", h("span", { class: "req", "aria-hidden": "true" }, "*")), "closest folders first as you type the title", h("div", {}, folder, folders, folderErr, createRow), folder),
+      h("details", {}, h("summary", { class: "hint" }, "File name (made from the title; change it only if you need to)"), field("File name", "without .md", name, name))),
+    h("fieldset", {}, h("legend", {}, h("span", { class: "step", "aria-hidden": "true" }, "2"), "What it is"), holder),
+    h("div", { class: "actions sticky" }, sumline, previewBtn, createBtn),
     out);
   refresh();
 }
