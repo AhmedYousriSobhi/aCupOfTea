@@ -125,7 +125,7 @@ Every content page ends with "Edit this page" (the file on GitHub, branch `dev`)
 
 Generator behavior worth knowing: folders without any `.md` page are skipped; git submodules (not checked out in CI) are rendered as external links to their repositories; a `README.md` titled `Overview` is listed first.
 
-**New pages:** create them with `python3 .docs/tools/new_page.py` (steps in `.github/CONTRIBUTING.md`). It picks the folder and kebab-case file name, writes front matter (`id`, `title`, `type`, `domains` (suggested from the folder's pages), optional `summary`, `level`, `tags` from `.docs/metadata/taxonomy.yaml`, `prerequisites` and `related`), adds the row to the folder `README.md` table, and regenerates the sidebar and navbar. Front matter is hidden on the site by Docsify's official front-matter plugin; keep YAML comments out of it. Reading time is never asked: `new_page.py --check PAGE` shows it once the page is written, with what is still missing.
+**New pages:** create them with `python3 .docs/tools/new_page.py` (steps in `.github/CONTRIBUTING.md`). It picks the folder and kebab-case file name, writes front matter (`id`, `title`, `type`, `domains` (suggested from the folder's pages), optional `summary`, `level`, `tags` from `.docs/metadata/taxonomy.yaml`, `prerequisites` and `related`), adds the row to the folder `README.md` table, and regenerates the sidebar and navbar. Front matter is hidden on the site by Docsify's official front-matter plugin; keep YAML comments out of it. For a page written by hand, `new_page.py --adopt PAGE` adds the front matter and index link without touching the text. Reading time is never asked: `new_page.py --check PAGE` shows it once the page is written, with what is still missing.
 
 ## 14. Ambiguity
 
@@ -212,7 +212,7 @@ id: sequence-models            # explicit, unique, kebab-case; required if the p
 title: Sequence Models
 summary: How models handle ordered data like text, from RNNs to transformers.   # optional, one line, max 200 chars
 level: intermediate            # optional: beginner | intermediate | advanced
-type: concept                  # concept | guide | reference | note | problem | project | experiment (definitions in taxonomy.yaml)
+type: concept                  # concept | guide | reference | note | problem | project | experiment (definitions in taxonomy.yaml); one, or a list of two: [concept, guide]
 status: stable                 # draft | stable | deprecated
 domains: [deep-learning]       # from taxonomy.yaml
 tags: [rnn]                    # optional, max 5, from taxonomy.yaml

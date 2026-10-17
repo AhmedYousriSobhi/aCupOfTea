@@ -30,8 +30,8 @@ It asks for:
 1. **Title.** It becomes the page heading and the file name (`Attention in Transformers` → `attention-in-transformers.md`).
 2. **Summary**, optional. One line, shown in search results and in the folder index.
 3. **Folder.** The closest existing folders are suggested first. It warns you if a similar page already exists, and it never creates a folder without asking.
-4. **Type**: concept (explains an idea), guide (how to do something), reference (to look up), note, problem, project or experiment. The type most pages in that folder use is suggested.
-5. **Domains**, one or two subjects such as `deep-learning` or `systems-and-hpc`. They put the page in Explore by subject. The folder's usual subjects are suggested.
+4. **Type**: concept (explains an idea), guide (how to do something), reference (to look up), note, problem, project or experiment. Give one, or two comma separated with the main one first (`concept, guide`). The type most pages in that folder use is suggested.
+5. **Domains**, one or two comma separated subjects such as `deep-learning` or `systems-and-hpc`. They put the page in Explore by subject. The folder's usual subjects are suggested. A short form like `hpc` is matched to `systems-and-hpc`, and a subject that does not exist yet can be added (with a one-line description) after you confirm. A wrong answer is asked again instead of stopping the script.
 6. **Tags**, optional. Pick from the tag list in `.docs/metadata/taxonomy.yaml` (Tab completes). A new tag is added only if you confirm.
 7. **Level**, **prerequisites** and **related pages**, optional. `beginner` makes the page show under "Beginner friendly" in Start here. Prerequisites are ids of pages to read first, which builds a learning path; related pages show as "See also" under the title. Both take page ids (Tab completes).
 
@@ -49,6 +49,16 @@ python3 .docs/tools/new_page.py --title "Attention in Transformers" \
 ```
 
 Add `--dry-run` to see the result without writing anything. Only Python 3 is needed.
+
+## A page you wrote by hand
+
+If you created the file yourself, add its front matter and index link without touching the text:
+
+```bash
+python3 .docs/tools/new_page.py --adopt fields/deep-learning/concepts/attention-in-transformers.md
+```
+
+The title comes from the page's `# ` heading and the folder from its path. It asks the same questions as a new page (summary, type, domains, tags, level, prerequisites, related), puts the front matter on top, adds the page to the folder `README.md` unless it is already listed, regenerates the sidebar and then shows the `--check` report. If the page already has front matter (for example only a `sidebar_label`), it keeps what is there and asks only for the missing fields; it says so when there is nothing to add. The page text is never changed. Add `--dry-run` to preview.
 
 ## When the page is written
 

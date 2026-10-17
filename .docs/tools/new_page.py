@@ -14,6 +14,11 @@ Or pass the answers as options (anything missing is still asked):
 It never overwrites a file and never creates a folder without asking. Only the
 standard library is needed.
 
+A page you wrote by hand gets the same front matter and index link without
+touching its text:
+
+  python3 .docs/tools/new_page.py --adopt fields/devops/kubernetes/my-page.md
+
 Reading time is not asked: the site computes it from the text (200 words a
 minute, code excluded), so it never goes stale. Once the page is written, check
 it and see its reading time and what is still missing:
@@ -34,7 +39,10 @@ SKIP_DIRS = {"__pycache__", "node_modules", "_site", "docs", "data"}
 STOP = set("a an and are as at be by for from how in into is it of on or the to vs what why with".split())
 MAX_TAGS = 5
 MAX_DOMAINS = 2
+MAX_TYPES = 2
 LEVELS = ("beginner", "intermediate", "advanced")
+FM_ORDER = ("id", "title", "sidebar_label", "sidebar_group", "summary", "level", "type", "status",
+            "domains", "tags", "relations")
 WORDS_PER_MIN = 200     # same as generate_index.py
 QUICK_MIN = 10          # "quick read" in Start here
 FENCE_BLOCK = re.compile(r"^(```|~~~).*?^\1[^\n]*$", re.S | re.M)
@@ -247,7 +255,44 @@ def add_tags(new):
         f.writelines(lines)
 
 
+def add_domains(new):
+    """Append new domains ({key: (label, description)}) to the end of the domains block."""
+    lines = read(TAXONOMY).splitlines(keepends=True)
+    start = next(i for i, l in enumerate(lines) if l.split("#")[0].rstrip() == "domains:")
+    end = start + 1
+    while end < len(lines) and not re.match(r"^\S", lines[end]):
+        end += 1
+    while end > start + 1 and not lines[end - 1].strip():
+        end -= 1                       # blank lines after the block stay outside it
+    add = []
+    for key, (label, description) in new.items():
+        add += ["  %s:\n" % key, "    label: %s\n" % label, "    description: %s\n" % description]
+    lines[end:end] = add
+    with open(TAXONOMY, "w", encoding="utf-8") as f:
+        f.writelines(lines)
+
+
 # ---------- prompts ----------
+
+class Invalid(Exception):
+    """A bad answer; the message says what is wrong."""
+
+
+def resolve(ask, supplied, parse, prompt):
+    """Get an answer and parse it. A bad option exits; a bad typed answer is asked again,
+    so one typo does not throw away everything already answered."""
+    if supplied is not None:
+        try:
+            return parse(supplied)
+        except Invalid as e:
+            sys.exit("error: %s" % e)
+    while True:
+        try:
+            return parse(prompt())
+        except Invalid as e:
+            if not ask.interactive or ask.yes:
+                sys.exit("error: %s" % e)
+            print("  %s; try again" % e)
 
 class Asker:
     def __init__(self, yes):
@@ -413,21 +458,24 @@ def warn_similar(title, folders, ask):
 
 
 def choose_tags(args, ask, title, known):
-    if args.tags is not None:
-        raw = args.tags
-    else:
+    def prompt():
         want = words(title)
         hint = [k for k, label in sorted(known.items()) if want & (words(k) | words(label))]
         print("\nTags (comma separated, Tab completes). Known: %s" % ", ".join(sorted(known)))
         complete_with(sorted(known))
-        raw = ask.text("Tags", ", ".join(hint), required=False)
-    tags = []
-    for t in raw.split(","):
-        t = slug(t)
-        if t and t not in tags:
-            tags.append(t)
-    if len(tags) > MAX_TAGS:
-        sys.exit("error: at most %d tags per page" % MAX_TAGS)
+        return ask.text("Tags", ", ".join(hint), required=False)
+
+    def parse(raw):
+        out = []
+        for t in raw.split(","):
+            t = slug(t)
+            if t and t not in out:
+                out.append(t)
+        if len(out) > MAX_TAGS:
+            raise Invalid("at most %d tags per page" % MAX_TAGS)
+        return out
+
+    tags = resolve(ask, args.tags, parse, prompt)
     new = {}
     for t in [t for t in tags if t not in known]:
         label = " ".join(w.capitalize() for w in t.split("-"))
@@ -439,32 +487,49 @@ def choose_tags(args, ask, title, known):
     return tags, new
 
 
-def choose_list(label, raw, allowed, limit):
+def split_list(raw):
+    """Comma (or space) separated answer as a list, without blanks or repeats."""
     out = []
-    for x in raw.split(","):
-        x = x.strip()
+    for x in re.split(r"[,\s]+", raw):
         if x and x not in out:
             out.append(x)
+    return out
+
+
+def closest(word, allowed):
+    """The allowed value a typo or short form most likely means ("hpc" -> systems-and-hpc), or ""."""
+    word = slug(word)
+    for a in allowed:
+        if word in a.split("-"):
+            return a
+    near = difflib.get_close_matches(word, allowed, n=1, cutoff=0.7)
+    return near[0] if near else ""
+
+
+def choose_list(label, raw, allowed, limit):
+    out = split_list(raw)
     bad = [x for x in out if x not in allowed]
     if bad:
-        sys.exit("error: unknown %s %s; allowed: %s" % (label, ", ".join(bad), ", ".join(allowed)))
+        hints = ["%s (did you mean %s?)" % (x, closest(x, allowed)) if closest(x, allowed) else x for x in bad]
+        raise Invalid("unknown %s %s; allowed: %s" % (label, ", ".join(hints), ", ".join(allowed)))
     if len(out) > limit:
-        sys.exit("error: at most %d %s" % (limit, label))
+        raise Invalid("at most %d %s per page" % (limit, label))
     return out
 
 
 def choose_type(args, ask, folder, folders):
+    """One or two kinds, the main one first. Returns a list."""
     types = load_section("types")
-    if args.type is not None:
-        raw = args.type
-    else:
+
+    def prompt():
         near = neighbours(folder, folders, "type")
-        print("\nKind of page: %s" % ", ".join(types))
+        print("\nKind of page, one or two comma separated (the main one first): %s" % ", ".join(types))
         print("  concept explains an idea, guide shows how to do something, reference is for looking up,")
         print("  note is a short write-up, problem/project/experiment describe work")
         complete_with(types)
-        raw = ask.text("Type", near[0] if near else "concept")
-    return (choose_list("type", raw, types, 1) or [""])[0]
+        return ask.text("Type", near[0] if near else "concept")
+
+    return resolve(ask, args.type, lambda raw: choose_list("type", raw, types, MAX_TYPES), prompt)
 
 
 def domain_words():
@@ -492,20 +557,46 @@ def guess_domains(title, folder):
 
 
 def choose_domains(args, ask, folder, folders, title):
+    """One or two subjects. Returns (domains, new_domains); an unknown subject is matched to a
+    known one ("hpc" -> systems-and-hpc) or, when typed in answer to the question, can be added."""
     domains = load_section("domains")
-    if args.domains is not None:
-        raw = args.domains
-    else:
+    new = {}
+
+    def prompt():
         near = neighbours(folder, folders, "domains")
         if not near:
             near = next((v for k, v in sorted(folder_defaults().items(), key=lambda kv: -len(kv[0]))
                          if folder == k or folder.startswith(k + "/")), [])
         if not near:
             near = guess_domains(title, folder)
-        print("\nSubjects (domains) put the page in Explore by subject; one or two. Known: %s" % ", ".join(domains))
-        complete_with(domains)
-        raw = ask.text("Domains", ", ".join(near[:MAX_DOMAINS]), required=False)
-    return choose_list("domains", raw, domains, MAX_DOMAINS)
+        print("\nSubjects (domains) put the page in Explore by subject; one or two, comma separated.")
+        print("Known: %s" % ", ".join(domains + list(new)))
+        complete_with(domains + list(new))
+        return ask.text("Domains", ", ".join(near[:MAX_DOMAINS]), required=False)
+
+    can_ask = args.domains is None and ask.interactive and not ask.yes
+
+    def parse(raw):
+        known = domains + list(new)
+        out = []
+        for x in split_list(raw):
+            if x not in known and can_ask:
+                guess = closest(x, known)
+                key = slug(x)
+                label = " ".join(w.capitalize() for w in key.split("-"))
+                if guess and ask.confirm("Unknown subject \"%s\". Use %s?" % (x, guess)):
+                    x = guess
+                elif key and ask.confirm("Add \"%s\" (label \"%s\") as a new subject?" % (key, label), default=False):
+                    description = ""
+                    while not description:
+                        description = ask.text("One line describing it")
+                    new[key] = (label, description)
+                    x = key
+            if x not in out:
+                out.append(x)
+        return choose_list("domains", ", ".join(out), domains + list(new), MAX_DOMAINS)
+
+    return resolve(ask, args.domains, parse, prompt), new
 
 
 def reading_time(body):
@@ -614,16 +705,210 @@ def link_in_readme(folder, page_rel, title, summary):
 
 
 def page_ids(raw, ids, role):
-    out = []
-    for r in raw.split(","):
-        r = r.strip()
-        if r and r not in out:
-            out.append(r)
+    out = split_list(raw)
     unknown = [r for r in out if r not in ids]
     if unknown:
-        sys.exit("error: no page has the id %s; only pages with an id in their front matter can be %s"
-                 % (", ".join(unknown), role))
+        hints = ["%s (did you mean %s?)" % (r, closest(r, sorted(ids))) if closest(r, sorted(ids)) else r
+                 for r in unknown]
+        raise Invalid("no page has the id %s; only pages with an id in their front matter can be %s"
+                      % (", ".join(hints), role))
     return out
+
+
+def ask_metadata(args, ask, title, folder, folders, have=()):
+    """The questions every page gets: type, subjects, tags, level, prerequisites, related.
+    Fields named in `have` (already in the page's front matter) are not asked."""
+    types = [] if "type" in have else choose_type(args, ask, folder, folders)
+    domains, new_domains = ([], {}) if "domains" in have else choose_domains(args, ask, folder, folders, title)
+    tags, new_tags = ([], {}) if "tags" in have else choose_tags(args, ask, title, load_tags())
+
+    def parse_level(raw):
+        raw = raw.strip().lower()
+        if raw and raw not in LEVELS:
+            raise Invalid("level must be one of %s" % ", ".join(LEVELS))
+        return raw
+    level = "" if "level" in have else resolve(
+        ask, args.level, parse_level, lambda: ask.text("Level (%s, optional)" % "/".join(LEVELS), required=False))
+    ids = existing_ids(folders)
+
+    def ask_ids(heading, label):
+        def prompt():
+            print("\n%s: ids of pages to %s (comma separated, Tab completes)." % (heading, label))
+            complete_with(sorted(ids))
+            return ask.text(heading, required=False)
+        return prompt
+    if "relations" in have:
+        prereqs, related = [], []
+    else:
+        prereqs = resolve(ask, args.prerequisites, lambda raw: page_ids(raw, ids, "a prerequisite"),
+                          ask_ids("Prerequisites", "read first"))
+        related = [r for r in resolve(ask, args.related, lambda raw: page_ids(raw, ids, "related"),
+                                      ask_ids("Related", "see also")) if r not in prereqs]
+    return {"types": types, "domains": domains, "new_domains": new_domains, "tags": tags,
+            "new_tags": new_tags, "level": level, "prereqs": prereqs, "related": related, "ids": ids}
+
+
+def front_matter_lines(page_id, title, summary, meta, note=True):
+    """The front matter block as a list of lines, from "---" to "---"."""
+    fm = ["---", "id: %s" % page_id, "title: %s" % yaml_value(title)]
+    label = sidebar_label(title)
+    if label != title:
+        if note:
+            print("\nNote: the sidebar shows the text after the last hyphen (\"%s\")." % label)
+            print("      sidebar_label is set, so the sidebar shows the full title.")
+        fm.append("sidebar_label: %s" % yaml_value(title))
+    if summary:
+        fm.append("summary: %s" % yaml_value(summary))
+    if meta["level"]:
+        fm.append("level: %s" % meta["level"])
+    if meta["types"]:
+        fm.append("type: %s" % (meta["types"][0] if len(meta["types"]) == 1 else "[%s]" % ", ".join(meta["types"])))
+    if meta["domains"]:
+        fm.append("domains: [%s]" % ", ".join(meta["domains"]))
+    if meta["tags"]:
+        fm.append("tags: [%s]" % ", ".join(meta["tags"]))
+    if meta["prereqs"] or meta["related"]:
+        fm.append("relations:")
+        if meta["prereqs"]:
+            fm.append("  prerequisites: [%s]" % ", ".join(meta["prereqs"]))
+        if meta["related"]:
+            fm.append("  related: [%s]" % ", ".join(meta["related"]))
+    fm.append("---")
+    return fm
+
+
+def key_blocks(lines):
+    """{key: [lines]} of a front matter block: each top-level key with its indented lines."""
+    blocks, current = {}, None
+    for line in lines:
+        if line.strip() == "---":
+            continue
+        m = re.match(r"^([A-Za-z_]+):", line)
+        if m:
+            current = m.group(1)
+            blocks[current] = []
+        if current:
+            blocks[current].append(line)
+    return blocks
+
+
+def merge_front_matter(existing, added, skip=()):
+    """Existing front matter lines plus the added fields the page lacks, in the usual order.
+    What is already there is kept exactly as written; `skip` names fields not to add."""
+    have, new = key_blocks(existing), key_blocks(added)
+    new = {k: v for k, v in new.items() if k not in skip}
+    order = [k for k in FM_ORDER if k in have or k in new] + [k for k in have if k not in FM_ORDER]
+    return ["---"] + [l for k in order for l in (have[k] if k in have else new[k])] + ["---"]
+
+
+def report_new(meta):
+    if meta["new_tags"]:
+        print("New tags for taxonomy.yaml: %s" % ", ".join(meta["new_tags"]))
+    if meta["new_domains"]:
+        print("New subjects for taxonomy.yaml: %s" % ", ".join(meta["new_domains"]))
+
+
+def save_taxonomy(meta):
+    if meta["new_tags"]:
+        add_tags(meta["new_tags"])
+        print("Added    tags %s to .docs/metadata/taxonomy.yaml" % ", ".join(sorted(meta["new_tags"])))
+    if meta["new_domains"]:
+        add_domains(meta["new_domains"])
+        print("Added    subjects %s to .docs/metadata/taxonomy.yaml" % ", ".join(meta["new_domains"]))
+
+
+def regenerate_navigation():
+    docs = os.path.join(ROOT, ".docs")
+    for script in ("gen_sidebar.sh", "gen_navbar.sh"):
+        subprocess.run(["bash", script], cwd=docs, check=True, stdout=subprocess.DEVNULL)
+    print("Updated  .docs/_sidebar.md and .docs/_navbar.md")
+
+
+def body_h1(text):
+    """The first "# " heading outside code fences."""
+    fenced = False
+    for line in text.splitlines():
+        if line.lstrip().startswith(("```", "~~~")):
+            fenced = not fenced
+        elif not fenced and line.startswith("# "):
+            return line[2:].strip()
+    return ""
+
+
+def listed_in_readme(folder, stem):
+    readme = os.path.join(ROOT, folder, "README.md")
+    return os.path.exists(readme) and bool(
+        re.search(r"\]\((?:[^)\s]*/)?%s\.md\)" % re.escape(stem), read(readme)))
+
+
+def adopt(args, ask):
+    """Add front matter to a page written by hand. The body is never touched."""
+    if args.title or args.folder or args.name:
+        sys.exit("error: --adopt takes the title from the page's heading and the folder from its path; "
+                 "drop --title, --folder and --name")
+    given = args.adopt
+    full = os.path.abspath(given if os.path.exists(given) else os.path.join(ROOT, given))
+    rel = os.path.relpath(full, ROOT).replace(os.sep, "/")
+    if not os.path.isfile(full):
+        sys.exit("error: no page at %s" % given)
+    if rel.startswith("../") or rel.split("/")[0].startswith(".") or "/" not in rel:
+        sys.exit("error: %s is not a content page inside a content folder" % rel)
+    if not rel.endswith(".md") or os.path.basename(rel) == "README.md":
+        sys.exit("error: --adopt is for a .md content page; README.md files are folder indexes")
+    if any(rel.startswith(sub + "/") for sub in submodules()):
+        sys.exit("error: %s is inside a git submodule" % rel)
+    with open(full, "rb") as fh:
+        text = fh.read().decode("utf-8")
+    bom, text = ("\ufeff", text[1:]) if text.startswith("\ufeff") else ("", text)
+    m = re.match(r"---[ \t]*\r?\n(.*?)\r?\n---[ \t]*(?:\r?\n|\Z)", text, re.S)
+    existing = m.group(1).splitlines() if m else []
+    rest = text[m.end():] if m else text
+    have = key_blocks(existing)
+    if re.match(r"---[ \t]*\r?\n", text) and not m:
+        sys.exit("error: %s starts with '---' but its front matter is not closed; fix that by hand "
+                 "(nothing was changed)" % rel)
+    title = body_h1(rest)
+    if not title:
+        sys.exit("error: %s has no '# ' heading to take the title from" % rel)
+
+    folder, name = os.path.dirname(rel), os.path.basename(rel)[:-3]
+    summary = ""
+    if "summary" not in have:
+        summary = args.summary if args.summary is not None else ask.text("Summary (one line, optional)", required=False)
+        summary = " ".join(summary.split())
+        if len(summary) > 200:
+            sys.exit("error: keep the summary under 200 characters")
+    folders = scan()
+    print("\nAdopting %s  (title: \"%s\")" % (rel, title))
+    if have:
+        print("Keeping what the front matter already has: %s" % ", ".join(have))
+    meta = ask_metadata(args, ask, title, folder, folders, have)
+    page_id = name if name not in meta["ids"] else slug(folder.split("/")[-1] + "-" + name)
+    first = text.find("\n")
+    eol = "\r\n" if first > 0 and text[first - 1] == "\r" else "\n"
+    added = front_matter_lines(page_id, title, summary, meta, note="sidebar_label" not in have)
+    # a page that had no front matter gets a blank line after it; one that had keeps its own
+    block = eol.join(merge_front_matter(existing, added, ("title",) if m else ())) + eol + ("" if m else eol)
+    if m and not [k for k in key_blocks(added) if k not in have and k != "title"]:
+        sys.exit("Nothing to add: %s already has all the fields asked for." % rel)
+
+    if args.dry_run:
+        print("\n--- %s (front matter after the change; the page text is unchanged) ---\n%s" % (rel, block))
+        report_new(meta)
+        return
+    tmp = full + ".tmp"
+    with open(tmp, "wb") as fh:
+        fh.write((bom + block + rest).encode("utf-8"))
+    os.replace(tmp, full)                 # all or nothing
+    print("\n%s front matter to %s (the page text is unchanged)" % ("Completed" if m else "Added", rel))
+    save_taxonomy(meta)
+    if listed_in_readme(folder, name):
+        print("Already listed in %s/README.md" % folder)
+    else:
+        print(link_in_readme(folder, rel, title, summary))
+    regenerate_navigation()
+    print()
+    check_page(rel)
 
 
 def main():
@@ -634,17 +919,20 @@ def main():
     p.add_argument("--name", help="file name without .md (default: from the title)")
     p.add_argument("--tags", help="comma separated, e.g. transformers,attention")
     p.add_argument("--level", choices=LEVELS, help="beginner pages show under 'Beginner friendly'")
-    p.add_argument("--type", help="concept, guide, reference, note, problem, project or experiment")
-    p.add_argument("--domains", help="comma separated subjects from taxonomy.yaml, e.g. deep-learning")
+    p.add_argument("--type", help="one or two of concept, guide, reference, note, problem, project, experiment, comma separated")
+    p.add_argument("--domains", help="one or two comma separated subjects from taxonomy.yaml, e.g. deep-learning")
     p.add_argument("--prerequisites", help="comma separated page ids to read first, e.g. deep-learning-basics")
     p.add_argument("--related", help="comma separated page ids to see also")
     p.add_argument("--check", metavar="PAGE", help="report a written page's reading time and what is missing")
+    p.add_argument("--adopt", metavar="PAGE", help="add front matter and an index link to a page you wrote by hand")
     p.add_argument("--yes", action="store_true", help="accept defaults and suggestions without asking")
     p.add_argument("--dry-run", action="store_true", help="show what would be written, change nothing")
     args = p.parse_args()
     if args.check:
         return 1 if check_page(args.check) else 0
     ask = Asker(args.yes)
+    if args.adopt:
+        return adopt(args, ask)
 
     title = (args.title or ask.text("Title")).strip()
     if not title:
@@ -665,62 +953,15 @@ def main():
     if os.path.exists(os.path.join(ROOT, page_rel)):
         sys.exit("error: %s already exists" % page_rel)
 
-    page_type = choose_type(args, ask, folder, folders)
-    domains = choose_domains(args, ask, folder, folders, title)
-    tags, new_tags = choose_tags(args, ask, title, load_tags())
-
-    level = args.level
-    if level is None:
-        level = ask.text("Level (%s, optional)" % "/".join(LEVELS), required=False).strip().lower()
-        if level and level not in LEVELS:
-            sys.exit("error: level must be one of %s" % ", ".join(LEVELS))
-    ids = existing_ids(folders)
-    if args.prerequisites is not None:
-        raw = args.prerequisites
-    else:
-        print("\nPrerequisites: ids of pages to read first (comma separated, Tab completes).")
-        complete_with(sorted(ids))
-        raw = ask.text("Prerequisites", required=False)
-    prereqs = page_ids(raw, ids, "a prerequisite")
-    if args.related is not None:
-        raw = args.related
-    else:
-        print("\nRelated pages: ids of pages to see also (comma separated, Tab completes).")
-        complete_with(sorted(ids))
-        raw = ask.text("Related", required=False)
-    related = [r for r in page_ids(raw, ids, "related") if r not in prereqs]
-
-    page_id = name if name not in ids else slug(folder.split("/")[-1] + "-" + name)
-    fm = ["---", "id: %s" % page_id, "title: %s" % yaml_value(title)]
-    label = sidebar_label(title)
-    if label != title:
-        print("\nNote: the sidebar shows the text after the last hyphen (\"%s\")." % label)
-        print("      sidebar_label is set, so the sidebar shows the full title.")
-        fm.append("sidebar_label: %s" % yaml_value(title))
-    if summary:
-        fm.append("summary: %s" % yaml_value(summary))
-    if level:
-        fm.append("level: %s" % level)
-    if page_type:
-        fm.append("type: %s" % page_type)
-    if domains:
-        fm.append("domains: [%s]" % ", ".join(domains))
-    if tags:
-        fm.append("tags: [%s]" % ", ".join(tags))
-    if prereqs or related:
-        fm.append("relations:")
-        if prereqs:
-            fm.append("  prerequisites: [%s]" % ", ".join(prereqs))
-        if related:
-            fm.append("  related: [%s]" % ", ".join(related))
-    fm.append("---")
+    meta = ask_metadata(args, ask, title, folder, folders)
+    page_id = name if name not in meta["ids"] else slug(folder.split("/")[-1] + "-" + name)
+    fm = front_matter_lines(page_id, title, summary, meta)
     intro = summary or "<!-- One or two sentences: what will the reader learn? -->"
     content = "\n".join(fm) + "\n\n" + BODY.format(title=title, intro=intro)
 
     if args.dry_run:
         print("\n--- %s ---\n%s" % (page_rel, content))
-        if new_tags:
-            print("New tags for taxonomy.yaml: %s" % ", ".join(new_tags))
+        report_new(meta)
         return
 
     full = os.path.join(ROOT, page_rel)
@@ -728,15 +969,9 @@ def main():
     with open(full, "w", encoding="utf-8") as f:
         f.write(content)
     print("\nCreated  %s" % page_rel)
-    if new_tags:
-        add_tags(new_tags)
-        print("Added    tags %s to .docs/metadata/taxonomy.yaml" % ", ".join(sorted(new_tags)))
+    save_taxonomy(meta)
     print(link_in_readme(folder, page_rel, title, summary))
-
-    docs = os.path.join(ROOT, ".docs")
-    for script in ("gen_sidebar.sh", "gen_navbar.sh"):
-        subprocess.run(["bash", script], cwd=docs, check=True, stdout=subprocess.DEVNULL)
-    print("Updated  .docs/_sidebar.md and .docs/_navbar.md")
+    regenerate_navigation()
     print("\nNext: write the page. The site shows its reading time from the text; to see it")
     print("and what is still missing, run:  python3 .docs/tools/new_page.py --check %s" % page_rel)
     print("Then commit it on a branch from dev.")

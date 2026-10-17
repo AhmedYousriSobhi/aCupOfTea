@@ -56,9 +56,157 @@ class DryRun(unittest.TestCase):
         self.assertNotEqual(r.returncode, 0)
         self.assertIn("cooking", r.stderr)
 
+    def test_two_types_are_written_as_a_list(self):
+        r = dry_run("--title", "A Quick Look", "--folder", "fields/schedulers", "--type", "concept,guide")
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertIn("type: [concept, guide]", r.stdout)
+
+    def test_three_types_are_refused(self):
+        r = dry_run("--title", "A Quick Look", "--folder", "fields/schedulers", "--type", "concept,guide,note")
+        self.assertNotEqual(r.returncode, 0)
+        self.assertIn("at most 2", r.stderr)
+
+    def test_unknown_domain_suggests_a_known_one(self):
+        r = dry_run("--title", "A Quick Look", "--folder", "fields/schedulers", "--domains", "hpc")
+        self.assertNotEqual(r.returncode, 0)
+        self.assertIn("did you mean systems-and-hpc", r.stderr)
+
     def test_folder_ranking(self):
         folders = new_page.scan()
         self.assertEqual(new_page.suggest_folders("Slurm job arrays", folders)[0], "fields/schedulers")
+
+
+class Prompts(unittest.TestCase):
+    """Typed answers: a bad one is asked again, a new subject can be added."""
+
+    def answers(self, *typed):
+        import io
+        from unittest import mock
+        ask = new_page.Asker(False)
+        ask.interactive = True
+        it = iter(typed)
+        out = io.StringIO()
+        patches = [mock.patch("builtins.input", lambda prompt="": next(it)),
+                   mock.patch("sys.stdout", out), mock.patch.object(new_page, "complete_with", lambda o: None)]
+        return ask, patches
+
+    def run_with(self, patches, fn):
+        for p in patches:
+            p.start()
+        try:
+            return fn()
+        finally:
+            for p in patches:
+                p.stop()
+
+    def test_bad_type_is_asked_again(self):
+        ask, patches = self.answers("cooking", "concept, guide")
+        args = type("A", (), {"type": None})()
+        got = self.run_with(patches, lambda: new_page.choose_type(args, ask, "fields/schedulers", new_page.scan()))
+        self.assertEqual(got, ["concept", "guide"])
+
+    def test_short_form_and_new_subject(self):
+        ask, patches = self.answers("devops, hpc", "y", "Running software on clusters", "")
+        args = type("A", (), {"domains": None})()
+        domains, new = self.run_with(patches, lambda: new_page.choose_domains(
+            args, ask, "fields/schedulers", new_page.scan(), "Kubernetes"))
+        self.assertEqual(domains, ["devops", "systems-and-hpc"])
+        self.assertEqual(new, {"devops": ("Devops", "Running software on clusters")})
+
+    def test_add_domains_writes_the_taxonomy(self):
+        with tempfile.TemporaryDirectory() as d:
+            path = os.path.join(d, "taxonomy.yaml")
+            with open(path, "w", encoding="utf-8") as fh:
+                fh.write("domains:\n  a:\n    label: A\n    description: x.\n\ntags:\n  t:\n    label: T\n")
+            old, new_page.TAXONOMY = new_page.TAXONOMY, path
+            try:
+                new_page.add_domains({"b": ("B", "y.")})
+                self.assertEqual(new_page.load_section("domains"), ["a", "b"])
+                self.assertEqual(new_page.load_section("tags"), ["t"])
+            finally:
+                new_page.TAXONOMY = old
+
+
+class Adopt(unittest.TestCase):
+    """--adopt adds front matter to a hand-written page and leaves its text alone."""
+    BODY = "# Hand Made\n\nSome text.\n\n```\n# not a title\n```\n"
+
+    def run_adopt(self, body, *extra):
+        import contextlib
+        import io
+        from unittest import mock
+        with tempfile.TemporaryDirectory() as root:
+            os.makedirs(os.path.join(root, "notes"))
+            page = os.path.join(root, "notes", "hand-made.md")
+            with open(page, "wb") as fh:
+                fh.write(body.encode("utf-8"))
+            with open(os.path.join(root, "notes", "README.md"), "w", encoding="utf-8") as fh:
+                fh.write("# Notes\n\n## Contents\n\n| File | Description |\n|---|---|\n| [a](/notes/a.md) | A |\n")
+            argv = ["new_page.py", "--adopt", "notes/hand-made.md", "--yes", "--type", "concept,guide",
+                    "--domains", "software-engineering", "--tags", "", "--prerequisites", "",
+                    "--related", "", "--summary", "A short one.", *extra]
+            out, code = io.StringIO(), 0
+            with mock.patch.object(new_page, "ROOT", root), mock.patch.object(new_page, "regenerate_navigation", lambda: None), \
+                    mock.patch("sys.argv", argv), contextlib.redirect_stdout(out):
+                try:
+                    new_page.main()
+                except SystemExit as e:
+                    code = e.code
+            with open(page, "rb") as fh:
+                after = fh.read().decode("utf-8")
+            with open(os.path.join(root, "notes", "README.md"), encoding="utf-8") as fh:
+                readme = fh.read()
+            return code, after, readme, out.getvalue()
+
+    def test_front_matter_added_and_text_unchanged(self):
+        code, after, readme, _ = self.run_adopt(self.BODY)
+        self.assertFalse(code)
+        head, _, rest = after.partition("---\n\n")
+        self.assertTrue(head.startswith("---\nid: hand-made\ntitle: Hand Made\n"))
+        self.assertIn("type: [concept, guide]", head)
+        self.assertEqual(rest, self.BODY)                       # byte for byte
+        self.assertIn("| [hand-made](/notes/hand-made.md) | A short one. |", readme)
+
+    def test_crlf_page_gets_crlf_front_matter(self):
+        body = self.BODY.replace("\n", "\r\n")
+        code, after, _, _ = self.run_adopt(body)
+        self.assertFalse(code)
+        self.assertTrue(after.endswith("---\r\n\r\n" + body))
+        self.assertNotIn("\n", after.replace("\r\n", ""))
+
+    def test_partial_front_matter_is_completed_and_kept(self):
+        code, after, _, _ = self.run_adopt("---\nsidebar_label: Short\n---\n\n" + self.BODY)
+        self.assertFalse(code)
+        head, _, rest = after.partition("\n---\n\n")
+        self.assertEqual(head.splitlines()[:4], ["---", "id: hand-made", "sidebar_label: Short", "summary: A short one."])
+        self.assertIn("type: [concept, guide]", head)
+        self.assertEqual(head.count("sidebar_label"), 1)
+        self.assertEqual(rest, self.BODY)
+
+    def test_complete_front_matter_has_nothing_to_add(self):
+        body = ("---\nid: x\nsummary: s\ntype: note\ndomains: [security]\ntags: []\nlevel: beginner\n"
+                "relations:\n  related: [y]\n---\n\n" + self.BODY)
+        code, after, _, _ = self.run_adopt(body)
+        self.assertIn("Nothing to add", str(code))
+        self.assertEqual(after, body)
+
+    def test_unclosed_front_matter_is_refused(self):
+        body = "---\nid: x\n\n" + self.BODY
+        code, after, _, _ = self.run_adopt(body)
+        self.assertTrue(code)
+        self.assertEqual(after, body)
+
+    def test_dry_run_changes_nothing(self):
+        code, after, readme, out = self.run_adopt(self.BODY, "--dry-run")
+        self.assertFalse(code)
+        self.assertEqual(after, self.BODY)
+        self.assertNotIn("hand-made", readme)
+        self.assertIn("id: hand-made", out)
+
+    def test_page_without_heading_is_refused(self):
+        code, after, _, _ = self.run_adopt("just text\n")
+        self.assertTrue(code)
+        self.assertEqual(after, "just text\n")
 
 
 class Check(unittest.TestCase):

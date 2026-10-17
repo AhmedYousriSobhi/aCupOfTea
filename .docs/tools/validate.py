@@ -20,6 +20,7 @@ ALLOWED_KEYS = {"id", "title", "sidebar_label", "sidebar_group", "summary", "lev
 SUMMARY_MAX = 200
 LABEL_WARN = 40
 MAX_TAGS = 5
+MAX_TYPES = 2
 
 
 class Report:
@@ -184,9 +185,15 @@ def validate_page(path, text, tax, rep):
     if "level" in data and data["level"] not in tax["levels"]:
         rep.error(path, lines.get(("level",), 1),
                   f"invalid level {data['level']!r}; allowed: {', '.join(sorted(tax['levels']))}")
-    if "type" in data and data["type"] not in tax["types"]:
-        rep.error(path, lines.get(("type",), 1),
-                  f"invalid type {data['type']!r}; allowed: {', '.join(sorted(tax['types']))}")
+    if "type" in data:
+        tv = data["type"]
+        if isinstance(tv, list):
+            check_enum_list(rep, path, lines, "type", tv, tax["types"], True)
+            if len(tv) > MAX_TYPES:
+                rep.error(path, lines.get(("type",), 1), f"at most {MAX_TYPES} types per page ({len(tv)} given)")
+        elif not isinstance(tv, str) or tv not in tax["types"]:
+            rep.error(path, lines.get(("type",), 1),
+                      f"invalid type {tv!r}; allowed: {', '.join(sorted(tax['types']))}")
     if "status" in data and data["status"] not in tax["statuses"]:
         rep.error(path, lines.get(("status",), 1),
                   f"invalid status {data['status']!r}; allowed: {', '.join(sorted(tax['statuses']))}")
