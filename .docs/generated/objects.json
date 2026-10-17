@@ -246,6 +246,32 @@
       "concept"
     ]
   },
+  "kubernetes-in-five-nouns": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "kubernetes-in-five-nouns",
+    "level": "advanced",
+    "path": "fields/devops/kubernetes/kubernetes-in-five-nouns.md",
+    "reading_time_min": 8,
+    "relations": {
+      "prerequisites": [
+        "containers-101"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "The five Kubernetes nouns (node, pod, namespace, event, API server) explained through HPC analogies, for someone who just inherited a cluster.",
+    "tags": [
+      "kubernetes"
+    ],
+    "title": "Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
   "nccl-collective-communication": {
     "domains": [
       "deep-learning",

@@ -17,6 +17,7 @@
   },
   "containers-101": {
     "prerequisite_of": [
+      "kubernetes-in-five-nouns",
       "singularity-containers"
     ],
     "prerequisites": [],
@@ -80,6 +81,14 @@
     "related_by": [
       "hpc-systems-overview"
     ]
+  },
+  "kubernetes-in-five-nouns": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "containers-101"
+    ],
+    "related": [],
+    "related_by": []
   },
   "nccl-collective-communication": {
     "prerequisite_of": [],

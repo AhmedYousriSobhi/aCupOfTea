@@ -40,6 +40,12 @@
       "nccl-collective-communication"
     ]
   },
+  "kubernetes": {
+    "label": "Kubernetes",
+    "objects": [
+      "kubernetes-in-five-nouns"
+    ]
+  },
   "llm": {
     "label": "Large Language Models",
     "objects": [

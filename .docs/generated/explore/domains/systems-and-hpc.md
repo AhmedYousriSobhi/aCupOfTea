@@ -12,6 +12,8 @@ Benchmarks, schedulers, system administration, high-performance computing.
   [`gpu`](/.docs/generated/explore/tags/gpu.md)
 - [HPC Systems](/business/hpc-industry/101-hpc.md) *(29 min)*
 - [HPC Workloads](/business/hpc-industry/workloads.md) *(10 min)*
+- [Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster](/fields/devops/kubernetes/kubernetes-in-five-nouns.md) — The five Kubernetes nouns (node, pod, namespace, event, API server) explained through HPC analogies, for someone who just inherited a cluster. *(advanced · 8 min)*  
+  [`kubernetes`](/.docs/generated/explore/tags/kubernetes.md)
 - [NCCL](/fields/benchmarks/nccl.md) *(19 min)*  
   [`distributed-training`](/.docs/generated/explore/tags/distributed-training.md) [`gpu`](/.docs/generated/explore/tags/gpu.md)
 - [pam_slurm_adopt: Closing the Slurm SSH Backdoor](/fields/schedulers/slurm-pam-adopt.md) *(4 min)*  

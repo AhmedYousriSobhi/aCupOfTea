@@ -51,6 +51,11 @@
     * [Overview](fields/design-patterns/README.md)
     * **Design Pattern**
       * [Feature Cross](fields/design-patterns/feature-cross/README.md)
+  * **DevOps: Where Code Meets the Machines That Run It**
+    * [DevOps](fields/devops/README.md)
+    * **Kubernetes, for People Who Have Other Things to Do**
+      * [Kubernetes](fields/devops/kubernetes/README.md)
+      * [Kubernetes in Five Nouns](fields/devops/kubernetes/kubernetes-in-five-nouns.md)
   * **Generative AI**
     * [Overview](fields/generative-ai/README.md)
     * **Evaluation and Debugging**
