@@ -1,6 +1,6 @@
 # Contributing ☕
 
-Got something worth a coffee break? Adding a page takes about five minutes, and you can do it from the **terminal** or from a **browser form**. Both ask the same few questions and follow the same rules. (How the repository is laid out: [SPEC.md](../SPEC.md).)
+Got something worth a coffee break? Adding a page takes about five minutes, and you can do it from the **terminal** or from a **browser form**. Both ask the same few questions and follow the same rules. (How the repository is laid out: [SPEC.md](/SPEC.md).)
 
 **The whole trip:** set up once → make a branch → write the page → let the checker nag you → open a pull request.
 
@@ -31,7 +31,7 @@ python3 .docs/tools/new_page.py
 
 It asks, you answer. **Enter accepts the suggestion** in brackets, a typo is asked again instead of crashing, and nothing is written until you have answered everything. Add `--dry-run` to only look.
 
-![The terminal asking for title, summary, folder, kind, subjects, tags and level, then printing the page it would create](images/terminal-new-page.png)
+![The terminal asking for title, summary, folder, kind, subjects, tags and level, then printing the page it would create](/.github/images/terminal-new-page.png)
 *A real run with `--dry-run`: what it asks, then what it would write.*
 
 You will be asked for, in this order:
@@ -64,11 +64,11 @@ python3 .docs/tools/new_page.py --gui
 
 A small form opens in your browser (it runs only on your own computer). Fill the five essentials; the cup fills up as you go.
 
-![The New page tab: title, folder, summary and kind filled in, the cup progress bar full, and a bar at the bottom with Preview and Create page](images/gui-new-page-top.png)
+![The New page tab: title, folder, summary and kind filled in, the cup progress bar full, and a bar at the bottom with Preview and Create page](/.github/images/gui-new-page-top.png)
 
 Scroll down for subjects. A little map shows whether the subjects you picked go together, and a card shows how the page will look in search:
 
-![The subject chips with two selected, a map joining them, the how-it-will-look card and the Create page button](images/gui-new-page-bottom.png)
+![The subject chips with two selected, a map joining them, the how-it-will-look card and the Create page button](/.github/images/gui-new-page-bottom.png)
 
 Press **Preview** to see what would be written, then **Create page**. Closed the tab by accident? Your answers are kept as a draft. The other tabs (Adopt, Edit, Add pictures, Fix problems) are covered below.
 
@@ -84,11 +84,11 @@ python3 .docs/tools/page_doctor.py
 
 It checks the pages you changed and gives you a to-do list: which file, which line, what to do. Type a number to open the problem in your editor, `f1` to apply the suggested fix (it shows the change and asks first).
 
-![The doctor listing a wrong tag, a link that breaks on the site, a missing picture and a picture without a description, each with the file and line](images/terminal-doctor.png)
+![The doctor listing a wrong tag, a link that breaks on the site, a missing picture and a picture without a description, each with the file and line](/.github/images/terminal-doctor.png)
 
 Prefer clicking? The **Fix problems** tab shows the same list with **Open in editor** and **Fix** buttons:
 
-![The Fix problems tab listing the same problems as cards with Open in editor and Fix buttons](images/gui-fix-problems.png)
+![The Fix problems tab listing the same problems as cards with Open in editor and Fix buttons](/.github/images/gui-fix-problems.png)
 
 CI runs the same checks. To run them by hand, all must pass (0 errors, 0 broken links):
 
@@ -102,7 +102,7 @@ python3 .docs/tools/generate_index.py    # then commit the changes in .docs/gene
 
 Commit, push, and open a pull request **into `dev`** (never `main`), one topic per pull request. The maintainer merges it and later releases `dev` to `main`, which updates the site.
 
-By contributing, you agree that your writing is licensed under [CC BY 4.0](../LICENSE) and your code under the [MIT License](../LICENSE-CODE).
+By contributing, you agree that your writing is licensed under [CC BY 4.0](/LICENSE) and your code under the [MIT License](/LICENSE-CODE).
 
 ---
 
