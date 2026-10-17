@@ -1,0 +1,139 @@
+{
+  "affinity": {
+    "label": "Affinity",
+    "objects": [
+      "cpu-affinity",
+      "parallel-execution-and-affinity"
+    ]
+  },
+  "clustering": {
+    "label": "Clustering",
+    "objects": [
+      "customer-segmentation-problem",
+      "unsupervised-learning"
+    ]
+  },
+  "containers": {
+    "label": "Containers",
+    "objects": [
+      "build-a-two-node-k3s-lab",
+      "containers-101",
+      "singularity-containers"
+    ]
+  },
+  "dev": {
+    "label": "Dev",
+    "objects": [
+      "gpu-allocation-vs-utilization"
+    ]
+  },
+  "devops": {
+    "label": "Devops",
+    "objects": [
+      "broken-pods-rogues-gallery",
+      "build-a-two-node-k3s-lab",
+      "fake-gpus-in-kubernetes"
+    ]
+  },
+  "distributed-training": {
+    "label": "Distributed Training",
+    "objects": [
+      "nccl-collective-communication",
+      "pytorch-ddp"
+    ]
+  },
+  "encoder-decoder": {
+    "label": "Encoder-Decoder",
+    "objects": [
+      "encoder-decoder-machine-translation"
+    ]
+  },
+  "gpu": {
+    "label": "GPU",
+    "objects": [
+      "cuda-101",
+      "nccl-collective-communication"
+    ]
+  },
+  "hpc": {
+    "label": "Hpc",
+    "objects": [
+      "broken-pods-rogues-gallery",
+      "build-a-two-node-k3s-lab",
+      "fake-gpus-in-kubernetes",
+      "gpu-allocation-vs-utilization",
+      "nvidia-cluster-readiness-engine"
+    ]
+  },
+  "kubernetes": {
+    "label": "Kubernetes",
+    "objects": [
+      "broken-pods-rogues-gallery",
+      "build-a-two-node-k3s-lab",
+      "fake-gpus-in-kubernetes",
+      "gpu-allocation-vs-utilization",
+      "kubernetes-in-five-nouns",
+      "nvidia-cluster-readiness-engine"
+    ]
+  },
+  "llm": {
+    "label": "Large Language Models",
+    "objects": [
+      "sequence-models"
+    ]
+  },
+  "model-evaluation": {
+    "label": "Model Evaluation",
+    "objects": [
+      "accuracy-paradox",
+      "bias-variance-trade-off"
+    ]
+  },
+  "mpi": {
+    "label": "MPI",
+    "objects": [
+      "parallel-execution-and-affinity"
+    ]
+  },
+  "neural-networks": {
+    "label": "Neural Networks",
+    "objects": [
+      "deep-learning-basics"
+    ]
+  },
+  "nvidia": {
+    "label": "Nvidia",
+    "objects": [
+      "broken-pods-rogues-gallery",
+      "fake-gpus-in-kubernetes",
+      "nvidia-cluster-readiness-engine"
+    ]
+  },
+  "pytorch": {
+    "label": "PyTorch",
+    "objects": [
+      "pytorch-101",
+      "pytorch-ddp"
+    ]
+  },
+  "rnn": {
+    "label": "Recurrent Neural Networks",
+    "objects": [
+      "encoder-decoder-machine-translation",
+      "sequence-models"
+    ]
+  },
+  "slurm": {
+    "label": "Slurm",
+    "objects": [
+      "parallel-execution-and-affinity",
+      "slurm-pam-adopt-ssh-access"
+    ]
+  },
+  "transformers": {
+    "label": "Transformers",
+    "objects": [
+      "sequence-models"
+    ]
+  }
+}

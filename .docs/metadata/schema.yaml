@@ -1,0 +1,119 @@
+# Front-matter schema for aCupOfTea pages.
+# Consumed by .docs/tools/validate.py and .docs/tools/generate_index.py (later phases).
+# Controlled values live in taxonomy.yaml; this file defines shape and rules.
+# Front matter may be partial: every field is optional, absent fields take the
+# defaults below. An id is needed only when the page takes part in relations.
+# Do not put YAML comments inside page front matter: gen_sidebar.sh derives
+# page labels from the first "# " line it finds.
+
+version: 1
+
+# Front matter is optional. Pages without it are "legacy": they stay valid, are
+# not indexed, and cannot be relation targets.
+placement:
+  delimiter: "---"          # first line of the file, closing "---" on its own line
+  line_endings: [lf, crlf]  # both accepted
+  excluded_paths:           # never carry front matter (separate repos, read via .gitmodules)
+    source: .gitmodules
+
+fields:
+  id:
+    type: string
+    pattern: "^[a-z0-9]+(-[a-z0-9]+)*$"   # semantic kebab-case, e.g. sequence-models
+    required: false
+    note: >
+      Required on any page that declares relations or is the target of one.
+      Must be unique repo-wide. When absent, a read-only fallback id is derived
+      from the path (see fallback_id); a fallback id is NOT a valid relation
+      target and must not collide with any explicit id.
+  title:
+    type: string
+    required: false
+    default: the first "# " heading of the page
+  sidebar_label:
+    type: string
+    required: false
+    one_line: true
+    warn_over: 40
+    note: >
+      Overrides the label gen_sidebar.sh derives from the page's H1, for this
+      page's own sidebar entry only (also on a README.md). The heading itself is
+      never edited. Must be unique among sidebar_labels in the same folder.
+      Quote it if it contains ": ". A page with only sidebar_label has no id and
+      no domains, so it is not indexed and no domain is inferred for it.
+  sidebar_group:
+    type: string
+    required: false
+    one_line: true
+    warn_over: 40
+    note: >
+      Only on a folder's README.md. Names that folder's group in the generated
+      sidebar (otherwise the text before the last hyphen in the README's H1).
+      Must be unique among sibling folders.
+  summary:
+    type: string
+    required: false
+    max_length: 200
+    note: >
+      One plain sentence on a single line telling a casual reader what the page
+      gives them. Shown in Explore lists and Start here.
+  level:
+    type: enum
+    values_from: taxonomy.yaml#levels
+    required: false
+    note: Reader difficulty. Used to group pages in Start here.
+  type:
+    type: enum | list[enum]
+    values_from: taxonomy.yaml#types
+    required: false
+    default: note
+    max_items: 2             # when a list; the first is the main type
+  status:
+    type: enum
+    values_from: taxonomy.yaml#statuses
+    required: false
+    default: stable
+  domains:
+    type: list[enum]
+    values_from: taxonomy.yaml#domains
+    required: false
+    min_items: 1             # when the key is present
+    note: >
+      Up to 3 (a warning above that), and they should go together: a domain lists the ones it
+      goes with in `related` in taxonomy.yaml, read both ways. validate.py warns when two
+      domains of one page are not related.
+  tags:
+    type: list[enum]
+    values_from: taxonomy.yaml#tags
+    required: false
+    max_items: 5
+    note: >
+      A tag needs 2+ pages or must name a concrete technology
+      (kind: technology in taxonomy.yaml). Single-use tags without that
+      marker produce a validator warning.
+  relations:
+    type: mapping
+    required: false
+    keys:                      # exact names; no other keys allowed
+      related:
+        type: list[id]
+      prerequisites:
+        type: list[id]
+    rules:
+      - targets are explicit ids of pages that have front matter
+      - targets may not be the page itself
+      - targets may not point into git submodules
+      - a page that declares relations must have an explicit id
+      - prerequisites must not form a cycle
+
+fallback_id:
+  applies_to: pages without an explicit id
+  derivation: path without ".md", "/" replaced by "-", lowercased; "README" maps to its folder
+  example: fields/deep-learning/concepts/basics.md -> fields-deep-learning-concepts-basics
+  uses: collision detection and display only
+  relation_target: false
+
+computed:                      # never authored; derived by generate_index.py
+  reading_time_min: ceil(words / 200) of the page body, fenced code excluded, minimum 1
+
+unknown_keys: error
