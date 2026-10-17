@@ -42,7 +42,7 @@ TAXONOMY = os.path.join(ROOT, ".docs", "metadata", "taxonomy.yaml")
 SKIP_DIRS = {"__pycache__", "node_modules", "_site", "docs", "data"}
 STOP = set("a an and are as at be by for from how in into is it of on or the to vs what why with".split())
 MAX_TAGS = 5
-MAX_DOMAINS = 2
+MAX_DOMAINS = 3          # a convention, not a technical limit: validate.py only warns above it
 MAX_TYPES = 2
 LEVELS = ("beginner", "intermediate", "advanced")
 FM_ORDER = ("id", "title", "sidebar_label", "sidebar_group", "summary", "level", "type", "status",
@@ -259,8 +259,23 @@ def add_tags(new):
         f.writelines(lines)
 
 
-def add_domains(new):
-    """Append new domains ({key: (label, description)}) to the end of the domains block."""
+def add_types(new):
+    """Add new page kinds ({key: description}) at the end of the types block."""
+    lines = read(TAXONOMY).splitlines(keepends=True)
+    start = next(i for i, l in enumerate(lines) if l.split("#")[0].rstrip() == "types:")
+    end = start + 1
+    while end < len(lines) and not re.match(r"^\S", lines[end]):
+        end += 1
+    while end > start + 1 and not lines[end - 1].strip():
+        end -= 1
+    lines[end:end] = ["  %s: %s\n" % (key, description) for key, description in new.items()]
+    with open(TAXONOMY, "w", encoding="utf-8") as f:
+        f.writelines(lines)
+
+
+def add_domains(new, chosen=()):
+    """Append new domains ({key: (label, description)}) to the end of the domains block, each related
+    to the other subjects `chosen` for the page it was created for."""
     lines = read(TAXONOMY).splitlines(keepends=True)
     start = next(i for i, l in enumerate(lines) if l.split("#")[0].rstrip() == "domains:")
     end = start + 1
@@ -271,6 +286,9 @@ def add_domains(new):
     add = []
     for key, (label, description) in new.items():
         add += ["  %s:\n" % key, "    label: %s\n" % label, "    description: %s\n" % description]
+        others = [d for d in chosen if d != key]
+        if others:
+            add.append("    related: [%s]\n" % ", ".join(others))
     lines[end:end] = add
     with open(TAXONOMY, "w", encoding="utf-8") as f:
         f.writelines(lines)
@@ -561,18 +579,43 @@ def choose_list(label, raw, allowed, limit):
 
 
 def choose_type(args, ask, folder, folders, default=None):
-    """One or two kinds, the main one first. Returns a list."""
+    """One or two kinds, the main one first. Returns (types, new_types); a kind that is not in the
+    taxonomy can be added (a new_types entry is key -> description)."""
     types = load_section("types")
+    new = {}
+    for key, description in (getattr(args, "new_type", None) or []):
+        new[key] = description
 
     def prompt():
         near = neighbours(folder, folders, "type")
-        print("\nKind of page, one or two comma separated (the main one first): %s" % ", ".join(types))
+        print("\nKind of page, one or two comma separated (the main one first): %s" % ", ".join(types + list(new)))
         print("  concept explains an idea, guide shows how to do something, reference is for looking up,")
-        print("  note is a short write-up, problem/project/experiment describe work")
-        complete_with(types)
+        print("  note is a short write-up, problem/project/experiment describe work.")
+        print("  None fits? Type a new kind and you will be asked to add it.")
+        complete_with(types + list(new))
         return ask.text("Type", default if default is not None else (near[0] if near else "concept"))
 
-    return resolve(ask, args.type, lambda raw: [] if raw.strip() == "-" else choose_list("type", raw, types, MAX_TYPES), prompt)
+    can_ask = args.type is None and ask.interactive and not ask.yes
+
+    def parse(raw):
+        known = types + list(new)
+        out = []
+        for x in ([] if raw.strip() == "-" else split_list(raw)):
+            if x not in known and can_ask:
+                guess, key = closest(x, known), slug(x)
+                if guess and ask.confirm("Unknown kind \"%s\". Use %s?" % (x, guess)):
+                    x = guess
+                elif key and ask.confirm("Add \"%s\" as a new kind of page?" % key, default=False):
+                    description = ""
+                    while not description:
+                        description = ask.text("One line: what is this kind of page?")
+                    new[key] = description
+                    x = key
+            if x not in out:
+                out.append(x)
+        return choose_list("type", ", ".join(out), types + list(new), MAX_TYPES)
+
+    return resolve(ask, args.type, parse, prompt), new
 
 
 def domain_words():
@@ -586,9 +629,37 @@ def domain_words():
         if m:
             current = m.group(1)
             out[current] = words(current.replace("-", " "))
-        elif inside and current:
+        elif inside and current and not line.strip().startswith("related:"):
             out[current] |= words(line.split(":", 1)[-1])
     return out
+
+
+def related_map():
+    """{domain: set of related domains} from taxonomy.yaml, read both ways (a pair is listed once)."""
+    out, current, inside = {}, None, False
+    for line in read(TAXONOMY).splitlines():
+        if re.match(r"^\S", line):
+            inside = line.split("#")[0].rstrip() == "domains:"
+            continue
+        m = inside and re.match(r"^  ([a-z0-9-]+):\s*$", line)
+        if m:
+            current = m.group(1)
+            out.setdefault(current, set())
+            continue
+        m = inside and current and re.match(r"^    related:\s*\[(.*)\]", line)
+        if m:
+            for other in [x.strip() for x in m.group(1).split(",") if x.strip()]:
+                out[current].add(other)
+                out.setdefault(other, set()).add(current)
+    return out
+
+
+def unrelated_pairs(domains, fresh=()):
+    """Pairs among `domains` not marked as related in taxonomy.yaml. A domain being created in this
+    run (`fresh`) is made related to the others, so it never counts."""
+    rel = related_map()
+    return [(a, b) for i, a in enumerate(domains) for b in domains[i + 1:]
+            if a not in fresh and b not in fresh and b not in rel.get(a, set())]
 
 
 def guess_domains(title, folder):
@@ -609,14 +680,14 @@ def default_domains(folder, folders, title):
 
 
 def choose_domains(args, ask, folder, folders, title, default=None):
-    """One or two subjects. Returns (domains, new_domains); an unknown subject is matched to a
+    """One to three related subjects. Returns (domains, new_domains); an unknown subject is matched to a
     known one ("hpc" -> systems-and-hpc) or, when typed in answer to the question, can be added."""
     domains = load_section("domains")
     new = {}
 
     def prompt():
         near = default_domains(folder, folders, title)
-        print("\nSubjects (domains) put the page in Explore by subject; one or two, comma separated.")
+        print("\nSubjects (domains) put the page in Explore by subject; up to %d related ones, comma separated." % MAX_DOMAINS)
         print("Known: %s" % ", ".join(domains + list(new)))
         complete_with(domains + list(new))
         return ask.text("Domains", default if default is not None else ", ".join(near[:MAX_DOMAINS]), required=False)
@@ -643,7 +714,18 @@ def choose_domains(args, ask, folder, folders, title, default=None):
                     x = key
             if x not in out:
                 out.append(x)
-        return choose_list("domains", ", ".join(out), domains + list(new), MAX_DOMAINS)
+        chosen = choose_list("domains", ", ".join(out), domains + list(new), MAX_DOMAINS)
+        pairs = unrelated_pairs(chosen, new)
+        if pairs:
+            text = "; ".join("%s and %s" % p for p in pairs) + (" are" if len(pairs) > 1 else " is") + \
+                " not marked as related in taxonomy.yaml (a page usually belongs to one area)"
+            if can_ask:
+                print("  " + text)
+                if not ask.confirm("Keep these subjects together anyway?", default=True):
+                    raise Invalid("choose subjects that go together")
+            else:
+                print("Note: " + text + ".")
+        return chosen
 
     return resolve(ask, args.domains, parse, prompt), new
 
@@ -813,7 +895,7 @@ def page_ids(raw, ids, role):
 def ask_metadata(args, ask, title, folder, folders, have=()):
     """The questions every page gets: type, subjects, tags, level, prerequisites, related.
     Fields named in `have` (already in the page's front matter) are not asked."""
-    types = [] if "type" in have else choose_type(args, ask, folder, folders)
+    types, new_types = ([], {}) if "type" in have else choose_type(args, ask, folder, folders)
     domains, new_domains = ([], {}) if "domains" in have else choose_domains(args, ask, folder, folders, title)
     tags, new_tags = ([], {}) if "tags" in have else choose_tags(args, ask, title, load_tags())
 
@@ -839,7 +921,7 @@ def ask_metadata(args, ask, title, folder, folders, have=()):
                           ask_ids("Prerequisites", "read first"))
         related = [r for r in resolve(ask, args.related, lambda raw: page_ids(raw, ids, "related"),
                                       ask_ids("Related", "see also")) if r not in prereqs]
-    return {"types": types, "domains": domains, "new_domains": new_domains, "tags": tags,
+    return {"types": types, "new_types": new_types, "domains": domains, "new_domains": new_domains, "tags": tags,
             "new_tags": new_tags, "level": level, "prereqs": prereqs, "related": related, "ids": ids}
 
 
@@ -901,6 +983,8 @@ def report_new(meta):
         print("New tags for taxonomy.yaml: %s" % ", ".join(meta["new_tags"]))
     if meta["new_domains"]:
         print("New subjects for taxonomy.yaml: %s" % ", ".join(meta["new_domains"]))
+    if meta.get("new_types"):
+        print("New kinds for taxonomy.yaml: %s" % ", ".join(meta["new_types"]))
 
 
 def save_taxonomy(meta):
@@ -908,8 +992,11 @@ def save_taxonomy(meta):
         add_tags(meta["new_tags"])
         print("Added    tags %s to .docs/metadata/taxonomy.yaml" % ", ".join(sorted(meta["new_tags"])))
     if meta["new_domains"]:
-        add_domains(meta["new_domains"])
+        add_domains(meta["new_domains"], meta["domains"])
         print("Added    subjects %s to .docs/metadata/taxonomy.yaml" % ", ".join(meta["new_domains"]))
+    if meta.get("new_types"):
+        add_types(meta["new_types"])
+        print("Added    kinds %s to .docs/metadata/taxonomy.yaml" % ", ".join(meta["new_types"]))
 
 
 def regenerate_navigation():
@@ -1065,7 +1152,7 @@ def update(args, ask):
     show = lambda v: ", ".join(v) if isinstance(v, list) else (v or "")
     print("\nUpdating %s  (title: \"%s\")" % (rel, title))
     changed, meta = set(), {"types": [], "domains": [], "tags": [], "level": "", "prereqs": [], "related": [],
-                            "new_tags": {}, "new_domains": {}, "ids": ids}
+                            "new_tags": {}, "new_domains": {}, "new_types": {}, "ids": ids}
     type_cur = cur.get("type", [])
     type_cur = type_cur if isinstance(type_cur, list) else [type_cur]
 
@@ -1083,7 +1170,7 @@ def update(args, ask):
             summary, _ = raw, changed.add("summary")
     types = type_cur
     if given(args.type):
-        got = choose_type(args, ask, folder, folders, default=show(type_cur))
+        got, meta["new_types"] = choose_type(args, ask, folder, folders, default=show(type_cur))
         if got != type_cur:
             types, _ = got, changed.add("types")
     domains = cur.get("domains", [])
@@ -1167,7 +1254,7 @@ def main(argv=None):
     p.add_argument("--tags", help="comma separated, e.g. transformers,attention")
     p.add_argument("--level", help="beginner, intermediate or advanced; beginner pages show under 'Beginner friendly' (--update: - clears it)")
     p.add_argument("--type", help="one or two of concept, guide, reference, note, problem, project, experiment, comma separated")
-    p.add_argument("--domains", help="one or two comma separated subjects from taxonomy.yaml, e.g. deep-learning")
+    p.add_argument("--domains", help="up to three related subjects from taxonomy.yaml, comma separated, e.g. deep-learning")
     p.add_argument("--prerequisites", help="comma separated page ids to read first, e.g. deep-learning-basics")
     p.add_argument("--related", help="comma separated page ids to see also")
     p.add_argument("--check", metavar="PAGE", help="report a written page's reading time and what is missing")
@@ -1175,6 +1262,8 @@ def main(argv=None):
     p.add_argument("--create-folder", action="store_true", help="create the folder if it does not exist, without asking")
     p.add_argument("--new-domain", action="append", default=[], metavar="KEY=DESCRIPTION", type=key_value,
                    help="confirm a new subject and add it to taxonomy.yaml (repeatable)")
+    p.add_argument("--new-type", action="append", default=[], metavar="KEY=DESCRIPTION", type=key_value,
+                   help="confirm a new kind of page and add it to taxonomy.yaml (repeatable)")
     p.add_argument("--new-tag", action="append", default=[], metavar="KEY[=LABEL]", type=key_value,
                    help="confirm a new tag and add it to taxonomy.yaml (repeatable)")
     p.add_argument("--gui", action="store_true", help="open the page form in your browser (local only)")

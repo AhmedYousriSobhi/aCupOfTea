@@ -101,6 +101,7 @@ def options(title="", folder=""):
         "tags": [{"key": k, "label": v} for k, v in sorted(new_page.load_tags().items())],
         "levels": list(new_page.LEVELS),
         "pages": page_ids(folders),
+        "related": {d: sorted(r) for d, r in new_page.related_map().items()},
         "limits": {"types": new_page.MAX_TYPES, "domains": new_page.MAX_DOMAINS, "tags": new_page.MAX_TAGS},
     }
 
@@ -149,6 +150,8 @@ def meta_argv(d):
         argv += ["--type", csv(d["types"])]
     if d.get("level"):
         argv += ["--level", d["level"]]
+    for n in d.get("new_types") or []:
+        argv += ["--new-type", "%s=%s" % (new_page.slug(n.get("key", "")), n.get("description", ""))]
     for n in d.get("new_domains") or []:
         argv += ["--new-domain", "%s=%s" % (new_page.slug(n.get("key", "")), n.get("description", ""))]
     for n in d.get("new_tags") or []:

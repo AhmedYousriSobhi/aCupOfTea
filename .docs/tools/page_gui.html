@@ -193,11 +193,31 @@ function checkGroup({ items, max, onChange }) {
     onChange && onChange();
   }
   el.addEventListener("change", sync);
-  return { el, add(it) { const b = h("input", { type: "checkbox", value: it.key, checked: true });
-      boxes.push(b); grid.append(chip(it, b, it.key + " (new)")); sync(); },
+  return { el, add(it) {
+      if (boxes.filter(b => b.checked).length >= max) { limit.textContent = "Limit of " + max + " reached: untick one first."; return false; }
+      const b = h("input", { type: "checkbox", value: it.key, checked: true });
+      boxes.push(b); grid.append(chip(it, b, it.key + " (new)")); sync(); return true; },
     get: () => boxes.filter(b => b.checked).map(b => b.value),
     has: key => boxes.some(b => b.value === key),
     set(keys) { boxes.forEach(b => { b.checked = keys.includes(b.value); }); sync(); } };
+}
+
+/* A small form that adds a key + one-line description (a new kind or subject). */
+function addBox({ keyLabel, keyPlaceholder, button, toggleText, onAdd }) {
+  const key = h("input", { type: "text", "aria-label": keyLabel, placeholder: keyPlaceholder });
+  const description = h("input", { type: "text", "aria-label": keyLabel + " description", placeholder: "one line: what is it?" });
+  const error = h("div", { class: "err-text", role: "alert" });
+  const box = h("div", { hidden: true }, h("div", { class: "row" }, key, description,
+    h("button", { type: "button", onclick() {
+      const k = slug(key.value);
+      if (!k || !description.value.trim()) { error.textContent = "Give it a key and a one-line description."; return; }
+      error.textContent = "";
+      if (onAdd({ key: k, label: titleCase(k), description: description.value.trim() }) === false) {
+        error.textContent = "The limit is reached: untick a choice first, then add it."; return; }
+      key.value = description.value = ""; box.hidden = true; toggle.setAttribute("aria-expanded", "false"); } }, button)), error);
+  const toggle = h("button", { type: "button", "aria-expanded": "false", onclick() {
+    box.hidden = !box.hidden; toggle.setAttribute("aria-expanded", String(!box.hidden)); if (!box.hidden) key.focus(); } }, toggleText);
+  return h("div", {}, toggle, box);
 }
 
 /* The questions about a page. The essentials (summary, kind, subjects) come first; tags, level and related
@@ -208,21 +228,23 @@ function metaForm(opts, have = [], onChange = () => {}) {
   const count = h("span", { class: "hint", "aria-live": "off" }, "0/200");
   summary.addEventListener("input", () => { count.textContent = summary.value.length + "/200"; onChange(); });
   const types = checkGroup({ items: opts.types, max: limits.types, onChange: () => onChange() });
-  const domains = checkGroup({ items: opts.domains, max: limits.domains, onChange: () => onChange() });
-  const newDomains = [];
-  const nd = { key: h("input", { type: "text", "aria-label": "New subject key", placeholder: "key, e.g. devops" }),
-               description: h("input", { type: "text", "aria-label": "New subject description", placeholder: "one line: what is this subject?" }) };
-  const ndError = h("div", { class: "err-text", role: "alert" });
-  const newDomainBox = h("div", { hidden: true }, h("div", { class: "row" }, nd.key, nd.description,
-    h("button", { type: "button", onclick() {
-      const key = slug(nd.key.value);
-      if (!key || !nd.description.value.trim()) { ndError.textContent = "Give the subject a key and a one-line description."; return; }
-      ndError.textContent = "";
-      newDomains.push({ key, label: titleCase(key), description: nd.description.value.trim() });
-      domains.add({ key, label: titleCase(key), description: nd.description.value.trim() }); nd.key.value = nd.description.value = ""; newDomainBox.hidden = true; } }, "Add subject")), ndError);
-  const addDomainBtn = h("button", { type: "button", "aria-expanded": "false", onclick() {
-    newDomainBox.hidden = !newDomainBox.hidden; addDomainBtn.setAttribute("aria-expanded", String(!newDomainBox.hidden)); if (!newDomainBox.hidden) nd.key.focus(); } },
-    "+ a subject that does not exist yet");
+  const domains = checkGroup({ items: opts.domains, max: limits.domains, onChange: () => { onChange(); checkRelated(); } });
+  const newDomains = [], newTypes = [];
+  const addDomain = addBox({ keyLabel: "New subject", keyPlaceholder: "key, e.g. devops", button: "Add subject",
+    toggleText: "+ a subject that does not exist yet", onAdd(d) { if (!domains.add(d)) return false; newDomains.push(d); } });
+  const addType = addBox({ keyLabel: "New kind", keyPlaceholder: "key, e.g. tutorial", button: "Add kind",
+    toggleText: "+ a kind of page that is not listed", onAdd(d) { if (!types.add(d)) return false; newTypes.push(d); } });
+  /* Subjects of one page should go together: say so when two are not marked as related in taxonomy.yaml. */
+  const relNote = h("div", { class: "hint", "aria-live": "polite", role: "status" });
+  const labelOf = key => (opts.domains.find(d => d.key === key) || { label: titleCase(key) }).label;
+  function checkRelated() {
+    const picked = domains.get(), fresh = newDomains.map(d => d.key), bad = [];
+    picked.forEach((a, i) => picked.slice(i + 1).forEach(b => {
+      if (!fresh.includes(a) && !fresh.includes(b) && !(opts.related[a] || []).includes(b)) bad.push(labelOf(a) + " and " + labelOf(b));
+    }));
+    relNote.textContent = bad.length ? "\u26a0 " + bad.join("; ") + (bad.length > 1 ? " are" : " is") + " not marked as related in taxonomy.yaml. A page usually belongs to one area; this is only a warning, you can still create it." : "";
+  }
+  domains.el.addEventListener("change", checkRelated);
   const moreNote = h("span", { class: "hint" });
   const tags = chipInput({ known: opts.tags.map(t => ({ value: t.key, label: t.label })), max: limits.tags, newLabel: true, onChange: () => { moreChanged(); onChange(); } });
   const level = h("select", {}, h("option", { value: "" }, "(none)"), opts.levels.map(l => h("option", { value: l }, l)));
@@ -250,18 +272,21 @@ function metaForm(opts, have = [], onChange = () => {}) {
   const el = h("div", {},
     keepNote,
     keep("summary", () => field("Summary", "one line shown in search and Explore", h("div", {}, summary, count), summary)),
-    keep("type", () => field("Kind of page", "one or two; the first you pick is the main one", types.el)),
-    keep("domains", () => field("Subjects", "one or two; they put the page in Explore by subject", h("div", {}, domains.el, addDomainBtn, newDomainBox))),
+    keep("type", () => field("Kind of page", "one or two; the first you pick is the main one", h("div", {}, types.el, addType))),
+    keep("domains", () => field("Subjects", "up to " + limits.domains + " that go together; they put the page in Explore by subject", h("div", {}, domains.el, relNote, addDomain))),
     more);
   const values = () => ({ summary: summary.value, types: types.get(), domains: domains.get(), tags: tags.state.items,
     level: level.value, prerequisites: prereq.state.items, related: related.state.items,
     new_domains: newDomains.filter(d => domains.get().includes(d.key)),
+    new_types: newTypes.filter(d => types.get().includes(d.key)),
     new_tags: tags.state.items.filter(t => tags.state.isNew.has(t)).map(t => ({ key: t, label: titleCase(t) })) });
   return { el, more, types, domains, tags, level, summary, prereq, related, values,
     /* put saved answers back (a draft) */
     restore(v) {
       summary.value = v.summary || ""; count.textContent = summary.value.length + "/200";
+      types.set([]); domains.set([]);               // room for the saved new ones
       for (const d of v.new_domains || []) if (!domains.has(d.key)) { newDomains.push(d); domains.add(d); }
+      for (const d of v.new_types || []) if (!types.has(d.key)) { newTypes.push(d); types.add(d); }
       types.set(v.types || []); domains.set(v.domains || []);
       tags.set(v.tags || []); level.value = v.level || ""; prereq.set(v.prerequisites || []); related.set(v.related || []);
       moreChanged();

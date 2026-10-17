@@ -126,18 +126,39 @@ def replace_in_list(text, key, old, new):
     return text[:span[0]] + block + text[span[1]:]
 
 
-def tag_block(lines, tag):
-    """(start, end) line indexes of a tag's entry in the tags section of taxonomy.yaml, or None."""
+def section_block(lines, section, key):
+    """(start, end) line indexes of an entry in a section of taxonomy.yaml (tags, domains), or None."""
     inside = False
     for i, line in enumerate(lines):
         if re.match(r"^\S", line):
-            inside = line.split("#")[0].rstrip() == "tags:"
-        elif inside and re.match(r"^  %s:\s*$" % re.escape(tag), line):
+            inside = line.split("#")[0].rstrip() == section + ":"
+        elif inside and re.match(r"^  %s:\s*$" % re.escape(key), line):
             end = i + 1
             while end < len(lines) and re.match(r"^    \S", lines[end]):
                 end += 1
             return i, end
     return None
+
+
+def tag_block(lines, tag):
+    return section_block(lines, "tags", tag)
+
+
+def add_related(taxonomy, a, b):
+    """taxonomy.yaml text where domain `a` lists `b` as related (pairs are read both ways)."""
+    lines = taxonomy.splitlines(keepends=True)
+    span = section_block(lines, "domains", a)
+    if not span:
+        return None
+    for i in range(*span):
+        m = re.match(r"^(    related:\s*\[)(.*)(\].*)$", lines[i].rstrip("\n"))
+        if m:
+            items = [x.strip() for x in m.group(2).split(",") if x.strip()]
+            if b not in items:
+                lines[i] = "%s%s%s\n" % (m.group(1), ", ".join(items + [b]), m.group(3))
+            return "".join(lines)
+    lines.insert(span[1], "    related: [%s]\n" % b)
+    return "".join(lines)
 
 
 def ensure_technology(taxonomy, tag):
@@ -318,6 +339,19 @@ def describe(issue):
     if m:
         hint = "A tag needs 2+ pages, or must name a concrete tool. Fix the spelling, merge it into a tag you already use, or mark it as a technology."
         fixes = tag_fixes(issue, m.group(1))
+    m = re.match(r"domains '([^']+)' and '([^']+)' are not marked as related", msg)
+    if m:
+        a, b = m.group(1), m.group(2)
+        text = read_rel(issue["path"])
+        hint = "A page should cover subjects that go together. Either they really do (then say so in taxonomy.yaml), or the page leans on one of them."
+        fixes = [f for f in (
+            make_fix("mark '%s' and '%s' as related in taxonomy.yaml (right when they belong together)" % (a, b),
+                     {TAXONOMY_REL: add_related(read_rel(TAXONOMY_REL), a, b)}),
+            make_fix("keep only '%s' on this page" % a, {issue["path"]: replace_in_list(text, "domains", b, "")}),
+            make_fix("keep only '%s' on this page" % b, {issue["path"]: replace_in_list(text, "domains", a, "")})) if f]
+    m = re.match(r"\d+ domains; pages are easier to find", msg)
+    if m:
+        hint = "Pick the main subjects; the rest can be reached through related pages and tags."
     m = re.match(r"invalid (domain|tag) '([^']+)'", msg)
     if m:
         key = "domains" if m.group(1) == "domain" else "tags"

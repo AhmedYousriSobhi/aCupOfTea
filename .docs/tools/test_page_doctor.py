@@ -212,6 +212,30 @@ class Extras(Tree):
         self.assertIn("mine", pd.read_rel(os.path.relpath(path, pd.ROOT)))
 
 
+class Related(Tree):
+    def test_unrelated_subjects_offer_a_taxonomy_fix_and_removals(self):
+        tax = ("domains:\n  business:\n    label: B\n    description: b.\n"
+               "  security:\n    label: S\n    description: s.\n    related: [business]\n"
+               "  statistics:\n    label: St\n    description: t.\n\ntags:\n  gpu:\n    label: GPU\n")
+        with open(os.path.join(pd.ROOT, pd.TAXONOMY_REL), "w", encoding="utf-8") as fh:
+            fh.write(tax)
+        text = PAGE.replace("domains: [systems-and-hpc]", "domains: [business, statistics]")
+        with open(os.path.join(pd.ROOT, self.page), "w", encoding="utf-8") as fh:
+            fh.write(text)
+        i = pd.describe({"tool": "validate", "level": "warning", "path": self.page, "line": 4,
+                         "message": "domains 'business' and 'statistics' are not marked as related in taxonomy.yaml; x"})
+        self.assertEqual(len(i["fixes"]), 3)
+        self.assertIn("    related: [statistics]\n", i["fixes"][0]["files"][pd.TAXONOMY_REL].split("  business:")[1].split("  security:")[0])
+        self.assertIn("domains: [business]", i["fixes"][1]["files"][self.page])      # keep only business
+        self.assertIn("domains: [statistics]", i["fixes"][2]["files"][self.page])    # keep only statistics
+
+    def test_add_related_extends_an_existing_list_once(self):
+        tax = "domains:\n  a:\n    label: A\n    description: x.\n    related: [b]\n  b:\n    label: B\n    description: y.\n  c:\n    label: C\n    description: z.\n"
+        once = pd.add_related(tax, "a", "c")
+        self.assertIn("    related: [b, c]\n", once)
+        self.assertEqual(pd.add_related(once, "a", "c"), once)
+
+
 class Pure(unittest.TestCase):
     def test_numeronym_and_typo(self):
         self.assertEqual(pd.suggest_word("k8s", [["explained", "kubernetes"]]), "kubernetes")

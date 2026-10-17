@@ -116,10 +116,36 @@ class Prompts(unittest.TestCase):
                 p.stop()
 
     def test_bad_type_is_asked_again(self):
-        ask, patches = self.answers("cooking", "concept, guide")
+        ask, patches = self.answers("cooking", "n", "concept, guide")      # not a kind; "add it?" -> n; again
         args = type("A", (), {"type": None})()
-        got = self.run_with(patches, lambda: new_page.choose_type(args, ask, "fields/schedulers", new_page.scan()))
+        got, new = self.run_with(patches, lambda: new_page.choose_type(args, ask, "fields/schedulers", new_page.scan()))
         self.assertEqual(got, ["concept", "guide"])
+        self.assertEqual(new, {})
+
+    def test_a_kind_that_does_not_exist_can_be_added(self):
+        ask, patches = self.answers("tutorial", "y", "A step by step lesson")
+        args = type("A", (), {"type": None})()
+        got, new = self.run_with(patches, lambda: new_page.choose_type(args, ask, "fields/schedulers", new_page.scan()))
+        self.assertEqual((got, new), (["tutorial"], {"tutorial": "A step by step lesson"}))
+
+    def test_unrelated_subjects_are_flagged_and_can_be_refused(self):
+        ask, patches = self.answers("business, security", "n", "security")    # keep together? n -> asked again
+        args = type("A", (), {"domains": None})()
+        domains, new = self.run_with(patches, lambda: new_page.choose_domains(
+            args, ask, "fields/schedulers", new_page.scan(), "Anything"))
+        self.assertEqual(domains, ["security"])
+        self.assertEqual(new_page.unrelated_pairs(["business", "security"]), [("business", "security")])
+        self.assertEqual(new_page.unrelated_pairs(["software-engineering", "systems-and-hpc", "security"]), [])
+        self.assertEqual(new_page.unrelated_pairs(["business", "devops"], fresh={"devops"}), [])
+
+    def test_three_subjects_are_allowed_four_are_not(self):
+        ask = new_page.Asker(True)
+        args = type("A", (), {"domains": "software-engineering,systems-and-hpc,security"})()
+        got, _ = new_page.choose_domains(args, ask, "fields/schedulers", new_page.scan(), "T")
+        self.assertEqual(len(got), 3)
+        args = type("A", (), {"domains": "software-engineering,systems-and-hpc,security,business"})()
+        with self.assertRaises(SystemExit):
+            new_page.choose_domains(args, ask, "fields/schedulers", new_page.scan(), "T")
 
     def test_short_form_and_new_subject(self):
         ask, patches = self.answers("devops, hpc", "y", "Running software on clusters", "")
@@ -128,6 +154,22 @@ class Prompts(unittest.TestCase):
             args, ask, "fields/schedulers", new_page.scan(), "Kubernetes"))
         self.assertEqual(domains, ["devops", "systems-and-hpc"])
         self.assertEqual(new, {"devops": ("Devops", "Running software on clusters")})
+
+    def test_add_types_and_related_for_a_new_domain(self):
+        with tempfile.TemporaryDirectory() as d:
+            path = os.path.join(d, "taxonomy.yaml")
+            with open(path, "w", encoding="utf-8") as fh:
+                fh.write("types:\n  note: n\n\ndomains:\n  a:\n    label: A\n    description: x.\n    related: [b]\n  b:\n    label: B\n    description: y.\n\ntags:\n  t:\n    label: T\n")
+            old, new_page.TAXONOMY = new_page.TAXONOMY, path
+            try:
+                new_page.add_types({"tutorial": "A lesson."})
+                new_page.add_domains({"c": ("C", "z.")}, ["a", "c"])
+                self.assertEqual(new_page.load_section("types"), ["note", "tutorial"])
+                self.assertIn("  c:\n    label: C\n    description: z.\n    related: [a]\n", new_page.read(path))
+                rel = new_page.related_map()
+                self.assertEqual((rel["a"], rel["c"], rel["b"]), ({"b", "c"}, {"a"}, {"a"}))     # read both ways
+            finally:
+                new_page.TAXONOMY = old
 
     def test_add_domains_writes_the_taxonomy(self):
         with tempfile.TemporaryDirectory() as d:
