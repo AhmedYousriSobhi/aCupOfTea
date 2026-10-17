@@ -15,13 +15,43 @@
     ],
     "related_by": []
   },
+  "broken-pods-rogues-gallery": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "kubernetes-in-five-nouns"
+    ],
+    "related": [
+      "containers-101"
+    ],
+    "related_by": []
+  },
+  "build-a-two-node-k3s-lab": {
+    "prerequisite_of": [
+      "fake-gpus-in-kubernetes",
+      "gpu-allocation-vs-utilization"
+    ],
+    "prerequisites": [
+      "kubernetes-in-five-nouns"
+    ],
+    "related": [
+      "containers-101"
+    ],
+    "related_by": []
+  },
   "containers-101": {
     "prerequisite_of": [
+      "kubernetes-in-five-nouns",
       "singularity-containers"
     ],
     "prerequisites": [],
     "related": [],
-    "related_by": []
+    "related_by": [
+      "broken-pods-rogues-gallery",
+      "build-a-two-node-k3s-lab",
+      "fake-gpus-in-kubernetes",
+      "gpu-allocation-vs-utilization",
+      "nvidia-cluster-readiness-engine"
+    ]
   },
   "cpu-affinity": {
     "prerequisite_of": [],
@@ -65,6 +95,28 @@
       "sequence-models"
     ]
   },
+  "fake-gpus-in-kubernetes": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "build-a-two-node-k3s-lab",
+      "kubernetes-in-five-nouns"
+    ],
+    "related": [
+      "containers-101"
+    ],
+    "related_by": []
+  },
+  "gpu-allocation-vs-utilization": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "build-a-two-node-k3s-lab",
+      "kubernetes-in-five-nouns"
+    ],
+    "related": [
+      "containers-101"
+    ],
+    "related_by": []
+  },
   "hpc-systems-overview": {
     "prerequisite_of": [],
     "prerequisites": [],
@@ -81,11 +133,35 @@
       "hpc-systems-overview"
     ]
   },
+  "kubernetes-in-five-nouns": {
+    "prerequisite_of": [
+      "broken-pods-rogues-gallery",
+      "build-a-two-node-k3s-lab",
+      "fake-gpus-in-kubernetes",
+      "gpu-allocation-vs-utilization",
+      "nvidia-cluster-readiness-engine"
+    ],
+    "prerequisites": [
+      "containers-101"
+    ],
+    "related": [],
+    "related_by": []
+  },
   "nccl-collective-communication": {
     "prerequisite_of": [],
     "prerequisites": [],
     "related": [
       "pytorch-ddp"
+    ],
+    "related_by": []
+  },
+  "nvidia-cluster-readiness-engine": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "kubernetes-in-five-nouns"
+    ],
+    "related": [
+      "containers-101"
     ],
     "related_by": []
   },

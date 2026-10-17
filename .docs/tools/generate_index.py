@@ -69,6 +69,8 @@ def load_objects(root):
         if "id" not in data:
             continue  # indexed pages need an explicit id; the validator guards relations
         rel = data.get("relations") or {}
+        raw_type = data.get("type") or "note"
+        types = list(raw_type) if isinstance(raw_type, list) else [raw_type]   # first is the main one
         objects[data["id"]] = {
             "id": data["id"],
             "path": path,
@@ -76,7 +78,8 @@ def load_objects(root):
             "summary": (data.get("summary") or "").strip(),
             "level": data.get("level") or "",
             "reading_time_min": reading_time_min(text[split[1]:]),
-            "type": data.get("type") or "note",
+            "type": types[0],
+            "types": types,
             "status": data.get("status") or "stable",
             "domains": sorted(data.get("domains") or []),
             "tags": sorted(data.get("tags") or []),

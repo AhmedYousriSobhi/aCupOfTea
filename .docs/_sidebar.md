@@ -51,6 +51,16 @@
     * [Overview](fields/design-patterns/README.md)
     * **Design Pattern**
       * [Feature Cross](fields/design-patterns/feature-cross/README.md)
+  * **DevOps: Where Code Meets the Machines That Run It**
+    * [DevOps](fields/devops/README.md)
+    * **Kubernetes, for People Who Have Other Things to Do**
+      * [Kubernetes](fields/devops/kubernetes/README.md)
+      * [Broken Pods, the Rogues' Gallery](fields/devops/kubernetes/broken-pods-rogues-gallery.md)
+      * [Build a Two-Node k3s Lab](fields/devops/kubernetes/build-a-two-node-k3s-lab.md)
+      * [Fake GPUs in Kubernetes](fields/devops/kubernetes/fake-gpus-in-kubernetes.md)
+      * [GPU Allocation vs Utilization](fields/devops/kubernetes/gpu-allocation-vs-utilization.md)
+      * [Kubernetes in Five Nouns](fields/devops/kubernetes/kubernetes-in-five-nouns.md)
+      * [NVIDIA Cluster Readiness Engine](fields/devops/kubernetes/nvidia-cluster-readiness-engine.md)
   * **Generative AI**
     * [Overview](fields/generative-ai/README.md)
     * **Evaluation and Debugging**

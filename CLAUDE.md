@@ -121,11 +121,13 @@ A line that is only `$$...$$` is shown as a display formula with KaTeX (`.docs/m
 
 Every content page ends with "Edit this page" (the file on GitHub, branch `dev`) and, on the deployed site, "Last updated" (`.docs/page-footer.js`). The dates come from `.docs/last-updated.json`, which `stage_site.py` writes from git history (so the deploy checkout uses `fetch-depth: 0`); a local preview shows only the edit link.
 
+`.github/CONTRIBUTING.md` is read on GitHub, not on the site (the home page links to its GitHub page), so its screenshots and links are root-absolute (`/.github/images/x.png`, `/SPEC.md`): GitHub resolves them against the repository root in both the file view and the repository's Contributing tab, where a relative `images/x.png` or `../SPEC.md` breaks. Docsify would double the folder, which is why the guide is not rendered on the site.
+
 **Folder README convention (best practice):** a folder `README.md` is the start of that folder: a one-line purpose, then `## Contents` with a `| File | Description |` table for pages and a `| Directory | Description |` table for subfolders, one short description per row. A README that is itself a topic page (a single question, a project) is content, not an index, and is left as written. `new_page.py` adds each new page's row (or a link in a bullet list).
 
 Generator behavior worth knowing: folders without any `.md` page are skipped; git submodules (not checked out in CI) are rendered as external links to their repositories; a `README.md` titled `Overview` is listed first.
 
-**New pages:** create them with `python3 .docs/tools/new_page.py` (steps in `.github/CONTRIBUTING.md`). It picks the folder and kebab-case file name, writes front matter (`id`, `title`, `type`, `domains` (suggested from the folder's pages), optional `summary`, `level`, `tags` from `.docs/metadata/taxonomy.yaml`, `prerequisites` and `related`), adds the row to the folder `README.md` table, and regenerates the sidebar and navbar. Front matter is hidden on the site by Docsify's official front-matter plugin; keep YAML comments out of it. Reading time is never asked: `new_page.py --check PAGE` shows it once the page is written, with what is still missing.
+**New pages:** create them with `python3 .docs/tools/new_page.py` (steps in `.github/CONTRIBUTING.md`). It picks the folder and kebab-case file name, writes front matter (`id`, `title`, `type`, `domains` (suggested from the folder's pages), optional `summary`, `level`, `tags` from `.docs/metadata/taxonomy.yaml`, `prerequisites` and `related`), adds the row to the folder `README.md` table, and regenerates the sidebar and navbar. Front matter is hidden on the site by Docsify's official front-matter plugin; keep YAML comments out of it. For a page written by hand, `new_page.py --adopt PAGE` adds the front matter and index link without touching the text; `--update PAGE` changes the metadata of a page that already has some. Reading time is never asked: `new_page.py --check PAGE` shows it once the page is written, with what is still missing.
 
 ## 14. Ambiguity
 
@@ -201,7 +203,7 @@ If the repository can't answer those through its structure, improve the structur
 An optional **overlay** on top of the folder structure: pages can carry YAML front matter so they are discoverable by domain and tag and linked to related pages. Folders remain the primary location; files never move for metadata's sake. Pages without front matter are valid ("legacy").
 
 - Schema and controlled vocabulary: `.docs/metadata/schema.yaml`, `.docs/metadata/taxonomy.yaml`. Add a new domain/tag there *before* using it.
-- Tools: `.docs/tools/validate.py`, `check_links.py`, `update_recent.py`, `check_pins.py`, `test_new_page.py`, `generate_index.py`, `stage_site.py` (Python + PyYAML 6.0.2).
+- Tools: `.docs/tools/validate.py`, `check_links.py`, `update_recent.py`, `check_pins.py`, `test_new_page.py`, `generate_index.py`, `stage_site.py` (Python + PyYAML 6.0.2); `page_gui.py` (`new_page.py --gui`) is the same authoring flow as a local browser form; `page_doctor.py` turns their warnings into a to-do list for the changed pages (open at the line, suggested fixes; also stale `.docs/generated`, pictures without a description, swapped folder READMEs, and an optional pre-push hook).
 - Generated output (never hand-edit, deterministic): `.docs/generated/` — JSON indexes plus Explore pages. Commit it with the change.
 
 **Add metadata to a page** — put front matter at the very top of the file, nothing else changes:
@@ -212,7 +214,7 @@ id: sequence-models            # explicit, unique, kebab-case; required if the p
 title: Sequence Models
 summary: How models handle ordered data like text, from RNNs to transformers.   # optional, one line, max 200 chars
 level: intermediate            # optional: beginner | intermediate | advanced
-type: concept                  # concept | guide | reference | note | problem | project | experiment (definitions in taxonomy.yaml)
+type: concept                  # concept | guide | reference | note | problem | project | experiment (definitions in taxonomy.yaml); one, or a list of two: [concept, guide]
 status: stable                 # draft | stable | deprecated
 domains: [deep-learning]       # from taxonomy.yaml
 tags: [rnn]                    # optional, max 5, from taxonomy.yaml
@@ -228,7 +230,8 @@ Reading time is computed (200 wpm over the body, code excluded), never authored.
 
 **Choosing domains and tags**
 
-- Domains describe the subject, not the folder. Most pages need one or two.
+- Domains describe the subject, not the folder. Most pages need one or two; three is the most (a convention: `validate.py` warns above it). The domains of one page should go together: each domain lists the ones it goes with in `related` in `taxonomy.yaml` (a pair is listed once and read both ways), and `validate.py` warns when two domains of a page are not related. If a page truly spans two areas, add them to each other's `related` list.
+- A kind of page (`type`) that is not in `taxonomy.yaml` can be added there (`new_page.py` and the form ask, or `--new-type KEY=DESCRIPTION`); a new subject created for a page is marked related to the page's other subjects.
 - A `deep-learning` page does not also get `machine-learning` unless it teaches general ML.
 - LLM pages may carry both `generative-ai` and `natural-language-processing`.
 - `tabular-data` is a folder, not a domain: pages under `fields/tabular-data/` default to `machine-learning` and `statistics` (recorded under `folder_defaults` in `taxonomy.yaml`).

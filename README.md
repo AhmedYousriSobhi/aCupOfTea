@@ -45,12 +45,12 @@ Not sure where to begin? Each of these takes one cup, roughly the reading time s
 
 ## 🆕 Recently added
 
-- 2026-09-07 · [The HPC Benchmarking Landscape: A Field Guide](/fields/benchmarks/benchmarking-guide.md)
-- 2026-09-07 · [Schedulers: The Traffic Controller Nobody Thanks Until It Breaks](/fields/schedulers/intro.md)
-- 2026-09-07 · [The Tale of job.sh and the Snapshot](/fields/schedulers/slurm-job-script-tale.md)
-- 2026-09-07 · [Rebooting a Slurm Cluster Without Losing Your Job (Or Anyone Else's)](/fields/schedulers/slurm-reboot-order.md)
-- 2026-08-20 · [OSU Benchmarks, Explained Like You're Debugging Them at 2 AM](/fields/benchmarks/osu.md)
-- 2026-08-04 · [Why Does Intel's HPL Binary Beat Netlib by 60% — Then Suddenly Not?](/fields/benchmarks/hpl-cpu-comparison.md)
+- 2026-10-17 · [Broken Pods: A Rogues' Gallery (and the One Command That Catches Them All)](/fields/devops/kubernetes/broken-pods-rogues-gallery.md)
+- 2026-10-17 · [Build a Two-Node Kubernetes Lab on Your Laptop (and Survive the DNS Pothole)](/fields/devops/kubernetes/build-a-two-node-k3s-lab.md)
+- 2026-10-17 · [Fake GPUs in Kubernetes: Learn GPU Scheduling Without Owning a GPU](/fields/devops/kubernetes/fake-gpus-in-kubernetes.md)
+- 2026-10-17 · [Booked Is Not Busy: GPU Allocation vs Utilization](/fields/devops/kubernetes/gpu-allocation-vs-utilization.md)
+- 2026-10-17 · [The Cluster That Passed Every Test Except the One That Mattered](/fields/devops/kubernetes/nvidia-cluster-readiness-engine.md)
+- 2026-10-17 · [Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster](/fields/devops/kubernetes/kubernetes-in-five-nouns.md)
 
 <!-- recent:end -->
 
@@ -119,7 +119,7 @@ Contributions are welcome: a correction, a clearer explanation or a whole new to
 2. Put the page where it belongs. [`SPEC.md`](/SPEC.md) describes the structure, and folder and page names use `kebab-case`.
 3. Open a pull request against `dev`.
 
-The step-by-step guide, with the script that creates a page and the checks to run, is in [CONTRIBUTING.md](/.github/CONTRIBUTING.md).
+The step-by-step guide, with the script that creates a page and the checks to run, is in [CONTRIBUTING.md](https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/.github/CONTRIBUTING.md).
 
 Found something off but no time to fix it? [Open an issue](https://github.com/AhmedYousriSobhi/aCupOfTea/issues). That helps too.
 

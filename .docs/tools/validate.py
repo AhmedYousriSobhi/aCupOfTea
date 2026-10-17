@@ -20,6 +20,8 @@ ALLOWED_KEYS = {"id", "title", "sidebar_label", "sidebar_group", "summary", "lev
 SUMMARY_MAX = 200
 LABEL_WARN = 40
 MAX_TAGS = 5
+MAX_TYPES = 2
+MAX_DOMAINS = 3          # more than this is only a warning
 
 
 class Report:
@@ -82,6 +84,14 @@ def load_taxonomy(root, rep):
         for k in tax[section]:
             if not ID_RE.match(str(k)):
                 rep.error(path, 1, f"{section} key {k!r} is not kebab-case")
+    related = {}
+    for d, meta in tax["domains"].items():
+        for other in (meta.get("related") or []) if isinstance(meta, dict) else []:
+            if other not in tax["domains"]:
+                rep.error(path, 1, f"domain {d!r} lists unknown related domain {other!r}")
+            elif other != d:
+                related.setdefault(d, set()).add(other)
+                related.setdefault(other, set()).add(d)        # a pair is listed once and read both ways
     if sorted(tax["relation_types"]) != sorted(RELATION_KEYS):
         rep.error(path, 1, f"relation_types must be exactly {list(RELATION_KEYS)}")
     return {
@@ -91,6 +101,7 @@ def load_taxonomy(root, rep):
         "statuses": set(tax["statuses"]),
         "levels": set(tax.get("levels") or []),
         "domains": set(tax["domains"]),
+        "domain_related": related,
         "tags": set(tax["tags"]),
     }
 
@@ -184,14 +195,29 @@ def validate_page(path, text, tax, rep):
     if "level" in data and data["level"] not in tax["levels"]:
         rep.error(path, lines.get(("level",), 1),
                   f"invalid level {data['level']!r}; allowed: {', '.join(sorted(tax['levels']))}")
-    if "type" in data and data["type"] not in tax["types"]:
-        rep.error(path, lines.get(("type",), 1),
-                  f"invalid type {data['type']!r}; allowed: {', '.join(sorted(tax['types']))}")
+    if "type" in data:
+        tv = data["type"]
+        if isinstance(tv, list):
+            check_enum_list(rep, path, lines, "type", tv, tax["types"], True)
+            if len(tv) > MAX_TYPES:
+                rep.error(path, lines.get(("type",), 1), f"at most {MAX_TYPES} types per page ({len(tv)} given)")
+        elif not isinstance(tv, str) or tv not in tax["types"]:
+            rep.error(path, lines.get(("type",), 1),
+                      f"invalid type {tv!r}; allowed: {', '.join(sorted(tax['types']))}")
     if "status" in data and data["status"] not in tax["statuses"]:
         rep.error(path, lines.get(("status",), 1),
                   f"invalid status {data['status']!r}; allowed: {', '.join(sorted(tax['statuses']))}")
     if "domains" in data:
         check_enum_list(rep, path, lines, "domains", data["domains"], tax["domains"], True)
+        doms = [d for d in data["domains"] if d in tax["domains"]] if isinstance(data["domains"], list) else []
+        dl = lines.get(("domains",), 1)
+        if len(doms) > MAX_DOMAINS:
+            rep.warn(path, dl, f"{len(doms)} domains; pages are easier to find with at most {MAX_DOMAINS}")
+        for i, a in enumerate(doms):
+            for b in doms[i + 1:]:
+                if b not in tax["domain_related"].get(a, set()):
+                    rep.warn(path, dl, f"domains {a!r} and {b!r} are not marked as related in taxonomy.yaml; "
+                                       "if the page really covers both, add one to the other's `related` list there")
     if "tags" in data:
         check_enum_list(rep, path, lines, "tags", data["tags"], tax["tags"], False)
         if isinstance(data["tags"], list) and len(data["tags"]) > MAX_TAGS:

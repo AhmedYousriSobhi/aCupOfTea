@@ -1,115 +1,187 @@
-# Contributing
+# Contributing ☕
 
-This guide covers the whole path for a new page: set up, write it, check it, preview it and send it. The repository layout is described in [SPEC.md](../SPEC.md).
+Got something worth a coffee break? Adding a page takes about five minutes, and you can do it from the **terminal** or from a **browser form**. Both ask the same few questions and follow the same rules. (How the repository is laid out: [SPEC.md](/SPEC.md).)
+
+**The whole trip:** set up once → make a branch → write the page → let the checker nag you → open a pull request.
 
 ## 1. Set up (once)
 
 ```bash
 git clone https://github.com/AhmedYousriSobhi/aCupOfTea.git
 cd aCupOfTea
-pip install PyYAML==6.0.2     # the only requirement of the scripts (Python 3.12 in CI)
+pip install PyYAML==6.0.2     # the only thing the scripts need (plus Python 3)
 ```
 
-For each new topic, start from an up-to-date `dev` and give it its own branch (never work on `dev` or `main` directly):
+## 2. One topic, one branch
+
+Always start from an up-to-date `dev` (never work on `dev` or `main` directly):
 
 ```bash
 git checkout dev && git pull
 git checkout -b content/attention-in-transformers
 ```
 
-## 2. Add the page
+## 3. Write the page: pick your path
 
-Every page is a markdown file in a folder. One command does the setup:
+### 🖥️ I live in the terminal
 
 ```bash
 python3 .docs/tools/new_page.py
 ```
 
-It asks for:
+It asks, you answer. **Enter accepts the suggestion** in brackets, a typo is asked again instead of crashing, and nothing is written until you have answered everything. Add `--dry-run` to only look.
 
-1. **Title.** It becomes the page heading and the file name (`Attention in Transformers` → `attention-in-transformers.md`).
-2. **Summary**, optional. One line, shown in search results and in the folder index.
-3. **Folder.** The closest existing folders are suggested first. It warns you if a similar page already exists, and it never creates a folder without asking.
-4. **Type**: concept (explains an idea), guide (how to do something), reference (to look up), note, problem, project or experiment. The type most pages in that folder use is suggested.
-5. **Domains**, one or two subjects such as `deep-learning` or `systems-and-hpc`. They put the page in Explore by subject. The folder's usual subjects are suggested.
-6. **Tags**, optional. Pick from the tag list in `.docs/metadata/taxonomy.yaml` (Tab completes). A new tag is added only if you confirm.
-7. **Level**, **prerequisites** and **related pages**, optional. `beginner` makes the page show under "Beginner friendly" in Start here. Prerequisites are ids of pages to read first, which builds a learning path; related pages show as "See also" under the title. Both take page ids (Tab completes).
+![The terminal asking for title, summary, folder, kind, subjects, tags and level, then printing the page it would create](/.github/images/terminal-new-page.png)
+*A real run with `--dry-run`: what it asks, then what it would write.*
 
-You don't enter a reading time: the site works it out from the text (200 words a minute, code not counted) and shows it under the title, so it stays right when the page changes.
+You will be asked for, in this order:
 
-It then creates the page with a short outline to fill in, adds it to the folder's `README.md` index (a `File | Description` table, or a list of links), and regenerates the site sidebar.
+| Question | In plain words |
+|---|---|
+| **Title** | Becomes the heading and the file name (`Attention in Transformers` → `attention-in-transformers.md`). |
+| **Summary** | One line, optional. Shown in search results. |
+| **Folder** | Closest existing folders are suggested. It never creates one without asking. |
+| **Kind** | `concept`, `guide`, `reference`, `note`, `problem`, `project` or `experiment`. None fits? Type a new one and add its definition. |
+| **Subjects** | Up to three that go together, like `deep-learning`. They put the page in Explore. Pairs that do not go together get a warning. |
+| **Tags** | Optional, from the list (Tab completes). A new tag that looks like a typo of a known one (`k8s`, `kubernates`) is caught. |
+| **Level, prerequisites, related** | Optional. `beginner` shows the page under "Beginner friendly". |
 
-To skip the questions, pass the answers as options:
+No reading time to enter: the site counts it from your text.
+
+Want to skip the questions? Pass the answers:
 
 ```bash
 python3 .docs/tools/new_page.py --title "Attention in Transformers" \
-  --folder fields/deep-learning/concepts --tags transformers \
-  --summary "How attention lets a model weigh every token." --level intermediate \
-  --type concept --domains deep-learning --related sequence-models --yes
+  --folder fields/deep-learning/concepts --type concept --domains deep-learning \
+  --tags transformers --summary "How attention lets a model weigh every token." --yes
 ```
 
-Add `--dry-run` to see the result without writing anything. Only Python 3 is needed.
-
-## When the page is written
+### 🖱️ I prefer buttons
 
 ```bash
-python3 .docs/tools/new_page.py --check fields/deep-learning/concepts/attention-in-transformers.md
+python3 .docs/tools/new_page.py --gui
 ```
 
-It shows the reading time readers will see, whether the page counts as a quick read (10 minutes or less), and what is still missing: outline notes from the template, empty sections, a summary, type, domains, tags or level, pictures described only as "image", and relative links that break on the site.
+A small form opens in your browser (it runs only on your own computer). Fill the five essentials; the cup fills up as you go.
 
-## Without the script
+![The New page tab: title, folder, summary and kind filled in, the cup progress bar full, and a bar at the bottom with Preview and Create page](/.github/images/gui-new-page-top.png)
 
-- Use a lowercase-kebab-case file name: `my-topic.md`.
-- Start the page with one `# Heading`. The sidebar shows the text after the last hyphen, so `# Deep Learning - Attention` appears as **Attention**.
-- Write links root-absolute: `/fields/deep-learning/concepts/basics.md`.
-- Keep your own images in the repo: put them in an `images/` folder next to the page and link them relative to the page, `![caption](images/my-topic-01.png)`. Root-absolute paths do not work for images on the site. Pictures that belong to someone else stay links to their source.
-- Add the page to its folder's `README.md` and run `cd .docs && ./gen_sidebar.sh`.
+Scroll down for subjects. A little map shows whether the subjects you picked go together, and a card shows how the page will look in search:
 
-## 3. Check before you push
+![The subject chips with two selected, a map joining them, the how-it-will-look card and the Create page button](/.github/images/gui-new-page-bottom.png)
 
-Run these from the repository root. CI runs the same checks and fails the pull request if one does not pass.
+Press **Preview** to see what would be written, then **Create page**. Closed the tab by accident? Your answers are kept as a draft. The other tabs (Adopt, Edit, Add pictures, Fix problems) are covered below.
+
+## 4. Fill in the page
+
+Open the new file and replace the comments in the outline with your own words. Your own images go in an `images/` folder next to the page and are linked relative to it: `![what it shows](images/my-topic-01.png)` (the **Add pictures** tab does this for you).
+
+## 5. Let the checker nag you
 
 ```bash
-python3 .docs/tools/validate.py         # front matter and relations: must report 0 errors
-python3 .docs/tools/check_links.py      # internal links and unsafe HTML: must report 0 broken links
-python3 .docs/tools/generate_index.py   # rebuilds .docs/generated (Explore pages); commit the result
+python3 .docs/tools/page_doctor.py
 ```
 
-If you added, renamed or retitled a page by hand, also run `cd .docs && ./gen_sidebar.sh && ./gen_navbar.sh` and commit the result. `new_page.py` already does this for pages it creates. Never edit the generated files (`.docs/_sidebar.md`, `.docs/_navbar.md`, `.docs/generated/`) by hand.
+It checks the pages you changed and gives you a to-do list: which file, which line, what to do. Type a number to open the problem in your editor, `f1` to apply the suggested fix (it shows the change and asks first).
 
-## 4. Preview as readers will see it (optional)
+![The doctor listing a wrong tag, a link that breaks on the site, a missing picture and a picture without a description, each with the file and line](/.github/images/terminal-doctor.png)
+
+Prefer clicking? The **Fix problems** tab shows the same list with **Open in editor** and **Fix** buttons:
+
+![The Fix problems tab listing the same problems as cards with Open in editor and Fix buttons](/.github/images/gui-fix-problems.png)
+
+CI runs the same checks. To run them by hand, all must pass (0 errors, 0 broken links):
 
 ```bash
-python3 .docs/tools/stage_site.py --out _site     # the deployed version: reading time, Related strip, code pages
+python3 .docs/tools/validate.py
+python3 .docs/tools/check_links.py
+python3 .docs/tools/generate_index.py    # then commit the changes in .docs/generated
+```
+
+## 6. Send it
+
+Commit, push, and open a pull request **into `dev`** (never `main`), one topic per pull request. The maintainer merges it and later releases `dev` to `main`, which updates the site.
+
+By contributing, you agree that your writing is licensed under [CC BY 4.0](/LICENSE) and your code under the [MIT License](/LICENSE-CODE).
+
+---
+
+## More, only when you need it
+
+<details>
+<summary><b>I already wrote the page by hand</b></summary>
+
+```bash
+python3 .docs/tools/new_page.py --adopt fields/deep-learning/concepts/attention-in-transformers.md
+```
+
+Adds the front matter and the folder index link without touching your text. It keeps any front matter that is already there and asks only for what is missing. In the form: the **Adopt a page** tab (type words of the path or title to filter the list).
+</details>
+
+<details>
+<summary><b>Change the summary, kind, subjects, tags or level later</b></summary>
+
+```bash
+python3 .docs/tools/new_page.py --update fields/deep-learning/concepts/attention-in-transformers.md
+```
+
+Enter keeps the current value, `-` clears it. Only what you change is rewritten. In the form: the **Edit a page** tab.
+</details>
+
+<details>
+<summary><b>Check a finished page, or preview the site</b></summary>
+
+```bash
+python3 .docs/tools/new_page.py --check PAGE      # reading time, what is still missing
+python3 .docs/tools/stage_site.py --out _site     # the deployed version
 python3 -m http.server 8000 --directory _site     # then open http://localhost:8000
 ```
 
-`_site/` is git-ignored. A plain `docsify serve` of the repository also works, but it does not show the reading time or the Related strip.
+`_site/` is git-ignored.
+</details>
 
-## All the scripts
+<details>
+<summary><b>No scripts at all</b></summary>
+
+- A lowercase-kebab-case file name: `my-topic.md`, starting with one `# Heading`.
+- Root-absolute links: `/fields/deep-learning/concepts/basics.md` (relative `../` links break on the site; images are the exception, see above).
+- Add the page to its folder's `README.md` table, then `cd .docs && ./gen_sidebar.sh && ./gen_navbar.sh`.
+- Never edit the generated files (`.docs/_sidebar.md`, `.docs/_navbar.md`, `.docs/generated/`) by hand.
+</details>
+
+<details>
+<summary><b>Stop a broken push before it leaves your machine</b></summary>
+
+```bash
+python3 .docs/tools/page_doctor.py --install-hook      # --uninstall-hook removes it
+```
+
+A git hook that refuses a push when the changed files have an error (skip once with `git push --no-verify`).
+</details>
+
+<details>
+<summary><b>All the scripts</b></summary>
 
 | Script | Use it to |
 |---|---|
-| `new_page.py` | create a page, add it to its folder index and the sidebar; `--check PAGE` reviews a finished page |
-| `validate.py` | check front matter, domains, tags and relations |
-| `check_links.py` | find broken internal links, unsafe HTML and pictures without a description |
+| `new_page.py` | create a page (`--gui` for the form), `--adopt`, `--update`, `--check` |
+| `page_doctor.py` | the to-do list of fixes for changed pages, and the optional pre-push hook |
+| `page_gui.py` | the browser form behind `--gui` |
+| `validate.py` | check front matter, subjects, tags and relations |
+| `check_links.py` | broken links, unsafe HTML, pictures without a description |
 | `generate_index.py` | rebuild the Explore and Start here pages in `.docs/generated` |
-| `stage_site.py` | build the deployed copy of the site locally, into `_site/` (git-ignored) |
-| `update_recent.py` | refresh the "Recently added" list in the README; the maintainer runs it before a release |
-| `check_pins.py` | compare the pinned CDN versions with npm and update their hashes (site maintenance) |
+| `stage_site.py` | build the deployed copy of the site into `_site/` |
+| `update_recent.py` | the maintainer runs it before a release |
+| `check_pins.py` | site maintenance: compare pinned CDN versions with npm |
+| `test_*.py` | tests of the tools (CI runs them) |
+</details>
 
-## Rules that save a review round
+<details>
+<summary><b>Rules that save a review round</b></summary>
 
-- Pages are content. Add or move things, but do not rewrite other people's pages in a structure PR.
-- Put a page where it belongs; do not duplicate knowledge to make it visible twice, link to it instead. A project stays a project even when it uses a technology.
-- Code files and notebooks keep their names and open as readable pages when linked root-absolute (`/folder/notebook.ipynb`).
-- A new domain or tag goes into `.docs/metadata/taxonomy.yaml` before a page uses it.
+- Pages are content: add or move things, but do not rewrite other people's pages in a structure PR.
+- Put a page where it belongs; link instead of duplicating. A project stays a project even when it uses a technology.
+- A new subject or tag goes into `.docs/metadata/taxonomy.yaml` before a page uses it (the tools offer to add it).
 - Raw `<script>`, `<iframe>` and `on...=` handlers are rejected by `check_links.py`.
 - Do not commit generated or temporary files (`_site/`, caches, notes at the root).
-
-## 5. Sending it
-
-Commit on your branch and open a pull request into `dev`, one topic per pull request. The maintainer merges it and later releases `dev` to `main`, which redeploys the site. Never open a pull request directly to `main`.
-
-By contributing, you agree that your writing is licensed under [CC BY 4.0](../LICENSE) and your code under the [MIT License](../LICENSE-CODE), as described in the README.
+</details>

@@ -22,12 +22,34 @@
       "sequence-models"
     ]
   },
+  "devops": {
+    "description": "Field",
+    "label": "Devops",
+    "objects": [
+      "broken-pods-rogues-gallery",
+      "build-a-two-node-k3s-lab",
+      "fake-gpus-in-kubernetes",
+      "gpu-allocation-vs-utilization",
+      "nvidia-cluster-readiness-engine"
+    ]
+  },
   "generative-ai": {
     "description": "Generative models, LLMs and their tooling.",
     "label": "Generative AI",
     "objects": [
       "encoder-decoder-machine-translation",
       "sequence-models"
+    ]
+  },
+  "kubernates": {
+    "description": "devops-orchestraiton",
+    "label": "Kubernates",
+    "objects": [
+      "broken-pods-rogues-gallery",
+      "build-a-two-node-k3s-lab",
+      "fake-gpus-in-kubernetes",
+      "gpu-allocation-vs-utilization",
+      "nvidia-cluster-readiness-engine"
     ]
   },
   "machine-learning": {
@@ -99,12 +121,18 @@
     "description": "Benchmarks, schedulers, system administration, high-performance computing.",
     "label": "Systems and HPC",
     "objects": [
+      "broken-pods-rogues-gallery",
+      "build-a-two-node-k3s-lab",
       "containers-101",
       "cpu-affinity",
       "cuda-101",
+      "fake-gpus-in-kubernetes",
+      "gpu-allocation-vs-utilization",
       "hpc-systems-overview",
       "hpc-workloads",
+      "kubernetes-in-five-nouns",
       "nccl-collective-communication",
+      "nvidia-cluster-readiness-engine",
       "parallel-execution-and-affinity",
       "pytorch-ddp",
       "singularity-containers",
