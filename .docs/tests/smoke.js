@@ -337,6 +337,14 @@ async function run(browser, base, label, size, phone) {
     return { href: cont && cont.getAttribute('href'), read };
   });
   c('pages already read are marked in the menu and "Continue" links to the last one', hist.read && hist.href === '#/tips/kaggle-tips', JSON.stringify(hist));
+  // saved pages: the button saves, the menu lists it, removing empties the list
+  await go('tips/kaggle-tips', 1500);
+  await page.click('.save-page');
+  await go('', 1500);
+  const savedOn = await page.evaluate(() => { const d = document.getElementById('saved-pages'); return { text: d && d.querySelector('summary').textContent, href: d && d.querySelector('a').getAttribute('href') }; });
+  await page.evaluate(() => document.querySelector('#saved-pages li button').click());
+  const savedOff = await page.evaluate(() => !document.getElementById('saved-pages'));
+  c('a saved page is listed in the menu and can be removed', /Saved \(1\)/.test(savedOn.text || '') && savedOn.href === '#/tips/kaggle-tips' && savedOff, JSON.stringify(savedOn) + ' removed=' + savedOff);
   c('no script errors', page.errors.length === 0, page.errors.join(' | '));
   await page.context().close();
 }
