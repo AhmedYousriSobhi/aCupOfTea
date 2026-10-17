@@ -19,7 +19,7 @@
   body { margin:0; background:var(--bg); color:var(--text); font:16px/1.5 system-ui, sans-serif; }
   header { display:flex; align-items:center; gap:16px; padding:12px 16px; border-bottom:1px solid var(--line); flex-wrap:wrap; }
   header h1 { font-size:1.1rem; margin:0; flex:1; }
-  nav { display:flex; gap:4px; }
+  nav { display:flex; flex-wrap:wrap; gap:4px; }
   nav button, button { font:inherit; min-height:40px; padding:6px 14px; border:1px solid var(--line); background:var(--card); color:var(--text); border-radius:6px; cursor:pointer; }
   nav button[aria-selected=true] { background:var(--accent); color:var(--accent-text); border-color:var(--accent); }
   button.primary { background:var(--accent); color:var(--accent-text); border-color:var(--accent); }
@@ -115,7 +115,7 @@
     @keyframes fall { to { transform: translate(var(--dx), 110vh) rotate(var(--rot)); opacity:.2; } }
   }
   [hidden] { display:none !important; }
-  @media (pointer:coarse), (max-width:600px) { button, nav button { min-height:44px; } .chipset .pill { min-height:44px; } .checks label { padding:4px 0; } header { padding:8px 12px; } main { padding:12px; } }
+  @media (pointer:coarse), (max-width:600px) { button, nav button, select:not([size]) { min-height:44px; } .chipset .pill { min-height:44px; } .checks label { padding:4px 0; } header { padding:8px 12px; } main { padding:12px; } }
   @media (prefers-reduced-motion: no-preference) { button { transition: background-color .15s, border-color .15s; } }
 </style>
 </head>
