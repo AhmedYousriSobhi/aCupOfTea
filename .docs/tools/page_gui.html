@@ -362,7 +362,9 @@ function metaForm(opts, have = [], onChange = () => {}, titleOf = () => "") {
   const domains = checkGroup({ items: opts.domains, max: limits.domains, onChange: () => { onChange(); checkRelated(); }, decorate: it => dot(it.key) });
   const newDomains = [], newTypes = [];
   const addDomain = addBox({ keyLabel: "New subject", keyPlaceholder: "key, e.g. devops", button: "Add subject",
-    toggleText: "+ a subject that does not exist yet", onAdd(d) { if (!domains.add(d)) return false; newDomains.push(d); } });
+    toggleText: "+ a subject that does not exist yet", onAdd(d) {
+      newDomains.push(d);                       // before ticking it: the check that runs on tick must already know it is new
+      if (!domains.add(d)) { newDomains.pop(); return false; } } });
   const addType = addBox({ keyLabel: "New kind", keyPlaceholder: "key, e.g. tutorial", button: "Add kind",
     toggleText: "+ a kind of page that is not listed", onAdd(d) { if (!types.add(d)) return false; newTypes.push(d); } });
   /* Subjects of one page should go together: say so when two are not marked as related in taxonomy.yaml. */
