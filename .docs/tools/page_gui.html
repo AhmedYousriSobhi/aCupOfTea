@@ -58,7 +58,7 @@
   .chipset .pill { border:1px solid var(--line); border-radius:999px; padding:6px 14px; min-height:36px; background:var(--card); display:inline-flex; align-items:center; }
   .chipset input:checked + .pill { background:var(--accent); color:var(--accent-text); border-color:var(--accent); }
   .chipset input:focus-visible + .pill { outline:3px solid var(--accent); outline-offset:2px; }
-  .chipset input:disabled + .pill { opacity:.45; cursor:not-allowed; }
+  .chipset input:disabled + .pill { opacity:.55; cursor:not-allowed; }
   .chipset input:disabled { cursor:not-allowed; }
   .what { min-height:1.5em; }
   details.more { border:1px solid var(--line); background:var(--card); border-radius:8px; margin:0 0 14px; padding:0 14px; }
@@ -70,6 +70,50 @@
   .sumline strong { color:var(--text); }
   .banner { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
   .banner span { flex:1 1 240px; }
+  .logo { display:flex; align-items:center; gap:10px; flex:1; }
+  .logo h1 { margin:0; font-size:1.1rem; flex:none; }
+  .logo small { color:var(--muted); display:block; font-size:.8rem; line-height:1.1; }
+  .ico { vertical-align:-3px; margin-right:6px; flex:none; }
+  .dot { display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:8px; flex:none; border:1px solid rgba(0,0,0,.25); }
+  .chipset input:checked + .pill .dot { border-color:rgba(255,255,255,.7); }
+  .cup { flex:none; color:var(--accent); }
+  .cup .body, .cup .rim { stroke:currentColor; fill:none; stroke-width:2.4; stroke-linecap:round; stroke-linejoin:round; }
+  .cup .tea { fill:currentColor; opacity:.85; }
+  .cup .steam { stroke:var(--muted); fill:none; stroke-width:2; stroke-linecap:round; opacity:0; }
+  .cup.hot .steam { opacity:.8; }
+  .brew { display:flex; gap:14px; align-items:center; background:var(--card); border:1px solid var(--line); border-radius:8px; padding:10px 14px; margin:0 0 14px; }
+  .brew strong { display:block; }
+  .brew .bar { height:6px; background:var(--code); border-radius:99px; overflow:hidden; margin-top:6px; }
+  .brew .bar i { display:block; height:100%; width:0; background:var(--accent); }
+  .pcard { background:var(--card); border:1px dashed var(--line); border-radius:10px; padding:12px 16px; margin:0 0 14px; }
+  .pcard .cap { color:var(--muted); font-size:.75rem; text-transform:uppercase; letter-spacing:.06em; }
+  .pcard h3 { margin:2px 0; font-size:1.15rem; }
+  .pcard .meta { display:flex; flex-wrap:wrap; gap:6px; margin:6px 0; }
+  .pcard .tag { border:1px solid var(--line); background:var(--code); border-radius:99px; padding:0 10px; font-size:.8rem; display:inline-flex; align-items:center; }
+  .pcard .empty { color:var(--muted); font-style:italic; }
+  .graph svg { display:block; max-width:100%; }
+  .graph text { font-size:11px; fill:var(--text); }
+  .graph .ok { stroke:var(--accent); stroke-width:2; }
+  .graph .odd { stroke:var(--err); stroke-width:2; stroke-dasharray:5 4; }
+  .graph .node { fill:var(--card); stroke:var(--accent); stroke-width:2; }
+  .brewed { display:flex; gap:14px; align-items:center; background:var(--card); border:1px solid var(--ok); border-radius:10px; padding:10px 16px; margin:8px 0; }
+  .brewed strong { display:block; font-size:1.05rem; }
+  .counts { display:flex; flex-wrap:wrap; gap:8px; margin:0 0 12px; }
+  .counts .badge { font-size:.85rem; padding:3px 12px; }
+  .allclear { text-align:center; padding:24px 12px; color:var(--muted); }
+  .allclear strong { display:block; color:var(--text); font-size:1.1rem; margin-top:6px; }
+  .leaf { position:fixed; top:-20px; width:10px; height:16px; border-radius:100% 0; pointer-events:none; z-index:10; opacity:.9; }
+  @media (prefers-reduced-motion: no-preference) {
+    .cup.hot .steam { animation: steam 2.4s ease-in-out infinite; }
+    .cup .steam:nth-of-type(2) { animation-delay:.5s; } .cup .steam:nth-of-type(3) { animation-delay:1s; }
+    .cup .tea { transition: y .5s ease, height .5s ease; }
+    .brew .bar i { transition: width .4s ease; }
+    .chipset .pill { transition: background-color .15s, color .15s, transform .12s; }
+    .chipset input:checked + .pill { transform: translateY(-1px); }
+    .leaf { animation: fall 1.8s cubic-bezier(.3,.6,.6,1) forwards; }
+    @keyframes steam { 0%,100% { transform: translateY(0); opacity:.2; } 50% { transform: translateY(-4px); opacity:.85; } }
+    @keyframes fall { to { transform: translate(var(--dx), 110vh) rotate(var(--rot)); opacity:.2; } }
+  }
   [hidden] { display:none !important; }
   @media (pointer:coarse), (max-width:600px) { button, nav button { min-height:44px; } .chipset .pill { min-height:44px; } .checks label { padding:4px 0; } header { padding:8px 12px; } main { padding:12px; } }
   @media (prefers-reduced-motion: no-preference) { button { transition: background-color .15s, border-color .15s; } }
@@ -77,7 +121,7 @@
 </head>
 <body>
 <header>
-  <h1>aCupOfTea page form</h1>
+  <div class="logo" id="logo"><div><h1>aCupOfTea page form</h1><small>brew a page, short enough for a coffee break</small></div></div>
   <nav role="tablist" aria-label="What to do">
     <button role="tab" id="tab-new" aria-selected="true" aria-controls="view-new" tabindex="0">New page</button>
     <button role="tab" id="tab-adopt" aria-selected="false" aria-controls="view-adopt" tabindex="-1">Adopt a page</button>
@@ -116,6 +160,61 @@ function h(tag, attrs, ...kids) {
 const slug = t => t.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
 const titleCase = k => k.split("-").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
 const debounce = (fn, ms) => { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; };
+/* ---- little drawings (decorative; the words always carry the meaning) ---- */
+const NS = "http://www.w3.org/2000/svg";
+function sv(tag, attrs, ...kids) {
+  const el = document.createElementNS(NS, tag);
+  for (const [k, v] of Object.entries(attrs || {})) el.setAttribute(k, v);
+  for (const kid of kids.flat()) if (kid) el.append(kid);
+  return el;
+}
+const icon = (d, size = 18) => sv("svg", { viewBox: "0 0 24 24", width: size, height: size, fill: "none", stroke: "currentColor",
+  "stroke-width": "1.8", "stroke-linecap": "round", "stroke-linejoin": "round", "aria-hidden": "true", class: "ico" }, sv("path", { d }));
+const KIND_ICON = {
+  concept: "M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z",
+  guide: "M9 6h11M9 12h11M9 18h11M4 6l1 1 2-2M4 12l1 1 2-2M4 18l1 1 2-2",
+  reference: "M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2zM4 19V5M9 7h6",
+  note: "M4 20l1-4L16 5l3 3L8 19zM14 7l3 3",
+  problem: "M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.7M12 17h.01",
+  project: "M3 7l9-4 9 4v10l-9 4-9-4zM3 7l9 4 9-4M12 11v10",
+  experiment: "M9 3h6M10 3v6L5 19a2 2 0 0 0 1.8 3h10.4A2 2 0 0 0 19 19l-5-10V3M8 15h8",
+  _new: "M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z",
+};
+const kindIcon = key => icon(KIND_ICON[key] || KIND_ICON._new);
+const hue = key => { let n = 7; for (const c of key) n = (n * 31 + c.charCodeAt(0)) % 360; return n; };
+const dot = key => h("span", { class: "dot", "aria-hidden": "true", style: "background:hsl(" + hue(key) + " 55% 42%)" });
+
+/* A cup that fills (0..1) and steams when it is full. */
+let cupN = 0;
+function cup(size = 44, level = 0) {
+  const id = "cupclip" + (++cupN);
+  const tea = sv("rect", { class: "tea", x: "12", width: "36", "clip-path": "url(#" + id + ")" });
+  const el = sv("svg", { viewBox: "0 0 64 64", width: size, height: size, class: "cup", "aria-hidden": "true" },
+    sv("defs", {}, sv("clipPath", { id }, sv("path", { d: "M12 24h36v14a14 14 0 0 1-14 14H26a14 14 0 0 1-14-14z" }))),
+    sv("path", { class: "steam", d: "M24 18c-3-3 3-5 0-9" }), sv("path", { class: "steam", d: "M32 18c-3-3 3-5 0-9" }), sv("path", { class: "steam", d: "M40 18c-3-3 3-5 0-9" }),
+    tea,
+    sv("path", { class: "body", d: "M12 24h36v14a14 14 0 0 1-14 14H26a14 14 0 0 1-14-14zM48 28h4a6 6 0 0 1 0 12h-5" }),
+    sv("path", { class: "rim", d: "M8 57h44" }));
+  const set = v => {
+    const top = 52 - Math.max(0, Math.min(1, v)) * 28;                 // 52 = empty, 24 = full
+    tea.setAttribute("y", String(top)); tea.setAttribute("height", String(56 - top));
+    el.classList.toggle("hot", v >= 1);
+  };
+  set(level);
+  return { el, set };
+}
+/* A short fall of tea leaves, once, when a page was created (not with reduced motion). */
+function confetti() {
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  for (let i = 0; i < 22; i++) {
+    const leaf = h("span", { class: "leaf", "aria-hidden": "true", style:
+      "left:" + Math.round(Math.random() * 100) + "vw;background:hsl(" + (80 + Math.round(Math.random() * 60)) + " 45% " + (32 + Math.round(Math.random() * 14)) + "%);" +
+      "--dx:" + (Math.round(Math.random() * 160) - 80) + "px;--rot:" + (Math.round(Math.random() * 540) - 270) + "deg;animation-delay:" + (Math.random() * 0.4).toFixed(2) + "s" });
+    document.body.append(leaf);
+    setTimeout(() => leaf.remove(), 2600);
+  }
+}
+
 let uidN = 0;
 const uid = p => p + (++uidN);
 function message(kind, text) {
@@ -172,14 +271,14 @@ function chipInput({ known, max, onChange, newLabel }) {
 }
 
 /* Choices as toggle chips, at most `max` on. Pointing at or tabbing to one says what it means. */
-function checkGroup({ items, max, onChange }) {
+function checkGroup({ items, max, onChange, decorate }) {
   const boxes = items.map(it => h("input", { type: "checkbox", value: it.key }));
   const base = "Point at a choice, or move to it with the keyboard, to see what it means.";
   const what = h("div", { class: "hint what", "aria-live": "polite" }, base);
   const limit = h("div", { class: "hint", "aria-live": "polite" });
   const tell = it => { what.textContent = it ? (it.label || it.key) + ": " + (it.description || "") : base; };
   const chip = (it, box, text) => {
-    const l = h("label", { title: it.description || "" }, box, h("span", { class: "pill" }, text));
+    const l = h("label", { title: it.description || "" }, box, h("span", { class: "pill" }, decorate ? decorate(it) : null, text));
     l.addEventListener("mouseenter", () => tell(it)); l.addEventListener("mouseleave", () => tell(null));
     box.addEventListener("focus", () => tell(it)); box.addEventListener("blur", () => tell(null));
     return l;
@@ -227,8 +326,8 @@ function metaForm(opts, have = [], onChange = () => {}) {
   const summary = h("input", { type: "text", maxlength: "200" });
   const count = h("span", { class: "hint", "aria-live": "off" }, "0/200");
   summary.addEventListener("input", () => { count.textContent = summary.value.length + "/200"; onChange(); });
-  const types = checkGroup({ items: opts.types, max: limits.types, onChange: () => onChange() });
-  const domains = checkGroup({ items: opts.domains, max: limits.domains, onChange: () => { onChange(); checkRelated(); } });
+  const types = checkGroup({ items: opts.types, max: limits.types, onChange: () => onChange(), decorate: it => kindIcon(it.key) });
+  const domains = checkGroup({ items: opts.domains, max: limits.domains, onChange: () => { onChange(); checkRelated(); }, decorate: it => dot(it.key) });
   const newDomains = [], newTypes = [];
   const addDomain = addBox({ keyLabel: "New subject", keyPlaceholder: "key, e.g. devops", button: "Add subject",
     toggleText: "+ a subject that does not exist yet", onAdd(d) { if (!domains.add(d)) return false; newDomains.push(d); } });
@@ -236,13 +335,32 @@ function metaForm(opts, have = [], onChange = () => {}) {
     toggleText: "+ a kind of page that is not listed", onAdd(d) { if (!types.add(d)) return false; newTypes.push(d); } });
   /* Subjects of one page should go together: say so when two are not marked as related in taxonomy.yaml. */
   const relNote = h("div", { class: "hint", "aria-live": "polite", role: "status" });
+  const graph = h("div", { class: "graph" });
   const labelOf = key => (opts.domains.find(d => d.key === key) || { label: titleCase(key) }).label;
   function checkRelated() {
     const picked = domains.get(), fresh = newDomains.map(d => d.key), bad = [];
     picked.forEach((a, i) => picked.slice(i + 1).forEach(b => {
       if (!fresh.includes(a) && !fresh.includes(b) && !(opts.related[a] || []).includes(b)) bad.push(labelOf(a) + " and " + labelOf(b));
     }));
+    drawGraph(picked, fresh);
     relNote.textContent = bad.length ? "\u26a0 " + bad.join("; ") + (bad.length > 1 ? " are" : " is") + " not marked as related in taxonomy.yaml. A page usually belongs to one area; this is only a warning, you can still create it." : "";
+  }
+  /* the chosen subjects as a small map: a solid line where two go together, a dashed red one where they are not related */
+  function drawGraph(picked, fresh) {
+    if (picked.length < 2) { graph.replaceChildren(); return; }
+    const W = 300, H = 120, pos = picked.length === 2 ? [[70, 60], [230, 60]] : [[150, 22], [60, 96], [240, 96]];
+    const rel = (a, b) => fresh.includes(a) || fresh.includes(b) || (opts.related[a] || []).includes(b);
+    const lines = [], nodes = [];
+    picked.forEach((a, i) => picked.slice(i + 1).forEach((b, j) => {
+      const [x1, y1] = pos[i], [x2, y2] = pos[i + 1 + j], ok = rel(a, b);
+      lines.push(sv("line", { x1, y1, x2, y2, class: ok ? "ok" : "odd" }));
+      if (!ok) lines.push(sv("text", { x: (x1 + x2) / 2, y: (y1 + y2) / 2 - 4, "text-anchor": "middle", style: "fill:var(--err);font-weight:700" }, "not related"));
+    }));
+    picked.forEach((a, i) => nodes.push(sv("circle", { cx: pos[i][0], cy: pos[i][1], r: 7, class: "node", style: "stroke:hsl(" + hue(a) + " 55% 42%)" }),
+      sv("text", { x: pos[i][0], y: pos[i][1] + (picked.length === 3 && i === 0 ? -12 : 21), "text-anchor": "middle" }, labelOf(a))));
+    const svg = sv("svg", { viewBox: "0 0 " + W + " " + H, width: W, height: H, role: "img",
+      "aria-label": "How the chosen subjects relate: " + picked.map(labelOf).join(", ") }, lines, nodes);
+    graph.replaceChildren(svg);
   }
   domains.el.addEventListener("change", checkRelated);
   const moreNote = h("span", { class: "hint" });
@@ -273,7 +391,7 @@ function metaForm(opts, have = [], onChange = () => {}) {
     keepNote,
     keep("summary", () => field("Summary", "one line shown in search and Explore", h("div", {}, summary, count), summary)),
     keep("type", () => field("Kind of page", "one or two; the first you pick is the main one", h("div", {}, types.el, addType))),
-    keep("domains", () => field("Subjects", "up to " + limits.domains + " that go together; they put the page in Explore by subject", h("div", {}, domains.el, relNote, addDomain))),
+    keep("domains", () => field("Subjects", "up to " + limits.domains + " that go together; they put the page in Explore by subject", h("div", {}, domains.el, graph, relNote, addDomain))),
     more);
   const values = () => ({ summary: summary.value, types: types.get(), domains: domains.get(), tags: tags.state.items,
     level: level.value, prerequisites: prereq.state.items, related: related.state.items,
@@ -296,7 +414,15 @@ function metaForm(opts, have = [], onChange = () => {}) {
 /* Show a result (or error) where the person is looking, and move focus there for screen readers. */
 function resultBox(host) {
   return (result) => {
-    host.replaceChildren(message(result.ok === false ? "err" : "ok", result.output || ""));
+    if (result.ok !== false && result.page) {
+      const c = cup(44, 1);
+      host.replaceChildren(h("div", { class: "brewed", role: "status" }, c.el,
+        h("div", {}, h("strong", {}, "Brewed! Your page is ready."), h("span", { class: "path" }, result.page))));
+      confetti();
+      host.append(h("details", {}, h("summary", { class: "hint" }, "What the tool did"), message("ok", result.output || "")));
+    } else {
+      host.replaceChildren(message(result.ok === false ? "err" : "ok", result.output || ""));
+    }
     if (result.check) host.append(h("div", { class: "hint" }, "Checklist for the page:"), h("pre", {}, result.check));
     if (result.page) {
       const note = h("div");
@@ -329,6 +455,10 @@ async function newTab(view) {
   const similar = h("div", { "aria-live": "polite" });
   const titleErr = h("div", { class: "err-text", role: "alert" }), folderErr = h("div", { class: "err-text", role: "alert" });
   const out = h("div"), banner = h("div"), sumline = h("div", { class: "sumline", "aria-live": "polite" });
+  const brewCup = cup(52, 0), brewText = h("span", { class: "hint" }), brewBar = h("i");
+  const brew = h("div", { class: "brew", role: "progressbar", "aria-label": "Essentials filled in", "aria-valuemin": "0", "aria-valuemax": "5", "aria-valuenow": "0" },
+    brewCup.el, h("div", { style: "flex:1" }, h("strong", {}, "Brewing your page"), brewText, h("div", { class: "bar" }, brewBar)));
+  const pcard = h("div", { class: "pcard", "aria-label": "How the page will look in search and Explore" });
   const holder = h("div");
   let touched = false, restoring = false;
   const meta = metaForm(opts, [], () => { touched = true; changed(); });
@@ -341,9 +471,28 @@ async function newTab(view) {
     const bits = [v.types.join(" + ") || "no kind yet", v.domains.join(" + ") || "no subject yet"];
     if (v.tags.length) bits.push(v.tags.length + " tag" + (v.tags.length > 1 ? "s" : ""));
     sumline.replaceChildren("Will create ", h("strong", {}, fileLine()), " – " + bits.join(" · "));
+    const todo = [["a title", title.value.trim()], ["a folder", folder.value.trim()], ["a summary", v.summary.trim()],
+      ["a kind", v.types.length], ["a subject", v.domains.length]];
+    const done = todo.filter(t => t[1]).length, next = todo.find(t => !t[1]);
+    brewCup.set(done / 5); brewBar.style.width = (done * 20) + "%"; brew.setAttribute("aria-valuenow", String(done));
+    brewText.textContent = done === 5 ? "Ready to brew: all five essentials are in." : " " + done + " of 5 essentials. Next: " + next[0] + ".";
+    drawCard(v);
     if (title.value.trim() || v.summary.trim() || v.domains.length) {
       Draft.save(Object.assign({ title: title.value, folder: folder.value, name: name.value, nameEdited, create_folder: createFolder.checked }, v));
     }
+  }
+  /* a mock of the page as readers will meet it in search and Explore */
+  function drawCard(v) {
+    const empty = t => h("span", { class: "empty" }, t);
+    pcard.replaceChildren(h("div", { class: "cap" }, "How it will look in search and Explore"),
+      h("h3", {}, title.value.trim() || empty("Your title shows here")),
+      h("div", { class: "path" }, fileLine()),
+      h("div", {}, v.summary.trim() || empty("Your one-line summary shows here.")),
+      h("div", { class: "meta" },
+        v.types.map(t => h("span", { class: "tag" }, kindIcon(t), t)),
+        v.domains.map(d => h("span", { class: "tag" }, dot(d), (opts.domains.find(x => x.key === d) || { label: d }).label)),
+        v.tags.map(t => h("span", { class: "tag" }, "#" + t)),
+        v.level ? h("span", { class: "tag" }, v.level) : null));
   }
   const refresh = debounce(async () => {
     const o = await api("/api/options?title=" + encodeURIComponent(title.value) + "&folder=" + encodeURIComponent(folder.value));
@@ -388,12 +537,13 @@ async function newTab(view) {
         banner.replaceChildren(); refresh(); } }, "Restore it"),
       h("button", { type: "button", onclick: () => { Draft.clear(); banner.replaceChildren(); } }, "Discard")));
   }
-  view.replaceChildren(banner,
+  view.replaceChildren(banner, brew,
     h("fieldset", {}, h("legend", {}, h("span", { class: "step", "aria-hidden": "true" }, "1"), "Where it goes"),
       field(h("span", {}, "Title ", h("span", { class: "req", "aria-hidden": "true" }, "*")), "", h("div", {}, title, titleErr), title), similar,
       field(h("span", {}, "Folder ", h("span", { class: "req", "aria-hidden": "true" }, "*")), "closest folders first as you type the title", h("div", {}, folder, folders, folderErr, createRow), folder),
       h("details", {}, h("summary", { class: "hint" }, "File name (made from the title; change it only if you need to)"), field("File name", "without .md", name, name))),
     h("fieldset", {}, h("legend", {}, h("span", { class: "step", "aria-hidden": "true" }, "2"), "What it is"), holder),
+    pcard,
     h("div", { class: "actions sticky" }, sumline, previewBtn, createBtn),
     out);
   refresh();
@@ -454,6 +604,11 @@ async function adoptTab(view) {
 function diffEl(text) {
   return h("pre", { class: "diff", tabindex: "0", "aria-label": "Suggested change" }, text.split("\n").map(l => h("div", { class: l.startsWith("+") && !l.startsWith("+++") ? "add" : l.startsWith("-") && !l.startsWith("---") ? "del" : "" }, l || " ")));
 }
+const LEVEL_ICON = {
+  error: "M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM15 9l-6 6M9 9l6 6",
+  warning: "M12 3l10 18H2zM12 10v5M12 18h.01",
+  todo: "M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 7v5l3 2",
+};
 async function fixTab(view) {
   const scope = h("select", {}, h("option", { value: "changed" }, "Files changed since dev"), h("option", { value: "all" }, "Whole repository"), h("option", { value: "pictures" }, "Pictures without a description"));
   const custom = h("input", { type: "text", placeholder: "or a path, then Enter" });
@@ -467,7 +622,11 @@ async function fixTab(view) {
     list.replaceChildren(h("div", { class: "hint" }, "Checking..."));
     try {
       const issues = await api("/api/issues?" + query());
-      status.replaceChildren(message(issues.length ? "box" : "ok", issues.length ? issues.length + " problem(s)" : "Nothing to fix."));
+      const by = l => issues.filter(i => i.level === l).length;
+      status.replaceChildren(issues.length
+        ? h("div", { class: "counts", role: "status" }, [["error", "errors"], ["warning", "warnings"], ["todo", "to-dos"]].filter(([l]) => by(l)).map(([l, w]) =>
+            h("span", { class: "badge " + l }, icon(LEVEL_ICON[l], 16), by(l) + " " + w)))
+        : h("div", { class: "allclear", role: "status" }, cup(56, 1).el, h("strong", {}, "All clear."), "Nothing to fix. Time for a cup of tea."));
       list.replaceChildren(...issues.map(card));
     } catch (e) { list.replaceChildren(message("err", e.message)); }
     list.removeAttribute("aria-busy");
@@ -475,7 +634,7 @@ async function fixTab(view) {
   function card(i) {
     const detail = h("div");
     return h("article", { class: "issue" },
-      h("div", {}, h("span", { class: "badge " + i.level }, i.level), h("span", { class: "path" }, i.path + ":" + i.line)),
+      h("div", {}, h("span", { class: "badge " + i.level }, icon(LEVEL_ICON[i.level] || LEVEL_ICON.todo, 14), i.level), h("span", { class: "path" }, i.path + ":" + i.line)),
       h("div", {}, i.message), i.hint ? h("div", { class: "hint" }, i.hint) : null,
       h("div", { class: "actions" },
         i.path.endsWith(".md") ? h("button", { type: "button", onclick: async () => detail.replaceChildren(message("ok", (await api("/api/open", { path: i.path, line: i.line })).output)) }, "Open in editor") : null,
@@ -499,6 +658,8 @@ async function fixTab(view) {
 }
 
 /* ---------- tabs ---------- */
+document.getElementById("logo").prepend(cup(40, 0.8).el);
+document.querySelector("#logo .cup").classList.add("hot");
 const tabs = { new: newTab, adopt: adoptTab, fix: fixTab };
 const loaded = {};
 async function show(name, focus) {
