@@ -200,7 +200,7 @@ async function run(browser, base, label, size, phone) {
     c('phone menu opens', before < 0 && after >= 0, `x ${before} -> ${after}`);
     // a page link in the menu opens the page and closes the menu
     try {
-      await page.evaluate(() => { const g = [...document.querySelectorAll('.sidebar-nav li.group')].find((l) => /Tips/.test(l.firstElementChild.textContent)); if (g) g.click(); });
+      await page.evaluate(() => { const g = [...document.querySelectorAll('.sidebar-nav li.group')].find((l) => /Tips/.test(l.querySelector(':scope > a, :scope > strong').textContent)); if (g) g.click(); });
       await page.waitForTimeout(300);
       await page.tap('.sidebar-nav a[href*="tips/kaggle"]', { timeout: 3000 });
       await page.waitForTimeout(1200);
@@ -314,12 +314,18 @@ async function run(browser, base, label, size, phone) {
   c('"Surprise me" opens different real pages', landed.size >= 3, [...landed].join(' '));
   }
   const nested = await page.evaluate(() => {
-    const label = (t) => [...document.querySelectorAll('.sidebar-nav li.group')].find((l) => l.firstElementChild.textContent.trim() === t);
+    const label = (t) => [...document.querySelectorAll('.sidebar-nav li.group')].find((l) => l.querySelector(':scope > a, :scope > strong').textContent.trim() === t);
     ['Fields', 'Benchmarks'].forEach((t) => { const l = label(t); if (l && l.classList.contains('collapsed')) l.click(); });
     const b = label('Benchmarks');
     return !!b && !b.classList.contains('collapsed') && b.querySelectorAll('a').length > 1;
   });
   c('a folder inside a folder in the menu opens when tapped', nested);
+  const fold = await page.evaluate(() => {
+    const b = document.querySelector('.sidebar-nav li.group > button.fold');
+    const r = b && b.getBoundingClientRect();
+    return { has: !!b, w: r && Math.round(r.width), h: r && Math.round(r.height), exp: b && b.getAttribute('aria-expanded'), label: b && b.getAttribute('aria-label') };
+  });
+  c('folders have a real fold button of at least 24px with its state announced', fold.has && fold.w >= 24 && fold.h >= 24 && /^(true|false)$/.test(fold.exp) && /^(Expand|Collapse) /.test(fold.label), JSON.stringify(fold));
   const twice = await page.evaluate(() => [...document.querySelectorAll('.sidebar-nav li.group > a')].filter((a) => [...a.parentNode.querySelectorAll(':scope > ul > li > a')].some((k) => k.getAttribute('href') === a.getAttribute('href'))).length);
   c('a folder heading and its index page are one menu entry, not two', twice === 0, twice + ' folders list their index twice');
   // reading history: a page read is dimmed in the menu, and "Continue" returns to it
