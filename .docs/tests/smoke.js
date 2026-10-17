@@ -345,6 +345,17 @@ async function run(browser, base, label, size, phone) {
   await page.evaluate(() => document.querySelector('#saved-pages li button').click());
   const savedOff = await page.evaluate(() => !document.getElementById('saved-pages'));
   c('a saved page is listed in the menu and can be removed', /Saved \(1\)/.test(savedOn.text || '') && savedOn.href === '#/tips/kaggle-tips' && savedOff, JSON.stringify(savedOn) + ' removed=' + savedOff);
+  // share links: a page has its own share page with its title for link previews, and a footer button for it
+  await go('tips/kaggle-tips', 1500);
+  const share = await page.evaluate(async () => {
+    const r = await fetch('./tips/kaggle-tips/');
+    const t = r.ok ? await r.text() : '';
+    const og = (t.match(/property="og:title" content="([^"]*)"/) || [])[1];
+    const refresh = (t.match(/http-equiv="refresh" content="0; url=([^"]*)"/) || [])[1];
+    const h1 = document.querySelector('.markdown-section h1').textContent.trim();
+    return { ok: r.ok, og, refresh, h1, button: !!document.querySelector('.page-footer .share-link') };
+  });
+  c('a page has a share page with its own title and a "Copy share link" button', share.ok && !!share.og && share.refresh === '../../#/tips/kaggle-tips' && share.button, JSON.stringify(share));
   c('no script errors', page.errors.length === 0, page.errors.join(' | '));
   await page.context().close();
 }
