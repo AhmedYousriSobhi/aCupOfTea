@@ -127,6 +127,72 @@ class Prompts(unittest.TestCase):
                 new_page.TAXONOMY = old
 
 
+class Adopt(unittest.TestCase):
+    """--adopt adds front matter to a hand-written page and leaves its text alone."""
+    BODY = "# Hand Made\n\nSome text.\n\n```\n# not a title\n```\n"
+
+    def run_adopt(self, body, *extra):
+        import contextlib
+        import io
+        from unittest import mock
+        with tempfile.TemporaryDirectory() as root:
+            os.makedirs(os.path.join(root, "notes"))
+            page = os.path.join(root, "notes", "hand-made.md")
+            with open(page, "wb") as fh:
+                fh.write(body.encode("utf-8"))
+            with open(os.path.join(root, "notes", "README.md"), "w", encoding="utf-8") as fh:
+                fh.write("# Notes\n\n## Contents\n\n| File | Description |\n|---|---|\n| [a](/notes/a.md) | A |\n")
+            argv = ["new_page.py", "--adopt", "notes/hand-made.md", "--yes", "--type", "concept,guide",
+                    "--domains", "software-engineering", "--tags", "", "--prerequisites", "",
+                    "--related", "", "--summary", "A short one.", *extra]
+            out, code = io.StringIO(), 0
+            with mock.patch.object(new_page, "ROOT", root), mock.patch.object(new_page, "regenerate_navigation", lambda: None), \
+                    mock.patch("sys.argv", argv), contextlib.redirect_stdout(out):
+                try:
+                    new_page.main()
+                except SystemExit as e:
+                    code = e.code
+            with open(page, "rb") as fh:
+                after = fh.read().decode("utf-8")
+            with open(os.path.join(root, "notes", "README.md"), encoding="utf-8") as fh:
+                readme = fh.read()
+            return code, after, readme, out.getvalue()
+
+    def test_front_matter_added_and_text_unchanged(self):
+        code, after, readme, _ = self.run_adopt(self.BODY)
+        self.assertFalse(code)
+        head, _, rest = after.partition("---\n\n")
+        self.assertTrue(head.startswith("---\nid: hand-made\ntitle: Hand Made\n"))
+        self.assertIn("type: [concept, guide]", head)
+        self.assertEqual(rest, self.BODY)                       # byte for byte
+        self.assertIn("| [hand-made](/notes/hand-made.md) | A short one. |", readme)
+
+    def test_crlf_page_gets_crlf_front_matter(self):
+        body = self.BODY.replace("\n", "\r\n")
+        code, after, _, _ = self.run_adopt(body)
+        self.assertFalse(code)
+        self.assertTrue(after.endswith("---\r\n\r\n" + body))
+        self.assertNotIn("\n", after.replace("\r\n", ""))
+
+    def test_page_with_front_matter_is_refused(self):
+        body = "---\nid: x\n---\n\n" + self.BODY
+        code, after, _, out = self.run_adopt(body)
+        self.assertTrue(code)
+        self.assertEqual(after, body)
+
+    def test_dry_run_changes_nothing(self):
+        code, after, readme, out = self.run_adopt(self.BODY, "--dry-run")
+        self.assertFalse(code)
+        self.assertEqual(after, self.BODY)
+        self.assertNotIn("hand-made", readme)
+        self.assertIn("id: hand-made", out)
+
+    def test_page_without_heading_is_refused(self):
+        code, after, _, _ = self.run_adopt("just text\n")
+        self.assertTrue(code)
+        self.assertEqual(after, "just text\n")
+
+
 class Check(unittest.TestCase):
     def test_reading_time_and_todos(self):
         page = ("---\nid: x\ntitle: X\n---\n\n# X\n\n" + "word " * 450

@@ -14,6 +14,11 @@ Or pass the answers as options (anything missing is still asked):
 It never overwrites a file and never creates a folder without asking. Only the
 standard library is needed.
 
+A page you wrote by hand gets the same front matter and index link without
+touching its text:
+
+  python3 .docs/tools/new_page.py --adopt fields/devops/kubernetes/my-page.md
+
 Reading time is not asked: the site computes it from the text (200 words a
 minute, code excluded), so it never goes stale. Once the page is written, check
 it and see its reading time and what is still missing:
@@ -708,46 +713,9 @@ def page_ids(raw, ids, role):
     return out
 
 
-def main():
-    p = argparse.ArgumentParser(description="Create a new page with front matter, an index link and a fresh sidebar.")
-    p.add_argument("--title")
-    p.add_argument("--summary", help="one line, shown in search results")
-    p.add_argument("--folder", help="e.g. fields/deep-learning/concepts")
-    p.add_argument("--name", help="file name without .md (default: from the title)")
-    p.add_argument("--tags", help="comma separated, e.g. transformers,attention")
-    p.add_argument("--level", choices=LEVELS, help="beginner pages show under 'Beginner friendly'")
-    p.add_argument("--type", help="one or two of concept, guide, reference, note, problem, project, experiment, comma separated")
-    p.add_argument("--domains", help="one or two comma separated subjects from taxonomy.yaml, e.g. deep-learning")
-    p.add_argument("--prerequisites", help="comma separated page ids to read first, e.g. deep-learning-basics")
-    p.add_argument("--related", help="comma separated page ids to see also")
-    p.add_argument("--check", metavar="PAGE", help="report a written page's reading time and what is missing")
-    p.add_argument("--yes", action="store_true", help="accept defaults and suggestions without asking")
-    p.add_argument("--dry-run", action="store_true", help="show what would be written, change nothing")
-    args = p.parse_args()
-    if args.check:
-        return 1 if check_page(args.check) else 0
-    ask = Asker(args.yes)
-
-    title = (args.title or ask.text("Title")).strip()
-    if not title:
-        sys.exit("error: a title is required")
-    summary = args.summary if args.summary is not None else ask.text("Summary (one line, optional)", required=False)
-    summary = " ".join(summary.split())
-    if len(summary) > 200:
-        sys.exit("error: keep the summary under 200 characters")
-
-    folders = scan()
-    warn_similar(title, folders, ask)
-    folder = choose_folder(args, ask, title, folders)
-
-    name = slug(args.name or ask.text("File name", slug(title)))
-    if not name:
-        sys.exit("error: empty file name")
-    page_rel = "%s/%s.md" % (folder, name)
-    if os.path.exists(os.path.join(ROOT, page_rel)):
-        sys.exit("error: %s already exists" % page_rel)
-
-    page_types = choose_type(args, ask, folder, folders)
+def ask_metadata(args, ask, title, folder, folders):
+    """The questions every page gets: type, subjects, tags, level, prerequisites, related."""
+    types = choose_type(args, ask, folder, folders)
     domains, new_domains = choose_domains(args, ask, folder, folders, title)
     tags, new_tags = choose_tags(args, ask, title, load_tags())
 
@@ -770,8 +738,12 @@ def main():
                       ask_ids("Prerequisites", "read first"))
     related = [r for r in resolve(ask, args.related, lambda raw: page_ids(raw, ids, "related"),
                                   ask_ids("Related", "see also")) if r not in prereqs]
+    return {"types": types, "domains": domains, "new_domains": new_domains, "tags": tags,
+            "new_tags": new_tags, "level": level, "prereqs": prereqs, "related": related, "ids": ids}
 
-    page_id = name if name not in ids else slug(folder.split("/")[-1] + "-" + name)
+
+def front_matter_lines(page_id, title, summary, meta):
+    """The front matter block as a list of lines, from "---" to "---"."""
     fm = ["---", "id: %s" % page_id, "title: %s" % yaml_value(title)]
     label = sidebar_label(title)
     if label != title:
@@ -780,30 +752,172 @@ def main():
         fm.append("sidebar_label: %s" % yaml_value(title))
     if summary:
         fm.append("summary: %s" % yaml_value(summary))
-    if level:
-        fm.append("level: %s" % level)
-    if page_types:
-        fm.append("type: %s" % (page_types[0] if len(page_types) == 1 else "[%s]" % ", ".join(page_types)))
-    if domains:
-        fm.append("domains: [%s]" % ", ".join(domains))
-    if tags:
-        fm.append("tags: [%s]" % ", ".join(tags))
-    if prereqs or related:
+    if meta["level"]:
+        fm.append("level: %s" % meta["level"])
+    if meta["types"]:
+        fm.append("type: %s" % (meta["types"][0] if len(meta["types"]) == 1 else "[%s]" % ", ".join(meta["types"])))
+    if meta["domains"]:
+        fm.append("domains: [%s]" % ", ".join(meta["domains"]))
+    if meta["tags"]:
+        fm.append("tags: [%s]" % ", ".join(meta["tags"]))
+    if meta["prereqs"] or meta["related"]:
         fm.append("relations:")
-        if prereqs:
-            fm.append("  prerequisites: [%s]" % ", ".join(prereqs))
-        if related:
-            fm.append("  related: [%s]" % ", ".join(related))
+        if meta["prereqs"]:
+            fm.append("  prerequisites: [%s]" % ", ".join(meta["prereqs"]))
+        if meta["related"]:
+            fm.append("  related: [%s]" % ", ".join(meta["related"]))
     fm.append("---")
+    return fm
+
+
+def report_new(meta):
+    if meta["new_tags"]:
+        print("New tags for taxonomy.yaml: %s" % ", ".join(meta["new_tags"]))
+    if meta["new_domains"]:
+        print("New subjects for taxonomy.yaml: %s" % ", ".join(meta["new_domains"]))
+
+
+def save_taxonomy(meta):
+    if meta["new_tags"]:
+        add_tags(meta["new_tags"])
+        print("Added    tags %s to .docs/metadata/taxonomy.yaml" % ", ".join(sorted(meta["new_tags"])))
+    if meta["new_domains"]:
+        add_domains(meta["new_domains"])
+        print("Added    subjects %s to .docs/metadata/taxonomy.yaml" % ", ".join(meta["new_domains"]))
+
+
+def regenerate_navigation():
+    docs = os.path.join(ROOT, ".docs")
+    for script in ("gen_sidebar.sh", "gen_navbar.sh"):
+        subprocess.run(["bash", script], cwd=docs, check=True, stdout=subprocess.DEVNULL)
+    print("Updated  .docs/_sidebar.md and .docs/_navbar.md")
+
+
+def body_h1(text):
+    """The first "# " heading outside code fences."""
+    fenced = False
+    for line in text.splitlines():
+        if line.lstrip().startswith(("```", "~~~")):
+            fenced = not fenced
+        elif not fenced and line.startswith("# "):
+            return line[2:].strip()
+    return ""
+
+
+def listed_in_readme(folder, stem):
+    readme = os.path.join(ROOT, folder, "README.md")
+    return os.path.exists(readme) and bool(
+        re.search(r"\]\((?:[^)\s]*/)?%s\.md\)" % re.escape(stem), read(readme)))
+
+
+def adopt(args, ask):
+    """Add front matter to a page written by hand. The body is never touched."""
+    if args.title or args.folder or args.name:
+        sys.exit("error: --adopt takes the title from the page's heading and the folder from its path; "
+                 "drop --title, --folder and --name")
+    given = args.adopt
+    full = os.path.abspath(given if os.path.exists(given) else os.path.join(ROOT, given))
+    rel = os.path.relpath(full, ROOT).replace(os.sep, "/")
+    if not os.path.isfile(full):
+        sys.exit("error: no page at %s" % given)
+    if rel.startswith("../") or rel.split("/")[0].startswith(".") or "/" not in rel:
+        sys.exit("error: %s is not a content page inside a content folder" % rel)
+    if not rel.endswith(".md") or os.path.basename(rel) == "README.md":
+        sys.exit("error: --adopt is for a .md content page; README.md files are folder indexes")
+    if any(rel.startswith(sub + "/") for sub in submodules()):
+        sys.exit("error: %s is inside a git submodule" % rel)
+    with open(full, "rb") as fh:
+        text = fh.read().decode("utf-8")
+    bom, text = ("\ufeff", text[1:]) if text.startswith("\ufeff") else ("", text)
+    if re.match(r"---[ \t]*\r?\n", text):
+        sys.exit("error: %s already has front matter; edit it by hand (nothing was changed)" % rel)
+    title = body_h1(text)
+    if not title:
+        sys.exit("error: %s has no '# ' heading to take the title from" % rel)
+
+    folder, name = os.path.dirname(rel), os.path.basename(rel)[:-3]
+    summary = args.summary if args.summary is not None else ask.text("Summary (one line, optional)", required=False)
+    summary = " ".join(summary.split())
+    if len(summary) > 200:
+        sys.exit("error: keep the summary under 200 characters")
+    folders = scan()
+    print("\nAdopting %s  (title: \"%s\")" % (rel, title))
+    meta = ask_metadata(args, ask, title, folder, folders)
+    page_id = name if name not in meta["ids"] else slug(folder.split("/")[-1] + "-" + name)
+    first = text.find("\n")
+    eol = "\r\n" if first > 0 and text[first - 1] == "\r" else "\n"
+    block = eol.join(front_matter_lines(page_id, title, summary, meta)) + eol + eol
+
+    if args.dry_run:
+        print("\n--- %s (front matter to add; the page itself is unchanged) ---\n%s" % (rel, block))
+        report_new(meta)
+        return
+    tmp = full + ".tmp"
+    with open(tmp, "wb") as fh:
+        fh.write((bom + block + text).encode("utf-8"))
+    os.replace(tmp, full)                 # all or nothing
+    print("\nAdded front matter to %s (the page text is unchanged)" % rel)
+    save_taxonomy(meta)
+    if listed_in_readme(folder, name):
+        print("Already listed in %s/README.md" % folder)
+    else:
+        print(link_in_readme(folder, rel, title, summary))
+    regenerate_navigation()
+    print()
+    check_page(rel)
+
+
+def main():
+    p = argparse.ArgumentParser(description="Create a new page with front matter, an index link and a fresh sidebar.")
+    p.add_argument("--title")
+    p.add_argument("--summary", help="one line, shown in search results")
+    p.add_argument("--folder", help="e.g. fields/deep-learning/concepts")
+    p.add_argument("--name", help="file name without .md (default: from the title)")
+    p.add_argument("--tags", help="comma separated, e.g. transformers,attention")
+    p.add_argument("--level", choices=LEVELS, help="beginner pages show under 'Beginner friendly'")
+    p.add_argument("--type", help="one or two of concept, guide, reference, note, problem, project, experiment, comma separated")
+    p.add_argument("--domains", help="one or two comma separated subjects from taxonomy.yaml, e.g. deep-learning")
+    p.add_argument("--prerequisites", help="comma separated page ids to read first, e.g. deep-learning-basics")
+    p.add_argument("--related", help="comma separated page ids to see also")
+    p.add_argument("--check", metavar="PAGE", help="report a written page's reading time and what is missing")
+    p.add_argument("--adopt", metavar="PAGE", help="add front matter and an index link to a page you wrote by hand")
+    p.add_argument("--yes", action="store_true", help="accept defaults and suggestions without asking")
+    p.add_argument("--dry-run", action="store_true", help="show what would be written, change nothing")
+    args = p.parse_args()
+    if args.check:
+        return 1 if check_page(args.check) else 0
+    ask = Asker(args.yes)
+    if args.adopt:
+        return adopt(args, ask)
+
+    title = (args.title or ask.text("Title")).strip()
+    if not title:
+        sys.exit("error: a title is required")
+    summary = args.summary if args.summary is not None else ask.text("Summary (one line, optional)", required=False)
+    summary = " ".join(summary.split())
+    if len(summary) > 200:
+        sys.exit("error: keep the summary under 200 characters")
+
+    folders = scan()
+    warn_similar(title, folders, ask)
+    folder = choose_folder(args, ask, title, folders)
+
+    name = slug(args.name or ask.text("File name", slug(title)))
+    if not name:
+        sys.exit("error: empty file name")
+    page_rel = "%s/%s.md" % (folder, name)
+    if os.path.exists(os.path.join(ROOT, page_rel)):
+        sys.exit("error: %s already exists" % page_rel)
+
+    meta = ask_metadata(args, ask, title, folder, folders)
+    page_id = name if name not in meta["ids"] else slug(folder.split("/")[-1] + "-" + name)
+    fm = front_matter_lines(page_id, title, summary, meta)
     intro = summary or "<!-- One or two sentences: what will the reader learn? -->"
     content = "\n".join(fm) + "\n\n" + BODY.format(title=title, intro=intro)
 
     if args.dry_run:
         print("\n--- %s ---\n%s" % (page_rel, content))
-        if new_tags:
-            print("New tags for taxonomy.yaml: %s" % ", ".join(new_tags))
-        if new_domains:
-            print("New subjects for taxonomy.yaml: %s" % ", ".join(new_domains))
+        report_new(meta)
         return
 
     full = os.path.join(ROOT, page_rel)
@@ -811,18 +925,9 @@ def main():
     with open(full, "w", encoding="utf-8") as f:
         f.write(content)
     print("\nCreated  %s" % page_rel)
-    if new_tags:
-        add_tags(new_tags)
-        print("Added    tags %s to .docs/metadata/taxonomy.yaml" % ", ".join(sorted(new_tags)))
-    if new_domains:
-        add_domains(new_domains)
-        print("Added    subjects %s to .docs/metadata/taxonomy.yaml" % ", ".join(new_domains))
+    save_taxonomy(meta)
     print(link_in_readme(folder, page_rel, title, summary))
-
-    docs = os.path.join(ROOT, ".docs")
-    for script in ("gen_sidebar.sh", "gen_navbar.sh"):
-        subprocess.run(["bash", script], cwd=docs, check=True, stdout=subprocess.DEVNULL)
-    print("Updated  .docs/_sidebar.md and .docs/_navbar.md")
+    regenerate_navigation()
     print("\nNext: write the page. The site shows its reading time from the text; to see it")
     print("and what is still missing, run:  python3 .docs/tools/new_page.py --check %s" % page_rel)
     print("Then commit it on a branch from dev.")

@@ -50,6 +50,16 @@ python3 .docs/tools/new_page.py --title "Attention in Transformers" \
 
 Add `--dry-run` to see the result without writing anything. Only Python 3 is needed.
 
+## A page you wrote by hand
+
+If you created the file yourself, add its front matter and index link without touching the text:
+
+```bash
+python3 .docs/tools/new_page.py --adopt fields/deep-learning/concepts/attention-in-transformers.md
+```
+
+The title comes from the page's `# ` heading and the folder from its path. It asks the same questions as a new page (summary, type, domains, tags, level, prerequisites, related), puts the front matter on top, adds the page to the folder `README.md` unless it is already listed, regenerates the sidebar and then shows the `--check` report. It refuses a page that already has front matter and never changes the page text. Add `--dry-run` to preview.
+
 ## When the page is written
 
 ```bash
