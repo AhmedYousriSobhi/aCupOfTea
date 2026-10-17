@@ -10,6 +10,8 @@ random port), prints the address and opens it. Three tabs:
                     type the title, a warning about similar pages, subjects and tags
                     (new ones can be added), preview, create
   Adopt a page      front matter and index link for a page you wrote by hand
+  Edit a page       the same form prefilled from a page's front matter; Preview and Save
+  Add pictures      save pictures into the page's images/ folder and get the line to paste
   Fix problems      the list of page_doctor.py: open a problem in your editor at its
                     line, see a suggested fix as a diff, apply it
 
@@ -18,12 +20,14 @@ the same as in the terminal. Every request must carry a random token and a local
 Host header, so another web page or another computer cannot drive it. Stop it
 with Ctrl+C or the Close button. Standard library only.
 """
+import base64
 import contextlib
 import io
 import json
 import os
 import re
 import shlex
+import shutil
 import subprocess
 import sys
 import threading
@@ -39,6 +43,8 @@ import page_doctor  # noqa: E402
 
 LOCK = threading.Lock()          # the tools print and write files: one request at a time
 MAX_BODY = 1 << 20
+MAX_IMAGE = 5 << 20                  # an uploaded picture; the request is a little bigger (base64)
+IMAGE_TYPES = {".png", ".jpg", ".jpeg", ".gif", ".webp"}      # no .svg: it can carry scripts
 FIELDS = ("summary", "type", "domains", "tags", "level")
 
 
@@ -104,6 +110,12 @@ def options(title="", folder=""):
         "related": {d: sorted(r) for d, r in new_page.related_map().items()},
         "limits": {"types": new_page.MAX_TYPES, "domains": new_page.MAX_DOMAINS, "tags": new_page.MAX_TAGS},
     }
+
+
+def all_pages():
+    """Every content page (path and title), for pickers that work on any page."""
+    return sorted(({"path": rel, "title": h1} for pages in new_page.scan().values() for rel, h1 in pages
+                   if os.path.basename(rel) != "README.md"), key=lambda p: p["path"])
 
 
 def adoptable():
@@ -230,6 +242,17 @@ def fix(d):
     return {"ok": True, "output": "Changed: " + ", ".join(written)}
 
 
+def terminal_prefix():
+    """argv that runs a command in a new terminal window, when this computer has a desktop and a terminal for it."""
+    if not (os.environ.get("DISPLAY") or os.environ.get("WAYLAND_DISPLAY")):
+        return None
+    for exe, flag in (("x-terminal-emulator", "-e"), ("gnome-terminal", "--"), ("konsole", "-e"), ("xfce4-terminal", "-x"),
+                      ("kitty", ""), ("alacritty", "-e"), ("wezterm", "start"), ("foot", ""), ("xterm", "-e")):
+        if shutil.which(exe):
+            return [exe] + ([flag] if flag else [])
+    return None
+
+
 def open_in_editor(d):
     path = os.path.realpath(os.path.join(new_page.ROOT, str(d.get("path", ""))))
     if not path.startswith(os.path.realpath(new_page.ROOT) + os.sep) or not os.path.isfile(path):
@@ -237,11 +260,101 @@ def open_in_editor(d):
     argv, blocks = page_doctor.editor_command(path, int(d.get("line") or 1))
     if not argv:
         return {"ok": False, "output": "No editor found. Set one, e.g. export EDITOR=nano, or open the file yourself."}
-    if blocks:   # a terminal editor cannot open from a browser
+    if blocks:   # a terminal editor needs a terminal: open one if there is a desktop, else say what to run
+        prefix = terminal_prefix()
+        if prefix:
+            subprocess.Popen(prefix + argv, cwd=new_page.ROOT, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            return {"ok": True, "output": "Opened %s in a new terminal window (%s)." % (os.path.basename(argv[0]), os.path.basename(prefix[0]))}
         return {"ok": False, "command": shlex.join(argv),
                 "output": "That editor runs in a terminal. Run it there:\n  " + shlex.join(argv)}
     subprocess.Popen(argv, cwd=new_page.ROOT, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     return {"ok": True, "output": "Opened in " + os.path.basename(argv[0])}
+
+
+# ---------- editing metadata, pictures, indexes ----------
+
+def editable():
+    """Pages that have front matter, with the values they have now (to prefill the edit form)."""
+    out = []
+    for pages in new_page.scan().values():
+        for rel, h1 in pages:
+            if os.path.basename(rel) == "README.md":
+                continue
+            m = re.match(r"---[ \t]*\r?\n(.*?)\r?\n---[ \t]*(?:\r?\n|\Z)", new_page.read(os.path.join(new_page.ROOT, rel)), re.S)
+            if not m:
+                continue
+            cur = new_page.parse_front(m.group(1).splitlines())
+            as_list = lambda v: v if isinstance(v, list) else ([v] if v else [])
+            out.append({"path": rel, "title": h1, "values": {
+                "summary": cur.get("summary", ""), "types": as_list(cur.get("type", [])), "domains": as_list(cur.get("domains", [])),
+                "tags": as_list(cur.get("tags", [])), "level": cur.get("level", ""),
+                "prerequisites": as_list(cur.get("prerequisites", [])), "related": as_list(cur.get("related", []))}})
+    return sorted(out, key=lambda p: p["path"])
+
+
+def update_page(d):
+    """new_page.py --update with every field sent; an empty one clears it ("-")."""
+    page = str(d.get("page", "")).strip("/")
+    dash = lambda v: v or "-"
+    argv = ["--update", page, "--summary", dash(" ".join(str(d.get("summary") or "").split())),
+            "--type", dash(csv(d.get("types"))), "--domains", dash(csv(d.get("domains"))), "--tags", dash(csv(d.get("tags"))),
+            "--level", dash(d.get("level")), "--prerequisites", dash(csv(d.get("prerequisites"))), "--related", dash(csv(d.get("related")))]
+    for n in d.get("new_types") or []:
+        argv += ["--new-type", "%s=%s" % (new_page.slug(n.get("key", "")), n.get("description", ""))]
+    for n in d.get("new_domains") or []:
+        argv += ["--new-domain", "%s=%s" % (new_page.slug(n.get("key", "")), n.get("description", ""))]
+    for n in d.get("new_tags") or []:
+        argv += ["--new-tag", "%s=%s" % (new_page.slug(n.get("key", "")), n.get("label", ""))]
+    if d.get("dry_run"):
+        argv.append("--dry-run")
+    result = run_cli(argv)
+    return result if d.get("dry_run") else checked(result, page)
+
+
+def upload_image(d):
+    """Save a picture next to a page, in its images/ folder, under a safe unused name. Returns the markdown to paste."""
+    page = str(d.get("page", "")).strip("/")
+    full = os.path.realpath(os.path.join(new_page.ROOT, page))
+    root = os.path.realpath(new_page.ROOT)
+    if not full.startswith(root + os.sep) or not page.endswith(".md") or not os.path.isfile(full) or page.split("/")[0].startswith("."):
+        return {"ok": False, "output": "Choose a page of the repository."}
+    stem, ext = os.path.splitext(str(d.get("filename", "")))
+    ext = ext.lower()
+    if ext not in IMAGE_TYPES:
+        return {"ok": False, "output": "Pictures can be %s (SVG files are not accepted: they can carry scripts)." % ", ".join(sorted(IMAGE_TYPES))}
+    alt = " ".join(str(d.get("alt") or "").replace("[", "(").replace("]", ")").split())
+    if not alt:
+        return {"ok": False, "output": "Say what the picture shows: it becomes the description screen readers and search use."}
+    try:
+        data = base64.b64decode(str(d.get("data", "")), validate=True)
+    except ValueError:
+        return {"ok": False, "output": "The file could not be read."}
+    if not data or len(data) > MAX_IMAGE:
+        return {"ok": False, "output": "The picture must be between 1 byte and %d MB." % (MAX_IMAGE >> 20)}
+    magic = {".png": b"\x89PNG", ".jpg": b"\xff\xd8", ".jpeg": b"\xff\xd8", ".gif": b"GIF8", ".webp": b"RIFF"}[ext]
+    if not data.startswith(magic):
+        return {"ok": False, "output": "That file is not really a %s picture." % ext[1:].upper()}
+    folder = os.path.join(os.path.dirname(full), "images")
+    name = new_page.slug(stem) or "image"
+    path, n = os.path.join(folder, name + ext), 2
+    with LOCK:
+        os.makedirs(folder, exist_ok=True)
+        while os.path.exists(path):                      # never overwrite
+            path = os.path.join(folder, "%s-%d%s" % (name, n, ext))
+            n += 1
+        with open(path, "wb") as f:
+            f.write(data)
+    rel = "images/" + os.path.basename(path)
+    return {"ok": True, "path": os.path.relpath(path, root).replace(os.sep, "/"), "snippet": "![%s](%s)" % (alt, rel),
+            "output": "Saved %s" % os.path.relpath(path, root).replace(os.sep, "/")}
+
+
+def reindex(d=None):
+    """Rewrite .docs/generated (what CI checks is current)."""
+    with LOCK:
+        r = subprocess.run([sys.executable, "-I", os.path.join(HERE, "generate_index.py"), "--root", new_page.ROOT],
+                           capture_output=True, text=True, cwd=new_page.ROOT)
+    return {"ok": r.returncode == 0, "output": (r.stdout + r.stderr).strip() or "done"}
 
 
 # ---------- the server ----------
@@ -251,8 +364,12 @@ GET_ROUTES = {
     "/api/adoptable": lambda q: adoptable(),
     "/api/issues": lambda q: issues(q.get("scope", ["changed"])[0], q.get("pictures", [""])[0] == "1"),
     "/api/check": lambda q: {"output": check_report(q.get("page", [""])[0])},
+    "/api/editable": lambda q: editable(),
+    "/api/pages": lambda q: all_pages(),
 }
-POST_ROUTES = {"/api/create": create, "/api/adopt": adopt, "/api/fix": fix, "/api/open": open_in_editor}
+POST_ROUTES = {"/api/create": create, "/api/adopt": adopt, "/api/update": update_page, "/api/fix": fix,
+               "/api/open": open_in_editor, "/api/image": upload_image, "/api/reindex": reindex}
+BIG_BODY = {"/api/image"}                # routes that may carry a picture
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -307,7 +424,7 @@ class Handler(BaseHTTPRequestHandler):
             return
         route = POST_ROUTES.get(path)
         size = int(self.headers.get("Content-Length") or 0)
-        if not route or size > MAX_BODY:
+        if not route or size > (MAX_IMAGE * 4 // 3 + 4096 if path in BIG_BODY else MAX_BODY):
             return self.send(404 if not route else 413, {"error": "not found or too large"})
         try:
             self.send(200, route(json.loads(self.rfile.read(size) or b"{}")))

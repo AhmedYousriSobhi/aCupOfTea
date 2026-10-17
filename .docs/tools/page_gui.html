@@ -125,6 +125,8 @@
   <nav role="tablist" aria-label="What to do">
     <button role="tab" id="tab-new" aria-selected="true" aria-controls="view-new" tabindex="0">New page</button>
     <button role="tab" id="tab-adopt" aria-selected="false" aria-controls="view-adopt" tabindex="-1">Adopt a page</button>
+    <button role="tab" id="tab-edit" aria-selected="false" aria-controls="view-edit" tabindex="-1">Edit a page</button>
+    <button role="tab" id="tab-images" aria-selected="false" aria-controls="view-images" tabindex="-1">Add pictures</button>
     <button role="tab" id="tab-fix" aria-selected="false" aria-controls="view-fix" tabindex="-1">Fix problems</button>
   </nav>
   <button id="quit" title="Stop the local server">Close</button>
@@ -132,6 +134,8 @@
 <main>
   <section id="view-new" role="tabpanel" aria-labelledby="tab-new"></section>
   <section id="view-adopt" role="tabpanel" aria-labelledby="tab-adopt" hidden></section>
+  <section id="view-edit" role="tabpanel" aria-labelledby="tab-edit" hidden></section>
+  <section id="view-images" role="tabpanel" aria-labelledby="tab-images" hidden></section>
   <section id="view-fix" role="tabpanel" aria-labelledby="tab-fix" hidden></section>
 </main>
 <script>
@@ -239,14 +243,25 @@ async function busy(btn, fn) {
   }
 }
 
+/* how alike two words are (0..1) and whether a is a short form like k8s of b */
+function likeness(a, b) {
+  const m = a.length, n = b.length; if (!m || !n) return 0;
+  let prev = Array.from({ length: n + 1 }, (_, j) => j);
+  for (let i = 1; i <= m; i++) { const cur = [i]; for (let j = 1; j <= n; j++) cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)); prev = cur; }
+  return 1 - prev[n] / Math.max(m, n);
+}
+function numeronym(short, word) { const m = /^([a-z])(\d+)([a-z])$/.exec(short); return !!m && word.length === +m[2] + 2 && word[0] === m[1] && word[word.length - 1] === m[3]; }
+const nearWord = (w, pools) => { for (const pool of pools) { const hit = pool.find(c => c !== w && c.length > 2 && (numeronym(w, c) || likeness(w, c) >= 0.75)); if (hit) return hit; } return ""; };
+
 /* A list of chips with a text box; `known` is [{value,label}] offered by the browser's own suggestions. */
-function chipInput({ known, max, onChange, newLabel }) {
+function chipInput({ known, max, onChange, newLabel, suggest }) {
   const state = { items: [], isNew: new Set() };
   const chips = h("div", { class: "chips" });
   const listId = "dl" + Math.random().toString(36).slice(2);
   const list = h("datalist", { id: listId }, known.map(k => h("option", { value: k.value }, k.label)));
   const input = h("input", { type: "text", list: listId, placeholder: "type, then Enter", autocomplete: "off" });
   const note = h("div", { class: "hint" });
+  const suggestion = h("div", { class: "hint", "aria-live": "polite" });       // "did you mean ...?" for a new tag
   function render() {
     chips.replaceChildren(...state.items.map(v => h("span", { class: "chip" + (state.isNew.has(v) ? " new" : "") },
       v + (state.isNew.has(v) ? " (new)" : ""),
@@ -259,7 +274,18 @@ function chipInput({ known, max, onChange, newLabel }) {
       if (!v || state.items.includes(v)) continue;
       if (max && state.items.length >= max) { note.textContent = "At most " + max + "."; break; }
       state.items.push(v);
-      if (!known.some(k => k.value === v)) { if (newLabel) state.isNew.add(v); else { state.items.pop(); note.textContent = v + " is not a known page id."; } }
+      if (!known.some(k => k.value === v)) {
+        if (newLabel) {
+          state.isNew.add(v);
+          const guess = suggest && suggest(v);                         // a new tag that looks like a known one is often a typo
+          if (guess) {
+            suggestion.replaceChildren('"' + v + '" looks like "' + guess + '". ', h("button", { type: "button", onclick() {
+              state.items = state.items.filter(x => x !== v); state.isNew.delete(v);
+              if (!state.items.includes(guess)) state.items.push(guess);
+              suggestion.textContent = ""; render(); onChange && onChange(); } }, "Use " + guess));
+          }
+        } else { state.items.pop(); note.textContent = v + " is not a known page id."; }
+      }
     }
     input.value = ""; render(); onChange && onChange();
   }
@@ -267,7 +293,7 @@ function chipInput({ known, max, onChange, newLabel }) {
   input.addEventListener("change", () => input.value && add(input.value));
   render();
   note.setAttribute("aria-live", "polite");
-  return { el: h("div", {}, chips, input, list, note), input, state, set(values) { state.items = []; state.isNew.clear(); add(values.join(",")); } };
+  return { el: h("div", {}, chips, input, list, note, suggestion), input, state, set(values) { state.items = []; state.isNew.clear(); add(values.join(",")); } };
 }
 
 /* Choices as toggle chips, at most `max` on. Pointing at or tabbing to one says what it means. */
@@ -321,7 +347,7 @@ function addBox({ keyLabel, keyPlaceholder, button, toggleText, onAdd }) {
 
 /* The questions about a page. The essentials (summary, kind, subjects) come first; tags, level and related
    pages are folded into "More options". Fields in `have` are already in the page and left alone. */
-function metaForm(opts, have = [], onChange = () => {}) {
+function metaForm(opts, have = [], onChange = () => {}, titleOf = () => "") {
   const limits = opts.limits;
   const summary = h("input", { type: "text", maxlength: "200" });
   const count = h("span", { class: "hint", "aria-live": "off" }, "0/200");
@@ -364,7 +390,8 @@ function metaForm(opts, have = [], onChange = () => {}) {
   }
   domains.el.addEventListener("change", checkRelated);
   const moreNote = h("span", { class: "hint" });
-  const tags = chipInput({ known: opts.tags.map(t => ({ value: t.key, label: t.label })), max: limits.tags, newLabel: true, onChange: () => { moreChanged(); onChange(); } });
+  const tags = chipInput({ known: opts.tags.map(t => ({ value: t.key, label: t.label })), max: limits.tags, newLabel: true,
+    suggest: v => nearWord(v, [opts.tags.map(t => t.key), titleOf().toLowerCase().match(/[a-z0-9]+/g) || []]), onChange: () => { moreChanged(); onChange(); } });
   const level = h("select", {}, h("option", { value: "" }, "(none)"), opts.levels.map(l => h("option", { value: l }, l)));
   level.addEventListener("change", () => { moreChanged(); onChange(); });
   const ids = opts.pages.map(p => ({ value: p.id, label: p.title }));
@@ -412,13 +439,13 @@ function metaForm(opts, have = [], onChange = () => {}) {
 }
 
 /* Show a result (or error) where the person is looking, and move focus there for screen readers. */
-function resultBox(host) {
+function resultBox(host, headline = "Brewed! Your page is ready.", party = true) {
   return (result) => {
     if (result.ok !== false && result.page) {
       const c = cup(44, 1);
       host.replaceChildren(h("div", { class: "brewed", role: "status" }, c.el,
-        h("div", {}, h("strong", {}, "Brewed! Your page is ready."), h("span", { class: "path" }, result.page))));
-      confetti();
+        h("div", {}, h("strong", {}, headline), h("span", { class: "path" }, result.page))));
+      if (party) confetti();
       host.append(h("details", {}, h("summary", { class: "hint" }, "What the tool did"), message("ok", result.output || "")));
     } else {
       host.replaceChildren(message(result.ok === false ? "err" : "ok", result.output || ""));
@@ -428,6 +455,7 @@ function resultBox(host) {
       const note = h("div");
       host.append(h("div", { class: "actions" },
         h("button", { type: "button", onclick: async () => note.replaceChildren(message("ok", (await api("/api/open", { path: result.page, line: 1 })).output)) }, "Open in editor"),
+        h("button", { type: "button", onclick: async () => note.replaceChildren(message("ok", (await api("/api/reindex", {})).output)) }, "Update the generated indexes"),
         h("button", { type: "button", onclick: () => { loaded.new = false; show("new"); } }, "Start another page")), note);
     }
     host.setAttribute("tabindex", "-1"); host.focus({ preventScroll: true }); host.scrollIntoView({ block: "nearest" });
@@ -461,7 +489,7 @@ async function newTab(view) {
   const pcard = h("div", { class: "pcard", "aria-label": "How the page will look in search and Explore" });
   const holder = h("div");
   let touched = false, restoring = false;
-  const meta = metaForm(opts, [], () => { touched = true; changed(); });
+  const meta = metaForm(opts, [], () => { touched = true; changed(); }, () => title.value);
   holder.replaceChildren(meta.el);
   const fileLine = () => (folder.value.trim() || "folder") + "/" + (name.value.trim() || "file-name") + ".md";
 
@@ -549,33 +577,27 @@ async function newTab(view) {
   refresh();
 }
 
-/* ---------- Adopt ---------- */
-async function adoptTab(view) {
-  const opts = await api("/api/options");
-  const pages = await api("/api/adoptable");
-  const filter = h("input", { type: "text", placeholder: "Type to filter: path, title or a missing field (e.g. devops summary)", autocomplete: "off" });
-  const list = h("select", { size: "8", "aria-label": "Pages that can be completed" });
+/* A filter box over a list of pages: type words of the path, title or anything in `extra(p)`. Enter picks the first
+   match, the down arrow moves into the list, Esc clears. `onChoose(page)` runs when one is picked. */
+function pagePicker({ pages, label, extra = () => "", onChoose, card }) {
+  const filter = h("input", { type: "text", placeholder: "Type to filter: path, title or a word from the list", autocomplete: "off" });
+  const list = h("select", { size: "8", "aria-label": "Pages" });
   const count = h("div", { class: "hint", "aria-live": "polite" });
-  const chosen = h("div", { class: "hint" });
-  const holder = h("div"), out = h("div");
-  let meta = null, current = "";
-  const label = p => p.path + (p.title ? "  \u2013  " + p.title : "") + (p.missing.length ? "   [missing: " + p.missing.join(", ") + "]" : "");
-  const matches = () => {                                 // every word typed must appear in the path, title or missing fields
+  const cardBox = h("div");
+  let current = "";
+  const matches = () => {
     const words = filter.value.toLowerCase().split(/\s+/).filter(Boolean);
-    return pages.filter(p => { const hay = (p.path + " " + p.title + " missing " + p.missing.join(" ")).toLowerCase(); return words.every(w => hay.includes(w)); });
+    return pages.filter(p => { const hay = (p.path + " " + p.title + " " + extra(p)).toLowerCase(); return words.every(w => hay.includes(w)); });
   };
   function render() {
     const found = matches();
     list.replaceChildren(...found.map(p => { const o = h("option", { value: p.path }, label(p)); if (p.path === current) o.selected = true; return o; }));
-    count.textContent = found.length === pages.length ? pages.length + " pages" : found.length + " of " + pages.length + " pages" + (found.length ? "; Enter picks the first, \u2193 moves into the list" : "; nothing matches");
+    count.textContent = found.length === pages.length ? pages.length + " pages" : found.length + " of " + pages.length + " pages" + (found.length ? "; Enter picks the first, ↓ moves into the list" : "; nothing matches");
   }
   function choose(path) {
     const p = pages.find(x => x.path === path);
     if (!p || path === current) return;
-    current = path; out.replaceChildren();
-    meta = metaForm(opts, p.have);
-    holder.replaceChildren(meta.el);
-    chosen.textContent = "Adopting: " + path;
+    current = path; cardBox.replaceChildren(...(card ? [card(p)] : [])); onChoose(p);
   }
   filter.addEventListener("input", render);
   filter.addEventListener("keydown", e => {
@@ -584,20 +606,108 @@ async function adoptTab(view) {
     else if (e.key === "Escape") { filter.value = ""; render(); }
   });
   list.addEventListener("change", () => choose(list.value));
+  render();
+  return { el: h("div", {}, field("Find a page", "", filter, filter), count, h("div", { class: "hint" }, "Pick one:"), list, cardBox),
+    get current() { return current; }, focus: () => filter.focus() };
+}
+const FIELD_NAMES = { summary: "summary", type: "kind", domains: "subjects", tags: "tags", level: "level" };
+const pageCard = p => h("div", { class: "pcard" }, h("div", { class: "cap" }, "Selected"), h("h3", {}, p.title || p.path), h("div", { class: "path" }, p.path),
+  h("div", { class: "meta" }, (p.have || []).map(k => h("span", { class: "tag" }, "✓ " + FIELD_NAMES[k])), (p.missing || []).map(k => h("span", { class: "tag empty" }, "missing: " + FIELD_NAMES[k]))));
+
+/* ---------- Adopt ---------- */
+async function adoptTab(view) {
+  const opts = await api("/api/options");
+  const pages = await api("/api/adoptable");
+  const holder = h("div"), out = h("div");
+  let meta = null;
+  const picker = pagePicker({ pages, label: p => p.path + (p.title ? "  –  " + p.title : "") + (p.missing.length ? "   [missing: " + p.missing.map(k => FIELD_NAMES[k]).join(", ") + "]" : ""),
+    extra: p => "missing " + p.missing.map(k => FIELD_NAMES[k]).join(" "), card: pageCard,
+    onChoose(p) { out.replaceChildren(); meta = metaForm(opts, p.have); holder.replaceChildren(meta.el); } });
   const submit = async (btn, dry) => {
-    if (!meta) { resultBox(out)({ ok: false, output: "Choose a page first." }); filter.focus(); return; }
-    await busy(btn, async () => resultBox(out)(await api("/api/adopt", Object.assign({ page: current, dry_run: dry }, meta.values()))));
+    if (!meta) { resultBox(out)({ ok: false, output: "Choose a page first." }); picker.focus(); return; }
+    await busy(btn, async () => resultBox(out, "Front matter added.")(await api("/api/adopt", Object.assign({ page: picker.current, dry_run: dry }, meta.values()))));
   };
   const previewBtn = h("button", { type: "button", onclick: () => submit(previewBtn, true) }, "Preview");
   const adoptBtn = h("button", { type: "button", class: "primary", onclick: () => submit(adoptBtn, false) }, "Add front matter");
   view.replaceChildren(
     h("p", { class: "hint" }, "For a page you wrote by hand: this adds the front matter and the folder index row. The text of the page is never changed."),
-    h("fieldset", {}, h("legend", {}, "Page"),
-      field("Find a page", "", filter, filter), count, h("div", { class: "hint" }, "Pick one:"), list, chosen),
+    h("fieldset", {}, h("legend", {}, "Page"), picker.el),
     h("fieldset", {}, h("legend", {}, "About the page"), holder),
     h("div", { class: "actions sticky" }, previewBtn, adoptBtn),
     out);
-  render();
+}
+
+/* ---------- Edit ---------- */
+async function editTab(view) {
+  const opts = await api("/api/options");
+  const pages = await api("/api/editable");
+  const holder = h("div"), out = h("div");
+  let meta = null;
+  const picker = pagePicker({ pages, label: p => p.path + (p.title ? "  –  " + p.title : ""),
+    extra: p => [p.values.types.join(" "), p.values.domains.join(" "), p.values.tags.join(" "), p.values.level].join(" "),
+    card: p => h("div", { class: "pcard" }, h("div", { class: "cap" }, "Now"), h("h3", {}, p.title || p.path), h("div", { class: "path" }, p.path),
+      h("div", {}, p.values.summary || h("span", { class: "empty" }, "(no summary)")),
+      h("div", { class: "meta" }, p.values.types.map(t => h("span", { class: "tag" }, kindIcon(t), t)),
+        p.values.domains.map(d => h("span", { class: "tag" }, dot(d), d)), p.values.tags.map(t => h("span", { class: "tag" }, "#" + t)),
+        p.values.level ? h("span", { class: "tag" }, p.values.level) : null)),
+    onChoose(p) { out.replaceChildren(); meta = metaForm(opts, []); holder.replaceChildren(meta.el); meta.restore(p.values);
+      if (meta.more && (p.values.tags.length || p.values.level || p.values.prerequisites.length || p.values.related.length)) meta.more.open = true; } });
+  const submit = async (btn, dry) => {
+    if (!meta) { resultBox(out)({ ok: false, output: "Choose a page first." }); picker.focus(); return; }
+    await busy(btn, async () => {
+      const r = await api("/api/update", Object.assign({ page: picker.current, dry_run: dry }, meta.values()));
+      resultBox(out, "Saved. The page text is unchanged.", false)(r);
+    });
+  };
+  const previewBtn = h("button", { type: "button", onclick: () => submit(previewBtn, true) }, "Preview the change");
+  const saveBtn = h("button", { type: "button", class: "primary", onclick: () => submit(saveBtn, false) }, "Save changes");
+  view.replaceChildren(
+    h("p", { class: "hint" }, "Change the summary, kind, subjects, tags, level or related pages of a page that already has front matter. Only what you change is rewritten; the text of the page stays as it is."),
+    h("fieldset", {}, h("legend", {}, "Page"), picker.el),
+    h("fieldset", {}, h("legend", {}, "About the page"), holder),
+    h("div", { class: "actions sticky" }, previewBtn, saveBtn),
+    out);
+}
+
+/* ---------- Pictures ---------- */
+async function imagesTab(view) {
+  const pages = await api("/api/pages");
+  const files = h("input", { type: "file", multiple: true, accept: ".png,.jpg,.jpeg,.gif,.webp,image/png,image/jpeg,image/gif,image/webp" });
+  const rows = h("div"), out = h("div");
+  const picker = pagePicker({ pages, label: p => p.path + (p.title ? "  –  " + p.title : ""), onChoose() { out.replaceChildren(); } });
+  const entries = [];
+  files.addEventListener("change", () => {
+    entries.length = 0; rows.replaceChildren();
+    for (const f of files.files) {
+      const alt = h("input", { type: "text", "aria-label": "What does " + f.name + " show?", placeholder: "What does it show? (needed: screen readers and search use it)" });
+      const big = f.size > 5 * 1024 * 1024;
+      const thumb = h("img", { src: URL.createObjectURL(f), alt: "", style: "flex:none;width:72px;height:72px;object-fit:cover;border-radius:6px;border:1px solid var(--line)" });
+      rows.append(h("div", { class: "row", style: "align-items:center;margin:8px 0" }, thumb, h("div", {}, h("div", { class: "path" }, f.name + " (" + Math.ceil(f.size / 1024) + " KB)"),
+        big ? h("div", { class: "err-text" }, "Over 5 MB: too big for the repo, make it smaller first.") : alt)));
+      if (!big) entries.push({ file: f, alt });
+    }
+  });
+  const toBase64 = file => new Promise((ok, no) => { const r = new FileReader(); r.onload = () => ok(String(r.result).split(",")[1]); r.onerror = no; r.readAsDataURL(file); });
+  const upload = async btn => {
+    if (!picker.current) { out.replaceChildren(message("err", "Choose the page the pictures belong to.")); picker.focus(); return; }
+    if (!entries.length) { out.replaceChildren(message("err", "Choose at least one picture.")); files.focus(); return; }
+    await busy(btn, async () => {
+      out.replaceChildren();
+      for (const e of entries) {
+        const r = await api("/api/image", { page: picker.current, filename: e.file.name, alt: e.alt.value, data: await toBase64(e.file) });
+        if (!r.ok) { out.append(message("err", e.file.name + ": " + r.output)); e.alt.setAttribute("aria-invalid", "true"); continue; }
+        const copyBtn = h("button", { type: "button", onclick: async () => {
+          try { await navigator.clipboard.writeText(r.snippet); copyBtn.textContent = "Copied"; } catch (x) { copyBtn.textContent = "Select and copy it"; } } }, "Copy");
+        out.append(h("div", { class: "box ok", role: "status" }, h("div", {}, r.output), h("pre", {}, r.snippet), copyBtn));
+      }
+    });
+  };
+  const uploadBtn = h("button", { type: "button", class: "primary", onclick: () => upload(uploadBtn) }, "Save pictures");
+  view.replaceChildren(
+    h("p", { class: "hint" }, "Pictures are saved next to the page, in its images/ folder, so they stay with it (PNG, JPEG, GIF or WebP, up to 5 MB). Paste the line you get into the page."),
+    h("fieldset", {}, h("legend", {}, "Page"), picker.el),
+    h("fieldset", {}, h("legend", {}, "Pictures"), field("Choose pictures", "", files, files), rows),
+    h("div", { class: "actions sticky" }, uploadBtn), out);
 }
 
 /* ---------- Fix problems ---------- */
@@ -660,7 +770,7 @@ async function fixTab(view) {
 /* ---------- tabs ---------- */
 document.getElementById("logo").prepend(cup(40, 0.8).el);
 document.querySelector("#logo .cup").classList.add("hot");
-const tabs = { new: newTab, adopt: adoptTab, fix: fixTab };
+const tabs = { new: newTab, adopt: adoptTab, edit: editTab, images: imagesTab, fix: fixTab };
 const loaded = {};
 async function show(name, focus) {
   for (const k of Object.keys(tabs)) {
