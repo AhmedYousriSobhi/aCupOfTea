@@ -50,6 +50,14 @@ python3 .docs/tools/new_page.py --title "Attention in Transformers" \
 
 Add `--dry-run` to see the result without writing anything. Only Python 3 is needed.
 
+## In your browser instead of the terminal
+
+```bash
+python3 .docs/tools/new_page.py --gui
+```
+
+It starts a small server on your own computer (127.0.0.1, a random port, protected by a token), prints the address and opens it. Three tabs: **New page** (the same questions as above as a form, with folder suggestions while you type the title, a warning about similar pages, tick boxes for kind and subjects, new subjects and tags added on the spot, Preview, Create), **Adopt a page** (the hand-written page flow below) and **Fix problems** (the list of `page_doctor.py` below: open a problem in your editor, see the suggested fix as a diff, apply it). The form only fills in the options of `new_page.py` and runs it, so the rules are the same. Stop it with Ctrl+C or the Close button. The same options work in a script: `--create-folder`, `--new-domain KEY=DESCRIPTION` and `--new-tag KEY=LABEL` confirm what the questions would ask.
+
 ## A page you wrote by hand
 
 If you created the file yourself, add its front matter and index link without touching the text:

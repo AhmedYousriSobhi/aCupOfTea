@@ -427,12 +427,13 @@ def choose_folder(args, ask, title, folders):
                 continue
             folder = choice
     if not os.path.isdir(os.path.join(ROOT, folder)):
-        if not ask.confirm("%s does not exist. Create it?" % folder, default=False):
+        if not ask.confirm("%s does not exist. Create it?" % folder, default=bool(getattr(args, "create_folder", False))):
             sys.exit("Stopped: no folder created.")
     return folder
 
 
-def warn_similar(title, folders, ask):
+def similar_pages(title, folders):
+    """[(rel, h1)] of existing pages that look like the same topic, best first (at most 3)."""
     want = words(title)
     norm = slug(title)
     hits = []
@@ -448,10 +449,15 @@ def warn_similar(title, folders, ask):
             score = max(jaccard, ratio, covered if len(want) >= 2 else 0)
             if jaccard >= 0.5 or ratio >= 0.8 or (len(want) >= 2 and covered >= 0.75):
                 hits.append((-score, rel, h1))
+    return [(rel, h1) for _, rel, h1 in sorted(hits)[:3]]
+
+
+def warn_similar(title, folders, ask):
+    hits = similar_pages(title, folders)
     if not hits:
         return
     print("\nSimilar pages already exist:")
-    for _, rel, h1 in sorted(hits)[:3]:
+    for rel, h1 in hits:
         print("  - %s  \"%s\"" % (rel, h1))
     if not ask.confirm("Continue with a new page?"):
         sys.exit("Stopped: nothing created.")
@@ -477,10 +483,11 @@ def choose_tags(args, ask, title, known):
 
     tags = resolve(ask, args.tags, parse, prompt)
     new = {}
+    wanted = dict(getattr(args, "new_tag", None) or [])
     for t in [t for t in tags if t not in known]:
-        label = " ".join(w.capitalize() for w in t.split("-"))
+        label = wanted.get(t) or " ".join(w.capitalize() for w in t.split("-"))
         print("\"%s\" is a new tag (label \"%s\")." % (t, label))
-        if ask.confirm("Add it to the tag list?", default=False):
+        if t in wanted or ask.confirm("Add it to the tag list?", default=False):
             new[t] = label
         else:
             tags.remove(t)
@@ -556,6 +563,15 @@ def guess_domains(title, folder):
     return [d for n, d in scored if n == scored[0][0]]   # only the best match(es)
 
 
+def default_domains(folder, folders, title):
+    """Subjects suggested for a page: the folder's usual ones, else the folder default, else a guess."""
+    near = neighbours(folder, folders, "domains")
+    if not near:
+        near = next((v for k, v in sorted(folder_defaults().items(), key=lambda kv: -len(kv[0]))
+                     if folder == k or folder.startswith(k + "/")), [])
+    return near or guess_domains(title, folder)
+
+
 def choose_domains(args, ask, folder, folders, title):
     """One or two subjects. Returns (domains, new_domains); an unknown subject is matched to a
     known one ("hpc" -> systems-and-hpc) or, when typed in answer to the question, can be added."""
@@ -563,18 +579,15 @@ def choose_domains(args, ask, folder, folders, title):
     new = {}
 
     def prompt():
-        near = neighbours(folder, folders, "domains")
-        if not near:
-            near = next((v for k, v in sorted(folder_defaults().items(), key=lambda kv: -len(kv[0]))
-                         if folder == k or folder.startswith(k + "/")), [])
-        if not near:
-            near = guess_domains(title, folder)
+        near = default_domains(folder, folders, title)
         print("\nSubjects (domains) put the page in Explore by subject; one or two, comma separated.")
         print("Known: %s" % ", ".join(domains + list(new)))
         complete_with(domains + list(new))
         return ask.text("Domains", ", ".join(near[:MAX_DOMAINS]), required=False)
 
     can_ask = args.domains is None and ask.interactive and not ask.yes
+    for key, description in (getattr(args, "new_domain", None) or []):
+        new[key] = (" ".join(w.capitalize() for w in key.split("-")), description)
 
     def parse(raw):
         known = domains + list(new)
@@ -911,7 +924,15 @@ def adopt(args, ask):
     check_page(rel)
 
 
-def main():
+def key_value(text):
+    key, _, value = text.partition("=")
+    key = slug(key)
+    if not key:
+        raise argparse.ArgumentTypeError("expected KEY=VALUE")
+    return key, value.strip()
+
+
+def main(argv=None):
     p = argparse.ArgumentParser(description="Create a new page with front matter, an index link and a fresh sidebar.")
     p.add_argument("--title")
     p.add_argument("--summary", help="one line, shown in search results")
@@ -925,9 +946,19 @@ def main():
     p.add_argument("--related", help="comma separated page ids to see also")
     p.add_argument("--check", metavar="PAGE", help="report a written page's reading time and what is missing")
     p.add_argument("--adopt", metavar="PAGE", help="add front matter and an index link to a page you wrote by hand")
+    p.add_argument("--create-folder", action="store_true", help="create the folder if it does not exist, without asking")
+    p.add_argument("--new-domain", action="append", default=[], metavar="KEY=DESCRIPTION", type=key_value,
+                   help="confirm a new subject and add it to taxonomy.yaml (repeatable)")
+    p.add_argument("--new-tag", action="append", default=[], metavar="KEY[=LABEL]", type=key_value,
+                   help="confirm a new tag and add it to taxonomy.yaml (repeatable)")
+    p.add_argument("--gui", action="store_true", help="open the page form in your browser (local only)")
     p.add_argument("--yes", action="store_true", help="accept defaults and suggestions without asking")
     p.add_argument("--dry-run", action="store_true", help="show what would be written, change nothing")
-    args = p.parse_args()
+    args = p.parse_args(argv)
+    if args.gui:
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        import page_gui
+        return page_gui.serve()
     if args.check:
         return 1 if check_page(args.check) else 0
     ask = Asker(args.yes)

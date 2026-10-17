@@ -35,10 +35,11 @@ jobs:
       - name: Check internal links
         run: python3 -I .docs/tools/check_links.py
 
-      - name: Test new_page.py, page_doctor.py, check_pins.py and check_links.py
+      - name: Test new_page.py, page_doctor.py, page_gui.py, check_pins.py and check_links.py
         run: |
           python3 -I .docs/tools/test_new_page.py
           python3 -I .docs/tools/test_page_doctor.py
+          python3 -I .docs/tools/test_page_gui.py
           python3 -I .docs/tools/test_check_pins.py
           python3 -I .docs/tools/test_check_links.py
 
