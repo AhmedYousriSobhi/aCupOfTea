@@ -320,6 +320,15 @@ async function run(browser, base, label, size, phone) {
     return !!b && !b.classList.contains('collapsed') && b.querySelectorAll('a').length > 1;
   });
   c('a folder inside a folder in the menu opens when tapped', nested);
+  // reading history: a page read is dimmed in the menu, and "Continue" returns to it
+  await go('tips/kaggle-tips', 1500);
+  await go('', 1500);
+  const hist = await page.evaluate(() => {
+    const cont = document.getElementById('continue-reading');
+    const read = [...document.querySelectorAll('.sidebar-nav a.read')].some((a) => /kaggle-tips/.test(a.getAttribute('href')));
+    return { href: cont && cont.getAttribute('href'), read };
+  });
+  c('pages already read are marked in the menu and "Continue" links to the last one', hist.read && hist.href === '#/tips/kaggle-tips', JSON.stringify(hist));
   c('no script errors', page.errors.length === 0, page.errors.join(' | '));
   await page.context().close();
 }
