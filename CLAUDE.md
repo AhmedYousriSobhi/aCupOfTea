@@ -228,7 +228,8 @@ Reading time is computed (200 wpm over the body, code excluded), never authored.
 
 **Choosing domains and tags**
 
-- Domains describe the subject, not the folder. Most pages need one or two.
+- Domains describe the subject, not the folder. Most pages need one or two; three is the most (a convention: `validate.py` warns above it). The domains of one page should go together: each domain lists the ones it goes with in `related` in `taxonomy.yaml` (a pair is listed once and read both ways), and `validate.py` warns when two domains of a page are not related. If a page truly spans two areas, add them to each other's `related` list.
+- A kind of page (`type`) that is not in `taxonomy.yaml` can be added there (`new_page.py` and the form ask, or `--new-type KEY=DESCRIPTION`); a new subject created for a page is marked related to the page's other subjects.
 - A `deep-learning` page does not also get `machine-learning` unless it teaches general ML.
 - LLM pages may carry both `generative-ai` and `natural-language-processing`.
 - `tabular-data` is a folder, not a domain: pages under `fields/tabular-data/` default to `machine-learning` and `statistics` (recorded under `folder_defaults` in `taxonomy.yaml`).

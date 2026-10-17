@@ -92,10 +92,12 @@ class Api(unittest.TestCase):
         self.assertIn("notes", o["folders"])
         self.assertIn("concept", [t["key"] for t in o["types"]])
         self.assertIn("systems-and-hpc", [d["key"] for d in o["domains"]])
-        self.assertEqual(o["limits"], {"types": 2, "domains": 2, "tags": 5})
+        self.assertEqual(o["limits"], {"types": 2, "domains": 3, "tags": 5})
         self.assertEqual(o["default_type"], ["note"])                       # what the folder's pages use
         self.assertIn("a-page", [p["id"] for p in o["pages"]])
         self.assertTrue(o["folder_exists"])
+        self.assertIn("security", o["related"]["software-engineering"])           # for the live "not related" warning
+        self.assertIn("software-engineering", o["related"]["security"])
 
     def test_options_report_a_missing_folder(self):
         self.assertFalse(self.json("/api/options?folder=notes/new-one")["folder_exists"])
@@ -140,6 +142,23 @@ class Api(unittest.TestCase):
             text = fh.read()
         self.assertIn("  devops:\n    label: Devops\n    description: Running software.\n", text)
         self.assertIn("  kubernetes:\n    label: Kubernetes\n", text)
+
+    def test_a_new_kind_and_a_new_related_subject_are_added(self):
+        r = self.create(types=["tutorial"], new_types=[{"key": "tutorial", "description": "A step by step lesson."}],
+                        domains=["devops", "systems-and-hpc"], new_domains=[{"key": "devops", "description": "Running software."}])
+        self.assertTrue(r["ok"], r)
+        with open(new_page.TAXONOMY, encoding="utf-8") as fh:
+            text = fh.read()
+        self.assertIn("  tutorial: A step by step lesson.\n", text)
+        self.assertIn("  devops:\n    label: Devops\n    description: Running software.\n    related: [systems-and-hpc]\n", text)
+
+    def test_three_related_subjects_are_accepted_and_unrelated_ones_only_noted(self):
+        ok = self.create(domains=["software-engineering", "systems-and-hpc", "security"], dry_run=True)
+        self.assertTrue(ok["ok"], ok)
+        self.assertNotIn("not marked as related", ok["output"])
+        note = self.create(domains=["business", "security"], dry_run=True)
+        self.assertTrue(note["ok"], note)
+        self.assertIn("business and security is not marked as related", note["output"])
 
     # ---- adopt
     def test_adoptable_lists_what_is_missing(self):

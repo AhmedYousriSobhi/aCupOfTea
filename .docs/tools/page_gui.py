@@ -101,6 +101,7 @@ def options(title="", folder=""):
         "tags": [{"key": k, "label": v} for k, v in sorted(new_page.load_tags().items())],
         "levels": list(new_page.LEVELS),
         "pages": page_ids(folders),
+        "related": {d: sorted(r) for d, r in new_page.related_map().items()},
         "limits": {"types": new_page.MAX_TYPES, "domains": new_page.MAX_DOMAINS, "tags": new_page.MAX_TAGS},
     }
 
@@ -149,6 +150,8 @@ def meta_argv(d):
         argv += ["--type", csv(d["types"])]
     if d.get("level"):
         argv += ["--level", d["level"]]
+    for n in d.get("new_types") or []:
+        argv += ["--new-type", "%s=%s" % (new_page.slug(n.get("key", "")), n.get("description", ""))]
     for n in d.get("new_domains") or []:
         argv += ["--new-domain", "%s=%s" % (new_page.slug(n.get("key", "")), n.get("description", ""))]
     for n in d.get("new_tags") or []:
@@ -207,22 +210,23 @@ def issue_id(i):
     return "%s:%d:%s" % (i["path"], i["line"], i["message"])
 
 
-def issues(scope_name):
+def issues(scope_name, pictures=False):
     with LOCK:
-        found = page_doctor.page_issues(scope_of(scope_name))
-    return [dict(i, id=issue_id(i), fixes=[{"label": f["label"], "safe": f["safe"], "files": sorted(f["files"]),
-                                            "diff": page_doctor.diff_of(f)} for f in i["fixes"]])
-            for i in found]
+        found = page_doctor.page_issues(scope_of(scope_name), pictures)
+    return [dict(i, id=issue_id(i), fixes=[page_doctor.fix_summary(f) for f in i["fixes"]]) for i in found]
 
 
 def fix(d):
     with LOCK:
-        found = page_doctor.page_issues(scope_of(d.get("scope")))
+        found = page_doctor.page_issues(scope_of(d.get("scope")), bool(d.get("pictures")))
         issue = next((i for i in found if issue_id(i) == d.get("id")), None)
         n = d.get("fix")
         if issue is None or not isinstance(n, int) or not 0 <= n < len(issue["fixes"]):
             return {"ok": False, "output": "That problem has changed since the list was made. Refresh and try again."}
-        written = page_doctor.apply_fix(issue["fixes"][n])
+        try:
+            written = page_doctor.apply_fix(issue["fixes"][n], d.get("value"))
+        except (RuntimeError, ValueError) as e:
+            return {"ok": False, "output": str(e)}
     return {"ok": True, "output": "Changed: " + ", ".join(written)}
 
 
@@ -245,7 +249,7 @@ def open_in_editor(d):
 GET_ROUTES = {
     "/api/options": lambda q: options(q.get("title", [""])[0], q.get("folder", [""])[0]),
     "/api/adoptable": lambda q: adoptable(),
-    "/api/issues": lambda q: issues(q.get("scope", ["changed"])[0]),
+    "/api/issues": lambda q: issues(q.get("scope", ["changed"])[0], q.get("pictures", [""])[0] == "1"),
     "/api/check": lambda q: {"output": check_report(q.get("page", [""])[0])},
 }
 POST_ROUTES = {"/api/create": create, "/api/adopt": adopt, "/api/fix": fix, "/api/open": open_in_editor}

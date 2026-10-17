@@ -78,6 +78,10 @@ fields:
     values_from: taxonomy.yaml#domains
     required: false
     min_items: 1             # when the key is present
+    note: >
+      Up to 3 (a warning above that), and they should go together: a domain lists the ones it
+      goes with in `related` in taxonomy.yaml, read both ways. validate.py warns when two
+      domains of one page are not related.
   tags:
     type: list[enum]
     values_from: taxonomy.yaml#tags
