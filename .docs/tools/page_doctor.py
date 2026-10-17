@@ -539,6 +539,17 @@ GROUPS = [
 ]
 
 
+# one hint for a whole group (the per-issue hints name each page's own path); shown once above the group
+GROUP_HINTS = {
+    "Missing metadata (front matter, summary, subjects, tags, level)":
+        "These pages lack some front matter fields. Adopt each page to be asked for them (the text of the page is never changed): "
+        "in the form with \"Adopt in the form\", or in the terminal with python3 .docs/tools/new_page.py --adopt PAGE.",
+    "Unfinished sections and template notes":
+        "Fill each empty section or remove its heading, and delete the template's outline notes; "
+        "python3 .docs/tools/new_page.py --check PAGE shows what is left.",
+}
+
+
 def group_of(issue):
     """Title of the group an issue belongs to (the kind of action it needs)."""
     msg = issue["message"]
@@ -561,6 +572,8 @@ def page_issues(scope=None, pictures=False):
     order = {"error": 0, "warning": 1, "todo": 2}
     for i in found:
         i["group"] = group_of(i)
+        if i["group"] in GROUP_HINTS:
+            i["group_hint"] = GROUP_HINTS[i["group"]]
     first = {}                                  # a group sits where its most severe member does
     for i in sorted(found, key=lambda i: order[i["level"]]):
         first.setdefault(i["group"], order[i["level"]])

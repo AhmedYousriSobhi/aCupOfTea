@@ -285,6 +285,15 @@ class Grouping(unittest.TestCase):
         g = pd.group_of
         self.assertEqual(g({"message": "page 'a' has 3 odd things: x"}), g({"message": "page 'b' has 9 odd things: y"}))
 
+    def test_metadata_and_unfinished_groups_carry_one_hint_for_the_group(self):
+        for msg in ("no summary (one line shown in search and Explore)", "empty section(s): A; fill or remove them"):
+            i = {"tool": "page", "level": "todo", "path": "a.md", "line": 1, "message": msg}
+            with mock.patch.object(pd, "run_tool", return_value=""), mock.patch.object(pd, "pages_in", return_value=["a.md"]), \
+                    mock.patch.object(pd, "readme_swap_issues", return_value=[]), mock.patch.object(pd, "stale_index_issue", return_value=[]), \
+                    mock.patch.object(pd, "page_todos", return_value=[i]):
+                found = pd.page_issues(None)
+            self.assertEqual(found[0]["group_hint"], pd.GROUP_HINTS[found[0]["group"]])
+
     def test_list_is_sorted_group_by_group(self):
         with mock.patch.object(pd, "run_tool", return_value=""), \
                 mock.patch.object(pd, "pages_in", return_value=["a.md", "b.md"]), \
