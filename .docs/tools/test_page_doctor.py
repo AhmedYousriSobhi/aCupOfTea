@@ -270,6 +270,38 @@ class Pure(unittest.TestCase):
         self.assertTrue(pd.in_scope(got[0]["path"], {"fields/x"}))      # not hidden by the scope
 
 
+class Grouping(unittest.TestCase):
+    def test_alike_problems_share_a_group(self):
+        g = pd.group_of
+        self.assertEqual(g({"message": "no summary (one line shown in search and Explore)"}),
+                         g({"message": "no front matter; create pages with this script"}))
+        self.assertEqual(g({"message": "empty section(s): Data Augmentation; fill or remove them"}),
+                         g({"message": "3 outline note(s) from the template are still there"}))
+        self.assertEqual(g({"message": "picture without a description: ![image](a.png)"}),
+                         g({"message": "2 picture(s) without a description (lines 1, 2)"}))
+        self.assertNotEqual(g({"message": "no summary (x)"}), g({"message": "relative link(s) break on the site"}))
+
+    def test_unknown_messages_group_by_their_shape(self):
+        g = pd.group_of
+        self.assertEqual(g({"message": "page 'a' has 3 odd things: x"}), g({"message": "page 'b' has 9 odd things: y"}))
+
+    def test_list_is_sorted_group_by_group(self):
+        with mock.patch.object(pd, "run_tool", return_value=""), \
+                mock.patch.object(pd, "pages_in", return_value=["a.md", "b.md"]), \
+                mock.patch.object(pd, "readme_swap_issues", return_value=[]), \
+                mock.patch.object(pd, "stale_index_issue", return_value=[]), \
+                mock.patch.object(pd, "page_todos", side_effect=lambda rel: [
+                    {"tool": "page", "level": "todo", "path": rel, "line": 1, "message": "no summary (x)"},
+                    {"tool": "page", "level": "todo", "path": rel, "line": 1, "message": "no level (y)"},
+                    {"tool": "page", "level": "todo", "path": rel, "line": 1, "message": "no # title heading"}]):
+            found = pd.page_issues(None)
+        groups = [i["group"] for i in found]
+        self.assertEqual(len(found), 6)
+        self.assertEqual(groups[:4], [groups[0]] * 4)           # both pages' metadata items sit together
+        self.assertEqual(groups[4], groups[5])                  # then the title heading ones
+        self.assertEqual([i["path"] for i in found[:4]], ["a.md", "a.md", "b.md", "b.md"])
+
+
 class Interactive(unittest.TestCase):
     def test_open_then_quit(self):
         issue = {"tool": "validate", "level": "warning", "path": "a.md", "line": 3, "message": "m", "hint": "", "fixes": []}
