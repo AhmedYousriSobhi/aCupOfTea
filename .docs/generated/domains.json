@@ -104,6 +104,7 @@
       "cuda-101",
       "hpc-systems-overview",
       "hpc-workloads",
+      "kubernetes-in-five-nouns",
       "nccl-collective-communication",
       "parallel-execution-and-affinity",
       "pytorch-ddp",

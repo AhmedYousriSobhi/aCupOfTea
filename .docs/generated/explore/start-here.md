@@ -8,10 +8,11 @@ Pick a cup: follow a path, grab a quick read, or start with the basics.
 
 Read each path in order; every step builds on the one before.
 
-### Software Engineering · 2 steps · 18 min
+### Systems and HPC · 3 steps · 26 min
 
 1. [Containers 101](/fields/libraries-frameworks-containers/101-containers.md) *(8 min)*
 2. [Singularity](/fields/libraries-frameworks-containers/101-singularity.md) *(10 min)*
+3. [Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster](/fields/devops/kubernetes/kubernetes-in-five-nouns.md) — The five Kubernetes nouns (node, pod, namespace, event, API server) explained through HPC analogies, for someone who just inherited a cluster. *(advanced · 8 min)*
 
 ### Deep Learning · 3 steps · 37 min
 
@@ -46,6 +47,7 @@ Read each path in order; every step builds on the one before.
 - [Time Series Analysis](/fields/tabular-data/concept-in-time-series/timeseriesfield.md) *(7 min)*
 - [Used Cars Retailer Company](/business/used-cars-retailer.md) *(7 min)*
 - [Containers 101](/fields/libraries-frameworks-containers/101-containers.md) *(8 min)*
+- [Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster](/fields/devops/kubernetes/kubernetes-in-five-nouns.md) — The five Kubernetes nouns (node, pod, namespace, event, API server) explained through HPC analogies, for someone who just inherited a cluster. *(advanced · 8 min)*
 - [Reinforcement Learning Basics](/fields/reinforcement-learning/concepts-in-reinforcement-learning/basics.md) *(8 min)*
 - [HPC Workloads](/business/hpc-industry/workloads.md) *(10 min)*
 - [Singularity](/fields/libraries-frameworks-containers/101-singularity.md) *(10 min)*

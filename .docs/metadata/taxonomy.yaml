@@ -79,6 +79,9 @@ tags:
   gpu:
     label: GPU
     kind: technology
+  kubernetes:
+    label: Kubernetes
+    kind: technology
   llm:
     label: Large Language Models
     kind: technology

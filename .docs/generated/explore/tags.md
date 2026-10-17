@@ -10,6 +10,7 @@ Pages grouped by topic tag.
 - [Distributed Training](/.docs/generated/explore/tags/distributed-training.md) (2)
 - [Encoder-Decoder](/.docs/generated/explore/tags/encoder-decoder.md) (1)
 - [GPU](/.docs/generated/explore/tags/gpu.md) (2)
+- [Kubernetes](/.docs/generated/explore/tags/kubernetes.md) (1)
 - [Large Language Models](/.docs/generated/explore/tags/llm.md) (1)
 - [Model Evaluation](/.docs/generated/explore/tags/model-evaluation.md) (2)
 - [MPI](/.docs/generated/explore/tags/mpi.md) (1)

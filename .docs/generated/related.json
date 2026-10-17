@@ -71,6 +71,17 @@
       }
     ]
   },
+  "fields/devops/kubernetes/kubernetes-in-five-nouns.md": {
+    "prerequisites": [
+      {
+        "id": "containers-101",
+        "path": "fields/libraries-frameworks-containers/101-containers.md",
+        "title": "Containers 101"
+      }
+    ],
+    "related": [],
+    "required_by": []
+  },
   "fields/generative-ai/machine-translator/encoder-decoder.md": {
     "prerequisites": [
       {
@@ -86,6 +97,11 @@
     "prerequisites": [],
     "related": [],
     "required_by": [
+      {
+        "id": "kubernetes-in-five-nouns",
+        "path": "fields/devops/kubernetes/kubernetes-in-five-nouns.md",
+        "title": "Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster"
+      },
       {
         "id": "singularity-containers",
         "path": "fields/libraries-frameworks-containers/101-singularity.md",
