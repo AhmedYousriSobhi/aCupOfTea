@@ -71,11 +71,12 @@ class Api(unittest.TestCase):
         return json.loads(data)
 
     # ---- guards
-    def test_page_needs_the_token(self):
-        self.assertEqual(self.call("/", token=False)[0], 403)
-        status, html = self.call("/?t=" + self.httpd.token, token=False)
+    def test_page_loads_without_the_token_but_only_from_a_local_host(self):
+        status, html = self.call("/", token=False)          # a refresh has no ?t=, the page is static
         self.assertEqual(status, 200)
         self.assertIn(b"aCupOfTea page form", html)
+        self.assertNotIn(self.httpd.token.encode(), html)
+        self.assertEqual(self.call("/", token=False, host="evil.example:%d" % self.port)[0], 403)
 
     def test_api_needs_the_token_and_a_local_host(self):
         self.assertEqual(self.call("/api/options", token=False)[0], 403)
