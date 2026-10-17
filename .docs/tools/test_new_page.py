@@ -87,6 +87,13 @@ class DryRun(unittest.TestCase):
         r = dry_run("--title", "A Quick Look", "--folder", "fields/schedulers/brand-new-sub", "--create-folder")
         self.assertEqual(r.returncode, 0, r.stderr)
 
+    def test_a_folder_that_leaves_the_repository_is_refused(self):
+        for bad in ("fields/../..", "fields/schedulers/../../..", "fields//schedulers", "fields/./schedulers", "fields\\schedulers"):
+            r = dry_run("--title", "A Quick Look", "--folder", bad)
+            self.assertNotEqual(r.returncode, 0, bad)
+            self.assertIn("plain folder path", r.stderr, bad)
+        self.assertEqual(dry_run("--title", "A Quick Look", "--folder", "fields/schedulers").returncode, 0)
+
     def test_folder_ranking(self):
         folders = new_page.scan()
         self.assertEqual(new_page.suggest_folders("Slurm job arrays", folders)[0], "fields/schedulers")
