@@ -258,6 +258,10 @@
   .section-link-copy[data-note]::after { content: attr(data-note); position: absolute; left: 100%; top: 50%; transform: translateY(-50%); margin-left: 6px; padding: 2px 8px; border-radius: 6px; background: var(--color-text); color: var(--color-bg); font-size: 12px; font-weight: 400; white-space: nowrap; }
   #surprise-me { display: block; margin: 0 20px 0.8em; padding: 8px 12px; border: 1px dashed var(--border-color); border-radius: 8px; color: var(--link); font-weight: 600; text-decoration: none; text-align: center; font-size: 0.95em; }
   #surprise-me:hover { border-style: solid; }
+  #continue-reading { display: block; margin: -0.3em 20px 0.8em; padding: 4px 12px; color: var(--link); font-size: 0.9em; text-decoration: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  #continue-reading:hover { text-decoration: underline; }
+  /* Pages already read (see .docs/reading-history.js): dimmed, the current page keeps its mark */
+  .sidebar-nav li:not(.group) > a.read:not(.here) { opacity: 0.6; }
   #menu-github { display: none; margin: 1.5em 20px 2em; padding-top: 1em; border-top: 1px solid var(--border-color); font-size: 0.9em; }
   @media (max-width: 768px) { #menu-github { display: block; } }
   /* Theme button (see .docs/theme-toggle.js) */
@@ -327,6 +331,7 @@
   <script src="./.docs/page-outline.js"></script>
   <script src="./.docs/reading-progress.js"></script>
   <script src="./.docs/surprise-me.js"></script>
+  <script src="./.docs/reading-history.js"></script>
   <script src="./.docs/section-links.js"></script>
   <!-- Read offline: keeps a copy of each page opened (service worker, deployed site only) -->
   <script src="./.docs/offline.js"></script>
