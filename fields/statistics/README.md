@@ -1,9 +1,9 @@
 # Statistics
-![image](images/statistics-01.png)
+![Title card reading Statistics under the heading Mathematics](images/statistics-01.png)
 
 Many enthusiastic people who love to have a great challenge, jump to the unbounded realm of AI, and get amazed by its titles like machine learning, deep learning, architecture, and other words related to this field. But what they don't know is that, the real challenge if where all of this came from?
 
-![image](images/statistics-02.png)
+![Four-panel meme: statistics is a cracked wall, framed as machine learning, then as artificial intelligence](images/statistics-02.png)
 
 # Table of Content
 - [Statistics](#statistics)
@@ -156,7 +156,7 @@ These courses provide a well-rounded education in statistics, preparing students
 
 # Introduction to Statistics
 
-![image](images/statistics-03.png)
+![Title card reading Introduction to Statistics, Stanford](images/statistics-03.png)
 
 The following illustration is taken from Stanford Statiscs Course (see Credit section below), with various illustrations from different sources to facilate and make the illustration simple to study.
 
@@ -165,7 +165,7 @@ Stanford's "Introduction to Statistics" teaches you statistical thinking concept
 ## Module 1 - Introduction and Descriptive Statiscs for Exploring Data
 ### Descriptive Statistics
 
-![image](images/statistics-04.png)
+![Title card reading Descriptive Statistics](images/statistics-04.png)
 
 **"It is best to communicate informatio with figures whenever possible rather than numbers"**
 
@@ -182,7 +182,7 @@ If we now summerize the numbers of temperatures of the first 25 shuttle missions
 
 It is not easy to take a closer look at these numbers, you won't easily get the temperatures overview. Unlike if we decided to plot these numbers into a simple __bar plot__, which will represent the following:
 
-![image](images/statistics-05.png)
+![Histogram of temperature frequencies, peaking between 65 and 70 degrees](images/statistics-05.png)
 
 The plot tells us that there are some temperatures values which are below from the common values we have.
 

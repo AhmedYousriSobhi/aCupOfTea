@@ -42,6 +42,7 @@ jobs:
           python3 -I .docs/tools/test_page_gui.py
           python3 -I .docs/tools/test_check_pins.py
           python3 -I .docs/tools/test_check_links.py
+          python3 -I .docs/tools/test_share_pages.py
 
       - name: Check the README "Recently added" list (release PRs to main)
         if: github.base_ref == 'main'

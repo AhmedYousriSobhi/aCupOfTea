@@ -23,7 +23,7 @@ Identifying Potential Data Issues| Unusual patterns in boxplots, such as extreme
 Overall, boxplots are valuable for gaining a quick understanding of the distribution of data, especially when dealing with multiple groups or categories. They provide a visual summary of key statistics and help you identify patterns and potential data anomalies.
 
 ## Error Bars in Bar Plot
-![image](images/visualization-graphs-01.png)
+![Grouped bar chart of spending per product category by education level, wines highest](images/visualization-graphs-01.png)
 
 Error Bars [Vertical black lines] are graphical representation of the variability of data an used on graphs to indicate the error or uncertainty in a reported measurements. So they are set to 95% of error.
 

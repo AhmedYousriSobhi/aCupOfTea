@@ -9,4 +9,4 @@ sidebar_group: Pipeline
 - [PipeLine](#pipeline)
 
 # PipeLine
-![image](images/pipeline-01.png)
+![Diagram of a scikit-learn pipeline from preprocessing and scaling to PCA and agglomerative clustering](images/pipeline-01.png)

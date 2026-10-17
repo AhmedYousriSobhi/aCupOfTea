@@ -5,7 +5,7 @@
 (function () {
   var open = {};
   function label(li) {
-    var head = li.firstElementChild;
+    var head = li.querySelector(':scope > a, :scope > strong');
     return head ? head.textContent.trim() : '';
   }
   function groups() {
@@ -35,8 +35,21 @@
       var sub = li.querySelector(':scope > ul:not(.app-sub-sidebar)');
       if (!sub) return;
       li.classList.add('group');
+      var btn = li.querySelector(':scope > button.fold');
+      // the page's own sections (app-sub-sidebar) keep their old behavior and get no fold button
+      if (!btn && !li.closest('.app-sub-sidebar')) {
+        btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'fold';
+        li.insertBefore(btn, li.firstChild);
+      }
       var holdsActive = !!li.querySelector('li.active') || (!!here && li.contains(here));
       li.classList.toggle('collapsed', !(holdsActive || open[label(li)]));
+      var shut = li.classList.contains('collapsed');
+      if (btn) {
+        btn.setAttribute('aria-expanded', shut ? 'false' : 'true');
+        btn.setAttribute('aria-label', (shut ? 'Expand ' : 'Collapse ') + label(li));
+      }
     });
     return here;
   }
@@ -69,9 +82,16 @@
     // a click inside this folder's own list belongs to its entries; a folder's label inside another folder's list still toggles
     var list = e.target.closest('ul');
     if (list && li.contains(list)) return;
+    // a folder heading that is a link opens its index page; only the chevron button folds it
     if (e.target.closest('a[href]')) return;
     li.classList.toggle('collapsed');
-    open[label(li)] = !li.classList.contains('collapsed');
+    var shut = li.classList.contains('collapsed');
+    open[label(li)] = !shut;
+    var btn = li.querySelector(':scope > button.fold');
+    if (btn) {
+      btn.setAttribute('aria-expanded', shut ? 'false' : 'true');
+      btn.setAttribute('aria-label', (shut ? 'Expand ' : 'Collapse ') + label(li));
+    }
   });
   var cfg = window.$docsify = window.$docsify || {};
   cfg.plugins = [].concat(cfg.plugins || [], function (hook) {

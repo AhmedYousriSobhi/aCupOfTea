@@ -298,7 +298,7 @@ x5 = (6, 7)
 x6 = (7, 8)
 ```
 
-![image](images/ml-unsupervised-02.png)
+![Six two-dimensional data points written as column vectors](images/ml-unsupervised-02.png)
 
 
 **Step-02:**
@@ -310,7 +310,7 @@ Mean vector (µ)
 ```
 Thus,
 
-![image](images/ml-unsupervised-03.png)
+![Mean vector of the six points, equal to 4.5 and 5](images/ml-unsupervised-03.png)
 
 **Step-03:**
 - Subtract mean vector (µ) from the given feature vectors.
@@ -325,16 +325,16 @@ x6 – µ = (7 – 4.5, 8 – 5) = (2.5, 3)
 
 Feature vectors (xi) after subtracting mean vector (µ) are
  
-![image](images/ml-unsupervised-04.png)
+![Six data points after subtracting the mean vector, as column vectors](images/ml-unsupervised-04.png)
 
 **Step-04:**
 - Calculate the covariance matrix. Covariance matrix is given by
  
-![image](images/ml-unsupervised-05.png)
+![Covariance matrix formula: sum of outer products of centered points divided by n](images/ml-unsupervised-05.png)
 
 Now,
 
-![image](images/ml-unsupervised-06.png)
+![Six worked outer products of centered vectors, each giving a 2 by 2 matrix](images/ml-unsupervised-06.png)
 
 Now,
 ```
@@ -343,14 +343,14 @@ Covariance matrix
 ```
 On adding the above matrices and dividing by 6, we get:
 
-![image](images/ml-unsupervised-07.png)
+![Covariance matrix as one sixth of summed matrix, giving 2.92, 3.67, 3.67, 5.67](images/ml-unsupervised-07.png)
 
 **Step-05:**
 - Calculate the eigen values and eigen vectors of the covariance matrix.
 
 λ is an eigen value for a matrix M if it is a solution of the characteristic equation |M – λI| = 0. So, we have:
  
-![image](images/ml-unsupervised-08.png)
+![Characteristic equation: determinant of covariance matrix minus lambda times identity equals zero](images/ml-unsupervised-08.png)
 
 From here,
 ```
@@ -378,7 +378,7 @@ X = Eigen vector
 
 Substituting the values in the above equation, we get 
 
-![image](images/ml-unsupervised-09.png)
+![Covariance matrix times vector X1, X2 equals 8.22 times the same vector](images/ml-unsupervised-09.png)
 
 Solving these, we get:
 ```
@@ -393,12 +393,12 @@ From (1) and (2), **X1 = 0.69X2**
 
 From (2), the eigen vector is
 
-![image](images/ml-unsupervised-10.png)
+![Eigenvector X1, X2 computed as 2.55 and 3.67](images/ml-unsupervised-10.png)
 
  
 Thus, principal component for the given data set is
  
-![image](images/ml-unsupervised-11.png)
+![Principal component equals the eigenvector with values 2.55 and 3.67](images/ml-unsupervised-11.png)
 
  
 Lastly, we project the data points onto the new subspace as
@@ -407,7 +407,7 @@ Lastly, we project the data points onto the new subspace as
 Y = 2.55*C , X = 3.67C -🡪 Y = 2.55/3.67 X
 ```
 
-![image](images/ml-unsupervised-12.png)
+![Scatter plot of points projected onto the principal component line x1 = 0.69 x2](images/ml-unsupervised-12.png)
 
 ## PCA Technical Points
 There are various of points that one should take care during deciding using PCA, which we refered in ["tabularData/dataModeling/PCA"](/fields/tabular-data/data-feature-engineering/pca.md)

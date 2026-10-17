@@ -534,14 +534,14 @@ Using anchors can help us identify patterns in the data that we wouldn't have no
 ## Model Complexity vs. Interpretability
 There is often a trade-off between model complexity and interpretability. Simple models like linear regression are highly interpretable but may not capture complex patterns. Complex models like deep neural networks can offer high accuracy but are less interpretable.
 
-![image](images/ml-supervised-classification-02.png)
+![Curves of interpretability, model performance and required training data against model complexity](images/ml-supervised-classification-02.png)
 
 Note: As the model complexity increases, the required amount of training data increases as well.
 
 ## Model Interpretability Vs. Accuracy
 The trade-off between accuracy and interpretability is a fundamental consideration in machine learning and model development. It involves finding the right balance between building highly accurate but complex models and models that are more interpretable but potentially less accurate. 
 
-![image](images/ml-supervised-classification-03.png)
+![Scatter of models: interpretability falls as accuracy rises from linear regression to neural nets](images/ml-supervised-classification-03.png)
 
 Here's a detailed description of this trade-off:
 

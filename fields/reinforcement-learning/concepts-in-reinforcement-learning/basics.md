@@ -52,9 +52,9 @@ Another challenge is that reinforcement learning algorithms can be sensitive to 
 # Mathematical Games
 In this paper from 1960: http://cs.williams.edu/~freund/cs136-073/GardnerHexapawn.pdf
 
-![image](images/basics-01.png)
+![Scientific American Mathematical Games article by Martin Gardner on a matchbox game-learning machine](images/basics-01.png)
 
-![image](images/basics-02.png)
+![Labels for HER matchboxes: grids of tic-tac-toe positions with arrows and numbers](images/basics-02.png)
 
 # Components of RL
 In RL, there are three main components:

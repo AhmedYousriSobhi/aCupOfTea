@@ -54,7 +54,7 @@ Characteristics of a high-variance model:
 - Prone to overfitting.
 
 # Bias-Variance Trade-Off
-![image](images/bias-variance-trade-off-01.png)
+![Bias and variance curves versus model complexity, with generalization error minimal between underfitting and overfitting zones](images/bias-variance-trade-off-01.png)
 
 In summary, the main differences between bias and variance are:
 
