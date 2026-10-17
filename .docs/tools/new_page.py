@@ -41,6 +41,8 @@ MAX_TAGS = 5
 MAX_DOMAINS = 2
 MAX_TYPES = 2
 LEVELS = ("beginner", "intermediate", "advanced")
+FM_ORDER = ("id", "title", "sidebar_label", "sidebar_group", "summary", "level", "type", "status",
+            "domains", "tags", "relations")
 WORDS_PER_MIN = 200     # same as generate_index.py
 QUICK_MIN = 10          # "quick read" in Start here
 FENCE_BLOCK = re.compile(r"^(```|~~~).*?^\1[^\n]*$", re.S | re.M)
@@ -713,19 +715,20 @@ def page_ids(raw, ids, role):
     return out
 
 
-def ask_metadata(args, ask, title, folder, folders):
-    """The questions every page gets: type, subjects, tags, level, prerequisites, related."""
-    types = choose_type(args, ask, folder, folders)
-    domains, new_domains = choose_domains(args, ask, folder, folders, title)
-    tags, new_tags = choose_tags(args, ask, title, load_tags())
+def ask_metadata(args, ask, title, folder, folders, have=()):
+    """The questions every page gets: type, subjects, tags, level, prerequisites, related.
+    Fields named in `have` (already in the page's front matter) are not asked."""
+    types = [] if "type" in have else choose_type(args, ask, folder, folders)
+    domains, new_domains = ([], {}) if "domains" in have else choose_domains(args, ask, folder, folders, title)
+    tags, new_tags = ([], {}) if "tags" in have else choose_tags(args, ask, title, load_tags())
 
     def parse_level(raw):
         raw = raw.strip().lower()
         if raw and raw not in LEVELS:
             raise Invalid("level must be one of %s" % ", ".join(LEVELS))
         return raw
-    level = resolve(ask, args.level, parse_level,
-                    lambda: ask.text("Level (%s, optional)" % "/".join(LEVELS), required=False))
+    level = "" if "level" in have else resolve(
+        ask, args.level, parse_level, lambda: ask.text("Level (%s, optional)" % "/".join(LEVELS), required=False))
     ids = existing_ids(folders)
 
     def ask_ids(heading, label):
@@ -734,21 +737,25 @@ def ask_metadata(args, ask, title, folder, folders):
             complete_with(sorted(ids))
             return ask.text(heading, required=False)
         return prompt
-    prereqs = resolve(ask, args.prerequisites, lambda raw: page_ids(raw, ids, "a prerequisite"),
-                      ask_ids("Prerequisites", "read first"))
-    related = [r for r in resolve(ask, args.related, lambda raw: page_ids(raw, ids, "related"),
-                                  ask_ids("Related", "see also")) if r not in prereqs]
+    if "relations" in have:
+        prereqs, related = [], []
+    else:
+        prereqs = resolve(ask, args.prerequisites, lambda raw: page_ids(raw, ids, "a prerequisite"),
+                          ask_ids("Prerequisites", "read first"))
+        related = [r for r in resolve(ask, args.related, lambda raw: page_ids(raw, ids, "related"),
+                                      ask_ids("Related", "see also")) if r not in prereqs]
     return {"types": types, "domains": domains, "new_domains": new_domains, "tags": tags,
             "new_tags": new_tags, "level": level, "prereqs": prereqs, "related": related, "ids": ids}
 
 
-def front_matter_lines(page_id, title, summary, meta):
+def front_matter_lines(page_id, title, summary, meta, note=True):
     """The front matter block as a list of lines, from "---" to "---"."""
     fm = ["---", "id: %s" % page_id, "title: %s" % yaml_value(title)]
     label = sidebar_label(title)
     if label != title:
-        print("\nNote: the sidebar shows the text after the last hyphen (\"%s\")." % label)
-        print("      sidebar_label is set, so the sidebar shows the full title.")
+        if note:
+            print("\nNote: the sidebar shows the text after the last hyphen (\"%s\")." % label)
+            print("      sidebar_label is set, so the sidebar shows the full title.")
         fm.append("sidebar_label: %s" % yaml_value(title))
     if summary:
         fm.append("summary: %s" % yaml_value(summary))
@@ -768,6 +775,30 @@ def front_matter_lines(page_id, title, summary, meta):
             fm.append("  related: [%s]" % ", ".join(meta["related"]))
     fm.append("---")
     return fm
+
+
+def key_blocks(lines):
+    """{key: [lines]} of a front matter block: each top-level key with its indented lines."""
+    blocks, current = {}, None
+    for line in lines:
+        if line.strip() == "---":
+            continue
+        m = re.match(r"^([A-Za-z_]+):", line)
+        if m:
+            current = m.group(1)
+            blocks[current] = []
+        if current:
+            blocks[current].append(line)
+    return blocks
+
+
+def merge_front_matter(existing, added, skip=()):
+    """Existing front matter lines plus the added fields the page lacks, in the usual order.
+    What is already there is kept exactly as written; `skip` names fields not to add."""
+    have, new = key_blocks(existing), key_blocks(added)
+    new = {k: v for k, v in new.items() if k not in skip}
+    order = [k for k in FM_ORDER if k in have or k in new] + [k for k in have if k not in FM_ORDER]
+    return ["---"] + [l for k in order for l in (have[k] if k in have else new[k])] + ["---"]
 
 
 def report_new(meta):
@@ -829,34 +860,47 @@ def adopt(args, ask):
     with open(full, "rb") as fh:
         text = fh.read().decode("utf-8")
     bom, text = ("\ufeff", text[1:]) if text.startswith("\ufeff") else ("", text)
-    if re.match(r"---[ \t]*\r?\n", text):
-        sys.exit("error: %s already has front matter; edit it by hand (nothing was changed)" % rel)
-    title = body_h1(text)
+    m = re.match(r"---[ \t]*\r?\n(.*?)\r?\n---[ \t]*(?:\r?\n|\Z)", text, re.S)
+    existing = m.group(1).splitlines() if m else []
+    rest = text[m.end():] if m else text
+    have = key_blocks(existing)
+    if re.match(r"---[ \t]*\r?\n", text) and not m:
+        sys.exit("error: %s starts with '---' but its front matter is not closed; fix that by hand "
+                 "(nothing was changed)" % rel)
+    title = body_h1(rest)
     if not title:
         sys.exit("error: %s has no '# ' heading to take the title from" % rel)
 
     folder, name = os.path.dirname(rel), os.path.basename(rel)[:-3]
-    summary = args.summary if args.summary is not None else ask.text("Summary (one line, optional)", required=False)
-    summary = " ".join(summary.split())
-    if len(summary) > 200:
-        sys.exit("error: keep the summary under 200 characters")
+    summary = ""
+    if "summary" not in have:
+        summary = args.summary if args.summary is not None else ask.text("Summary (one line, optional)", required=False)
+        summary = " ".join(summary.split())
+        if len(summary) > 200:
+            sys.exit("error: keep the summary under 200 characters")
     folders = scan()
     print("\nAdopting %s  (title: \"%s\")" % (rel, title))
-    meta = ask_metadata(args, ask, title, folder, folders)
+    if have:
+        print("Keeping what the front matter already has: %s" % ", ".join(have))
+    meta = ask_metadata(args, ask, title, folder, folders, have)
     page_id = name if name not in meta["ids"] else slug(folder.split("/")[-1] + "-" + name)
     first = text.find("\n")
     eol = "\r\n" if first > 0 and text[first - 1] == "\r" else "\n"
-    block = eol.join(front_matter_lines(page_id, title, summary, meta)) + eol + eol
+    added = front_matter_lines(page_id, title, summary, meta, note="sidebar_label" not in have)
+    # a page that had no front matter gets a blank line after it; one that had keeps its own
+    block = eol.join(merge_front_matter(existing, added, ("title",) if m else ())) + eol + ("" if m else eol)
+    if m and not [k for k in key_blocks(added) if k not in have and k != "title"]:
+        sys.exit("Nothing to add: %s already has all the fields asked for." % rel)
 
     if args.dry_run:
-        print("\n--- %s (front matter to add; the page itself is unchanged) ---\n%s" % (rel, block))
+        print("\n--- %s (front matter after the change; the page text is unchanged) ---\n%s" % (rel, block))
         report_new(meta)
         return
     tmp = full + ".tmp"
     with open(tmp, "wb") as fh:
-        fh.write((bom + block + text).encode("utf-8"))
+        fh.write((bom + block + rest).encode("utf-8"))
     os.replace(tmp, full)                 # all or nothing
-    print("\nAdded front matter to %s (the page text is unchanged)" % rel)
+    print("\n%s front matter to %s (the page text is unchanged)" % ("Completed" if m else "Added", rel))
     save_taxonomy(meta)
     if listed_in_readme(folder, name):
         print("Already listed in %s/README.md" % folder)

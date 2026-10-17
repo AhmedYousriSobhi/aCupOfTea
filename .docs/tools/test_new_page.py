@@ -174,9 +174,25 @@ class Adopt(unittest.TestCase):
         self.assertTrue(after.endswith("---\r\n\r\n" + body))
         self.assertNotIn("\n", after.replace("\r\n", ""))
 
-    def test_page_with_front_matter_is_refused(self):
-        body = "---\nid: x\n---\n\n" + self.BODY
-        code, after, _, out = self.run_adopt(body)
+    def test_partial_front_matter_is_completed_and_kept(self):
+        code, after, _, _ = self.run_adopt("---\nsidebar_label: Short\n---\n\n" + self.BODY)
+        self.assertFalse(code)
+        head, _, rest = after.partition("\n---\n\n")
+        self.assertEqual(head.splitlines()[:4], ["---", "id: hand-made", "sidebar_label: Short", "summary: A short one."])
+        self.assertIn("type: [concept, guide]", head)
+        self.assertEqual(head.count("sidebar_label"), 1)
+        self.assertEqual(rest, self.BODY)
+
+    def test_complete_front_matter_has_nothing_to_add(self):
+        body = ("---\nid: x\nsummary: s\ntype: note\ndomains: [security]\ntags: []\nlevel: beginner\n"
+                "relations:\n  related: [y]\n---\n\n" + self.BODY)
+        code, after, _, _ = self.run_adopt(body)
+        self.assertIn("Nothing to add", str(code))
+        self.assertEqual(after, body)
+
+    def test_unclosed_front_matter_is_refused(self):
+        body = "---\nid: x\n\n" + self.BODY
+        code, after, _, _ = self.run_adopt(body)
         self.assertTrue(code)
         self.assertEqual(after, body)
 
