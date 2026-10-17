@@ -44,6 +44,7 @@
   .actions.sticky { position:sticky; bottom:0; background:var(--bg); padding:10px 0; margin:0; border-top:1px solid var(--line); z-index:2; }
   .req { color:var(--err); }
   .err-text { color:var(--err); font-size:.875rem; margin-top:2px; }
+  select[size] option { padding:4px 6px; }
   input[aria-invalid=true] { border-color:var(--err); }
   button[aria-busy=true] { cursor:progress; }
   .issue { background:var(--card); border:1px solid var(--line); border-radius:8px; padding:10px 14px; margin-bottom:10px; }
@@ -293,27 +294,51 @@ async function newTab(view) {
 async function adoptTab(view) {
   const opts = await api("/api/options");
   const pages = await api("/api/adoptable");
-  const select = h("select", {}, h("option", { value: "" }, "(choose a page)"), pages.map(p => h("option", { value: p.path }, p.path + (p.missing.length ? "   [missing: " + p.missing.join(", ") + "]" : ""))));
+  const filter = h("input", { type: "text", placeholder: "Type to filter: path, title or a missing field (e.g. devops summary)", autocomplete: "off" });
+  const list = h("select", { size: "8", "aria-label": "Pages that can be completed" });
+  const count = h("div", { class: "hint", "aria-live": "polite" });
+  const chosen = h("div", { class: "hint" });
   const holder = h("div"), out = h("div");
-  let meta = null;
-  select.addEventListener("change", () => {
-    const p = pages.find(x => x.path === select.value);
-    out.replaceChildren();
-    meta = p ? metaForm(opts, p.have) : null;
-    holder.replaceChildren(...(meta ? [meta.el] : []));
+  let meta = null, current = "";
+  const label = p => p.path + (p.title ? "  \u2013  " + p.title : "") + (p.missing.length ? "   [missing: " + p.missing.join(", ") + "]" : "");
+  const matches = () => {                                 // every word typed must appear in the path, title or missing fields
+    const words = filter.value.toLowerCase().split(/\s+/).filter(Boolean);
+    return pages.filter(p => { const hay = (p.path + " " + p.title + " missing " + p.missing.join(" ")).toLowerCase(); return words.every(w => hay.includes(w)); });
+  };
+  function render() {
+    const found = matches();
+    list.replaceChildren(...found.map(p => { const o = h("option", { value: p.path }, label(p)); if (p.path === current) o.selected = true; return o; }));
+    count.textContent = found.length === pages.length ? pages.length + " pages" : found.length + " of " + pages.length + " pages" + (found.length ? "; Enter picks the first, \u2193 moves into the list" : "; nothing matches");
+  }
+  function choose(path) {
+    const p = pages.find(x => x.path === path);
+    if (!p || path === current) return;
+    current = path; out.replaceChildren();
+    meta = metaForm(opts, p.have);
+    holder.replaceChildren(meta.el);
+    chosen.textContent = "Adopting: " + path;
+  }
+  filter.addEventListener("input", render);
+  filter.addEventListener("keydown", e => {
+    if (e.key === "Enter") { e.preventDefault(); const first = matches()[0]; if (first) { choose(first.path); render(); } }
+    else if (e.key === "ArrowDown" && list.options.length) { e.preventDefault(); list.focus(); if (list.selectedIndex < 0) list.selectedIndex = 0; }
+    else if (e.key === "Escape") { filter.value = ""; render(); }
   });
+  list.addEventListener("change", () => choose(list.value));
   const submit = async (btn, dry) => {
-    if (!meta) { resultBox(out)({ ok: false, output: "Choose a page first." }); select.focus(); return; }
-    await busy(btn, async () => resultBox(out)(await api("/api/adopt", Object.assign({ page: select.value, dry_run: dry }, meta.values()))));
+    if (!meta) { resultBox(out)({ ok: false, output: "Choose a page first." }); filter.focus(); return; }
+    await busy(btn, async () => resultBox(out)(await api("/api/adopt", Object.assign({ page: current, dry_run: dry }, meta.values()))));
   };
   const previewBtn = h("button", { type: "button", onclick: () => submit(previewBtn, true) }, "Preview");
   const adoptBtn = h("button", { type: "button", class: "primary", onclick: () => submit(adoptBtn, false) }, "Add front matter");
   view.replaceChildren(
     h("p", { class: "hint" }, "For a page you wrote by hand: this adds the front matter and the folder index row. The text of the page is never changed."),
-    h("fieldset", {}, h("legend", {}, "Page"), field("Page", "", select, select)),
+    h("fieldset", {}, h("legend", {}, "Page"),
+      field("Find a page", "", filter, filter), count, h("div", { class: "hint" }, "Pick one:"), list, chosen),
     h("fieldset", {}, h("legend", {}, "About the page"), holder),
     h("div", { class: "actions sticky" }, previewBtn, adoptBtn),
     out);
+  render();
 }
 
 /* ---------- Fix problems ---------- */
