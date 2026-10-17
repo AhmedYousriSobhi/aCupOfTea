@@ -212,7 +212,7 @@ id: sequence-models            # explicit, unique, kebab-case; required if the p
 title: Sequence Models
 summary: How models handle ordered data like text, from RNNs to transformers.   # optional, one line, max 200 chars
 level: intermediate            # optional: beginner | intermediate | advanced
-type: concept                  # concept | guide | reference | note | problem | project | experiment (definitions in taxonomy.yaml)
+type: concept                  # concept | guide | reference | note | problem | project | experiment (definitions in taxonomy.yaml); one, or a list of two: [concept, guide]
 status: stable                 # draft | stable | deprecated
 domains: [deep-learning]       # from taxonomy.yaml
 tags: [rnn]                    # optional, max 5, from taxonomy.yaml

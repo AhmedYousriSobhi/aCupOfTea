@@ -63,10 +63,11 @@ fields:
     required: false
     note: Reader difficulty. Used to group pages in Start here.
   type:
-    type: enum
+    type: enum | list[enum]
     values_from: taxonomy.yaml#types
     required: false
     default: note
+    max_items: 2             # when a list; the first is the main type
   status:
     type: enum
     values_from: taxonomy.yaml#statuses

@@ -34,6 +34,7 @@ SKIP_DIRS = {"__pycache__", "node_modules", "_site", "docs", "data"}
 STOP = set("a an and are as at be by for from how in into is it of on or the to vs what why with".split())
 MAX_TAGS = 5
 MAX_DOMAINS = 2
+MAX_TYPES = 2
 LEVELS = ("beginner", "intermediate", "advanced")
 WORDS_PER_MIN = 200     # same as generate_index.py
 QUICK_MIN = 10          # "quick read" in Start here
@@ -247,7 +248,44 @@ def add_tags(new):
         f.writelines(lines)
 
 
+def add_domains(new):
+    """Append new domains ({key: (label, description)}) to the end of the domains block."""
+    lines = read(TAXONOMY).splitlines(keepends=True)
+    start = next(i for i, l in enumerate(lines) if l.split("#")[0].rstrip() == "domains:")
+    end = start + 1
+    while end < len(lines) and not re.match(r"^\S", lines[end]):
+        end += 1
+    while end > start + 1 and not lines[end - 1].strip():
+        end -= 1                       # blank lines after the block stay outside it
+    add = []
+    for key, (label, description) in new.items():
+        add += ["  %s:\n" % key, "    label: %s\n" % label, "    description: %s\n" % description]
+    lines[end:end] = add
+    with open(TAXONOMY, "w", encoding="utf-8") as f:
+        f.writelines(lines)
+
+
 # ---------- prompts ----------
+
+class Invalid(Exception):
+    """A bad answer; the message says what is wrong."""
+
+
+def resolve(ask, supplied, parse, prompt):
+    """Get an answer and parse it. A bad option exits; a bad typed answer is asked again,
+    so one typo does not throw away everything already answered."""
+    if supplied is not None:
+        try:
+            return parse(supplied)
+        except Invalid as e:
+            sys.exit("error: %s" % e)
+    while True:
+        try:
+            return parse(prompt())
+        except Invalid as e:
+            if not ask.interactive or ask.yes:
+                sys.exit("error: %s" % e)
+            print("  %s; try again" % e)
 
 class Asker:
     def __init__(self, yes):
@@ -413,21 +451,24 @@ def warn_similar(title, folders, ask):
 
 
 def choose_tags(args, ask, title, known):
-    if args.tags is not None:
-        raw = args.tags
-    else:
+    def prompt():
         want = words(title)
         hint = [k for k, label in sorted(known.items()) if want & (words(k) | words(label))]
         print("\nTags (comma separated, Tab completes). Known: %s" % ", ".join(sorted(known)))
         complete_with(sorted(known))
-        raw = ask.text("Tags", ", ".join(hint), required=False)
-    tags = []
-    for t in raw.split(","):
-        t = slug(t)
-        if t and t not in tags:
-            tags.append(t)
-    if len(tags) > MAX_TAGS:
-        sys.exit("error: at most %d tags per page" % MAX_TAGS)
+        return ask.text("Tags", ", ".join(hint), required=False)
+
+    def parse(raw):
+        out = []
+        for t in raw.split(","):
+            t = slug(t)
+            if t and t not in out:
+                out.append(t)
+        if len(out) > MAX_TAGS:
+            raise Invalid("at most %d tags per page" % MAX_TAGS)
+        return out
+
+    tags = resolve(ask, args.tags, parse, prompt)
     new = {}
     for t in [t for t in tags if t not in known]:
         label = " ".join(w.capitalize() for w in t.split("-"))
@@ -439,32 +480,49 @@ def choose_tags(args, ask, title, known):
     return tags, new
 
 
-def choose_list(label, raw, allowed, limit):
+def split_list(raw):
+    """Comma (or space) separated answer as a list, without blanks or repeats."""
     out = []
-    for x in raw.split(","):
-        x = x.strip()
+    for x in re.split(r"[,\s]+", raw):
         if x and x not in out:
             out.append(x)
+    return out
+
+
+def closest(word, allowed):
+    """The allowed value a typo or short form most likely means ("hpc" -> systems-and-hpc), or ""."""
+    word = slug(word)
+    for a in allowed:
+        if word in a.split("-"):
+            return a
+    near = difflib.get_close_matches(word, allowed, n=1, cutoff=0.7)
+    return near[0] if near else ""
+
+
+def choose_list(label, raw, allowed, limit):
+    out = split_list(raw)
     bad = [x for x in out if x not in allowed]
     if bad:
-        sys.exit("error: unknown %s %s; allowed: %s" % (label, ", ".join(bad), ", ".join(allowed)))
+        hints = ["%s (did you mean %s?)" % (x, closest(x, allowed)) if closest(x, allowed) else x for x in bad]
+        raise Invalid("unknown %s %s; allowed: %s" % (label, ", ".join(hints), ", ".join(allowed)))
     if len(out) > limit:
-        sys.exit("error: at most %d %s" % (limit, label))
+        raise Invalid("at most %d %s per page" % (limit, label))
     return out
 
 
 def choose_type(args, ask, folder, folders):
+    """One or two kinds, the main one first. Returns a list."""
     types = load_section("types")
-    if args.type is not None:
-        raw = args.type
-    else:
+
+    def prompt():
         near = neighbours(folder, folders, "type")
-        print("\nKind of page: %s" % ", ".join(types))
+        print("\nKind of page, one or two comma separated (the main one first): %s" % ", ".join(types))
         print("  concept explains an idea, guide shows how to do something, reference is for looking up,")
         print("  note is a short write-up, problem/project/experiment describe work")
         complete_with(types)
-        raw = ask.text("Type", near[0] if near else "concept")
-    return (choose_list("type", raw, types, 1) or [""])[0]
+        return ask.text("Type", near[0] if near else "concept")
+
+    return resolve(ask, args.type, lambda raw: choose_list("type", raw, types, MAX_TYPES), prompt)
 
 
 def domain_words():
@@ -492,20 +550,46 @@ def guess_domains(title, folder):
 
 
 def choose_domains(args, ask, folder, folders, title):
+    """One or two subjects. Returns (domains, new_domains); an unknown subject is matched to a
+    known one ("hpc" -> systems-and-hpc) or, when typed in answer to the question, can be added."""
     domains = load_section("domains")
-    if args.domains is not None:
-        raw = args.domains
-    else:
+    new = {}
+
+    def prompt():
         near = neighbours(folder, folders, "domains")
         if not near:
             near = next((v for k, v in sorted(folder_defaults().items(), key=lambda kv: -len(kv[0]))
                          if folder == k or folder.startswith(k + "/")), [])
         if not near:
             near = guess_domains(title, folder)
-        print("\nSubjects (domains) put the page in Explore by subject; one or two. Known: %s" % ", ".join(domains))
-        complete_with(domains)
-        raw = ask.text("Domains", ", ".join(near[:MAX_DOMAINS]), required=False)
-    return choose_list("domains", raw, domains, MAX_DOMAINS)
+        print("\nSubjects (domains) put the page in Explore by subject; one or two, comma separated.")
+        print("Known: %s" % ", ".join(domains + list(new)))
+        complete_with(domains + list(new))
+        return ask.text("Domains", ", ".join(near[:MAX_DOMAINS]), required=False)
+
+    can_ask = args.domains is None and ask.interactive and not ask.yes
+
+    def parse(raw):
+        known = domains + list(new)
+        out = []
+        for x in split_list(raw):
+            if x not in known and can_ask:
+                guess = closest(x, known)
+                key = slug(x)
+                label = " ".join(w.capitalize() for w in key.split("-"))
+                if guess and ask.confirm("Unknown subject \"%s\". Use %s?" % (x, guess)):
+                    x = guess
+                elif key and ask.confirm("Add \"%s\" (label \"%s\") as a new subject?" % (key, label), default=False):
+                    description = ""
+                    while not description:
+                        description = ask.text("One line describing it")
+                    new[key] = (label, description)
+                    x = key
+            if x not in out:
+                out.append(x)
+        return choose_list("domains", ", ".join(out), domains + list(new), MAX_DOMAINS)
+
+    return resolve(ask, args.domains, parse, prompt), new
 
 
 def reading_time(body):
@@ -614,15 +698,13 @@ def link_in_readme(folder, page_rel, title, summary):
 
 
 def page_ids(raw, ids, role):
-    out = []
-    for r in raw.split(","):
-        r = r.strip()
-        if r and r not in out:
-            out.append(r)
+    out = split_list(raw)
     unknown = [r for r in out if r not in ids]
     if unknown:
-        sys.exit("error: no page has the id %s; only pages with an id in their front matter can be %s"
-                 % (", ".join(unknown), role))
+        hints = ["%s (did you mean %s?)" % (r, closest(r, sorted(ids))) if closest(r, sorted(ids)) else r
+                 for r in unknown]
+        raise Invalid("no page has the id %s; only pages with an id in their front matter can be %s"
+                      % (", ".join(hints), role))
     return out
 
 
@@ -634,8 +716,8 @@ def main():
     p.add_argument("--name", help="file name without .md (default: from the title)")
     p.add_argument("--tags", help="comma separated, e.g. transformers,attention")
     p.add_argument("--level", choices=LEVELS, help="beginner pages show under 'Beginner friendly'")
-    p.add_argument("--type", help="concept, guide, reference, note, problem, project or experiment")
-    p.add_argument("--domains", help="comma separated subjects from taxonomy.yaml, e.g. deep-learning")
+    p.add_argument("--type", help="one or two of concept, guide, reference, note, problem, project, experiment, comma separated")
+    p.add_argument("--domains", help="one or two comma separated subjects from taxonomy.yaml, e.g. deep-learning")
     p.add_argument("--prerequisites", help="comma separated page ids to read first, e.g. deep-learning-basics")
     p.add_argument("--related", help="comma separated page ids to see also")
     p.add_argument("--check", metavar="PAGE", help="report a written page's reading time and what is missing")
@@ -665,30 +747,29 @@ def main():
     if os.path.exists(os.path.join(ROOT, page_rel)):
         sys.exit("error: %s already exists" % page_rel)
 
-    page_type = choose_type(args, ask, folder, folders)
-    domains = choose_domains(args, ask, folder, folders, title)
+    page_types = choose_type(args, ask, folder, folders)
+    domains, new_domains = choose_domains(args, ask, folder, folders, title)
     tags, new_tags = choose_tags(args, ask, title, load_tags())
 
-    level = args.level
-    if level is None:
-        level = ask.text("Level (%s, optional)" % "/".join(LEVELS), required=False).strip().lower()
-        if level and level not in LEVELS:
-            sys.exit("error: level must be one of %s" % ", ".join(LEVELS))
+    def parse_level(raw):
+        raw = raw.strip().lower()
+        if raw and raw not in LEVELS:
+            raise Invalid("level must be one of %s" % ", ".join(LEVELS))
+        return raw
+    level = resolve(ask, args.level, parse_level,
+                    lambda: ask.text("Level (%s, optional)" % "/".join(LEVELS), required=False))
     ids = existing_ids(folders)
-    if args.prerequisites is not None:
-        raw = args.prerequisites
-    else:
-        print("\nPrerequisites: ids of pages to read first (comma separated, Tab completes).")
-        complete_with(sorted(ids))
-        raw = ask.text("Prerequisites", required=False)
-    prereqs = page_ids(raw, ids, "a prerequisite")
-    if args.related is not None:
-        raw = args.related
-    else:
-        print("\nRelated pages: ids of pages to see also (comma separated, Tab completes).")
-        complete_with(sorted(ids))
-        raw = ask.text("Related", required=False)
-    related = [r for r in page_ids(raw, ids, "related") if r not in prereqs]
+
+    def ask_ids(heading, label):
+        def prompt():
+            print("\n%s: ids of pages to %s (comma separated, Tab completes)." % (heading, label))
+            complete_with(sorted(ids))
+            return ask.text(heading, required=False)
+        return prompt
+    prereqs = resolve(ask, args.prerequisites, lambda raw: page_ids(raw, ids, "a prerequisite"),
+                      ask_ids("Prerequisites", "read first"))
+    related = [r for r in resolve(ask, args.related, lambda raw: page_ids(raw, ids, "related"),
+                                  ask_ids("Related", "see also")) if r not in prereqs]
 
     page_id = name if name not in ids else slug(folder.split("/")[-1] + "-" + name)
     fm = ["---", "id: %s" % page_id, "title: %s" % yaml_value(title)]
@@ -701,8 +782,8 @@ def main():
         fm.append("summary: %s" % yaml_value(summary))
     if level:
         fm.append("level: %s" % level)
-    if page_type:
-        fm.append("type: %s" % page_type)
+    if page_types:
+        fm.append("type: %s" % (page_types[0] if len(page_types) == 1 else "[%s]" % ", ".join(page_types)))
     if domains:
         fm.append("domains: [%s]" % ", ".join(domains))
     if tags:
@@ -721,6 +802,8 @@ def main():
         print("\n--- %s ---\n%s" % (page_rel, content))
         if new_tags:
             print("New tags for taxonomy.yaml: %s" % ", ".join(new_tags))
+        if new_domains:
+            print("New subjects for taxonomy.yaml: %s" % ", ".join(new_domains))
         return
 
     full = os.path.join(ROOT, page_rel)
@@ -731,6 +814,9 @@ def main():
     if new_tags:
         add_tags(new_tags)
         print("Added    tags %s to .docs/metadata/taxonomy.yaml" % ", ".join(sorted(new_tags)))
+    if new_domains:
+        add_domains(new_domains)
+        print("Added    subjects %s to .docs/metadata/taxonomy.yaml" % ", ".join(new_domains))
     print(link_in_readme(folder, page_rel, title, summary))
 
     docs = os.path.join(ROOT, ".docs")

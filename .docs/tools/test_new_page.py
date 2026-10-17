@@ -56,9 +56,75 @@ class DryRun(unittest.TestCase):
         self.assertNotEqual(r.returncode, 0)
         self.assertIn("cooking", r.stderr)
 
+    def test_two_types_are_written_as_a_list(self):
+        r = dry_run("--title", "A Quick Look", "--folder", "fields/schedulers", "--type", "concept,guide")
+        self.assertEqual(r.returncode, 0, r.stderr)
+        self.assertIn("type: [concept, guide]", r.stdout)
+
+    def test_three_types_are_refused(self):
+        r = dry_run("--title", "A Quick Look", "--folder", "fields/schedulers", "--type", "concept,guide,note")
+        self.assertNotEqual(r.returncode, 0)
+        self.assertIn("at most 2", r.stderr)
+
+    def test_unknown_domain_suggests_a_known_one(self):
+        r = dry_run("--title", "A Quick Look", "--folder", "fields/schedulers", "--domains", "hpc")
+        self.assertNotEqual(r.returncode, 0)
+        self.assertIn("did you mean systems-and-hpc", r.stderr)
+
     def test_folder_ranking(self):
         folders = new_page.scan()
         self.assertEqual(new_page.suggest_folders("Slurm job arrays", folders)[0], "fields/schedulers")
+
+
+class Prompts(unittest.TestCase):
+    """Typed answers: a bad one is asked again, a new subject can be added."""
+
+    def answers(self, *typed):
+        import io
+        from unittest import mock
+        ask = new_page.Asker(False)
+        ask.interactive = True
+        it = iter(typed)
+        out = io.StringIO()
+        patches = [mock.patch("builtins.input", lambda prompt="": next(it)),
+                   mock.patch("sys.stdout", out), mock.patch.object(new_page, "complete_with", lambda o: None)]
+        return ask, patches
+
+    def run_with(self, patches, fn):
+        for p in patches:
+            p.start()
+        try:
+            return fn()
+        finally:
+            for p in patches:
+                p.stop()
+
+    def test_bad_type_is_asked_again(self):
+        ask, patches = self.answers("cooking", "concept, guide")
+        args = type("A", (), {"type": None})()
+        got = self.run_with(patches, lambda: new_page.choose_type(args, ask, "fields/schedulers", new_page.scan()))
+        self.assertEqual(got, ["concept", "guide"])
+
+    def test_short_form_and_new_subject(self):
+        ask, patches = self.answers("devops, hpc", "y", "Running software on clusters", "")
+        args = type("A", (), {"domains": None})()
+        domains, new = self.run_with(patches, lambda: new_page.choose_domains(
+            args, ask, "fields/schedulers", new_page.scan(), "Kubernetes"))
+        self.assertEqual(domains, ["devops", "systems-and-hpc"])
+        self.assertEqual(new, {"devops": ("Devops", "Running software on clusters")})
+
+    def test_add_domains_writes_the_taxonomy(self):
+        with tempfile.TemporaryDirectory() as d:
+            path = os.path.join(d, "taxonomy.yaml")
+            with open(path, "w", encoding="utf-8") as fh:
+                fh.write("domains:\n  a:\n    label: A\n    description: x.\n\ntags:\n  t:\n    label: T\n")
+            old, new_page.TAXONOMY = new_page.TAXONOMY, path
+            try:
+                new_page.add_domains({"b": ("B", "y.")})
+                self.assertEqual(new_page.load_section("domains"), ["a", "b"])
+                self.assertEqual(new_page.load_section("tags"), ["t"])
+            finally:
+                new_page.TAXONOMY = old
 
 
 class Check(unittest.TestCase):

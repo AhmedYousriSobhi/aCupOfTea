@@ -18,7 +18,10 @@
       "model-evaluation"
     ],
     "title": "Accuracy Paradox",
-    "type": "concept"
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
   },
   "bias-variance-trade-off": {
     "domains": [
@@ -41,7 +44,10 @@
       "model-evaluation"
     ],
     "title": "Bias and Variance Trade-Off",
-    "type": "concept"
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
   },
   "containers-101": {
     "domains": [
@@ -62,7 +68,10 @@
       "containers"
     ],
     "title": "Containers 101",
-    "type": "concept"
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
   },
   "cpu-affinity": {
     "domains": [
@@ -83,7 +92,10 @@
       "affinity"
     ],
     "title": "CPU Affinity",
-    "type": "concept"
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
   },
   "cuda-101": {
     "domains": [
@@ -104,7 +116,10 @@
       "gpu"
     ],
     "title": "CUDA 101",
-    "type": "concept"
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
   },
   "customer-segmentation-problem": {
     "domains": [
@@ -127,7 +142,10 @@
       "clustering"
     ],
     "title": "Customer Segmentation",
-    "type": "problem"
+    "type": "problem",
+    "types": [
+      "problem"
+    ]
   },
   "deep-learning-basics": {
     "domains": [
@@ -149,7 +167,10 @@
       "neural-networks"
     ],
     "title": "Deep Learning Basics",
-    "type": "concept"
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
   },
   "encoder-decoder-machine-translation": {
     "domains": [
@@ -174,7 +195,10 @@
       "rnn"
     ],
     "title": "Encoder-Decoder for Machine Translation",
-    "type": "concept"
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
   },
   "hpc-systems-overview": {
     "domains": [
@@ -195,7 +219,10 @@
     "summary": "",
     "tags": [],
     "title": "HPC Systems",
-    "type": "concept"
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
   },
   "hpc-workloads": {
     "domains": [
@@ -214,7 +241,10 @@
     "summary": "",
     "tags": [],
     "title": "HPC Workloads",
-    "type": "concept"
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
   },
   "nccl-collective-communication": {
     "domains": [
@@ -238,7 +268,10 @@
       "gpu"
     ],
     "title": "NCCL",
-    "type": "concept"
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
   },
   "parallel-execution-and-affinity": {
     "domains": [
@@ -263,7 +296,10 @@
       "slurm"
     ],
     "title": "Parallel Execution and Affinity",
-    "type": "guide"
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
   },
   "principal-component-analysis": {
     "domains": [
@@ -282,7 +318,10 @@
     "summary": "",
     "tags": [],
     "title": "Principal Component Analysis (PCA)",
-    "type": "concept"
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
   },
   "pytorch-101": {
     "domains": [
@@ -303,7 +342,10 @@
       "pytorch"
     ],
     "title": "PyTorch 101",
-    "type": "guide"
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
   },
   "pytorch-ddp": {
     "domains": [
@@ -327,7 +369,10 @@
       "pytorch"
     ],
     "title": "PyTorch DDP",
-    "type": "note"
+    "type": "note",
+    "types": [
+      "note"
+    ]
   },
   "regression-imputing": {
     "domains": [
@@ -346,7 +391,10 @@
     "summary": "",
     "tags": [],
     "title": "Regression Imputing",
-    "type": "concept"
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
   },
   "reinforcement-learning-basics": {
     "domains": [
@@ -365,7 +413,10 @@
     "summary": "",
     "tags": [],
     "title": "Reinforcement Learning Basics",
-    "type": "concept"
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
   },
   "sequence-models": {
     "domains": [
@@ -393,7 +444,10 @@
       "transformers"
     ],
     "title": "Sequence Models",
-    "type": "concept"
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
   },
   "singularity-containers": {
     "domains": [
@@ -416,7 +470,10 @@
       "containers"
     ],
     "title": "Singularity",
-    "type": "guide"
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
   },
   "slurm-pam-adopt-ssh-access": {
     "domains": [
@@ -437,7 +494,10 @@
       "slurm"
     ],
     "title": "pam_slurm_adopt: Closing the Slurm SSH Backdoor",
-    "type": "guide"
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
   },
   "time-series-analysis": {
     "domains": [
@@ -456,7 +516,10 @@
     "summary": "",
     "tags": [],
     "title": "Time Series Analysis",
-    "type": "concept"
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
   },
   "unsupervised-learning": {
     "domains": [
@@ -477,7 +540,10 @@
       "clustering"
     ],
     "title": "Unsupervised Learning",
-    "type": "concept"
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
   },
   "used-cars-retailer-kpis": {
     "domains": [
@@ -496,6 +562,9 @@
     "summary": "",
     "tags": [],
     "title": "Used Cars Retailer Company",
-    "type": "note"
+    "type": "note",
+    "types": [
+      "note"
+    ]
   }
 }
