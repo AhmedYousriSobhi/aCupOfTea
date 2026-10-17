@@ -78,6 +78,14 @@ domains:
     label: Security
     description: Access control, authentication and hardening.
     related: [software-engineering, systems-and-hpc]
+  devops:
+    label: Devops
+    description: Field
+    related: [systems-and-hpc, kubernates]
+  kubernates:
+    label: Kubernates
+    description: devops-orchestraiton
+    related: [systems-and-hpc, devops]
 
 tags:
   affinity:
@@ -86,6 +94,11 @@ tags:
     label: Clustering
   containers:
     label: Containers
+  dev:
+    label: Dev
+    kind: technology
+  devops:
+    label: Devops
   distributed-training:
     label: Distributed Training
   encoder-decoder:
@@ -93,6 +106,9 @@ tags:
     kind: technology
   gpu:
     label: GPU
+    kind: technology
+  hpc:
+    label: Hpc
     kind: technology
   kubernetes:
     label: Kubernetes
@@ -107,6 +123,9 @@ tags:
     kind: technology
   neural-networks:
     label: Neural Networks
+    kind: technology
+  nvidia:
+    label: Nvidia
     kind: technology
   pytorch:
     label: PyTorch

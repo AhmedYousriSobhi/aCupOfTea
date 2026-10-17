@@ -49,6 +49,72 @@
       "concept"
     ]
   },
+  "broken-pods-rogues-gallery": {
+    "domains": [
+      "devops",
+      "kubernates",
+      "systems-and-hpc"
+    ],
+    "id": "broken-pods-rogues-gallery",
+    "level": "intermediate",
+    "path": "fields/devops/kubernetes/broken-pods-rogues-gallery.md",
+    "reading_time_min": 6,
+    "relations": {
+      "prerequisites": [
+        "kubernetes-in-five-nouns"
+      ],
+      "related": [
+        "containers-101"
+      ]
+    },
+    "status": "stable",
+    "summary": "How to recognise CrashLoop, OOMKilled, ImagePull and Pending pods by reading status, events and previous logs.",
+    "tags": [
+      "devops",
+      "hpc",
+      "kubernetes",
+      "nvidia"
+    ],
+    "title": "Broken Pods: A Rogues' Gallery (and the One Command That Catches Them All)",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
+  "build-a-two-node-k3s-lab": {
+    "domains": [
+      "devops",
+      "kubernates",
+      "systems-and-hpc"
+    ],
+    "id": "build-a-two-node-k3s-lab",
+    "level": "intermediate",
+    "path": "fields/devops/kubernetes/build-a-two-node-k3s-lab.md",
+    "reading_time_min": 7,
+    "relations": {
+      "prerequisites": [
+        "kubernetes-in-five-nouns"
+      ],
+      "related": [
+        "containers-101"
+      ]
+    },
+    "status": "stable",
+    "summary": "Build a two-VM Kubernetes lab on your laptop with Vagrant, libvirt and k3s, and dodge the DNS and network potholes.",
+    "tags": [
+      "containers",
+      "devops",
+      "hpc",
+      "kubernetes"
+    ],
+    "title": "Build a Two-Node Kubernetes Lab on Your Laptop (and Survive the DNS Pothole)",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
   "containers-101": {
     "domains": [
       "software-engineering",
@@ -200,6 +266,73 @@
       "concept"
     ]
   },
+  "fake-gpus-in-kubernetes": {
+    "domains": [
+      "devops",
+      "kubernates",
+      "systems-and-hpc"
+    ],
+    "id": "fake-gpus-in-kubernetes",
+    "level": "intermediate",
+    "path": "fields/devops/kubernetes/fake-gpus-in-kubernetes.md",
+    "reading_time_min": 6,
+    "relations": {
+      "prerequisites": [
+        "build-a-two-node-k3s-lab",
+        "kubernetes-in-five-nouns"
+      ],
+      "related": [
+        "containers-101"
+      ]
+    },
+    "status": "stable",
+    "summary": "Patch a node with a fake nvidia.com/gpu counter to learn GPU scheduling without owning a GPU.",
+    "tags": [
+      "devops",
+      "hpc",
+      "kubernetes",
+      "nvidia"
+    ],
+    "title": "Fake GPUs in Kubernetes: Learn GPU Scheduling Without Owning a GPU",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
+  "gpu-allocation-vs-utilization": {
+    "domains": [
+      "devops",
+      "kubernates",
+      "systems-and-hpc"
+    ],
+    "id": "gpu-allocation-vs-utilization",
+    "level": "intermediate",
+    "path": "fields/devops/kubernetes/gpu-allocation-vs-utilization.md",
+    "reading_time_min": 7,
+    "relations": {
+      "prerequisites": [
+        "build-a-two-node-k3s-lab",
+        "kubernetes-in-five-nouns"
+      ],
+      "related": [
+        "containers-101"
+      ]
+    },
+    "status": "stable",
+    "summary": "The scheduler knows who has booked the GPUs, not whether they’re busy, so use kubectl for the first question and DCGM-style telemetry for the second.",
+    "tags": [
+      "dev",
+      "hpc",
+      "kubernetes"
+    ],
+    "title": "Booked Is Not Busy: GPU Allocation vs Utilization",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
   "hpc-systems-overview": {
     "domains": [
       "business",
@@ -297,6 +430,38 @@
     "type": "concept",
     "types": [
       "concept"
+    ]
+  },
+  "nvidia-cluster-readiness-engine": {
+    "domains": [
+      "devops",
+      "kubernates",
+      "systems-and-hpc"
+    ],
+    "id": "nvidia-cluster-readiness-engine",
+    "level": "intermediate",
+    "path": "fields/devops/kubernetes/nvidia-cluster-readiness-engine.md",
+    "reading_time_min": 10,
+    "relations": {
+      "prerequisites": [
+        "kubernetes-in-five-nouns"
+      ],
+      "related": [
+        "containers-101"
+      ]
+    },
+    "status": "stable",
+    "summary": "Even when traditional monitoring tools show all GPUs and networks operating normally, subtle bottlenecks—like a single slow GPU or a degraded network link—can silently drag down the performance of an",
+    "tags": [
+      "hpc",
+      "kubernetes",
+      "nvidia"
+    ],
+    "title": "The Cluster That Passed Every Test Except the One That Mattered",
+    "type": "concept",
+    "types": [
+      "concept",
+      "note"
     ]
   },
   "parallel-execution-and-affinity": {

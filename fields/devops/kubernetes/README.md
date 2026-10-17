@@ -3,28 +3,30 @@ sidebar_label: Kubernetes
 ---
 
 # Kubernetes, for People Who Have Other Things to Do
-
-A short series on Kubernetes, written by someone who runs GPU clusters for a living and needed a landlord-with-opinions explanation before the YAML made sense. Start at page 1 and work down. Each page stands on its own.
-
+ 
+A short series on Kubernetes, written by someone who runs GPU clusters for a living and needed a landlord-with-opinions explanation before the YAML made sense. Start at page 1 and work down. Each page stands on its own, and later pages link back to earlier ones when they lean on them.
+ 
 ---
-
+ 
 ## Pages
-
-| Page | What it covers | Time |
-| --- | --- | --- |
-| [Kubernetes in Five Nouns](/fields/devops/kubernetes/kubernetes-in-five-nouns.md) | Node, Pod, Namespace, Event and API server, with an HPC translation table | 5 min |
-
+ 
+| # | Page | What it covers | Time |
+| --- | --- | --- | --- |
+| 1 | [Kubernetes in Five Nouns](/fields/devops/kubernetes/kubernetes-in-five-nouns.md) | Node, Pod, Namespace, Event and API server, with an HPC translation table | 5 min |
+| 2 | [Build a Two-Node k3s Lab](/fields/devops/kubernetes/build-a-two-node-k3s-lab.md) | Vagrant, libvirt and k3s on a laptop, plus the DNS and network potholes | 10 min |
+| 3 | [Fake GPUs in Kubernetes](/fields/devops/kubernetes/fake-gpus-in-kubernetes.md) | Extended resources: learn GPU scheduling without owning a GPU | 5 min |
+| 4 | [Broken Pods, the Rogues' Gallery](/fields/devops/kubernetes/broken-pods-rogues-gallery.md) | CrashLoop, OOMKilled, ImagePull and Pending pods, and how to read each one | 7 min |
+| 5 | [GPU Allocation vs Utilization](/fields/devops/kubernetes/gpu-allocation-vs-utilization.md) | Booked is not busy: what the scheduler knows and what it doesn't | 6 min |
+| 6 | [NVIDIA Cluster Readiness Engine](/fields/devops/kubernetes/nvidia-cluster-readiness-engine.md) | Proving a GPU cluster is ready by running real workloads on it | 8 min |
+ 
 ## Brewing next
-
+ 
 These are planned and not written yet:
-
-- Build a two-node k3s lab with Vagrant (and the DNS pothole that ate an afternoon)
+ 
 - k3s vs kubeadm: which one, and when
-- Fake GPUs in Kubernetes: extended resources without the hardware
-- The rogues' gallery: CrashLoop, OOMKilled, ImagePull and Unschedulable pods
 - RBAC and the limited viewer
 - Your kubeconfig is a house key
 - Polite API server monitoring
-- GPU allocation vs utilization
 - Kubernetes at HPC scale
 - A kubectl troubleshooting cheat sheet (this one will live in `tips/`)
+ 
