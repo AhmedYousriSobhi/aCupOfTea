@@ -262,11 +262,22 @@ function chipInput({ known, max, onChange, newLabel, suggest }) {
   const input = h("input", { type: "text", list: listId, placeholder: "type, then Enter", autocomplete: "off" });
   const note = h("div", { class: "hint" });
   const suggestion = h("div", { class: "hint", "aria-live": "polite" });       // "did you mean ...?" for a new tag
+  const guesses = new Map();                                                    // new tag -> the known tag it looks like
+  function showSuggestion() {                                                   // only for a tag that is still in the list
+    const v = state.items.find(x => guesses.has(x) && !state.items.includes(guesses.get(x)));
+    if (!v) { suggestion.textContent = ""; return; }
+    const guess = guesses.get(v);
+    suggestion.replaceChildren('"' + v + '" looks like "' + guess + '". ', h("button", { type: "button", onclick() {
+      state.items = state.items.filter(x => x !== v); state.isNew.delete(v); guesses.delete(v);
+      if (!state.items.includes(guess)) state.items.push(guess);
+      render(); onChange && onChange(); } }, "Use " + guess));
+  }
   function render() {
     chips.replaceChildren(...state.items.map(v => h("span", { class: "chip" + (state.isNew.has(v) ? " new" : "") },
       v + (state.isNew.has(v) ? " (new)" : ""),
-      h("button", { type: "button", "aria-label": "remove " + v, onclick: () => { state.items = state.items.filter(x => x !== v); state.isNew.delete(v); render(); onChange && onChange(); } }, "×"))));
+      h("button", { type: "button", "aria-label": "remove " + v, onclick: () => { state.items = state.items.filter(x => x !== v); state.isNew.delete(v); guesses.delete(v); render(); onChange && onChange(); } }, "×"))));
     note.textContent = max ? state.items.length + " of at most " + max : "";
+    showSuggestion();
   }
   function add(raw) {
     for (const part of raw.split(",")) {
@@ -278,12 +289,7 @@ function chipInput({ known, max, onChange, newLabel, suggest }) {
         if (newLabel) {
           state.isNew.add(v);
           const guess = suggest && suggest(v);                         // a new tag that looks like a known one is often a typo
-          if (guess) {
-            suggestion.replaceChildren('"' + v + '" looks like "' + guess + '". ', h("button", { type: "button", onclick() {
-              state.items = state.items.filter(x => x !== v); state.isNew.delete(v);
-              if (!state.items.includes(guess)) state.items.push(guess);
-              suggestion.textContent = ""; render(); onChange && onChange(); } }, "Use " + guess));
-          }
+          if (guess) guesses.set(v, guess);
         } else { state.items.pop(); note.textContent = v + " is not a known page id."; }
       }
     }
@@ -293,7 +299,7 @@ function chipInput({ known, max, onChange, newLabel, suggest }) {
   input.addEventListener("change", () => input.value && add(input.value));
   render();
   note.setAttribute("aria-live", "polite");
-  return { el: h("div", {}, chips, input, list, note, suggestion), input, state, set(values) { state.items = []; state.isNew.clear(); add(values.join(",")); } };
+  return { el: h("div", {}, chips, input, list, note, suggestion), input, state, set(values) { state.items = []; state.isNew.clear(); guesses.clear(); add(values.join(",")); } };
 }
 
 /* Choices as toggle chips, at most `max` on. Pointing at or tabbing to one says what it means. */
