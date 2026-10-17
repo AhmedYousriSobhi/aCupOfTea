@@ -49,6 +49,10 @@
   button[aria-busy=true] { cursor:progress; }
   .issue { background:var(--card); border:1px solid var(--line); border-radius:8px; padding:10px 14px; margin-bottom:10px; }
   .badge { font-size:.75rem; text-transform:uppercase; padding:1px 8px; border-radius:999px; border:1px solid currentColor; margin-right:6px; }
+  details.group { margin:0 0 14px; }
+  details.group > summary { cursor:pointer; padding:8px 0; font-weight:600; list-style-position:inside; }
+  details.group > summary .count { font-weight:400; color:var(--muted); }
+  details.group > .hint { margin:0 0 8px; }
   .badge.error { color:var(--err); } .badge.warning { color:var(--warn); } .badge.todo { color:var(--muted); }
   .path { font-family:ui-monospace, monospace; font-size:.875rem; }
   .diff .add { color:var(--ok); } .diff .del { color:var(--err); }
@@ -760,15 +764,36 @@ async function fixTab(view) {
         ? h("div", { class: "counts", role: "status" }, [["error", "errors"], ["warning", "warnings"], ["todo", "to-dos"]].filter(([l]) => by(l)).map(([l, w]) =>
             h("span", { class: "badge " + l }, icon(LEVEL_ICON[l], 16), by(l) + " " + w)))
         : h("div", { class: "allclear", role: "status" }, cup(56, 1).el, h("strong", {}, "All clear."), "Nothing to fix. Time for a cup of tea."));
-      list.replaceChildren(...issues.map(card));
+      list.replaceChildren(...groupsOf(issues).map(group));
     } catch (e) { list.replaceChildren(message("err", e.message)); }
     list.removeAttribute("aria-busy");
   }
-  function card(i) {
+  const groupOpen = {};
+  // problems that call for the same kind of action share one collapsible section (the server sorts them together)
+  function groupsOf(issues) {
+    const groups = [];
+    for (const i of issues) {
+      let g = groups.find(x => x.title === (i.group || i.message));
+      if (!g) groups.push(g = { title: i.group || i.message, items: [] });
+      g.items.push(i);
+    }
+    return groups;
+  }
+  function group(g) {
+    const worst = ["error", "warning", "todo"].find(l => g.items.some(i => i.level === l)) || "todo";
+    const hint = g.items[0].hint, shared = !!hint && g.items.every(i => i.hint === hint);
+    const el = h("details", { class: "group", open: g.title in groupOpen ? groupOpen[g.title] : g.items.length <= 8 },
+      h("summary", {}, h("span", { class: "badge " + worst }, icon(LEVEL_ICON[worst], 14), worst), g.title, " ", h("span", { class: "count" }, "(" + g.items.length + ")")),
+      shared ? h("div", { class: "hint" }, hint) : null,
+      ...g.items.map(i => card(i, shared)));
+    el.addEventListener("toggle", () => { groupOpen[g.title] = el.open; });   // kept when the list is refreshed after a fix
+    return el;
+  }
+  function card(i, hideHint) {
     const detail = h("div");
     return h("article", { class: "issue" },
       h("div", {}, h("span", { class: "badge " + i.level }, icon(LEVEL_ICON[i.level] || LEVEL_ICON.todo, 14), i.level), h("span", { class: "path" }, i.path + ":" + i.line)),
-      h("div", {}, i.message), i.hint ? h("div", { class: "hint" }, i.hint) : null,
+      h("div", {}, i.message), i.hint && !hideHint ? h("div", { class: "hint" }, i.hint) : null,
       h("div", { class: "actions" },
         i.path.endsWith(".md") ? h("button", { type: "button", onclick: async () => detail.replaceChildren(message("ok", (await api("/api/open", { path: i.path, line: i.line })).output)) }, "Open in editor") : null,
         i.fixes.map((f, n) => h("button", { type: "button", onclick() {
