@@ -52,6 +52,9 @@ generate_sidebar() {
 
         if [ -d "$path" ]; then
             folders+=("$path")
+        elif [ "$base" == "README.md" ]; then
+            # A folder's README is linked from the folder heading below, not listed twice
+            continue
         elif [[ "$base" == *.md ]]; then
             # --- FILE HEADER EXTRACTION ---
             local header=$(grep -m 1 "^# " "$path" | sed 's/^# //')
@@ -140,7 +143,12 @@ generate_sidebar() {
             folder_display_name=$(echo "$base" | sed 's/[-_]/ /g' | awk '{for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) substr($i,2)} 1')
         fi
 
-        echo "${indent}* **$folder_display_name**" >> $OUTPUT
+        # The heading links to the folder's README (the folder index); without one it is a plain toggle
+        if [ -f "$readme_file" ]; then
+            echo "${indent}* [**$folder_display_name**](${rel}/README.md)" >> $OUTPUT
+        else
+            echo "${indent}* **$folder_display_name**" >> $OUTPUT
+        fi
         
         # Recurse
         generate_sidebar "$d" "  $indent"
