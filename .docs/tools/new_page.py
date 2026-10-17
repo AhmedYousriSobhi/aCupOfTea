@@ -369,6 +369,8 @@ def suggest_folders(title, folders, limit=5):
 def folder_problem(folder, folders):
     if not folder:
         return "no folder chosen"
+    if folder.startswith("/") or "\\" in folder or any(part in ("", ".", "..") for part in folder.split("/")):
+        return "%s is not a plain folder path inside the repository (no .., . or empty parts)" % folder
     if folder.split("/")[0] not in {f.split("/")[0] for f in folders}:
         return "%s is not under an existing top-level folder" % folder
     bad = [p for p in folder.split("/") if p != slug(p)]
