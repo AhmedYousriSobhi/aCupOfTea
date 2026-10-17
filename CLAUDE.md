@@ -201,7 +201,7 @@ If the repository can't answer those through its structure, improve the structur
 An optional **overlay** on top of the folder structure: pages can carry YAML front matter so they are discoverable by domain and tag and linked to related pages. Folders remain the primary location; files never move for metadata's sake. Pages without front matter are valid ("legacy").
 
 - Schema and controlled vocabulary: `.docs/metadata/schema.yaml`, `.docs/metadata/taxonomy.yaml`. Add a new domain/tag there *before* using it.
-- Tools: `.docs/tools/validate.py`, `check_links.py`, `update_recent.py`, `check_pins.py`, `test_new_page.py`, `generate_index.py`, `stage_site.py` (Python + PyYAML 6.0.2); `page_gui.py` (`new_page.py --gui`) is the same authoring flow as a local browser form; `page_doctor.py` turns their warnings into a to-do list for the changed pages (open at the line, suggested fixes).
+- Tools: `.docs/tools/validate.py`, `check_links.py`, `update_recent.py`, `check_pins.py`, `test_new_page.py`, `generate_index.py`, `stage_site.py` (Python + PyYAML 6.0.2); `page_gui.py` (`new_page.py --gui`) is the same authoring flow as a local browser form; `page_doctor.py` turns their warnings into a to-do list for the changed pages (open at the line, suggested fixes; also stale `.docs/generated`, pictures without a description, swapped folder READMEs, and an optional pre-push hook).
 - Generated output (never hand-edit, deterministic): `.docs/generated/` — JSON indexes plus Explore pages. Commit it with the change.
 
 **Add metadata to a page** — put front matter at the very top of the file, nothing else changes:

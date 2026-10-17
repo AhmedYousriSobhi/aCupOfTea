@@ -77,7 +77,21 @@ python3 .docs/tools/page_doctor.py             # files changed since dev, intera
 python3 .docs/tools/page_doctor.py fields/devops   # one page or folder
 ```
 
-Type a problem's number to open it in your editor at that line (`$VISUAL` or `$EDITOR`; VS Code, vim and nano get the line number), `f1` to apply the first suggested fix (it shows the change and asks first), `r` to check again, `q` to quit. Fixes it can make: a `../` link written root-absolute (or pointed at the file of that name), a misspelt or abbreviated tag or subject replaced (`kubernates`, `k8s` become `kubernetes`), a single-use tag that names a tool marked `kind: technology`. Use `--list` to print only, `--apply-safe` to apply the fixes marked `[safe]`, and `--json` for scripts.
+Type a problem's number to open it in your editor at that line (`$VISUAL` or `$EDITOR`; VS Code, vim and nano get the line number), `f1` to apply the first suggested fix (it shows the change and asks first), `r` to check again, `q` to quit. Fixes it can make: a `../` link written root-absolute (or pointed at the file of that name), a misspelt or abbreviated tag or subject replaced (`kubernates`, `k8s` become `kubernetes`), a single-use tag that names a tool marked `kind: technology`. It also notices:
+
+- **Stale generated indexes** (CI fails on those): the fix runs `generate_index.py` for you.
+- **Pictures without a description**: with `--pictures` each one is listed at its line and the fix asks what it shows, then writes it into the brackets.
+- **Swapped folder READMEs** (a folder's README that is about its subfolder and the other way round): the fix swaps the two files back.
+
+Use `--list` to print only, `--errors-only` to leave out warnings and to-dos, `--apply-safe` to apply the fixes marked `[safe]`, and `--json` for scripts. "Changed files" means changed since the branch left `dev`, committed or not.
+
+To catch errors before CI does, install a git hook that stops a push when the changed files have an error (skip it once with `git push --no-verify`):
+
+```bash
+python3 .docs/tools/page_doctor.py --install-hook      # --uninstall-hook removes it
+```
+
+It never overwrites a hook it did not make.
 
 ## When the page is written
 
