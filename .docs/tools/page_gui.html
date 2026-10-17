@@ -95,7 +95,7 @@
   .graph text { font-size:11px; fill:var(--text); }
   .graph .ok { stroke:var(--accent); stroke-width:2; }
   .graph .odd { stroke:var(--err); stroke-width:2; stroke-dasharray:5 4; }
-  .graph .node { fill:var(--card); stroke:var(--accent); stroke-width:2; }
+  .graph .node { stroke:var(--card); stroke-width:2; }
   .brewed { display:flex; gap:14px; align-items:center; background:var(--card); border:1px solid var(--ok); border-radius:10px; padding:10px 16px; margin:8px 0; }
   .brewed strong { display:block; font-size:1.05rem; }
   .counts { display:flex; flex-wrap:wrap; gap:8px; margin:0 0 12px; }
@@ -362,30 +362,45 @@ function metaForm(opts, have = [], onChange = () => {}, titleOf = () => "") {
   /* Subjects of one page should go together: say so when two are not marked as related in taxonomy.yaml. */
   const relNote = h("div", { class: "hint", "aria-live": "polite", role: "status" });
   const graph = h("div", { class: "graph" });
+  const relFix = h("div", { class: "actions" });
   const labelOf = key => (opts.domains.find(d => d.key === key) || { label: titleCase(key) }).label;
   function checkRelated() {
     const picked = domains.get(), fresh = newDomains.map(d => d.key), bad = [];
     picked.forEach((a, i) => picked.slice(i + 1).forEach(b => {
-      if (!fresh.includes(a) && !fresh.includes(b) && !(opts.related[a] || []).includes(b)) bad.push(labelOf(a) + " and " + labelOf(b));
+      if (!fresh.includes(a) && !fresh.includes(b) && !(opts.related[a] || []).includes(b)) bad.push({ a, b, text: labelOf(a) + " and " + labelOf(b) });
     }));
     drawGraph(picked, fresh);
-    relNote.textContent = bad.length ? "\u26a0 " + bad.join("; ") + (bad.length > 1 ? " are" : " is") + " not marked as related in taxonomy.yaml. A page usually belongs to one area; this is only a warning, you can still create it." : "";
+    relNote.textContent = bad.length ? "\u26a0 " + bad.map(p => p.text).join("; ") + (bad.length > 1 ? " are" : " is") + " not marked as related in taxonomy.yaml. A page usually belongs to one area; this is only a warning, you can still create it." : "";
+    relFix.replaceChildren(...bad.map(p => h("button", { type: "button", onclick: async e => {
+      const btn = e.currentTarget; btn.disabled = true;
+      try {
+        const r = await api("/api/relate", { a: p.a, b: p.b });
+        if (r.ok) { (opts.related[p.a] = opts.related[p.a] || []).push(p.b); (opts.related[p.b] = opts.related[p.b] || []).push(p.a); checkRelated(); relNote.textContent = "\u2713 " + r.output; }
+        else { btn.disabled = false; relNote.textContent = r.output; }
+      } catch (x) { btn.disabled = false; relNote.textContent = String(x.message || x); }
+    } }, "Mark " + p.text + " as related")));
   }
   /* the chosen subjects as a small map: a solid line where two go together, a dashed red one where they are not related */
   function drawGraph(picked, fresh) {
     if (picked.length < 2) { graph.replaceChildren(); return; }
     const W = 300, H = 120, pos = picked.length === 2 ? [[70, 60], [230, 60]] : [[150, 22], [60, 96], [240, 96]];
     const rel = (a, b) => fresh.includes(a) || fresh.includes(b) || (opts.related[a] || []).includes(b);
-    const lines = [], nodes = [];
+    const lines = [], nodes = [], defs = [];
     picked.forEach((a, i) => picked.slice(i + 1).forEach((b, j) => {
-      const [x1, y1] = pos[i], [x2, y2] = pos[i + 1 + j], ok = rel(a, b);
-      lines.push(sv("line", { x1, y1, x2, y2, class: ok ? "ok" : "odd" }));
-      if (!ok) lines.push(sv("text", { x: (x1 + x2) / 2, y: (y1 + y2) / 2 - 4, "text-anchor": "middle", style: "fill:var(--err);font-weight:700" }, "not related"));
+      const [x1, y1] = pos[i], [x2, y2] = pos[i + 1 + j], ok = rel(a, b), id = "g" + i + "-" + (i + 1 + j);
+      if (ok) {   // a related pair: the line shades from one subject's colour to the other's
+        defs.push(sv("linearGradient", { id, gradientUnits: "userSpaceOnUse", x1, y1, x2, y2 },
+          sv("stop", { offset: "0", "stop-color": "hsl(" + hue(a) + " 55% 48%)" }), sv("stop", { offset: "1", "stop-color": "hsl(" + hue(b) + " 55% 48%)" })));
+        lines.push(sv("line", { x1, y1, x2, y2, class: "ok", style: "stroke:url(#" + id + ")" }));
+      } else {    // not related: dashed and labelled, so it does not depend on colour alone
+        lines.push(sv("line", { x1, y1, x2, y2, class: "odd" }));
+        lines.push(sv("text", { x: (x1 + x2) / 2, y: (y1 + y2) / 2 - 4, "text-anchor": "middle", style: "fill:var(--err);font-weight:700" }, "\u26a0 not related"));
+      }
     }));
-    picked.forEach((a, i) => nodes.push(sv("circle", { cx: pos[i][0], cy: pos[i][1], r: 7, class: "node", style: "stroke:hsl(" + hue(a) + " 55% 42%)" }),
-      sv("text", { x: pos[i][0], y: pos[i][1] + (picked.length === 3 && i === 0 ? -12 : 21), "text-anchor": "middle" }, labelOf(a))));
+    picked.forEach((a, i) => nodes.push(sv("circle", { cx: pos[i][0], cy: pos[i][1], r: 8, class: "node", style: "fill:hsl(" + hue(a) + " 55% 48%)" }),
+      sv("text", { x: pos[i][0], y: pos[i][1] + (picked.length === 3 && i === 0 ? -13 : 22), "text-anchor": "middle" }, labelOf(a))));
     const svg = sv("svg", { viewBox: "0 0 " + W + " " + H, width: W, height: H, role: "img",
-      "aria-label": "How the chosen subjects relate: " + picked.map(labelOf).join(", ") }, lines, nodes);
+      "aria-label": "How the chosen subjects relate: " + picked.map(labelOf).join(", ") }, sv("defs", {}, defs), lines, nodes);
     graph.replaceChildren(svg);
   }
   domains.el.addEventListener("change", checkRelated);
@@ -418,7 +433,7 @@ function metaForm(opts, have = [], onChange = () => {}, titleOf = () => "") {
     keepNote,
     keep("summary", () => field("Summary", "one line shown in search and Explore", h("div", {}, summary, count), summary)),
     keep("type", () => field("Kind of page", "one or two; the first you pick is the main one", h("div", {}, types.el, addType))),
-    keep("domains", () => field("Subjects", "up to " + limits.domains + " that go together; they put the page in Explore by subject", h("div", {}, domains.el, graph, relNote, addDomain))),
+    keep("domains", () => field("Subjects", "up to " + limits.domains + " that go together; they put the page in Explore by subject", h("div", {}, domains.el, graph, relNote, relFix, addDomain))),
     more);
   const values = () => ({ summary: summary.value, types: types.get(), domains: domains.get(), tags: tags.state.items,
     level: level.value, prerequisites: prereq.state.items, related: related.state.items,

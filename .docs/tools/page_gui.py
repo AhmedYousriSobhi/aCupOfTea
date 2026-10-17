@@ -349,6 +349,23 @@ def upload_image(d):
             "output": "Saved %s" % os.path.relpath(path, root).replace(os.sep, "/")}
 
 
+def relate(d):
+    """Mark two subjects as going together in taxonomy.yaml (a pair is listed once, read both ways)."""
+    a, b = str(d.get("a", "")), str(d.get("b", ""))
+    known = new_page.related_map()
+    if a == b or a not in known or b not in known:
+        return {"ok": False, "output": "Both must be different subjects from taxonomy.yaml."}
+    with LOCK:
+        if b in new_page.related_map().get(a, set()):
+            return {"ok": True, "output": "Already related."}
+        text = page_doctor.add_related(new_page.read(new_page.TAXONOMY), a, b)
+        if text is None:
+            return {"ok": False, "output": "Could not find %s in taxonomy.yaml." % a}
+        with open(new_page.TAXONOMY, "w", encoding="utf-8") as f:
+            f.write(text)
+    return {"ok": True, "output": "%s and %s are now marked as related in taxonomy.yaml." % (a, b)}
+
+
 def reindex(d=None):
     """Rewrite .docs/generated (what CI checks is current)."""
     with LOCK:
@@ -368,7 +385,7 @@ GET_ROUTES = {
     "/api/pages": lambda q: all_pages(),
 }
 POST_ROUTES = {"/api/create": create, "/api/adopt": adopt, "/api/update": update_page, "/api/fix": fix,
-               "/api/open": open_in_editor, "/api/image": upload_image, "/api/reindex": reindex}
+               "/api/open": open_in_editor, "/api/image": upload_image, "/api/reindex": reindex, "/api/relate": relate}
 BIG_BODY = {"/api/image"}                # routes that may carry a picture
 
 

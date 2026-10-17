@@ -161,6 +161,18 @@ class Api(unittest.TestCase):
         self.assertTrue(note["ok"], note)
         self.assertIn("business and security is not marked as related", note["output"])
 
+    def test_two_subjects_can_be_marked_as_related(self):
+        before = self.json("/api/options")["related"]
+        self.assertNotIn("security", before["business"])
+        r = self.json("/api/relate", {"a": "business", "b": "security"})
+        self.assertTrue(r["ok"], r)
+        after = self.json("/api/options")["related"]
+        self.assertIn("security", after["business"])
+        self.assertIn("business", after["security"])
+        self.assertTrue(self.json("/api/relate", {"a": "business", "b": "security"})["ok"])   # twice is fine
+        self.assertFalse(self.json("/api/relate", {"a": "business", "b": "nonsense"})["ok"])
+        self.assertFalse(self.json("/api/relate", {"a": "business", "b": "business"})["ok"])
+
     # ---- adopt
     def test_adoptable_lists_what_is_missing(self):
         pages = {p["path"]: p for p in self.json("/api/adoptable")}
