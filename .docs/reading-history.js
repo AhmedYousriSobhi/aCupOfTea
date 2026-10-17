@@ -25,7 +25,8 @@
   }
   function mark() {
     var read = load(KEY, {});
-    Array.prototype.forEach.call(document.querySelectorAll('.sidebar-nav li:not(.group) > a[href^="#/"]'), function (a) {
+    Array.prototype.forEach.call(document.querySelectorAll('.sidebar-nav li:not(.group) > a.page-link[href^="#/"]'), function (a) {
+      if (a.closest('.app-sub-sidebar')) return; // the page's own sections are not pages
       var h = decodeURIComponent(a.getAttribute('href').replace(/^#/, '').split('?')[0]).replace(/\.md$/, '');
       a.classList.toggle('read', !!read[h]);
     });
