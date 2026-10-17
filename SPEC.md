@@ -121,7 +121,7 @@ index.html           — Docsify entry point: page shell, styles, Content-Securi
                          lazy-libs.js (loads Mermaid and KaTeX only on pages that use them)
                          reading-progress.js (progress bar, back-to-top button)
                          surprise-me.js (random page link in the menu)
-                         reading-history.js (pages read get a check in the menu, Continue link)
+                         reading-history.js (pages read get a check in the menu, Continue link, Save for later and the Saved list)
                          section-links.js (copy a link to an h2/h3 section)
                          offline.js + sw-template.js (read offline; stage_site.py writes sw.js into the published copy)
                          theme-toggle.js (theme list: light, sepia, dark, midnight, black)
