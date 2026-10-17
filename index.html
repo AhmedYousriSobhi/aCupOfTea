@@ -290,13 +290,13 @@
   html[data-size="xl"] { --font-size: 21px; }
   nav.app-nav, nav.app-nav a, nav.app-nav li, nav.app-nav p { font-size: 17px !important; }
   /* Sidebar groups (see .docs/sidebar-groups.js) */
-  .sidebar-nav li.group > strong { cursor: pointer; position: relative; }
-  .sidebar-nav li.group > strong::before {
+  .sidebar-nav li.group > strong, .sidebar-nav li.group > a { cursor: pointer; position: relative; }
+  .sidebar-nav li.group > strong::before, .sidebar-nav li.group > a::before {
     content: ''; position: absolute; left: -14px; top: 0.55em; width: 6px; height: 6px;
     border-right: 1px solid currentColor; border-bottom: 1px solid currentColor;
     transform: rotate(45deg); opacity: 0.6; transition: transform 0.1s;
   }
-  .sidebar-nav li.group.collapsed > strong::before { transform: rotate(-45deg); }
+  .sidebar-nav li.group.collapsed > strong::before, .sidebar-nav li.group.collapsed > a::before { transform: rotate(-45deg); }
   .sidebar-nav li.group.collapsed > ul { display: none; }
   /* Look of Docsify 4 kept: green bold links, no underline, compact menu */
   .markdown-section a:not(.anchor) {

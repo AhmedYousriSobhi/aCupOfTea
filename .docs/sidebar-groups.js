@@ -69,7 +69,13 @@
     // a click inside this folder's own list belongs to its entries; a folder's label inside another folder's list still toggles
     var list = e.target.closest('ul');
     if (list && li.contains(list)) return;
-    if (e.target.closest('a[href]')) return;
+    var link = e.target.closest('a[href]');
+    if (link) {
+      // a folder heading is a link to the folder's index page; a click on the chevron (left of the text) folds it instead
+      var head = link.parentNode === li && li.firstElementChild === link;
+      if (!head || e.clientX >= link.getBoundingClientRect().left) return;
+      e.preventDefault();
+    }
     li.classList.toggle('collapsed');
     open[label(li)] = !li.classList.contains('collapsed');
   });
