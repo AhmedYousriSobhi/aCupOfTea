@@ -1,5 +1,6 @@
 ---
 sidebar_label: Kubernetes
+sidebar_group: Kubernetes
 ---
 
 # Kubernetes, for People Who Have Other Things to Do

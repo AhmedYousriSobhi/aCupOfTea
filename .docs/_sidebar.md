@@ -51,9 +51,9 @@
     * [Overview](fields/design-patterns/README.md)
     * **Design Pattern**
       * [Feature Cross](fields/design-patterns/feature-cross/README.md)
-  * **DevOps: Where Code Meets the Machines That Run It**
+  * **DevOps**
     * [DevOps](fields/devops/README.md)
-    * **Kubernetes, for People Who Have Other Things to Do**
+    * **Kubernetes**
       * [Kubernetes](fields/devops/kubernetes/README.md)
       * [Broken Pods, the Rogues' Gallery](fields/devops/kubernetes/broken-pods-rogues-gallery.md)
       * [Build a Two-Node k3s Lab](fields/devops/kubernetes/build-a-two-node-k3s-lab.md)
@@ -218,7 +218,7 @@
       * [Overview](programming/software-goals/robustness/README.md)
   * **Software Skills & Tools**
     * [Overview](programming/software-skills-and-tools/README.md)
-    * **Software Tool: AWS Services for HPC Systems**
+    * **AWS**
       * [Software Tool: AWS Services for HPC Systems](programming/software-skills-and-tools/aws/README.md)
   * **Version Control**
     * [Overview](programming/version-control/README.md)

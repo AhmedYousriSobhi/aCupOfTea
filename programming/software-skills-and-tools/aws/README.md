@@ -1,3 +1,7 @@
+---
+sidebar_group: AWS
+---
+
 # Software Tool: AWS Services for HPC Systems
 
 In this Chapter, we are interested in introducing the AWS services that support the High-Performance Computing (HPC) Systems.
