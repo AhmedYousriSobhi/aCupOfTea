@@ -32,12 +32,12 @@ It asks for:
 3. **Folder.** The closest existing folders are suggested first. It warns you if a similar page already exists, and it never creates a folder without asking.
 4. **Type**: concept (explains an idea), guide (how to do something), reference (to look up), note, problem, project or experiment. Give one, or two comma separated with the main one first (`concept, guide`). The type most pages in that folder use is suggested.
 5. **Domains**, one or two comma separated subjects such as `deep-learning` or `systems-and-hpc`. They put the page in Explore by subject. The folder's usual subjects are suggested. A short form like `hpc` is matched to `systems-and-hpc`, and a subject that does not exist yet can be added (with a one-line description) after you confirm. A wrong answer is asked again instead of stopping the script.
-6. **Tags**, optional. Pick from the tag list in `.docs/metadata/taxonomy.yaml` (Tab completes). A new tag is added only if you confirm.
+6. **Tags**, optional. Pick from the tag list in `.docs/metadata/taxonomy.yaml` (Tab completes). A new tag is added only if you confirm, and if it looks like a known tag or a word of your title (`kubernates`, `k8s` for `kubernetes`) you are asked whether you meant that one.
 7. **Level**, **prerequisites** and **related pages**, optional. `beginner` makes the page show under "Beginner friendly" in Start here. Prerequisites are ids of pages to read first, which builds a learning path; related pages show as "See also" under the title. Both take page ids (Tab completes).
 
 You don't enter a reading time: the site works it out from the text (200 words a minute, code not counted) and shows it under the title, so it stays right when the page changes.
 
-It then creates the page with a short outline to fill in, adds it to the folder's `README.md` index (a `File | Description` table, or a list of links), and regenerates the site sidebar.
+It then creates the page with a short outline to fill in, adds it to the folder's `README.md` index (any table whose rows start with a link, such as `Page | What it covers | Time`, or a list of links), and regenerates the site sidebar. For a folder it just created it also writes a `README.md` (a purpose line to fill in and the contents table) and adds the folder to the parent's `Directory` table.
 
 To skip the questions, pass the answers as options:
 
@@ -68,6 +68,14 @@ python3 .docs/tools/new_page.py --adopt fields/deep-learning/concepts/attention-
 
 The title comes from the page's `# ` heading and the folder from its path. It asks the same questions as a new page (summary, type, domains, tags, level, prerequisites, related), puts the front matter on top, adds the page to the folder `README.md` unless it is already listed, regenerates the sidebar and then shows the `--check` report. If the page already has front matter (for example only a `sidebar_label`), it keeps what is there and asks only for the missing fields; it says so when there is nothing to add. The page text is never changed. Add `--dry-run` to preview.
 
+## Changing a page's metadata later
+
+```bash
+python3 .docs/tools/new_page.py --update fields/deep-learning/concepts/attention-in-transformers.md
+```
+
+It asks for the summary, kind, subjects, tags, level and relations with the current value as the default: Enter keeps it, `-` clears it. Options skip the questions (`--tags transformers,attention --level intermediate`). Only the changed fields are rewritten, other fields like `id` and `sidebar_label` and the page text stay as they are. `--dry-run` shows the change.
+
 ## Fixing what the checks report
 
 `validate.py` and `check_links.py` print a list; `page_doctor.py` turns it into a to-do list for the pages you changed, with the page, the line and what to do:
@@ -77,7 +85,21 @@ python3 .docs/tools/page_doctor.py             # files changed since dev, intera
 python3 .docs/tools/page_doctor.py fields/devops   # one page or folder
 ```
 
-Type a problem's number to open it in your editor at that line (`$VISUAL` or `$EDITOR`; VS Code, vim and nano get the line number), `f1` to apply the first suggested fix (it shows the change and asks first), `r` to check again, `q` to quit. Fixes it can make: a `../` link written root-absolute (or pointed at the file of that name), a misspelt or abbreviated tag or subject replaced (`kubernates`, `k8s` become `kubernetes`), a single-use tag that names a tool marked `kind: technology`. Use `--list` to print only, `--apply-safe` to apply the fixes marked `[safe]`, and `--json` for scripts.
+Type a problem's number to open it in your editor at that line (`$VISUAL` or `$EDITOR`; VS Code, vim and nano get the line number), `f1` to apply the first suggested fix (it shows the change and asks first), `r` to check again, `q` to quit. Fixes it can make: a `../` link written root-absolute (or pointed at the file of that name), a misspelt or abbreviated tag or subject replaced (`kubernates`, `k8s` become `kubernetes`), a single-use tag that names a tool marked `kind: technology`. It also notices:
+
+- **Stale generated indexes** (CI fails on those): the fix runs `generate_index.py` for you.
+- **Pictures without a description**: with `--pictures` each one is listed at its line and the fix asks what it shows, then writes it into the brackets.
+- **Swapped folder READMEs** (a folder's README that is about its subfolder and the other way round): the fix swaps the two files back.
+
+Use `--list` to print only, `--errors-only` to leave out warnings and to-dos, `--apply-safe` to apply the fixes marked `[safe]`, and `--json` for scripts. "Changed files" means changed since the branch left `dev`, committed or not.
+
+To catch errors before CI does, install a git hook that stops a push when the changed files have an error (skip it once with `git push --no-verify`):
+
+```bash
+python3 .docs/tools/page_doctor.py --install-hook      # --uninstall-hook removes it
+```
+
+It never overwrites a hook it did not make.
 
 ## When the page is written
 

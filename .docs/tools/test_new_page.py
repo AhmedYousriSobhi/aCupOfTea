@@ -87,6 +87,13 @@ class DryRun(unittest.TestCase):
         r = dry_run("--title", "A Quick Look", "--folder", "fields/schedulers/brand-new-sub", "--create-folder")
         self.assertEqual(r.returncode, 0, r.stderr)
 
+    def test_a_folder_that_leaves_the_repository_is_refused(self):
+        for bad in ("fields/../..", "fields/schedulers/../../..", "fields//schedulers", "fields/./schedulers", "fields\\schedulers"):
+            r = dry_run("--title", "A Quick Look", "--folder", bad)
+            self.assertNotEqual(r.returncode, 0, bad)
+            self.assertIn("plain folder path", r.stderr, bad)
+        self.assertEqual(dry_run("--title", "A Quick Look", "--folder", "fields/schedulers").returncode, 0)
+
     def test_folder_ranking(self):
         folders = new_page.scan()
         self.assertEqual(new_page.suggest_folders("Slurm job arrays", folders)[0], "fields/schedulers")
@@ -223,6 +230,132 @@ class Adopt(unittest.TestCase):
         code, after, _, _ = self.run_adopt("just text\n")
         self.assertTrue(code)
         self.assertEqual(after, "just text\n")
+
+
+class Guards(unittest.TestCase):
+    """New-tag typo check, any index table, a README for a new folder, --update."""
+
+    def run_main(self, root, *argv, typed=None):
+        import contextlib
+        import io
+        from unittest import mock
+        out, code = io.StringIO(), 0
+        patches = [mock.patch.object(new_page, "ROOT", root), mock.patch.object(new_page, "regenerate_navigation", lambda: None),
+                   mock.patch("sys.argv", ["new_page.py", *argv]), contextlib.redirect_stdout(out)]
+        if typed is not None:
+            it = iter(typed)
+            patches += [mock.patch("builtins.input", lambda prompt="": next(it)), mock.patch.object(new_page.sys.stdin, "isatty", lambda: True),
+                        mock.patch.object(new_page, "complete_with", lambda o: None)]
+        with contextlib.ExitStack() as stack:
+            for p in patches:
+                stack.enter_context(p)
+            try:
+                new_page.main()
+            except SystemExit as e:
+                code = e.code
+        return code, out.getvalue()
+
+    def test_new_tag_that_looks_like_a_known_one_is_flagged(self):
+        import contextlib
+        import io
+        ask = new_page.Asker(True)
+        args = type("A", (), {"tags": "kubernates"})()
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            tags, new = new_page.choose_tags(args, ask, "Intro", {"kubernetes": "Kubernetes", "gpu": "GPU"})
+        self.assertIn('looks like "kubernetes"', out.getvalue())
+
+    def test_short_form_is_matched_to_a_title_word_and_can_be_accepted(self):
+        import contextlib
+        import io
+        from unittest import mock
+        ask = new_page.Asker(False)
+        ask.interactive = True
+        answers = iter(["", "y"])      # "Use that instead?" -> y
+        args = type("A", (), {"tags": "k8s"})()
+        with mock.patch("builtins.input", lambda prompt="": next(answers)), contextlib.redirect_stdout(io.StringIO()):
+            tags, new = new_page.choose_tags(args, ask, "Kubernetes in Five Nouns", {"gpu": "GPU", "kubernetes": "Kubernetes"})
+        self.assertEqual(tags, ["kubernetes"])
+        self.assertEqual(new, {})
+
+    def test_any_table_whose_rows_start_with_a_link_is_the_index(self):
+        lines = ["# K\n", "\n", "| Page | What it covers | Time |\n", "| --- | --- | --- |\n",
+                 "| [alpha](/k/alpha.md) | A | 5 min |\n"]
+        self.assertTrue(new_page.add_table_row(lines, "beta", "/k/beta.md", "About beta."))
+        self.assertEqual(lines[-1], "| [beta](/k/beta.md) | About beta. | |\n")
+        self.assertFalse(new_page.add_table_row(["# no table\n"], "x", "/x.md", "d"))
+
+    def test_new_folder_gets_a_readme_and_a_row_in_the_parent(self):
+        with tempfile.TemporaryDirectory() as root:
+            os.makedirs(os.path.join(root, "area", "sub"))
+            with open(os.path.join(root, "area", "README.md"), "w", encoding="utf-8") as fh:
+                fh.write("# Area\n\n| Directory | Description |\n|---|---|\n| [other](/area/other/README.md) | O |\n")
+            old, new_page.ROOT = new_page.ROOT, root
+            try:
+                msgs = new_page.create_folder_readme("area/sub", "area/sub/page.md", "A Page", "About it.")
+            finally:
+                new_page.ROOT = old
+            with open(os.path.join(root, "area", "sub", "README.md"), encoding="utf-8") as fh:
+                readme = fh.read()
+            with open(os.path.join(root, "area", "README.md"), encoding="utf-8") as fh:
+                parent = fh.read()
+        self.assertTrue(readme.startswith("# Sub\n"))
+        self.assertIn("| [page](/area/sub/page.md) | About it. |", readme)
+        self.assertIn("| [sub](/area/sub/README.md) | Sub |", parent)
+        self.assertEqual(len(msgs), 2)
+
+    def page(self, root, text):
+        os.makedirs(os.path.join(root, "notes"), exist_ok=True)
+        with open(os.path.join(root, "notes", "p.md"), "w", encoding="utf-8", newline="") as fh:
+            fh.write(text)
+
+    def test_update_changes_only_what_is_given_and_keeps_the_text(self):
+        body = "# P\n\nText.\n"
+        with tempfile.TemporaryDirectory() as root:
+            self.page(root, "---\nid: p\nsidebar_label: Short\nlevel: advanced\ntype: [concept, guide]\ndomains: [security]\n---\n\n" + body)
+            code, out = self.run_main(root, "--update", "notes/p.md", "--level", "beginner", "--summary", "New one.", "--yes")
+            with open(os.path.join(root, "notes", "p.md"), encoding="utf-8") as fh:
+                after = fh.read()
+        self.assertFalse(code, out)
+        self.assertIn("level: beginner", after)
+        self.assertIn("summary: New one.", after)
+        self.assertIn("sidebar_label: Short", after)                  # untouched
+        self.assertIn("type: [concept, guide]", after)
+        self.assertTrue(after.endswith("\n---\n\n" + body))
+
+    def test_update_dash_clears_and_nothing_to_change_says_so(self):
+        with tempfile.TemporaryDirectory() as root:
+            self.page(root, "---\nid: p\nlevel: advanced\ndomains: [security]\n---\n\n# P\n")
+            code, out = self.run_main(root, "--update", "notes/p.md", "--level", "-", "--yes")
+            with open(os.path.join(root, "notes", "p.md"), encoding="utf-8") as fh:
+                after = fh.read()
+            self.assertFalse(code, out)
+            self.assertNotIn("level:", after)
+            code, out = self.run_main(root, "--update", "notes/p.md", "--level", "", "--yes")
+            self.assertIn("Nothing to change", str(code))
+
+    def test_update_refuses_a_page_without_front_matter_and_dry_run_writes_nothing(self):
+        with tempfile.TemporaryDirectory() as root:
+            self.page(root, "# P\n")
+            code, out = self.run_main(root, "--update", "notes/p.md", "--level", "beginner", "--yes")
+            self.assertIn("--adopt", str(code))
+            self.page(root, "---\nid: p\n---\n\n# P\n")
+            code, out = self.run_main(root, "--update", "notes/p.md", "--level", "beginner", "--dry-run", "--yes")
+            self.assertIn("+level: beginner", out)
+            with open(os.path.join(root, "notes", "p.md"), encoding="utf-8") as fh:
+                self.assertNotIn("level", fh.read())
+
+    def test_update_asks_with_the_current_value_as_default(self):
+        with tempfile.TemporaryDirectory() as root:
+            self.page(root, "---\nid: p\nlevel: advanced\ntype: note\ndomains: [security]\ntags: [gpu]\n---\n\n# P\n")
+            # summary, type, domains, tags, level, prerequisites, related: Enter keeps all but level
+            code, out = self.run_main(root, "--update", "notes/p.md", typed=["", "", "", "", "beginner", "", ""])
+            with open(os.path.join(root, "notes", "p.md"), encoding="utf-8") as fh:
+                after = fh.read()
+        self.assertFalse(code, out)
+        self.assertIn("level: beginner", after)
+        self.assertIn("tags: [gpu]", after)
+        self.assertIn("domains: [security]", after)
 
 
 class Check(unittest.TestCase):

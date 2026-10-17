@@ -19,6 +19,10 @@ touching its text:
 
   python3 .docs/tools/new_page.py --adopt fields/devops/kubernetes/my-page.md
 
+and later its metadata can be changed (Enter keeps a value, - clears it; options skip the questions):
+
+  python3 .docs/tools/new_page.py --update fields/devops/kubernetes/my-page.md --tags kubernetes,gpu
+
 Reading time is not asked: the site computes it from the text (200 words a
 minute, code excluded), so it never goes stale. Once the page is written, check
 it and see its reading time and what is still missing:
@@ -369,6 +373,8 @@ def suggest_folders(title, folders, limit=5):
 def folder_problem(folder, folders):
     if not folder:
         return "no folder chosen"
+    if folder.startswith("/") or "\\" in folder or any(part in ("", ".", "..") for part in folder.split("/")):
+        return "%s is not a plain folder path inside the repository (no .., . or empty parts)" % folder
     if folder.split("/")[0] not in {f.split("/")[0] for f in folders}:
         return "%s is not under an existing top-level folder" % folder
     bad = [p for p in folder.split("/") if p != slug(p)]
@@ -463,17 +469,36 @@ def warn_similar(title, folders, ask):
         sys.exit("Stopped: nothing created.")
 
 
-def choose_tags(args, ask, title, known):
+def numeronym(short, word):
+    """k8s ~ kubernetes, i18n ~ internationalization."""
+    m = re.fullmatch(r"([a-z])(\d+)([a-z])", short)
+    return bool(m) and len(word) == int(m.group(2)) + 2 and word[0] == m.group(1) and word[-1] == m.group(3)
+
+
+def near_word(word, pools):
+    """The word from `pools` (lists, most trusted first) that `word` is a short form or a typo of, or ""."""
+    best = None
+    for rank, pool in enumerate(pools):
+        for cand in pool:
+            if cand == word or len(cand) < 3:
+                continue
+            score = 1.0 if numeronym(word, cand) else difflib.SequenceMatcher(None, word, cand).ratio()
+            if score >= 0.75 and (best is None or (score, -rank) > best[0]):
+                best = ((score, -rank), cand)
+    return best[1] if best else ""
+
+
+def choose_tags(args, ask, title, known, default=None):
     def prompt():
         want = words(title)
         hint = [k for k, label in sorted(known.items()) if want & (words(k) | words(label))]
         print("\nTags (comma separated, Tab completes). Known: %s" % ", ".join(sorted(known)))
         complete_with(sorted(known))
-        return ask.text("Tags", ", ".join(hint), required=False)
+        return ask.text("Tags", default if default is not None else ", ".join(hint), required=False)
 
     def parse(raw):
         out = []
-        for t in raw.split(","):
+        for t in ([] if raw.strip() == "-" else raw.split(",")):
             t = slug(t)
             if t and t not in out:
                 out.append(t)
@@ -484,13 +509,26 @@ def choose_tags(args, ask, title, known):
     tags = resolve(ask, args.tags, parse, prompt)
     new = {}
     wanted = dict(getattr(args, "new_tag", None) or [])
+    title_words = [w for w in re.findall(r"[a-z0-9]+", title.lower())]
     for t in [t for t in tags if t not in known]:
+        # a new tag that looks like a known one (or a word of the title) is usually a typo or a short form;
+        # one confirmed with --new-tag was meant as typed
+        guess = None if t in wanted else near_word(t, [sorted(known), title_words])
+        if guess:
+            if ask.interactive and not ask.yes and ask.confirm('"%s" looks like "%s". Use that instead?' % (t, guess)):
+                tags[tags.index(t)] = guess
+                t = guess
+                if t in known:
+                    continue
+            else:
+                print("Note: \"%s\" looks like \"%s\"; check it is not a typo." % (t, guess))
         label = wanted.get(t) or " ".join(w.capitalize() for w in t.split("-"))
         print("\"%s\" is a new tag (label \"%s\")." % (t, label))
         if t in wanted or ask.confirm("Add it to the tag list?", default=False):
             new[t] = label
         else:
             tags.remove(t)
+    tags = list(dict.fromkeys(tags))
     return tags, new
 
 
@@ -524,7 +562,7 @@ def choose_list(label, raw, allowed, limit):
     return out
 
 
-def choose_type(args, ask, folder, folders):
+def choose_type(args, ask, folder, folders, default=None):
     """One or two kinds, the main one first. Returns a list."""
     types = load_section("types")
 
@@ -534,9 +572,9 @@ def choose_type(args, ask, folder, folders):
         print("  concept explains an idea, guide shows how to do something, reference is for looking up,")
         print("  note is a short write-up, problem/project/experiment describe work")
         complete_with(types)
-        return ask.text("Type", near[0] if near else "concept")
+        return ask.text("Type", default if default is not None else (near[0] if near else "concept"))
 
-    return resolve(ask, args.type, lambda raw: choose_list("type", raw, types, MAX_TYPES), prompt)
+    return resolve(ask, args.type, lambda raw: [] if raw.strip() == "-" else choose_list("type", raw, types, MAX_TYPES), prompt)
 
 
 def domain_words():
@@ -572,7 +610,7 @@ def default_domains(folder, folders, title):
     return near or guess_domains(title, folder)
 
 
-def choose_domains(args, ask, folder, folders, title):
+def choose_domains(args, ask, folder, folders, title, default=None):
     """One or two subjects. Returns (domains, new_domains); an unknown subject is matched to a
     known one ("hpc" -> systems-and-hpc) or, when typed in answer to the question, can be added."""
     domains = load_section("domains")
@@ -583,7 +621,7 @@ def choose_domains(args, ask, folder, folders, title):
         print("\nSubjects (domains) put the page in Explore by subject; one or two, comma separated.")
         print("Known: %s" % ", ".join(domains + list(new)))
         complete_with(domains + list(new))
-        return ask.text("Domains", ", ".join(near[:MAX_DOMAINS]), required=False)
+        return ask.text("Domains", default if default is not None else ", ".join(near[:MAX_DOMAINS]), required=False)
 
     can_ask = args.domains is None and ask.interactive and not ask.yes
     for key, description in (getattr(args, "new_domain", None) or []):
@@ -592,7 +630,7 @@ def choose_domains(args, ask, folder, folders, title):
     def parse(raw):
         known = domains + list(new)
         out = []
-        for x in split_list(raw):
+        for x in ([] if raw.strip() == "-" else split_list(raw)):
             if x not in known and can_ask:
                 guess = closest(x, known)
                 key = slug(x)
@@ -675,9 +713,48 @@ def yaml_value(v):
     return v
 
 
+SEPARATOR = re.compile(r"^\s*\|[\s:|-]+\|\s*$")
+
+
+def index_table(lines):
+    """(start, end, columns) of the table in a README that lists pages: the File/Directory one, else the
+    first table whose rows start with a link. Rows are lines[start:end]."""
+    found = []
+    for i in range(len(lines) - 1):
+        if lines[i].lstrip().startswith("|") and SEPARATOR.match(lines[i + 1]):
+            start = end = i + 2
+            while end < len(lines) and lines[end].lstrip().startswith("|"):
+                end += 1
+            linked = any(re.match(r"^\|\s*\[", l) for l in lines[start:end])
+            named = bool(TABLE_HEAD.match(lines[i].lstrip()))
+            if named or linked:
+                found.append((not named, start, end, lines[i].strip().strip("|").count("|") + 1))
+    if not found:
+        return None
+    _, start, end, cols = min(found)
+    return start, end, cols
+
+
+def add_table_row(lines, stem, link, description):
+    """Insert a row for `stem` into the README's page table (alphabetical when the table is). True if done."""
+    table = index_table(lines)
+    if not table:
+        return False
+    start, end, cols = table
+    if not lines[end - 1].endswith("\n"):
+        lines[end - 1] += "\n"
+    row = "| [%s](%s) | %s |%s\n" % (stem, link, description, " |" * max(0, cols - 2)) if cols > 1 else "| [%s](%s) |\n" % (stem, link)
+    keys = [re.sub(r"^\|\s*\[([^\]]*)\].*", r"\1", l).lower() for l in lines[start:end]]
+    pos = end
+    if keys == sorted(keys):
+        pos = start + sum(1 for k in keys if k < stem)
+    lines.insert(pos, row)
+    return True
+
+
 def link_in_readme(folder, page_rel, title, summary):
-    """Add the page to the folder README's index: a File/Directory table, or
-    failing that the last bullet list of links. Returns a message."""
+    """Add the page to the folder README's index: a table of pages (File/Directory, or any table whose
+    rows start with a link), or failing that the last bullet list of links. Returns a message."""
     readme = os.path.join(ROOT, folder, "README.md")
     stem = os.path.basename(page_rel)[:-3]
     row = "| [%s](/%s) | %s |" % (stem, page_rel, summary or title)
@@ -685,21 +762,7 @@ def link_in_readme(folder, page_rel, title, summary):
     if not os.path.exists(readme):
         return "No README.md in %s; the sidebar still lists the page." % folder
     lines = read(readme).splitlines(keepends=True)
-    for i, line in enumerate(lines):
-        if TABLE_HEAD.match(line):
-            start = end = i + 2
-            while end < len(lines) and lines[end].startswith("|"):
-                end += 1
-            if not lines[end - 1].endswith("\n"):
-                lines[end - 1] += "\n"
-            # Keep the table's order when it is alphabetical; otherwise append.
-            keys = [re.sub(r"^\|\s*\[([^\]]*)\].*", r"\1", l).lower() for l in lines[start:end]]
-            pos = end
-            if keys == sorted(keys):
-                pos = start + sum(1 for k in keys if k < stem)
-            lines.insert(pos, row + "\n")
-            break
-    else:
+    if not add_table_row(lines, stem, "/" + page_rel, summary or title):
         last = None
         in_code = False
         for i, line in enumerate(lines):
@@ -715,6 +778,27 @@ def link_in_readme(folder, page_rel, title, summary):
     with open(readme, "w", encoding="utf-8") as f:
         f.writelines(lines)
     return "Linked   in %s/README.md" % folder
+
+
+def create_folder_readme(folder, page_rel, title, summary):
+    """A README for a folder this run created: heading, a purpose line to fill in, and the contents table
+    holding the page. Also lists the folder in the parent's README table when that has one. Returns messages."""
+    heading = " ".join(w.capitalize() for w in os.path.basename(folder).split("-"))
+    stem = os.path.basename(page_rel)[:-3]
+    text = ("# %s\n\n<!-- One line: what belongs in this folder. -->\n\n## Contents\n\n"
+            "| File | Description |\n|---|---|\n| [%s](/%s) | %s |\n" % (heading, stem, page_rel, summary or title))
+    with open(os.path.join(ROOT, folder, "README.md"), "w", encoding="utf-8") as f:
+        f.write(text)
+    out = ["Created  %s/README.md (fill in its purpose line)" % folder]
+    parent = os.path.join(ROOT, os.path.dirname(folder), "README.md")
+    if os.path.dirname(folder) and os.path.exists(parent):
+        lines = read(parent).splitlines(keepends=True)
+        name = os.path.basename(folder)
+        if add_table_row(lines, name, "/%s/README.md" % folder, heading):
+            with open(parent, "w", encoding="utf-8") as f:
+                f.writelines(lines)
+            out.append("Listed   %s in %s/README.md (edit its description)" % (name, os.path.dirname(folder)))
+    return out
 
 
 def page_ids(raw, ids, role):
@@ -854,12 +938,8 @@ def listed_in_readme(folder, stem):
         re.search(r"\]\((?:[^)\s]*/)?%s\.md\)" % re.escape(stem), read(readme)))
 
 
-def adopt(args, ask):
-    """Add front matter to a page written by hand. The body is never touched."""
-    if args.title or args.folder or args.name:
-        sys.exit("error: --adopt takes the title from the page's heading and the folder from its path; "
-                 "drop --title, --folder and --name")
-    given = args.adopt
+def locate_page(given, flag):
+    """(full path, repo-relative path) of a content page named on the command line, or exit with why not."""
     full = os.path.abspath(given if os.path.exists(given) else os.path.join(ROOT, given))
     rel = os.path.relpath(full, ROOT).replace(os.sep, "/")
     if not os.path.isfile(full):
@@ -867,9 +947,18 @@ def adopt(args, ask):
     if rel.startswith("../") or rel.split("/")[0].startswith(".") or "/" not in rel:
         sys.exit("error: %s is not a content page inside a content folder" % rel)
     if not rel.endswith(".md") or os.path.basename(rel) == "README.md":
-        sys.exit("error: --adopt is for a .md content page; README.md files are folder indexes")
+        sys.exit("error: %s is for a .md content page; README.md files are folder indexes" % flag)
     if any(rel.startswith(sub + "/") for sub in submodules()):
         sys.exit("error: %s is inside a git submodule" % rel)
+    return full, rel
+
+
+def adopt(args, ask):
+    """Add front matter to a page written by hand. The body is never touched."""
+    if args.title or args.folder or args.name:
+        sys.exit("error: --adopt takes the title from the page's heading and the folder from its path; "
+                 "drop --title, --folder and --name")
+    full, rel = locate_page(args.adopt, "--adopt")
     with open(full, "rb") as fh:
         text = fh.read().decode("utf-8")
     bom, text = ("\ufeff", text[1:]) if text.startswith("\ufeff") else ("", text)
@@ -932,6 +1021,145 @@ def key_value(text):
     return key, value.strip()
 
 
+def parse_front(lines):
+    """{key: value} of front matter lines: scalars as text, one-line [a, b] lists and - item lists as lists,
+    and the relations block as prerequisites / related lists."""
+    out = {}
+    for key, block in key_blocks(lines).items():
+        head = block[0].split(":", 1)[1].strip()
+        if key == "relations":
+            for line in block[1:]:
+                m = re.match(r"^\s+(prerequisites|related):\s*\[(.*)\]\s*$", line)
+                if m:
+                    out[m.group(1)] = [x.strip() for x in m.group(2).split(",") if x.strip()]
+        elif head.startswith("["):
+            out[key] = [x.strip().strip("\"'") for x in head[1:head.rfind("]")].split(",") if x.strip()]
+        elif head:
+            out[key] = head.strip("\"'")
+        else:
+            out[key] = [re.sub(r"^\s+-\s*", "", l).strip().strip("\"'") for l in block[1:] if re.match(r"^\s+-", l)]
+    return out
+
+
+UPDATE_KEYS = {"summary": ("summary",), "level": ("level",), "types": ("type",), "domains": ("domains",),
+               "tags": ("tags",), "relations": ("relations",)}
+
+
+def update(args, ask):
+    """Change the summary, kind, subjects, tags, level or relations of a page that has front matter.
+    Fields not given as options are asked (Enter keeps the current value, - clears it) when run by hand."""
+    if args.title or args.folder or args.name:
+        sys.exit("error: --update changes the metadata of an existing page; drop --title, --folder and --name")
+    full, rel = locate_page(args.update, "--update")
+    with open(full, "rb") as fh:
+        text = fh.read().decode("utf-8")
+    bom, text = ("\ufeff", text[1:]) if text.startswith("\ufeff") else ("", text)
+    m = re.match(r"---[ \t]*\r?\n(.*?)\r?\n---[ \t]*(?:\r?\n|\Z)", text, re.S)
+    if not m:
+        sys.exit("error: %s has no front matter; use --adopt to add it" % rel)
+    existing, rest = m.group(1).splitlines(), text[m.end():]
+    cur = parse_front(existing)
+    folder, name = os.path.dirname(rel), os.path.basename(rel)[:-3]
+    title = cur.get("title") or body_h1(rest) or name
+    folders = scan()
+    ids = existing_ids(folders)
+    asked = ask.interactive and not ask.yes
+    show = lambda v: ", ".join(v) if isinstance(v, list) else (v or "")
+    print("\nUpdating %s  (title: \"%s\")" % (rel, title))
+    changed, meta = set(), {"types": [], "domains": [], "tags": [], "level": "", "prereqs": [], "related": [],
+                            "new_tags": {}, "new_domains": {}, "ids": ids}
+    type_cur = cur.get("type", [])
+    type_cur = type_cur if isinstance(type_cur, list) else [type_cur]
+
+    def given(opt):
+        return opt is not None or asked
+
+    # each field: from the option, else asked with the current value as the default, else kept as it is
+    summary = cur.get("summary", "")
+    if given(args.summary):
+        raw = args.summary if args.summary is not None else ask.text("Summary (one line)", summary, required=False)
+        raw = "" if raw.strip() == "-" else " ".join(raw.split())
+        if len(raw) > 200:
+            sys.exit("error: keep the summary under 200 characters")
+        if raw != summary:
+            summary, _ = raw, changed.add("summary")
+    types = type_cur
+    if given(args.type):
+        got = choose_type(args, ask, folder, folders, default=show(type_cur))
+        if got != type_cur:
+            types, _ = got, changed.add("types")
+    domains = cur.get("domains", [])
+    if given(args.domains):
+        got, meta["new_domains"] = choose_domains(args, ask, folder, folders, title, default=show(domains))
+        if got != domains:
+            domains, _ = got, changed.add("domains")
+    tags = cur.get("tags", [])
+    if given(args.tags):
+        got, meta["new_tags"] = choose_tags(args, ask, title, load_tags(), default=show(tags))
+        if got != tags:
+            tags, _ = got, changed.add("tags")
+    level = cur.get("level", "")
+
+    def parse_level(raw):
+        raw = raw.strip().lower()
+        raw = "" if raw == "-" else raw
+        if raw and raw not in LEVELS:
+            raise Invalid("level must be one of %s" % ", ".join(LEVELS))
+        return raw
+    if given(args.level):
+        got = resolve(ask, args.level, parse_level, lambda: ask.text("Level (%s)" % "/".join(LEVELS), level, required=False))
+        if got != level:
+            level, _ = got, changed.add("level")
+    prereqs, related = cur.get("prerequisites", []), cur.get("related", [])
+    for label, opt, now, key in (("Prerequisites", args.prerequisites, prereqs, "prerequisites"),
+                                 ("Related", args.related, related, "related")):
+        if given(opt):
+            got = resolve(ask, opt, lambda raw: [] if raw.strip() == "-" else page_ids(raw, ids - {cur.get("id")}, label.lower()),
+                          lambda: ask.text(label, show(now), required=False))
+            if got != now:
+                changed.add("relations")
+                if key == "prerequisites":
+                    prereqs = got
+                else:
+                    related = got
+    related = [r for r in related if r not in prereqs]
+    if not changed:
+        sys.exit("Nothing to change in %s." % rel)
+
+    meta.update(types=types, domains=domains, tags=tags, level=level, prereqs=prereqs, related=related)
+    page_id = cur.get("id") or (name if name not in ids else slug(folder.split("/")[-1] + "-" + name))
+    fresh = key_blocks(front_matter_lines(page_id, title, summary, meta, note=False))
+    have = key_blocks(existing)
+    for group in changed:
+        for key in UPDATE_KEYS[group]:
+            if key in fresh:
+                have[key] = fresh[key]
+            else:
+                have.pop(key, None)         # cleared
+    if "relations" in changed and "relations" in fresh and "id" not in have:
+        have["id"] = fresh["id"]            # relations need an id
+    order = [k for k in FM_ORDER if k in have] + [k for k in have if k not in FM_ORDER]
+    first = text.find("\n")
+    eol = "\r\n" if first > 0 and text[first - 1] == "\r" else "\n"
+    block = eol.join(["---"] + [l for k in order for l in have[k]] + ["---"]) + eol
+    new_text = block + rest
+    old_block = text[:m.end()]
+    if args.dry_run:
+        import difflib as _d
+        print("\n--- %s (front matter changes; the page text is unchanged) ---" % rel)
+        print("\n".join(l for l in _d.unified_diff(old_block.splitlines(), block.splitlines(), "before", "after", lineterm="", n=0)
+                        if not l.startswith(("---", "+++", "@@"))) or "(no visible change)")
+        report_new(meta)
+        return
+    tmp = full + ".tmp"
+    with open(tmp, "wb") as fh:
+        fh.write((bom + new_text).encode("utf-8"))
+    os.replace(tmp, full)
+    print("\nUpdated front matter of %s (the page text is unchanged): %s" % (rel, ", ".join(sorted(changed))))
+    save_taxonomy(meta)
+    print("Next: python3 .docs/tools/page_doctor.py (it also checks that the generated indexes are current)")
+
+
 def main(argv=None):
     p = argparse.ArgumentParser(description="Create a new page with front matter, an index link and a fresh sidebar.")
     p.add_argument("--title")
@@ -939,7 +1167,7 @@ def main(argv=None):
     p.add_argument("--folder", help="e.g. fields/deep-learning/concepts")
     p.add_argument("--name", help="file name without .md (default: from the title)")
     p.add_argument("--tags", help="comma separated, e.g. transformers,attention")
-    p.add_argument("--level", choices=LEVELS, help="beginner pages show under 'Beginner friendly'")
+    p.add_argument("--level", help="beginner, intermediate or advanced; beginner pages show under 'Beginner friendly' (--update: - clears it)")
     p.add_argument("--type", help="one or two of concept, guide, reference, note, problem, project, experiment, comma separated")
     p.add_argument("--domains", help="one or two comma separated subjects from taxonomy.yaml, e.g. deep-learning")
     p.add_argument("--prerequisites", help="comma separated page ids to read first, e.g. deep-learning-basics")
@@ -952,6 +1180,7 @@ def main(argv=None):
     p.add_argument("--new-tag", action="append", default=[], metavar="KEY[=LABEL]", type=key_value,
                    help="confirm a new tag and add it to taxonomy.yaml (repeatable)")
     p.add_argument("--gui", action="store_true", help="open the page form in your browser (local only)")
+    p.add_argument("--update", metavar="PAGE", help="change the summary, kind, subjects, tags, level or relations of a page that has front matter")
     p.add_argument("--yes", action="store_true", help="accept defaults and suggestions without asking")
     p.add_argument("--dry-run", action="store_true", help="show what would be written, change nothing")
     args = p.parse_args(argv)
@@ -964,6 +1193,8 @@ def main(argv=None):
     ask = Asker(args.yes)
     if args.adopt:
         return adopt(args, ask)
+    if args.update:
+        return update(args, ask)
 
     title = (args.title or ask.text("Title")).strip()
     if not title:
@@ -983,6 +1214,7 @@ def main(argv=None):
     page_rel = "%s/%s.md" % (folder, name)
     if os.path.exists(os.path.join(ROOT, page_rel)):
         sys.exit("error: %s already exists" % page_rel)
+    new_folder = not os.path.isdir(os.path.join(ROOT, folder))
 
     meta = ask_metadata(args, ask, title, folder, folders)
     page_id = name if name not in meta["ids"] else slug(folder.split("/")[-1] + "-" + name)
@@ -1001,7 +1233,10 @@ def main(argv=None):
         f.write(content)
     print("\nCreated  %s" % page_rel)
     save_taxonomy(meta)
-    print(link_in_readme(folder, page_rel, title, summary))
+    if new_folder and not os.path.exists(os.path.join(ROOT, folder, "README.md")):
+        print("\n".join(create_folder_readme(folder, page_rel, title, summary)))
+    else:
+        print(link_in_readme(folder, page_rel, title, summary))
     regenerate_navigation()
     print("\nNext: write the page. The site shows its reading time from the text; to see it")
     print("and what is still missing, run:  python3 .docs/tools/new_page.py --check %s" % page_rel)

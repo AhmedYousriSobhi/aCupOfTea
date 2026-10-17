@@ -34,6 +34,7 @@ import subprocess
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import check_links  # noqa: E402
 import new_page  # noqa: E402
 
 ROOT = new_page.ROOT
@@ -76,12 +77,13 @@ def parse(tool, lines):
 
 
 def changed_paths():
-    """Files changed against dev (committed or not) plus untracked ones; None when git can't say."""
+    """Files changed since the branch left dev (committed or not) plus untracked ones; None when git can't say."""
     def git(*a):
         r = subprocess.run(["git", *a], capture_output=True, text=True, cwd=ROOT)
         return r.stdout.splitlines() if r.returncode == 0 else None
-    base = "dev" if git("rev-parse", "--verify", "-q", "dev") else "HEAD"
-    diff, fresh = git("diff", "--name-only", base), git("ls-files", "--others", "--exclude-standard")
+    base = next((b for b in ("origin/dev", "dev") if git("rev-parse", "--verify", "-q", b)), None)
+    fork = (git("merge-base", "HEAD", base) or [None])[0] if base else None     # where this branch left dev
+    diff, fresh = git("diff", "--name-only", fork or "HEAD"), git("ls-files", "--others", "--exclude-standard")
     if diff is None or fresh is None:
         return None
     return set(diff) | set(fresh)
@@ -212,6 +214,16 @@ def tag_uses(exclude):
             for t in new_page.front_matter(rel).get("tags") or []:
                 uses[t] = uses.get(t, 0) + 1
     return uses
+
+
+def command_fix(label, argv):
+    """A fix that runs a command (the generated indexes are rewritten by their generator)."""
+    return {"label": label, "safe": False, "files": {}, "run": list(argv)}
+
+
+def input_fix(label, prompt, build):
+    """A fix that needs a typed value first; build(value) returns the real fix (or None)."""
+    return {"label": label, "safe": False, "files": {}, "input": prompt, "build": build}
 
 
 def make_fix(label, files, safe=False):
@@ -364,23 +376,138 @@ def pages_in(scope):
         elif entry.endswith(".md") and os.path.isfile(full):
             pages.add(entry)
     return sorted(p for p in pages if not p.endswith("README.md") and "/" in p
-                  and not p.startswith((".docs/", ".github/")))
+                  and not any(part.startswith(".") for part in p.split("/")))      # .docs, .github, .claude ...
 
 
-def page_issues(scope=None):
+def snapshot(folder):
+    out = {}
+    for d, _, files in os.walk(os.path.join(ROOT, folder)):
+        for f in files:
+            full = os.path.join(d, f)
+            with open(full, "rb") as fh:
+                out[full] = fh.read()
+    return out
+
+
+def stale_index_issue(scope):
+    """An issue when .docs/generated differs from what generate_index.py writes now (CI fails on that)."""
+    if scope is not None and not any(p.endswith(".md") or p == TAXONOMY_REL for p in scope):
+        return []
+    if not os.path.isdir(os.path.join(ROOT, ".docs", "generated")):
+        return []
+    before = snapshot(".docs/generated")
+    try:
+        r = subprocess.run([sys.executable, "-I", os.path.join(TOOLS, "generate_index.py"), "--root", ROOT],
+                           capture_output=True, text=True, cwd=ROOT)
+        after = snapshot(".docs/generated")
+    finally:                                     # leave the files as they were: only the fix changes them
+        now = snapshot(".docs/generated")
+        for full in set(now) - set(before):
+            os.remove(full)
+        for full, data in before.items():
+            if now.get(full) != data:
+                with open(full, "wb") as fh:
+                    fh.write(data)
+    if r.returncode or before == after:
+        return []
+    names = sorted({os.path.relpath(f, ROOT).replace(os.sep, "/") for f in set(before) | set(after) if before.get(f) != after.get(f)})
+    return [{"tool": "index", "level": "error", "path": ".docs/generated", "line": 1,
+             "message": "the generated indexes are stale (%d file(s) differ: %s); CI fails on this"
+                        % (len(names), ", ".join(names[:3]) + (", ..." if len(names) > 3 else "")),
+             "hint": "They are rewritten from the pages' front matter. Commit them with the change.",
+             "fixes": [command_fix("regenerate them (python3 .docs/tools/generate_index.py)",
+                                   [sys.executable, "-I", os.path.join(TOOLS, "generate_index.py"), "--root", ROOT])]}]
+
+
+def alt_fix(rel, line, k):
+    """A fix asking for a description of the k-th picture without one on `line`."""
+    def build(value):
+        value = " ".join(value.replace("[", "(").replace("]", ")").split())
+        if not value:
+            return None
+        lines = read_rel(rel).splitlines(keepends=True)
+        if not 0 < line <= len(lines):
+            return None
+        hits = [m for m in check_links.IMAGE_ALT_RE.finditer(lines[line - 1]) if check_links.NO_ALT_RE.match(m.group(1).strip())]
+        if k >= len(hits):
+            return None
+        m = hits[k]
+        lines[line - 1] = lines[line - 1][:m.start(1)] + value + lines[line - 1][m.end(1):]
+        return make_fix("describe the picture: " + value, {rel: "".join(lines)})
+    return input_fix("describe it", "What does the picture show? (a few words)", build)
+
+
+def picture_issues(scope):
+    """One issue per picture without a description, each with a fix that asks for the description."""
+    out = []
+    for page, lines in sorted(check_links.alt_report(ROOT).items()):
+        if not in_scope(page, scope):
+            continue
+        text = read_rel(page).splitlines()
+        seen = {}
+        for n in lines:
+            k = seen[n] = seen.get(n, -1) + 1
+            shown = text[n - 1].strip()[:90] if 0 < n <= len(text) else ""
+            out.append({"tool": "check_links", "level": "todo", "path": page, "line": n,
+                        "message": "picture without a description: " + shown,
+                        "hint": "Write what the picture shows between the brackets: ![what it shows](path). Screen readers and search use it.",
+                        "fixes": [alt_fix(page, n, k)]})
+    return out
+
+
+def readme_swap_issues(scope):
+    """A folder README whose title belongs to its subfolder while the subfolder's README belongs to the folder."""
+    readmes = {}
+    for d, dirs, files in os.walk(ROOT):
+        dirs[:] = [x for x in dirs if not x.startswith(".") and x not in new_page.SKIP_DIRS]
+        if "README.md" in files:
+            readmes[os.path.relpath(d, ROOT).replace(os.sep, "/")] = os.path.join(d, "README.md")
+
+    def overlap(rel_dir, folder_name):
+        head = new_page.front_matter(rel_dir + "/README.md").get("sidebar_label", "") if rel_dir != "." else ""
+        title = " ".join([head, new_page.first_h1(readmes[rel_dir])])
+        return len(new_page.words(title) & new_page.words(folder_name.replace("-", " ")))
+    out = []
+    for parent in readmes:
+        if parent == ".":
+            continue
+        for child in readmes:
+            if os.path.dirname(child) != parent:
+                continue
+            pn, cn = os.path.basename(parent), os.path.basename(child)
+            if overlap(parent, pn) == 0 and overlap(parent, cn) > 0 and overlap(child, cn) == 0 and overlap(child, pn) > 0:
+                p_rel, c_rel = parent + "/README.md", child + "/README.md"
+                if not (in_scope(p_rel, scope) or in_scope(c_rel, scope)):
+                    continue
+                out.append({"tool": "layout", "level": "warning", "path": p_rel, "line": 1,
+                            "message": "%s is about %s and %s is about %s: the two README files look swapped"
+                                       % (p_rel, cn, c_rel, pn),
+                            "hint": "Each README should describe its own folder; otherwise the sidebar nests the topics the wrong way round.",
+                            "fixes": [make_fix("swap the two README files", {p_rel: read_rel(c_rel), c_rel: read_rel(p_rel)})]})
+    return [i for i in out if i["fixes"][0]]
+
+
+def page_issues(scope=None, pictures=False):
     """All problems for the pages in scope (a set of paths/folders; None = whole repo), with fixes."""
     found = parse("validate", run_tool("validate.py")) + parse("check_links", run_tool("check_links.py"))
     found = [i for i in found if in_scope(i["path"], scope)]
+    if pictures:        # one issue per picture instead of one line per page
+        found = [i for i in found if "picture(s) without a description" not in i["message"]] + picture_issues(scope)
     for rel in pages_in(scope):
         found += page_todos(rel)
+    found += readme_swap_issues(scope) + stale_index_issue(scope)
     order = {"error": 0, "warning": 1, "todo": 2}
     found.sort(key=lambda i: (order[i["level"]], i["path"], i["line"]))
-    return [describe(i) for i in found]
+    return [i if "fixes" in i else describe(i) for i in found]
 
 
 # ---------- applying and opening ----------
 
 def diff_of(fix):
+    if fix.get("run"):
+        return "will run: " + " ".join(fix["run"])
+    if fix.get("input"):
+        return "needs: " + fix["input"]
     out = []
     for rel, new in fix["files"].items():
         out += difflib.unified_diff(read_rel(rel).splitlines(), new.splitlines(), "a/" + rel, "b/" + rel,
@@ -388,8 +515,23 @@ def diff_of(fix):
     return "\n".join(out)
 
 
-def apply_fix(fix):
-    """Write the fix's files (each all or nothing). Returns the paths written."""
+def fix_summary(fix):
+    """A fix as plain data (for --json and the GUI)."""
+    return {"label": fix["label"], "safe": fix["safe"], "files": sorted(fix["files"]), "diff": diff_of(fix),
+            "run": fix.get("run"), "input": fix.get("input")}
+
+
+def apply_fix(fix, value=None):
+    """Write the fix's files (each all or nothing) or run its command. Returns what was changed."""
+    if fix.get("input"):
+        fix = fix["build"](value or "")
+        if not fix:
+            raise ValueError("that value gives no change")
+    if fix.get("run"):
+        r = subprocess.run(fix["run"], cwd=ROOT, capture_output=True, text=True)
+        if r.returncode:
+            raise RuntimeError("%s failed: %s" % (" ".join(fix["run"]), (r.stderr or r.stdout).strip()[-300:]))
+        return [" ".join(fix["run"])]
     for rel, new in fix["files"].items():
         full = os.path.join(ROOT, rel)
         tmp = full + ".tmp"
@@ -449,8 +591,8 @@ def show(issues, scope):
     print()
 
 
-def interactive(scope):
-    issues = page_issues(scope)
+def interactive(scope, pictures=False):
+    issues = page_issues(scope, pictures)
     while True:
         show(issues, scope)
         if not issues:
@@ -462,7 +604,7 @@ def interactive(scope):
         if cmd in ("q", "quit", ""):
             return 1
         if cmd in ("r", "re"):
-            issues = page_issues(scope)
+            issues = page_issues(scope, pictures)
             continue
         m = re.fullmatch(r"(f)?(\d+)([a-h]?)", cmd)
         if not m or not 0 < int(m[2]) <= len(issues):
@@ -471,7 +613,7 @@ def interactive(scope):
         issue = issues[int(m[2]) - 1]
         if not m[1]:
             if open_issue(issue):
-                issues = page_issues(scope)        # a terminal editor has closed: look again
+                issues = page_issues(scope, pictures)        # a terminal editor has closed: look again
             else:
                 print("  Save the file, then type r to check again.\n")
             continue
@@ -479,21 +621,91 @@ def interactive(scope):
         if k >= len(issue["fixes"]):
             print("  no such fix; this problem has %d\n" % len(issue["fixes"]))
             continue
-        fix = issue["fixes"][k]
+        fix, value = issue["fixes"][k], None
+        if fix.get("input"):
+            value = input(fix["input"] + " ").strip()
+            fix = fix["build"](value)
+            if not fix:
+                print("  nothing to change\n")
+                continue
         print("\n" + diff_of(fix) + "\n")
         if input("Apply this change? [y/N] ").strip().lower().startswith("y"):
-            print("  changed: " + ", ".join(apply_fix(fix)) + "\n")
-            issues = page_issues(scope)
+            try:
+                print("  changed: " + ", ".join(apply_fix(fix)) + "\n")
+            except (RuntimeError, ValueError) as e:
+                print("  %s\n" % e)
+            issues = page_issues(scope, pictures)
 
 
-def main():
+# ---------- git hook ----------
+
+HOOK_MARK = "# installed by page_doctor.py --install-hook"
+HOOK = """#!/bin/sh
+%s
+# Stops a push when the checks find an error in what this branch changed.
+# Skip it once with: git push --no-verify
+exec python3 "$(git rev-parse --show-toplevel)/.docs/tools/page_doctor.py" --pre-push
+""" % HOOK_MARK
+
+
+def hook_path():
+    r = subprocess.run(["git", "rev-parse", "--git-path", "hooks/pre-push"], capture_output=True, text=True, cwd=ROOT)
+    if r.returncode:
+        sys.exit("error: not a git repository")
+    return os.path.join(ROOT, r.stdout.strip())
+
+
+def install_hook():
+    path = hook_path()
+    if os.path.exists(path) and HOOK_MARK not in new_page.read(path):
+        sys.exit("error: %s already exists and was not made by this tool; add the line yourself:\n  "
+                 "python3 .docs/tools/page_doctor.py --pre-push || exit 1" % path)
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(HOOK)
+    os.chmod(path, 0o755)
+    print("Installed %s\nA push now stops on errors in the files your branch changed. Skip once: git push --no-verify" % path)
+
+
+def uninstall_hook():
+    path = hook_path()
+    if os.path.exists(path) and HOOK_MARK in new_page.read(path):
+        os.remove(path)
+        print("Removed " + path)
+    else:
+        print("No hook from this tool at " + path)
+
+
+def pre_push():
+    """Exit 1 on errors (validation, broken links, stale indexes, a crashed check) in the changed files."""
+    scope = changed_paths()
+    errors = [i for i in page_issues(scope) if i["level"] == "error"]
+    if not errors:
+        return 0
+    show(errors, scope)
+    print("Fix these (python3 .docs/tools/page_doctor.py), or skip once with: git push --no-verify")
+    return 1
+
+
+def main(argv=None):
     ap = argparse.ArgumentParser(description="Check changed pages, jump to each problem, apply fixes.")
     ap.add_argument("paths", nargs="*", help="pages or folders to check (default: files changed since dev)")
     ap.add_argument("--all", action="store_true", help="the whole repository")
     ap.add_argument("--list", action="store_true", help="print the problems and exit (1 if any)")
     ap.add_argument("--json", action="store_true", help="print the problems with their fixes as JSON and exit")
+    ap.add_argument("--pictures", action="store_true", help="list each picture without a description (a fix asks for the text)")
+    ap.add_argument("--errors-only", action="store_true", help="leave out warnings and to-dos")
     ap.add_argument("--apply-safe", action="store_true", help="apply every fix marked [safe] without asking")
-    args = ap.parse_args()
+    ap.add_argument("--pre-push", action="store_true", help="what the git hook runs: exit 1 on errors in the changed files")
+    ap.add_argument("--install-hook", action="store_true", help="install a git pre-push hook that runs --pre-push")
+    ap.add_argument("--uninstall-hook", action="store_true", help="remove the hook this tool installed")
+    args = ap.parse_args(argv)
+    if args.install_hook:
+        return install_hook()
+    if args.uninstall_hook:
+        return uninstall_hook()
+    if args.pre_push:
+        return pre_push()
     if args.all:
         scope = None
     elif args.paths:
@@ -503,20 +715,21 @@ def main():
         if scope is None:
             sys.exit("error: could not ask git what changed; pass paths or --all")
     if args.apply_safe:
-        for issue in page_issues(scope):
+        for issue in page_issues(scope, args.pictures):
             fix = next((f for f in issue["fixes"] if f["safe"]), None)
             if fix:
                 print("fixed %s:%d  %s" % (issue["path"], issue["line"], fix["label"]))
                 apply_fix(fix)
-    issues = page_issues(scope)
+    issues = page_issues(scope, args.pictures)
+    if args.errors_only:
+        issues = [i for i in issues if i["level"] == "error"]
     if args.json:
-        print(json.dumps([dict(i, fixes=[{"label": f["label"], "safe": f["safe"], "files": sorted(f["files"]),
-                                          "diff": diff_of(f)} for f in i["fixes"]]) for i in issues], indent=2))
+        print(json.dumps([dict(i, fixes=[fix_summary(f) for f in i["fixes"]]) for i in issues], indent=2))
         return 1 if issues else 0
-    if args.list or not sys.stdin.isatty():
+    if args.list or args.errors_only or not sys.stdin.isatty():
         show(issues, scope)
         return 1 if issues else 0
-    return interactive(scope)
+    return interactive(scope, args.pictures)
 
 
 if __name__ == "__main__":
