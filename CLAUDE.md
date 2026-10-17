@@ -121,6 +121,8 @@ A line that is only `$$...$$` is shown as a display formula with KaTeX (`.docs/m
 
 Every content page ends with "Edit this page" (the file on GitHub, branch `dev`) and, on the deployed site, "Last updated" (`.docs/page-footer.js`). The dates come from `.docs/last-updated.json`, which `stage_site.py` writes from git history (so the deploy checkout uses `fetch-depth: 0`); a local preview shows only the edit link.
 
+`.github/CONTRIBUTING.md` is read on GitHub, not on the site (the home page links to its GitHub page), so its screenshots and links are root-absolute (`/.github/images/x.png`, `/SPEC.md`): GitHub resolves them against the repository root in both the file view and the repository's Contributing tab, where a relative `images/x.png` or `../SPEC.md` breaks. Docsify would double the folder, which is why the guide is not rendered on the site.
+
 **Folder README convention (best practice):** a folder `README.md` is the start of that folder: a one-line purpose, then `## Contents` with a `| File | Description |` table for pages and a `| Directory | Description |` table for subfolders, one short description per row. A README that is itself a topic page (a single question, a project) is content, not an index, and is left as written. `new_page.py` adds each new page's row (or a link in a bullet list).
 
 Generator behavior worth knowing: folders without any `.md` page are skipped; git submodules (not checked out in CI) are rendered as external links to their repositories; a `README.md` titled `Overview` is listed first.
