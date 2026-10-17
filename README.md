@@ -1,6 +1,6 @@
 # aCupOfTea
 # AI Tea Lounge: Sipping Knowledge in AI Domains
-![image](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/4a033ba8-5aac-475d-9b27-ec13e68746ba)
+![aCupOfTea logo: a yellow Pac-Man shape beside a steaming cup of tea on a saucer](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/4a033ba8-5aac-475d-9b27-ec13e68746ba)
 
 > **Knowledge, served in short sips.** Notes on AI, machine learning, software engineering and the business around them. Each page is short enough to finish before your tea goes cold.
 

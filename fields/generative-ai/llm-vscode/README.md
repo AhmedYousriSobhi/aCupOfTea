@@ -2,7 +2,7 @@
 sidebar_group: LLM VSCode
 ---
 # Generative AI - LLM VSCode
-![image](images/llm-vscode-01.png)
+![Large Language Models plus Visual Studio Code logo banner](images/llm-vscode-01.png)
 
 Large language models (LLMs) have the potential to revolutionize programming, making it more efficient, accessible, and creative. 
 
@@ -45,7 +45,7 @@ Here are some additional thoughts on the power of LLM models to help programming
 Overall, LLM models have the potential to make programming more efficient, accessible, creative, and reliable.
 
 # Llm-VsCode
-![image](images/llm-vscode-02.png)
+![VS Code Marketplace page of the Hugging Face llm-vscode extension](images/llm-vscode-02.png)
 
 [LLM-VSCode](https://huggingface.co/blog/codellama) is a Visual Studio Code extension that provides a suite of tools and features for developing, testing, and deploying machine learning models. It is designed to simplify the machine learning development workflow and provide a consistent experience across different programming languages and frameworks.
 
@@ -68,7 +68,7 @@ Overall, LLM-VSCode aims to streamline the machine learning development workflow
 ## Promoting and Suggesstions
 LLM-VsCode trained models are used to help you through code and documentation. This extention is mainly used for **Code Scripts and Documantation markdown**
 
-![image](images/llm-vscode-03.png)
+![Editor showing a Notebooks support heading with grey ghost-text code suggestions](images/llm-vscode-03.png)
 
 ## Rate Limit Reached Warning
 As we are using free tokken from HuggingFace, so we have a limited number of free hourly usage, and it resets hourly. So we have some solution for this:
@@ -78,7 +78,7 @@ As we are using free tokken from HuggingFace, so we have a limited number of fre
 Note: in case of logging out, you will have to login again and enter your hugging face tokken.
 
 # StarCoder
-![image](images/llm-vscode-04.png)
+![VS Code Marketplace page of the StarCoderEx extension with an SQL prompt example](images/llm-vscode-04.png)
 
 [Starcoder](https://huggingface.co/blog/starcoder) is a Visual Studio Code extension that provides a comprehensive set of features and tools for developers working with the Hugging Face Transformers library. The extension is designed to simplify the process of building, training, and deploying machine learning models using the Transformers library, and it includes a range of functionality to enhance productivity and streamline development workflows.
 
@@ -103,15 +103,15 @@ Starcoder is also compatible with Jupyter notebooks, and it provides support for
 ## Configuration
 To configure StarCoder, you need to add a token from hugging face to "starcoderex.bearertoken".
 
-![image](images/llm-vscode-05.png)
+![VS Code settings search for llm config showing the Config Template dropdown set to bigcode/starcoder](images/llm-vscode-05.png)
 
 Adding token from hugging face to "starcoderex.bearertoken".
-![image](images/llm-vscode-06.png)
+![settings.json file with llm options and a highlighted placeholder for the Hugging Face token](images/llm-vscode-06.png)
 
 ## Usage of StarCoder
 On Jupyter Notebook, Write your promot, just like a description to desired functionality.
 
-![image](images/llm-vscode-07.png)
+![Notebook cell with a selected comment and function signature for merge sort](images/llm-vscode-07.png)
 
 2- Highlight your promot, then Ctrl+Shift+P to open the command palette.
 
@@ -119,4 +119,4 @@ On Jupyter Notebook, Write your promot, just like a description to desired funct
 
 4- Generate the desired function.
 
-![image](images/llm-vscode-08.png)
+![Notebook cell with a generated merge sort function completed by the extension](images/llm-vscode-08.png)

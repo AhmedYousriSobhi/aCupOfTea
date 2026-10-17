@@ -2,7 +2,7 @@
 sidebar_group: Langchain
 ---
 # Generative AI - Langchain
-![image](images/langchain-01.png)
+![LangChain logo with a parrot and a chain link](images/langchain-01.png)
 
 LangChain is a framework for developing applications powered by language models. It provides a set of tools and abstractions that make it easy to build applications that can generate text, translate languages, write different kinds of creative content, and answer questions in an informative way.
 
