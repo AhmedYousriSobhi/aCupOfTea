@@ -296,12 +296,17 @@ async function run(browser, base, label, size, phone) {
       const pre = document.querySelector('.markdown-section pre[data-lang="bash"]');
       const b = pre && pre.querySelector('.code-copy');
       if (!b) return { buttons: 0 };
+      const want = pre.querySelector('code').textContent.replace(/\n$/, '');
+      // what the button hands to the clipboard: WebKit refuses readText() without a real user gesture, so the real clipboard is only compared where it can be read
+      const sent = [];
+      const write = navigator.clipboard.writeText.bind(navigator.clipboard);
+      navigator.clipboard.writeText = (t) => { sent.push(t); return write(t); };
       b.click();
       await new Promise((r) => setTimeout(r, 300));
-      let text = '';
-      try { text = await navigator.clipboard.readText(); } catch (e) { /* not readable */ }
+      let text = null;
+      try { text = await navigator.clipboard.readText(); } catch (e) { /* not readable in this browser */ }
       return { buttons: document.querySelectorAll('.code-copy').length, old: document.querySelectorAll('.docsify-copy-code-button').length,
-        note: b.getAttribute('data-note'), same: text === pre.querySelector('code').textContent.replace(/\n$/, '') };
+        note: b.getAttribute('data-note'), same: sent.length === 1 && sent[0] === want && (text === null || text === want), readable: text !== null };
     });
     c('code block copy button copies the code', code.buttons >= 1 && !code.old && code.note === 'Copied' && code.same, JSON.stringify(code));
     if (link.url) {
