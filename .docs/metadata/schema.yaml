@@ -50,6 +50,17 @@ fields:
       Only on a folder's README.md. Names that folder's group in the generated
       sidebar (otherwise the text before the last hyphen in the README's H1).
       Must be unique among sibling folders.
+  order:
+    type: integer
+    required: false
+    minimum: 1
+    note: >
+      Reading position of this page inside its folder (1 = first). Pages with an
+      order are listed in that order in the generated sidebar, so the Previous /
+      Next buttons follow it, and "Read next" and Start here list them in it.
+      Pages without one stay alphabetical, after the ordered pages; a folder's
+      README.md is always first. Unique per folder; a prerequisite in the same
+      folder should have a smaller number (validate.py warns otherwise).
   summary:
     type: string
     required: false
