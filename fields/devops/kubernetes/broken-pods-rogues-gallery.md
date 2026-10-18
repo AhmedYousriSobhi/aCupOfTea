@@ -1,6 +1,7 @@
 ---
 id: broken-pods-rogues-gallery
 sidebar_label: Broken Pods, the Rogues' Gallery
+order: 4
 summary: "How to recognise CrashLoop, OOMKilled, ImagePull and Pending pods by reading status, events and previous logs."
 level: intermediate
 type: [concept, guide]

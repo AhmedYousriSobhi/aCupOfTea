@@ -1,6 +1,7 @@
 ---
 id: kubernetes-in-five-nouns
 sidebar_label: Kubernetes in Five Nouns
+order: 1
 summary: The five Kubernetes nouns (node, pod, namespace, event, API server) explained through HPC analogies, for someone who just inherited a cluster.
 level: advanced
 type: [concept, guide]

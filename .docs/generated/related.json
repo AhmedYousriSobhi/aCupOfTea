@@ -105,14 +105,14 @@
     ],
     "required_by": [
       {
-        "id": "gpu-allocation-vs-utilization",
-        "path": "fields/devops/kubernetes/gpu-allocation-vs-utilization.md",
-        "title": "Booked Is Not Busy: GPU Allocation vs Utilization"
-      },
-      {
         "id": "fake-gpus-in-kubernetes",
         "path": "fields/devops/kubernetes/fake-gpus-in-kubernetes.md",
         "title": "Fake GPUs in Kubernetes: Learn GPU Scheduling Without Owning a GPU"
+      },
+      {
+        "id": "gpu-allocation-vs-utilization",
+        "path": "fields/devops/kubernetes/gpu-allocation-vs-utilization.md",
+        "title": "Booked Is Not Busy: GPU Allocation vs Utilization"
       }
     ]
   },
@@ -171,16 +171,6 @@
     "related": [],
     "required_by": [
       {
-        "id": "gpu-allocation-vs-utilization",
-        "path": "fields/devops/kubernetes/gpu-allocation-vs-utilization.md",
-        "title": "Booked Is Not Busy: GPU Allocation vs Utilization"
-      },
-      {
-        "id": "broken-pods-rogues-gallery",
-        "path": "fields/devops/kubernetes/broken-pods-rogues-gallery.md",
-        "title": "Broken Pods: A Rogues' Gallery (and the One Command That Catches Them All)"
-      },
-      {
         "id": "build-a-two-node-k3s-lab",
         "path": "fields/devops/kubernetes/build-a-two-node-k3s-lab.md",
         "title": "Build a Two-Node Kubernetes Lab on Your Laptop (and Survive the DNS Pothole)"
@@ -189,6 +179,16 @@
         "id": "fake-gpus-in-kubernetes",
         "path": "fields/devops/kubernetes/fake-gpus-in-kubernetes.md",
         "title": "Fake GPUs in Kubernetes: Learn GPU Scheduling Without Owning a GPU"
+      },
+      {
+        "id": "broken-pods-rogues-gallery",
+        "path": "fields/devops/kubernetes/broken-pods-rogues-gallery.md",
+        "title": "Broken Pods: A Rogues' Gallery (and the One Command That Catches Them All)"
+      },
+      {
+        "id": "gpu-allocation-vs-utilization",
+        "path": "fields/devops/kubernetes/gpu-allocation-vs-utilization.md",
+        "title": "Booked Is Not Busy: GPU Allocation vs Utilization"
       },
       {
         "id": "nvidia-cluster-readiness-engine",
