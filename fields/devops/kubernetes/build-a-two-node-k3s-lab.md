@@ -1,6 +1,7 @@
 ---
 id: build-a-two-node-k3s-lab
 sidebar_label: Build a Two-Node k3s Lab
+order: 2
 summary: "Build a two-VM Kubernetes lab on your laptop with Vagrant, libvirt and k3s, and dodge the DNS and network potholes."
 level: intermediate
 type: [concept, guide]

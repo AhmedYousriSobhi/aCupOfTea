@@ -16,7 +16,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from common import (DupKeyLoader, ID_RE, RELATION_KEYS, fallback_id, list_pages,  # noqa: E402
                     read_text, split_front_matter, submodule_paths)
 
-ALLOWED_KEYS = {"id", "title", "sidebar_label", "sidebar_group", "summary", "level", "type", "status", "domains", "tags", "relations"}
+ALLOWED_KEYS = {"id", "title", "sidebar_label", "sidebar_group", "order", "summary", "level", "type", "status", "domains", "tags", "relations"}
 SUMMARY_MAX = 200
 LABEL_WARN = 40
 MAX_TAGS = 5
@@ -185,6 +185,13 @@ def validate_page(path, text, tax, rep):
             group = sg.strip()
             if len(group) > LABEL_WARN:
                 rep.warn(path, gl, f"sidebar_group is {len(group)} characters; keep it under {LABEL_WARN}")
+    order = None
+    if "order" in data:
+        ov = data["order"]
+        if isinstance(ov, bool) or not isinstance(ov, int) or ov < 1:
+            rep.error(path, lines.get(("order",), 1), "order must be a whole number from 1 up")
+        else:
+            order = ov
     if "summary" in data:
         sm = data["summary"]
         if not isinstance(sm, str) or not sm.strip():
@@ -242,6 +249,7 @@ def validate_page(path, text, tax, rep):
                       "pages that declare relations need an explicit 'id'")
     tags = data.get("tags") if isinstance(data.get("tags"), list) else []
     return {"id": page_id, "relations": relations, "label": label, "group": group,
+            "order": order, "order_line": lines.get(("order",), 1),
             "group_line": lines.get(("sidebar_group",), 1), "label_line": lines.get(("sidebar_label",), 1),
             "tags": [t for t in tags if isinstance(t, str)], "tags_line": lines.get(("tags",), 1)}
 
@@ -295,6 +303,32 @@ def run(root):
                 rep.error(p, fm_pages[p]["label_line"],
                           f"duplicate sidebar_label {fm_pages[p]['label']!r} in {folder or '.'} "
                           f"(also in {', '.join(x for x in paths if x != p)})")
+
+    # order is the reading position inside a folder: unique per folder, and a
+    # prerequisite in the same folder must come before the page that needs it
+    orders = {}
+    for path in sorted(fm_pages):
+        if fm_pages[path]["order"]:
+            orders.setdefault((os.path.dirname(path), fm_pages[path]["order"]), []).append(path)
+    for (folder, num), paths in sorted(orders.items()):
+        if len(paths) > 1:
+            for p in paths:
+                rep.error(p, fm_pages[p]["order_line"],
+                          f"duplicate order {num} in {folder or '.'} "
+                          f"(also in {', '.join(x for x in paths if x != p)})")
+    by_id = {fm_pages[p]["id"]: p for p in fm_pages if fm_pages[p]["id"]}
+    for path in sorted(fm_pages):
+        mine = fm_pages[path]["order"]
+        if not mine:
+            continue
+        for target, _ in fm_pages[path]["relations"].get("prerequisites", []):
+            other = by_id.get(target)
+            if other and os.path.dirname(other) == os.path.dirname(path):
+                theirs = fm_pages[other]["order"]
+                if theirs and theirs >= mine:
+                    rep.warn(path, fm_pages[path]["order_line"],
+                             f"order {mine} comes before its prerequisite {target!r} (order {theirs}); "
+                             "readers are sent to the prerequisite first")
 
     groups = {}
     for path in sorted(fm_pages):

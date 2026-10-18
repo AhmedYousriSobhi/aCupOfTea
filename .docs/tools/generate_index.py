@@ -71,6 +71,7 @@ def load_objects(root):
         rel = data.get("relations") or {}
         raw_type = data.get("type") or "note"
         types = list(raw_type) if isinstance(raw_type, list) else [raw_type]   # first is the main one
+        order = data.get("order")
         objects[data["id"]] = {
             "id": data["id"],
             "path": path,
@@ -81,6 +82,7 @@ def load_objects(root):
             "type": types[0],
             "types": types,
             "status": data.get("status") or "stable",
+            **({"order": order} if isinstance(order, int) and not isinstance(order, bool) else {}),
             "domains": sorted(data.get("domains") or []),
             "tags": sorted(data.get("tags") or []),
             "relations": {
@@ -107,6 +109,11 @@ def build_relationships(objects):
     return rels
 
 
+def reading_key(objects):
+    """Sort key for pages read in sequence: authored order first, then title."""
+    return lambda i: (objects[i].get("order", math.inf), objects[i]["title"].lower(), i)
+
+
 def build_related(objects, rels):
     """Per page path: the data behind the related-pages strip rendered at deploy time."""
     def ref(i):
@@ -119,7 +126,7 @@ def build_related(objects, rels):
         both = sorted((set(r["related"]) | set(r["related_by"])) - shown, key=lambda i: (objects[i]["title"].lower(), i))
         block = {
             "prerequisites": [ref(i) for i in sorted(r["prerequisites"], key=lambda i: (objects[i]["title"].lower(), i))],
-            "required_by": [ref(i) for i in sorted(r["prerequisite_of"], key=lambda i: (objects[i]["title"].lower(), i))],
+            "required_by": [ref(i) for i in sorted(r["prerequisite_of"], key=reading_key(objects))],
             "related": [ref(i) for i in both],
         }
         if any(block.values()):
@@ -181,7 +188,8 @@ def learning_paths(objects):
     for i in linked:
         comps.setdefault(find(i), []).append(i)
 
-    key = lambda i: (LEVEL_RANK.get(objects[i]["level"], 1), objects[i]["title"].lower(), i)  # noqa: E731
+    key = lambda i: (objects[i].get("order", math.inf), LEVEL_RANK.get(objects[i]["level"], 1),  # noqa: E731
+                     objects[i]["title"].lower(), i)
     paths = []
     for members in comps.values():
         deg = {i: indeg[i] for i in members}

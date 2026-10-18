@@ -45,7 +45,7 @@ MAX_TAGS = 5
 MAX_DOMAINS = 3          # a convention, not a technical limit: validate.py only warns above it
 MAX_TYPES = 2
 LEVELS = ("beginner", "intermediate", "advanced")
-FM_ORDER = ("id", "title", "sidebar_label", "sidebar_group", "summary", "level", "type", "status",
+FM_ORDER = ("id", "title", "sidebar_label", "sidebar_group", "order", "summary", "level", "type", "status",
             "domains", "tags", "relations")
 WORDS_PER_MIN = 200     # same as generate_index.py
 QUICK_MIN = 10          # "quick read" in Start here

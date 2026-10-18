@@ -1,6 +1,7 @@
 ---
 id: gpu-allocation-vs-utilization
 sidebar_label: GPU Allocation vs Utilization
+order: 5
 summary: "The scheduler knows who has booked the GPUs, not whether they’re busy, so use kubectl for the first question and DCGM-style telemetry for the second."
 level: intermediate
 type: [concept, guide]

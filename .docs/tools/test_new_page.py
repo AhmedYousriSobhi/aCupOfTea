@@ -155,12 +155,12 @@ class Prompts(unittest.TestCase):
             new_page.choose_domains(args, ask, "fields/schedulers", new_page.scan(), "T")
 
     def test_short_form_and_new_subject(self):
-        ask, patches = self.answers("devops, hpc", "y", "Running software on clusters", "")
+        ask, patches = self.answers("robotics, hpc", "y", "Running software on clusters", "")
         args = type("A", (), {"domains": None})()
         domains, new = self.run_with(patches, lambda: new_page.choose_domains(
             args, ask, "fields/schedulers", new_page.scan(), "Kubernetes"))
-        self.assertEqual(domains, ["devops", "systems-and-hpc"])
-        self.assertEqual(new, {"devops": ("Devops", "Running software on clusters")})
+        self.assertEqual(domains, ["robotics", "systems-and-hpc"])
+        self.assertEqual(new, {"robotics": ("Robotics", "Running software on clusters")})
 
     def test_add_types_and_related_for_a_new_domain(self):
         with tempfile.TemporaryDirectory() as d:
