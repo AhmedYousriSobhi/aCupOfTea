@@ -200,6 +200,9 @@
     background: color-mix(in srgb, var(--link) 14%, transparent);
     border-left: 3px solid var(--link); border-radius: 0 6px 6px 0; padding-left: 8px; margin-left: -11px;
   }
+  /* On a folder's index page the menu already lists the folder's pages, so its own
+     section list (shown under the folder heading on narrow screens) would repeat them */
+  .sidebar-nav li.group > .app-sub-sidebar { display: none; }
   /* Light theme text that was under 4.5:1 */
   html[data-mode="light"] { --blockquote-color: #55616d; }
   html[data-mode="light"] .markdown-section code { color: #a8420a; }
