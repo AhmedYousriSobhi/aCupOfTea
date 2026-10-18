@@ -90,13 +90,15 @@ Prefer clicking? The **Fix problems** tab shows the same list with **Open in edi
 
 ![The Fix problems tab listing the same problems as cards with Open in editor and Fix buttons](/.github/images/gui-fix-problems.png)
 
-CI runs the same checks. To run them by hand, all must pass (0 errors, 0 broken links):
+CI runs the same checks. To run them all by hand, and update the sidebar, navbar and `.docs/generated` in one go, run this and commit what it changes:
 
 ```bash
-python3 .docs/tools/validate.py
-python3 .docs/tools/check_links.py
-python3 .docs/tools/generate_index.py    # then commit the changes in .docs/generated
+python3 .docs/tools/check_all.py --fix
 ```
+
+It runs `validate.py`, `check_links.py`, the generators and every `test_*.py`; without `--fix` it only reports a stale generated file, which is what CI does.
+
+To put a page at a given place in its folder (a series read in order), add `order: 1`, `order: 2`, ... to the front matter of its pages; the sidebar, Previous/Next and "Read next" follow that order.
 
 ## 6. Send it
 
@@ -167,6 +169,7 @@ A git hook that refuses a push when the changed files have an error (skip once w
 | `new_page.py` | create a page (`--gui` for the form), `--adopt`, `--update`, `--check` |
 | `page_doctor.py` | the to-do list of fixes for changed pages, and the optional pre-push hook |
 | `page_gui.py` | the browser form behind `--gui` |
+| `check_all.py` | the whole suite: validate, links, generators up to date, tests (`--fix` applies them) |
 | `validate.py` | check front matter, subjects, tags and relations |
 | `check_links.py` | broken links, unsafe HTML, pictures without a description |
 | `generate_index.py` | rebuild the Explore and Start here pages in `.docs/generated` |

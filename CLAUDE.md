@@ -203,7 +203,7 @@ If the repository can't answer those through its structure, improve the structur
 An optional **overlay** on top of the folder structure: pages can carry YAML front matter so they are discoverable by domain and tag and linked to related pages. Folders remain the primary location; files never move for metadata's sake. Pages without front matter are valid ("legacy").
 
 - Schema and controlled vocabulary: `.docs/metadata/schema.yaml`, `.docs/metadata/taxonomy.yaml`. Add a new domain/tag there *before* using it.
-- Tools: `.docs/tools/validate.py`, `check_links.py`, `update_recent.py`, `check_pins.py`, `test_new_page.py`, `generate_index.py`, `stage_site.py` (Python + PyYAML 6.0.2); `page_gui.py` (`new_page.py --gui`) is the same authoring flow as a local browser form; `page_doctor.py` turns their warnings into a to-do list for the changed pages (open at the line, suggested fixes; also stale `.docs/generated`, pictures without a description, swapped folder READMEs, and an optional pre-push hook).
+- Tools: `.docs/tools/check_all.py` (the whole suite, see below), `.docs/tools/validate.py`, `check_links.py`, `update_recent.py`, `check_pins.py`, `test_new_page.py`, `generate_index.py`, `stage_site.py` (Python + PyYAML 6.0.2); `page_gui.py` (`new_page.py --gui`) is the same authoring flow as a local browser form; `page_doctor.py` turns their warnings into a to-do list for the changed pages (open at the line, suggested fixes; also stale `.docs/generated`, pictures without a description, swapped folder READMEs, and an optional pre-push hook).
 - Generated output (never hand-edit, deterministic): `.docs/generated/` — JSON indexes plus Explore pages. Commit it with the change.
 
 **Add metadata to a page** — put front matter at the very top of the file, nothing else changes:
@@ -212,6 +212,7 @@ An optional **overlay** on top of the folder structure: pages can carry YAML fro
 ---
 id: sequence-models            # explicit, unique, kebab-case; required if the page has or receives relations
 title: Sequence Models
+order: 3                       # optional: reading position inside the folder (1 = first)
 summary: How models handle ordered data like text, from RNNs to transformers.   # optional, one line, max 200 chars
 level: intermediate            # optional: beginner | intermediate | advanced
 type: concept                  # concept | guide | reference | note | problem | project | experiment (definitions in taxonomy.yaml); one, or a list of two: [concept, guide]
@@ -224,7 +225,7 @@ relations:                     # optional; targets are explicit ids
 ---
 ```
 
-Front matter may be partial: every field is optional (defaults: `title` = first H1, `type` = note, `status` = stable); `id` is needed only for pages that take part in relations. `sidebar_label` overrides a page's label in the generated sidebar without touching its heading (one line, warned over 40 characters, unique within its folder, quoted if it contains `: `). `sidebar_group` (on a folder's `README.md` only) names that folder's group in the sidebar instead of the text before the last hyphen in its H1; use it when sibling folders would otherwise share a group name. Same limits as `sidebar_label`. A page that carries only these fields is not indexed.
+Front matter may be partial: every field is optional (defaults: `title` = first H1, `type` = note, `status` = stable); `id` is needed only for pages that take part in relations. `sidebar_label` overrides a page's label in the generated sidebar without touching its heading (one line, warned over 40 characters, unique within its folder, quoted if it contains `: `). `order` (a whole number from 1 up, unique per folder) puts a page at that position in its folder: the generated sidebar lists a folder's README first, then pages with an `order` in that order, then the rest alphabetically, and the Previous/Next buttons, the "Read next" strip and Start here paths follow it; give every page of a series an `order` instead of renaming files (`validate.py` errors on a duplicate and warns when a page comes before its own prerequisite in the same folder). `sidebar_group` (on a folder's `README.md` only) names that folder's group in the sidebar instead of the text before the last hyphen in its H1; use it when sibling folders would otherwise share a group name. Same limits as `sidebar_label`. A page that carries only these fields is not indexed.
 
 Reading time is computed (200 wpm over the body, code excluded), never authored. `summary` and `level` feed the Explore lists and the **Start here** page (learning paths from `prerequisites`, quick reads of 10 minutes or less, beginner picks); prerequisites must not form a cycle.
 
@@ -240,15 +241,14 @@ Reading time is computed (200 wpm over the body, code excluded), never authored.
 
 Rules: no YAML comments inside front matter (`gen_sidebar.sh` reads the first `# ` line as the page label); the path-derived fallback id of legacy pages is never a relation target; relations never target git submodule content (submodules are skipped entirely).
 
-**Before pushing:**
+**After any change, before pushing** — one command runs the whole validation suite and applies the generators:
 
 ```bash
-python3 .docs/tools/validate.py        # must report 0 errors
-python3 .docs/tools/check_links.py     # must report 0 broken links
-python3 .docs/tools/generate_index.py  # then commit .docs/generated
-cd .docs && ./gen_sidebar.sh && ./gen_navbar.sh   # only if structure/titles changed
+python3 .docs/tools/check_all.py --fix   # then commit what it updated
 ```
 
-CI (`validate-metadata.yml`) runs on PRs to `dev`/`main` and pushes to `dev`, and fails on validation errors, broken internal links, raw HTML that would run in readers' browsers (`<script>`, `<iframe>`, `<object>`, `<embed>`, `on...=` handlers, `javascript:` links outside code; `check_links.py`, a deliberate case needs `<!-- allow-html -->` on the line before), or stale `.docs/generated`. `check_links.py` also warns, one line per page, about pictures without a real description (`![]`, `![image]`, a file name as the description); the warning never fails CI and `--no-alt-report` silences it.
+`check_all.py` runs `validate.py` (0 errors), `check_links.py` (0 broken links), regenerates `.docs/generated`, `_sidebar.md` and `_navbar.md` (`--fix` keeps the result; without it a stale file fails the run and nothing changes on disk) and every `test_*.py`. A new `test_*.py` is picked up with no wiring. The steps still work alone (`validate.py`, `check_links.py`, `generate_index.py`, `cd .docs && ./gen_sidebar.sh && ./gen_navbar.sh`).
+
+CI (`validate-metadata.yml`) runs on PRs to `dev`/`main` and pushes to `dev`, and runs `check_all.py` (without `--fix`), so it fails on validation errors, broken internal links, raw HTML that would run in readers' browsers (`<script>`, `<iframe>`, `<object>`, `<embed>`, `on...=` handlers, `javascript:` links outside code; `check_links.py`, a deliberate case needs `<!-- allow-html -->` on the line before), or a stale `.docs/generated`, sidebar or navbar, or a failing test. `check_links.py` also warns, one line per page, about pictures without a real description (`![]`, `![image]`, a file name as the description); the warning never fails CI and `--no-alt-report` silences it.
 
 **Deploy:** CI builds a staging copy (`stage_site.py --out _site`) that also writes a share page for every content page at its folder address (`share_pages.py`: that page's title and summary as Open Graph tags, then an instant redirect to the `#/` page, no script; `--base-url` sets the public address, default the GitHub Pages site), so a pasted link shows that page's own preview; the page footer's "Copy share link" copies that address. The copy also strips front matter, puts the reading time ("6 min read", every content page but the homepage and folder indexes with a `## Contents` list) and a one-line "Read first / See also / Read next" strip under the title, and publishes that copy. Sources are never rewritten. A local `docsify serve` of the repo hides the front matter on the page (Docsify's front-matter plugin) and in search (`.docs/search.js` strips it), but does **not** show the Related block; to preview the deployed result run `python3 .docs/tools/stage_site.py --out _site` and serve `_site/` (git-ignored).
