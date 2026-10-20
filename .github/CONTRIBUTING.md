@@ -100,7 +100,18 @@ It runs `validate.py`, `check_links.py`, the generators and every `test_*.py`; w
 
 To put a page at a given place in its folder (a series read in order), add `order: 1`, `order: 2`, ... to the front matter of its pages; the sidebar, Previous/Next and "Read next" follow that order.
 
-## 6. Send it
+## 6. Preview it
+
+Look at the final result in a browser before you push. This is the deployed version of the site, with the menu order, reading time and "Read next" strip:
+
+```bash
+python3 .docs/tools/stage_site.py --out _site     # build the deployed copy
+python3 -m http.server 8000 --directory _site     # then open http://localhost:8000
+```
+
+Check that your page is in the left menu in the order of its folder `README.md` table, that its links and images work, and that it reads well on a narrow window (phone width). `_site/` is git-ignored; stop the server with Ctrl+C. For a quick look at the raw sources only, `npx docsify-cli serve .` also works.
+
+## 7. Send it
 
 Commit, push, and open a pull request **into `dev`** (never `main`), one topic per pull request. The maintainer merges it and later releases `dev` to `main`, which updates the site.
 
