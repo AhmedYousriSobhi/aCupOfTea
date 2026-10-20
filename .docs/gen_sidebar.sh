@@ -32,6 +32,35 @@ fm_label() {
          }' "$1"
 }
 
+# List a directory's entries in the order its README.md links them (the Contents
+# tables), then the entries it does not link, alphabetically. Prints paths only.
+ordered_paths() {
+    local dir=$1
+    local rel="${dir#..}"; rel="${rel#/}"
+    local readme="$dir/README.md"
+    local links=""
+    if [ -f "$readme" ]; then
+        links=$(grep -o ']([^)]*)' "$readme" | sed 's/^](//; s/)$//; s/[#?].*$//; s/[[:space:]].*$//')
+    fi
+    find "$dir" -maxdepth 1 -not -path '*/.*' | LC_ALL=C sort | awk -v rel="$rel" -v dir="$dir" '
+        FILENAME == ARGV[1] {
+            if ($0 == "" || $0 ~ /:\/\//) next
+            t = $0
+            if (t ~ /^\//) sub(/^\//, "", t); else if (rel != "") t = rel "/" t
+            sub(/^\.\//, "", t); sub(/\/$/, "", t)
+            if (!(t in rank)) rank[t] = ++n
+            next
+        }
+        {
+            p = $0; sub("^" dir "/?", "", p)
+            key = (rel == "" ? p : rel "/" p)
+            r = 1000000
+            if (key in rank) r = rank[key]
+            else if ((key "/README.md") in rank) r = rank[key "/README.md"]
+            printf "%07d\t%s\n", r, $0
+        }' <(printf '%s\n' "$links") - | LC_ALL=C sort -s -t "$(printf '\t')" -k1,1 | cut -f2-
+}
+
 generate_sidebar() {
     local dir=$1
     local indent=$2
@@ -98,7 +127,7 @@ generate_sidebar() {
                 files+=("$sort_key $entry")
             fi
         fi
-    done < <(find "$dir" -maxdepth 1 -not -path '*/.*' | LC_ALL=C sort)
+    done < <(ordered_paths "$dir")
 
     # 2. Output files (Overview always first)
     if [ -n "$overview_item" ]; then
