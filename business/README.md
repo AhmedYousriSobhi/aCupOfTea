@@ -8,12 +8,15 @@ The main objective of this section, is to get more information regarding domain 
 
 ## Contents
 
-| Directory | Description |
-|-----------|-------------|
+| File | Description |
+|------|-------------|
 | [food-delivery-service-company](/business/food-delivery-service-company.md) | Food delivery service domain |
-| [hpc-industry](/business/hpc-industry/README.md) | High-Performance Computing industry |
 | [real-estate-company](/business/real-estate-company.md) | Real estate and property domain |
 | [used-cars-retailer](/business/used-cars-retailer.md) | Used car retail business |
+
+| Directory | Description |
+|-----------|-------------|
+| [hpc-industry](/business/hpc-industry/README.md) | High-Performance Computing industry |
 
 What you can gain actually is getting more familiar with their domain knowledge, investigate their projects.
 
