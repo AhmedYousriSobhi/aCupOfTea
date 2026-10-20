@@ -45,12 +45,12 @@ Not sure where to begin? Each of these takes one cup, roughly the reading time s
 
 ## 🆕 Recently added
 
-- 2026-10-17 · [Broken Pods: A Rogues' Gallery (and the One Command That Catches Them All)](/fields/devops/kubernetes/broken-pods-rogues-gallery.md)
-- 2026-10-17 · [Build a Two-Node Kubernetes Lab on Your Laptop (and Survive the DNS Pothole)](/fields/devops/kubernetes/build-a-two-node-k3s-lab.md)
-- 2026-10-17 · [Fake GPUs in Kubernetes: Learn GPU Scheduling Without Owning a GPU](/fields/devops/kubernetes/fake-gpus-in-kubernetes.md)
-- 2026-10-17 · [Booked Is Not Busy: GPU Allocation vs Utilization](/fields/devops/kubernetes/gpu-allocation-vs-utilization.md)
-- 2026-10-17 · [The Cluster That Passed Every Test Except the One That Mattered](/fields/devops/kubernetes/nvidia-cluster-readiness-engine.md)
-- 2026-10-17 · [Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster](/fields/devops/kubernetes/kubernetes-in-five-nouns.md)
+- 2026-10-20 · [The Curtain, the Locksmith and the Door Already Built](/programming/local-app-accounts/lock-recovery-and-going-online.md)
+- 2026-10-20 · [The Orphans Come Home: Old Data and Background Work](/programming/local-app-accounts/old-data-and-background-work.md)
+- 2026-10-20 · [Reviewing the Design: Where Would You Push Back?](/programming/local-app-accounts/reviewing-the-design.md)
+- 2026-10-20 · [Who's Home, and What May They Touch? Sessions and Two Walls](/programming/local-app-accounts/sessions-and-two-walls.md)
+- 2026-10-20 · [Sign-In Hygiene: How the Clerk Says "No" Without Giving Anything Away](/programming/local-app-accounts/sign-in-hygiene.md)
+- 2026-10-20 · [Two People, One Laptop: What Accounts Should (and Shouldn't) Promise](/programming/local-app-accounts/threat-model-and-first-launch.md)
 
 <!-- recent:end -->
 
