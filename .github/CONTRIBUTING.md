@@ -98,9 +98,28 @@ python3 .docs/tools/check_all.py --fix
 
 It runs `validate.py`, `check_links.py`, the generators and every `test_*.py`; without `--fix` it only reports a stale generated file, which is what CI does.
 
-To put a page at a given place in its folder (a series read in order), add `order: 1`, `order: 2`, ... to the front matter of its pages; the sidebar, Previous/Next and "Read next" follow that order.
+To put a page at a given place in its folder (a series read in order), add `order: 1`, `order: 2`, ... to the front matter of its pages; the sidebar, Previous/Next and "Read next" follow that order. Pages without `order` follow the order of the folder `README.md` table.
 
-## 6. Send it
+## 6. Preview it
+
+Look at the deployed version of your page in a browser before you push.
+
+1. Build the site and serve it:
+
+   ```bash
+   python3 .docs/tools/stage_site.py --out _site
+   python3 -m http.server 8000 --directory _site
+   ```
+
+2. Open http://localhost:8000 and check:
+   - your page is in the left menu, in the order of its folder `README.md` table;
+   - its reading time, links and images show up and work;
+   - it reads well in a narrow window (phone width).
+3. Stop the server with Ctrl+C. `_site/` is git-ignored.
+
+To see the reading time and what is still missing without a browser, run `python3 .docs/tools/new_page.py --check PAGE`.
+
+## 7. Send it
 
 Commit, push, and open a pull request **into `dev`** (never `main`), one topic per pull request. The maintainer merges it and later releases `dev` to `main`, which updates the site.
 
@@ -131,18 +150,6 @@ Enter keeps the current value, `-` clears it. Only what you change is rewritten.
 </details>
 
 <details>
-<summary><b>Check a finished page, or preview the site</b></summary>
-
-```bash
-python3 .docs/tools/new_page.py --check PAGE      # reading time, what is still missing
-python3 .docs/tools/stage_site.py --out _site     # the deployed version
-python3 -m http.server 8000 --directory _site     # then open http://localhost:8000
-```
-
-`_site/` is git-ignored.
-</details>
-
-<details>
 <summary><b>No scripts at all</b></summary>
 
 - A lowercase-kebab-case file name: `my-topic.md`, starting with one `# Heading`.
@@ -159,6 +166,16 @@ python3 .docs/tools/page_doctor.py --install-hook      # --uninstall-hook remove
 ```
 
 A git hook that refuses a push when the changed files have an error (skip once with `git push --no-verify`).
+</details>
+
+<details>
+<summary><b>Keep the menu and indexes up to date on every commit</b></summary>
+
+```bash
+git config core.hooksPath .docs/hooks
+```
+
+A `pre-commit` hook regenerates the sidebar, navbar and `.docs/generated` and adds them to the commit (skip once with `git commit --no-verify`).
 </details>
 
 <details>
