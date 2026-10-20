@@ -98,18 +98,26 @@ python3 .docs/tools/check_all.py --fix
 
 It runs `validate.py`, `check_links.py`, the generators and every `test_*.py`; without `--fix` it only reports a stale generated file, which is what CI does.
 
-To put a page at a given place in its folder (a series read in order), add `order: 1`, `order: 2`, ... to the front matter of its pages; the sidebar, Previous/Next and "Read next" follow that order.
+To put a page at a given place in its folder (a series read in order), add `order: 1`, `order: 2`, ... to the front matter of its pages; the sidebar, Previous/Next and "Read next" follow that order. Pages without `order` follow the order of the folder `README.md` table.
 
 ## 6. Preview it
 
-Look at the final result in a browser before you push. This is the deployed version of the site, with the menu order, reading time and "Read next" strip:
+Look at the deployed version of your page in a browser before you push.
 
-```bash
-python3 .docs/tools/stage_site.py --out _site     # build the deployed copy
-python3 -m http.server 8000 --directory _site     # then open http://localhost:8000
-```
+1. Build the site and serve it:
 
-Check that your page is in the left menu in the order of its folder `README.md` table, that its links and images work, and that it reads well on a narrow window (phone width). `_site/` is git-ignored; stop the server with Ctrl+C. For a quick look at the raw sources only, `npx docsify-cli serve .` also works.
+   ```bash
+   python3 .docs/tools/stage_site.py --out _site
+   python3 -m http.server 8000 --directory _site
+   ```
+
+2. Open http://localhost:8000 and check:
+   - your page is in the left menu, in the order of its folder `README.md` table;
+   - its reading time, links and images show up and work;
+   - it reads well in a narrow window (phone width).
+3. Stop the server with Ctrl+C. `_site/` is git-ignored.
+
+To see the reading time and what is still missing without a browser, run `python3 .docs/tools/new_page.py --check PAGE`.
 
 ## 7. Send it
 
@@ -139,18 +147,6 @@ python3 .docs/tools/new_page.py --update fields/deep-learning/concepts/attention
 ```
 
 Enter keeps the current value, `-` clears it. Only what you change is rewritten. In the form: the **Edit a page** tab.
-</details>
-
-<details>
-<summary><b>Check a finished page, or preview the site</b></summary>
-
-```bash
-python3 .docs/tools/new_page.py --check PAGE      # reading time, what is still missing
-python3 .docs/tools/stage_site.py --out _site     # the deployed version
-python3 -m http.server 8000 --directory _site     # then open http://localhost:8000
-```
-
-`_site/` is git-ignored.
 </details>
 
 <details>

@@ -109,7 +109,8 @@ generate_sidebar() {
             local entry="${indent}* [$file_title]($final_link)"
 
             # Reading position: README.md first, then pages with an `order`
-            # (front matter), then the rest alphabetically (the find|sort order).
+            # (front matter), then the rest in the order of the folder README table
+            # (unlisted pages last, alphabetically): the ordered_paths order.
             local fm_ord sort_key
             fm_ord=$(fm_label "$path" order)
             if [ "$base" == "README.md" ]; then
