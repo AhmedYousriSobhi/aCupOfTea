@@ -30,6 +30,12 @@ Read each path in order; every step builds on the one before.
 1. [PyTorch 101](/fields/libraries-frameworks-containers/101-pytorch.md) *(6 min)*
 2. [PyTorch DDP](/fields/libraries-frameworks-containers/102-pytorch-ddp.md) *(1 min)*
 
+### Software Engineering · 3 steps · 15 min
+
+1. [Two People, One Laptop: What Accounts Should (and Shouldn't) Promise](/programming/local-app-accounts/threat-model-and-first-launch.md) — Before writing any account code, state what accounts will and will not protect, then handle the very first sign-up gracefully. *(beginner · 4 min)*
+2. [Sign-In Hygiene: How the Clerk Says "No" Without Giving Anything Away](/programming/local-app-accounts/sign-in-hygiene.md) — Slow self-describing password hashes, a decoy check for unknown users, one identical error message, and throttling that cannot be used to lock someone out forever. *(intermediate · 5 min)*
+3. [Who's Home, and What May They Touch? Sessions and Two Walls](/programming/local-app-accounts/sessions-and-two-walls.md) — How an app remembers who is signed in, why remember-me stores a fingerprint instead of a token, and why authorization needs one check at the door and another at the data. *(intermediate · 6 min)*
+
 ### Machine Learning · 2 steps · 28 min
 
 1. [Unsupervised Learning](/fields/tabular-data/concept-in-machine-learning/ml-unsupervised.md) *(22 min)*
@@ -42,13 +48,18 @@ Read each path in order; every step builds on the one before.
 - [Regression Imputing](/fields/tabular-data/data-processing/handling-missing-data/regression-imputing.md) *(3 min)*
 - [Accuracy Paradox](/fields/tabular-data/data-evaluation/classification/accuracy-paradox.md) *(4 min)*
 - [pam_slurm_adopt: Closing the Slurm SSH Backdoor](/fields/schedulers/slurm-pam-adopt.md) *(4 min)*
+- [Two People, One Laptop: What Accounts Should (and Shouldn't) Promise](/programming/local-app-accounts/threat-model-and-first-launch.md) — Before writing any account code, state what accounts will and will not protect, then handle the very first sign-up gracefully. *(beginner · 4 min)*
 - [CPU Affinity](/programming/operating-system/process-cpu-affinity.md) *(5 min)*
 - [Parallel Execution and Affinity](/fields/benchmarks/parallel-execution-affinity-master-guide.md) *(5 min)*
+- [Sign-In Hygiene: How the Clerk Says "No" Without Giving Anything Away](/programming/local-app-accounts/sign-in-hygiene.md) — Slow self-describing password hashes, a decoy check for unknown users, one identical error message, and throttling that cannot be used to lock someone out forever. *(intermediate · 5 min)*
 - [Broken Pods: A Rogues' Gallery (and the One Command That Catches Them All)](/fields/devops/kubernetes/broken-pods-rogues-gallery.md) — How to recognise CrashLoop, OOMKilled, ImagePull and Pending pods by reading status, events and previous logs. *(intermediate · 6 min)*
 - [Customer Segmentation](/problems/customer-segmentation.md) *(6 min)*
 - [Fake GPUs in Kubernetes: Learn GPU Scheduling Without Owning a GPU](/fields/devops/kubernetes/fake-gpus-in-kubernetes.md) — Patch a node with a fake nvidia.com/gpu counter to learn GPU scheduling without owning a GPU. *(intermediate · 6 min)*
 - [PyTorch 101](/fields/libraries-frameworks-containers/101-pytorch.md) *(6 min)*
+- [Reviewing the Design: Where Would You Push Back?](/programming/local-app-accounts/reviewing-the-design.md) — Six review questions the design leaves open, a table of mistakes it avoids, the Designing Data-Intensive Applications chapters that explain why, and six exercises. *(intermediate · 6 min)*
 - [Sequence Models](/fields/deep-learning/concepts/sequence-models.md) — How models handle ordered data like text, from RNNs and LSTMs to transformers and LLMs. *(intermediate · 6 min)*
+- [The Orphans Come Home: Old Data and Background Work](/programming/local-app-accounts/old-data-and-background-work.md) — How to give pre-existing data an owner without surprises, and why background monitors and their cached readings must follow the signed-in person. *(intermediate · 6 min)*
+- [Who's Home, and What May They Touch? Sessions and Two Walls](/programming/local-app-accounts/sessions-and-two-walls.md) — How an app remembers who is signed in, why remember-me stores a fingerprint instead of a token, and why authorization needs one check at the door and another at the data. *(intermediate · 6 min)*
 - [Bias and Variance Trade-Off](/fields/tabular-data/data-evaluation/model-behavior/bias-variance-trade-off.md) *(7 min)*
 - [Booked Is Not Busy: GPU Allocation vs Utilization](/fields/devops/kubernetes/gpu-allocation-vs-utilization.md) — The scheduler knows who has booked the GPUs, not whether they’re busy, so use kubectl for the first question and DCGM-style telemetry for the second. *(intermediate · 7 min)*
 - [Build a Two-Node Kubernetes Lab on Your Laptop (and Survive the DNS Pothole)](/fields/devops/kubernetes/build-a-two-node-k3s-lab.md) — Build a two-VM Kubernetes lab on your laptop with Vagrant, libvirt and k3s, and dodge the DNS and network potholes. *(intermediate · 7 min)*
@@ -65,3 +76,4 @@ Read each path in order; every step builds on the one before.
 ## Beginner friendly
 
 - [Deep Learning Basics](/fields/deep-learning/concepts/basics.md) — Neurons, loss and cost, and the common activation functions, explained from first principles. *(beginner · 30 min)*
+- [Two People, One Laptop: What Accounts Should (and Shouldn't) Promise](/programming/local-app-accounts/threat-model-and-first-launch.md) — Before writing any account code, state what accounts will and will not protect, then handle the very first sign-up gracefully. *(beginner · 4 min)*

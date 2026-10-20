@@ -100,9 +100,14 @@
     "objects": [
       "containers-101",
       "cpu-affinity",
+      "old-data-and-background-work",
       "parallel-execution-and-affinity",
       "pytorch-101",
-      "singularity-containers"
+      "reviewing-the-design",
+      "sessions-and-two-walls",
+      "sign-in-hygiene",
+      "singularity-containers",
+      "threat-model-and-first-launch"
     ]
   },
   "statistics": {
@@ -115,6 +120,17 @@
       "regression-imputing",
       "time-series-analysis",
       "unsupervised-learning"
+    ]
+  },
+  "system-design": {
+    "description": "Software System Design",
+    "label": "System Design",
+    "objects": [
+      "old-data-and-background-work",
+      "reviewing-the-design",
+      "sessions-and-two-walls",
+      "sign-in-hygiene",
+      "threat-model-and-first-launch"
     ]
   },
   "systems-and-hpc": {

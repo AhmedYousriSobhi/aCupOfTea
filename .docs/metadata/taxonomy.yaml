@@ -86,14 +86,32 @@ domains:
     label: Kubernates
     description: devops-orchestraiton
     related: [systems-and-hpc, devops]
+  system-design:
+    label: System Design
+    description: Design Software Systems
+    related: [software-engineering]
+  system-design:
+    label: System Design
+    description: Software System Design
+    related: [software-engineering]
+  system-design:
+    label: System Design
+    description: Software System Design
+    related: [software-engineering]
 
 tags:
   affinity:
     label: Affinity
+  applications:
+    label: Applications
+    kind: technology
   clustering:
     label: Clustering
   containers:
     label: Containers
+  design:
+    label: Design
+    kind: technology
   dev:
     label: Dev
     kind: technology
@@ -127,6 +145,9 @@ tags:
   nvidia:
     label: Nvidia
     kind: technology
+  programming:
+    label: Programming
+    kind: technology
   pytorch:
     label: PyTorch
     kind: technology
@@ -136,6 +157,13 @@ tags:
   slurm:
     label: Slurm
     kind: technology
+  software:
+    label: Software
+  software-engineering:
+    label: Software Engineering
+    kind: technology
+  system-design:
+    label: System Design
   transformers:
     label: Transformers
     kind: technology
