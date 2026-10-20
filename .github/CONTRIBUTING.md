@@ -130,6 +130,24 @@ By contributing, you agree that your writing is licensed under [CC BY 4.0](/LICE
 ## More, only when you need it
 
 <details>
+<summary><b>Write a formula</b></summary>
+
+Write plain LaTeX on **one line of its own**, between double dollar signs. GitHub and the site both show it as a centred formula:
+
+```markdown
+$$\text{Total Cores} = \text{Nodes} \times \text{Cores per Node}$$
+```
+
+How the site (Docsify) handles it, so you know what to expect:
+
+- Only a line that is nothing but `$$...$$` becomes a formula (`.docs/math.js`, drawn by KaTeX). Keep the opening and closing `$$` on the same line: a formula split over several lines, or with text before or after it on the line, stays as raw text on the site.
+- Single `$...$` inside a sentence is left alone on the site, so prices and shell snippets such as `$HOME` never turn into maths. GitHub does render it, so avoid it in a page when the formula matters; put it in a `$$...$$` line instead.
+- Anything inside a code fence is never touched.
+- KaTeX is downloaded only on pages that have a formula. A formula KaTeX cannot parse is shown in red instead of breaking the page.
+- Escape special characters as in LaTeX (`\_` for an underscore, `\&` for an ampersand), and use `\text{...}` for words.
+</details>
+
+<details>
 <summary><b>I already wrote the page by hand</b></summary>
 
 ```bash
