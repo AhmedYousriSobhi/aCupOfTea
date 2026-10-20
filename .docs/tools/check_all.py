@@ -2,7 +2,9 @@
 """Run every repository check in one go: the validation suite.
 
 Steps, in order:
-  1. validate.py        front matter (ids, relations, order, labels), 0 errors
+  1. validate.py        front matter (ids, relations, order, labels), 0 errors;
+                        also prints how many pages have a summary (information
+                        only: a summary is optional but recommended)
   2. check_links.py     internal links and unsafe HTML, 0 broken
   3. generated output   .docs/generated, _sidebar.md and _navbar.md are what
                         the generators produce from the current files
@@ -86,8 +88,13 @@ def main():
     args = ap.parse_args()
 
     py = [sys.executable, "-I"]
-    results = [run("validate.py", py + [os.path.join(TOOLS, "validate.py")]),
-               run("check_links.py", py + [os.path.join(TOOLS, "check_links.py")])]
+    results = [run("validate.py", py + [os.path.join(TOOLS, "validate.py")])]
+    if results[0]:
+        cov = subprocess.run(py + [os.path.join(TOOLS, "validate.py"), "--summary-coverage"],
+                             cwd=ROOT, capture_output=True, text=True)
+        if cov.returncode == 0:
+            print(f"[info] {cov.stdout.strip()}")
+    results.append(run("check_links.py", py + [os.path.join(TOOLS, "check_links.py")]))
     if results[0]:   # the generators refuse to run on invalid front matter
         results.append(check_generated(args.fix))
     else:

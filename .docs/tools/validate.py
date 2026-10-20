@@ -8,6 +8,7 @@ Usage: python3 .docs/tools/validate.py [--root PATH]
 """
 import argparse
 import os
+import re
 import sys
 
 import yaml
@@ -28,6 +29,8 @@ class Report:
     def __init__(self):
         self.errors = []
         self.warnings = []
+        self.summary_missing = []   # content pages without a summary (optional, recommended)
+        self.summary_total = 0      # content pages: every page except folder indexes
 
     def error(self, path, line, msg):
         self.errors.append((path, line, msg))
@@ -248,10 +251,24 @@ def validate_page(path, text, tax, rep):
             rep.error(path, lines.get(("relations",), 1),
                       "pages that declare relations need an explicit 'id'")
     tags = data.get("tags") if isinstance(data.get("tags"), list) else []
-    return {"id": page_id, "relations": relations, "label": label, "group": group,
+    sm = data.get("summary")
+    return {"has_summary": isinstance(sm, str) and bool(sm.strip()), "id": page_id, "relations": relations, "label": label, "group": group,
             "order": order, "order_line": lines.get(("order",), 1),
             "group_line": lines.get(("sidebar_group",), 1), "label_line": lines.get(("sidebar_label",), 1),
             "tags": [t for t in tags if isinstance(t, str)], "tags_line": lines.get(("tags",), 1)}
+
+
+def is_folder_index(path, text):
+    """A folder README with a `## Contents` list: navigation, not a page that needs a summary."""
+    return os.path.basename(path) == "README.md" and re.search(r"^## Contents\s*$", text, re.M) is not None
+
+
+def coverage_line(rep):
+    """One line on how many content pages carry a summary. Never an error: a summary is optional."""
+    have = rep.summary_total - len(rep.summary_missing)
+    pct = round(100 * have / rep.summary_total) if rep.summary_total else 100
+    return (f"summary coverage: {have} of {rep.summary_total} content pages ({pct}%); "
+            "a summary is optional but recommended (list the rest with --list-missing-summaries)")
 
 
 def run(root):
@@ -272,6 +289,10 @@ def run(root):
         info = validate_page(path, text, tax, rep)
         if info is not None:
             fm_pages[path] = info
+        if not is_folder_index(path, text):
+            rep.summary_total += 1
+            if info is None or not info["has_summary"]:
+                rep.summary_missing.append(path)
 
     # id uniqueness: explicit vs explicit, explicit vs any page's fallback
     explicit = {}
@@ -395,11 +416,22 @@ def run(root):
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--root", default=os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
+    ap.add_argument("--summary-coverage", action="store_true",
+                    help="print only the summary coverage line (never fails on missing summaries)")
+    ap.add_argument("--list-missing-summaries", action="store_true",
+                    help="also list the content pages that have no summary")
     args = ap.parse_args()
     rep, n_pages, n_fm = run(args.root)
+    if args.summary_coverage:
+        print(coverage_line(rep))
+        sys.exit(1 if rep.errors else 0)
     rep.emit()
     print(f"checked {n_pages} pages ({n_fm} with front matter): "
           f"{len(rep.errors)} error(s), {len(rep.warnings)} warning(s)")
+    print(coverage_line(rep))
+    if args.list_missing_summaries:
+        for path in rep.summary_missing:
+            print(f"  no summary: {path}")
     sys.exit(1 if rep.errors else 0)
 
 

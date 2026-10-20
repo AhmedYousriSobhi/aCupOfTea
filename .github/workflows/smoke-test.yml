@@ -29,8 +29,8 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install PyYAML
-        run: pip install PyYAML==6.0.2
+      - name: Install PyYAML and Pillow
+        run: pip install PyYAML==6.0.2 Pillow==12.3.0
 
       - name: Set up Node
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
