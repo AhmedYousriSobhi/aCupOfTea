@@ -57,6 +57,7 @@
     ],
     "id": "broken-pods-rogues-gallery",
     "level": "intermediate",
+    "order": 4,
     "path": "fields/devops/kubernetes/broken-pods-rogues-gallery.md",
     "reading_time_min": 6,
     "relations": {
@@ -90,6 +91,7 @@
     ],
     "id": "build-a-two-node-k3s-lab",
     "level": "intermediate",
+    "order": 2,
     "path": "fields/devops/kubernetes/build-a-two-node-k3s-lab.md",
     "reading_time_min": 7,
     "relations": {
@@ -220,7 +222,7 @@
     "id": "deep-learning-basics",
     "level": "beginner",
     "path": "fields/deep-learning/concepts/basics.md",
-    "reading_time_min": 28,
+    "reading_time_min": 30,
     "relations": {
       "prerequisites": [],
       "related": [
@@ -274,6 +276,7 @@
     ],
     "id": "fake-gpus-in-kubernetes",
     "level": "intermediate",
+    "order": 3,
     "path": "fields/devops/kubernetes/fake-gpus-in-kubernetes.md",
     "reading_time_min": 6,
     "relations": {
@@ -308,6 +311,7 @@
     ],
     "id": "gpu-allocation-vs-utilization",
     "level": "intermediate",
+    "order": 5,
     "path": "fields/devops/kubernetes/gpu-allocation-vs-utilization.md",
     "reading_time_min": 7,
     "relations": {
@@ -385,6 +389,7 @@
     ],
     "id": "kubernetes-in-five-nouns",
     "level": "advanced",
+    "order": 1,
     "path": "fields/devops/kubernetes/kubernetes-in-five-nouns.md",
     "reading_time_min": 8,
     "relations": {
@@ -440,6 +445,7 @@
     ],
     "id": "nvidia-cluster-readiness-engine",
     "level": "intermediate",
+    "order": 6,
     "path": "fields/devops/kubernetes/nvidia-cluster-readiness-engine.md",
     "reading_time_min": 10,
     "relations": {
@@ -462,6 +468,32 @@
     "types": [
       "concept",
       "note"
+    ]
+  },
+  "old-data-and-background-work": {
+    "domains": [
+      "software-engineering",
+      "system-design"
+    ],
+    "id": "old-data-and-background-work",
+    "level": "intermediate",
+    "path": "programming/local-app-accounts/old-data-and-background-work.md",
+    "reading_time_min": 6,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "How to give pre-existing data an owner without surprises, and why background monitors and their cached readings must follow the signed-in person.",
+    "tags": [
+      "programming",
+      "software-engineering",
+      "system-design"
+    ],
+    "title": "The Orphans Come Home: Old Data and Background Work",
+    "type": "concept",
+    "types": [
+      "concept"
     ]
   },
   "parallel-execution-and-affinity": {
@@ -609,6 +641,33 @@
       "concept"
     ]
   },
+  "reviewing-the-design": {
+    "domains": [
+      "software-engineering",
+      "system-design"
+    ],
+    "id": "reviewing-the-design",
+    "level": "intermediate",
+    "path": "programming/local-app-accounts/reviewing-the-design.md",
+    "reading_time_min": 6,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Six review questions the design leaves open, a table of mistakes it avoids, the Designing Data-Intensive Applications chapters that explain why, and six exercises.",
+    "tags": [
+      "programming",
+      "software",
+      "system-design"
+    ],
+    "title": "Reviewing the Design: Where Would You Push Back?",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
   "sequence-models": {
     "domains": [
       "deep-learning",
@@ -638,6 +697,64 @@
     "type": "concept",
     "types": [
       "concept"
+    ]
+  },
+  "sessions-and-two-walls": {
+    "domains": [
+      "software-engineering",
+      "system-design"
+    ],
+    "id": "sessions-and-two-walls",
+    "level": "intermediate",
+    "path": "programming/local-app-accounts/sessions-and-two-walls.md",
+    "reading_time_min": 6,
+    "relations": {
+      "prerequisites": [
+        "sign-in-hygiene"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "How an app remembers who is signed in, why remember-me stores a fingerprint instead of a token, and why authorization needs one check at the door and another at the data.",
+    "tags": [
+      "programming",
+      "software-engineering",
+      "system-design"
+    ],
+    "title": "Who's Home, and What May They Touch? Sessions and Two Walls",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
+  "sign-in-hygiene": {
+    "domains": [
+      "software-engineering",
+      "system-design"
+    ],
+    "id": "sign-in-hygiene",
+    "level": "intermediate",
+    "path": "programming/local-app-accounts/sign-in-hygiene.md",
+    "reading_time_min": 5,
+    "relations": {
+      "prerequisites": [
+        "threat-model-and-first-launch"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Slow self-describing password hashes, a decoy check for unknown users, one identical error message, and throttling that cannot be used to lock someone out forever.",
+    "tags": [
+      "programming",
+      "software-engineering",
+      "system-design"
+    ],
+    "title": "Sign-In Hygiene: How the Clerk Says \"No\" Without Giving Anything Away",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
     ]
   },
   "singularity-containers": {
@@ -687,6 +804,33 @@
     "title": "pam_slurm_adopt: Closing the Slurm SSH Backdoor",
     "type": "guide",
     "types": [
+      "guide"
+    ]
+  },
+  "threat-model-and-first-launch": {
+    "domains": [
+      "software-engineering",
+      "system-design"
+    ],
+    "id": "threat-model-and-first-launch",
+    "level": "beginner",
+    "path": "programming/local-app-accounts/threat-model-and-first-launch.md",
+    "reading_time_min": 4,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Before writing any account code, state what accounts will and will not protect, then handle the very first sign-up gracefully.",
+    "tags": [
+      "design",
+      "programming",
+      "software"
+    ],
+    "title": "Two People, One Laptop: What Accounts Should (and Shouldn't) Promise",
+    "type": "concept",
+    "types": [
+      "concept",
       "guide"
     ]
   },

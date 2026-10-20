@@ -200,7 +200,7 @@ async function run(browser, base, label, size, phone) {
     c('phone menu opens', before < 0 && after >= 0, `x ${before} -> ${after}`);
     // a page link in the menu opens the page and closes the menu
     try {
-      await page.evaluate(() => { const g = [...document.querySelectorAll('.sidebar-nav li.group > strong')].find((s) => /Tips/.test(s.textContent)); if (g) g.click(); });
+      await page.evaluate(() => { const g = [...document.querySelectorAll('.sidebar-nav li.group')].find((l) => /Tips/.test(l.querySelector(':scope > a, :scope > strong').textContent)); if (g) g.click(); });
       await page.waitForTimeout(300);
       await page.tap('.sidebar-nav a[href*="tips/kaggle"]', { timeout: 3000 });
       await page.waitForTimeout(1200);
@@ -296,12 +296,17 @@ async function run(browser, base, label, size, phone) {
       const pre = document.querySelector('.markdown-section pre[data-lang="bash"]');
       const b = pre && pre.querySelector('.code-copy');
       if (!b) return { buttons: 0 };
+      const want = pre.querySelector('code').textContent.replace(/\n$/, '');
+      // what the button hands to the clipboard: WebKit refuses readText() without a real user gesture, so the real clipboard is only compared where it can be read
+      const sent = [];
+      const write = navigator.clipboard.writeText.bind(navigator.clipboard);
+      navigator.clipboard.writeText = (t) => { sent.push(t); return write(t); };
       b.click();
       await new Promise((r) => setTimeout(r, 300));
-      let text = '';
-      try { text = await navigator.clipboard.readText(); } catch (e) { /* not readable */ }
+      let text = null;
+      try { text = await navigator.clipboard.readText(); } catch (e) { /* not readable in this browser */ }
       return { buttons: document.querySelectorAll('.code-copy').length, old: document.querySelectorAll('.docsify-copy-code-button').length,
-        note: b.getAttribute('data-note'), same: text === pre.querySelector('code').textContent.replace(/\n$/, '') };
+        note: b.getAttribute('data-note'), same: sent.length === 1 && sent[0] === want && (text === null || text === want), readable: text !== null };
     });
     c('code block copy button copies the code', code.buttons >= 1 && !code.old && code.note === 'Copied' && code.same, JSON.stringify(code));
     if (link.url) {
@@ -314,12 +319,48 @@ async function run(browser, base, label, size, phone) {
   c('"Surprise me" opens different real pages', landed.size >= 3, [...landed].join(' '));
   }
   const nested = await page.evaluate(() => {
-    const label = (t) => [...document.querySelectorAll('.sidebar-nav li.group')].find((l) => l.firstElementChild.textContent.trim() === t);
-    ['Fields', 'Benchmarks'].forEach((t) => { const l = label(t); if (l && l.classList.contains('collapsed')) l.firstElementChild.click(); });
+    const label = (t) => [...document.querySelectorAll('.sidebar-nav li.group')].find((l) => l.querySelector(':scope > a, :scope > strong').textContent.trim() === t);
+    ['Fields', 'Benchmarks'].forEach((t) => { const l = label(t); if (l && l.classList.contains('collapsed')) l.click(); });
     const b = label('Benchmarks');
     return !!b && !b.classList.contains('collapsed') && b.querySelectorAll('a').length > 1;
   });
   c('a folder inside a folder in the menu opens when tapped', nested);
+  const fold = await page.evaluate(() => {
+    const b = document.querySelector('.sidebar-nav li.group > button.fold');
+    const r = b && b.getBoundingClientRect();
+    return { has: !!b, w: r && Math.round(r.width), h: r && Math.round(r.height), exp: b && b.getAttribute('aria-expanded'), label: b && b.getAttribute('aria-label') };
+  });
+  c('folders have a real fold button of at least 24px with its state announced', fold.has && fold.w >= 24 && fold.h >= 24 && /^(true|false)$/.test(fold.exp) && /^(Expand|Collapse) /.test(fold.label), JSON.stringify(fold));
+  const twice = await page.evaluate(() => [...document.querySelectorAll('.sidebar-nav li.group > a')].filter((a) => [...a.parentNode.querySelectorAll(':scope > ul > li > a')].some((k) => k.getAttribute('href') === a.getAttribute('href'))).length);
+  c('a folder heading and its index page are one menu entry, not two', twice === 0, twice + ' folders list their index twice');
+  // reading history: a page read is dimmed in the menu, and "Continue" returns to it
+  await go('tips/kaggle-tips', 1500);
+  await go('', 1500);
+  const hist = await page.evaluate(() => {
+    const cont = document.getElementById('continue-reading');
+    const read = [...document.querySelectorAll('.sidebar-nav a.read')].some((a) => /kaggle-tips/.test(a.getAttribute('href')));
+    return { href: cont && cont.getAttribute('href'), read };
+  });
+  c('pages already read are marked in the menu and "Continue" links to the last one', hist.read && hist.href === '#/tips/kaggle-tips', JSON.stringify(hist));
+  // saved pages: the button saves, the menu lists it, removing empties the list
+  await go('tips/kaggle-tips', 1500);
+  await page.click('.save-page');
+  await go('', 1500);
+  const savedOn = await page.evaluate(() => { const d = document.getElementById('saved-pages'); return { text: d && d.querySelector('summary').textContent, href: d && d.querySelector('a').getAttribute('href') }; });
+  await page.evaluate(() => document.querySelector('#saved-pages li button').click());
+  const savedOff = await page.evaluate(() => !document.getElementById('saved-pages'));
+  c('a saved page is listed in the menu and can be removed', /Saved \(1\)/.test(savedOn.text || '') && savedOn.href === '#/tips/kaggle-tips' && savedOff, JSON.stringify(savedOn) + ' removed=' + savedOff);
+  // share links: a page has its own share page with its title for link previews, and a footer button for it
+  await go('tips/kaggle-tips', 1500);
+  const share = await page.evaluate(async () => {
+    const r = await fetch('./tips/kaggle-tips/');
+    const t = r.ok ? await r.text() : '';
+    const og = (t.match(/property="og:title" content="([^"]*)"/) || [])[1];
+    const refresh = (t.match(/http-equiv="refresh" content="0; url=([^"]*)"/) || [])[1];
+    const h1 = document.querySelector('.markdown-section h1').textContent.trim();
+    return { ok: r.ok, og, refresh, h1, button: !!document.querySelector('.page-footer .share-link') };
+  });
+  c('a page has a share page with its own title and a "Copy share link" button', share.ok && !!share.og && share.refresh === '../../#/tips/kaggle-tips' && share.button, JSON.stringify(share));
   c('no script errors', page.errors.length === 0, page.errors.join(' | '));
   await page.context().close();
 }

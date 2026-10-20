@@ -115,12 +115,13 @@ index.html           — Docsify entry point: page shell, styles, Content-Securi
                          phone-tables.js (phone table cards)
                          lazy-images.js (images load as you scroll)
                          _404.md (page shown for a missing link)
-                         page-footer.js (Edit this page, Last updated)
+                         page-footer.js (Edit this page, Last updated, Copy share link)
                          math.js (display formulas with KaTeX)
                          config.js (Docsify settings, window.$docsify)
                          lazy-libs.js (loads Mermaid and KaTeX only on pages that use them)
                          reading-progress.js (progress bar, back-to-top button)
                          surprise-me.js (random page link in the menu)
+                         reading-history.js (pages read get a check in the menu, Continue link, Save for later and the Saved list)
                          section-links.js (copy a link to an h2/h3 section)
                          offline.js + sw-template.js (read offline; stage_site.py writes sw.js into the published copy)
                          theme-toggle.js (theme list: light, sepia, dark, midnight, black)
@@ -129,7 +130,7 @@ index.html           — Docsify entry point: page shell, styles, Content-Securi
                          icons/ (favicon.svg, PNG sizes, site.webmanifest)
                          tests/smoke.js (browser smoke test of the staged site, run in Chromium and WebKit)
                          metadata/ (schema.yaml, taxonomy.yaml)
-                         tools/ (validate, generate_index, stage_site, code_pages, build_search_index, check_links, update_recent, check_pins, new_page, page_doctor, page_gui (+ page_gui.html), and the test_*.py files that CI runs)
+                         tools/ (check_all, validate, generate_index, stage_site, code_pages, build_search_index, share_pages, check_links, update_recent, check_pins, new_page, page_doctor, page_gui (+ page_gui.html), and the test_*.py files that CI runs)
                          generated/ (indexes and Explore pages, generated)
 .github/             — workflows (validate metadata, smoke test, pin check; deploy a staged copy to gh-pages), dependabot.yml (action updates) and CONTRIBUTING.md
 .gitmodules          — project/knowledge submodules
@@ -153,8 +154,9 @@ Two navigation layers exist and both must stay accurate:
 
 1. **`README.md` indexes** inside a folder — description, subcategories, links, related projects/technologies. Should not duplicate large amounts of underlying content.
 2. **`.docs/_sidebar.md`** — the navigation tree for the rendered Docsify site. It is **generated** from the file tree by `.docs/gen_sidebar.sh`, and CI regenerates it on every push to `main`. It MUST NOT be hand-edited; regenerate and commit it in the same change as any move/rename/new section so the repo matches what's published.
+   - Inside a folder the README comes first, then pages with an `order` (front matter, §26) by that number, then the rest alphabetically; Previous/Next follow the sidebar.
    - A page's label is the text after the last hyphen of its `# H1` (the whole H1 if it has none). A `sidebar_label` in front matter overrides it without editing the heading.
-   - A folder's group name is the text before the last hyphen of its `README.md` H1. A `sidebar_group` in that README overrides it; use it when sibling folders would share a name.
+   - A folder's group name is the text before the last hyphen of its `README.md` H1, and the group heading links to that README (the README is not repeated as a child entry; the chevron folds the group). A `sidebar_group` in that README overrides it; use it when sibling folders would share a name.
    - An additive **Explore** section (Start here, Domains, Tags) comes from the metadata layer (§26); the folder tree below it is untouched.
 
 Folder `README.md` indexes SHOULD list their pages in a `| File | Description |` table under `## Contents`, the format `new_page.py` updates automatically (§27). Converging the remaining list-style indexes is tracked in issue #77.
@@ -243,17 +245,21 @@ Content type, location and navigation are unchanged; metadata is an **overlay** 
 - **Location:** schema, taxonomy, tools and generated data live under `.docs/` (served by GitHub Pages), so the root allowlist (§13) is unchanged.
 - **Generated, deterministic:** `.docs/generated/` holds `objects.json`, `domains.json`, `tags.json`, `relationships.json` (with reverse links), `related.json` and the Explore pages. The sidebar gains an additive **Explore** section (Start here, Domains, Tags); the folder tree is untouched.
 - **Submodules** are never written into and are skipped by the tools; relations may not target their content.
+- **Link previews:** the staged copy also holds a share page per content page at its folder address (title and summary as Open Graph tags, then a redirect to the `#/` page), so a shared link previews that page; `summary` in front matter feeds the description, else the first paragraph is used.
 - **Deployment:** the published site is a staging copy with front matter stripped and a "Read first / See also / Read next" strip under the title; repository sources are never rewritten.
+- **Reading order:** optional `order` (whole number from 1 up, unique within a folder) is a page's position in its folder: it drives the generated sidebar, the Previous/Next buttons, the "Read next" strip and Start here paths. A prerequisite in the same folder should have a smaller number.
 - **Partial front matter, `sidebar_label` and `sidebar_group`:** every field is optional (defaults: title = first H1, type = note, status = stable); `id` only for pages in relations. `sidebar_label` overrides a page's sidebar label without editing its heading; `sidebar_group` (folder `README.md` only) overrides the folder's group name. Labels must be unique within a folder and groups among sibling folders. A page with only these fields is not indexed and gets no domain.
 
 See `CLAUDE.md` §21 for the contributor how-to.
 
 ## 27. Adding New Knowledge
 
+**Finishing any change:** `python3 .docs/tools/check_all.py --fix` runs the validation suite (front matter, links, tests) and regenerates the indexes, sidebar and navbar; CI runs the same script without `--fix` on every PR to `dev`/`main` and push to `dev`, so a stale generated file or a broken rule blocks the merge.
+
 Adding a page MUST stay a small, repeatable step for a solo author or an outside contributor:
 
 - **Preferred:** `python3 .docs/tools/new_page.py`. It asks for a title, optional summary, folder, type, domains (suggested from the folder), tags, level, prerequisites and related pages, then creates the kebab-case file with front matter and a short outline, adds the page to the folder's `README.md` table, and regenerates the sidebar and navbar. It suggests the closest existing folders, warns about similar existing pages (§17), never overwrites a file, and never creates a folder without confirmation (§15). New tags are added to `taxonomy.yaml` only after confirmation (§26). Reading time is never entered: the site computes it from the text, and `new_page.py --check PAGE` shows it together with what is still missing.
-- **In the browser:** `new_page.py --gui` serves the same questions, the hand-written-page flow and the `page_doctor.py` list as a form on 127.0.0.1 only (`page_gui.py`, `page_gui.html`); it runs `new_page.py` with options, so the rules are the same.
+- **In the browser:** `new_page.py --gui` serves the same questions, the hand-written-page flow and the `page_doctor.py` list (similar problems grouped under one heading) as a form on 127.0.0.1 only (`page_gui.py`, `page_gui.html`); it runs `new_page.py` with options, so the rules are the same.
 - **Changing metadata later:** `new_page.py --update PAGE` changes the summary, kind, subjects, tags, level or relations of a page that has front matter, keeping every other field and the page text.
 - **A page written by hand:** `python3 .docs/tools/new_page.py --adopt PAGE` adds the front matter and index link to an existing page without changing its text, and, for a page with partial front matter, keeps it and adds only the missing fields.
 - **Without the script:** create a kebab-case `.md` file with one `# H1`, add it to the folder's `README.md` index, and regenerate the sidebar. Front matter stays optional.

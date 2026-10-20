@@ -52,6 +52,9 @@ generate_sidebar() {
 
         if [ -d "$path" ]; then
             folders+=("$path")
+        elif [ "$base" == "README.md" ]; then
+            # A folder's README is linked from the folder heading below, not listed twice
+            continue
         elif [[ "$base" == *.md ]]; then
             # --- FILE HEADER EXTRACTION ---
             local header=$(grep -m 1 "^# " "$path" | sed 's/^# //')
@@ -76,11 +79,23 @@ generate_sidebar() {
             local final_link="${path#../}"
             local entry="${indent}* [$file_title]($final_link)"
 
+            # Reading position: README.md first, then pages with an `order`
+            # (front matter), then the rest alphabetically (the find|sort order).
+            local fm_ord sort_key
+            fm_ord=$(fm_label "$path" order)
+            if [ "$base" == "README.md" ]; then
+                sort_key="0000000"
+            elif [[ "$fm_ord" =~ ^[0-9]+$ ]]; then
+                sort_key=$(printf '1%06d' "$((10#$fm_ord))")
+            else
+                sort_key="2000000"
+            fi
+
             # --- ORDERING: Force "Overview" to top ---
             if [[ "${file_title,,}" == "overview" ]]; then
                 overview_item="$entry"
             else
-                files+=("$entry")
+                files+=("$sort_key $entry")
             fi
         fi
     done < <(find "$dir" -maxdepth 1 -not -path '*/.*' | LC_ALL=C sort)
@@ -89,9 +104,10 @@ generate_sidebar() {
     if [ -n "$overview_item" ]; then
         echo "$overview_item" >> $OUTPUT
     fi
-    for f in "${files[@]}"; do
-        echo "$f" >> $OUTPUT
-    done
+    # Stable sort on the key only: equal keys keep the alphabetical order above
+    if [ "${#files[@]}" -gt 0 ]; then
+        printf '%s\n' "${files[@]}" | sort -s -k1,1 | cut -d' ' -f2- >> $OUTPUT
+    fi
 
     # 3. Process Directories
     for d in "${folders[@]}"; do
@@ -140,7 +156,12 @@ generate_sidebar() {
             folder_display_name=$(echo "$base" | sed 's/[-_]/ /g' | awk '{for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) substr($i,2)} 1')
         fi
 
-        echo "${indent}* **$folder_display_name**" >> $OUTPUT
+        # The heading links to the folder's README (the folder index); without one it is a plain toggle
+        if [ -f "$readme_file" ]; then
+            echo "${indent}* [**$folder_display_name**](${rel}/README.md)" >> $OUTPUT
+        else
+            echo "${indent}* **$folder_display_name**" >> $OUTPUT
+        fi
         
         # Recurse
         generate_sidebar "$d" "  $indent"

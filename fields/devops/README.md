@@ -1,5 +1,6 @@
 ---
 sidebar_label: DevOps
+sidebar_group: DevOps
 ---
 
 # DevOps: Where Code Meets the Machines That Run It

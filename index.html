@@ -200,6 +200,9 @@
     background: color-mix(in srgb, var(--link) 14%, transparent);
     border-left: 3px solid var(--link); border-radius: 0 6px 6px 0; padding-left: 8px; margin-left: -11px;
   }
+  /* On a folder's index page the menu already lists the folder's pages, so its own
+     section list (shown under the folder heading on narrow screens) would repeat them */
+  .sidebar-nav li.group > .app-sub-sidebar { display: none; }
   /* Light theme text that was under 4.5:1 */
   html[data-mode="light"] { --blockquote-color: #55616d; }
   html[data-mode="light"] .markdown-section code { color: #a8420a; }
@@ -258,6 +261,21 @@
   .section-link-copy[data-note]::after { content: attr(data-note); position: absolute; left: 100%; top: 50%; transform: translateY(-50%); margin-left: 6px; padding: 2px 8px; border-radius: 6px; background: var(--color-text); color: var(--color-bg); font-size: 12px; font-weight: 400; white-space: nowrap; }
   #surprise-me { display: block; margin: 0 20px 0.8em; padding: 8px 12px; border: 1px dashed var(--border-color); border-radius: 8px; color: var(--link); font-weight: 600; text-decoration: none; text-align: center; font-size: 0.95em; }
   #surprise-me:hover { border-style: solid; }
+  #continue-reading { display: block; margin: -0.3em 20px 0.8em; padding: 4px 12px; color: var(--link); font-size: 0.9em; text-decoration: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  #continue-reading:hover { text-decoration: underline; }
+  #saved-pages { margin: 0 20px 0.8em; font-size: 0.9em; }
+  #saved-pages summary { cursor: pointer; padding: 6px 0; color: var(--link); font-weight: 600; }
+  #saved-pages ul { list-style: none; margin: 0; padding: 0; }
+  #saved-pages li { display: flex; align-items: center; gap: 4px; }
+  #saved-pages li a { flex: 1; min-width: 0; padding: 6px 0; }
+  #saved-pages li button { flex: none; width: 32px; height: 32px; border: 0; background: none; color: inherit; font-size: 1.2em; cursor: pointer; opacity: 0.6; }
+  #saved-pages li button:hover, #saved-pages li button:focus-visible { opacity: 1; }
+  .page-footer .share-link { padding: 0; border: 0; background: none; color: var(--link); font: inherit; font-weight: 600; cursor: pointer; }
+  .page-footer .share-link:hover { text-decoration: underline; }
+  .save-page { display: block; margin: -0.2em 0 1em auto; padding: 6px 12px; min-height: 32px; border: 1px solid var(--border-color); border-radius: 8px; background: none; color: var(--link); font: inherit; font-size: 0.85em; font-weight: 600; cursor: pointer; }
+  .save-page[aria-pressed="true"] { border-color: var(--link); }
+  /* Pages already read (see .docs/reading-history.js): a small check after the title, text keeps full contrast */
+  .sidebar-nav li:not(.group) > a.read:not(.here)::after { content: ' ✓'; content: ' ✓' / ''; font-size: 0.8em; opacity: 0.55; }
   #menu-github { display: none; margin: 1.5em 20px 2em; padding-top: 1em; border-top: 1px solid var(--border-color); font-size: 0.9em; }
   @media (max-width: 768px) { #menu-github { display: block; } }
   /* Theme button (see .docs/theme-toggle.js) */
@@ -290,13 +308,20 @@
   html[data-size="xl"] { --font-size: 21px; }
   nav.app-nav, nav.app-nav a, nav.app-nav li, nav.app-nav p { font-size: 17px !important; }
   /* Sidebar groups (see .docs/sidebar-groups.js) */
-  .sidebar-nav li.group > strong { cursor: pointer; position: relative; }
-  .sidebar-nav li.group > strong::before {
-    content: ''; position: absolute; left: -14px; top: 0.55em; width: 6px; height: 6px;
+  .sidebar-nav li.group { position: relative; }
+  .sidebar-nav li.group > strong { cursor: pointer; }
+  /* The chevron is a real button (keyboard, screen reader) with a 34x34px tap area left of the title */
+  .sidebar-nav li.group > button.fold {
+    position: absolute; left: -24px; top: 0; width: 34px; height: 34px; padding: 0; margin: 0;
+    border: 0; background: none; color: inherit; cursor: pointer;
+  }
+  .sidebar-nav li.group > button.fold::before {
+    content: ''; position: absolute; left: 12px; top: 12px; width: 6px; height: 6px;
     border-right: 1px solid currentColor; border-bottom: 1px solid currentColor;
     transform: rotate(45deg); opacity: 0.6; transition: transform 0.1s;
   }
-  .sidebar-nav li.group.collapsed > strong::before { transform: rotate(-45deg); }
+  .sidebar-nav li.group > button.fold:focus-visible { outline: 2px solid var(--theme-color); outline-offset: -2px; border-radius: 4px; }
+  .sidebar-nav li.group.collapsed > button.fold::before { transform: rotate(-45deg); }
   .sidebar-nav li.group.collapsed > ul { display: none; }
   /* Look of Docsify 4 kept: green bold links, no underline, compact menu */
   .markdown-section a:not(.anchor) {
@@ -327,6 +352,7 @@
   <script src="./.docs/page-outline.js"></script>
   <script src="./.docs/reading-progress.js"></script>
   <script src="./.docs/surprise-me.js"></script>
+  <script src="./.docs/reading-history.js"></script>
   <script src="./.docs/section-links.js"></script>
   <!-- Read offline: keeps a copy of each page opened (service worker, deployed site only) -->
   <script src="./.docs/offline.js"></script>

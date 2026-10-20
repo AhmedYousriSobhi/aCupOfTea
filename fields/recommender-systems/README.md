@@ -1,6 +1,6 @@
 # Recommender Systems - Overview
 
-![image](images/recommender-systems-01.png)
+![Title card reading Recommender Systems](images/recommender-systems-01.png)
 
 # Table of Content
 - [Recommender Systems - Overview](#recommender-systems---overview)

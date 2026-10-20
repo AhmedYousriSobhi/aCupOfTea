@@ -29,29 +29,10 @@ jobs:
       - name: Install PyYAML
         run: pip install PyYAML==6.0.2
 
-      - name: Validate front matter
-        run: python3 -I .docs/tools/validate.py
-
-      - name: Check internal links
-        run: python3 -I .docs/tools/check_links.py
-
-      - name: Test new_page.py, page_doctor.py, page_gui.py, check_pins.py and check_links.py
-        run: |
-          python3 -I .docs/tools/test_new_page.py
-          python3 -I .docs/tools/test_page_doctor.py
-          python3 -I .docs/tools/test_page_gui.py
-          python3 -I .docs/tools/test_check_pins.py
-          python3 -I .docs/tools/test_check_links.py
+      - name: Run the validation suite
+        # front matter, internal links, generated indexes + sidebar + navbar up to date, all test_*.py
+        run: python3 -I .docs/tools/check_all.py
 
       - name: Check the README "Recently added" list (release PRs to main)
         if: github.base_ref == 'main'
         run: python3 -I .docs/tools/update_recent.py --check
-
-      - name: Check generated indexes are up to date
-        run: |
-          python3 -I .docs/tools/generate_index.py
-          git status --porcelain -- .docs/generated
-          test -z "$(git status --porcelain -- .docs/generated)" || {
-            echo "::error::.docs/generated is stale; run python3 .docs/tools/generate_index.py and commit"
-            exit 1
-          }

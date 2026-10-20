@@ -165,6 +165,12 @@
     ],
     "related_by": []
   },
+  "old-data-and-background-work": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
   "parallel-execution-and-affinity": {
     "prerequisite_of": [],
     "prerequisites": [],
@@ -209,6 +215,12 @@
     "related": [],
     "related_by": []
   },
+  "reviewing-the-design": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
   "sequence-models": {
     "prerequisite_of": [
       "encoder-decoder-machine-translation"
@@ -223,6 +235,24 @@
       "deep-learning-basics"
     ]
   },
+  "sessions-and-two-walls": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "sign-in-hygiene"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "sign-in-hygiene": {
+    "prerequisite_of": [
+      "sessions-and-two-walls"
+    ],
+    "prerequisites": [
+      "threat-model-and-first-launch"
+    ],
+    "related": [],
+    "related_by": []
+  },
   "singularity-containers": {
     "prerequisite_of": [],
     "prerequisites": [
@@ -233,6 +263,14 @@
   },
   "slurm-pam-adopt-ssh-access": {
     "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "threat-model-and-first-launch": {
+    "prerequisite_of": [
+      "sign-in-hygiene"
+    ],
     "prerequisites": [],
     "related": [],
     "related_by": []

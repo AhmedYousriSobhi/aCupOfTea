@@ -11,6 +11,9 @@ Copies the repo to --out, then in the COPY only:
     .docs/generated/related.json (run generate_index.py first);
   * writes a readable page next to every code file and notebook
     (name.py -> name.py.md, the address a Docsify link asks for; code_pages.py);
+  * writes a share page (title and summary as Open Graph tags, then a redirect)
+    at each page's folder address so link previews differ per page
+    (share_pages.py);
   * writes .docs/last-updated.json (page -> date of its last git commit) for
     the page footer, when the checkout has git history;
   * fills the homepage block between <!-- recent:start --> and <!-- recent:end -->
@@ -39,6 +42,7 @@ from build_search_index import build as build_search_index  # noqa: E402
 from code_pages import write_code_pages  # noqa: E402
 from common import list_pages, split_front_matter, submodule_paths  # noqa: E402
 from generate_index import reading_time_min  # noqa: E402
+from share_pages import DEFAULT_BASE, write_share_pages  # noqa: E402
 
 MARKER = ".stage-site"
 RELATED_MARK = "<!-- related-block -->"
@@ -168,7 +172,7 @@ def write_service_worker(src, out):
     return version, len(shell)
 
 
-def stage(src, out):
+def stage(src, out, base_url=DEFAULT_BASE):
     src, out = os.path.abspath(src), os.path.abspath(out)
     if out == src or src.startswith(out + os.sep):
         sys.exit("--out must not be the source directory or one of its parents")
@@ -200,10 +204,12 @@ def stage(src, out):
             related = json.load(f)
 
     stripped = appended = timed = 0
+    originals = {}
     for path in list_pages(out, set(subs)):
         full = os.path.join(out, path)
         with open(full, encoding="utf-8", newline="") as f:
             text = f.read()
+        originals[path] = text
         new = text
         split = split_front_matter(text)
         if split is not None:
@@ -220,6 +226,7 @@ def stage(src, out):
                 f.write(new)
 
     n_code = write_code_pages(out, subs)
+    n_share = write_share_pages(out, originals, base_url)
 
     recent = recent_pages(src, list_pages(out, set(subs)))
     home = os.path.join(out, "README.md")
@@ -242,7 +249,7 @@ def stage(src, out):
     open(os.path.join(out, MARKER), "w").close()
     print(f"staged {out}: stripped front matter from {stripped} pages, "
           f"reading time on {timed} pages, related strip on {appended} pages, "
-          f"{n_code} code and notebook pages, {len(recent)} recent pages, "
+          f"{n_code} code and notebook pages, {n_share} share pages, {len(recent)} recent pages, "
           f"last-updated dates for {len(dates)} pages, "
           f"search index of {n_idx} pages ({idx_size // 1024} KB), "
           + (f"service worker {sw[0]} with {sw[1]} shell files" if sw else "no service worker"))
@@ -252,8 +259,10 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--src", default=os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
     ap.add_argument("--out", required=True)
+    ap.add_argument("--base-url", default=DEFAULT_BASE,
+                    help="public address of the site, used in share-page link previews")
     args = ap.parse_args()
-    stage(args.src, args.out)
+    stage(args.src, args.out, args.base_url)
 
 
 if __name__ == "__main__":

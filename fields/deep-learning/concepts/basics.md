@@ -15,7 +15,7 @@ relations:
 ---
 
 # Deep Learning - Concepts - Basics
-![image](images/basics-01.png)
+![Title slide with the words DEEP DEEP DEEP LEARNING in shrinking sizes under the heading Artificial Intelligence](images/basics-01.png)
 
 In this article, we'll start explaining the important basics in deep learning
 
@@ -104,7 +104,7 @@ So Let's define a deep network to be :
 DEEP Networks are gigantic Non-Linear or implicit sophisticated look-up table.
 ```
 
-![image](images/basics-02.png)
+![Slide showing a neuron as input times weights, summed with an intercept, passed through activation function g, then minimized](images/basics-02.png)
 
 Here are some of the key features of a neural network:
 
@@ -138,7 +138,7 @@ Assume removing the intercept, then the line will go through the origin wherein 
 An activation function is a function that is applied to the output of a neuron in a neural network. It is used to introduce non-linearity into the network, which is essential for learning complex patterns.
 
 ## Linear Function
-![image](images/basics-03.png)
+![Slide on the linear activation g of x equals x, with a straight line through the origin on axes](images/basics-03.png)
 
 The linear activation function is not commonly used in neural networks. It is a simple function that outputs the input value unchanged. This means that the output of each neuron is simply a linear combination of the inputs. As a result, the network cannot learn any non-linear relationships between the inputs and the outputs.
 
@@ -157,7 +157,7 @@ The ReLU function is a non-linear function that outputs the input value if it is
 
 It is computationally efficient and does not suffer from the vanishing gradient problem, but it can lead to the dying ReLU problem.
 
-![image](images/basics-04.png)
+![ReLU activation slide with max of 0 and z formula and a plot flat at zero for negative inputs, annotated dying ReLU problem](images/basics-04.png)
 
 #### What is Dying Relu Problem?
 - It can occur when the weights of neural network are initialized in a way that causes many of the neurons to output zero. This can happen if the weights are initialized to be too small or if the data is not well-scalled.
@@ -175,7 +175,7 @@ The Leaky ReLU function is a variant of the ReLU function that outputs a small p
 
 This prevents the dying ReLU problem.
 
-![image](images/basics-05.png)
+![Leaky ReLU slide with plot having a small slope for negative z and formula max of a times z and z](images/basics-05.png)
 
 ### Sigmoid
 The sigmoid function is a special activation function because it has a few properties that make it useful for neural networks.
@@ -199,7 +199,7 @@ Here are some of the reasons why the tanh function is preferred over the sigmoid
 - Sensitivity to outliers: The tanh function is less sensitive to outliers than the sigmoid function. This is because the tanh function is symmetric around 0, while the sigmoid function is not.
 - Smoothness: The tanh function is a smooth function, which makes it easier to train neural networks. The sigmoid function is not as smooth, which can make it more difficult to train neural networks.
 
-![image](images/basics-07.png)
+![Tanh activation slide with S-shaped curve between minus 1 and 1 on z axis, noting it keeps the sign of the input](images/basics-07.png)
 
 Here are some cases where the tanh function is preferred over the sigmoid function:
 - Regression problems: The tanh function is a good choice for regression problems where the output should be a continuous value.
@@ -215,7 +215,7 @@ The softmax function is a special activation function because it is used in clas
 
 The softmax function is a versatile and useful activation function. It is a good choice for classification problems with multiple output classes.
 
-![image](images/basics-08.png)
+![Softmax slide: output layer values 1.3, 5.1, 2.2, 0.7, 1.1 passed through softmax formula into probabilities summing to 1](images/basics-08.png)
 
 Here are some of the reasons why the softmax function is special:
 - Normalization: The softmax function is a normalization function, which means that the sum of the outputs is always equal to 1. This is important for classification problems, where the output should represent the probability of the input belonging to a particular class.
@@ -246,7 +246,7 @@ The absolute activation function is a simple function, but it can be useful in s
 
 The absolute activation function is also less sensitive to the vanishing gradient problem than some other activation functions, such as the sigmoid function. __The vanishing gradient problem is a problem that can occur when the derivatives of the activation function approach zero__. This can make it difficult for the network to learn, as the updates to the weights become very small.
 
-![image](images/basics-09.png)
+![Absolute value activation slide with plot of y equals abs of x, a V shape with its vertex at the origin](images/basics-09.png)
 
 However, the absolute activation function also has some limitations. It is not as interpretable as some other activation functions, such as the sigmoid function. This can make it more difficult to debug and understand the behavior of the network.
 
@@ -256,9 +256,9 @@ Here are some cases where the absolute activation function is used:
 - Image processing: The absolute activation function can be used to remove noise from images.
 
 #### Can ABS() be used as activation function?
-![image](images/basics-10.png)
+![Quora answer by Prasoon Goyal saying abs of x can be used as an activation but is non-monotonic and harder to train](images/basics-10.png)
 
-![image](images/basics-11.png)
+![Quora answer by Michael Naunton saying abs of x being non-differentiable at zero is not a concern for gradient descent](images/basics-11.png)
 
 To conclude: If you will use abs(x), adjust your calculation such that, when a zero input is used, add some small fraction to zero to make it differentiable.
 
@@ -288,7 +288,7 @@ For Output Laysers: Depends on the task whether it is classification or regressi
   - Multi-Class Classifier: SoftMax.
 
 # The PERCEPTRION ERROR
-![image](images/basics-12.png)
+![Title slide reading Neural Networks, The Perceptron Error](images/basics-12.png)
 
 # Gradient in Neural Network
 ## 1- What is a Gradient?
@@ -332,7 +332,7 @@ Here are some of the most common variations of gradient descent:
 - RMSprop: RMSprop is a technique that is similar to Adagrad, but it is more efficient. It works by averaging the squared gradients over time.
 
 # Vanishing/Exploding Gradient
-![image](images/basics-13.png)
+![Title slide reading Neural Networks, Vanishing/Exploding Gradient](images/basics-13.png)
 
 The vanishing gradient and exploding gradient problems are two common problems that can occur in neural networks. The vanishing gradient problem occurs when the gradients of the activation function become very small as the network learns. This can make it difficult for the network to learn, as the updates to the weights become very small.
 
@@ -366,11 +366,11 @@ There are a number of solutions to the exploding gradient problem.
 
 ## 1.3- Common Solution for Both [Vanishing/Exploding] Gradient
 1. Batch Normalization: It occurs after the activation function.
-    ![image](images/basics-14.png)
-    ![image](images/basics-15.png)
+    ![Slide on batch normalization at training time: per mini-batch mean and variance, then normalize to mean 0 and variance 1](images/basics-14.png)
+    ![Slide on batch normalization at test time: use average mean and variance computed across training mini-batches](images/basics-15.png)
     - Note: We can't use normalizer paramters of the test set, and instead we use the parameters of the training set, As if we use the test set normalizer parameters, there will be __Data Leakage__.
 2. Weight Initialization: 
-    ![image](images/basics-16.png)
+    ![Slide on weight initialization: He initialization for ReLU and Xavier Glorot initialization for tanh, with variance formulas](images/basics-16.png)
 
 ## 1.4- Summary
 Here is a table that summarizes the key differences between the two problems:
@@ -384,7 +384,7 @@ Here is a table that summarizes the key differences between the two problems:
 
 
 ## 2- Vanishing/Exploding Gradient in NN
-![image](images/basics-17.png)
+![Handwritten diagram of a deep network of many layers with inputs x1, x2, showing weights compounding to explode or vanish](images/basics-17.png)
 
 If we start with weights so large, so y-pred will have total of large value due to weight multiplication. Same if we start with weights so small.
 This will lead us to Exploding and vanishing of gradient respectively .
@@ -402,78 +402,78 @@ Initialize the weights and biases to be zero:
 - This will cause the inputs of the tanh to also be very large, thus causing gradients to be close to zero. The optimization algorithm will thus become slow.
 
 # Regularization
-![image](images/basics-18.png)
+![Title slide reading Neural Networks, Regularization](images/basics-18.png)
 
 # Normalization
-![image](images/basics-19.png)
+![Title slide reading Neural Networks, Normalization](images/basics-19.png)
 
 # Parameters Initialization
-![image](images/basics-20.png)
+![Title slide reading Neural Networks, Parameters Initialization](images/basics-20.png)
 
 # Gradient Checking
-![image](images/basics-21.png)
+![Title slide reading Neural Networks, Gradient Checking](images/basics-21.png)
 
 # Optimizers
-![image](images/basics-22.png)
+![Title slide reading Neural Networks, Optimizers](images/basics-22.png)
 
 ## Mini-Batch
-![image](images/basics-23.png)
+![Title slide reading Neural Networks, Optimizers, Mini-Batch](images/basics-23.png)
 
 ## Exponential Weighted Average
-![image](images/basics-24.png)
+![Title slide reading Neural Networks, Optimizers, Exponentially Weighted Average](images/basics-24.png)
 
 ## Momentum GD
-![image](images/basics-25.png)
+![Title slide reading Neural Networks, Optimizers, Momentum GD](images/basics-25.png)
 
 ## RMSPROP GD
-![image](images/basics-26.png)
+![Title slide reading Neural Networks, Optimizers, RMSprop GD](images/basics-26.png)
 
 ## ADAM
-![image](images/basics-27.png)
+![Title slide reading Neural Networks, Optimizers, Adam](images/basics-27.png)
 
 ## Learning Rate
-![image](images/basics-28.png)
+![Title slide reading Neural Networks, Optimizers, Learning Rate](images/basics-28.png)
 
 ## ADAGRAD
-![image](images/basics-29.png)
+![Title slide reading Neural Networks, Optimizers, Adagrad](images/basics-29.png)
 
 ## Local Minima
-![image](images/basics-30.png)
+![Title slide reading Neural Networks, Optimizers, Local Minima](images/basics-30.png)
 
 ## Transfer Learning
-![image](images/basics-31.png)
+![Title slide reading Neural Networks, Optimizers, Transfer Learning](images/basics-31.png)
 
 # Hyper-Parameters Tuning
-![image](images/basics-32.png)
+![Title slide reading Neural Networks, Hyperparameters Tuning](images/basics-32.png)
 
 # Batch Normalization
-![image](images/basics-33.png)
+![Title slide reading Neural Networks, Batch Normalization](images/basics-33.png)
 
 # Multi-Class Classification
-![image](images/basics-34.png)
+![Title slide reading Neural Networks, Multi-Class Classification](images/basics-34.png)
 
 # BIAS - Variance
-![image](images/basics-35.png)
+![Title slide reading Neural Networks, Bias-Variance](images/basics-35.png)
 
 # Single Number Evaluation Metric
-![image](images/basics-36.png)
+![Title slide reading Neural Networks, Single Number Evaluation Metric](images/basics-36.png)
 
 # Avoidable Bias
-![image](images/basics-37.png)
+![Title slide reading Neural Networks, Avoidable Bias](images/basics-37.png)
 
 # Error Analysis
-![image](images/basics-38.png)
+![Title slide reading Neural Networks, Error Analysis](images/basics-38.png)
 
 Tip: Build your system quickly then iterate.
 
 # Mismatched Training & Dev/Test Sets
-![image](images/basics-39.png)
+![Title slide reading Neural Networks, Mismatched Training and Dev/Test Set](images/basics-39.png)
 
 # Learning From Multiple Tasks
-![image](images/basics-40.png)
+![Title slide reading Neural Networks, Learning From Multiple Tasks](images/basics-40.png)
 
 # End-To-End Deep Learning
-![image](images/basics-41.png)
+![Title slide reading Neural Networks, End-to-End Deep Learning](images/basics-41.png)
 
 End-to_end deep leanring is a techinque where a single neural network trained to perform a task directly from the input data, without any manual feature extraction. This is in contrast to traditional machine learning approaches , which typically involve manually extraction features from the input data and then training a seperate machine learning model on those features.
 
@@ -488,7 +488,7 @@ We could create a single neaural network to be able to detect the input image an
 
 Alternatively, We could uses a two stage approach, where the first stage is face detection for the input image, and extract that face, then pass this output face detected into a second stage which is face recognition, where the detected face is comapred with a predefined database of labeld faces vectores and measure the similarity between these two faces. 
 
-![image](images/basics-42.png)
+![Face recognition slide comparing a single-stage image to identity network with a two-stage detect face then identify pipeline](images/basics-42.png)
 
 Two reasons for why two stages NN is better than one stage NN to determine Identity of employee:
 - Each of two problem you’re solving is much simpler (one to detect faces, second to determine  employee).

@@ -1,6 +1,7 @@
 ---
 id: fake-gpus-in-kubernetes
 sidebar_label: Fake GPUs in Kubernetes
+order: 3
 summary: Patch a node with a fake nvidia.com/gpu counter to learn GPU scheduling without owning a GPU.
 level: intermediate
 type: [concept, guide]

@@ -6,6 +6,10 @@
       "parallel-execution-and-affinity"
     ]
   },
+  "applications": {
+    "label": "Applications",
+    "objects": []
+  },
   "clustering": {
     "label": "Clustering",
     "objects": [
@@ -19,6 +23,12 @@
       "build-a-two-node-k3s-lab",
       "containers-101",
       "singularity-containers"
+    ]
+  },
+  "design": {
+    "label": "Design",
+    "objects": [
+      "threat-model-and-first-launch"
     ]
   },
   "dev": {
@@ -109,6 +119,16 @@
       "nvidia-cluster-readiness-engine"
     ]
   },
+  "programming": {
+    "label": "Programming",
+    "objects": [
+      "old-data-and-background-work",
+      "reviewing-the-design",
+      "sessions-and-two-walls",
+      "sign-in-hygiene",
+      "threat-model-and-first-launch"
+    ]
+  },
   "pytorch": {
     "label": "PyTorch",
     "objects": [
@@ -128,6 +148,30 @@
     "objects": [
       "parallel-execution-and-affinity",
       "slurm-pam-adopt-ssh-access"
+    ]
+  },
+  "software": {
+    "label": "Software",
+    "objects": [
+      "reviewing-the-design",
+      "threat-model-and-first-launch"
+    ]
+  },
+  "software-engineering": {
+    "label": "Software Engineering",
+    "objects": [
+      "old-data-and-background-work",
+      "sessions-and-two-walls",
+      "sign-in-hygiene"
+    ]
+  },
+  "system-design": {
+    "label": "System Design",
+    "objects": [
+      "old-data-and-background-work",
+      "reviewing-the-design",
+      "sessions-and-two-walls",
+      "sign-in-hygiene"
     ]
   },
   "transformers": {

@@ -33,10 +33,10 @@ Also all experimental projects are saved in our [https://wandb.ai/acupoftea/proj
 - Fine-Tuning LLMs.
 
 Availalbe wide range of tools:
-![image](images/evaluation-and-debugging-01.png)
+![Weights and Biases MLOps portfolio slide listing Models, Prompts, Monitoring and Platform tools](images/evaluation-and-debugging-01.png)
 
 These tools could work with wide range of ML frameworks:
-![image](images/evaluation-and-debugging-02.png)
+![Slide showing frameworks and cloud providers the Weights and Biases platform integrates with](images/evaluation-and-debugging-02.png)
 
 ## Instrument W&B
 ### Why use Weights & Biases?
@@ -76,12 +76,12 @@ Note: you can find your API key in your browser throught: [https://wandb.ai.auth
 The idea during using this tool, is to just update the configuration for the model, then simply run again the training model process, the W&B tool will create a new run, save it, and compare it with other previous runs.
 
 ### Overview - pick a run
-![image](images/evaluation-and-debugging-03.png)
-![image](images/evaluation-and-debugging-04.png)
+![Weights and Biases run overview page with run name, state, hostname and hardware details](images/evaluation-and-debugging-03.png)
+![Weights and Biases run config parameters and summary metrics with confusion matrices](images/evaluation-and-debugging-04.png)
 
 You can see that W&B catches the Git repository that you are in, and commits your works, so you can easily pull back to this stage where this run was made.
 
-![image](images/evaluation-and-debugging-05.png)
+![Weights and Biases run Files tab listing config, requirements and metadata files](images/evaluation-and-debugging-05.png)
 Even it saves the commit diff of files changes, also all the parameters and configuration used.
 
 ## Credits

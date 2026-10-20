@@ -2,6 +2,7 @@
 id: nvidia-cluster-readiness-engine
 title: The Cluster That Passed Every Test Except the One That Mattered
 sidebar_label: NVIDIA Cluster Readiness Engine
+order: 6
 summary: "Even when traditional monitoring tools show all GPUs and networks operating normally, subtle bottlenecks—like a single slow GPU or a degraded network link—can silently drag down the performance of an"
 level: intermediate
 type: [concept, note]

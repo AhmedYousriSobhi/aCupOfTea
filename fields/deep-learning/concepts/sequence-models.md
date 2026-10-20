@@ -21,7 +21,7 @@ relations:
 ---
 
 # Deep Learning - Concepts - Sequence Models
-![image](images/sequence-models-01.png)
+![Title card reading Sequence Models under the heading Deep Learning](images/sequence-models-01.png)
 
 # Table of Content
 - [Deep Learning - Concepts - Sequence Models](#deep-learning---concepts---sequence-models)
@@ -49,7 +49,7 @@ Continued Advancements| Since GPT-3, the development of LLMs has continued with 
 The history of LLMs reflects the evolution of deep learning and its impact on natural language understanding and generation. LLMs have become integral to various applications, from chatbots and virtual assistants to content generation and language translation. Researchers and organizations continue to explore ways to make LLMs more powerful, efficient, and capable.
 
 # Examples of Sequence Data
-![image](images/sequence-models-02.png)
+![Slide of sequence data examples: speech, music, sentiment, DNA, translation, video, entities](images/sequence-models-02.png)
 
 # Different between NLP and LLM
 Large Language Models (LLMs) and Natural Language Processing (NLP) are related concepts, but they represent different aspects of the field of natural language understanding and language technology. Here are the key differences between LLM and NLP:

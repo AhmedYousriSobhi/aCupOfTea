@@ -521,6 +521,45 @@ def readme_swap_issues(scope):
     return [i for i in out if i["fixes"][0]]
 
 
+# (pattern, title): problems that call for the same kind of action share a group in the list
+GROUPS = [
+    (r"no front matter|no (summary|type|domains|tags|level) \(", "Missing metadata (front matter, summary, subjects, tags, level)"),
+    (r"empty section|outline note", "Unfinished sections and template notes"),
+    (r"picture(\(s\))? without a description", "Pictures without a description"),
+    (r"relative link", "Relative links that break on the site"),
+    (r"target does not exist", "Links to files that are not there"),
+    (r"summary is over", "Summaries that are too long"),
+    (r"no # title", "Pages without a title heading"),
+    (r"tag '[^']+' is used by only one page", "Tags used by only one page"),
+    (r"domains '[^']+' and '[^']+' are not marked as related", "Subjects that are not marked as related"),
+    (r"\d+ domains;", "Pages with too many subjects"),
+    (r"invalid (domain|tag) ", "Subjects or tags that are not in the taxonomy"),
+    (r"generated indexes are stale", "Generated files out of date"),
+    (r"README files look swapped", "Folder READMEs that look swapped"),
+]
+
+
+# one hint for a whole group (the per-issue hints name each page's own path); shown once above the group
+GROUP_HINTS = {
+    "Missing metadata (front matter, summary, subjects, tags, level)":
+        "These pages lack some front matter fields. Adopt each page to be asked for them (the text of the page is never changed): "
+        "in the form with \"Adopt in the form\", or in the terminal with python3 .docs/tools/new_page.py --adopt PAGE.",
+    "Unfinished sections and template notes":
+        "Fill each empty section or remove its heading, and delete the template's outline notes; "
+        "python3 .docs/tools/new_page.py --check PAGE shows what is left.",
+}
+
+
+def group_of(issue):
+    """Title of the group an issue belongs to (the kind of action it needs)."""
+    msg = issue["message"]
+    for pattern, title in GROUPS:
+        if re.search(pattern, msg):
+            return title
+    # unknown message: drop quoted names, numbers and everything after a colon so alike messages meet
+    return re.sub(r"\s+", " ", re.sub(r"'[^']*'|\d+", "", msg.split(":")[0])).strip() or msg
+
+
 def page_issues(scope=None, pictures=False):
     """All problems for the pages in scope (a set of paths/folders; None = whole repo), with fixes."""
     found = parse("validate", run_tool("validate.py")) + parse("check_links", run_tool("check_links.py"))
@@ -531,7 +570,14 @@ def page_issues(scope=None, pictures=False):
         found += page_todos(rel)
     found += readme_swap_issues(scope) + stale_index_issue(scope)
     order = {"error": 0, "warning": 1, "todo": 2}
-    found.sort(key=lambda i: (order[i["level"]], i["path"], i["line"]))
+    for i in found:
+        i["group"] = group_of(i)
+        if i["group"] in GROUP_HINTS:
+            i["group_hint"] = GROUP_HINTS[i["group"]]
+    first = {}                                  # a group sits where its most severe member does
+    for i in sorted(found, key=lambda i: order[i["level"]]):
+        first.setdefault(i["group"], order[i["level"]])
+    found.sort(key=lambda i: (first[i["group"]], i["group"], order[i["level"]], i["path"], i["line"]))
     return [i if "fixes" in i else describe(i) for i in found]
 
 
