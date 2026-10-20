@@ -162,6 +162,16 @@ A git hook that refuses a push when the changed files have an error (skip once w
 </details>
 
 <details>
+<summary><b>Keep the menu and indexes up to date on every commit</b></summary>
+
+```bash
+git config core.hooksPath .docs/hooks
+```
+
+A `pre-commit` hook regenerates the sidebar, navbar and `.docs/generated` and adds them to the commit (skip once with `git commit --no-verify`).
+</details>
+
+<details>
 <summary><b>All the scripts</b></summary>
 
 | Script | Use it to |
