@@ -48,6 +48,9 @@ from share_pages import DEFAULT_BASE, write_share_pages  # noqa: E402
 from optimize_images import optimize_tree  # noqa: E402
 
 MARKER = ".stage-site"
+# Pages of the local authoring tools: they only work next to the local server (new_page.py --gui),
+# so they stay out of the published site.
+LOCAL_ONLY = {".docs/tools/page_gui.html"}
 RELATED_MARK = "<!-- related-block -->"
 RECENT_RE = re.compile(r"<!-- recent:start -->.*?<!-- recent:end -->", re.S)
 RECENT_COUNT = 6
@@ -192,7 +195,7 @@ def stage(src, out, base_url=DEFAULT_BASE):
         skip = set()
         for n in names:
             rel = n if rel_dir == "." else f"{rel_dir}/{n}"
-            if n == ".git" or rel in subs or rel == out_rel:
+            if n == ".git" or n == "__pycache__" or rel in subs or rel == out_rel or rel in LOCAL_ONLY:
                 skip.add(n)
         return skip
 

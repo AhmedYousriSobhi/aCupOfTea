@@ -71,7 +71,9 @@ class SummaryCoverageTests(unittest.TestCase):
         self.assertEqual(len(only.stdout.strip().splitlines()), 1)
 
     def test_empty_repo_counts_as_full_coverage(self):
-        rep, _, _ = validate.run(make_repo({}))
+        empty = make_repo({})
+        self.addCleanup(shutil.rmtree, empty, ignore_errors=True)
+        rep, _, _ = validate.run(empty)
         self.assertIn("(100%)", validate.coverage_line(rep))
 
 
