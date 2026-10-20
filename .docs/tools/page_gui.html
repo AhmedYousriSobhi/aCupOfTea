@@ -1,0 +1,857 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>aCupOfTea page form</title>
+<style>
+  :root { --bg:#fbf8f3; --card:#fff; --text:#2b2622; --muted:#665b52; --line:#e3dbd0; --accent:#8a5a2b; --accent-text:#fff;
+          --ok:#25672a; --warn:#8f5000; --err:#b3261e; --code:#f4efe7; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#1d1a17; --card:#262220; --text:#ece6de; --muted:#a39689; --line:#3a342f; --accent:#d9a066; --accent-text:#1d1a17;
+            --ok:#7bc67e; --warn:#e5a84b; --err:#f2877f; --code:#2d2824; } }
+  :root { color-scheme: light dark; }
+  * { box-sizing: border-box; }
+  html { scroll-padding-bottom: 96px; }
+  :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+  .sr-only { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+  body { margin:0; background:var(--bg); color:var(--text); font:16px/1.5 system-ui, sans-serif; }
+  header { display:flex; align-items:center; gap:16px; padding:12px 16px; border-bottom:1px solid var(--line); flex-wrap:wrap; }
+  header h1 { font-size:1.1rem; margin:0; flex:1; }
+  nav { display:flex; flex-wrap:wrap; gap:4px; }
+  nav button, button { font:inherit; min-height:40px; padding:6px 14px; border:1px solid var(--line); background:var(--card); color:var(--text); border-radius:6px; cursor:pointer; }
+  nav button[aria-selected=true] { background:var(--accent); color:var(--accent-text); border-color:var(--accent); }
+  button.primary { background:var(--accent); color:var(--accent-text); border-color:var(--accent); }
+  button:disabled { opacity:.5; cursor:default; }
+  main { max-width:860px; margin:0 auto; padding:16px; }
+  fieldset { border:1px solid var(--line); background:var(--card); border-radius:8px; margin:0 0 14px; padding:12px 14px; }
+  legend { font-weight:600; padding:0 6px; }
+  label { display:block; font-weight:600; margin:8px 0 2px; }
+  .hint { color:var(--muted); font-size:.875rem; font-weight:400; }
+  input[type=text], textarea, select { width:100%; font:inherit; padding:6px 8px; border:1px solid var(--line); border-radius:6px; background:var(--bg); color:var(--text); }
+  .row { display:flex; gap:12px; flex-wrap:wrap; } .row > * { flex:1 1 220px; }
+  .checks { display:flex; flex-wrap:wrap; gap:4px 16px; } .checks label { font-weight:400; margin:2px 0; display:flex; gap:6px; align-items:flex-start; }
+  .chips { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:6px; }
+  .chip { background:var(--code); border:1px solid var(--line); border-radius:999px; padding:1px 4px 1px 10px; font-size:.875rem; }
+  .chip { display:inline-flex; align-items:center; }
+  .chip button { border:0; background:none; min-height:28px; min-width:28px; padding:0; color:var(--muted); font-size:1.1rem; }
+  .chip.new { border-color:var(--warn); }
+  .box { border-left:4px solid var(--warn); background:var(--card); padding:8px 12px; margin:8px 0; border-radius:4px; }
+  .box.err { border-color:var(--err); } .box.ok { border-color:var(--ok); }
+  pre { background:var(--code); border:1px solid var(--line); border-radius:6px; padding:10px; overflow:auto; white-space:pre-wrap; margin:6px 0; font-size:.85rem; }
+  .actions { display:flex; gap:8px; flex-wrap:wrap; margin:14px 0; }
+  .actions.sticky { position:sticky; bottom:0; background:var(--bg); padding:10px 0; margin:0; border-top:1px solid var(--line); z-index:2; }
+  .req { color:var(--err); }
+  .err-text { color:var(--err); font-size:.875rem; margin-top:2px; }
+  select[size] option { padding:4px 6px; }
+  input[aria-invalid=true] { border-color:var(--err); }
+  button[aria-busy=true] { cursor:progress; }
+  .issue { background:var(--card); border:1px solid var(--line); border-radius:8px; padding:10px 14px; margin-bottom:10px; }
+  .badge { font-size:.75rem; text-transform:uppercase; padding:1px 8px; border-radius:999px; border:1px solid currentColor; margin-right:6px; }
+  details.group { margin:0 0 14px; }
+  details.group > summary { cursor:pointer; padding:8px 0; font-weight:600; list-style-position:inside; }
+  details.group > summary .count { font-weight:400; color:var(--muted); }
+  details.group > .hint { margin:0 0 8px; }
+  .badge.error { color:var(--err); } .badge.warning { color:var(--warn); } .badge.todo { color:var(--muted); }
+  .path { font-family:ui-monospace, monospace; font-size:.875rem; }
+  .diff .add { color:var(--ok); } .diff .del { color:var(--err); }
+  .chipset { display:flex; flex-wrap:wrap; gap:8px; }
+  .chipset label { position:relative; display:inline-flex; margin:0; font-weight:500; }
+  .chipset input { position:absolute; inset:0; width:100%; height:100%; margin:0; opacity:0; cursor:pointer; }
+  .chipset .pill { border:1px solid var(--line); border-radius:999px; padding:6px 14px; min-height:36px; background:var(--card); display:inline-flex; align-items:center; }
+  .chipset input:checked + .pill { background:var(--accent); color:var(--accent-text); border-color:var(--accent); }
+  .chipset input:focus-visible + .pill { outline:3px solid var(--accent); outline-offset:2px; }
+  .chipset input:disabled + .pill { opacity:.55; cursor:not-allowed; }
+  .chipset input:disabled { cursor:not-allowed; }
+  .what { min-height:1.5em; }
+  details.more { border:1px solid var(--line); background:var(--card); border-radius:8px; margin:0 0 14px; padding:0 14px; }
+  details.more > summary { cursor:pointer; padding:10px 0; font-weight:600; list-style-position:inside; }
+  details.more > summary .hint { font-weight:400; }
+  details.more[open] > summary { border-bottom:1px solid var(--line); margin-bottom:8px; }
+  .step { display:inline-block; min-width:1.6em; text-align:center; border-radius:999px; background:var(--accent); color:var(--accent-text); margin-right:6px; font-size:.85rem; }
+  .sumline { flex:1 1 240px; align-self:center; font-size:.875rem; color:var(--muted); overflow-wrap:anywhere; }
+  .sumline strong { color:var(--text); }
+  .banner { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .banner span { flex:1 1 240px; }
+  .logo { display:flex; align-items:center; gap:10px; flex:1; }
+  .logo h1 { margin:0; font-size:1.1rem; flex:none; }
+  .logo small { color:var(--muted); display:block; font-size:.8rem; line-height:1.1; }
+  .ico { vertical-align:-3px; margin-right:6px; flex:none; }
+  .dot { display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:8px; flex:none; border:1px solid rgba(0,0,0,.25); }
+  .chipset input:checked + .pill .dot { border-color:rgba(255,255,255,.7); }
+  .cup { flex:none; color:var(--accent); }
+  .cup .body, .cup .rim { stroke:currentColor; fill:none; stroke-width:2.4; stroke-linecap:round; stroke-linejoin:round; }
+  .cup .tea { fill:currentColor; opacity:.85; }
+  .cup .steam { stroke:var(--muted); fill:none; stroke-width:2; stroke-linecap:round; opacity:0; }
+  .cup.hot .steam { opacity:.8; }
+  .brew { display:flex; gap:14px; align-items:center; background:var(--card); border:1px solid var(--line); border-radius:8px; padding:10px 14px; margin:0 0 14px; }
+  .brew strong { display:block; }
+  .brew .bar { height:6px; background:var(--code); border-radius:99px; overflow:hidden; margin-top:6px; }
+  .brew .bar i { display:block; height:100%; width:0; background:var(--accent); }
+  .pcard { background:var(--card); border:1px dashed var(--line); border-radius:10px; padding:12px 16px; margin:0 0 14px; }
+  .pcard .cap { color:var(--muted); font-size:.75rem; text-transform:uppercase; letter-spacing:.06em; }
+  .pcard h3 { margin:2px 0; font-size:1.15rem; }
+  .pcard .meta { display:flex; flex-wrap:wrap; gap:6px; margin:6px 0; }
+  .pcard .tag { border:1px solid var(--line); background:var(--code); border-radius:99px; padding:0 10px; font-size:.8rem; display:inline-flex; align-items:center; }
+  .pcard .empty { color:var(--muted); font-style:italic; }
+  .graph svg { display:block; max-width:100%; }
+  .graph text { font-size:11px; fill:var(--text); }
+  .graph .ok { stroke:var(--accent); stroke-width:2; }
+  .graph .odd { stroke:var(--err); stroke-width:2; stroke-dasharray:5 4; }
+  .graph .node { stroke:var(--card); stroke-width:2; }
+  .brewed { display:flex; gap:14px; align-items:center; background:var(--card); border:1px solid var(--ok); border-radius:10px; padding:10px 16px; margin:8px 0; }
+  .brewed strong { display:block; font-size:1.05rem; }
+  .counts { display:flex; flex-wrap:wrap; gap:8px; margin:0 0 12px; }
+  .counts .badge { font-size:.85rem; padding:3px 12px; }
+  .allclear { text-align:center; padding:24px 12px; color:var(--muted); }
+  .allclear strong { display:block; color:var(--text); font-size:1.1rem; margin-top:6px; }
+  .leaf { position:fixed; top:-20px; width:10px; height:16px; border-radius:100% 0; pointer-events:none; z-index:10; opacity:.9; }
+  @media (prefers-reduced-motion: no-preference) {
+    .cup.hot .steam { animation: steam 2.4s ease-in-out infinite; }
+    .cup .steam:nth-of-type(2) { animation-delay:.5s; } .cup .steam:nth-of-type(3) { animation-delay:1s; }
+    .cup .tea { transition: y .5s ease, height .5s ease; }
+    .brew .bar i { transition: width .4s ease; }
+    .chipset .pill { transition: background-color .15s, color .15s, transform .12s; }
+    .chipset input:checked + .pill { transform: translateY(-1px); }
+    .leaf { animation: fall 1.8s cubic-bezier(.3,.6,.6,1) forwards; }
+    @keyframes steam { 0%,100% { transform: translateY(0); opacity:.2; } 50% { transform: translateY(-4px); opacity:.85; } }
+    @keyframes fall { to { transform: translate(var(--dx), 110vh) rotate(var(--rot)); opacity:.2; } }
+  }
+  [hidden] { display:none !important; }
+  @media (pointer:coarse), (max-width:600px) { button, nav button, select:not([size]) { min-height:44px; } .chipset .pill { min-height:44px; } .checks label { padding:4px 0; } header { padding:8px 12px; } main { padding:12px; } }
+  @media (prefers-reduced-motion: no-preference) { button { transition: background-color .15s, border-color .15s; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="logo" id="logo"><div><h1>aCupOfTea page form</h1><small>brew a page, short enough for a coffee break</small></div></div>
+  <nav role="tablist" aria-label="What to do">
+    <button role="tab" id="tab-new" aria-selected="true" aria-controls="view-new" tabindex="0">New page</button>
+    <button role="tab" id="tab-adopt" aria-selected="false" aria-controls="view-adopt" tabindex="-1">Adopt a page</button>
+    <button role="tab" id="tab-edit" aria-selected="false" aria-controls="view-edit" tabindex="-1">Edit a page</button>
+    <button role="tab" id="tab-images" aria-selected="false" aria-controls="view-images" tabindex="-1">Add pictures</button>
+    <button role="tab" id="tab-fix" aria-selected="false" aria-controls="view-fix" tabindex="-1">Fix problems</button>
+  </nav>
+  <button id="quit" title="Stop the local server">Close</button>
+</header>
+<main>
+  <section id="view-new" role="tabpanel" aria-labelledby="tab-new"></section>
+  <section id="view-adopt" role="tabpanel" aria-labelledby="tab-adopt" hidden></section>
+  <section id="view-edit" role="tabpanel" aria-labelledby="tab-edit" hidden></section>
+  <section id="view-images" role="tabpanel" aria-labelledby="tab-images" hidden></section>
+  <section id="view-fix" role="tabpanel" aria-labelledby="tab-fix" hidden></section>
+</main>
+<script>
+"use strict";
+let TOKEN = new URLSearchParams(location.search).get("t") || "";
+try { if (TOKEN) sessionStorage.setItem("t", TOKEN); else TOKEN = sessionStorage.getItem("t") || ""; } catch (e) { /* no session storage */ }
+history.replaceState(null, "", location.pathname);              // keep the token out of the address bar; a refresh keeps working
+
+async function api(path, body) {
+  const res = await fetch(path, body === undefined ? { headers: { "X-Token": TOKEN } } :
+    { method: "POST", headers: { "X-Token": TOKEN, "Content-Type": "application/json" }, body: JSON.stringify(body) });
+  const data = await res.json();
+  if (res.status === 403) throw new Error("This page has no access key (it was opened without one, or the server was restarted). Open the address printed in the terminal again.");
+  if (!res.ok) throw new Error(data.error || res.statusText);
+  return data;
+}
+function h(tag, attrs, ...kids) {
+  const el = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs || {})) {
+    if (k === "class") el.className = v; else if (k.startsWith("on")) el.addEventListener(k.slice(2), v);
+    else if (v !== false && v != null) el.setAttribute(k, v === true ? "" : v);
+  }
+  for (const kid of kids.flat()) if (kid != null) el.append(kid.nodeType ? kid : document.createTextNode(kid));
+  return el;
+}
+const slug = t => t.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+const titleCase = k => k.split("-").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+const debounce = (fn, ms) => { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; };
+/* ---- little drawings (decorative; the words always carry the meaning) ---- */
+const NS = "http://www.w3.org/2000/svg";
+function sv(tag, attrs, ...kids) {
+  const el = document.createElementNS(NS, tag);
+  for (const [k, v] of Object.entries(attrs || {})) el.setAttribute(k, v);
+  for (const kid of kids.flat()) if (kid) el.append(kid);
+  return el;
+}
+const icon = (d, size = 18) => sv("svg", { viewBox: "0 0 24 24", width: size, height: size, fill: "none", stroke: "currentColor",
+  "stroke-width": "1.8", "stroke-linecap": "round", "stroke-linejoin": "round", "aria-hidden": "true", class: "ico" }, sv("path", { d }));
+const KIND_ICON = {
+  concept: "M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z",
+  guide: "M9 6h11M9 12h11M9 18h11M4 6l1 1 2-2M4 12l1 1 2-2M4 18l1 1 2-2",
+  reference: "M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2zM4 19V5M9 7h6",
+  note: "M4 20l1-4L16 5l3 3L8 19zM14 7l3 3",
+  problem: "M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.7M12 17h.01",
+  project: "M3 7l9-4 9 4v10l-9 4-9-4zM3 7l9 4 9-4M12 11v10",
+  experiment: "M9 3h6M10 3v6L5 19a2 2 0 0 0 1.8 3h10.4A2 2 0 0 0 19 19l-5-10V3M8 15h8",
+  _new: "M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z",
+};
+const kindIcon = key => icon(KIND_ICON[key] || KIND_ICON._new);
+const hue = key => { let n = 7; for (const c of key) n = (n * 31 + c.charCodeAt(0)) % 360; return n; };
+const dot = key => h("span", { class: "dot", "aria-hidden": "true", style: "background:hsl(" + hue(key) + " 55% 42%)" });
+
+/* A cup that fills (0..1) and steams when it is full. */
+let cupN = 0;
+function cup(size = 44, level = 0) {
+  const id = "cupclip" + (++cupN);
+  const tea = sv("rect", { class: "tea", x: "12", width: "36", "clip-path": "url(#" + id + ")" });
+  const el = sv("svg", { viewBox: "0 0 64 64", width: size, height: size, class: "cup", "aria-hidden": "true" },
+    sv("defs", {}, sv("clipPath", { id }, sv("path", { d: "M12 24h36v14a14 14 0 0 1-14 14H26a14 14 0 0 1-14-14z" }))),
+    sv("path", { class: "steam", d: "M24 18c-3-3 3-5 0-9" }), sv("path", { class: "steam", d: "M32 18c-3-3 3-5 0-9" }), sv("path", { class: "steam", d: "M40 18c-3-3 3-5 0-9" }),
+    tea,
+    sv("path", { class: "body", d: "M12 24h36v14a14 14 0 0 1-14 14H26a14 14 0 0 1-14-14zM48 28h4a6 6 0 0 1 0 12h-5" }),
+    sv("path", { class: "rim", d: "M8 57h44" }));
+  const set = v => {
+    const top = 52 - Math.max(0, Math.min(1, v)) * 28;                 // 52 = empty, 24 = full
+    tea.setAttribute("y", String(top)); tea.setAttribute("height", String(56 - top));
+    el.classList.toggle("hot", v >= 1);
+  };
+  set(level);
+  return { el, set };
+}
+/* A short fall of tea leaves, once, when a page was created (not with reduced motion). */
+function confetti() {
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  for (let i = 0; i < 22; i++) {
+    const leaf = h("span", { class: "leaf", "aria-hidden": "true", style:
+      "left:" + Math.round(Math.random() * 100) + "vw;background:hsl(" + (80 + Math.round(Math.random() * 60)) + " 45% " + (32 + Math.round(Math.random() * 14)) + "%);" +
+      "--dx:" + (Math.round(Math.random() * 160) - 80) + "px;--rot:" + (Math.round(Math.random() * 540) - 270) + "deg;animation-delay:" + (Math.random() * 0.4).toFixed(2) + "s" });
+    document.body.append(leaf);
+    setTimeout(() => leaf.remove(), 2600);
+  }
+}
+
+let uidN = 0;
+const uid = p => p + (++uidN);
+function message(kind, text) {
+  return h("div", { class: "box " + kind, role: kind === "err" ? "alert" : "status" }, h("pre", {}, text));
+}
+/* A label tied to its control: `control` is the input (or a group labelled by the text). */
+function field(name, hint, control, input) {
+  const id = uid("f");
+  const label = h("label", { id: id + "l" }, name, hint ? " " : null, hint ? h("span", { class: "hint" }, hint) : null);
+  if (input) { input.id = input.id || id; label.setAttribute("for", input.id); }
+  else { control.setAttribute("role", "group"); control.setAttribute("aria-labelledby", id + "l"); }
+  return h("div", {}, label, control);
+}
+/* Run `fn` with the buttons disabled and "Working..." on the one clicked. */
+async function busy(btn, fn) {
+  const all = [...document.querySelectorAll("button")].filter(b => !b.disabled);
+  const text = btn.textContent;
+  all.forEach(b => { b.disabled = true; });
+  btn.setAttribute("aria-busy", "true"); btn.textContent = "Working...";
+  try { return await fn(); } finally {
+    all.forEach(b => { b.disabled = false; }); btn.removeAttribute("aria-busy"); btn.textContent = text;
+  }
+}
+
+/* how alike two words are (0..1) and whether a is a short form like k8s of b */
+function likeness(a, b) {
+  const m = a.length, n = b.length; if (!m || !n) return 0;
+  let prev = Array.from({ length: n + 1 }, (_, j) => j);
+  for (let i = 1; i <= m; i++) { const cur = [i]; for (let j = 1; j <= n; j++) cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)); prev = cur; }
+  return 1 - prev[n] / Math.max(m, n);
+}
+function numeronym(short, word) { const m = /^([a-z])(\d+)([a-z])$/.exec(short); return !!m && word.length === +m[2] + 2 && word[0] === m[1] && word[word.length - 1] === m[3]; }
+const nearWord = (w, pools) => { for (const pool of pools) { const hit = pool.find(c => c !== w && c.length > 2 && (numeronym(w, c) || likeness(w, c) >= 0.75)); if (hit) return hit; } return ""; };
+
+/* A list of chips with a text box; `known` is [{value,label}] offered by the browser's own suggestions. */
+function chipInput({ known, max, onChange, newLabel, suggest }) {
+  const state = { items: [], isNew: new Set() };
+  const chips = h("div", { class: "chips" });
+  const listId = "dl" + Math.random().toString(36).slice(2);
+  const list = h("datalist", { id: listId }, known.map(k => h("option", { value: k.value }, k.label)));
+  const input = h("input", { type: "text", list: listId, placeholder: "type, then Enter", autocomplete: "off" });
+  const note = h("div", { class: "hint" });
+  const suggestion = h("div", { class: "hint", "aria-live": "polite" });       // "did you mean ...?" for a new tag
+  const guesses = new Map();                                                    // new tag -> the known tag it looks like
+  function showSuggestion() {                                                   // only for a tag that is still in the list
+    const v = state.items.find(x => guesses.has(x) && !state.items.includes(guesses.get(x)));
+    if (!v) { suggestion.textContent = ""; return; }
+    const guess = guesses.get(v);
+    suggestion.replaceChildren('"' + v + '" looks like "' + guess + '". ', h("button", { type: "button", onclick() {
+      state.items = state.items.filter(x => x !== v); state.isNew.delete(v); guesses.delete(v);
+      if (!state.items.includes(guess)) state.items.push(guess);
+      render(); onChange && onChange(); } }, "Use " + guess));
+  }
+  function render() {
+    chips.replaceChildren(...state.items.map(v => h("span", { class: "chip" + (state.isNew.has(v) ? " new" : "") },
+      v + (state.isNew.has(v) ? " (new)" : ""),
+      h("button", { type: "button", "aria-label": "remove " + v, onclick: () => { state.items = state.items.filter(x => x !== v); state.isNew.delete(v); guesses.delete(v); render(); onChange && onChange(); } }, "×"))));
+    note.textContent = max ? state.items.length + " of at most " + max : "";
+    showSuggestion();
+  }
+  function add(raw) {
+    for (const part of raw.split(",")) {
+      const v = slug(part);
+      if (!v || state.items.includes(v)) continue;
+      if (max && state.items.length >= max) { note.textContent = "At most " + max + "."; break; }
+      state.items.push(v);
+      if (!known.some(k => k.value === v)) {
+        if (newLabel) {
+          state.isNew.add(v);
+          const guess = suggest && suggest(v);                         // a new tag that looks like a known one is often a typo
+          if (guess) guesses.set(v, guess);
+        } else { state.items.pop(); note.textContent = v + " is not a known page id."; }
+      }
+    }
+    input.value = ""; render(); onChange && onChange();
+  }
+  input.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === ",") { e.preventDefault(); add(input.value); } });
+  input.addEventListener("change", () => input.value && add(input.value));
+  render();
+  note.setAttribute("aria-live", "polite");
+  return { el: h("div", {}, chips, input, list, note, suggestion), input, state, set(values) { state.items = []; state.isNew.clear(); guesses.clear(); add(values.join(",")); } };
+}
+
+/* Choices as toggle chips, at most `max` on. Pointing at or tabbing to one says what it means. */
+function checkGroup({ items, max, onChange, decorate }) {
+  const boxes = items.map(it => h("input", { type: "checkbox", value: it.key }));
+  const base = "Point at a choice, or move to it with the keyboard, to see what it means.";
+  const what = h("div", { class: "hint what", "aria-live": "polite" }, base);
+  const limit = h("div", { class: "hint", "aria-live": "polite" });
+  const tell = it => { what.textContent = it ? (it.label || it.key) + ": " + (it.description || "") : base; };
+  const chip = (it, box, text) => {
+    const l = h("label", { title: it.description || "" }, box, h("span", { class: "pill" }, decorate ? decorate(it) : null, text));
+    l.addEventListener("mouseenter", () => tell(it)); l.addEventListener("mouseleave", () => tell(null));
+    box.addEventListener("focus", () => tell(it)); box.addEventListener("blur", () => tell(null));
+    return l;
+  };
+  const grid = h("div", { class: "chipset" }, items.map((it, i) => chip(it, boxes[i], it.label || it.key)));
+  const el = h("div", {}, grid, what, limit);
+  function sync() {
+    const n = boxes.filter(b => b.checked).length;
+    boxes.forEach(b => { b.disabled = !b.checked && n >= max; });
+    limit.textContent = n >= max ? "Limit of " + max + " reached: untick one to choose another." : "";
+    onChange && onChange();
+  }
+  el.addEventListener("change", sync);
+  return { el, add(it) {
+      if (boxes.filter(b => b.checked).length >= max) { limit.textContent = "Limit of " + max + " reached: untick one first."; return false; }
+      const b = h("input", { type: "checkbox", value: it.key, checked: true });
+      boxes.push(b); grid.append(chip(it, b, it.key + " (new)")); sync(); return true; },
+    get: () => boxes.filter(b => b.checked).map(b => b.value),
+    has: key => boxes.some(b => b.value === key),
+    set(keys) { boxes.forEach(b => { b.checked = keys.includes(b.value); }); sync(); } };
+}
+
+/* A small form that adds a key + one-line description (a new kind or subject). */
+function addBox({ keyLabel, keyPlaceholder, button, toggleText, onAdd }) {
+  const key = h("input", { type: "text", "aria-label": keyLabel, placeholder: keyPlaceholder });
+  const description = h("input", { type: "text", "aria-label": keyLabel + " description", placeholder: "one line: what is it?" });
+  const error = h("div", { class: "err-text", role: "alert" });
+  const box = h("div", { hidden: true }, h("div", { class: "row" }, key, description,
+    h("button", { type: "button", onclick() {
+      const k = slug(key.value);
+      if (!k || !description.value.trim()) { error.textContent = "Give it a key and a one-line description."; return; }
+      error.textContent = "";
+      if (onAdd({ key: k, label: titleCase(k), description: description.value.trim() }) === false) {
+        error.textContent = "The limit is reached: untick a choice first, then add it."; return; }
+      key.value = description.value = ""; box.hidden = true; toggle.setAttribute("aria-expanded", "false"); } }, button)), error);
+  const toggle = h("button", { type: "button", "aria-expanded": "false", onclick() {
+    box.hidden = !box.hidden; toggle.setAttribute("aria-expanded", String(!box.hidden)); if (!box.hidden) key.focus(); } }, toggleText);
+  return h("div", {}, toggle, box);
+}
+
+/* The questions about a page. The essentials (summary, kind, subjects) come first; tags, level and related
+   pages are folded into "More options". Fields in `have` are already in the page and left alone. */
+function metaForm(opts, have = [], onChange = () => {}, titleOf = () => "") {
+  const limits = opts.limits;
+  const summary = h("input", { type: "text", maxlength: "200" });
+  const count = h("span", { class: "hint", "aria-live": "off" }, "0/200");
+  summary.addEventListener("input", () => { count.textContent = summary.value.length + "/200"; onChange(); });
+  const types = checkGroup({ items: opts.types, max: limits.types, onChange: () => onChange(), decorate: it => kindIcon(it.key) });
+  const domains = checkGroup({ items: opts.domains, max: limits.domains, onChange: () => { onChange(); checkRelated(); }, decorate: it => dot(it.key) });
+  const newDomains = [], newTypes = [];
+  const addDomain = addBox({ keyLabel: "New subject", keyPlaceholder: "key, e.g. devops", button: "Add subject",
+    toggleText: "+ a subject that does not exist yet", onAdd(d) {
+      newDomains.push(d);                       // before ticking it: the check that runs on tick must already know it is new
+      if (!domains.add(d)) { newDomains.pop(); return false; } } });
+  const addType = addBox({ keyLabel: "New kind", keyPlaceholder: "key, e.g. tutorial", button: "Add kind",
+    toggleText: "+ a kind of page that is not listed", onAdd(d) { if (!types.add(d)) return false; newTypes.push(d); } });
+  /* Subjects of one page should go together: say so when two are not marked as related in taxonomy.yaml. */
+  const relNote = h("div", { class: "hint", "aria-live": "polite", role: "status" });
+  const graph = h("div", { class: "graph" });
+  const relFix = h("div", { class: "actions" });
+  const labelOf = key => (opts.domains.find(d => d.key === key) || { label: titleCase(key) }).label;
+  function checkRelated() {
+    const picked = domains.get(), fresh = newDomains.map(d => d.key), bad = [];
+    picked.forEach((a, i) => picked.slice(i + 1).forEach(b => {
+      if (!fresh.includes(a) && !fresh.includes(b) && !(opts.related[a] || []).includes(b)) bad.push({ a, b, text: labelOf(a) + " and " + labelOf(b) });
+    }));
+    drawGraph(picked, fresh);
+    relNote.textContent = bad.length ? "\u26a0 " + bad.map(p => p.text).join("; ") + (bad.length > 1 ? " are" : " is") + " not marked as related in taxonomy.yaml. A page usually belongs to one area; this is only a warning, you can still create it." : "";
+    relFix.replaceChildren(...bad.map(p => h("button", { type: "button", onclick: async e => {
+      const btn = e.currentTarget; btn.disabled = true;
+      try {
+        const r = await api("/api/relate", { a: p.a, b: p.b });
+        if (r.ok) { (opts.related[p.a] = opts.related[p.a] || []).push(p.b); (opts.related[p.b] = opts.related[p.b] || []).push(p.a); checkRelated(); relNote.textContent = "\u2713 " + r.output; }
+        else { btn.disabled = false; relNote.textContent = r.output; }
+      } catch (x) { btn.disabled = false; relNote.textContent = String(x.message || x); }
+    } }, "Mark " + p.text + " as related")));
+  }
+  /* the chosen subjects as a small map: a solid line where two go together, a dashed red one where they are not related */
+  function drawGraph(picked, fresh) {
+    if (picked.length < 2) { graph.replaceChildren(); return; }
+    const W = 300, H = 120, pos = picked.length === 2 ? [[70, 60], [230, 60]] : [[150, 22], [60, 96], [240, 96]];
+    const rel = (a, b) => fresh.includes(a) || fresh.includes(b) || (opts.related[a] || []).includes(b);
+    const lines = [], nodes = [], defs = [];
+    picked.forEach((a, i) => picked.slice(i + 1).forEach((b, j) => {
+      const [x1, y1] = pos[i], [x2, y2] = pos[i + 1 + j], ok = rel(a, b), id = "g" + i + "-" + (i + 1 + j);
+      if (ok) {   // a related pair: the line shades from one subject's colour to the other's
+        defs.push(sv("linearGradient", { id, gradientUnits: "userSpaceOnUse", x1, y1, x2, y2 },
+          sv("stop", { offset: "0", "stop-color": "hsl(" + hue(a) + " 55% 48%)" }), sv("stop", { offset: "1", "stop-color": "hsl(" + hue(b) + " 55% 48%)" })));
+        lines.push(sv("line", { x1, y1, x2, y2, class: "ok", style: "stroke:url(#" + id + ")" }));
+      } else {    // not related: dashed and labelled, so it does not depend on colour alone
+        lines.push(sv("line", { x1, y1, x2, y2, class: "odd" }));
+        lines.push(sv("text", { x: (x1 + x2) / 2, y: (y1 + y2) / 2 - 4, "text-anchor": "middle", style: "fill:var(--err);font-weight:700" }, "\u26a0 not related"));
+      }
+    }));
+    picked.forEach((a, i) => nodes.push(sv("circle", { cx: pos[i][0], cy: pos[i][1], r: 8, class: "node", style: "fill:hsl(" + hue(a) + " 55% 48%)" }),
+      sv("text", { x: pos[i][0], y: pos[i][1] + (picked.length === 3 && i === 0 ? -13 : 22), "text-anchor": "middle" }, labelOf(a))));
+    const svg = sv("svg", { viewBox: "0 0 " + W + " " + H, width: W, height: H, role: "img",
+      "aria-label": "How the chosen subjects relate: " + picked.map(labelOf).join(", ") }, sv("defs", {}, defs), lines, nodes);
+    graph.replaceChildren(svg);
+  }
+  domains.el.addEventListener("change", checkRelated);
+  const moreNote = h("span", { class: "hint" });
+  const tags = chipInput({ known: opts.tags.map(t => ({ value: t.key, label: t.label })), max: limits.tags, newLabel: true,
+    suggest: v => nearWord(v, [opts.tags.map(t => t.key), titleOf().toLowerCase().match(/[a-z0-9]+/g) || []]), onChange: () => { moreChanged(); onChange(); } });
+  const level = h("select", {}, h("option", { value: "" }, "(none)"), opts.levels.map(l => h("option", { value: l }, l)));
+  level.addEventListener("change", () => { moreChanged(); onChange(); });
+  const ids = opts.pages.map(p => ({ value: p.id, label: p.title }));
+  const prereq = chipInput({ known: ids, onChange: () => { moreChanged(); onChange(); } });
+  const related = chipInput({ known: ids, onChange: () => { moreChanged(); onChange(); } });
+  const keep = (key, make) => have.includes(key) ? null : make();
+  const moreParts = [
+    keep("tags", () => field("Tags", "up to " + limits.tags + "; a new tag is added to taxonomy.yaml", tags.el, tags.input)),
+    keep("level", () => field("Level", "beginner pages show under Beginner friendly", level, level)),
+    keep("relations", () => h("div", {},
+      field("Read first (prerequisites)", "ids of pages", prereq.el, prereq.input),
+      field("See also (related)", "ids of pages", related.el, related.input)))].filter(Boolean);
+  function moreChanged() {
+    const bits = [];
+    if (tags.state.items.length) bits.push(tags.state.items.length + " tag" + (tags.state.items.length > 1 ? "s" : ""));
+    if (level.value) bits.push(level.value);
+    if (prereq.state.items.length + related.state.items.length) bits.push((prereq.state.items.length + related.state.items.length) + " related");
+    moreNote.textContent = bits.length ? " – " + bits.join(", ") : " – tags, level, related pages";
+  }
+  moreChanged();
+  const more = moreParts.length ? h("details", { class: "more" }, h("summary", {}, "More options (optional)", moreNote), ...moreParts) : null;
+  const keepNote = have.length ? h("div", { class: "box", role: "status" }, "Already in the front matter, kept as it is: " + have.join(", ")) : null;
+  const el = h("div", {},
+    keepNote,
+    keep("summary", () => field("Summary", "one line shown in search and Explore", h("div", {}, summary, count), summary)),
+    keep("type", () => field("Kind of page", "one or two; the first you pick is the main one", h("div", {}, types.el, addType))),
+    keep("domains", () => field("Subjects", "up to " + limits.domains + " that go together; they put the page in Explore by subject", h("div", {}, domains.el, graph, relNote, relFix, addDomain))),
+    more);
+  const values = () => ({ summary: summary.value, types: types.get(), domains: domains.get(), tags: tags.state.items,
+    level: level.value, prerequisites: prereq.state.items, related: related.state.items,
+    new_domains: newDomains.filter(d => domains.get().includes(d.key)),
+    new_types: newTypes.filter(d => types.get().includes(d.key)),
+    new_tags: tags.state.items.filter(t => tags.state.isNew.has(t)).map(t => ({ key: t, label: titleCase(t) })) });
+  return { el, more, types, domains, tags, level, summary, prereq, related, values,
+    /* put saved answers back (a draft) */
+    restore(v) {
+      summary.value = v.summary || ""; count.textContent = summary.value.length + "/200";
+      types.set([]); domains.set([]);               // room for the saved new ones
+      for (const d of v.new_domains || []) if (!domains.has(d.key)) { newDomains.push(d); domains.add(d); }
+      for (const d of v.new_types || []) if (!types.has(d.key)) { newTypes.push(d); types.add(d); }
+      types.set(v.types || []); domains.set(v.domains || []);
+      tags.set(v.tags || []); level.value = v.level || ""; prereq.set(v.prerequisites || []); related.set(v.related || []);
+      moreChanged();
+    } };
+}
+
+/* Show a result (or error) where the person is looking, and move focus there for screen readers. */
+function resultBox(host, headline = "Brewed! Your page is ready.", party = true) {
+  return (result) => {
+    if (result.ok !== false && result.page) {
+      const c = cup(44, 1);
+      host.replaceChildren(h("div", { class: "brewed", role: "status" }, c.el,
+        h("div", {}, h("strong", {}, headline), h("span", { class: "path" }, result.page))));
+      if (party) confetti();
+      host.append(h("details", {}, h("summary", { class: "hint" }, "What the tool did"), message("ok", result.output || "")));
+    } else {
+      host.replaceChildren(message(result.ok === false ? "err" : "ok", result.output || ""));
+    }
+    if (result.check) host.append(h("div", { class: "hint" }, "Checklist for the page:"), h("pre", {}, result.check));
+    if (result.page) {
+      const note = h("div");
+      host.append(h("div", { class: "actions" },
+        h("button", { type: "button", onclick: async () => note.replaceChildren(message("ok", (await api("/api/open", { path: result.page, line: 1 })).output)) }, "Open in editor"),
+        h("button", { type: "button", onclick: async () => note.replaceChildren(message("ok", (await api("/api/reindex", {})).output)) }, "Update the generated indexes"),
+        h("button", { type: "button", onclick: () => { loaded.new = false; show("new"); } }, "Start another page")), note);
+    }
+    host.setAttribute("tabindex", "-1"); host.focus({ preventScroll: true }); host.scrollIntoView({ block: "nearest" });
+  };
+}
+
+/* A draft of the New page form kept in this browser, so a closed tab or a stopped server loses nothing. */
+const Draft = {
+  key: "acupoftea-page-form-new-v1",
+  load() { try { return JSON.parse(localStorage.getItem(this.key) || "null"); } catch (e) { return null; } },
+  save(v) { try { localStorage.setItem(this.key, JSON.stringify(v)); } catch (e) { /* private window: no draft */ } },
+  clear() { try { localStorage.removeItem(this.key); } catch (e) { /* nothing to clear */ } },
+};
+
+/* ---------- New page ---------- */
+async function newTab(view) {
+  let opts = await api("/api/options");
+  const title = h("input", { type: "text", placeholder: "e.g. Attention in Transformers", required: true, "aria-required": "true" });
+  const folder = h("input", { type: "text", list: "folders", autocomplete: "off", required: true, "aria-required": "true" });
+  const folders = h("datalist", { id: "folders" });
+  const name = h("input", { type: "text" });
+  let nameEdited = false;
+  const createFolder = h("input", { type: "checkbox" });
+  const createRow = h("label", { hidden: true }, createFolder, " This folder does not exist yet: create it");
+  const similar = h("div", { "aria-live": "polite" });
+  const titleErr = h("div", { class: "err-text", role: "alert" }), folderErr = h("div", { class: "err-text", role: "alert" });
+  const out = h("div"), banner = h("div"), sumline = h("div", { class: "sumline", "aria-live": "polite" });
+  const brewCup = cup(52, 0), brewText = h("span", { class: "hint" }), brewBar = h("i");
+  const brew = h("div", { class: "brew", role: "progressbar", "aria-label": "Essentials filled in", "aria-valuemin": "0", "aria-valuemax": "5", "aria-valuenow": "0" },
+    brewCup.el, h("div", { style: "flex:1" }, h("strong", {}, "Brewing your page"), brewText, h("div", { class: "bar" }, brewBar)));
+  const pcard = h("div", { class: "pcard", "aria-label": "How the page will look in search and Explore" });
+  const holder = h("div");
+  let touched = false, restoring = false;
+  const meta = metaForm(opts, [], () => { touched = true; changed(); }, () => title.value);
+  holder.replaceChildren(meta.el);
+  const fileLine = () => (folder.value.trim() || "folder") + "/" + (name.value.trim() || "file-name") + ".md";
+
+  function changed() {                                        // keep the draft and the one-line summary current
+    if (restoring) return;
+    const v = meta.values();
+    const bits = [v.types.join(" + ") || "no kind yet", v.domains.join(" + ") || "no subject yet"];
+    if (v.tags.length) bits.push(v.tags.length + " tag" + (v.tags.length > 1 ? "s" : ""));
+    sumline.replaceChildren("Will create ", h("strong", {}, fileLine()), " – " + bits.join(" · "));
+    const todo = [["a title", title.value.trim()], ["a folder", folder.value.trim()], ["a summary", v.summary.trim()],
+      ["a kind", v.types.length], ["a subject", v.domains.length]];
+    const done = todo.filter(t => t[1]).length, next = todo.find(t => !t[1]);
+    brewCup.set(done / 5); brewBar.style.width = (done * 20) + "%"; brew.setAttribute("aria-valuenow", String(done));
+    brewText.textContent = done === 5 ? "Ready to brew: all five essentials are in." : " " + done + " of 5 essentials. Next: " + next[0] + ".";
+    drawCard(v);
+    if (title.value.trim() || v.summary.trim() || v.domains.length) {
+      Draft.save(Object.assign({ title: title.value, folder: folder.value, name: name.value, nameEdited, create_folder: createFolder.checked }, v));
+    }
+  }
+  /* a mock of the page as readers will meet it in search and Explore */
+  function drawCard(v) {
+    const empty = t => h("span", { class: "empty" }, t);
+    pcard.replaceChildren(h("div", { class: "cap" }, "How it will look in search and Explore"),
+      h("h3", {}, title.value.trim() || empty("Your title shows here")),
+      h("div", { class: "path" }, fileLine()),
+      h("div", {}, v.summary.trim() || empty("Your one-line summary shows here.")),
+      h("div", { class: "meta" },
+        v.types.map(t => h("span", { class: "tag" }, kindIcon(t), t)),
+        v.domains.map(d => h("span", { class: "tag" }, dot(d), (opts.domains.find(x => x.key === d) || { label: d }).label)),
+        v.tags.map(t => h("span", { class: "tag" }, "#" + t)),
+        v.level ? h("span", { class: "tag" }, v.level) : null));
+  }
+  const refresh = debounce(async () => {
+    const o = await api("/api/options?title=" + encodeURIComponent(title.value) + "&folder=" + encodeURIComponent(folder.value));
+    folders.replaceChildren(...[...o.suggested_folders, ...o.folders.filter(f => !o.suggested_folders.includes(f))].map(f => h("option", { value: f })));
+    if (!nameEdited) name.value = o.slug;
+    createRow.hidden = o.folder_exists !== false;
+    similar.replaceChildren(...(o.similar.length ? [h("div", { class: "box" }, "Similar pages already exist: ", o.similar.map(s => h("div", { class: "path" }, s.path + "  \"" + s.title + "\"")), "Consider extending one of them instead (the repo keeps one page per topic).")] : []));
+    if (!touched && folder.value.trim()) { restoring = true; meta.domains.set(o.default_domains); meta.types.set(o.default_type); restoring = false; }
+    changed();
+  }, 300);
+  title.addEventListener("input", refresh); folder.addEventListener("input", refresh);
+  name.addEventListener("input", () => { nameEdited = true; changed(); });
+  createFolder.addEventListener("change", changed);
+  function valid() {
+    titleErr.textContent = title.value.trim() ? "" : "Give the page a title.";
+    folderErr.textContent = folder.value.trim() ? "" : "Choose a folder (closest ones are suggested once you type a title).";
+    title.setAttribute("aria-invalid", String(!title.value.trim())); folder.setAttribute("aria-invalid", String(!folder.value.trim()));
+    if (!title.value.trim()) { title.focus(); return false; }
+    if (!folder.value.trim()) { folder.focus(); return false; }
+    return true;
+  }
+  const submit = async (btn, dry) => {
+    if (!valid()) return;
+    await busy(btn, async () => {
+      const r = await api("/api/create", Object.assign({ title: title.value, folder: folder.value, name: name.value,
+        create_folder: createFolder.checked, dry_run: dry }, meta.values()));
+      resultBox(out)(r);
+      if (r.ok && !dry) { Draft.clear(); opts = await api("/api/options"); }
+    });
+  };
+  const previewBtn = h("button", { type: "button", onclick: () => submit(previewBtn, true) }, "Preview");
+  const createBtn = h("button", { type: "button", class: "primary", onclick: () => submit(createBtn, false) }, "Create page");
+
+  const saved = Draft.load();
+  if (saved && (saved.title || saved.summary)) {
+    banner.replaceChildren(h("div", { class: "box banner", role: "status" },
+      h("span", {}, "Your last draft was kept: “" + (saved.title || "untitled") + "”."),
+      h("button", { type: "button", onclick() {
+        restoring = true;
+        title.value = saved.title || ""; folder.value = saved.folder || ""; name.value = saved.name || ""; nameEdited = !!saved.nameEdited;
+        createFolder.checked = !!saved.create_folder; meta.restore(saved); touched = true; restoring = false;
+        banner.replaceChildren(); refresh(); } }, "Restore it"),
+      h("button", { type: "button", onclick: () => { Draft.clear(); banner.replaceChildren(); } }, "Discard")));
+  }
+  view.replaceChildren(banner, brew,
+    h("fieldset", {}, h("legend", {}, h("span", { class: "step", "aria-hidden": "true" }, "1"), "Where it goes"),
+      field(h("span", {}, "Title ", h("span", { class: "req", "aria-hidden": "true" }, "*")), "", h("div", {}, title, titleErr), title), similar,
+      field(h("span", {}, "Folder ", h("span", { class: "req", "aria-hidden": "true" }, "*")), "closest folders first as you type the title", h("div", {}, folder, folders, folderErr, createRow), folder),
+      h("details", {}, h("summary", { class: "hint" }, "File name (made from the title; change it only if you need to)"), field("File name", "without .md", name, name))),
+    h("fieldset", {}, h("legend", {}, h("span", { class: "step", "aria-hidden": "true" }, "2"), "What it is"), holder),
+    pcard,
+    h("div", { class: "actions sticky" }, sumline, previewBtn, createBtn),
+    out);
+  refresh();
+}
+
+/* A filter box over a list of pages: type words of the path, title or anything in `extra(p)`. Enter picks the first
+   match, the down arrow moves into the list, Esc clears. `onChoose(page)` runs when one is picked. */
+function pagePicker({ pages, label, extra = () => "", onChoose, card }) {
+  const filter = h("input", { type: "text", placeholder: "Type to filter: path, title or a word from the list", autocomplete: "off" });
+  const list = h("select", { size: "8", "aria-label": "Pages" });
+  const count = h("div", { class: "hint", "aria-live": "polite" });
+  const cardBox = h("div");
+  let current = "";
+  const matches = () => {
+    const words = filter.value.toLowerCase().split(/\s+/).filter(Boolean);
+    return pages.filter(p => { const hay = (p.path + " " + p.title + " " + extra(p)).toLowerCase(); return words.every(w => hay.includes(w)); });
+  };
+  function render() {
+    const found = matches();
+    list.replaceChildren(...found.map(p => { const o = h("option", { value: p.path }, label(p)); if (p.path === current) o.selected = true; return o; }));
+    count.textContent = found.length === pages.length ? pages.length + " pages" : found.length + " of " + pages.length + " pages" + (found.length ? "; Enter picks the first, ↓ moves into the list" : "; nothing matches");
+  }
+  function choose(path) {
+    const p = pages.find(x => x.path === path);
+    if (!p || path === current) return;
+    current = path; cardBox.replaceChildren(...(card ? [card(p)] : [])); onChoose(p);
+  }
+  filter.addEventListener("input", render);
+  filter.addEventListener("keydown", e => {
+    if (e.key === "Enter") { e.preventDefault(); const first = matches()[0]; if (first) { choose(first.path); render(); } }
+    else if (e.key === "ArrowDown" && list.options.length) { e.preventDefault(); list.focus(); if (list.selectedIndex < 0) list.selectedIndex = 0; }
+    else if (e.key === "Escape") { filter.value = ""; render(); }
+  });
+  list.addEventListener("change", () => choose(list.value));
+  render();
+  return { el: h("div", {}, field("Find a page", "", filter, filter), count, h("div", { class: "hint" }, "Pick one:"), list, cardBox),
+    get current() { return current; }, focus: () => filter.focus(), choose: path => { choose(path); render(); } };
+}
+const FIELD_NAMES = { summary: "summary", type: "kind", domains: "subjects", tags: "tags", level: "level" };
+const pageCard = p => h("div", { class: "pcard" }, h("div", { class: "cap" }, "Selected"), h("h3", {}, p.title || p.path), h("div", { class: "path" }, p.path),
+  h("div", { class: "meta" }, (p.have || []).map(k => h("span", { class: "tag" }, "✓ " + FIELD_NAMES[k])), (p.missing || []).map(k => h("span", { class: "tag empty" }, "missing: " + FIELD_NAMES[k]))));
+
+/* ---------- Adopt ---------- */
+let preselect = null;                    // a page path another tab wants chosen when the Adopt tab opens
+const META_GROUP = "Missing metadata (front matter, summary, subjects, tags, level)";
+async function adoptTab(view) {
+  const opts = await api("/api/options");
+  const pages = await api("/api/adoptable");
+  const holder = h("div"), out = h("div");
+  let meta = null;
+  const picker = pagePicker({ pages, label: p => p.path + (p.title ? "  –  " + p.title : "") + (p.missing.length ? "   [missing: " + p.missing.map(k => FIELD_NAMES[k]).join(", ") + "]" : ""),
+    extra: p => "missing " + p.missing.map(k => FIELD_NAMES[k]).join(" "), card: pageCard,
+    onChoose(p) { out.replaceChildren(); meta = metaForm(opts, p.have); holder.replaceChildren(meta.el); } });
+  if (preselect) { picker.choose(preselect); preselect = null; }      // sent here by a problem in Fix problems
+  const submit = async (btn, dry) => {
+    if (!meta) { resultBox(out)({ ok: false, output: "Choose a page first." }); picker.focus(); return; }
+    await busy(btn, async () => resultBox(out, "Front matter added.")(await api("/api/adopt", Object.assign({ page: picker.current, dry_run: dry }, meta.values()))));
+  };
+  const previewBtn = h("button", { type: "button", onclick: () => submit(previewBtn, true) }, "Preview");
+  const adoptBtn = h("button", { type: "button", class: "primary", onclick: () => submit(adoptBtn, false) }, "Add front matter");
+  view.replaceChildren(
+    h("p", { class: "hint" }, "For a page you wrote by hand: this adds the front matter and the folder index row. The text of the page is never changed."),
+    h("fieldset", {}, h("legend", {}, "Page"), picker.el),
+    h("fieldset", {}, h("legend", {}, "About the page"), holder),
+    h("div", { class: "actions sticky" }, previewBtn, adoptBtn),
+    out);
+}
+
+/* ---------- Edit ---------- */
+async function editTab(view) {
+  const opts = await api("/api/options");
+  const pages = await api("/api/editable");
+  const holder = h("div"), out = h("div");
+  let meta = null;
+  const picker = pagePicker({ pages, label: p => p.path + (p.title ? "  –  " + p.title : ""),
+    extra: p => [p.values.types.join(" "), p.values.domains.join(" "), p.values.tags.join(" "), p.values.level].join(" "),
+    card: p => h("div", { class: "pcard" }, h("div", { class: "cap" }, "Now"), h("h3", {}, p.title || p.path), h("div", { class: "path" }, p.path),
+      h("div", {}, p.values.summary || h("span", { class: "empty" }, "(no summary)")),
+      h("div", { class: "meta" }, p.values.types.map(t => h("span", { class: "tag" }, kindIcon(t), t)),
+        p.values.domains.map(d => h("span", { class: "tag" }, dot(d), d)), p.values.tags.map(t => h("span", { class: "tag" }, "#" + t)),
+        p.values.level ? h("span", { class: "tag" }, p.values.level) : null)),
+    onChoose(p) { out.replaceChildren(); meta = metaForm(opts, []); holder.replaceChildren(meta.el); meta.restore(p.values);
+      if (meta.more && (p.values.tags.length || p.values.level || p.values.prerequisites.length || p.values.related.length)) meta.more.open = true; } });
+  const submit = async (btn, dry) => {
+    if (!meta) { resultBox(out)({ ok: false, output: "Choose a page first." }); picker.focus(); return; }
+    await busy(btn, async () => {
+      const r = await api("/api/update", Object.assign({ page: picker.current, dry_run: dry }, meta.values()));
+      resultBox(out, "Saved. The page text is unchanged.", false)(r);
+    });
+  };
+  const previewBtn = h("button", { type: "button", onclick: () => submit(previewBtn, true) }, "Preview the change");
+  const saveBtn = h("button", { type: "button", class: "primary", onclick: () => submit(saveBtn, false) }, "Save changes");
+  view.replaceChildren(
+    h("p", { class: "hint" }, "Change the summary, kind, subjects, tags, level or related pages of a page that already has front matter. Only what you change is rewritten; the text of the page stays as it is."),
+    h("fieldset", {}, h("legend", {}, "Page"), picker.el),
+    h("fieldset", {}, h("legend", {}, "About the page"), holder),
+    h("div", { class: "actions sticky" }, previewBtn, saveBtn),
+    out);
+}
+
+/* ---------- Pictures ---------- */
+async function imagesTab(view) {
+  const pages = await api("/api/pages");
+  const files = h("input", { type: "file", multiple: true, accept: ".png,.jpg,.jpeg,.gif,.webp,image/png,image/jpeg,image/gif,image/webp" });
+  const rows = h("div"), out = h("div");
+  const picker = pagePicker({ pages, label: p => p.path + (p.title ? "  –  " + p.title : ""), onChoose() { out.replaceChildren(); } });
+  const entries = [];
+  files.addEventListener("change", () => {
+    entries.length = 0; rows.replaceChildren();
+    for (const f of files.files) {
+      const alt = h("input", { type: "text", "aria-label": "What does " + f.name + " show?", placeholder: "What does it show? (needed: screen readers and search use it)" });
+      const big = f.size > 5 * 1024 * 1024;
+      const thumb = h("img", { src: URL.createObjectURL(f), alt: "", style: "flex:none;width:72px;height:72px;object-fit:cover;border-radius:6px;border:1px solid var(--line)" });
+      rows.append(h("div", { class: "row", style: "align-items:center;margin:8px 0" }, thumb, h("div", {}, h("div", { class: "path" }, f.name + " (" + Math.ceil(f.size / 1024) + " KB)"),
+        big ? h("div", { class: "err-text" }, "Over 5 MB: too big for the repo, make it smaller first.") : alt)));
+      if (!big) entries.push({ file: f, alt });
+    }
+  });
+  const toBase64 = file => new Promise((ok, no) => { const r = new FileReader(); r.onload = () => ok(String(r.result).split(",")[1]); r.onerror = no; r.readAsDataURL(file); });
+  const upload = async btn => {
+    if (!picker.current) { out.replaceChildren(message("err", "Choose the page the pictures belong to.")); picker.focus(); return; }
+    if (!entries.length) { out.replaceChildren(message("err", "Choose at least one picture.")); files.focus(); return; }
+    await busy(btn, async () => {
+      out.replaceChildren();
+      for (const e of entries) {
+        const r = await api("/api/image", { page: picker.current, filename: e.file.name, alt: e.alt.value, data: await toBase64(e.file) });
+        if (!r.ok) { out.append(message("err", e.file.name + ": " + r.output)); e.alt.setAttribute("aria-invalid", "true"); continue; }
+        const copyBtn = h("button", { type: "button", onclick: async () => {
+          try { await navigator.clipboard.writeText(r.snippet); copyBtn.textContent = "Copied"; } catch (x) { copyBtn.textContent = "Select and copy it"; } } }, "Copy");
+        out.append(h("div", { class: "box ok", role: "status" }, h("div", {}, r.output), h("pre", {}, r.snippet), copyBtn));
+      }
+    });
+  };
+  const uploadBtn = h("button", { type: "button", class: "primary", onclick: () => upload(uploadBtn) }, "Save pictures");
+  view.replaceChildren(
+    h("p", { class: "hint" }, "Pictures are saved next to the page, in its images/ folder, so they stay with it (PNG, JPEG, GIF or WebP, up to 5 MB). Paste the line you get into the page."),
+    h("fieldset", {}, h("legend", {}, "Page"), picker.el),
+    h("fieldset", {}, h("legend", {}, "Pictures"), field("Choose pictures", "", files, files), rows),
+    h("div", { class: "actions sticky" }, uploadBtn), out);
+}
+
+/* ---------- Fix problems ---------- */
+function diffEl(text) {
+  return h("pre", { class: "diff", tabindex: "0", "aria-label": "Suggested change" }, text.split("\n").map(l => h("div", { class: l.startsWith("+") && !l.startsWith("+++") ? "add" : l.startsWith("-") && !l.startsWith("---") ? "del" : "" }, l || " ")));
+}
+const LEVEL_ICON = {
+  error: "M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM15 9l-6 6M9 9l6 6",
+  warning: "M12 3l10 18H2zM12 10v5M12 18h.01",
+  todo: "M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 7v5l3 2",
+};
+async function fixTab(view) {
+  const scope = h("select", {}, h("option", { value: "changed" }, "Files changed since dev"), h("option", { value: "all" }, "Whole repository"), h("option", { value: "pictures" }, "Pictures without a description"));
+  const custom = h("input", { type: "text", placeholder: "or a path, then Enter" });
+  const list = h("div", { "aria-live": "polite" }), status = h("div", { "aria-live": "polite" });
+  const notice = h("div");              // what the last applied fix changed; stays while the list refreshes
+  const current = () => custom.value.trim() || (scope.value === "pictures" ? "all" : scope.value);
+  const pics = () => !custom.value.trim() && scope.value === "pictures";
+  const query = () => "scope=" + encodeURIComponent(current()) + (pics() ? "&pictures=1" : "");
+  async function load() {
+    list.setAttribute("aria-busy", "true");
+    list.replaceChildren(h("div", { class: "hint" }, "Checking..."));
+    try {
+      const issues = await api("/api/issues?" + query());
+      const by = l => issues.filter(i => i.level === l).length;
+      status.replaceChildren(issues.length
+        ? h("div", { class: "counts", role: "status" }, [["error", "errors"], ["warning", "warnings"], ["todo", "to-dos"]].filter(([l]) => by(l)).map(([l, w]) =>
+            h("span", { class: "badge " + l }, icon(LEVEL_ICON[l], 16), by(l) + " " + w)))
+        : h("div", { class: "allclear", role: "status" }, cup(56, 1).el, h("strong", {}, "All clear."), "Nothing to fix. Time for a cup of tea."));
+      list.replaceChildren(...groupsOf(issues).map(group));
+    } catch (e) { list.replaceChildren(message("err", e.message)); }
+    list.removeAttribute("aria-busy");
+  }
+  const groupOpen = {};
+  // problems that call for the same kind of action share one collapsible section (the server sorts them together)
+  function groupsOf(issues) {
+    const groups = [];
+    for (const i of issues) {
+      let g = groups.find(x => x.title === (i.group || i.message));
+      if (!g) groups.push(g = { title: i.group || i.message, items: [] });
+      g.items.push(i);
+    }
+    return groups;
+  }
+  function group(g) {
+    const worst = ["error", "warning", "todo"].find(l => g.items.some(i => i.level === l)) || "todo";
+    const hint = g.items[0].group_hint || g.items[0].hint, shared = !!hint && (!!g.items[0].group_hint || g.items.every(i => i.hint === hint));
+    const el = h("details", { class: "group", open: g.title in groupOpen ? groupOpen[g.title] : g.items.length <= 8 },
+      h("summary", {}, h("span", { class: "badge " + worst }, icon(LEVEL_ICON[worst], 14), worst), g.title, " ", h("span", { class: "count" }, "(" + g.items.length + ")")),
+      shared ? h("div", { class: "hint" }, hint) : null,
+      ...g.items.map(i => card(i, shared)));
+    el.addEventListener("toggle", () => { groupOpen[g.title] = el.open; });   // kept when the list is refreshed after a fix
+    return el;
+  }
+  function card(i, hideHint) {
+    const detail = h("div");
+    return h("article", { class: "issue" },
+      h("div", {}, h("span", { class: "badge " + i.level }, icon(LEVEL_ICON[i.level] || LEVEL_ICON.todo, 14), i.level), h("span", { class: "path" }, i.path + ":" + i.line)),
+      h("div", {}, i.message), i.hint && !hideHint ? h("div", { class: "hint" }, i.hint) : null,
+      h("div", { class: "actions" },
+        i.group === META_GROUP && i.path.endsWith(".md") ? h("button", { type: "button", onclick: () => { preselect = i.path; show("adopt", true); } }, "Adopt in the form") : null,
+        i.path.endsWith(".md") ? h("button", { type: "button", onclick: async () => detail.replaceChildren(message("ok", (await api("/api/open", { path: i.path, line: i.line })).output)) }, "Open in editor") : null,
+        i.fixes.map((f, n) => h("button", { type: "button", onclick() {
+          const valueBox = f.input ? h("input", { type: "text", "aria-label": f.input, placeholder: f.input }) : null;
+          const apply = h("button", { type: "button", class: "primary", onclick: () => busy(apply, async () => {
+            const r = await api("/api/fix", { id: i.id, fix: n, scope: current(), pictures: pics(), value: valueBox ? valueBox.value : undefined });
+            notice.replaceChildren(message(r.ok ? "ok" : "err", r.output));
+            if (r.ok) await load(); else detail.replaceChildren(message("err", r.output)); }) }, "Apply this change");
+          detail.replaceChildren(h("div", { class: "hint" }, f.label), valueBox || diffEl(f.diff), h("div", { class: "actions" }, apply,
+            h("button", { type: "button", onclick: () => detail.replaceChildren() }, "Cancel")));
+          (valueBox || apply).focus(); } }, "Fix: " + f.label))),
+      detail);
+  }
+  const recheck = () => { notice.replaceChildren(); load(); };
+  scope.addEventListener("change", () => { custom.value = ""; recheck(); });
+  custom.addEventListener("keydown", e => { if (e.key === "Enter") recheck(); });
+  scope.setAttribute("aria-label", "Which files to check"); custom.setAttribute("aria-label", "Page or folder path");
+  view.replaceChildren(h("div", { class: "row" }, scope, custom, h("button", { type: "button", onclick: recheck }, "Check again")), notice, status, list);
+  load();
+}
+
+/* ---------- tabs ---------- */
+document.getElementById("logo").prepend(cup(40, 0.8).el);
+document.querySelector("#logo .cup").classList.add("hot");
+const tabs = { new: newTab, adopt: adoptTab, edit: editTab, images: imagesTab, fix: fixTab };
+const loaded = {};
+async function show(name, focus) {
+  for (const k of Object.keys(tabs)) {
+    const t = document.getElementById("tab-" + k);
+    t.setAttribute("aria-selected", k === name); t.tabIndex = k === name ? 0 : -1;
+    document.getElementById("view-" + k).hidden = k !== name;
+  }
+  if (focus) document.getElementById("tab-" + name).focus();
+  const view = document.getElementById("view-" + name);
+  if (loaded[name] && name === "new") return;
+  loaded[name] = true;
+  try { await tabs[name](view); } catch (e) { view.replaceChildren(message("err", e.message)); }
+}
+const order = Object.keys(tabs);
+for (const k of order) {
+  const t = document.getElementById("tab-" + k);
+  t.addEventListener("click", () => show(k));
+  t.addEventListener("keydown", e => {
+    const i = order.indexOf(k);
+    const to = e.key === "ArrowRight" ? order[(i + 1) % order.length] : e.key === "ArrowLeft" ? order[(i + order.length - 1) % order.length]
+      : e.key === "Home" ? order[0] : e.key === "End" ? order[order.length - 1] : null;
+    if (to) { e.preventDefault(); show(to, true); }
+  });
+}
+document.getElementById("quit").addEventListener("click", async () => {
+  try { await api("/api/quit", {}); } catch (e) { /* the server is gone */ }
+  document.body.replaceChildren(h("main", {}, h("p", {}, "Stopped. You can close this tab.")));
+});
+show("new");
+</script>
+</body>
+</html>

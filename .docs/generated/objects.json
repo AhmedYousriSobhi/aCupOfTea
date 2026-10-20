@@ -1,0 +1,905 @@
+{
+  "accuracy-paradox": {
+    "domains": [
+      "machine-learning",
+      "statistics"
+    ],
+    "id": "accuracy-paradox",
+    "level": "",
+    "path": "fields/tabular-data/data-evaluation/classification/accuracy-paradox.md",
+    "reading_time_min": 4,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "",
+    "tags": [
+      "model-evaluation"
+    ],
+    "title": "Accuracy Paradox",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "bias-variance-trade-off": {
+    "domains": [
+      "machine-learning",
+      "statistics"
+    ],
+    "id": "bias-variance-trade-off",
+    "level": "",
+    "path": "fields/tabular-data/data-evaluation/model-behavior/bias-variance-trade-off.md",
+    "reading_time_min": 7,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "accuracy-paradox"
+      ]
+    },
+    "status": "stable",
+    "summary": "",
+    "tags": [
+      "model-evaluation"
+    ],
+    "title": "Bias and Variance Trade-Off",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "broken-pods-rogues-gallery": {
+    "domains": [
+      "devops",
+      "kubernates",
+      "systems-and-hpc"
+    ],
+    "id": "broken-pods-rogues-gallery",
+    "level": "intermediate",
+    "order": 4,
+    "path": "fields/devops/kubernetes/broken-pods-rogues-gallery.md",
+    "reading_time_min": 6,
+    "relations": {
+      "prerequisites": [
+        "kubernetes-in-five-nouns"
+      ],
+      "related": [
+        "containers-101"
+      ]
+    },
+    "status": "stable",
+    "summary": "How to recognise CrashLoop, OOMKilled, ImagePull and Pending pods by reading status, events and previous logs.",
+    "tags": [
+      "devops",
+      "hpc",
+      "kubernetes",
+      "nvidia"
+    ],
+    "title": "Broken Pods: A Rogues' Gallery (and the One Command That Catches Them All)",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
+  "build-a-two-node-k3s-lab": {
+    "domains": [
+      "devops",
+      "kubernates",
+      "systems-and-hpc"
+    ],
+    "id": "build-a-two-node-k3s-lab",
+    "level": "intermediate",
+    "order": 2,
+    "path": "fields/devops/kubernetes/build-a-two-node-k3s-lab.md",
+    "reading_time_min": 7,
+    "relations": {
+      "prerequisites": [
+        "kubernetes-in-five-nouns"
+      ],
+      "related": [
+        "containers-101"
+      ]
+    },
+    "status": "stable",
+    "summary": "Build a two-VM Kubernetes lab on your laptop with Vagrant, libvirt and k3s, and dodge the DNS and network potholes.",
+    "tags": [
+      "containers",
+      "devops",
+      "hpc",
+      "kubernetes"
+    ],
+    "title": "Build a Two-Node Kubernetes Lab on Your Laptop (and Survive the DNS Pothole)",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
+  "containers-101": {
+    "domains": [
+      "software-engineering",
+      "systems-and-hpc"
+    ],
+    "id": "containers-101",
+    "level": "",
+    "path": "fields/libraries-frameworks-containers/101-containers.md",
+    "reading_time_min": 8,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "",
+    "tags": [
+      "containers"
+    ],
+    "title": "Containers 101",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "cpu-affinity": {
+    "domains": [
+      "software-engineering",
+      "systems-and-hpc"
+    ],
+    "id": "cpu-affinity",
+    "level": "",
+    "path": "programming/operating-system/process-cpu-affinity.md",
+    "reading_time_min": 5,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "",
+    "tags": [
+      "affinity"
+    ],
+    "title": "CPU Affinity",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "cuda-101": {
+    "domains": [
+      "deep-learning",
+      "systems-and-hpc"
+    ],
+    "id": "cuda-101",
+    "level": "",
+    "path": "fields/libraries-frameworks-containers/101-cuda.md",
+    "reading_time_min": 7,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "",
+    "tags": [
+      "gpu"
+    ],
+    "title": "CUDA 101",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "customer-segmentation-problem": {
+    "domains": [
+      "business",
+      "machine-learning"
+    ],
+    "id": "customer-segmentation-problem",
+    "level": "",
+    "path": "problems/customer-segmentation.md",
+    "reading_time_min": 6,
+    "relations": {
+      "prerequisites": [
+        "unsupervised-learning"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "",
+    "tags": [
+      "clustering"
+    ],
+    "title": "Customer Segmentation",
+    "type": "problem",
+    "types": [
+      "problem"
+    ]
+  },
+  "deep-learning-basics": {
+    "domains": [
+      "deep-learning"
+    ],
+    "id": "deep-learning-basics",
+    "level": "beginner",
+    "path": "fields/deep-learning/concepts/basics.md",
+    "reading_time_min": 30,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "sequence-models"
+      ]
+    },
+    "status": "stable",
+    "summary": "Neurons, loss and cost, and the common activation functions, explained from first principles.",
+    "tags": [
+      "neural-networks"
+    ],
+    "title": "Deep Learning Basics",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "encoder-decoder-machine-translation": {
+    "domains": [
+      "deep-learning",
+      "generative-ai",
+      "natural-language-processing"
+    ],
+    "id": "encoder-decoder-machine-translation",
+    "level": "intermediate",
+    "path": "fields/generative-ai/machine-translator/encoder-decoder.md",
+    "reading_time_min": 3,
+    "relations": {
+      "prerequisites": [
+        "sequence-models"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "The encoder-decoder idea behind neural machine translation, with a basic seq2seq model.",
+    "tags": [
+      "encoder-decoder",
+      "rnn"
+    ],
+    "title": "Encoder-Decoder for Machine Translation",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "fake-gpus-in-kubernetes": {
+    "domains": [
+      "devops",
+      "kubernates",
+      "systems-and-hpc"
+    ],
+    "id": "fake-gpus-in-kubernetes",
+    "level": "intermediate",
+    "order": 3,
+    "path": "fields/devops/kubernetes/fake-gpus-in-kubernetes.md",
+    "reading_time_min": 6,
+    "relations": {
+      "prerequisites": [
+        "build-a-two-node-k3s-lab",
+        "kubernetes-in-five-nouns"
+      ],
+      "related": [
+        "containers-101"
+      ]
+    },
+    "status": "stable",
+    "summary": "Patch a node with a fake nvidia.com/gpu counter to learn GPU scheduling without owning a GPU.",
+    "tags": [
+      "devops",
+      "hpc",
+      "kubernetes",
+      "nvidia"
+    ],
+    "title": "Fake GPUs in Kubernetes: Learn GPU Scheduling Without Owning a GPU",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
+  "gpu-allocation-vs-utilization": {
+    "domains": [
+      "devops",
+      "kubernates",
+      "systems-and-hpc"
+    ],
+    "id": "gpu-allocation-vs-utilization",
+    "level": "intermediate",
+    "order": 5,
+    "path": "fields/devops/kubernetes/gpu-allocation-vs-utilization.md",
+    "reading_time_min": 7,
+    "relations": {
+      "prerequisites": [
+        "build-a-two-node-k3s-lab",
+        "kubernetes-in-five-nouns"
+      ],
+      "related": [
+        "containers-101"
+      ]
+    },
+    "status": "stable",
+    "summary": "The scheduler knows who has booked the GPUs, not whether they’re busy, so use kubectl for the first question and DCGM-style telemetry for the second.",
+    "tags": [
+      "dev",
+      "hpc",
+      "kubernetes"
+    ],
+    "title": "Booked Is Not Busy: GPU Allocation vs Utilization",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
+  "hpc-systems-overview": {
+    "domains": [
+      "business",
+      "systems-and-hpc"
+    ],
+    "id": "hpc-systems-overview",
+    "level": "",
+    "path": "business/hpc-industry/101-hpc.md",
+    "reading_time_min": 29,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "hpc-workloads"
+      ]
+    },
+    "status": "stable",
+    "summary": "",
+    "tags": [],
+    "title": "HPC Systems",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "hpc-workloads": {
+    "domains": [
+      "business",
+      "systems-and-hpc"
+    ],
+    "id": "hpc-workloads",
+    "level": "",
+    "path": "business/hpc-industry/workloads.md",
+    "reading_time_min": 10,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "",
+    "tags": [],
+    "title": "HPC Workloads",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "kubernetes-in-five-nouns": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "kubernetes-in-five-nouns",
+    "level": "advanced",
+    "order": 1,
+    "path": "fields/devops/kubernetes/kubernetes-in-five-nouns.md",
+    "reading_time_min": 8,
+    "relations": {
+      "prerequisites": [
+        "containers-101"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "The five Kubernetes nouns (node, pod, namespace, event, API server) explained through HPC analogies, for someone who just inherited a cluster.",
+    "tags": [
+      "kubernetes"
+    ],
+    "title": "Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
+  "nccl-collective-communication": {
+    "domains": [
+      "deep-learning",
+      "systems-and-hpc"
+    ],
+    "id": "nccl-collective-communication",
+    "level": "",
+    "path": "fields/benchmarks/nccl.md",
+    "reading_time_min": 19,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "pytorch-ddp"
+      ]
+    },
+    "status": "stable",
+    "summary": "",
+    "tags": [
+      "distributed-training",
+      "gpu"
+    ],
+    "title": "NCCL",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "nvidia-cluster-readiness-engine": {
+    "domains": [
+      "devops",
+      "kubernates",
+      "systems-and-hpc"
+    ],
+    "id": "nvidia-cluster-readiness-engine",
+    "level": "intermediate",
+    "order": 6,
+    "path": "fields/devops/kubernetes/nvidia-cluster-readiness-engine.md",
+    "reading_time_min": 10,
+    "relations": {
+      "prerequisites": [
+        "kubernetes-in-five-nouns"
+      ],
+      "related": [
+        "containers-101"
+      ]
+    },
+    "status": "stable",
+    "summary": "Even when traditional monitoring tools show all GPUs and networks operating normally, subtle bottlenecks—like a single slow GPU or a degraded network link—can silently drag down the performance of an",
+    "tags": [
+      "hpc",
+      "kubernetes",
+      "nvidia"
+    ],
+    "title": "The Cluster That Passed Every Test Except the One That Mattered",
+    "type": "concept",
+    "types": [
+      "concept",
+      "note"
+    ]
+  },
+  "old-data-and-background-work": {
+    "domains": [
+      "software-engineering",
+      "system-design"
+    ],
+    "id": "old-data-and-background-work",
+    "level": "intermediate",
+    "path": "programming/local-app-accounts/old-data-and-background-work.md",
+    "reading_time_min": 6,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "How to give pre-existing data an owner without surprises, and why background monitors and their cached readings must follow the signed-in person.",
+    "tags": [
+      "programming",
+      "software-engineering",
+      "system-design"
+    ],
+    "title": "The Orphans Come Home: Old Data and Background Work",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "parallel-execution-and-affinity": {
+    "domains": [
+      "software-engineering",
+      "systems-and-hpc"
+    ],
+    "id": "parallel-execution-and-affinity",
+    "level": "",
+    "path": "fields/benchmarks/parallel-execution-affinity-master-guide.md",
+    "reading_time_min": 5,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "cpu-affinity"
+      ]
+    },
+    "status": "stable",
+    "summary": "",
+    "tags": [
+      "affinity",
+      "mpi",
+      "slurm"
+    ],
+    "title": "Parallel Execution and Affinity",
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
+  },
+  "principal-component-analysis": {
+    "domains": [
+      "machine-learning",
+      "statistics"
+    ],
+    "id": "principal-component-analysis",
+    "level": "",
+    "path": "fields/tabular-data/data-feature-engineering/pca.md",
+    "reading_time_min": 14,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "",
+    "tags": [],
+    "title": "Principal Component Analysis (PCA)",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "pytorch-101": {
+    "domains": [
+      "deep-learning",
+      "software-engineering"
+    ],
+    "id": "pytorch-101",
+    "level": "",
+    "path": "fields/libraries-frameworks-containers/101-pytorch.md",
+    "reading_time_min": 6,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "",
+    "tags": [
+      "pytorch"
+    ],
+    "title": "PyTorch 101",
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
+  },
+  "pytorch-ddp": {
+    "domains": [
+      "deep-learning",
+      "systems-and-hpc"
+    ],
+    "id": "pytorch-ddp",
+    "level": "",
+    "path": "fields/libraries-frameworks-containers/102-pytorch-ddp.md",
+    "reading_time_min": 1,
+    "relations": {
+      "prerequisites": [
+        "pytorch-101"
+      ],
+      "related": []
+    },
+    "status": "draft",
+    "summary": "",
+    "tags": [
+      "distributed-training",
+      "pytorch"
+    ],
+    "title": "PyTorch DDP",
+    "type": "note",
+    "types": [
+      "note"
+    ]
+  },
+  "regression-imputing": {
+    "domains": [
+      "machine-learning",
+      "statistics"
+    ],
+    "id": "regression-imputing",
+    "level": "",
+    "path": "fields/tabular-data/data-processing/handling-missing-data/regression-imputing.md",
+    "reading_time_min": 3,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "",
+    "tags": [],
+    "title": "Regression Imputing",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "reinforcement-learning-basics": {
+    "domains": [
+      "machine-learning",
+      "reinforcement-learning"
+    ],
+    "id": "reinforcement-learning-basics",
+    "level": "",
+    "path": "fields/reinforcement-learning/concepts-in-reinforcement-learning/basics.md",
+    "reading_time_min": 8,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "",
+    "tags": [],
+    "title": "Reinforcement Learning Basics",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "reviewing-the-design": {
+    "domains": [
+      "software-engineering",
+      "system-design"
+    ],
+    "id": "reviewing-the-design",
+    "level": "intermediate",
+    "path": "programming/local-app-accounts/reviewing-the-design.md",
+    "reading_time_min": 6,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Six review questions the design leaves open, a table of mistakes it avoids, the Designing Data-Intensive Applications chapters that explain why, and six exercises.",
+    "tags": [
+      "programming",
+      "software",
+      "system-design"
+    ],
+    "title": "Reviewing the Design: Where Would You Push Back?",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
+  "sequence-models": {
+    "domains": [
+      "deep-learning",
+      "generative-ai",
+      "natural-language-processing"
+    ],
+    "id": "sequence-models",
+    "level": "intermediate",
+    "path": "fields/deep-learning/concepts/sequence-models.md",
+    "reading_time_min": 6,
+    "relations": {
+      "prerequisites": [
+        "deep-learning-basics"
+      ],
+      "related": [
+        "encoder-decoder-machine-translation"
+      ]
+    },
+    "status": "stable",
+    "summary": "How models handle ordered data like text, from RNNs and LSTMs to transformers and LLMs.",
+    "tags": [
+      "llm",
+      "rnn",
+      "transformers"
+    ],
+    "title": "Sequence Models",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "sessions-and-two-walls": {
+    "domains": [
+      "software-engineering",
+      "system-design"
+    ],
+    "id": "sessions-and-two-walls",
+    "level": "intermediate",
+    "path": "programming/local-app-accounts/sessions-and-two-walls.md",
+    "reading_time_min": 6,
+    "relations": {
+      "prerequisites": [
+        "sign-in-hygiene"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "How an app remembers who is signed in, why remember-me stores a fingerprint instead of a token, and why authorization needs one check at the door and another at the data.",
+    "tags": [
+      "programming",
+      "software-engineering",
+      "system-design"
+    ],
+    "title": "Who's Home, and What May They Touch? Sessions and Two Walls",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
+  "sign-in-hygiene": {
+    "domains": [
+      "software-engineering",
+      "system-design"
+    ],
+    "id": "sign-in-hygiene",
+    "level": "intermediate",
+    "path": "programming/local-app-accounts/sign-in-hygiene.md",
+    "reading_time_min": 5,
+    "relations": {
+      "prerequisites": [
+        "threat-model-and-first-launch"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Slow self-describing password hashes, a decoy check for unknown users, one identical error message, and throttling that cannot be used to lock someone out forever.",
+    "tags": [
+      "programming",
+      "software-engineering",
+      "system-design"
+    ],
+    "title": "Sign-In Hygiene: How the Clerk Says \"No\" Without Giving Anything Away",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
+  "singularity-containers": {
+    "domains": [
+      "software-engineering",
+      "systems-and-hpc"
+    ],
+    "id": "singularity-containers",
+    "level": "",
+    "path": "fields/libraries-frameworks-containers/101-singularity.md",
+    "reading_time_min": 10,
+    "relations": {
+      "prerequisites": [
+        "containers-101"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "",
+    "tags": [
+      "containers"
+    ],
+    "title": "Singularity",
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
+  },
+  "slurm-pam-adopt-ssh-access": {
+    "domains": [
+      "security",
+      "systems-and-hpc"
+    ],
+    "id": "slurm-pam-adopt-ssh-access",
+    "level": "",
+    "path": "fields/schedulers/slurm-pam-adopt.md",
+    "reading_time_min": 4,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "",
+    "tags": [
+      "slurm"
+    ],
+    "title": "pam_slurm_adopt: Closing the Slurm SSH Backdoor",
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
+  },
+  "threat-model-and-first-launch": {
+    "domains": [
+      "software-engineering",
+      "system-design"
+    ],
+    "id": "threat-model-and-first-launch",
+    "level": "beginner",
+    "path": "programming/local-app-accounts/threat-model-and-first-launch.md",
+    "reading_time_min": 4,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Before writing any account code, state what accounts will and will not protect, then handle the very first sign-up gracefully.",
+    "tags": [
+      "design",
+      "programming",
+      "software"
+    ],
+    "title": "Two People, One Laptop: What Accounts Should (and Shouldn't) Promise",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
+  "time-series-analysis": {
+    "domains": [
+      "machine-learning",
+      "statistics"
+    ],
+    "id": "time-series-analysis",
+    "level": "",
+    "path": "fields/tabular-data/concept-in-time-series/timeseriesfield.md",
+    "reading_time_min": 7,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "",
+    "tags": [],
+    "title": "Time Series Analysis",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "unsupervised-learning": {
+    "domains": [
+      "machine-learning",
+      "statistics"
+    ],
+    "id": "unsupervised-learning",
+    "level": "",
+    "path": "fields/tabular-data/concept-in-machine-learning/ml-unsupervised.md",
+    "reading_time_min": 22,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "",
+    "tags": [
+      "clustering"
+    ],
+    "title": "Unsupervised Learning",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "used-cars-retailer-kpis": {
+    "domains": [
+      "business",
+      "machine-learning"
+    ],
+    "id": "used-cars-retailer-kpis",
+    "level": "",
+    "path": "business/used-cars-retailer.md",
+    "reading_time_min": 7,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "",
+    "tags": [],
+    "title": "Used Cars Retailer Company",
+    "type": "note",
+    "types": [
+      "note"
+    ]
+  }
+}

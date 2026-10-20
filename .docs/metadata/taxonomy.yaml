@@ -1,0 +1,176 @@
+# Controlled vocabulary. Add a value here before using it in a page.
+# Keys are kebab-case ids; label is for display.
+#
+# A page may carry up to 3 domains, and they should be related: a domain lists the ones it
+# goes with in `related` (read both ways, so list a pair once). validate.py warns when two domains
+# of one page are not related.
+#
+# Tag rule: a tag needs 2+ pages, or must name a concrete technology
+# (marked `kind: technology`). Max 5 tags per page.
+
+version: 1
+
+types:
+  concept: Explains an idea, theory, principle or technique.
+  guide: Shows how to do something; practical steps, setup or procedures.
+  reference: Lookup material such as cheat sheets, terminology or command lists.
+  note: Short informal write-up, summary or context that is not a full explanation.
+  problem: A reusable problem formulation, with or without a solution.
+  project: A concrete implementation addressing a defined problem.
+  experiment: Exploratory or temporary investigation.
+
+statuses:
+  - draft
+  - stable
+  - deprecated
+
+levels:
+  - beginner
+  - intermediate
+  - advanced
+
+relation_types:      # exact names used in front matter
+  - related
+  - prerequisites
+
+domains:
+  machine-learning:
+    label: Machine Learning
+    description: Learning from data, general ML theory and practice.
+    related: [deep-learning, statistics, recommender-systems, reinforcement-learning, generative-ai, natural-language-processing]
+  deep-learning:
+    label: Deep Learning
+    description: Neural networks and deep architectures.
+    related: [machine-learning, generative-ai, natural-language-processing, reinforcement-learning, recommender-systems, software-engineering]
+  generative-ai:
+    label: Generative AI
+    description: Generative models, LLMs and their tooling.
+    related: [deep-learning, natural-language-processing, machine-learning]
+  natural-language-processing:
+    label: Natural Language Processing
+    description: Text and language modelling, translation, sequence tasks.
+    related: [deep-learning, generative-ai, machine-learning]
+  reinforcement-learning:
+    label: Reinforcement Learning
+    description: Agents learning through reward and interaction.
+    related: [machine-learning, deep-learning]
+  statistics:
+    label: Statistics
+    description: Statistical methods and probability.
+    related: [machine-learning, recommender-systems]
+  recommender-systems:
+    label: Recommender Systems
+    description: Recommendation and ranking techniques.
+    related: [machine-learning, deep-learning, statistics]
+  software-engineering:
+    label: Software Engineering
+    description: Engineering practice, patterns and tooling.
+    related: [systems-and-hpc, security, business]
+  systems-and-hpc:
+    label: Systems and HPC
+    description: Benchmarks, schedulers, system administration, high-performance computing.
+    related: [software-engineering, security, machine-learning, deep-learning]
+  business:
+    label: Business
+    description: Business context, KPIs and domain knowledge around the technical work.
+    related: [software-engineering, machine-learning, recommender-systems, systems-and-hpc]
+  security:
+    label: Security
+    description: Access control, authentication and hardening.
+    related: [software-engineering, systems-and-hpc]
+  devops:
+    label: Devops
+    description: Field
+    related: [systems-and-hpc, kubernates]
+  kubernates:
+    label: Kubernates
+    description: devops-orchestraiton
+    related: [systems-and-hpc, devops]
+  system-design:
+    label: System Design
+    description: Design Software Systems
+    related: [software-engineering]
+  system-design:
+    label: System Design
+    description: Software System Design
+    related: [software-engineering]
+  system-design:
+    label: System Design
+    description: Software System Design
+    related: [software-engineering]
+
+tags:
+  affinity:
+    label: Affinity
+  applications:
+    label: Applications
+    kind: technology
+  clustering:
+    label: Clustering
+  containers:
+    label: Containers
+  design:
+    label: Design
+    kind: technology
+  dev:
+    label: Dev
+    kind: technology
+  devops:
+    label: Devops
+  distributed-training:
+    label: Distributed Training
+  encoder-decoder:
+    label: Encoder-Decoder
+    kind: technology
+  gpu:
+    label: GPU
+    kind: technology
+  hpc:
+    label: Hpc
+    kind: technology
+  kubernetes:
+    label: Kubernetes
+    kind: technology
+  llm:
+    label: Large Language Models
+    kind: technology
+  model-evaluation:
+    label: Model Evaluation
+  mpi:
+    label: MPI
+    kind: technology
+  neural-networks:
+    label: Neural Networks
+    kind: technology
+  nvidia:
+    label: Nvidia
+    kind: technology
+  programming:
+    label: Programming
+    kind: technology
+  pytorch:
+    label: PyTorch
+    kind: technology
+  rnn:
+    label: Recurrent Neural Networks
+    kind: technology
+  slurm:
+    label: Slurm
+    kind: technology
+  software:
+    label: Software
+  software-engineering:
+    label: Software Engineering
+    kind: technology
+  system-design:
+    label: System Design
+  transformers:
+    label: Transformers
+    kind: technology
+
+# Default domains suggested for pages in a folder (used by the future scaffold
+# command; not read by the validator or generator).
+folder_defaults:
+  fields/tabular-data:
+    - machine-learning
+    - statistics

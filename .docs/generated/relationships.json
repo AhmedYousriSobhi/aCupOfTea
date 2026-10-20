@@ -1,0 +1,298 @@
+{
+  "accuracy-paradox": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [],
+    "related_by": [
+      "bias-variance-trade-off"
+    ]
+  },
+  "bias-variance-trade-off": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "accuracy-paradox"
+    ],
+    "related_by": []
+  },
+  "broken-pods-rogues-gallery": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "kubernetes-in-five-nouns"
+    ],
+    "related": [
+      "containers-101"
+    ],
+    "related_by": []
+  },
+  "build-a-two-node-k3s-lab": {
+    "prerequisite_of": [
+      "fake-gpus-in-kubernetes",
+      "gpu-allocation-vs-utilization"
+    ],
+    "prerequisites": [
+      "kubernetes-in-five-nouns"
+    ],
+    "related": [
+      "containers-101"
+    ],
+    "related_by": []
+  },
+  "containers-101": {
+    "prerequisite_of": [
+      "kubernetes-in-five-nouns",
+      "singularity-containers"
+    ],
+    "prerequisites": [],
+    "related": [],
+    "related_by": [
+      "broken-pods-rogues-gallery",
+      "build-a-two-node-k3s-lab",
+      "fake-gpus-in-kubernetes",
+      "gpu-allocation-vs-utilization",
+      "nvidia-cluster-readiness-engine"
+    ]
+  },
+  "cpu-affinity": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [],
+    "related_by": [
+      "parallel-execution-and-affinity"
+    ]
+  },
+  "cuda-101": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "customer-segmentation-problem": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "unsupervised-learning"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "deep-learning-basics": {
+    "prerequisite_of": [
+      "sequence-models"
+    ],
+    "prerequisites": [],
+    "related": [
+      "sequence-models"
+    ],
+    "related_by": []
+  },
+  "encoder-decoder-machine-translation": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "sequence-models"
+    ],
+    "related": [],
+    "related_by": [
+      "sequence-models"
+    ]
+  },
+  "fake-gpus-in-kubernetes": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "build-a-two-node-k3s-lab",
+      "kubernetes-in-five-nouns"
+    ],
+    "related": [
+      "containers-101"
+    ],
+    "related_by": []
+  },
+  "gpu-allocation-vs-utilization": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "build-a-two-node-k3s-lab",
+      "kubernetes-in-five-nouns"
+    ],
+    "related": [
+      "containers-101"
+    ],
+    "related_by": []
+  },
+  "hpc-systems-overview": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "hpc-workloads"
+    ],
+    "related_by": []
+  },
+  "hpc-workloads": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [],
+    "related_by": [
+      "hpc-systems-overview"
+    ]
+  },
+  "kubernetes-in-five-nouns": {
+    "prerequisite_of": [
+      "broken-pods-rogues-gallery",
+      "build-a-two-node-k3s-lab",
+      "fake-gpus-in-kubernetes",
+      "gpu-allocation-vs-utilization",
+      "nvidia-cluster-readiness-engine"
+    ],
+    "prerequisites": [
+      "containers-101"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "nccl-collective-communication": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "pytorch-ddp"
+    ],
+    "related_by": []
+  },
+  "nvidia-cluster-readiness-engine": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "kubernetes-in-five-nouns"
+    ],
+    "related": [
+      "containers-101"
+    ],
+    "related_by": []
+  },
+  "old-data-and-background-work": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "parallel-execution-and-affinity": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "cpu-affinity"
+    ],
+    "related_by": []
+  },
+  "principal-component-analysis": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "pytorch-101": {
+    "prerequisite_of": [
+      "pytorch-ddp"
+    ],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "pytorch-ddp": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "pytorch-101"
+    ],
+    "related": [],
+    "related_by": [
+      "nccl-collective-communication"
+    ]
+  },
+  "regression-imputing": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "reinforcement-learning-basics": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "reviewing-the-design": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "sequence-models": {
+    "prerequisite_of": [
+      "encoder-decoder-machine-translation"
+    ],
+    "prerequisites": [
+      "deep-learning-basics"
+    ],
+    "related": [
+      "encoder-decoder-machine-translation"
+    ],
+    "related_by": [
+      "deep-learning-basics"
+    ]
+  },
+  "sessions-and-two-walls": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "sign-in-hygiene"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "sign-in-hygiene": {
+    "prerequisite_of": [
+      "sessions-and-two-walls"
+    ],
+    "prerequisites": [
+      "threat-model-and-first-launch"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "singularity-containers": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "containers-101"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "slurm-pam-adopt-ssh-access": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "threat-model-and-first-launch": {
+    "prerequisite_of": [
+      "sign-in-hygiene"
+    ],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "time-series-analysis": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "unsupervised-learning": {
+    "prerequisite_of": [
+      "customer-segmentation-problem"
+    ],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "used-cars-retailer-kpis": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  }
+}
