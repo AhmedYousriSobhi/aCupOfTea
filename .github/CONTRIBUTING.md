@@ -117,6 +117,8 @@ Look at the deployed version of your page in a browser before you push.
    - it reads well in a narrow window (phone width).
 3. Stop the server with Ctrl+C. `_site/` is git-ignored.
 
+The preview is a snapshot: after you edit a page, stop the server, run `stage_site.py` again and reload. Run it from the branch you are about to push, so the preview matches what you send. Reading time, "Last updated" and the Related strip only appear in this built copy, not in a plain `docsify serve`.
+
 To see the reading time and what is still missing without a browser, run `python3 .docs/tools/new_page.py --check PAGE`.
 
 ## 7. Send it
