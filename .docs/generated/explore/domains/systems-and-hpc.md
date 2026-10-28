@@ -4,12 +4,18 @@
 
 Benchmarks, schedulers, system administration, high-performance computing.
 
+- [Architecture-Driven NHC: Generate Health Checks from Your Cluster's Definition](/fields/system-administration/node-health-check/architecture-driven-nhc.md) — Describe your cluster's architecture once in YAML, generate every NHC config from it, cross-check it against slurm.conf, and prove the result with real NHC before it ships. *(advanced · 12 min)*  
+  [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
+- [Auto-Remediation: From Detected to Fixed, Safely](/fields/system-administration/node-health-check/auto-remediation.md) — Turn NHC drains into automatic fixes with an escalation ladder, built-in fix actions, a node-doctor loop on the controller, and guard rails against reboot storms. *(advanced · 8 min)*  
+  [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [Booked Is Not Busy: GPU Allocation vs Utilization](/fields/devops/kubernetes/gpu-allocation-vs-utilization.md) — The scheduler knows who has booked the GPUs, not whether they’re busy, so use kubectl for the first question and DCGM-style telemetry for the second. *(intermediate · 7 min)*  
   [`dev`](/.docs/generated/explore/tags/dev.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`kubernetes`](/.docs/generated/explore/tags/kubernetes.md)
 - [Broken Pods: A Rogues' Gallery (and the One Command That Catches Them All)](/fields/devops/kubernetes/broken-pods-rogues-gallery.md) — How to recognise CrashLoop, OOMKilled, ImagePull and Pending pods by reading status, events and previous logs. *(intermediate · 6 min)*  
   [`devops`](/.docs/generated/explore/tags/devops.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`kubernetes`](/.docs/generated/explore/tags/kubernetes.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md)
 - [Build a Two-Node Kubernetes Lab on Your Laptop (and Survive the DNS Pothole)](/fields/devops/kubernetes/build-a-two-node-k3s-lab.md) — Build a two-VM Kubernetes lab on your laptop with Vagrant, libvirt and k3s, and dodge the DNS and network potholes. *(intermediate · 7 min)*  
   [`containers`](/.docs/generated/explore/tags/containers.md) [`devops`](/.docs/generated/explore/tags/devops.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`kubernetes`](/.docs/generated/explore/tags/kubernetes.md)
+- [Build and Install NHC](/fields/system-administration/node-health-check/build-and-install.md) — Get NHC onto your nodes from a release RPM, the release tarball or the Git tree, run its unit tests and know where every file lands. *(beginner · 5 min)*  
+  [`hpc`](/.docs/generated/explore/tags/hpc.md)
 - [Containers 101](/fields/libraries-frameworks-containers/101-containers.md) *(8 min)*  
   [`containers`](/.docs/generated/explore/tags/containers.md)
 - [CPU Affinity](/programming/operating-system/process-cpu-affinity.md) *(5 min)*  
@@ -24,15 +30,29 @@ Benchmarks, schedulers, system administration, high-performance computing.
   [`kubernetes`](/.docs/generated/explore/tags/kubernetes.md)
 - [NCCL](/fields/benchmarks/nccl.md) *(19 min)*  
   [`distributed-training`](/.docs/generated/explore/tags/distributed-training.md) [`gpu`](/.docs/generated/explore/tags/gpu.md)
+- [NHC Cheat Sheet](/fields/system-administration/node-health-check/cheat-sheet.md) — Every NHC command, option, variable, config pattern and Slurm knob from the series on one page. *(intermediate · 6 min)*  
+  [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
+- [NHC Troubleshooting: Symptom First](/fields/system-administration/node-health-check/troubleshooting.md) — Symptom-first fixes for false drains, nodes that never resume, slurmd that won't register, timeouts, hanging df, and checks that pass by hand but fail under Slurm. *(intermediate · 8 min)*  
+  [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [pam_slurm_adopt: Closing the Slurm SSH Backdoor](/fields/schedulers/slurm-pam-adopt.md) *(4 min)*  
   [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [Parallel Execution and Affinity](/fields/benchmarks/parallel-execution-affinity-master-guide.md) *(5 min)*  
   [`affinity`](/.docs/generated/explore/tags/affinity.md) [`mpi`](/.docs/generated/explore/tags/mpi.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
+- [Plugging NHC into Slurm (and Friends)](/fields/system-administration/node-health-check/slurm-integration.md) — The three slurm.conf lines, which node states to check, timeouts that don't fight each other, prolog and epilog patterns, reboots, plus PBS and cron. *(intermediate · 7 min)*  
+  [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [PyTorch DDP](/fields/libraries-frameworks-containers/102-pytorch-ddp.md) *(1 min)*  
   [`distributed-training`](/.docs/generated/explore/tags/distributed-training.md) [`pytorch`](/.docs/generated/explore/tags/pytorch.md)
+- [Rolling NHC Out to a Fleet Without Draining Everything](/fields/system-administration/node-health-check/rollout-at-scale.md) — A dry-run, canary, enforce plan for deploying NHC or a new nhc.conf to hundreds of nodes, with a circuit breaker for bad pushes. *(intermediate · 6 min)*  
+  [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [Singularity](/fields/libraries-frameworks-containers/101-singularity.md) *(10 min)*  
   [`containers`](/.docs/generated/explore/tags/containers.md)
 - [The Cluster That Passed Every Test Except the One That Mattered](/fields/devops/kubernetes/nvidia-cluster-readiness-engine.md) — Even when traditional monitoring tools show all GPUs and networks operating normally, subtle bottlenecks—like a single slow GPU or a degraded network link—can silently drag down the performance of an *(intermediate · 10 min)*  
   [`hpc`](/.docs/generated/explore/tags/hpc.md) [`kubernetes`](/.docs/generated/explore/tags/kubernetes.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md)
+- [Why Your Cluster Needs a Bouncer](/fields/system-administration/node-health-check/why-node-health-check.md) — One broken node can eat a whole queue of jobs; this is what NHC is, how it decides a node is sick, and how it tells the scheduler. *(beginner · 7 min)*  
+  [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
+- [Writing nhc.conf That Actually Fits Your Cluster](/fields/system-administration/node-health-check/writing-nhc-conf.md) — The config syntax, match strings, variables and contexts, plus copy-ready starter configs for CPU, GPU and login nodes. *(intermediate · 8 min)*  
+  [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md)
+- [Writing Your Own NHC Checks](/fields/system-administration/node-health-check/custom-checks.md) — Build a site .nhc module the way upstream does, with cached data, clear failure messages, fast bash, and practical GPU checks. *(advanced · 7 min)*  
+  [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md)
 
 [All domains](/.docs/generated/explore/domains.md)

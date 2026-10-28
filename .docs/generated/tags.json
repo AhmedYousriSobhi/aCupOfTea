@@ -62,7 +62,10 @@
     "label": "GPU",
     "objects": [
       "cuda-101",
-      "nccl-collective-communication"
+      "nccl-collective-communication",
+      "nhc-architecture-driven",
+      "nhc-custom-checks",
+      "nhc-writing-nhc-conf"
     ]
   },
   "hpc": {
@@ -72,6 +75,16 @@
       "build-a-two-node-k3s-lab",
       "fake-gpus-in-kubernetes",
       "gpu-allocation-vs-utilization",
+      "nhc-architecture-driven",
+      "nhc-auto-remediation",
+      "nhc-build-and-install",
+      "nhc-cheat-sheet",
+      "nhc-custom-checks",
+      "nhc-rollout-at-scale",
+      "nhc-slurm-integration",
+      "nhc-troubleshooting",
+      "nhc-why-node-health-check",
+      "nhc-writing-nhc-conf",
       "nvidia-cluster-readiness-engine"
     ]
   },
@@ -116,6 +129,7 @@
     "objects": [
       "broken-pods-rogues-gallery",
       "fake-gpus-in-kubernetes",
+      "nhc-custom-checks",
       "nvidia-cluster-readiness-engine"
     ]
   },
@@ -146,6 +160,13 @@
   "slurm": {
     "label": "Slurm",
     "objects": [
+      "nhc-architecture-driven",
+      "nhc-auto-remediation",
+      "nhc-cheat-sheet",
+      "nhc-rollout-at-scale",
+      "nhc-slurm-integration",
+      "nhc-troubleshooting",
+      "nhc-why-node-health-check",
       "parallel-execution-and-affinity",
       "slurm-pam-adopt-ssh-access"
     ]

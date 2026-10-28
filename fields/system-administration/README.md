@@ -15,6 +15,7 @@ System administration, DevOps, and infrastructure management for AI/ML environme
 | [linux-admin](/fields/system-administration/linux-admin/) | Linux administration guides |
 | [memory](/fields/system-administration/memory.md) | Memory management and optimization |
 | [network](/fields/system-administration/network.md) | Networking fundamentals |
+| [node-health-check](/fields/system-administration/node-health-check/README.md) | Series: LBNL Node Health Check (NHC) from install to auto-remediation |
 | [q-and-a](/fields/system-administration/q-and-a.md) | Common sysadmin Q&A |
 | [virtual-machines](/fields/system-administration/virtual-machines.md) | Virtual machine management |
 

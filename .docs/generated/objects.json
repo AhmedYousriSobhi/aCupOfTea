@@ -437,6 +437,283 @@
       "concept"
     ]
   },
+  "nhc-architecture-driven": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "nhc-architecture-driven",
+    "level": "advanced",
+    "order": 9,
+    "path": "fields/system-administration/node-health-check/architecture-driven-nhc.md",
+    "reading_time_min": 12,
+    "relations": {
+      "prerequisites": [
+        "nhc-custom-checks",
+        "nhc-rollout-at-scale",
+        "nhc-writing-nhc-conf"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Describe your cluster's architecture once in YAML, generate every NHC config from it, cross-check it against slurm.conf, and prove the result with real NHC before it ships.",
+    "tags": [
+      "gpu",
+      "hpc",
+      "slurm"
+    ],
+    "title": "Architecture-Driven NHC: Generate Health Checks from Your Cluster's Definition",
+    "type": "guide",
+    "types": [
+      "guide",
+      "project"
+    ]
+  },
+  "nhc-auto-remediation": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "nhc-auto-remediation",
+    "level": "advanced",
+    "order": 7,
+    "path": "fields/system-administration/node-health-check/auto-remediation.md",
+    "reading_time_min": 8,
+    "relations": {
+      "prerequisites": [
+        "nhc-rollout-at-scale",
+        "nhc-slurm-integration"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Turn NHC drains into automatic fixes with an escalation ladder, built-in fix actions, a node-doctor loop on the controller, and guard rails against reboot storms.",
+    "tags": [
+      "hpc",
+      "slurm"
+    ],
+    "title": "Auto-Remediation: From Detected to Fixed, Safely",
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
+  },
+  "nhc-build-and-install": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "nhc-build-and-install",
+    "level": "beginner",
+    "order": 2,
+    "path": "fields/system-administration/node-health-check/build-and-install.md",
+    "reading_time_min": 5,
+    "relations": {
+      "prerequisites": [
+        "nhc-why-node-health-check"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Get NHC onto your nodes from a release RPM, the release tarball or the Git tree, run its unit tests and know where every file lands.",
+    "tags": [
+      "hpc"
+    ],
+    "title": "Build and Install NHC",
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
+  },
+  "nhc-cheat-sheet": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "nhc-cheat-sheet",
+    "level": "intermediate",
+    "order": 10,
+    "path": "fields/system-administration/node-health-check/cheat-sheet.md",
+    "reading_time_min": 6,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "nhc-troubleshooting",
+        "nhc-writing-nhc-conf"
+      ]
+    },
+    "status": "stable",
+    "summary": "Every NHC command, option, variable, config pattern and Slurm knob from the series on one page.",
+    "tags": [
+      "hpc",
+      "slurm"
+    ],
+    "title": "NHC Cheat Sheet",
+    "type": "reference",
+    "types": [
+      "reference"
+    ]
+  },
+  "nhc-custom-checks": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "nhc-custom-checks",
+    "level": "advanced",
+    "order": 6,
+    "path": "fields/system-administration/node-health-check/custom-checks.md",
+    "reading_time_min": 7,
+    "relations": {
+      "prerequisites": [
+        "nhc-writing-nhc-conf"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Build a site .nhc module the way upstream does, with cached data, clear failure messages, fast bash, and practical GPU checks.",
+    "tags": [
+      "gpu",
+      "hpc",
+      "nvidia"
+    ],
+    "title": "Writing Your Own NHC Checks",
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
+  },
+  "nhc-rollout-at-scale": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "nhc-rollout-at-scale",
+    "level": "intermediate",
+    "order": 5,
+    "path": "fields/system-administration/node-health-check/rollout-at-scale.md",
+    "reading_time_min": 6,
+    "relations": {
+      "prerequisites": [
+        "nhc-slurm-integration"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "A dry-run, canary, enforce plan for deploying NHC or a new nhc.conf to hundreds of nodes, with a circuit breaker for bad pushes.",
+    "tags": [
+      "hpc",
+      "slurm"
+    ],
+    "title": "Rolling NHC Out to a Fleet Without Draining Everything",
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
+  },
+  "nhc-slurm-integration": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "nhc-slurm-integration",
+    "level": "intermediate",
+    "order": 4,
+    "path": "fields/system-administration/node-health-check/slurm-integration.md",
+    "reading_time_min": 7,
+    "relations": {
+      "prerequisites": [
+        "nhc-writing-nhc-conf"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "The three slurm.conf lines, which node states to check, timeouts that don't fight each other, prolog and epilog patterns, reboots, plus PBS and cron.",
+    "tags": [
+      "hpc",
+      "slurm"
+    ],
+    "title": "Plugging NHC into Slurm (and Friends)",
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
+  },
+  "nhc-troubleshooting": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "nhc-troubleshooting",
+    "level": "intermediate",
+    "order": 8,
+    "path": "fields/system-administration/node-health-check/troubleshooting.md",
+    "reading_time_min": 8,
+    "relations": {
+      "prerequisites": [
+        "nhc-slurm-integration"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Symptom-first fixes for false drains, nodes that never resume, slurmd that won't register, timeouts, hanging df, and checks that pass by hand but fail under Slurm.",
+    "tags": [
+      "hpc",
+      "slurm"
+    ],
+    "title": "NHC Troubleshooting: Symptom First",
+    "type": "guide",
+    "types": [
+      "guide",
+      "reference"
+    ]
+  },
+  "nhc-why-node-health-check": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "nhc-why-node-health-check",
+    "level": "beginner",
+    "order": 1,
+    "path": "fields/system-administration/node-health-check/why-node-health-check.md",
+    "reading_time_min": 7,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "nhc-slurm-integration"
+      ]
+    },
+    "status": "stable",
+    "summary": "One broken node can eat a whole queue of jobs; this is what NHC is, how it decides a node is sick, and how it tells the scheduler.",
+    "tags": [
+      "hpc",
+      "slurm"
+    ],
+    "title": "Why Your Cluster Needs a Bouncer",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "nhc-writing-nhc-conf": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "nhc-writing-nhc-conf",
+    "level": "intermediate",
+    "order": 3,
+    "path": "fields/system-administration/node-health-check/writing-nhc-conf.md",
+    "reading_time_min": 8,
+    "relations": {
+      "prerequisites": [
+        "nhc-build-and-install"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "The config syntax, match strings, variables and contexts, plus copy-ready starter configs for CPU, GPU and login nodes.",
+    "tags": [
+      "gpu",
+      "hpc"
+    ],
+    "title": "Writing nhc.conf That Actually Fits Your Cluster",
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
+  },
   "nvidia-cluster-readiness-engine": {
     "domains": [
       "devops",

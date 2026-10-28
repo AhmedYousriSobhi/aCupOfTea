@@ -8,5 +8,7 @@
   [`devops`](/.docs/generated/explore/tags/devops.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`kubernetes`](/.docs/generated/explore/tags/kubernetes.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md)
 - [The Cluster That Passed Every Test Except the One That Mattered](/fields/devops/kubernetes/nvidia-cluster-readiness-engine.md) — Even when traditional monitoring tools show all GPUs and networks operating normally, subtle bottlenecks—like a single slow GPU or a degraded network link—can silently drag down the performance of an *(intermediate · 10 min)*  
   [`hpc`](/.docs/generated/explore/tags/hpc.md) [`kubernetes`](/.docs/generated/explore/tags/kubernetes.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md)
+- [Writing Your Own NHC Checks](/fields/system-administration/node-health-check/custom-checks.md) — Build a site .nhc module the way upstream does, with cached data, clear failure messages, fast bash, and practical GPU checks. *(advanced · 7 min)*  
+  [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md)
 
 [All tags](/.docs/generated/explore/tags.md)

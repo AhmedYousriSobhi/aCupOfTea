@@ -155,6 +155,113 @@
     ],
     "related_by": []
   },
+  "nhc-architecture-driven": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "nhc-custom-checks",
+      "nhc-rollout-at-scale",
+      "nhc-writing-nhc-conf"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "nhc-auto-remediation": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "nhc-rollout-at-scale",
+      "nhc-slurm-integration"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "nhc-build-and-install": {
+    "prerequisite_of": [
+      "nhc-writing-nhc-conf"
+    ],
+    "prerequisites": [
+      "nhc-why-node-health-check"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "nhc-cheat-sheet": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "nhc-troubleshooting",
+      "nhc-writing-nhc-conf"
+    ],
+    "related_by": []
+  },
+  "nhc-custom-checks": {
+    "prerequisite_of": [
+      "nhc-architecture-driven"
+    ],
+    "prerequisites": [
+      "nhc-writing-nhc-conf"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "nhc-rollout-at-scale": {
+    "prerequisite_of": [
+      "nhc-architecture-driven",
+      "nhc-auto-remediation"
+    ],
+    "prerequisites": [
+      "nhc-slurm-integration"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "nhc-slurm-integration": {
+    "prerequisite_of": [
+      "nhc-auto-remediation",
+      "nhc-rollout-at-scale",
+      "nhc-troubleshooting"
+    ],
+    "prerequisites": [
+      "nhc-writing-nhc-conf"
+    ],
+    "related": [],
+    "related_by": [
+      "nhc-why-node-health-check"
+    ]
+  },
+  "nhc-troubleshooting": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "nhc-slurm-integration"
+    ],
+    "related": [],
+    "related_by": [
+      "nhc-cheat-sheet"
+    ]
+  },
+  "nhc-why-node-health-check": {
+    "prerequisite_of": [
+      "nhc-build-and-install"
+    ],
+    "prerequisites": [],
+    "related": [
+      "nhc-slurm-integration"
+    ],
+    "related_by": []
+  },
+  "nhc-writing-nhc-conf": {
+    "prerequisite_of": [
+      "nhc-architecture-driven",
+      "nhc-custom-checks",
+      "nhc-slurm-integration"
+    ],
+    "prerequisites": [
+      "nhc-build-and-install"
+    ],
+    "related": [],
+    "related_by": [
+      "nhc-cheat-sheet"
+    ]
+  },
   "nvidia-cluster-readiness-engine": {
     "prerequisite_of": [],
     "prerequisites": [
