@@ -1006,6 +1006,13 @@ def regenerate_navigation():
     for script in ("gen_sidebar.sh", "gen_navbar.sh"):
         subprocess.run(["bash", script], cwd=docs, check=True, stdout=subprocess.DEVNULL)
     print("Updated  .docs/_sidebar.md and .docs/_navbar.md")
+    # The indexes refuse to build while the validator reports errors; say so instead of failing the page.
+    done = subprocess.run([sys.executable, os.path.join(ROOT, ".docs", "tools", "generate_index.py")],
+                          cwd=ROOT, capture_output=True, text=True)
+    if done.returncode == 0:
+        print("Updated  .docs/generated")
+    else:
+        print("Skipped  .docs/generated (generate_index.py refused; run check_all.py --fix)")
 
 
 def body_h1(text):

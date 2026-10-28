@@ -2,9 +2,15 @@
 
 # GPU
 
+- [Architecture-Driven NHC: Generate Health Checks from Your Cluster's Definition](/fields/system-administration/node-health-check/architecture-driven-nhc.md) — Describe your cluster's architecture once in YAML, generate every NHC config from it, cross-check it against slurm.conf, and prove the result with real NHC before it ships. *(advanced · 12 min)*  
+  [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [CUDA 101](/fields/libraries-frameworks-containers/101-cuda.md) *(7 min)*  
   [`gpu`](/.docs/generated/explore/tags/gpu.md)
 - [NCCL](/fields/benchmarks/nccl.md) *(19 min)*  
   [`distributed-training`](/.docs/generated/explore/tags/distributed-training.md) [`gpu`](/.docs/generated/explore/tags/gpu.md)
+- [Writing nhc.conf That Actually Fits Your Cluster](/fields/system-administration/node-health-check/writing-nhc-conf.md) — The config syntax, match strings, variables and contexts, plus copy-ready starter configs for CPU, GPU and login nodes. *(intermediate · 8 min)*  
+  [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md)
+- [Writing Your Own NHC Checks](/fields/system-administration/node-health-check/custom-checks.md) — Build a site .nhc module the way upstream does, with cached data, clear failure messages, fast bash, and practical GPU checks. *(advanced · 7 min)*  
+  [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md)
 
 [All tags](/.docs/generated/explore/tags.md)

@@ -45,12 +45,12 @@ Not sure where to begin? Each of these takes one cup, roughly the reading time s
 
 ## 🆕 Recently added
 
-- 2026-10-20 · [The Curtain, the Locksmith and the Door Already Built](/programming/local-app-accounts/lock-recovery-and-going-online.md)
-- 2026-10-20 · [The Orphans Come Home: Old Data and Background Work](/programming/local-app-accounts/old-data-and-background-work.md)
-- 2026-10-20 · [Reviewing the Design: Where Would You Push Back?](/programming/local-app-accounts/reviewing-the-design.md)
-- 2026-10-20 · [Who's Home, and What May They Touch? Sessions and Two Walls](/programming/local-app-accounts/sessions-and-two-walls.md)
-- 2026-10-20 · [Sign-In Hygiene: How the Clerk Says "No" Without Giving Anything Away](/programming/local-app-accounts/sign-in-hygiene.md)
-- 2026-10-20 · [Two People, One Laptop: What Accounts Should (and Shouldn't) Promise](/programming/local-app-accounts/threat-model-and-first-launch.md)
+- 2026-10-28 · [Architecture-Driven NHC: Generate Health Checks from Your Cluster's Definition](/fields/system-administration/node-health-check/architecture-driven-nhc.md)
+- 2026-10-28 · [Auto-Remediation: From Detected to Fixed, Safely](/fields/system-administration/node-health-check/auto-remediation.md)
+- 2026-10-28 · [Build and Install NHC](/fields/system-administration/node-health-check/build-and-install.md)
+- 2026-10-28 · [NHC Cheat Sheet](/fields/system-administration/node-health-check/cheat-sheet.md)
+- 2026-10-28 · [Writing Your Own NHC Checks](/fields/system-administration/node-health-check/custom-checks.md)
+- 2026-10-28 · [Rolling NHC Out to a Fleet Without Draining Everything](/fields/system-administration/node-health-check/rollout-at-scale.md)
 
 <!-- recent:end -->
 

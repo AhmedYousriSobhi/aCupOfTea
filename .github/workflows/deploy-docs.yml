@@ -49,8 +49,8 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install PyYAML
-        run: pip install PyYAML==6.0.2
+      - name: Install PyYAML and Pillow
+        run: pip install PyYAML==6.0.2 Pillow==12.3.0
 
       - name: Validate and generate metadata indexes
         run: |

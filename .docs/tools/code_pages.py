@@ -20,7 +20,8 @@ import re
 REPO = "AhmedYousriSobhi/aCupOfTea"
 BRANCH = "main"  # the site is built from main
 LANGS = {".py": "python", ".sh": "bash", ".r": "r", ".sql": "sql", ".js": "javascript",
-         ".c": "c", ".cpp": "cpp", ".java": "java", ".go": "go", ".ts": "typescript"}
+         ".c": "c", ".cpp": "cpp", ".java": "java", ".go": "go", ".ts": "typescript",
+         ".yaml": "yaml", ".yml": "yaml", ".nhc": "bash"}
 MAX_OUTPUT_LINES = 60
 ANSI_RE = re.compile(r"\x1b\[[0-9;?]*[ -/]*[@-~]|\x1b[@-_]")
 CONTROL_RE = re.compile(r"[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]")  # left after ANSI codes are removed

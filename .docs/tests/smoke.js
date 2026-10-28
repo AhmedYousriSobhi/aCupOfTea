@@ -158,7 +158,7 @@ async function run(browser, base, label, size, phone) {
   await go('fields/system-administration/network', 4000);
   c('diagrams render', (await page.locator('.mermaid svg').count()) >= 3);
   await go('fields/benchmarks/stream');
-  c('alerts render', (await page.locator('.alert.callout').count()) >= 1);
+  c('alerts render', (await page.locator('.markdown-section .callout').count()) >= 1);
 
   for (const [kind, route] of [['script', 'programming/software-goals/robustness/script_RectangleClass.py'],
     ['notebook', 'programming/software-goals/robustness/nb_Robustness.ipynb']]) {

@@ -98,9 +98,30 @@ python3 .docs/tools/check_all.py --fix
 
 It runs `validate.py`, `check_links.py`, the generators and every `test_*.py`; without `--fix` it only reports a stale generated file, which is what CI does.
 
-To put a page at a given place in its folder (a series read in order), add `order: 1`, `order: 2`, ... to the front matter of its pages; the sidebar, Previous/Next and "Read next" follow that order.
+To put a page at a given place in its folder (a series read in order), add `order: 1`, `order: 2`, ... to the front matter of its pages; the sidebar, Previous/Next and "Read next" follow that order. Pages without `order` follow the order of the folder `README.md` table.
 
-## 6. Send it
+## 6. Preview it
+
+Look at the deployed version of your page in a browser before you push.
+
+1. Build the site and serve it:
+
+   ```bash
+   python3 .docs/tools/stage_site.py --out _site
+   python3 -m http.server 8000 --directory _site
+   ```
+
+2. Open http://localhost:8000 and check:
+   - your page is in the left menu, in the order of its folder `README.md` table;
+   - its reading time, links and images show up and work;
+   - it reads well in a narrow window (phone width).
+3. Stop the server with Ctrl+C. `_site/` is git-ignored.
+
+The preview is a snapshot: after you edit a page, stop the server, run `stage_site.py` again and reload. Run it from the branch you are about to push, so the preview matches what you send. Reading time, "Last updated" and the Related strip only appear in this built copy, not in a plain `docsify serve`.
+
+To see the reading time and what is still missing without a browser, run `python3 .docs/tools/new_page.py --check PAGE`.
+
+## 7. Send it
 
 Commit, push, and open a pull request **into `dev`** (never `main`), one topic per pull request. The maintainer merges it and later releases `dev` to `main`, which updates the site.
 
@@ -109,6 +130,24 @@ By contributing, you agree that your writing is licensed under [CC BY 4.0](/LICE
 ---
 
 ## More, only when you need it
+
+<details>
+<summary><b>Write a formula</b></summary>
+
+Write plain LaTeX on **one line of its own**, between double dollar signs. GitHub and the site both show it as a centred formula:
+
+```markdown
+$$\text{Total Cores} = \text{Nodes} \times \text{Cores per Node}$$
+```
+
+How the site (Docsify) handles it, so you know what to expect:
+
+- Only a line that is nothing but `$$...$$` becomes a formula (`.docs/math.js`, drawn by KaTeX). Keep the opening and closing `$$` on the same line: a formula split over several lines, or with text before or after it on the line, stays as raw text on the site.
+- Single `$...$` inside a sentence is left alone on the site, so prices and shell snippets such as `$HOME` never turn into maths. GitHub does render it, so avoid it in a page when the formula matters; put it in a `$$...$$` line instead.
+- Anything inside a code fence is never touched.
+- KaTeX is downloaded only on pages that have a formula. A formula KaTeX cannot parse is shown in red instead of breaking the page.
+- Escape special characters as in LaTeX (`\_` for an underscore, `\&` for an ampersand), and use `\text{...}` for words.
+</details>
 
 <details>
 <summary><b>I already wrote the page by hand</b></summary>
@@ -131,18 +170,6 @@ Enter keeps the current value, `-` clears it. Only what you change is rewritten.
 </details>
 
 <details>
-<summary><b>Check a finished page, or preview the site</b></summary>
-
-```bash
-python3 .docs/tools/new_page.py --check PAGE      # reading time, what is still missing
-python3 .docs/tools/stage_site.py --out _site     # the deployed version
-python3 -m http.server 8000 --directory _site     # then open http://localhost:8000
-```
-
-`_site/` is git-ignored.
-</details>
-
-<details>
 <summary><b>No scripts at all</b></summary>
 
 - A lowercase-kebab-case file name: `my-topic.md`, starting with one `# Heading`.
@@ -159,6 +186,16 @@ python3 .docs/tools/page_doctor.py --install-hook      # --uninstall-hook remove
 ```
 
 A git hook that refuses a push when the changed files have an error (skip once with `git push --no-verify`).
+</details>
+
+<details>
+<summary><b>Keep the menu and indexes up to date on every commit</b></summary>
+
+```bash
+git config core.hooksPath .docs/hooks
+```
+
+A `pre-commit` hook regenerates the sidebar, navbar and `.docs/generated` and adds them to the commit (skip once with `git commit --no-verify`).
 </details>
 
 <details>

@@ -1,0 +1,10 @@
+#!/bin/sh
+# Regenerates the sidebar, navbar and metadata indexes before every commit and
+# adds the results to it, so the repo always matches what CI publishes.
+# Enable once per clone: git config core.hooksPath .docs/hooks
+# Skip once: git commit --no-verify
+root=$(git rev-parse --show-toplevel) || exit 1
+cd "$root" || exit 1
+(cd .docs && ./gen_sidebar.sh >/dev/null && ./gen_navbar.sh >/dev/null) || exit 1
+python3 .docs/tools/generate_index.py >/dev/null || exit 1
+git add .docs/_sidebar.md .docs/_navbar.md .docs/generated

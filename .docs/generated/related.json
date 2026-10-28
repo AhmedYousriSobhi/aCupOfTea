@@ -306,6 +306,215 @@
     ],
     "required_by": []
   },
+  "fields/system-administration/node-health-check/architecture-driven-nhc.md": {
+    "prerequisites": [
+      {
+        "id": "nhc-rollout-at-scale",
+        "path": "fields/system-administration/node-health-check/rollout-at-scale.md",
+        "title": "Rolling NHC Out to a Fleet Without Draining Everything"
+      },
+      {
+        "id": "nhc-writing-nhc-conf",
+        "path": "fields/system-administration/node-health-check/writing-nhc-conf.md",
+        "title": "Writing nhc.conf That Actually Fits Your Cluster"
+      },
+      {
+        "id": "nhc-custom-checks",
+        "path": "fields/system-administration/node-health-check/custom-checks.md",
+        "title": "Writing Your Own NHC Checks"
+      }
+    ],
+    "related": [],
+    "required_by": []
+  },
+  "fields/system-administration/node-health-check/auto-remediation.md": {
+    "prerequisites": [
+      {
+        "id": "nhc-slurm-integration",
+        "path": "fields/system-administration/node-health-check/slurm-integration.md",
+        "title": "Plugging NHC into Slurm (and Friends)"
+      },
+      {
+        "id": "nhc-rollout-at-scale",
+        "path": "fields/system-administration/node-health-check/rollout-at-scale.md",
+        "title": "Rolling NHC Out to a Fleet Without Draining Everything"
+      }
+    ],
+    "related": [],
+    "required_by": []
+  },
+  "fields/system-administration/node-health-check/build-and-install.md": {
+    "prerequisites": [
+      {
+        "id": "nhc-why-node-health-check",
+        "path": "fields/system-administration/node-health-check/why-node-health-check.md",
+        "title": "Why Your Cluster Needs a Bouncer"
+      }
+    ],
+    "related": [],
+    "required_by": [
+      {
+        "id": "nhc-writing-nhc-conf",
+        "path": "fields/system-administration/node-health-check/writing-nhc-conf.md",
+        "title": "Writing nhc.conf That Actually Fits Your Cluster"
+      }
+    ]
+  },
+  "fields/system-administration/node-health-check/cheat-sheet.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "nhc-troubleshooting",
+        "path": "fields/system-administration/node-health-check/troubleshooting.md",
+        "title": "NHC Troubleshooting: Symptom First"
+      },
+      {
+        "id": "nhc-writing-nhc-conf",
+        "path": "fields/system-administration/node-health-check/writing-nhc-conf.md",
+        "title": "Writing nhc.conf That Actually Fits Your Cluster"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/system-administration/node-health-check/custom-checks.md": {
+    "prerequisites": [
+      {
+        "id": "nhc-writing-nhc-conf",
+        "path": "fields/system-administration/node-health-check/writing-nhc-conf.md",
+        "title": "Writing nhc.conf That Actually Fits Your Cluster"
+      }
+    ],
+    "related": [],
+    "required_by": [
+      {
+        "id": "nhc-architecture-driven",
+        "path": "fields/system-administration/node-health-check/architecture-driven-nhc.md",
+        "title": "Architecture-Driven NHC: Generate Health Checks from Your Cluster's Definition"
+      }
+    ]
+  },
+  "fields/system-administration/node-health-check/rollout-at-scale.md": {
+    "prerequisites": [
+      {
+        "id": "nhc-slurm-integration",
+        "path": "fields/system-administration/node-health-check/slurm-integration.md",
+        "title": "Plugging NHC into Slurm (and Friends)"
+      }
+    ],
+    "related": [],
+    "required_by": [
+      {
+        "id": "nhc-auto-remediation",
+        "path": "fields/system-administration/node-health-check/auto-remediation.md",
+        "title": "Auto-Remediation: From Detected to Fixed, Safely"
+      },
+      {
+        "id": "nhc-architecture-driven",
+        "path": "fields/system-administration/node-health-check/architecture-driven-nhc.md",
+        "title": "Architecture-Driven NHC: Generate Health Checks from Your Cluster's Definition"
+      }
+    ]
+  },
+  "fields/system-administration/node-health-check/slurm-integration.md": {
+    "prerequisites": [
+      {
+        "id": "nhc-writing-nhc-conf",
+        "path": "fields/system-administration/node-health-check/writing-nhc-conf.md",
+        "title": "Writing nhc.conf That Actually Fits Your Cluster"
+      }
+    ],
+    "related": [
+      {
+        "id": "nhc-why-node-health-check",
+        "path": "fields/system-administration/node-health-check/why-node-health-check.md",
+        "title": "Why Your Cluster Needs a Bouncer"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "nhc-rollout-at-scale",
+        "path": "fields/system-administration/node-health-check/rollout-at-scale.md",
+        "title": "Rolling NHC Out to a Fleet Without Draining Everything"
+      },
+      {
+        "id": "nhc-auto-remediation",
+        "path": "fields/system-administration/node-health-check/auto-remediation.md",
+        "title": "Auto-Remediation: From Detected to Fixed, Safely"
+      },
+      {
+        "id": "nhc-troubleshooting",
+        "path": "fields/system-administration/node-health-check/troubleshooting.md",
+        "title": "NHC Troubleshooting: Symptom First"
+      }
+    ]
+  },
+  "fields/system-administration/node-health-check/troubleshooting.md": {
+    "prerequisites": [
+      {
+        "id": "nhc-slurm-integration",
+        "path": "fields/system-administration/node-health-check/slurm-integration.md",
+        "title": "Plugging NHC into Slurm (and Friends)"
+      }
+    ],
+    "related": [
+      {
+        "id": "nhc-cheat-sheet",
+        "path": "fields/system-administration/node-health-check/cheat-sheet.md",
+        "title": "NHC Cheat Sheet"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/system-administration/node-health-check/why-node-health-check.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "nhc-slurm-integration",
+        "path": "fields/system-administration/node-health-check/slurm-integration.md",
+        "title": "Plugging NHC into Slurm (and Friends)"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "nhc-build-and-install",
+        "path": "fields/system-administration/node-health-check/build-and-install.md",
+        "title": "Build and Install NHC"
+      }
+    ]
+  },
+  "fields/system-administration/node-health-check/writing-nhc-conf.md": {
+    "prerequisites": [
+      {
+        "id": "nhc-build-and-install",
+        "path": "fields/system-administration/node-health-check/build-and-install.md",
+        "title": "Build and Install NHC"
+      }
+    ],
+    "related": [
+      {
+        "id": "nhc-cheat-sheet",
+        "path": "fields/system-administration/node-health-check/cheat-sheet.md",
+        "title": "NHC Cheat Sheet"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "nhc-slurm-integration",
+        "path": "fields/system-administration/node-health-check/slurm-integration.md",
+        "title": "Plugging NHC into Slurm (and Friends)"
+      },
+      {
+        "id": "nhc-custom-checks",
+        "path": "fields/system-administration/node-health-check/custom-checks.md",
+        "title": "Writing Your Own NHC Checks"
+      },
+      {
+        "id": "nhc-architecture-driven",
+        "path": "fields/system-administration/node-health-check/architecture-driven-nhc.md",
+        "title": "Architecture-Driven NHC: Generate Health Checks from Your Cluster's Definition"
+      }
+    ]
+  },
   "fields/tabular-data/concept-in-machine-learning/ml-unsupervised.md": {
     "prerequisites": [],
     "related": [],
