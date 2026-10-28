@@ -95,7 +95,7 @@
   .pcard .meta { display:flex; flex-wrap:wrap; gap:6px; margin:6px 0; }
   .pcard .tag { border:1px solid var(--line); background:var(--code); border-radius:99px; padding:0 10px; font-size:.8rem; display:inline-flex; align-items:center; }
   .pcard .empty { color:var(--muted); font-style:italic; }
-  .graph svg { display:block; max-width:100%; }
+  .graph svg { display:block; max-width:100%; height:auto; }
   .graph text { font-size:11px; fill:var(--text); }
   .graph .ok { stroke:var(--accent); stroke-width:2; }
   .graph .odd { stroke:var(--err); stroke-width:2; stroke-dasharray:5 4; }
@@ -392,14 +392,23 @@ function metaForm(opts, have = [], onChange = () => {}, titleOf = () => "") {
       } catch (x) { btn.disabled = false; relNote.textContent = String(x.message || x); }
     } }, "Mark " + p.text + " as related")));
   }
-  /* the chosen subjects as a small map: a solid line where two go together, a dashed red one where they are not related */
+  /* a long subject name on two lines, split at the space nearest the middle, so it fits beside the other labels */
+  function wrapLabel(text) {
+    if (text.length <= 14 || !text.includes(" ")) return [text];
+    let best = -1;
+    for (let k = text.indexOf(" "); k !== -1; k = text.indexOf(" ", k + 1)) if (best < 0 || Math.abs(k - text.length / 2) < Math.abs(best - text.length / 2)) best = k;
+    return [text.slice(0, best), text.slice(best + 1)];
+  }
+  /* the chosen subjects as a small map: a solid line where two go together, a dashed red one where they are not related.
+     The picture is for the eyes only; a hidden list below it says each pair in words for screen readers. */
   function drawGraph(picked, fresh) {
     if (picked.length < 2) { graph.replaceChildren(); return; }
-    const W = 300, H = 120, pos = picked.length === 2 ? [[70, 60], [230, 60]] : [[150, 22], [60, 96], [240, 96]];
+    const W = 360, H = 144, pos = picked.length === 2 ? [[90, 52], [270, 52]] : [[180, 44], [75, 100], [285, 100]];
     const rel = (a, b) => fresh.includes(a) || fresh.includes(b) || (opts.related[a] || []).includes(b);
-    const lines = [], nodes = [], defs = [];
+    const lines = [], nodes = [], defs = [], pairs = [];
     picked.forEach((a, i) => picked.slice(i + 1).forEach((b, j) => {
       const [x1, y1] = pos[i], [x2, y2] = pos[i + 1 + j], ok = rel(a, b), id = "g" + i + "-" + (i + 1 + j);
+      pairs.push(h("li", {}, labelOf(a) + " and " + labelOf(b) + ": " + (ok ? "related" : "not related")));
       if (ok) {   // a related pair: the line shades from one subject's colour to the other's
         defs.push(sv("linearGradient", { id, gradientUnits: "userSpaceOnUse", x1, y1, x2, y2 },
           sv("stop", { offset: "0", "stop-color": "hsl(" + hue(a) + " 55% 48%)" }), sv("stop", { offset: "1", "stop-color": "hsl(" + hue(b) + " 55% 48%)" })));
@@ -409,11 +418,13 @@ function metaForm(opts, have = [], onChange = () => {}, titleOf = () => "") {
         lines.push(sv("text", { x: (x1 + x2) / 2, y: (y1 + y2) / 2 - 4, "text-anchor": "middle", style: "fill:var(--err);font-weight:700" }, "\u26a0 not related"));
       }
     }));
-    picked.forEach((a, i) => nodes.push(sv("circle", { cx: pos[i][0], cy: pos[i][1], r: 8, class: "node", style: "fill:hsl(" + hue(a) + " 55% 48%)" }),
-      sv("text", { x: pos[i][0], y: pos[i][1] + (picked.length === 3 && i === 0 ? -13 : 22), "text-anchor": "middle" }, labelOf(a))));
-    const svg = sv("svg", { viewBox: "0 0 " + W + " " + H, width: W, height: H, role: "img",
-      "aria-label": "How the chosen subjects relate: " + picked.map(labelOf).join(", ") }, sv("defs", {}, defs), lines, nodes);
-    graph.replaceChildren(svg);
+    picked.forEach((a, i) => {
+      const [x, y] = pos[i], words = wrapLabel(labelOf(a)), above = picked.length === 3 && i === 0;
+      nodes.push(sv("circle", { cx: x, cy: y, r: 8, class: "node", style: "fill:hsl(" + hue(a) + " 55% 48%)" }),
+        ...words.map((w, k) => sv("text", { x, y: above ? y - 14 - 13 * (words.length - 1 - k) : y + 22 + 13 * k, "text-anchor": "middle" }, w)));
+    });
+    const svg = sv("svg", { viewBox: "0 0 " + W + " " + H, width: W, height: H, "aria-hidden": "true" }, sv("defs", {}, defs), lines, nodes);
+    graph.replaceChildren(svg, h("ul", { class: "sr-only", "aria-label": "How the chosen subjects relate" }, pairs));
   }
   domains.el.addEventListener("change", checkRelated);
   const moreNote = h("span", { class: "hint" });
