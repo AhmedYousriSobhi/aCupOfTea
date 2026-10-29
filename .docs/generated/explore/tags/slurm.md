@@ -6,6 +6,8 @@
   [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [Auto-Remediation: From Detected to Fixed, Safely](/fields/system-administration/node-health-check/auto-remediation.md) — Turn NHC drains into automatic fixes with an escalation ladder, built-in fix actions, a node-doctor loop on the controller, and guard rails against reboot storms. *(advanced · 8 min)*  
   [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
+- [Case Study: "Build Us an NHC", From a Vague Ask to a Validated Proposal](/fields/system-administration/node-health-check/case-study-build-me-an-nhc.md) — A client asks for an NHC for their DGX H100 and AMD EPYC Slurm cluster; the discovery questions, first proposal, validation against vendor specs, and the final answer. *(advanced · 17 min)*  
+  [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [NHC Cheat Sheet](/fields/system-administration/node-health-check/cheat-sheet.md) — Every NHC command, option, variable, config pattern and Slurm knob from the series on one page. *(intermediate · 6 min)*  
   [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [NHC Troubleshooting: Symptom First](/fields/system-administration/node-health-check/troubleshooting.md) — Symptom-first fixes for false drains, nodes that never resume, slurmd that won't register, timeouts, hanging df, and checks that pass by hand but fail under Slurm. *(intermediate · 8 min)*  

@@ -156,7 +156,9 @@
     "related_by": []
   },
   "nhc-architecture-driven": {
-    "prerequisite_of": [],
+    "prerequisite_of": [
+      "nhc-case-study"
+    ],
     "prerequisites": [
       "nhc-custom-checks",
       "nhc-rollout-at-scale",
@@ -180,6 +182,14 @@
     ],
     "prerequisites": [
       "nhc-why-node-health-check"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "nhc-case-study": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "nhc-architecture-driven"
     ],
     "related": [],
     "related_by": []
