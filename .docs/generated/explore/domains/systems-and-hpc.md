@@ -16,6 +16,8 @@ Benchmarks, schedulers, system administration, high-performance computing.
   [`containers`](/.docs/generated/explore/tags/containers.md) [`devops`](/.docs/generated/explore/tags/devops.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`kubernetes`](/.docs/generated/explore/tags/kubernetes.md)
 - [Build and Install NHC](/fields/system-administration/node-health-check/build-and-install.md) — Get NHC onto your nodes from a release RPM, the release tarball or the Git tree, run its unit tests and know where every file lands. *(beginner · 5 min)*  
   [`hpc`](/.docs/generated/explore/tags/hpc.md)
+- [Case Study: "Build Us an NHC", From a Vague Ask to a Validated Proposal](/fields/system-administration/node-health-check/case-study-build-me-an-nhc.md) — A client asks for an NHC for their DGX H100 and AMD EPYC Slurm cluster; the discovery questions, first proposal, validation against vendor specs, and the final answer. *(advanced · 17 min)*  
+  [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [Containers 101](/fields/libraries-frameworks-containers/101-containers.md) *(8 min)*  
   [`containers`](/.docs/generated/explore/tags/containers.md)
 - [CPU Affinity](/programming/operating-system/process-cpu-affinity.md) *(5 min)*  

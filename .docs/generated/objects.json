@@ -522,13 +522,43 @@
       "guide"
     ]
   },
+  "nhc-case-study": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "nhc-case-study",
+    "level": "advanced",
+    "order": 10,
+    "path": "fields/system-administration/node-health-check/case-study-build-me-an-nhc.md",
+    "reading_time_min": 17,
+    "relations": {
+      "prerequisites": [
+        "nhc-architecture-driven"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "A client asks for an NHC for their DGX H100 and AMD EPYC Slurm cluster; the discovery questions, first proposal, validation against vendor specs, and the final answer.",
+    "tags": [
+      "gpu",
+      "hpc",
+      "nvidia",
+      "slurm"
+    ],
+    "title": "Case Study: \"Build Us an NHC\", From a Vague Ask to a Validated Proposal",
+    "type": "guide",
+    "types": [
+      "guide",
+      "project"
+    ]
+  },
   "nhc-cheat-sheet": {
     "domains": [
       "systems-and-hpc"
     ],
     "id": "nhc-cheat-sheet",
     "level": "intermediate",
-    "order": 10,
+    "order": 11,
     "path": "fields/system-administration/node-health-check/cheat-sheet.md",
     "reading_time_min": 6,
     "relations": {

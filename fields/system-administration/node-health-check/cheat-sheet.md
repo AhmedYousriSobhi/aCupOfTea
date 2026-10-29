@@ -1,8 +1,8 @@
 ---
 id: nhc-cheat-sheet
 title: NHC Cheat Sheet
-sidebar_label: "10. Cheat sheet"
-order: 10
+sidebar_label: "11. Cheat sheet"
+order: 11
 summary: Every NHC command, option, variable, config pattern and Slurm knob from the series on one page.
 level: intermediate
 type: reference
@@ -14,7 +14,7 @@ relations:
 
 # NHC Cheat Sheet
 
-> **Part 10 of the [Node Health Check series](/fields/system-administration/node-health-check/README.md).** The whole series in one sip. Each section links back to the page that explains it.
+> **Part 11 of the [Node Health Check series](/fields/system-administration/node-health-check/README.md).** The whole series in one sip. Each section links back to the page that explains it.
 
 ## Everyday commands
 
