@@ -64,6 +64,7 @@
       "cuda-101",
       "nccl-collective-communication",
       "nhc-architecture-driven",
+      "nhc-case-study",
       "nhc-custom-checks",
       "nhc-writing-nhc-conf"
     ]
@@ -78,6 +79,7 @@
       "nhc-architecture-driven",
       "nhc-auto-remediation",
       "nhc-build-and-install",
+      "nhc-case-study",
       "nhc-cheat-sheet",
       "nhc-custom-checks",
       "nhc-rollout-at-scale",
@@ -129,6 +131,7 @@
     "objects": [
       "broken-pods-rogues-gallery",
       "fake-gpus-in-kubernetes",
+      "nhc-case-study",
       "nhc-custom-checks",
       "nvidia-cluster-readiness-engine"
     ]
@@ -162,6 +165,7 @@
     "objects": [
       "nhc-architecture-driven",
       "nhc-auto-remediation",
+      "nhc-case-study",
       "nhc-cheat-sheet",
       "nhc-rollout-at-scale",
       "nhc-slurm-integration",

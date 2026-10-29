@@ -1,6 +1,6 @@
 # Node Health Check - Overview
 
-> A ten-part series on **LBNL Node Health Check (NHC)**, the small bash framework that big HPC clusters trust to decide whether a compute node deserves a job. Read it in order the first time; come back to the troubleshooting page and cheat sheet whenever a node misbehaves at 2 AM.
+> An eleven-part series on **LBNL Node Health Check (NHC)**, the small bash framework that big HPC clusters trust to decide whether a compute node deserves a job. Read it in order the first time; come back to the troubleshooting page and cheat sheet whenever a node misbehaves at 2 AM.
 
 ## Who this is for
 
@@ -19,7 +19,8 @@ Cluster admins and HPC/AI platform engineers who run Slurm (or PBS, or Grid Engi
 | 7 | [Auto-remediation](/fields/system-administration/node-health-check/auto-remediation.md) | A safe detect → drain → fix → verify → resume loop with guard rails |
 | 8 | [Troubleshooting](/fields/system-administration/node-health-check/troubleshooting.md) | Symptom-first fixes for the classic NHC headaches |
 | 9 | [Architecture-driven NHC](/fields/system-administration/node-health-check/architecture-driven-nhc.md) | NHC generated from one cluster definition, cross-checked with `slurm.conf` and tested with real NHC |
-| 10 | [Cheat sheet](/fields/system-administration/node-health-check/cheat-sheet.md) | Every command and knob from the series on one page |
+| 10 | [Case study: build us an NHC](/fields/system-administration/node-health-check/case-study-build-me-an-nhc.md) | A client engagement on DGX H100 + AMD EPYC hardware: discovery questions, proposal, validation, final answer |
+| 11 | [Cheat sheet](/fields/system-administration/node-health-check/cheat-sheet.md) | Every command and knob from the series on one page |
 
 ## Contents
 
@@ -34,9 +35,10 @@ Cluster admins and HPC/AI platform engineers who run Slurm (or PBS, or Grid Engi
 | [architecture-driven-nhc](/fields/system-administration/node-health-check/architecture-driven-nhc.md) | Generating NHC configs from an architecture definition |
 | [auto-remediation](/fields/system-administration/node-health-check/auto-remediation.md) | Automating fixes without automating disasters |
 | [troubleshooting](/fields/system-administration/node-health-check/troubleshooting.md) | Symptom-first troubleshooting guide |
+| [case-study-build-me-an-nhc](/fields/system-administration/node-health-check/case-study-build-me-an-nhc.md) | Consulting case study: from a vague request to a validated proposal |
 | [cheat-sheet](/fields/system-administration/node-health-check/cheat-sheet.md) | Commands, options and variables at a glance |
 
-Example files for part 9: [`cluster-example.yaml`](/fields/system-administration/node-health-check/cluster-example.yaml), [`nhc_gen.py`](/fields/system-administration/node-health-check/nhc_gen.py), [`acme_arch.nhc`](/fields/system-administration/node-health-check/acme_arch.nhc).
+Tools and inputs for parts 9-10: [`nhc_gen.py`](/fields/system-administration/node-health-check/nhc_gen.py), [`acme_arch.nhc`](/fields/system-administration/node-health-check/acme_arch.nhc), [`nhc_test_harness.sh`](/fields/system-administration/node-health-check/nhc_test_harness.sh), [`cluster-example.yaml`](/fields/system-administration/node-health-check/cluster-example.yaml), [`case-study-delta-cluster.yaml`](/fields/system-administration/node-health-check/case-study-delta-cluster.yaml), [`case-study-delta-expected.txt`](/fields/system-administration/node-health-check/case-study-delta-expected.txt).
 
 ## Versions this series targets
 

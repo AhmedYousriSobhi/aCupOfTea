@@ -325,7 +325,13 @@
       }
     ],
     "related": [],
-    "required_by": []
+    "required_by": [
+      {
+        "id": "nhc-case-study",
+        "path": "fields/system-administration/node-health-check/case-study-build-me-an-nhc.md",
+        "title": "Case Study: \"Build Us an NHC\", From a Vague Ask to a Validated Proposal"
+      }
+    ]
   },
   "fields/system-administration/node-health-check/auto-remediation.md": {
     "prerequisites": [
@@ -359,6 +365,17 @@
         "title": "Writing nhc.conf That Actually Fits Your Cluster"
       }
     ]
+  },
+  "fields/system-administration/node-health-check/case-study-build-me-an-nhc.md": {
+    "prerequisites": [
+      {
+        "id": "nhc-architecture-driven",
+        "path": "fields/system-administration/node-health-check/architecture-driven-nhc.md",
+        "title": "Architecture-Driven NHC: Generate Health Checks from Your Cluster's Definition"
+      }
+    ],
+    "related": [],
+    "required_by": []
   },
   "fields/system-administration/node-health-check/cheat-sheet.md": {
     "prerequisites": [],
