@@ -117,6 +117,82 @@
     ],
     "related_by": []
   },
+  "gpu-failure-prediction-overview": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "nhc-auto-remediation"
+    ],
+    "related_by": []
+  },
+  "gpu-pred-alert-to-drain": {
+    "prerequisite_of": [
+      "gpu-pred-backtesting"
+    ],
+    "prerequisites": [
+      "gpu-pred-rules"
+    ],
+    "related": [
+      "nhc-auto-remediation"
+    ],
+    "related_by": [
+      "gpu-pred-runbook"
+    ]
+  },
+  "gpu-pred-backtesting": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "gpu-pred-alert-to-drain"
+    ],
+    "related": [],
+    "related_by": [
+      "gpu-pred-runbook"
+    ]
+  },
+  "gpu-pred-collecting-signals": {
+    "prerequisite_of": [
+      "gpu-pred-rules"
+    ],
+    "prerequisites": [
+      "gpu-pred-what-fails"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "gpu-pred-rules": {
+    "prerequisite_of": [
+      "gpu-pred-alert-to-drain"
+    ],
+    "prerequisites": [
+      "gpu-pred-collecting-signals"
+    ],
+    "related": [],
+    "related_by": [
+      "gpu-pred-runbook"
+    ]
+  },
+  "gpu-pred-runbook": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "gpu-pred-what-fails"
+    ],
+    "related": [
+      "gpu-pred-alert-to-drain",
+      "gpu-pred-backtesting",
+      "gpu-pred-rules",
+      "nhc-auto-remediation"
+    ],
+    "related_by": []
+  },
+  "gpu-pred-what-fails": {
+    "prerequisite_of": [
+      "gpu-pred-collecting-signals",
+      "gpu-pred-runbook"
+    ],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
   "hpc-systems-overview": {
     "prerequisite_of": [],
     "prerequisites": [],
@@ -143,6 +219,48 @@
     ],
     "prerequisites": [
       "containers-101"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "llm-inference-performance-overview": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "llm-perf-compute-vs-memory-bound": {
+    "prerequisite_of": [
+      "llm-perf-inference-roofline"
+    ],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "llm-perf-inference-roofline": {
+    "prerequisite_of": [
+      "llm-perf-sizing-70b"
+    ],
+    "prerequisites": [
+      "llm-perf-compute-vs-memory-bound"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "llm-perf-optimizations": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "llm-perf-sizing-70b"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "llm-perf-sizing-70b": {
+    "prerequisite_of": [
+      "llm-perf-optimizations"
+    ],
+    "prerequisites": [
+      "llm-perf-inference-roofline"
     ],
     "related": [],
     "related_by": []
@@ -174,7 +292,11 @@
       "nhc-slurm-integration"
     ],
     "related": [],
-    "related_by": []
+    "related_by": [
+      "gpu-failure-prediction-overview",
+      "gpu-pred-alert-to-drain",
+      "gpu-pred-runbook"
+    ]
   },
   "nhc-build-and-install": {
     "prerequisite_of": [
@@ -374,6 +496,38 @@
     "prerequisite_of": [],
     "prerequisites": [
       "containers-101"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "slurm-mixed-gpus-four-ways": {
+    "prerequisite_of": [
+      "slurm-mixed-gpus-why-disappoints"
+    ],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "slurm-mixed-gpus-overview": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "slurm-mixed-gpus-where-shine": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "slurm-mixed-gpus-why-disappoints"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "slurm-mixed-gpus-why-disappoints": {
+    "prerequisite_of": [
+      "slurm-mixed-gpus-where-shine"
+    ],
+    "prerequisites": [
+      "slurm-mixed-gpus-four-ways"
     ],
     "related": [],
     "related_by": []
