@@ -10,5 +10,6 @@ Generative artificial intelligence (/AI) describes algorithms (/such as ChatGPT)
 | [langchain](/fields/generative-ai/langchain/README.md) | LangChain framework for LLM applications |
 | [llm-vscode](/fields/generative-ai/llm-vscode/README.md) | LLM integration with VS Code |
 | [machine-translator](/fields/generative-ai/machine-translator/README.md) | Machine translation implementations |
+| [llm-inference-performance](/fields/generative-ai/llm-inference-performance/README.md) | Machine translation implementations |
 
 Covers LLMs, prompt engineering, and generative model applications.

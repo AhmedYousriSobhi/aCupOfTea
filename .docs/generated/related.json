@@ -214,6 +214,62 @@
     ],
     "required_by": []
   },
+  "fields/generative-ai/llm-inference-performance/compute-bound-vs-memory-bound.md": {
+    "prerequisites": [],
+    "related": [],
+    "required_by": [
+      {
+        "id": "llm-perf-inference-roofline",
+        "path": "fields/generative-ai/llm-inference-performance/llm-inference-on-the-roofline.md",
+        "title": "LLM Inference on the Roofline"
+      }
+    ]
+  },
+  "fields/generative-ai/llm-inference-performance/llm-inference-on-the-roofline.md": {
+    "prerequisites": [
+      {
+        "id": "llm-perf-compute-vs-memory-bound",
+        "path": "fields/generative-ai/llm-inference-performance/compute-bound-vs-memory-bound.md",
+        "title": "Compute-Bound vs Memory-Bandwidth-Bound"
+      }
+    ],
+    "related": [],
+    "required_by": [
+      {
+        "id": "llm-perf-sizing-70b",
+        "path": "fields/generative-ai/llm-inference-performance/sizing-a-70b-model.md",
+        "title": "Sizing a 70B Model with a Pencil"
+      }
+    ]
+  },
+  "fields/generative-ai/llm-inference-performance/optimizations-on-the-roofline.md": {
+    "prerequisites": [
+      {
+        "id": "llm-perf-sizing-70b",
+        "path": "fields/generative-ai/llm-inference-performance/sizing-a-70b-model.md",
+        "title": "Sizing a 70B Model with a Pencil"
+      }
+    ],
+    "related": [],
+    "required_by": []
+  },
+  "fields/generative-ai/llm-inference-performance/sizing-a-70b-model.md": {
+    "prerequisites": [
+      {
+        "id": "llm-perf-inference-roofline",
+        "path": "fields/generative-ai/llm-inference-performance/llm-inference-on-the-roofline.md",
+        "title": "LLM Inference on the Roofline"
+      }
+    ],
+    "related": [],
+    "required_by": [
+      {
+        "id": "llm-perf-optimizations",
+        "path": "fields/generative-ai/llm-inference-performance/optimizations-on-the-roofline.md",
+        "title": "Optimizations, Mapped to the Roofline"
+      }
+    ]
+  },
   "fields/generative-ai/machine-translator/encoder-decoder.md": {
     "prerequisites": [
       {
@@ -306,6 +362,189 @@
     ],
     "required_by": []
   },
+  "fields/schedulers/slurm-mixed-gpus/four-ways-to-mix-gpus.md": {
+    "prerequisites": [],
+    "related": [],
+    "required_by": [
+      {
+        "id": "slurm-mixed-gpus-why-disappoints",
+        "path": "fields/schedulers/slurm-mixed-gpus/why-mixed-training-disappoints.md",
+        "title": "Why Mixed-GPU Training Disappoints"
+      }
+    ]
+  },
+  "fields/schedulers/slurm-mixed-gpus/where-hetjobs-shine.md": {
+    "prerequisites": [
+      {
+        "id": "slurm-mixed-gpus-why-disappoints",
+        "path": "fields/schedulers/slurm-mixed-gpus/why-mixed-training-disappoints.md",
+        "title": "Why Mixed-GPU Training Disappoints"
+      }
+    ],
+    "related": [],
+    "required_by": []
+  },
+  "fields/schedulers/slurm-mixed-gpus/why-mixed-training-disappoints.md": {
+    "prerequisites": [
+      {
+        "id": "slurm-mixed-gpus-four-ways",
+        "path": "fields/schedulers/slurm-mixed-gpus/four-ways-to-mix-gpus.md",
+        "title": "Four Ways to Ask Slurm for Mixed GPUs"
+      }
+    ],
+    "related": [],
+    "required_by": [
+      {
+        "id": "slurm-mixed-gpus-where-shine",
+        "path": "fields/schedulers/slurm-mixed-gpus/where-hetjobs-shine.md",
+        "title": "Where Heterogeneous Jobs Shine"
+      }
+    ]
+  },
+  "fields/system-administration/gpu-failure-prediction/README.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "nhc-auto-remediation",
+        "path": "fields/system-administration/node-health-check/auto-remediation.md",
+        "title": "Auto-Remediation: From Detected to Fixed, Safely"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/system-administration/gpu-failure-prediction/collecting-the-signals.md": {
+    "prerequisites": [
+      {
+        "id": "gpu-pred-what-fails",
+        "path": "fields/system-administration/gpu-failure-prediction/what-fails-and-what-warns.md",
+        "title": "How GPU Memory Fails, and Why You Can See It Coming"
+      }
+    ],
+    "related": [],
+    "required_by": [
+      {
+        "id": "gpu-pred-rules",
+        "path": "fields/system-administration/gpu-failure-prediction/rules-that-predict.md",
+        "title": "From Signals to Decisions"
+      }
+    ]
+  },
+  "fields/system-administration/gpu-failure-prediction/from-alert-to-drain.md": {
+    "prerequisites": [
+      {
+        "id": "gpu-pred-rules",
+        "path": "fields/system-administration/gpu-failure-prediction/rules-that-predict.md",
+        "title": "From Signals to Decisions"
+      }
+    ],
+    "related": [
+      {
+        "id": "nhc-auto-remediation",
+        "path": "fields/system-administration/node-health-check/auto-remediation.md",
+        "title": "Auto-Remediation: From Detected to Fixed, Safely"
+      },
+      {
+        "id": "gpu-pred-runbook",
+        "path": "fields/system-administration/gpu-failure-prediction/runbook.md",
+        "title": "Runbook: Deploying GPU Failure Prediction End to End"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "gpu-pred-backtesting",
+        "path": "fields/system-administration/gpu-failure-prediction/scoring-and-backtesting.md",
+        "title": "Is the Prediction Any Good?"
+      }
+    ]
+  },
+  "fields/system-administration/gpu-failure-prediction/rules-that-predict.md": {
+    "prerequisites": [
+      {
+        "id": "gpu-pred-collecting-signals",
+        "path": "fields/system-administration/gpu-failure-prediction/collecting-the-signals.md",
+        "title": "Reading the GPU's Vital Signs"
+      }
+    ],
+    "related": [
+      {
+        "id": "gpu-pred-runbook",
+        "path": "fields/system-administration/gpu-failure-prediction/runbook.md",
+        "title": "Runbook: Deploying GPU Failure Prediction End to End"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "gpu-pred-alert-to-drain",
+        "path": "fields/system-administration/gpu-failure-prediction/from-alert-to-drain.md",
+        "title": "Acting Without Making It Worse"
+      }
+    ]
+  },
+  "fields/system-administration/gpu-failure-prediction/runbook.md": {
+    "prerequisites": [
+      {
+        "id": "gpu-pred-what-fails",
+        "path": "fields/system-administration/gpu-failure-prediction/what-fails-and-what-warns.md",
+        "title": "How GPU Memory Fails, and Why You Can See It Coming"
+      }
+    ],
+    "related": [
+      {
+        "id": "gpu-pred-alert-to-drain",
+        "path": "fields/system-administration/gpu-failure-prediction/from-alert-to-drain.md",
+        "title": "Acting Without Making It Worse"
+      },
+      {
+        "id": "nhc-auto-remediation",
+        "path": "fields/system-administration/node-health-check/auto-remediation.md",
+        "title": "Auto-Remediation: From Detected to Fixed, Safely"
+      },
+      {
+        "id": "gpu-pred-rules",
+        "path": "fields/system-administration/gpu-failure-prediction/rules-that-predict.md",
+        "title": "From Signals to Decisions"
+      },
+      {
+        "id": "gpu-pred-backtesting",
+        "path": "fields/system-administration/gpu-failure-prediction/scoring-and-backtesting.md",
+        "title": "Is the Prediction Any Good?"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/system-administration/gpu-failure-prediction/scoring-and-backtesting.md": {
+    "prerequisites": [
+      {
+        "id": "gpu-pred-alert-to-drain",
+        "path": "fields/system-administration/gpu-failure-prediction/from-alert-to-drain.md",
+        "title": "Acting Without Making It Worse"
+      }
+    ],
+    "related": [
+      {
+        "id": "gpu-pred-runbook",
+        "path": "fields/system-administration/gpu-failure-prediction/runbook.md",
+        "title": "Runbook: Deploying GPU Failure Prediction End to End"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/system-administration/gpu-failure-prediction/what-fails-and-what-warns.md": {
+    "prerequisites": [],
+    "related": [],
+    "required_by": [
+      {
+        "id": "gpu-pred-collecting-signals",
+        "path": "fields/system-administration/gpu-failure-prediction/collecting-the-signals.md",
+        "title": "Reading the GPU's Vital Signs"
+      },
+      {
+        "id": "gpu-pred-runbook",
+        "path": "fields/system-administration/gpu-failure-prediction/runbook.md",
+        "title": "Runbook: Deploying GPU Failure Prediction End to End"
+      }
+    ]
+  },
   "fields/system-administration/node-health-check/architecture-driven-nhc.md": {
     "prerequisites": [
       {
@@ -346,7 +585,23 @@
         "title": "Rolling NHC Out to a Fleet Without Draining Everything"
       }
     ],
-    "related": [],
+    "related": [
+      {
+        "id": "gpu-pred-alert-to-drain",
+        "path": "fields/system-administration/gpu-failure-prediction/from-alert-to-drain.md",
+        "title": "Acting Without Making It Worse"
+      },
+      {
+        "id": "gpu-failure-prediction-overview",
+        "path": "fields/system-administration/gpu-failure-prediction/README.md",
+        "title": "Predicting GPU Node Failures - Overview"
+      },
+      {
+        "id": "gpu-pred-runbook",
+        "path": "fields/system-administration/gpu-failure-prediction/runbook.md",
+        "title": "Runbook: Deploying GPU Failure Prediction End to End"
+      }
+    ],
     "required_by": []
   },
   "fields/system-administration/node-health-check/build-and-install.md": {

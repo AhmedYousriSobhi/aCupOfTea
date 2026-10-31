@@ -45,7 +45,7 @@ domains:
   generative-ai:
     label: Generative AI
     description: Generative models, LLMs and their tooling.
-    related: [deep-learning, natural-language-processing, machine-learning]
+    related: [deep-learning, natural-language-processing, machine-learning, systems-and-hpc]
   natural-language-processing:
     label: Natural Language Processing
     description: Text and language modelling, translation, sequence tasks.

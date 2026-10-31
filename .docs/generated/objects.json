@@ -337,6 +337,209 @@
       "guide"
     ]
   },
+  "gpu-failure-prediction-overview": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "gpu-failure-prediction-overview",
+    "level": "advanced",
+    "path": "fields/system-administration/gpu-failure-prediction/README.md",
+    "reading_time_min": 5,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "nhc-auto-remediation"
+      ]
+    },
+    "status": "stable",
+    "summary": "A five-part series on how GPU memory fails, what its telemetry really says, and how to turn that into predictions you can trust before a training run dies.",
+    "tags": [
+      "gpu",
+      "hpc",
+      "nvidia",
+      "slurm"
+    ],
+    "title": "Predicting GPU Node Failures - Overview",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "gpu-pred-alert-to-drain": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "gpu-pred-alert-to-drain",
+    "level": "advanced",
+    "order": 4,
+    "path": "fields/system-administration/gpu-failure-prediction/from-alert-to-drain.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [
+        "gpu-pred-rules"
+      ],
+      "related": [
+        "nhc-auto-remediation"
+      ]
+    },
+    "status": "stable",
+    "summary": "The principles of safe automated response to GPU failure predictions - reversibility, drain semantics, blast radius, drain budgets, staged rollout and rollback.",
+    "tags": [
+      "gpu",
+      "hpc",
+      "nvidia",
+      "slurm"
+    ],
+    "title": "Acting Without Making It Worse",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "gpu-pred-backtesting": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "gpu-pred-backtesting",
+    "level": "advanced",
+    "order": 5,
+    "path": "fields/system-administration/gpu-failure-prediction/scoring-and-backtesting.md",
+    "reading_time_min": 10,
+    "relations": {
+      "prerequisites": [
+        "gpu-pred-alert-to-drain"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "How to judge GPU failure predictions - base rates, precision, recall, lead time, horizons, label quality, leakage and drift - and when a learned model is worth it.",
+    "tags": [
+      "gpu",
+      "hpc",
+      "nvidia"
+    ],
+    "title": "Is the Prediction Any Good?",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "gpu-pred-collecting-signals": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "gpu-pred-collecting-signals",
+    "level": "intermediate",
+    "order": 2,
+    "path": "fields/system-administration/gpu-failure-prediction/collecting-the-signals.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [
+        "gpu-pred-what-fails"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "The telemetry concepts behind GPU failure prediction - counters, gauges and events, volatile versus persistent, in-band versus out-of-band - and the ways each one misleads.",
+    "tags": [
+      "gpu",
+      "hpc",
+      "nvidia"
+    ],
+    "title": "Reading the GPU's Vital Signs",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "gpu-pred-rules": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "gpu-pred-rules",
+    "level": "advanced",
+    "order": 3,
+    "path": "fields/system-administration/gpu-failure-prediction/rules-that-predict.md",
+    "reading_time_min": 10,
+    "relations": {
+      "prerequisites": [
+        "gpu-pred-collecting-signals"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "How to design GPU failure rules - state, event and trend rules, personal baselines, persistence, noise floors and action tiers - and the traps that make rules silently fail.",
+    "tags": [
+      "gpu",
+      "hpc",
+      "nvidia"
+    ],
+    "title": "From Signals to Decisions",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "gpu-pred-runbook": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "gpu-pred-runbook",
+    "level": "advanced",
+    "order": 6,
+    "path": "fields/system-administration/gpu-failure-prediction/runbook.md",
+    "reading_time_min": 15,
+    "relations": {
+      "prerequisites": [
+        "gpu-pred-what-fails"
+      ],
+      "related": [
+        "gpu-pred-alert-to-drain",
+        "gpu-pred-backtesting",
+        "gpu-pred-rules",
+        "nhc-auto-remediation"
+      ]
+    },
+    "status": "stable",
+    "summary": "The hands-on companion to the series - counters file, node checks, tested Prometheus rules, Alertmanager routing, a guarded Slurm drain hook and a backtest, step by step.",
+    "tags": [
+      "gpu",
+      "hpc",
+      "nvidia",
+      "slurm"
+    ],
+    "title": "Runbook: Deploying GPU Failure Prediction End to End",
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
+  },
+  "gpu-pred-what-fails": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "gpu-pred-what-fails",
+    "level": "intermediate",
+    "order": 1,
+    "path": "fields/system-administration/gpu-failure-prediction/what-fails-and-what-warns.md",
+    "reading_time_min": 11,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "How ECC, row remapping and error containment work on NVIDIA GPUs, why memory errors repeat and cluster, and the error ladder that makes failure predictable.",
+    "tags": [
+      "gpu",
+      "hpc",
+      "nvidia"
+    ],
+    "title": "How GPU Memory Fails, and Why You Can See It Coming",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
   "hpc-systems-overview": {
     "domains": [
       "business",
@@ -408,6 +611,148 @@
     "types": [
       "concept",
       "guide"
+    ]
+  },
+  "llm-inference-performance-overview": {
+    "domains": [
+      "generative-ai",
+      "systems-and-hpc"
+    ],
+    "id": "llm-inference-performance-overview",
+    "level": "intermediate",
+    "path": "fields/generative-ai/llm-inference-performance/README.md",
+    "reading_time_min": 4,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Why a GPU with 3x the TFLOPS can make your chatbot only 1.6x faster - a four-part series on the roofline, LLM inference and the optimizations that actually work.",
+    "tags": [
+      "gpu",
+      "llm",
+      "nvidia",
+      "transformers"
+    ],
+    "title": "LLM Inference Performance - Overview",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "llm-perf-compute-vs-memory-bound": {
+    "domains": [
+      "generative-ai",
+      "systems-and-hpc"
+    ],
+    "id": "llm-perf-compute-vs-memory-bound",
+    "level": "intermediate",
+    "order": 1,
+    "path": "fields/generative-ai/llm-inference-performance/compute-bound-vs-memory-bound.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Why a 3x faster GPU can give you 1.6x - arithmetic intensity, the ridge point and the roofline, explained with a pizza kitchen and two lines of arithmetic.",
+    "tags": [
+      "gpu",
+      "nvidia"
+    ],
+    "title": "Compute-Bound vs Memory-Bandwidth-Bound",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "llm-perf-inference-roofline": {
+    "domains": [
+      "generative-ai",
+      "systems-and-hpc"
+    ],
+    "id": "llm-perf-inference-roofline",
+    "level": "intermediate",
+    "order": 2,
+    "path": "fields/generative-ai/llm-inference-performance/llm-inference-on-the-roofline.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [
+        "llm-perf-compute-vs-memory-bound"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Why your chatbot reads a novel-length prompt in a blink but types its answer like a tired intern - prefill, decode, batching and the KV cache on the roofline.",
+    "tags": [
+      "gpu",
+      "llm",
+      "transformers"
+    ],
+    "title": "LLM Inference on the Roofline",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "llm-perf-optimizations": {
+    "domains": [
+      "generative-ai",
+      "systems-and-hpc"
+    ],
+    "id": "llm-perf-optimizations",
+    "level": "intermediate",
+    "order": 4,
+    "path": "fields/generative-ai/llm-inference-performance/optimizations-on-the-roofline.md",
+    "reading_time_min": 12,
+    "relations": {
+      "prerequisites": [
+        "llm-perf-sizing-70b"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Five proposals in one meeting, one roofline to judge them - batching, PagedAttention, quantization, tensor parallelism, FlashAttention, and how to measure which wall you hit.",
+    "tags": [
+      "gpu",
+      "llm",
+      "nvidia",
+      "transformers"
+    ],
+    "title": "Optimizations, Mapped to the Roofline",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "llm-perf-sizing-70b": {
+    "domains": [
+      "generative-ai",
+      "systems-and-hpc"
+    ],
+    "id": "llm-perf-sizing-70b",
+    "level": "intermediate",
+    "order": 3,
+    "path": "fields/generative-ai/llm-inference-performance/sizing-a-70b-model.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [
+        "llm-perf-inference-roofline"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "A live whiteboard walk-through - Llama 2 70B on 8xH100, from \"does it fit?\" to the exact token-rate ceilings at batch 1 and batch 64, using only a datasheet.",
+    "tags": [
+      "gpu",
+      "llm",
+      "nvidia",
+      "transformers"
+    ],
+    "title": "Sizing a 70B Model with a Pencil",
+    "type": "concept",
+    "types": [
+      "concept"
     ]
   },
   "nccl-collective-communication": {
@@ -1088,6 +1433,116 @@
     "type": "guide",
     "types": [
       "guide"
+    ]
+  },
+  "slurm-mixed-gpus-four-ways": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-mixed-gpus-four-ways",
+    "level": "intermediate",
+    "order": 1,
+    "path": "fields/schedulers/slurm-mixed-gpus/four-ways-to-mix-gpus.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Typed GRES, constraint operators, heterogeneous jobs and heterogeneous steps - what each one actually allocates, and the one-character constraint that mixes GPU types by accident.",
+    "tags": [
+      "gpu",
+      "hpc",
+      "slurm"
+    ],
+    "title": "Four Ways to Ask Slurm for Mixed GPUs",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "slurm-mixed-gpus-overview": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-mixed-gpus-overview",
+    "level": "intermediate",
+    "path": "fields/schedulers/slurm-mixed-gpus/README.md",
+    "reading_time_min": 3,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Slurm can allocate H100s and A100s in one job - four different ways. A three-part series on what each actually gives you, why mixed training disappoints, and where it shines.",
+    "tags": [
+      "gpu",
+      "hpc",
+      "nvidia",
+      "slurm"
+    ],
+    "title": "Mixing GPU Types in Slurm - Overview",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "slurm-mixed-gpus-where-shine": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-mixed-gpus-where-shine",
+    "level": "intermediate",
+    "order": 3,
+    "path": "fields/schedulers/slurm-mixed-gpus/where-hetjobs-shine.md",
+    "reading_time_min": 10,
+    "relations": {
+      "prerequisites": [
+        "slurm-mixed-gpus-why-disappoints"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "The workloads where mixing GPU types in one Slurm job is exactly right, how admins should label and guard a multi-generation cluster, a decision table, and the interview answer.",
+    "tags": [
+      "gpu",
+      "hpc",
+      "nvidia",
+      "slurm"
+    ],
+    "title": "Where Heterogeneous Jobs Shine",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "slurm-mixed-gpus-why-disappoints": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-mixed-gpus-why-disappoints",
+    "level": "intermediate",
+    "order": 2,
+    "path": "fields/schedulers/slurm-mixed-gpus/why-mixed-training-disappoints.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [
+        "slurm-mixed-gpus-four-ways"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Why 8 H100s plus 8 A100s train like 16 A100s, which H100 features the A100s switch off, and what co-scheduling a heterogeneous job costs you in the queue.",
+    "tags": [
+      "gpu",
+      "hpc",
+      "nvidia",
+      "slurm"
+    ],
+    "title": "Why Mixed-GPU Training Disappoints",
+    "type": "concept",
+    "types": [
+      "concept"
     ]
   },
   "slurm-pam-adopt-ssh-access": {

@@ -38,6 +38,11 @@
     "label": "Generative AI",
     "objects": [
       "encoder-decoder-machine-translation",
+      "llm-inference-performance-overview",
+      "llm-perf-compute-vs-memory-bound",
+      "llm-perf-inference-roofline",
+      "llm-perf-optimizations",
+      "llm-perf-sizing-70b",
       "sequence-models"
     ]
   },
@@ -144,9 +149,21 @@
       "cuda-101",
       "fake-gpus-in-kubernetes",
       "gpu-allocation-vs-utilization",
+      "gpu-failure-prediction-overview",
+      "gpu-pred-alert-to-drain",
+      "gpu-pred-backtesting",
+      "gpu-pred-collecting-signals",
+      "gpu-pred-rules",
+      "gpu-pred-runbook",
+      "gpu-pred-what-fails",
       "hpc-systems-overview",
       "hpc-workloads",
       "kubernetes-in-five-nouns",
+      "llm-inference-performance-overview",
+      "llm-perf-compute-vs-memory-bound",
+      "llm-perf-inference-roofline",
+      "llm-perf-optimizations",
+      "llm-perf-sizing-70b",
       "nccl-collective-communication",
       "nhc-architecture-driven",
       "nhc-auto-remediation",
@@ -163,6 +180,10 @@
       "parallel-execution-and-affinity",
       "pytorch-ddp",
       "singularity-containers",
+      "slurm-mixed-gpus-four-ways",
+      "slurm-mixed-gpus-overview",
+      "slurm-mixed-gpus-where-shine",
+      "slurm-mixed-gpus-why-disappoints",
       "slurm-pam-adopt-ssh-access"
     ]
   }
