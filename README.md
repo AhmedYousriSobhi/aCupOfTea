@@ -45,12 +45,12 @@ Not sure where to begin? Each of these takes one cup, roughly the reading time s
 
 ## 🆕 Recently added
 
-- 2026-10-28 · [Architecture-Driven NHC: Generate Health Checks from Your Cluster's Definition](/fields/system-administration/node-health-check/architecture-driven-nhc.md)
-- 2026-10-28 · [Auto-Remediation: From Detected to Fixed, Safely](/fields/system-administration/node-health-check/auto-remediation.md)
-- 2026-10-28 · [Build and Install NHC](/fields/system-administration/node-health-check/build-and-install.md)
-- 2026-10-28 · [NHC Cheat Sheet](/fields/system-administration/node-health-check/cheat-sheet.md)
-- 2026-10-28 · [Writing Your Own NHC Checks](/fields/system-administration/node-health-check/custom-checks.md)
-- 2026-10-28 · [Rolling NHC Out to a Fleet Without Draining Everything](/fields/system-administration/node-health-check/rollout-at-scale.md)
+- 2026-10-31 · [Compute-Bound vs Memory-Bandwidth-Bound](/fields/generative-ai/llm-inference-performance/compute-bound-vs-memory-bound.md)
+- 2026-10-31 · [LLM Inference on the Roofline](/fields/generative-ai/llm-inference-performance/llm-inference-on-the-roofline.md)
+- 2026-10-31 · [Optimizations, Mapped to the Roofline](/fields/generative-ai/llm-inference-performance/optimizations-on-the-roofline.md)
+- 2026-10-31 · [Sizing a 70B Model with a Pencil](/fields/generative-ai/llm-inference-performance/sizing-a-70b-model.md)
+- 2026-10-31 · [Four Ways to Ask Slurm for Mixed GPUs](/fields/schedulers/slurm-mixed-gpus/four-ways-to-mix-gpus.md)
+- 2026-10-31 · [Where Heterogeneous Jobs Shine](/fields/schedulers/slurm-mixed-gpus/where-hetjobs-shine.md)
 
 <!-- recent:end -->
 
