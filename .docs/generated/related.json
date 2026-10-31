@@ -136,7 +136,13 @@
         "title": "Containers 101"
       }
     ],
-    "required_by": []
+    "required_by": [
+      {
+        "id": "isolating-gpu-workloads",
+        "path": "fields/devops/kubernetes/isolating-gpu-workloads.md",
+        "title": "Isolating GPU Workloads: Taints, Labels and the Device Plugin"
+      }
+    ]
   },
   "fields/devops/kubernetes/gpu-allocation-vs-utilization.md": {
     "prerequisites": [
@@ -156,6 +162,57 @@
         "id": "containers-101",
         "path": "fields/libraries-frameworks-containers/101-containers.md",
         "title": "Containers 101"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "isolating-gpu-workloads",
+        "path": "fields/devops/kubernetes/isolating-gpu-workloads.md",
+        "title": "Isolating GPU Workloads: Taints, Labels and the Device Plugin"
+      }
+    ]
+  },
+  "fields/devops/kubernetes/isolating-gpu-workloads.md": {
+    "prerequisites": [
+      {
+        "id": "gpu-allocation-vs-utilization",
+        "path": "fields/devops/kubernetes/gpu-allocation-vs-utilization.md",
+        "title": "Booked Is Not Busy: GPU Allocation vs Utilization"
+      },
+      {
+        "id": "fake-gpus-in-kubernetes",
+        "path": "fields/devops/kubernetes/fake-gpus-in-kubernetes.md",
+        "title": "Fake GPUs in Kubernetes: Learn GPU Scheduling Without Owning a GPU"
+      }
+    ],
+    "related": [
+      {
+        "id": "slurm-accounting-multi-tenancy",
+        "path": "fields/schedulers/slurm-accounting-multi-tenancy.md",
+        "title": "Slurm Multi-Tenancy: Who Stores the Rules, Who Enforces Them"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "job-execution-journey",
+        "path": "fields/devops/kubernetes/job-execution-journey.md",
+        "title": "The Job Execution Journey: From `kubectl apply` to the First All-Reduce"
+      }
+    ]
+  },
+  "fields/devops/kubernetes/job-execution-journey.md": {
+    "prerequisites": [
+      {
+        "id": "isolating-gpu-workloads",
+        "path": "fields/devops/kubernetes/isolating-gpu-workloads.md",
+        "title": "Isolating GPU Workloads: Taints, Labels and the Device Plugin"
+      }
+    ],
+    "related": [
+      {
+        "id": "ai-storage-rdma-gpudirect",
+        "path": "fields/system-administration/ai-storage-and-fabric/rdma-infiniband-gpudirect.md",
+        "title": "RDMA, InfiniBand and GPUDirect: Taking the CPU Out of the Way"
       }
     ],
     "required_by": []
@@ -396,6 +453,33 @@
     ],
     "required_by": []
   },
+  "fields/schedulers/slurm-accounting-multi-tenancy.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "isolating-gpu-workloads",
+        "path": "fields/devops/kubernetes/isolating-gpu-workloads.md",
+        "title": "Isolating GPU Workloads: Taints, Labels and the Device Plugin"
+      },
+      {
+        "id": "slurm-mixed-gpus-overview",
+        "path": "fields/schedulers/slurm-mixed-gpus/README.md",
+        "title": "Mixing GPU Types in Slurm - Overview"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/schedulers/slurm-mixed-gpus/README.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "slurm-accounting-multi-tenancy",
+        "path": "fields/schedulers/slurm-accounting-multi-tenancy.md",
+        "title": "Slurm Multi-Tenancy: Who Stores the Rules, Who Enforces Them"
+      }
+    ],
+    "required_by": []
+  },
   "fields/schedulers/slurm-mixed-gpus/four-ways-to-mix-gpus.md": {
     "prerequisites": [],
     "related": [],
@@ -434,6 +518,34 @@
         "title": "Where Heterogeneous Jobs Shine"
       }
     ]
+  },
+  "fields/system-administration/ai-storage-and-fabric/parallel-filesystems-for-ai.md": {
+    "prerequisites": [],
+    "related": [],
+    "required_by": [
+      {
+        "id": "ai-storage-rdma-gpudirect",
+        "path": "fields/system-administration/ai-storage-and-fabric/rdma-infiniband-gpudirect.md",
+        "title": "RDMA, InfiniBand and GPUDirect: Taking the CPU Out of the Way"
+      }
+    ]
+  },
+  "fields/system-administration/ai-storage-and-fabric/rdma-infiniband-gpudirect.md": {
+    "prerequisites": [
+      {
+        "id": "ai-storage-parallel-filesystems",
+        "path": "fields/system-administration/ai-storage-and-fabric/parallel-filesystems-for-ai.md",
+        "title": "Parallel Filesystems: Why 10,000 GPUs Can Starve on a Full Disk"
+      }
+    ],
+    "related": [
+      {
+        "id": "job-execution-journey",
+        "path": "fields/devops/kubernetes/job-execution-journey.md",
+        "title": "The Job Execution Journey: From `kubectl apply` to the First All-Reduce"
+      }
+    ],
+    "required_by": []
   },
   "fields/system-administration/gpu-failure-prediction/README.md": {
     "prerequisites": [],

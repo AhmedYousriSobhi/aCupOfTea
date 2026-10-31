@@ -49,7 +49,7 @@ Picture a rowing boat with eight rowers. Four are Olympic athletes. Four are ent
 
 How fast does the boat go? The athletes finish each stroke early, then sit with oars raised, waiting. The boat moves at the **amateurs' pace**. The athletes add almost nothing.
 
-Standard **data-parallel training** is that boat. Every GPU processes its share of the batch, then all GPUs exchange gradients (an **all-reduce**) before anyone can take the next step. That exchange is a meeting point: nobody leaves until everybody arrives.
+Standard **data-parallel training** is that boat. Every GPU processes its share of the batch, then all GPUs exchange gradients (an **all-reduce**, on NVIDIA GPUs usually performed by the NCCL library) before anyone can take the next step. That exchange is a meeting point: nobody leaves until everybody arrives.
 
 So the rule is:
 
