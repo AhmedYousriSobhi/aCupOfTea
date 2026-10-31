@@ -2,11 +2,17 @@
 
 # Slurm
 
+- [Acting Without Making It Worse](/fields/system-administration/gpu-failure-prediction/from-alert-to-drain.md) — The principles of safe automated response to GPU failure predictions - reversibility, drain semantics, blast radius, drain budgets, staged rollout and rollback. *(advanced · 9 min)*  
+  [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [Architecture-Driven NHC: Generate Health Checks from Your Cluster's Definition](/fields/system-administration/node-health-check/architecture-driven-nhc.md) — Describe your cluster's architecture once in YAML, generate every NHC config from it, cross-check it against slurm.conf, and prove the result with real NHC before it ships. *(advanced · 12 min)*  
   [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [Auto-Remediation: From Detected to Fixed, Safely](/fields/system-administration/node-health-check/auto-remediation.md) — Turn NHC drains into automatic fixes with an escalation ladder, built-in fix actions, a node-doctor loop on the controller, and guard rails against reboot storms. *(advanced · 8 min)*  
   [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [Case Study: "Build Us an NHC", From a Vague Ask to a Validated Proposal](/fields/system-administration/node-health-check/case-study-build-me-an-nhc.md) — A client asks for an NHC for their DGX H100 and AMD EPYC Slurm cluster; the discovery questions, first proposal, validation against vendor specs, and the final answer. *(advanced · 17 min)*  
+  [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
+- [Four Ways to Ask Slurm for Mixed GPUs](/fields/schedulers/slurm-mixed-gpus/four-ways-to-mix-gpus.md) — Typed GRES, constraint operators, heterogeneous jobs and heterogeneous steps - what each one actually allocates, and the one-character constraint that mixes GPU types by accident. *(intermediate · 9 min)*  
+  [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
+- [Mixing GPU Types in Slurm - Overview](/fields/schedulers/slurm-mixed-gpus/README.md) — Slurm can allocate H100s and A100s in one job - four different ways. A three-part series on what each actually gives you, why mixed training disappoints, and where it shines. *(intermediate · 3 min)*  
   [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [NHC Cheat Sheet](/fields/system-administration/node-health-check/cheat-sheet.md) — Every NHC command, option, variable, config pattern and Slurm knob from the series on one page. *(intermediate · 6 min)*  
   [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
@@ -18,8 +24,16 @@
   [`affinity`](/.docs/generated/explore/tags/affinity.md) [`mpi`](/.docs/generated/explore/tags/mpi.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [Plugging NHC into Slurm (and Friends)](/fields/system-administration/node-health-check/slurm-integration.md) — The three slurm.conf lines, which node states to check, timeouts that don't fight each other, prolog and epilog patterns, reboots, plus PBS and cron. *(intermediate · 7 min)*  
   [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
+- [Predicting GPU Node Failures - Overview](/fields/system-administration/gpu-failure-prediction/README.md) — A five-part series on how GPU memory fails, what its telemetry really says, and how to turn that into predictions you can trust before a training run dies. *(advanced · 5 min)*  
+  [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [Rolling NHC Out to a Fleet Without Draining Everything](/fields/system-administration/node-health-check/rollout-at-scale.md) — A dry-run, canary, enforce plan for deploying NHC or a new nhc.conf to hundreds of nodes, with a circuit breaker for bad pushes. *(intermediate · 6 min)*  
   [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
+- [Runbook: Deploying GPU Failure Prediction End to End](/fields/system-administration/gpu-failure-prediction/runbook.md) — The hands-on companion to the series - counters file, node checks, tested Prometheus rules, Alertmanager routing, a guarded Slurm drain hook and a backtest, step by step. *(advanced · 15 min)*  
+  [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
+- [Where Heterogeneous Jobs Shine](/fields/schedulers/slurm-mixed-gpus/where-hetjobs-shine.md) — The workloads where mixing GPU types in one Slurm job is exactly right, how admins should label and guard a multi-generation cluster, a decision table, and the interview answer. *(intermediate · 10 min)*  
+  [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
+- [Why Mixed-GPU Training Disappoints](/fields/schedulers/slurm-mixed-gpus/why-mixed-training-disappoints.md) — Why 8 H100s plus 8 A100s train like 16 A100s, which H100 features the A100s switch off, and what co-scheduling a heterogeneous job costs you in the queue. *(intermediate · 9 min)*  
+  [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [Why Your Cluster Needs a Bouncer](/fields/system-administration/node-health-check/why-node-health-check.md) — One broken node can eat a whole queue of jobs; this is what NHC is, how it decides a node is sick, and how it tells the scheduler. *(beginner · 7 min)*  
   [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 

@@ -62,11 +62,27 @@
     "label": "GPU",
     "objects": [
       "cuda-101",
+      "gpu-failure-prediction-overview",
+      "gpu-pred-alert-to-drain",
+      "gpu-pred-backtesting",
+      "gpu-pred-collecting-signals",
+      "gpu-pred-rules",
+      "gpu-pred-runbook",
+      "gpu-pred-what-fails",
+      "llm-inference-performance-overview",
+      "llm-perf-compute-vs-memory-bound",
+      "llm-perf-inference-roofline",
+      "llm-perf-optimizations",
+      "llm-perf-sizing-70b",
       "nccl-collective-communication",
       "nhc-architecture-driven",
       "nhc-case-study",
       "nhc-custom-checks",
-      "nhc-writing-nhc-conf"
+      "nhc-writing-nhc-conf",
+      "slurm-mixed-gpus-four-ways",
+      "slurm-mixed-gpus-overview",
+      "slurm-mixed-gpus-where-shine",
+      "slurm-mixed-gpus-why-disappoints"
     ]
   },
   "hpc": {
@@ -76,6 +92,13 @@
       "build-a-two-node-k3s-lab",
       "fake-gpus-in-kubernetes",
       "gpu-allocation-vs-utilization",
+      "gpu-failure-prediction-overview",
+      "gpu-pred-alert-to-drain",
+      "gpu-pred-backtesting",
+      "gpu-pred-collecting-signals",
+      "gpu-pred-rules",
+      "gpu-pred-runbook",
+      "gpu-pred-what-fails",
       "nhc-architecture-driven",
       "nhc-auto-remediation",
       "nhc-build-and-install",
@@ -87,7 +110,11 @@
       "nhc-troubleshooting",
       "nhc-why-node-health-check",
       "nhc-writing-nhc-conf",
-      "nvidia-cluster-readiness-engine"
+      "nvidia-cluster-readiness-engine",
+      "slurm-mixed-gpus-four-ways",
+      "slurm-mixed-gpus-overview",
+      "slurm-mixed-gpus-where-shine",
+      "slurm-mixed-gpus-why-disappoints"
     ]
   },
   "kubernetes": {
@@ -104,6 +131,10 @@
   "llm": {
     "label": "Large Language Models",
     "objects": [
+      "llm-inference-performance-overview",
+      "llm-perf-inference-roofline",
+      "llm-perf-optimizations",
+      "llm-perf-sizing-70b",
       "sequence-models"
     ]
   },
@@ -131,9 +162,23 @@
     "objects": [
       "broken-pods-rogues-gallery",
       "fake-gpus-in-kubernetes",
+      "gpu-failure-prediction-overview",
+      "gpu-pred-alert-to-drain",
+      "gpu-pred-backtesting",
+      "gpu-pred-collecting-signals",
+      "gpu-pred-rules",
+      "gpu-pred-runbook",
+      "gpu-pred-what-fails",
+      "llm-inference-performance-overview",
+      "llm-perf-compute-vs-memory-bound",
+      "llm-perf-optimizations",
+      "llm-perf-sizing-70b",
       "nhc-case-study",
       "nhc-custom-checks",
-      "nvidia-cluster-readiness-engine"
+      "nvidia-cluster-readiness-engine",
+      "slurm-mixed-gpus-overview",
+      "slurm-mixed-gpus-where-shine",
+      "slurm-mixed-gpus-why-disappoints"
     ]
   },
   "programming": {
@@ -163,6 +208,9 @@
   "slurm": {
     "label": "Slurm",
     "objects": [
+      "gpu-failure-prediction-overview",
+      "gpu-pred-alert-to-drain",
+      "gpu-pred-runbook",
       "nhc-architecture-driven",
       "nhc-auto-remediation",
       "nhc-case-study",
@@ -172,6 +220,10 @@
       "nhc-troubleshooting",
       "nhc-why-node-health-check",
       "parallel-execution-and-affinity",
+      "slurm-mixed-gpus-four-ways",
+      "slurm-mixed-gpus-overview",
+      "slurm-mixed-gpus-where-shine",
+      "slurm-mixed-gpus-why-disappoints",
       "slurm-pam-adopt-ssh-access"
     ]
   },
@@ -202,6 +254,10 @@
   "transformers": {
     "label": "Transformers",
     "objects": [
+      "llm-inference-performance-overview",
+      "llm-perf-inference-roofline",
+      "llm-perf-optimizations",
+      "llm-perf-sizing-70b",
       "sequence-models"
     ]
   }

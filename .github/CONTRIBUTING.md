@@ -4,12 +4,28 @@ Got something worth a coffee break? Adding a page takes about five minutes, and 
 
 **The whole trip:** set up once → make a branch → write the page → let the checker nag you → open a pull request.
 
+Every task is one command of the form `cupctl <verb> <action>` (like `kubectl`). Run `cupctl` alone to list them all:
+
+| You want to | Command |
+|---|---|
+| start a topic branch | `cupctl branch new content/my-topic` |
+| write a page (questions in the terminal) | `cupctl page new` |
+| write a page (form in the browser) | `cupctl page gui` |
+| register a page you wrote by hand | `cupctl page adopt PAGE` |
+| change a page's summary, tags, level... | `cupctl page update PAGE` |
+| get a to-do list of what to fix | `cupctl page doctor` |
+| run every check and refresh menus and indexes | `cupctl check fix` |
+| see the site as deployed | `cupctl site build` then `cupctl site serve` |
+| prepare the `dev` → `main` release | `cupctl release prepare` |
+
+Extra flags go to the underlying script (`cupctl page new --dry-run`). `cupctl` is `.docs/tools/cupctl.py`; to type just `cupctl`, add `alias cupctl='python3 /path/to/aCupOfTea/.docs/tools/cupctl.py'` to your shell profile. The sections below show the plain script commands too.
+
 ## 1. Set up (once)
 
 ```bash
 git clone https://github.com/AhmedYousriSobhi/aCupOfTea.git
 cd aCupOfTea
-pip install PyYAML==6.0.2     # the only thing the scripts need (plus Python 3)
+pip install PyYAML==6.0.2     # the only thing the scripts need (plus Python 3); or: python3 .docs/tools/cupctl.py setup
 ```
 
 ## 2. One topic, one branch
@@ -17,8 +33,7 @@ pip install PyYAML==6.0.2     # the only thing the scripts need (plus Python 3)
 Always start from an up-to-date `dev` (never work on `dev` or `main` directly):
 
 ```bash
-git checkout dev && git pull
-git checkout -b content/attention-in-transformers
+cupctl branch new content/attention-in-transformers   # = fetch, then cut from origin/dev
 ```
 
 ## 3. Write the page: pick your path
@@ -26,7 +41,7 @@ git checkout -b content/attention-in-transformers
 ### 🖥️ I live in the terminal
 
 ```bash
-python3 .docs/tools/new_page.py
+cupctl page new      # = python3 .docs/tools/new_page.py
 ```
 
 It asks, you answer. **Enter accepts the suggestion** in brackets, a typo is asked again instead of crashing, and nothing is written until you have answered everything. Add `--dry-run` to only look.
@@ -51,7 +66,7 @@ No reading time to enter: the site counts it from your text.
 Want to skip the questions? Pass the answers:
 
 ```bash
-python3 .docs/tools/new_page.py --title "Attention in Transformers" \
+cupctl page new --title "Attention in Transformers" \
   --folder fields/deep-learning/concepts --type concept --domains deep-learning \
   --tags transformers --summary "How attention lets a model weigh every token." --yes
 ```
@@ -59,7 +74,7 @@ python3 .docs/tools/new_page.py --title "Attention in Transformers" \
 ### 🖱️ I prefer buttons
 
 ```bash
-python3 .docs/tools/new_page.py --gui
+cupctl page gui      # = new_page.py --gui
 ```
 
 A small form opens in your browser (it runs only on your own computer). Fill the five essentials; the cup fills up as you go.
@@ -79,7 +94,7 @@ Open the new file and replace the comments in the outline with your own words. Y
 ## 5. Let the checker nag you
 
 ```bash
-python3 .docs/tools/page_doctor.py
+cupctl page doctor   # = python3 .docs/tools/page_doctor.py
 ```
 
 It checks the pages you changed and gives you a to-do list: which file, which line, what to do. Type a number to open the problem in your editor, `f1` to apply the suggested fix (it shows the change and asks first).
@@ -93,7 +108,7 @@ Prefer clicking? The **Fix problems** tab shows the same list with **Open in edi
 CI runs the same checks. To run them all by hand, and update the sidebar, navbar and `.docs/generated` in one go, run this and commit what it changes:
 
 ```bash
-python3 .docs/tools/check_all.py --fix
+cupctl check fix     # = python3 .docs/tools/check_all.py --fix
 ```
 
 It runs `validate.py`, `check_links.py`, the generators and every `test_*.py`; without `--fix` it only reports a stale generated file, which is what CI does.
@@ -107,8 +122,8 @@ Look at the deployed version of your page in a browser before you push.
 1. Build the site and serve it:
 
    ```bash
-   python3 .docs/tools/stage_site.py --out _site
-   python3 -m http.server 8000 --directory _site
+   cupctl site build
+   cupctl site serve
    ```
 
 2. Open http://localhost:8000 and check:
@@ -117,9 +132,9 @@ Look at the deployed version of your page in a browser before you push.
    - it reads well in a narrow window (phone width).
 3. Stop the server with Ctrl+C. `_site/` is git-ignored.
 
-The preview is a snapshot: after you edit a page, stop the server, run `stage_site.py` again and reload. Run it from the branch you are about to push, so the preview matches what you send. Reading time, "Last updated" and the Related strip only appear in this built copy, not in a plain `docsify serve`.
+The preview is a snapshot: after you edit a page, stop the server, run `cupctl site build` again (`cupctl site build`) and reload. Run it from the branch you are about to push, so the preview matches what you send. Reading time, "Last updated" and the Related strip only appear in this built copy, not in a plain `docsify serve`.
 
-To see the reading time and what is still missing without a browser, run `python3 .docs/tools/new_page.py --check PAGE`.
+To see the reading time and what is still missing without a browser, run `cupctl page check PAGE`.
 
 ## 7. Send it
 
@@ -153,7 +168,7 @@ How the site (Docsify) handles it, so you know what to expect:
 <summary><b>I already wrote the page by hand</b></summary>
 
 ```bash
-python3 .docs/tools/new_page.py --adopt fields/deep-learning/concepts/attention-in-transformers.md
+cupctl page adopt fields/deep-learning/concepts/attention-in-transformers.md
 ```
 
 Adds the front matter and the folder index link without touching your text. It keeps any front matter that is already there and asks only for what is missing. In the form: the **Adopt a page** tab (type words of the path or title to filter the list).
@@ -163,7 +178,7 @@ Adds the front matter and the folder index link without touching your text. It k
 <summary><b>Change the summary, kind, subjects, tags or level later</b></summary>
 
 ```bash
-python3 .docs/tools/new_page.py --update fields/deep-learning/concepts/attention-in-transformers.md
+cupctl page update fields/deep-learning/concepts/attention-in-transformers.md
 ```
 
 Enter keeps the current value, `-` clears it. Only what you change is rewritten. In the form: the **Edit a page** tab.
@@ -174,7 +189,7 @@ Enter keeps the current value, `-` clears it. Only what you change is rewritten.
 
 - A lowercase-kebab-case file name: `my-topic.md`, starting with one `# Heading`.
 - Root-absolute links: `/fields/deep-learning/concepts/basics.md` (relative `../` links break on the site; images are the exception, see above).
-- Add the page to its folder's `README.md` table, then `cd .docs && ./gen_sidebar.sh && ./gen_navbar.sh`.
+- Add the page to its folder's `README.md` table, then `cupctl nav regen`.
 - Never edit the generated files (`.docs/_sidebar.md`, `.docs/_navbar.md`, `.docs/generated/`) by hand.
 </details>
 
@@ -182,7 +197,7 @@ Enter keeps the current value, `-` clears it. Only what you change is rewritten.
 <summary><b>Stop a broken push before it leaves your machine</b></summary>
 
 ```bash
-python3 .docs/tools/page_doctor.py --install-hook      # --uninstall-hook removes it
+cupctl hook install      # cupctl hook uninstall removes it
 ```
 
 A git hook that refuses a push when the changed files have an error (skip once with `git push --no-verify`).
