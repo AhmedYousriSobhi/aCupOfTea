@@ -19,6 +19,8 @@ A short series on Kubernetes, written by someone who runs GPU clusters for a liv
 | 4 | [Broken Pods, the Rogues' Gallery](/fields/devops/kubernetes/broken-pods-rogues-gallery.md) | CrashLoop, OOMKilled, ImagePull and Pending pods, and how to read each one | 7 min |
 | 5 | [GPU Allocation vs Utilization](/fields/devops/kubernetes/gpu-allocation-vs-utilization.md) | Booked is not busy: what the scheduler knows and what it doesn't | 6 min |
 | 6 | [NVIDIA Cluster Readiness Engine](/fields/devops/kubernetes/nvidia-cluster-readiness-engine.md) | Proving a GPU cluster is ready by running real workloads on it | 8 min |
+| 7 | [Isolating GPU Workloads](/fields/devops/kubernetes/isolating-gpu-workloads.md) | Device plugins, taints vs labels, the toleration trap, and gang scheduling | 9 min |
+| 8 | [The Job Execution Journey](/fields/devops/kubernetes/job-execution-journey.md) | From `kubectl apply` to the first NCCL all-reduce: six stops, in the right order | 12 min |
  
 ## Brewing next
  
@@ -30,4 +32,3 @@ These are planned and not written yet:
 - Polite API server monitoring
 - Kubernetes at HPC scale
 - A kubectl troubleshooting cheat sheet (this one will live in `tips/`)
- 

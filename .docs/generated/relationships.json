@@ -7,6 +7,36 @@
       "bias-variance-trade-off"
     ]
   },
+  "ai-infrastructure-core-concepts": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "ai-storage-and-fabric-overview": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "ai-storage-parallel-filesystems": {
+    "prerequisite_of": [
+      "ai-storage-rdma-gpudirect"
+    ],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "ai-storage-rdma-gpudirect": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "ai-storage-parallel-filesystems"
+    ],
+    "related": [],
+    "related_by": [
+      "job-execution-journey"
+    ]
+  },
   "bias-variance-trade-off": {
     "prerequisite_of": [],
     "prerequisites": [],
@@ -96,7 +126,9 @@
     ]
   },
   "fake-gpus-in-kubernetes": {
-    "prerequisite_of": [],
+    "prerequisite_of": [
+      "isolating-gpu-workloads"
+    ],
     "prerequisites": [
       "build-a-two-node-k3s-lab",
       "kubernetes-in-five-nouns"
@@ -107,7 +139,9 @@
     "related_by": []
   },
   "gpu-allocation-vs-utilization": {
-    "prerequisite_of": [],
+    "prerequisite_of": [
+      "isolating-gpu-workloads"
+    ],
     "prerequisites": [
       "build-a-two-node-k3s-lab",
       "kubernetes-in-five-nouns"
@@ -208,6 +242,29 @@
     "related_by": [
       "hpc-systems-overview"
     ]
+  },
+  "isolating-gpu-workloads": {
+    "prerequisite_of": [
+      "job-execution-journey"
+    ],
+    "prerequisites": [
+      "fake-gpus-in-kubernetes",
+      "gpu-allocation-vs-utilization"
+    ],
+    "related": [
+      "slurm-accounting-multi-tenancy"
+    ],
+    "related_by": []
+  },
+  "job-execution-journey": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "isolating-gpu-workloads"
+    ],
+    "related": [
+      "ai-storage-rdma-gpudirect"
+    ],
+    "related_by": []
   },
   "kubernetes-in-five-nouns": {
     "prerequisite_of": [
@@ -520,6 +577,16 @@
     "related": [],
     "related_by": []
   },
+  "slurm-accounting-multi-tenancy": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "slurm-mixed-gpus-overview"
+    ],
+    "related_by": [
+      "isolating-gpu-workloads"
+    ]
+  },
   "slurm-mixed-gpus-four-ways": {
     "prerequisite_of": [
       "slurm-mixed-gpus-why-disappoints"
@@ -532,7 +599,9 @@
     "prerequisite_of": [],
     "prerequisites": [],
     "related": [],
-    "related_by": []
+    "related_by": [
+      "slurm-accounting-multi-tenancy"
+    ]
   },
   "slurm-mixed-gpus-where-shine": {
     "prerequisite_of": [],

@@ -23,6 +23,114 @@
       "concept"
     ]
   },
+  "ai-infrastructure-core-concepts": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "ai-infrastructure-core-concepts",
+    "level": "intermediate",
+    "path": "business/hpc-industry/ai-infrastructure-core-concepts.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Six concepts every AI-infrastructure engineer gets asked about, each fact-checked with a 30-second answer and a pointer to where to go deeper.",
+    "tags": [
+      "gpu",
+      "hpc",
+      "kubernetes",
+      "nvidia",
+      "slurm"
+    ],
+    "title": "Core AI Infrastructure Concepts: A Map",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "ai-storage-and-fabric-overview": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "ai-storage-and-fabric-overview",
+    "level": "intermediate",
+    "path": "fields/system-administration/ai-storage-and-fabric/README.md",
+    "reading_time_min": 2,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "A two-part series on keeping thousands of GPUs fed - parallel filesystems, small files and checkpoint storms, then RDMA, InfiniBand, RoCE and GPUDirect.",
+    "tags": [
+      "gpu",
+      "hpc",
+      "nvidia",
+      "storage"
+    ],
+    "title": "Storage and Fabric for AI Clusters - Overview",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "ai-storage-parallel-filesystems": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "ai-storage-parallel-filesystems",
+    "level": "intermediate",
+    "order": 1,
+    "path": "fields/system-administration/ai-storage-and-fabric/parallel-filesystems-for-ai.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "How Lustre-style parallel filesystems split metadata from data, why millions of small files starve GPUs, how striping works, and why checkpoints - not datasets - set your storage peak.",
+    "tags": [
+      "gpu",
+      "hpc",
+      "storage"
+    ],
+    "title": "Parallel Filesystems: Why 10,000 GPUs Can Starve on a Full Disk",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "ai-storage-rdma-gpudirect": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "ai-storage-rdma-gpudirect",
+    "level": "intermediate",
+    "order": 2,
+    "path": "fields/system-administration/ai-storage-and-fabric/rdma-infiniband-gpudirect.md",
+    "reading_time_min": 8,
+    "relations": {
+      "prerequisites": [
+        "ai-storage-parallel-filesystems"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Why AI clusters use RDMA fabrics (InfiniBand or RoCE), what kernel bypass and zero-copy mean, and how GPUDirect RDMA and GPUDirect Storage move data straight into GPU memory.",
+    "tags": [
+      "gpu",
+      "hpc",
+      "nvidia",
+      "storage"
+    ],
+    "title": "RDMA, InfiniBand and GPUDirect: Taking the CPU Out of the Way",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
   "bias-variance-trade-off": {
     "domains": [
       "machine-learning",
@@ -581,6 +689,71 @@
     "summary": "",
     "tags": [],
     "title": "HPC Workloads",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "isolating-gpu-workloads": {
+    "domains": [
+      "devops",
+      "systems-and-hpc"
+    ],
+    "id": "isolating-gpu-workloads",
+    "level": "intermediate",
+    "order": 7,
+    "path": "fields/devops/kubernetes/isolating-gpu-workloads.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [
+        "fake-gpus-in-kubernetes",
+        "gpu-allocation-vs-utilization"
+      ],
+      "related": [
+        "slurm-accounting-multi-tenancy"
+      ]
+    },
+    "status": "stable",
+    "summary": "How the NVIDIA device plugin exposes GPUs to pods, why taints alone don't dedicate GPU nodes, and why distributed training needs all-or-nothing scheduling.",
+    "tags": [
+      "gpu",
+      "hpc",
+      "kubernetes",
+      "nvidia"
+    ],
+    "title": "Isolating GPU Workloads: Taints, Labels and the Device Plugin",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "job-execution-journey": {
+    "domains": [
+      "devops",
+      "systems-and-hpc"
+    ],
+    "id": "job-execution-journey",
+    "level": "intermediate",
+    "order": 8,
+    "path": "fields/devops/kubernetes/job-execution-journey.md",
+    "reading_time_min": 13,
+    "relations": {
+      "prerequisites": [
+        "isolating-gpu-workloads"
+      ],
+      "related": [
+        "ai-storage-rdma-gpudirect"
+      ]
+    },
+    "status": "stable",
+    "summary": "From kubectl apply to the first NCCL all-reduce of an 8-GPU job, via the API server, Kueue, operators, scheduler, device plugin, runtime and Multus.",
+    "tags": [
+      "gpu",
+      "hpc",
+      "kubernetes",
+      "nvidia"
+    ],
+    "title": "The Job Execution Journey: From `kubectl apply` to the First All-Reduce",
     "type": "concept",
     "types": [
       "concept"
@@ -1493,6 +1666,33 @@
     "type": "guide",
     "types": [
       "guide"
+    ]
+  },
+  "slurm-accounting-multi-tenancy": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-accounting-multi-tenancy",
+    "level": "intermediate",
+    "path": "fields/schedulers/slurm-accounting-multi-tenancy.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "slurm-mixed-gpus-overview"
+      ]
+    },
+    "status": "stable",
+    "summary": "How slurmctld, slurmd, slurmdbd and sacctmgr split the work of multi-tenant accounting, why limits you set can silently do nothing, and how associations, TRES limits, QOS and fairshare fit together.",
+    "tags": [
+      "gpu",
+      "hpc",
+      "slurm"
+    ],
+    "title": "Slurm Multi-Tenancy: Who Stores the Rules, Who Enforces Them",
+    "type": "concept",
+    "types": [
+      "concept"
     ]
   },
   "slurm-mixed-gpus-four-ways": {

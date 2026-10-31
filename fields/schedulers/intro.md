@@ -52,7 +52,7 @@ Slurm isn't the only option, and it helps to know what else is out there — bot
 | **PBS / PBS Pro / OpenPBS** | Originally NASA-developed | Many legacy HPC centers, some commercial HPC | Mature, well-documented, still common in industry HPC (aerospace, oil & gas) |
 | **LSF (Load Sharing Facility)** | IBM | Enterprise & pharma/life-sciences HPC | Strong commercial support, heavy enterprise integration features |
 | **SGE / Grid Engine** (and descendants like UGE) | Sun Microsystems → various forks | Older academic clusters, some bioinformatics shops | Historically very common before Slurm's rise |
-| **Kubernetes schedulers** (kube-scheduler, Volcano, Kueue) | Cloud-native ecosystem | Increasingly common for containerized ML training workloads | Built for elastic, container-first workloads rather than batch HPC jobs |
+| **Kubernetes schedulers** (kube-scheduler, Volcano, Kueue) | Cloud-native ecosystem | Increasingly common for containerized ML training workloads | Built for elastic, container-first workloads rather than batch HPC jobs — see [isolating GPU workloads](/fields/devops/kubernetes/isolating-gpu-workloads.md) for how the two compare |
 | **HTCondor** | University of Wisconsin–Madison | High-throughput (many small/independent jobs) computing, grid computing | Optimized for opportunistic, loosely-coupled workloads rather than tightly-coupled MPI jobs |
 
 > [!TIP]
@@ -109,17 +109,23 @@ Every post in this directory assumes familiarity with this shape — worth inter
       └───────────────┘ └───────────────┘ └───────────────┘      launches/contains jobs
 ```
 
-- **`slurmctld`** — the decision-maker. Tracks partition/node state, runs the scheduling algorithm, decides what runs where and when.
-- **`slurmdbd`** — the memory. Persists accounting data (who ran what, for how long, using how much) to a database, which is what fairshare calculations and usage reporting draw from.
+- **`slurmctld`** — the decision-maker. Tracks partition/node state, runs the scheduling algorithm, decides what runs where and when — and *enforces* account limits, when `AccountingStorageEnforce` tells it to.
+- **`slurmdbd`** — the memory. Persists accounting data (who ran what, for how long, using how much) plus accounts, limits and QOS definitions to a database, which is what fairshare calculations and usage reporting draw from.
 - **`slurmd`** — the muscle. Runs on every compute node, actually launches job steps, and (with `task/cgroup` + `PrologFlags=contain` enabled) enforces resource containment — including adopting SSH sessions via `pam_slurm_adopt`.
+- **`sacctmgr`** and friends (`sacct`, `sreport`) — not daemons, but command-line clients that read and write accounting data *through* `slurmdbd`. All of this traffic is authenticated with **MUNGE**.
 
-Every operational task you'll do — a rolling reboot, a security hardening pass, a Slurm version upgrade — ultimately comes down to safely coordinating these three roles without letting them get out of sync with each other.
+Every operational task you'll do — a rolling reboot, a security hardening pass, a Slurm version upgrade — ultimately comes down to safely coordinating these roles without letting them get out of sync with each other.
+
+> [!NOTE]
+> "`slurmdbd` stores the limits" and "`slurmdbd` enforces the limits" are different claims, and only the first is true. See [Slurm multi-tenancy: who stores the rules, who enforces them](/fields/schedulers/slurm-accounting-multi-tenancy.md).
 
 ---
 
 ## Where to go from here
 
 - New to Slurm entirely? Start with the [official Slurm quickstart](https://slurm.schedmd.com/quickstart.html) for the user-facing side (`sbatch`, `srun`, `squeue`) before diving into the admin-focused posts here.
+- Sharing a cluster between teams? [Slurm multi-tenancy](/fields/schedulers/slurm-accounting-multi-tenancy.md) covers associations, limits, QOS and fairshare — and the one missing `slurm.conf` line that makes limits do nothing.
+- Running more than one GPU generation? [Mixing GPU types in Slurm](/fields/schedulers/slurm-mixed-gpus/README.md) explains heterogeneous jobs, the bare-`|` constraint trap, and why mixed training disappoints.
 - Already running a cluster and hardening it? Start with [`slurm-pam-adopt-blog.md`](/fields/schedulers/slurm-pam-adopt.md) — it's a small config change that closes a real, commonly-overlooked gap.
 - Planning your next maintenance window? [`slurm-reboot-order-blog.md`](/fields/schedulers/slurm-reboot-order.md) is the checklist to have open in a second tab while you work.
 - Wondering how scheduler decisions (rank placement, node allocation) connect to the performance numbers you actually measure? That's where this directory hands off to the [benchmarks series](/fields/benchmarks/benchmarking-guide.md) — specifically the [parallel execution & affinity guide](/fields/benchmarks/parallel-execution-affinity-master-guide.md), which picks up exactly where Slurm's node allocation leaves off.

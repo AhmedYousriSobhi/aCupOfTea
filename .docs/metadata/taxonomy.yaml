@@ -162,6 +162,8 @@ tags:
   software-engineering:
     label: Software Engineering
     kind: technology
+  storage:
+    label: Storage
   system-design:
     label: System Design
   transformers:

@@ -18,6 +18,7 @@ System administration, DevOps, and infrastructure management for AI/ML environme
 | [node-health-check](/fields/system-administration/node-health-check/README.md) | Series: LBNL Node Health Check (NHC) from install to auto-remediation |
 | [q-and-a](/fields/system-administration/q-and-a.md) | Common sysadmin Q&A |
 | [virtual-machines](/fields/system-administration/virtual-machines.md) | Virtual machine management |
-| [gpu-failure-prediction](/fields/system-administration/gpu-failure-prediction/README.md) | Virtual machine management |
+| [gpu-failure-prediction](/fields/system-administration/gpu-failure-prediction/README.md) | Series: predicting GPU node failures and draining before jobs die |
+| [ai-storage-and-fabric](/fields/system-administration/ai-storage-and-fabric/README.md) | Series: parallel filesystems, RDMA, InfiniBand and GPUDirect for GPU clusters |
 
 Essential knowledge for managing ML infrastructure and deployment environments.

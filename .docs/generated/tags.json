@@ -61,6 +61,10 @@
   "gpu": {
     "label": "GPU",
     "objects": [
+      "ai-infrastructure-core-concepts",
+      "ai-storage-and-fabric-overview",
+      "ai-storage-parallel-filesystems",
+      "ai-storage-rdma-gpudirect",
       "cuda-101",
       "gpu-failure-prediction-overview",
       "gpu-pred-alert-to-drain",
@@ -69,6 +73,8 @@
       "gpu-pred-rules",
       "gpu-pred-runbook",
       "gpu-pred-what-fails",
+      "isolating-gpu-workloads",
+      "job-execution-journey",
       "llm-inference-performance-overview",
       "llm-perf-compute-vs-memory-bound",
       "llm-perf-inference-roofline",
@@ -81,6 +87,7 @@
       "nhc-case-study",
       "nhc-custom-checks",
       "nhc-writing-nhc-conf",
+      "slurm-accounting-multi-tenancy",
       "slurm-mixed-gpus-four-ways",
       "slurm-mixed-gpus-overview",
       "slurm-mixed-gpus-where-shine",
@@ -90,6 +97,10 @@
   "hpc": {
     "label": "Hpc",
     "objects": [
+      "ai-infrastructure-core-concepts",
+      "ai-storage-and-fabric-overview",
+      "ai-storage-parallel-filesystems",
+      "ai-storage-rdma-gpudirect",
       "broken-pods-rogues-gallery",
       "build-a-two-node-k3s-lab",
       "fake-gpus-in-kubernetes",
@@ -101,6 +112,8 @@
       "gpu-pred-rules",
       "gpu-pred-runbook",
       "gpu-pred-what-fails",
+      "isolating-gpu-workloads",
+      "job-execution-journey",
       "nhc-architecture-driven",
       "nhc-auto-remediation",
       "nhc-build-and-install",
@@ -113,6 +126,7 @@
       "nhc-why-node-health-check",
       "nhc-writing-nhc-conf",
       "nvidia-cluster-readiness-engine",
+      "slurm-accounting-multi-tenancy",
       "slurm-mixed-gpus-four-ways",
       "slurm-mixed-gpus-overview",
       "slurm-mixed-gpus-where-shine",
@@ -122,10 +136,13 @@
   "kubernetes": {
     "label": "Kubernetes",
     "objects": [
+      "ai-infrastructure-core-concepts",
       "broken-pods-rogues-gallery",
       "build-a-two-node-k3s-lab",
       "fake-gpus-in-kubernetes",
       "gpu-allocation-vs-utilization",
+      "isolating-gpu-workloads",
+      "job-execution-journey",
       "kubernetes-in-five-nouns",
       "nvidia-cluster-readiness-engine"
     ]
@@ -164,6 +181,9 @@
   "nvidia": {
     "label": "Nvidia",
     "objects": [
+      "ai-infrastructure-core-concepts",
+      "ai-storage-and-fabric-overview",
+      "ai-storage-rdma-gpudirect",
       "broken-pods-rogues-gallery",
       "fake-gpus-in-kubernetes",
       "gpu-failure-prediction-overview",
@@ -173,6 +193,8 @@
       "gpu-pred-rules",
       "gpu-pred-runbook",
       "gpu-pred-what-fails",
+      "isolating-gpu-workloads",
+      "job-execution-journey",
       "llm-inference-performance-overview",
       "llm-perf-compute-vs-memory-bound",
       "llm-perf-optimizations",
@@ -214,6 +236,7 @@
   "slurm": {
     "label": "Slurm",
     "objects": [
+      "ai-infrastructure-core-concepts",
       "gpu-failure-prediction-overview",
       "gpu-pred-alert-to-drain",
       "gpu-pred-runbook",
@@ -226,6 +249,7 @@
       "nhc-troubleshooting",
       "nhc-why-node-health-check",
       "parallel-execution-and-affinity",
+      "slurm-accounting-multi-tenancy",
       "slurm-mixed-gpus-four-ways",
       "slurm-mixed-gpus-overview",
       "slurm-mixed-gpus-where-shine",
@@ -246,6 +270,14 @@
       "old-data-and-background-work",
       "sessions-and-two-walls",
       "sign-in-hygiene"
+    ]
+  },
+  "storage": {
+    "label": "Storage",
+    "objects": [
+      "ai-storage-and-fabric-overview",
+      "ai-storage-parallel-filesystems",
+      "ai-storage-rdma-gpudirect"
     ]
   },
   "system-design": {
