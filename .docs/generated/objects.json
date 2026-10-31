@@ -712,7 +712,7 @@
       "related": []
     },
     "status": "stable",
-    "summary": "Five proposals in one meeting, one roofline to judge them - batching, PagedAttention, quantization, tensor parallelism, FlashAttention, and how to measure which wall you hit.",
+    "summary": "Five proposals in one meeting, one roofline to judge them - batching, PagedAttention, quantization, tensor parallelism, FlashAttention, speculative decoding, disaggregation, and how to measure.",
     "tags": [
       "gpu",
       "llm",
@@ -750,6 +750,66 @@
       "transformers"
     ],
     "title": "Sizing a 70B Model with a Pencil",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "llm-perf-sparsity-vs-quantization": {
+    "domains": [
+      "generative-ai",
+      "systems-and-hpc"
+    ],
+    "id": "llm-perf-sparsity-vs-quantization",
+    "level": "intermediate",
+    "order": 6,
+    "path": "fields/generative-ai/llm-inference-performance/sparsity-vs-quantization.md",
+    "reading_time_min": 10,
+    "relations": {
+      "prerequisites": [
+        "llm-perf-structured-sparsity"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "What it costs to prune an LLM to 2:4, how much accuracy goes with it, how it compares with FP8 and 4-bit quantization, and why the usual order is quantize first, sparsify second.",
+    "tags": [
+      "gpu",
+      "llm",
+      "nvidia",
+      "transformers"
+    ],
+    "title": "Sparsity vs Quantization: Who Pays, and Who Wins",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "llm-perf-structured-sparsity": {
+    "domains": [
+      "generative-ai",
+      "systems-and-hpc"
+    ],
+    "id": "llm-perf-structured-sparsity",
+    "level": "intermediate",
+    "order": 5,
+    "path": "fields/generative-ai/llm-inference-performance/structured-sparsity.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [
+        "llm-perf-optimizations"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "How NVIDIA's 2:4 structured sparsity works, what it really saves (44% of weight bytes, not 50%), and why its doubled TFLOPS help prefill while decode only feels the byte savings.",
+    "tags": [
+      "gpu",
+      "llm",
+      "nvidia",
+      "transformers"
+    ],
+    "title": "2:4 Sparsity: Half the Weights, Not Half the Time",
     "type": "concept",
     "types": [
       "concept"

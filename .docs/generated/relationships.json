@@ -248,7 +248,9 @@
     "related_by": []
   },
   "llm-perf-optimizations": {
-    "prerequisite_of": [],
+    "prerequisite_of": [
+      "llm-perf-structured-sparsity"
+    ],
     "prerequisites": [
       "llm-perf-sizing-70b"
     ],
@@ -261,6 +263,24 @@
     ],
     "prerequisites": [
       "llm-perf-inference-roofline"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "llm-perf-sparsity-vs-quantization": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "llm-perf-structured-sparsity"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "llm-perf-structured-sparsity": {
+    "prerequisite_of": [
+      "llm-perf-sparsity-vs-quantization"
+    ],
+    "prerequisites": [
+      "llm-perf-optimizations"
     ],
     "related": [],
     "related_by": []
