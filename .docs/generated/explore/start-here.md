@@ -17,7 +17,7 @@ Read each path in order; every step builds on the one before.
 5. [2:4 Sparsity: Half the Weights, Not Half the Time](/fields/generative-ai/llm-inference-performance/structured-sparsity.md) — How NVIDIA's 2:4 structured sparsity works, what it really saves (44% of weight bytes, not 50%), and why its doubled TFLOPS help prefill while decode only feels the byte savings. *(intermediate · 9 min)*
 6. [Sparsity vs Quantization: Who Pays, and Who Wins](/fields/generative-ai/llm-inference-performance/sparsity-vs-quantization.md) — What it costs to prune an LLM to 2:4, how much accuracy goes with it, how it compares with FP8 and 4-bit quantization, and why the usual order is quantize first, sparsify second. *(intermediate · 10 min)*
 
-### Systems and HPC · 8 steps · 62 min
+### Systems and HPC · 10 steps · 84 min
 
 1. [Containers 101](/fields/libraries-frameworks-containers/101-containers.md) *(8 min)*
 2. [Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster](/fields/devops/kubernetes/kubernetes-in-five-nouns.md) — The five Kubernetes nouns (node, pod, namespace, event, API server) explained through HPC analogies, for someone who just inherited a cluster. *(advanced · 8 min)*
@@ -26,7 +26,9 @@ Read each path in order; every step builds on the one before.
 5. [Broken Pods: A Rogues' Gallery (and the One Command That Catches Them All)](/fields/devops/kubernetes/broken-pods-rogues-gallery.md) — How to recognise CrashLoop, OOMKilled, ImagePull and Pending pods by reading status, events and previous logs. *(intermediate · 6 min)*
 6. [Booked Is Not Busy: GPU Allocation vs Utilization](/fields/devops/kubernetes/gpu-allocation-vs-utilization.md) — The scheduler knows who has booked the GPUs, not whether they’re busy, so use kubectl for the first question and DCGM-style telemetry for the second. *(intermediate · 7 min)*
 7. [The Cluster That Passed Every Test Except the One That Mattered](/fields/devops/kubernetes/nvidia-cluster-readiness-engine.md) — Even when traditional monitoring tools show all GPUs and networks operating normally, subtle bottlenecks—like a single slow GPU or a degraded network link—can silently drag down the performance of an *(intermediate · 10 min)*
-8. [Singularity](/fields/libraries-frameworks-containers/101-singularity.md) *(10 min)*
+8. [Isolating GPU Workloads: Taints, Labels and the Device Plugin](/fields/devops/kubernetes/isolating-gpu-workloads.md) — How the NVIDIA device plugin exposes GPUs to pods, why taints alone don't dedicate GPU nodes, and why distributed training needs all-or-nothing scheduling. *(intermediate · 9 min)*
+9. [The Job Execution Journey: From `kubectl apply` to the First All-Reduce](/fields/devops/kubernetes/job-execution-journey.md) — From kubectl apply to the first NCCL all-reduce of an 8-GPU job, via the API server, Kueue, operators, scheduler, device plugin, runtime and Multus. *(intermediate · 13 min)*
+10. [Singularity](/fields/libraries-frameworks-containers/101-singularity.md) *(10 min)*
 
 ### Deep Learning · 3 steps · 39 min
 
@@ -48,6 +50,11 @@ Read each path in order; every step builds on the one before.
 4. [Acting Without Making It Worse](/fields/system-administration/gpu-failure-prediction/from-alert-to-drain.md) — The principles of safe automated response to GPU failure predictions - reversibility, drain semantics, blast radius, drain budgets, staged rollout and rollback. *(advanced · 9 min)*
 5. [Is the Prediction Any Good?](/fields/system-administration/gpu-failure-prediction/scoring-and-backtesting.md) — How to judge GPU failure predictions - base rates, precision, recall, lead time, horizons, label quality, leakage and drift - and when a learned model is worth it. *(advanced · 10 min)*
 6. [Runbook: Deploying GPU Failure Prediction End to End](/fields/system-administration/gpu-failure-prediction/runbook.md) — The hands-on companion to the series - counters file, node checks, tested Prometheus rules, Alertmanager routing, a guarded Slurm drain hook and a backtest, step by step. *(advanced · 15 min)*
+
+### Systems and HPC · 2 steps · 17 min
+
+1. [Parallel Filesystems: Why 10,000 GPUs Can Starve on a Full Disk](/fields/system-administration/ai-storage-and-fabric/parallel-filesystems-for-ai.md) — How Lustre-style parallel filesystems split metadata from data, why millions of small files starve GPUs, how striping works, and why checkpoints - not datasets - set your storage peak. *(intermediate · 9 min)*
+2. [RDMA, InfiniBand and GPUDirect: Taking the CPU Out of the Way](/fields/system-administration/ai-storage-and-fabric/rdma-infiniband-gpudirect.md) — Why AI clusters use RDMA fabrics (InfiniBand or RoCE), what kernel bypass and zero-copy mean, and how GPUDirect RDMA and GPUDirect Storage move data straight into GPU memory. *(intermediate · 8 min)*
 
 ### Deep Learning · 2 steps · 7 min
 
@@ -81,6 +88,7 @@ Read each path in order; every step builds on the one before.
 ## Quick reads (10 minutes or less)
 
 - [PyTorch DDP](/fields/libraries-frameworks-containers/102-pytorch-ddp.md) *(1 min)*
+- [Storage and Fabric for AI Clusters - Overview](/fields/system-administration/ai-storage-and-fabric/README.md) — A two-part series on keeping thousands of GPUs fed - parallel filesystems, small files and checkpoint storms, then RDMA, InfiniBand, RoCE and GPUDirect. *(intermediate · 2 min)*
 - [Encoder-Decoder for Machine Translation](/fields/generative-ai/machine-translator/encoder-decoder.md) — The encoder-decoder idea behind neural machine translation, with a basic seq2seq model. *(intermediate · 3 min)*
 - [Mixing GPU Types in Slurm - Overview](/fields/schedulers/slurm-mixed-gpus/README.md) — Slurm can allocate H100s and A100s in one job - four different ways. A three-part series on what each actually gives you, why mixed training disappoints, and where it shines. *(intermediate · 3 min)*
 - [Regression Imputing](/fields/tabular-data/data-processing/handling-missing-data/regression-imputing.md) *(3 min)*
@@ -116,15 +124,20 @@ Read each path in order; every step builds on the one before.
 - [Containers 101](/fields/libraries-frameworks-containers/101-containers.md) *(8 min)*
 - [Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster](/fields/devops/kubernetes/kubernetes-in-five-nouns.md) — The five Kubernetes nouns (node, pod, namespace, event, API server) explained through HPC analogies, for someone who just inherited a cluster. *(advanced · 8 min)*
 - [NHC Troubleshooting: Symptom First](/fields/system-administration/node-health-check/troubleshooting.md) — Symptom-first fixes for false drains, nodes that never resume, slurmd that won't register, timeouts, hanging df, and checks that pass by hand but fail under Slurm. *(intermediate · 8 min)*
+- [RDMA, InfiniBand and GPUDirect: Taking the CPU Out of the Way](/fields/system-administration/ai-storage-and-fabric/rdma-infiniband-gpudirect.md) — Why AI clusters use RDMA fabrics (InfiniBand or RoCE), what kernel bypass and zero-copy mean, and how GPUDirect RDMA and GPUDirect Storage move data straight into GPU memory. *(intermediate · 8 min)*
 - [Reinforcement Learning Basics](/fields/reinforcement-learning/concepts-in-reinforcement-learning/basics.md) *(8 min)*
 - [Writing nhc.conf That Actually Fits Your Cluster](/fields/system-administration/node-health-check/writing-nhc-conf.md) — The config syntax, match strings, variables and contexts, plus copy-ready starter configs for CPU, GPU and login nodes. *(intermediate · 8 min)*
 - [2:4 Sparsity: Half the Weights, Not Half the Time](/fields/generative-ai/llm-inference-performance/structured-sparsity.md) — How NVIDIA's 2:4 structured sparsity works, what it really saves (44% of weight bytes, not 50%), and why its doubled TFLOPS help prefill while decode only feels the byte savings. *(intermediate · 9 min)*
 - [Acting Without Making It Worse](/fields/system-administration/gpu-failure-prediction/from-alert-to-drain.md) — The principles of safe automated response to GPU failure predictions - reversibility, drain semantics, blast radius, drain budgets, staged rollout and rollback. *(advanced · 9 min)*
 - [Compute-Bound vs Memory-Bandwidth-Bound](/fields/generative-ai/llm-inference-performance/compute-bound-vs-memory-bound.md) — Why a 3x faster GPU can give you 1.6x - arithmetic intensity, the ridge point and the roofline, explained with a pizza kitchen and two lines of arithmetic. *(intermediate · 9 min)*
+- [Core AI Infrastructure Concepts: A Map](/business/hpc-industry/ai-infrastructure-core-concepts.md) — Six concepts every AI-infrastructure engineer gets asked about, each fact-checked with a 30-second answer and a pointer to where to go deeper. *(intermediate · 9 min)*
 - [Four Ways to Ask Slurm for Mixed GPUs](/fields/schedulers/slurm-mixed-gpus/four-ways-to-mix-gpus.md) — Typed GRES, constraint operators, heterogeneous jobs and heterogeneous steps - what each one actually allocates, and the one-character constraint that mixes GPU types by accident. *(intermediate · 9 min)*
+- [Isolating GPU Workloads: Taints, Labels and the Device Plugin](/fields/devops/kubernetes/isolating-gpu-workloads.md) — How the NVIDIA device plugin exposes GPUs to pods, why taints alone don't dedicate GPU nodes, and why distributed training needs all-or-nothing scheduling. *(intermediate · 9 min)*
 - [LLM Inference on the Roofline](/fields/generative-ai/llm-inference-performance/llm-inference-on-the-roofline.md) — Why your chatbot reads a novel-length prompt in a blink but types its answer like a tired intern - prefill, decode, batching and the KV cache on the roofline. *(intermediate · 9 min)*
+- [Parallel Filesystems: Why 10,000 GPUs Can Starve on a Full Disk](/fields/system-administration/ai-storage-and-fabric/parallel-filesystems-for-ai.md) — How Lustre-style parallel filesystems split metadata from data, why millions of small files starve GPUs, how striping works, and why checkpoints - not datasets - set your storage peak. *(intermediate · 9 min)*
 - [Reading the GPU's Vital Signs](/fields/system-administration/gpu-failure-prediction/collecting-the-signals.md) — The telemetry concepts behind GPU failure prediction - counters, gauges and events, volatile versus persistent, in-band versus out-of-band - and the ways each one misleads. *(intermediate · 9 min)*
 - [Sizing a 70B Model with a Pencil](/fields/generative-ai/llm-inference-performance/sizing-a-70b-model.md) — A live whiteboard walk-through - Llama 2 70B on 8xH100, from "does it fit?" to the exact token-rate ceilings at batch 1 and batch 64, using only a datasheet. *(intermediate · 9 min)*
+- [Slurm Multi-Tenancy: Who Stores the Rules, Who Enforces Them](/fields/schedulers/slurm-accounting-multi-tenancy.md) — How slurmctld, slurmd, slurmdbd and sacctmgr split the work of multi-tenant accounting, why limits you set can silently do nothing, and how associations, TRES limits, QOS and fairshare fit together. *(intermediate · 9 min)*
 - [Why Mixed-GPU Training Disappoints](/fields/schedulers/slurm-mixed-gpus/why-mixed-training-disappoints.md) — Why 8 H100s plus 8 A100s train like 16 A100s, which H100 features the A100s switch off, and what co-scheduling a heterogeneous job costs you in the queue. *(intermediate · 9 min)*
 - [From Signals to Decisions](/fields/system-administration/gpu-failure-prediction/rules-that-predict.md) — How to design GPU failure rules - state, event and trend rules, personal baselines, persistence, noise floors and action tiers - and the traps that make rules silently fail. *(advanced · 10 min)*
 - [HPC Workloads](/business/hpc-industry/workloads.md) *(10 min)*

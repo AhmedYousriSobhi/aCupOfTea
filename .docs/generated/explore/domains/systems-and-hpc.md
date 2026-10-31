@@ -26,6 +26,8 @@ Benchmarks, schedulers, system administration, high-performance computing.
   [`gpu`](/.docs/generated/explore/tags/gpu.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md)
 - [Containers 101](/fields/libraries-frameworks-containers/101-containers.md) *(8 min)*  
   [`containers`](/.docs/generated/explore/tags/containers.md)
+- [Core AI Infrastructure Concepts: A Map](/business/hpc-industry/ai-infrastructure-core-concepts.md) — Six concepts every AI-infrastructure engineer gets asked about, each fact-checked with a 30-second answer and a pointer to where to go deeper. *(intermediate · 9 min)*  
+  [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`kubernetes`](/.docs/generated/explore/tags/kubernetes.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [CPU Affinity](/programming/operating-system/process-cpu-affinity.md) *(5 min)*  
   [`affinity`](/.docs/generated/explore/tags/affinity.md)
 - [CUDA 101](/fields/libraries-frameworks-containers/101-cuda.md) *(7 min)*  
@@ -42,6 +44,8 @@ Benchmarks, schedulers, system administration, high-performance computing.
 - [HPC Workloads](/business/hpc-industry/workloads.md) *(10 min)*
 - [Is the Prediction Any Good?](/fields/system-administration/gpu-failure-prediction/scoring-and-backtesting.md) — How to judge GPU failure predictions - base rates, precision, recall, lead time, horizons, label quality, leakage and drift - and when a learned model is worth it. *(advanced · 10 min)*  
   [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md)
+- [Isolating GPU Workloads: Taints, Labels and the Device Plugin](/fields/devops/kubernetes/isolating-gpu-workloads.md) — How the NVIDIA device plugin exposes GPUs to pods, why taints alone don't dedicate GPU nodes, and why distributed training needs all-or-nothing scheduling. *(intermediate · 9 min)*  
+  [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`kubernetes`](/.docs/generated/explore/tags/kubernetes.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md)
 - [Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster](/fields/devops/kubernetes/kubernetes-in-five-nouns.md) — The five Kubernetes nouns (node, pod, namespace, event, API server) explained through HPC analogies, for someone who just inherited a cluster. *(advanced · 8 min)*  
   [`kubernetes`](/.docs/generated/explore/tags/kubernetes.md)
 - [LLM Inference on the Roofline](/fields/generative-ai/llm-inference-performance/llm-inference-on-the-roofline.md) — Why your chatbot reads a novel-length prompt in a blink but types its answer like a tired intern - prefill, decode, batching and the KV cache on the roofline. *(intermediate · 9 min)*  
@@ -62,12 +66,16 @@ Benchmarks, schedulers, system administration, high-performance computing.
   [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [Parallel Execution and Affinity](/fields/benchmarks/parallel-execution-affinity-master-guide.md) *(5 min)*  
   [`affinity`](/.docs/generated/explore/tags/affinity.md) [`mpi`](/.docs/generated/explore/tags/mpi.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
+- [Parallel Filesystems: Why 10,000 GPUs Can Starve on a Full Disk](/fields/system-administration/ai-storage-and-fabric/parallel-filesystems-for-ai.md) — How Lustre-style parallel filesystems split metadata from data, why millions of small files starve GPUs, how striping works, and why checkpoints - not datasets - set your storage peak. *(intermediate · 9 min)*  
+  [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`storage`](/.docs/generated/explore/tags/storage.md)
 - [Plugging NHC into Slurm (and Friends)](/fields/system-administration/node-health-check/slurm-integration.md) — The three slurm.conf lines, which node states to check, timeouts that don't fight each other, prolog and epilog patterns, reboots, plus PBS and cron. *(intermediate · 7 min)*  
   [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [Predicting GPU Node Failures - Overview](/fields/system-administration/gpu-failure-prediction/README.md) — A five-part series on how GPU memory fails, what its telemetry really says, and how to turn that into predictions you can trust before a training run dies. *(advanced · 5 min)*  
   [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [PyTorch DDP](/fields/libraries-frameworks-containers/102-pytorch-ddp.md) *(1 min)*  
   [`distributed-training`](/.docs/generated/explore/tags/distributed-training.md) [`pytorch`](/.docs/generated/explore/tags/pytorch.md)
+- [RDMA, InfiniBand and GPUDirect: Taking the CPU Out of the Way](/fields/system-administration/ai-storage-and-fabric/rdma-infiniband-gpudirect.md) — Why AI clusters use RDMA fabrics (InfiniBand or RoCE), what kernel bypass and zero-copy mean, and how GPUDirect RDMA and GPUDirect Storage move data straight into GPU memory. *(intermediate · 8 min)*  
+  [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md) [`storage`](/.docs/generated/explore/tags/storage.md)
 - [Reading the GPU's Vital Signs](/fields/system-administration/gpu-failure-prediction/collecting-the-signals.md) — The telemetry concepts behind GPU failure prediction - counters, gauges and events, volatile versus persistent, in-band versus out-of-band - and the ways each one misleads. *(intermediate · 9 min)*  
   [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md)
 - [Rolling NHC Out to a Fleet Without Draining Everything](/fields/system-administration/node-health-check/rollout-at-scale.md) — A dry-run, canary, enforce plan for deploying NHC or a new nhc.conf to hundreds of nodes, with a circuit breaker for bad pushes. *(intermediate · 6 min)*  
@@ -78,10 +86,16 @@ Benchmarks, schedulers, system administration, high-performance computing.
   [`containers`](/.docs/generated/explore/tags/containers.md)
 - [Sizing a 70B Model with a Pencil](/fields/generative-ai/llm-inference-performance/sizing-a-70b-model.md) — A live whiteboard walk-through - Llama 2 70B on 8xH100, from "does it fit?" to the exact token-rate ceilings at batch 1 and batch 64, using only a datasheet. *(intermediate · 9 min)*  
   [`gpu`](/.docs/generated/explore/tags/gpu.md) [`llm`](/.docs/generated/explore/tags/llm.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md) [`transformers`](/.docs/generated/explore/tags/transformers.md)
+- [Slurm Multi-Tenancy: Who Stores the Rules, Who Enforces Them](/fields/schedulers/slurm-accounting-multi-tenancy.md) — How slurmctld, slurmd, slurmdbd and sacctmgr split the work of multi-tenant accounting, why limits you set can silently do nothing, and how associations, TRES limits, QOS and fairshare fit together. *(intermediate · 9 min)*  
+  [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [Sparsity vs Quantization: Who Pays, and Who Wins](/fields/generative-ai/llm-inference-performance/sparsity-vs-quantization.md) — What it costs to prune an LLM to 2:4, how much accuracy goes with it, how it compares with FP8 and 4-bit quantization, and why the usual order is quantize first, sparsify second. *(intermediate · 10 min)*  
   [`gpu`](/.docs/generated/explore/tags/gpu.md) [`llm`](/.docs/generated/explore/tags/llm.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md) [`transformers`](/.docs/generated/explore/tags/transformers.md)
+- [Storage and Fabric for AI Clusters - Overview](/fields/system-administration/ai-storage-and-fabric/README.md) — A two-part series on keeping thousands of GPUs fed - parallel filesystems, small files and checkpoint storms, then RDMA, InfiniBand, RoCE and GPUDirect. *(intermediate · 2 min)*  
+  [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md) [`storage`](/.docs/generated/explore/tags/storage.md)
 - [The Cluster That Passed Every Test Except the One That Mattered](/fields/devops/kubernetes/nvidia-cluster-readiness-engine.md) — Even when traditional monitoring tools show all GPUs and networks operating normally, subtle bottlenecks—like a single slow GPU or a degraded network link—can silently drag down the performance of an *(intermediate · 10 min)*  
   [`hpc`](/.docs/generated/explore/tags/hpc.md) [`kubernetes`](/.docs/generated/explore/tags/kubernetes.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md)
+- [The Job Execution Journey: From `kubectl apply` to the First All-Reduce](/fields/devops/kubernetes/job-execution-journey.md) — From kubectl apply to the first NCCL all-reduce of an 8-GPU job, via the API server, Kueue, operators, scheduler, device plugin, runtime and Multus. *(intermediate · 13 min)*  
+  [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`kubernetes`](/.docs/generated/explore/tags/kubernetes.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md)
 - [Where Heterogeneous Jobs Shine](/fields/schedulers/slurm-mixed-gpus/where-hetjobs-shine.md) — The workloads where mixing GPU types in one Slurm job is exactly right, how admins should label and guard a multi-generation cluster, a decision table, and the interview answer. *(intermediate · 10 min)*  
   [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [Why Mixed-GPU Training Disappoints](/fields/schedulers/slurm-mixed-gpus/why-mixed-training-disappoints.md) — Why 8 H100s plus 8 A100s train like 16 A100s, which H100 features the A100s switch off, and what co-scheduling a heterogeneous job costs you in the queue. *(intermediate · 9 min)*  

@@ -30,6 +30,8 @@
       "build-a-two-node-k3s-lab",
       "fake-gpus-in-kubernetes",
       "gpu-allocation-vs-utilization",
+      "isolating-gpu-workloads",
+      "job-execution-journey",
       "nvidia-cluster-readiness-engine"
     ]
   },
@@ -144,6 +146,10 @@
     "description": "Benchmarks, schedulers, system administration, high-performance computing.",
     "label": "Systems and HPC",
     "objects": [
+      "ai-infrastructure-core-concepts",
+      "ai-storage-and-fabric-overview",
+      "ai-storage-parallel-filesystems",
+      "ai-storage-rdma-gpudirect",
       "broken-pods-rogues-gallery",
       "build-a-two-node-k3s-lab",
       "containers-101",
@@ -160,6 +166,8 @@
       "gpu-pred-what-fails",
       "hpc-systems-overview",
       "hpc-workloads",
+      "isolating-gpu-workloads",
+      "job-execution-journey",
       "kubernetes-in-five-nouns",
       "llm-inference-performance-overview",
       "llm-perf-compute-vs-memory-bound",
@@ -184,6 +192,7 @@
       "parallel-execution-and-affinity",
       "pytorch-ddp",
       "singularity-containers",
+      "slurm-accounting-multi-tenancy",
       "slurm-mixed-gpus-four-ways",
       "slurm-mixed-gpus-overview",
       "slurm-mixed-gpus-where-shine",

@@ -178,6 +178,15 @@ The H100 datasheet lists BF16 Tensor Core performance as **1,979 TFLOPS**. Look 
 
 Use the headline number and your ridge point doubles. Every workload suddenly looks twice as bandwidth-bound as it really is, and your capacity plan is built on sand.
 
+Here's what that misdiagnosis looks like. A team profiles a kernel at **400 FLOP/byte** on an H100.
+
+| Ridge point computed from | Ridge | Verdict for 400 FLOP/byte | What the team does next |
+|---------------------------|-------|---------------------------|-------------------------|
+| Dense BF16, 989 TFLOPS ÷ 3.35 TB/s | ~295 | **Compute-bound** (correct) | Looks for faster math: FP8, better tensor-core use |
+| Sparse BF16, 1,979 TFLOPS ÷ 3.35 TB/s | ~590 | "Bandwidth-bound" (wrong) | Spends a sprint cutting memory traffic, and nothing gets faster |
+
+Everything between the real ridge and the inflated one gets misfiled. The team optimizes the wrong axis, exactly the mistake the roofline exists to prevent. The sparse number only becomes the right one once a model really is pruned to 2:4, which [part 5](/fields/generative-ai/llm-inference-performance/structured-sparsity.md) covers.
+
 Also remember the datasheet bandwidth is a peak. Real kernels get a fraction of it, so real ceilings sit a bit lower than the ones you'll compute in this series.
 
 ### What the roofline is not
