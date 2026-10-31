@@ -11,7 +11,7 @@ tags: [gpu, llm, nvidia, transformers]
 
 # LLM Inference Performance - Overview
 
-> A four-part series on the most expensive misunderstanding in AI infrastructure: buying compute when you're short of bandwidth. By the end you'll be able to predict a model's speed on any GPU with a pencil, and explain why vLLM, quantization and tensor parallelism work instead of just naming them.
+> A six-part series on the most expensive misunderstanding in AI infrastructure: buying compute when you're short of bandwidth. By the end you'll be able to predict a model's speed on any GPU with a pencil, explain why vLLM, quantization, tensor parallelism and 2:4 sparsity work instead of just naming them, and decode the asterisk on every GPU datasheet.
 
 ## Table of Contents
 - [LLM Inference Performance - Overview](#llm-inference-performance---overview)
@@ -49,6 +49,8 @@ This series explains why the second number decided their week, and why it decide
 | 2 | [LLM inference on the roofline](/fields/generative-ai/llm-inference-performance/llm-inference-on-the-roofline.md) | Why does the answer start fast but stream slowly? |
 | 3 | [Sizing a 70B model with a pencil](/fields/generative-ai/llm-inference-performance/sizing-a-70b-model.md) | Can you predict a model's speed in an interview, live, on a whiteboard? |
 | 4 | [Optimizations, mapped to the roofline](/fields/generative-ai/llm-inference-performance/optimizations-on-the-roofline.md) | Which of the five "fixes" proposed in the meeting will actually work? |
+| 5 | [2:4 sparsity: half the weights, not half the time](/fields/generative-ai/llm-inference-performance/structured-sparsity.md) | What is the "with sparsity" asterisk on the datasheet, and what does it really buy? |
+| 6 | [Sparsity vs quantization](/fields/generative-ai/llm-inference-performance/sparsity-vs-quantization.md) | Who pays for pruning, what does accuracy lose, and which lever comes first? |
 
 Each page ends with the question the next one answers. Page 3 is the one to rehearse: doing the arithmetic live is what wins the room.
 
@@ -83,6 +85,8 @@ All hardware figures from NVIDIA datasheets; the model from the Llama 2 paper an
 | [llm-inference-on-the-roofline](/fields/generative-ai/llm-inference-performance/llm-inference-on-the-roofline.md) | Prefill vs decode, batching and the KV cache |
 | [sizing-a-70b-model](/fields/generative-ai/llm-inference-performance/sizing-a-70b-model.md) | Worked example: Llama 2 70B on 8×H100 |
 | [optimizations-on-the-roofline](/fields/generative-ai/llm-inference-performance/optimizations-on-the-roofline.md) | What each optimization moves, how to measure, interview answer |
+| [structured-sparsity](/fields/generative-ai/llm-inference-performance/structured-sparsity.md) | How 2:4 sparsity works, the metadata tax, and its two gifts on the roofline |
+| [sparsity-vs-quantization](/fields/generative-ai/llm-inference-performance/sparsity-vs-quantization.md) | Pruning cost and accuracy, comparison with FP8 and 4-bit, who owns what |
 
 ## Related reading in this repo
 

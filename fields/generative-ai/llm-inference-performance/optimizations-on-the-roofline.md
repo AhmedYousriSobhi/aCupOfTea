@@ -3,7 +3,7 @@ id: llm-perf-optimizations
 title: "Optimizations, Mapped to the Roofline"
 sidebar_label: "4. Optimizations on the roofline"
 order: 4
-summary: Five proposals in one meeting, one roofline to judge them - batching, PagedAttention, quantization, tensor parallelism, FlashAttention, and how to measure which wall you hit.
+summary: Five proposals in one meeting, one roofline to judge them - batching, PagedAttention, quantization, tensor parallelism, FlashAttention, speculative decoding, disaggregation, and how to measure.
 level: intermediate
 type: concept
 domains: [generative-ai, systems-and-hpc]
@@ -14,7 +14,7 @@ relations:
 
 # Optimizations, Mapped to the Roofline
 
-> **Part 4 of the [LLM Inference Performance series](/fields/generative-ai/llm-inference-performance/README.md), the last one.** Every LLM serving optimization pulls one of five levers. Once you can name the lever, you can predict whether an idea will work before anyone spends a dollar on it. By the end of this page you'll judge five real proposals, meet three clever tricks nobody proposed, catch a dashboard lying to you, and give the 70B interview answer with reasons.
+> **Part 4 of the [LLM Inference Performance series](/fields/generative-ai/llm-inference-performance/README.md).** Every LLM serving optimization pulls one of five levers. Once you can name the lever, you can predict whether an idea will work before anyone spends a dollar on it. By the end of this page you'll judge five real proposals, meet three clever tricks nobody proposed, catch a dashboard lying to you, and give the 70B interview answer with reasons.
 
 ## Table of Contents
 - [The meeting](#the-meeting)
@@ -188,7 +188,7 @@ For deeper digging: **Nsight Compute** draws each kernel on an actual roofline c
 
 **Takeaway:** every serving optimization reuses bytes, fetches fewer bytes, adds bandwidth, frees memory or separates the phases, so name the lever before you spend the money, and check tensor activity against memory activity before you believe a utilization dashboard.
 
-That's the series. You walked in wondering why a 3× faster chip gave 1.6×. You're walking out able to predict it, with a pencil. Back to the [overview](/fields/generative-ai/llm-inference-performance/README.md).
+You walked in wondering why a 3× faster chip gave 1.6×. You can now predict it with a pencil. But one number on the datasheet is still unexplained: the H100's headline 1,979 TFLOPS, the one with the asterisk. What is "with sparsity," and can your models ever use it? That's [part 5](/fields/generative-ai/llm-inference-performance/structured-sparsity.md).
 
 ### References
 - [Kwon et al., "Efficient Memory Management for Large Language Model Serving with PagedAttention", SOSP 2023, arXiv:2309.06180](https://arxiv.org/abs/2309.06180)

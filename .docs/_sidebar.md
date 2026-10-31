@@ -38,6 +38,8 @@
       * [2. LLM inference on the roofline](fields/generative-ai/llm-inference-performance/llm-inference-on-the-roofline.md)
       * [3. Sizing a 70B model](fields/generative-ai/llm-inference-performance/sizing-a-70b-model.md)
       * [4. Optimizations on the roofline](fields/generative-ai/llm-inference-performance/optimizations-on-the-roofline.md)
+      * [5. 2:4 structured sparsity](fields/generative-ai/llm-inference-performance/structured-sparsity.md)
+      * [6. Sparsity vs quantization](fields/generative-ai/llm-inference-performance/sparsity-vs-quantization.md)
   * [**Libraries, Frameworks & Containers**](fields/libraries-frameworks-containers/README.md)
     * [Conda](fields/libraries-frameworks-containers/101-conda.md)
     * [Containers](fields/libraries-frameworks-containers/101-containers.md)

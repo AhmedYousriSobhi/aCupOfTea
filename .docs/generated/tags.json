@@ -74,6 +74,8 @@
       "llm-perf-inference-roofline",
       "llm-perf-optimizations",
       "llm-perf-sizing-70b",
+      "llm-perf-sparsity-vs-quantization",
+      "llm-perf-structured-sparsity",
       "nccl-collective-communication",
       "nhc-architecture-driven",
       "nhc-case-study",
@@ -135,6 +137,8 @@
       "llm-perf-inference-roofline",
       "llm-perf-optimizations",
       "llm-perf-sizing-70b",
+      "llm-perf-sparsity-vs-quantization",
+      "llm-perf-structured-sparsity",
       "sequence-models"
     ]
   },
@@ -173,6 +177,8 @@
       "llm-perf-compute-vs-memory-bound",
       "llm-perf-optimizations",
       "llm-perf-sizing-70b",
+      "llm-perf-sparsity-vs-quantization",
+      "llm-perf-structured-sparsity",
       "nhc-case-study",
       "nhc-custom-checks",
       "nvidia-cluster-readiness-engine",
@@ -258,6 +264,8 @@
       "llm-perf-inference-roofline",
       "llm-perf-optimizations",
       "llm-perf-sizing-70b",
+      "llm-perf-sparsity-vs-quantization",
+      "llm-perf-structured-sparsity",
       "sequence-models"
     ]
   }
