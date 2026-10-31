@@ -1,0 +1,658 @@
+{
+  "accuracy-paradox": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [],
+    "related_by": [
+      "bias-variance-trade-off"
+    ]
+  },
+  "ai-infrastructure-core-concepts": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "ai-storage-and-fabric-overview": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "ai-storage-parallel-filesystems": {
+    "prerequisite_of": [
+      "ai-storage-rdma-gpudirect"
+    ],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "ai-storage-rdma-gpudirect": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "ai-storage-parallel-filesystems"
+    ],
+    "related": [],
+    "related_by": [
+      "job-execution-journey"
+    ]
+  },
+  "bias-variance-trade-off": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "accuracy-paradox"
+    ],
+    "related_by": []
+  },
+  "broken-pods-rogues-gallery": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "kubernetes-in-five-nouns"
+    ],
+    "related": [
+      "containers-101"
+    ],
+    "related_by": []
+  },
+  "build-a-two-node-k3s-lab": {
+    "prerequisite_of": [
+      "fake-gpus-in-kubernetes",
+      "gpu-allocation-vs-utilization"
+    ],
+    "prerequisites": [
+      "kubernetes-in-five-nouns"
+    ],
+    "related": [
+      "containers-101"
+    ],
+    "related_by": []
+  },
+  "containers-101": {
+    "prerequisite_of": [
+      "kubernetes-in-five-nouns",
+      "singularity-containers"
+    ],
+    "prerequisites": [],
+    "related": [],
+    "related_by": [
+      "broken-pods-rogues-gallery",
+      "build-a-two-node-k3s-lab",
+      "fake-gpus-in-kubernetes",
+      "gpu-allocation-vs-utilization",
+      "nvidia-cluster-readiness-engine"
+    ]
+  },
+  "cpu-affinity": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [],
+    "related_by": [
+      "parallel-execution-and-affinity"
+    ]
+  },
+  "cuda-101": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "customer-segmentation-problem": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "unsupervised-learning"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "deep-learning-basics": {
+    "prerequisite_of": [
+      "sequence-models"
+    ],
+    "prerequisites": [],
+    "related": [
+      "sequence-models"
+    ],
+    "related_by": []
+  },
+  "encoder-decoder-machine-translation": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "sequence-models"
+    ],
+    "related": [],
+    "related_by": [
+      "sequence-models"
+    ]
+  },
+  "fake-gpus-in-kubernetes": {
+    "prerequisite_of": [
+      "isolating-gpu-workloads"
+    ],
+    "prerequisites": [
+      "build-a-two-node-k3s-lab",
+      "kubernetes-in-five-nouns"
+    ],
+    "related": [
+      "containers-101"
+    ],
+    "related_by": []
+  },
+  "gpu-allocation-vs-utilization": {
+    "prerequisite_of": [
+      "isolating-gpu-workloads"
+    ],
+    "prerequisites": [
+      "build-a-two-node-k3s-lab",
+      "kubernetes-in-five-nouns"
+    ],
+    "related": [
+      "containers-101"
+    ],
+    "related_by": []
+  },
+  "gpu-failure-prediction-overview": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "nhc-auto-remediation"
+    ],
+    "related_by": []
+  },
+  "gpu-pred-alert-to-drain": {
+    "prerequisite_of": [
+      "gpu-pred-backtesting"
+    ],
+    "prerequisites": [
+      "gpu-pred-rules"
+    ],
+    "related": [
+      "nhc-auto-remediation"
+    ],
+    "related_by": [
+      "gpu-pred-runbook"
+    ]
+  },
+  "gpu-pred-backtesting": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "gpu-pred-alert-to-drain"
+    ],
+    "related": [],
+    "related_by": [
+      "gpu-pred-runbook"
+    ]
+  },
+  "gpu-pred-collecting-signals": {
+    "prerequisite_of": [
+      "gpu-pred-rules"
+    ],
+    "prerequisites": [
+      "gpu-pred-what-fails"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "gpu-pred-rules": {
+    "prerequisite_of": [
+      "gpu-pred-alert-to-drain"
+    ],
+    "prerequisites": [
+      "gpu-pred-collecting-signals"
+    ],
+    "related": [],
+    "related_by": [
+      "gpu-pred-runbook"
+    ]
+  },
+  "gpu-pred-runbook": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "gpu-pred-what-fails"
+    ],
+    "related": [
+      "gpu-pred-alert-to-drain",
+      "gpu-pred-backtesting",
+      "gpu-pred-rules",
+      "nhc-auto-remediation"
+    ],
+    "related_by": []
+  },
+  "gpu-pred-what-fails": {
+    "prerequisite_of": [
+      "gpu-pred-collecting-signals",
+      "gpu-pred-runbook"
+    ],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "hpc-systems-overview": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "hpc-workloads"
+    ],
+    "related_by": []
+  },
+  "hpc-workloads": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [],
+    "related_by": [
+      "hpc-systems-overview"
+    ]
+  },
+  "isolating-gpu-workloads": {
+    "prerequisite_of": [
+      "job-execution-journey"
+    ],
+    "prerequisites": [
+      "fake-gpus-in-kubernetes",
+      "gpu-allocation-vs-utilization"
+    ],
+    "related": [
+      "slurm-accounting-multi-tenancy"
+    ],
+    "related_by": []
+  },
+  "job-execution-journey": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "isolating-gpu-workloads"
+    ],
+    "related": [
+      "ai-storage-rdma-gpudirect"
+    ],
+    "related_by": []
+  },
+  "kubernetes-in-five-nouns": {
+    "prerequisite_of": [
+      "broken-pods-rogues-gallery",
+      "build-a-two-node-k3s-lab",
+      "fake-gpus-in-kubernetes",
+      "gpu-allocation-vs-utilization",
+      "nvidia-cluster-readiness-engine"
+    ],
+    "prerequisites": [
+      "containers-101"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "llm-inference-performance-overview": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "llm-perf-compute-vs-memory-bound": {
+    "prerequisite_of": [
+      "llm-perf-inference-roofline"
+    ],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "llm-perf-inference-roofline": {
+    "prerequisite_of": [
+      "llm-perf-sizing-70b"
+    ],
+    "prerequisites": [
+      "llm-perf-compute-vs-memory-bound"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "llm-perf-optimizations": {
+    "prerequisite_of": [
+      "llm-perf-structured-sparsity"
+    ],
+    "prerequisites": [
+      "llm-perf-sizing-70b"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "llm-perf-sizing-70b": {
+    "prerequisite_of": [
+      "llm-perf-optimizations"
+    ],
+    "prerequisites": [
+      "llm-perf-inference-roofline"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "llm-perf-sparsity-vs-quantization": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "llm-perf-structured-sparsity"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "llm-perf-structured-sparsity": {
+    "prerequisite_of": [
+      "llm-perf-sparsity-vs-quantization"
+    ],
+    "prerequisites": [
+      "llm-perf-optimizations"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "nccl-collective-communication": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "pytorch-ddp"
+    ],
+    "related_by": []
+  },
+  "nhc-architecture-driven": {
+    "prerequisite_of": [
+      "nhc-case-study"
+    ],
+    "prerequisites": [
+      "nhc-custom-checks",
+      "nhc-rollout-at-scale",
+      "nhc-writing-nhc-conf"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "nhc-auto-remediation": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "nhc-rollout-at-scale",
+      "nhc-slurm-integration"
+    ],
+    "related": [],
+    "related_by": [
+      "gpu-failure-prediction-overview",
+      "gpu-pred-alert-to-drain",
+      "gpu-pred-runbook"
+    ]
+  },
+  "nhc-build-and-install": {
+    "prerequisite_of": [
+      "nhc-writing-nhc-conf"
+    ],
+    "prerequisites": [
+      "nhc-why-node-health-check"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "nhc-case-study": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "nhc-architecture-driven"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "nhc-cheat-sheet": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "nhc-troubleshooting",
+      "nhc-writing-nhc-conf"
+    ],
+    "related_by": []
+  },
+  "nhc-custom-checks": {
+    "prerequisite_of": [
+      "nhc-architecture-driven"
+    ],
+    "prerequisites": [
+      "nhc-writing-nhc-conf"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "nhc-rollout-at-scale": {
+    "prerequisite_of": [
+      "nhc-architecture-driven",
+      "nhc-auto-remediation"
+    ],
+    "prerequisites": [
+      "nhc-slurm-integration"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "nhc-slurm-integration": {
+    "prerequisite_of": [
+      "nhc-auto-remediation",
+      "nhc-rollout-at-scale",
+      "nhc-troubleshooting"
+    ],
+    "prerequisites": [
+      "nhc-writing-nhc-conf"
+    ],
+    "related": [],
+    "related_by": [
+      "nhc-why-node-health-check"
+    ]
+  },
+  "nhc-troubleshooting": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "nhc-slurm-integration"
+    ],
+    "related": [],
+    "related_by": [
+      "nhc-cheat-sheet"
+    ]
+  },
+  "nhc-why-node-health-check": {
+    "prerequisite_of": [
+      "nhc-build-and-install"
+    ],
+    "prerequisites": [],
+    "related": [
+      "nhc-slurm-integration"
+    ],
+    "related_by": []
+  },
+  "nhc-writing-nhc-conf": {
+    "prerequisite_of": [
+      "nhc-architecture-driven",
+      "nhc-custom-checks",
+      "nhc-slurm-integration"
+    ],
+    "prerequisites": [
+      "nhc-build-and-install"
+    ],
+    "related": [],
+    "related_by": [
+      "nhc-cheat-sheet"
+    ]
+  },
+  "nvidia-cluster-readiness-engine": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "kubernetes-in-five-nouns"
+    ],
+    "related": [
+      "containers-101"
+    ],
+    "related_by": []
+  },
+  "old-data-and-background-work": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "parallel-execution-and-affinity": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "cpu-affinity"
+    ],
+    "related_by": []
+  },
+  "principal-component-analysis": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "pytorch-101": {
+    "prerequisite_of": [
+      "pytorch-ddp"
+    ],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "pytorch-ddp": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "pytorch-101"
+    ],
+    "related": [],
+    "related_by": [
+      "nccl-collective-communication"
+    ]
+  },
+  "regression-imputing": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "reinforcement-learning-basics": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "reviewing-the-design": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "sequence-models": {
+    "prerequisite_of": [
+      "encoder-decoder-machine-translation"
+    ],
+    "prerequisites": [
+      "deep-learning-basics"
+    ],
+    "related": [
+      "encoder-decoder-machine-translation"
+    ],
+    "related_by": [
+      "deep-learning-basics"
+    ]
+  },
+  "sessions-and-two-walls": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "sign-in-hygiene"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "sign-in-hygiene": {
+    "prerequisite_of": [
+      "sessions-and-two-walls"
+    ],
+    "prerequisites": [
+      "threat-model-and-first-launch"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "singularity-containers": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "containers-101"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "slurm-accounting-multi-tenancy": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "slurm-mixed-gpus-overview"
+    ],
+    "related_by": [
+      "isolating-gpu-workloads"
+    ]
+  },
+  "slurm-mixed-gpus-four-ways": {
+    "prerequisite_of": [
+      "slurm-mixed-gpus-why-disappoints"
+    ],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "slurm-mixed-gpus-overview": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [],
+    "related_by": [
+      "slurm-accounting-multi-tenancy"
+    ]
+  },
+  "slurm-mixed-gpus-where-shine": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "slurm-mixed-gpus-why-disappoints"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "slurm-mixed-gpus-why-disappoints": {
+    "prerequisite_of": [
+      "slurm-mixed-gpus-where-shine"
+    ],
+    "prerequisites": [
+      "slurm-mixed-gpus-four-ways"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "slurm-pam-adopt-ssh-access": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "threat-model-and-first-launch": {
+    "prerequisite_of": [
+      "sign-in-hygiene"
+    ],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "time-series-analysis": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "unsupervised-learning": {
+    "prerequisite_of": [
+      "customer-segmentation-problem"
+    ],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "used-cars-retailer-kpis": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  }
+}

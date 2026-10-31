@@ -1,0 +1,277 @@
+#!/usr/bin/env python3
+"""Build the publishable copy of the site (the "staging copy").
+
+Copies the repo to --out, then in the COPY only:
+  * strips YAML front matter from every page (LF or CRLF), so Docsify
+    rendering and its search index stay clean;
+  * puts the reading time ("6 min read") under the title of every content page
+    (not the homepage and not folder indexes with a "## Contents" list);
+  * puts a one-line "Read first / See also / Read next" strip under the title of pages
+    that have relations, from
+    .docs/generated/related.json (run generate_index.py first);
+  * writes a readable page next to every code file and notebook
+    (name.py -> name.py.md, the address a Docsify link asks for; code_pages.py);
+  * writes a share page (title and summary as Open Graph tags, then a redirect)
+    at each page's folder address so link previews differ per page
+    (share_pages.py);
+  * writes .docs/last-updated.json (page -> date of its last git commit) for
+    the page footer, when the checkout has git history;
+  * fills the homepage block between <!-- recent:start --> and <!-- recent:end -->
+    with the pages most recently added (git history, renames excluded);
+  * writes .docs/search-index.json (build_search_index.py) so the site search
+    loads one file instead of fetching every page;
+  * writes sw.js (the read-offline service worker) at the site root from
+    .docs/sw-template.js, versioned with the git commit so each deploy gets a
+    new cache; it has to sit at the root to control every page.
+  * losslessly recompresses PNG and JPEG images (optimize_images.py; skipped
+    when Pillow is not installed).
+Source files are never modified. Local `docsify serve` on the repo itself
+shows neither the stripping nor the related-pages strip; serve --out to see them.
+
+Usage: python3 .docs/tools/stage_site.py --out _site [--src PATH]
+"""
+import argparse
+import json
+import os
+import re
+import shutil
+import subprocess
+import sys
+import time
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from build_search_index import build as build_search_index  # noqa: E402
+from code_pages import write_code_pages  # noqa: E402
+from common import list_pages, split_front_matter, submodule_paths  # noqa: E402
+from generate_index import reading_time_min  # noqa: E402
+from share_pages import DEFAULT_BASE, write_share_pages  # noqa: E402
+from optimize_images import optimize_tree  # noqa: E402
+
+MARKER = ".stage-site"
+# Pages of the local authoring tools: they only work next to the local server (new_page.py --gui),
+# so they stay out of the published site.
+LOCAL_ONLY = {".docs/tools/page_gui.html"}
+RELATED_MARK = "<!-- related-block -->"
+RECENT_RE = re.compile(r"<!-- recent:start -->.*?<!-- recent:end -->", re.S)
+RECENT_COUNT = 6
+NOT_RECENT = {"README.md", "SPEC.md", "CLAUDE.md"}
+INDEX_RE = re.compile(r"^## +Contents\s*$", re.M)
+SW_TEMPLATE = ".docs/sw-template.js"
+# local scripts/stylesheets and pinned CDN files that index.html loads (the offline shell)
+ASSET_RE = re.compile(r'<(?:script|link)\b[^>]*?\b(?:src|href)="((?:\./|https://cdn\.jsdelivr\.net/)[^"]+)"')
+
+
+def render_related(block):
+    """One line of links for the top of a page: read first, see also, read next."""
+    groups = []
+    for key, label in (("prerequisites", "Read first"),
+                       ("related", "See also"),
+                       ("required_by", "Read next")):
+        items = block.get(key) or []
+        if items:
+            links = ", ".join(f"[{i['title']}](/{i['path']})" for i in items)
+            groups.append(f"**{label}:** {links}")
+    if not groups:
+        return ""
+    return "\n".join([RELATED_MARK, '<div class="related-strip">', "", "  \u00b7  ".join(groups), "", "</div>", ""])
+
+
+def render_reading_time(path, body):
+    """'N min read' block for a content page; '' for the root docs and folder indexes."""
+    if path in NOT_RECENT or (path.endswith("README.md") and INDEX_RE.search(body)):
+        return ""
+    # same marker as the related strip: search drops it from the page text
+    return f'{RELATED_MARK}\n<div class="reading-time">{reading_time_min(body)} min read</div>\n'
+
+
+def put_related(text, strip):
+    """Insert the strip right under the page's first # heading (at the top when there is none)."""
+    if not strip:
+        return text
+    lines = text.splitlines(keepends=True)
+    fence = False
+    for i, line in enumerate(lines):
+        if line.lstrip().startswith(("```", "~~~")):
+            fence = not fence
+        if not fence and line.startswith("# "):
+            nl = "\r\n" if line.endswith("\r\n") else "\n"
+            return "".join(lines[:i + 1]) + nl + strip.replace("\n", nl) + nl + "".join(lines[i + 1:])
+    return strip + "\n" + text
+
+
+def last_updated(src, pages):
+    """{page: 'YYYY-MM-DD'} from one git log pass; {} when there is no usable history."""
+    try:
+        log = subprocess.run(["git", "-C", src, "log", "--format=@%cs", "--name-only", "-M"],
+                             capture_output=True, text=True, check=True).stdout
+    except (OSError, subprocess.CalledProcessError):
+        return {}
+    wanted, dates, day = set(pages), {}, None
+    for line in log.splitlines():
+        if line.startswith("@"):
+            day = line[1:]
+        elif line in wanted and line not in dates:
+            dates[line] = day  # newest commit comes first
+    return dates
+
+
+def recent_pages(src, pages, count=RECENT_COUNT):
+    """[(date, page)] newest first: pages added (not renamed) in git history."""
+    try:
+        log = subprocess.run(["git", "-C", src, "log", "--diff-filter=A", "-M", "--format=@%cs",
+                              "--name-only", "--", "*.md"],
+                             capture_output=True, text=True, check=True).stdout
+    except (OSError, subprocess.CalledProcessError):
+        return []
+    wanted = {p for p in pages if p not in NOT_RECENT and not p.endswith("/README.md")}
+    found, day = [], None
+    for line in log.splitlines():
+        if line.startswith("@"):
+            day = line[1:]
+        elif line in wanted:
+            found.append((day, line))
+    return found[:count]
+
+
+def page_title(out, page):
+    with open(os.path.join(out, page), encoding="utf-8") as f:
+        for line in f:
+            if line.startswith("# "):
+                return line[2:].strip().rsplit(" - ", 1)[-1].strip()
+    return os.path.basename(page)[:-3]
+
+
+def render_recent(out, recent):
+    lines = ["<!-- recent:start -->", "", "## \U0001F195 Recently added", ""]
+    lines += [f"- {day} \u00b7 [{page_title(out, page)}](/{page})" for day, page in recent]
+    return "\n".join(lines + ["", "<!-- recent:end -->"])
+
+
+def site_version(src):
+    """The git commit of the source (short), or a timestamp without git."""
+    try:
+        return subprocess.run(["git", "-C", src, "rev-parse", "--short=12", "HEAD"],
+                              capture_output=True, text=True, check=True).stdout.strip()
+    except (OSError, subprocess.CalledProcessError):
+        return time.strftime("%Y%m%d%H%M%S", time.gmtime())
+
+
+def write_service_worker(src, out):
+    """sw.js at the root of the staged site; (version, shell file count), or None without a template."""
+    template = os.path.join(out, SW_TEMPLATE)
+    index = os.path.join(out, "index.html")
+    if not (os.path.exists(template) and os.path.exists(index)):
+        return None
+    with open(index, encoding="utf-8") as f:
+        assets = [u[2:] if u.startswith("./") else u for u in ASSET_RE.findall(f.read())]
+    shell = ["./", "index.html", ".docs/_sidebar.md", ".docs/_navbar.md", ".docs/_404.md", "README.md"]
+    shell += [p for p in (".docs/search-index.json", ".docs/last-updated.json")
+              if os.path.exists(os.path.join(out, p))]
+    shell += [a for a in assets
+              if a not in shell and (a.startswith("https://") or os.path.exists(os.path.join(out, a)))]
+    version = site_version(src)
+    with open(template, encoding="utf-8") as f:
+        code = f.read()
+    code = code.replace("'__SW_VERSION__'", json.dumps(version)).replace("['__SW_SHELL__']", json.dumps(shell))
+    with open(os.path.join(out, "sw.js"), "w", encoding="utf-8") as f:
+        f.write(code)
+    return version, len(shell)
+
+
+def stage(src, out, base_url=DEFAULT_BASE):
+    src, out = os.path.abspath(src), os.path.abspath(out)
+    if out == src or src.startswith(out + os.sep):
+        sys.exit("--out must not be the source directory or one of its parents")
+    if os.path.exists(out):
+        if not os.path.exists(os.path.join(out, MARKER)):
+            sys.exit(f"{out} exists and was not created by this script; refusing to delete it")
+        shutil.rmtree(out)
+
+    subs = set(submodule_paths(src))
+    out_rel = os.path.relpath(out, src).replace(os.sep, "/")
+
+    def ignore(dirpath, names):
+        rel_dir = os.path.relpath(dirpath, src).replace(os.sep, "/")
+        skip = set()
+        for n in names:
+            rel = n if rel_dir == "." else f"{rel_dir}/{n}"
+            if n == ".git" or n == "__pycache__" or rel in subs or rel == out_rel or rel in LOCAL_ONLY:
+                skip.add(n)
+        return skip
+
+    shutil.copytree(src, out, ignore=ignore)
+    for s in sorted(subs):  # keep submodule folders as empty dirs, as in a CI checkout
+        os.makedirs(os.path.join(out, s), exist_ok=True)
+
+    related = {}
+    rpath = os.path.join(src, ".docs/generated/related.json")
+    if os.path.exists(rpath):
+        with open(rpath, encoding="utf-8") as f:
+            related = json.load(f)
+
+    stripped = appended = timed = 0
+    originals = {}
+    for path in list_pages(out, set(subs)):
+        full = os.path.join(out, path)
+        with open(full, encoding="utf-8", newline="") as f:
+            text = f.read()
+        originals[path] = text
+        new = text
+        split = split_front_matter(text)
+        if split is not None:
+            new = text[split[1]:]
+            stripped += 1
+        under_title = render_reading_time(path, new)
+        timed += bool(under_title)
+        if path in related:
+            under_title += render_related(related[path])
+            appended += 1
+        new = put_related(new, under_title)
+        if new != text:
+            with open(full, "w", encoding="utf-8", newline="") as f:
+                f.write(new)
+
+    n_code = write_code_pages(out, subs)
+    n_share = write_share_pages(out, originals, base_url)
+
+    recent = recent_pages(src, list_pages(out, set(subs)))
+    home = os.path.join(out, "README.md")
+    if recent and os.path.exists(home):
+        with open(home, encoding="utf-8", newline="") as f:
+            text = f.read()
+        if RECENT_RE.search(text):
+            with open(home, "w", encoding="utf-8", newline="") as f:
+                f.write(RECENT_RE.sub(lambda m: render_recent(out, recent), text, count=1))
+
+    dates = last_updated(src, list_pages(out, set(subs)))
+    if dates:
+        with open(os.path.join(out, ".docs/last-updated.json"), "w", encoding="utf-8") as f:
+            json.dump(dates, f, sort_keys=True, separators=(",", ":"))
+
+    n_idx, idx_size = build_search_index(out)
+    sw = write_service_worker(src, out)
+    images = optimize_tree(out)
+
+    open(os.path.join(out, ".nojekyll"), "w").close()
+    open(os.path.join(out, MARKER), "w").close()
+    print(f"staged {out}: stripped front matter from {stripped} pages, "
+          f"reading time on {timed} pages, related strip on {appended} pages, "
+          f"{n_code} code and notebook pages, {n_share} share pages, {len(recent)} recent pages, "
+          f"last-updated dates for {len(dates)} pages, "
+          f"search index of {n_idx} pages ({idx_size // 1024} KB), "
+          + (f"service worker {sw[0]} with {sw[1]} shell files" if sw else "no service worker")
+          + f"; {images}")
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    ap.add_argument("--src", default=os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
+    ap.add_argument("--out", required=True)
+    ap.add_argument("--base-url", default=DEFAULT_BASE,
+                    help="public address of the site, used in share-page link previews")
+    args = ap.parse_args()
+    stage(args.src, args.out, args.base_url)
+
+
+if __name__ == "__main__":
+    main()

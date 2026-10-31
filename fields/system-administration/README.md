@@ -1,0 +1,24 @@
+# System Administration - Overview
+
+System administration, DevOps, and infrastructure management for AI/ML environments.
+
+## Contents
+
+| File | Description |
+|------|-------------|
+| [active-directory](/fields/system-administration/active-directory.md) | Active Directory reference for Linux and HPC engineers |
+| [ansible](/fields/system-administration/ansible.md) | Configuration management with Ansible |
+| [bash-scripting](/fields/system-administration/bash-scripting.md) | Bash scripting for automation |
+| [build-process](/fields/system-administration/build-process.md) | Software build and CI/CD processes |
+| [Hardware](/fields/system-administration/hw.md) | Hardware issues and solutions |
+| [ldap](/fields/system-administration/ldap.md) | LDAP directory services |
+| [linux-admin](/fields/system-administration/linux-admin/) | Linux administration guides |
+| [memory](/fields/system-administration/memory.md) | Memory management and optimization |
+| [network](/fields/system-administration/network.md) | Networking fundamentals |
+| [node-health-check](/fields/system-administration/node-health-check/README.md) | Series: LBNL Node Health Check (NHC) from install to auto-remediation |
+| [q-and-a](/fields/system-administration/q-and-a.md) | Common sysadmin Q&A |
+| [virtual-machines](/fields/system-administration/virtual-machines.md) | Virtual machine management |
+| [gpu-failure-prediction](/fields/system-administration/gpu-failure-prediction/README.md) | Series: predicting GPU node failures and draining before jobs die |
+| [ai-storage-and-fabric](/fields/system-administration/ai-storage-and-fabric/README.md) | Series: parallel filesystems, RDMA, InfiniBand and GPUDirect for GPU clusters |
+
+Essential knowledge for managing ML infrastructure and deployment environments.

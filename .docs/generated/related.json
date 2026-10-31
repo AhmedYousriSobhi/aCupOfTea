@@ -1,0 +1,1030 @@
+{
+  "business/hpc-industry/101-hpc.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "hpc-workloads",
+        "path": "business/hpc-industry/workloads.md",
+        "title": "HPC Workloads"
+      }
+    ],
+    "required_by": []
+  },
+  "business/hpc-industry/workloads.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "hpc-systems-overview",
+        "path": "business/hpc-industry/101-hpc.md",
+        "title": "HPC Systems"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/benchmarks/nccl.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "pytorch-ddp",
+        "path": "fields/libraries-frameworks-containers/102-pytorch-ddp.md",
+        "title": "PyTorch DDP"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/benchmarks/parallel-execution-affinity-master-guide.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "cpu-affinity",
+        "path": "programming/operating-system/process-cpu-affinity.md",
+        "title": "CPU Affinity"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/deep-learning/concepts/basics.md": {
+    "prerequisites": [],
+    "related": [],
+    "required_by": [
+      {
+        "id": "sequence-models",
+        "path": "fields/deep-learning/concepts/sequence-models.md",
+        "title": "Sequence Models"
+      }
+    ]
+  },
+  "fields/deep-learning/concepts/sequence-models.md": {
+    "prerequisites": [
+      {
+        "id": "deep-learning-basics",
+        "path": "fields/deep-learning/concepts/basics.md",
+        "title": "Deep Learning Basics"
+      }
+    ],
+    "related": [],
+    "required_by": [
+      {
+        "id": "encoder-decoder-machine-translation",
+        "path": "fields/generative-ai/machine-translator/encoder-decoder.md",
+        "title": "Encoder-Decoder for Machine Translation"
+      }
+    ]
+  },
+  "fields/devops/kubernetes/broken-pods-rogues-gallery.md": {
+    "prerequisites": [
+      {
+        "id": "kubernetes-in-five-nouns",
+        "path": "fields/devops/kubernetes/kubernetes-in-five-nouns.md",
+        "title": "Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster"
+      }
+    ],
+    "related": [
+      {
+        "id": "containers-101",
+        "path": "fields/libraries-frameworks-containers/101-containers.md",
+        "title": "Containers 101"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/devops/kubernetes/build-a-two-node-k3s-lab.md": {
+    "prerequisites": [
+      {
+        "id": "kubernetes-in-five-nouns",
+        "path": "fields/devops/kubernetes/kubernetes-in-five-nouns.md",
+        "title": "Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster"
+      }
+    ],
+    "related": [
+      {
+        "id": "containers-101",
+        "path": "fields/libraries-frameworks-containers/101-containers.md",
+        "title": "Containers 101"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "fake-gpus-in-kubernetes",
+        "path": "fields/devops/kubernetes/fake-gpus-in-kubernetes.md",
+        "title": "Fake GPUs in Kubernetes: Learn GPU Scheduling Without Owning a GPU"
+      },
+      {
+        "id": "gpu-allocation-vs-utilization",
+        "path": "fields/devops/kubernetes/gpu-allocation-vs-utilization.md",
+        "title": "Booked Is Not Busy: GPU Allocation vs Utilization"
+      }
+    ]
+  },
+  "fields/devops/kubernetes/fake-gpus-in-kubernetes.md": {
+    "prerequisites": [
+      {
+        "id": "build-a-two-node-k3s-lab",
+        "path": "fields/devops/kubernetes/build-a-two-node-k3s-lab.md",
+        "title": "Build a Two-Node Kubernetes Lab on Your Laptop (and Survive the DNS Pothole)"
+      },
+      {
+        "id": "kubernetes-in-five-nouns",
+        "path": "fields/devops/kubernetes/kubernetes-in-five-nouns.md",
+        "title": "Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster"
+      }
+    ],
+    "related": [
+      {
+        "id": "containers-101",
+        "path": "fields/libraries-frameworks-containers/101-containers.md",
+        "title": "Containers 101"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "isolating-gpu-workloads",
+        "path": "fields/devops/kubernetes/isolating-gpu-workloads.md",
+        "title": "Isolating GPU Workloads: Taints, Labels and the Device Plugin"
+      }
+    ]
+  },
+  "fields/devops/kubernetes/gpu-allocation-vs-utilization.md": {
+    "prerequisites": [
+      {
+        "id": "build-a-two-node-k3s-lab",
+        "path": "fields/devops/kubernetes/build-a-two-node-k3s-lab.md",
+        "title": "Build a Two-Node Kubernetes Lab on Your Laptop (and Survive the DNS Pothole)"
+      },
+      {
+        "id": "kubernetes-in-five-nouns",
+        "path": "fields/devops/kubernetes/kubernetes-in-five-nouns.md",
+        "title": "Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster"
+      }
+    ],
+    "related": [
+      {
+        "id": "containers-101",
+        "path": "fields/libraries-frameworks-containers/101-containers.md",
+        "title": "Containers 101"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "isolating-gpu-workloads",
+        "path": "fields/devops/kubernetes/isolating-gpu-workloads.md",
+        "title": "Isolating GPU Workloads: Taints, Labels and the Device Plugin"
+      }
+    ]
+  },
+  "fields/devops/kubernetes/isolating-gpu-workloads.md": {
+    "prerequisites": [
+      {
+        "id": "gpu-allocation-vs-utilization",
+        "path": "fields/devops/kubernetes/gpu-allocation-vs-utilization.md",
+        "title": "Booked Is Not Busy: GPU Allocation vs Utilization"
+      },
+      {
+        "id": "fake-gpus-in-kubernetes",
+        "path": "fields/devops/kubernetes/fake-gpus-in-kubernetes.md",
+        "title": "Fake GPUs in Kubernetes: Learn GPU Scheduling Without Owning a GPU"
+      }
+    ],
+    "related": [
+      {
+        "id": "slurm-accounting-multi-tenancy",
+        "path": "fields/schedulers/slurm-accounting-multi-tenancy.md",
+        "title": "Slurm Multi-Tenancy: Who Stores the Rules, Who Enforces Them"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "job-execution-journey",
+        "path": "fields/devops/kubernetes/job-execution-journey.md",
+        "title": "The Job Execution Journey: From `kubectl apply` to the First All-Reduce"
+      }
+    ]
+  },
+  "fields/devops/kubernetes/job-execution-journey.md": {
+    "prerequisites": [
+      {
+        "id": "isolating-gpu-workloads",
+        "path": "fields/devops/kubernetes/isolating-gpu-workloads.md",
+        "title": "Isolating GPU Workloads: Taints, Labels and the Device Plugin"
+      }
+    ],
+    "related": [
+      {
+        "id": "ai-storage-rdma-gpudirect",
+        "path": "fields/system-administration/ai-storage-and-fabric/rdma-infiniband-gpudirect.md",
+        "title": "RDMA, InfiniBand and GPUDirect: Taking the CPU Out of the Way"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/devops/kubernetes/kubernetes-in-five-nouns.md": {
+    "prerequisites": [
+      {
+        "id": "containers-101",
+        "path": "fields/libraries-frameworks-containers/101-containers.md",
+        "title": "Containers 101"
+      }
+    ],
+    "related": [],
+    "required_by": [
+      {
+        "id": "build-a-two-node-k3s-lab",
+        "path": "fields/devops/kubernetes/build-a-two-node-k3s-lab.md",
+        "title": "Build a Two-Node Kubernetes Lab on Your Laptop (and Survive the DNS Pothole)"
+      },
+      {
+        "id": "fake-gpus-in-kubernetes",
+        "path": "fields/devops/kubernetes/fake-gpus-in-kubernetes.md",
+        "title": "Fake GPUs in Kubernetes: Learn GPU Scheduling Without Owning a GPU"
+      },
+      {
+        "id": "broken-pods-rogues-gallery",
+        "path": "fields/devops/kubernetes/broken-pods-rogues-gallery.md",
+        "title": "Broken Pods: A Rogues' Gallery (and the One Command That Catches Them All)"
+      },
+      {
+        "id": "gpu-allocation-vs-utilization",
+        "path": "fields/devops/kubernetes/gpu-allocation-vs-utilization.md",
+        "title": "Booked Is Not Busy: GPU Allocation vs Utilization"
+      },
+      {
+        "id": "nvidia-cluster-readiness-engine",
+        "path": "fields/devops/kubernetes/nvidia-cluster-readiness-engine.md",
+        "title": "The Cluster That Passed Every Test Except the One That Mattered"
+      }
+    ]
+  },
+  "fields/devops/kubernetes/nvidia-cluster-readiness-engine.md": {
+    "prerequisites": [
+      {
+        "id": "kubernetes-in-five-nouns",
+        "path": "fields/devops/kubernetes/kubernetes-in-five-nouns.md",
+        "title": "Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster"
+      }
+    ],
+    "related": [
+      {
+        "id": "containers-101",
+        "path": "fields/libraries-frameworks-containers/101-containers.md",
+        "title": "Containers 101"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/generative-ai/llm-inference-performance/compute-bound-vs-memory-bound.md": {
+    "prerequisites": [],
+    "related": [],
+    "required_by": [
+      {
+        "id": "llm-perf-inference-roofline",
+        "path": "fields/generative-ai/llm-inference-performance/llm-inference-on-the-roofline.md",
+        "title": "LLM Inference on the Roofline"
+      }
+    ]
+  },
+  "fields/generative-ai/llm-inference-performance/llm-inference-on-the-roofline.md": {
+    "prerequisites": [
+      {
+        "id": "llm-perf-compute-vs-memory-bound",
+        "path": "fields/generative-ai/llm-inference-performance/compute-bound-vs-memory-bound.md",
+        "title": "Compute-Bound vs Memory-Bandwidth-Bound"
+      }
+    ],
+    "related": [],
+    "required_by": [
+      {
+        "id": "llm-perf-sizing-70b",
+        "path": "fields/generative-ai/llm-inference-performance/sizing-a-70b-model.md",
+        "title": "Sizing a 70B Model with a Pencil"
+      }
+    ]
+  },
+  "fields/generative-ai/llm-inference-performance/optimizations-on-the-roofline.md": {
+    "prerequisites": [
+      {
+        "id": "llm-perf-sizing-70b",
+        "path": "fields/generative-ai/llm-inference-performance/sizing-a-70b-model.md",
+        "title": "Sizing a 70B Model with a Pencil"
+      }
+    ],
+    "related": [],
+    "required_by": [
+      {
+        "id": "llm-perf-structured-sparsity",
+        "path": "fields/generative-ai/llm-inference-performance/structured-sparsity.md",
+        "title": "2:4 Sparsity: Half the Weights, Not Half the Time"
+      }
+    ]
+  },
+  "fields/generative-ai/llm-inference-performance/sizing-a-70b-model.md": {
+    "prerequisites": [
+      {
+        "id": "llm-perf-inference-roofline",
+        "path": "fields/generative-ai/llm-inference-performance/llm-inference-on-the-roofline.md",
+        "title": "LLM Inference on the Roofline"
+      }
+    ],
+    "related": [],
+    "required_by": [
+      {
+        "id": "llm-perf-optimizations",
+        "path": "fields/generative-ai/llm-inference-performance/optimizations-on-the-roofline.md",
+        "title": "Optimizations, Mapped to the Roofline"
+      }
+    ]
+  },
+  "fields/generative-ai/llm-inference-performance/sparsity-vs-quantization.md": {
+    "prerequisites": [
+      {
+        "id": "llm-perf-structured-sparsity",
+        "path": "fields/generative-ai/llm-inference-performance/structured-sparsity.md",
+        "title": "2:4 Sparsity: Half the Weights, Not Half the Time"
+      }
+    ],
+    "related": [],
+    "required_by": []
+  },
+  "fields/generative-ai/llm-inference-performance/structured-sparsity.md": {
+    "prerequisites": [
+      {
+        "id": "llm-perf-optimizations",
+        "path": "fields/generative-ai/llm-inference-performance/optimizations-on-the-roofline.md",
+        "title": "Optimizations, Mapped to the Roofline"
+      }
+    ],
+    "related": [],
+    "required_by": [
+      {
+        "id": "llm-perf-sparsity-vs-quantization",
+        "path": "fields/generative-ai/llm-inference-performance/sparsity-vs-quantization.md",
+        "title": "Sparsity vs Quantization: Who Pays, and Who Wins"
+      }
+    ]
+  },
+  "fields/generative-ai/machine-translator/encoder-decoder.md": {
+    "prerequisites": [
+      {
+        "id": "sequence-models",
+        "path": "fields/deep-learning/concepts/sequence-models.md",
+        "title": "Sequence Models"
+      }
+    ],
+    "related": [],
+    "required_by": []
+  },
+  "fields/libraries-frameworks-containers/101-containers.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "gpu-allocation-vs-utilization",
+        "path": "fields/devops/kubernetes/gpu-allocation-vs-utilization.md",
+        "title": "Booked Is Not Busy: GPU Allocation vs Utilization"
+      },
+      {
+        "id": "broken-pods-rogues-gallery",
+        "path": "fields/devops/kubernetes/broken-pods-rogues-gallery.md",
+        "title": "Broken Pods: A Rogues' Gallery (and the One Command That Catches Them All)"
+      },
+      {
+        "id": "build-a-two-node-k3s-lab",
+        "path": "fields/devops/kubernetes/build-a-two-node-k3s-lab.md",
+        "title": "Build a Two-Node Kubernetes Lab on Your Laptop (and Survive the DNS Pothole)"
+      },
+      {
+        "id": "fake-gpus-in-kubernetes",
+        "path": "fields/devops/kubernetes/fake-gpus-in-kubernetes.md",
+        "title": "Fake GPUs in Kubernetes: Learn GPU Scheduling Without Owning a GPU"
+      },
+      {
+        "id": "nvidia-cluster-readiness-engine",
+        "path": "fields/devops/kubernetes/nvidia-cluster-readiness-engine.md",
+        "title": "The Cluster That Passed Every Test Except the One That Mattered"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "kubernetes-in-five-nouns",
+        "path": "fields/devops/kubernetes/kubernetes-in-five-nouns.md",
+        "title": "Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster"
+      },
+      {
+        "id": "singularity-containers",
+        "path": "fields/libraries-frameworks-containers/101-singularity.md",
+        "title": "Singularity"
+      }
+    ]
+  },
+  "fields/libraries-frameworks-containers/101-pytorch.md": {
+    "prerequisites": [],
+    "related": [],
+    "required_by": [
+      {
+        "id": "pytorch-ddp",
+        "path": "fields/libraries-frameworks-containers/102-pytorch-ddp.md",
+        "title": "PyTorch DDP"
+      }
+    ]
+  },
+  "fields/libraries-frameworks-containers/101-singularity.md": {
+    "prerequisites": [
+      {
+        "id": "containers-101",
+        "path": "fields/libraries-frameworks-containers/101-containers.md",
+        "title": "Containers 101"
+      }
+    ],
+    "related": [],
+    "required_by": []
+  },
+  "fields/libraries-frameworks-containers/102-pytorch-ddp.md": {
+    "prerequisites": [
+      {
+        "id": "pytorch-101",
+        "path": "fields/libraries-frameworks-containers/101-pytorch.md",
+        "title": "PyTorch 101"
+      }
+    ],
+    "related": [
+      {
+        "id": "nccl-collective-communication",
+        "path": "fields/benchmarks/nccl.md",
+        "title": "NCCL"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/schedulers/slurm-accounting-multi-tenancy.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "isolating-gpu-workloads",
+        "path": "fields/devops/kubernetes/isolating-gpu-workloads.md",
+        "title": "Isolating GPU Workloads: Taints, Labels and the Device Plugin"
+      },
+      {
+        "id": "slurm-mixed-gpus-overview",
+        "path": "fields/schedulers/slurm-mixed-gpus/README.md",
+        "title": "Mixing GPU Types in Slurm - Overview"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/schedulers/slurm-mixed-gpus/README.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "slurm-accounting-multi-tenancy",
+        "path": "fields/schedulers/slurm-accounting-multi-tenancy.md",
+        "title": "Slurm Multi-Tenancy: Who Stores the Rules, Who Enforces Them"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/schedulers/slurm-mixed-gpus/four-ways-to-mix-gpus.md": {
+    "prerequisites": [],
+    "related": [],
+    "required_by": [
+      {
+        "id": "slurm-mixed-gpus-why-disappoints",
+        "path": "fields/schedulers/slurm-mixed-gpus/why-mixed-training-disappoints.md",
+        "title": "Why Mixed-GPU Training Disappoints"
+      }
+    ]
+  },
+  "fields/schedulers/slurm-mixed-gpus/where-hetjobs-shine.md": {
+    "prerequisites": [
+      {
+        "id": "slurm-mixed-gpus-why-disappoints",
+        "path": "fields/schedulers/slurm-mixed-gpus/why-mixed-training-disappoints.md",
+        "title": "Why Mixed-GPU Training Disappoints"
+      }
+    ],
+    "related": [],
+    "required_by": []
+  },
+  "fields/schedulers/slurm-mixed-gpus/why-mixed-training-disappoints.md": {
+    "prerequisites": [
+      {
+        "id": "slurm-mixed-gpus-four-ways",
+        "path": "fields/schedulers/slurm-mixed-gpus/four-ways-to-mix-gpus.md",
+        "title": "Four Ways to Ask Slurm for Mixed GPUs"
+      }
+    ],
+    "related": [],
+    "required_by": [
+      {
+        "id": "slurm-mixed-gpus-where-shine",
+        "path": "fields/schedulers/slurm-mixed-gpus/where-hetjobs-shine.md",
+        "title": "Where Heterogeneous Jobs Shine"
+      }
+    ]
+  },
+  "fields/system-administration/ai-storage-and-fabric/parallel-filesystems-for-ai.md": {
+    "prerequisites": [],
+    "related": [],
+    "required_by": [
+      {
+        "id": "ai-storage-rdma-gpudirect",
+        "path": "fields/system-administration/ai-storage-and-fabric/rdma-infiniband-gpudirect.md",
+        "title": "RDMA, InfiniBand and GPUDirect: Taking the CPU Out of the Way"
+      }
+    ]
+  },
+  "fields/system-administration/ai-storage-and-fabric/rdma-infiniband-gpudirect.md": {
+    "prerequisites": [
+      {
+        "id": "ai-storage-parallel-filesystems",
+        "path": "fields/system-administration/ai-storage-and-fabric/parallel-filesystems-for-ai.md",
+        "title": "Parallel Filesystems: Why 10,000 GPUs Can Starve on a Full Disk"
+      }
+    ],
+    "related": [
+      {
+        "id": "job-execution-journey",
+        "path": "fields/devops/kubernetes/job-execution-journey.md",
+        "title": "The Job Execution Journey: From `kubectl apply` to the First All-Reduce"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/system-administration/gpu-failure-prediction/README.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "nhc-auto-remediation",
+        "path": "fields/system-administration/node-health-check/auto-remediation.md",
+        "title": "Auto-Remediation: From Detected to Fixed, Safely"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/system-administration/gpu-failure-prediction/collecting-the-signals.md": {
+    "prerequisites": [
+      {
+        "id": "gpu-pred-what-fails",
+        "path": "fields/system-administration/gpu-failure-prediction/what-fails-and-what-warns.md",
+        "title": "How GPU Memory Fails, and Why You Can See It Coming"
+      }
+    ],
+    "related": [],
+    "required_by": [
+      {
+        "id": "gpu-pred-rules",
+        "path": "fields/system-administration/gpu-failure-prediction/rules-that-predict.md",
+        "title": "From Signals to Decisions"
+      }
+    ]
+  },
+  "fields/system-administration/gpu-failure-prediction/from-alert-to-drain.md": {
+    "prerequisites": [
+      {
+        "id": "gpu-pred-rules",
+        "path": "fields/system-administration/gpu-failure-prediction/rules-that-predict.md",
+        "title": "From Signals to Decisions"
+      }
+    ],
+    "related": [
+      {
+        "id": "nhc-auto-remediation",
+        "path": "fields/system-administration/node-health-check/auto-remediation.md",
+        "title": "Auto-Remediation: From Detected to Fixed, Safely"
+      },
+      {
+        "id": "gpu-pred-runbook",
+        "path": "fields/system-administration/gpu-failure-prediction/runbook.md",
+        "title": "Runbook: Deploying GPU Failure Prediction End to End"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "gpu-pred-backtesting",
+        "path": "fields/system-administration/gpu-failure-prediction/scoring-and-backtesting.md",
+        "title": "Is the Prediction Any Good?"
+      }
+    ]
+  },
+  "fields/system-administration/gpu-failure-prediction/rules-that-predict.md": {
+    "prerequisites": [
+      {
+        "id": "gpu-pred-collecting-signals",
+        "path": "fields/system-administration/gpu-failure-prediction/collecting-the-signals.md",
+        "title": "Reading the GPU's Vital Signs"
+      }
+    ],
+    "related": [
+      {
+        "id": "gpu-pred-runbook",
+        "path": "fields/system-administration/gpu-failure-prediction/runbook.md",
+        "title": "Runbook: Deploying GPU Failure Prediction End to End"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "gpu-pred-alert-to-drain",
+        "path": "fields/system-administration/gpu-failure-prediction/from-alert-to-drain.md",
+        "title": "Acting Without Making It Worse"
+      }
+    ]
+  },
+  "fields/system-administration/gpu-failure-prediction/runbook.md": {
+    "prerequisites": [
+      {
+        "id": "gpu-pred-what-fails",
+        "path": "fields/system-administration/gpu-failure-prediction/what-fails-and-what-warns.md",
+        "title": "How GPU Memory Fails, and Why You Can See It Coming"
+      }
+    ],
+    "related": [
+      {
+        "id": "gpu-pred-alert-to-drain",
+        "path": "fields/system-administration/gpu-failure-prediction/from-alert-to-drain.md",
+        "title": "Acting Without Making It Worse"
+      },
+      {
+        "id": "nhc-auto-remediation",
+        "path": "fields/system-administration/node-health-check/auto-remediation.md",
+        "title": "Auto-Remediation: From Detected to Fixed, Safely"
+      },
+      {
+        "id": "gpu-pred-rules",
+        "path": "fields/system-administration/gpu-failure-prediction/rules-that-predict.md",
+        "title": "From Signals to Decisions"
+      },
+      {
+        "id": "gpu-pred-backtesting",
+        "path": "fields/system-administration/gpu-failure-prediction/scoring-and-backtesting.md",
+        "title": "Is the Prediction Any Good?"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/system-administration/gpu-failure-prediction/scoring-and-backtesting.md": {
+    "prerequisites": [
+      {
+        "id": "gpu-pred-alert-to-drain",
+        "path": "fields/system-administration/gpu-failure-prediction/from-alert-to-drain.md",
+        "title": "Acting Without Making It Worse"
+      }
+    ],
+    "related": [
+      {
+        "id": "gpu-pred-runbook",
+        "path": "fields/system-administration/gpu-failure-prediction/runbook.md",
+        "title": "Runbook: Deploying GPU Failure Prediction End to End"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/system-administration/gpu-failure-prediction/what-fails-and-what-warns.md": {
+    "prerequisites": [],
+    "related": [],
+    "required_by": [
+      {
+        "id": "gpu-pred-collecting-signals",
+        "path": "fields/system-administration/gpu-failure-prediction/collecting-the-signals.md",
+        "title": "Reading the GPU's Vital Signs"
+      },
+      {
+        "id": "gpu-pred-runbook",
+        "path": "fields/system-administration/gpu-failure-prediction/runbook.md",
+        "title": "Runbook: Deploying GPU Failure Prediction End to End"
+      }
+    ]
+  },
+  "fields/system-administration/node-health-check/architecture-driven-nhc.md": {
+    "prerequisites": [
+      {
+        "id": "nhc-rollout-at-scale",
+        "path": "fields/system-administration/node-health-check/rollout-at-scale.md",
+        "title": "Rolling NHC Out to a Fleet Without Draining Everything"
+      },
+      {
+        "id": "nhc-writing-nhc-conf",
+        "path": "fields/system-administration/node-health-check/writing-nhc-conf.md",
+        "title": "Writing nhc.conf That Actually Fits Your Cluster"
+      },
+      {
+        "id": "nhc-custom-checks",
+        "path": "fields/system-administration/node-health-check/custom-checks.md",
+        "title": "Writing Your Own NHC Checks"
+      }
+    ],
+    "related": [],
+    "required_by": [
+      {
+        "id": "nhc-case-study",
+        "path": "fields/system-administration/node-health-check/case-study-build-me-an-nhc.md",
+        "title": "Case Study: \"Build Us an NHC\", From a Vague Ask to a Validated Proposal"
+      }
+    ]
+  },
+  "fields/system-administration/node-health-check/auto-remediation.md": {
+    "prerequisites": [
+      {
+        "id": "nhc-slurm-integration",
+        "path": "fields/system-administration/node-health-check/slurm-integration.md",
+        "title": "Plugging NHC into Slurm (and Friends)"
+      },
+      {
+        "id": "nhc-rollout-at-scale",
+        "path": "fields/system-administration/node-health-check/rollout-at-scale.md",
+        "title": "Rolling NHC Out to a Fleet Without Draining Everything"
+      }
+    ],
+    "related": [
+      {
+        "id": "gpu-pred-alert-to-drain",
+        "path": "fields/system-administration/gpu-failure-prediction/from-alert-to-drain.md",
+        "title": "Acting Without Making It Worse"
+      },
+      {
+        "id": "gpu-failure-prediction-overview",
+        "path": "fields/system-administration/gpu-failure-prediction/README.md",
+        "title": "Predicting GPU Node Failures - Overview"
+      },
+      {
+        "id": "gpu-pred-runbook",
+        "path": "fields/system-administration/gpu-failure-prediction/runbook.md",
+        "title": "Runbook: Deploying GPU Failure Prediction End to End"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/system-administration/node-health-check/build-and-install.md": {
+    "prerequisites": [
+      {
+        "id": "nhc-why-node-health-check",
+        "path": "fields/system-administration/node-health-check/why-node-health-check.md",
+        "title": "Why Your Cluster Needs a Bouncer"
+      }
+    ],
+    "related": [],
+    "required_by": [
+      {
+        "id": "nhc-writing-nhc-conf",
+        "path": "fields/system-administration/node-health-check/writing-nhc-conf.md",
+        "title": "Writing nhc.conf That Actually Fits Your Cluster"
+      }
+    ]
+  },
+  "fields/system-administration/node-health-check/case-study-build-me-an-nhc.md": {
+    "prerequisites": [
+      {
+        "id": "nhc-architecture-driven",
+        "path": "fields/system-administration/node-health-check/architecture-driven-nhc.md",
+        "title": "Architecture-Driven NHC: Generate Health Checks from Your Cluster's Definition"
+      }
+    ],
+    "related": [],
+    "required_by": []
+  },
+  "fields/system-administration/node-health-check/cheat-sheet.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "nhc-troubleshooting",
+        "path": "fields/system-administration/node-health-check/troubleshooting.md",
+        "title": "NHC Troubleshooting: Symptom First"
+      },
+      {
+        "id": "nhc-writing-nhc-conf",
+        "path": "fields/system-administration/node-health-check/writing-nhc-conf.md",
+        "title": "Writing nhc.conf That Actually Fits Your Cluster"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/system-administration/node-health-check/custom-checks.md": {
+    "prerequisites": [
+      {
+        "id": "nhc-writing-nhc-conf",
+        "path": "fields/system-administration/node-health-check/writing-nhc-conf.md",
+        "title": "Writing nhc.conf That Actually Fits Your Cluster"
+      }
+    ],
+    "related": [],
+    "required_by": [
+      {
+        "id": "nhc-architecture-driven",
+        "path": "fields/system-administration/node-health-check/architecture-driven-nhc.md",
+        "title": "Architecture-Driven NHC: Generate Health Checks from Your Cluster's Definition"
+      }
+    ]
+  },
+  "fields/system-administration/node-health-check/rollout-at-scale.md": {
+    "prerequisites": [
+      {
+        "id": "nhc-slurm-integration",
+        "path": "fields/system-administration/node-health-check/slurm-integration.md",
+        "title": "Plugging NHC into Slurm (and Friends)"
+      }
+    ],
+    "related": [],
+    "required_by": [
+      {
+        "id": "nhc-auto-remediation",
+        "path": "fields/system-administration/node-health-check/auto-remediation.md",
+        "title": "Auto-Remediation: From Detected to Fixed, Safely"
+      },
+      {
+        "id": "nhc-architecture-driven",
+        "path": "fields/system-administration/node-health-check/architecture-driven-nhc.md",
+        "title": "Architecture-Driven NHC: Generate Health Checks from Your Cluster's Definition"
+      }
+    ]
+  },
+  "fields/system-administration/node-health-check/slurm-integration.md": {
+    "prerequisites": [
+      {
+        "id": "nhc-writing-nhc-conf",
+        "path": "fields/system-administration/node-health-check/writing-nhc-conf.md",
+        "title": "Writing nhc.conf That Actually Fits Your Cluster"
+      }
+    ],
+    "related": [
+      {
+        "id": "nhc-why-node-health-check",
+        "path": "fields/system-administration/node-health-check/why-node-health-check.md",
+        "title": "Why Your Cluster Needs a Bouncer"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "nhc-rollout-at-scale",
+        "path": "fields/system-administration/node-health-check/rollout-at-scale.md",
+        "title": "Rolling NHC Out to a Fleet Without Draining Everything"
+      },
+      {
+        "id": "nhc-auto-remediation",
+        "path": "fields/system-administration/node-health-check/auto-remediation.md",
+        "title": "Auto-Remediation: From Detected to Fixed, Safely"
+      },
+      {
+        "id": "nhc-troubleshooting",
+        "path": "fields/system-administration/node-health-check/troubleshooting.md",
+        "title": "NHC Troubleshooting: Symptom First"
+      }
+    ]
+  },
+  "fields/system-administration/node-health-check/troubleshooting.md": {
+    "prerequisites": [
+      {
+        "id": "nhc-slurm-integration",
+        "path": "fields/system-administration/node-health-check/slurm-integration.md",
+        "title": "Plugging NHC into Slurm (and Friends)"
+      }
+    ],
+    "related": [
+      {
+        "id": "nhc-cheat-sheet",
+        "path": "fields/system-administration/node-health-check/cheat-sheet.md",
+        "title": "NHC Cheat Sheet"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/system-administration/node-health-check/why-node-health-check.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "nhc-slurm-integration",
+        "path": "fields/system-administration/node-health-check/slurm-integration.md",
+        "title": "Plugging NHC into Slurm (and Friends)"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "nhc-build-and-install",
+        "path": "fields/system-administration/node-health-check/build-and-install.md",
+        "title": "Build and Install NHC"
+      }
+    ]
+  },
+  "fields/system-administration/node-health-check/writing-nhc-conf.md": {
+    "prerequisites": [
+      {
+        "id": "nhc-build-and-install",
+        "path": "fields/system-administration/node-health-check/build-and-install.md",
+        "title": "Build and Install NHC"
+      }
+    ],
+    "related": [
+      {
+        "id": "nhc-cheat-sheet",
+        "path": "fields/system-administration/node-health-check/cheat-sheet.md",
+        "title": "NHC Cheat Sheet"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "nhc-slurm-integration",
+        "path": "fields/system-administration/node-health-check/slurm-integration.md",
+        "title": "Plugging NHC into Slurm (and Friends)"
+      },
+      {
+        "id": "nhc-custom-checks",
+        "path": "fields/system-administration/node-health-check/custom-checks.md",
+        "title": "Writing Your Own NHC Checks"
+      },
+      {
+        "id": "nhc-architecture-driven",
+        "path": "fields/system-administration/node-health-check/architecture-driven-nhc.md",
+        "title": "Architecture-Driven NHC: Generate Health Checks from Your Cluster's Definition"
+      }
+    ]
+  },
+  "fields/tabular-data/concept-in-machine-learning/ml-unsupervised.md": {
+    "prerequisites": [],
+    "related": [],
+    "required_by": [
+      {
+        "id": "customer-segmentation-problem",
+        "path": "problems/customer-segmentation.md",
+        "title": "Customer Segmentation"
+      }
+    ]
+  },
+  "fields/tabular-data/data-evaluation/classification/accuracy-paradox.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "bias-variance-trade-off",
+        "path": "fields/tabular-data/data-evaluation/model-behavior/bias-variance-trade-off.md",
+        "title": "Bias and Variance Trade-Off"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/tabular-data/data-evaluation/model-behavior/bias-variance-trade-off.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "accuracy-paradox",
+        "path": "fields/tabular-data/data-evaluation/classification/accuracy-paradox.md",
+        "title": "Accuracy Paradox"
+      }
+    ],
+    "required_by": []
+  },
+  "problems/customer-segmentation.md": {
+    "prerequisites": [
+      {
+        "id": "unsupervised-learning",
+        "path": "fields/tabular-data/concept-in-machine-learning/ml-unsupervised.md",
+        "title": "Unsupervised Learning"
+      }
+    ],
+    "related": [],
+    "required_by": []
+  },
+  "programming/local-app-accounts/sessions-and-two-walls.md": {
+    "prerequisites": [
+      {
+        "id": "sign-in-hygiene",
+        "path": "programming/local-app-accounts/sign-in-hygiene.md",
+        "title": "Sign-In Hygiene: How the Clerk Says \"No\" Without Giving Anything Away"
+      }
+    ],
+    "related": [],
+    "required_by": []
+  },
+  "programming/local-app-accounts/sign-in-hygiene.md": {
+    "prerequisites": [
+      {
+        "id": "threat-model-and-first-launch",
+        "path": "programming/local-app-accounts/threat-model-and-first-launch.md",
+        "title": "Two People, One Laptop: What Accounts Should (and Shouldn't) Promise"
+      }
+    ],
+    "related": [],
+    "required_by": [
+      {
+        "id": "sessions-and-two-walls",
+        "path": "programming/local-app-accounts/sessions-and-two-walls.md",
+        "title": "Who's Home, and What May They Touch? Sessions and Two Walls"
+      }
+    ]
+  },
+  "programming/local-app-accounts/threat-model-and-first-launch.md": {
+    "prerequisites": [],
+    "related": [],
+    "required_by": [
+      {
+        "id": "sign-in-hygiene",
+        "path": "programming/local-app-accounts/sign-in-hygiene.md",
+        "title": "Sign-In Hygiene: How the Clerk Says \"No\" Without Giving Anything Away"
+      }
+    ]
+  },
+  "programming/operating-system/process-cpu-affinity.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "parallel-execution-and-affinity",
+        "path": "fields/benchmarks/parallel-execution-affinity-master-guide.md",
+        "title": "Parallel Execution and Affinity"
+      }
+    ],
+    "required_by": []
+  }
+}
