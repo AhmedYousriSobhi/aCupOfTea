@@ -43,6 +43,8 @@
       "llm-perf-inference-roofline",
       "llm-perf-optimizations",
       "llm-perf-sizing-70b",
+      "llm-perf-sparsity-vs-quantization",
+      "llm-perf-structured-sparsity",
       "sequence-models"
     ]
   },
@@ -164,6 +166,8 @@
       "llm-perf-inference-roofline",
       "llm-perf-optimizations",
       "llm-perf-sizing-70b",
+      "llm-perf-sparsity-vs-quantization",
+      "llm-perf-structured-sparsity",
       "nccl-collective-communication",
       "nhc-architecture-driven",
       "nhc-auto-remediation",

@@ -251,7 +251,13 @@
       }
     ],
     "related": [],
-    "required_by": []
+    "required_by": [
+      {
+        "id": "llm-perf-structured-sparsity",
+        "path": "fields/generative-ai/llm-inference-performance/structured-sparsity.md",
+        "title": "2:4 Sparsity: Half the Weights, Not Half the Time"
+      }
+    ]
   },
   "fields/generative-ai/llm-inference-performance/sizing-a-70b-model.md": {
     "prerequisites": [
@@ -267,6 +273,34 @@
         "id": "llm-perf-optimizations",
         "path": "fields/generative-ai/llm-inference-performance/optimizations-on-the-roofline.md",
         "title": "Optimizations, Mapped to the Roofline"
+      }
+    ]
+  },
+  "fields/generative-ai/llm-inference-performance/sparsity-vs-quantization.md": {
+    "prerequisites": [
+      {
+        "id": "llm-perf-structured-sparsity",
+        "path": "fields/generative-ai/llm-inference-performance/structured-sparsity.md",
+        "title": "2:4 Sparsity: Half the Weights, Not Half the Time"
+      }
+    ],
+    "related": [],
+    "required_by": []
+  },
+  "fields/generative-ai/llm-inference-performance/structured-sparsity.md": {
+    "prerequisites": [
+      {
+        "id": "llm-perf-optimizations",
+        "path": "fields/generative-ai/llm-inference-performance/optimizations-on-the-roofline.md",
+        "title": "Optimizations, Mapped to the Roofline"
+      }
+    ],
+    "related": [],
+    "required_by": [
+      {
+        "id": "llm-perf-sparsity-vs-quantization",
+        "path": "fields/generative-ai/llm-inference-performance/sparsity-vs-quantization.md",
+        "title": "Sparsity vs Quantization: Who Pays, and Who Wins"
       }
     ]
   },
