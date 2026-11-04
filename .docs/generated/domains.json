@@ -1,0 +1,203 @@
+{
+  "business": {
+    "description": "Business context, KPIs and domain knowledge around the technical work.",
+    "label": "Business",
+    "objects": [
+      "customer-segmentation-problem",
+      "hpc-systems-overview",
+      "hpc-workloads",
+      "used-cars-retailer-kpis"
+    ]
+  },
+  "deep-learning": {
+    "description": "Neural networks and deep architectures.",
+    "label": "Deep Learning",
+    "objects": [
+      "cuda-101",
+      "deep-learning-basics",
+      "encoder-decoder-machine-translation",
+      "nccl-collective-communication",
+      "pytorch-101",
+      "pytorch-ddp",
+      "sequence-models"
+    ]
+  },
+  "devops": {
+    "description": "Field",
+    "label": "Devops",
+    "objects": [
+      "broken-pods-rogues-gallery",
+      "build-a-two-node-k3s-lab",
+      "fake-gpus-in-kubernetes",
+      "gpu-allocation-vs-utilization",
+      "isolating-gpu-workloads",
+      "job-execution-journey",
+      "nvidia-cluster-readiness-engine"
+    ]
+  },
+  "generative-ai": {
+    "description": "Generative models, LLMs and their tooling.",
+    "label": "Generative AI",
+    "objects": [
+      "encoder-decoder-machine-translation",
+      "llm-inference-performance-overview",
+      "llm-perf-compute-vs-memory-bound",
+      "llm-perf-inference-roofline",
+      "llm-perf-optimizations",
+      "llm-perf-sizing-70b",
+      "llm-perf-sparsity-vs-quantization",
+      "llm-perf-structured-sparsity",
+      "sequence-models"
+    ]
+  },
+  "kubernates": {
+    "description": "devops-orchestraiton",
+    "label": "Kubernates",
+    "objects": [
+      "broken-pods-rogues-gallery",
+      "build-a-two-node-k3s-lab",
+      "fake-gpus-in-kubernetes",
+      "gpu-allocation-vs-utilization",
+      "nvidia-cluster-readiness-engine"
+    ]
+  },
+  "machine-learning": {
+    "description": "Learning from data, general ML theory and practice.",
+    "label": "Machine Learning",
+    "objects": [
+      "accuracy-paradox",
+      "bias-variance-trade-off",
+      "customer-segmentation-problem",
+      "principal-component-analysis",
+      "regression-imputing",
+      "reinforcement-learning-basics",
+      "time-series-analysis",
+      "unsupervised-learning",
+      "used-cars-retailer-kpis"
+    ]
+  },
+  "natural-language-processing": {
+    "description": "Text and language modelling, translation, sequence tasks.",
+    "label": "Natural Language Processing",
+    "objects": [
+      "encoder-decoder-machine-translation",
+      "sequence-models"
+    ]
+  },
+  "recommender-systems": {
+    "description": "Recommendation and ranking techniques.",
+    "label": "Recommender Systems",
+    "objects": []
+  },
+  "reinforcement-learning": {
+    "description": "Agents learning through reward and interaction.",
+    "label": "Reinforcement Learning",
+    "objects": [
+      "reinforcement-learning-basics"
+    ]
+  },
+  "security": {
+    "description": "Access control, authentication and hardening.",
+    "label": "Security",
+    "objects": [
+      "slurm-pam-adopt-ssh-access"
+    ]
+  },
+  "software-engineering": {
+    "description": "Engineering practice, patterns and tooling.",
+    "label": "Software Engineering",
+    "objects": [
+      "containers-101",
+      "cpu-affinity",
+      "old-data-and-background-work",
+      "parallel-execution-and-affinity",
+      "pytorch-101",
+      "reviewing-the-design",
+      "sessions-and-two-walls",
+      "sign-in-hygiene",
+      "singularity-containers",
+      "threat-model-and-first-launch"
+    ]
+  },
+  "statistics": {
+    "description": "Statistical methods and probability.",
+    "label": "Statistics",
+    "objects": [
+      "accuracy-paradox",
+      "bias-variance-trade-off",
+      "principal-component-analysis",
+      "regression-imputing",
+      "time-series-analysis",
+      "unsupervised-learning"
+    ]
+  },
+  "system-design": {
+    "description": "Software System Design",
+    "label": "System Design",
+    "objects": [
+      "old-data-and-background-work",
+      "reviewing-the-design",
+      "sessions-and-two-walls",
+      "sign-in-hygiene",
+      "threat-model-and-first-launch"
+    ]
+  },
+  "systems-and-hpc": {
+    "description": "Benchmarks, schedulers, system administration, high-performance computing.",
+    "label": "Systems and HPC",
+    "objects": [
+      "ai-infrastructure-core-concepts",
+      "ai-storage-and-fabric-overview",
+      "ai-storage-parallel-filesystems",
+      "ai-storage-rdma-gpudirect",
+      "broken-pods-rogues-gallery",
+      "build-a-two-node-k3s-lab",
+      "containers-101",
+      "cpu-affinity",
+      "cuda-101",
+      "fake-gpus-in-kubernetes",
+      "gpu-allocation-vs-utilization",
+      "gpu-failure-prediction-overview",
+      "gpu-pred-alert-to-drain",
+      "gpu-pred-backtesting",
+      "gpu-pred-collecting-signals",
+      "gpu-pred-rules",
+      "gpu-pred-runbook",
+      "gpu-pred-what-fails",
+      "hpc-systems-overview",
+      "hpc-workloads",
+      "isolating-gpu-workloads",
+      "job-execution-journey",
+      "kubernetes-in-five-nouns",
+      "llm-inference-performance-overview",
+      "llm-perf-compute-vs-memory-bound",
+      "llm-perf-inference-roofline",
+      "llm-perf-optimizations",
+      "llm-perf-sizing-70b",
+      "llm-perf-sparsity-vs-quantization",
+      "llm-perf-structured-sparsity",
+      "nccl-collective-communication",
+      "nhc-architecture-driven",
+      "nhc-auto-remediation",
+      "nhc-build-and-install",
+      "nhc-case-study",
+      "nhc-cheat-sheet",
+      "nhc-custom-checks",
+      "nhc-rollout-at-scale",
+      "nhc-slurm-integration",
+      "nhc-troubleshooting",
+      "nhc-why-node-health-check",
+      "nhc-writing-nhc-conf",
+      "nvidia-cluster-readiness-engine",
+      "parallel-execution-and-affinity",
+      "pytorch-ddp",
+      "singularity-containers",
+      "slurm-accounting-multi-tenancy",
+      "slurm-mixed-gpus-four-ways",
+      "slurm-mixed-gpus-overview",
+      "slurm-mixed-gpus-where-shine",
+      "slurm-mixed-gpus-why-disappoints",
+      "slurm-pam-adopt-ssh-access"
+    ]
+  }
+}

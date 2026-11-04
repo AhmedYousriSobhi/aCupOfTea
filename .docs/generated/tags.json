@@ -1,0 +1,304 @@
+{
+  "affinity": {
+    "label": "Affinity",
+    "objects": [
+      "cpu-affinity",
+      "parallel-execution-and-affinity"
+    ]
+  },
+  "applications": {
+    "label": "Applications",
+    "objects": []
+  },
+  "clustering": {
+    "label": "Clustering",
+    "objects": [
+      "customer-segmentation-problem",
+      "unsupervised-learning"
+    ]
+  },
+  "containers": {
+    "label": "Containers",
+    "objects": [
+      "build-a-two-node-k3s-lab",
+      "containers-101",
+      "singularity-containers"
+    ]
+  },
+  "design": {
+    "label": "Design",
+    "objects": [
+      "threat-model-and-first-launch"
+    ]
+  },
+  "dev": {
+    "label": "Dev",
+    "objects": [
+      "gpu-allocation-vs-utilization"
+    ]
+  },
+  "devops": {
+    "label": "Devops",
+    "objects": [
+      "broken-pods-rogues-gallery",
+      "build-a-two-node-k3s-lab",
+      "fake-gpus-in-kubernetes"
+    ]
+  },
+  "distributed-training": {
+    "label": "Distributed Training",
+    "objects": [
+      "nccl-collective-communication",
+      "pytorch-ddp"
+    ]
+  },
+  "encoder-decoder": {
+    "label": "Encoder-Decoder",
+    "objects": [
+      "encoder-decoder-machine-translation"
+    ]
+  },
+  "gpu": {
+    "label": "GPU",
+    "objects": [
+      "ai-infrastructure-core-concepts",
+      "ai-storage-and-fabric-overview",
+      "ai-storage-parallel-filesystems",
+      "ai-storage-rdma-gpudirect",
+      "cuda-101",
+      "gpu-failure-prediction-overview",
+      "gpu-pred-alert-to-drain",
+      "gpu-pred-backtesting",
+      "gpu-pred-collecting-signals",
+      "gpu-pred-rules",
+      "gpu-pred-runbook",
+      "gpu-pred-what-fails",
+      "isolating-gpu-workloads",
+      "job-execution-journey",
+      "llm-inference-performance-overview",
+      "llm-perf-compute-vs-memory-bound",
+      "llm-perf-inference-roofline",
+      "llm-perf-optimizations",
+      "llm-perf-sizing-70b",
+      "llm-perf-sparsity-vs-quantization",
+      "llm-perf-structured-sparsity",
+      "nccl-collective-communication",
+      "nhc-architecture-driven",
+      "nhc-case-study",
+      "nhc-custom-checks",
+      "nhc-writing-nhc-conf",
+      "slurm-accounting-multi-tenancy",
+      "slurm-mixed-gpus-four-ways",
+      "slurm-mixed-gpus-overview",
+      "slurm-mixed-gpus-where-shine",
+      "slurm-mixed-gpus-why-disappoints"
+    ]
+  },
+  "hpc": {
+    "label": "Hpc",
+    "objects": [
+      "ai-infrastructure-core-concepts",
+      "ai-storage-and-fabric-overview",
+      "ai-storage-parallel-filesystems",
+      "ai-storage-rdma-gpudirect",
+      "broken-pods-rogues-gallery",
+      "build-a-two-node-k3s-lab",
+      "fake-gpus-in-kubernetes",
+      "gpu-allocation-vs-utilization",
+      "gpu-failure-prediction-overview",
+      "gpu-pred-alert-to-drain",
+      "gpu-pred-backtesting",
+      "gpu-pred-collecting-signals",
+      "gpu-pred-rules",
+      "gpu-pred-runbook",
+      "gpu-pred-what-fails",
+      "isolating-gpu-workloads",
+      "job-execution-journey",
+      "nhc-architecture-driven",
+      "nhc-auto-remediation",
+      "nhc-build-and-install",
+      "nhc-case-study",
+      "nhc-cheat-sheet",
+      "nhc-custom-checks",
+      "nhc-rollout-at-scale",
+      "nhc-slurm-integration",
+      "nhc-troubleshooting",
+      "nhc-why-node-health-check",
+      "nhc-writing-nhc-conf",
+      "nvidia-cluster-readiness-engine",
+      "slurm-accounting-multi-tenancy",
+      "slurm-mixed-gpus-four-ways",
+      "slurm-mixed-gpus-overview",
+      "slurm-mixed-gpus-where-shine",
+      "slurm-mixed-gpus-why-disappoints"
+    ]
+  },
+  "kubernetes": {
+    "label": "Kubernetes",
+    "objects": [
+      "ai-infrastructure-core-concepts",
+      "broken-pods-rogues-gallery",
+      "build-a-two-node-k3s-lab",
+      "fake-gpus-in-kubernetes",
+      "gpu-allocation-vs-utilization",
+      "isolating-gpu-workloads",
+      "job-execution-journey",
+      "kubernetes-in-five-nouns",
+      "nvidia-cluster-readiness-engine"
+    ]
+  },
+  "llm": {
+    "label": "Large Language Models",
+    "objects": [
+      "llm-inference-performance-overview",
+      "llm-perf-inference-roofline",
+      "llm-perf-optimizations",
+      "llm-perf-sizing-70b",
+      "llm-perf-sparsity-vs-quantization",
+      "llm-perf-structured-sparsity",
+      "sequence-models"
+    ]
+  },
+  "model-evaluation": {
+    "label": "Model Evaluation",
+    "objects": [
+      "accuracy-paradox",
+      "bias-variance-trade-off"
+    ]
+  },
+  "mpi": {
+    "label": "MPI",
+    "objects": [
+      "parallel-execution-and-affinity"
+    ]
+  },
+  "neural-networks": {
+    "label": "Neural Networks",
+    "objects": [
+      "deep-learning-basics"
+    ]
+  },
+  "nvidia": {
+    "label": "Nvidia",
+    "objects": [
+      "ai-infrastructure-core-concepts",
+      "ai-storage-and-fabric-overview",
+      "ai-storage-rdma-gpudirect",
+      "broken-pods-rogues-gallery",
+      "fake-gpus-in-kubernetes",
+      "gpu-failure-prediction-overview",
+      "gpu-pred-alert-to-drain",
+      "gpu-pred-backtesting",
+      "gpu-pred-collecting-signals",
+      "gpu-pred-rules",
+      "gpu-pred-runbook",
+      "gpu-pred-what-fails",
+      "isolating-gpu-workloads",
+      "job-execution-journey",
+      "llm-inference-performance-overview",
+      "llm-perf-compute-vs-memory-bound",
+      "llm-perf-optimizations",
+      "llm-perf-sizing-70b",
+      "llm-perf-sparsity-vs-quantization",
+      "llm-perf-structured-sparsity",
+      "nhc-case-study",
+      "nhc-custom-checks",
+      "nvidia-cluster-readiness-engine",
+      "slurm-mixed-gpus-overview",
+      "slurm-mixed-gpus-where-shine",
+      "slurm-mixed-gpus-why-disappoints"
+    ]
+  },
+  "programming": {
+    "label": "Programming",
+    "objects": [
+      "old-data-and-background-work",
+      "reviewing-the-design",
+      "sessions-and-two-walls",
+      "sign-in-hygiene",
+      "threat-model-and-first-launch"
+    ]
+  },
+  "pytorch": {
+    "label": "PyTorch",
+    "objects": [
+      "pytorch-101",
+      "pytorch-ddp"
+    ]
+  },
+  "rnn": {
+    "label": "Recurrent Neural Networks",
+    "objects": [
+      "encoder-decoder-machine-translation",
+      "sequence-models"
+    ]
+  },
+  "slurm": {
+    "label": "Slurm",
+    "objects": [
+      "ai-infrastructure-core-concepts",
+      "gpu-failure-prediction-overview",
+      "gpu-pred-alert-to-drain",
+      "gpu-pred-runbook",
+      "nhc-architecture-driven",
+      "nhc-auto-remediation",
+      "nhc-case-study",
+      "nhc-cheat-sheet",
+      "nhc-rollout-at-scale",
+      "nhc-slurm-integration",
+      "nhc-troubleshooting",
+      "nhc-why-node-health-check",
+      "parallel-execution-and-affinity",
+      "slurm-accounting-multi-tenancy",
+      "slurm-mixed-gpus-four-ways",
+      "slurm-mixed-gpus-overview",
+      "slurm-mixed-gpus-where-shine",
+      "slurm-mixed-gpus-why-disappoints",
+      "slurm-pam-adopt-ssh-access"
+    ]
+  },
+  "software": {
+    "label": "Software",
+    "objects": [
+      "reviewing-the-design",
+      "threat-model-and-first-launch"
+    ]
+  },
+  "software-engineering": {
+    "label": "Software Engineering",
+    "objects": [
+      "old-data-and-background-work",
+      "sessions-and-two-walls",
+      "sign-in-hygiene"
+    ]
+  },
+  "storage": {
+    "label": "Storage",
+    "objects": [
+      "ai-storage-and-fabric-overview",
+      "ai-storage-parallel-filesystems",
+      "ai-storage-rdma-gpudirect"
+    ]
+  },
+  "system-design": {
+    "label": "System Design",
+    "objects": [
+      "old-data-and-background-work",
+      "reviewing-the-design",
+      "sessions-and-two-walls",
+      "sign-in-hygiene"
+    ]
+  },
+  "transformers": {
+    "label": "Transformers",
+    "objects": [
+      "llm-inference-performance-overview",
+      "llm-perf-inference-roofline",
+      "llm-perf-optimizations",
+      "llm-perf-sizing-70b",
+      "llm-perf-sparsity-vs-quantization",
+      "llm-perf-structured-sparsity",
+      "sequence-models"
+    ]
+  }
+}

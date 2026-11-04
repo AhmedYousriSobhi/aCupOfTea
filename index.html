@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <!-- Content-Security-Policy: scripts only from this site and the pinned CDN (no inline scripts),
+       no plugins or frames. GitHub Pages cannot send headers, so it is set here. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; font-src 'self' data: https://cdn.jsdelivr.net https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; frame-src 'none'; base-uri 'self'; form-action 'none'">
+  <title>aCupOfTea: knowledge in short sips</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="description" content="Notes on AI, machine learning, software engineering and the business around them, short enough to read on a coffee break.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="aCupOfTea: knowledge in short sips">
+  <meta property="og:description" content="Notes on AI, machine learning, software engineering and the business around them, short enough to read on a coffee break.">
+  <meta name="twitter:card" content="summary">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="./.docs/icons/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="./.docs/icons/favicon-32.png">
+  <link rel="apple-touch-icon" href="./.docs/icons/apple-touch-icon.png">
+  <link rel="manifest" href="./.docs/icons/site.webmanifest">
+  <meta name="theme-color" content="#1f7a52">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify@5.0.0/dist/themes/core.min.css" integrity="sha384-u1ltA0BWEetQbGokjUjglT9sN702RQwy8JESh3Ha4GNlyzMU57usk6duY0/BOTMj" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify@5.0.0/dist/themes/addons/vue.min.css" integrity="sha384-Juf4pwILpOysilbsFQxO8a3Ct3yDvSPolGmartfG+QQRLj6m7c1mYWV38WDI1N93" crossorigin="anonymous">
+  <link rel="stylesheet" id="dark-css" href="https://cdn.jsdelivr.net/npm/docsify@5.0.0/dist/themes/addons/core-dark.min.css" integrity="sha384-g9crfHW8IcGuSHfca3iTqOPPx2uRbodq5uKkC9CiXVqnNVszeNEYKIs5nYc8wUXY" crossorigin="anonymous">
+  <script src="./.docs/theme-toggle.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=PT+Sans&family=JetBrains+Mono&display=swap" rel="stylesheet">
+
+</head>
+<style>
+  /* Apply fonts */
+  .markdown-section {
+    font-family: 'Inter', sans-serif;
+    line-height: 1.7;
+  }
+  code, pre {
+    font-family: 'JetBrains Mono', monospace !important;
+    font-size: 0.92em !important;
+  }
+  /* Themes: .docs/theme-toggle.js sets data-theme (which one) and data-mode (light or dark) on <html>. */
+  html[data-mode="dark"] .markdown-section code {
+    color: #ff8fc0; /* default pink is 3.3:1 on the code background */
+  }
+  /* Mermaid draws arrows and lines in black, invisible on the dark page */
+  html[data-mode="dark"] .mermaid .flowchart-link,
+  html[data-mode="dark"] .mermaid .edgePath path {
+    stroke: #c9d4de !important;
+  }
+  html[data-mode="dark"] .mermaid marker path {
+    fill: #c9d4de !important;
+    stroke: #c9d4de !important;
+  }
+  /* Phones: one top bar that stays on screen, links on the left and the theme
+     button at its right end (where phone readers look for settings). The
+     GitHub corner would cover that spot, so on phones the GitHub link moves to
+     the end of the side menu (.docs/config.js). */
+  @media (max-width: 768px) {
+    :root { --scroll-padding-top: 72px; }
+    nav.app-nav {
+      top: 0 !important; left: 0 !important; right: 0 !important; margin: 0 !important;
+      min-height: 52px; padding: 4px 60px 4px 14px !important; border-radius: 0 !important;
+      justify-content: flex-start !important; align-items: center; gap: 4px 12px !important;
+      border-bottom: 1px solid var(--border-color); z-index: 45;
+    }
+    .github-corner { display: none !important; }
+    html body #theme-toggle { position: fixed; top: 4px; right: 8px; left: auto; }
+    html body #theme-menu { position: fixed; top: 54px; right: 8px; left: auto; max-height: calc(100vh - 70px); overflow-y: auto; }
+    /* Menu button: Docsify makes the whole left edge (35px, full height) the tap
+       target, so taps on text near the edge opened the menu. Keep it 44px wide
+       but only over its button at the bottom; while the menu is open it still
+       covers the rest of the screen, so a tap outside closes the menu. */
+    body:not(:has(.sidebar.show)) .sidebar-toggle {
+      width: 44px; top: auto !important; bottom: 0;
+      height: calc(var(--sidebar-toggle-height) + 2 * var(--sidebar-toggle-margin-block));
+    }
+    body:has(.sidebar.show) #theme-toggle, body:has(.sidebar.show) #theme-menu { display: none; }
+    section.content { padding-top: 52px !important; }
+    .markdown-section { padding-top: 12px !important; }
+  }
+  .markdown-section .math-block { overflow-x: auto; padding: 0.2em 0; }
+  /* Links to related pages, one line under the page title (added when the site is built) */
+  /* Readers who ask for less motion: no sliding menu, fades or smooth scrolling */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; }
+  }
+  /* Reading progress bar and back-to-top button (.docs/reading-progress.js) */
+  #read-progress { position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 70; background: var(--theme-color); transform-origin: 0 50%; transform: scaleX(0); pointer-events: none; }
+  #back-to-top { position: fixed; right: 16px; bottom: 20px; z-index: 55; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--borderColor, #ddd); background: var(--color-bg); color: var(--theme-color); display: flex; align-items: center; justify-content: center; padding: 0; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+  /* the Previous/Next links end the page: keep room below them so the button never covers Next */
+  .docsify-pagination-container { margin-bottom: 72px; }
+  #back-to-top svg { flex: none; }
+  #back-to-top[hidden] { display: none; }
+  @media (max-width: 768px) { body:has(.sidebar.show) #back-to-top { display: none; } }
+  /* Code blocks: a card with a slim header bar that names the language.
+     Docsify's own pre rules use !important, so these do too. */
+  body .markdown-section pre[data-lang] {
+    margin: 1.2em 0; padding: 2.5em 0 0 !important; overflow: hidden;
+    border: 1px solid var(--border-color); border-radius: 10px !important;
+    background: color-mix(in srgb, var(--color-text) 5%, var(--color-bg));
+  }
+  body .markdown-section pre[data-lang]::after {
+    content: attr(data-lang); position: absolute; top: 0; left: 0; right: 0; box-sizing: border-box;
+    height: 2.5em; padding: 0 16px; line-height: 2.5em; font-size: 0.75em; letter-spacing: 0.08em;
+    text-transform: uppercase; font-weight: 600; color: var(--color-text); opacity: 0.8;
+    background: color-mix(in srgb, var(--color-text) 8%, var(--color-bg));
+    border-bottom: 1px solid var(--border-color); pointer-events: none;
+  }
+  body .markdown-section pre[data-lang] > code {
+    display: block; overflow-x: auto; padding: 1em 16px 1.1em !important; line-height: 1.6; tab-size: 4;
+    scrollbar-width: thin; scrollbar-color: color-mix(in srgb, var(--color-text) 35%, transparent) transparent;
+  }
+  body .markdown-section pre[data-lang] > code::-webkit-scrollbar { height: 8px; }
+  body .markdown-section pre[data-lang] > code::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--color-text) 30%, transparent); border-radius: 4px; }
+  body .markdown-section pre[data-lang=""] { padding-top: 0 !important; }
+  body .markdown-section pre[data-lang=""]::after { display: none; }
+  /* Pages built for code files and notebooks (see .docs/tools/code_pages.py) */
+  .markdown-section h1 { overflow-wrap: anywhere; }
+  .markdown-section .code-file p { margin: 0 0 1.4em; padding: 0.35em 0.8em; border-left: 3px solid var(--theme-color); font-size: 0.92em; }
+  body .markdown-section pre[data-lang="output"] { background: transparent; margin-top: -0.6em; }
+  .markdown-section pre[data-lang="output"]::after { content: "Output"; }
+  .markdown-section .nb-output { overflow-x: auto; max-width: 100%; margin: -0.4em 0 1em; font-size: 0.9em; }
+  /* Reading time, one quiet line under the page title (added when the site is built) */
+  .markdown-section .reading-time { margin: -0.4em 0 1em; font-size: 0.85em; opacity: 0.75; }
+  .markdown-section .reading-time + .related-strip { margin-top: 0; }
+  .markdown-section .related-strip { margin: 0.4em 0 1.4em; font-size: 0.92em; line-height: 1.7; color: var(--textColor); opacity: 0.95; }
+  .markdown-section .related-strip p { margin: 0; padding: 0.35em 0.8em; border-left: 3px solid var(--borderColor, #ccc); }
+    /* Footer under each page: edit link and last-updated date */
+  .markdown-section .page-footer {
+    margin-top: 3em;
+    padding-top: 0.8em;
+    border-top: 1px solid var(--borderColor, #ddd);
+    font-size: 0.85em;
+    opacity: 0.8;
+  }
+  /* Tables on phones: 2-4 column tables become cards (see .docs/phone-tables.js),
+     wider ones scroll sideways instead of squeezing every column. */
+  @media (max-width: 768px) {
+    .markdown-section table:not(.stack) { display: block; overflow-x: auto; }
+    .markdown-section table.stack,
+    .markdown-section table.stack tbody,
+    .markdown-section table.stack tr,
+    .markdown-section table.stack td { display: block; width: 100%; box-sizing: border-box; }
+    .markdown-section table.stack thead { display: none; }
+    .markdown-section table.stack tr {
+      border: 1px solid var(--borderColor, #ddd);
+      border-radius: 8px;
+      margin: 0 0 12px;
+      padding: 8px 14px;
+    }
+    .markdown-section table.stack td { border: 0; padding: 4px 0; text-align: left; }
+    .markdown-section table.stack td:first-child { font-weight: 600; font-size: 1.05em; }
+    .markdown-section table.stack td[data-label]::before {
+      content: attr(data-label);
+      display: block;
+      font-size: 0.72em;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      opacity: 0.65;
+    }
+    .markdown-section table.stack tr:nth-child(2n) { background: transparent; }
+  }
+  /* Colours. Docsify 5 reads --color-bg, --color-text and --theme-color; the
+     older names below are what the rest of this page and .docs/search.js use. */
+  :root {
+    --theme-color: #42b983;
+    --color-bg: #ffffff;
+    --color-text: #34495e;
+    --font-family: 'PT Sans', system-ui, sans-serif;
+    --font-size: 17px;
+    --background: var(--color-bg);
+    --textColor: var(--color-text);
+    --borderColor: var(--border-color);
+    --accent: var(--theme-color);
+    --sidebar-toggle-alignment: end;
+    --sidebar-toggle-bg: transparent;
+    --sidebar-toggle-color: var(--accent);
+    --sidebar-toggle-margin-block: 12px;
+  }
+  /* One block per theme. --link is the text colour for links (4.5:1 or better on that ground). */
+  html[data-theme="light"] { color-scheme: light; }
+  html[data-theme="sepia"] {
+    --color-bg: #f4ecd8; --color-text: #3b2f20; --border-color: #d9cbb0; --link: #7a4a0e;
+    --blockquote-color: #5c4d3a; color-scheme: light;
+  }
+  html[data-theme="dark"] {
+    --color-bg: #16181c; --color-text: #d3d6da; --border-color: #3a3f46; --link: #5cc99a; color-scheme: dark;
+  }
+  html[data-theme="midnight"] {
+    --color-bg: #091a28; --color-text: #c4ccd3; --border-color: #2b4257; --link: #5cc99a; color-scheme: dark;
+  }
+  html[data-theme="black"] {
+    --color-bg: #000000; --color-text: #d4d4d4; --border-color: #383838; --link: #5cc99a; color-scheme: dark;
+  }
+  .sidebar-nav li.active > a, .sidebar-nav a.active { color: var(--link) !important; }
+  /* "You are here" in the menu: set by .docs/sidebar-groups.js from the address */
+  .sidebar-nav a.here {
+    color: var(--link) !important; font-weight: 700;
+    background: color-mix(in srgb, var(--link) 14%, transparent);
+    border-left: 3px solid var(--link); border-radius: 0 6px 6px 0; padding-left: 8px; margin-left: -11px;
+  }
+  /* On a folder's index page the menu already lists the folder's pages, so its own
+     section list (shown under the folder heading on narrow screens) would repeat them */
+  .sidebar-nav li.group > .app-sub-sidebar { display: none; }
+  /* Light theme text that was under 4.5:1 */
+  html[data-mode="light"] { --blockquote-color: #55616d; }
+  html[data-mode="light"] .markdown-section code { color: #a8420a; }
+  :root { --link: #1a7f52; } /* 5:1 on white; the old green was 2.5:1 */
+  /* Say the page colours outright, so nothing around the page (an embedding
+     frame, a browser default) can leave dark text on a dark ground or the reverse. */
+  html, body { background: var(--color-bg); color: var(--color-text); }
+  .sidebar input::placeholder, .search input::placeholder { color: var(--color-text); opacity: 0.7; }
+  /* Docsify 5 layout: keep the text column inside the screen. */
+  .markdown-section {
+    width: auto !important;
+    max-width: min(900px, calc(100% - 32px)) !important;
+    margin-inline: auto !important;
+    padding: 30px 0 40px !important;
+  }
+  @media (max-width: 768px) {
+    app-nav, nav.app-nav { display: flex; flex-wrap: wrap; }
+  }
+  @media (min-width: 1400px) { section.content { padding-right: 240px; } }
+  /* Page outline (wide screens), see .docs/page-outline.js */
+  aside.page-outline {
+    position: fixed; top: 110px; right: 24px; width: 200px; max-height: 70vh; overflow-y: auto;
+    font-size: 0.8rem; line-height: 1.4;
+    border-left: 1px solid var(--borderColor, #ddd); padding-left: 12px;
+  }
+  aside.page-outline p { margin: 0 0 6px; opacity: 0.65; text-transform: uppercase; letter-spacing: 0.06em; font-size: 0.72rem; }
+  aside.page-outline a { display: block; padding: 2px 0; color: var(--textColor, inherit); opacity: 0.75; text-decoration: none; }
+  aside.page-outline a.sub { padding-left: 12px; }
+  aside.page-outline a.active { opacity: 1; color: var(--link); font-weight: 600; }
+  .markdown-section pre, .markdown-section table, .markdown-section .math-block { max-width: 100%; box-sizing: border-box; }
+  html, body { overflow-x: clip; }  /* clip, not hidden: hidden would make <body> the scroller and window scroll events would stop */
+  /* the top menu and the GitHub corner stay on screen while the page scrolls */
+  nav.app-nav, .github-corner { position: fixed; }
+  /* The top menu stays on screen in Docsify 5; give it a background so text does not run through it */
+  nav.app-nav { background: var(--color-bg); border-radius: 8px; padding: 2px 10px; }
+  /* Copy button on code blocks (.docs/copy-code.js) */
+  body .markdown-section pre[data-lang] .code-copy {
+    position: absolute; top: 4px; right: 8px; z-index: 2; display: flex; align-items: center; gap: 6px;
+    height: 28px; padding: 0 7px; border: 1px solid transparent; border-radius: 6px; cursor: pointer;
+    background: transparent; color: var(--color-text); font: 600 12px/1 'Inter', sans-serif;
+    opacity: 0; transition: opacity 0.15s, background 0.15s;
+  }
+  body .markdown-section pre[data-lang] .code-copy svg { display: block; flex: none; }
+  body .markdown-section pre[data-lang] .code-copy:focus-visible, body .markdown-section pre[data-lang] .code-copy[data-note], body .markdown-section pre[data-lang]:hover .code-copy { opacity: 0.85; }
+  body .markdown-section pre[data-lang] .code-copy:hover { background: color-mix(in srgb, var(--color-text) 14%, transparent); opacity: 1; }
+  body .markdown-section pre[data-lang] .code-copy[data-note]::after { content: attr(data-note); }
+  body .markdown-section pre[data-lang] .code-copy[data-note="Copied"] { color: var(--link); }
+  @media (hover: none) { body .markdown-section pre[data-lang] .code-copy { opacity: 0.6; } }
+  /* Copy-a-link button after h2/h3 (.docs/section-links.js) */
+  .markdown-section .section-link-copy { background: transparent !important; box-shadow: none; position: relative; margin-left: 0.35em; padding: 4px; border: 0; background: transparent; color: var(--link); vertical-align: middle; cursor: pointer; opacity: 0; transition: opacity 0.15s; }
+  .section-link-copy svg { display: block; }
+  h2:hover .section-link-copy, h3:hover .section-link-copy, .section-link-copy:focus-visible, .section-link-copy[data-note] { opacity: 0.8; }
+  @media (hover: none) { .section-link-copy { opacity: 0.45; } }
+  .section-link-copy[data-note]::after { content: attr(data-note); position: absolute; left: 100%; top: 50%; transform: translateY(-50%); margin-left: 6px; padding: 2px 8px; border-radius: 6px; background: var(--color-text); color: var(--color-bg); font-size: 12px; font-weight: 400; white-space: nowrap; }
+  #surprise-me { display: block; margin: 0 20px 0.8em; padding: 8px 12px; border: 1px dashed var(--border-color); border-radius: 8px; color: var(--link); font-weight: 600; text-decoration: none; text-align: center; font-size: 0.95em; }
+  #surprise-me:hover { border-style: solid; }
+  #continue-reading { display: block; margin: -0.3em 20px 0.8em; padding: 4px 12px; color: var(--link); font-size: 0.9em; text-decoration: none; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  #continue-reading:hover { text-decoration: underline; }
+  #saved-pages { margin: 0 20px 0.8em; font-size: 0.9em; }
+  #saved-pages summary { cursor: pointer; padding: 6px 0; color: var(--link); font-weight: 600; }
+  #saved-pages ul { list-style: none; margin: 0; padding: 0; }
+  #saved-pages li { display: flex; align-items: center; gap: 4px; }
+  #saved-pages li a { flex: 1; min-width: 0; padding: 6px 0; }
+  #saved-pages li button { flex: none; width: 32px; height: 32px; border: 0; background: none; color: inherit; font-size: 1.2em; cursor: pointer; opacity: 0.6; }
+  #saved-pages li button:hover, #saved-pages li button:focus-visible { opacity: 1; }
+  .page-footer .share-link { padding: 0; border: 0; background: none; color: var(--link); font: inherit; font-weight: 600; cursor: pointer; }
+  .page-footer .share-link:hover { text-decoration: underline; }
+  .save-page { display: block; margin: -0.2em 0 1em auto; padding: 6px 12px; min-height: 32px; border: 1px solid var(--border-color); border-radius: 8px; background: none; color: var(--link); font: inherit; font-size: 0.85em; font-weight: 600; cursor: pointer; }
+  .save-page[aria-pressed="true"] { border-color: var(--link); }
+  /* Pages already read (see .docs/reading-history.js): a small check after the title, text keeps full contrast */
+  .sidebar-nav li:not(.group) > a.read:not(.here)::after { content: ' ✓'; content: ' ✓' / ''; font-size: 0.8em; opacity: 0.55; }
+  #menu-github { display: none; margin: 1.5em 20px 2em; padding-top: 1em; border-top: 1px solid var(--border-color); font-size: 0.9em; }
+  @media (max-width: 768px) { #menu-github { display: block; } }
+  /* Theme button (see .docs/theme-toggle.js) */
+  #theme-toggle {
+    position: absolute; top: 74px; right: 16px; z-index: 60;
+    width: 44px; height: 44px; padding: 10px; border: 0; border-radius: 50%;
+    background: transparent; color: var(--color-text); cursor: pointer; opacity: 0.8;
+  }
+  #theme-toggle:hover { opacity: 1; }
+  #theme-menu {
+    position: absolute; top: 122px; right: 16px; z-index: 61; min-width: 170px; padding: 6px;
+    background: var(--color-bg); color: var(--color-text); border: 1px solid var(--border-color);
+    border-radius: 10px; box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+  }
+  #theme-menu[hidden] { display: none; }
+  #theme-menu button {
+    display: flex; align-items: center; gap: 10px; width: 100%; padding: 8px 10px; border: 0; border-radius: 6px;
+    background: transparent; color: inherit; font: inherit; font-size: 0.95rem; text-align: left; cursor: pointer;
+  }
+  #theme-menu button:hover { background: var(--color-mono-2, rgba(128, 128, 128, 0.15)); }
+  #theme-menu button[aria-checked="true"] { font-weight: 700; color: var(--link); }
+  #theme-menu .swatch { width: 18px; height: 18px; border-radius: 50%; border: 1px solid var(--border-color); flex: none; }
+  #theme-toggle svg { display: block; }
+  #theme-menu .size-row { display: flex; align-items: center; gap: 2px; margin-top: 6px; padding: 8px 4px 2px 10px; border-top: 1px solid var(--border-color); }
+  #theme-menu .size-row span { flex: 1; font-size: 0.85rem; opacity: 0.75; }
+  #theme-menu .size-row button { width: 34px; height: 34px; padding: 0; justify-content: center; line-height: 1; }
+  /* Text size from the theme menu; the top menu keeps its size so it fits on a phone */
+  html[data-size="s"] { --font-size: 15px; }
+  html[data-size="l"] { --font-size: 19px; }
+  html[data-size="xl"] { --font-size: 21px; }
+  nav.app-nav, nav.app-nav a, nav.app-nav li, nav.app-nav p { font-size: 17px !important; }
+  /* Sidebar groups (see .docs/sidebar-groups.js) */
+  .sidebar-nav li.group { position: relative; }
+  .sidebar-nav li.group > strong { cursor: pointer; }
+  /* The chevron is a real button (keyboard, screen reader) with a 34x34px tap area left of the title */
+  .sidebar-nav li.group > button.fold {
+    position: absolute; left: -24px; top: 0; width: 34px; height: 34px; padding: 0; margin: 0;
+    border: 0; background: none; color: inherit; cursor: pointer;
+  }
+  .sidebar-nav li.group > button.fold::before {
+    content: ''; position: absolute; left: 12px; top: 12px; width: 6px; height: 6px;
+    border-right: 1px solid currentColor; border-bottom: 1px solid currentColor;
+    transform: rotate(45deg); opacity: 0.6; transition: transform 0.1s;
+  }
+  .sidebar-nav li.group > button.fold:focus-visible { outline: 2px solid var(--theme-color); outline-offset: -2px; border-radius: 4px; }
+  .sidebar-nav li.group.collapsed > button.fold::before { transform: rotate(-45deg); }
+  .sidebar-nav li.group.collapsed > ul { display: none; }
+  /* Look of Docsify 4 kept: green bold links, no underline, compact menu */
+  .markdown-section a:not(.anchor) {
+    color: var(--link); font-weight: 600; text-decoration: none !important;
+    background: none !important;
+  }
+  .markdown-section a:not(.anchor):hover { text-decoration: underline !important; }
+  :root { --sidebar-font-size: 15px; }
+</style>
+
+<body>
+  <div id="app"></div>
+  <noscript>
+    <div style="max-width:640px;margin:15vh auto;padding:0 16px;font:17px/1.6 sans-serif;color:#34495e">
+      <h1 style="font-size:1.6em">aCupOfTea</h1>
+      <p>This site needs JavaScript to show its pages. Every page can also be read as plain markdown in the
+      <a href="https://github.com/AhmedYousriSobhi/aCupOfTea">repository on GitHub</a>.</p>
+    </div>
+  </noscript>
+  <!-- Docsify settings (window.$docsify) -->
+  <script src="./.docs/config.js"></script>
+  <script src="./.docs/math.js"></script>
+  <!-- Mermaid and KaTeX load only on pages that use them -->
+  <script src="./.docs/lazy-libs.js"></script>
+  <script src="./.docs/phone-tables.js"></script>
+  <script src="./.docs/lazy-images.js"></script>
+  <script src="./.docs/page-footer.js"></script>
+  <script src="./.docs/page-outline.js"></script>
+  <script src="./.docs/reading-progress.js"></script>
+  <script src="./.docs/surprise-me.js"></script>
+  <script src="./.docs/reading-history.js"></script>
+  <script src="./.docs/section-links.js"></script>
+  <!-- Read offline: keeps a copy of each page opened (service worker, deployed site only) -->
+  <script src="./.docs/offline.js"></script>
+  <!-- Two-group search (replaces the built-in Docsify search) -->
+  <script src="./.docs/search.js"></script>
+  <!-- Docsify v5 -->
+  <script src="https://cdn.jsdelivr.net/npm/docsify@5.0.0/dist/docsify.min.js" integrity="sha384-w6yZXzkazsxmservgGooUY9zjEHzIFHubRNZMLJ3enj/JD+Z8BvAGBqdrjfnLNhu" crossorigin="anonymous"></script>
+  <!-- Code colours for the languages the pages use (Docsify bundles Prism with web languages only) -->
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-bash.min.js" integrity="sha384-9WmlN8ABpoFSSHvBGGjhvB3E/D8UkNB9HpLJjBQFC2VSQsM1odiQDv4NbEo+7l15" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-python.min.js" integrity="sha384-WJdEkJKrbsqw0evQ4GB6mlsKe5cGTxBOw4KAEIa52ZLB7DDpliGkwdme/HMa5n1m" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-powershell.min.js" integrity="sha384-xbI9krqyYp4npK9Cn94XyNoSR+TYZKddrk0NUVZ44zZ+OVpKz/LL0U1PB0MjR7Vx" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-yaml.min.js" integrity="sha384-AKAiycghK0jDCjD+aavMHzDkLzRR7Yzcwh3+xL/295cvyVMe+cxQfyQC8xxGGcI8" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-c.min.js" integrity="sha384-gaD4ncierlmWk42Z3BmTp37/z+Dqt8V4Wf74UjTvFeo+M+SgnEI6Ysd98pWhksQv" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-ini.min.js" integrity="sha384-IzgZExoq7muPnVEjP/MVubbALJ4d+D++YULBQxvKKWLSoXut91gFAg36n+5WAFf6" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-sql.min.js" integrity="sha384-/MKWdycCDliku23mP5sYXbZNuXrzgmQO/jsVxwPFn99dVOaXRyKsqDjarqpueGAp" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify@5.0.0/dist/plugins/zoom-image.min.js" integrity="sha384-fEfrGm33VrJRIHLahu6V+6z/ko0yy5DuXngjAfwUDYN9jlYLwxTySLCReKmEh6vo" crossorigin="anonymous"></script>
+  <!-- On phones, tapping a picture opens it full size to pan and pinch -->
+  <script src="./.docs/image-viewer.js"></script>
+  <!-- Hides YAML front matter (title, summary, tags) from the rendered page -->
+  <script src="https://cdn.jsdelivr.net/npm/docsify@5.0.0/dist/plugins/front-matter.min.js" integrity="sha384-q8Wjf/FHh26HTvmdZvJLHedWqYyJqQIEiUUQgGuIM8Efquoyrs3G5lxd619gLhvl" crossorigin="anonymous"></script>
+  <script src="./.docs/copy-code.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify-tabs@1.6.3/dist/docsify-tabs.min.js" integrity="sha384-QA3IVKzXq6xcKR8yQJHgDbI1FcJiQ137Cuetl1VWzUxJ6BQ7ew0MMq5fg2HbFK1o" crossorigin="anonymous"></script>
+  <script src="./.docs/sidebar-groups.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify-pagination@2.10.1/dist/docsify-pagination.min.js" integrity="sha384-uFEp18/1vv2dYlO64J2lOcnbhirAQZPtruqAZZ7PZYoXenm5c+tIs3AqSMjVMRe8" crossorigin="anonymous"></script>
+
+</body>
+</html>
