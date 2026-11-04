@@ -1,5 +1,14 @@
 ---
+id: slurm-intro
 sidebar_label: Schedulers Intro
+order: 1
+summary: What a cluster scheduler does, how it differs from the OS scheduler, the scheduler landscape, the concepts they share, and the Slurm architecture at a glance.
+level: beginner
+type: concept
+domains: [systems-and-hpc]
+tags: [slurm, hpc]
+relations:
+  related: [slurm-job-script-tale, slurm-slurmstepd]
 ---
 # Schedulers: The Traffic Controller Nobody Thanks Until It Breaks
 
@@ -70,7 +79,7 @@ Regardless of which tool sits on top, these ideas show up everywhere — learn t
 - **Backfill scheduling** — letting *smaller* jobs jump ahead in the queue and fill idle gaps, as long as doing so doesn't delay the start time already promised to a larger, higher-priority job waiting for enough nodes to free up. This is why a tiny job sometimes starts before a big one that's been queued longer — it's not favoritism, it's gap-filling.
 - **Reservations** — blocking off nodes for a specific purpose (maintenance, a guaranteed-start job, a demo) ahead of time, bypassing normal queue ordering for that block.
 - **Node health checking** — automated pre/post-job verification that a node is actually healthy (memory, GPUs, filesystem mounts, network) before the scheduler trusts it with real work. NHC is the common open-source tool for this on Slurm clusters.
-- **Accounting / cgroup containment** — tracking and *enforcing* what a job actually consumes, not just what it requested — this is exactly the gap [`pam_slurm_adopt`](/fields/schedulers/slurm-pam-adopt.md) closes for SSH sessions that would otherwise slip outside this accounting entirely.
+- **Accounting / cgroup containment** — tracking and *enforcing* what a job actually consumes, not just what it requested — this is exactly the gap [`pam_slurm_adopt`](/fields/schedulers/slurm-pam-adopt-ssh-access.md) closes for SSH sessions that would otherwise slip outside this accounting entirely.
 
 ---
 
@@ -126,6 +135,6 @@ Every operational task you'll do — a rolling reboot, a security hardening pass
 - New to Slurm entirely? Start with the [official Slurm quickstart](https://slurm.schedmd.com/quickstart.html) for the user-facing side (`sbatch`, `srun`, `squeue`) before diving into the admin-focused posts here.
 - Sharing a cluster between teams? [Slurm multi-tenancy](/fields/schedulers/slurm-accounting-multi-tenancy.md) covers associations, limits, QOS and fairshare — and the one missing `slurm.conf` line that makes limits do nothing.
 - Running more than one GPU generation? [Mixing GPU types in Slurm](/fields/schedulers/slurm-mixed-gpus/README.md) explains heterogeneous jobs, the bare-`|` constraint trap, and why mixed training disappoints.
-- Already running a cluster and hardening it? Start with [`slurm-pam-adopt-blog.md`](/fields/schedulers/slurm-pam-adopt.md) — it's a small config change that closes a real, commonly-overlooked gap.
+- Already running a cluster and hardening it? Start with [`slurm-pam-adopt-blog.md`](/fields/schedulers/slurm-pam-adopt-ssh-access.md) — it's a small config change that closes a real, commonly-overlooked gap.
 - Planning your next maintenance window? [`slurm-reboot-order-blog.md`](/fields/schedulers/slurm-reboot-order.md) is the checklist to have open in a second tab while you work.
 - Wondering how scheduler decisions (rank placement, node allocation) connect to the performance numbers you actually measure? That's where this directory hands off to the [benchmarks series](/fields/benchmarks/benchmarking-guide.md) — specifically the [parallel execution & affinity guide](/fields/benchmarks/parallel-execution-affinity-master-guide.md), which picks up exactly where Slurm's node allocation leaves off.

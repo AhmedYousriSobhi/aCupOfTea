@@ -10,3 +10,5 @@ wandb/
 
 # Local staging copy of the site (.docs/tools/stage_site.py)
 _site/
+
+.venv/

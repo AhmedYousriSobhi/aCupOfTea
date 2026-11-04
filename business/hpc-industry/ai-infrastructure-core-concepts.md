@@ -67,7 +67,7 @@ Each section has the same four parts: the common summary, a verdict, a 30-second
 
 > "`slurmctld` schedules and enforces, `slurmd` launches and contains jobs, and `slurmdbd` is the accounting database front end. Tenancy is built on associations, cluster plus account plus user plus optional partition, with Grp limits for team quotas, Max limits for job sizes, QOS for policy classes and fairshare for ordering. `sacctmgr` writes those rules through `slurmdbd`, but they're only enforced once `AccountingStorageEnforce` includes `limits`."
 
-**Go deeper:** [Slurm multi-tenancy: who stores the rules, who enforces them](/fields/schedulers/slurm-accounting-multi-tenancy.md) and the [schedulers intro](/fields/schedulers/intro.md)
+**Go deeper:** [Slurm multi-tenancy: who stores the rules, who enforces them](/fields/schedulers/slurm-accounting-multi-tenancy.md) and the [schedulers intro](/fields/schedulers/slurm-intro.md)
 
 ---
 

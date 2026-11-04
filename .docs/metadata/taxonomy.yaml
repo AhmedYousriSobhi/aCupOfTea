@@ -69,7 +69,7 @@ domains:
   systems-and-hpc:
     label: Systems and HPC
     description: Benchmarks, schedulers, system administration, high-performance computing.
-    related: [software-engineering, security, machine-learning, deep-learning]
+    related: [software-engineering, security, machine-learning, deep-learning, system-design]
   business:
     label: Business
     description: Business context, KPIs and domain knowledge around the technical work.
