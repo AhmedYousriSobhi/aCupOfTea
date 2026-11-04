@@ -988,6 +988,27 @@
       "concept"
     ]
   },
+  "memory-locking-mlockall": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "memory-locking-mlockall",
+    "level": "intermediate",
+    "path": "fields/system-administration/memory-locking-mlockall.md",
+    "reading_time_min": 11,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Why a program that rescues a machine under memory pressure must pin its own pages in RAM, what mlockall does, why the 8 MiB limit exists, and why root gets the real lock - explained with a tow truck.",
+    "tags": [],
+    "title": "Memory Locking: Keeping a Rescuer in RAM with mlockall",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
   "nccl-collective-communication": {
     "domains": [
       "deep-learning",

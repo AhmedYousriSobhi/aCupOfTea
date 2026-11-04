@@ -14,6 +14,7 @@ System administration, DevOps, and infrastructure management for AI/ML environme
 | [ldap](/fields/system-administration/ldap.md) | LDAP directory services |
 | [linux-admin](/fields/system-administration/linux-admin/) | Linux administration guides |
 | [memory](/fields/system-administration/memory.md) | Memory management and optimization |
+| [memory-locking-mlockall](/fields/system-administration/memory-locking-mlockall.md) | Why a rescuer program pins its own memory with mlockall, and why the full lock needs root |
 | [network](/fields/system-administration/network.md) | Networking fundamentals |
 | [node-health-check](/fields/system-administration/node-health-check/README.md) | Series: LBNL Node Health Check (NHC) from install to auto-remediation |
 | [q-and-a](/fields/system-administration/q-and-a.md) | Common sysadmin Q&A |

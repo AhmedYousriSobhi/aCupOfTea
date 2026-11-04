@@ -176,6 +176,7 @@
       "llm-perf-sizing-70b",
       "llm-perf-sparsity-vs-quantization",
       "llm-perf-structured-sparsity",
+      "memory-locking-mlockall",
       "nccl-collective-communication",
       "nhc-architecture-driven",
       "nhc-auto-remediation",

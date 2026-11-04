@@ -74,6 +74,7 @@
     * [Hardware](fields/system-administration/hw.md)
     * [LDAP](fields/system-administration/ldap.md)
     * [Memory](fields/system-administration/memory.md)
+    * [Memory locking (mlockall)](fields/system-administration/memory-locking-mlockall.md)
     * [Network](fields/system-administration/network.md)
     * [Questions & Answers](fields/system-administration/q-and-a.md)
     * [Virtual Machines](fields/system-administration/virtual-machines.md)

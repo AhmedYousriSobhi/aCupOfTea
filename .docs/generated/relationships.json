@@ -342,6 +342,12 @@
     "related": [],
     "related_by": []
   },
+  "memory-locking-mlockall": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
   "nccl-collective-communication": {
     "prerequisite_of": [],
     "prerequisites": [],
