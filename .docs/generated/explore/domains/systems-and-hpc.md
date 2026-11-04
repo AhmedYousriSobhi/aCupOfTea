@@ -12,6 +12,8 @@ Benchmarks, schedulers, system administration, high-performance computing.
   [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [Auto-Remediation: From Detected to Fixed, Safely](/fields/system-administration/node-health-check/auto-remediation.md) — Turn NHC drains into automatic fixes with an escalation ladder, built-in fix actions, a node-doctor loop on the controller, and guard rails against reboot storms. *(advanced · 8 min)*  
   [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
+- [Backfill Tuning: The Planner That Can Only See One Day Ahead](/fields/schedulers/slurm-backfill-tuning.md) — Slurm backfill relies on accurate time limits. A 1-day bf_window hides 7-day jobs, causing squeue drift. Use sdiag to tune bf_window, bf_resolution, bf_max_job_test, and bf_max_time. *(advanced · 21 min)*  
+  [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [Booked Is Not Busy: GPU Allocation vs Utilization](/fields/devops/kubernetes/gpu-allocation-vs-utilization.md) — The scheduler knows who has booked the GPUs, not whether they’re busy, so use kubectl for the first question and DCGM-style telemetry for the second. *(intermediate · 7 min)*  
   [`dev`](/.docs/generated/explore/tags/dev.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`kubernetes`](/.docs/generated/explore/tags/kubernetes.md)
 - [Broken Pods: A Rogues' Gallery (and the One Command That Catches Them All)](/fields/devops/kubernetes/broken-pods-rogues-gallery.md) — How to recognise CrashLoop, OOMKilled, ImagePull and Pending pods by reading status, events and previous logs. *(intermediate · 6 min)*  
@@ -32,6 +34,8 @@ Benchmarks, schedulers, system administration, high-performance computing.
   [`affinity`](/.docs/generated/explore/tags/affinity.md)
 - [CUDA 101](/fields/libraries-frameworks-containers/101-cuda.md) *(7 min)*  
   [`gpu`](/.docs/generated/explore/tags/gpu.md)
+- [Dying Politely: Preemption, Requeue and the Signals Your Training Job Ignores](/fields/schedulers/slurm-preemption-requeue-signals.md) — How Slurm preemption modes differ, what GraceTime and --signal really send and when, why a bash trap never fires while  trainer runs, and a requeue-safe checkpoint wrapper that cannot loop forever. *(intermediate · 9 min)*  
+  [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [Fake GPUs in Kubernetes: Learn GPU Scheduling Without Owning a GPU](/fields/devops/kubernetes/fake-gpus-in-kubernetes.md) — Patch a node with a fake nvidia.com/gpu counter to learn GPU scheduling without owning a GPU. *(intermediate · 6 min)*  
   [`devops`](/.docs/generated/explore/tags/devops.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`kubernetes`](/.docs/generated/explore/tags/kubernetes.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md)
 - [Four Ways to Ask Slurm for Mixed GPUs](/fields/schedulers/slurm-mixed-gpus/four-ways-to-mix-gpus.md) — Typed GRES, constraint operators, heterogeneous jobs and heterogeneous steps - what each one actually allocates, and the one-character constraint that mixes GPU types by accident. *(intermediate · 9 min)*  
@@ -46,6 +50,8 @@ Benchmarks, schedulers, system administration, high-performance computing.
   [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md)
 - [Isolating GPU Workloads: Taints, Labels and the Device Plugin](/fields/devops/kubernetes/isolating-gpu-workloads.md) — How the NVIDIA device plugin exposes GPUs to pods, why taints alone don't dedicate GPU nodes, and why distributed training needs all-or-nothing scheduling. *(intermediate · 9 min)*  
   [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`kubernetes`](/.docs/generated/explore/tags/kubernetes.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md)
+- [Kill Task Failed: A Murder Mystery With No Body (and One Drained Node)](/fields/schedulers/slurm-kill-task-failed.md) — Slurm job death (SIGTERM, KillWait, SIGKILL) fails on uninterruptible sleep, draining nodes. Raising timeouts rarely helps. Debug these with UnkillableStepProgram. *(intermediate · 7 min)*  
+  [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster](/fields/devops/kubernetes/kubernetes-in-five-nouns.md) — The five Kubernetes nouns (node, pod, namespace, event, API server) explained through HPC analogies, for someone who just inherited a cluster. *(advanced · 8 min)*  
   [`kubernetes`](/.docs/generated/explore/tags/kubernetes.md)
 - [LLM Inference on the Roofline](/fields/generative-ai/llm-inference-performance/llm-inference-on-the-roofline.md) — Why your chatbot reads a novel-length prompt in a blink but types its answer like a tired intern - prefill, decode, batching and the KV cache on the roofline. *(intermediate · 9 min)*  
@@ -62,7 +68,7 @@ Benchmarks, schedulers, system administration, high-performance computing.
   [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [Optimizations, Mapped to the Roofline](/fields/generative-ai/llm-inference-performance/optimizations-on-the-roofline.md) — Five proposals in one meeting, one roofline to judge them - batching, PagedAttention, quantization, tensor parallelism, FlashAttention, speculative decoding, disaggregation, and how to measure. *(intermediate · 12 min)*  
   [`gpu`](/.docs/generated/explore/tags/gpu.md) [`llm`](/.docs/generated/explore/tags/llm.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md) [`transformers`](/.docs/generated/explore/tags/transformers.md)
-- [pam_slurm_adopt: Closing the Slurm SSH Backdoor](/fields/schedulers/slurm-pam-adopt.md) *(4 min)*  
+- [pam_slurm_adopt: Closing the Slurm SSH Backdoor](/fields/schedulers/slurm-pam-adopt-ssh-access.md) *(4 min)*  
   [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [Parallel Execution and Affinity](/fields/benchmarks/parallel-execution-affinity-master-guide.md) *(5 min)*  
   [`affinity`](/.docs/generated/explore/tags/affinity.md) [`mpi`](/.docs/generated/explore/tags/mpi.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
@@ -78,6 +84,7 @@ Benchmarks, schedulers, system administration, high-performance computing.
   [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md) [`storage`](/.docs/generated/explore/tags/storage.md)
 - [Reading the GPU's Vital Signs](/fields/system-administration/gpu-failure-prediction/collecting-the-signals.md) — The telemetry concepts behind GPU failure prediction - counters, gauges and events, volatile versus persistent, in-band versus out-of-band - and the ways each one misleads. *(intermediate · 9 min)*  
   [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md)
+- [Rebooting a Slurm Cluster Without Losing Your Job (Or Anyone Else's)](/fields/schedulers/slurm-reboot-order.md) *(intermediate · 6 min)*
 - [Rolling NHC Out to a Fleet Without Draining Everything](/fields/system-administration/node-health-check/rollout-at-scale.md) — A dry-run, canary, enforce plan for deploying NHC or a new nhc.conf to hundreds of nodes, with a circuit breaker for bad pushes. *(intermediate · 6 min)*  
   [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [Runbook: Deploying GPU Failure Prediction End to End](/fields/system-administration/gpu-failure-prediction/runbook.md) — The hands-on companion to the series - counters file, node checks, tested Prometheus rules, Alertmanager routing, a guarded Slurm drain hook and a backtest, step by step. *(advanced · 15 min)*  
@@ -86,8 +93,14 @@ Benchmarks, schedulers, system administration, high-performance computing.
   [`containers`](/.docs/generated/explore/tags/containers.md)
 - [Sizing a 70B Model with a Pencil](/fields/generative-ai/llm-inference-performance/sizing-a-70b-model.md) — A live whiteboard walk-through - Llama 2 70B on 8xH100, from "does it fit?" to the exact token-rate ceilings at batch 1 and batch 64, using only a datasheet. *(intermediate · 9 min)*  
   [`gpu`](/.docs/generated/explore/tags/gpu.md) [`llm`](/.docs/generated/explore/tags/llm.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md) [`transformers`](/.docs/generated/explore/tags/transformers.md)
+- [Slurm cgroups in Practice: What Gets Constrained, and Where the Numbers Lie](/fields/schedulers/slurm-cgroups-in-practice.md) — Which cgroup.conf switches actually fence a Slurm job, why every one of them defaults to off, how v1 and v2 differ, and why sacct's memory numbers are samples and not measurements. *(intermediate · 11 min)*  
+  [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [Slurm Multi-Tenancy: Who Stores the Rules, Who Enforces Them](/fields/schedulers/slurm-accounting-multi-tenancy.md) — How slurmctld, slurmd, slurmdbd and sacctmgr split the work of multi-tenant accounting, why limits you set can silently do nothing, and how associations, TRES limits, QOS and fairshare fit together. *(intermediate · 9 min)*  
   [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
+- [SlurmdSpoolDir Is Full: The Drain That Is Not About the Spool Directory](/fields/schedulers/slurm-spool-dir-full.md) — Why slurmd drains node with reason "SlurmdSpoolDir is full", why culprit is filesystem underneath, what slurmd keeps in spool directory, a triage runbook, how to stop jobs from filling the disk. *(intermediate · 10 min)*  
+  [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
+- [slurmstepd: The Small Daemon That Actually Runs Your Job](/fields/schedulers/slurm-slurmstepd.md) — slurmstepd (1/step/node) bridges slurmd's fork and task start. Jobs survive slurmd restarts via SlurmdSpoolDir sockets. Covers how to find, count, and read stepds on busy nodes. *(intermediate · 11 min)*  
+  [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [Sparsity vs Quantization: Who Pays, and Who Wins](/fields/generative-ai/llm-inference-performance/sparsity-vs-quantization.md) — What it costs to prune an LLM to 2:4, how much accuracy goes with it, how it compares with FP8 and 4-bit quantization, and why the usual order is quantize first, sparsify second. *(intermediate · 10 min)*  
   [`gpu`](/.docs/generated/explore/tags/gpu.md) [`llm`](/.docs/generated/explore/tags/llm.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md) [`transformers`](/.docs/generated/explore/tags/transformers.md)
 - [Storage and Fabric for AI Clusters - Overview](/fields/system-administration/ai-storage-and-fabric/README.md) — A two-part series on keeping thousands of GPUs fed - parallel filesystems, small files and checkpoint storms, then RDMA, InfiniBand, RoCE and GPUDirect. *(intermediate · 2 min)*  
@@ -96,6 +109,8 @@ Benchmarks, schedulers, system administration, high-performance computing.
   [`hpc`](/.docs/generated/explore/tags/hpc.md) [`kubernetes`](/.docs/generated/explore/tags/kubernetes.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md)
 - [The Job Execution Journey: From `kubectl apply` to the First All-Reduce](/fields/devops/kubernetes/job-execution-journey.md) — From kubectl apply to the first NCCL all-reduce of an 8-GPU job, via the API server, Kueue, operators, scheduler, device plugin, runtime and Multus. *(intermediate · 13 min)*  
   [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`kubernetes`](/.docs/generated/explore/tags/kubernetes.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md)
+- [Upgrading Slurm: The Order, the Window, and the Parts That Bite](/fields/schedulers/slurm-upgrade-order.md) — Order Slurm daemons must be upgraded in, how far apart two versions can be, what to back up, why slurmdbd needs a hand-started first run, and why a cluster is not upgraded until last old job finishes. *(intermediate · 12 min)*  
+  [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [Where Heterogeneous Jobs Shine](/fields/schedulers/slurm-mixed-gpus/where-hetjobs-shine.md) — The workloads where mixing GPU types in one Slurm job is exactly right, how admins should label and guard a multi-generation cluster, a decision table, and the interview answer. *(intermediate · 10 min)*  
   [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [Why Mixed-GPU Training Disappoints](/fields/schedulers/slurm-mixed-gpus/why-mixed-training-disappoints.md) — Why 8 H100s plus 8 A100s train like 16 A100s, which H100 features the A100s switch off, and what co-scheduling a heterogeneous job costs you in the queue. *(intermediate · 9 min)*  
@@ -106,5 +121,7 @@ Benchmarks, schedulers, system administration, high-performance computing.
   [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md)
 - [Writing Your Own NHC Checks](/fields/system-administration/node-health-check/custom-checks.md) — Build a site .nhc module the way upstream does, with cached data, clear failure messages, fast bash, and practical GPU checks. *(advanced · 7 min)*  
   [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md)
+- [Your GPU Has Core Affinity. Slurm Has Socket Affinity. They Are Not Speaking.](/fields/schedulers/slurm-gpu-affinity-socket-lie.md) — gres.conf Cores= schedules per socket, not core. Fix topology via l3cache_as_socket or numa_node_as_socket. Also covers four 1-GPU schemes and how MIG, MPS, and sharding isolate workloads. *(advanced · 10 min)*  
+  [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 
 [All domains](/.docs/generated/explore/domains.md)

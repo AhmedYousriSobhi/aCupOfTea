@@ -1,13 +1,20 @@
+---
+id: slurm-job-script-tale
+order: 2
+sidebar_label: The Tale of Job.sh and the Snapshot
+---
+
 # The Tale of job.sh and the Snapshot
 
 ## The Tale of job.sh and the Snapshot
 
 ## Table of Contents
 - [The Tale of job.sh and the Snapshot](#the-tale-of-jobsh-and-the-snapshot)
-- [Table of Contents](#table-of-contents)
-- [Once Upon A Time](#once-upon-a-time)
-- [When does your edit matter?](#when-does-your-edit-matter)
-- [Best practice](#best-practice)
+  - [The Tale of job.sh and the Snapshot](#the-tale-of-jobsh-and-the-snapshot-1)
+  - [Table of Contents](#table-of-contents)
+  - [Once Upon A Time](#once-upon-a-time)
+  - [When does your edit matter?](#when-does-your-edit-matter)
+  - [Best practice](#best-practice)
 
 ## Once Upon A Time
 When you run sbatch job.sh, Slurm doesn't keep a live link to your file. Instead, at the moment of submission, it reads the script, copies its contents into the job record (spooled internally, typically under StateSaveLocation), and hands it a JobID. From that instant on, the job is frozen in time — it carries its own private copy of the script.

@@ -1674,6 +1674,7 @@
     ],
     "id": "slurm-accounting-multi-tenancy",
     "level": "intermediate",
+    "order": 6,
     "path": "fields/schedulers/slurm-accounting-multi-tenancy.md",
     "reading_time_min": 9,
     "relations": {
@@ -1690,6 +1691,160 @@
       "slurm"
     ],
     "title": "Slurm Multi-Tenancy: Who Stores the Rules, Who Enforces Them",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "slurm-backfill-tuning": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-backfill-tuning",
+    "level": "advanced",
+    "order": 7,
+    "path": "fields/schedulers/slurm-backfill-tuning.md",
+    "reading_time_min": 21,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "slurm-accounting-multi-tenancy",
+        "slurm-preemption-requeue-signals"
+      ]
+    },
+    "status": "stable",
+    "summary": "Slurm backfill relies on accurate time limits. A 1-day bf_window hides 7-day jobs, causing squeue drift. Use sdiag to tune bf_window, bf_resolution, bf_max_job_test, and bf_max_time.",
+    "tags": [
+      "hpc",
+      "slurm"
+    ],
+    "title": "Backfill Tuning: The Planner That Can Only See One Day Ahead",
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
+  },
+  "slurm-cgroups-in-practice": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-cgroups-in-practice",
+    "level": "intermediate",
+    "order": 4,
+    "path": "fields/schedulers/slurm-cgroups-in-practice.md",
+    "reading_time_min": 11,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "slurm-accounting-multi-tenancy",
+        "slurm-pam-adopt-ssh-access"
+      ]
+    },
+    "status": "stable",
+    "summary": "Which cgroup.conf switches actually fence a Slurm job, why every one of them defaults to off, how v1 and v2 differ, and why sacct's memory numbers are samples and not measurements.",
+    "tags": [
+      "gpu",
+      "hpc",
+      "slurm"
+    ],
+    "title": "Slurm cgroups in Practice: What Gets Constrained, and Where the Numbers Lie",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "slurm-gpu-affinity-socket-lie": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-gpu-affinity-socket-lie",
+    "level": "advanced",
+    "order": 5,
+    "path": "fields/schedulers/slurm-gpu-affinity-socket-lie.md",
+    "reading_time_min": 10,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "slurm-cgroups-in-practice",
+        "slurm-kill-task-failed"
+      ]
+    },
+    "status": "stable",
+    "summary": "gres.conf Cores= schedules per socket, not core. Fix topology via l3cache_as_socket or numa_node_as_socket. Also covers four 1-GPU schemes and how MIG, MPS, and sharding isolate workloads.",
+    "tags": [
+      "gpu",
+      "hpc",
+      "slurm"
+    ],
+    "title": "Your GPU Has Core Affinity. Slurm Has Socket Affinity. They Are Not Speaking.",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "slurm-intro": {
+    "domains": [],
+    "id": "slurm-intro",
+    "level": "",
+    "order": 1,
+    "path": "fields/schedulers/slurm-intro.md",
+    "reading_time_min": 8,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "",
+    "tags": [],
+    "title": "Schedulers: The Traffic Controller Nobody Thanks Until It Breaks",
+    "type": "note",
+    "types": [
+      "note"
+    ]
+  },
+  "slurm-job-script-tale": {
+    "domains": [],
+    "id": "slurm-job-script-tale",
+    "level": "",
+    "order": 2,
+    "path": "fields/schedulers/slurm-job-script-tale.md",
+    "reading_time_min": 2,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "",
+    "tags": [],
+    "title": "The Tale of job.sh and the Snapshot",
+    "type": "note",
+    "types": [
+      "note"
+    ]
+  },
+  "slurm-kill-task-failed": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-kill-task-failed",
+    "level": "intermediate",
+    "order": 9,
+    "path": "fields/schedulers/slurm-kill-task-failed.md",
+    "reading_time_min": 7,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "slurm-accounting-multi-tenancy",
+        "slurm-cgroups-in-practice"
+      ]
+    },
+    "status": "stable",
+    "summary": "Slurm job death (SIGTERM, KillWait, SIGKILL) fails on uninterruptible sleep, draining nodes. Raising timeouts rarely helps. Debug these with UnkillableStepProgram.",
+    "tags": [
+      "hpc",
+      "slurm"
+    ],
+    "title": "Kill Task Failed: A Murder Mystery With No Body (and One Drained Node)",
     "type": "concept",
     "types": [
       "concept"
@@ -1812,7 +1967,8 @@
     ],
     "id": "slurm-pam-adopt-ssh-access",
     "level": "",
-    "path": "fields/schedulers/slurm-pam-adopt.md",
+    "order": 11,
+    "path": "fields/schedulers/slurm-pam-adopt-ssh-access.md",
     "reading_time_min": 4,
     "relations": {
       "prerequisites": [],
@@ -1824,6 +1980,145 @@
       "slurm"
     ],
     "title": "pam_slurm_adopt: Closing the Slurm SSH Backdoor",
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
+  },
+  "slurm-preemption-requeue-signals": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-preemption-requeue-signals",
+    "level": "intermediate",
+    "order": 8,
+    "path": "fields/schedulers/slurm-preemption-requeue-signals.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "slurm-kill-task-failed",
+        "slurm-upgrade-order"
+      ]
+    },
+    "status": "stable",
+    "summary": "How Slurm preemption modes differ, what GraceTime and --signal really send and when, why a bash trap never fires while  trainer runs, and a requeue-safe checkpoint wrapper that cannot loop forever.",
+    "tags": [
+      "gpu",
+      "hpc",
+      "slurm"
+    ],
+    "title": "Dying Politely: Preemption, Requeue and the Signals Your Training Job Ignores",
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
+  },
+  "slurm-reboot-order": {
+    "domains": [
+      "system-design",
+      "systems-and-hpc"
+    ],
+    "id": "slurm-reboot-order",
+    "level": "intermediate",
+    "order": 12,
+    "path": "fields/schedulers/slurm-reboot-order.md",
+    "reading_time_min": 6,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "",
+    "tags": [],
+    "title": "Rebooting a Slurm Cluster Without Losing Your Job (Or Anyone Else's)",
+    "type": "concept",
+    "types": [
+      "concept",
+      "experiment"
+    ]
+  },
+  "slurm-slurmstepd": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-slurmstepd",
+    "level": "intermediate",
+    "order": 3,
+    "path": "fields/schedulers/slurm-slurmstepd.md",
+    "reading_time_min": 11,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "slurm-cgroups-in-practice",
+        "slurm-kill-task-failed",
+        "slurm-spool-dir-full"
+      ]
+    },
+    "status": "stable",
+    "summary": "slurmstepd (1/step/node) bridges slurmd's fork and task start. Jobs survive slurmd restarts via SlurmdSpoolDir sockets. Covers how to find, count, and read stepds on busy nodes.",
+    "tags": [
+      "hpc",
+      "slurm"
+    ],
+    "title": "slurmstepd: The Small Daemon That Actually Runs Your Job",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "slurm-spool-dir-full": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-spool-dir-full",
+    "level": "intermediate",
+    "order": 10,
+    "path": "fields/schedulers/slurm-spool-dir-full.md",
+    "reading_time_min": 10,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "slurm-kill-task-failed",
+        "slurm-reboot-order",
+        "slurm-slurmstepd"
+      ]
+    },
+    "status": "stable",
+    "summary": "Why slurmd drains node with reason \"SlurmdSpoolDir is full\", why culprit is filesystem underneath, what slurmd keeps in spool directory, a triage runbook, how to stop jobs from filling the disk.",
+    "tags": [
+      "hpc",
+      "slurm"
+    ],
+    "title": "SlurmdSpoolDir Is Full: The Drain That Is Not About the Spool Directory",
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
+  },
+  "slurm-upgrade-order": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-upgrade-order",
+    "level": "intermediate",
+    "order": 13,
+    "path": "fields/schedulers/slurm-upgrade-order.md",
+    "reading_time_min": 12,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "slurm-accounting-multi-tenancy",
+        "slurm-pam-adopt-ssh-access"
+      ]
+    },
+    "status": "stable",
+    "summary": "Order Slurm daemons must be upgraded in, how far apart two versions can be, what to back up, why slurmdbd needs a hand-started first run, and why a cluster is not upgraded until last old job finishes.",
+    "tags": [
+      "hpc",
+      "slurm"
+    ],
+    "title": "Upgrading Slurm: The Order, the Window, and the Parts That Bite",
     "type": "guide",
     "types": [
       "guide"

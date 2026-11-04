@@ -2,6 +2,7 @@
 id: slurm-accounting-multi-tenancy
 title: "Slurm Multi-Tenancy: Who Stores the Rules, Who Enforces Them"
 sidebar_label: Slurm accounting & multi-tenancy
+order: 6
 summary: How slurmctld, slurmd, slurmdbd and sacctmgr split the work of multi-tenant accounting, why limits you set can silently do nothing, and how associations, TRES limits, QOS and fairshare fit together.
 level: intermediate
 type: concept
@@ -13,7 +14,7 @@ relations:
 
 # Slurm Multi-Tenancy: Who Stores the Rules, Who Enforces Them
 
-> **Part of the [schedulers](/fields/schedulers/intro.md) directory.** The [intro](/fields/schedulers/intro.md#the-slurm-architecture-at-a-glance) sketched Slurm's three daemons. This page zooms in on the part that makes a shared cluster fair: accounts, limits and usage history. By the end you'll know which daemon stores the rules, which one enforces them, what `sacctmgr` actually is, and the one missing line in `slurm.conf` that makes every limit you set do nothing.
+> **Part of the [schedulers](/fields/schedulers/slurm-intro.md) directory.** The [intro](/fields/schedulers/slurm-intro.md#the-slurm-architecture-at-a-glance) sketched Slurm's three daemons. This page zooms in on the part that makes a shared cluster fair: accounts, limits and usage history. By the end you'll know which daemon stores the rules, which one enforces them, what `sacctmgr` actually is, and the one missing line in `slurm.conf` that makes every limit you set do nothing.
 
 ## Table of Contents
 - [Slurm Multi-Tenancy: Who Stores the Rules, Who Enforces Them](#slurm-multi-tenancy-who-stores-the-rules-who-enforces-them)

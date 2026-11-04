@@ -584,7 +584,68 @@
       "slurm-mixed-gpus-overview"
     ],
     "related_by": [
-      "isolating-gpu-workloads"
+      "isolating-gpu-workloads",
+      "slurm-backfill-tuning",
+      "slurm-cgroups-in-practice",
+      "slurm-kill-task-failed",
+      "slurm-upgrade-order"
+    ]
+  },
+  "slurm-backfill-tuning": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "slurm-accounting-multi-tenancy",
+      "slurm-preemption-requeue-signals"
+    ],
+    "related_by": []
+  },
+  "slurm-cgroups-in-practice": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "slurm-accounting-multi-tenancy",
+      "slurm-pam-adopt-ssh-access"
+    ],
+    "related_by": [
+      "slurm-gpu-affinity-socket-lie",
+      "slurm-kill-task-failed",
+      "slurm-slurmstepd"
+    ]
+  },
+  "slurm-gpu-affinity-socket-lie": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "slurm-cgroups-in-practice",
+      "slurm-kill-task-failed"
+    ],
+    "related_by": []
+  },
+  "slurm-intro": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "slurm-job-script-tale": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "slurm-kill-task-failed": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "slurm-accounting-multi-tenancy",
+      "slurm-cgroups-in-practice"
+    ],
+    "related_by": [
+      "slurm-gpu-affinity-socket-lie",
+      "slurm-preemption-requeue-signals",
+      "slurm-slurmstepd",
+      "slurm-spool-dir-full"
     ]
   },
   "slurm-mixed-gpus-four-ways": {
@@ -625,7 +686,64 @@
     "prerequisite_of": [],
     "prerequisites": [],
     "related": [],
-    "related_by": []
+    "related_by": [
+      "slurm-cgroups-in-practice",
+      "slurm-upgrade-order"
+    ]
+  },
+  "slurm-preemption-requeue-signals": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "slurm-kill-task-failed",
+      "slurm-upgrade-order"
+    ],
+    "related_by": [
+      "slurm-backfill-tuning"
+    ]
+  },
+  "slurm-reboot-order": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [],
+    "related_by": [
+      "slurm-spool-dir-full"
+    ]
+  },
+  "slurm-slurmstepd": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "slurm-cgroups-in-practice",
+      "slurm-kill-task-failed",
+      "slurm-spool-dir-full"
+    ],
+    "related_by": [
+      "slurm-spool-dir-full"
+    ]
+  },
+  "slurm-spool-dir-full": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "slurm-kill-task-failed",
+      "slurm-reboot-order",
+      "slurm-slurmstepd"
+    ],
+    "related_by": [
+      "slurm-slurmstepd"
+    ]
+  },
+  "slurm-upgrade-order": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "slurm-accounting-multi-tenancy",
+      "slurm-pam-adopt-ssh-access"
+    ],
+    "related_by": [
+      "slurm-preemption-requeue-signals"
+    ]
   },
   "threat-model-and-first-launch": {
     "prerequisite_of": [

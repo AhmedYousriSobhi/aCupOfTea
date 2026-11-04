@@ -139,6 +139,7 @@
       "reviewing-the-design",
       "sessions-and-two-walls",
       "sign-in-hygiene",
+      "slurm-reboot-order",
       "threat-model-and-first-launch"
     ]
   },
@@ -193,11 +194,20 @@
       "pytorch-ddp",
       "singularity-containers",
       "slurm-accounting-multi-tenancy",
+      "slurm-backfill-tuning",
+      "slurm-cgroups-in-practice",
+      "slurm-gpu-affinity-socket-lie",
+      "slurm-kill-task-failed",
       "slurm-mixed-gpus-four-ways",
       "slurm-mixed-gpus-overview",
       "slurm-mixed-gpus-where-shine",
       "slurm-mixed-gpus-why-disappoints",
-      "slurm-pam-adopt-ssh-access"
+      "slurm-pam-adopt-ssh-access",
+      "slurm-preemption-requeue-signals",
+      "slurm-reboot-order",
+      "slurm-slurmstepd",
+      "slurm-spool-dir-full",
+      "slurm-upgrade-order"
     ]
   }
 }

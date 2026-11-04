@@ -88,10 +88,13 @@
       "nhc-custom-checks",
       "nhc-writing-nhc-conf",
       "slurm-accounting-multi-tenancy",
+      "slurm-cgroups-in-practice",
+      "slurm-gpu-affinity-socket-lie",
       "slurm-mixed-gpus-four-ways",
       "slurm-mixed-gpus-overview",
       "slurm-mixed-gpus-where-shine",
-      "slurm-mixed-gpus-why-disappoints"
+      "slurm-mixed-gpus-why-disappoints",
+      "slurm-preemption-requeue-signals"
     ]
   },
   "hpc": {
@@ -127,10 +130,18 @@
       "nhc-writing-nhc-conf",
       "nvidia-cluster-readiness-engine",
       "slurm-accounting-multi-tenancy",
+      "slurm-backfill-tuning",
+      "slurm-cgroups-in-practice",
+      "slurm-gpu-affinity-socket-lie",
+      "slurm-kill-task-failed",
       "slurm-mixed-gpus-four-ways",
       "slurm-mixed-gpus-overview",
       "slurm-mixed-gpus-where-shine",
-      "slurm-mixed-gpus-why-disappoints"
+      "slurm-mixed-gpus-why-disappoints",
+      "slurm-preemption-requeue-signals",
+      "slurm-slurmstepd",
+      "slurm-spool-dir-full",
+      "slurm-upgrade-order"
     ]
   },
   "kubernetes": {
@@ -250,11 +261,19 @@
       "nhc-why-node-health-check",
       "parallel-execution-and-affinity",
       "slurm-accounting-multi-tenancy",
+      "slurm-backfill-tuning",
+      "slurm-cgroups-in-practice",
+      "slurm-gpu-affinity-socket-lie",
+      "slurm-kill-task-failed",
       "slurm-mixed-gpus-four-ways",
       "slurm-mixed-gpus-overview",
       "slurm-mixed-gpus-where-shine",
       "slurm-mixed-gpus-why-disappoints",
-      "slurm-pam-adopt-ssh-access"
+      "slurm-pam-adopt-ssh-access",
+      "slurm-preemption-requeue-signals",
+      "slurm-slurmstepd",
+      "slurm-spool-dir-full",
+      "slurm-upgrade-order"
     ]
   },
   "software": {

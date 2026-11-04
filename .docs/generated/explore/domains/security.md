@@ -4,7 +4,7 @@
 
 Access control, authentication and hardening.
 
-- [pam_slurm_adopt: Closing the Slurm SSH Backdoor](/fields/schedulers/slurm-pam-adopt.md) *(4 min)*  
+- [pam_slurm_adopt: Closing the Slurm SSH Backdoor](/fields/schedulers/slurm-pam-adopt-ssh-access.md) *(4 min)*  
   [`slurm`](/.docs/generated/explore/tags/slurm.md)
 
 [All domains](/.docs/generated/explore/domains.md)

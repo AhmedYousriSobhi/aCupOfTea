@@ -1,5 +1,10 @@
 ---
+id: slurm-reboot-order
 sidebar_label: Rebooting a Slurm Cluster
+order: 12
+level: intermediate
+type: [concept, experiment]
+domains: [systems-and-hpc, system-design]
 ---
 # Rebooting a Slurm Cluster Without Losing Your Job (Or Anyone Else's)
 
