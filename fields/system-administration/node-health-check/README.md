@@ -47,5 +47,5 @@ Written against **NHC 1.5** (released October 2026, the first feature release si
 ## Related reading in this repo
 
 - [Rebooting a Slurm cluster without losing jobs](/fields/schedulers/slurm-reboot-order.md): NHC is on its pre-flight checklist for a reason.
-- [Schedulers intro](/fields/schedulers/intro.md): where node health checking sits in the scheduler's world.
+- [Schedulers intro](/fields/schedulers/slurm-intro.md): where node health checking sits in the scheduler's world.
 - [The cluster that passed every test except the one that mattered](/fields/devops/kubernetes/nvidia-cluster-readiness-engine.md): what's beyond single-node checks.

@@ -39,7 +39,7 @@ Not sure where to begin? Each of these takes one cup, roughly the reading time s
 | ~3 min | [Encoder-decoder for translation](/fields/generative-ai/machine-translator/encoder-decoder.md) | The architecture behind machine translation, in a few paragraphs |
 | ~7 min | [Bias and variance](/fields/tabular-data/data-evaluation/model-behavior/bias-variance-trade-off.md) | The trade-off behind overfitting and underfitting |
 | ~6 min | [Customer segmentation](/problems/customer-segmentation.md) | A business problem, framed the way a data scientist would |
-| ~7 min | [Schedulers, the traffic controller](/fields/schedulers/intro.md) | What a cluster scheduler does and why it matters |
+| ~7 min | [Schedulers, the traffic controller](/fields/schedulers/slurm-intro.md) | What a cluster scheduler does and why it matters |
 
 <!-- recent:start -->
 

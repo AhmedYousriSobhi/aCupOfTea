@@ -15,5 +15,5 @@ Pages grouped by subject. Folders stay the primary location; this is an overlay.
 - [Security](/.docs/generated/explore/domains/security.md) (1): Access control, authentication and hardening.
 - [Software Engineering](/.docs/generated/explore/domains/software-engineering.md) (10): Engineering practice, patterns and tooling.
 - [Statistics](/.docs/generated/explore/domains/statistics.md) (6): Statistical methods and probability.
-- [System Design](/.docs/generated/explore/domains/system-design.md) (5): Software System Design
-- [Systems and HPC](/.docs/generated/explore/domains/systems-and-hpc.md) (59): Benchmarks, schedulers, system administration, high-performance computing.
+- [System Design](/.docs/generated/explore/domains/system-design.md) (6): Software System Design
+- [Systems and HPC](/.docs/generated/explore/domains/systems-and-hpc.md) (70): Benchmarks, schedulers, system administration, high-performance computing.
