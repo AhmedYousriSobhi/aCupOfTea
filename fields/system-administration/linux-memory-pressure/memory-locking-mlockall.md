@@ -1,16 +1,20 @@
 ---
-id: memory-locking-mlockall
+id: linux-mem-mlockall
+order: 5
 title: "Memory Locking: Keeping a Rescuer in RAM with mlockall"
-sidebar_label: Memory locking (mlockall)
+sidebar_label: "5. Memory locking (mlockall)"
 summary: Why a program that rescues a machine under memory pressure must pin its own pages in RAM, what mlockall does, why the 8 MiB limit exists, and why root gets the real lock - explained with a tow truck.
 level: intermediate
 type: concept
 domains: [systems-and-hpc]
+relations:
+  prerequisites: [linux-mem-reclaim]
+  related: [linux-mem-cgroup-v2, linux-mem-rescuer-checklist]
 ---
 
 # Memory Locking: Keeping a Rescuer in RAM with mlockall
 
-> **One idea, one page.** Some programs exist to act when the machine is out of memory: a watchdog that kills a runaway job, a daemon that pauses containers. Those programs have a trap waiting for them, and `mlockall` is the fix. By the end you'll know what the trap is, what the fix pins, what it costs, and why an ordinary user can only get half of it.
+> **Part 5 of the [Linux Memory Pressure series](/fields/system-administration/linux-memory-pressure/README.md).** Some programs exist to act when the machine is out of memory: a watchdog that kills a runaway job, a daemon that pauses containers. Those programs have a trap waiting for them, and `mlockall` is the fix. By the end you'll know what the trap is, what the fix pins, what it costs, and why an ordinary user can only get half of it.
 
 ## Table of Contents
 - [Memory Locking: Keeping a Rescuer in RAM with mlockall](#memory-locking-keeping-a-rescuer-in-ram-with-mlockall)
@@ -229,6 +233,8 @@ Pinning pages fixes one stall. It is not armor.
 The same call has a second, unrelated use: programs that hold secrets (keys, passwords) lock that memory so it never reaches a swap file on disk.
 
 **Takeaway:** a program meant to act under memory pressure is the first thing the kernel would evict, so it pins its own pages with `mlockall` and does its allocating before trouble starts; Linux rations that power, which is why the full guarantee needs root and an unprivileged run is best effort.
+
+The lock is one piece of survival. CPU priority, the OOM shield and a watchdog complete it in [part 6](/fields/system-administration/linux-memory-pressure/rescuer-checklist.md).
 
 ### References
 - [mlock(2), mlockall(2): Linux manual pages](https://man7.org/linux/man-pages/man2/mlock.2.html)

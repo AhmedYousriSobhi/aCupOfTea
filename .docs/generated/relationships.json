@@ -280,6 +280,98 @@
     "related": [],
     "related_by": []
   },
+  "linux-mem-cgroup-v2": {
+    "prerequisite_of": [
+      "linux-mem-rescuer-checklist"
+    ],
+    "prerequisites": [
+      "linux-mem-reclaim"
+    ],
+    "related": [
+      "linux-mem-oom-killer",
+      "linux-mem-psi"
+    ],
+    "related_by": [
+      "linux-mem-mlockall",
+      "linux-mem-oom-killer"
+    ]
+  },
+  "linux-mem-mlockall": {
+    "prerequisite_of": [
+      "linux-mem-rescuer-checklist"
+    ],
+    "prerequisites": [
+      "linux-mem-reclaim"
+    ],
+    "related": [
+      "linux-mem-cgroup-v2",
+      "linux-mem-rescuer-checklist"
+    ],
+    "related_by": []
+  },
+  "linux-mem-oom-killer": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "linux-mem-reclaim"
+    ],
+    "related": [
+      "linux-mem-cgroup-v2",
+      "linux-mem-psi"
+    ],
+    "related_by": [
+      "linux-mem-cgroup-v2",
+      "linux-mem-psi",
+      "linux-mem-rescuer-checklist"
+    ]
+  },
+  "linux-mem-psi": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "linux-mem-reclaim"
+    ],
+    "related": [
+      "linux-mem-oom-killer"
+    ],
+    "related_by": [
+      "linux-mem-cgroup-v2",
+      "linux-mem-oom-killer",
+      "linux-mem-reclaim",
+      "linux-mem-rescuer-checklist"
+    ]
+  },
+  "linux-mem-reclaim": {
+    "prerequisite_of": [
+      "linux-mem-cgroup-v2",
+      "linux-mem-mlockall",
+      "linux-mem-oom-killer",
+      "linux-mem-psi"
+    ],
+    "prerequisites": [],
+    "related": [
+      "linux-mem-psi"
+    ],
+    "related_by": []
+  },
+  "linux-mem-rescuer-checklist": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "linux-mem-cgroup-v2",
+      "linux-mem-mlockall"
+    ],
+    "related": [
+      "linux-mem-oom-killer",
+      "linux-mem-psi"
+    ],
+    "related_by": [
+      "linux-mem-mlockall"
+    ]
+  },
+  "linux-memory-pressure-overview": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
   "llm-inference-performance-overview": {
     "prerequisite_of": [],
     "prerequisites": [],
@@ -339,12 +431,6 @@
     "prerequisites": [
       "llm-perf-optimizations"
     ],
-    "related": [],
-    "related_by": []
-  },
-  "memory-locking-mlockall": {
-    "prerequisite_of": [],
-    "prerequisites": [],
     "related": [],
     "related_by": []
   },
