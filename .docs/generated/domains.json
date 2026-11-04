@@ -197,6 +197,8 @@
       "slurm-backfill-tuning",
       "slurm-cgroups-in-practice",
       "slurm-gpu-affinity-socket-lie",
+      "slurm-intro",
+      "slurm-job-script-tale",
       "slurm-kill-task-failed",
       "slurm-mixed-gpus-four-ways",
       "slurm-mixed-gpus-overview",

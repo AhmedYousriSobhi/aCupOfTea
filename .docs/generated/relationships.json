@@ -610,6 +610,7 @@
     "related_by": [
       "slurm-gpu-affinity-socket-lie",
       "slurm-kill-task-failed",
+      "slurm-pam-adopt-ssh-access",
       "slurm-slurmstepd"
     ]
   },
@@ -623,16 +624,27 @@
     "related_by": []
   },
   "slurm-intro": {
-    "prerequisite_of": [],
+    "prerequisite_of": [
+      "slurm-job-script-tale"
+    ],
     "prerequisites": [],
-    "related": [],
+    "related": [
+      "slurm-job-script-tale",
+      "slurm-slurmstepd"
+    ],
     "related_by": []
   },
   "slurm-job-script-tale": {
     "prerequisite_of": [],
-    "prerequisites": [],
-    "related": [],
-    "related_by": []
+    "prerequisites": [
+      "slurm-intro"
+    ],
+    "related": [
+      "slurm-spool-dir-full"
+    ],
+    "related_by": [
+      "slurm-intro"
+    ]
   },
   "slurm-kill-task-failed": {
     "prerequisite_of": [],
@@ -685,7 +697,10 @@
   "slurm-pam-adopt-ssh-access": {
     "prerequisite_of": [],
     "prerequisites": [],
-    "related": [],
+    "related": [
+      "slurm-cgroups-in-practice",
+      "slurm-reboot-order"
+    ],
     "related_by": [
       "slurm-cgroups-in-practice",
       "slurm-upgrade-order"
@@ -705,8 +720,12 @@
   "slurm-reboot-order": {
     "prerequisite_of": [],
     "prerequisites": [],
-    "related": [],
+    "related": [
+      "slurm-spool-dir-full",
+      "slurm-upgrade-order"
+    ],
     "related_by": [
+      "slurm-pam-adopt-ssh-access",
       "slurm-spool-dir-full"
     ]
   },
@@ -719,6 +738,7 @@
       "slurm-spool-dir-full"
     ],
     "related_by": [
+      "slurm-intro",
       "slurm-spool-dir-full"
     ]
   },
@@ -731,6 +751,8 @@
       "slurm-slurmstepd"
     ],
     "related_by": [
+      "slurm-job-script-tale",
+      "slurm-reboot-order",
       "slurm-slurmstepd"
     ]
   },
@@ -742,7 +764,8 @@
       "slurm-pam-adopt-ssh-access"
     ],
     "related_by": [
-      "slurm-preemption-requeue-signals"
+      "slurm-preemption-requeue-signals",
+      "slurm-reboot-order"
     ]
   },
   "threat-model-and-first-launch": {

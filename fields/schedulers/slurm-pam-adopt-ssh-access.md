@@ -10,6 +10,11 @@ domains:
   - security
 tags:
   - slurm
+  - hpc
+summary: Why users can SSH into a node and escape their job's limits, and how pam_slurm_adopt closes the backdoor by admitting only users with a job there and adopting the session into its cgroup.
+level: intermediate
+relations:
+  related: [slurm-cgroups-in-practice, slurm-reboot-order]
 ---
 
 # The SSH Backdoor Every Slurm Cluster Has (Until You Close It)

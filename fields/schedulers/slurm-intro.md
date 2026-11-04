@@ -2,6 +2,13 @@
 id: slurm-intro
 sidebar_label: Schedulers Intro
 order: 1
+summary: What a cluster scheduler does, how it differs from the OS scheduler, the scheduler landscape, the concepts they share, and the Slurm architecture at a glance.
+level: beginner
+type: concept
+domains: [systems-and-hpc]
+tags: [slurm, hpc]
+relations:
+  related: [slurm-job-script-tale, slurm-slurmstepd]
 ---
 # Schedulers: The Traffic Controller Nobody Thanks Until It Breaks
 

@@ -61,6 +61,11 @@ Read each path in order; every step builds on the one before.
 1. [PyTorch 101](/fields/libraries-frameworks-containers/101-pytorch.md) *(6 min)*
 2. [PyTorch DDP](/fields/libraries-frameworks-containers/102-pytorch-ddp.md) *(1 min)*
 
+### Systems and HPC · 2 steps · 10 min
+
+1. [Schedulers: The Traffic Controller Nobody Thanks Until It Breaks](/fields/schedulers/slurm-intro.md) — What a cluster scheduler does, how it differs from the OS scheduler, the scheduler landscape, the concepts they share, and the Slurm architecture at a glance. *(beginner · 8 min)*
+2. [The Tale of job.sh and the Snapshot](/fields/schedulers/slurm-job-script-tale.md) — Slurm copies your batch script at submission, so editing job.sh later changes neither running nor pending jobs; cancel and resubmit, or version your scripts. *(beginner · 2 min)*
+
 ### Software Engineering · 3 steps · 15 min
 
 1. [Two People, One Laptop: What Accounts Should (and Shouldn't) Promise](/programming/local-app-accounts/threat-model-and-first-launch.md) — Before writing any account code, state what accounts will and will not protect, then handle the very first sign-up gracefully. *(beginner · 4 min)*
@@ -89,13 +94,13 @@ Read each path in order; every step builds on the one before.
 
 - [PyTorch DDP](/fields/libraries-frameworks-containers/102-pytorch-ddp.md) *(1 min)*
 - [Storage and Fabric for AI Clusters - Overview](/fields/system-administration/ai-storage-and-fabric/README.md) — A two-part series on keeping thousands of GPUs fed - parallel filesystems, small files and checkpoint storms, then RDMA, InfiniBand, RoCE and GPUDirect. *(intermediate · 2 min)*
-- [The Tale of job.sh and the Snapshot](/fields/schedulers/slurm-job-script-tale.md) *(2 min)*
+- [The Tale of job.sh and the Snapshot](/fields/schedulers/slurm-job-script-tale.md) — Slurm copies your batch script at submission, so editing job.sh later changes neither running nor pending jobs; cancel and resubmit, or version your scripts. *(beginner · 2 min)*
 - [Encoder-Decoder for Machine Translation](/fields/generative-ai/machine-translator/encoder-decoder.md) — The encoder-decoder idea behind neural machine translation, with a basic seq2seq model. *(intermediate · 3 min)*
 - [Mixing GPU Types in Slurm - Overview](/fields/schedulers/slurm-mixed-gpus/README.md) — Slurm can allocate H100s and A100s in one job - four different ways. A three-part series on what each actually gives you, why mixed training disappoints, and where it shines. *(intermediate · 3 min)*
 - [Regression Imputing](/fields/tabular-data/data-processing/handling-missing-data/regression-imputing.md) *(3 min)*
 - [Accuracy Paradox](/fields/tabular-data/data-evaluation/classification/accuracy-paradox.md) *(4 min)*
 - [LLM Inference Performance - Overview](/fields/generative-ai/llm-inference-performance/README.md) — Why a GPU with 3x the TFLOPS can make your chatbot only 1.6x faster - a four-part series on the roofline, LLM inference and the optimizations that actually work. *(intermediate · 4 min)*
-- [pam_slurm_adopt: Closing the Slurm SSH Backdoor](/fields/schedulers/slurm-pam-adopt-ssh-access.md) *(4 min)*
+- [pam_slurm_adopt: Closing the Slurm SSH Backdoor](/fields/schedulers/slurm-pam-adopt-ssh-access.md) — Why users can SSH into a node and escape their job's limits, and how pam_slurm_adopt closes the backdoor by admitting only users with a job there and adopting the session into its cgroup. *(intermediate · 4 min)*
 - [Two People, One Laptop: What Accounts Should (and Shouldn't) Promise](/programming/local-app-accounts/threat-model-and-first-launch.md) — Before writing any account code, state what accounts will and will not protect, then handle the very first sign-up gracefully. *(beginner · 4 min)*
 - [Build and Install NHC](/fields/system-administration/node-health-check/build-and-install.md) — Get NHC onto your nodes from a release RPM, the release tarball or the Git tree, run its unit tests and know where every file lands. *(beginner · 5 min)*
 - [CPU Affinity](/programming/operating-system/process-cpu-affinity.md) *(5 min)*
@@ -107,7 +112,7 @@ Read each path in order; every step builds on the one before.
 - [Fake GPUs in Kubernetes: Learn GPU Scheduling Without Owning a GPU](/fields/devops/kubernetes/fake-gpus-in-kubernetes.md) — Patch a node with a fake nvidia.com/gpu counter to learn GPU scheduling without owning a GPU. *(intermediate · 6 min)*
 - [NHC Cheat Sheet](/fields/system-administration/node-health-check/cheat-sheet.md) — Every NHC command, option, variable, config pattern and Slurm knob from the series on one page. *(intermediate · 6 min)*
 - [PyTorch 101](/fields/libraries-frameworks-containers/101-pytorch.md) *(6 min)*
-- [Rebooting a Slurm Cluster Without Losing Your Job (Or Anyone Else's)](/fields/schedulers/slurm-reboot-order.md) *(intermediate · 6 min)*
+- [Rebooting a Slurm Cluster Without Losing Your Job (Or Anyone Else's)](/fields/schedulers/slurm-reboot-order.md) — The step-by-step order for rebooting a Slurm cluster: drain, lock access, control plane first, then front-end and compute nodes, and reopen in a controlled way. *(intermediate · 6 min)*
 - [Reviewing the Design: Where Would You Push Back?](/programming/local-app-accounts/reviewing-the-design.md) — Six review questions the design leaves open, a table of mistakes it avoids, the Designing Data-Intensive Applications chapters that explain why, and six exercises. *(intermediate · 6 min)*
 - [Rolling NHC Out to a Fleet Without Draining Everything](/fields/system-administration/node-health-check/rollout-at-scale.md) — A dry-run, canary, enforce plan for deploying NHC or a new nhc.conf to hundreds of nodes, with a circuit breaker for bad pushes. *(intermediate · 6 min)*
 - [Sequence Models](/fields/deep-learning/concepts/sequence-models.md) — How models handle ordered data like text, from RNNs and LSTMs to transformers and LLMs. *(intermediate · 6 min)*
@@ -129,7 +134,7 @@ Read each path in order; every step builds on the one before.
 - [NHC Troubleshooting: Symptom First](/fields/system-administration/node-health-check/troubleshooting.md) — Symptom-first fixes for false drains, nodes that never resume, slurmd that won't register, timeouts, hanging df, and checks that pass by hand but fail under Slurm. *(intermediate · 8 min)*
 - [RDMA, InfiniBand and GPUDirect: Taking the CPU Out of the Way](/fields/system-administration/ai-storage-and-fabric/rdma-infiniband-gpudirect.md) — Why AI clusters use RDMA fabrics (InfiniBand or RoCE), what kernel bypass and zero-copy mean, and how GPUDirect RDMA and GPUDirect Storage move data straight into GPU memory. *(intermediate · 8 min)*
 - [Reinforcement Learning Basics](/fields/reinforcement-learning/concepts-in-reinforcement-learning/basics.md) *(8 min)*
-- [Schedulers: The Traffic Controller Nobody Thanks Until It Breaks](/fields/schedulers/slurm-intro.md) *(8 min)*
+- [Schedulers: The Traffic Controller Nobody Thanks Until It Breaks](/fields/schedulers/slurm-intro.md) — What a cluster scheduler does, how it differs from the OS scheduler, the scheduler landscape, the concepts they share, and the Slurm architecture at a glance. *(beginner · 8 min)*
 - [Writing nhc.conf That Actually Fits Your Cluster](/fields/system-administration/node-health-check/writing-nhc-conf.md) — The config syntax, match strings, variables and contexts, plus copy-ready starter configs for CPU, GPU and login nodes. *(intermediate · 8 min)*
 - [2:4 Sparsity: Half the Weights, Not Half the Time](/fields/generative-ai/llm-inference-performance/structured-sparsity.md) — How NVIDIA's 2:4 structured sparsity works, what it really saves (44% of weight bytes, not 50%), and why its doubled TFLOPS help prefill while decode only feels the byte savings. *(intermediate · 9 min)*
 - [Acting Without Making It Worse](/fields/system-administration/gpu-failure-prediction/from-alert-to-drain.md) — The principles of safe automated response to GPU failure predictions - reversibility, drain semantics, blast radius, drain budgets, staged rollout and rollback. *(advanced · 9 min)*
@@ -158,5 +163,7 @@ Read each path in order; every step builds on the one before.
 
 - [Build and Install NHC](/fields/system-administration/node-health-check/build-and-install.md) — Get NHC onto your nodes from a release RPM, the release tarball or the Git tree, run its unit tests and know where every file lands. *(beginner · 5 min)*
 - [Deep Learning Basics](/fields/deep-learning/concepts/basics.md) — Neurons, loss and cost, and the common activation functions, explained from first principles. *(beginner · 30 min)*
+- [Schedulers: The Traffic Controller Nobody Thanks Until It Breaks](/fields/schedulers/slurm-intro.md) — What a cluster scheduler does, how it differs from the OS scheduler, the scheduler landscape, the concepts they share, and the Slurm architecture at a glance. *(beginner · 8 min)*
+- [The Tale of job.sh and the Snapshot](/fields/schedulers/slurm-job-script-tale.md) — Slurm copies your batch script at submission, so editing job.sh later changes neither running nor pending jobs; cancel and resubmit, or version your scripts. *(beginner · 2 min)*
 - [Two People, One Laptop: What Accounts Should (and Shouldn't) Promise](/programming/local-app-accounts/threat-model-and-first-launch.md) — Before writing any account code, state what accounts will and will not protect, then handle the very first sign-up gracefully. *(beginner · 4 min)*
 - [Why Your Cluster Needs a Bouncer](/fields/system-administration/node-health-check/why-node-health-check.md) — One broken node can eat a whole queue of jobs; this is what NHC is, how it decides a node is sick, and how it tells the scheduler. *(beginner · 7 min)*

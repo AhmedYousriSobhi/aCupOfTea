@@ -2,6 +2,14 @@
 id: slurm-job-script-tale
 order: 2
 sidebar_label: The Tale of Job.sh and the Snapshot
+summary: Slurm copies your batch script at submission, so editing job.sh later changes neither running nor pending jobs; cancel and resubmit, or version your scripts.
+level: beginner
+type: guide
+domains: [systems-and-hpc]
+tags: [slurm, hpc]
+relations:
+  prerequisites: [slurm-intro]
+  related: [slurm-spool-dir-full]
 ---
 
 # The Tale of job.sh and the Snapshot

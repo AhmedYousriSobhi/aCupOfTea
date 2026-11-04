@@ -26,18 +26,22 @@
   [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [NHC Troubleshooting: Symptom First](/fields/system-administration/node-health-check/troubleshooting.md) — Symptom-first fixes for false drains, nodes that never resume, slurmd that won't register, timeouts, hanging df, and checks that pass by hand but fail under Slurm. *(intermediate · 8 min)*  
   [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
-- [pam_slurm_adopt: Closing the Slurm SSH Backdoor](/fields/schedulers/slurm-pam-adopt-ssh-access.md) *(4 min)*  
-  [`slurm`](/.docs/generated/explore/tags/slurm.md)
+- [pam_slurm_adopt: Closing the Slurm SSH Backdoor](/fields/schedulers/slurm-pam-adopt-ssh-access.md) — Why users can SSH into a node and escape their job's limits, and how pam_slurm_adopt closes the backdoor by admitting only users with a job there and adopting the session into its cgroup. *(intermediate · 4 min)*  
+  [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [Parallel Execution and Affinity](/fields/benchmarks/parallel-execution-affinity-master-guide.md) *(5 min)*  
   [`affinity`](/.docs/generated/explore/tags/affinity.md) [`mpi`](/.docs/generated/explore/tags/mpi.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [Plugging NHC into Slurm (and Friends)](/fields/system-administration/node-health-check/slurm-integration.md) — The three slurm.conf lines, which node states to check, timeouts that don't fight each other, prolog and epilog patterns, reboots, plus PBS and cron. *(intermediate · 7 min)*  
   [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [Predicting GPU Node Failures - Overview](/fields/system-administration/gpu-failure-prediction/README.md) — A five-part series on how GPU memory fails, what its telemetry really says, and how to turn that into predictions you can trust before a training run dies. *(advanced · 5 min)*  
   [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
+- [Rebooting a Slurm Cluster Without Losing Your Job (Or Anyone Else's)](/fields/schedulers/slurm-reboot-order.md) — The step-by-step order for rebooting a Slurm cluster: drain, lock access, control plane first, then front-end and compute nodes, and reopen in a controlled way. *(intermediate · 6 min)*  
+  [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [Rolling NHC Out to a Fleet Without Draining Everything](/fields/system-administration/node-health-check/rollout-at-scale.md) — A dry-run, canary, enforce plan for deploying NHC or a new nhc.conf to hundreds of nodes, with a circuit breaker for bad pushes. *(intermediate · 6 min)*  
   [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [Runbook: Deploying GPU Failure Prediction End to End](/fields/system-administration/gpu-failure-prediction/runbook.md) — The hands-on companion to the series - counters file, node checks, tested Prometheus rules, Alertmanager routing, a guarded Slurm drain hook and a backtest, step by step. *(advanced · 15 min)*  
   [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
+- [Schedulers: The Traffic Controller Nobody Thanks Until It Breaks](/fields/schedulers/slurm-intro.md) — What a cluster scheduler does, how it differs from the OS scheduler, the scheduler landscape, the concepts they share, and the Slurm architecture at a glance. *(beginner · 8 min)*  
+  [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [Slurm cgroups in Practice: What Gets Constrained, and Where the Numbers Lie](/fields/schedulers/slurm-cgroups-in-practice.md) — Which cgroup.conf switches actually fence a Slurm job, why every one of them defaults to off, how v1 and v2 differ, and why sacct's memory numbers are samples and not measurements. *(intermediate · 11 min)*  
   [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [Slurm Multi-Tenancy: Who Stores the Rules, Who Enforces Them](/fields/schedulers/slurm-accounting-multi-tenancy.md) — How slurmctld, slurmd, slurmdbd and sacctmgr split the work of multi-tenant accounting, why limits you set can silently do nothing, and how associations, TRES limits, QOS and fairshare fit together. *(intermediate · 9 min)*  
@@ -45,6 +49,8 @@
 - [SlurmdSpoolDir Is Full: The Drain That Is Not About the Spool Directory](/fields/schedulers/slurm-spool-dir-full.md) — Why slurmd drains node with reason "SlurmdSpoolDir is full", why culprit is filesystem underneath, what slurmd keeps in spool directory, a triage runbook, how to stop jobs from filling the disk. *(intermediate · 10 min)*  
   [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [slurmstepd: The Small Daemon That Actually Runs Your Job](/fields/schedulers/slurm-slurmstepd.md) — slurmstepd (1/step/node) bridges slurmd's fork and task start. Jobs survive slurmd restarts via SlurmdSpoolDir sockets. Covers how to find, count, and read stepds on busy nodes. *(intermediate · 11 min)*  
+  [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
+- [The Tale of job.sh and the Snapshot](/fields/schedulers/slurm-job-script-tale.md) — Slurm copies your batch script at submission, so editing job.sh later changes neither running nor pending jobs; cancel and resubmit, or version your scripts. *(beginner · 2 min)*  
   [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [Upgrading Slurm: The Order, the Window, and the Parts That Bite](/fields/schedulers/slurm-upgrade-order.md) — Order Slurm daemons must be upgraded in, how far apart two versions can be, what to back up, why slurmdbd needs a hand-started first run, and why a cluster is not upgraded until last old job finishes. *(intermediate · 12 min)*  
   [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)

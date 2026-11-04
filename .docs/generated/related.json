@@ -552,6 +552,40 @@
     ],
     "required_by": []
   },
+  "fields/schedulers/slurm-intro.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "slurm-slurmstepd",
+        "path": "fields/schedulers/slurm-slurmstepd.md",
+        "title": "slurmstepd: The Small Daemon That Actually Runs Your Job"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "slurm-job-script-tale",
+        "path": "fields/schedulers/slurm-job-script-tale.md",
+        "title": "The Tale of job.sh and the Snapshot"
+      }
+    ]
+  },
+  "fields/schedulers/slurm-job-script-tale.md": {
+    "prerequisites": [
+      {
+        "id": "slurm-intro",
+        "path": "fields/schedulers/slurm-intro.md",
+        "title": "Schedulers: The Traffic Controller Nobody Thanks Until It Breaks"
+      }
+    ],
+    "related": [
+      {
+        "id": "slurm-spool-dir-full",
+        "path": "fields/schedulers/slurm-spool-dir-full.md",
+        "title": "SlurmdSpoolDir Is Full: The Drain That Is Not About the Spool Directory"
+      }
+    ],
+    "required_by": []
+  },
   "fields/schedulers/slurm-kill-task-failed.md": {
     "prerequisites": [],
     "related": [
@@ -642,6 +676,11 @@
     "prerequisites": [],
     "related": [
       {
+        "id": "slurm-reboot-order",
+        "path": "fields/schedulers/slurm-reboot-order.md",
+        "title": "Rebooting a Slurm Cluster Without Losing Your Job (Or Anyone Else's)"
+      },
+      {
         "id": "slurm-cgroups-in-practice",
         "path": "fields/schedulers/slurm-cgroups-in-practice.md",
         "title": "Slurm cgroups in Practice: What Gets Constrained, and Where the Numbers Lie"
@@ -679,9 +718,19 @@
     "prerequisites": [],
     "related": [
       {
+        "id": "slurm-pam-adopt-ssh-access",
+        "path": "fields/schedulers/slurm-pam-adopt-ssh-access.md",
+        "title": "pam_slurm_adopt: Closing the Slurm SSH Backdoor"
+      },
+      {
         "id": "slurm-spool-dir-full",
         "path": "fields/schedulers/slurm-spool-dir-full.md",
         "title": "SlurmdSpoolDir Is Full: The Drain That Is Not About the Spool Directory"
+      },
+      {
+        "id": "slurm-upgrade-order",
+        "path": "fields/schedulers/slurm-upgrade-order.md",
+        "title": "Upgrading Slurm: The Order, the Window, and the Parts That Bite"
       }
     ],
     "required_by": []
@@ -693,6 +742,11 @@
         "id": "slurm-kill-task-failed",
         "path": "fields/schedulers/slurm-kill-task-failed.md",
         "title": "Kill Task Failed: A Murder Mystery With No Body (and One Drained Node)"
+      },
+      {
+        "id": "slurm-intro",
+        "path": "fields/schedulers/slurm-intro.md",
+        "title": "Schedulers: The Traffic Controller Nobody Thanks Until It Breaks"
       },
       {
         "id": "slurm-cgroups-in-practice",
@@ -724,6 +778,11 @@
         "id": "slurm-slurmstepd",
         "path": "fields/schedulers/slurm-slurmstepd.md",
         "title": "slurmstepd: The Small Daemon That Actually Runs Your Job"
+      },
+      {
+        "id": "slurm-job-script-tale",
+        "path": "fields/schedulers/slurm-job-script-tale.md",
+        "title": "The Tale of job.sh and the Snapshot"
       }
     ],
     "required_by": []
@@ -740,6 +799,11 @@
         "id": "slurm-pam-adopt-ssh-access",
         "path": "fields/schedulers/slurm-pam-adopt-ssh-access.md",
         "title": "pam_slurm_adopt: Closing the Slurm SSH Backdoor"
+      },
+      {
+        "id": "slurm-reboot-order",
+        "path": "fields/schedulers/slurm-reboot-order.md",
+        "title": "Rebooting a Slurm Cluster Without Losing Your Job (Or Anyone Else's)"
       },
       {
         "id": "slurm-accounting-multi-tenancy",

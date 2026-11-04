@@ -1783,43 +1783,60 @@
     ]
   },
   "slurm-intro": {
-    "domains": [],
+    "domains": [
+      "systems-and-hpc"
+    ],
     "id": "slurm-intro",
-    "level": "",
+    "level": "beginner",
     "order": 1,
     "path": "fields/schedulers/slurm-intro.md",
     "reading_time_min": 8,
     "relations": {
       "prerequisites": [],
-      "related": []
+      "related": [
+        "slurm-job-script-tale",
+        "slurm-slurmstepd"
+      ]
     },
     "status": "stable",
-    "summary": "",
-    "tags": [],
+    "summary": "What a cluster scheduler does, how it differs from the OS scheduler, the scheduler landscape, the concepts they share, and the Slurm architecture at a glance.",
+    "tags": [
+      "hpc",
+      "slurm"
+    ],
     "title": "Schedulers: The Traffic Controller Nobody Thanks Until It Breaks",
-    "type": "note",
+    "type": "concept",
     "types": [
-      "note"
+      "concept"
     ]
   },
   "slurm-job-script-tale": {
-    "domains": [],
+    "domains": [
+      "systems-and-hpc"
+    ],
     "id": "slurm-job-script-tale",
-    "level": "",
+    "level": "beginner",
     "order": 2,
     "path": "fields/schedulers/slurm-job-script-tale.md",
     "reading_time_min": 2,
     "relations": {
-      "prerequisites": [],
-      "related": []
+      "prerequisites": [
+        "slurm-intro"
+      ],
+      "related": [
+        "slurm-spool-dir-full"
+      ]
     },
     "status": "stable",
-    "summary": "",
-    "tags": [],
+    "summary": "Slurm copies your batch script at submission, so editing job.sh later changes neither running nor pending jobs; cancel and resubmit, or version your scripts.",
+    "tags": [
+      "hpc",
+      "slurm"
+    ],
     "title": "The Tale of job.sh and the Snapshot",
-    "type": "note",
+    "type": "guide",
     "types": [
-      "note"
+      "guide"
     ]
   },
   "slurm-kill-task-failed": {
@@ -1966,17 +1983,21 @@
       "systems-and-hpc"
     ],
     "id": "slurm-pam-adopt-ssh-access",
-    "level": "",
+    "level": "intermediate",
     "order": 11,
     "path": "fields/schedulers/slurm-pam-adopt-ssh-access.md",
     "reading_time_min": 4,
     "relations": {
       "prerequisites": [],
-      "related": []
+      "related": [
+        "slurm-cgroups-in-practice",
+        "slurm-reboot-order"
+      ]
     },
     "status": "stable",
-    "summary": "",
+    "summary": "Why users can SSH into a node and escape their job's limits, and how pam_slurm_adopt closes the backdoor by admitting only users with a job there and adopting the session into its cgroup.",
     "tags": [
+      "hpc",
       "slurm"
     ],
     "title": "pam_slurm_adopt: Closing the Slurm SSH Backdoor",
@@ -2026,11 +2047,17 @@
     "reading_time_min": 6,
     "relations": {
       "prerequisites": [],
-      "related": []
+      "related": [
+        "slurm-spool-dir-full",
+        "slurm-upgrade-order"
+      ]
     },
     "status": "stable",
-    "summary": "",
-    "tags": [],
+    "summary": "The step-by-step order for rebooting a Slurm cluster: drain, lock access, control plane first, then front-end and compute nodes, and reopen in a controlled way.",
+    "tags": [
+      "hpc",
+      "slurm"
+    ],
     "title": "Rebooting a Slurm Cluster Without Losing Your Job (Or Anyone Else's)",
     "type": "concept",
     "types": [
