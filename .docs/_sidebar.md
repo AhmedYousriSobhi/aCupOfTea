@@ -57,7 +57,7 @@
       * [Reinforcement Learning](fields/reinforcement-learning/concepts-in-reinforcement-learning/basics.md)
   * [**Schedulers**](fields/schedulers/README.md)
     * [Schedulers Intro](fields/schedulers/slurm-intro.md)
-    * [The Tale of Job.sh and the Snapshot](fields/schedulers/slurm-job-script-tale.md)
+    * [The job script tale](fields/schedulers/slurm-job-script-tale.md)
     * [slurmstepd](fields/schedulers/slurm-slurmstepd.md)
     * [Slurm cgroups in practice](fields/schedulers/slurm-cgroups-in-practice.md)
     * [GPU affinity and the socket lie](fields/schedulers/slurm-gpu-affinity-socket-lie.md)
