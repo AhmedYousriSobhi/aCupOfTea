@@ -10,7 +10,7 @@ Implement a function, identify_customers, which will build two classifier models
 - data_test - a Pandas DataFrame with the same structure as data_train.
 
 In the identify_customers function, you should perform the following steps:
-1. Preprate the 17 binary variables in data_train and data_test by replacing 'yes' with 1, and 'no' with 0. Retaion the rest of the variables without any changes. After this step, you will have two new data frames 'onehot_train' and 'onehot_test'.
+1. Prepare the 17 binary variables in data_train and data_test by replacing 'yes' with 1, and 'no' with 0. Retain the rest of the variables without any changes. After this step, you will have two new data frames 'onehot_train' and 'onehot_test'.
 2. Find the proportion (prep) of clients that have subscribed to a term deposit in onehot_train (use the 'label' variable) and round the value to 3 decimal places. This will be necessary to set weights in the classifier models.
 3. build a LogisticRegression Classifier on onehot_train. Set the parameters: class_weight={0:prep, 1:1-prep}, random_state=0, max_inter=50.
 4. Build a RandomForest Classifier on onehot_train. Set the parameters: max_depth=10, random_state=0, n_estimators=30, class_weight={0:prep, 1:1-prep}.

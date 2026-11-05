@@ -14,7 +14,7 @@ LangChain is designed to be flexible and extensible. It can be used with any lan
 
 LangChain is also designed to be scalable and production-ready. It provides a number of features that make it easy to deploy and manage language model applications in production, such as support for distributed computing and monitoring.
 
-LangChain was initially released in October 2022,by [Harrison Chase](https://www.linkedin.com/in/harrison-chase-961287118/), under MIT licences
+LangChain was initially released in October 2022, by [Harrison Chase](https://www.linkedin.com/in/harrison-chase-961287118/), under MIT licences
 
 # Table of Content
 - [Generative AI - Langchain](#generative-ai---langchain)

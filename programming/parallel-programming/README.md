@@ -26,4 +26,4 @@ Anyone whose job is too big or too slow for a single process.
 |------|-------------|
 | [mpi](/programming/parallel-programming/mpi.md) | Message Passing Interface for distributed computing |
 
-Covers multithreading, multiprocessing, distributed computing, and GPU parallelism.
+So far this folder holds the MPI references. Multithreading, multiprocessing and GPU parallelism are not written yet.
