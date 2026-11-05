@@ -3,7 +3,9 @@ sidebar_label: Workspace Overview
 ---
 # Workspace
 
-Practical implementations and notebooks for deep learning.
+> Notebooks where the deep learning concepts become running code.
+
+Reading about a convolution is one thing. Watching one run on an image is another. This is where the code lives.
 
 ## Contents
 

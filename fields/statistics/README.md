@@ -1,6 +1,10 @@
 # Statistics
 ![Title card reading Statistics under the heading Mathematics](images/statistics-01.png)
 
+> The ground floor under machine learning: what statistics is, why it is worth learning, and a module-by-module curriculum from descriptive statistics to probability and distributions.
+
+You can call a model without knowing any statistics. You cannot tell whether to trust it. Read the intro below, then jump to the curriculum in the table of contents.
+
 Many enthusiastic people who love to have a great challenge, jump to the unbounded realm of AI, and get amazed by its titles like machine learning, deep learning, architecture, and other words related to this field. But what they don't know is that, the real challenge if where all of this came from?
 
 ![Four-panel meme: statistics is a cracked wall, framed as machine learning, then as artificial intelligence](images/statistics-02.png)

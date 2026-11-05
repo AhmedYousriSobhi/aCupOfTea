@@ -1,6 +1,8 @@
 # Concepts in Reinforcement Learning - Overview
 
-Core concepts and theory behind reinforcement learning algorithms.
+> The vocabulary of reinforcement learning in one place: agents, environments, rewards, policies and value functions.
+
+Every RL algorithm is built from these few pieces. Learn them once and the rest reads easily.
 
 ## Contents
 

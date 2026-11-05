@@ -1,5 +1,7 @@
 # Version Control - Overview
 
+> Git and GitHub, from the idea to the command line. By the end you'll know what version control gives you, how to work with Git day to day, and which page to open when a situation gets messy.
+
 ## Introduction
 Imagine you’re working on a project — maybe writing some code, editing a document, or building something cool. A few days later, you realize something broke, and you wish you could go back to the version that worked perfectly.
 That’s exactly where version control comes to the rescue!
@@ -23,6 +25,18 @@ It’s like a social network for developers. You can store your Git projects, wo
 Learning Git and GitHub isn’t just about managing code — it’s about building confidence as a developer. You’ll collaborate better, take more risks safely, and understand your own workflow more deeply.
 
 So, let’s dive in and start mastering version control — one commit at a time!
+
+## The route
+
+| Page | The question it answers |
+|---|---|
+| [Git CLI](/programming/version-control/git-cli.md) | How do I use Git from the terminal? |
+| [Git know-how](/programming/version-control/know-how.md) | How does the daily workflow go, from fork to pull request to merge? |
+| [Case study](/programming/version-control/case-study.md) | What do I do in this specific, messy situation? |
+
+## Who this is for
+
+Anyone who writes code or documents and wants to stop fearing the word "undo".
 
 ## What is Covered?
 

@@ -3,7 +3,9 @@ sidebar_group: Model Behavior
 ---
 # Tabular Data - Data Evaluation - Model Behavior - Overview
 
-Understanding model behavior and performance characteristics.
+> One page on why models fail in two opposite ways. By the end you'll know how to tell a model that is too simple from one that memorized the training data.
+
+Is your model bad because it learned too little, or because it learned too much? The fixes are opposite, so you need to know which one you have. That's the bias-variance trade-off.
 
 ## Contents
 

@@ -1,6 +1,8 @@
 # System Administration - Overview
 
-System administration, DevOps, and infrastructure management for AI/ML environments.
+> System administration, DevOps and infrastructure for AI/ML environments: the unglamorous work that keeps the GPUs busy and the jobs alive.
+
+The training run died at 3 AM. Was it the node, the network, the memory or the filesystem? The pages here are the ones to read before that happens. The folders marked "Series" are multi-part walkthroughs; the single pages are references.
 
 ## Contents
 

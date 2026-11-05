@@ -1,6 +1,8 @@
 # Experiments - Overview
 
-Exploratory, one-off investigations: notebooks and small codebases built to try out a tool or idea. An experiment that grows its own objective, results, and docs graduates to [projects](/projects/README.md).
+> Small, exploratory work: notebooks and codebases built to try a tool or an idea, before it deserves a project.
+
+Sometimes you just want to see whether a tool does what the blog post says. Those tries live here. An experiment that grows its own objective, results and docs graduates to [projects](/projects/README.md).
 
 ## Contents
 

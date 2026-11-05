@@ -3,6 +3,10 @@ sidebar_group: XGBoost
 ---
 # Tabular Data - Data Modeling - XGBOOST
 
+> A walk from "what is an ensemble?" to XGBoost. By the end you'll know the difference between bagging and boosting, how gradient boosting learns from its own mistakes, and what XGBoost adds on top.
+
+The idea in one line: instead of one clever model, train many simple ones, each fixing the errors of the one before. The sections go in that order: ensembles, bagging, boosting, AdaBoost, gradient boosting, then XGBoost itself.
+
 ## Abstract
 XGBoost (eXtreme Gradient Boosting) is a popular machine learning algorithm that belongs to the gradient boosting framework. It is known for its efficiency, accuracy, and flexibility in handling a variety of data types and problem domains. XGBoost is widely used for both regression and classification tasks.
 

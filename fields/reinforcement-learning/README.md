@@ -1,6 +1,6 @@
 # Reinforcement Learning - Overview
 
-RL algorithms, concepts, and practical implementations.
+> Learning by trial and error: an agent acts, gets a reward, and slowly figures out what to do. Start with the core concepts.
 
 ## Contents
 
