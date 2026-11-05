@@ -259,11 +259,11 @@ CI (`validate-metadata.yml`) runs on PRs to `dev`/`main` and pushes to `dev`, an
 
 When a page states how software behaves (a kernel interface, a systemd setting, a scheduler option) and nobody has run it, test it before release instead of trusting memory or docs alone. Docs and recollection were wrong in places in the memory-pressure series; a VM run caught them.
 
-**The VM trick** (on the owner's machine; Vagrant + libvirt, box `generic/ubuntu2204` cached): a separate folder with its own `Vagrantfile` and `tests/`, outside this repo (`../side-kicks/hgate-testlab/compute-test/`). `tests/run.sh` does up → run `checks.sh` inside the VM as root → destroy, with the revert in a `trap` so it runs even when a step fails.
+**The VM trick:** run the checks inside a throwaway VM that is destroyed afterwards: up → run a checks script inside it as root → destroy, with the revert in a `trap` so it runs even when a step fails. **Ask the owner to guide you** to the VM setup (where it lives, which box or image, which provider); don't assume a path or reuse an existing lab VM.
 
-- Ask the owner before running; it starts a VM and touches libvirt.
-- Use a new folder and domain, never the existing lab VMs. No `private_network`, no provisioning.
-- Record `virsh list/net-list/pool-list/vol-list` and `vagrant box list` before, diff after. `vagrant destroy` can delete a pre-existing persistent libvirt network (it deleted `vagrant-libvirt`): re-define it if so. The cached box stays.
+- Ask the owner before running; it starts a VM and may touch libvirt or other host state.
+- Use a new folder and a new VM, never the owner's existing lab VMs.
+- Record the host's VM and network state before (for libvirt: `virsh list/net-list/pool-list/vol-list`, `vagrant box list`) and diff it after. `vagrant destroy` can delete a pre-existing persistent libvirt network: re-define it if so. The cached box stays.
 - Write checks that print real output and prove the **failure** path too (ordinary user refused, limit hit, process restarted). A bare `wait` returns 0 whatever the job did: capture each exit code directly.
 - Put the result on the page: what was run, on which distro and kernel, and what differed from the docs. Anything not run stays marked "untested".
 
