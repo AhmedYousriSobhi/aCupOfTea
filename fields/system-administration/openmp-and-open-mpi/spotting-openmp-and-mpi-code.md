@@ -39,7 +39,20 @@ grep -rlE 'mpi\.h|MPI_Init'            src/    # files that use MPI
 grep -rlE 'omp\.h|#pragma omp' src/ | xargs grep -lE 'mpi\.h'   # files that use both
 ```
 
-I ran these on the test programs from part 3: the first listed the five OpenMP files, the second listed the three MPI ones, the third listed the two files that use both. (`!$omp` is how OpenMP is written in Fortran; I did not run Fortran here.)
+Then follow the trail:
+
+```mermaid
+flowchart TD
+    S["Open the source<br/>or the job script"] --> Q1{"MPI_ calls, mpi.h<br/>or mpirun?"}
+    Q1 -- no --> Q2{"omp pragmas, omp.h<br/>or -fopenmp?"}
+    Q1 -- yes --> Q3{"Also omp pragmas<br/>or OMP_NUM_THREADS?"}
+    Q2 -- yes --> O["OpenMP only:<br/>threads in one process"]
+    Q2 -- no --> N["Serial, or another model<br/>(GPU, pthreads, ...)"]
+    Q3 -- no --> P["MPI only:<br/>separate ranks"]
+    Q3 -- yes --> H["Hybrid:<br/>ranks that each run threads"]
+```
+
+I ran the three searches on the test programs from part 3: the first listed the five OpenMP files, the second listed the three MPI ones, the third listed the two files that use both. (`!$omp` is how OpenMP is written in Fortran; I did not run Fortran here.)
 
 ---
 

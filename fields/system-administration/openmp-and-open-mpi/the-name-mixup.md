@@ -69,6 +69,21 @@ Keep one picture and every later page gets easier.
 | Scale | As many cooks as the kitchen has stove burners (the cores of one machine) | As many kitchens as you can build, in one building or across a city |
 | Classic mistake | Two cooks grab the same egg (a data race) | A cook waits for a note that never comes (a deadlock) |
 
+```mermaid
+flowchart TB
+    subgraph A["OpenMP: one kitchen, shared counter"]
+        direction LR
+        c1["chef 1"] --- m[("one shared<br/>counter")]
+        c2["chef 2"] --- m
+        c3["chef 3"] --- m
+    end
+    subgraph B["MPI: separate kitchens, notes only"]
+        direction LR
+        k0["rank 0<br/>own memory"] <-->|"messages"| k1["rank 1<br/>own memory"]
+        k1 <-->|"messages"| k2["rank 2<br/>own memory"]
+    end
+```
+
 OpenMP stops at the kitchen wall: the chefs can shout at each other all day, but they cannot shout across town. MPI is what lets kitchens cooperate, with all the paperwork that implies. Big jobs use both: several kitchens (MPI), each with several cooks (OpenMP). That is part 5.
 
 ---

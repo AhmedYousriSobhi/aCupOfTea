@@ -74,15 +74,15 @@ A hybrid hello. Each thread reports the CPU it is on, and each rank reports how 
 #include <stdio.h>
 int main(int argc, char **argv) {
     int provided;
-    MPI_Init_thread(&argc, &argv, MPI_THREAD_FUNNELED, &provided);
+    MPI_Init_thread(&argc, &argv, MPI_THREAD_FUNNELED, &provided);  /* MPI + threads: only the main thread calls MPI */
     int rank; MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    cpu_set_t set; sched_getaffinity(0, sizeof set, &set);
+    cpu_set_t set; sched_getaffinity(0, sizeof set, &set);          /* which CPUs may this rank use? (the binding) */
     if (rank == 0) printf("provided=%d (FUNNELED=%d)\n", provided, MPI_THREAD_FUNNELED);
-    #pragma omp parallel
+    #pragma omp parallel                       /* each rank forks its own team of threads */
     {
         #pragma omp critical
         printf("rank %d thread %d/%d on cpu %d, rank may use %d cpus\n", rank,
-               omp_get_thread_num(), omp_get_num_threads(), sched_getcpu(), CPU_COUNT(&set));
+               omp_get_thread_num(), omp_get_num_threads(), sched_getcpu(), CPU_COUNT(&set));   /* the CPU I'm on now; how many my rank may use */
     }
     MPI_Finalize();
     return 0;
@@ -104,6 +104,17 @@ rank 1 thread 3/4 on cpu 1, rank may use 1 cpus
 rank 1 thread 1/4 on cpu 1, rank may use 1 cpus
 rank 1 thread 2/4 on cpu 1, rank may use 1 cpus
 rank 1 thread 0/4 on cpu 1, rank may use 1 cpus
+```
+
+```mermaid
+flowchart LR
+    subgraph D["Default: 2 ranks x 4 threads"]
+        direction TB
+        r0["rank 0<br/>4 threads"] --> c0["cpu 0<br/>4 threads queue here"]
+        r1["rank 1<br/>4 threads"] --> c1["cpu 1<br/>4 threads queue here"]
+        c2["cpu 2: idle"]
+        c3["cpu 3: idle"]
+    end
 ```
 
 Read the last column: **"rank may use 1 cpus"**. Four threads per rank, all on cpu 0 (rank 0) or cpu 1 (rank 1). Four chefs, one stove burner, and two other stoves sitting cold. The program runs without a single error message. This is the whole trap.
@@ -135,6 +146,17 @@ rank 1 thread 0/2 on cpu 2, rank may use 2 cpus
 rank 1 thread 1/2 on cpu 3, rank may use 2 cpus
 rank 0 thread 0/2 on cpu 0, rank may use 2 cpus
 rank 0 thread 1/2 on cpu 1, rank may use 2 cpus
+```
+
+```mermaid
+flowchart LR
+    subgraph F["Fixed: 2 ranks x 2 threads, PE=2"]
+        direction TB
+        s0["rank 0<br/>2 threads"] --> d0["cpu 0"]
+        s0 --> d1["cpu 1"]
+        s1["rank 1<br/>2 threads"] --> d2["cpu 2"]
+        s1 --> d3["cpu 3"]
+    end
 ```
 
 Now the output reads "may use 2 cpus", and the four threads sit on four different CPUs (0, 1, 2, 3). The rule of thumb:

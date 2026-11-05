@@ -33,7 +33,39 @@ The case file: I asked four threads to count to 100 million. Two out of three ti
 
 An OpenMP program is **one process** that, at marked spots, splits into a team of **threads** which all see the same memory, then joins back into one. An MPI program is **a team of separate processes**, called **ranks**, started together, each with its own private memory, which cooperate only by sending messages.
 
-Everything else in both worlds is detail on top of that.
+Everything else in both worlds is detail on top of that. Here are the two shapes:
+
+```mermaid
+flowchart LR
+    S["main thread<br/>(just one)"] -->|"fork"| T0["thread 0"]
+    S --> T1["thread 1"]
+    S --> T2["thread 2"]
+    S --> T3["thread 3"]
+    T0 --> J["join:<br/>one thread again"]
+    T1 --> J
+    T2 --> J
+    T3 --> J
+    M[("one shared memory")] -.- T0
+    M -.- T1
+    M -.- T2
+    M -.- T3
+```
+
+*OpenMP: the process forks into a team, the team shares memory, the team joins.*
+
+```mermaid
+sequenceDiagram
+    participant R1 as rank 1
+    participant R2 as rank 2
+    participant R3 as rank 3
+    participant R0 as rank 0
+    R1->>R0: my number: 1
+    R2->>R0: my number: 2
+    R3->>R0: my number: 3
+    Note over R0: MPI_Reduce adds 0 + 1 + 2 + 3 = 6
+```
+
+*MPI: separate processes, each with its own number, combined only because they sent it.*
 
 > [!NOTE]
 > Written against Ubuntu 26.04.1 (Linux 7.0), gcc 15.2.0 and Open MPI 5.0.10, run in a throwaway 4-CPU VM. Output order and exact numbers will differ on your machine. That is the point of parallel code: nothing promises the order.
@@ -46,11 +78,13 @@ Everything else in both worlds is detail on top of that.
 #include <omp.h>
 #include <stdio.h>
 int main(void) {
-    #pragma omp parallel
+    #pragma omp parallel                  /* FORK: the block below runs once per thread */
     {
-        #pragma omp critical
-        printf("hello from thread %d of %d\n", omp_get_thread_num(), omp_get_num_threads());
-    }
+        #pragma omp critical              /* one thread at a time, so lines don't interleave */
+        printf("hello from thread %d of %d\n",
+               omp_get_thread_num(),      /* "which thread am I?"  0, 1, 2, ... */
+               omp_get_num_threads());    /* "how many of us?"     the team size */
+    }                                     /* JOIN: back to a single thread */
     return 0;
 }
 ```
@@ -109,19 +143,22 @@ The racy total was wrong in two runs out of three, and right in the third by luc
 #include <mpi.h>
 #include <stdio.h>
 int main(int argc, char **argv) {
-    MPI_Init(&argc, &argv);
+    MPI_Init(&argc, &argv);                       /* every MPI program starts here... */
     int rank, size, len; char host[MPI_MAX_PROCESSOR_NAME];
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     MPI_Get_processor_name(host, &len);
     int sum = 0;
     MPI_Reduce(&rank, &sum, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+                                                  /* everyone sends `rank`; rank 0 receives the sum */
     printf("rank %d of %d on %s\n", rank, size, host);
     if (rank == 0) printf("sum of ranks = %d\n", sum);
-    MPI_Finalize();
+    MPI_Finalize();                               /* ...and ends here */
     return 0;
 }
 ```
+
+Everything between `Init` and `Finalize` runs in **every** rank at once. That is why the one printed `sum of ranks` line is wrapped in `if (rank == 0)`: without it, all four ranks would print it.
 
 - `MPI_COMM_WORLD` is "everyone who was started together".
 - `MPI_Get_processor_name` just reports which machine the rank runs on (here the VM is called `twins`).
