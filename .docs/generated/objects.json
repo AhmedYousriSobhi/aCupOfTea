@@ -1996,27 +1996,30 @@
       "systems-and-hpc"
     ],
     "id": "slurm-job-script-tale",
-    "level": "beginner",
+    "level": "intermediate",
     "order": 2,
     "path": "fields/schedulers/slurm-job-script-tale.md",
-    "reading_time_min": 2,
+    "reading_time_min": 11,
     "relations": {
       "prerequisites": [
         "slurm-intro"
       ],
       "related": [
+        "slurm-backfill-tuning",
+        "slurm-slurmstepd",
         "slurm-spool-dir-full"
       ]
     },
     "status": "stable",
-    "summary": "Slurm copies your batch script at submission, so editing job.sh later changes neither running nor pending jobs; cancel and resubmit, or version your scripts.",
+    "summary": "Why editing a script after sbatch changes nothing, where Slurm keeps the frozen copy, what stays live, how to read the script back, and how to keep runs traceable.",
     "tags": [
       "hpc",
       "slurm"
     ],
-    "title": "The Tale of job.sh and the Snapshot",
-    "type": "guide",
+    "title": "The Tale of a Slurm Job Script: Submission Is a Commitment, Not a Promise",
+    "type": "concept",
     "types": [
+      "concept",
       "guide"
     ]
   },

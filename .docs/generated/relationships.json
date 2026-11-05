@@ -691,7 +691,9 @@
       "slurm-accounting-multi-tenancy",
       "slurm-preemption-requeue-signals"
     ],
-    "related_by": []
+    "related_by": [
+      "slurm-job-script-tale"
+    ]
   },
   "slurm-cgroups-in-practice": {
     "prerequisite_of": [],
@@ -733,6 +735,8 @@
       "slurm-intro"
     ],
     "related": [
+      "slurm-backfill-tuning",
+      "slurm-slurmstepd",
       "slurm-spool-dir-full"
     ],
     "related_by": [
@@ -833,6 +837,7 @@
     "related_by": [
       "linux-mem-mlockall",
       "slurm-intro",
+      "slurm-job-script-tale",
       "slurm-spool-dir-full"
     ]
   },

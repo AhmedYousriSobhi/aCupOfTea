@@ -70,10 +70,10 @@ Read each path in order; every step builds on the one before.
 1. [PyTorch 101](/fields/libraries-frameworks-containers/101-pytorch.md) *(6 min)*
 2. [PyTorch DDP](/fields/libraries-frameworks-containers/102-pytorch-ddp.md) *(1 min)*
 
-### Systems and HPC · 2 steps · 10 min
+### Systems and HPC · 2 steps · 19 min
 
 1. [Schedulers: The Traffic Controller Nobody Thanks Until It Breaks](/fields/schedulers/slurm-intro.md) — What a cluster scheduler does, how it differs from the OS scheduler, the scheduler landscape, the concepts they share, and the Slurm architecture at a glance. *(beginner · 8 min)*
-2. [The Tale of job.sh and the Snapshot](/fields/schedulers/slurm-job-script-tale.md) — Slurm copies your batch script at submission, so editing job.sh later changes neither running nor pending jobs; cancel and resubmit, or version your scripts. *(beginner · 2 min)*
+2. [The Tale of a Slurm Job Script: Submission Is a Commitment, Not a Promise](/fields/schedulers/slurm-job-script-tale.md) — Why editing a script after sbatch changes nothing, where Slurm keeps the frozen copy, what stays live, how to read the script back, and how to keep runs traceable. *(intermediate · 11 min)*
 
 ### Software Engineering · 3 steps · 15 min
 
@@ -103,7 +103,6 @@ Read each path in order; every step builds on the one before.
 
 - [PyTorch DDP](/fields/libraries-frameworks-containers/102-pytorch-ddp.md) *(1 min)*
 - [Storage and Fabric for AI Clusters - Overview](/fields/system-administration/ai-storage-and-fabric/README.md) — A two-part series on keeping thousands of GPUs fed - parallel filesystems, small files and checkpoint storms, then RDMA, InfiniBand, RoCE and GPUDirect. *(intermediate · 2 min)*
-- [The Tale of job.sh and the Snapshot](/fields/schedulers/slurm-job-script-tale.md) — Slurm copies your batch script at submission, so editing job.sh later changes neither running nor pending jobs; cancel and resubmit, or version your scripts. *(beginner · 2 min)*
 - [Encoder-Decoder for Machine Translation](/fields/generative-ai/machine-translator/encoder-decoder.md) — The encoder-decoder idea behind neural machine translation, with a basic seq2seq model. *(intermediate · 3 min)*
 - [Linux Memory Pressure - Overview](/fields/system-administration/linux-memory-pressure/README.md) — A six-part series on what Linux does when RAM runs short - reclaim, PSI, the OOM killer, cgroup levers, memory locking - and how to build a rescuer that still works at the worst moment. *(intermediate · 3 min)*
 - [Mixing GPU Types in Slurm - Overview](/fields/schedulers/slurm-mixed-gpus/README.md) — Slurm can allocate H100s and A100s in one job - four different ways. A three-part series on what each actually gives you, why mixed training disappoints, and where it shines. *(intermediate · 3 min)*
@@ -179,6 +178,5 @@ Read each path in order; every step builds on the one before.
 - [Build and Install NHC](/fields/system-administration/node-health-check/build-and-install.md) — Get NHC onto your nodes from a release RPM, the release tarball or the Git tree, run its unit tests and know where every file lands. *(beginner · 5 min)*
 - [Deep Learning Basics](/fields/deep-learning/concepts/basics.md) — Neurons, loss and cost, and the common activation functions, explained from first principles. *(beginner · 30 min)*
 - [Schedulers: The Traffic Controller Nobody Thanks Until It Breaks](/fields/schedulers/slurm-intro.md) — What a cluster scheduler does, how it differs from the OS scheduler, the scheduler landscape, the concepts they share, and the Slurm architecture at a glance. *(beginner · 8 min)*
-- [The Tale of job.sh and the Snapshot](/fields/schedulers/slurm-job-script-tale.md) — Slurm copies your batch script at submission, so editing job.sh later changes neither running nor pending jobs; cancel and resubmit, or version your scripts. *(beginner · 2 min)*
 - [Two People, One Laptop: What Accounts Should (and Shouldn't) Promise](/programming/local-app-accounts/threat-model-and-first-launch.md) — Before writing any account code, state what accounts will and will not protect, then handle the very first sign-up gracefully. *(beginner · 4 min)*
 - [Why Your Cluster Needs a Bouncer](/fields/system-administration/node-health-check/why-node-health-check.md) — One broken node can eat a whole queue of jobs; this is what NHC is, how it decides a node is sick, and how it tells the scheduler. *(beginner · 7 min)*
