@@ -1,6 +1,6 @@
 ---
 id: linux-mem-psi
-order: 2
+order: 3
 title: "Pressure Stall Information: Measuring Time Lost, Not Bytes Left"
 sidebar_label: "2. Memory pressure (PSI)"
 summary: How to read /proc/pressure/memory, why the share of time tasks spend stalled is a better alarm than free bytes, and how to get woken by the kernel the moment a threshold is crossed.

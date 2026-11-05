@@ -1,6 +1,6 @@
 ---
 id: linux-mem-rescuer-checklist
-order: 6
+order: 7
 title: "Making a Rescuer Survive: CPU, Protection and a Checklist"
 sidebar_label: "6. The rescuer checklist"
 summary: Beyond memory locking, what keeps an emergency program running under load - real-time priority, an OOM shield, restart and watchdog - and one checklist that ties all six pages together.

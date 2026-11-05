@@ -792,7 +792,7 @@
     ],
     "id": "linux-mem-cgroup-v2",
     "level": "intermediate",
-    "order": 4,
+    "order": 5,
     "path": "fields/system-administration/linux-memory-pressure/cgroup-v2-memory-control.md",
     "reading_time_min": 12,
     "relations": {
@@ -819,7 +819,7 @@
     ],
     "id": "linux-mem-mlockall",
     "level": "intermediate",
-    "order": 5,
+    "order": 6,
     "path": "fields/system-administration/linux-memory-pressure/memory-locking-mlockall.md",
     "reading_time_min": 12,
     "relations": {
@@ -847,7 +847,7 @@
     ],
     "id": "linux-mem-oom-killer",
     "level": "intermediate",
-    "order": 3,
+    "order": 4,
     "path": "fields/system-administration/linux-memory-pressure/the-oom-killer.md",
     "reading_time_min": 9,
     "relations": {
@@ -874,7 +874,7 @@
     ],
     "id": "linux-mem-psi",
     "level": "intermediate",
-    "order": 2,
+    "order": 3,
     "path": "fields/system-administration/linux-memory-pressure/memory-pressure-psi.md",
     "reading_time_min": 8,
     "relations": {
@@ -900,7 +900,7 @@
     ],
     "id": "linux-mem-reclaim",
     "level": "intermediate",
-    "order": 1,
+    "order": 2,
     "path": "fields/system-administration/linux-memory-pressure/how-linux-reclaims-memory.md",
     "reading_time_min": 9,
     "relations": {
@@ -924,7 +924,7 @@
     ],
     "id": "linux-mem-rescuer-checklist",
     "level": "intermediate",
-    "order": 6,
+    "order": 7,
     "path": "fields/system-administration/linux-memory-pressure/rescuer-checklist.md",
     "reading_time_min": 8,
     "relations": {
@@ -944,6 +944,32 @@
     "type": "guide",
     "types": [
       "guide"
+    ]
+  },
+  "linux-memory-free-vs-available": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "linux-memory-free-vs-available",
+    "level": "beginner",
+    "order": 1,
+    "path": "fields/system-administration/linux-memory-pressure/linux-memory-free-vs-available.md",
+    "reading_time_min": 10,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "linux-mem-psi",
+        "linux-mem-reclaim",
+        "slurm-cgroups-in-practice"
+      ]
+    },
+    "status": "stable",
+    "summary": "One real free -h snapshot explained - why free is the wrong number, what buff/cache and shared hold, why the columns sum above total, and how to find what is really used.",
+    "tags": [],
+    "title": "The Server That Looked Full: Free vs Available Memory, Cache, and What Is Really Used",
+    "type": "concept",
+    "types": [
+      "concept"
     ]
   },
   "linux-memory-pressure-overview": {
