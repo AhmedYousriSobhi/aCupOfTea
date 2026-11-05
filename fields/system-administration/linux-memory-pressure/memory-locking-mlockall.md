@@ -218,7 +218,7 @@ LimitMEMLOCK=infinity
 OOMScoreAdjust=-900
 ```
 
-To see the failure for yourself, run the Python snippet from Step 3 as a normal user on a default machine. Expect `OSError: [Errno 12] Cannot allocate memory`. Run it as root and it returns normally, and `VmLck` in `/proc/self/status` jumps from `0 kB` to the size of the process.
+To see the failure for yourself, run the Python snippet from Step 3 as a normal user with an 8 MiB limit (`ulimit -l 8192` first). Expect `OSError: [Errno 12] Cannot allocate memory`. I confirmed that on Ubuntu 22.04 (Linux 5.15). The limit varies by distribution and systemd version: on that same VM `ulimit -l` was 251360 KiB out of the box, and the call **succeeded** for an ordinary user (`VmLck: 17564 kB`). So check `ulimit -l` before you assume you're limited to 8 MiB. Run it as root and it returns normally, and `VmLck` in `/proc/self/status` jumps from `0 kB` to the size of the process.
 
 ---
 

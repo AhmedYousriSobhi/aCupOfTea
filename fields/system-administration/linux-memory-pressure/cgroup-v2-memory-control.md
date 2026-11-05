@@ -82,7 +82,7 @@ The distinction people trip on is **`high` versus `max`**:
 
 Setting `memory.high` a bit below `memory.max` gives a working group a warning zone: it slows down *before* it dies, and the cgroup's `memory.pressure` ([part 2](/fields/system-administration/linux-memory-pressure/memory-pressure-psi.md)) rises as a signal that you could see.
 
-A catch worth knowing. `memory.high` works by making the group reclaim memory. If **nothing in the group can be reclaimed** (all anonymous pages and no swap), it can't get under the line, and the throttling just gets heavier. When I tried this by putting a small program in a scope with a 100 MiB `memory.high` and swap disabled for it, allocating 130 MiB, it had not finished after 40 seconds (Ubuntu 26.04, Linux 7.0). The throttle is real and can look like a hang. To reproduce it, use the throwaway-scope command at the end of this page with `MemoryHigh=100M` and `MemorySwapMax=0`, and allocate and touch more than 100 MiB inside it.
+A catch worth knowing. `memory.high` works by making the group reclaim memory. If **nothing in the group can be reclaimed** (all anonymous pages and no swap), it can't get under the line, and the throttling just gets heavier. When I tried this by putting a small program in a scope with a 100 MiB `memory.high` and swap disabled for it, allocating 130 MiB, it had not finished after 40 seconds (Ubuntu 26.04, Linux 7.0). I repeated it on a clean Ubuntu 22.04 VM (Linux 5.15, systemd 249) with a 60-second cap: touching 130 MiB did not finish, and neither did 105 MiB, only 5 MiB over the line. After 8 seconds the group sat at about 106 MiB, `memory.events` showed `high` at 997, and its `memory.pressure` read `some avg10=43.67`. The throttle is real and can look like a hang. To reproduce it, use the throwaway-scope command at the end of this page with `MemoryHigh=100M` and `MemorySwapMax=0`, and allocate and touch more than 100 MiB inside it.
 
 > [!WARNING]
 > A group throttled by `memory.high` that has nothing to reclaim looks hung, not dead, and it never gets OOM-killed for it. Watch `memory.events` (`high` counting up) and the group's `memory.pressure`, or you'll wait on a job that can't finish.
@@ -111,7 +111,7 @@ Answers: at 3 GiB, **nothing**: it is below every line. At 5 GiB it is **throttl
 
 The limit files are *standing rules*. Three more files are **actions** a rescuer can take on demand.
 
-**`memory.reclaim`.** Writing an amount, such as `echo 512M > memory.reclaim`, asks the kernel to reclaim that much from the group *now*, pushing its cold pages to swap or dropping its cache. It does **not** change any limit. It is a polite request that returns an error (`EAGAIN`) if the group couldn't give back the full amount. Since it is proactive, it is the gentlest way to free memory from a specific group. It needs **Linux 5.19 or newer**, and the docs don't say whether the write waits for the reclaim, so time it on your kernel before you put it in a rescuer's hot path.
+**`memory.reclaim`.** Writing an amount, such as `echo 512M > memory.reclaim`, asks the kernel to reclaim that much from the group *now*, pushing its cold pages to swap or dropping its cache. It does **not** change any limit. It is a polite request that returns an error (`EAGAIN`) if the group couldn't give back the full amount. Since it is proactive, it is the gentlest way to free memory from a specific group. It needs **Linux 5.19 or newer**: on Ubuntu 22.04 (5.15) the file does not exist in a new cgroup, while `cgroup.kill`, `cgroup.freeze`, `memory.high`, `memory.low` and `memory.min` do. The docs don't say whether the write waits for the reclaim, so time it on your kernel before you put it in a rescuer's hot path.
 
 **`cgroup.freeze`.** Writing `1` freezes every process in the group: they stop being scheduled, like a paused video. It does **not** release their memory; it only stops it growing. Writing `0` thaws them. This is how `docker pause` works. It is a good emergency brake: it buys time without destroying anyone's work. Frozen processes can still be killed.
 
@@ -181,7 +181,7 @@ To set a limit safely, let systemd do it on a throwaway group, which cleans up a
 systemd-run --user --scope -p MemoryHigh=200M -p MemoryMax=300M -p MemorySwapMax=0 <command>
 ```
 
-Success: the command runs, and `memory.events` in its scope shows `high` counting up once the command passes 200 MiB. Find the scope's directory with `cat /proc/<pid>/cgroup` for the command's PID. I did not run this exact command for the page, so if it fails to start, check first that `memory` appears in the `cgroup.controllers` listing above, since a user session without a delegated `memory` controller can't apply these limits.
+Success: it prints `Running scope as unit: run-<id>.scope` and then your command's output. Tested as an ordinary user on Ubuntu 22.04, where the user's `cgroup.controllers` was `memory pids`. Check that `memory` is in that listing first: a user session without a delegated `memory` controller can't apply these limits. To watch `memory.events` while it runs, find the scope's directory with `cat /proc/<pid>/cgroup` for the command's PID.
 
 Do not point experiments at your login session's group. Create a new scope as above and watch it from a second terminal.
 

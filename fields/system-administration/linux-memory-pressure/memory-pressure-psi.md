@@ -139,7 +139,11 @@ while True:
 
 The string means: *stall time (150000 µs) within a window (1000000 µs)*. If tasks lose 150 ms or more out of any second, the program is woken. Windows run from 500 ms to 10 s.
 
-Two notes, both from the kernel's PSI document. **Unprivileged users can create triggers too, but the window must be a multiple of 2 seconds**, so the 1-second window above needs privilege and an ordinary user should use `2000000` or more. And notifications are **rate-limited to one per tracking window**: a sustained stall can wake you again each window, so don't assume a single wake-up. Re-read the file after you act and decide from the numbers, not from the wake-up alone. (Written against Linux 7.0; I did not test the trigger on this page's machine. The privilege rule above is the docs, not a test.)
+Two notes, both tested on Ubuntu 22.04 (Linux 5.15).
+
+**A trigger keeps firing while the stall lasts.** The kernel docs say notifications are rate-limited to one per tracking window. In a test, a 150 ms-in-1 s trigger on a cgroup under sustained pressure woke the program 14 times in 15 seconds, about once per window. Don't assume a single wake-up, and re-read the file after you act to decide from the numbers.
+
+**Registering a trigger needs privilege.** The kernel docs say unprivileged users can create triggers if the window is a multiple of 2 seconds. On 5.15 that did not work for me: an ordinary user got `EPERM` writing to `/proc/pressure/memory` with both a 1 s and a 2 s window, and `EACCES` on their own `user@1000.service` cgroup's `memory.pressure`, which is owned by root. Treat unprivileged triggers as something to test on your kernel, and run the rescuer as root. (Not tested on Linux 7.0.)
 
 This is how a lightweight rescuer can sleep at zero cost until it is needed. And because it sleeps in the kernel until it is woken, it fits the memory-locking idea: the program is **idle until the worst moment**, the exact profile that [part 5](/fields/system-administration/linux-memory-pressure/memory-locking-mlockall.md) protects.
 

@@ -130,7 +130,7 @@ CPUSchedulingPriority=50
 MemoryLow=64M
 ```
 
-Most lines here need privilege (everything except `Restart=` and `WatchdogSec=`), which is the reason an unprivileged rescuer is "best effort" and a root service is "the real thing". `WatchdogSec=` works without `Type=notify`: systemd sets `NotifyAccess=main` for you when `WatchdogSec=` is set and `NotifyAccess=` isn't.
+Most lines here need privilege (everything except `Restart=` and `WatchdogSec=`), which is the reason an unprivileged rescuer is "best effort" and a root service is "the real thing". `WatchdogSec=` works without `Type=notify`: systemd sets `NotifyAccess=main` for you when `WatchdogSec=` is set and `NotifyAccess=` isn't. Tested on Ubuntu 22.04 (systemd 249): `systemctl show -p NotifyAccess` printed `main` for a plain `Type=simple` unit that never set it.
 
 **Roll it out safely.** Install it on one canary node first, as a drop-in, so you can undo it:
 
@@ -138,7 +138,13 @@ Most lines here need privilege (everything except `Restart=` and `WatchdogSec=`)
 2. Turn on the real action on the canary node only, and keep a second root shell open.
 3. Roll back with `systemctl stop rescuer`, delete the unit or drop-in, and `systemctl daemon-reload`.
 
-**Prove the watchdog works.** This is the failure path, and it was not run for this page: freeze the process with `kill -STOP $(pidof rescuer)`. Within about `WatchdogSec` (30 seconds) the journal should show a watchdog timeout and systemd restarting the service. If nothing happens, the service isn't sending its keep-alive pings.
+**Prove the watchdog works.** Freeze the process with `kill -STOP $(pidof rescuer)`. Within about `WatchdogSec` (30 seconds here) the journal should show a watchdog timeout and systemd restarting the service. If nothing happens, the service isn't sending its keep-alive pings. I ran this on Ubuntu 22.04 with `WatchdogSec=6` and a small Python process sending `WATCHDOG=1` every 2 seconds. Healthy for 14 seconds, it kept the same PID. After `kill -STOP` and 12 seconds it had a new PID, and the journal showed:
+
+```text
+wdtest.service: Watchdog timeout (limit 6s)!
+wdtest.service: Failed with result 'watchdog'.
+wdtest.service: Scheduled restart job, restart counter is at 1.
+```
 
 ---
 

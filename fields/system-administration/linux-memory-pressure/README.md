@@ -27,7 +27,7 @@ Each page ends with the question the next one answers. The series follows one st
 
 ## Versions
 
-Written against Ubuntu 26.04, Linux 7.0 and systemd as shipped there. The numbers shown "on my machine" were measured there. Several levers are newer than the kernels many clusters run, and distributions backport features, so check your own kernel.
+Written against Ubuntu 26.04, Linux 7.0 and systemd as shipped there. The numbers shown "on my machine" were measured there. The PSI trigger, `memory.high` hang, `mlockall` limit, `oom_score_adj` and watchdog claims were also tested in a clean Ubuntu 22.04 VM (Linux 5.15, systemd 249) and the pages say where the two differ. Several levers are newer than the kernels many clusters run, and distributions backport features, so check your own kernel.
 
 | Feature | Added in Linux | Used on page |
 |---------|----------------|--------------|

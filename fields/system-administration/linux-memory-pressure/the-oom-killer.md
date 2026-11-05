@@ -114,7 +114,7 @@ Answer: the **browser (D)**. The scores are roughly A: 500, B: -897, C: 312, D: 
 | `0` | Default: judged on size alone |
 | `+500` to `+1000` | Prefer to kill this first. Good for disposable batch work |
 
-The rule that matters for permissions: **an ordinary user can raise the value of their own processes**. Lowering it below the value the process started with, which is what shields it, needs `CAP_SYS_RESOURCE`, which in practice means root. (This rule is from the kernel source, `fs/proc/base.c`, not from the man pages, which don't spell it out.) This is the same shape as `RLIMIT_MEMLOCK` from [part 5](/fields/system-administration/linux-memory-pressure/memory-locking-mlockall.md): protection from the machine's limits is rationed to privileged code.
+The rule that matters for permissions: **an ordinary user can raise the value of their own processes**. Lowering it below the value the process started with, which is what shields it, needs `CAP_SYS_RESOURCE`, which in practice means root. (This rule is from the kernel source, `fs/proc/base.c`, not from the man pages, which don't spell it out. Tested as an ordinary user on Linux 5.15: raising to 100, then lowering to 50 and back to the starting 0, worked; lowering to -100 failed with `Permission denied`.) This is the same shape as `RLIMIT_MEMLOCK` from [part 5](/fields/system-administration/linux-memory-pressure/memory-locking-mlockall.md): protection from the machine's limits is rationed to privileged code.
 
 In systemd you don't write the file yourself:
 
