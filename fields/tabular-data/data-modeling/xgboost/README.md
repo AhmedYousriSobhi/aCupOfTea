@@ -58,7 +58,7 @@ The key idea behind XGBoost is to build an ensemble of weak predictive models, t
 ## XGboost Architecture
 XGBoost stands for Extreme Gradient Boosting. It’s a parallelized and carefully optimized version of the gradient boosting algorithm. __Parallelizing the whole boosting process__ hugely improves the training time. 
 
-Instead of training the best possible model on the data (like in traditional methods), we train thousands of models on various subsets of the training dataset and then vote for the best-performing model.
+Instead of training one large model on the data (like in traditional methods), we train many small models one after another, each fitted to the errors of the models before it, and add their predictions together into the final prediction.
 
 For many cases, XGBoost is better than usual gradient boosting algorithms. The Python implementation gives access to a vast number of inner parameters to tweak for better precision and accuracy.
 

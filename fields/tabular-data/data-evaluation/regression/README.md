@@ -43,7 +43,7 @@ MSE = Σ(y_i - y_hat_i)^2 / n
 ```
 
 # RMSE - Root Mean Squared Error
-This is the square root of MSE. It has the same units as the target variable, so it is easier to interpret than MSE. RMSE is also less sensitive to outliers than MSE.
+This is the square root of MSE. It has the same units as the target variable, so it is easier to interpret than MSE. Like MSE, RMSE is sensitive to outliers.
 
 Formula:
 ```
@@ -59,7 +59,7 @@ MAE = Σ|y_i - y_hat_i| / n
 ```
 
 # R-squared (R^2)
-This metric measures the proportion of variance in the target variable that is explained by the model. R^2 can range from 0 to 1, where 0 means that the model does not explain any variance in the target variable and 1 means that the model perfectly explains all of the variance in the target variable.
+This metric measures the proportion of variance in the target variable that is explained by the model. R^2 is at most 1: 1 means that the model perfectly explains all of the variance in the target variable, and 0 means it does no better than always predicting the mean. It can be negative for a model that does worse than that.
 
 Formula:
 ```
@@ -75,8 +75,9 @@ This metric is similar to R^2, but it adjusts for the number of features in the 
 
 Formula:
 ```
-Adjusted R^2 = 1 - (n - 1) * MSE / (TSS - MSE)
+Adjusted R^2 = 1 - (1 - R^2) * (n - 1) / (n - p - 1)
 ```
+Where n is the number of data points and p is the number of features.
 
 # Mean absolute percentage error (MAPE)
 This metric measures the average percentage error between the predicted and actual values. MAPE is expressed as a percentage, so it is easy to understand and interpret. However, MAPE is sensitive to outliers, so it is not always the best metric to use.
@@ -103,11 +104,11 @@ MedAE = median(|y_i - y_hat_i|)
 ```
 
 # Explained variance score (EVS)
-This metric measures the proportion of variance in the target variable that is explained by the model. EVS is similar to R^2, but it is not affected by the number of features in the model.
+This metric measures the proportion of variance in the target variable that is explained by the model. EVS is similar to R^2, but it measures the variance of the errors instead of their squared size, so it does not penalize a constant bias in the predictions (R^2 does).
 
 Formula:
 ```
-EVS = 1 - (TSS - RSS) / TSS
+EVS = 1 - Var(y - y_hat) / Var(y)
 ```
 Note: It can be misleading if the target variable is not normally distributed. Additionally, EVS can be sensitive to outliers.
 
@@ -121,7 +122,7 @@ AIC = 2 * K - 2 * log(L)
 
 where:
 - K is the number of parameters in the model
-- L is the log-likelihood of the model
+- L is the likelihood of the model (so log(L) is its log-likelihood)
 
 The log-likelihood of a model is a measure of how well the model fits the data. It is calculated by taking the natural logarithm of the likelihood of the model. The likelihood of a model is a probability distribution that describes how likely the observed data is under the assumption that the model is correct.
 - The formula for the log-likelihood function is:
@@ -137,7 +138,7 @@ The penalty term in AIC is 2 * K. This penalty term penalizes models with more p
 
 A lower AIC value indicates a better-fitting model. This is because a lower AIC value means that the model has a higher log-likelihood and a smaller penalty term.
 
-For example, let's say that we have two models that we are trying to compare. The first model has 2 parameters, and the second model has 3 parameters. The log-likelihood of the first model is 100, and the log-likelihood of the second model is 90. The AIC of the first model is 40, and the AIC of the second model is 50.
+For example, let's say that we have two models that we are trying to compare. The first model has 2 parameters, and the second model has 3 parameters. The log-likelihood of the first model is 100, and the log-likelihood of the second model is 90. The AIC of the first model is 2 * 2 - 2 * 100 = -196, and the AIC of the second model is 2 * 3 - 2 * 90 = -174.
 
 In this case, the first model would be considered to be a better-fitting model because it has a lower AIC value. This is because the first model has a higher log-likelihood and a smaller penalty term.
 
@@ -157,9 +158,9 @@ BIC = K * log(n) - 2 * log(L)
 |--|--|--|--|--|--|
 |Mean Squared Error (MSE)|	Measures the average squared difference between the predicted and actual values|	Easy to understand and interpret|	Sensitive to outliers|	Linear regression models|	1823|
 |Root Mean Squared Error (RMSE)|	The square root of the MSE|	More interpretable than MSE because it is in the same units as the target variable	|Sensitive to outliers|	Linear regression models|	1823|
-|Mean Absolute Error (MAE)|	Measures the average absolute difference between the predicted and actual values	|Robust to outliers|	Not as informative as R-squared for non-linear regression models|	Non-linear regression models|	1823|
+|Mean Absolute Error (MAE)|	Measures the average absolute difference between the predicted and actual values	|Robust to outliers|	Not as informative as R-squared for non-linear regression models|	Linear and non-linear regression models|	1823|
 |R-squared|	Measures the proportion of the variance in the actual values that is explained by the predicted values|	Can be used for both linear and non-linear regression models|	Can be negative for poor models|	Linear and non-linear regression models|	1888|
-|Adjusted R-squared|	A penalized version of R-squared that takes into account the number of predictors in the model|	More accurate than R-squared for selecting the best model in a model selection procedure| |	Linear and non-linear regression models|	1908|
+|Adjusted R-squared|	A penalized version of R-squared that takes into account the number of predictors in the model|	More accurate than R-squared for selecting the best model in a model selection procedure|	-|	Linear and non-linear regression models|	1908|
 |Mean Absolute Percentage Error (MAPE)|	Measures the average absolute percentage difference between the predicted and actual values|	Easy to interpret because it is expressed as a percentage|	Can be misleading if the actual values are close to zero|	Linear and non-linear regression models|	1960|
 |Root Mean Squared Log Error (RMSLE)|	The square root of the mean squared log error|	More informative than MAPE for forecasting models|	Cannot be used for regression models with non-positive target variables|	Linear and non-linear regression models|	1972|
 |Median Absolute Error|	Measures the median absolute difference between the predicted and actual values|	Robust to outliers|	Not as interpretable as MSE or RMSE|	Linear and non-linear regression models|	1975|
