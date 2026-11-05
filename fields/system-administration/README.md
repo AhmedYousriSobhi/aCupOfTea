@@ -23,5 +23,6 @@ The training run died at 3 AM. Was it the node, the network, the memory or the f
 | [virtual-machines](/fields/system-administration/virtual-machines.md) | Virtual machine management |
 | [gpu-failure-prediction](/fields/system-administration/gpu-failure-prediction/README.md) | Series: predicting GPU node failures and draining before jobs die |
 | [ai-storage-and-fabric](/fields/system-administration/ai-storage-and-fabric/README.md) | Series: parallel filesystems, RDMA, InfiniBand and GPUDirect for GPU clusters |
+| [openmp-and-open-mpi](/fields/system-administration/openmp-and-open-mpi/README.md) | Series: what OpenMP, MPI and Open MPI are, where they came from, how to spot them and how to combine them |
 
 Essential knowledge for managing ML infrastructure and deployment environments.

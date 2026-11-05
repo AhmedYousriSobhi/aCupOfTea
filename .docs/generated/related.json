@@ -39,6 +39,16 @@
         "id": "cpu-affinity",
         "path": "programming/operating-system/process-cpu-affinity.md",
         "title": "CPU Affinity"
+      },
+      {
+        "id": "openmp-mpi-hybrid-binding-trap",
+        "path": "fields/system-administration/openmp-and-open-mpi/hybrid-and-the-binding-trap.md",
+        "title": "Kitchens With Cooks: Hybrid MPI+OpenMP and the Binding Trap"
+      },
+      {
+        "id": "openmp-open-mpi-name-mixup",
+        "path": "fields/system-administration/openmp-and-open-mpi/the-name-mixup.md",
+        "title": "Not Twins, Not Even Cousins: OpenMP, MPI and Open MPI"
       }
     ],
     "required_by": []
@@ -210,6 +220,11 @@
     ],
     "related": [
       {
+        "id": "openmp-mpi-on-kubernetes",
+        "path": "fields/system-administration/openmp-and-open-mpi/mpi-and-openmp-on-kubernetes.md",
+        "title": "No Login Node, No Hostfile: OpenMP and MPI on Kubernetes"
+      },
+      {
         "id": "ai-storage-rdma-gpudirect",
         "path": "fields/system-administration/ai-storage-and-fabric/rdma-infiniband-gpudirect.md",
         "title": "RDMA, InfiniBand and GPUDirect: Taking the CPU Out of the Way"
@@ -225,7 +240,13 @@
         "title": "Containers 101"
       }
     ],
-    "related": [],
+    "related": [
+      {
+        "id": "openmp-mpi-on-kubernetes",
+        "path": "fields/system-administration/openmp-and-open-mpi/mpi-and-openmp-on-kubernetes.md",
+        "title": "No Login Node, No Hostfile: OpenMP and MPI on Kubernetes"
+      }
+    ],
     "required_by": [
       {
         "id": "build-a-two-node-k3s-lab",
@@ -709,6 +730,11 @@
         "id": "slurm-upgrade-order",
         "path": "fields/schedulers/slurm-upgrade-order.md",
         "title": "Upgrading Slurm: The Order, the Window, and the Parts That Bite"
+      },
+      {
+        "id": "openmp-mpi-under-slurm",
+        "path": "fields/system-administration/openmp-and-open-mpi/mpi-and-openmp-under-slurm.md",
+        "title": "Who Starts the Ranks? OpenMP and MPI Under Slurm"
       }
     ],
     "required_by": []
@@ -787,6 +813,11 @@
         "id": "slurm-job-script-tale",
         "path": "fields/schedulers/slurm-job-script-tale.md",
         "title": "The Tale of a Slurm Job Script: Submission Is a Commitment, Not a Promise"
+      },
+      {
+        "id": "openmp-mpi-under-slurm",
+        "path": "fields/system-administration/openmp-and-open-mpi/mpi-and-openmp-under-slurm.md",
+        "title": "Who Starts the Ranks? OpenMP and MPI Under Slurm"
       }
     ],
     "required_by": []
@@ -1454,6 +1485,162 @@
         "id": "nhc-architecture-driven",
         "path": "fields/system-administration/node-health-check/architecture-driven-nhc.md",
         "title": "Architecture-Driven NHC: Generate Health Checks from Your Cluster's Definition"
+      }
+    ]
+  },
+  "fields/system-administration/openmp-and-open-mpi/hybrid-and-the-binding-trap.md": {
+    "prerequisites": [
+      {
+        "id": "openmp-mpi-threads-and-ranks",
+        "path": "fields/system-administration/openmp-and-open-mpi/threads-and-ranks.md",
+        "title": "Cooks and Kitchens: Threads, Ranks and the One Mental Model"
+      }
+    ],
+    "related": [
+      {
+        "id": "parallel-execution-and-affinity",
+        "path": "fields/benchmarks/parallel-execution-affinity-master-guide.md",
+        "title": "Parallel Execution and Affinity"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "openmp-mpi-under-slurm",
+        "path": "fields/system-administration/openmp-and-open-mpi/mpi-and-openmp-under-slurm.md",
+        "title": "Who Starts the Ranks? OpenMP and MPI Under Slurm"
+      }
+    ]
+  },
+  "fields/system-administration/openmp-and-open-mpi/mpi-and-openmp-on-kubernetes.md": {
+    "prerequisites": [
+      {
+        "id": "openmp-mpi-under-slurm",
+        "path": "fields/system-administration/openmp-and-open-mpi/mpi-and-openmp-under-slurm.md",
+        "title": "Who Starts the Ranks? OpenMP and MPI Under Slurm"
+      }
+    ],
+    "related": [
+      {
+        "id": "kubernetes-in-five-nouns",
+        "path": "fields/devops/kubernetes/kubernetes-in-five-nouns.md",
+        "title": "Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster"
+      },
+      {
+        "id": "job-execution-journey",
+        "path": "fields/devops/kubernetes/job-execution-journey.md",
+        "title": "The Job Execution Journey: From `kubectl apply` to the First All-Reduce"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/system-administration/openmp-and-open-mpi/mpi-and-openmp-under-slurm.md": {
+    "prerequisites": [
+      {
+        "id": "openmp-mpi-hybrid-binding-trap",
+        "path": "fields/system-administration/openmp-and-open-mpi/hybrid-and-the-binding-trap.md",
+        "title": "Kitchens With Cooks: Hybrid MPI+OpenMP and the Binding Trap"
+      }
+    ],
+    "related": [
+      {
+        "id": "slurm-pam-adopt-ssh-access",
+        "path": "fields/schedulers/slurm-pam-adopt-ssh-access.md",
+        "title": "pam_slurm_adopt: Closing the Slurm SSH Backdoor"
+      },
+      {
+        "id": "slurm-slurmstepd",
+        "path": "fields/schedulers/slurm-slurmstepd.md",
+        "title": "slurmstepd: The Small Daemon That Actually Runs Your Job"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "openmp-mpi-on-kubernetes",
+        "path": "fields/system-administration/openmp-and-open-mpi/mpi-and-openmp-on-kubernetes.md",
+        "title": "No Login Node, No Hostfile: OpenMP and MPI on Kubernetes"
+      }
+    ]
+  },
+  "fields/system-administration/openmp-and-open-mpi/spotting-openmp-and-mpi-code.md": {
+    "prerequisites": [
+      {
+        "id": "openmp-mpi-threads-and-ranks",
+        "path": "fields/system-administration/openmp-and-open-mpi/threads-and-ranks.md",
+        "title": "Cooks and Kitchens: Threads, Ranks and the One Mental Model"
+      }
+    ],
+    "related": [],
+    "required_by": []
+  },
+  "fields/system-administration/openmp-and-open-mpi/the-name-mixup.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "parallel-execution-and-affinity",
+        "path": "fields/benchmarks/parallel-execution-affinity-master-guide.md",
+        "title": "Parallel Execution and Affinity"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "openmp-mpi-where-they-came-from",
+        "path": "fields/system-administration/openmp-and-open-mpi/where-they-came-from.md",
+        "title": "Two Tribes, One Problem: Where OpenMP and MPI Came From"
+      },
+      {
+        "id": "openmp-mpi-threads-and-ranks",
+        "path": "fields/system-administration/openmp-and-open-mpi/threads-and-ranks.md",
+        "title": "Cooks and Kitchens: Threads, Ranks and the One Mental Model"
+      }
+    ]
+  },
+  "fields/system-administration/openmp-and-open-mpi/threads-and-ranks.md": {
+    "prerequisites": [
+      {
+        "id": "openmp-open-mpi-name-mixup",
+        "path": "fields/system-administration/openmp-and-open-mpi/the-name-mixup.md",
+        "title": "Not Twins, Not Even Cousins: OpenMP, MPI and Open MPI"
+      }
+    ],
+    "related": [],
+    "required_by": [
+      {
+        "id": "openmp-mpi-spotting-the-code",
+        "path": "fields/system-administration/openmp-and-open-mpi/spotting-openmp-and-mpi-code.md",
+        "title": "Know It on Sight: Reading OpenMP and MPI Code, Builds and Job Scripts"
+      },
+      {
+        "id": "openmp-mpi-hybrid-binding-trap",
+        "path": "fields/system-administration/openmp-and-open-mpi/hybrid-and-the-binding-trap.md",
+        "title": "Kitchens With Cooks: Hybrid MPI+OpenMP and the Binding Trap"
+      }
+    ]
+  },
+  "fields/system-administration/openmp-and-open-mpi/where-they-are-going.md": {
+    "prerequisites": [
+      {
+        "id": "openmp-mpi-where-they-came-from",
+        "path": "fields/system-administration/openmp-and-open-mpi/where-they-came-from.md",
+        "title": "Two Tribes, One Problem: Where OpenMP and MPI Came From"
+      }
+    ],
+    "related": [],
+    "required_by": []
+  },
+  "fields/system-administration/openmp-and-open-mpi/where-they-came-from.md": {
+    "prerequisites": [
+      {
+        "id": "openmp-open-mpi-name-mixup",
+        "path": "fields/system-administration/openmp-and-open-mpi/the-name-mixup.md",
+        "title": "Not Twins, Not Even Cousins: OpenMP, MPI and Open MPI"
+      }
+    ],
+    "related": [],
+    "required_by": [
+      {
+        "id": "openmp-mpi-where-they-are-going",
+        "path": "fields/system-administration/openmp-and-open-mpi/where-they-are-going.md",
+        "title": "Two Tickets About the Future: OpenMP 6, MPI 5 and What Never Expires"
       }
     ]
   },
