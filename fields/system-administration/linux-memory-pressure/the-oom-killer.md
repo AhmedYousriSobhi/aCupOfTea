@@ -27,7 +27,7 @@ relations:
   - [A smaller ship: OOM inside a cgroup](#a-smaller-ship-oom-inside-a-cgroup)
   - [Why the kernel is late, and who acts earlier](#why-the-kernel-is-late-and-who-acts-earlier)
   - [Read the crime scene](#read-the-crime-scene)
-    - [References](#references)
+  - [References](#references)
 
 ---
 
@@ -72,6 +72,8 @@ and that is scaled to a number from 0 to 1000 by the share of the machine's memo
 
 $$\text{oom\_score} = \frac{\text{points} \times 1000}{\text{total pages}} + \text{oom\_score\_adj}$$
 
+"Total pages" is the memory the process is *allowed* to use: RAM plus swap on the whole machine, or the cgroup's limit inside a cgroup (so the same process scores higher in a small cgroup). The proc(5) man pages describe it as an estimate of memory and swap use relative to allowed memory.
+
 The process with the **highest** score is killed. Its memory is released quickly by a helper (the *OOM reaper*), so the system recovers without waiting for the victim to finish exiting.
 
 Notes that explain real surprises:
@@ -107,12 +109,12 @@ Answer: the **browser (D)**. The scores are roughly A: 500, B: -897, C: 312, D: 
 
 | Value | Effect |
 |-------|--------|
-| `-1000` | **Never kill.** The process is exempt. Use sparingly: if it leaks, the kernel has nothing else left to sacrifice |
+| `-1000` | **Never kill.** The process is exempt (its badness score is always 0). Use sparingly: if it leaks, the kernel has nothing else left to sacrifice |
 | `-900` | Very strongly protected, but not exempt. The usual choice for something that must survive |
 | `0` | Default: judged on size alone |
 | `+500` to `+1000` | Prefer to kill this first. Good for disposable batch work |
 
-The rule that matters for permissions: **an ordinary user can only *raise* the value of their own processes**. Lowering it, which shields a process, needs `CAP_SYS_RESOURCE`, which in practice means root. This is the same shape as `RLIMIT_MEMLOCK` from [part 5](/fields/system-administration/linux-memory-pressure/memory-locking-mlockall.md): protection from the machine's limits is rationed to privileged code.
+The rule that matters for permissions: **an ordinary user can raise the value of their own processes**. Lowering it below the value the process started with, which is what shields it, needs `CAP_SYS_RESOURCE`, which in practice means root. (This rule is from the kernel source, `fs/proc/base.c`, not from the man pages, which don't spell it out.) This is the same shape as `RLIMIT_MEMLOCK` from [part 5](/fields/system-administration/linux-memory-pressure/memory-locking-mlockall.md): protection from the machine's limits is rationed to privileged code.
 
 In systemd you don't write the file yourself:
 
@@ -184,7 +186,7 @@ cat /sys/fs/cgroup/<group>/memory.events    # oom, oom_kill counts for a cgroup
 
 The kernel's tool is a blunt kill. The cgroup files give you gentler levers, such as throttling, asking a group to give memory back, freezing it. That's [part 4](/fields/system-administration/linux-memory-pressure/cgroup-v2-memory-control.md).
 
-### References
+## References
 - [Linux kernel docs: Out of memory management](https://www.kernel.org/doc/html/latest/admin-guide/mm/concepts.html#oom-killer)
 - [proc(5): oom_score, oom_score_adj](https://man7.org/linux/man-pages/man5/proc.5.html)
 - [Linux kernel docs: Control Group v2, memory.events and memory.oom.group](https://www.kernel.org/doc/html/latest/admin-guide/cgroup-v2.html#memory)

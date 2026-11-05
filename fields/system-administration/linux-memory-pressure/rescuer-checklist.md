@@ -27,7 +27,7 @@ relations:
   - [The whole unit file](#the-whole-unit-file)
   - [The checklist](#the-checklist)
   - [Other uses of locked memory](#other-uses-of-locked-memory)
-    - [References](#references)
+  - [References](#references)
 
 ---
 
@@ -56,6 +56,9 @@ chrt -p <pid>                 # show a running process's policy and priority
 
 In a systemd unit: `CPUSchedulingPolicy=fifo` and `CPUSchedulingPriority=50`.
 
+> [!CAUTION]
+> `SCHED_FIFO` can freeze a machine. A real-time rescuer that loops without blocking starves everything, including the SSH session you'd use to stop it. Try it on one canary node first, and keep a second root shell open.
+
 The cost: this is a power that can freeze a machine. A real-time program that loops without blocking would starve everything, including the programs it was meant to rescue, which is why the kernel limits it:
 
 - A normal user needs `CAP_SYS_NICE` or an `RLIMIT_RTPRIO` allowance to ask for it, so it is **privileged**, just like the memory lock.
@@ -73,7 +76,7 @@ Even locked and prioritized, the rescuer is a process. When the kernel is out of
 
 Why `-900` and not `-1000`? Because `-1000` makes the process **exempt from the OOM killer entirely**. If the rescuer itself ever leaks, the kernel has no way to remove it, and the machine can wedge. `-900` makes it a victim of last resort: almost any other process dies first, but a real bug in the rescuer is still correctable.
 
-One more shield sits in the cgroup. Giving the rescuer's service a **`MemoryLow=`** (or `memory.low`) tells reclaim to take memory from other groups first when the machine is short. It's a cousin of the lock for pages that are *not* worth pinning individually.
+One more shield sits in the cgroup. Giving the rescuer's service a **`MemoryLow=`** (or `memory.low`) tells reclaim to take memory from other groups first when the machine is short. It's a cousin of the lock for pages that are *not* worth pinning individually. The kernel docs say the effective protection is limited by the `memory.low` of the **ancestor** groups, so also protect the parent slice, or the line may do little.
 
 ---
 
@@ -127,7 +130,15 @@ CPUSchedulingPriority=50
 MemoryLow=64M
 ```
 
-Every line here needs privilege, which is the reason an unprivileged rescuer is "best effort" and a root service is "the real thing".
+Most lines here need privilege (everything except `Restart=` and `WatchdogSec=`), which is the reason an unprivileged rescuer is "best effort" and a root service is "the real thing". `WatchdogSec=` works without `Type=notify`: systemd sets `NotifyAccess=main` for you when `WatchdogSec=` is set and `NotifyAccess=` isn't.
+
+**Roll it out safely.** Install it on one canary node first, as a drop-in, so you can undo it:
+
+1. Run it for a few days in log-only mode (it names the group it *would* act on and does nothing).
+2. Turn on the real action on the canary node only, and keep a second root shell open.
+3. Roll back with `systemctl stop rescuer`, delete the unit or drop-in, and `systemctl daemon-reload`.
+
+**Prove the watchdog works.** This is the failure path, and it was not run for this page: freeze the process with `kill -STOP $(pidof rescuer)`. Within about `WatchdogSec` (30 seconds) the journal should show a watchdog timeout and systemd restarting the service. If nothing happens, the service isn't sending its keep-alive pings.
 
 ---
 
@@ -160,7 +171,7 @@ Locking isn't only for rescuers. The same call shows up wherever *the kernel mov
 
 **Takeaway:** a rescuer that is only locked in RAM can still be starved of CPU, killed by the OOM killer or hang unnoticed; give it real-time priority, a `-900` OOM shield and a watchdog, and acquire every resource it will need before the pressure begins.
 
-### References
+## References
 - [sched(7): real-time scheduling policies](https://man7.org/linux/man-pages/man7/sched.7.html) and [chrt(1)](https://man7.org/linux/man-pages/man1/chrt.1.html)
 - [systemd.service(5): Restart, WatchdogSec](https://www.freedesktop.org/software/systemd/man/latest/systemd.service.html) and [sd_notify(3)](https://www.freedesktop.org/software/systemd/man/latest/sd_notify.html)
 - [systemd.exec(5): CPUSchedulingPolicy, OOMScoreAdjust, LimitMEMLOCK](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html)
