@@ -1,4 +1,5 @@
 ---
+summary: How to track and compare model training runs with Weights & Biases, including adding it to a Python script and reading its run overview.
 sidebar_group: Evaluation and Debugging
 sidebar_label: Evaluation with Weights and Biases
 ---

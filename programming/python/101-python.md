@@ -1,3 +1,6 @@
+---
+summary: A commented walk through the core of Python, from primitive types, operators and collections to the language's other main building blocks.
+---
 # 101 - Python
 
 # Table of Content

@@ -1,3 +1,6 @@
+---
+summary: How to set up Vagrant with the libvirt provider and sync a folder between the host and its virtual machines.
+---
 # System Administration - Virtual Machines
 
 ## Table of Contents

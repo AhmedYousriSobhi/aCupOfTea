@@ -1,3 +1,6 @@
+---
+summary: Install Ansible (Ubuntu or an isolated Mamba environment), verify it works, and fix the errors that tend to show up on the first runs.
+---
 # System Administration - Ansible
 
 ## Table of Contents

@@ -1,3 +1,6 @@
+---
+summary: "A Docker introduction: why containers exist, containers vs virtual machines, key terms and commands, and core concepts, security and real-world use."
+---
 # 101 - Docker
 
 let's create a chapter to learn **Docker**. **Docker** is a popular containerization platform that allows you to package and run applications and their dependencies in isolated containers.

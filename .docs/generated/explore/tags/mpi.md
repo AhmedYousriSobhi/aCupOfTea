@@ -2,7 +2,7 @@
 
 # MPI
 
-- [Parallel Execution and Affinity](/fields/benchmarks/parallel-execution-affinity-master-guide.md) *(5 min)*  
+- [Parallel Execution and Affinity](/fields/benchmarks/parallel-execution-affinity-master-guide.md) — How to place processes, threads and GPUs on a node: srun vs mpirun, NUMA, CPU binding syntax and GPU mapping, with tuning advice for HPL and NCCL. *(5 min)*  
   [`affinity`](/.docs/generated/explore/tags/affinity.md) [`mpi`](/.docs/generated/explore/tags/mpi.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 
 [All tags](/.docs/generated/explore/tags.md)

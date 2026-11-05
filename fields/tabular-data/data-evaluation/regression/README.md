@@ -1,4 +1,5 @@
 ---
+summary: A comparison of regression evaluation metrics, including MSE, RMSE, MAE, R-squared, MAPE, RMSLE, MedAE, explained variance, AIC and BIC.
 sidebar_group: Regression Evaluation
 ---
 # Tabular Data - Data Evaluation - Regression Evaluation Metrics

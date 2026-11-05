@@ -1,4 +1,5 @@
 ---
+summary: "Reinforcement learning basics: how an agent learns by trial and error, its components, policies, exploration vs exploitation, Markov decision processes and early algorithms."
 id: reinforcement-learning-basics
 title: Reinforcement Learning Basics
 type: concept

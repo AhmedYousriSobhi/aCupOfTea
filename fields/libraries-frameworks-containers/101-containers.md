@@ -1,4 +1,5 @@
 ---
+summary: "Containers from the ground up: what happens at boot, kernel and user space, virtual machines, then namespaces, cgroups and Linux containers."
 id: containers-101
 title: Containers 101
 type: concept

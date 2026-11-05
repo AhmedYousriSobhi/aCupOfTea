@@ -1,3 +1,6 @@
+---
+summary: A fix for missing HDMI audio on Ubuntu with an NVIDIA GPU, done by commenting one udev rule line.
+---
 # System Administration - Hardware
 
 ## Table of Contents

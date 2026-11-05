@@ -1,3 +1,6 @@
+---
+summary: Deeper answers to three questions, why scp is secure, what it means that a directory is a logical container, and what makes a system Unix-like.
+---
 # System Administration - Under the Hood
 
 The target of this page is to learn more deeper things that come to our minds.

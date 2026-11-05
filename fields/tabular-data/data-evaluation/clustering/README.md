@@ -1,4 +1,5 @@
 ---
+summary: How to inspect clusters and turn them into groups you can name, including why only the first two PCA components are plotted and how to describe each cluster.
 sidebar_group: Clustering Evaluation
 ---
 # Tabular Data - DATA EVALUATION - CLUSTERING

@@ -1,3 +1,6 @@
+---
+summary: Using Git and the GitHub CLI from the terminal, with SSH key setup, managing several users and undoing the last pushed commit.
+---
 # Git CLI
 In the context of Git, "gh" refers to the GitHub CLI tool, which is a command-line interface for interacting with GitHub repositories. It provides a convenient way to manage GitHub-specific features, such as issues, pull requests, and releases, directly from your terminal. The GitHub CLI is available for macOS, Windows, and Linux, and it can be installed using a package manager or by downloading the binary from the GitHub CLI website.
 

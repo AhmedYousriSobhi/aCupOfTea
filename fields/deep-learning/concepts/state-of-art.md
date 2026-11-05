@@ -1,3 +1,6 @@
+---
+summary: "What state of the art means, shown through face detection and recognition: history, current models, the RetinaFace architecture and face embeddings."
+---
 # Deep Learning - Concepts -  State of Art
 ![Title card reading State-of-Art under the heading AI Realm](images/state-of-art-01.png)
 

@@ -1,3 +1,6 @@
+---
+summary: Markdown tricks for adding an Open in Colab button and general buttons, and for converting Markdown to .rst or to PDF with math formulas.
+---
 # Tips - Markdown
 
 ## Table of Content

@@ -2,9 +2,9 @@
 
 # Model Evaluation
 
-- [Accuracy Paradox](/fields/tabular-data/data-evaluation/classification/accuracy-paradox.md) *(4 min)*  
+- [Accuracy Paradox](/fields/tabular-data/data-evaluation/classification/accuracy-paradox.md) — Why accuracy can look high and still mislead on imbalanced classification, with the accuracy paradox explained. *(4 min)*  
   [`model-evaluation`](/.docs/generated/explore/tags/model-evaluation.md)
-- [Bias and Variance Trade-Off](/fields/tabular-data/data-evaluation/model-behavior/bias-variance-trade-off.md) *(7 min)*  
+- [Bias and Variance Trade-Off](/fields/tabular-data/data-evaluation/model-behavior/bias-variance-trade-off.md) — What bias and variance are, how they trade off, and the difference between a model that is consistent but inaccurate and one that is inconsistent but accurate. *(7 min)*  
   [`model-evaluation`](/.docs/generated/explore/tags/model-evaluation.md)
 
 [All tags](/.docs/generated/explore/tags.md)

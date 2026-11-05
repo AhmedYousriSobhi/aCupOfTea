@@ -1,3 +1,6 @@
+---
+summary: An mpirun command that starts 4 ranks and binds each one to a core, with the output to expect.
+---
 # System Administration - Linux - MPI
 
 ## Table of Contents

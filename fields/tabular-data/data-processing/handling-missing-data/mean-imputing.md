@@ -1,3 +1,6 @@
+---
+summary: How to fill missing values with a column mean, or with a mean per category, in pandas.
+---
 # Tabular Data - Data Processing - Handling Missing Data - Mean Imputing
 
 It is recommend to read __determineMissingValues__ before starting.

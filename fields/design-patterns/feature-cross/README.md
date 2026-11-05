@@ -1,3 +1,6 @@
+---
+summary: "The Feature Cross pattern: join categorical features into one combined feature so a model can learn their interaction faster, even a simple linear one."
+---
 # Design Pattern - Feature Cross
 
 > One idea: instead of hoping the model finds how two features interact, hand it that combination as a feature of its own.

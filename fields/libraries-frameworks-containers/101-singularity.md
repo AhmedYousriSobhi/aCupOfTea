@@ -1,4 +1,5 @@
 ---
+summary: "Singularity (rootless containers for HPC): installing it, building SIF images, converting from Docker, bind mounts and definition-file variables."
 id: singularity-containers
 title: Singularity
 type: guide

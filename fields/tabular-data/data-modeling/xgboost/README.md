@@ -1,4 +1,5 @@
 ---
+summary: A walk from ensembles, bagging and boosting through AdaBoost and gradient boosting to XGBoost, its architecture and its advantages.
 sidebar_group: XGBoost
 ---
 # Tabular Data - Data Modeling - XGBOOST

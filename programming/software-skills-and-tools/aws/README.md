@@ -1,5 +1,6 @@
 ---
 sidebar_group: AWS
+summary: The AWS services that support HPC systems, with Kubernetes and AWS ParallelCluster in more detail and interview questions for an HPC engineer role.
 ---
 
 # Software Tool: AWS Services for HPC Systems

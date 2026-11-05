@@ -1,4 +1,5 @@
 ---
+summary: "The start of the DevOps section: which topics exist, which are still brewing, where related Slurm, Linux and container pages live, and how pages are written."
 sidebar_label: DevOps
 sidebar_group: DevOps
 ---

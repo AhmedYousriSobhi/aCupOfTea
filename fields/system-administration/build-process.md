@@ -1,3 +1,6 @@
+---
+summary: Why and how to configure the build of a Linux package, with a closer look at how CMake works, how to clean a build and how find_package fails.
+---
 # System Administration - Build Process
 
 # Mystic Map

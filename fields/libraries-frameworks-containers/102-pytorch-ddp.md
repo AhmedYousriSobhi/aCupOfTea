@@ -1,4 +1,5 @@
 ---
+summary: "A short pointer page on PyTorch Distributed Data Parallel: a recommended distributed training tutorial and a related read on the Python GIL."
 id: pytorch-ddp
 title: PyTorch DDP
 type: note

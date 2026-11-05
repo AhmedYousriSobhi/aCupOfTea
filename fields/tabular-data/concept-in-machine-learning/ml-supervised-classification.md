@@ -1,3 +1,6 @@
+---
+summary: Supervised classification concepts, from the confusion matrix and metrics like precision, recall, F1 and ROC AUC to choosing an error metric, with KNN and other classifiers.
+---
 # Tabular Data - Concepts in Machine Learning - Supervised Learning: Classification
 
 # Table of Content

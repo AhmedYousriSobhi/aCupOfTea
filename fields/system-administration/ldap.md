@@ -1,3 +1,6 @@
+---
+summary: First steps to install OpenLDAP on Fedora or CentOS, start slapd, open its port, and how a directory tree of entries, object classes and attributes is laid out.
+---
 # System Administration - LDAP
 
 ## Table of Contents

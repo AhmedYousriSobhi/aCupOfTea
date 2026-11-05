@@ -1,4 +1,5 @@
 ---
+summary: What the OSU Micro-Benchmarks measure, the three that matter, how to build and run them, and a sane order for diagnosing slow network numbers.
 sidebar_label: OSU Benchmarks
 ---
 # OSU Benchmarks, Explained Like You're Debugging Them at 2 AM

@@ -1,3 +1,6 @@
+---
+summary: "Conda basics: creating, listing, removing and sharing environments, plus channels and the .condarc configuration file."
+---
 # Packages - Conda
 
 # Table of Content

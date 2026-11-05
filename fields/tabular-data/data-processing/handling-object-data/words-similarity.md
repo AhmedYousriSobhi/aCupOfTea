@@ -1,3 +1,6 @@
+---
+summary: How to measure how similar two text values are with Levenshtein distance, and how to do it in Python with fuzzywuzzy.
+---
 # Tabular Data - Data Processing - Handling Objects Data - Words Similarity
 
 ## Table of Contents

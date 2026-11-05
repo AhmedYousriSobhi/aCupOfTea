@@ -1,4 +1,5 @@
 ---
+summary: "Notes for starting with PyTorch: where to learn, data type precision, GPU properties, the training loop, making predictions, and saving and loading models."
 id: pytorch-101
 title: PyTorch 101
 type: guide

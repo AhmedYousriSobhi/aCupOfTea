@@ -1,3 +1,6 @@
+---
+summary: How to prepare for a value interview, including what the interviewer looks for, how to introduce yourself, and real questions to practise.
+---
 # Tips - Value Interview
 
 A "values interview" or "values-based interview" is a type of job interview that focuses on assessing whether a candidate's values, beliefs, and personal characteristics align with the company's culture and core values. This interview is typically conducted by the Human Resources (HR) department or a company's hiring team before or alongside technical interviews.
