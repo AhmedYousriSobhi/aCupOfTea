@@ -139,6 +139,9 @@ tags:
   mpi:
     label: MPI
     kind: technology
+  openmp:
+    label: OpenMP
+    kind: technology
   neural-networks:
     label: Neural Networks
     kind: technology

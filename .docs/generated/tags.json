@@ -3,6 +3,7 @@
     "label": "Affinity",
     "objects": [
       "cpu-affinity",
+      "openmp-mpi-hybrid-binding-trap",
       "parallel-execution-and-affinity"
     ]
   },
@@ -129,6 +130,12 @@
       "nhc-why-node-health-check",
       "nhc-writing-nhc-conf",
       "nvidia-cluster-readiness-engine",
+      "openmp-mpi-hybrid-binding-trap",
+      "openmp-mpi-spotting-the-code",
+      "openmp-mpi-threads-and-ranks",
+      "openmp-mpi-where-they-are-going",
+      "openmp-mpi-where-they-came-from",
+      "openmp-open-mpi-name-mixup",
       "slurm-accounting-multi-tenancy",
       "slurm-backfill-tuning",
       "slurm-cgroups-in-practice",
@@ -184,6 +191,12 @@
   "mpi": {
     "label": "MPI",
     "objects": [
+      "openmp-mpi-hybrid-binding-trap",
+      "openmp-mpi-spotting-the-code",
+      "openmp-mpi-threads-and-ranks",
+      "openmp-mpi-where-they-are-going",
+      "openmp-mpi-where-they-came-from",
+      "openmp-open-mpi-name-mixup",
       "parallel-execution-and-affinity"
     ]
   },
@@ -222,6 +235,17 @@
       "slurm-mixed-gpus-overview",
       "slurm-mixed-gpus-where-shine",
       "slurm-mixed-gpus-why-disappoints"
+    ]
+  },
+  "openmp": {
+    "label": "OpenMP",
+    "objects": [
+      "openmp-mpi-hybrid-binding-trap",
+      "openmp-mpi-spotting-the-code",
+      "openmp-mpi-threads-and-ranks",
+      "openmp-mpi-where-they-are-going",
+      "openmp-mpi-where-they-came-from",
+      "openmp-open-mpi-name-mixup"
     ]
   },
   "programming": {
