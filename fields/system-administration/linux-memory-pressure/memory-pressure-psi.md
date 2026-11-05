@@ -27,7 +27,7 @@ relations:
   - [Getting woken up: triggers](#getting-woken-up-triggers)
   - [Per group, and who uses it](#per-group-and-who-uses-it)
   - [Check it on your own machine](#check-it-on-your-own-machine)
-    - [References](#references)
+  - [References](#references)
 
 ---
 
@@ -139,7 +139,11 @@ while True:
 
 The string means: *stall time (150000 µs) within a window (1000000 µs)*. If tasks lose 150 ms or more out of any second, the program is woken. Windows run from 500 ms to 10 s.
 
-Two notes. Registering a trigger on the **system-wide** file normally needs privilege, so an ordinary user usually reads the averages instead, or watches their own cgroup's file. And a trigger fires on *crossing*, so it won't repeat while the pressure stays above the line: a rescuer should re-check the file after it acts.
+Two notes, both tested in clean VMs on Ubuntu 22.04 (Linux 5.15) and Ubuntu 26.04 (Linux 7.0).
+
+**A trigger keeps firing while the stall lasts.** The kernel docs say notifications are rate-limited to one per tracking window. In a test, a 150 ms-in-1 s trigger on a cgroup under sustained pressure woke the program 14 times in 15 seconds on 5.15 and 15 times on 7.0, about once per window. Don't assume a single wake-up, and re-read the file after you act to decide from the numbers.
+
+**Who may register a trigger depends on the kernel.** The kernel docs say unprivileged users can create triggers if the window is a multiple of 2 seconds. On 7.0 that is what happened: an ordinary user registered a 2 s window on `/proc/pressure/memory`, and the 1 s window above was refused with `EINVAL`. On 5.15 the same user got `EPERM` for both. On both kernels a user's own `user@1000.service` cgroup file was owned by root and refused the write (`EACCES`), so a rescuer that watches a group needs a file it can write. If you must support older kernels, run the rescuer as root.
 
 This is how a lightweight rescuer can sleep at zero cost until it is needed. And because it sleeps in the kernel until it is woken, it fits the memory-locking idea: the program is **idle until the worst moment**, the exact profile that [part 5](/fields/system-administration/linux-memory-pressure/memory-locking-mlockall.md) protects.
 
@@ -155,7 +159,7 @@ Every cgroup v2 group has its own `memory.pressure` (and `cpu.pressure`, `io.pre
 | **`earlyoom`** | `MemAvailable` and swap free, in percent | A simpler, older approach: bytes, not time |
 | A custom rescuer | Anything you choose | PSI triggers plus the per-group files give the finest control |
 
-On the machine this page was written on, `systemd-oomd` is running and `earlyoom` is not.
+On the machine this page was written on (Ubuntu 26.04, Linux 7.0), `systemd-oomd` is running and `earlyoom` is not.
 
 ---
 
@@ -168,7 +172,7 @@ cat /sys/fs/cgroup/user.slice/memory.pressure       # just the user sessions
 systemctl status systemd-oomd                       # is a pressure-based killer running?
 ```
 
-If `/proc/pressure/memory` doesn't exist, the kernel was built without PSI, or booted with `psi=0`.
+If `/proc/pressure/memory` doesn't exist, the kernel was built without PSI, or booted with `psi=0`. Some distribution kernels ship PSI switched off by default (they need `psi=1` on the kernel command line), so check the file before you build on it.
 
 To watch it move, put a deliberately small memory limit on a throwaway group and run something greedy inside it (see the [cgroup page](/fields/system-administration/linux-memory-pressure/cgroup-v2-memory-control.md)). Its `memory.pressure` climbs while the host's stays near zero.
 
@@ -176,8 +180,8 @@ To watch it move, put a deliberately small memory limit on a throwaway group and
 
 You can now see pressure coming. If nothing relieves it, the kernel eventually loses patience and kills something: who, and when? That's [part 3](/fields/system-administration/linux-memory-pressure/the-oom-killer.md).
 
-### References
-- [Linux kernel docs: PSI, Pressure Stall Information](https://www.kernel.org/doc/html/latest/accounting/psi.html)
+## References
+- [Linux kernel docs: PSI, Pressure Stall Information](https://www.kernel.org/doc/html/latest/accounting/psi.html) (trigger rate limit, window range, unprivileged monitors)
 - [Facebook Engineering: PSI and cgroup2-based OOM handling (oomd)](https://facebookmicrosites.github.io/oomd/)
 - [systemd-oomd.service(8)](https://www.freedesktop.org/software/systemd/man/latest/systemd-oomd.service.html)
 - [earlyoom](https://github.com/rfjakob/earlyoom)

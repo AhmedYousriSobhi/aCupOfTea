@@ -26,7 +26,7 @@ relations:
   - [The knobs: swappiness, zram and zswap](#the-knobs-swappiness-zram-and-zswap)
   - [Thrashing: when the clearing never ends](#thrashing-when-the-clearing-never-ends)
   - [See it on your own machine](#see-it-on-your-own-machine)
-    - [References](#references)
+  - [References](#references)
 
 ---
 
@@ -62,7 +62,7 @@ Not every page is equally cheap to take back. This is the fact that everything e
 
 *Anonymous* means "not backed by a file": a program's heap, its stack, memory from `malloc`. That's the memory programs own.
 
-The kernel sorts pages onto four lists in `/proc/meminfo`: `Active(file)`, `Inactive(file)`, `Active(anon)` and `Inactive(anon)`. A page moves from active to inactive when it hasn't been touched for a while, and the inactive ends are where reclaim eats first. This is the "least recently used" rule from the [memory-locking page](/fields/system-administration/linux-memory-pressure/memory-locking-mlockall.md), made concrete.
+The kernel sorts pages onto four lists in `/proc/meminfo`: `Active(file)`, `Inactive(file)`, `Active(anon)` and `Inactive(anon)`. A page moves from active to inactive when it hasn't been touched for a while, and the inactive ends are where reclaim eats first. (Kernels with **multi-gen LRU**, on by default on Ubuntu 26.04, age pages through several generations instead. The four `/proc/meminfo` counters are still there, so the picture here still reads correctly. Check `/sys/kernel/mm/lru_gen/enabled`.) This is the "least recently used" rule from the [memory-locking page](/fields/system-administration/linux-memory-pressure/memory-locking-mlockall.md), made concrete.
 
 One consequence is worth saying out loud. **A machine with no swap isn't safer, it just has fewer pages it is allowed to reclaim.** All the anonymous memory is pinned by the lack of a place to put it, and only the file cache is left to squeeze.
 
@@ -84,6 +84,8 @@ Got your answer? Scroll on.
 
 Answer: **no**. 11 GB of the "used" memory is cache, mostly clean file pages the librarian can send back to the stacks in an instant. The 300 MB figure only says the desks are being used well. The number that matters is the next section's.
 
+One catch: `Cached` also counts **shared memory** (`tmpfs`, `/dev/shm`, MPI shared segments), which is swap-backed like anonymous memory. With no swap those pages can't be dropped. Check the `Shmem` line in `/proc/meminfo` before you call all of `Cached` free.
+
 ---
 
 ## Free is not available
@@ -92,7 +94,7 @@ Answer: **no**. 11 GB of the "used" memory is cache, mostly clean file pages the
 
 The number you want is `MemAvailable`: the kernel's estimate of how much it could hand to a new program **without swapping**, which is free memory plus the part of the cache it can drop, minus a safety margin.
 
-On the machine I wrote this page on:
+On the machine I wrote this page on (Ubuntu 26.04, Linux 7.0, 14.8 GiB of RAM):
 
 | Field | Value | Meaning |
 |-------|-------|---------|
@@ -144,7 +146,7 @@ Roughly two scanned pages in a hundred were done by a program that was made to w
 
 Three settings change how the librarian behaves. People often misread the first.
 
-**`vm.swappiness`** (default 60) is the balance between reclaiming **file pages** and **anonymous pages**. It is *not* "start swapping when memory is 60% full". Higher values make the kernel more willing to push anonymous pages to swap rather than shrink the cache. At 0 it strongly prefers dropping cache first. The range is 0 to 200 on modern kernels.
+**`vm.swappiness`** (default 60) is the balance between reclaiming **file pages** and **anonymous pages**. It is *not* "start swapping when memory is 60% full". Higher values make the kernel more willing to push anonymous pages to swap rather than shrink the cache. At 0 it strongly prefers dropping cache first. The range is 0 to 200 since Linux 5.8 (0 to 100 before).
 
 **zram** is a swap device that lives in RAM and **compresses** what is put into it. Swapping out a page costs a bit of CPU instead of a disk write, which is why zram-backed swap hurts far less. It is common on laptops and some servers.
 
@@ -186,7 +188,7 @@ Run the `/proc/vmstat` line twice, a minute apart, during busy work, and subtrac
 
 So the machine is spending its time clearing desks. How do you notice that it's happening *before* anything breaks? That's [part 2](/fields/system-administration/linux-memory-pressure/memory-pressure-psi.md).
 
-### References
+## References
 - [Linux kernel docs: Concepts overview (page cache, anonymous memory, reclaim)](https://www.kernel.org/doc/html/latest/admin-guide/mm/concepts.html)
 - [Linux kernel docs: /proc/sys/vm (swappiness, min_free_kbytes, watermark_scale_factor)](https://www.kernel.org/doc/html/latest/admin-guide/sysctl/vm.html)
 - [Linux kernel docs: zram](https://www.kernel.org/doc/html/latest/admin-guide/blockdev/zram.html) and [zswap](https://www.kernel.org/doc/html/latest/admin-guide/mm/zswap.html)

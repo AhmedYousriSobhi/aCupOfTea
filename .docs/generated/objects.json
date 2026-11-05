@@ -794,7 +794,7 @@
     "level": "intermediate",
     "order": 4,
     "path": "fields/system-administration/linux-memory-pressure/cgroup-v2-memory-control.md",
-    "reading_time_min": 9,
+    "reading_time_min": 12,
     "relations": {
       "prerequisites": [
         "linux-mem-reclaim"
@@ -821,7 +821,7 @@
     "level": "intermediate",
     "order": 5,
     "path": "fields/system-administration/linux-memory-pressure/memory-locking-mlockall.md",
-    "reading_time_min": 11,
+    "reading_time_min": 12,
     "relations": {
       "prerequisites": [
         "linux-mem-reclaim"
@@ -849,7 +849,7 @@
     "level": "intermediate",
     "order": 3,
     "path": "fields/system-administration/linux-memory-pressure/the-oom-killer.md",
-    "reading_time_min": 8,
+    "reading_time_min": 9,
     "relations": {
       "prerequisites": [
         "linux-mem-reclaim"
@@ -876,7 +876,7 @@
     "level": "intermediate",
     "order": 2,
     "path": "fields/system-administration/linux-memory-pressure/memory-pressure-psi.md",
-    "reading_time_min": 7,
+    "reading_time_min": 8,
     "relations": {
       "prerequisites": [
         "linux-mem-reclaim"
@@ -926,7 +926,7 @@
     "level": "intermediate",
     "order": 6,
     "path": "fields/system-administration/linux-memory-pressure/rescuer-checklist.md",
-    "reading_time_min": 7,
+    "reading_time_min": 8,
     "relations": {
       "prerequisites": [
         "linux-mem-cgroup-v2",
@@ -953,7 +953,7 @@
     "id": "linux-memory-pressure-overview",
     "level": "intermediate",
     "path": "fields/system-administration/linux-memory-pressure/README.md",
-    "reading_time_min": 3,
+    "reading_time_min": 6,
     "relations": {
       "prerequisites": [],
       "related": []
@@ -1996,27 +1996,30 @@
       "systems-and-hpc"
     ],
     "id": "slurm-job-script-tale",
-    "level": "beginner",
+    "level": "intermediate",
     "order": 2,
     "path": "fields/schedulers/slurm-job-script-tale.md",
-    "reading_time_min": 2,
+    "reading_time_min": 11,
     "relations": {
       "prerequisites": [
         "slurm-intro"
       ],
       "related": [
+        "slurm-backfill-tuning",
+        "slurm-slurmstepd",
         "slurm-spool-dir-full"
       ]
     },
     "status": "stable",
-    "summary": "Slurm copies your batch script at submission, so editing job.sh later changes neither running nor pending jobs; cancel and resubmit, or version your scripts.",
+    "summary": "Why editing a script after sbatch changes nothing, where Slurm keeps the frozen copy, what stays live, how to read the script back, and how to keep runs traceable.",
     "tags": [
       "hpc",
       "slurm"
     ],
-    "title": "The Tale of job.sh and the Snapshot",
-    "type": "guide",
+    "title": "The Tale of a Slurm Job Script: Submission Is a Commitment, Not a Promise",
+    "type": "concept",
     "types": [
+      "concept",
       "guide"
     ]
   },
