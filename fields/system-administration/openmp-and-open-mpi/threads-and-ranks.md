@@ -14,7 +14,7 @@ relations:
 
 # Cooks and Kitchens: Threads, Ranks and the One Mental Model
 
-> **Part 3 of 6.** By the end you'll know what a **thread** and a **rank** are, you'll have seen both run, and you'll understand the one bug each style invites.
+> **Part 3 of 8.** By the end you'll know what a **thread** and a **rank** are, you'll have seen both run, and you'll understand the one bug each style invites.
 
 The case file: I asked four threads to count to 100 million. Two out of three times they proudly reported **75 million**. Nobody lied. Nobody crashed. Twenty-five million counts simply vanished, without a single error message. This page is about how that happens.
 

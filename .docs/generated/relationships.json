@@ -264,7 +264,9 @@
     "related": [
       "ai-storage-rdma-gpudirect"
     ],
-    "related_by": []
+    "related_by": [
+      "openmp-mpi-on-kubernetes"
+    ]
   },
   "kubernetes-in-five-nouns": {
     "prerequisite_of": [
@@ -278,7 +280,9 @@
       "containers-101"
     ],
     "related": [],
-    "related_by": []
+    "related_by": [
+      "openmp-mpi-on-kubernetes"
+    ]
   },
   "linux-mem-cgroup-v2": {
     "prerequisite_of": [
@@ -600,12 +604,25 @@
     "related_by": []
   },
   "openmp-mpi-hybrid-binding-trap": {
-    "prerequisite_of": [],
+    "prerequisite_of": [
+      "openmp-mpi-under-slurm"
+    ],
     "prerequisites": [
       "openmp-mpi-threads-and-ranks"
     ],
     "related": [
       "parallel-execution-and-affinity"
+    ],
+    "related_by": []
+  },
+  "openmp-mpi-on-kubernetes": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "openmp-mpi-under-slurm"
+    ],
+    "related": [
+      "job-execution-journey",
+      "kubernetes-in-five-nouns"
     ],
     "related_by": []
   },
@@ -626,6 +643,19 @@
       "openmp-open-mpi-name-mixup"
     ],
     "related": [],
+    "related_by": []
+  },
+  "openmp-mpi-under-slurm": {
+    "prerequisite_of": [
+      "openmp-mpi-on-kubernetes"
+    ],
+    "prerequisites": [
+      "openmp-mpi-hybrid-binding-trap"
+    ],
+    "related": [
+      "slurm-pam-adopt-ssh-access",
+      "slurm-slurmstepd"
+    ],
     "related_by": []
   },
   "openmp-mpi-where-they-are-going": {
@@ -880,6 +910,7 @@
       "slurm-reboot-order"
     ],
     "related_by": [
+      "openmp-mpi-under-slurm",
       "slurm-cgroups-in-practice",
       "slurm-upgrade-order"
     ]
@@ -917,6 +948,7 @@
     ],
     "related_by": [
       "linux-mem-mlockall",
+      "openmp-mpi-under-slurm",
       "slurm-intro",
       "slurm-job-script-tale",
       "slurm-spool-dir-full"

@@ -14,7 +14,7 @@ relations:
 
 # Know It on Sight: Reading OpenMP and MPI Code, Builds and Job Scripts
 
-> **Part 4 of 6.** By the end, you'll be able to open an unfamiliar source tree, Makefile or job script and say "this uses OpenMP", "this uses MPI" or "this uses both", and know what each line is asking of the machine.
+> **Part 4 of 8.** By the end, you'll be able to open an unfamiliar source tree, Makefile or job script and say "this uses OpenMP", "this uses MPI" or "this uses both", and know what each line is asking of the machine.
 
 Think of this page as a detective's pocket guide. Every suspect leaves fingerprints: an include line here, a function prefix there, a launch command at the scene. Learn the five fingerprints and you can name the culprit before you've finished your tea.
 
@@ -141,7 +141,7 @@ export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK   # each rank runs 8 OpenMP threads
 srun ./prog
 ```
 
-Decode it: **ntasks = ranks**, **cpus-per-task = threads per rank**. Here that is 2 × 4 = 8 ranks, each with 8 threads, 64 cores in total. Slurm's manual says `SLURM_CPUS_PER_TASK` is "only set if either the --cpus-per-task option or the --tres-per-task=cpu=# option is specified", so a script that uses it without the option exports an empty value. If `--cpus-per-task` is missing but `OMP_NUM_THREADS` is large, every thread competes for one core. Part 5 shows that trap on a real machine.
+Decode it: **ntasks = ranks**, **cpus-per-task = threads per rank**. Here that is 2 × 4 = 8 ranks, each with 8 threads, 64 cores in total. Slurm's manual says `SLURM_CPUS_PER_TASK` is "only set if either the --cpus-per-task option or the --tres-per-task=cpu=# option is specified", so a script that uses it without the option exports an empty value. If `--cpus-per-task` is missing but `OMP_NUM_THREADS` is large, every thread competes for one core. Part 5 shows that trap on a real machine, and [part 7](/fields/system-administration/openmp-and-open-mpi/mpi-and-openmp-under-slurm.md) explains what Slurm does with these lines.
 
 | Script says | Reading |
 |-------------|---------|

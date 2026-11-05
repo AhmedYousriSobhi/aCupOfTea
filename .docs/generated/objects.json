@@ -1602,7 +1602,7 @@
       "related": []
     },
     "status": "stable",
-    "summary": "A six-part series that untangles OpenMP, MPI and Open MPI - what each one is, where they came from, how to read their code on sight and how to combine them.",
+    "summary": "An eight-part series that untangles OpenMP, MPI and Open MPI - what each is, where they came from, how to read their code, how to combine them and how Slurm and Kubernetes run them.",
     "tags": [],
     "title": "OpenMP and Open MPI - Overview",
     "type": "concept",
@@ -1640,6 +1640,39 @@
     "type": "guide",
     "types": [
       "guide"
+    ]
+  },
+  "openmp-mpi-on-kubernetes": {
+    "domains": [
+      "devops",
+      "systems-and-hpc"
+    ],
+    "id": "openmp-mpi-on-kubernetes",
+    "level": "intermediate",
+    "order": 8,
+    "path": "fields/system-administration/openmp-and-open-mpi/mpi-and-openmp-on-kubernetes.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [
+        "openmp-mpi-under-slurm"
+      ],
+      "related": [
+        "job-execution-journey",
+        "kubernetes-in-five-nouns"
+      ]
+    },
+    "status": "stable",
+    "summary": "How an MPIJob turns pods into an MPI cluster - launcher, workers, headless Service, SSH keys, hostfile - and which three numbers keep the binding trap away.",
+    "tags": [
+      "hpc",
+      "kubernetes",
+      "mpi",
+      "openmp"
+    ],
+    "title": "No Login Node, No Hostfile: OpenMP and MPI on Kubernetes",
+    "type": "concept",
+    "types": [
+      "concept"
     ]
   },
   "openmp-mpi-spotting-the-code": {
@@ -1695,6 +1728,38 @@
       "openmp"
     ],
     "title": "Cooks and Kitchens: Threads, Ranks and the One Mental Model",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "openmp-mpi-under-slurm": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "openmp-mpi-under-slurm",
+    "level": "intermediate",
+    "order": 7,
+    "path": "fields/system-administration/openmp-and-open-mpi/mpi-and-openmp-under-slurm.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [
+        "openmp-mpi-hybrid-binding-trap"
+      ],
+      "related": [
+        "slurm-pam-adopt-ssh-access",
+        "slurm-slurmstepd"
+      ]
+    },
+    "status": "stable",
+    "summary": "How Slurm launches MPI ranks and OpenMP threads - srun direct launch, mpirun inside an allocation, PMIx as the address book, and how ntasks and cpus-per-task decide the binding trap from part 5.",
+    "tags": [
+      "hpc",
+      "mpi",
+      "openmp",
+      "slurm"
+    ],
+    "title": "Who Starts the Ranks? OpenMP and MPI Under Slurm",
     "type": "concept",
     "types": [
       "concept"

@@ -14,7 +14,7 @@ relations:
 
 # Two Tribes, One Problem: Where OpenMP and MPI Came From
 
-> **Part 2 of 6.** Two committees, one headache, and a standard that nearly died on the way in. By the end of this page you'll know why two parallel standards exist, who wrote each, and where Open MPI fits in the family tree.
+> **Part 2 of 8.** Two committees, one headache, and a standard that nearly died on the way in. By the end of this page you'll know why two parallel standards exist, who wrote each, and where Open MPI fits in the family tree.
 
 ## Contents
 

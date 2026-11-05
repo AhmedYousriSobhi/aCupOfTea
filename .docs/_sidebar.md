@@ -126,6 +126,8 @@
       * [4. Spotting the code](fields/system-administration/openmp-and-open-mpi/spotting-openmp-and-mpi-code.md)
       * [5. Hybrid and the binding trap](fields/system-administration/openmp-and-open-mpi/hybrid-and-the-binding-trap.md)
       * [6. Where they're going](fields/system-administration/openmp-and-open-mpi/where-they-are-going.md)
+      * [7. Under Slurm](fields/system-administration/openmp-and-open-mpi/mpi-and-openmp-under-slurm.md)
+      * [8. On Kubernetes](fields/system-administration/openmp-and-open-mpi/mpi-and-openmp-on-kubernetes.md)
   * [**Fields - Tabular Data**](fields/tabular-data/README.md)
     * [**Concept in Machine Learning**](fields/tabular-data/concept-in-machine-learning/README.md)
       * [Data EDA and Analysis](fields/tabular-data/concept-in-machine-learning/data-eda-analysis.md)
