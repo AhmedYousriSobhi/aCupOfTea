@@ -16,6 +16,8 @@ relations:
 
 > Part 4 of 6. By the end, you'll be able to open an unfamiliar source tree, Makefile or job script and say "this uses OpenMP", "this uses MPI" or "this uses both", and know what each line is asking of the machine.
 
+Think of this page as a detective's pocket guide. Every suspect leaves fingerprints: an include line here, a function prefix there, a launch command at the scene. Learn the five fingerprints and you can name the culprit before you've finished your tea.
+
 ## Contents
 
 - [The 30-second triage](#the-30-second-triage)
@@ -60,7 +62,7 @@ OpenMP is **hints written into ordinary code**. Strip the hints and what remains
 | `OMP_PLACES`, `OMP_PROC_BIND` | Where threads may run: part of the thread-affinity controls added in OpenMP 4.0 |
 | `#pragma omp target` | Offload this region to an accelerator such as a GPU (device support arrived in OpenMP 4.0) |
 
-The marker for "OpenMP and nothing else": no `MPI_` anywhere, started as a plain `./prog`.
+The marker for "OpenMP and nothing else": no `MPI_` anywhere, started as a plain `./prog`. A chef with no delivery window.
 
 > [!WARNING]
 > Pragmas are only comments to a compiler that doesn't know them. No `-fopenmp`, no error, no speed-up (part 3).
@@ -86,7 +88,7 @@ MPI is **a library you call**. Everything is a function whose name starts with `
 | `mpirun -np 16 ./prog` or `mpiexec ...` | Start 16 ranks |
 | `srun ./prog` inside a Slurm job | Slurm starts the ranks instead of `mpirun` |
 
-Two reading habits pay off:
+Two reading habits pay off, and they have saved me from more than one afternoon of staring:
 
 1. **Everything between `MPI_Init` and `MPI_Finalize` runs in every rank**, unless an `if (rank == ...)` fences it off.
 2. **A collective call must be made by every rank in the communicator.** If a collective sits inside an `if` that only some ranks enter, the others wait forever: a deadlock.
@@ -94,6 +96,8 @@ Two reading habits pay off:
 ---
 
 ## Spotting both: the hybrid fingerprint
+
+The rarest sighting, and the one that makes people hold their coffee more tightly.
 
 A hybrid program has **both** includes, usually `MPI_Init_thread` instead of `MPI_Init`, and pragmas inside functions that also call `MPI_`. The ask for thread support is a one-line fingerprint:
 

@@ -28,7 +28,7 @@ relations:
 
 ## The problem: every vendor spoke its own dialect
 
-Picture the early 1990s. You wrote a clever parallel program for one vendor's supercomputer. Then the machine was retired and the replacement came from another vendor. Your program did not move. It had to be rewritten, because every vendor had invented its own way to say "split this work up".
+Picture the early 1990s. You spent a year writing a clever parallel program for one vendor's supercomputer. Then the machine was retired, and the replacement came from another vendor. Your year of work did not move. It had to be rewritten, because every vendor had invented its own way to say "split this work up". It was like a hotel chain where every hotel makes you learn a different way to switch on the light.
 
 There were two kinds of machines, and so two kinds of dialect:
 
@@ -37,7 +37,7 @@ There were two kinds of machines, and so two kinds of dialect:
 | **Shared-memory** | All processors see one memory | Mark loops for parallel execution; the compiler splits them |
 | **Distributed-memory** | Each processor has its own memory | Send messages between processors |
 
-Both tribes arrived at the same cure: write the dialects down once, as a standard, and let every vendor implement it.
+Both tribes arrived at the same cure: stop inventing light switches, write the dialects down once as a standard, and let every vendor build to it. Then they went off and did it separately, which is the whole reason you are reading two stories.
 
 ---
 
@@ -52,7 +52,7 @@ The distributed-memory tribe moved first, and in the open. The [MPI-1.1 standard
 
 MPI-1.0 was published in 1994 (per the [Open MPI FAQ](https://www.open-mpi.org/faq/?category=general)); MPI-1.1 followed on June 12, 1995.
 
-Notice what MPI is: a **document**. The Forum writes the rules and, then, anyone may build software that follows them. That is the whole reason there is more than one MPI program (part 1).
+Notice what MPI is: a **document**, finished by a committee of about 60 people who still managed to agree. The Forum writes the rules and, then, anyone may build software that follows them. That is the whole reason there is more than one MPI program (part 1).
 
 ---
 
@@ -60,7 +60,7 @@ Notice what MPI is: a **document**. The Forum writes the rules and, then, anyone
 
 The shared-memory tribe had a false start. Per the [LLNL OpenMP tutorial](https://hpc-tutorials.llnl.gov/openmp/introduction/), makers of shared-memory machines had each offered "comparable Fortran extensions based on compiler directives", where you mark a loop and the compiler spreads it over the processors. In 1994 a draft from **ANSI X3H5** tried to standardize them. It was "never adopted, largely due to waning interest as distributed memory machines became popular".
 
-Read that again: the rise of MPI-style machines is part of why the first shared-memory standard stalled.
+Read that again: the rise of MPI-style machines is part of why the first shared-memory standard stalled. In short, the message-passing tribe accidentally knocked over the shared-memory tribe's first standard on the way in, and the shared-memory tribe came back three years later with a better plan.
 
 It came back in **spring 1997**, when work on the OpenMP standard began, "continuing where X3H5 left off", led by the OpenMP Architecture Review Board (ARB). The first spec, **OpenMP Fortran 1.0, came out in October 1997**. The C/C++ version followed in October 1998 ([OpenMP specifications list](https://www.openmp.org/specifications/)).
 

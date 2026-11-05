@@ -30,7 +30,9 @@ relations:
 
 A cluster ticket reads: *"Please install Open MPI so my OpenMP code runs on more nodes."* Two people on the call nod. One is thinking "a library that talks between machines". The other is thinking "a compiler flag for threads". They are both right, and the ticket is wrong in a way neither notices for a week.
 
-The names are the problem. `OpenMP` and `Open MPI` differ by one space. Say them aloud and they differ by nothing. Pull them apart and the confusion goes away, because they are not related the way the names suggest.
+The names are the problem. `OpenMP` and `Open MPI` differ by one space. Say them aloud and they differ by nothing, like "affect" and "effect", except with a job queue attached. Pull them apart and the confusion goes away, because they are not related the way the names suggest.
+
+If they were on a family-DNA website, the result would read: *"Relationship: none. Both parents are called Open, which is probably how this started."*
 
 ---
 
@@ -47,7 +49,9 @@ Read that table twice. The only name that is software you install is **Open MPI*
 - OpenMP describes itself as an API that "supports multi-platform shared-memory parallel programming in C/C++ and Fortran" ([OpenMP FAQ](https://www.openmp.org/about/openmp-faq/)).
 - The Open MPI project calls itself "an open source, freely available implementation of the MPI specifications" ([Open MPI FAQ](https://www.open-mpi.org/faq/?category=general)).
 
-So: **Open MPI is to MPI what a browser is to the HTML spec.** Chrome and Firefox both implement HTML. Open MPI and MPICH both implement MPI. OpenMP is a different rulebook altogether.
+So: **Open MPI is to MPI what a browser is to the HTML spec.** Nobody says "I installed HTML to open this page", and nobody should say "I installed OpenMP so my cluster can talk".
+
+Chrome and Firefox both implement HTML. Open MPI and MPICH both implement MPI. OpenMP is a different rulebook altogether.
 
 > [!NOTE]
 > "Open" in both names is a coincidence of branding, not a family tie. The two projects have different authors, different goals and different release schedules. The next part tells where each one came from.
@@ -65,7 +69,7 @@ Keep one picture and every later page gets easier.
 | Scale | As many cooks as the kitchen has stove burners (the cores of one machine) | As many kitchens as you can build, in one building or across a city |
 | Classic mistake | Two cooks grab the same egg (a data race) | A cook waits for a note that never comes (a deadlock) |
 
-OpenMP stops at the kitchen wall. MPI is what lets kitchens cooperate. Big jobs use both: several kitchens (MPI), each with several cooks (OpenMP). That is part 5.
+OpenMP stops at the kitchen wall: the chefs can shout at each other all day, but they cannot shout across town. MPI is what lets kitchens cooperate, with all the paperwork that implies. Big jobs use both: several kitchens (MPI), each with several cooks (OpenMP). That is part 5.
 
 ---
 

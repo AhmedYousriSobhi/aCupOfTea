@@ -17,6 +17,8 @@ relations:
 
 > Part 5 of 6. By the end you'll know why the two models are combined, what "binding" means, how to see it, and the one-line fix for the most common hybrid mistake.
 
+The scene: you reserve a nice 4-core node, start 2 ranks with 4 threads each, and the job runs. No error. No warning. It is just a bit slow, and slow is the one thing a cluster never complains about. Meanwhile half your cores are doing a very good impression of a break room.
+
 ## Contents
 
 - [Why combine them](#why-combine-them)
@@ -104,7 +106,7 @@ rank 1 thread 2/4 on cpu 1, rank may use 1 cpus
 rank 1 thread 0/4 on cpu 1, rank may use 1 cpus
 ```
 
-Read the last column: **"rank may use 1 cpus"**. Four threads per rank, all on cpu 0 (rank 0) or cpu 1 (rank 1). Two CPUs sit idle and the program runs without a single error message. This is the whole trap.
+Read the last column: **"rank may use 1 cpus"**. Four threads per rank, all on cpu 0 (rank 0) or cpu 1 (rank 1). Four chefs, one stove burner, and two other stoves sitting cold. The program runs without a single error message. This is the whole trap.
 
 You can also see the pinning without writing code, through `--report-bindings` on the plain MPI hello:
 
@@ -151,13 +153,13 @@ A busy loop of 400 million iterations, 2 ranks × 2 threads. This is a demonstra
 | `--map-by slot:PE=2 --bind-to core` | 0.19 s |
 | `--bind-to none` | 0.19 s |
 
-Same work, same threads, **twice as long** under the default, because two threads shared one core. `--bind-to none` also recovered the time, but it lets the operating system move processes around, and on real multi-socket nodes you usually want the explicit binding.
+Same work, same threads, **twice as long** under the default, because two threads shared one core. Same chefs, same recipe, half the stove. `--bind-to none` also recovered the time, but it lets the operating system move processes around, and on real multi-socket nodes you usually want the explicit binding.
 
 ---
 
 ## A surprise on the way
 
-My first attempt at the `PE=2` run **failed** with exit code 213. The error text was hidden behind the missing-help-file message (part 3), and only its topic name survived: `span-packages-multiple`. That first VM had libvirt's default CPU layout, which I did not record. I changed the VM to present **1 socket with 4 cores** and the same command worked. My reading, from the topic name only: Open MPI would not give a rank two CPUs that straddle two sockets. Treat that as a guess, but the lesson is real: **on a VM whose CPU layout is odd, binding can fail where bare metal works**, so check `lscpu` first.
+My first attempt at the `PE=2` run **failed** (of course it did) with exit code 213. The error text was hidden behind the missing-help-file message (part 3), and only its topic name survived: `span-packages-multiple`. That first VM had libvirt's default CPU layout, which I did not record. I changed the VM to present **1 socket with 4 cores** and the same command worked. My reading, from the topic name only: Open MPI would not give a rank two CPUs that straddle two sockets. Treat that as a guess, but the lesson is real: **on a VM whose CPU layout is odd, binding can fail where bare metal works**, so check `lscpu` first.
 
 I also found `--report-bindings` working on 5.0.10, although the manual lists it as deprecated in favour of `--display bindings`. I ran the latter once and saw no binding lines in that run, and did not investigate further.
 

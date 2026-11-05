@@ -16,6 +16,8 @@ relations:
 
 > Part 6 of 6. By the end you'll know what the latest version of each one added, how to read a version number, and what is safe to learn once and keep.
 
+Crystal-ball disclaimer: I'm not predicting anything past what the standards bodies have published. What I can promise is that the part of this series you need most, the two mental models, is the part that has not changed since the 1990s. Standards come and go. Kitchens and chefs stay.
+
 ## Contents
 
 - [The version trail](#the-version-trail)
@@ -105,7 +107,7 @@ You can learn these once and keep them for the rest of your career:
 | `parallel`, `for`, `reduction` / `Init`, `rank`, `Send`, `Reduce` | The vocabulary has been stable since the 1990s |
 | Binding decides where work runs | Newer hardware makes it matter more, not less |
 
-New versions add vocabulary on top. They do not replace the vocabulary you now have.
+New versions add vocabulary on top. They do not replace the vocabulary you now have. Think of it as a menu that keeps adding dishes, while the kitchen stays a kitchen.
 
 ---
 

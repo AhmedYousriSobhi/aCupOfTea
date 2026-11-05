@@ -10,7 +10,9 @@ domains: [systems-and-hpc, software-engineering]
 
 # OpenMP and Open MPI - Overview
 
-> A six-part series for anyone whose brain blue-screens when two names differ by one space. By the end you'll know what each name means, why they exist, how to spot their code in a glance, and how the two meet in one job.
+> A six-part series for anyone whose brain blue-screens when two names differ by one space. By the end you'll know what each name means, why they exist, how to spot their code at a glance, and how the two end up in the same job script, arguing over the same CPU.
+
+The cast, so you can keep score: **OpenMP** is one kitchen with several chefs sharing a counter. **MPI** is the rulebook for kitchens that pass notes through a delivery window. **Open MPI** is one courier company that follows that rulebook. Nobody here is a twin. Several of them are, however, very good at stepping on each other's toes.
 
 ## The route
 

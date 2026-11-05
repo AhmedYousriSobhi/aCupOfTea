@@ -16,6 +16,8 @@ relations:
 
 > Part 3 of 6. By the end you'll know what a **thread** and a **rank** are, you'll have seen both run, and you'll understand the one bug each style invites.
 
+The case file: I asked four threads to count to 100 million. Two out of three times they proudly reported **75 million**. Nobody lied. Nobody crashed. Twenty-five million counts simply vanished, without a single error message. This page is about how that happens.
+
 ## Contents
 
 - [The mental model in two sentences](#the-mental-model-in-two-sentences)
@@ -97,7 +99,7 @@ racy     100000000      reduction 100000000
 racy      75000000      reduction 100000000
 ```
 
-The racy total was wrong in two runs out of three, and right in the third by luck. I did not dig into why it landed on those exact numbers. The lesson stands: **a race gives wrong answers that change from run to run**, so a pass proves nothing. `reduction(+:var)` is the standard fix for "everyone adds to one total".
+The racy total was wrong in two runs out of three, and right in the third by luck. That is the nasty part: the program that is wrong sometimes will happily pass the one test you ran before shipping it. I did not dig into why it landed on those exact numbers. The lesson stands: **a race gives wrong answers that change from run to run**, so a pass proves nothing. `reduction(+:var)` is the standard fix for "everyone adds to one total".
 
 ---
 
@@ -139,7 +141,7 @@ rank 0 of 4 on twins
 sum of ranks = 6
 ```
 
-0 + 1 + 2 + 3 = 6. Four separate processes each held one number in private memory, and the library moved them together. No rank could simply read another's `rank` variable. That is the "separate kitchens" rule.
+0 + 1 + 2 + 3 = 6. Four separate processes each held one number in private memory, and the library carried the numbers together, like four kitchens each handing a single note through the window to rank 0. No rank could simply read another's `rank` variable. That is the "separate kitchens" rule.
 
 ---
 
@@ -152,12 +154,12 @@ mpirun -np 8 ./mpi_hello     # on a 4-CPU VM: refused
 mpirun --oversubscribe -np 8 ./mpi_hello    # allowed, exit 0
 ```
 
-`--oversubscribe` means "yes, I know there are only 4 slots". Use it for testing, not for speed.
+`--oversubscribe` means "yes, I know there are only 4 slots, and I would like to seat eight guests anyway". Use it for testing, not for speed.
 
 > [!WARNING]
 > On this Ubuntu 26.04 install, the refusal message is hidden behind `Sorry!  You were supposed to get help about: prte-rmaps-base:alloc-error` plus "couldn't open the help file". The packages looked for the help text under `/usr/lib/x86_64-linux-gnu/prrte3/share/prte/`, and I found one such file only under `/usr/share/doc/libprrte-dev/`. On such a system, `alloc-error` means "not enough slots". The same missing file also breaks `mpirun --version`; `ompi_info --version` works.
 
-The other classic MPI bug I did not run here, because it hangs by design: a **deadlock**, where two ranks each wait for a message the other has not sent. It is the mirror of the data race: instead of a wrong answer, you get no answer.
+The other classic MPI bug I did not run here, because it hangs by design: a **deadlock**, where two ranks each wait for a message the other has not sent. It is the mirror of the data race: instead of a wrong answer, you get no answer. Think of two people at a door, each insisting "after you", forever.
 
 ---
 

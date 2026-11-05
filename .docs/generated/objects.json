@@ -1596,7 +1596,7 @@
     "id": "openmp-and-open-mpi-overview",
     "level": "beginner",
     "path": "fields/system-administration/openmp-and-open-mpi/README.md",
-    "reading_time_min": 2,
+    "reading_time_min": 3,
     "relations": {
       "prerequisites": [],
       "related": []
@@ -1651,7 +1651,7 @@
     "level": "beginner",
     "order": 4,
     "path": "fields/system-administration/openmp-and-open-mpi/spotting-openmp-and-mpi-code.md",
-    "reading_time_min": 6,
+    "reading_time_min": 7,
     "relations": {
       "prerequisites": [
         "openmp-mpi-threads-and-ranks"
@@ -1680,7 +1680,7 @@
     "level": "beginner",
     "order": 3,
     "path": "fields/system-administration/openmp-and-open-mpi/threads-and-ranks.md",
-    "reading_time_min": 5,
+    "reading_time_min": 6,
     "relations": {
       "prerequisites": [
         "openmp-open-mpi-name-mixup"
@@ -1738,7 +1738,7 @@
     "level": "beginner",
     "order": 2,
     "path": "fields/system-administration/openmp-and-open-mpi/where-they-came-from.md",
-    "reading_time_min": 5,
+    "reading_time_min": 6,
     "relations": {
       "prerequisites": [
         "openmp-open-mpi-name-mixup"
