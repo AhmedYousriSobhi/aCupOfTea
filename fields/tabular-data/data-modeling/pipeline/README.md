@@ -1,4 +1,5 @@
 ---
+summary: One diagram of a scikit-learn pipeline that chains preprocessing, scaling, PCA and agglomerative clustering into a single flow.
 sidebar_group: Pipeline
 ---
 # Tabular Data - DATA MODELING - PIPELINE

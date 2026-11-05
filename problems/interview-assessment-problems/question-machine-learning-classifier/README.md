@@ -1,5 +1,6 @@
 ---
 sidebar_group: ML Classifier
+summary: An interview ML problem where you build a logistic regression and a random forest on bank customer data and report what drives term-deposit subscriptions.
 ---
 # Question - Machine Learning Classifier
 

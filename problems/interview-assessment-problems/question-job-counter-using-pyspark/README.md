@@ -1,5 +1,6 @@
 ---
 sidebar_group: "Job Counter (PySpark)"
+summary: An interview PySpark problem where you group and sort a CSV of names and job titles to count how often each job appears.
 ---
 # Question - Job Counter Using PySpark
 

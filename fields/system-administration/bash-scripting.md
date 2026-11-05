@@ -1,3 +1,6 @@
+---
+summary: Bash scripting from the first script to the basics, covering naming, shebang, variables, input and output, and running a script.
+---
 # System Administration - Bash Scripting
 # Table of Content
 - [System Administration - Bash Scripting](#system-administration---bash-scripting)

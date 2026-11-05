@@ -1,3 +1,6 @@
+---
+summary: How-to recipes for Git and GitHub, such as the fork, modify, pull request and merge workflow, managing multiple users, removing a pushed commit and branching from upstream.
+---
 # Git - Know How?
 
 Daily works never ends, learning never gets old, so every new day requires a new thing to do, here let's know the how to do for git and github.

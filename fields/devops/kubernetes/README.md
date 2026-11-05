@@ -1,4 +1,5 @@
 ---
+summary: An eight-page Kubernetes series for HPC people, from core concepts and a two-node lab to GPU scheduling and a job's journey, with a list of planned pages.
 sidebar_label: Kubernetes
 sidebar_group: Kubernetes
 ---

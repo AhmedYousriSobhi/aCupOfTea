@@ -1,3 +1,6 @@
+---
+summary: How a food delivery company works from order to doorstep, the KPIs it targets and how each is calculated, plus related data projects.
+---
 # Food Delivery Service Company
 
 A food delivery service company is an organization that specializes in delivering food from restaurants, cafes, or other food establishments to customers' doorsteps. These companies act as intermediaries between the customers and the food providers, facilitating the ordering and delivery process.

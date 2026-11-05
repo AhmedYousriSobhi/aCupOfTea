@@ -1,3 +1,6 @@
+---
+summary: The machine learning workflow, how data gets messy, and how to handle missing values and outliers, run EDA, transform features, select variables, and tell correlation from causation.
+---
 # Tabular Data - Concepts in Machine Learning - Data EDA and Analysis
 
 # Table of Content

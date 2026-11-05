@@ -1,3 +1,6 @@
+---
+summary: What a single feature tells you about your data, from constant and binary columns to uniform and near-uniform distributions, and what to do about each.
+---
 # Tabular Data - Data EDA - Feature Analysis
 
 ## Table of Content

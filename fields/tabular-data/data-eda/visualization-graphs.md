@@ -1,3 +1,6 @@
+---
+summary: What you can read from a box plot and from error bars in a bar plot, as short tables of insights.
+---
 # Tabular Data - DATA EDA - VISUALIZATION GRAPHS
 
 ## Table of Content

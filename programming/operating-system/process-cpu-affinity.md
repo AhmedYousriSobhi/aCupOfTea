@@ -1,5 +1,6 @@
 ---
 id: cpu-affinity
+summary: What CPU affinity is, why pinning processes to cores helps and the challenges of multitasking, and how to set it.
 title: CPU Affinity
 type: concept
 status: stable

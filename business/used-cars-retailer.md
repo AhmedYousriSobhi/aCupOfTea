@@ -1,4 +1,5 @@
 ---
+summary: The KPIs a used-car buying and selling company should target, how to calculate each, and the projects that relate to them.
 id: used-cars-retailer-kpis
 title: Used Cars Retailer Company
 type: note

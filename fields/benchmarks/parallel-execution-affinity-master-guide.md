@@ -1,4 +1,5 @@
 ---
+summary: "How to place processes, threads and GPUs on a node: srun vs mpirun, NUMA, CPU binding syntax and GPU mapping, with tuning advice for HPL and NCCL."
 id: parallel-execution-and-affinity
 title: Parallel Execution and Affinity
 sidebar_label: Parallel Execution and Affinity

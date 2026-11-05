@@ -4,19 +4,19 @@
 
 Engineering practice, patterns and tooling.
 
-- [Containers 101](/fields/libraries-frameworks-containers/101-containers.md) *(8 min)*  
+- [Containers 101](/fields/libraries-frameworks-containers/101-containers.md) — Containers from the ground up: what happens at boot, kernel and user space, virtual machines, then namespaces, cgroups and Linux containers. *(8 min)*  
   [`containers`](/.docs/generated/explore/tags/containers.md)
-- [CPU Affinity](/programming/operating-system/process-cpu-affinity.md) *(5 min)*  
+- [CPU Affinity](/programming/operating-system/process-cpu-affinity.md) — What CPU affinity is, why pinning processes to cores helps and the challenges of multitasking, and how to set it. *(5 min)*  
   [`affinity`](/.docs/generated/explore/tags/affinity.md)
-- [Parallel Execution and Affinity](/fields/benchmarks/parallel-execution-affinity-master-guide.md) *(5 min)*  
+- [Parallel Execution and Affinity](/fields/benchmarks/parallel-execution-affinity-master-guide.md) — How to place processes, threads and GPUs on a node: srun vs mpirun, NUMA, CPU binding syntax and GPU mapping, with tuning advice for HPL and NCCL. *(5 min)*  
   [`affinity`](/.docs/generated/explore/tags/affinity.md) [`mpi`](/.docs/generated/explore/tags/mpi.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
-- [PyTorch 101](/fields/libraries-frameworks-containers/101-pytorch.md) *(6 min)*  
+- [PyTorch 101](/fields/libraries-frameworks-containers/101-pytorch.md) — Notes for starting with PyTorch: where to learn, data type precision, GPU properties, the training loop, making predictions, and saving and loading models. *(6 min)*  
   [`pytorch`](/.docs/generated/explore/tags/pytorch.md)
 - [Reviewing the Design: Where Would You Push Back?](/programming/local-app-accounts/reviewing-the-design.md) — Six review questions the design leaves open, a table of mistakes it avoids, the Designing Data-Intensive Applications chapters that explain why, and six exercises. *(intermediate · 6 min)*  
   [`programming`](/.docs/generated/explore/tags/programming.md) [`software`](/.docs/generated/explore/tags/software.md) [`system-design`](/.docs/generated/explore/tags/system-design.md)
 - [Sign-In Hygiene: How the Clerk Says "No" Without Giving Anything Away](/programming/local-app-accounts/sign-in-hygiene.md) — Slow self-describing password hashes, a decoy check for unknown users, one identical error message, and throttling that cannot be used to lock someone out forever. *(intermediate · 5 min)*  
   [`programming`](/.docs/generated/explore/tags/programming.md) [`software-engineering`](/.docs/generated/explore/tags/software-engineering.md) [`system-design`](/.docs/generated/explore/tags/system-design.md)
-- [Singularity](/fields/libraries-frameworks-containers/101-singularity.md) *(10 min)*  
+- [Singularity](/fields/libraries-frameworks-containers/101-singularity.md) — Singularity (rootless containers for HPC): installing it, building SIF images, converting from Docker, bind mounts and definition-file variables. *(10 min)*  
   [`containers`](/.docs/generated/explore/tags/containers.md)
 - [The Orphans Come Home: Old Data and Background Work](/programming/local-app-accounts/old-data-and-background-work.md) — How to give pre-existing data an owner without surprises, and why background monitors and their cached readings must follow the signed-in person. *(intermediate · 6 min)*  
   [`programming`](/.docs/generated/explore/tags/programming.md) [`software-engineering`](/.docs/generated/explore/tags/software-engineering.md) [`system-design`](/.docs/generated/explore/tags/system-design.md)

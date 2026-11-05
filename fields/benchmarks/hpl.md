@@ -1,4 +1,5 @@
 ---
+summary: "A deep dive into HPL: what it measures, how to calculate theoretical peak, why GFLOPS fall short of it, and how HPL-GPU differs."
 sidebar_label: HPL and the TOP500
 ---
 # HPL: The Benchmark That Built the TOP500 (and Why Your GFLOPS Number Lies a Little)

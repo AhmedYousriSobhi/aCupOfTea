@@ -1,3 +1,6 @@
+---
+summary: What version control gives you, how Git and GitHub fit together, and which page to open when a Git situation gets messy.
+---
 # Version Control - Overview
 
 > Git and GitHub, from the idea to the command line. By the end you'll know what version control gives you, how to work with Git day to day, and which page to open when a situation gets messy.

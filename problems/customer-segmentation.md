@@ -1,5 +1,6 @@
 ---
 id: customer-segmentation-problem
+summary: What customer segmentation is, with the key points, aspects and concepts to consider when you split customers into groups.
 title: Customer Segmentation
 type: problem
 status: stable

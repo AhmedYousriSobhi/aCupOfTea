@@ -1,4 +1,5 @@
 ---
+summary: Unsupervised learning notes on clustering (K-means, picking an algorithm and the number of clusters) and dimensionality reduction such as PCA, plus the curse of dimensionality.
 id: unsupervised-learning
 title: Unsupervised Learning
 type: concept

@@ -1,3 +1,6 @@
+---
+summary: Questions to ask the interviewer for a data scientist role, such as team structure, planning, deployed projects and tools, and what each answer tells you.
+---
 # Tips - Technical Info
 
 When you are doing an interview for any technical position, there are some important questions you should ask the interviewer about, so let's discuss more about these questions.

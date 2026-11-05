@@ -1,3 +1,6 @@
+---
+summary: Why statistics matters for machine learning, what it is, and a module-by-module curriculum from descriptive statistics to probability, distributions and sampling.
+---
 # Statistics
 ![Title card reading Statistics under the heading Mathematics](images/statistics-01.png)
 

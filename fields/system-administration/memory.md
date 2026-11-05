@@ -1,3 +1,6 @@
+---
+summary: The common memory bugs in Linux programs (segfaults, leaks, buffer overflows, use after free) and the static analysis tools that help find them.
+---
 # System Administration - Memory
 
 ## Table of Contents

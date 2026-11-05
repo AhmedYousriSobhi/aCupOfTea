@@ -1,3 +1,6 @@
+---
+summary: Supervised regression in context, covering interpretation versus prediction, the R2 metric, feature and target transformation, train-test split, cross validation and the bias-variance trade-off.
+---
 # Tabular Data - Concepts in Machine Learning - Supervised Learning: Regression
 
 # Table of Content

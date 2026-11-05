@@ -1,3 +1,6 @@
+---
+summary: Short dated notes on small findings, such as PyTorch dropping macOS Intel support and the Zen of Python.
+---
 # Journal
 
 > Daily notes: small findings worth keeping, one dated entry at a time.

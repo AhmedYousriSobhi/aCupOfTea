@@ -1,4 +1,5 @@
 ---
+summary: How to fill missing values by predicting them with a regression model built on the other features.
 id: regression-imputing
 title: Regression Imputing
 type: concept

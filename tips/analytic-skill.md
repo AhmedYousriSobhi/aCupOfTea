@@ -1,3 +1,6 @@
+---
+summary: Steps to build analysis skills as a data scientist, and how to get into domain knowledge and approach a standalone analytic task in a new domain.
+---
 # Tips - Analytic Skill for a Data Scientist
 
 The analysis part is a crucial aspect of a data scientist's work. 

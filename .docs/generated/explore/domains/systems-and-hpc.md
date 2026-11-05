@@ -27,13 +27,13 @@ Benchmarks, schedulers, system administration, high-performance computing.
 - [cgroup v2 Memory Control: The Levers Between Doing Nothing and Killing](/fields/system-administration/linux-memory-pressure/cgroup-v2-memory-control.md) — The memory files of a cgroup v2 group, from protection (min, low) to throttling (high) to the hard cap (max), plus the active levers: reclaim, freeze and kill, and why they need privilege. *(intermediate · 12 min)*
 - [Compute-Bound vs Memory-Bandwidth-Bound](/fields/generative-ai/llm-inference-performance/compute-bound-vs-memory-bound.md) — Why a 3x faster GPU can give you 1.6x - arithmetic intensity, the ridge point and the roofline, explained with a pizza kitchen and two lines of arithmetic. *(intermediate · 9 min)*  
   [`gpu`](/.docs/generated/explore/tags/gpu.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md)
-- [Containers 101](/fields/libraries-frameworks-containers/101-containers.md) *(8 min)*  
+- [Containers 101](/fields/libraries-frameworks-containers/101-containers.md) — Containers from the ground up: what happens at boot, kernel and user space, virtual machines, then namespaces, cgroups and Linux containers. *(8 min)*  
   [`containers`](/.docs/generated/explore/tags/containers.md)
 - [Core AI Infrastructure Concepts: A Map](/business/hpc-industry/ai-infrastructure-core-concepts.md) — Six concepts every AI-infrastructure engineer gets asked about, each fact-checked with a 30-second answer and a pointer to where to go deeper. *(intermediate · 9 min)*  
   [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`kubernetes`](/.docs/generated/explore/tags/kubernetes.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
-- [CPU Affinity](/programming/operating-system/process-cpu-affinity.md) *(5 min)*  
+- [CPU Affinity](/programming/operating-system/process-cpu-affinity.md) — What CPU affinity is, why pinning processes to cores helps and the challenges of multitasking, and how to set it. *(5 min)*  
   [`affinity`](/.docs/generated/explore/tags/affinity.md)
-- [CUDA 101](/fields/libraries-frameworks-containers/101-cuda.md) *(7 min)*  
+- [CUDA 101](/fields/libraries-frameworks-containers/101-cuda.md) — What CUDA is and why it is named that, what a thread really is, memory coalescing, and the path of code from CPU to GPU. *(7 min)*  
   [`gpu`](/.docs/generated/explore/tags/gpu.md)
 - [Dying Politely: Preemption, Requeue and the Signals Your Training Job Ignores](/fields/schedulers/slurm-preemption-requeue-signals.md) — How Slurm preemption modes differ, what GraceTime and --signal really send and when, why a bash trap never fires while  trainer runs, and a requeue-safe checkpoint wrapper that cannot loop forever. *(intermediate · 9 min)*  
   [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
@@ -46,8 +46,8 @@ Benchmarks, schedulers, system administration, high-performance computing.
 - [How GPU Memory Fails, and Why You Can See It Coming](/fields/system-administration/gpu-failure-prediction/what-fails-and-what-warns.md) — How ECC, row remapping and error containment work on NVIDIA GPUs, why memory errors repeat and cluster, and the error ladder that makes failure predictable. *(intermediate · 11 min)*  
   [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md)
 - [How Linux Reclaims Memory: Cache, Swap and the Two Kinds of Stall](/fields/system-administration/linux-memory-pressure/how-linux-reclaims-memory.md) — Why free memory near zero is normal, which pages the kernel can drop for free and which need swap, how kswapd and direct reclaim differ, and why the second one is where programs stall. *(intermediate · 9 min)*
-- [HPC Systems](/business/hpc-industry/101-hpc.md) *(29 min)*
-- [HPC Workloads](/business/hpc-industry/workloads.md) *(10 min)*
+- [HPC Systems](/business/hpc-industry/101-hpc.md) — What HPC systems are, what an HPC systems team does, the skills the role needs, and how it compares with MLOps for someone coming from data science. *(29 min)*
+- [HPC Workloads](/business/hpc-industry/workloads.md) — What an HPC workload is, the common types, how Linux relates to them, and how RDMA and data science workloads fit in. *(10 min)*
 - [Is the Prediction Any Good?](/fields/system-administration/gpu-failure-prediction/scoring-and-backtesting.md) — How to judge GPU failure predictions - base rates, precision, recall, lead time, horizons, label quality, leakage and drift - and when a learned model is worth it. *(advanced · 10 min)*  
   [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md)
 - [Isolating GPU Workloads: Taints, Labels and the Device Plugin](/fields/devops/kubernetes/isolating-gpu-workloads.md) — How the NVIDIA device plugin exposes GPUs to pods, why taints alone don't dedicate GPU nodes, and why distributed training needs all-or-nothing scheduling. *(intermediate · 9 min)*  
@@ -65,7 +65,7 @@ Benchmarks, schedulers, system administration, high-performance computing.
 - [Memory Locking: Keeping a Rescuer in RAM with mlockall](/fields/system-administration/linux-memory-pressure/memory-locking-mlockall.md) — Why a program that rescues a machine under memory pressure must pin its own pages in RAM, what mlockall does, why the 8 MiB limit exists, and why root gets the real lock - explained with a tow truck. *(intermediate · 12 min)*
 - [Mixing GPU Types in Slurm - Overview](/fields/schedulers/slurm-mixed-gpus/README.md) — Slurm can allocate H100s and A100s in one job - four different ways. A three-part series on what each actually gives you, why mixed training disappoints, and where it shines. *(intermediate · 3 min)*  
   [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
-- [NCCL](/fields/benchmarks/nccl.md) *(19 min)*  
+- [NCCL](/fields/benchmarks/nccl.md) — What NCCL is, its collectives, ring and tree topologies, key environment variables and common failures, and how an all-reduce benchmark runs and is read. *(19 min)*  
   [`distributed-training`](/.docs/generated/explore/tags/distributed-training.md) [`gpu`](/.docs/generated/explore/tags/gpu.md)
 - [NHC Cheat Sheet](/fields/system-administration/node-health-check/cheat-sheet.md) — Every NHC command, option, variable, config pattern and Slurm knob from the series on one page. *(intermediate · 6 min)*  
   [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
@@ -75,7 +75,7 @@ Benchmarks, schedulers, system administration, high-performance computing.
   [`gpu`](/.docs/generated/explore/tags/gpu.md) [`llm`](/.docs/generated/explore/tags/llm.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md) [`transformers`](/.docs/generated/explore/tags/transformers.md)
 - [pam_slurm_adopt: Closing the Slurm SSH Backdoor](/fields/schedulers/slurm-pam-adopt-ssh-access.md) — Why users can SSH into a node and escape their job's limits, and how pam_slurm_adopt closes the backdoor by admitting only users with a job there and adopting the session into its cgroup. *(intermediate · 4 min)*  
   [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
-- [Parallel Execution and Affinity](/fields/benchmarks/parallel-execution-affinity-master-guide.md) *(5 min)*  
+- [Parallel Execution and Affinity](/fields/benchmarks/parallel-execution-affinity-master-guide.md) — How to place processes, threads and GPUs on a node: srun vs mpirun, NUMA, CPU binding syntax and GPU mapping, with tuning advice for HPL and NCCL. *(5 min)*  
   [`affinity`](/.docs/generated/explore/tags/affinity.md) [`mpi`](/.docs/generated/explore/tags/mpi.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [Parallel Filesystems: Why 10,000 GPUs Can Starve on a Full Disk](/fields/system-administration/ai-storage-and-fabric/parallel-filesystems-for-ai.md) — How Lustre-style parallel filesystems split metadata from data, why millions of small files starve GPUs, how striping works, and why checkpoints - not datasets - set your storage peak. *(intermediate · 9 min)*  
   [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`storage`](/.docs/generated/explore/tags/storage.md)
@@ -84,7 +84,7 @@ Benchmarks, schedulers, system administration, high-performance computing.
 - [Predicting GPU Node Failures - Overview](/fields/system-administration/gpu-failure-prediction/README.md) — A five-part series on how GPU memory fails, what its telemetry really says, and how to turn that into predictions you can trust before a training run dies. *(advanced · 5 min)*  
   [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [Pressure Stall Information: Measuring Time Lost, Not Bytes Left](/fields/system-administration/linux-memory-pressure/memory-pressure-psi.md) — How to read /proc/pressure/memory, why the share of time tasks spend stalled is a better alarm than free bytes, and how to get woken by the kernel the moment a threshold is crossed. *(intermediate · 8 min)*
-- [PyTorch DDP](/fields/libraries-frameworks-containers/102-pytorch-ddp.md) *(1 min)*  
+- [PyTorch DDP](/fields/libraries-frameworks-containers/102-pytorch-ddp.md) — A short pointer page on PyTorch Distributed Data Parallel: a recommended distributed training tutorial and a related read on the Python GIL. *(1 min)*  
   [`distributed-training`](/.docs/generated/explore/tags/distributed-training.md) [`pytorch`](/.docs/generated/explore/tags/pytorch.md)
 - [RDMA, InfiniBand and GPUDirect: Taking the CPU Out of the Way](/fields/system-administration/ai-storage-and-fabric/rdma-infiniband-gpudirect.md) — Why AI clusters use RDMA fabrics (InfiniBand or RoCE), what kernel bypass and zero-copy mean, and how GPUDirect RDMA and GPUDirect Storage move data straight into GPU memory. *(intermediate · 8 min)*  
   [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md) [`storage`](/.docs/generated/explore/tags/storage.md)
@@ -98,7 +98,7 @@ Benchmarks, schedulers, system administration, high-performance computing.
   [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [Schedulers: The Traffic Controller Nobody Thanks Until It Breaks](/fields/schedulers/slurm-intro.md) — What a cluster scheduler does, how it differs from the OS scheduler, the scheduler landscape, the concepts they share, and the Slurm architecture at a glance. *(beginner · 8 min)*  
   [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
-- [Singularity](/fields/libraries-frameworks-containers/101-singularity.md) *(10 min)*  
+- [Singularity](/fields/libraries-frameworks-containers/101-singularity.md) — Singularity (rootless containers for HPC): installing it, building SIF images, converting from Docker, bind mounts and definition-file variables. *(10 min)*  
   [`containers`](/.docs/generated/explore/tags/containers.md)
 - [Sizing a 70B Model with a Pencil](/fields/generative-ai/llm-inference-performance/sizing-a-70b-model.md) — A live whiteboard walk-through - Llama 2 70B on 8xH100, from "does it fit?" to the exact token-rate ceilings at batch 1 and batch 64, using only a datasheet. *(intermediate · 9 min)*  
   [`gpu`](/.docs/generated/explore/tags/gpu.md) [`llm`](/.docs/generated/explore/tags/llm.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md) [`transformers`](/.docs/generated/explore/tags/transformers.md)

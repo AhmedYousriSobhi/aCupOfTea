@@ -1,4 +1,5 @@
 ---
+summary: A checklist of factors to weigh before deleting outliers in a customer segmentation task, since the answer depends on context.
 sidebar_group: Outliers
 ---
 # Tabular Data - Data Processing - Handling Outliers

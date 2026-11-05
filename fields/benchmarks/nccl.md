@@ -1,4 +1,5 @@
 ---
+summary: What NCCL is, its collectives, ring and tree topologies, key environment variables and common failures, and how an all-reduce benchmark runs and is read.
 id: nccl-collective-communication
 title: NCCL
 type: concept

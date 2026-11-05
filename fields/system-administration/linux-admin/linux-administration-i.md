@@ -1,3 +1,6 @@
+---
+summary: Study notes on Linux administration that follow the Red Hat book chapter by chapter, from the command line, files and users to services, networking, packages and virtualization.
+---
 # System Administration - Linux Administration
 
 Linux administration is the art and science of efficiently managing Linux-based computer systems. At its core, Linux administration involves overseeing and maintaining the health, security, and performance of Linux servers and workstations. It encompasses a wide range of tasks, from the installation and configuration of the Linux operating system to the management of users, software, and network services.

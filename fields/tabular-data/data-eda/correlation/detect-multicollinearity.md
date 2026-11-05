@@ -1,3 +1,6 @@
+---
+summary: How to measure correlation between numeric features with a correlation matrix and show it as a heatmap, to spot multicollinearity.
+---
 # Tabular Data - Data EDA - Correlation - Detect Multicollinearity
 
 ## Table of Content

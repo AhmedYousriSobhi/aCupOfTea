@@ -1,4 +1,5 @@
 ---
+summary: A step-by-step learning path for time series analysis, from the basics through data preparation, analysis techniques and forecasting to advanced techniques and practical projects.
 id: time-series-analysis
 title: Time Series Analysis
 type: concept

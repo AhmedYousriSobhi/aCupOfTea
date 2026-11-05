@@ -1,3 +1,6 @@
+---
+summary: Two Git situations worked through, syncing a fork with an updated branch of another repo and reviewing a merged PR on your own commit.
+---
 # Git - Case Study
 
 ## Table of Contents

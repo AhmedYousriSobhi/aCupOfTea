@@ -1,4 +1,5 @@
 ---
+summary: What LangChain is, why people use it to build applications around language models, and where it came from.
 sidebar_group: Langchain
 ---
 # Generative AI - Langchain

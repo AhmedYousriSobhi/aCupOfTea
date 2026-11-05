@@ -1,3 +1,6 @@
+---
+summary: Git tips, including how to remove a commit from a repo and a ready-made .gitignore for Python, virtual environments, Conda and Jupyter.
+---
 # Tips - Version Control - Git
 
 ## Table of Contents
