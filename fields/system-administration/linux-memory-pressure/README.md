@@ -40,19 +40,23 @@ Written against Ubuntu 26.04, Linux 7.0 and systemd as shipped there. The number
 
 ### What changed since Ubuntu 22.04
 
-The pages were tested on Ubuntu 22.04 (Linux 5.15, systemd 249) and written on Ubuntu 26.04 (Linux 7.0, systemd 259). This is what differs between them. "Seen" means read from the 26.04 machine without changing anything; "not tested" means no behaviour test was run on 7.0.
+The pages were tested in clean VMs on Ubuntu 22.04 (Linux 5.15, systemd 249) and Ubuntu 26.04 (Linux 7.0.0-34, systemd 259.5), and the examples were written on a 26.04 machine. This is what differs. "Tested" means a command was run in the VM; "seen" means read from a machine without changing anything; "docs" means taken from release notes or kernel docs and not run.
 
 | Area | Ubuntu 22.04 (5.15, systemd 249) | Ubuntu 26.04 (7.0, systemd 259) | Basis |
 |------|----------------------------------|---------------------------------|-------|
-| `memory.reclaim` | Absent (tested) | Present | Seen |
-| `memory.peak`, `memory.swap.peak`, `memory.swap.high`, `memory.zswap.max`, `memory.zswap.writeback` | Not checked | Present in a user cgroup | Seen. The kernel docs say writing to `memory.swap.peak` resets it |
-| `memory.reclaim` argument `swappiness=` | Not available | Patch series (Dec 2023 to Jan 2024) adds it. Whether 7.0 has it was not checked | [Patch series](https://patchew.org/linux/20240103164841.2800183-1-schatzberg.dan@gmail.com/20240103164841.2800183-3-schatzberg.dan@gmail.com) |
-| Unprivileged PSI triggers (window a multiple of 2 s) | Refused with `EPERM` (tested) | Allowed per the kernel docs. The commit dates from March 2023. Not tested | [Commit d82caa27](https://lab.nexedi.cn/kirr/linux/-/commit/d82caa273565b45fcf103148950549af76c314b0) |
-| Multi-gen LRU (page aging by generations, not just active/inactive lists) | Not in 5.15 (merged in Linux 6.1) | On: `CONFIG_LRU_GEN_ENABLED=y`, `/sys/kernel/mm/lru_gen/enabled` is `0x0007`. `Active(...)`/`Inactive(...)` are still in `/proc/meminfo` | Seen. [Launchpad 2023629](https://bugs.launchpad.net/bugs/2023629): Ubuntu enabled it for 23.10 kernels |
-| `RLIMIT_MEMLOCK` | 245 MiB out of the box on the test VM | 8 MiB (`ulimit -l` printed `8192`) | Seen |
-| cgroup v1 | Supported | **Gone**: systemd 258 removed support for the legacy and hybrid hierarchies, so 26.04 is cgroup v2 only | [systemd NEWS, v258](https://github.com/systemd/systemd/blob/main/NEWS) |
-| `systemd-oomd` | Basic | v257 adds `ManagedOOMMemoryPressureDurationSec=` per service; v259 adds `OOMKills` and `ManagedOOMKills` properties on service units; v260 (not in 26.04) adds rulesets | [systemd NEWS](https://github.com/systemd/systemd/blob/main/NEWS) |
-| PSI, `memory.high`, `memory.min`/`low`, OOM scoring, `WatchdogSec=` | Tested | Same interface, same documented meaning | Not tested on 7.0 |
+| `memory.reclaim` | Absent | Present | Tested |
+| `memory.reclaim` argument `swappiness=` | Not available | Accepted: values 0, 60 and `max` parsed, 201 and unknown keys refused with `EINVAL` | Tested. [Patch series](https://patchew.org/linux/20240103164841.2800183-1-schatzberg.dan@gmail.com/20240103164841.2800183-3-schatzberg.dan@gmail.com) |
+| `memory.reclaim` write on a group holding 200 MiB of anonymous memory, no swap | n/a | Returned `EAGAIN` at once (under 1 ms) and freed nothing. Not measured where pages can be reclaimed | Tested |
+| `memory.peak`, `memory.swap.peak`, `memory.swap.high`, `memory.zswap.max`, `memory.zswap.writeback`, `cgroup.pressure`, `memory.oom.group` | Not checked | Present in a new cgroup. Writing to `memory.peak` and `memory.swap.peak` is accepted (the docs say it resets them) | Tested |
+| `dmem` cgroup controller (device memory) | Absent | Listed in the root `cgroup.controllers` | Tested |
+| Unprivileged PSI triggers (window a multiple of 2 s) | Refused with `EPERM` for 1 s and 2 s | Works on `/proc/pressure/memory`: 2 s registered, 1 s refused with `EINVAL`. On the user's own cgroup file still `EACCES`, because that file is owned by root | Tested. [Commit d82caa27](https://lab.nexedi.cn/kirr/linux/-/commit/d82caa273565b45fcf103148950549af76c314b0) (March 2023) |
+| PSI trigger repeats while the stall lasts | 14 wake-ups in 15 s | 15 wake-ups in 15 s | Tested |
+| `memory.high`, no swap, nothing reclaimable | 130 MiB and 105 MiB under a 100 MiB limit both unfinished after 60 s | 130 MiB unfinished after 60 s, but 105 MiB finished in 9 s | Tested |
+| Multi-gen LRU (page aging by generations) | Not in 5.15 (merged in Linux 6.1) | On: `/sys/kernel/mm/lru_gen/enabled` is `0x0007`. `Active(...)`/`Inactive(...)` still appear in `/proc/meminfo` | Tested. [Launchpad 2023629](https://bugs.launchpad.net/bugs/2023629): Ubuntu enabled it for 23.10 kernels |
+| `RLIMIT_MEMLOCK` default and `mlockall` for an ordinary user | 245 MiB on the test VM, so the call succeeded | 8 MiB (`ulimit -l` is `8192`), and the call failed with `ENOMEM` | Tested |
+| cgroup v1 | Supported | **Gone**: no cgroup v1 mounts in the VM. systemd 258 removed the legacy and hybrid hierarchies | Tested. [systemd NEWS, v258](https://github.com/systemd/systemd/blob/main/NEWS) |
+| `systemd-oomd` | Basic | v257 adds `ManagedOOMMemoryPressureDurationSec=` per service; v259 adds `OOMKills` and `ManagedOOMKills` properties on service units; v260 (not in 26.04) adds rulesets | Docs: [systemd NEWS](https://github.com/systemd/systemd/blob/main/NEWS) |
+| `oom_score_adj` lowering rule, `WatchdogSec=` with implicit `NotifyAccess=main`, a user's throwaway scope | Works as the pages say | Same | Tested |
 
 Not reviewed: the systemd NEWS for v250 to v256, and the kernel release notes for 5.16 to 6.0 and 6.2 to 6.17. Gaps there could hide other changes.
 

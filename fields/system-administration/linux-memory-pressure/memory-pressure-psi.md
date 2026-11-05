@@ -139,11 +139,11 @@ while True:
 
 The string means: *stall time (150000 µs) within a window (1000000 µs)*. If tasks lose 150 ms or more out of any second, the program is woken. Windows run from 500 ms to 10 s.
 
-Two notes, both tested on Ubuntu 22.04 (Linux 5.15).
+Two notes, both tested in clean VMs on Ubuntu 22.04 (Linux 5.15) and Ubuntu 26.04 (Linux 7.0).
 
-**A trigger keeps firing while the stall lasts.** The kernel docs say notifications are rate-limited to one per tracking window. In a test, a 150 ms-in-1 s trigger on a cgroup under sustained pressure woke the program 14 times in 15 seconds, about once per window. Don't assume a single wake-up, and re-read the file after you act to decide from the numbers.
+**A trigger keeps firing while the stall lasts.** The kernel docs say notifications are rate-limited to one per tracking window. In a test, a 150 ms-in-1 s trigger on a cgroup under sustained pressure woke the program 14 times in 15 seconds on 5.15 and 15 times on 7.0, about once per window. Don't assume a single wake-up, and re-read the file after you act to decide from the numbers.
 
-**Registering a trigger needs privilege.** The kernel docs say unprivileged users can create triggers if the window is a multiple of 2 seconds. On 5.15 that did not work for me: an ordinary user got `EPERM` writing to `/proc/pressure/memory` with both a 1 s and a 2 s window, and `EACCES` on their own `user@1000.service` cgroup's `memory.pressure`, which is owned by root. Treat unprivileged triggers as something to test on your kernel, and run the rescuer as root. (Not tested on Linux 7.0.)
+**Who may register a trigger depends on the kernel.** The kernel docs say unprivileged users can create triggers if the window is a multiple of 2 seconds. On 7.0 that is what happened: an ordinary user registered a 2 s window on `/proc/pressure/memory`, and the 1 s window above was refused with `EINVAL`. On 5.15 the same user got `EPERM` for both. On both kernels a user's own `user@1000.service` cgroup file was owned by root and refused the write (`EACCES`), so a rescuer that watches a group needs a file it can write. If you must support older kernels, run the rescuer as root.
 
 This is how a lightweight rescuer can sleep at zero cost until it is needed. And because it sleeps in the kernel until it is woken, it fits the memory-locking idea: the program is **idle until the worst moment**, the exact profile that [part 5](/fields/system-administration/linux-memory-pressure/memory-locking-mlockall.md) protects.
 
