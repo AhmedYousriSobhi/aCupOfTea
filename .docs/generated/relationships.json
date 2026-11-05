@@ -1,0 +1,1011 @@
+{
+  "accuracy-paradox": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [],
+    "related_by": [
+      "bias-variance-trade-off"
+    ]
+  },
+  "ai-infrastructure-core-concepts": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "ai-storage-and-fabric-overview": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "ai-storage-parallel-filesystems": {
+    "prerequisite_of": [
+      "ai-storage-rdma-gpudirect"
+    ],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "ai-storage-rdma-gpudirect": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "ai-storage-parallel-filesystems"
+    ],
+    "related": [],
+    "related_by": [
+      "job-execution-journey"
+    ]
+  },
+  "bias-variance-trade-off": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "accuracy-paradox"
+    ],
+    "related_by": []
+  },
+  "broken-pods-rogues-gallery": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "kubernetes-in-five-nouns"
+    ],
+    "related": [
+      "containers-101"
+    ],
+    "related_by": []
+  },
+  "build-a-two-node-k3s-lab": {
+    "prerequisite_of": [
+      "fake-gpus-in-kubernetes",
+      "gpu-allocation-vs-utilization"
+    ],
+    "prerequisites": [
+      "kubernetes-in-five-nouns"
+    ],
+    "related": [
+      "containers-101"
+    ],
+    "related_by": []
+  },
+  "containers-101": {
+    "prerequisite_of": [
+      "kubernetes-in-five-nouns",
+      "singularity-containers"
+    ],
+    "prerequisites": [],
+    "related": [],
+    "related_by": [
+      "broken-pods-rogues-gallery",
+      "build-a-two-node-k3s-lab",
+      "fake-gpus-in-kubernetes",
+      "gpu-allocation-vs-utilization",
+      "nvidia-cluster-readiness-engine"
+    ]
+  },
+  "cpu-affinity": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [],
+    "related_by": [
+      "parallel-execution-and-affinity"
+    ]
+  },
+  "cuda-101": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "customer-segmentation-problem": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "unsupervised-learning"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "deep-learning-basics": {
+    "prerequisite_of": [
+      "sequence-models"
+    ],
+    "prerequisites": [],
+    "related": [
+      "sequence-models"
+    ],
+    "related_by": []
+  },
+  "encoder-decoder-machine-translation": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "sequence-models"
+    ],
+    "related": [],
+    "related_by": [
+      "sequence-models"
+    ]
+  },
+  "fake-gpus-in-kubernetes": {
+    "prerequisite_of": [
+      "isolating-gpu-workloads"
+    ],
+    "prerequisites": [
+      "build-a-two-node-k3s-lab",
+      "kubernetes-in-five-nouns"
+    ],
+    "related": [
+      "containers-101"
+    ],
+    "related_by": []
+  },
+  "gpu-allocation-vs-utilization": {
+    "prerequisite_of": [
+      "isolating-gpu-workloads"
+    ],
+    "prerequisites": [
+      "build-a-two-node-k3s-lab",
+      "kubernetes-in-five-nouns"
+    ],
+    "related": [
+      "containers-101"
+    ],
+    "related_by": []
+  },
+  "gpu-failure-prediction-overview": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "nhc-auto-remediation"
+    ],
+    "related_by": []
+  },
+  "gpu-pred-alert-to-drain": {
+    "prerequisite_of": [
+      "gpu-pred-backtesting"
+    ],
+    "prerequisites": [
+      "gpu-pred-rules"
+    ],
+    "related": [
+      "nhc-auto-remediation"
+    ],
+    "related_by": [
+      "gpu-pred-runbook"
+    ]
+  },
+  "gpu-pred-backtesting": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "gpu-pred-alert-to-drain"
+    ],
+    "related": [],
+    "related_by": [
+      "gpu-pred-runbook"
+    ]
+  },
+  "gpu-pred-collecting-signals": {
+    "prerequisite_of": [
+      "gpu-pred-rules"
+    ],
+    "prerequisites": [
+      "gpu-pred-what-fails"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "gpu-pred-rules": {
+    "prerequisite_of": [
+      "gpu-pred-alert-to-drain"
+    ],
+    "prerequisites": [
+      "gpu-pred-collecting-signals"
+    ],
+    "related": [],
+    "related_by": [
+      "gpu-pred-runbook"
+    ]
+  },
+  "gpu-pred-runbook": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "gpu-pred-what-fails"
+    ],
+    "related": [
+      "gpu-pred-alert-to-drain",
+      "gpu-pred-backtesting",
+      "gpu-pred-rules",
+      "nhc-auto-remediation"
+    ],
+    "related_by": []
+  },
+  "gpu-pred-what-fails": {
+    "prerequisite_of": [
+      "gpu-pred-collecting-signals",
+      "gpu-pred-runbook"
+    ],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "hpc-systems-overview": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "hpc-workloads"
+    ],
+    "related_by": []
+  },
+  "hpc-workloads": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [],
+    "related_by": [
+      "hpc-systems-overview"
+    ]
+  },
+  "isolating-gpu-workloads": {
+    "prerequisite_of": [
+      "job-execution-journey"
+    ],
+    "prerequisites": [
+      "fake-gpus-in-kubernetes",
+      "gpu-allocation-vs-utilization"
+    ],
+    "related": [
+      "slurm-accounting-multi-tenancy"
+    ],
+    "related_by": []
+  },
+  "job-execution-journey": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "isolating-gpu-workloads"
+    ],
+    "related": [
+      "ai-storage-rdma-gpudirect"
+    ],
+    "related_by": [
+      "openmp-mpi-on-kubernetes"
+    ]
+  },
+  "kubernetes-in-five-nouns": {
+    "prerequisite_of": [
+      "broken-pods-rogues-gallery",
+      "build-a-two-node-k3s-lab",
+      "fake-gpus-in-kubernetes",
+      "gpu-allocation-vs-utilization",
+      "nvidia-cluster-readiness-engine"
+    ],
+    "prerequisites": [
+      "containers-101"
+    ],
+    "related": [],
+    "related_by": [
+      "openmp-mpi-on-kubernetes"
+    ]
+  },
+  "linux-mem-cgroup-v2": {
+    "prerequisite_of": [
+      "linux-mem-rescuer-checklist"
+    ],
+    "prerequisites": [
+      "linux-mem-reclaim"
+    ],
+    "related": [
+      "linux-mem-oom-killer",
+      "linux-mem-psi"
+    ],
+    "related_by": [
+      "linux-mem-mlockall",
+      "linux-mem-oom-killer"
+    ]
+  },
+  "linux-mem-mlockall": {
+    "prerequisite_of": [
+      "linux-mem-rescuer-checklist"
+    ],
+    "prerequisites": [
+      "linux-mem-reclaim"
+    ],
+    "related": [
+      "linux-mem-cgroup-v2",
+      "linux-mem-rescuer-checklist",
+      "slurm-slurmstepd"
+    ],
+    "related_by": []
+  },
+  "linux-mem-oom-killer": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "linux-mem-reclaim"
+    ],
+    "related": [
+      "linux-mem-cgroup-v2",
+      "linux-mem-psi"
+    ],
+    "related_by": [
+      "linux-mem-cgroup-v2",
+      "linux-mem-psi",
+      "linux-mem-rescuer-checklist"
+    ]
+  },
+  "linux-mem-psi": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "linux-mem-reclaim"
+    ],
+    "related": [
+      "linux-mem-oom-killer"
+    ],
+    "related_by": [
+      "linux-mem-cgroup-v2",
+      "linux-mem-oom-killer",
+      "linux-mem-reclaim",
+      "linux-mem-rescuer-checklist",
+      "linux-memory-free-vs-available"
+    ]
+  },
+  "linux-mem-reclaim": {
+    "prerequisite_of": [
+      "linux-mem-cgroup-v2",
+      "linux-mem-mlockall",
+      "linux-mem-oom-killer",
+      "linux-mem-psi"
+    ],
+    "prerequisites": [],
+    "related": [
+      "linux-mem-psi"
+    ],
+    "related_by": [
+      "linux-memory-free-vs-available"
+    ]
+  },
+  "linux-mem-rescuer-checklist": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "linux-mem-cgroup-v2",
+      "linux-mem-mlockall"
+    ],
+    "related": [
+      "linux-mem-oom-killer",
+      "linux-mem-psi"
+    ],
+    "related_by": [
+      "linux-mem-mlockall"
+    ]
+  },
+  "linux-memory-free-vs-available": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "linux-mem-psi",
+      "linux-mem-reclaim",
+      "slurm-cgroups-in-practice"
+    ],
+    "related_by": []
+  },
+  "linux-memory-pressure-overview": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "llm-inference-performance-overview": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "llm-perf-compute-vs-memory-bound": {
+    "prerequisite_of": [
+      "llm-perf-inference-roofline"
+    ],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "llm-perf-inference-roofline": {
+    "prerequisite_of": [
+      "llm-perf-sizing-70b"
+    ],
+    "prerequisites": [
+      "llm-perf-compute-vs-memory-bound"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "llm-perf-optimizations": {
+    "prerequisite_of": [
+      "llm-perf-structured-sparsity"
+    ],
+    "prerequisites": [
+      "llm-perf-sizing-70b"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "llm-perf-sizing-70b": {
+    "prerequisite_of": [
+      "llm-perf-optimizations"
+    ],
+    "prerequisites": [
+      "llm-perf-inference-roofline"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "llm-perf-sparsity-vs-quantization": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "llm-perf-structured-sparsity"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "llm-perf-structured-sparsity": {
+    "prerequisite_of": [
+      "llm-perf-sparsity-vs-quantization"
+    ],
+    "prerequisites": [
+      "llm-perf-optimizations"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "nccl-collective-communication": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "pytorch-ddp"
+    ],
+    "related_by": []
+  },
+  "nhc-architecture-driven": {
+    "prerequisite_of": [
+      "nhc-case-study"
+    ],
+    "prerequisites": [
+      "nhc-custom-checks",
+      "nhc-rollout-at-scale",
+      "nhc-writing-nhc-conf"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "nhc-auto-remediation": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "nhc-rollout-at-scale",
+      "nhc-slurm-integration"
+    ],
+    "related": [],
+    "related_by": [
+      "gpu-failure-prediction-overview",
+      "gpu-pred-alert-to-drain",
+      "gpu-pred-runbook"
+    ]
+  },
+  "nhc-build-and-install": {
+    "prerequisite_of": [
+      "nhc-writing-nhc-conf"
+    ],
+    "prerequisites": [
+      "nhc-why-node-health-check"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "nhc-case-study": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "nhc-architecture-driven"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "nhc-cheat-sheet": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "nhc-troubleshooting",
+      "nhc-writing-nhc-conf"
+    ],
+    "related_by": []
+  },
+  "nhc-custom-checks": {
+    "prerequisite_of": [
+      "nhc-architecture-driven"
+    ],
+    "prerequisites": [
+      "nhc-writing-nhc-conf"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "nhc-rollout-at-scale": {
+    "prerequisite_of": [
+      "nhc-architecture-driven",
+      "nhc-auto-remediation"
+    ],
+    "prerequisites": [
+      "nhc-slurm-integration"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "nhc-slurm-integration": {
+    "prerequisite_of": [
+      "nhc-auto-remediation",
+      "nhc-rollout-at-scale",
+      "nhc-troubleshooting"
+    ],
+    "prerequisites": [
+      "nhc-writing-nhc-conf"
+    ],
+    "related": [],
+    "related_by": [
+      "nhc-why-node-health-check"
+    ]
+  },
+  "nhc-troubleshooting": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "nhc-slurm-integration"
+    ],
+    "related": [],
+    "related_by": [
+      "nhc-cheat-sheet"
+    ]
+  },
+  "nhc-why-node-health-check": {
+    "prerequisite_of": [
+      "nhc-build-and-install"
+    ],
+    "prerequisites": [],
+    "related": [
+      "nhc-slurm-integration"
+    ],
+    "related_by": []
+  },
+  "nhc-writing-nhc-conf": {
+    "prerequisite_of": [
+      "nhc-architecture-driven",
+      "nhc-custom-checks",
+      "nhc-slurm-integration"
+    ],
+    "prerequisites": [
+      "nhc-build-and-install"
+    ],
+    "related": [],
+    "related_by": [
+      "nhc-cheat-sheet"
+    ]
+  },
+  "nvidia-cluster-readiness-engine": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "kubernetes-in-five-nouns"
+    ],
+    "related": [
+      "containers-101"
+    ],
+    "related_by": []
+  },
+  "old-data-and-background-work": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "openmp-and-open-mpi-overview": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "openmp-mpi-hybrid-binding-trap": {
+    "prerequisite_of": [
+      "openmp-mpi-under-slurm"
+    ],
+    "prerequisites": [
+      "openmp-mpi-threads-and-ranks"
+    ],
+    "related": [
+      "parallel-execution-and-affinity"
+    ],
+    "related_by": []
+  },
+  "openmp-mpi-on-kubernetes": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "openmp-mpi-under-slurm"
+    ],
+    "related": [
+      "job-execution-journey",
+      "kubernetes-in-five-nouns"
+    ],
+    "related_by": []
+  },
+  "openmp-mpi-spotting-the-code": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "openmp-mpi-threads-and-ranks"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "openmp-mpi-threads-and-ranks": {
+    "prerequisite_of": [
+      "openmp-mpi-hybrid-binding-trap",
+      "openmp-mpi-spotting-the-code"
+    ],
+    "prerequisites": [
+      "openmp-open-mpi-name-mixup"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "openmp-mpi-under-slurm": {
+    "prerequisite_of": [
+      "openmp-mpi-on-kubernetes"
+    ],
+    "prerequisites": [
+      "openmp-mpi-hybrid-binding-trap"
+    ],
+    "related": [
+      "slurm-pam-adopt-ssh-access",
+      "slurm-slurmstepd"
+    ],
+    "related_by": []
+  },
+  "openmp-mpi-where-they-are-going": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "openmp-mpi-where-they-came-from"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "openmp-mpi-where-they-came-from": {
+    "prerequisite_of": [
+      "openmp-mpi-where-they-are-going"
+    ],
+    "prerequisites": [
+      "openmp-open-mpi-name-mixup"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "openmp-open-mpi-name-mixup": {
+    "prerequisite_of": [
+      "openmp-mpi-threads-and-ranks",
+      "openmp-mpi-where-they-came-from"
+    ],
+    "prerequisites": [],
+    "related": [
+      "parallel-execution-and-affinity"
+    ],
+    "related_by": []
+  },
+  "parallel-execution-and-affinity": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "cpu-affinity"
+    ],
+    "related_by": [
+      "openmp-mpi-hybrid-binding-trap",
+      "openmp-open-mpi-name-mixup"
+    ]
+  },
+  "principal-component-analysis": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "pytorch-101": {
+    "prerequisite_of": [
+      "pytorch-ddp"
+    ],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "pytorch-ddp": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "pytorch-101"
+    ],
+    "related": [],
+    "related_by": [
+      "nccl-collective-communication"
+    ]
+  },
+  "regression-imputing": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "reinforcement-learning-basics": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "reviewing-the-design": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "sequence-models": {
+    "prerequisite_of": [
+      "encoder-decoder-machine-translation"
+    ],
+    "prerequisites": [
+      "deep-learning-basics"
+    ],
+    "related": [
+      "encoder-decoder-machine-translation"
+    ],
+    "related_by": [
+      "deep-learning-basics"
+    ]
+  },
+  "sessions-and-two-walls": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "sign-in-hygiene"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "sign-in-hygiene": {
+    "prerequisite_of": [
+      "sessions-and-two-walls"
+    ],
+    "prerequisites": [
+      "threat-model-and-first-launch"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "singularity-containers": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "containers-101"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "slurm-accounting-multi-tenancy": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "slurm-mixed-gpus-overview"
+    ],
+    "related_by": [
+      "isolating-gpu-workloads",
+      "slurm-backfill-tuning",
+      "slurm-cgroups-in-practice",
+      "slurm-kill-task-failed",
+      "slurm-upgrade-order"
+    ]
+  },
+  "slurm-backfill-tuning": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "slurm-accounting-multi-tenancy",
+      "slurm-preemption-requeue-signals"
+    ],
+    "related_by": [
+      "slurm-job-script-tale"
+    ]
+  },
+  "slurm-cgroups-in-practice": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "slurm-accounting-multi-tenancy",
+      "slurm-pam-adopt-ssh-access"
+    ],
+    "related_by": [
+      "linux-memory-free-vs-available",
+      "slurm-gpu-affinity-socket-lie",
+      "slurm-kill-task-failed",
+      "slurm-pam-adopt-ssh-access",
+      "slurm-slurmstepd"
+    ]
+  },
+  "slurm-gpu-affinity-socket-lie": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "slurm-cgroups-in-practice",
+      "slurm-kill-task-failed"
+    ],
+    "related_by": []
+  },
+  "slurm-intro": {
+    "prerequisite_of": [
+      "slurm-job-script-tale"
+    ],
+    "prerequisites": [],
+    "related": [
+      "slurm-job-script-tale",
+      "slurm-slurmstepd"
+    ],
+    "related_by": []
+  },
+  "slurm-job-script-tale": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "slurm-intro"
+    ],
+    "related": [
+      "slurm-backfill-tuning",
+      "slurm-slurmstepd",
+      "slurm-spool-dir-full"
+    ],
+    "related_by": [
+      "slurm-intro"
+    ]
+  },
+  "slurm-kill-task-failed": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "slurm-accounting-multi-tenancy",
+      "slurm-cgroups-in-practice"
+    ],
+    "related_by": [
+      "slurm-gpu-affinity-socket-lie",
+      "slurm-preemption-requeue-signals",
+      "slurm-slurmstepd",
+      "slurm-spool-dir-full"
+    ]
+  },
+  "slurm-mixed-gpus-four-ways": {
+    "prerequisite_of": [
+      "slurm-mixed-gpus-why-disappoints"
+    ],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "slurm-mixed-gpus-overview": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [],
+    "related_by": [
+      "slurm-accounting-multi-tenancy"
+    ]
+  },
+  "slurm-mixed-gpus-where-shine": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "slurm-mixed-gpus-why-disappoints"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "slurm-mixed-gpus-why-disappoints": {
+    "prerequisite_of": [
+      "slurm-mixed-gpus-where-shine"
+    ],
+    "prerequisites": [
+      "slurm-mixed-gpus-four-ways"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "slurm-pam-adopt-ssh-access": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "slurm-cgroups-in-practice",
+      "slurm-reboot-order"
+    ],
+    "related_by": [
+      "openmp-mpi-under-slurm",
+      "slurm-cgroups-in-practice",
+      "slurm-upgrade-order"
+    ]
+  },
+  "slurm-preemption-requeue-signals": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "slurm-kill-task-failed",
+      "slurm-upgrade-order"
+    ],
+    "related_by": [
+      "slurm-backfill-tuning"
+    ]
+  },
+  "slurm-reboot-order": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "slurm-spool-dir-full",
+      "slurm-upgrade-order"
+    ],
+    "related_by": [
+      "slurm-pam-adopt-ssh-access",
+      "slurm-spool-dir-full"
+    ]
+  },
+  "slurm-slurmstepd": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "slurm-cgroups-in-practice",
+      "slurm-kill-task-failed",
+      "slurm-spool-dir-full"
+    ],
+    "related_by": [
+      "linux-mem-mlockall",
+      "openmp-mpi-under-slurm",
+      "slurm-intro",
+      "slurm-job-script-tale",
+      "slurm-spool-dir-full"
+    ]
+  },
+  "slurm-spool-dir-full": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "slurm-kill-task-failed",
+      "slurm-reboot-order",
+      "slurm-slurmstepd"
+    ],
+    "related_by": [
+      "slurm-job-script-tale",
+      "slurm-reboot-order",
+      "slurm-slurmstepd"
+    ]
+  },
+  "slurm-upgrade-order": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "slurm-accounting-multi-tenancy",
+      "slurm-pam-adopt-ssh-access"
+    ],
+    "related_by": [
+      "slurm-preemption-requeue-signals",
+      "slurm-reboot-order"
+    ]
+  },
+  "threat-model-and-first-launch": {
+    "prerequisite_of": [
+      "sign-in-hygiene"
+    ],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "time-series-analysis": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "unsupervised-learning": {
+    "prerequisite_of": [
+      "customer-segmentation-problem"
+    ],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "used-cars-retailer-kpis": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  }
+}
