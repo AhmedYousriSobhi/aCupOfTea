@@ -37,18 +37,15 @@ Everything else in both worlds is detail on top of that. Here are the two shapes
 
 ```mermaid
 flowchart LR
-    S["main thread<br/>(just one)"] -->|"fork"| T0["thread 0"]
-    S --> T1["thread 1"]
-    S --> T2["thread 2"]
-    S --> T3["thread 3"]
-    T0 --> J["join:<br/>one thread again"]
-    T1 --> J
-    T2 --> J
-    T3 --> J
-    M[("one shared memory")] -.- T0
-    M -.- T1
-    M -.- T2
-    M -.- T3
+    S["main thread<br/>(just one)"] -->|"fork"| T
+    subgraph T["the team: every thread sees the SAME memory"]
+        direction TB
+        T0["thread 0"]
+        T1["thread 1"]
+        T2["thread 2"]
+        T3["thread 3"]
+    end
+    T -->|"join"| J["main thread<br/>again"]
 ```
 
 *OpenMP: the process forks into a team, the team shares memory, the team joins.*
@@ -62,7 +59,7 @@ sequenceDiagram
     R1->>R0: my number: 1
     R2->>R0: my number: 2
     R3->>R0: my number: 3
-    Note over R0: MPI_Reduce adds 0 + 1 + 2 + 3 = 6
+    Note over R3,R0: MPI_Reduce adds 0 + 1 + 2 + 3 = 6
 ```
 
 *MPI: separate processes, each with its own number, combined only because they sent it.*
