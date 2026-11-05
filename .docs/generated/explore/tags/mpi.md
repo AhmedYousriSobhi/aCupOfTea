@@ -8,6 +8,8 @@
   [`affinity`](/.docs/generated/explore/tags/affinity.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`mpi`](/.docs/generated/explore/tags/mpi.md) [`openmp`](/.docs/generated/explore/tags/openmp.md)
 - [Know It on Sight: Reading OpenMP and MPI Code, Builds and Job Scripts](/fields/system-administration/openmp-and-open-mpi/spotting-openmp-and-mpi-code.md) — A field guide to recognizing OpenMP, MPI or both in 30 seconds - the include lines, the pragmas, the function prefixes, the compile commands, the launch lines and the environment variables. *(beginner · 7 min)*  
   [`hpc`](/.docs/generated/explore/tags/hpc.md) [`mpi`](/.docs/generated/explore/tags/mpi.md) [`openmp`](/.docs/generated/explore/tags/openmp.md)
+- [No Login Node, No Hostfile: OpenMP and MPI on Kubernetes](/fields/system-administration/openmp-and-open-mpi/mpi-and-openmp-on-kubernetes.md) — How an MPIJob turns pods into an MPI cluster - launcher, workers, headless Service, SSH keys, hostfile - and which three numbers keep the binding trap away. *(intermediate · 9 min)*  
+  [`hpc`](/.docs/generated/explore/tags/hpc.md) [`kubernetes`](/.docs/generated/explore/tags/kubernetes.md) [`mpi`](/.docs/generated/explore/tags/mpi.md) [`openmp`](/.docs/generated/explore/tags/openmp.md)
 - [Not Twins, Not Even Cousins: OpenMP, MPI and Open MPI](/fields/system-administration/openmp-and-open-mpi/the-name-mixup.md) — OpenMP and Open MPI differ by one space and share almost nothing. Three names, three jobs - an API for threads, a standard for messages, and one program that implements the second. *(beginner · 6 min)*  
   [`hpc`](/.docs/generated/explore/tags/hpc.md) [`mpi`](/.docs/generated/explore/tags/mpi.md) [`openmp`](/.docs/generated/explore/tags/openmp.md)
 - [Parallel Execution and Affinity](/fields/benchmarks/parallel-execution-affinity-master-guide.md) — How to place processes, threads and GPUs on a node: srun vs mpirun, NUMA, CPU binding syntax and GPU mapping, with tuning advice for HPL and NCCL. *(5 min)*  
@@ -16,5 +18,7 @@
   [`hpc`](/.docs/generated/explore/tags/hpc.md) [`mpi`](/.docs/generated/explore/tags/mpi.md) [`openmp`](/.docs/generated/explore/tags/openmp.md)
 - [Two Tribes, One Problem: Where OpenMP and MPI Came From](/fields/system-administration/openmp-and-open-mpi/where-they-came-from.md) — The 1990s story - shared-memory vendors each had their own directives, distributed-memory users each had their own message libraries, and two committees fixed it from opposite sides. *(beginner · 6 min)*  
   [`hpc`](/.docs/generated/explore/tags/hpc.md) [`mpi`](/.docs/generated/explore/tags/mpi.md) [`openmp`](/.docs/generated/explore/tags/openmp.md)
+- [Who Starts the Ranks? OpenMP and MPI Under Slurm](/fields/system-administration/openmp-and-open-mpi/mpi-and-openmp-under-slurm.md) — How Slurm launches MPI ranks and OpenMP threads - srun direct launch, mpirun inside an allocation, PMIx as the address book, and how ntasks and cpus-per-task decide the binding trap from part 5. *(intermediate · 9 min)*  
+  [`hpc`](/.docs/generated/explore/tags/hpc.md) [`mpi`](/.docs/generated/explore/tags/mpi.md) [`openmp`](/.docs/generated/explore/tags/openmp.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 
 [All tags](/.docs/generated/explore/tags.md)

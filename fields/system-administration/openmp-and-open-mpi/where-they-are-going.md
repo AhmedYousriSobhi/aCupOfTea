@@ -14,7 +14,7 @@ relations:
 
 # Two Tickets About the Future: OpenMP 6, MPI 5 and What Never Expires
 
-> **Part 6 of 6, the last one.** Both standards shipped a big new version. By the end of this page you'll know what each one added, why the answer to "do we have to rewrite everything?" is mostly no, and the one caveat hiding in it.
+> **Part 6 of 8.** Both standards shipped a big new version. By the end of this page you'll know what each one added, why the answer to "do we have to rewrite everything?" is mostly no, and the one caveat hiding in it.
 
 ## Contents
 
@@ -164,7 +164,7 @@ Notice what neither verdict needed: knowing the new features. It needed the **mo
 
 **Takeaway:** a new version number adds vocabulary, but the two ideas underneath, share memory between threads or send messages between processes, are the part that doesn't expire.
 
-Here is your closing challenge: next time someone writes "OpenMP" and "Open MPI" in the same ticket, can you answer in thirty seconds which one needs `-fopenmp`, which one needs `mpirun`, and which one is not even a program? If yes, go deeper into the placement side with [Parallel Execution and Affinity](/fields/benchmarks/parallel-execution-affinity-master-guide.md), or start the series again from [the overview](/fields/system-administration/openmp-and-open-mpi/README.md) with a friend who is still lost.
+The standards are the stable part. The next question is about where your job actually runs: on a cluster someone else manages. Next time a Slurm script says `--ntasks=4` and your program prints `rank 0 of 1` four times, can you say who forgot to introduce the ranks? That's [part 7: who starts the ranks under Slurm](/fields/system-administration/openmp-and-open-mpi/mpi-and-openmp-under-slurm.md), and Kubernetes follows in part 8.
 
 ---
 

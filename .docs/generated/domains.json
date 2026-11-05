@@ -32,7 +32,8 @@
       "gpu-allocation-vs-utilization",
       "isolating-gpu-workloads",
       "job-execution-journey",
-      "nvidia-cluster-readiness-engine"
+      "nvidia-cluster-readiness-engine",
+      "openmp-mpi-on-kubernetes"
     ]
   },
   "generative-ai": {
@@ -207,8 +208,10 @@
       "nvidia-cluster-readiness-engine",
       "openmp-and-open-mpi-overview",
       "openmp-mpi-hybrid-binding-trap",
+      "openmp-mpi-on-kubernetes",
       "openmp-mpi-spotting-the-code",
       "openmp-mpi-threads-and-ranks",
+      "openmp-mpi-under-slurm",
       "openmp-mpi-where-they-are-going",
       "openmp-mpi-where-they-came-from",
       "openmp-open-mpi-name-mixup",

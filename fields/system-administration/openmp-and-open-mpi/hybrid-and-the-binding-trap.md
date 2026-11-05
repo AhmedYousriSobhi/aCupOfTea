@@ -15,7 +15,7 @@ relations:
 
 # Kitchens With Cooks: Hybrid MPI+OpenMP and the Binding Trap
 
-> **Part 5 of 6.** By the end you'll know why the two models are combined, what "binding" means, how to see it, and the one-line fix for the most common hybrid mistake.
+> **Part 5 of 8.** By the end you'll know why the two models are combined, what "binding" means, how to see it, and the one-line fix for the most common hybrid mistake.
 
 The scene: you reserve a nice 4-core node, start 2 ranks with 4 threads each, and the job runs. No error. No warning. It is just a bit slow, and slow is the one thing a cluster never complains about. Meanwhile half your cores are doing a very good impression of a break room.
 

@@ -14,7 +14,7 @@ relations:
 
 # Not Twins, Not Even Cousins: OpenMP, MPI and Open MPI
 
-> **Part 1 of 6.** Two names that differ by one space, and one that is not even a program. By the end of this page you'll be able to say, without hesitation, what each of the three is, and you'll know which one to blame when the ticket comes back.
+> **Part 1 of 8.** Two names that differ by one space, and one that is not even a program. By the end of this page you'll be able to say, without hesitation, what each of the three is, and you'll know which one to blame when the ticket comes back.
 
 ## Contents
 

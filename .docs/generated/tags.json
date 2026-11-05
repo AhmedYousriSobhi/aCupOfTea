@@ -131,8 +131,10 @@
       "nhc-writing-nhc-conf",
       "nvidia-cluster-readiness-engine",
       "openmp-mpi-hybrid-binding-trap",
+      "openmp-mpi-on-kubernetes",
       "openmp-mpi-spotting-the-code",
       "openmp-mpi-threads-and-ranks",
+      "openmp-mpi-under-slurm",
       "openmp-mpi-where-they-are-going",
       "openmp-mpi-where-they-came-from",
       "openmp-open-mpi-name-mixup",
@@ -166,7 +168,8 @@
       "isolating-gpu-workloads",
       "job-execution-journey",
       "kubernetes-in-five-nouns",
-      "nvidia-cluster-readiness-engine"
+      "nvidia-cluster-readiness-engine",
+      "openmp-mpi-on-kubernetes"
     ]
   },
   "llm": {
@@ -192,8 +195,10 @@
     "label": "MPI",
     "objects": [
       "openmp-mpi-hybrid-binding-trap",
+      "openmp-mpi-on-kubernetes",
       "openmp-mpi-spotting-the-code",
       "openmp-mpi-threads-and-ranks",
+      "openmp-mpi-under-slurm",
       "openmp-mpi-where-they-are-going",
       "openmp-mpi-where-they-came-from",
       "openmp-open-mpi-name-mixup",
@@ -241,8 +246,10 @@
     "label": "OpenMP",
     "objects": [
       "openmp-mpi-hybrid-binding-trap",
+      "openmp-mpi-on-kubernetes",
       "openmp-mpi-spotting-the-code",
       "openmp-mpi-threads-and-ranks",
+      "openmp-mpi-under-slurm",
       "openmp-mpi-where-they-are-going",
       "openmp-mpi-where-they-came-from",
       "openmp-open-mpi-name-mixup"
@@ -287,6 +294,7 @@
       "nhc-slurm-integration",
       "nhc-troubleshooting",
       "nhc-why-node-health-check",
+      "openmp-mpi-under-slurm",
       "parallel-execution-and-affinity",
       "slurm-accounting-multi-tenancy",
       "slurm-backfill-tuning",
