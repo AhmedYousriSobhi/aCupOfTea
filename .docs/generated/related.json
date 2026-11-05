@@ -501,6 +501,11 @@
         "id": "slurm-accounting-multi-tenancy",
         "path": "fields/schedulers/slurm-accounting-multi-tenancy.md",
         "title": "Slurm Multi-Tenancy: Who Stores the Rules, Who Enforces Them"
+      },
+      {
+        "id": "slurm-job-script-tale",
+        "path": "fields/schedulers/slurm-job-script-tale.md",
+        "title": "The Tale of a Slurm Job Script: Submission Is a Commitment, Not a Promise"
       }
     ],
     "required_by": []
@@ -565,7 +570,7 @@
       {
         "id": "slurm-job-script-tale",
         "path": "fields/schedulers/slurm-job-script-tale.md",
-        "title": "The Tale of job.sh and the Snapshot"
+        "title": "The Tale of a Slurm Job Script: Submission Is a Commitment, Not a Promise"
       }
     ]
   },
@@ -579,9 +584,19 @@
     ],
     "related": [
       {
+        "id": "slurm-backfill-tuning",
+        "path": "fields/schedulers/slurm-backfill-tuning.md",
+        "title": "Backfill Tuning: The Planner That Can Only See One Day Ahead"
+      },
+      {
         "id": "slurm-spool-dir-full",
         "path": "fields/schedulers/slurm-spool-dir-full.md",
         "title": "SlurmdSpoolDir Is Full: The Drain That Is Not About the Spool Directory"
+      },
+      {
+        "id": "slurm-slurmstepd",
+        "path": "fields/schedulers/slurm-slurmstepd.md",
+        "title": "slurmstepd: The Small Daemon That Actually Runs Your Job"
       }
     ],
     "required_by": []
@@ -762,6 +777,11 @@
         "id": "slurm-spool-dir-full",
         "path": "fields/schedulers/slurm-spool-dir-full.md",
         "title": "SlurmdSpoolDir Is Full: The Drain That Is Not About the Spool Directory"
+      },
+      {
+        "id": "slurm-job-script-tale",
+        "path": "fields/schedulers/slurm-job-script-tale.md",
+        "title": "The Tale of a Slurm Job Script: Submission Is a Commitment, Not a Promise"
       }
     ],
     "required_by": []
@@ -787,7 +807,7 @@
       {
         "id": "slurm-job-script-tale",
         "path": "fields/schedulers/slurm-job-script-tale.md",
-        "title": "The Tale of job.sh and the Snapshot"
+        "title": "The Tale of a Slurm Job Script: Submission Is a Commitment, Not a Promise"
       }
     ],
     "required_by": []

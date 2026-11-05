@@ -50,7 +50,7 @@
   [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [slurmstepd: The Small Daemon That Actually Runs Your Job](/fields/schedulers/slurm-slurmstepd.md) — slurmstepd (1/step/node) bridges slurmd's fork and task start. Jobs survive slurmd restarts via SlurmdSpoolDir sockets. Covers how to find, count, and read stepds on busy nodes. *(intermediate · 11 min)*  
   [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
-- [The Tale of job.sh and the Snapshot](/fields/schedulers/slurm-job-script-tale.md) — Slurm copies your batch script at submission, so editing job.sh later changes neither running nor pending jobs; cancel and resubmit, or version your scripts. *(beginner · 2 min)*  
+- [The Tale of a Slurm Job Script: Submission Is a Commitment, Not a Promise](/fields/schedulers/slurm-job-script-tale.md) — Why editing a script after sbatch changes nothing, where Slurm keeps the frozen copy, what stays live, how to read the script back, and how to keep runs traceable. *(intermediate · 11 min)*  
   [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [Upgrading Slurm: The Order, the Window, and the Parts That Bite](/fields/schedulers/slurm-upgrade-order.md) — Order Slurm daemons must be upgraded in, how far apart two versions can be, what to back up, why slurmdbd needs a hand-started first run, and why a cluster is not upgraded until last old job finishes. *(intermediate · 12 min)*  
   [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
