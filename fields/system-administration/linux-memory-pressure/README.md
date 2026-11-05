@@ -25,6 +25,21 @@ domains: [systems-and-hpc]
 
 Each page ends with the question the next one answers. The series follows one story: **see the pressure (1, 2), know what happens if you're late (3), pull the levers (4), and stay alive while you do it (5, 6)**.
 
+## Versions
+
+Written against Ubuntu 26.04, Linux 7.0 and systemd as shipped there. The numbers shown "on my machine" were measured there. The PSI trigger, `memory.high` hang, `mlockall` limit, `oom_score_adj` and watchdog claims were also tested in a clean Ubuntu 22.04 VM (Linux 5.15, systemd 249) and the pages say where the two differ. Several levers are newer than the kernels many clusters run, and distributions backport features, so check your own kernel.
+
+| Feature | Added in Linux | Used on page |
+|---------|----------------|--------------|
+| PSI (`/proc/pressure/*`) | 4.20 (some distro kernels need `psi=1`) | 2 |
+| `vm.swappiness` up to 200 | 5.8 | 1 |
+| `cgroup.freeze` | 5.2 | 4 |
+| `cgroup.kill` | 5.14 | 4 |
+| `memory.reclaim` | 5.19 | 4 |
+| `RLIMIT_MEMLOCK` default 8 MiB (was 64 KiB) | 5.16 | 5 |
+
+Kernel versions here come from the kernel release history and man pages, except the memory-locking default, which is from getrlimit(2).
+
 ## Who this is for
 
 Anyone running Linux machines under load: sysadmins and HPC engineers who have been paged for "the node froze", and developers writing a watchdog, a job killer or an autoscaler. You need to be comfortable with a shell and know what a process is. Everything else is explained with a story first.

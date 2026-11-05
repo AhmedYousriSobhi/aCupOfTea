@@ -29,7 +29,7 @@ relations:
   - [Root versus ordinary user](#root-versus-ordinary-user)
   - [Check it on your own machine](#check-it-on-your-own-machine)
   - [What locking does not do](#what-locking-does-not-do)
-    - [References](#references)
+  - [References](#references)
 
 ---
 
@@ -163,7 +163,9 @@ When the crisis comes, the rescuer's work is a single `write` to a handle it alr
 | Allocates a buffer under pressure | Buffer was allocated and touched at startup |
 | May stall in reclaim | Nothing left to wait for |
 
-One honest limit: if the rescue involves **starting a new process** (for example running a `docker stop` command), the kernel has to allocate for that process, and no pre-allocation inside your program can prevent it. Only actions that are plain writes to already-open handles are fully allocation-free.
+Two honest limits. If the rescue involves **starting a new process** (for example running a `docker stop` command), the kernel has to allocate for that process, and no pre-allocation inside your program can prevent it. Only plain writes to already-open handles avoid new allocations in your own code.
+
+And the examples on this page are Python, which allocates small objects on almost every call, even `os.pwrite`. A Python rescuer can shrink that (build the bytes to write once at startup and reuse them) but can't get to zero. If the rescuer has to be strict about it, write it in C, Go or Rust, and treat the Python here as the readable version of the idea.
 
 ---
 
@@ -216,7 +218,7 @@ LimitMEMLOCK=infinity
 OOMScoreAdjust=-900
 ```
 
-To see the failure for yourself, run the Python snippet from Step 3 as a normal user on a default machine. Expect `OSError: [Errno 12] Cannot allocate memory`. Run it as root and it returns normally, and `VmLck` in `/proc/self/status` jumps from `0 kB` to the size of the process.
+To see the failure for yourself, run the Python snippet from Step 3 as a normal user with an 8 MiB limit (`ulimit -l 8192` first). Expect `OSError: [Errno 12] Cannot allocate memory`. I confirmed that on Ubuntu 22.04 (Linux 5.15). The limit varies by distribution and systemd version: on that same VM `ulimit -l` was 251360 KiB out of the box, and the call **succeeded** for an ordinary user (`VmLck: 17564 kB`). So check `ulimit -l` before you assume you're limited to 8 MiB. Run it as root and it returns normally, and `VmLck` in `/proc/self/status` jumps from `0 kB` to the size of the process.
 
 ---
 
@@ -238,7 +240,7 @@ The same call has a second, unrelated use: programs that hold secrets (keys, pas
 
 The lock is one piece of survival. CPU priority, the OOM shield and a watchdog complete it in [part 6](/fields/system-administration/linux-memory-pressure/rescuer-checklist.md).
 
-### References
+## References
 - [mlock(2), mlockall(2): Linux manual pages](https://man7.org/linux/man-pages/man2/mlock.2.html)
 - [getrlimit(2): RLIMIT_MEMLOCK](https://man7.org/linux/man-pages/man2/getrlimit.2.html)
 - [systemd.exec: LimitMEMLOCK, OOMScoreAdjust](https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html)
