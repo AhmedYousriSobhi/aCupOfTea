@@ -14,7 +14,7 @@
   [`gpu`](/.docs/generated/explore/tags/gpu.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md)
 - [Core AI Infrastructure Concepts: A Map](/business/hpc-industry/ai-infrastructure-core-concepts.md) — Six concepts every AI-infrastructure engineer gets asked about, each fact-checked with a 30-second answer and a pointer to where to go deeper. *(intermediate · 9 min)*  
   [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`kubernetes`](/.docs/generated/explore/tags/kubernetes.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
-- [CUDA 101](/fields/libraries-frameworks-containers/101-cuda.md) *(7 min)*  
+- [CUDA 101](/fields/libraries-frameworks-containers/101-cuda.md) — What CUDA is and why it is named that, what a thread really is, memory coalescing, and the path of code from CPU to GPU. *(7 min)*  
   [`gpu`](/.docs/generated/explore/tags/gpu.md)
 - [Dying Politely: Preemption, Requeue and the Signals Your Training Job Ignores](/fields/schedulers/slurm-preemption-requeue-signals.md) — How Slurm preemption modes differ, what GraceTime and --signal really send and when, why a bash trap never fires while  trainer runs, and a requeue-safe checkpoint wrapper that cannot loop forever. *(intermediate · 9 min)*  
   [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
@@ -34,7 +34,7 @@
   [`gpu`](/.docs/generated/explore/tags/gpu.md) [`llm`](/.docs/generated/explore/tags/llm.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md) [`transformers`](/.docs/generated/explore/tags/transformers.md)
 - [Mixing GPU Types in Slurm - Overview](/fields/schedulers/slurm-mixed-gpus/README.md) — Slurm can allocate H100s and A100s in one job - four different ways. A three-part series on what each actually gives you, why mixed training disappoints, and where it shines. *(intermediate · 3 min)*  
   [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
-- [NCCL](/fields/benchmarks/nccl.md) *(19 min)*  
+- [NCCL](/fields/benchmarks/nccl.md) — What NCCL is, its collectives, ring and tree topologies, key environment variables and common failures, and how an all-reduce benchmark runs and is read. *(19 min)*  
   [`distributed-training`](/.docs/generated/explore/tags/distributed-training.md) [`gpu`](/.docs/generated/explore/tags/gpu.md)
 - [Optimizations, Mapped to the Roofline](/fields/generative-ai/llm-inference-performance/optimizations-on-the-roofline.md) — Five proposals in one meeting, one roofline to judge them - batching, PagedAttention, quantization, tensor parallelism, FlashAttention, speculative decoding, disaggregation, and how to measure. *(intermediate · 12 min)*  
   [`gpu`](/.docs/generated/explore/tags/gpu.md) [`llm`](/.docs/generated/explore/tags/llm.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md) [`transformers`](/.docs/generated/explore/tags/transformers.md)

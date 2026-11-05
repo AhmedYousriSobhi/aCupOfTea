@@ -1,4 +1,5 @@
 ---
+summary: When to use PCA, how to choose the number of components, how to read explained variance, and how PCA compares with kernel PCA.
 id: principal-component-analysis
 title: Principal Component Analysis (PCA)
 type: concept

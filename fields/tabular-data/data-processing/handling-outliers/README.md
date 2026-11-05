@@ -1,7 +1,12 @@
 ---
+summary: A checklist of factors to weigh before deleting outliers in a customer segmentation task, since the answer depends on context.
 sidebar_group: Outliers
 ---
 # Tabular Data - Data Processing - Handling Outliers
+
+> A decision guide for one tricky question: should you delete the outliers? By the end you'll have a checklist of eight factors to weigh, and the short answer, "it depends".
+
+An outlier is a value far from the rest. Is it a typo, or your best customer? Delete the first and you fix your data. Delete the second and you erase the people you most wanted to find. The table below helps you tell them apart.
 
 ## Table of Content
 - [Tabular Data - Data Processing - Handling Outliers](#tabular-data---data-processing---handling-outliers)

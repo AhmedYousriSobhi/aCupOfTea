@@ -1,3 +1,6 @@
+---
+summary: Linux admin practice questions, each answered with an explanation, covering paths, permissions, IPv4, signals, logging, user accounts and rpm switches.
+---
 # System Administration - Questions & Answers
 
 In this blog, we will introduce more practice illustrated in question and answers approach, and will try to explain related aspects and points related to understand more.

@@ -1,5 +1,6 @@
 ---
 sidebar_label: Active Directory Reference
+summary: Why LDAP and Active Directory look the way they do, how AD works inside, a PAM and NSS primer, building a domain, and joining Linux or HPC nodes to it.
 ---
 # Active Directory — The Senior Engineer's Reference Card
 > Scope: history & motivation → internals → PAM/NSS primer → build → Linux/HPC integration → debugging

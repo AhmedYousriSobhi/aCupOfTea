@@ -1,3 +1,6 @@
+---
+summary: A table of everyday Linux tricks, such as clearing file content in vi, searching, checking OS and shell info, and using the mouse to scroll in tmux.
+---
 # Tips - Linux daily Tricks
 
 These are some tips and tricks I usually need in my daily work, so I tried to document them here.

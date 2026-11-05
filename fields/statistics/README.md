@@ -1,5 +1,12 @@
+---
+summary: Why statistics matters for machine learning, what it is, and a module-by-module curriculum from descriptive statistics to probability, distributions and sampling.
+---
 # Statistics
 ![Title card reading Statistics under the heading Mathematics](images/statistics-01.png)
+
+> The ground floor under machine learning: what statistics is, why it is worth learning, and a module-by-module curriculum from descriptive statistics to probability and distributions.
+
+You can call a model without knowing any statistics. You cannot tell whether to trust it. Read the intro below, then jump to the curriculum in the table of contents.
 
 Many enthusiastic people who love to have a great challenge, jump to the unbounded realm of AI, and get amazed by its titles like machine learning, deep learning, architecture, and other words related to this field. But what they don't know is that, the real challenge if where all of this came from?
 
@@ -14,9 +21,9 @@ Many enthusiastic people who love to have a great challenge, jump to the unbound
 - [How to get started?](#how-to-get-started)
 - [Curriculum](#curriculum)
 - [Introduction to Statistics](#introduction-to-statistics)
-  - [Module 1 - Introduction and Descriptive Statiscs for Exploring Data](#module-1---introduction-and-descriptive-statiscs-for-exploring-data)
+  - [Module 1 - Introduction and Descriptive Statistics for Exploring Data](#module-1---introduction-and-descriptive-statiscs-for-exploring-data)
     - [Descriptive Statistics](#descriptive-statistics)
-      - [Why are Descriptive Statiscs important?](#why-are-descriptive-statiscs-important)
+      - [Why are Descriptive Statistics important?](#why-are-descriptive-statiscs-important)
     - [Numerical Summary Measures](#numerical-summary-measures)
   - [Module 2 - Producing Data and Sampling](#module-2---producing-data-and-sampling)
     - [Simple Random Sampling and other Sampling Plans](#simple-random-sampling-and-other-sampling-plans)
@@ -27,7 +34,7 @@ Many enthusiastic people who love to have a great challenge, jump to the unbound
     - [Examples and Case Studies](#examples-and-case-studies)
   - [Module 4 - Normal Approximation and Binomial Distribution](#module-4---normal-approximation-and-binomial-distribution)
     - [The Normal Approximation](#the-normal-approximation)
-    - [Binormal Distributions](#binormal-distributions)
+    - [Binomial Distributions](#binomial-distributions)
   - [Module 5 - Sampling Distributions and Central Limit Theorem](#module-5---sampling-distributions-and-central-limit-theorem)
     - [The Expected Value, Standard Error, and Sampling Distribution of a Statistic](#the-expected-value-standard-error-and-sampling-distribution-of-a-statistic)
     - [The Law of Large Numbers and the Central Limit Theorem](#the-law-of-large-numbers-and-the-central-limit-theorem)
@@ -94,7 +101,7 @@ Here are the key aspects of statistics:
 |Ethics and Bias| Ethical considerations are essential in statistics, as data collection and analysis can impact individuals and society. Researchers must be aware of bias, privacy concerns, and potential ethical dilemmas.
 
 # Why to Learn it?
-In is the real challenge to face!!
+It is the real challenge to face!!
 
 There are many reasons why learning statistics is important, especially in today's data-driven world. Here are some key points highlighted in the provided context:
 
@@ -158,11 +165,11 @@ These courses provide a well-rounded education in statistics, preparing students
 
 ![Title card reading Introduction to Statistics, Stanford](images/statistics-03.png)
 
-The following illustration is taken from Stanford Statiscs Course (see Credit section below), with various illustrations from different sources to facilate and make the illustration simple to study.
+The following illustration is taken from Stanford Statistics Course (see Credit section below), with various illustrations from different sources to facilate and make the illustration simple to study.
 
 Stanford's "Introduction to Statistics" teaches you statistical thinking concepts that are essential for learning from data and communicating insights. By the end of the course, you will be able to perform exploratory data analysis, understand key principles of sampling, and select appropriate tests of significance for multiple contexts. You will gain the foundational skills that prepare you to pursue more advanced topics in statistical thinking and machine learning
 
-## Module 1 - Introduction and Descriptive Statiscs for Exploring Data
+## Module 1 - Introduction and Descriptive Statistics for Exploring Data
 ### Descriptive Statistics
 
 ![Title card reading Descriptive Statistics](images/statistics-04.png)
@@ -171,7 +178,7 @@ Stanford's "Introduction to Statistics" teaches you statistical thinking concept
 
 Descriptive statistics is a branch of statistics that focuses on the methods and techniques used to summarize and describe data. It involves organizing, presenting, and summarizing data in a meaningful and informative way. Descriptive statistics are used to provide a concise overview of data sets, making it easier to understand and interpret the underlying information
 
-#### Why are Descriptive Statiscs important?
+#### Why are Descriptive Statistics important?
 
 "In January 1986, the space shuttle Challenger broke apart shortly after liftoff. The
 accident was caused by a part that was not designed to fly at the unusually cold
@@ -212,7 +219,7 @@ When data of large size, the exploring of it become essential to use summaries, 
 
 ### The Normal Approximation
 
-### Binormal Distributions
+### Binomial Distributions
 
 ## Module 5 - Sampling Distributions and Central Limit Theorem
 

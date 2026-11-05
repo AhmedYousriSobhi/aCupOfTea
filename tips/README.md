@@ -1,6 +1,8 @@
 # Tips - Overview
 
-A curated collection of practical tips, tricks, and quick references for daily data science and AI work.
+> Quick references for daily data science and AI work: short, practical, and meant to be found in a hurry.
+
+Some knowledge doesn't need a long essay. It needs to be there at 6 PM when you forget the Git command, or the night before an interview. These pages are that shelf.
 
 ## Contents
 
@@ -17,4 +19,13 @@ A curated collection of practical tips, tricks, and quick references for daily d
 | [value-interview](/tips/value-interview.md) | Company values and culture fit interviews |
 | [version-control-git](/tips/version-control-git.md) | Git tips and workflows |
 
-These quick references help streamline workflows and boost productivity.
+## The shelf
+
+| Need | Page |
+|------|------|
+| Think through a problem analytically | [analytic-skill](/tips/analytic-skill.md) |
+| Prepare for interviews | [interview-technical-info](/tips/interview-technical-info.md), [value-interview](/tips/value-interview.md) |
+| Compete on Kaggle | [kaggle-tips](/tips/kaggle-tips.md) |
+| Get around Linux and Ubuntu | [linux-daily-tricks](/tips/linux-daily-tricks.md), [linux-create-app-launcher](/tips/linux-create-app-launcher.md), [ubuntu-deb-file-install](/tips/ubuntu-deb-file-install.md) |
+| Use Git and Markdown | [version-control-git](/tips/version-control-git.md), [markdown](/tips/markdown.md) |
+| Look up a core concept | [concepts](/tips/concepts.md) |

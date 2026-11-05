@@ -1,3 +1,6 @@
+---
+summary: What memory coalescing is in GPU computing, told as a story, and why threads fetch whole blocks of data instead of single values.
+---
 # Operating System - Memory Coalescing
 
 # Table of Content

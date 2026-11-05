@@ -1,14 +1,19 @@
 ---
+summary: A walk from ensembles, bagging and boosting through AdaBoost and gradient boosting to XGBoost, its architecture and its advantages.
 sidebar_group: XGBoost
 ---
 # Tabular Data - Data Modeling - XGBOOST
 
+> A walk from "what is an ensemble?" to XGBoost. By the end you'll know the difference between bagging and boosting, how gradient boosting learns from its own mistakes, and what XGBoost adds on top.
+
+The idea in one line: instead of one clever model, train many simple ones, each fixing the errors of the one before. The sections go in that order: ensembles, bagging, boosting, AdaBoost, gradient boosting, then XGBoost itself.
+
 ## Abstract
 XGBoost (eXtreme Gradient Boosting) is a popular machine learning algorithm that belongs to the gradient boosting framework. It is known for its efficiency, accuracy, and flexibility in handling a variety of data types and problem domains. XGBoost is widely used for both regression and classification tasks.
 
-## Historical Defenitions
+## Historical Definitions
 __Ensemble__: "Combining multiple models together"
-- Referes to the process of combining multiple individual models, called base learners, to form a stronger and more accurate model.
+- Refers to the process of combining multiple individual models, called base learners, to form a stronger and more accurate model.
 - The idea behind the ensemble learning is that the collective knowledge of multiple models can often outperform a single model.
 - Ensemble methods can be applied to various machine learning algorithms, such as decision trees, neural networks, or support vector machines.
 - The models that form the ensemble, also known as base learners, could be either from the same learning algorithm or different learning algorithms. 
@@ -21,7 +26,7 @@ __Bagging__: 'Ensemble but the models are in parallel'
 
 ![bagging image](https://lh3.googleusercontent.com/4svO7UdzXj-JxFwU-_SyrMWMqxp8Al3pVpQYr5A-nzCDXdEqVL_CHeqbeVVW8Kivsq76q5sozAKwGsQuy5qnk5wVYfqWb5LHxhknBm9DSLBjg0ViSRTVjZ3gFQPwiGxJ8wP2usOH)
 
-__Boosting__: 'Ensemble but the models are sequentials'
+__Boosting__: 'Ensemble but the models are sequential'
 - Boosting is a specific technique within ensemble learning that focuses on sequentially building an ensemble of models in an iterative manner. 
 - The key idea of boosting is to train each model in the ensemble to correct the mistakes or misclassifications made by the previous models. 
 - Boosting algorithms, such as AdaBoost and Gradient Boosting, iteratively build an ensemble of models, with each model giving more weight to the misclassified or difficult instances.
@@ -37,7 +42,7 @@ AdaBoost stands for Adaptive Boosting. The logic implemented in the algorithm is
 - In subsequent boosting rounds the adaptive process __increasingly weighs data points that were misclassified__ by the learners in previous rounds and decrease the weights for correctly classified ones. 
 
 ### 2- Gradient Boosting Framework
-It is a boosting algorithm, so the base learners are connected sequentially. The word 'gradient' is based on the principle of __gradient descent optimization__, which means the model is fitted to the resuduals or errors of the previous models.
+It is a boosting algorithm, so the base learners are connected sequentially. The word 'gradient' is based on the principle of __gradient descent optimization__, which means the model is fitted to the residuals or errors of the previous models.
 
 So: it is a special implementation of the boosting.
 
@@ -47,13 +52,13 @@ The key idea behind gradient boosting is to iteratively fit the models to the re
 
 Summary: Gradient Boosting uses differentiable function losses from the weak learners to generalize. At each boosting stage, the learners are used to minimize the loss function given the current model.
 
-## XGboost Methadology
+## XGboost Methodology
 The key idea behind XGBoost is to build an ensemble of weak predictive models, typically decision trees, and iteratively improve their performance. It trains these models in a sequential manner, where each new model is trained to correct the mistakes made by the previous models. This iterative process allows XGBoost to learn complex patterns and make accurate predictions.
 
 ## XGboost Architecture
 XGBoost stands for Extreme Gradient Boosting. It’s a parallelized and carefully optimized version of the gradient boosting algorithm. __Parallelizing the whole boosting process__ hugely improves the training time. 
 
-Instead of training the best possible model on the data (like in traditional methods), we train thousands of models on various subsets of the training dataset and then vote for the best-performing model.
+Instead of training one large model on the data (like in traditional methods), we train many small models one after another, each fitted to the errors of the models before it, and add their predictions together into the final prediction.
 
 For many cases, XGBoost is better than usual gradient boosting algorithms. The Python implementation gives access to a vast number of inner parameters to tweak for better precision and accuracy.
 

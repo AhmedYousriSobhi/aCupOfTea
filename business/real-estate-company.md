@@ -1,4 +1,5 @@
 ---
+summary: What a real estate company does, the KPIs it tracks and how they are calculated, and data science projects that could fit it.
 sidebar_label: Real Estate Company
 ---
 # Real-State Company

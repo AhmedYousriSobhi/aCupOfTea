@@ -1,3 +1,6 @@
+---
+summary: Whether to remove features that are highly or lowly correlated with each other, with the benefits, the cautions and the factors to weigh before dropping any.
+---
 # Tabular Data - Data EDA - Correlation - Extreme Correlation
 
 ## Table of Content

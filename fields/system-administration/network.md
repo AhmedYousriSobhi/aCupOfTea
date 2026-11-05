@@ -1,3 +1,6 @@
+---
+summary: Short notes on IP addresses and masks, how to work out an address range, and what a switch, a router and a VLAN do.
+---
 # System Administration - Network
 
 ## Table of Contents

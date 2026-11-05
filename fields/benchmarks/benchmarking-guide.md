@@ -1,3 +1,6 @@
+---
+summary: A map of the HPC benchmarks (OSU, STREAM, HPL, NCCL, affinity), the ones not yet covered, a node validation walkthrough and a diagnostic flowchart.
+---
 # The HPC Benchmarking Landscape: A Field Guide
 
 > One node. Five different questions. Five different tools. This is the map that ties `OSU`, `STREAM/BabelStream`, `HPL`, `NCCL`, and the execution/affinity layer together — plus the benchmarks that haven't come up yet but will, the moment you validate your next node.

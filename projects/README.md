@@ -1,6 +1,8 @@
 # Projects - Overview
 
-In this section, we will give some spot to the projects either we faced during interview process, self-implemented, or encounter during our journey.
+> End-to-end ML projects: ones faced during interviews, built on our own, or met along the way. Each is its own repository, so you can clone and run it.
+
+Reading about a technique is one thing. Seeing it carry a problem from raw data to a result is another. That is what this shelf is for, across several techniques and domains.
 
 ## Contents
 
@@ -11,5 +13,3 @@ In this section, we will give some spot to the projects either we faced during i
 | [face-off](/projects/face-off/) | Face recognition/detection project |
 | [market-campaign-impact](/projects/market-campaign-impact/) | Marketing campaign impact analysis |
 | [used-cars-price-estimation](/projects/used-cars-price-estimation/) | Used car price prediction |
-
-End-to-end ML projects showcasing various techniques and domains.

@@ -1,3 +1,6 @@
+---
+summary: "Convolution for computer vision, step by step: edge-detecting filters, padding, stride, multi-channel volumes, parameter counts and pooling layers."
+---
 # Deep Learning - Concepts - Convolution
 ![Title slide reading Convolution under the Deep Learning heading](images/convolution-01.png)
 

@@ -1,4 +1,5 @@
 ---
+summary: Why Intel's HPL binary beats the Netlib one by 60% at small problem sizes but barely matters at large ones, and what to do about it.
 sidebar_label: "HPL: Intel vs Netlib"
 ---
 # Why Does Intel's HPL Binary Beat Netlib by 60% — Then Suddenly Not?

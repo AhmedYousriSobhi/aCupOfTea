@@ -1,4 +1,5 @@
 ---
+summary: What CUDA is and why it is named that, what a thread really is, memory coalescing, and the path of code from CPU to GPU.
 id: cuda-101
 title: CUDA 101
 type: concept

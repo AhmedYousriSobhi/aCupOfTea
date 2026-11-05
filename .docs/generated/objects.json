@@ -13,7 +13,7 @@
       "related": []
     },
     "status": "stable",
-    "summary": "",
+    "summary": "Why accuracy can look high and still mislead on imbalanced classification, with the accuracy paradox explained.",
     "tags": [
       "model-evaluation"
     ],
@@ -147,7 +147,7 @@
       ]
     },
     "status": "stable",
-    "summary": "",
+    "summary": "What bias and variance are, how they trade off, and the difference between a model that is consistent but inaccurate and one that is inconsistent but accurate.",
     "tags": [
       "model-evaluation"
     ],
@@ -239,7 +239,7 @@
       "related": []
     },
     "status": "stable",
-    "summary": "",
+    "summary": "Containers from the ground up: what happens at boot, kernel and user space, virtual machines, then namespaces, cgroups and Linux containers.",
     "tags": [
       "containers"
     ],
@@ -263,7 +263,7 @@
       "related": []
     },
     "status": "stable",
-    "summary": "",
+    "summary": "What CPU affinity is, why pinning processes to cores helps and the challenges of multitasking, and how to set it.",
     "tags": [
       "affinity"
     ],
@@ -287,7 +287,7 @@
       "related": []
     },
     "status": "stable",
-    "summary": "",
+    "summary": "What CUDA is and why it is named that, what a thread really is, memory coalescing, and the path of code from CPU to GPU.",
     "tags": [
       "gpu"
     ],
@@ -313,7 +313,7 @@
       "related": []
     },
     "status": "stable",
-    "summary": "",
+    "summary": "What customer segmentation is, with the key points, aspects and concepts to consider when you split customers into groups.",
     "tags": [
       "clustering"
     ],
@@ -664,7 +664,7 @@
       ]
     },
     "status": "stable",
-    "summary": "",
+    "summary": "What HPC systems are, what an HPC systems team does, the skills the role needs, and how it compares with MLOps for someone coming from data science.",
     "tags": [],
     "title": "HPC Systems",
     "type": "concept",
@@ -686,7 +686,7 @@
       "related": []
     },
     "status": "stable",
-    "summary": "",
+    "summary": "What an HPC workload is, the common types, how Linux relates to them, and how RDMA and data science workloads fit in.",
     "tags": [],
     "title": "HPC Workloads",
     "type": "concept",
@@ -1185,7 +1185,7 @@
       ]
     },
     "status": "stable",
-    "summary": "",
+    "summary": "What NCCL is, its collectives, ring and tree topologies, key environment variables and common failures, and how an all-reduce benchmark runs and is read.",
     "tags": [
       "distributed-training",
       "gpu"
@@ -1578,7 +1578,7 @@
       ]
     },
     "status": "stable",
-    "summary": "",
+    "summary": "How to place processes, threads and GPUs on a node: srun vs mpirun, NUMA, CPU binding syntax and GPU mapping, with tuning advice for HPL and NCCL.",
     "tags": [
       "affinity",
       "mpi",
@@ -1604,7 +1604,7 @@
       "related": []
     },
     "status": "stable",
-    "summary": "",
+    "summary": "When to use PCA, how to choose the number of components, how to read explained variance, and how PCA compares with kernel PCA.",
     "tags": [],
     "title": "Principal Component Analysis (PCA)",
     "type": "concept",
@@ -1626,7 +1626,7 @@
       "related": []
     },
     "status": "stable",
-    "summary": "",
+    "summary": "Notes for starting with PyTorch: where to learn, data type precision, GPU properties, the training loop, making predictions, and saving and loading models.",
     "tags": [
       "pytorch"
     ],
@@ -1652,7 +1652,7 @@
       "related": []
     },
     "status": "draft",
-    "summary": "",
+    "summary": "A short pointer page on PyTorch Distributed Data Parallel: a recommended distributed training tutorial and a related read on the Python GIL.",
     "tags": [
       "distributed-training",
       "pytorch"
@@ -1677,7 +1677,7 @@
       "related": []
     },
     "status": "stable",
-    "summary": "",
+    "summary": "How to fill missing values by predicting them with a regression model built on the other features.",
     "tags": [],
     "title": "Regression Imputing",
     "type": "concept",
@@ -1699,7 +1699,7 @@
       "related": []
     },
     "status": "stable",
-    "summary": "",
+    "summary": "Reinforcement learning basics: how an agent learns by trial and error, its components, policies, exploration vs exploitation, Markov decision processes and early algorithms.",
     "tags": [],
     "title": "Reinforcement Learning Basics",
     "type": "concept",
@@ -1839,7 +1839,7 @@
       "related": []
     },
     "status": "stable",
-    "summary": "",
+    "summary": "Singularity (rootless containers for HPC): installing it, building SIF images, converting from Docker, bind mounts and definition-file variables.",
     "tags": [
       "containers"
     ],
@@ -2376,7 +2376,7 @@
       "related": []
     },
     "status": "stable",
-    "summary": "",
+    "summary": "A step-by-step learning path for time series analysis, from the basics through data preparation, analysis techniques and forecasting to advanced techniques and practical projects.",
     "tags": [],
     "title": "Time Series Analysis",
     "type": "concept",
@@ -2398,7 +2398,7 @@
       "related": []
     },
     "status": "stable",
-    "summary": "",
+    "summary": "Unsupervised learning notes on clustering (K-means, picking an algorithm and the number of clusters) and dimensionality reduction such as PCA, plus the curse of dimensionality.",
     "tags": [
       "clustering"
     ],
@@ -2422,7 +2422,7 @@
       "related": []
     },
     "status": "stable",
-    "summary": "",
+    "summary": "The KPIs a used-car buying and selling company should target, how to calculate each, and the projects that relate to them.",
     "tags": [],
     "title": "Used Cars Retailer Company",
     "type": "note",

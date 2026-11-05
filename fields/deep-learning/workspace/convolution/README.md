@@ -3,7 +3,7 @@ sidebar_label: Convolution Workspace
 ---
 # Convolution
 
-Convolutional Neural Network implementations and examples.
+> A runnable notebook for Convolutional Neural Networks. Theory first? Read [convolution](/fields/deep-learning/concepts/convolution.md), then come back here.
 
 ## Contents
 

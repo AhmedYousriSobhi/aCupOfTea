@@ -1,4 +1,5 @@
 ---
+summary: What bias and variance are, how they trade off, and the difference between a model that is consistent but inaccurate and one that is inconsistent but accurate.
 id: bias-variance-trade-off
 title: Bias and Variance Trade-Off
 type: concept

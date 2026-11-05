@@ -1,13 +1,20 @@
 ---
+summary: How to inspect clusters and turn them into groups you can name, including why only the first two PCA components are plotted and how to describe each cluster.
 sidebar_group: Clustering Evaluation
 ---
 # Tabular Data - DATA EVALUATION - CLUSTERING
+
+> How to look at clusters and turn them into groups you can name. By the end you'll know why we plot only the first two PCA components, and five ways to describe what each cluster is.
+
+You ran the algorithm and got cluster 0, 1, 2. Now what? A cluster number means nothing until you can say who is in it. This page shows the plot first, then how to profile each group.
 
 # Table of Content
 - [Tabular Data - DATA EVALUATION - CLUSTERING](#tabular-data---data-evaluation---clustering)
 - [Table of Content](#table-of-content)
 - [Why just plot the first two PCA components?](#why-just-plot-the-first-two-pca-components)
 - [Defining Customers Groups from Clusters](#defining-customers-groups-from-clusters)
+
+Code for this page: [clustering.py](/fields/tabular-data/data-evaluation/clustering/clustering.py).
 
 # Why just plot the first two PCA components?
 

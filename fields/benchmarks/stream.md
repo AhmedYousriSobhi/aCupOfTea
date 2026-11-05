@@ -1,4 +1,5 @@
 ---
+summary: Why memory bandwidth deserves a benchmark first, and how to choose and run STREAM, BabelStream or STREAM-GPU, including array sizing on an H200.
 sidebar_label: STREAM and BabelStream
 ---
 # STREAM & BabelStream: Measuring the Thing Everyone Forgets to Measure

@@ -1,7 +1,10 @@
 ---
+summary: How to get code suggestions, generation and review inside VS Code with the LLM-VSCode extension and StarCoder, including rate limits, notebooks and configuration.
 sidebar_group: LLM VSCode
 ---
 # Generative AI - LLM VSCode
+> How to get code suggestions, code generation and code review from a language model without leaving VS Code, using the LLM-VSCode extension and StarCoder.
+
 ![Large Language Models plus Visual Studio Code logo banner](images/llm-vscode-01.png)
 
 Large language models (LLMs) have the potential to revolutionize programming, making it more efficient, accessible, and creative. 

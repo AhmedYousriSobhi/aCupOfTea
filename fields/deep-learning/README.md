@@ -1,6 +1,8 @@
 # Deep Learning - Overview
 
-Neural networks, deep learning architectures, and implementation guides.
+> Neural networks, from "what is a neuron" to modern architectures, plus notebooks where you run the code yourself.
+
+Pick your mood. Want the ideas first? Read the concepts. Want to get your hands dirty? Open the workspace.
 
 ## Contents
 

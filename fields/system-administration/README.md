@@ -1,6 +1,8 @@
 # System Administration - Overview
 
-System administration, DevOps, and infrastructure management for AI/ML environments.
+> System administration, DevOps and infrastructure for AI/ML environments: the unglamorous work that keeps the GPUs busy and the jobs alive.
+
+The training run died at 3 AM. Was it the node, the network, the memory or the filesystem? The pages here are the ones to read before that happens. The folders marked "Series" are multi-part walkthroughs; the single pages are references.
 
 ## Contents
 
@@ -12,7 +14,7 @@ System administration, DevOps, and infrastructure management for AI/ML environme
 | [build-process](/fields/system-administration/build-process.md) | Software build and CI/CD processes |
 | [Hardware](/fields/system-administration/hw.md) | Hardware issues and solutions |
 | [ldap](/fields/system-administration/ldap.md) | LDAP directory services |
-| [linux-admin](/fields/system-administration/linux-admin/) | Linux administration guides |
+| [linux-admin](/fields/system-administration/linux-admin/README.md) | Linux administration guides |
 | [memory](/fields/system-administration/memory.md) | Memory management and optimization |
 | [linux-memory-pressure](/fields/system-administration/linux-memory-pressure/README.md) | Series: reclaim, PSI, the OOM killer, cgroup levers and memory locking for a rescuer program |
 | [network](/fields/system-administration/network.md) | Networking fundamentals |

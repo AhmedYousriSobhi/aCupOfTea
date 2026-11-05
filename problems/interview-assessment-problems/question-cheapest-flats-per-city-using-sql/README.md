@@ -1,7 +1,10 @@
 ---
 sidebar_group: "Cheapest Flats per City (SQL)"
+summary: An interview SQL problem where you pick the three cheapest flats in each city from a flats table, using an OVER clause.
 ---
 # Question - Cheapest Flats per city using SQL
+
+> An interview SQL problem: pick the three cheapest flats in each city, using an OVER clause.
 
 ## Question - Cheapest Flats per city using SQL
 
@@ -11,7 +14,7 @@ create table flats(</br>
     city varchar(40) not null,</br>
     price integer not null</br>
 )</br>
-Each row of table flats represents a flat located in acity available for sale for a given price.
+Each row of table flats represents a flat located in a city available for sale for a given price.
 
 Write a SQL query that, for each city finds the three cheapest flats located in that city. In case of a tie, the query may return any three flats with the cheapest prices.
 
@@ -31,7 +34,7 @@ Example:</br>
 |2|London|170000|
 |3|Cairo|300000|
 |21|London|500000|
-|9|London|500000|
+|9|London|200000|
 
 One of the possible outputs is:</br>
 
@@ -44,7 +47,7 @@ One of the possible outputs is:</br>
 |9|London|200000|
 |18|Warsaw|150000|
 
-There are only two flats available in Warsaw and on in Cairo, sothery are all selected. The cheapest flat in London has ID 2, then there are three flats with the same price (with IDs: 7, 9, 25). Any two of them may be selected.
+There are only two flats available in Cairo and one in Warsaw, so they are all selected. The cheapest flat in London has ID 2, then there are three flats with the same price (with IDs: 7, 9, 25). Any two of them may be selected.
 
 Assume that:
 - The flast table has at most 100 rows.

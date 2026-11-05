@@ -1,3 +1,6 @@
+---
+summary: Why an operating system fills new free memory with values, and why that value is zero.
+---
 # Empty Memory Fill with Zeros ?!
 
 The title of this blog is a question, but actually they are two separate questions!

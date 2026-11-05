@@ -1,3 +1,6 @@
+---
+summary: A short list of reading links for learning MPI, the Message Passing Interface.
+---
 # MPI - Message Passing Interface
 
 # Table of Content

@@ -1,3 +1,6 @@
+---
+summary: How to connect the Kaggle API on Linux.
+---
 # Tips - Kaggle Tips & Tricks
 
 ## Connecting Kaggle Api (Linux)

@@ -1,4 +1,5 @@
 ---
+summary: Why accuracy can look high and still mislead on imbalanced classification, with the accuracy paradox explained.
 id: accuracy-paradox
 title: Accuracy Paradox
 type: concept

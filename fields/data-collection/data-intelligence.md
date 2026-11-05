@@ -1,3 +1,6 @@
+---
+summary: What Open Data Intelligence and OSINT are, how they differ and overlap, when to use both, with code examples, advanced techniques and privacy points.
+---
 # Data Collection - Data Intelligence
 # Understanding Open Data Inteligence (ODI) & Open-Source Intelligence (OSINT)
 

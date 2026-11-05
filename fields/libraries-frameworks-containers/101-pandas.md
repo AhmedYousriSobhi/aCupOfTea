@@ -1,3 +1,6 @@
+---
+summary: "Pandas basics: what a DataFrame is, ways to create one, display options, and reading CSV files with pd.read_csv."
+---
 # 101 - Pandas
 
 # Table of Content

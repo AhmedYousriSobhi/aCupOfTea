@@ -1,3 +1,6 @@
+---
+summary: How to read nvidia-smi output to monitor GPU usage, covering what the tool is, where to get it, and the GPU state and processes tables.
+---
 # 101 - Nvidia-smi
 
 In our daily work, we use GPU alot rather than CPU in the heavy computations, so How to monitor the usage?

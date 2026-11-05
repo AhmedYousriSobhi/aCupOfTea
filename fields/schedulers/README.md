@@ -2,6 +2,8 @@
 
 How a cluster scheduler decides who runs where, with Slurm as the working example.
 
+Forty people share a cluster. Everyone wants the GPUs now. Somebody has to decide who goes first, where the job lands and what happens when it misbehaves. That somebody is the scheduler, and these pages show how Slurm does it.
+
 ## Contents
 
 | File | Description |
@@ -20,3 +22,12 @@ How a cluster scheduler decides who runs where, with Slurm as the working exampl
 | [slurm-reboot-order](/fields/schedulers/slurm-reboot-order.md) | Rebooting a Slurm cluster without losing jobs |
 | [slurm-upgrade-order](/fields/schedulers/slurm-upgrade-order.md) | The order to upgrade Slurm daemons, the version window, and the parts that bite |
 | [slurm-mixed-gpus](/fields/schedulers/slurm-mixed-gpus/README.md) | Series: mixing H100s and A100s in one Slurm job, and when it pays off |
+
+## The route
+
+| Start here if... | Read |
+|------------------|------|
+| You are new to schedulers | [slurm-intro](/fields/schedulers/slurm-intro.md), then [slurm-job-script-tale](/fields/schedulers/slurm-job-script-tale.md) |
+| Jobs misbehave or nodes drain | [slurm-kill-task-failed](/fields/schedulers/slurm-kill-task-failed.md), [slurm-spool-dir-full](/fields/schedulers/slurm-spool-dir-full.md) |
+| You run a multi-user cluster | [slurm-accounting-multi-tenancy](/fields/schedulers/slurm-accounting-multi-tenancy.md), [slurm-backfill-tuning](/fields/schedulers/slurm-backfill-tuning.md), [slurm-preemption-requeue-signals](/fields/schedulers/slurm-preemption-requeue-signals.md) |
+| You maintain the cluster | [slurm-reboot-order](/fields/schedulers/slurm-reboot-order.md), [slurm-upgrade-order](/fields/schedulers/slurm-upgrade-order.md) |

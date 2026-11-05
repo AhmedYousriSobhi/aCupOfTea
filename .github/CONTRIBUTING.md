@@ -18,7 +18,7 @@ Every task is one command of the form `cupctl <verb> <action>` (like `kubectl`).
 | see the site as deployed | `cupctl site build` then `cupctl site serve` |
 | prepare the `dev` → `main` release | `cupctl release prepare` |
 
-Extra flags go to the underlying script (`cupctl page new --dry-run`). `cupctl` is `.docs/tools/cupctl.py`; to type just `cupctl`, add `alias cupctl='python3 /path/to/aCupOfTea/.docs/tools/cupctl.py'` to your shell profile. The sections below show the plain script commands too.
+Extra flags go to the underlying script (`cupctl page new --dry-run`). `cupctl` is the script `.docs/tools/cupctl.py`, not an installed program: typing `cupctl` only works after the one-time step in [Make `cupctl` a command](#make-cupctl-a-command) below. Until then, run it as `python3 .docs/tools/cupctl.py page new`. The sections below show the plain script commands too.
 
 ## 1. Set up (once)
 
@@ -27,6 +27,34 @@ git clone https://github.com/AhmedYousriSobhi/aCupOfTea.git
 cd aCupOfTea
 pip install PyYAML==6.0.2     # the only thing the scripts need (plus Python 3); or: python3 .docs/tools/cupctl.py setup
 ```
+
+### Make `cupctl` a command
+
+Pick one. Both run the script from your clone, so `git pull` updates it.
+
+**Option 1: an alias** (zsh or bash). Add this line to `~/.bashrc` or `~/.zshrc`, with the real path to your clone, then open a new terminal:
+
+```bash
+alias cupctl='python3 /path/to/aCupOfTea/.docs/tools/cupctl.py'
+```
+
+**Option 2: a small wrapper on your PATH** (works from scripts and editors too, not only interactive shells). This assumes `~/.local/bin` is on your PATH, which is true on most Linux setups:
+
+```bash
+mkdir -p ~/.local/bin
+cat > ~/.local/bin/cupctl <<'EOF'
+#!/bin/sh
+exec python3 /path/to/aCupOfTea/.docs/tools/cupctl.py "$@"
+EOF
+chmod +x ~/.local/bin/cupctl
+```
+
+Check it from any folder: `cupctl` should print the list of commands, and `cupctl check all` should end with `All checks passed.`
+
+> [!WARNING]
+> Use a wrapper or an alias, not a symlink to `cupctl.py`: the script finds the repository from its own path and does not follow symlinks, so a symlink makes it look in the wrong folder.
+
+If `cupctl: command not found` still shows up, the alias is not loaded (open a new terminal) or `~/.local/bin` is not on your PATH (`echo $PATH`).
 
 ## 2. One topic, one branch
 

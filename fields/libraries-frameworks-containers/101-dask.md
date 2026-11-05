@@ -1,3 +1,6 @@
+---
+summary: What Dask is, how it compares with Spark, and how it scales Python data work with parallel and distributed computing, performance stages and scheduling.
+---
 # Dask
 
 Imagine having the power of Apache Spark's distributed computing, but seamlessly integrated into your Python data science ecosystem. That's Dask. While Spark is fantastic for big data processing, Dask brings parallel and distributed computing capabilities directly to your Python environment, making it feel like a natural extension of libraries like NumPy, Pandas, and Scikit-learn. With Dask, you can effortlessly scale your data analysis and machine learning workflows across multiple cores on a single machine or even across a cluster of machines, all while leveraging familiar Python APIs and tools. It's like having the scalability of Spark with the simplicity and flexibility of Python, offering a compelling solution for tackling large-scale data challenges in a way that feels intuitive and seamless for Python-centric data scientists

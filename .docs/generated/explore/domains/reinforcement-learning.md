@@ -4,6 +4,6 @@
 
 Agents learning through reward and interaction.
 
-- [Reinforcement Learning Basics](/fields/reinforcement-learning/concepts-in-reinforcement-learning/basics.md) *(8 min)*
+- [Reinforcement Learning Basics](/fields/reinforcement-learning/concepts-in-reinforcement-learning/basics.md) — Reinforcement learning basics: how an agent learns by trial and error, its components, policies, exploration vs exploitation, Markov decision processes and early algorithms. *(8 min)*
 
 [All domains](/.docs/generated/explore/domains.md)
