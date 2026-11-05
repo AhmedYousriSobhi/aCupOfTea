@@ -337,7 +337,8 @@
       "linux-mem-cgroup-v2",
       "linux-mem-oom-killer",
       "linux-mem-reclaim",
-      "linux-mem-rescuer-checklist"
+      "linux-mem-rescuer-checklist",
+      "linux-memory-free-vs-available"
     ]
   },
   "linux-mem-reclaim": {
@@ -351,7 +352,9 @@
     "related": [
       "linux-mem-psi"
     ],
-    "related_by": []
+    "related_by": [
+      "linux-memory-free-vs-available"
+    ]
   },
   "linux-mem-rescuer-checklist": {
     "prerequisite_of": [],
@@ -366,6 +369,16 @@
     "related_by": [
       "linux-mem-mlockall"
     ]
+  },
+  "linux-memory-free-vs-available": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "linux-mem-psi",
+      "linux-mem-reclaim",
+      "slurm-cgroups-in-practice"
+    ],
+    "related_by": []
   },
   "linux-memory-pressure-overview": {
     "prerequisite_of": [],
@@ -703,6 +716,7 @@
       "slurm-pam-adopt-ssh-access"
     ],
     "related_by": [
+      "linux-memory-free-vs-available",
       "slurm-gpu-affinity-socket-lie",
       "slurm-kill-task-failed",
       "slurm-pam-adopt-ssh-access",

@@ -1,6 +1,6 @@
 ---
 id: linux-mem-reclaim
-order: 1
+order: 2
 title: "How Linux Reclaims Memory: Cache, Swap and the Two Kinds of Stall"
 sidebar_label: "1. How Linux reclaims memory"
 summary: Why free memory near zero is normal, which pages the kernel can drop for free and which need swap, how kswapd and direct reclaim differ, and why the second one is where programs stall.

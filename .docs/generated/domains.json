@@ -176,6 +176,7 @@
       "linux-mem-psi",
       "linux-mem-reclaim",
       "linux-mem-rescuer-checklist",
+      "linux-memory-free-vs-available",
       "linux-memory-pressure-overview",
       "llm-inference-performance-overview",
       "llm-perf-compute-vs-memory-bound",
