@@ -13,6 +13,8 @@ You ran the algorithm and got cluster 0, 1, 2. Now what? A cluster number means 
 - [Why just plot the first two PCA components?](#why-just-plot-the-first-two-pca-components)
 - [Defining Customers Groups from Clusters](#defining-customers-groups-from-clusters)
 
+Code for this page: [clustering.py](/fields/tabular-data/data-evaluation/clustering/clustering.py).
+
 # Why just plot the first two PCA components?
 
 ![Agglomerative Clustering Results](images/clustering-01.jpg)

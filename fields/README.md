@@ -14,7 +14,7 @@ Each subdirectory focuses on a specific area, with in-depth knowledge, concepts 
 | [deep-learning](/fields/deep-learning/README.md) | Neural networks, CNNs, RNNs, and deep learning concepts |
 | [design-patterns](/fields/design-patterns/README.md) | Software design patterns for ML/AI systems |
 | [generative-ai](/fields/generative-ai/README.md) | LLMs, LangChain, and generative models |
-| [libararies,Frameworks,Containers](/fields/libraries-frameworks-containers/README.md) | Tools like Pandas, PyTorch, Docker |
+| [libraries-frameworks-containers](/fields/libraries-frameworks-containers/README.md) | Tools like Pandas, PyTorch, Docker |
 | [recommender-systems](/fields/recommender-systems/README.md) | Recommendation algorithms and systems |
 | [reinforcement-learning](/fields/reinforcement-learning/README.md) | RL concepts and algorithms |
 | [schedulers](/fields/schedulers/README.md) | How cluster schedulers such as Slurm work |
