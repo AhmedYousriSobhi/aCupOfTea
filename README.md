@@ -45,12 +45,12 @@ Not sure where to begin? Each of these takes one cup, roughly the reading time s
 
 ## 🆕 Recently added
 
-- 2026-11-04 · [cgroup v2 Memory Control: The Levers Between Doing Nothing and Killing](/fields/system-administration/linux-memory-pressure/cgroup-v2-memory-control.md)
-- 2026-11-04 · [How Linux Reclaims Memory: Cache, Swap and the Two Kinds of Stall](/fields/system-administration/linux-memory-pressure/how-linux-reclaims-memory.md)
-- 2026-11-04 · [Pressure Stall Information: Measuring Time Lost, Not Bytes Left](/fields/system-administration/linux-memory-pressure/memory-pressure-psi.md)
-- 2026-11-04 · [Making a Rescuer Survive: CPU, Protection and a Checklist](/fields/system-administration/linux-memory-pressure/rescuer-checklist.md)
-- 2026-11-04 · [The OOM Killer: Who Gets Thrown Overboard, and Why So Late](/fields/system-administration/linux-memory-pressure/the-oom-killer.md)
-- 2026-11-04 · [Backfill Tuning: The Planner That Can Only See One Day Ahead](/fields/schedulers/slurm-backfill-tuning.md)
+- 2026-11-05 · [No Login Node, No Hostfile: OpenMP and MPI on Kubernetes](/fields/system-administration/openmp-and-open-mpi/mpi-and-openmp-on-kubernetes.md)
+- 2026-11-05 · [Who Starts the Ranks? OpenMP and MPI Under Slurm](/fields/system-administration/openmp-and-open-mpi/mpi-and-openmp-under-slurm.md)
+- 2026-11-05 · [Kitchens With Cooks: Hybrid MPI+OpenMP and the Binding Trap](/fields/system-administration/openmp-and-open-mpi/hybrid-and-the-binding-trap.md)
+- 2026-11-05 · [Know It on Sight: Reading OpenMP and MPI Code, Builds and Job Scripts](/fields/system-administration/openmp-and-open-mpi/spotting-openmp-and-mpi-code.md)
+- 2026-11-05 · [Not Twins, Not Even Cousins: OpenMP, MPI and Open MPI](/fields/system-administration/openmp-and-open-mpi/the-name-mixup.md)
+- 2026-11-05 · [Cooks and Kitchens: Threads, Ranks and the One Mental Model](/fields/system-administration/openmp-and-open-mpi/threads-and-ranks.md)
 
 <!-- recent:end -->
 
