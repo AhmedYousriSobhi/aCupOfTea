@@ -1,5 +1,9 @@
 # Object Oriented Programming
 
+> A notebook on object-oriented programming: bundling data and the code that works on it into one tidy thing called an object.
+
+Think of a class as a blueprint and an object as one thing built from it. That idea is the whole starting point, and this folder walks through it.
+
 The illustrated content are extracted from book: __Data Structures & Algorithms in Python__, Chapter #2.
 
 The book is free to use.

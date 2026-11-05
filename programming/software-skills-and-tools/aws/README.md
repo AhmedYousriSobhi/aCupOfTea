@@ -4,7 +4,13 @@ sidebar_group: AWS
 
 # Software Tool: AWS Services for HPC Systems
 
+> The AWS services that support High-Performance Computing (HPC) systems, plus Kubernetes and AWS ParallelCluster in more detail. By the end you'll know which service does which job, and have answers to common interview questions on the topic.
+
 In this Chapter, we are interested in introducing the AWS services that support the High-Performance Computing (HPC) Systems.
+
+HPC means running big computing jobs, such as machine learning or simulations, on many machines working together. AWS sells the pieces for that as separate services: compute, fast network, storage, scheduling. This page maps them out so you can tell which one to reach for.
+
+**Who this is for:** engineers who need to run HPC or ML workloads on AWS, or who are preparing for an HPC systems engineer interview.
 
 # Table of Content
 - [Software Tool: AWS Services for HPC Systems](#software-tool-aws-services-for-hpc-systems)

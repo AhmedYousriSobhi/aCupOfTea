@@ -3,7 +3,9 @@ sidebar_group: Clustering
 ---
 # Tabular Data - Data Modeling - Clustering
 
-Clustering algorithms and implementation.
+> Clustering means letting the data sort itself into groups, with no labels given. By the end you'll know how the elbow method helps you pick how many groups to ask for.
+
+The awkward part of K-means is that you must say how many clusters you want before you start. The elbow method gives you a way to choose: run it for several values and look for the bend in the curve.
 
 ## Contents
 

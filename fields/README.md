@@ -1,6 +1,8 @@
 # Fields - Overview
 
-This directory contains various domains and fields within AI, Machine Learning, and Data Science. Each subdirectory focuses on a specific area of expertise, providing in-depth knowledge, concepts, and practical implementations.
+> The subject areas of the knowledge base: AI, machine learning and data science, one folder per field. Pick a field, then follow its README.
+
+Each subdirectory focuses on a specific area, with in-depth knowledge, concepts and practical implementations.
 
 ## Contents
 
@@ -20,4 +22,12 @@ This directory contains various domains and fields within AI, Machine Learning, 
 | [system-administration](/fields/system-administration/README.md) | System admin and DevOps for AI |
 | [tabular-data](/fields/tabular-data/README.md) | Working with structured/tabular datasets |
 
-Explore each field to dive deeper into specific AI and data science domains.
+## Where to go
+
+| If you want... | Go to |
+|----------------|-------|
+| Neural networks, CNNs, RNNs | [deep-learning](/fields/deep-learning/README.md) |
+| LLMs, LangChain, generative models | [generative-ai](/fields/generative-ai/README.md) |
+| Structured data and models on it | [tabular-data](/fields/tabular-data/README.md) |
+| How to measure HPC hardware | [benchmarks](/fields/benchmarks/README.md) |
+| How cluster schedulers work | [schedulers](/fields/schedulers/README.md) |

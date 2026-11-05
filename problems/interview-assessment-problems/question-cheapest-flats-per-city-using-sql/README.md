@@ -3,6 +3,8 @@ sidebar_group: "Cheapest Flats per City (SQL)"
 ---
 # Question - Cheapest Flats per city using SQL
 
+> An interview SQL problem: pick the three cheapest flats in each city, using an OVER clause.
+
 ## Question - Cheapest Flats per city using SQL
 
 You are given a table of flats with the following structure: </br>

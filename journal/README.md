@@ -1,6 +1,8 @@
 # Journal
 
-This is a daily notes in our life
+> Daily notes: small findings worth keeping, one dated entry at a time.
+
+A place for the things we learn along the way and don't want to lose. Each entry is short.
 
 # Table of Notes
 - [Journal](#journal)

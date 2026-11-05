@@ -1,6 +1,8 @@
 # Deep Learning - Concepts - Overview
 
-Core concepts and theory behind deep learning and neural networks.
+> The ideas behind neural networks, in reading order: what a neuron is, how convolutions and sequence models work, and where the field stands today.
+
+If you are new, start with `basics` and go down the table. If you already know the basics, jump to the topic you need.
 
 ## Contents
 

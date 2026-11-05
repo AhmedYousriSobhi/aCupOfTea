@@ -2,7 +2,11 @@
 sidebar_group: Langchain
 ---
 # Generative AI - Langchain
+> What LangChain is, why people reach for it, and where it came from.
+
 ![LangChain logo with a parrot and a chain link](images/langchain-01.png)
+
+Calling a language model is easy. Building an application around one (prompts, several models, monitoring, deployment) is where the work piles up. That is the gap LangChain fills.
 
 LangChain is a framework for developing applications powered by language models. It provides a set of tools and abstractions that make it easy to build applications that can generate text, translate languages, write different kinds of creative content, and answer questions in an informative way.
 

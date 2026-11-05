@@ -3,6 +3,12 @@ sidebar_group: Regression Evaluation
 ---
 # Tabular Data - Data Evaluation - Regression Evaluation Metrics
 
+> A field guide to the metrics that score a model predicting numbers: MSE, RMSE, MAE, R-squared, MAPE, RMSLE and more. By the end you'll know what each one measures, when it fails, and which to reach for.
+
+Your model predicted 310 and the real answer was 300. How wrong is that? It depends on whether you square the gap, take its absolute value, or turn it into a percentage. Each metric answers a slightly different question. Outliers are the usual tiebreaker, so the notes below flag which metrics they hurt.
+
+Short on time? Jump to the [comparison table](#comparison) or [A Good Tip](#a-good-tip).
+
 # Table of Content
 - [Tabular Data - Data Evaluation - Regression Evaluation Metrics](#tabular-data---data-evaluation---regression-evaluation-metrics)
 - [Table of Content](#table-of-content)

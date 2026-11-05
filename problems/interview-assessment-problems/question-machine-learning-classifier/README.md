@@ -3,6 +3,8 @@ sidebar_group: ML Classifier
 ---
 # Question - Machine Learning Classifier
 
+> An interview ML problem: build a logistic regression and a random forest on bank customer data, and report what drives term-deposit subscriptions.
+
 Implement a function, identify_customers, which will build two classifier models based on financial data. The identify_customers functions accepts two arguments:
 - data_train - a Pandas DataFrame consisting of a binary column 'label' (1 means that the client subscribed to a term deposite, 0 otherwise), three integer columns describing the customer, including their age, account (account balance), and duration (time of being a bank customer) and 17 binary columns (with 'yes' and 'no' values) that also describe the customers.
 - data_test - a Pandas DataFrame with the same structure as data_train.

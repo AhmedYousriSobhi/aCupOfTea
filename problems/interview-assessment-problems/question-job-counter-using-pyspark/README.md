@@ -3,6 +3,8 @@ sidebar_group: "Job Counter (PySpark)"
 ---
 # Question - Job Counter Using PySpark
 
+> An interview PySpark problem: group and sort data, counting how often each job appears.
+
 Group & sort data using PySpark.
 
 Requirements

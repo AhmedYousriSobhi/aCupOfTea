@@ -3,6 +3,10 @@ sidebar_group: Clustering Evaluation
 ---
 # Tabular Data - DATA EVALUATION - CLUSTERING
 
+> How to look at clusters and turn them into groups you can name. By the end you'll know why we plot only the first two PCA components, and five ways to describe what each cluster is.
+
+You ran the algorithm and got cluster 0, 1, 2. Now what? A cluster number means nothing until you can say who is in it. This page shows the plot first, then how to profile each group.
+
 # Table of Content
 - [Tabular Data - DATA EVALUATION - CLUSTERING](#tabular-data---data-evaluation---clustering)
 - [Table of Content](#table-of-content)

@@ -1,5 +1,7 @@
 # Design Pattern - Feature Cross
 
+> One idea: instead of hoping the model finds how two features interact, hand it that combination as a feature of its own.
+
 ## Abstract
 In Machine Learning, Feature engineering is the process of using domain knowledge to create new features that aid the machine learning process and increase the predictive power of our model. One commonly used feature engineering technique is creating a feature cross.
 
