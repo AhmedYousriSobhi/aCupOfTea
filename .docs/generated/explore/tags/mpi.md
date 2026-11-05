@@ -12,9 +12,9 @@
   [`hpc`](/.docs/generated/explore/tags/hpc.md) [`mpi`](/.docs/generated/explore/tags/mpi.md) [`openmp`](/.docs/generated/explore/tags/openmp.md)
 - [Parallel Execution and Affinity](/fields/benchmarks/parallel-execution-affinity-master-guide.md) — How to place processes, threads and GPUs on a node: srun vs mpirun, NUMA, CPU binding syntax and GPU mapping, with tuning advice for HPL and NCCL. *(5 min)*  
   [`affinity`](/.docs/generated/explore/tags/affinity.md) [`mpi`](/.docs/generated/explore/tags/mpi.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
-- [Two Tribes, One Problem: Where OpenMP and MPI Came From](/fields/system-administration/openmp-and-open-mpi/where-they-came-from.md) — The 1990s story - shared-memory vendors each had their own directives, distributed-memory users each had their own message libraries, and two committees fixed it from opposite sides. *(beginner · 6 min)*  
+- [Season Finale: Where OpenMP and MPI Are Going](/fields/system-administration/openmp-and-open-mpi/where-they-are-going.md) — The latest seasons of two long-running series - OpenMP 6.0 and MPI 5.0 - what plot twists they added (GPUs, tasks, a standard ABI), and why the mental models you learned will not be cancelled. *(beginner · 6 min)*  
   [`hpc`](/.docs/generated/explore/tags/hpc.md) [`mpi`](/.docs/generated/explore/tags/mpi.md) [`openmp`](/.docs/generated/explore/tags/openmp.md)
-- [Where They're Going: OpenMP 6, MPI 5 and Open MPI Today](/fields/system-administration/openmp-and-open-mpi/where-they-are-going.md) — The version trail from the 1990s to OpenMP 6.0 and MPI 5.0 - GPUs and tasks on one side, a standard ABI on the other - and why the core ideas you learned will not expire. *(beginner · 6 min)*  
+- [Two Tribes, One Problem: Where OpenMP and MPI Came From](/fields/system-administration/openmp-and-open-mpi/where-they-came-from.md) — The 1990s story - shared-memory vendors each had their own directives, distributed-memory users each had their own message libraries, and two committees fixed it from opposite sides. *(beginner · 6 min)*  
   [`hpc`](/.docs/generated/explore/tags/hpc.md) [`mpi`](/.docs/generated/explore/tags/mpi.md) [`openmp`](/.docs/generated/explore/tags/openmp.md)
 
 [All tags](/.docs/generated/explore/tags.md)

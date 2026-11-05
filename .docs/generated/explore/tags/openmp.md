@@ -10,9 +10,9 @@
   [`hpc`](/.docs/generated/explore/tags/hpc.md) [`mpi`](/.docs/generated/explore/tags/mpi.md) [`openmp`](/.docs/generated/explore/tags/openmp.md)
 - [Not Twins, Not Even Cousins: OpenMP, MPI and Open MPI](/fields/system-administration/openmp-and-open-mpi/the-name-mixup.md) — OpenMP and Open MPI differ by one space and share almost nothing. Three names, three jobs - an API for threads, a standard for messages, and one program that implements the second. *(beginner · 5 min)*  
   [`hpc`](/.docs/generated/explore/tags/hpc.md) [`mpi`](/.docs/generated/explore/tags/mpi.md) [`openmp`](/.docs/generated/explore/tags/openmp.md)
-- [Two Tribes, One Problem: Where OpenMP and MPI Came From](/fields/system-administration/openmp-and-open-mpi/where-they-came-from.md) — The 1990s story - shared-memory vendors each had their own directives, distributed-memory users each had their own message libraries, and two committees fixed it from opposite sides. *(beginner · 6 min)*  
+- [Season Finale: Where OpenMP and MPI Are Going](/fields/system-administration/openmp-and-open-mpi/where-they-are-going.md) — The latest seasons of two long-running series - OpenMP 6.0 and MPI 5.0 - what plot twists they added (GPUs, tasks, a standard ABI), and why the mental models you learned will not be cancelled. *(beginner · 6 min)*  
   [`hpc`](/.docs/generated/explore/tags/hpc.md) [`mpi`](/.docs/generated/explore/tags/mpi.md) [`openmp`](/.docs/generated/explore/tags/openmp.md)
-- [Where They're Going: OpenMP 6, MPI 5 and Open MPI Today](/fields/system-administration/openmp-and-open-mpi/where-they-are-going.md) — The version trail from the 1990s to OpenMP 6.0 and MPI 5.0 - GPUs and tasks on one side, a standard ABI on the other - and why the core ideas you learned will not expire. *(beginner · 6 min)*  
+- [Two Tribes, One Problem: Where OpenMP and MPI Came From](/fields/system-administration/openmp-and-open-mpi/where-they-came-from.md) — The 1990s story - shared-memory vendors each had their own directives, distributed-memory users each had their own message libraries, and two committees fixed it from opposite sides. *(beginner · 6 min)*  
   [`hpc`](/.docs/generated/explore/tags/hpc.md) [`mpi`](/.docs/generated/explore/tags/mpi.md) [`openmp`](/.docs/generated/explore/tags/openmp.md)
 
 [All tags](/.docs/generated/explore/tags.md)

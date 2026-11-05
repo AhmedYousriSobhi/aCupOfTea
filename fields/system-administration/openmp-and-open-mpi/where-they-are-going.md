@@ -1,9 +1,9 @@
 ---
 id: openmp-mpi-where-they-are-going
-title: "Where They're Going: OpenMP 6, MPI 5 and Open MPI Today"
+title: "Season Finale: Where OpenMP and MPI Are Going"
 order: 6
 sidebar_label: "6. Where they're going"
-summary: The version trail from the 1990s to OpenMP 6.0 and MPI 5.0 - GPUs and tasks on one side, a standard ABI on the other - and why the core ideas you learned will not expire.
+summary: The latest seasons of two long-running series - OpenMP 6.0 and MPI 5.0 - what plot twists they added (GPUs, tasks, a standard ABI), and why the mental models you learned will not be cancelled.
 level: beginner
 type: concept
 domains: [systems-and-hpc, software-engineering]
@@ -12,117 +12,112 @@ relations:
   prerequisites: [openmp-mpi-where-they-came-from]
 ---
 
-# Where They're Going: OpenMP 6, MPI 5 and Open MPI Today
+# Season Finale: Where OpenMP and MPI Are Going
 
-> Part 6 of 6. By the end you'll know what the latest version of each one added, how to read a version number, and what is safe to learn once and keep.
-
-Crystal-ball disclaimer: I'm not predicting anything past what the standards bodies have published. What I can promise is that the part of this series you need most, the two mental models, is the part that has not changed since the 1990s. Standards come and go. Kitchens and chefs stay.
+> Part 6 of 6. By the end you'll know what the newest "season" of each standard added, whether you need to panic about it (spoiler: no), and the six-line summary of the whole series.
 
 ## Contents
 
-- [The version trail](#the-version-trail)
-- [OpenMP: from loops to devices to tasks](#openmp-from-loops-to-devices-to-tasks)
-- [MPI: from messages to one binary interface](#mpi-from-messages-to-one-binary-interface)
-- [Open MPI today](#open-mpi-today)
-- [What won't change](#what-wont-change)
-- [Your pocket summary of the series](#your-pocket-summary-of-the-series)
+- [The shows are still running](#the-shows-are-still-running)
+- [OpenMP: the sitcom that learned about GPUs](#openmp-the-sitcom-that-learned-about-gpus)
+- [MPI: the drama with a very big plot twist](#mpi-the-drama-with-a-very-big-plot-twist)
+- [Open MPI: the cast member everyone actually meets](#open-mpi-the-cast-member-everyone-actually-meets)
+- [What never gets cancelled](#what-never-gets-cancelled)
+- [The whole series in six lines](#the-whole-series-in-six-lines)
 
 ---
 
-## The version trail
+## The shows are still running
 
-Dates from the official lists, [OpenMP](https://www.openmp.org/specifications/) and [MPI](https://www.mpi-forum.org/docs/):
+OpenMP and MPI have each been on air for decades. Neither has been cancelled, both keep releasing new seasons, and both have a rule that makes them safe to keep watching: **old episodes still play**. The MPI standard says it outright: "any valid MPI-4.1 program is a valid MPI-5.0 program".
 
-| Year | OpenMP | MPI |
-|------|--------|-----|
-| 1997 | Fortran 1.0 (October) | MPI 2.0 (July) |
-| 1998 | C/C++ 1.0 | |
-| 2005 | 2.5 (C/C++ and Fortran in one document) | |
-| 2008 | 3.0 (May) | 2.1 (September) |
-| 2009 | | 2.2 |
-| 2011 | 3.1 | |
-| 2012 | | 3.0 (September) |
-| 2013 | 4.0 (July) | |
-| 2015 | 4.5 | 3.1 (June) |
-| 2018 | 5.0 | |
-| 2020-21 | 5.1 (2020), 5.2 (2021) | 4.0 (June 2021) |
-| 2023 | | 4.1 (November) |
-| 2024-25 | **6.0 (November 2024)** | **5.0 (June 5, 2025)** |
+Here is the season guide, with dates from the official lists ([OpenMP](https://www.openmp.org/specifications/), [MPI](https://www.mpi-forum.org/docs/)). No spoilers beyond the release notes.
 
-Reading the numbers: a bump in the **first** number is a larger step (new capabilities); a bump in the second is usually a consolidation and fixes. Neither standard throws old programs away lightly: the MPI standard states that "any valid MPI-4.1 program is a valid MPI-5.0 program".
+| Season | OpenMP | MPI |
+|--------|--------|-----|
+| The pilot | Fortran 1.0, October 1997 | MPI-1.0, 1994 (2.0 in July 1997) |
+| The "everything grows up" season | 3.0, May 2008 | 3.0, September 2012 |
+| The one with the big new cast | **4.0, July 2013** | 3.1, June 2015 |
+| Recent seasons | 5.0 (2018), 5.1 (2020), 5.2 (2021) | **4.0, June 2021**; 4.1, November 2023 |
+| **Latest** | **6.0, November 14, 2024** | **5.0, June 5, 2025** |
+
+Reading a version number: a bump in the **first** digit is a big storyline; a bump in the second is mostly tidying and fixes.
 
 ---
 
-## OpenMP: from loops to devices to tasks
+## OpenMP: the sitcom that learned about GPUs
 
-- **1.0 to 3.x:** loops and sections split among threads, the picture from part 3.
-- **4.0 (July 2013):** the biggest widening. Per the [4.0 release announcement](https://www.openmp.org/press-release/openmp-4-0-api-released/): support for **accelerator devices** (this is the `#pragma omp target` you meet in GPU-offloading code), **SIMD** constructs to vectorize loops, **task dependencies**, **thread affinity**, user-defined reductions and cancellation.
-- **6.0 (November 14, 2024):** per the [announcement](https://www.openmp.org/home-news/openmp-arb-releases-openmp-6-0-for-easier-programming/): easier task programming, finer control over memory allocation, loop transformations such as fusion, reversal and interchange, support for recent C, C++ and Fortran standards, and **removal of features deprecated in 5.0, 5.1 and 5.2**. The openmp.org blog says first implementations of 6.0 features are in the Intel and GCC compilers.
-- **6.1:** a public comment draft dated July 2026 is on the specifications page. It is a draft, not a release.
+For years OpenMP's whole plot was "chefs share a kitchen". Then the writers brought in some new characters.
 
-The direction: from "make my loop parallel" to "describe the work, the data and the device, and let the compiler map it".
+- **4.0 (July 2013)** is the season everyone remembers. Per the [announcement](https://www.openmp.org/press-release/openmp-4-0-api-released/), it added support for **accelerator devices** (hello, `#pragma omp target`, the GPU-offload lines you'll see in modern code), **SIMD** for squeezing loops through vector units, **task dependencies**, **thread affinity** (remember the binding trap from part 5?), user-defined reductions and cancellation.
+- **6.0 (November 14, 2024)** is the latest. Per [the release page](https://www.openmp.org/home-news/openmp-arb-releases-openmp-6-0-for-easier-programming/): easier **task** programming, finer control over memory, **loop transformations** such as fusion, reversal and interchange, support for recent C, C++ and Fortran standards, and a spring clean that **removed features deprecated in 5.0, 5.1 and 5.2**. [The OpenMP blog](https://www.openmp.org/blog/openmp-6/) says Intel and GCC compilers already ship first implementations of 6.0 features.
+- **6.1** is a public comment draft dated July 2026. A trailer, not a release.
+
+The arc in one line: from "please parallelize my loop" to "here's the work, here's the data, here's the device, you figure out the rest".
 
 > [!NOTE]
-> A spec version is not a compiler version. What your cluster's compiler supports is a separate question: check its documentation before relying on a new directive.
+> A spec version is not a compiler version. The question that matters for you is what your cluster's compiler supports, so check its docs before you lean on a brand-new directive.
 
 ---
 
-## MPI: from messages to one binary interface
+## MPI: the drama with a very big plot twist
 
-- **1.x (1994-95):** the core of part 3: ranks, communicators, send and receive, collectives.
-- **2.0 (1997):** an extension of 1.x, per the Open MPI FAQ ("mostly added to and extended MPI-1.0").
-- **4.0 (June 2021):** per the MPI-4.1 document, the largest changes are **large-count** versions of many routines (counts no longer limited to an `int`), **persistent collectives**, **partitioned communication**, and a new way to initialize MPI called **sessions**.
-- **5.0 (June 5, 2025):** the headline is a **standard ABI** (Application Binary Interface). Until now, a program compiled against one MPI implementation had to be recompiled for another, because details such as the layout of handle types differed. The ABI chapter fixes those details so one compiled program can run with different implementations. It exists "in parallel with existing implementation ABIs", so nothing existing breaks. At ISC25, MPICH was described as having implemented it already, and Open MPI's work as in progress.
+MPI's story has been steady: ranks, messages, collectives. Two recent seasons changed the scenery.
 
-The direction: the same rank-and-message model, with larger data, better overlap of communication and computation, and less pain moving binaries between systems.
+- **4.0 (June 2021).** The headline additions, per the MPI-4.1 document: **large counts** (message sizes no longer stuck at an `int`), **persistent collectives**, **partitioned communication**, and **sessions**, a new way to start MPI up.
+- **5.0 (June 5, 2025): the plot twist.** A standard **ABI**. Until now, a program compiled against one MPI implementation had to be **recompiled** for another, because small details like how a handle looks in memory differed. Like an actor who only works with one specific camera. The ABI fixes those details, so one compiled program can run on several implementations. It lives "in parallel with existing implementation ABIs", so nothing already running breaks. At ISC25, MPICH was shown with it implemented and Open MPI's support was a work in progress ([MPI 5.0 announcement](https://lists.mpi-forum.org/pipermail/mpi-forum/2025-June/007905.html)).
+
+The arc in one line: the same rank-and-message model, with bigger messages, more overlap of talking and computing, and less pain moving binaries around.
 
 ---
 
-## Open MPI today
+## Open MPI: the cast member everyone actually meets
 
-Per the [downloads page](https://www.open-mpi.org/software/ompi/) (retrieved as of this series' writing):
+Remember, MPI is the script and Open MPI is one of the actors. Per its [downloads page](https://www.open-mpi.org/software/ompi/) when I wrote this:
 
 | Series | Status |
 |--------|--------|
 | v6.0 | Upcoming, no date listed |
-| v5.0 | Current, stable; latest 5.0.11 (September 16, 2026) |
+| v5.0 | Current stable; latest 5.0.11 (September 16, 2026) |
 | v4.1 | Still supported |
 | v4.0 and older | Retired |
 
-The [about page](https://www.open-mpi.org/about/) says Open MPI offers full MPI-3.1 conformance with many MPI-4.0 elements. The series I tested, 5.0.10, is the Ubuntu 26.04 package. On that install, `mpirun` ships with the PMIx and PRRTE packages, which is why some help text lived in `libprrte-dev` (part 3).
+Its [about page](https://www.open-mpi.org/about/) says it offers full MPI-3.1 conformance with many MPI-4.0 elements. I tested 5.0.10 (the Ubuntu 26.04 package), where `mpirun` comes with PMIx and PRRTE packages, which is why some help text lived in `libprrte-dev` (part 3).
 
 > [!NOTE]
-> Behaviour I describe for binding and launching is from 5.0.x. Open MPI 4.1 is still supported but has different internals. I did not test it for this series, so check its manual before assuming the same flags and messages.
+> Everything about binding and launching in this series is from 5.0.x. Open MPI 4.1 is still supported but has different internals and I did not test it, so check its manual before assuming the same flags and messages.
 
 ---
 
-## What won't change
+## What never gets cancelled
 
-You can learn these once and keep them for the rest of your career:
+Standards keep adding episodes. These storylines have run since the 1990s and will outlive the next few seasons:
 
-| Idea | Why it lasts |
-|------|--------------|
-| Shared memory vs separate memory | It is the hardware split that started both standards (part 2) |
-| Threads need care about who writes what; ranks need messages | The two signature bugs, race and deadlock, are the same in every version |
-| `parallel`, `for`, `reduction` / `Init`, `rank`, `Send`, `Reduce` | The vocabulary has been stable since the 1990s |
-| Binding decides where work runs | Newer hardware makes it matter more, not less |
+| Storyline | Why it lasts |
+|-----------|--------------|
+| Shared memory vs separate memory | It is the hardware split that created both standards (part 2) |
+| Threads: care who writes what. Ranks: send messages | The two signature bugs, race and deadlock, never left |
+| `parallel` / `reduction` and `Init` / `rank` / `Reduce` | The core vocabulary has been stable for decades |
+| Binding decides where work runs | Bigger machines make it matter more, not less |
 
-New versions add vocabulary on top. They do not replace the vocabulary you now have. Think of it as a menu that keeps adding dishes, while the kitchen stays a kitchen.
+New versions add vocabulary on top. They don't replace the vocabulary you now have. Think of a menu that keeps adding dishes while the kitchen stays a kitchen.
 
 ---
 
-## Your pocket summary of the series
+## The whole series in six lines
 
 | Part | One line |
 |------|----------|
 | 1 | OpenMP = threads, MPI = messages, Open MPI = one implementation of MPI |
-| 2 | Two tribes in the 1990s: MPI (1992-94) and OpenMP (1997) solved the same headache from opposite sides |
-| 3 | One kitchen with many cooks vs many kitchens passing notes; race vs deadlock |
-| 4 | `omp.h`, `#pragma omp`, `-fopenmp` vs `mpi.h`, `MPI_`, `mpirun`; both together is hybrid |
+| 2 | Two tribes in the 1990s solved the same headache from opposite sides |
+| 3 | One kitchen with many chefs vs many kitchens passing notes; race vs deadlock |
+| 4 | `omp.h` + `#pragma omp` + `-fopenmp` vs `mpi.h` + `MPI_` + `mpirun`; both = hybrid |
 | 5 | Check "rank may use N cpus": the default can pin each rank to one core |
-| 6 | OpenMP 6.0 and MPI 5.0 are the current versions; the core ideas are stable |
+| 6 | OpenMP 6.0 and MPI 5.0 are current, and the core ideas are stable |
 
-**Takeaway:** the names are confusing, but the ideas are two: share memory between threads, or send messages between processes. Everything else is detail on top.
+Next time someone says "OpenMP" or "Open MPI" in a meeting, you'll know exactly which kitchen they're standing in.
+
+**Takeaway:** two ideas run the whole show, share memory between threads or send messages between processes, and the newest versions only add new ways to do those two things.
 
 ---
 
