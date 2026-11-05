@@ -1,6 +1,6 @@
 ---
 id: linux-mem-cgroup-v2
-order: 4
+order: 5
 title: "cgroup v2 Memory Control: The Levers Between Doing Nothing and Killing"
 sidebar_label: "4. cgroup v2 memory control"
 summary: "The memory files of a cgroup v2 group, from protection (min, low) to throttling (high) to the hard cap (max), plus the active levers: reclaim, freeze and kill, and why they need privilege."

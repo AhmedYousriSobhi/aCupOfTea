@@ -534,6 +534,11 @@
         "title": "slurmstepd: The Small Daemon That Actually Runs Your Job"
       },
       {
+        "id": "linux-memory-free-vs-available",
+        "path": "fields/system-administration/linux-memory-pressure/linux-memory-free-vs-available.md",
+        "title": "The Server That Looked Full: Free vs Available Memory, Cache, and What Is Really Used"
+      },
+      {
         "id": "slurm-gpu-affinity-socket-lie",
         "path": "fields/schedulers/slurm-gpu-affinity-socket-lie.md",
         "title": "Your GPU Has Core Affinity. Slurm Has Socket Affinity. They Are Not Speaking."
@@ -1045,7 +1050,13 @@
   },
   "fields/system-administration/linux-memory-pressure/how-linux-reclaims-memory.md": {
     "prerequisites": [],
-    "related": [],
+    "related": [
+      {
+        "id": "linux-memory-free-vs-available",
+        "path": "fields/system-administration/linux-memory-pressure/linux-memory-free-vs-available.md",
+        "title": "The Server That Looked Full: Free vs Available Memory, Cache, and What Is Really Used"
+      }
+    ],
     "required_by": [
       {
         "id": "linux-mem-psi",
@@ -1068,6 +1079,27 @@
         "title": "Memory Locking: Keeping a Rescuer in RAM with mlockall"
       }
     ]
+  },
+  "fields/system-administration/linux-memory-pressure/linux-memory-free-vs-available.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "linux-mem-reclaim",
+        "path": "fields/system-administration/linux-memory-pressure/how-linux-reclaims-memory.md",
+        "title": "How Linux Reclaims Memory: Cache, Swap and the Two Kinds of Stall"
+      },
+      {
+        "id": "linux-mem-psi",
+        "path": "fields/system-administration/linux-memory-pressure/memory-pressure-psi.md",
+        "title": "Pressure Stall Information: Measuring Time Lost, Not Bytes Left"
+      },
+      {
+        "id": "slurm-cgroups-in-practice",
+        "path": "fields/schedulers/slurm-cgroups-in-practice.md",
+        "title": "Slurm cgroups in Practice: What Gets Constrained, and Where the Numbers Lie"
+      }
+    ],
+    "required_by": []
   },
   "fields/system-administration/linux-memory-pressure/memory-locking-mlockall.md": {
     "prerequisites": [
@@ -1120,6 +1152,11 @@
         "id": "linux-mem-oom-killer",
         "path": "fields/system-administration/linux-memory-pressure/the-oom-killer.md",
         "title": "The OOM Killer: Who Gets Thrown Overboard, and Why So Late"
+      },
+      {
+        "id": "linux-memory-free-vs-available",
+        "path": "fields/system-administration/linux-memory-pressure/linux-memory-free-vs-available.md",
+        "title": "The Server That Looked Full: Free vs Available Memory, Cache, and What Is Really Used"
       }
     ],
     "required_by": []

@@ -1,6 +1,6 @@
 ---
 id: linux-mem-mlockall
-order: 5
+order: 6
 title: "Memory Locking: Keeping a Rescuer in RAM with mlockall"
 sidebar_label: "5. Memory locking (mlockall)"
 summary: Why a program that rescues a machine under memory pressure must pin its own pages in RAM, what mlockall does, why the 8 MiB limit exists, and why root gets the real lock - explained with a tow truck.

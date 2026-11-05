@@ -14,8 +14,11 @@ domains: [systems-and-hpc]
 
 ## The route
 
+Start with the prelude if `free` and `available` still confuse you. The six parts follow.
+
 | # | Page | The question it answers |
 |---|------|-------------------------|
+| 0 | [Free vs available memory](/fields/system-administration/linux-memory-pressure/linux-memory-free-vs-available.md) | Why does `free -h` show almost no free memory, and what is really used? |
 | 1 | [How Linux reclaims memory](/fields/system-administration/linux-memory-pressure/how-linux-reclaims-memory.md) | Why is free memory near zero normal, and when does a program actually stall? |
 | 2 | [Memory pressure (PSI)](/fields/system-administration/linux-memory-pressure/memory-pressure-psi.md) | How do you measure trouble in time lost, not bytes left? |
 | 3 | [The OOM killer](/fields/system-administration/linux-memory-pressure/the-oom-killer.md) | Who gets killed, why so late, and how do you shield or sacrifice a process? |
@@ -70,6 +73,7 @@ Anyone running Linux machines under load: sysadmins and HPC engineers who have b
 
 | File | Description |
 |------|-------------|
+| [linux-memory-free-vs-available](/fields/system-administration/linux-memory-pressure/linux-memory-free-vs-available.md) | Prelude: reading free -h, buff/cache, shared and available |
 | [how-linux-reclaims-memory](/fields/system-administration/linux-memory-pressure/how-linux-reclaims-memory.md) | Page cache, swap, kswapd and direct reclaim |
 | [memory-pressure-psi](/fields/system-administration/linux-memory-pressure/memory-pressure-psi.md) | Pressure Stall Information and PSI triggers |
 | [the-oom-killer](/fields/system-administration/linux-memory-pressure/the-oom-killer.md) | Victim scoring, oom_score_adj and why the kernel is late |

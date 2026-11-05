@@ -1,6 +1,6 @@
 ---
 id: linux-mem-oom-killer
-order: 3
+order: 4
 title: "The OOM Killer: Who Gets Thrown Overboard, and Why So Late"
 sidebar_label: "3. The OOM killer"
 summary: How the kernel decides when it is out of memory and whom to kill, how oom_score_adj shields or sacrifices a process, and why userspace killers like systemd-oomd act earlier than the kernel.
