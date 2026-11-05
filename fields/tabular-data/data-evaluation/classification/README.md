@@ -14,4 +14,4 @@ A model that always answers "no" can score a high accuracy when "yes" is rare. L
 | [accuracy-paradox](/fields/tabular-data/data-evaluation/classification/accuracy-paradox.md) | Understanding the accuracy paradox |
 | [nb_AccuracyParadox](/fields/tabular-data/data-evaluation/classification/nb_AccuracyParadox.ipynb) | Accuracy paradox demonstration |
 
-Classification metrics: accuracy, precision, recall, F1-score, ROC-AUC, and confusion matrix.
+So far this folder covers the accuracy paradox. Precision, recall, F1-score, ROC-AUC and the confusion matrix are not written yet.

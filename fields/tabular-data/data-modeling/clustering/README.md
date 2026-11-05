@@ -13,4 +13,4 @@ The awkward part of K-means is that you must say how many clusters you want befo
 |------|-------------|
 | [cluster_elbow_method](/fields/tabular-data/data-modeling/clustering/cluster_elbow_method.py) | Elbow method for optimal clusters |
 
-K-means, hierarchical clustering, DBSCAN, and other clustering techniques.
+So far this folder covers K-means with the elbow method. Hierarchical clustering, DBSCAN and other techniques are not written yet.

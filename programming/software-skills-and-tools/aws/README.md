@@ -12,11 +12,11 @@ HPC means running big computing jobs, such as machine learning or simulations, o
 
 **Who this is for:** engineers who need to run HPC or ML workloads on AWS, or who are preparing for an HPC systems engineer interview.
 
-# Table of Content
+## Table of Content
 - [Software Tool: AWS Services for HPC Systems](#software-tool-aws-services-for-hpc-systems)
 - [Table of Content](#table-of-content)
 - [AWS Services for HPC Systems](#aws-services-for-hpc-systems)
-- [What is Kubernets?](#what-is-kubernets)
+- [What is Kubernetes?](#what-is-kubernetes)
   - [Provided Features](#provided-features)
   - [Benefits of Using](#benefits-of-using)
 - [AWS ParallelCluster](#aws-parallelcluster)
@@ -34,16 +34,16 @@ The following AWS services can be used in HPC systems:
 |Amazon FSx for Lustre| Amazon FSx for Lustre is a fully managed, high-performance file system that is designed for HPC workloads. Amazon FSx for Lustre provides scalable storage capacity and high-performance throughput.
 |AWS Batch| AWS Batch is a job scheduler that can be used to manage and scale HPC workloads. AWS Batch can automatically scale your HPC workload based on demand, and it can optimize your costs by using Spot Instances.
 |AWS ParallelCluster| AWS ParallelCluster is a managed service that makes it easy to set up and manage HPC clusters on AWS. AWS ParallelCluster provides a variety of cluster templates that are optimized for specific HPC workloads, and it makes it easy to scale your cluster up or down as needed.
-Amazon Simple Storage Service (Amazon S3)| Amazon S3 is a highly scalable object storage service that can be used to store and access large datasets for HPC workloads.
-Amazon Elastic Block Store (Amazon EBS)| Amazon EBS is a block storage service that can be used to store and access persistent data for HPC workloads.
-Amazon Elastic Kubernetes Service (Amazon EKS)| Amazon EKS is a managed service that makes it easy to run Kubernetes on AWS. You can use Amazon EKS to run Kubernetes-based HPC applications.
+|Amazon Simple Storage Service (Amazon S3)| Amazon S3 is a highly scalable object storage service that can be used to store and access large datasets for HPC workloads.
+|Amazon Elastic Block Store (Amazon EBS)| Amazon EBS is a block storage service that can be used to store and access persistent data for HPC workloads.
+|Amazon Elastic Kubernetes Service (Amazon EKS)| Amazon EKS is a managed service that makes it easy to run Kubernetes on AWS. You can use Amazon EKS to run Kubernetes-based HPC applications.
 
 You can choose the AWS services that are right for your HPC needs based on the specific requirements of your applications and workloads.
 
-# What is Kubernets?
+# What is Kubernetes?
 Kubernetes is an open-source container orchestration platform. It automates the deployment, scaling, and management of containerized applications. Kubernetes makes it easy to deploy applications across multiple hosts, and it provides a number of features that make it easy to manage and scale applications.
 
-![kubernets](https://kubernetes.io/images/docs/components-of-kubernetes.svg)
+![kubernetes](https://kubernetes.io/images/docs/components-of-kubernetes.svg)
 
 Kubernetes is based on the concept of a cluster. A cluster is a group of machines that work together to run containerized applications. Kubernetes uses a master node to manage the cluster. The master node is responsible for scheduling containers to the worker nodes, and it also monitors the health of the cluster.
 
@@ -124,27 +124,27 @@ Answer: AWS ParallelCluster is a managed service that makes it easy to set up an
 
 Some of the benefits of using AWS ParallelCluster for HPC systems include:
 
-    Easy to use: AWS ParallelCluster provides a simple user interface and command line interface for managing your HPC clusters.
-    Managed service: AWS ParallelCluster is a managed service, which means that AWS takes care of the underlying infrastructure and software.
-    Scalable: AWS ParallelCluster makes it easy to scale your HPC clusters up or down as needed.
-    High performance: AWS ParallelCluster is optimized for HPC workloads, and it provides low latency and high throughput communication between Amazon EC2 instances.
+- Easy to use: AWS ParallelCluster provides a simple user interface and command line interface for managing your HPC clusters.
+- Managed service: AWS ParallelCluster is a managed service, which means that AWS takes care of the underlying infrastructure and software.
+- Scalable: AWS ParallelCluster makes it easy to scale your HPC clusters up or down as needed.
+- High performance: AWS ParallelCluster is optimized for HPC workloads, and it provides low latency and high throughput communication between Amazon EC2 instances.
 
 Q: What are some of the challenges of managing HPC systems on AWS?
 
 Answer: Some of the challenges of managing HPC systems on AWS include:
 
-    Cost optimization: It is important to optimize the cost of your HPC systems on AWS. You can do this by using Spot Instances, selecting the right instance types, and using AWS Batch.
-    Security: It is important to secure your HPC systems on AWS. You can do this by using Identity and Access Management (IAM) roles, VPC security groups, and AWS CloudTrail.
-    Performance: It is important to monitor the performance of your HPC systems on AWS. You can do this by using Amazon CloudWatch and AWS CloudTrail.
+- Cost optimization: It is important to optimize the cost of your HPC systems on AWS. You can do this by using Spot Instances, selecting the right instance types, and using AWS Batch.
+- Security: It is important to secure your HPC systems on AWS. You can do this by using Identity and Access Management (IAM) roles, VPC security groups, and AWS CloudTrail.
+- Performance: It is important to monitor the performance of your HPC systems on AWS. You can do this by using Amazon CloudWatch and AWS CloudTrail.
 
 Q: What are some of the best practices for managing HPC systems on AWS?
 
 Answer: Some of the best practices for managing HPC systems on AWS include:
 
-    Use the right instance types: Choose the right instance types for your HPC workloads. AWS offers a variety of instance types that are optimized for specific HPC workloads.
-    Use Spot Instances: Spot Instances can help you to save money on your HPC systems on AWS. Spot Instances are spare capacity that is available on the AWS Cloud.
-    Use AWS Batch: AWS Batch can help you to scale your HPC workloads up or down as needed. AWS Batch also provides a number of features that can help you to optimize the cost and performance of your HPC workloads.
-    Use IAM roles: Use IAM roles to control access to your HPC systems on AWS. IAM roles allow you to grant users permissions to perform specific tasks on your HPC systems.
-    Use VPC security groups: Use VPC security groups to control network access to your HPC systems on AWS. VPC security groups allow you to specify the IP addresses that are allowed to access your HPC systems.
-    Use AWS CloudTrail: Use AWS CloudTrail to log all activity on your HPC systems on AWS. AWS CloudTrail can help you to troubleshoot problems and to comply with security requirements.
-    Monitor performance: Use Amazon CloudWatch and AWS CloudTrail to monitor the performance of your HPC systems on AWS. Monitoring performance can help you to identify and troubleshoot problems.
+- Use the right instance types: Choose the right instance types for your HPC workloads. AWS offers a variety of instance types that are optimized for specific HPC workloads.
+- Use Spot Instances: Spot Instances can help you to save money on your HPC systems on AWS. Spot Instances are spare capacity that is available on the AWS Cloud.
+- Use AWS Batch: AWS Batch can help you to scale your HPC workloads up or down as needed. AWS Batch also provides a number of features that can help you to optimize the cost and performance of your HPC workloads.
+- Use IAM roles: Use IAM roles to control access to your HPC systems on AWS. IAM roles allow you to grant users permissions to perform specific tasks on your HPC systems.
+- Use VPC security groups: Use VPC security groups to control network access to your HPC systems on AWS. VPC security groups allow you to specify the IP addresses that are allowed to access your HPC systems.
+- Use AWS CloudTrail: Use AWS CloudTrail to log all activity on your HPC systems on AWS. AWS CloudTrail can help you to troubleshoot problems and to comply with security requirements.
+- Monitor performance: Use Amazon CloudWatch and AWS CloudTrail to monitor the performance of your HPC systems on AWS. Monitoring performance can help you to identify and troubleshoot problems.
