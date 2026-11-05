@@ -10,3 +10,8 @@ wandb/
 
 # Local staging copy of the site (.docs/tools/stage_site.py)
 _site/
+
+.venv/
+
+# Local Claude Code skills (personal tooling, not part of the knowledge base)
+.claude/skills/

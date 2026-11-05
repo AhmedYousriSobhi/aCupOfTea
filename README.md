@@ -39,18 +39,18 @@ Not sure where to begin? Each of these takes one cup, roughly the reading time s
 | ~3 min | [Encoder-decoder for translation](/fields/generative-ai/machine-translator/encoder-decoder.md) | The architecture behind machine translation, in a few paragraphs |
 | ~7 min | [Bias and variance](/fields/tabular-data/data-evaluation/model-behavior/bias-variance-trade-off.md) | The trade-off behind overfitting and underfitting |
 | ~6 min | [Customer segmentation](/problems/customer-segmentation.md) | A business problem, framed the way a data scientist would |
-| ~7 min | [Schedulers, the traffic controller](/fields/schedulers/intro.md) | What a cluster scheduler does and why it matters |
+| ~7 min | [Schedulers, the traffic controller](/fields/schedulers/slurm-intro.md) | What a cluster scheduler does and why it matters |
 
 <!-- recent:start -->
 
 ## 🆕 Recently added
 
-- 2026-10-31 · [Core AI Infrastructure Concepts: A Map](/business/hpc-industry/ai-infrastructure-core-concepts.md)
-- 2026-10-31 · [Isolating GPU Workloads: Taints, Labels and the Device Plugin](/fields/devops/kubernetes/isolating-gpu-workloads.md)
-- 2026-10-31 · [The Job Execution Journey: From `kubectl apply` to the First All-Reduce](/fields/devops/kubernetes/job-execution-journey.md)
-- 2026-10-31 · [Slurm Multi-Tenancy: Who Stores the Rules, Who Enforces Them](/fields/schedulers/slurm-accounting-multi-tenancy.md)
-- 2026-10-31 · [Parallel Filesystems: Why 10,000 GPUs Can Starve on a Full Disk](/fields/system-administration/ai-storage-and-fabric/parallel-filesystems-for-ai.md)
-- 2026-10-31 · [RDMA, InfiniBand and GPUDirect: Taking the CPU Out of the Way](/fields/system-administration/ai-storage-and-fabric/rdma-infiniband-gpudirect.md)
+- 2026-11-04 · [cgroup v2 Memory Control: The Levers Between Doing Nothing and Killing](/fields/system-administration/linux-memory-pressure/cgroup-v2-memory-control.md)
+- 2026-11-04 · [How Linux Reclaims Memory: Cache, Swap and the Two Kinds of Stall](/fields/system-administration/linux-memory-pressure/how-linux-reclaims-memory.md)
+- 2026-11-04 · [Pressure Stall Information: Measuring Time Lost, Not Bytes Left](/fields/system-administration/linux-memory-pressure/memory-pressure-psi.md)
+- 2026-11-04 · [Making a Rescuer Survive: CPU, Protection and a Checklist](/fields/system-administration/linux-memory-pressure/rescuer-checklist.md)
+- 2026-11-04 · [The OOM Killer: Who Gets Thrown Overboard, and Why So Late](/fields/system-administration/linux-memory-pressure/the-oom-killer.md)
+- 2026-11-04 · [Backfill Tuning: The Planner That Can Only See One Day Ahead](/fields/schedulers/slurm-backfill-tuning.md)
 
 <!-- recent:end -->
 
