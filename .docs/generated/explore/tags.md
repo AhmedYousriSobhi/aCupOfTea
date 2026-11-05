@@ -4,7 +4,7 @@
 
 Pages grouped by topic tag.
 
-- [Affinity](/.docs/generated/explore/tags/affinity.md) (2)
+- [Affinity](/.docs/generated/explore/tags/affinity.md) (3)
 - [Clustering](/.docs/generated/explore/tags/clustering.md) (2)
 - [Containers](/.docs/generated/explore/tags/containers.md) (3)
 - [Design](/.docs/generated/explore/tags/design.md) (1)
@@ -13,13 +13,14 @@ Pages grouped by topic tag.
 - [Distributed Training](/.docs/generated/explore/tags/distributed-training.md) (2)
 - [Encoder-Decoder](/.docs/generated/explore/tags/encoder-decoder.md) (1)
 - [GPU](/.docs/generated/explore/tags/gpu.md) (34)
-- [Hpc](/.docs/generated/explore/tags/hpc.md) (46)
+- [Hpc](/.docs/generated/explore/tags/hpc.md) (52)
 - [Kubernetes](/.docs/generated/explore/tags/kubernetes.md) (9)
 - [Large Language Models](/.docs/generated/explore/tags/llm.md) (7)
 - [Model Evaluation](/.docs/generated/explore/tags/model-evaluation.md) (2)
-- [MPI](/.docs/generated/explore/tags/mpi.md) (1)
+- [MPI](/.docs/generated/explore/tags/mpi.md) (7)
 - [Neural Networks](/.docs/generated/explore/tags/neural-networks.md) (1)
 - [Nvidia](/.docs/generated/explore/tags/nvidia.md) (26)
+- [OpenMP](/.docs/generated/explore/tags/openmp.md) (6)
 - [Programming](/.docs/generated/explore/tags/programming.md) (5)
 - [PyTorch](/.docs/generated/explore/tags/pytorch.md) (2)
 - [Recurrent Neural Networks](/.docs/generated/explore/tags/rnn.md) (2)

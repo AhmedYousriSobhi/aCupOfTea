@@ -593,13 +593,80 @@
     "related": [],
     "related_by": []
   },
+  "openmp-and-open-mpi-overview": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "openmp-mpi-hybrid-binding-trap": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "openmp-mpi-threads-and-ranks"
+    ],
+    "related": [
+      "parallel-execution-and-affinity"
+    ],
+    "related_by": []
+  },
+  "openmp-mpi-spotting-the-code": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "openmp-mpi-threads-and-ranks"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "openmp-mpi-threads-and-ranks": {
+    "prerequisite_of": [
+      "openmp-mpi-hybrid-binding-trap",
+      "openmp-mpi-spotting-the-code"
+    ],
+    "prerequisites": [
+      "openmp-open-mpi-name-mixup"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "openmp-mpi-where-they-are-going": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "openmp-mpi-where-they-came-from"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "openmp-mpi-where-they-came-from": {
+    "prerequisite_of": [
+      "openmp-mpi-where-they-are-going"
+    ],
+    "prerequisites": [
+      "openmp-open-mpi-name-mixup"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "openmp-open-mpi-name-mixup": {
+    "prerequisite_of": [
+      "openmp-mpi-threads-and-ranks",
+      "openmp-mpi-where-they-came-from"
+    ],
+    "prerequisites": [],
+    "related": [
+      "parallel-execution-and-affinity"
+    ],
+    "related_by": []
+  },
   "parallel-execution-and-affinity": {
     "prerequisite_of": [],
     "prerequisites": [],
     "related": [
       "cpu-affinity"
     ],
-    "related_by": []
+    "related_by": [
+      "openmp-mpi-hybrid-binding-trap",
+      "openmp-open-mpi-name-mixup"
+    ]
   },
   "principal-component-analysis": {
     "prerequisite_of": [],
