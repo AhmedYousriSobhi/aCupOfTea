@@ -62,7 +62,7 @@ Not every page is equally cheap to take back. This is the fact that everything e
 
 *Anonymous* means "not backed by a file": a program's heap, its stack, memory from `malloc`. That's the memory programs own.
 
-The kernel sorts pages onto four lists in `/proc/meminfo`: `Active(file)`, `Inactive(file)`, `Active(anon)` and `Inactive(anon)`. A page moves from active to inactive when it hasn't been touched for a while, and the inactive ends are where reclaim eats first. This is the "least recently used" rule from the [memory-locking page](/fields/system-administration/linux-memory-pressure/memory-locking-mlockall.md), made concrete.
+The kernel sorts pages onto four lists in `/proc/meminfo`: `Active(file)`, `Inactive(file)`, `Active(anon)` and `Inactive(anon)`. A page moves from active to inactive when it hasn't been touched for a while, and the inactive ends are where reclaim eats first. (Kernels with **multi-gen LRU**, on by default on Ubuntu 26.04, age pages through several generations instead. The four `/proc/meminfo` counters are still there, so the picture here still reads correctly. Check `/sys/kernel/mm/lru_gen/enabled`.) This is the "least recently used" rule from the [memory-locking page](/fields/system-administration/linux-memory-pressure/memory-locking-mlockall.md), made concrete.
 
 One consequence is worth saying out loud. **A machine with no swap isn't safer, it just has fewer pages it is allowed to reclaim.** All the anonymous memory is pinned by the lack of a place to put it, and only the file cache is left to squeeze.
 

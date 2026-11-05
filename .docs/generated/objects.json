@@ -953,7 +953,7 @@
     "id": "linux-memory-pressure-overview",
     "level": "intermediate",
     "path": "fields/system-administration/linux-memory-pressure/README.md",
-    "reading_time_min": 3,
+    "reading_time_min": 5,
     "relations": {
       "prerequisites": [],
       "related": []

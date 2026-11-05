@@ -38,6 +38,24 @@ Written against Ubuntu 26.04, Linux 7.0 and systemd as shipped there. The number
 | `memory.reclaim` | 5.19 | 4 |
 | `RLIMIT_MEMLOCK` default 8 MiB (was 64 KiB) | 5.16 | 5 |
 
+### What changed since Ubuntu 22.04
+
+The pages were tested on Ubuntu 22.04 (Linux 5.15, systemd 249) and written on Ubuntu 26.04 (Linux 7.0, systemd 259). This is what differs between them. "Seen" means read from the 26.04 machine without changing anything; "not tested" means no behaviour test was run on 7.0.
+
+| Area | Ubuntu 22.04 (5.15, systemd 249) | Ubuntu 26.04 (7.0, systemd 259) | Basis |
+|------|----------------------------------|---------------------------------|-------|
+| `memory.reclaim` | Absent (tested) | Present | Seen |
+| `memory.peak`, `memory.swap.peak`, `memory.swap.high`, `memory.zswap.max`, `memory.zswap.writeback` | Not checked | Present in a user cgroup | Seen. The kernel docs say writing to `memory.swap.peak` resets it |
+| `memory.reclaim` argument `swappiness=` | Not available | Patch series (Dec 2023 to Jan 2024) adds it. Whether 7.0 has it was not checked | [Patch series](https://patchew.org/linux/20240103164841.2800183-1-schatzberg.dan@gmail.com/20240103164841.2800183-3-schatzberg.dan@gmail.com) |
+| Unprivileged PSI triggers (window a multiple of 2 s) | Refused with `EPERM` (tested) | Allowed per the kernel docs. The commit dates from March 2023. Not tested | [Commit d82caa27](https://lab.nexedi.cn/kirr/linux/-/commit/d82caa273565b45fcf103148950549af76c314b0) |
+| Multi-gen LRU (page aging by generations, not just active/inactive lists) | Not in 5.15 (merged in Linux 6.1) | On: `CONFIG_LRU_GEN_ENABLED=y`, `/sys/kernel/mm/lru_gen/enabled` is `0x0007`. `Active(...)`/`Inactive(...)` are still in `/proc/meminfo` | Seen. [Launchpad 2023629](https://bugs.launchpad.net/bugs/2023629): Ubuntu enabled it for 23.10 kernels |
+| `RLIMIT_MEMLOCK` | 245 MiB out of the box on the test VM | 8 MiB (`ulimit -l` printed `8192`) | Seen |
+| cgroup v1 | Supported | **Gone**: systemd 258 removed support for the legacy and hybrid hierarchies, so 26.04 is cgroup v2 only | [systemd NEWS, v258](https://github.com/systemd/systemd/blob/main/NEWS) |
+| `systemd-oomd` | Basic | v257 adds `ManagedOOMMemoryPressureDurationSec=` per service; v259 adds `OOMKills` and `ManagedOOMKills` properties on service units; v260 (not in 26.04) adds rulesets | [systemd NEWS](https://github.com/systemd/systemd/blob/main/NEWS) |
+| PSI, `memory.high`, `memory.min`/`low`, OOM scoring, `WatchdogSec=` | Tested | Same interface, same documented meaning | Not tested on 7.0 |
+
+Not reviewed: the systemd NEWS for v250 to v256, and the kernel release notes for 5.16 to 6.0 and 6.2 to 6.17. Gaps there could hide other changes.
+
 Kernel versions here come from the kernel release history and man pages, except the memory-locking default, which is from getrlimit(2).
 
 ## Who this is for
