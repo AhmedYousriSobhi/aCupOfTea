@@ -1619,7 +1619,7 @@
     "level": "intermediate",
     "order": 5,
     "path": "fields/system-administration/openmp-and-open-mpi/hybrid-and-the-binding-trap.md",
-    "reading_time_min": 6,
+    "reading_time_min": 7,
     "relations": {
       "prerequisites": [
         "openmp-mpi-threads-and-ranks"
@@ -1680,7 +1680,7 @@
     "level": "beginner",
     "order": 3,
     "path": "fields/system-administration/openmp-and-open-mpi/threads-and-ranks.md",
-    "reading_time_min": 6,
+    "reading_time_min": 7,
     "relations": {
       "prerequisites": [
         "openmp-open-mpi-name-mixup"
@@ -1709,7 +1709,7 @@
     "level": "beginner",
     "order": 6,
     "path": "fields/system-administration/openmp-and-open-mpi/where-they-are-going.md",
-    "reading_time_min": 6,
+    "reading_time_min": 9,
     "relations": {
       "prerequisites": [
         "openmp-mpi-where-they-came-from"
@@ -1717,13 +1717,13 @@
       "related": []
     },
     "status": "stable",
-    "summary": "The latest seasons of two long-running series - OpenMP 6.0 and MPI 5.0 - what plot twists they added (GPUs, tasks, a standard ABI), and why the mental models you learned will not be cancelled.",
+    "summary": "OpenMP 6.0 and MPI 5.0 are out. Do you have to rewrite everything? Two Monday tickets, the new GPU annex and the standard delivery box, and the ideas that will outlive every version number.",
     "tags": [
       "hpc",
       "mpi",
       "openmp"
     ],
-    "title": "Season Finale: Where OpenMP and MPI Are Going",
+    "title": "Two Tickets About the Future: OpenMP 6, MPI 5 and What Never Expires",
     "type": "concept",
     "types": [
       "concept"
@@ -1767,7 +1767,7 @@
     "level": "beginner",
     "order": 1,
     "path": "fields/system-administration/openmp-and-open-mpi/the-name-mixup.md",
-    "reading_time_min": 5,
+    "reading_time_min": 6,
     "relations": {
       "prerequisites": [],
       "related": [

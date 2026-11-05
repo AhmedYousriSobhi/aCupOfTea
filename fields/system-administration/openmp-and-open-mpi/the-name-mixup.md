@@ -14,21 +14,32 @@ relations:
 
 # Not Twins, Not Even Cousins: OpenMP, MPI and Open MPI
 
-> Part 1 of 6. By the end you'll be able to say, without hesitation, what each of the three names is, and you'll stop confusing the two that look alike.
+> **Part 1 of 6.** Two names that differ by one space, and one that is not even a program. By the end of this page you'll be able to say, without hesitation, what each of the three is, and you'll know which one to blame when the ticket comes back.
 
 ## Contents
 
 - [The meeting where nobody understood anybody](#the-meeting-where-nobody-understood-anybody)
 - [Three names, three jobs](#three-names-three-jobs)
 - [The kitchen analogy](#the-kitchen-analogy)
+- [Try it before you scroll](#try-it-before-you-scroll)
 - [Proof that Open MPI is not OpenMP](#proof-that-open-mpi-is-not-openmp)
 - [The cheat table](#the-cheat-table)
 
 ---
 
-## The meeting where nobody understood anybody
+## The ticket that came back
 
-A cluster ticket reads: *"Please install Open MPI so my OpenMP code runs on more nodes."* Two people on the call nod. One is thinking "a library that talks between machines". The other is thinking "a compiler flag for threads". They are both right, and the ticket is wrong in a way neither notices for a week.
+Monday, a ticket lands in the cluster team's queue:
+
+**Ticket 1:** *"Please install Open MPI so my OpenMP code runs on more nodes."*
+
+A junior engineer types `apt install openmpi-bin`, writes "done", and closes it.
+
+Friday, the same user is back:
+
+**Ticket 2:** *"Still one node. Still slow. Did the install even work?"*
+
+The install worked perfectly. It also did nothing for this user, because the ticket asked for the wrong thing in a way that sounds exactly right. To see why, you need to pull apart three names.
 
 The names are the problem. `OpenMP` and `Open MPI` differ by one space. Say them aloud and they differ by nothing, like "affect" and "effect", except with a job queue attached. Pull them apart and the confusion goes away, because they are not related the way the names suggest.
 
@@ -44,7 +55,7 @@ If they were on a family-DNA website, the result would read: *"Relationship: non
 | **MPI** | The **M**essage **P**assing **I**nterface: an agreed set of functions for **processes** to send each other messages | A specification (a document) | Many processes, each with its own memory, possibly on many machines |
 | **Open MPI** | One program that implements the MPI specification | Software you install | Same as MPI: it is MPI |
 
-Read that table twice. The only name that is software you install is **Open MPI**. The other two are rulebooks.
+Read that table twice. The only name that is software you install is **Open MPI**. The other two are rulebooks. Ticket 1 asked for the one name that is software, to fix a problem in the rulebook that isn't.
 
 - OpenMP describes itself as an API that "supports multi-platform shared-memory parallel programming in C/C++ and Fortran" ([OpenMP FAQ](https://www.openmp.org/about/openmp-faq/)).
 - The Open MPI project calls itself "an open source, freely available implementation of the MPI specifications" ([Open MPI FAQ](https://www.open-mpi.org/faq/?category=general)).
@@ -52,6 +63,8 @@ Read that table twice. The only name that is software you install is **Open MPI*
 So: **Open MPI is to MPI what a browser is to the HTML spec.** Nobody says "I installed HTML to open this page", and nobody should say "I installed OpenMP so my cluster can talk".
 
 Chrome and Firefox both implement HTML. Open MPI and MPICH both implement MPI. OpenMP is a different rulebook altogether.
+
+That is the theory. The kitchen version is easier to remember.
 
 > [!NOTE]
 > "Open" in both names is a coincidence of branding, not a family tie. The two projects have different authors, different goals and different release schedules. The next part tells where each one came from.
@@ -86,11 +99,21 @@ flowchart TB
 
 OpenMP stops at the kitchen wall: the chefs can shout at each other all day, but they cannot shout across town. MPI is what lets kitchens cooperate, with all the paperwork that implies. Big jobs use both: several kitchens (MPI), each with several cooks (OpenMP). That is part 5.
 
+So where do those chefs and kitchens come from in software? Hold that thought for one pause.
+
+---
+
+## Try it before you scroll
+
+☕ Ten seconds. A colleague installs Open MPI on a fresh machine, then compiles an OpenMP program with `mpicc` and runs it. Will it run with threads?
+
+Hint: what did `mpicc` get installed to do, and who turns on OpenMP?
+
 ---
 
 ## Proof that Open MPI is not OpenMP
 
-Claims are cheap. Here is the evidence, from a throwaway Ubuntu 26.04 VM with Open MPI 5.0.10 installed from the distribution's packages (`openmpi-bin`, `libopenmpi-dev`) and gcc 15.2.
+The answer is no, and here is the evidence, from a throwaway Ubuntu 26.04 VM with Open MPI 5.0.10 installed from the distribution's packages (`openmpi-bin`, `libopenmpi-dev`) and gcc 15.2.
 
 **1. `mpicc` is just gcc with extra flags.** It adds the MPI headers and library and nothing about threads:
 
@@ -110,7 +133,7 @@ omp_hello.c:(.text.startup+0xd): undefined reference to `omp_get_thread_num'
 collect2: error: ld returned 1 exit status
 ```
 
-Installing Open MPI gave that program no OpenMP at all. The two are installed, switched on and versioned separately.
+Installing Open MPI gave that program no OpenMP at all. The two are installed, switched on and versioned separately. That is Ticket 1: the install had nothing to do with the user's real problem (threads can't leave one machine), so the user was still on one node on Friday.
 
 **3. An MPI program does not even need a cluster.** Started without `mpirun`, an MPI program just runs as a team of one:
 
@@ -132,7 +155,7 @@ sum of ranks = 0
 
 **Takeaway:** OpenMP shares work between threads, MPI passes messages between processes, and Open MPI is merely one program that implements MPI.
 
-Next: [Where they came from](/fields/system-administration/openmp-and-open-mpi/where-they-came-from.md), part 2: the early 1990s that made both necessary.
+So here's the question this raises: if both rulebooks solve "make a program parallel", why did anyone write two? The answer is in [part 2: where they came from](/fields/system-administration/openmp-and-open-mpi/where-they-came-from.md), and it starts in the early 1990s with a very annoying hotel.
 
 ---
 

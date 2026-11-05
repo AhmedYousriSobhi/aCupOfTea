@@ -14,7 +14,7 @@ relations:
 
 # Know It on Sight: Reading OpenMP and MPI Code, Builds and Job Scripts
 
-> Part 4 of 6. By the end, you'll be able to open an unfamiliar source tree, Makefile or job script and say "this uses OpenMP", "this uses MPI" or "this uses both", and know what each line is asking of the machine.
+> **Part 4 of 6.** By the end, you'll be able to open an unfamiliar source tree, Makefile or job script and say "this uses OpenMP", "this uses MPI" or "this uses both", and know what each line is asking of the machine.
 
 Think of this page as a detective's pocket guide. Every suspect leaves fingerprints: an include line here, a function prefix there, a launch command at the scene. Learn the five fingerprints and you can name the culprit before you've finished your tea.
 
@@ -25,6 +25,7 @@ Think of this page as a detective's pocket guide. Every suspect leaves fingerpri
 - [Spotting MPI](#spotting-mpi)
 - [Spotting both: the hybrid fingerprint](#spotting-both-the-hybrid-fingerprint)
 - [Reading a job script](#reading-a-job-script)
+- [Try it before you scroll](#try-it-before-you-scroll)
 - [Three look-alikes that fool people](#three-look-alikes-that-fool-people)
 
 ---
@@ -53,6 +54,8 @@ flowchart TD
 ```
 
 I ran the three searches on the test programs from part 3: the first listed the five OpenMP files, the second listed the three MPI ones, the third listed the two files that use both. (`!$omp` is how OpenMP is written in Fortran; I did not run Fortran here.)
+
+Got a hit? Then it's time to read the fingerprints.
 
 ---
 
@@ -148,6 +151,31 @@ Decode it: **ntasks = ranks**, **cpus-per-task = threads per rank**. Here that i
 
 ---
 
+## Try it before you scroll
+
+☕ Three scripts land in your inbox. For each, say OpenMP, MPI or hybrid before you read the answers.
+
+```bash
+# A
+mpirun -np 8 ./sim
+
+# B
+export OMP_NUM_THREADS=16
+./sim
+
+# C
+#SBATCH --ntasks=4
+#SBATCH --cpus-per-task=8
+export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
+srun ./sim
+```
+
+Hint: look for who starts the processes, and for who sets a thread count.
+
+**Answers.** A is **MPI only**: eight ranks, no thread setting. B is **OpenMP only**: one plain process with 16 threads, no launcher. C is **hybrid**: 4 ranks, each with 8 threads, 32 cores in all. If you got C right, you can already read most real-world job scripts.
+
+---
+
 ## Three look-alikes that fool people
 
 | Looks like | Actually |
@@ -158,7 +186,7 @@ Decode it: **ntasks = ranks**, **cpus-per-task = threads per rank**. Here that i
 
 **Takeaway:** `#pragma omp` and `OMP_` mean threads in one process; `MPI_` and `mpirun` mean separate ranks; `MPI_Init_thread` plus pragmas means both.
 
-Next: [Hybrid and the binding trap](/fields/system-administration/openmp-and-open-mpi/hybrid-and-the-binding-trap.md), part 5: running both at once, and the default that silently halves your speed.
+Script C above is the interesting one. It runs both models at once, and it is the one that quietly goes slow without telling you why. [Part 5](/fields/system-administration/openmp-and-open-mpi/hybrid-and-the-binding-trap.md) catches it on camera.
 
 ---
 

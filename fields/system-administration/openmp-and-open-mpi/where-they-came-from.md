@@ -14,12 +14,13 @@ relations:
 
 # Two Tribes, One Problem: Where OpenMP and MPI Came From
 
-> Part 2 of 6. By the end you'll know why two parallel standards exist, who wrote each, and where Open MPI fits in the family tree.
+> **Part 2 of 6.** Two committees, one headache, and a standard that nearly died on the way in. By the end of this page you'll know why two parallel standards exist, who wrote each, and where Open MPI fits in the family tree.
 
 ## Contents
 
 - [The problem: every vendor spoke its own dialect](#the-problem-every-vendor-spoke-its-own-dialect)
 - [Tribe 1: the message passers (MPI)](#tribe-1-the-message-passers-mpi)
+- [Try it before you scroll](#try-it-before-you-scroll)
 - [Tribe 2: the shared-memory crowd (OpenMP)](#tribe-2-the-shared-memory-crowd-openmp)
 - [Where Open MPI was born](#where-open-mpi-was-born)
 - [The whole timeline on one screen](#the-whole-timeline-on-one-screen)
@@ -39,6 +40,8 @@ There were two kinds of machines, and so two kinds of dialect:
 
 Both tribes arrived at the same cure: stop inventing light switches, write the dialects down once as a standard, and let every vendor build to it. Then they went off and did it separately, which is the whole reason you are reading two stories.
 
+Who went first, and who went at all?
+
 ---
 
 ## Tribe 1: the message passers (MPI)
@@ -54,11 +57,21 @@ MPI-1.0 was published in 1994 (per the [Open MPI FAQ](https://www.open-mpi.org/f
 
 Notice what MPI is: a **document**, finished by a committee of about 60 people who still managed to agree. The Forum writes the rules and, then, anyone may build software that follows them. That is the whole reason there is more than one MPI program (part 1).
 
+Meanwhile, the shared-memory tribe tried the same trick in 1994, three years before OpenMP. It did not go well.
+
+---
+
+## Try it before you scroll
+
+☕ Ten seconds. In 1994 a committee drafted a standard for shared-memory directives (it was called **ANSI X3H5**), and then **nobody adopted it**. Why do you think it was abandoned?
+
+Hint: what was happening, at that exact moment, to the other kind of machine?
+
 ---
 
 ## Tribe 2: the shared-memory crowd (OpenMP)
 
-The shared-memory tribe had a false start. Per the [LLNL OpenMP tutorial](https://hpc-tutorials.llnl.gov/openmp/introduction/), makers of shared-memory machines had each offered "comparable Fortran extensions based on compiler directives", where you mark a loop and the compiler spreads it over the processors. In 1994 a draft from **ANSI X3H5** tried to standardize them. It was "never adopted, largely due to waning interest as distributed memory machines became popular".
+The answer is in the sources. The shared-memory tribe had a false start. Per the [LLNL OpenMP tutorial](https://hpc-tutorials.llnl.gov/openmp/introduction/), makers of shared-memory machines had each offered "comparable Fortran extensions based on compiler directives", where you mark a loop and the compiler spreads it over the processors. In 1994 a draft from **ANSI X3H5** tried to standardize them. It was "never adopted, largely due to waning interest as distributed memory machines became popular".
 
 Read that again: the rise of MPI-style machines is part of why the first shared-memory standard stalled. In short, the message-passing tribe accidentally knocked over the shared-memory tribe's first standard on the way in, and the shared-memory tribe came back three years later with a better plan.
 
@@ -89,7 +102,7 @@ MPI was a document, so implementations followed. By the [Open MPI FAQ](https://w
 
 The project's copyright notice starts in 2004. Open MPI is therefore a **descendant of MPI implementations**, not of OpenMP. The name is "Open" because it is open source, the same way a hundred other projects are.
 
-Open MPI is not alone. MPICH is another implementation, and vendors ship their own.
+Open MPI is not alone. MPICH is another implementation, and vendors ship their own. Which is why, in part 1, installing "Open MPI" and "MPI" was never the same sentence.
 
 ---
 
@@ -106,7 +119,7 @@ Open MPI is not alone. MPICH is another implementation, and vendors ship their o
 
 **Takeaway:** MPI and OpenMP are two answers from two tribes to the same 1990s headache, and Open MPI is a later, separate program that implements MPI.
 
-Next: [Threads and ranks](/fields/system-administration/openmp-and-open-mpi/threads-and-ranks.md), part 3: the mental model, with programs you can run.
+You now know the cast and the history. Time to stop reading about them and run them: in [part 3](/fields/system-administration/openmp-and-open-mpi/threads-and-ranks.md) four threads count to 100 million, and two out of three times they get it wrong.
 
 ---
 

@@ -14,7 +14,7 @@ relations:
 
 # Cooks and Kitchens: Threads, Ranks and the One Mental Model
 
-> Part 3 of 6. By the end you'll know what a **thread** and a **rank** are, you'll have seen both run, and you'll understand the one bug each style invites.
+> **Part 3 of 6.** By the end you'll know what a **thread** and a **rank** are, you'll have seen both run, and you'll understand the one bug each style invites.
 
 The case file: I asked four threads to count to 100 million. Two out of three times they proudly reported **75 million**. Nobody lied. Nobody crashed. Twenty-five million counts simply vanished, without a single error message. This page is about how that happens.
 
@@ -22,6 +22,7 @@ The case file: I asked four threads to count to 100 million. Two out of three ti
 
 - [The mental model in two sentences](#the-mental-model-in-two-sentences)
 - [OpenMP: one process, many threads](#openmp-one-process-many-threads)
+- [Try it before you scroll](#try-it-before-you-scroll)
 - [The bug OpenMP invites: a data race](#the-bug-openmp-invites-a-data-race)
 - [MPI: many processes, many ranks](#mpi-many-processes-many-ranks)
 - [The bug MPI invites: not enough slots, and waiting forever](#the-bug-mpi-invites-not-enough-slots-and-waiting-forever)
@@ -108,6 +109,16 @@ Two knobs to remember:
 > [!WARNING]
 > Forget `-fopenmp` and the pragmas are **silently ignored**. A program with only pragmas builds clean (gcc warns only with `-Wall`) and runs on one thread. I tested a four-thread `printf` region: with the flag it printed 4 lines, without it, 1. If your OpenMP program is mysteriously slow, check the flag first.
 
+That's the happy path. Now let's give four threads a job they can get wrong.
+
+---
+
+## Try it before you scroll
+
+☕ Ten seconds. Four threads share one variable, `racy`, and each one runs `racy += 1` twenty-five million times. What is `racy` at the end?
+
+Hint: `+=` is not one step for a CPU. It is three: read the old value, add one, write the new value back. What happens if two threads do the reading before either does the writing?
+
 ---
 
 ## The bug OpenMP invites: a data race
@@ -131,6 +142,8 @@ racy      75000000      reduction 100000000
 ```
 
 The racy total was wrong in two runs out of three, and right in the third by luck. That is the nasty part: the program that is wrong sometimes will happily pass the one test you ran before shipping it. I did not dig into why it landed on those exact numbers. The lesson stands: **a race gives wrong answers that change from run to run**, so a pass proves nothing. `reduction(+:var)` is the standard fix for "everyone adds to one total".
+
+That's the threads' signature bug. The other kitchens have their own way to go wrong, but first they need to run at all.
 
 ---
 
@@ -177,6 +190,8 @@ sum of ranks = 6
 
 0 + 1 + 2 + 3 = 6. Four separate processes each held one number in private memory, and the library carried the numbers together, like four kitchens each handing a single note through the window to rank 0. No rank could simply read another's `rank` variable. That is the "separate kitchens" rule.
 
+Both programs run. So what is the first thing that goes wrong when you ask for more kitchens than the building has?
+
 ---
 
 ## The bug MPI invites: not enough slots, and waiting forever
@@ -211,7 +226,7 @@ The other classic MPI bug I did not run here, because it hangs by design: a **de
 
 **Takeaway:** a thread shares memory and needs care about who writes what; a rank owns its memory and needs messages to cooperate.
 
-Next: [Spotting OpenMP and MPI code](/fields/system-administration/openmp-and-open-mpi/spotting-openmp-and-mpi-code.md), part 4: what to look for the moment you open someone's source or job script.
+You've now seen both models run and both models break. The next skill is the one you'll use every week: someone hands you a repo or a job script, and in thirty seconds you have to say which kitchen you're standing in. That's [part 4](/fields/system-administration/openmp-and-open-mpi/spotting-openmp-and-mpi-code.md).
 
 ---
 

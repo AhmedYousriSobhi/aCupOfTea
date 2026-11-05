@@ -15,7 +15,7 @@ relations:
 
 # Kitchens With Cooks: Hybrid MPI+OpenMP and the Binding Trap
 
-> Part 5 of 6. By the end you'll know why the two models are combined, what "binding" means, how to see it, and the one-line fix for the most common hybrid mistake.
+> **Part 5 of 6.** By the end you'll know why the two models are combined, what "binding" means, how to see it, and the one-line fix for the most common hybrid mistake.
 
 The scene: you reserve a nice 4-core node, start 2 ranks with 4 threads each, and the job runs. No error. No warning. It is just a bit slow, and slow is the one thing a cluster never complains about. Meanwhile half your cores are doing a very good impression of a break room.
 
@@ -24,6 +24,7 @@ The scene: you reserve a nice 4-core node, start 2 ranks with 4 threads each, an
 - [Why combine them](#why-combine-them)
 - [Binding in one paragraph](#binding-in-one-paragraph)
 - [The trap, caught on camera](#the-trap-caught-on-camera)
+- [Try it before you scroll](#try-it-before-you-scroll)
 - [The fix](#the-fix)
 - [Proof it matters](#proof-it-matters)
 - [A surprise on the way](#a-surprise-on-the-way)
@@ -128,11 +129,21 @@ You can also see the pinning without writing code, through `--report-bindings` o
 
 Each rank bound to one core (`core:L0`, `core:L1`).
 
+Four threads, two ranks, and "rank may use 1 cpus". So how do you get the second CPU?
+
+---
+
+## Try it before you scroll
+
+☕ Ten seconds. Each rank is allowed one CPU and needs two. What would you tell `mpirun` to change?
+
+Hint: the manual describes a qualifier that means "reserve n CPUs for each process". Its name is a pair of letters.
+
 ---
 
 ## The fix
 
-Tell Open MPI to give each rank as many CPUs as it has threads:
+The answer is `PE`. Tell Open MPI to give each rank as many CPUs as it has threads:
 
 ```bash
 OMP_NUM_THREADS=2 mpirun -np 2 --map-by slot:PE=2 --bind-to core ./hybrid
@@ -162,6 +173,8 @@ flowchart LR
 Now the output reads "may use 2 cpus", and the four threads sit on four different CPUs (0, 1, 2, 3). The rule of thumb:
 
 > **ranks × threads per rank = cores you reserved, and each rank's binding must hold its threads.**
+
+Fixed on paper. But does it matter in practice, or is this a purist's complaint? Let's put a stopwatch on it.
 
 ---
 
@@ -199,7 +212,7 @@ OpenMP has its own placement controls (`OMP_PLACES`, `OMP_PROC_BIND`). I did not
 
 **Takeaway:** In a hybrid job, check "rank may use N cpus" before you trust any timing, because the default can quietly give every rank one core.
 
-Next: [Where they're going](/fields/system-administration/openmp-and-open-mpi/where-they-are-going.md), part 6: the versions, and why what you learned here won't expire.
+One last question. Both standards just shipped a big new version, OpenMP 6.0 and MPI 5.0. Do you have to rewrite everything you've seen in this series? Two Monday tickets say otherwise, in [part 6](/fields/system-administration/openmp-and-open-mpi/where-they-are-going.md).
 
 ---
 
