@@ -1634,9 +1634,11 @@
     "level": "intermediate",
     "order": 10,
     "path": "fields/devops/kubernetes/oomkilled-with-memory-to-spare.md",
-    "reading_time_min": 12,
+    "reading_time_min": 11,
     "relations": {
-      "prerequisites": [],
+      "prerequisites": [
+        "broken-pods-rogues-gallery"
+      ],
       "related": [
         "draining-a-gpu-node",
         "linux-memory-free-vs-available",
@@ -1652,7 +1654,8 @@
     "title": "The Pod Killed With Memory to Spare",
     "type": "concept",
     "types": [
-      "concept"
+      "concept",
+      "guide"
     ]
   },
   "openmp-and-open-mpi-overview": {

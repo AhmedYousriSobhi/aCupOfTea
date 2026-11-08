@@ -101,7 +101,13 @@
         "title": "Draining a GPU Node With a Three-Day Run on It"
       }
     ],
-    "required_by": []
+    "required_by": [
+      {
+        "id": "oomkilled-with-memory-to-spare",
+        "path": "fields/devops/kubernetes/oomkilled-with-memory-to-spare.md",
+        "title": "The Pod Killed With Memory to Spare"
+      }
+    ]
   },
   "fields/devops/kubernetes/build-a-two-node-k3s-lab.md": {
     "prerequisites": [
@@ -360,7 +366,13 @@
     "required_by": []
   },
   "fields/devops/kubernetes/oomkilled-with-memory-to-spare.md": {
-    "prerequisites": [],
+    "prerequisites": [
+      {
+        "id": "broken-pods-rogues-gallery",
+        "path": "fields/devops/kubernetes/broken-pods-rogues-gallery.md",
+        "title": "Broken Pods: A Rogues' Gallery (and the One Command That Catches Them All)"
+      }
+    ],
     "related": [
       {
         "id": "draining-a-gpu-node",

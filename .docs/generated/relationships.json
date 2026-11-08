@@ -46,7 +46,9 @@
     "related_by": []
   },
   "broken-pods-rogues-gallery": {
-    "prerequisite_of": [],
+    "prerequisite_of": [
+      "oomkilled-with-memory-to-spare"
+    ],
     "prerequisites": [
       "kubernetes-in-five-nouns"
     ],
@@ -624,7 +626,9 @@
   },
   "oomkilled-with-memory-to-spare": {
     "prerequisite_of": [],
-    "prerequisites": [],
+    "prerequisites": [
+      "broken-pods-rogues-gallery"
+    ],
     "related": [
       "draining-a-gpu-node",
       "linux-memory-free-vs-available",

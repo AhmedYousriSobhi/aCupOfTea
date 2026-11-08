@@ -17,7 +17,7 @@ Read each path in order; every step builds on the one before.
 5. [2:4 Sparsity: Half the Weights, Not Half the Time](/fields/generative-ai/llm-inference-performance/structured-sparsity.md) — How NVIDIA's 2:4 structured sparsity works, what it really saves (44% of weight bytes, not 50%), and why its doubled TFLOPS help prefill while decode only feels the byte savings. *(intermediate · 9 min)*
 6. [Sparsity vs Quantization: Who Pays, and Who Wins](/fields/generative-ai/llm-inference-performance/sparsity-vs-quantization.md) — What it costs to prune an LLM to 2:4, how much accuracy goes with it, how it compares with FP8 and 4-bit quantization, and why the usual order is quantize first, sparsify second. *(intermediate · 10 min)*
 
-### Systems and HPC · 11 steps · 94 min
+### Systems and HPC · 12 steps · 105 min
 
 1. [Containers 101](/fields/libraries-frameworks-containers/101-containers.md) — Containers from the ground up: what happens at boot, kernel and user space, virtual machines, then namespaces, cgroups and Linux containers. *(8 min)*
 2. [Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster](/fields/devops/kubernetes/kubernetes-in-five-nouns.md) — The five Kubernetes nouns (node, pod, namespace, event, API server) explained through HPC analogies, for someone who just inherited a cluster. *(advanced · 8 min)*
@@ -29,7 +29,8 @@ Read each path in order; every step builds on the one before.
 8. [Isolating GPU Workloads: Taints, Labels and the Device Plugin](/fields/devops/kubernetes/isolating-gpu-workloads.md) — How the NVIDIA device plugin exposes GPUs to pods, why taints alone don't dedicate GPU nodes, and why distributed training needs all-or-nothing scheduling. *(intermediate · 9 min)*
 9. [The Job Execution Journey: From `kubectl apply` to the First All-Reduce](/fields/devops/kubernetes/job-execution-journey.md) — From kubectl apply to the first NCCL all-reduce of an 8-GPU job, via the API server, Kueue, operators, scheduler, device plugin, runtime and Multus. *(intermediate · 13 min)*
 10. [Draining a GPU Node With a Three-Day Run on It](/fields/devops/kubernetes/draining-a-gpu-node.md) — Why kubectl drain means the opposite of Slurm's drain, how the SIGTERM-to-SIGKILL clock works, five ways a long training run dies anyway, and a runbook that keeps the checkpoint. *(intermediate · 10 min)*
-11. [Singularity](/fields/libraries-frameworks-containers/101-singularity.md) — Singularity (rootless containers for HPC): installing it, building SIF images, converting from Docker, bind mounts and definition-file variables. *(10 min)*
+11. [The Pod Killed With Memory to Spare](/fields/devops/kubernetes/oomkilled-with-memory-to-spare.md) — Why a training pod is OOMKilled on a node with memory free: three killers, per-container limits, working set, /dev/shm, QoS and a spike no dashboard caught. *(intermediate · 11 min)*
+12. [Singularity](/fields/libraries-frameworks-containers/101-singularity.md) — Singularity (rootless containers for HPC): installing it, building SIF images, converting from Docker, bind mounts and definition-file variables. *(10 min)*
 
 ### Deep Learning · 3 steps · 39 min
 
