@@ -1,5 +1,6 @@
 ---
 summary: How to connect the Kaggle API on Linux.
+order: 3
 ---
 # Tips - Kaggle Tips & Tricks
 

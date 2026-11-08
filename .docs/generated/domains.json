@@ -28,12 +28,20 @@
     "objects": [
       "broken-pods-rogues-gallery",
       "build-a-two-node-k3s-lab",
+      "draining-a-gpu-node",
       "fake-gpus-in-kubernetes",
       "gpu-allocation-vs-utilization",
       "isolating-gpu-workloads",
       "job-execution-journey",
+      "k3s-vs-kubeadm",
+      "kubectl-troubleshooting",
+      "kubernetes-at-hpc-scale",
       "nvidia-cluster-readiness-engine",
-      "openmp-mpi-on-kubernetes"
+      "oomkilled-with-memory-to-spare",
+      "openmp-mpi-on-kubernetes",
+      "polite-api-server-monitoring",
+      "rbac-and-the-limited-viewer",
+      "your-kubeconfig-is-a-house-key"
     ]
   },
   "generative-ai": {
@@ -164,6 +172,7 @@
       "containers-101",
       "cpu-affinity",
       "cuda-101",
+      "draining-a-gpu-node",
       "fake-gpus-in-kubernetes",
       "gpu-allocation-vs-utilization",
       "gpu-failure-prediction-overview",
@@ -177,6 +186,9 @@
       "hpc-workloads",
       "isolating-gpu-workloads",
       "job-execution-journey",
+      "k3s-vs-kubeadm",
+      "kubectl-troubleshooting",
+      "kubernetes-at-hpc-scale",
       "kubernetes-in-five-nouns",
       "linux-mem-cgroup-v2",
       "linux-mem-mlockall",
@@ -206,6 +218,7 @@
       "nhc-why-node-health-check",
       "nhc-writing-nhc-conf",
       "nvidia-cluster-readiness-engine",
+      "oomkilled-with-memory-to-spare",
       "openmp-and-open-mpi-overview",
       "openmp-mpi-hybrid-binding-trap",
       "openmp-mpi-on-kubernetes",
@@ -216,7 +229,9 @@
       "openmp-mpi-where-they-came-from",
       "openmp-open-mpi-name-mixup",
       "parallel-execution-and-affinity",
+      "polite-api-server-monitoring",
       "pytorch-ddp",
+      "rbac-and-the-limited-viewer",
       "singularity-containers",
       "slurm-accounting-multi-tenancy",
       "slurm-backfill-tuning",
@@ -234,7 +249,8 @@
       "slurm-reboot-order",
       "slurm-slurmstepd",
       "slurm-spool-dir-full",
-      "slurm-upgrade-order"
+      "slurm-upgrade-order",
+      "your-kubeconfig-is-a-house-key"
     ]
   }
 }

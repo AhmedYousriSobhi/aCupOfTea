@@ -94,9 +94,25 @@
         "id": "containers-101",
         "path": "fields/libraries-frameworks-containers/101-containers.md",
         "title": "Containers 101"
+      },
+      {
+        "id": "draining-a-gpu-node",
+        "path": "fields/devops/kubernetes/draining-a-gpu-node.md",
+        "title": "Draining a GPU Node With a Three-Day Run on It"
+      },
+      {
+        "id": "kubectl-troubleshooting",
+        "path": "tips/kubectl-troubleshooting.md",
+        "title": "kubectl Troubleshooting Cheat Sheet: Five Questions, in Order"
       }
     ],
-    "required_by": []
+    "required_by": [
+      {
+        "id": "oomkilled-with-memory-to-spare",
+        "path": "fields/devops/kubernetes/oomkilled-with-memory-to-spare.md",
+        "title": "The Pod Killed With Memory to Spare"
+      }
+    ]
   },
   "fields/devops/kubernetes/build-a-two-node-k3s-lab.md": {
     "prerequisites": [
@@ -111,6 +127,16 @@
         "id": "containers-101",
         "path": "fields/libraries-frameworks-containers/101-containers.md",
         "title": "Containers 101"
+      },
+      {
+        "id": "k3s-vs-kubeadm",
+        "path": "fields/devops/kubernetes/k3s-vs-kubeadm.md",
+        "title": "k3s vs kubeadm: Furnished Flat or Empty Unit?"
+      },
+      {
+        "id": "your-kubeconfig-is-a-house-key",
+        "path": "fields/devops/kubernetes/your-kubeconfig-is-a-house-key.md",
+        "title": "Your kubeconfig Is a House Key"
       }
     ],
     "required_by": [
@@ -125,6 +151,58 @@
         "title": "Booked Is Not Busy: GPU Allocation vs Utilization"
       }
     ]
+  },
+  "fields/devops/kubernetes/draining-a-gpu-node.md": {
+    "prerequisites": [
+      {
+        "id": "kubernetes-in-five-nouns",
+        "path": "fields/devops/kubernetes/kubernetes-in-five-nouns.md",
+        "title": "Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster"
+      }
+    ],
+    "related": [
+      {
+        "id": "broken-pods-rogues-gallery",
+        "path": "fields/devops/kubernetes/broken-pods-rogues-gallery.md",
+        "title": "Broken Pods: A Rogues' Gallery (and the One Command That Catches Them All)"
+      },
+      {
+        "id": "slurm-preemption-requeue-signals",
+        "path": "fields/schedulers/slurm-preemption-requeue-signals.md",
+        "title": "Dying Politely: Preemption, Requeue and the Signals Your Training Job Ignores"
+      },
+      {
+        "id": "isolating-gpu-workloads",
+        "path": "fields/devops/kubernetes/isolating-gpu-workloads.md",
+        "title": "Isolating GPU Workloads: Taints, Labels and the Device Plugin"
+      },
+      {
+        "id": "k3s-vs-kubeadm",
+        "path": "fields/devops/kubernetes/k3s-vs-kubeadm.md",
+        "title": "k3s vs kubeadm: Furnished Flat or Empty Unit?"
+      },
+      {
+        "id": "slurm-kill-task-failed",
+        "path": "fields/schedulers/slurm-kill-task-failed.md",
+        "title": "Kill Task Failed: A Murder Mystery With No Body (and One Drained Node)"
+      },
+      {
+        "id": "slurm-reboot-order",
+        "path": "fields/schedulers/slurm-reboot-order.md",
+        "title": "Rebooting a Slurm Cluster Without Losing Your Job (Or Anyone Else's)"
+      },
+      {
+        "id": "job-execution-journey",
+        "path": "fields/devops/kubernetes/job-execution-journey.md",
+        "title": "The Job Execution Journey: From `kubectl apply` to the First All-Reduce"
+      },
+      {
+        "id": "oomkilled-with-memory-to-spare",
+        "path": "fields/devops/kubernetes/oomkilled-with-memory-to-spare.md",
+        "title": "The Pod Killed With Memory to Spare"
+      }
+    ],
+    "required_by": []
   },
   "fields/devops/kubernetes/fake-gpus-in-kubernetes.md": {
     "prerequisites": [
@@ -197,6 +275,16 @@
     ],
     "related": [
       {
+        "id": "draining-a-gpu-node",
+        "path": "fields/devops/kubernetes/draining-a-gpu-node.md",
+        "title": "Draining a GPU Node With a Three-Day Run on It"
+      },
+      {
+        "id": "kubernetes-at-hpc-scale",
+        "path": "fields/devops/kubernetes/kubernetes-at-hpc-scale.md",
+        "title": "Kubernetes at HPC Scale: The Front Desk Meets a 100,000-Task Array"
+      },
+      {
         "id": "slurm-accounting-multi-tenancy",
         "path": "fields/schedulers/slurm-accounting-multi-tenancy.md",
         "title": "Slurm Multi-Tenancy: Who Stores the Rules, Who Enforces Them"
@@ -220,14 +308,93 @@
     ],
     "related": [
       {
+        "id": "draining-a-gpu-node",
+        "path": "fields/devops/kubernetes/draining-a-gpu-node.md",
+        "title": "Draining a GPU Node With a Three-Day Run on It"
+      },
+      {
+        "id": "kubernetes-at-hpc-scale",
+        "path": "fields/devops/kubernetes/kubernetes-at-hpc-scale.md",
+        "title": "Kubernetes at HPC Scale: The Front Desk Meets a 100,000-Task Array"
+      },
+      {
         "id": "openmp-mpi-on-kubernetes",
         "path": "fields/system-administration/openmp-and-open-mpi/mpi-and-openmp-on-kubernetes.md",
         "title": "No Login Node, No Hostfile: OpenMP and MPI on Kubernetes"
       },
       {
+        "id": "polite-api-server-monitoring",
+        "path": "fields/devops/kubernetes/polite-api-server-monitoring.md",
+        "title": "Polite API Server Monitoring: Leave Your Number, Don't Knock Every Second"
+      },
+      {
         "id": "ai-storage-rdma-gpudirect",
         "path": "fields/system-administration/ai-storage-and-fabric/rdma-infiniband-gpudirect.md",
         "title": "RDMA, InfiniBand and GPUDirect: Taking the CPU Out of the Way"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/devops/kubernetes/k3s-vs-kubeadm.md": {
+    "prerequisites": [
+      {
+        "id": "kubernetes-in-five-nouns",
+        "path": "fields/devops/kubernetes/kubernetes-in-five-nouns.md",
+        "title": "Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster"
+      }
+    ],
+    "related": [
+      {
+        "id": "build-a-two-node-k3s-lab",
+        "path": "fields/devops/kubernetes/build-a-two-node-k3s-lab.md",
+        "title": "Build a Two-Node Kubernetes Lab on Your Laptop (and Survive the DNS Pothole)"
+      },
+      {
+        "id": "draining-a-gpu-node",
+        "path": "fields/devops/kubernetes/draining-a-gpu-node.md",
+        "title": "Draining a GPU Node With a Three-Day Run on It"
+      },
+      {
+        "id": "rbac-and-the-limited-viewer",
+        "path": "fields/devops/kubernetes/rbac-and-the-limited-viewer.md",
+        "title": "RBAC: The Error Message Writes the Rule for You"
+      },
+      {
+        "id": "your-kubeconfig-is-a-house-key",
+        "path": "fields/devops/kubernetes/your-kubeconfig-is-a-house-key.md",
+        "title": "Your kubeconfig Is a House Key"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/devops/kubernetes/kubernetes-at-hpc-scale.md": {
+    "prerequisites": [
+      {
+        "id": "kubernetes-in-five-nouns",
+        "path": "fields/devops/kubernetes/kubernetes-in-five-nouns.md",
+        "title": "Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster"
+      }
+    ],
+    "related": [
+      {
+        "id": "isolating-gpu-workloads",
+        "path": "fields/devops/kubernetes/isolating-gpu-workloads.md",
+        "title": "Isolating GPU Workloads: Taints, Labels and the Device Plugin"
+      },
+      {
+        "id": "kubectl-troubleshooting",
+        "path": "tips/kubectl-troubleshooting.md",
+        "title": "kubectl Troubleshooting Cheat Sheet: Five Questions, in Order"
+      },
+      {
+        "id": "polite-api-server-monitoring",
+        "path": "fields/devops/kubernetes/polite-api-server-monitoring.md",
+        "title": "Polite API Server Monitoring: Leave Your Number, Don't Knock Every Second"
+      },
+      {
+        "id": "job-execution-journey",
+        "path": "fields/devops/kubernetes/job-execution-journey.md",
+        "title": "The Job Execution Journey: From `kubectl apply` to the First All-Reduce"
       }
     ],
     "required_by": []
@@ -272,6 +439,41 @@
         "id": "nvidia-cluster-readiness-engine",
         "path": "fields/devops/kubernetes/nvidia-cluster-readiness-engine.md",
         "title": "The Cluster That Passed Every Test Except the One That Mattered"
+      },
+      {
+        "id": "draining-a-gpu-node",
+        "path": "fields/devops/kubernetes/draining-a-gpu-node.md",
+        "title": "Draining a GPU Node With a Three-Day Run on It"
+      },
+      {
+        "id": "k3s-vs-kubeadm",
+        "path": "fields/devops/kubernetes/k3s-vs-kubeadm.md",
+        "title": "k3s vs kubeadm: Furnished Flat or Empty Unit?"
+      },
+      {
+        "id": "kubectl-troubleshooting",
+        "path": "tips/kubectl-troubleshooting.md",
+        "title": "kubectl Troubleshooting Cheat Sheet: Five Questions, in Order"
+      },
+      {
+        "id": "your-kubeconfig-is-a-house-key",
+        "path": "fields/devops/kubernetes/your-kubeconfig-is-a-house-key.md",
+        "title": "Your kubeconfig Is a House Key"
+      },
+      {
+        "id": "rbac-and-the-limited-viewer",
+        "path": "fields/devops/kubernetes/rbac-and-the-limited-viewer.md",
+        "title": "RBAC: The Error Message Writes the Rule for You"
+      },
+      {
+        "id": "polite-api-server-monitoring",
+        "path": "fields/devops/kubernetes/polite-api-server-monitoring.md",
+        "title": "Polite API Server Monitoring: Leave Your Number, Don't Knock Every Second"
+      },
+      {
+        "id": "kubernetes-at-hpc-scale",
+        "path": "fields/devops/kubernetes/kubernetes-at-hpc-scale.md",
+        "title": "Kubernetes at HPC Scale: The Front Desk Meets a 100,000-Task Array"
       }
     ]
   },
@@ -288,6 +490,119 @@
         "id": "containers-101",
         "path": "fields/libraries-frameworks-containers/101-containers.md",
         "title": "Containers 101"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/devops/kubernetes/oomkilled-with-memory-to-spare.md": {
+    "prerequisites": [
+      {
+        "id": "broken-pods-rogues-gallery",
+        "path": "fields/devops/kubernetes/broken-pods-rogues-gallery.md",
+        "title": "Broken Pods: A Rogues' Gallery (and the One Command That Catches Them All)"
+      }
+    ],
+    "related": [
+      {
+        "id": "draining-a-gpu-node",
+        "path": "fields/devops/kubernetes/draining-a-gpu-node.md",
+        "title": "Draining a GPU Node With a Three-Day Run on It"
+      },
+      {
+        "id": "kubectl-troubleshooting",
+        "path": "tips/kubectl-troubleshooting.md",
+        "title": "kubectl Troubleshooting Cheat Sheet: Five Questions, in Order"
+      },
+      {
+        "id": "slurm-cgroups-in-practice",
+        "path": "fields/schedulers/slurm-cgroups-in-practice.md",
+        "title": "Slurm cgroups in Practice: What Gets Constrained, and Where the Numbers Lie"
+      },
+      {
+        "id": "linux-memory-free-vs-available",
+        "path": "fields/system-administration/linux-memory-pressure/linux-memory-free-vs-available.md",
+        "title": "The Server That Looked Full: Free vs Available Memory, Cache, and What Is Really Used"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/devops/kubernetes/polite-api-server-monitoring.md": {
+    "prerequisites": [
+      {
+        "id": "kubernetes-in-five-nouns",
+        "path": "fields/devops/kubernetes/kubernetes-in-five-nouns.md",
+        "title": "Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster"
+      }
+    ],
+    "related": [
+      {
+        "id": "kubernetes-at-hpc-scale",
+        "path": "fields/devops/kubernetes/kubernetes-at-hpc-scale.md",
+        "title": "Kubernetes at HPC Scale: The Front Desk Meets a 100,000-Task Array"
+      },
+      {
+        "id": "rbac-and-the-limited-viewer",
+        "path": "fields/devops/kubernetes/rbac-and-the-limited-viewer.md",
+        "title": "RBAC: The Error Message Writes the Rule for You"
+      },
+      {
+        "id": "job-execution-journey",
+        "path": "fields/devops/kubernetes/job-execution-journey.md",
+        "title": "The Job Execution Journey: From `kubectl apply` to the First All-Reduce"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/devops/kubernetes/rbac-and-the-limited-viewer.md": {
+    "prerequisites": [
+      {
+        "id": "kubernetes-in-five-nouns",
+        "path": "fields/devops/kubernetes/kubernetes-in-five-nouns.md",
+        "title": "Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster"
+      }
+    ],
+    "related": [
+      {
+        "id": "k3s-vs-kubeadm",
+        "path": "fields/devops/kubernetes/k3s-vs-kubeadm.md",
+        "title": "k3s vs kubeadm: Furnished Flat or Empty Unit?"
+      },
+      {
+        "id": "polite-api-server-monitoring",
+        "path": "fields/devops/kubernetes/polite-api-server-monitoring.md",
+        "title": "Polite API Server Monitoring: Leave Your Number, Don't Knock Every Second"
+      },
+      {
+        "id": "your-kubeconfig-is-a-house-key",
+        "path": "fields/devops/kubernetes/your-kubeconfig-is-a-house-key.md",
+        "title": "Your kubeconfig Is a House Key"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/devops/kubernetes/your-kubeconfig-is-a-house-key.md": {
+    "prerequisites": [
+      {
+        "id": "kubernetes-in-five-nouns",
+        "path": "fields/devops/kubernetes/kubernetes-in-five-nouns.md",
+        "title": "Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster"
+      }
+    ],
+    "related": [
+      {
+        "id": "build-a-two-node-k3s-lab",
+        "path": "fields/devops/kubernetes/build-a-two-node-k3s-lab.md",
+        "title": "Build a Two-Node Kubernetes Lab on Your Laptop (and Survive the DNS Pothole)"
+      },
+      {
+        "id": "k3s-vs-kubeadm",
+        "path": "fields/devops/kubernetes/k3s-vs-kubeadm.md",
+        "title": "k3s vs kubeadm: Furnished Flat or Empty Unit?"
+      },
+      {
+        "id": "rbac-and-the-limited-viewer",
+        "path": "fields/devops/kubernetes/rbac-and-the-limited-viewer.md",
+        "title": "RBAC: The Error Message Writes the Rule for You"
       }
     ],
     "required_by": []
@@ -555,6 +870,11 @@
         "title": "slurmstepd: The Small Daemon That Actually Runs Your Job"
       },
       {
+        "id": "oomkilled-with-memory-to-spare",
+        "path": "fields/devops/kubernetes/oomkilled-with-memory-to-spare.md",
+        "title": "The Pod Killed With Memory to Spare"
+      },
+      {
         "id": "linux-memory-free-vs-available",
         "path": "fields/system-administration/linux-memory-pressure/linux-memory-free-vs-available.md",
         "title": "The Server That Looked Full: Free vs Available Memory, Cache, and What Is Really Used"
@@ -630,6 +950,11 @@
   "fields/schedulers/slurm-kill-task-failed.md": {
     "prerequisites": [],
     "related": [
+      {
+        "id": "draining-a-gpu-node",
+        "path": "fields/devops/kubernetes/draining-a-gpu-node.md",
+        "title": "Draining a GPU Node With a Three-Day Run on It"
+      },
       {
         "id": "slurm-preemption-requeue-signals",
         "path": "fields/schedulers/slurm-preemption-requeue-signals.md",
@@ -748,6 +1073,11 @@
         "title": "Backfill Tuning: The Planner That Can Only See One Day Ahead"
       },
       {
+        "id": "draining-a-gpu-node",
+        "path": "fields/devops/kubernetes/draining-a-gpu-node.md",
+        "title": "Draining a GPU Node With a Three-Day Run on It"
+      },
+      {
         "id": "slurm-kill-task-failed",
         "path": "fields/schedulers/slurm-kill-task-failed.md",
         "title": "Kill Task Failed: A Murder Mystery With No Body (and One Drained Node)"
@@ -763,6 +1093,11 @@
   "fields/schedulers/slurm-reboot-order.md": {
     "prerequisites": [],
     "related": [
+      {
+        "id": "draining-a-gpu-node",
+        "path": "fields/devops/kubernetes/draining-a-gpu-node.md",
+        "title": "Draining a GPU Node With a Three-Day Run on It"
+      },
       {
         "id": "slurm-pam-adopt-ssh-access",
         "path": "fields/schedulers/slurm-pam-adopt-ssh-access.md",
@@ -1128,6 +1463,11 @@
         "id": "slurm-cgroups-in-practice",
         "path": "fields/schedulers/slurm-cgroups-in-practice.md",
         "title": "Slurm cgroups in Practice: What Gets Constrained, and Where the Numbers Lie"
+      },
+      {
+        "id": "oomkilled-with-memory-to-spare",
+        "path": "fields/devops/kubernetes/oomkilled-with-memory-to-spare.md",
+        "title": "The Pod Killed With Memory to Spare"
       }
     ],
     "required_by": []
@@ -1734,6 +2074,33 @@
         "id": "parallel-execution-and-affinity",
         "path": "fields/benchmarks/parallel-execution-affinity-master-guide.md",
         "title": "Parallel Execution and Affinity"
+      }
+    ],
+    "required_by": []
+  },
+  "tips/kubectl-troubleshooting.md": {
+    "prerequisites": [
+      {
+        "id": "kubernetes-in-five-nouns",
+        "path": "fields/devops/kubernetes/kubernetes-in-five-nouns.md",
+        "title": "Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster"
+      }
+    ],
+    "related": [
+      {
+        "id": "broken-pods-rogues-gallery",
+        "path": "fields/devops/kubernetes/broken-pods-rogues-gallery.md",
+        "title": "Broken Pods: A Rogues' Gallery (and the One Command That Catches Them All)"
+      },
+      {
+        "id": "kubernetes-at-hpc-scale",
+        "path": "fields/devops/kubernetes/kubernetes-at-hpc-scale.md",
+        "title": "Kubernetes at HPC Scale: The Front Desk Meets a 100,000-Task Array"
+      },
+      {
+        "id": "oomkilled-with-memory-to-spare",
+        "path": "fields/devops/kubernetes/oomkilled-with-memory-to-spare.md",
+        "title": "The Pod Killed With Memory to Spare"
       }
     ],
     "required_by": []

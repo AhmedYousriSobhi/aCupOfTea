@@ -1,5 +1,6 @@
 ---
 summary: The steps to create an app launcher on Linux.
+order: 7
 ---
 # Tips - Linux Create App Launcher
 

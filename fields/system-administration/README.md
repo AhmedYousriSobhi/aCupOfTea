@@ -9,7 +9,6 @@ The training run died at 3 AM. Was it the node, the network, the memory or the f
 | File | Description |
 |------|-------------|
 | [active-directory](/fields/system-administration/active-directory.md) | Active Directory reference for Linux and HPC engineers |
-| [ansible](/fields/system-administration/ansible.md) | Configuration management with Ansible |
 | [bash-scripting](/fields/system-administration/bash-scripting.md) | Bash scripting for automation |
 | [build-process](/fields/system-administration/build-process.md) | Software build and CI/CD processes |
 | [Hardware](/fields/system-administration/hw.md) | Hardware issues and solutions |
