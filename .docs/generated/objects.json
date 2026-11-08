@@ -389,7 +389,10 @@
     },
     "status": "stable",
     "summary": "Derivatives as differences between neighbours - gradient, Sobel, Laplacian and unsharp masking, plus a one-line example that shows exactly where sharpening halos come from.",
-    "tags": [],
+    "tags": [
+      "filtering",
+      "noise"
+    ],
     "title": "Edges and Sharpening",
     "type": "concept",
     "types": [
@@ -416,6 +419,7 @@
     "summary": "What the 2D DFT really says - an image as a sum of waves, magnitude versus phase, a 4-point DFT done by hand, and the convolution theorem that turns sliding windows into multiplication.",
     "tags": [
       "convolution",
+      "filtering",
       "fourier-transform"
     ],
     "title": "The Fourier Transform for Images",
@@ -443,7 +447,9 @@
     "summary": "Low-pass, high-pass and notch filters as masks on the spectrum, why the ideal filter rings, and how sampling too coarsely creates moire - with the Nyquist rule worked on one number.",
     "tags": [
       "convolution",
-      "fourier-transform"
+      "filtering",
+      "fourier-transform",
+      "sampling"
     ],
     "title": "Frequency Filtering and Aliasing",
     "type": "concept",
@@ -493,7 +499,9 @@
     },
     "status": "stable",
     "summary": "A pixel is a number in a grid - sampling, quantization, bit depth, coordinates and neighbours, and why 200 + 100 can equal 44.",
-    "tags": [],
+    "tags": [
+      "sampling"
+    ],
     "title": "Images Are Just Matrices",
     "type": "concept",
     "types": [
@@ -543,7 +551,10 @@
     },
     "status": "stable",
     "summary": "The degradation model g = h*f + n, common noise types, why inverse filtering explodes, and how the Wiener filter gives up gracefully - with PSNR to score the result.",
-    "tags": [],
+    "tags": [
+      "filtering",
+      "noise"
+    ],
     "title": "Noise and Restoration",
     "type": "concept",
     "types": [
@@ -571,7 +582,9 @@
     "status": "stable",
     "summary": "Kernels, correlation versus convolution, padding and separability - blurring explained as a neighbourhood vote, with the mean and median compared on one noisy pixel.",
     "tags": [
-      "convolution"
+      "convolution",
+      "filtering",
+      "noise"
     ],
     "title": "Spatial Filtering",
     "type": "concept",

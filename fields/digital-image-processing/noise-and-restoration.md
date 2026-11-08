@@ -7,6 +7,7 @@ summary: The degradation model g = h*f + n, common noise types, why inverse filt
 level: intermediate
 type: concept
 domains: [image-processing, statistics]
+tags: [noise, filtering]
 relations:
   prerequisites: [dip-frequency-filtering-aliasing]
 ---

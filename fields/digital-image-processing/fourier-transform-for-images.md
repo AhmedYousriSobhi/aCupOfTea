@@ -7,7 +7,7 @@ summary: What the 2D DFT really says - an image as a sum of waves, magnitude ver
 level: intermediate
 type: concept
 domains: [image-processing, statistics]
-tags: [fourier-transform, convolution]
+tags: [fourier-transform, convolution, filtering]
 relations:
   prerequisites: [dip-spatial-filtering]
 ---

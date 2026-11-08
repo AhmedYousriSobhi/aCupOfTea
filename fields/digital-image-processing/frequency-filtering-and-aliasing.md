@@ -7,7 +7,7 @@ summary: Low-pass, high-pass and notch filters as masks on the spectrum, why the
 level: intermediate
 type: concept
 domains: [image-processing]
-tags: [fourier-transform, convolution]
+tags: [fourier-transform, convolution, filtering, sampling]
 relations:
   prerequisites: [dip-fourier-transform-images]
 ---

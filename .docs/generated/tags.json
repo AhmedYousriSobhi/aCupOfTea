@@ -69,6 +69,16 @@
       "encoder-decoder-machine-translation"
     ]
   },
+  "filtering": {
+    "label": "Filtering",
+    "objects": [
+      "dip-edges-sharpening",
+      "dip-fourier-transform-images",
+      "dip-frequency-filtering-aliasing",
+      "dip-noise-restoration",
+      "dip-spatial-filtering"
+    ]
+  },
   "fourier-transform": {
     "label": "Fourier Transform",
     "objects": [
@@ -241,6 +251,14 @@
       "deep-learning-basics"
     ]
   },
+  "noise": {
+    "label": "Noise",
+    "objects": [
+      "dip-edges-sharpening",
+      "dip-noise-restoration",
+      "dip-spatial-filtering"
+    ]
+  },
   "nvidia": {
     "label": "Nvidia",
     "objects": [
@@ -307,6 +325,13 @@
     "objects": [
       "encoder-decoder-machine-translation",
       "sequence-models"
+    ]
+  },
+  "sampling": {
+    "label": "Sampling",
+    "objects": [
+      "dip-frequency-filtering-aliasing",
+      "dip-images-are-matrices"
     ]
   },
   "slurm": {

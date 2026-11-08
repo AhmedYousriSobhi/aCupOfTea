@@ -7,6 +7,7 @@ summary: Derivatives as differences between neighbours - gradient, Sobel, Laplac
 level: beginner
 type: concept
 domains: [image-processing]
+tags: [filtering, noise]
 relations:
   prerequisites: [dip-spatial-filtering]
 ---

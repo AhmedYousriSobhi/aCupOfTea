@@ -7,7 +7,7 @@ summary: Kernels, correlation versus convolution, padding and separability - blu
 level: beginner
 type: concept
 domains: [image-processing, deep-learning]
-tags: [convolution]
+tags: [convolution, filtering, noise]
 relations:
   prerequisites: [dip-intensity-transforms-histograms]
   related: [dip-fourier-transform-images]

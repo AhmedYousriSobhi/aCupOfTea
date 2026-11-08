@@ -7,6 +7,7 @@ summary: A pixel is a number in a grid - sampling, quantization, bit depth, coor
 level: beginner
 type: concept
 domains: [image-processing]
+tags: [sampling]
 ---
 
 # Images Are Just Matrices

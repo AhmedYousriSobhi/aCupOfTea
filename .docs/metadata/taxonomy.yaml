@@ -115,8 +115,14 @@ tags:
     label: Containers
   convolution:
     label: Convolution
+  filtering:
+    label: Filtering
   fourier-transform:
     label: Fourier Transform
+  noise:
+    label: Noise
+  sampling:
+    label: Sampling
   design:
     label: Design
     kind: technology
