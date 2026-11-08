@@ -147,6 +147,7 @@
     ],
     "related": [],
     "related_by": [
+      "dip-meet-fourier",
       "dip-spatial-filtering"
     ]
   },
@@ -189,6 +190,14 @@
       "dip-images-are-matrices"
     ],
     "related": [],
+    "related_by": []
+  },
+  "dip-meet-fourier": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "dip-fourier-transform-images"
+    ],
     "related_by": []
   },
   "dip-noise-restoration": {

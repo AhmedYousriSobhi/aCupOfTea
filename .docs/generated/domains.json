@@ -71,6 +71,7 @@
       "dip-geometric-transforms-interpolation",
       "dip-images-are-matrices",
       "dip-intensity-transforms-histograms",
+      "dip-meet-fourier",
       "dip-noise-restoration",
       "dip-spatial-filtering",
       "dip-wavelets-multiresolution"

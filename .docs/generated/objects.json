@@ -533,6 +533,32 @@
       "concept"
     ]
   },
+  "dip-meet-fourier": {
+    "domains": [
+      "image-processing"
+    ],
+    "id": "dip-meet-fourier",
+    "level": "beginner",
+    "order": 10,
+    "path": "fields/digital-image-processing/meet-fourier.md",
+    "reading_time_min": 7,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "dip-fourier-transform-images"
+      ]
+    },
+    "status": "stable",
+    "summary": "The story of Joseph Fourier, the prefect who drained swamps and studied heat, and why his idea that heat spreads as a sum of sine waves ended up inside every image filter.",
+    "tags": [
+      "fourier-transform"
+    ],
+    "title": "Meet Fourier",
+    "type": "note",
+    "types": [
+      "note"
+    ]
+  },
   "dip-noise-restoration": {
     "domains": [
       "image-processing",

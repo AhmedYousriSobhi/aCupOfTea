@@ -14,7 +14,7 @@ relations:
 
 # The Fourier Transform for Images
 
-> **Part 5 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** The same town, heard as a choir instead of seen as a grid. By the end you'll read the DFT formula as "how much of each wave is in this image", compute a small one by hand, and know why the convolution theorem makes the whole frequency domain worth the trouble.
+> **Part 5 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** The same town, heard as a choir instead of seen as a grid (curious who started it? [Meet Fourier](/fields/digital-image-processing/meet-fourier.md)). By the end you'll read the DFT formula as "how much of each wave is in this image", compute a small one by hand, and know why the convolution theorem makes the whole frequency domain worth the trouble.
 
 ## Table of Contents
 - [The Fourier Transform for Images](#the-fourier-transform-for-images)

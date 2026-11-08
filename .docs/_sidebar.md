@@ -193,6 +193,7 @@
     * [7. Noise and restoration](fields/digital-image-processing/noise-and-restoration.md)
     * [8. Geometric transforms](fields/digital-image-processing/geometric-transforms-and-interpolation.md)
     * [9. Wavelets, multiresolution](fields/digital-image-processing/wavelets-and-multiresolution-processing.md)
+    * [Interlude: Meet Fourier](fields/digital-image-processing/meet-fourier.md)
 * [**Programming**](programming/README.md)
   * [**Data Structure**](programming/data-structure/README.md)
   * [**Decorators**](programming/decorators/README.md)

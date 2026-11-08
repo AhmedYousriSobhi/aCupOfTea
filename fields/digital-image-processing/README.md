@@ -51,6 +51,7 @@ Same town, nine points of view. The math is only the language we use to describe
 | 7 | [Noise and restoration](/fields/digital-image-processing/noise-and-restoration.md) | Why does "un-blurring" a photo explode into static? |
 | 8 | [Geometric transforms and interpolation](/fields/digital-image-processing/geometric-transforms-and-interpolation.md) | Why does a rotated scan come out jagged? |
 | 9 | [Wavelets and multiresolution processing](/fields/digital-image-processing/wavelets-and-multiresolution-processing.md) | Where in the picture is the scratch, and at what scale? |
+| Interlude | [Meet Fourier](/fields/digital-image-processing/meet-fourier.md) | Who was Fourier, and why is heat a blur filter? |
 
 Each page ends with the question the next one answers. Read them in order the first time; later, jump straight to the formula you need.
 
@@ -89,6 +90,7 @@ The pages follow the order of the course's main reference, R. C. Gonzalez and R.
 | [frequency-filtering-and-aliasing](/fields/digital-image-processing/frequency-filtering-and-aliasing.md) | Low-pass, high-pass and notch filters; sampling and aliasing |
 | [noise-and-restoration](/fields/digital-image-processing/noise-and-restoration.md) | Noise models, inverse and Wiener filtering, PSNR |
 | [geometric-transforms-and-interpolation](/fields/digital-image-processing/geometric-transforms-and-interpolation.md) | Affine transforms, inverse mapping, bilinear and bicubic interpolation |
+| [meet-fourier](/fields/digital-image-processing/meet-fourier.md) | The story of Joseph Fourier and why heat flow is a blur filter |
 | [wavelets-and-multiresolution-processing](/fields/digital-image-processing/wavelets-and-multiresolution-processing.md) | Pyramids, the Haar transform, subbands, wavelet denoising |
 
 ## Related reading in this repo

@@ -14,6 +14,8 @@ Digital images as signals - intensity, filtering, frequency domain, restoration 
 - [Images Are Just Matrices](/fields/digital-image-processing/images-are-just-matrices.md) — A pixel is a number in a grid - sampling, quantization, bit depth, coordinates and neighbours, and why 200 + 100 can equal 44. *(beginner · 7 min)*  
   [`sampling`](/.docs/generated/explore/tags/sampling.md)
 - [Intensity Transforms and Histograms](/fields/digital-image-processing/intensity-transforms-and-histograms.md) — Rescue a dark image with one formula - negatives, log, gamma and histogram equalization, with the CDF worked out by hand on a tiny image. *(beginner · 7 min)*
+- [Meet Fourier](/fields/digital-image-processing/meet-fourier.md) — The story of Joseph Fourier, the prefect who drained swamps and studied heat, and why his idea that heat spreads as a sum of sine waves ended up inside every image filter. *(beginner · 7 min)*  
+  [`fourier-transform`](/.docs/generated/explore/tags/fourier-transform.md)
 - [Noise and Restoration](/fields/digital-image-processing/noise-and-restoration.md) — The degradation model g = h*f + n, common noise types, why inverse filtering explodes, and how the Wiener filter gives up gracefully - with PSNR to score the result. *(intermediate · 7 min)*  
   [`filtering`](/.docs/generated/explore/tags/filtering.md) [`noise`](/.docs/generated/explore/tags/noise.md)
 - [Spatial Filtering](/fields/digital-image-processing/spatial-filtering.md) — Kernels, correlation versus convolution, padding and separability - blurring explained as a neighbourhood vote, with the mean and median compared on one noisy pixel. *(beginner · 7 min)*  

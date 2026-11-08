@@ -626,7 +626,13 @@
         "title": "Spatial Filtering"
       }
     ],
-    "related": [],
+    "related": [
+      {
+        "id": "dip-meet-fourier",
+        "path": "fields/digital-image-processing/meet-fourier.md",
+        "title": "Meet Fourier"
+      }
+    ],
     "required_by": [
       {
         "id": "dip-frequency-filtering-aliasing",
@@ -712,6 +718,17 @@
         "title": "Spatial Filtering"
       }
     ]
+  },
+  "fields/digital-image-processing/meet-fourier.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "dip-fourier-transform-images",
+        "path": "fields/digital-image-processing/fourier-transform-for-images.md",
+        "title": "The Fourier Transform for Images"
+      }
+    ],
+    "required_by": []
   },
   "fields/digital-image-processing/noise-and-restoration.md": {
     "prerequisites": [

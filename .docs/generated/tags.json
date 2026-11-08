@@ -85,6 +85,7 @@
       "digital-image-processing-overview",
       "dip-fourier-transform-images",
       "dip-frequency-filtering-aliasing",
+      "dip-meet-fourier",
       "dip-wavelets-multiresolution"
     ]
   },

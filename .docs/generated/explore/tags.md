@@ -14,7 +14,7 @@ Pages grouped by topic tag.
 - [Distributed Training](/.docs/generated/explore/tags/distributed-training.md) (2)
 - [Encoder-Decoder](/.docs/generated/explore/tags/encoder-decoder.md) (1)
 - [Filtering](/.docs/generated/explore/tags/filtering.md) (5)
-- [Fourier Transform](/.docs/generated/explore/tags/fourier-transform.md) (4)
+- [Fourier Transform](/.docs/generated/explore/tags/fourier-transform.md) (5)
 - [GPU](/.docs/generated/explore/tags/gpu.md) (36)
 - [Hpc](/.docs/generated/explore/tags/hpc.md) (55)
 - [Kubernetes](/.docs/generated/explore/tags/kubernetes.md) (18)
