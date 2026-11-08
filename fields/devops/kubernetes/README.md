@@ -1,5 +1,5 @@
 ---
-summary: An eight-page Kubernetes series for HPC people, from core concepts and a two-node lab to GPU scheduling and a job's journey, with a list of planned pages.
+summary: A ten-page Kubernetes series for HPC people, from core concepts and a two-node lab to GPU scheduling and a job's journey, with a list of planned pages.
 sidebar_label: Kubernetes
 sidebar_group: Kubernetes
 ---
@@ -22,6 +22,8 @@ A short series on Kubernetes, written by someone who runs GPU clusters for a liv
 | 6 | [NVIDIA Cluster Readiness Engine](/fields/devops/kubernetes/nvidia-cluster-readiness-engine.md) | Proving a GPU cluster is ready by running real workloads on it | 8 min |
 | 7 | [Isolating GPU Workloads](/fields/devops/kubernetes/isolating-gpu-workloads.md) | Device plugins, taints vs labels, the toleration trap, and gang scheduling | 9 min |
 | 8 | [The Job Execution Journey](/fields/devops/kubernetes/job-execution-journey.md) | From `kubectl apply` to the first NCCL all-reduce: six stops, in the right order | 12 min |
+| 9 | [Draining a GPU Node With a Three-Day Run on It](/fields/devops/kubernetes/draining-a-gpu-node.md) | Cordon vs drain, the SIGTERM-to-SIGKILL clock, PodDisruptionBudgets and a runbook that keeps the checkpoint | 10 min |
+| 10 | [The Pod Killed With Memory to Spare](/fields/devops/kubernetes/oomkilled-with-memory-to-spare.md) | OOMKilled on a node with free RAM: cgroup limits, working set, /dev/shm, QoS and spikes dashboards miss | 12 min |
  
 ## Brewing next
  

@@ -53,7 +53,9 @@
     "related": [
       "containers-101"
     ],
-    "related_by": []
+    "related_by": [
+      "draining-a-gpu-node"
+    ]
   },
   "build-a-two-node-k3s-lab": {
     "prerequisite_of": [
@@ -114,6 +116,23 @@
       "sequence-models"
     ],
     "related_by": []
+  },
+  "draining-a-gpu-node": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "kubernetes-in-five-nouns"
+    ],
+    "related": [
+      "broken-pods-rogues-gallery",
+      "isolating-gpu-workloads",
+      "job-execution-journey",
+      "slurm-kill-task-failed",
+      "slurm-preemption-requeue-signals",
+      "slurm-reboot-order"
+    ],
+    "related_by": [
+      "oomkilled-with-memory-to-spare"
+    ]
   },
   "encoder-decoder-machine-translation": {
     "prerequisite_of": [],
@@ -254,7 +273,9 @@
     "related": [
       "slurm-accounting-multi-tenancy"
     ],
-    "related_by": []
+    "related_by": [
+      "draining-a-gpu-node"
+    ]
   },
   "job-execution-journey": {
     "prerequisite_of": [],
@@ -265,6 +286,7 @@
       "ai-storage-rdma-gpudirect"
     ],
     "related_by": [
+      "draining-a-gpu-node",
       "openmp-mpi-on-kubernetes"
     ]
   },
@@ -272,6 +294,7 @@
     "prerequisite_of": [
       "broken-pods-rogues-gallery",
       "build-a-two-node-k3s-lab",
+      "draining-a-gpu-node",
       "fake-gpus-in-kubernetes",
       "gpu-allocation-vs-utilization",
       "nvidia-cluster-readiness-engine"
@@ -382,7 +405,9 @@
       "linux-mem-reclaim",
       "slurm-cgroups-in-practice"
     ],
-    "related_by": []
+    "related_by": [
+      "oomkilled-with-memory-to-spare"
+    ]
   },
   "linux-memory-pressure-overview": {
     "prerequisite_of": [],
@@ -595,6 +620,16 @@
     "prerequisite_of": [],
     "prerequisites": [],
     "related": [],
+    "related_by": []
+  },
+  "oomkilled-with-memory-to-spare": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "draining-a-gpu-node",
+      "linux-memory-free-vs-available",
+      "slurm-cgroups-in-practice"
+    ],
     "related_by": []
   },
   "openmp-and-open-mpi-overview": {
@@ -814,6 +849,7 @@
     ],
     "related_by": [
       "linux-memory-free-vs-available",
+      "oomkilled-with-memory-to-spare",
       "slurm-gpu-affinity-socket-lie",
       "slurm-kill-task-failed",
       "slurm-pam-adopt-ssh-access",
@@ -862,6 +898,7 @@
       "slurm-cgroups-in-practice"
     ],
     "related_by": [
+      "draining-a-gpu-node",
       "slurm-gpu-affinity-socket-lie",
       "slurm-preemption-requeue-signals",
       "slurm-slurmstepd",
@@ -923,6 +960,7 @@
       "slurm-upgrade-order"
     ],
     "related_by": [
+      "draining-a-gpu-node",
       "slurm-backfill-tuning"
     ]
   },
@@ -934,6 +972,7 @@
       "slurm-upgrade-order"
     ],
     "related_by": [
+      "draining-a-gpu-node",
       "slurm-pam-adopt-ssh-access",
       "slurm-spool-dir-full"
     ]

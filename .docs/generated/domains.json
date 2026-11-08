@@ -28,11 +28,13 @@
     "objects": [
       "broken-pods-rogues-gallery",
       "build-a-two-node-k3s-lab",
+      "draining-a-gpu-node",
       "fake-gpus-in-kubernetes",
       "gpu-allocation-vs-utilization",
       "isolating-gpu-workloads",
       "job-execution-journey",
       "nvidia-cluster-readiness-engine",
+      "oomkilled-with-memory-to-spare",
       "openmp-mpi-on-kubernetes"
     ]
   },
@@ -164,6 +166,7 @@
       "containers-101",
       "cpu-affinity",
       "cuda-101",
+      "draining-a-gpu-node",
       "fake-gpus-in-kubernetes",
       "gpu-allocation-vs-utilization",
       "gpu-failure-prediction-overview",
@@ -206,6 +209,7 @@
       "nhc-why-node-health-check",
       "nhc-writing-nhc-conf",
       "nvidia-cluster-readiness-engine",
+      "oomkilled-with-memory-to-spare",
       "openmp-and-open-mpi-overview",
       "openmp-mpi-hybrid-binding-trap",
       "openmp-mpi-on-kubernetes",

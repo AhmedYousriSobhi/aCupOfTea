@@ -176,6 +176,8 @@
       * [NVIDIA Cluster Readiness Engine](fields/devops/kubernetes/nvidia-cluster-readiness-engine.md)
       * [Isolating GPU Workloads](fields/devops/kubernetes/isolating-gpu-workloads.md)
       * [The Job Execution Journey](fields/devops/kubernetes/job-execution-journey.md)
+      * [Draining a GPU node](fields/devops/kubernetes/draining-a-gpu-node.md)
+      * [OOMKilled with memory to spare](fields/devops/kubernetes/oomkilled-with-memory-to-spare.md)
 * [**Programming**](programming/README.md)
   * [**Data Structure**](programming/data-structure/README.md)
   * [**Decorators**](programming/decorators/README.md)

@@ -94,6 +94,11 @@
         "id": "containers-101",
         "path": "fields/libraries-frameworks-containers/101-containers.md",
         "title": "Containers 101"
+      },
+      {
+        "id": "draining-a-gpu-node",
+        "path": "fields/devops/kubernetes/draining-a-gpu-node.md",
+        "title": "Draining a GPU Node With a Three-Day Run on It"
       }
     ],
     "required_by": []
@@ -125,6 +130,53 @@
         "title": "Booked Is Not Busy: GPU Allocation vs Utilization"
       }
     ]
+  },
+  "fields/devops/kubernetes/draining-a-gpu-node.md": {
+    "prerequisites": [
+      {
+        "id": "kubernetes-in-five-nouns",
+        "path": "fields/devops/kubernetes/kubernetes-in-five-nouns.md",
+        "title": "Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster"
+      }
+    ],
+    "related": [
+      {
+        "id": "broken-pods-rogues-gallery",
+        "path": "fields/devops/kubernetes/broken-pods-rogues-gallery.md",
+        "title": "Broken Pods: A Rogues' Gallery (and the One Command That Catches Them All)"
+      },
+      {
+        "id": "slurm-preemption-requeue-signals",
+        "path": "fields/schedulers/slurm-preemption-requeue-signals.md",
+        "title": "Dying Politely: Preemption, Requeue and the Signals Your Training Job Ignores"
+      },
+      {
+        "id": "isolating-gpu-workloads",
+        "path": "fields/devops/kubernetes/isolating-gpu-workloads.md",
+        "title": "Isolating GPU Workloads: Taints, Labels and the Device Plugin"
+      },
+      {
+        "id": "slurm-kill-task-failed",
+        "path": "fields/schedulers/slurm-kill-task-failed.md",
+        "title": "Kill Task Failed: A Murder Mystery With No Body (and One Drained Node)"
+      },
+      {
+        "id": "slurm-reboot-order",
+        "path": "fields/schedulers/slurm-reboot-order.md",
+        "title": "Rebooting a Slurm Cluster Without Losing Your Job (Or Anyone Else's)"
+      },
+      {
+        "id": "job-execution-journey",
+        "path": "fields/devops/kubernetes/job-execution-journey.md",
+        "title": "The Job Execution Journey: From `kubectl apply` to the First All-Reduce"
+      },
+      {
+        "id": "oomkilled-with-memory-to-spare",
+        "path": "fields/devops/kubernetes/oomkilled-with-memory-to-spare.md",
+        "title": "The Pod Killed With Memory to Spare"
+      }
+    ],
+    "required_by": []
   },
   "fields/devops/kubernetes/fake-gpus-in-kubernetes.md": {
     "prerequisites": [
@@ -197,6 +249,11 @@
     ],
     "related": [
       {
+        "id": "draining-a-gpu-node",
+        "path": "fields/devops/kubernetes/draining-a-gpu-node.md",
+        "title": "Draining a GPU Node With a Three-Day Run on It"
+      },
+      {
         "id": "slurm-accounting-multi-tenancy",
         "path": "fields/schedulers/slurm-accounting-multi-tenancy.md",
         "title": "Slurm Multi-Tenancy: Who Stores the Rules, Who Enforces Them"
@@ -219,6 +276,11 @@
       }
     ],
     "related": [
+      {
+        "id": "draining-a-gpu-node",
+        "path": "fields/devops/kubernetes/draining-a-gpu-node.md",
+        "title": "Draining a GPU Node With a Three-Day Run on It"
+      },
       {
         "id": "openmp-mpi-on-kubernetes",
         "path": "fields/system-administration/openmp-and-open-mpi/mpi-and-openmp-on-kubernetes.md",
@@ -272,6 +334,11 @@
         "id": "nvidia-cluster-readiness-engine",
         "path": "fields/devops/kubernetes/nvidia-cluster-readiness-engine.md",
         "title": "The Cluster That Passed Every Test Except the One That Mattered"
+      },
+      {
+        "id": "draining-a-gpu-node",
+        "path": "fields/devops/kubernetes/draining-a-gpu-node.md",
+        "title": "Draining a GPU Node With a Three-Day Run on It"
       }
     ]
   },
@@ -288,6 +355,27 @@
         "id": "containers-101",
         "path": "fields/libraries-frameworks-containers/101-containers.md",
         "title": "Containers 101"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/devops/kubernetes/oomkilled-with-memory-to-spare.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "draining-a-gpu-node",
+        "path": "fields/devops/kubernetes/draining-a-gpu-node.md",
+        "title": "Draining a GPU Node With a Three-Day Run on It"
+      },
+      {
+        "id": "slurm-cgroups-in-practice",
+        "path": "fields/schedulers/slurm-cgroups-in-practice.md",
+        "title": "Slurm cgroups in Practice: What Gets Constrained, and Where the Numbers Lie"
+      },
+      {
+        "id": "linux-memory-free-vs-available",
+        "path": "fields/system-administration/linux-memory-pressure/linux-memory-free-vs-available.md",
+        "title": "The Server That Looked Full: Free vs Available Memory, Cache, and What Is Really Used"
       }
     ],
     "required_by": []
@@ -555,6 +643,11 @@
         "title": "slurmstepd: The Small Daemon That Actually Runs Your Job"
       },
       {
+        "id": "oomkilled-with-memory-to-spare",
+        "path": "fields/devops/kubernetes/oomkilled-with-memory-to-spare.md",
+        "title": "The Pod Killed With Memory to Spare"
+      },
+      {
         "id": "linux-memory-free-vs-available",
         "path": "fields/system-administration/linux-memory-pressure/linux-memory-free-vs-available.md",
         "title": "The Server That Looked Full: Free vs Available Memory, Cache, and What Is Really Used"
@@ -630,6 +723,11 @@
   "fields/schedulers/slurm-kill-task-failed.md": {
     "prerequisites": [],
     "related": [
+      {
+        "id": "draining-a-gpu-node",
+        "path": "fields/devops/kubernetes/draining-a-gpu-node.md",
+        "title": "Draining a GPU Node With a Three-Day Run on It"
+      },
       {
         "id": "slurm-preemption-requeue-signals",
         "path": "fields/schedulers/slurm-preemption-requeue-signals.md",
@@ -748,6 +846,11 @@
         "title": "Backfill Tuning: The Planner That Can Only See One Day Ahead"
       },
       {
+        "id": "draining-a-gpu-node",
+        "path": "fields/devops/kubernetes/draining-a-gpu-node.md",
+        "title": "Draining a GPU Node With a Three-Day Run on It"
+      },
+      {
         "id": "slurm-kill-task-failed",
         "path": "fields/schedulers/slurm-kill-task-failed.md",
         "title": "Kill Task Failed: A Murder Mystery With No Body (and One Drained Node)"
@@ -763,6 +866,11 @@
   "fields/schedulers/slurm-reboot-order.md": {
     "prerequisites": [],
     "related": [
+      {
+        "id": "draining-a-gpu-node",
+        "path": "fields/devops/kubernetes/draining-a-gpu-node.md",
+        "title": "Draining a GPU Node With a Three-Day Run on It"
+      },
       {
         "id": "slurm-pam-adopt-ssh-access",
         "path": "fields/schedulers/slurm-pam-adopt-ssh-access.md",
@@ -1128,6 +1236,11 @@
         "id": "slurm-cgroups-in-practice",
         "path": "fields/schedulers/slurm-cgroups-in-practice.md",
         "title": "Slurm cgroups in Practice: What Gets Constrained, and Where the Numbers Lie"
+      },
+      {
+        "id": "oomkilled-with-memory-to-spare",
+        "path": "fields/devops/kubernetes/oomkilled-with-memory-to-spare.md",
+        "title": "The Pod Killed With Memory to Spare"
       }
     ],
     "required_by": []

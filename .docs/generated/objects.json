@@ -348,6 +348,43 @@
       "concept"
     ]
   },
+  "draining-a-gpu-node": {
+    "domains": [
+      "devops",
+      "systems-and-hpc"
+    ],
+    "id": "draining-a-gpu-node",
+    "level": "intermediate",
+    "order": 9,
+    "path": "fields/devops/kubernetes/draining-a-gpu-node.md",
+    "reading_time_min": 10,
+    "relations": {
+      "prerequisites": [
+        "kubernetes-in-five-nouns"
+      ],
+      "related": [
+        "broken-pods-rogues-gallery",
+        "isolating-gpu-workloads",
+        "job-execution-journey",
+        "slurm-kill-task-failed",
+        "slurm-preemption-requeue-signals",
+        "slurm-reboot-order"
+      ]
+    },
+    "status": "stable",
+    "summary": "Why kubectl drain means the opposite of Slurm's drain, how the SIGTERM-to-SIGKILL clock works, five ways a long training run dies anyway, and a runbook that keeps the checkpoint.",
+    "tags": [
+      "gpu",
+      "hpc",
+      "kubernetes"
+    ],
+    "title": "Draining a GPU Node With a Three-Day Run on It",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
   "encoder-decoder-machine-translation": {
     "domains": [
       "deep-learning",
@@ -1583,6 +1620,36 @@
       "system-design"
     ],
     "title": "The Orphans Come Home: Old Data and Background Work",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "oomkilled-with-memory-to-spare": {
+    "domains": [
+      "devops",
+      "systems-and-hpc"
+    ],
+    "id": "oomkilled-with-memory-to-spare",
+    "level": "intermediate",
+    "order": 10,
+    "path": "fields/devops/kubernetes/oomkilled-with-memory-to-spare.md",
+    "reading_time_min": 12,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "draining-a-gpu-node",
+        "linux-memory-free-vs-available",
+        "slurm-cgroups-in-practice"
+      ]
+    },
+    "status": "stable",
+    "summary": "Why a training pod is OOMKilled on a node with memory free: three killers, per-container limits, working set, /dev/shm, QoS and a spike no dashboard caught.",
+    "tags": [
+      "gpu",
+      "kubernetes"
+    ],
+    "title": "The Pod Killed With Memory to Spare",
     "type": "concept",
     "types": [
       "concept"
