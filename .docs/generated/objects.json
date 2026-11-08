@@ -828,6 +828,38 @@
       "guide"
     ]
   },
+  "kubernetes-at-hpc-scale": {
+    "domains": [
+      "devops",
+      "systems-and-hpc"
+    ],
+    "id": "kubernetes-at-hpc-scale",
+    "level": "intermediate",
+    "order": 15,
+    "path": "fields/devops/kubernetes/kubernetes-at-hpc-scale.md",
+    "reading_time_min": 10,
+    "relations": {
+      "prerequisites": [
+        "kubernetes-in-five-nouns"
+      ],
+      "related": [
+        "isolating-gpu-workloads",
+        "job-execution-journey",
+        "polite-api-server-monitoring"
+      ]
+    },
+    "status": "stable",
+    "summary": "What changes when a cluster gets big and the work looks like an HPC job array: the published limits, where the pressure lands, and how to turn an array into one Indexed Job.",
+    "tags": [
+      "kubernetes"
+    ],
+    "title": "Kubernetes at HPC Scale: The Front Desk Meets a 100,000-Task Array",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
   "kubernetes-in-five-nouns": {
     "domains": [
       "systems-and-hpc"

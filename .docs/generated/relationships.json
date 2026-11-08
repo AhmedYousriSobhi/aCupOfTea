@@ -280,7 +280,8 @@
       "slurm-accounting-multi-tenancy"
     ],
     "related_by": [
-      "draining-a-gpu-node"
+      "draining-a-gpu-node",
+      "kubernetes-at-hpc-scale"
     ]
   },
   "job-execution-journey": {
@@ -293,6 +294,7 @@
     ],
     "related_by": [
       "draining-a-gpu-node",
+      "kubernetes-at-hpc-scale",
       "openmp-mpi-on-kubernetes",
       "polite-api-server-monitoring"
     ]
@@ -311,6 +313,18 @@
       "your-kubeconfig-is-a-house-key"
     ]
   },
+  "kubernetes-at-hpc-scale": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "kubernetes-in-five-nouns"
+    ],
+    "related": [
+      "isolating-gpu-workloads",
+      "job-execution-journey",
+      "polite-api-server-monitoring"
+    ],
+    "related_by": []
+  },
   "kubernetes-in-five-nouns": {
     "prerequisite_of": [
       "broken-pods-rogues-gallery",
@@ -319,6 +333,7 @@
       "fake-gpus-in-kubernetes",
       "gpu-allocation-vs-utilization",
       "k3s-vs-kubeadm",
+      "kubernetes-at-hpc-scale",
       "nvidia-cluster-readiness-engine",
       "polite-api-server-monitoring",
       "rbac-and-the-limited-viewer",
@@ -769,7 +784,9 @@
       "job-execution-journey",
       "rbac-and-the-limited-viewer"
     ],
-    "related_by": []
+    "related_by": [
+      "kubernetes-at-hpc-scale"
+    ]
   },
   "principal-component-analysis": {
     "prerequisite_of": [],

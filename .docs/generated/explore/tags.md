@@ -14,7 +14,7 @@ Pages grouped by topic tag.
 - [Encoder-Decoder](/.docs/generated/explore/tags/encoder-decoder.md) (1)
 - [GPU](/.docs/generated/explore/tags/gpu.md) (36)
 - [Hpc](/.docs/generated/explore/tags/hpc.md) (55)
-- [Kubernetes](/.docs/generated/explore/tags/kubernetes.md) (16)
+- [Kubernetes](/.docs/generated/explore/tags/kubernetes.md) (17)
 - [Large Language Models](/.docs/generated/explore/tags/llm.md) (7)
 - [Model Evaluation](/.docs/generated/explore/tags/model-evaluation.md) (2)
 - [MPI](/.docs/generated/explore/tags/mpi.md) (9)

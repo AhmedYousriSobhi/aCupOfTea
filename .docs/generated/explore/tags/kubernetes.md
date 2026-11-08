@@ -18,6 +18,8 @@
   [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`kubernetes`](/.docs/generated/explore/tags/kubernetes.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md)
 - [k3s vs kubeadm: Furnished Flat or Empty Unit?](/fields/devops/kubernetes/k3s-vs-kubeadm.md) — k3s and kubeadm deliver the same conformant Kubernetes; what each installs, how upgrades and HA differ, and how to choose for a lab, edge box or GPU cluster. *(intermediate · 9 min)*  
   [`containers`](/.docs/generated/explore/tags/containers.md) [`kubernetes`](/.docs/generated/explore/tags/kubernetes.md)
+- [Kubernetes at HPC Scale: The Front Desk Meets a 100,000-Task Array](/fields/devops/kubernetes/kubernetes-at-hpc-scale.md) — What changes when a cluster gets big and the work looks like an HPC job array: the published limits, where the pressure lands, and how to turn an array into one Indexed Job. *(intermediate · 10 min)*  
+  [`kubernetes`](/.docs/generated/explore/tags/kubernetes.md)
 - [Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster](/fields/devops/kubernetes/kubernetes-in-five-nouns.md) — The five Kubernetes nouns (node, pod, namespace, event, API server) explained through HPC analogies, for someone who just inherited a cluster. *(advanced · 8 min)*  
   [`kubernetes`](/.docs/generated/explore/tags/kubernetes.md)
 - [No Login Node, No Hostfile: OpenMP and MPI on Kubernetes](/fields/system-administration/openmp-and-open-mpi/mpi-and-openmp-on-kubernetes.md) — How an MPIJob turns pods into an MPI cluster - launcher, workers, headless Service, SSH keys, hostfile - and which three numbers keep the binding trap away. *(intermediate · 9 min)*  

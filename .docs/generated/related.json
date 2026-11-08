@@ -275,6 +275,11 @@
         "title": "Draining a GPU Node With a Three-Day Run on It"
       },
       {
+        "id": "kubernetes-at-hpc-scale",
+        "path": "fields/devops/kubernetes/kubernetes-at-hpc-scale.md",
+        "title": "Kubernetes at HPC Scale: The Front Desk Meets a 100,000-Task Array"
+      },
+      {
         "id": "slurm-accounting-multi-tenancy",
         "path": "fields/schedulers/slurm-accounting-multi-tenancy.md",
         "title": "Slurm Multi-Tenancy: Who Stores the Rules, Who Enforces Them"
@@ -301,6 +306,11 @@
         "id": "draining-a-gpu-node",
         "path": "fields/devops/kubernetes/draining-a-gpu-node.md",
         "title": "Draining a GPU Node With a Three-Day Run on It"
+      },
+      {
+        "id": "kubernetes-at-hpc-scale",
+        "path": "fields/devops/kubernetes/kubernetes-at-hpc-scale.md",
+        "title": "Kubernetes at HPC Scale: The Front Desk Meets a 100,000-Task Array"
       },
       {
         "id": "openmp-mpi-on-kubernetes",
@@ -348,6 +358,33 @@
         "id": "your-kubeconfig-is-a-house-key",
         "path": "fields/devops/kubernetes/your-kubeconfig-is-a-house-key.md",
         "title": "Your kubeconfig Is a House Key"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/devops/kubernetes/kubernetes-at-hpc-scale.md": {
+    "prerequisites": [
+      {
+        "id": "kubernetes-in-five-nouns",
+        "path": "fields/devops/kubernetes/kubernetes-in-five-nouns.md",
+        "title": "Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster"
+      }
+    ],
+    "related": [
+      {
+        "id": "isolating-gpu-workloads",
+        "path": "fields/devops/kubernetes/isolating-gpu-workloads.md",
+        "title": "Isolating GPU Workloads: Taints, Labels and the Device Plugin"
+      },
+      {
+        "id": "polite-api-server-monitoring",
+        "path": "fields/devops/kubernetes/polite-api-server-monitoring.md",
+        "title": "Polite API Server Monitoring: Leave Your Number, Don't Knock Every Second"
+      },
+      {
+        "id": "job-execution-journey",
+        "path": "fields/devops/kubernetes/job-execution-journey.md",
+        "title": "The Job Execution Journey: From `kubectl apply` to the First All-Reduce"
       }
     ],
     "required_by": []
@@ -417,6 +454,11 @@
         "id": "polite-api-server-monitoring",
         "path": "fields/devops/kubernetes/polite-api-server-monitoring.md",
         "title": "Polite API Server Monitoring: Leave Your Number, Don't Knock Every Second"
+      },
+      {
+        "id": "kubernetes-at-hpc-scale",
+        "path": "fields/devops/kubernetes/kubernetes-at-hpc-scale.md",
+        "title": "Kubernetes at HPC Scale: The Front Desk Meets a 100,000-Task Array"
       }
     ]
   },
@@ -473,6 +515,11 @@
       }
     ],
     "related": [
+      {
+        "id": "kubernetes-at-hpc-scale",
+        "path": "fields/devops/kubernetes/kubernetes-at-hpc-scale.md",
+        "title": "Kubernetes at HPC Scale: The Front Desk Meets a 100,000-Task Array"
+      },
       {
         "id": "rbac-and-the-limited-viewer",
         "path": "fields/devops/kubernetes/rbac-and-the-limited-viewer.md",
