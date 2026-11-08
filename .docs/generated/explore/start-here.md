@@ -17,7 +17,7 @@ Read each path in order; every step builds on the one before.
 5. [2:4 Sparsity: Half the Weights, Not Half the Time](/fields/generative-ai/llm-inference-performance/structured-sparsity.md) — How NVIDIA's 2:4 structured sparsity works, what it really saves (44% of weight bytes, not 50%), and why its doubled TFLOPS help prefill while decode only feels the byte savings. *(intermediate · 9 min)*
 6. [Sparsity vs Quantization: Who Pays, and Who Wins](/fields/generative-ai/llm-inference-performance/sparsity-vs-quantization.md) — What it costs to prune an LLM to 2:4, how much accuracy goes with it, how it compares with FP8 and 4-bit quantization, and why the usual order is quantize first, sparsify second. *(intermediate · 10 min)*
 
-### Systems and HPC · 15 steps · 131 min
+### Systems and HPC · 16 steps · 141 min
 
 1. [Containers 101](/fields/libraries-frameworks-containers/101-containers.md) — Containers from the ground up: what happens at boot, kernel and user space, virtual machines, then namespaces, cgroups and Linux containers. *(8 min)*
 2. [Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster](/fields/devops/kubernetes/kubernetes-in-five-nouns.md) — The five Kubernetes nouns (node, pod, namespace, event, API server) explained through HPC analogies, for someone who just inherited a cluster. *(advanced · 8 min)*
@@ -33,7 +33,8 @@ Read each path in order; every step builds on the one before.
 12. [k3s vs kubeadm: Furnished Flat or Empty Unit?](/fields/devops/kubernetes/k3s-vs-kubeadm.md) — k3s and kubeadm deliver the same conformant Kubernetes; what each installs, how upgrades and HA differ, and how to choose for a lab, edge box or GPU cluster. *(intermediate · 9 min)*
 13. [Your kubeconfig Is a House Key](/fields/devops/kubernetes/your-kubeconfig-is-a-house-key.md) — What a kubeconfig holds, how kubectl picks one, why a leaked certificate can't be revoked, and how to issue each person a short-lived key instead of sharing yours. *(intermediate · 8 min)*
 14. [RBAC: The Error Message Writes the Rule for You](/fields/devops/kubernetes/rbac-and-the-limited-viewer.md) — Read a Forbidden error as the rule you need, build a read-only user in two commands, and see RBAC's guardrails and why the binding is the off switch for a certificate. *(intermediate · 9 min)*
-15. [Singularity](/fields/libraries-frameworks-containers/101-singularity.md) — Singularity (rootless containers for HPC): installing it, building SIF images, converting from Docker, bind mounts and definition-file variables. *(10 min)*
+15. [Polite API Server Monitoring: Leave Your Number, Don't Knock Every Second](/fields/devops/kubernetes/polite-api-server-monitoring.md) — Why polling the API server every second hurts, measured on a lab: 20 lists vs 1 list and a watch, what a list costs in bytes, the priority lane monitors share, and five habits for a polite monitor. *(intermediate · 10 min)*
+16. [Singularity](/fields/libraries-frameworks-containers/101-singularity.md) — Singularity (rootless containers for HPC): installing it, building SIF images, converting from Docker, bind mounts and definition-file variables. *(10 min)*
 
 ### Deep Learning · 3 steps · 39 min
 
@@ -194,6 +195,7 @@ Read each path in order; every step builds on the one before.
 - [From Signals to Decisions](/fields/system-administration/gpu-failure-prediction/rules-that-predict.md) — How to design GPU failure rules - state, event and trend rules, personal baselines, persistence, noise floors and action tiers - and the traps that make rules silently fail. *(advanced · 10 min)*
 - [HPC Workloads](/business/hpc-industry/workloads.md) — What an HPC workload is, the common types, how Linux relates to them, and how RDMA and data science workloads fit in. *(10 min)*
 - [Is the Prediction Any Good?](/fields/system-administration/gpu-failure-prediction/scoring-and-backtesting.md) — How to judge GPU failure predictions - base rates, precision, recall, lead time, horizons, label quality, leakage and drift - and when a learned model is worth it. *(advanced · 10 min)*
+- [Polite API Server Monitoring: Leave Your Number, Don't Knock Every Second](/fields/devops/kubernetes/polite-api-server-monitoring.md) — Why polling the API server every second hurts, measured on a lab: 20 lists vs 1 list and a watch, what a list costs in bytes, the priority lane monitors share, and five habits for a polite monitor. *(intermediate · 10 min)*
 - [Singularity](/fields/libraries-frameworks-containers/101-singularity.md) — Singularity (rootless containers for HPC): installing it, building SIF images, converting from Docker, bind mounts and definition-file variables. *(10 min)*
 - [SlurmdSpoolDir Is Full: The Drain That Is Not About the Spool Directory](/fields/schedulers/slurm-spool-dir-full.md) — Why slurmd drains node with reason "SlurmdSpoolDir is full", why culprit is filesystem underneath, what slurmd keeps in spool directory, a triage runbook, how to stop jobs from filling the disk. *(intermediate · 10 min)*
 - [Sparsity vs Quantization: Who Pays, and Who Wins](/fields/generative-ai/llm-inference-performance/sparsity-vs-quantization.md) — What it costs to prune an LLM to 2:4, how much accuracy goes with it, how it compares with FP8 and 4-bit quantization, and why the usual order is quantize first, sparsify second. *(intermediate · 10 min)*

@@ -177,6 +177,7 @@
       "nvidia-cluster-readiness-engine",
       "oomkilled-with-memory-to-spare",
       "openmp-mpi-on-kubernetes",
+      "polite-api-server-monitoring",
       "rbac-and-the-limited-viewer",
       "your-kubeconfig-is-a-house-key"
     ]

@@ -181,6 +181,7 @@
       * [k3s vs kubeadm](fields/devops/kubernetes/k3s-vs-kubeadm.md)
       * [Your kubeconfig is a house key](fields/devops/kubernetes/your-kubeconfig-is-a-house-key.md)
       * [RBAC and the limited viewer](fields/devops/kubernetes/rbac-and-the-limited-viewer.md)
+      * [Polite API server monitoring](fields/devops/kubernetes/polite-api-server-monitoring.md)
 * [**Programming**](programming/README.md)
   * [**Data Structure**](programming/data-structure/README.md)
   * [**Decorators**](programming/decorators/README.md)

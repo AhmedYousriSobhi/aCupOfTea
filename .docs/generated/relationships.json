@@ -293,7 +293,8 @@
     ],
     "related_by": [
       "draining-a-gpu-node",
-      "openmp-mpi-on-kubernetes"
+      "openmp-mpi-on-kubernetes",
+      "polite-api-server-monitoring"
     ]
   },
   "k3s-vs-kubeadm": {
@@ -319,6 +320,7 @@
       "gpu-allocation-vs-utilization",
       "k3s-vs-kubeadm",
       "nvidia-cluster-readiness-engine",
+      "polite-api-server-monitoring",
       "rbac-and-the-limited-viewer",
       "your-kubeconfig-is-a-house-key"
     ],
@@ -758,6 +760,17 @@
       "openmp-open-mpi-name-mixup"
     ]
   },
+  "polite-api-server-monitoring": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "kubernetes-in-five-nouns"
+    ],
+    "related": [
+      "job-execution-journey",
+      "rbac-and-the-limited-viewer"
+    ],
+    "related_by": []
+  },
   "principal-component-analysis": {
     "prerequisite_of": [],
     "prerequisites": [],
@@ -791,7 +804,9 @@
       "k3s-vs-kubeadm",
       "your-kubeconfig-is-a-house-key"
     ],
-    "related_by": []
+    "related_by": [
+      "polite-api-server-monitoring"
+    ]
   },
   "regression-imputing": {
     "prerequisite_of": [],

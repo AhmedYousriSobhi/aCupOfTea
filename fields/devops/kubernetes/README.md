@@ -1,5 +1,5 @@
 ---
-summary: A thirteen-page Kubernetes series for HPC people, from core concepts and a two-node lab to GPU scheduling and a job's journey, with a list of planned pages.
+summary: A fourteen-page Kubernetes series for HPC people, from core concepts and a two-node lab to GPU scheduling and a job's journey, with a list of planned pages.
 sidebar_label: Kubernetes
 sidebar_group: Kubernetes
 ---
@@ -27,11 +27,11 @@ A short series on Kubernetes, written by someone who runs GPU clusters for a liv
 | 11 | [k3s vs kubeadm: Furnished Flat or Empty Unit?](/fields/devops/kubernetes/k3s-vs-kubeadm.md) | What each installs, how upgrades and HA differ, and which to pick for a lab or a GPU cluster | 9 min |
 | 12 | [Your kubeconfig Is a House Key](/fields/devops/kubernetes/your-kubeconfig-is-a-house-key.md) | What a kubeconfig holds, how kubectl picks one, why certificates cannot be revoked, and short-lived keys | 7 min |
 | 13 | [RBAC: The Error Message Writes the Rule for You](/fields/devops/kubernetes/rbac-and-the-limited-viewer.md) | Reading a Forbidden error as a rule, a read-only user in two commands, RBAC guardrails, and revoking at the binding | 8 min |
+| 14 | [Polite API Server Monitoring: Leave Your Number](/fields/devops/kubernetes/polite-api-server-monitoring.md) | Polling vs watching measured on a lab, what a list costs, the shared priority lane, and five habits | 10 min |
  
 ## Brewing next
  
 These are planned and not written yet:
  
-- Polite API server monitoring
 - Kubernetes at HPC scale
 - A kubectl troubleshooting cheat sheet (this one will live in `tips/`)

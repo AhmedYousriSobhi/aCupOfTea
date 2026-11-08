@@ -1982,6 +1982,37 @@
       "guide"
     ]
   },
+  "polite-api-server-monitoring": {
+    "domains": [
+      "devops",
+      "systems-and-hpc"
+    ],
+    "id": "polite-api-server-monitoring",
+    "level": "intermediate",
+    "order": 14,
+    "path": "fields/devops/kubernetes/polite-api-server-monitoring.md",
+    "reading_time_min": 10,
+    "relations": {
+      "prerequisites": [
+        "kubernetes-in-five-nouns"
+      ],
+      "related": [
+        "job-execution-journey",
+        "rbac-and-the-limited-viewer"
+      ]
+    },
+    "status": "stable",
+    "summary": "Why polling the API server every second hurts, measured on a lab: 20 lists vs 1 list and a watch, what a list costs in bytes, the priority lane monitors share, and five habits for a polite monitor.",
+    "tags": [
+      "kubernetes"
+    ],
+    "title": "Polite API Server Monitoring: Leave Your Number, Don't Knock Every Second",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
   "principal-component-analysis": {
     "domains": [
       "machine-learning",

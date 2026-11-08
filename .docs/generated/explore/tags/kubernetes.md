@@ -22,6 +22,8 @@
   [`kubernetes`](/.docs/generated/explore/tags/kubernetes.md)
 - [No Login Node, No Hostfile: OpenMP and MPI on Kubernetes](/fields/system-administration/openmp-and-open-mpi/mpi-and-openmp-on-kubernetes.md) — How an MPIJob turns pods into an MPI cluster - launcher, workers, headless Service, SSH keys, hostfile - and which three numbers keep the binding trap away. *(intermediate · 9 min)*  
   [`hpc`](/.docs/generated/explore/tags/hpc.md) [`kubernetes`](/.docs/generated/explore/tags/kubernetes.md) [`mpi`](/.docs/generated/explore/tags/mpi.md) [`openmp`](/.docs/generated/explore/tags/openmp.md)
+- [Polite API Server Monitoring: Leave Your Number, Don't Knock Every Second](/fields/devops/kubernetes/polite-api-server-monitoring.md) — Why polling the API server every second hurts, measured on a lab: 20 lists vs 1 list and a watch, what a list costs in bytes, the priority lane monitors share, and five habits for a polite monitor. *(intermediate · 10 min)*  
+  [`kubernetes`](/.docs/generated/explore/tags/kubernetes.md)
 - [RBAC: The Error Message Writes the Rule for You](/fields/devops/kubernetes/rbac-and-the-limited-viewer.md) — Read a Forbidden error as the rule you need, build a read-only user in two commands, and see RBAC's guardrails and why the binding is the off switch for a certificate. *(intermediate · 9 min)*  
   [`kubernetes`](/.docs/generated/explore/tags/kubernetes.md)
 - [The Cluster That Passed Every Test Except the One That Mattered](/fields/devops/kubernetes/nvidia-cluster-readiness-engine.md) — Even when traditional monitoring tools show all GPUs and networks operating normally, subtle bottlenecks—like a single slow GPU or a degraded network link—can silently drag down the performance of an *(intermediate · 10 min)*  

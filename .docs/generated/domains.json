@@ -37,6 +37,7 @@
       "nvidia-cluster-readiness-engine",
       "oomkilled-with-memory-to-spare",
       "openmp-mpi-on-kubernetes",
+      "polite-api-server-monitoring",
       "rbac-and-the-limited-viewer",
       "your-kubeconfig-is-a-house-key"
     ]
@@ -224,6 +225,7 @@
       "openmp-mpi-where-they-came-from",
       "openmp-open-mpi-name-mixup",
       "parallel-execution-and-affinity",
+      "polite-api-server-monitoring",
       "pytorch-ddp",
       "rbac-and-the-limited-viewer",
       "singularity-containers",

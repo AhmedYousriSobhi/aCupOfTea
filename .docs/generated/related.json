@@ -308,6 +308,11 @@
         "title": "No Login Node, No Hostfile: OpenMP and MPI on Kubernetes"
       },
       {
+        "id": "polite-api-server-monitoring",
+        "path": "fields/devops/kubernetes/polite-api-server-monitoring.md",
+        "title": "Polite API Server Monitoring: Leave Your Number, Don't Knock Every Second"
+      },
+      {
         "id": "ai-storage-rdma-gpudirect",
         "path": "fields/system-administration/ai-storage-and-fabric/rdma-infiniband-gpudirect.md",
         "title": "RDMA, InfiniBand and GPUDirect: Taking the CPU Out of the Way"
@@ -407,6 +412,11 @@
         "id": "rbac-and-the-limited-viewer",
         "path": "fields/devops/kubernetes/rbac-and-the-limited-viewer.md",
         "title": "RBAC: The Error Message Writes the Rule for You"
+      },
+      {
+        "id": "polite-api-server-monitoring",
+        "path": "fields/devops/kubernetes/polite-api-server-monitoring.md",
+        "title": "Polite API Server Monitoring: Leave Your Number, Don't Knock Every Second"
       }
     ]
   },
@@ -454,6 +464,28 @@
     ],
     "required_by": []
   },
+  "fields/devops/kubernetes/polite-api-server-monitoring.md": {
+    "prerequisites": [
+      {
+        "id": "kubernetes-in-five-nouns",
+        "path": "fields/devops/kubernetes/kubernetes-in-five-nouns.md",
+        "title": "Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster"
+      }
+    ],
+    "related": [
+      {
+        "id": "rbac-and-the-limited-viewer",
+        "path": "fields/devops/kubernetes/rbac-and-the-limited-viewer.md",
+        "title": "RBAC: The Error Message Writes the Rule for You"
+      },
+      {
+        "id": "job-execution-journey",
+        "path": "fields/devops/kubernetes/job-execution-journey.md",
+        "title": "The Job Execution Journey: From `kubectl apply` to the First All-Reduce"
+      }
+    ],
+    "required_by": []
+  },
   "fields/devops/kubernetes/rbac-and-the-limited-viewer.md": {
     "prerequisites": [
       {
@@ -467,6 +499,11 @@
         "id": "k3s-vs-kubeadm",
         "path": "fields/devops/kubernetes/k3s-vs-kubeadm.md",
         "title": "k3s vs kubeadm: Furnished Flat or Empty Unit?"
+      },
+      {
+        "id": "polite-api-server-monitoring",
+        "path": "fields/devops/kubernetes/polite-api-server-monitoring.md",
+        "title": "Polite API Server Monitoring: Leave Your Number, Don't Knock Every Second"
       },
       {
         "id": "your-kubeconfig-is-a-house-key",
