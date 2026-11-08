@@ -173,6 +173,7 @@
       "isolating-gpu-workloads",
       "job-execution-journey",
       "k3s-vs-kubeadm",
+      "kubectl-troubleshooting",
       "kubernetes-at-hpc-scale",
       "kubernetes-in-five-nouns",
       "nvidia-cluster-readiness-engine",

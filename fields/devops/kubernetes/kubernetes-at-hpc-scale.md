@@ -176,7 +176,7 @@ On Slurm that would have been a one-liner. On Kubernetes it's twenty lines, and 
 
 **Takeaway:** the cluster's limits are counts of objects, so send an array as one Indexed Job with a parallelism cap and a TTL, and leave the scheduler's defaults alone until you've measured a reason.
 
-**Challenge:** index 417 of Noor's Job failed twice and shows up in `.status.failedIndexes`. In one command, how do you find that pod's log, and which three commands would you run first if the pod is already gone? The kubectl troubleshooting cheat sheet is the next page.
+**Challenge:** index 417 of Noor's Job failed twice and shows up in `.status.failedIndexes`. In one command, how do you find that pod's log, and which three commands would you run first if the pod is already gone? The [kubectl troubleshooting cheat sheet](/tips/kubectl-troubleshooting.md) answers it.
 
 ---
 

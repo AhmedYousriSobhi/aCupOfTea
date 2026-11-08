@@ -99,6 +99,11 @@
         "id": "draining-a-gpu-node",
         "path": "fields/devops/kubernetes/draining-a-gpu-node.md",
         "title": "Draining a GPU Node With a Three-Day Run on It"
+      },
+      {
+        "id": "kubectl-troubleshooting",
+        "path": "tips/kubectl-troubleshooting.md",
+        "title": "kubectl Troubleshooting Cheat Sheet: Five Questions, in Order"
       }
     ],
     "required_by": [
@@ -377,6 +382,11 @@
         "title": "Isolating GPU Workloads: Taints, Labels and the Device Plugin"
       },
       {
+        "id": "kubectl-troubleshooting",
+        "path": "tips/kubectl-troubleshooting.md",
+        "title": "kubectl Troubleshooting Cheat Sheet: Five Questions, in Order"
+      },
+      {
         "id": "polite-api-server-monitoring",
         "path": "fields/devops/kubernetes/polite-api-server-monitoring.md",
         "title": "Polite API Server Monitoring: Leave Your Number, Don't Knock Every Second"
@@ -459,6 +469,11 @@
         "id": "kubernetes-at-hpc-scale",
         "path": "fields/devops/kubernetes/kubernetes-at-hpc-scale.md",
         "title": "Kubernetes at HPC Scale: The Front Desk Meets a 100,000-Task Array"
+      },
+      {
+        "id": "kubectl-troubleshooting",
+        "path": "tips/kubectl-troubleshooting.md",
+        "title": "kubectl Troubleshooting Cheat Sheet: Five Questions, in Order"
       }
     ]
   },
@@ -492,6 +507,11 @@
         "id": "draining-a-gpu-node",
         "path": "fields/devops/kubernetes/draining-a-gpu-node.md",
         "title": "Draining a GPU Node With a Three-Day Run on It"
+      },
+      {
+        "id": "kubectl-troubleshooting",
+        "path": "tips/kubectl-troubleshooting.md",
+        "title": "kubectl Troubleshooting Cheat Sheet: Five Questions, in Order"
       },
       {
         "id": "slurm-cgroups-in-practice",
@@ -2054,6 +2074,33 @@
         "id": "parallel-execution-and-affinity",
         "path": "fields/benchmarks/parallel-execution-affinity-master-guide.md",
         "title": "Parallel Execution and Affinity"
+      }
+    ],
+    "required_by": []
+  },
+  "tips/kubectl-troubleshooting.md": {
+    "prerequisites": [
+      {
+        "id": "kubernetes-in-five-nouns",
+        "path": "fields/devops/kubernetes/kubernetes-in-five-nouns.md",
+        "title": "Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster"
+      }
+    ],
+    "related": [
+      {
+        "id": "broken-pods-rogues-gallery",
+        "path": "fields/devops/kubernetes/broken-pods-rogues-gallery.md",
+        "title": "Broken Pods: A Rogues' Gallery (and the One Command That Catches Them All)"
+      },
+      {
+        "id": "kubernetes-at-hpc-scale",
+        "path": "fields/devops/kubernetes/kubernetes-at-hpc-scale.md",
+        "title": "Kubernetes at HPC Scale: The Front Desk Meets a 100,000-Task Array"
+      },
+      {
+        "id": "oomkilled-with-memory-to-spare",
+        "path": "fields/devops/kubernetes/oomkilled-with-memory-to-spare.md",
+        "title": "The Pod Killed With Memory to Spare"
       }
     ],
     "required_by": []

@@ -30,8 +30,6 @@ A short series on Kubernetes, written by someone who runs GPU clusters for a liv
 | 14 | [Polite API Server Monitoring: Leave Your Number](/fields/devops/kubernetes/polite-api-server-monitoring.md) | Polling vs watching measured on a lab, what a list costs, the shared priority lane, and five habits | 10 min |
 | 15 | [Kubernetes at HPC Scale: The Front Desk Meets a 100,000-Task Array](/fields/devops/kubernetes/kubernetes-at-hpc-scale.md) | The published limits, where pressure lands first, and a job array as one Indexed Job | 10 min |
  
-## Brewing next
- 
-These are planned and not written yet:
- 
-- A kubectl troubleshooting cheat sheet (this one will live in `tips/`)
+## Also on the shelf
+
+- [kubectl troubleshooting cheat sheet](/tips/kubectl-troubleshooting.md): five questions, in order, for a pod or Job that won't work (lives in `tips/`)

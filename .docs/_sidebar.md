@@ -242,6 +242,7 @@
   * [Tips Concepts](tips/concepts.md)
   * [Technical Info](tips/interview-technical-info.md)
   * [Kaggle Tips & Tricks](tips/kaggle-tips.md)
+  * [kubectl troubleshooting](tips/kubectl-troubleshooting.md)
   * [Linux Create App Launcher](tips/linux-create-app-launcher.md)
   * [Linux daily Tricks](tips/linux-daily-tricks.md)
   * [Markdown](tips/markdown.md)

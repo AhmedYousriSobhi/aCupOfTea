@@ -56,7 +56,8 @@
       "containers-101"
     ],
     "related_by": [
-      "draining-a-gpu-node"
+      "draining-a-gpu-node",
+      "kubectl-troubleshooting"
     ]
   },
   "build-a-two-node-k3s-lab": {
@@ -313,6 +314,18 @@
       "your-kubeconfig-is-a-house-key"
     ]
   },
+  "kubectl-troubleshooting": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "kubernetes-in-five-nouns"
+    ],
+    "related": [
+      "broken-pods-rogues-gallery",
+      "kubernetes-at-hpc-scale",
+      "oomkilled-with-memory-to-spare"
+    ],
+    "related_by": []
+  },
   "kubernetes-at-hpc-scale": {
     "prerequisite_of": [],
     "prerequisites": [
@@ -323,7 +336,9 @@
       "job-execution-journey",
       "polite-api-server-monitoring"
     ],
-    "related_by": []
+    "related_by": [
+      "kubectl-troubleshooting"
+    ]
   },
   "kubernetes-in-five-nouns": {
     "prerequisite_of": [
@@ -333,6 +348,7 @@
       "fake-gpus-in-kubernetes",
       "gpu-allocation-vs-utilization",
       "k3s-vs-kubeadm",
+      "kubectl-troubleshooting",
       "kubernetes-at-hpc-scale",
       "nvidia-cluster-readiness-engine",
       "polite-api-server-monitoring",
@@ -672,7 +688,9 @@
       "linux-memory-free-vs-available",
       "slurm-cgroups-in-practice"
     ],
-    "related_by": []
+    "related_by": [
+      "kubectl-troubleshooting"
+    ]
   },
   "openmp-and-open-mpi-overview": {
     "prerequisite_of": [],
