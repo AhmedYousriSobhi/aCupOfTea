@@ -348,6 +348,265 @@
       "concept"
     ]
   },
+  "digital-image-processing-overview": {
+    "domains": [
+      "image-processing"
+    ],
+    "id": "digital-image-processing-overview",
+    "level": "beginner",
+    "path": "fields/digital-image-processing/README.md",
+    "reading_time_min": 5,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "The math of digital image processing, made friendly - a nine-part series from pixels as matrices to filters, Fourier, restoration, geometry and wavelets, for anyone coming back to the subject.",
+    "tags": [
+      "convolution",
+      "fourier-transform"
+    ],
+    "title": "Digital Image Processing - Overview",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "dip-edges-sharpening": {
+    "domains": [
+      "image-processing"
+    ],
+    "id": "dip-edges-sharpening",
+    "level": "beginner",
+    "order": 4,
+    "path": "fields/digital-image-processing/edges-and-sharpening.md",
+    "reading_time_min": 7,
+    "relations": {
+      "prerequisites": [
+        "dip-spatial-filtering"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Derivatives as differences between neighbours - gradient, Sobel, Laplacian and unsharp masking, plus a one-line example that shows exactly where sharpening halos come from.",
+    "tags": [],
+    "title": "Edges and Sharpening",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "dip-fourier-transform-images": {
+    "domains": [
+      "image-processing",
+      "statistics"
+    ],
+    "id": "dip-fourier-transform-images",
+    "level": "intermediate",
+    "order": 5,
+    "path": "fields/digital-image-processing/fourier-transform-for-images.md",
+    "reading_time_min": 8,
+    "relations": {
+      "prerequisites": [
+        "dip-spatial-filtering"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "What the 2D DFT really says - an image as a sum of waves, magnitude versus phase, a 4-point DFT done by hand, and the convolution theorem that turns sliding windows into multiplication.",
+    "tags": [
+      "convolution",
+      "fourier-transform"
+    ],
+    "title": "The Fourier Transform for Images",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "dip-frequency-filtering-aliasing": {
+    "domains": [
+      "image-processing"
+    ],
+    "id": "dip-frequency-filtering-aliasing",
+    "level": "intermediate",
+    "order": 6,
+    "path": "fields/digital-image-processing/frequency-filtering-and-aliasing.md",
+    "reading_time_min": 7,
+    "relations": {
+      "prerequisites": [
+        "dip-fourier-transform-images"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Low-pass, high-pass and notch filters as masks on the spectrum, why the ideal filter rings, and how sampling too coarsely creates moire - with the Nyquist rule worked on one number.",
+    "tags": [
+      "convolution",
+      "fourier-transform"
+    ],
+    "title": "Frequency Filtering and Aliasing",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "dip-geometric-transforms-interpolation": {
+    "domains": [
+      "image-processing",
+      "machine-learning"
+    ],
+    "id": "dip-geometric-transforms-interpolation",
+    "level": "intermediate",
+    "order": 8,
+    "path": "fields/digital-image-processing/geometric-transforms-and-interpolation.md",
+    "reading_time_min": 7,
+    "relations": {
+      "prerequisites": [
+        "dip-images-are-matrices"
+      ],
+      "related": [
+        "dip-frequency-filtering-aliasing"
+      ]
+    },
+    "status": "stable",
+    "summary": "Moving the whole map - affine transforms in homogeneous coordinates, why you must map backwards, and nearest, bilinear and bicubic interpolation with a bilinear example worked by hand.",
+    "tags": [],
+    "title": "Geometric Transforms and Interpolation",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "dip-images-are-matrices": {
+    "domains": [
+      "image-processing"
+    ],
+    "id": "dip-images-are-matrices",
+    "level": "beginner",
+    "order": 1,
+    "path": "fields/digital-image-processing/images-are-just-matrices.md",
+    "reading_time_min": 7,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "A pixel is a number in a grid - sampling, quantization, bit depth, coordinates and neighbours, and why 200 + 100 can equal 44.",
+    "tags": [],
+    "title": "Images Are Just Matrices",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "dip-intensity-transforms-histograms": {
+    "domains": [
+      "image-processing",
+      "statistics"
+    ],
+    "id": "dip-intensity-transforms-histograms",
+    "level": "beginner",
+    "order": 2,
+    "path": "fields/digital-image-processing/intensity-transforms-and-histograms.md",
+    "reading_time_min": 7,
+    "relations": {
+      "prerequisites": [
+        "dip-images-are-matrices"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Rescue a dark image with one formula - negatives, log, gamma and histogram equalization, with the CDF worked out by hand on a tiny image.",
+    "tags": [],
+    "title": "Intensity Transforms and Histograms",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "dip-noise-restoration": {
+    "domains": [
+      "image-processing",
+      "statistics"
+    ],
+    "id": "dip-noise-restoration",
+    "level": "intermediate",
+    "order": 7,
+    "path": "fields/digital-image-processing/noise-and-restoration.md",
+    "reading_time_min": 7,
+    "relations": {
+      "prerequisites": [
+        "dip-frequency-filtering-aliasing"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "The degradation model g = h*f + n, common noise types, why inverse filtering explodes, and how the Wiener filter gives up gracefully - with PSNR to score the result.",
+    "tags": [],
+    "title": "Noise and Restoration",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "dip-spatial-filtering": {
+    "domains": [
+      "deep-learning",
+      "image-processing"
+    ],
+    "id": "dip-spatial-filtering",
+    "level": "beginner",
+    "order": 3,
+    "path": "fields/digital-image-processing/spatial-filtering.md",
+    "reading_time_min": 7,
+    "relations": {
+      "prerequisites": [
+        "dip-intensity-transforms-histograms"
+      ],
+      "related": [
+        "dip-fourier-transform-images"
+      ]
+    },
+    "status": "stable",
+    "summary": "Kernels, correlation versus convolution, padding and separability - blurring explained as a neighbourhood vote, with the mean and median compared on one noisy pixel.",
+    "tags": [
+      "convolution"
+    ],
+    "title": "Spatial Filtering",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "dip-wavelets-multiresolution": {
+    "domains": [
+      "image-processing"
+    ],
+    "id": "dip-wavelets-multiresolution",
+    "level": "intermediate",
+    "order": 9,
+    "path": "fields/digital-image-processing/wavelets-and-multiresolution-processing.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [
+        "dip-fourier-transform-images"
+      ],
+      "related": [
+        "dip-noise-restoration"
+      ]
+    },
+    "status": "stable",
+    "summary": "Seeing an image at several scales at once - pyramids, a Haar wavelet transform by hand, the four 2D subbands, and why mostly-zero detail makes denoising and compression work.",
+    "tags": [
+      "fourier-transform"
+    ],
+    "title": "Wavelets and Multiresolution Processing",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
   "draining-a-gpu-node": {
     "domains": [
       "devops",

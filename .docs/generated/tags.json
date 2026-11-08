@@ -27,6 +27,15 @@
       "singularity-containers"
     ]
   },
+  "convolution": {
+    "label": "Convolution",
+    "objects": [
+      "digital-image-processing-overview",
+      "dip-fourier-transform-images",
+      "dip-frequency-filtering-aliasing",
+      "dip-spatial-filtering"
+    ]
+  },
   "design": {
     "label": "Design",
     "objects": [
@@ -58,6 +67,15 @@
     "label": "Encoder-Decoder",
     "objects": [
       "encoder-decoder-machine-translation"
+    ]
+  },
+  "fourier-transform": {
+    "label": "Fourier Transform",
+    "objects": [
+      "digital-image-processing-overview",
+      "dip-fourier-transform-images",
+      "dip-frequency-filtering-aliasing",
+      "dip-wavelets-multiresolution"
     ]
   },
   "gpu": {

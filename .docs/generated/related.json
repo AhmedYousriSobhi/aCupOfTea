@@ -607,6 +607,168 @@
     ],
     "required_by": []
   },
+  "fields/digital-image-processing/edges-and-sharpening.md": {
+    "prerequisites": [
+      {
+        "id": "dip-spatial-filtering",
+        "path": "fields/digital-image-processing/spatial-filtering.md",
+        "title": "Spatial Filtering"
+      }
+    ],
+    "related": [],
+    "required_by": []
+  },
+  "fields/digital-image-processing/fourier-transform-for-images.md": {
+    "prerequisites": [
+      {
+        "id": "dip-spatial-filtering",
+        "path": "fields/digital-image-processing/spatial-filtering.md",
+        "title": "Spatial Filtering"
+      }
+    ],
+    "related": [],
+    "required_by": [
+      {
+        "id": "dip-frequency-filtering-aliasing",
+        "path": "fields/digital-image-processing/frequency-filtering-and-aliasing.md",
+        "title": "Frequency Filtering and Aliasing"
+      },
+      {
+        "id": "dip-wavelets-multiresolution",
+        "path": "fields/digital-image-processing/wavelets-and-multiresolution-processing.md",
+        "title": "Wavelets and Multiresolution Processing"
+      }
+    ]
+  },
+  "fields/digital-image-processing/frequency-filtering-and-aliasing.md": {
+    "prerequisites": [
+      {
+        "id": "dip-fourier-transform-images",
+        "path": "fields/digital-image-processing/fourier-transform-for-images.md",
+        "title": "The Fourier Transform for Images"
+      }
+    ],
+    "related": [
+      {
+        "id": "dip-geometric-transforms-interpolation",
+        "path": "fields/digital-image-processing/geometric-transforms-and-interpolation.md",
+        "title": "Geometric Transforms and Interpolation"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "dip-noise-restoration",
+        "path": "fields/digital-image-processing/noise-and-restoration.md",
+        "title": "Noise and Restoration"
+      }
+    ]
+  },
+  "fields/digital-image-processing/geometric-transforms-and-interpolation.md": {
+    "prerequisites": [
+      {
+        "id": "dip-images-are-matrices",
+        "path": "fields/digital-image-processing/images-are-just-matrices.md",
+        "title": "Images Are Just Matrices"
+      }
+    ],
+    "related": [
+      {
+        "id": "dip-frequency-filtering-aliasing",
+        "path": "fields/digital-image-processing/frequency-filtering-and-aliasing.md",
+        "title": "Frequency Filtering and Aliasing"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/digital-image-processing/images-are-just-matrices.md": {
+    "prerequisites": [],
+    "related": [],
+    "required_by": [
+      {
+        "id": "dip-intensity-transforms-histograms",
+        "path": "fields/digital-image-processing/intensity-transforms-and-histograms.md",
+        "title": "Intensity Transforms and Histograms"
+      },
+      {
+        "id": "dip-geometric-transforms-interpolation",
+        "path": "fields/digital-image-processing/geometric-transforms-and-interpolation.md",
+        "title": "Geometric Transforms and Interpolation"
+      }
+    ]
+  },
+  "fields/digital-image-processing/intensity-transforms-and-histograms.md": {
+    "prerequisites": [
+      {
+        "id": "dip-images-are-matrices",
+        "path": "fields/digital-image-processing/images-are-just-matrices.md",
+        "title": "Images Are Just Matrices"
+      }
+    ],
+    "related": [],
+    "required_by": [
+      {
+        "id": "dip-spatial-filtering",
+        "path": "fields/digital-image-processing/spatial-filtering.md",
+        "title": "Spatial Filtering"
+      }
+    ]
+  },
+  "fields/digital-image-processing/noise-and-restoration.md": {
+    "prerequisites": [
+      {
+        "id": "dip-frequency-filtering-aliasing",
+        "path": "fields/digital-image-processing/frequency-filtering-and-aliasing.md",
+        "title": "Frequency Filtering and Aliasing"
+      }
+    ],
+    "related": [
+      {
+        "id": "dip-wavelets-multiresolution",
+        "path": "fields/digital-image-processing/wavelets-and-multiresolution-processing.md",
+        "title": "Wavelets and Multiresolution Processing"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/digital-image-processing/spatial-filtering.md": {
+    "prerequisites": [
+      {
+        "id": "dip-intensity-transforms-histograms",
+        "path": "fields/digital-image-processing/intensity-transforms-and-histograms.md",
+        "title": "Intensity Transforms and Histograms"
+      }
+    ],
+    "related": [],
+    "required_by": [
+      {
+        "id": "dip-edges-sharpening",
+        "path": "fields/digital-image-processing/edges-and-sharpening.md",
+        "title": "Edges and Sharpening"
+      },
+      {
+        "id": "dip-fourier-transform-images",
+        "path": "fields/digital-image-processing/fourier-transform-for-images.md",
+        "title": "The Fourier Transform for Images"
+      }
+    ]
+  },
+  "fields/digital-image-processing/wavelets-and-multiresolution-processing.md": {
+    "prerequisites": [
+      {
+        "id": "dip-fourier-transform-images",
+        "path": "fields/digital-image-processing/fourier-transform-for-images.md",
+        "title": "The Fourier Transform for Images"
+      }
+    ],
+    "related": [
+      {
+        "id": "dip-noise-restoration",
+        "path": "fields/digital-image-processing/noise-and-restoration.md",
+        "title": "Noise and Restoration"
+      }
+    ],
+    "required_by": []
+  },
   "fields/generative-ai/llm-inference-performance/compute-bound-vs-memory-bound.md": {
     "prerequisites": [],
     "related": [],
