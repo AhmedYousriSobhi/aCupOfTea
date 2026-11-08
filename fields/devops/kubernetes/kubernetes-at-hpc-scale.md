@@ -67,9 +67,7 @@ flowchart LR
     S["Submitters<br/>kubectl, scripts, operators"] --> A["API server"]
     A --> E[("etcd<br/>every object")]
     A --> SC["Scheduler"]
-    A --> K["Kubelets and add-ons<br/>on every node"]
-    SC --> A
-    K --> A
+    A --> K["Kubelets<br/>and add-ons"]
 ```
 
 *Everything goes through the API server. Load that grows with the number of objects or nodes lands on the same four places.*
