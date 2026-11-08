@@ -123,6 +123,116 @@
     ],
     "related_by": []
   },
+  "digital-image-processing-overview": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "dip-edges-sharpening": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "dip-spatial-filtering"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "dip-fourier-transform-images": {
+    "prerequisite_of": [
+      "dip-frequency-filtering-aliasing",
+      "dip-wavelets-multiresolution"
+    ],
+    "prerequisites": [
+      "dip-spatial-filtering"
+    ],
+    "related": [],
+    "related_by": [
+      "dip-meet-fourier",
+      "dip-spatial-filtering"
+    ]
+  },
+  "dip-frequency-filtering-aliasing": {
+    "prerequisite_of": [
+      "dip-noise-restoration"
+    ],
+    "prerequisites": [
+      "dip-fourier-transform-images"
+    ],
+    "related": [],
+    "related_by": [
+      "dip-geometric-transforms-interpolation"
+    ]
+  },
+  "dip-geometric-transforms-interpolation": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "dip-images-are-matrices"
+    ],
+    "related": [
+      "dip-frequency-filtering-aliasing"
+    ],
+    "related_by": []
+  },
+  "dip-images-are-matrices": {
+    "prerequisite_of": [
+      "dip-geometric-transforms-interpolation",
+      "dip-intensity-transforms-histograms"
+    ],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
+  "dip-intensity-transforms-histograms": {
+    "prerequisite_of": [
+      "dip-spatial-filtering"
+    ],
+    "prerequisites": [
+      "dip-images-are-matrices"
+    ],
+    "related": [],
+    "related_by": []
+  },
+  "dip-meet-fourier": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "dip-fourier-transform-images"
+    ],
+    "related_by": []
+  },
+  "dip-noise-restoration": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "dip-frequency-filtering-aliasing"
+    ],
+    "related": [],
+    "related_by": [
+      "dip-wavelets-multiresolution"
+    ]
+  },
+  "dip-spatial-filtering": {
+    "prerequisite_of": [
+      "dip-edges-sharpening",
+      "dip-fourier-transform-images"
+    ],
+    "prerequisites": [
+      "dip-intensity-transforms-histograms"
+    ],
+    "related": [
+      "dip-fourier-transform-images"
+    ],
+    "related_by": []
+  },
+  "dip-wavelets-multiresolution": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "dip-fourier-transform-images"
+    ],
+    "related": [
+      "dip-noise-restoration"
+    ],
+    "related_by": []
+  },
   "draining-a-gpu-node": {
     "prerequisite_of": [],
     "prerequisites": [

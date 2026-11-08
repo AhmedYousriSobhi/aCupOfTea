@@ -8,8 +8,13 @@ Statistical methods and probability.
   [`model-evaluation`](/.docs/generated/explore/tags/model-evaluation.md)
 - [Bias and Variance Trade-Off](/fields/tabular-data/data-evaluation/model-behavior/bias-variance-trade-off.md) — What bias and variance are, how they trade off, and the difference between a model that is consistent but inaccurate and one that is inconsistent but accurate. *(7 min)*  
   [`model-evaluation`](/.docs/generated/explore/tags/model-evaluation.md)
+- [Intensity Transforms and Histograms](/fields/digital-image-processing/intensity-transforms-and-histograms.md) — Rescue a dark image with one formula - negatives, log, gamma and histogram equalization, with the CDF worked out by hand on a tiny image. *(beginner · 7 min)*
+- [Noise and Restoration](/fields/digital-image-processing/noise-and-restoration.md) — The degradation model g = h*f + n, common noise types, why inverse filtering explodes, and how the Wiener filter gives up gracefully - with PSNR to score the result. *(intermediate · 7 min)*  
+  [`filtering`](/.docs/generated/explore/tags/filtering.md) [`noise`](/.docs/generated/explore/tags/noise.md)
 - [Principal Component Analysis (PCA)](/fields/tabular-data/data-feature-engineering/pca.md) — When to use PCA, how to choose the number of components, how to read explained variance, and how PCA compares with kernel PCA. *(14 min)*
 - [Regression Imputing](/fields/tabular-data/data-processing/handling-missing-data/regression-imputing.md) — How to fill missing values by predicting them with a regression model built on the other features. *(3 min)*
+- [The Fourier Transform for Images](/fields/digital-image-processing/fourier-transform-for-images.md) — What the 2D DFT really says - an image as a sum of waves, magnitude versus phase, a 4-point DFT done by hand, and the convolution theorem that turns sliding windows into multiplication. *(intermediate · 8 min)*  
+  [`convolution`](/.docs/generated/explore/tags/convolution.md) [`filtering`](/.docs/generated/explore/tags/filtering.md) [`fourier-transform`](/.docs/generated/explore/tags/fourier-transform.md)
 - [Time Series Analysis](/fields/tabular-data/concept-in-time-series/timeseriesfield.md) — A step-by-step learning path for time series analysis, from the basics through data preparation, analysis techniques and forecasting to advanced techniques and practical projects. *(7 min)*
 - [Unsupervised Learning](/fields/tabular-data/concept-in-machine-learning/ml-unsupervised.md) — Unsupervised learning notes on clustering (K-means, picking an algorithm and the number of clusters) and dimensionality reduction such as PCA, plus the curse of dimensionality. *(22 min)*  
   [`clustering`](/.docs/generated/explore/tags/clustering.md)
