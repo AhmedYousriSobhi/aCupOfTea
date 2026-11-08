@@ -1,8 +1,8 @@
 ---
 id: dip-fourier-transform-images
 title: The Fourier Transform for Images
-sidebar_label: 5. The Fourier transform
-order: 5
+sidebar_label: 6. The Fourier transform
+order: 7
 summary: What the 2D DFT really says - an image as a sum of waves, magnitude versus phase, a 4-point DFT done by hand, and the convolution theorem that turns sliding windows into multiplication.
 level: intermediate
 type: concept
@@ -14,7 +14,7 @@ relations:
 
 # The Fourier Transform for Images
 
-> **Part 5 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** The same town, heard as a choir instead of seen as a grid (curious who started it? [Meet Fourier](/fields/digital-image-processing/meet-fourier.md)). By the end you'll read the DFT formula as "how much of each wave is in this image", compute a small one by hand, and know why the convolution theorem makes the whole frequency domain worth the trouble.
+> **Part 6 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** The same town, heard as a choir instead of seen as a grid (curious who started it? [Meet Fourier](/fields/digital-image-processing/meet-fourier.md)). By the end you'll read the DFT formula as "how much of each wave is in this image", compute a small one by hand, and know why the convolution theorem makes the whole frequency domain worth the trouble.
 
 ## Table of Contents
 - [The Fourier Transform for Images](#the-fourier-transform-for-images)
@@ -133,7 +133,7 @@ The standard picture shows |F(u,v)| as an image, and you need three tricks to re
 | Trick | Why |
 |---|---|
 | **Shift** the origin to the centre | By default the DC term (0,0) is at the corner; the shift puts low frequencies in the middle, high ones outward |
-| **Log scale** | The DC term is enormous compared with everything else; log(1 + \|F\|) (page 2) makes the rest visible |
+| **Log scale** | The DC term is enormous compared with everything else; log(1 + \|F\|) (page 3) makes the rest visible |
 | Read **direction**, not position | A bright dot at distance d from the centre means stripes of frequency d; the line from the centre points perpendicular to the stripes |
 
 A photo of a vertical picket fence gives a bright horizontal row of dots through the centre: vertical stripes mean frequency changes along the horizontal axis.
@@ -162,16 +162,16 @@ Since the magnitude is the part everyone draws, most intuition about spectrum pi
 
 ## The convolution theorem
 
-Here is the reason to bother. Sliding a kernel over an image (page 3) is convolution. In the frequency domain it becomes **plain multiplication**:
+Here is the reason to bother. Sliding a kernel over an image (page 4) is convolution. In the frequency domain it becomes **plain multiplication**:
 
 $$f * h \;\longleftrightarrow\; F\cdot H$$
 
 The convolution of two signals has the DFT equal to the **product** of their DFTs, element by element. Read it two ways:
 
 - **Speed:** a large kernel costs k² per pixel in the spatial domain; the FFT route costs about log(MN) per pixel no matter the kernel size. Beyond small kernels, multiplication wins.
-- **Understanding:** every spatial filter has a frequency-domain description H(u,v) that says **which frequencies it lets through and how much**. The box blur keeps lows and kills highs. Sobel kills lows and passes highs. The Laplacian, as page 4 found, boosts highs.
+- **Understanding:** every spatial filter has a frequency-domain description H(u,v) that says **which frequencies it lets through and how much**. The box blur keeps lows and kills highs. Sobel kills lows and passes highs. The Laplacian, as page 5 found, boosts highs.
 
-One gotcha for later: the DFT treats the image as if it repeated forever, so the product corresponds to a **circular** convolution, which wraps around the borders. That bites on page 6.
+One gotcha for later: the DFT treats the image as if it repeated forever, so the product corresponds to a **circular** convolution, which wraps around the borders. That bites on page 7.
 
 ---
 
@@ -183,7 +183,7 @@ You now have a dictionary: spatial position becomes frequency, smooth becomes lo
 
 **Takeaway:** the DFT rewrites an image as waves; magnitude is how much, phase is where, and the convolution theorem turns filtering into multiplication.
 
-**Next:** if we can multiply the choir by a mask, which masks work, and what goes wrong when we sample the town too coarsely? [Part 6: Frequency filtering and aliasing](/fields/digital-image-processing/frequency-filtering-and-aliasing.md).
+**Next:** if we can multiply the choir by a mask, which masks work, and what goes wrong when we sample the town too coarsely? [Part 7: Frequency filtering and aliasing](/fields/digital-image-processing/frequency-filtering-and-aliasing.md).
 
 ### References
 

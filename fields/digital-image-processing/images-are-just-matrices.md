@@ -67,7 +67,7 @@ That's the whole object. Every algorithm in this series is "do something to this
 
 **Sampling** picks the grid size. More squares means finer detail, up to the limit of the optics.
 
-Too few squares and small things fall between citizens and vanish, or worse, turn into patterns that were never there. That second failure is called **aliasing**, and it deserves its own page ([page 6](/fields/digital-image-processing/frequency-filtering-and-aliasing.md)).
+Too few squares and small things fall between citizens and vanish, or worse, turn into patterns that were never there. That second failure is called **aliasing**, and it deserves its own page ([page 7](/fields/digital-image-processing/frequency-filtering-and-aliasing.md)).
 
 Spatial resolution is simply how many samples you take per unit of the scene. "12 megapixels" means roughly twelve million citizens. It says nothing about how good each card is, which brings us to the other half.
 
@@ -111,7 +111,7 @@ Two conventions trip up everyone at least once.
 | Origin | Often top-left in DIP books | Top-left |
 | y direction | Down the image | Down the image |
 
-So `img[y, x]` is the pixel at column x, row y. If your result looks transposed, you swapped the two. And because y grows **downward**, a "counter-clockwise" rotation in the usual math formula looks clockwise on screen (we'll meet that again on [page 8](/fields/digital-image-processing/geometric-transforms-and-interpolation.md)).
+So `img[y, x]` is the pixel at column x, row y. If your result looks transposed, you swapped the two. And because y grows **downward**, a "counter-clockwise" rotation in the usual math formula looks clockwise on screen (we'll meet that again on [page 2](/fields/digital-image-processing/geometric-transforms-and-interpolation.md)).
 
 > [!NOTE]
 > OpenCV also stores colour channels in BGR order, not RGB. Show a BGR array with an RGB viewer and every face turns blue.
@@ -164,7 +164,7 @@ The brightest pixel in the picture is shown at about **6%** of full brightness. 
 
 **Takeaway:** an image is a matrix of integers with a finite number of levels, and most "mystery" bugs are the wrong type, the wrong axis or the wrong range.
 
-**Next:** how do you rescue an image whose numbers are all squeezed into a dark corner of the range? [Part 2: Intensity transforms and histograms](/fields/digital-image-processing/intensity-transforms-and-histograms.md).
+**Next:** every rotation, zoom and shift sends a citizen to a square that doesn't exist. What number do you write on the squares left behind? [Part 2: Geometric transforms and interpolation](/fields/digital-image-processing/geometric-transforms-and-interpolation.md).
 
 ### References
 

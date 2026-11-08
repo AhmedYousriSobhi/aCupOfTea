@@ -1,8 +1,8 @@
 ---
 id: dip-edges-sharpening
 title: Edges and Sharpening
-sidebar_label: 4. Edges and sharpening
-order: 4
+sidebar_label: 5. Edges and sharpening
+order: 5
 summary: Derivatives as differences between neighbours - gradient, Sobel, Laplacian and unsharp masking, plus a one-line example that shows exactly where sharpening halos come from.
 level: beginner
 type: concept
@@ -14,7 +14,7 @@ relations:
 
 # Edges and Sharpening
 
-> **Part 4 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** An edge is where neighbours disagree, and calculus is the tool for measuring disagreement. By the end you'll build Sobel and Laplacian kernels from first principles and explain why sharpening draws halos and amplifies noise.
+> **Part 5 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** An edge is where neighbours disagree, and calculus is the tool for measuring disagreement. By the end you'll build Sobel and Laplacian kernels from first principles and explain why sharpening draws halos and amplifies noise.
 
 ## Table of Contents
 - [Edges and Sharpening](#edges-and-sharpening)
@@ -105,7 +105,7 @@ Look at G_x: the columns are [−1, 0, 1], which is a central difference, and th
 
 $$\begin{bmatrix}1\\2\\1\end{bmatrix}\begin{bmatrix}-1&0&1\end{bmatrix}=\begin{bmatrix}-1&0&1\\-2&0&2\\-1&0&1\end{bmatrix}$$
 
-Each Sobel kernel sums to **0** (the tip from [page 3](/fields/digital-image-processing/spatial-filtering.md)): flat regions give zero, edges give a response. Apply G_x and G_y as two filters, then combine with the magnitude formula to get an edge map. Full edge detectors such as Canny (1986) add thinning and thresholds on top of the same gradient.
+Each Sobel kernel sums to **0** (the tip from [page 4](/fields/digital-image-processing/spatial-filtering.md)): flat regions give zero, edges give a response. Apply G_x and G_y as two filters, then combine with the magnitude formula to get an edge map. Full edge detectors such as Canny (1986) add thinning and thresholds on top of the same gradient.
 
 ---
 
@@ -160,7 +160,7 @@ $$g = f + k\,\big(f - \text{blur}(f)\big)$$
 | 1 | Unsharp masking | Adds the detail once |
 | greater than 1 | High-boost | Exaggerates the detail |
 
-The difference f − blur(f) keeps only what the blur removed, which is the fine detail and edges. In the frequency picture of [page 5](/fields/digital-image-processing/fourier-transform-for-images.md) you've just **boosted the high frequencies**. Everything that sharpens an image, Laplacian or unsharp, boosts the same thing, and noise lives in the same place.
+The difference f − blur(f) keeps only what the blur removed, which is the fine detail and edges. In the frequency picture of [page 6](/fields/digital-image-processing/fourier-transform-for-images.md) you've just **boosted the high frequencies**. Everything that sharpens an image, Laplacian or unsharp, boosts the same thing, and noise lives in the same place.
 
 ---
 
@@ -178,7 +178,7 @@ And the scissors halo is the overshoot from the table above: the filter makes da
 
 **Takeaway:** derivatives are neighbour differences; they find edges, and the same operation that sharpens also amplifies noise and draws halos.
 
-**Next:** we keep saying "high frequencies". What are they, and can we filter them directly? [Part 5: The Fourier transform for images](/fields/digital-image-processing/fourier-transform-for-images.md).
+**Next:** we keep saying "high frequencies". What are they, and can we filter them directly? [Part 6: The Fourier transform for images](/fields/digital-image-processing/fourier-transform-for-images.md), after an optional [interlude on the man behind it](/fields/digital-image-processing/meet-fourier.md).
 
 ### References
 

@@ -1,8 +1,8 @@
 ---
 id: dip-noise-restoration
 title: Noise and Restoration
-sidebar_label: 7. Noise and restoration
-order: 7
+sidebar_label: 8. Noise and restoration
+order: 9
 summary: The degradation model g = h*f + n, common noise types, why inverse filtering explodes, and how the Wiener filter gives up gracefully - with PSNR to score the result.
 level: intermediate
 type: concept
@@ -14,7 +14,7 @@ relations:
 
 # Noise and Restoration
 
-> **Part 7 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** Real photos arrive blurred and noisy, and the obvious cure for the blur is also the fastest way to destroy the picture. By the end you'll write the damage as an equation, pick a filter by noise type, and see why Wiener is inverse filtering with common sense added.
+> **Part 8 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** Real photos arrive blurred and noisy, and the obvious cure for the blur is also the fastest way to destroy the picture. By the end you'll write the damage as an equation, pick a filter by noise type, and see why Wiener is inverse filtering with common sense added.
 
 ## Table of Contents
 - [Noise and Restoration](#noise-and-restoration)
@@ -48,7 +48,7 @@ Most restoration starts from one model. The true image f is blurred by something
 
 $$g(x,y) = h(x,y) * f(x,y) + \eta(x,y)$$
 
-By the convolution theorem from [page 5](/fields/digital-image-processing/fourier-transform-for-images.md), the same thing in the frequency domain is:
+By the convolution theorem from [page 6](/fields/digital-image-processing/fourier-transform-for-images.md), the same thing in the frequency domain is:
 
 $$G(u,v) = H(u,v)\,F(u,v) + N(u,v)$$
 
@@ -85,9 +85,9 @@ Each has a statistical model, which is why this page lives next to statistics: t
 
 | Noise | Reach for | Why |
 |---|---|---|
-| Gaussian | Mean or Gaussian blur (page 3) | Averaging independent, zero-mean errors cancels them |
-| Salt-and-pepper | Median (page 3) | An outlier can't be the middle value |
-| Periodic (stripes) | Notch filter (page 6) | The noise sits at a few isolated frequencies |
+| Gaussian | Mean or Gaussian blur (page 4) | Averaging independent, zero-mean errors cancels them |
+| Salt-and-pepper | Median (page 4) | An outlier can't be the middle value |
+| Periodic (stripes) | Notch filter (page 7) | The noise sits at a few isolated frequencies |
 | Several frames of a still scene | Average the frames | Noise standard deviation falls by about √n for n independent frames |
 
 > [!NOTE]
@@ -164,7 +164,7 @@ Wiener's fix is the same principle in every area of engineering: **don't trust a
 
 **Takeaway:** write the damage as G = HF + N, match the filter to the noise, and never invert a blur without a Wiener-style safety.
 
-**Next:** so far the town stayed put. What if we move, rotate or stretch the whole map? [Part 8: Geometric transforms and interpolation](/fields/digital-image-processing/geometric-transforms-and-interpolation.md).
+**Next:** all of these tools see the town at **one scale**. What if the useful structure lives at several sizes at once? [Part 9: Wavelets and multiresolution processing](/fields/digital-image-processing/wavelets-and-multiresolution-processing.md).
 
 ### References
 

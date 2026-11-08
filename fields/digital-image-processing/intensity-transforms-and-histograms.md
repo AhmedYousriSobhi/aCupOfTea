@@ -1,8 +1,8 @@
 ---
 id: dip-intensity-transforms-histograms
 title: Intensity Transforms and Histograms
-sidebar_label: 2. Intensity transforms
-order: 2
+sidebar_label: 3. Intensity transforms
+order: 3
 summary: Rescue a dark image with one formula - negatives, log, gamma and histogram equalization, with the CDF worked out by hand on a tiny image.
 level: beginner
 type: concept
@@ -13,7 +13,7 @@ relations:
 
 # Intensity Transforms and Histograms
 
-> **Part 2 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** A pixel transform is a lookup table: the old number goes in, a new one comes out. By the end you'll pick between log, gamma and histogram equalization on purpose, and you'll see why equalization is a cumulative sum in disguise.
+> **Part 3 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** A pixel transform is a lookup table: the old number goes in, a new one comes out. By the end you'll pick between log, gamma and histogram equalization on purpose, and you'll see why equalization is a cumulative sum in disguise.
 
 ## Table of Contents
 - [Intensity Transforms and Histograms](#intensity-transforms-and-histograms)
@@ -33,7 +33,7 @@ relations:
 
 ## The unreadable X-ray
 
-A radiologist sends you a scan from the previous page. Technically it's fine, but every value sits between 0 and about 60 out of 255. The bones are in there, one shade apart, and nobody can see the difference.
+A radiologist sends you the kind of scan from [page 1](/fields/digital-image-processing/images-are-just-matrices.md). Technically it's fine, but every value sits between 0 and about 60 out of 255. The bones are in there, one shade apart, and nobody can see the difference.
 
 You don't need a smarter algorithm. You need to **spread the numbers out**. In Pixel Town terms: every citizen is whispering. Tell them all to speak up, and speak up in the right proportions.
 
@@ -64,7 +64,7 @@ All three assume r is normalized to [0, 1] unless stated, and c is a scaling con
 | Transform | Formula | What it does | Reach for it when |
 |---|---|---|---|
 | Negative | s = (L−1) − r | Flips dark and bright | Reading white-on-dark detail in a dark region |
-| Log | s = c · log(1 + r) | Stretches darks, squashes brights | A huge range crushed into a few bright values (like a Fourier spectrum, page 5) |
+| Log | s = c · log(1 + r) | Stretches darks, squashes brights | A huge range crushed into a few bright values (like a Fourier spectrum, page 6) |
 | Power law (gamma) | s = c · r^γ | γ < 1 brightens darks; γ > 1 darkens | Contrast tuning, display correction |
 
 A few things worth knowing:
@@ -172,7 +172,7 @@ That's the limit of one-citizen-at-a-time tools: they never look at neighbours. 
 
 **Takeaway:** an intensity transform is a lookup table; histogram equalization builds that table from the CDF, and it trades lost levels for visible contrast.
 
-**Next:** what happens when each pixel's new value depends on its neighbours? [Part 3: Spatial filtering](/fields/digital-image-processing/spatial-filtering.md).
+**Next:** what happens when each pixel's new value depends on its neighbours? [Part 4: Spatial filtering](/fields/digital-image-processing/spatial-filtering.md).
 
 ### References
 

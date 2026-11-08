@@ -378,7 +378,7 @@
     ],
     "id": "dip-edges-sharpening",
     "level": "beginner",
-    "order": 4,
+    "order": 5,
     "path": "fields/digital-image-processing/edges-and-sharpening.md",
     "reading_time_min": 7,
     "relations": {
@@ -406,7 +406,7 @@
     ],
     "id": "dip-fourier-transform-images",
     "level": "intermediate",
-    "order": 5,
+    "order": 7,
     "path": "fields/digital-image-processing/fourier-transform-for-images.md",
     "reading_time_min": 8,
     "relations": {
@@ -434,7 +434,7 @@
     ],
     "id": "dip-frequency-filtering-aliasing",
     "level": "intermediate",
-    "order": 6,
+    "order": 8,
     "path": "fields/digital-image-processing/frequency-filtering-and-aliasing.md",
     "reading_time_min": 7,
     "relations": {
@@ -464,7 +464,7 @@
     ],
     "id": "dip-geometric-transforms-interpolation",
     "level": "intermediate",
-    "order": 8,
+    "order": 2,
     "path": "fields/digital-image-processing/geometric-transforms-and-interpolation.md",
     "reading_time_min": 7,
     "relations": {
@@ -515,7 +515,7 @@
     ],
     "id": "dip-intensity-transforms-histograms",
     "level": "beginner",
-    "order": 2,
+    "order": 3,
     "path": "fields/digital-image-processing/intensity-transforms-and-histograms.md",
     "reading_time_min": 7,
     "relations": {
@@ -539,7 +539,7 @@
     ],
     "id": "dip-meet-fourier",
     "level": "beginner",
-    "order": 10,
+    "order": 6,
     "path": "fields/digital-image-processing/meet-fourier.md",
     "reading_time_min": 7,
     "relations": {
@@ -566,7 +566,7 @@
     ],
     "id": "dip-noise-restoration",
     "level": "intermediate",
-    "order": 7,
+    "order": 9,
     "path": "fields/digital-image-processing/noise-and-restoration.md",
     "reading_time_min": 7,
     "relations": {
@@ -594,7 +594,7 @@
     ],
     "id": "dip-spatial-filtering",
     "level": "beginner",
-    "order": 3,
+    "order": 4,
     "path": "fields/digital-image-processing/spatial-filtering.md",
     "reading_time_min": 7,
     "relations": {
@@ -624,7 +624,7 @@
     ],
     "id": "dip-wavelets-multiresolution",
     "level": "intermediate",
-    "order": 9,
+    "order": 10,
     "path": "fields/digital-image-processing/wavelets-and-multiresolution-processing.md",
     "reading_time_min": 9,
     "relations": {

@@ -1,8 +1,8 @@
 ---
 id: dip-geometric-transforms-interpolation
 title: Geometric Transforms and Interpolation
-sidebar_label: 8. Geometric transforms
-order: 8
+sidebar_label: 2. Geometric transforms
+order: 2
 summary: Moving the whole map - affine transforms in homogeneous coordinates, why you must map backwards, and nearest, bilinear and bicubic interpolation with a bilinear example worked by hand.
 level: intermediate
 type: concept
@@ -14,7 +14,7 @@ relations:
 
 # Geometric Transforms and Interpolation
 
-> **Part 8 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** Every rotation, zoom and shift moves citizens to squares that don't exist. By the end you'll write a transform as one matrix, explain why real code loops over the **output** instead of the input, and compute a bilinear interpolation on paper.
+> **Part 2 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** Every rotation, zoom and shift moves citizens to squares that don't exist. By the end you'll write a transform as one matrix, explain why real code loops over the **output** instead of the input, and compute a bilinear interpolation on paper.
 
 ## Table of Contents
 - [Geometric Transforms and Interpolation](#geometric-transforms-and-interpolation)
@@ -159,7 +159,7 @@ At a grid point the answer is the original pixel; in between it slides smoothly.
 
 An affine transform keeps parallel lines parallel. A **perspective (homography)** transform, a full 3 × 3 matrix with a free bottom row followed by a divide by the third coordinate, doesn't. It has **8 free numbers** (four point pairs) and models a flat surface seen from an angle: straightening a photographed document, say. The same inverse-map-and-interpolate loop applies.
 
-**Shrinking** needs one more care, from [page 6](/fields/digital-image-processing/frequency-filtering-and-aliasing.md): reduce the image by a large factor without blurring first and the result aliases. OpenCV's docs recommend `INTER_AREA` when shrinking.
+**Shrinking** needs one more care, which [page 7](/fields/digital-image-processing/frequency-filtering-and-aliasing.md) explains in full: reduce the image by a large factor without blurring first and the result aliases. OpenCV's docs recommend `INTER_AREA` when shrinking.
 
 ---
 
@@ -171,7 +171,7 @@ The cleaner pipeline is inverse mapping with bilinear or bicubic, and only **one
 
 **Takeaway:** one 3 × 3 matrix handles every affine move; always map output to input, and choose the interpolation to suit the data.
 
-**Next:** all of these tools see the town at **one scale**. What if the useful structure lives at several sizes at once? [Part 9: Wavelets and multiresolution processing](/fields/digital-image-processing/wavelets-and-multiresolution-processing.md).
+**Next:** so far we moved the citizens. What if we only change what their cards say, to rescue an image whose numbers are squeezed into a dark corner of the range? [Part 3: Intensity transforms and histograms](/fields/digital-image-processing/intensity-transforms-and-histograms.md).
 
 ### References
 

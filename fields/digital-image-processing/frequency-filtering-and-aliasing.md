@@ -1,8 +1,8 @@
 ---
 id: dip-frequency-filtering-aliasing
 title: Frequency Filtering and Aliasing
-sidebar_label: 6. Frequency filtering, aliasing
-order: 6
+sidebar_label: 7. Frequency filtering, aliasing
+order: 8
 summary: Low-pass, high-pass and notch filters as masks on the spectrum, why the ideal filter rings, and how sampling too coarsely creates moire - with the Nyquist rule worked on one number.
 level: intermediate
 type: concept
@@ -14,7 +14,7 @@ relations:
 
 # Frequency Filtering and Aliasing
 
-> **Part 6 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** Give the choir a volume knob for every singer, then find out what happens when the town is too small to hear the fast ones. By the end you'll design a filter as a mask, explain ringing, and compute an alias by hand.
+> **Part 7 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** Give the choir a volume knob for every singer, then find out what happens when the town is too small to hear the fast ones. By the end you'll design a filter as a mask, explain ringing, and compute an alias by hand.
 
 ## Table of Contents
 - [Frequency Filtering and Aliasing](#frequency-filtering-and-aliasing)
@@ -71,7 +71,7 @@ A **low-pass** filter keeps low frequencies (smooth shading) and removes high on
 | Butterworth (order n) | 1 / (1 + (D/D₀)^(2n)) | Smooth cutoff; larger n is steeper and rings more |
 | Gaussian | exp(−D² / (2·D₀²)) | Smoothest; **no ringing** |
 
-The Gaussian has a bonus: its inverse transform is also a Gaussian. A Gaussian mask in frequency matches a Gaussian kernel in space, so it's the same blur as page 3, just designed from the other side.
+The Gaussian has a bonus: its inverse transform is also a Gaussian. A Gaussian mask in frequency matches a Gaussian kernel in space, so it's the same blur as page 4, just designed from the other side.
 
 > [!TIP]
 > Recommendation: use the Gaussian unless you have a reason not to. It's the only one of the three with no artifacts. Pick the Ideal filter only to see the artifact once, for the lesson.
@@ -82,7 +82,7 @@ The Gaussian has a bonus: its inverse transform is also a Gaussian. A Gaussian m
 
 An ideal low-pass is a perfect circle of 1s with a hard wall. Its equivalent spatial kernel, via the inverse transform, is not a gentle blob. It's a **sinc**-like function: a central peak with endless decaying ripples around it.
 
-Convolve a sharp edge with ripples and you get ripples next to the edge: faint bands that follow every edge, like the echo after a shout in a stairwell. It's the same overshoot and undershoot as page 4's sharpening, now caused by cutting frequencies too abruptly.
+Convolve a sharp edge with ripples and you get ripples next to the edge: faint bands that follow every edge, like the echo after a shout in a stairwell. It's the same overshoot and undershoot as page 5's sharpening, now caused by cutting frequencies too abruptly.
 
 The rule: **a sharp edge in one domain becomes ripples in the other.** A softer cutoff means fewer ripples. That's why Gaussian wins.
 
@@ -90,7 +90,7 @@ The rule: **a sharp edge in one domain becomes ripples in the other.** A softer 
 
 ## High-pass and notch
 
-Turn the knob the other way and you get a **high-pass** filter: H_hp = 1 − H_lp. It removes smooth shading and keeps edges, which is another way to see the sharpening of page 4: unsharp masking is "the original plus some high-pass".
+Turn the knob the other way and you get a **high-pass** filter: H_hp = 1 − H_lp. It removes smooth shading and keeps edges, which is another way to see the sharpening of page 5: unsharp masking is "the original plus some high-pass".
 
 A **notch** filter removes one specific frequency, or a symmetric pair, and leaves everything else alone. It's the right tool for **periodic noise**, such as the regular line pattern from a scanner or a screen-captured halftone. In the spectrum that noise shows up as a few isolated bright dots, and you mask just those dots. No spatial kernel can do that as cleanly.
 
@@ -146,7 +146,7 @@ Once aliasing has happened it can't be undone: the information about the true fr
 
 ## Wraparound: the border gotcha
 
-One trap from [page 5](/fields/digital-image-processing/fourier-transform-for-images.md): multiplying DFTs corresponds to **circular** convolution, as if the image repeated like wallpaper. Filter without care and the left edge's content bleeds in from the right edge.
+One trap from [page 6](/fields/digital-image-processing/fourier-transform-for-images.md): multiplying DFTs corresponds to **circular** convolution, as if the image repeated like wallpaper. Filter without care and the left edge's content bleeds in from the right edge.
 
 The fix is to **pad** the image with zeros (to at least the image size plus the kernel size) before transforming, filter, and crop afterwards.
 
@@ -160,7 +160,7 @@ And the choir picture holds: each singer is a frequency, the grid can only hear 
 
 **Takeaway:** a frequency filter is a mask on the spectrum (Gaussian is the safe choice), and sampling below twice the highest frequency creates aliases that can't be undone.
 
-**Next:** real images arrive damaged by noise and blur. Can you undo the damage by dividing it out? [Part 7: Noise and restoration](/fields/digital-image-processing/noise-and-restoration.md).
+**Next:** real images arrive damaged by noise and blur. Can you undo the damage by dividing it out? [Part 8: Noise and restoration](/fields/digital-image-processing/noise-and-restoration.md).
 
 ### References
 

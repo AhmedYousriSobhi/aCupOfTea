@@ -2,7 +2,7 @@
 id: dip-wavelets-multiresolution
 title: Wavelets and Multiresolution Processing
 sidebar_label: 9. Wavelets, multiresolution
-order: 9
+order: 10
 summary: Seeing an image at several scales at once - pyramids, a Haar wavelet transform by hand, the four 2D subbands, and why mostly-zero detail makes denoising and compression work.
 level: intermediate
 type: concept
@@ -37,7 +37,7 @@ relations:
 
 You compute the Fourier transform of a photo with one thin vertical scratch. You expect a tidy little feature in the spectrum. Instead, the scratch has smeared itself across **every frequency**, and nothing in the spectrum says where in the picture it was.
 
-That's Fourier's blind spot. Each wave in [page 5](/fields/digital-image-processing/fourier-transform-for-images.md) stretches over the whole image, so the transform knows **how much** of each pattern there is and almost nothing about **where**. A scratch, a sharp edge or a blob of texture is local; the tool is global.
+That's Fourier's blind spot. Each wave in [page 6](/fields/digital-image-processing/fourier-transform-for-images.md) stretches over the whole image, so the transform knows **how much** of each pattern there is and almost nothing about **where**. A scratch, a sharp edge or a blob of texture is local; the tool is global.
 
 ---
 
@@ -51,7 +51,7 @@ That is the idea of **multiresolution processing**: represent the image as a coa
 
 ## Image pyramids
 
-A **Gaussian pyramid** repeatedly blurs the image (page 3) and halves its width and height. Each level is a smaller, blurrier version of the one below.
+A **Gaussian pyramid** repeatedly blurs the image (page 4) and halves its width and height. Each level is a smaller, blurrier version of the one below.
 
 The **Laplacian pyramid** stores what each shrink lost: the original at that level, minus the next level scaled back up:
 
@@ -147,7 +147,7 @@ So the transform of a typical image is a handful of large numbers and a sea of n
 | **Denoising** | Noise spreads thinly over every detail coefficient, while real edges concentrate in a few big ones. Shrink or zero every detail coefficient below a threshold, then invert. The edges survive; the noise mostly goes. Donoho and Johnstone's "wavelet shrinkage" made this principled. |
 | **Compression** | Store only the large coefficients, coarsely quantized, and drop the small ones. JPEG 2000 does this with a wavelet transform; the older JPEG uses 8 × 8 block cosine transforms instead. |
 
-Compare with [page 7](/fields/digital-image-processing/noise-and-restoration.md): a mean filter blurs the edges together with the noise because it can't tell them apart. A wavelet threshold can, because edges and noise **look different** in this domain.
+Compare with [page 8](/fields/digital-image-processing/noise-and-restoration.md): a mean filter blurs the edges together with the noise because it can't tell them apart. A wavelet threshold can, because edges and noise **look different** in this domain.
 
 Honest limits: thresholding too hard leaves ringing-like artifacts around edges and a patchy look, and a wavelet is chosen to suit the image type. And there's a trade-off you can't escape: you cannot know a position and a frequency both perfectly. Wavelets just pick a smarter compromise than Fourier's all-frequency, no-position extreme: short windows for fast changes, long windows for slow ones.
 
@@ -179,7 +179,7 @@ You've now gone from a grid of numbers to the frequency domain, to restoring and
 
 ### References
 
-- R. C. Gonzalez and R. E. Woods, *Digital Image Processing*, 4th ed., Pearson, 2018: chapter 6, "Wavelet and Other Image Transforms" (the 3rd edition called it "Wavelets and Multiresolution Processing"): pyramids, subband coding, the discrete wavelet transform.
+- R. C. Gonzalez and R. E. Woods, *Digital Image Processing*, 4th ed., Pearson, 2018: the chapter "Wavelet and Other Image Transforms" (the 3rd edition called it "Wavelets and Multiresolution Processing"; chapter numbers differ between listings, so look it up by title): pyramids, subband coding, the discrete wavelet transform.
 - P. J. Burt and E. H. Adelson, "The Laplacian Pyramid as a Compact Image Code", *IEEE Transactions on Communications*, 31(4), 532-540, 1983.
 - S. G. Mallat, "A Theory for Multiresolution Signal Decomposition: The Wavelet Representation", *IEEE Transactions on Pattern Analysis and Machine Intelligence*, 11(7), 674-693, 1989.
 - D. L. Donoho and I. M. Johnstone, "Ideal spatial adaptation by wavelet shrinkage", *Biometrika*, 81(3), 425-455, 1994.

@@ -1,8 +1,8 @@
 ---
 id: dip-spatial-filtering
 title: Spatial Filtering
-sidebar_label: 3. Spatial filtering
-order: 3
+sidebar_label: 4. Spatial filtering
+order: 4
 summary: Kernels, correlation versus convolution, padding and separability - blurring explained as a neighbourhood vote, with the mean and median compared on one noisy pixel.
 level: beginner
 type: concept
@@ -15,7 +15,7 @@ relations:
 
 # Spatial Filtering
 
-> **Part 3 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** Now the citizens talk to their neighbours. By the end you'll compute a filtered pixel by hand, know why convolution flips the kernel (and why CNN libraries quietly don't), and see why a Gaussian blur costs far less than it looks.
+> **Part 4 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** Now the citizens talk to their neighbours. By the end you'll compute a filtered pixel by hand, know why convolution flips the kernel (and why CNN libraries quietly don't), and see why a Gaussian blur costs far less than it looks.
 
 ## Table of Contents
 - [Spatial Filtering](#spatial-filtering)
@@ -62,7 +62,7 @@ $$g(x,y) = \sum_{s=-a}^{a}\sum_{t=-b}^{b} w(s,t)\, f(x+s,\, y+t)$$
 That is a weighted vote: each neighbour gets a weight, and the sum is the result. For a **box** (mean) filter every weight is 1/9 in a 3 × 3 window, so the pixel becomes the plain average of itself and its eight neighbours.
 
 > [!TIP]
-> Weights that sum to **1** keep overall brightness. Weights that sum to **0** (edge detectors, page 4) give zero on flat regions and a response only where things change.
+> Weights that sum to **1** keep overall brightness. Weights that sum to **0** (edge detectors, page 5) give zero on flat regions and a response only where things change.
 
 ---
 
@@ -76,7 +76,7 @@ Only the sign inside f changed, and that sign decides whether you read the kerne
 
 If the kernel is symmetric (box, Gaussian, Laplacian), flipping changes nothing and the two are the same. They differ only for asymmetric kernels such as a Sobel edge detector, where the flip reverses the direction of the response.
 
-Why does the flip exist at all? Because convolution has clean algebra: it is commutative and associative, and, as [page 5](/fields/digital-image-processing/fourier-transform-for-images.md) shows, it turns into plain multiplication in the frequency domain. Correlation is the "what matches this pattern?" operation and is what you reach for when you slide a template over a picture.
+Why does the flip exist at all? Because convolution has clean algebra: it is commutative and associative, and, as [page 6](/fields/digital-image-processing/fourier-transform-for-images.md) shows, it turns into plain multiplication in the frequency domain. Correlation is the "what matches this pattern?" operation and is what you reach for when you slide a template over a picture.
 
 ---
 
@@ -112,7 +112,7 @@ The speck vanishes completely and nothing bleeds. A single outlier can never be 
 | Good against | Gaussian-like noise spread over every pixel | Salt-and-pepper (isolated extreme pixels) |
 | Side effect | Blurs edges | Preserves edges better, can erase thin lines |
 
-So the manager and the other engineer were both right. They were treating different noise: Pixel Town's whisper campaign versus one loudmouth. More on telling them apart on [page 7](/fields/digital-image-processing/noise-and-restoration.md).
+So the manager and the other engineer were both right. They were treating different noise: Pixel Town's whisper campaign versus one loudmouth. More on telling them apart on [page 8](/fields/digital-image-processing/noise-and-restoration.md).
 
 ---
 
@@ -172,7 +172,7 @@ Notice also what both did to a real edge between a dark wall and a bright door: 
 
 **Takeaway:** a filter is a sliding weighted vote; linear ones are kernels, the median is the nonlinear exception, and separable kernels make big blurs cheap.
 
-**Next:** how do you find an edge by asking neighbours to disagree? [Part 4: Edges and sharpening](/fields/digital-image-processing/edges-and-sharpening.md).
+**Next:** how do you find an edge by asking neighbours to disagree? [Part 5: Edges and sharpening](/fields/digital-image-processing/edges-and-sharpening.md).
 
 ### References
 

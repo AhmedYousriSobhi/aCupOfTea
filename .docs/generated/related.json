@@ -691,14 +691,14 @@
     "related": [],
     "required_by": [
       {
-        "id": "dip-intensity-transforms-histograms",
-        "path": "fields/digital-image-processing/intensity-transforms-and-histograms.md",
-        "title": "Intensity Transforms and Histograms"
-      },
-      {
         "id": "dip-geometric-transforms-interpolation",
         "path": "fields/digital-image-processing/geometric-transforms-and-interpolation.md",
         "title": "Geometric Transforms and Interpolation"
+      },
+      {
+        "id": "dip-intensity-transforms-histograms",
+        "path": "fields/digital-image-processing/intensity-transforms-and-histograms.md",
+        "title": "Intensity Transforms and Histograms"
       }
     ]
   },

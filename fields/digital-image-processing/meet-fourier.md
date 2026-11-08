@@ -2,7 +2,7 @@
 id: dip-meet-fourier
 title: Meet Fourier
 sidebar_label: "Interlude: Meet Fourier"
-order: 10
+order: 6
 summary: The story of Joseph Fourier, the prefect who drained swamps and studied heat, and why his idea that heat spreads as a sum of sine waves ended up inside every image filter.
 level: beginner
 type: note
@@ -14,7 +14,7 @@ relations:
 
 # Meet Fourier
 
-> **Interlude of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** Read it before or after [Part 5](/fields/digital-image-processing/fourier-transform-for-images.md). The man behind the transform was an administrator who studied heat in his spare time, and his one big idea explains why blur, low-pass filters and the heat on your stove are the same thing.
+> **Interlude of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** Read it before or after [Part 6](/fields/digital-image-processing/fourier-transform-for-images.md). The man behind the transform was an administrator who studied heat in his spare time, and his one big idea explains why blur, low-pass filters and the heat on your stove are the same thing.
 
 ## Table of Contents
 - [Meet Fourier](#meet-fourier)
@@ -63,7 +63,7 @@ Take a metal rod, heat one spot, and watch. The hot spot spreads out and flatten
 
 $$\frac{\partial u}{\partial t} = \alpha\,\frac{\partial^2 u}{\partial x^2}$$
 
-The right side is the **second derivative**. You met it on [page 4](/fields/digital-image-processing/edges-and-sharpening.md): "how much I differ from my neighbours". The constant α says how well the material conducts. A bump hotter than its neighbours cools; a dip colder than its neighbours warms. Nothing mysterious, and also very hard to solve for a lumpy starting temperature.
+The right side is the **second derivative**. You met it on [page 5](/fields/digital-image-processing/edges-and-sharpening.md): "how much I differ from my neighbours". The constant α says how well the material conducts. A bump hotter than its neighbours cools; a dip colder than its neighbours warms. Nothing mysterious, and also very hard to solve for a lumpy starting temperature.
 
 ---
 
@@ -87,9 +87,9 @@ flowchart LR
     D --> E["Temperature<br/>at any later time"]
 ```
 
-*Split the hard problem into easy pieces, solve each, put them back together. That's the whole method, and it's the DFT of page 5 in disguise.*
+*Split the hard problem into easy pieces, solve each, put them back together. That's the whole method, and it's the DFT of page 6 in disguise.*
 
-That last claim, that a wildly shaped function could be a sum of smooth waves, was hard to swallow in his day, and making it precise took mathematicians a long time afterwards. For us it's the foundation: it's why page 5 can say "every image is a sum of waves".
+That last claim, that a wildly shaped function could be a sum of smooth waves, was hard to swallow in his day, and making it precise took mathematicians a long time afterwards. For us it's the foundation: it's why page 6 can say "every image is a sum of waves".
 
 ---
 
@@ -105,7 +105,7 @@ That last claim, that a wildly shaped function could be a sum of smooth waves, w
 
 ## Heat is a blur filter
 
-Read that answer again from Pixel Town's point of view. Heat flow makes sharp, fast-changing detail **disappear first** and leaves the smooth, slow shapes for last. That is exactly what a **low-pass filter** does ([page 6](/fields/digital-image-processing/frequency-filtering-and-aliasing.md)).
+Read that answer again from Pixel Town's point of view. Heat flow makes sharp, fast-changing detail **disappear first** and leaves the smooth, slow shapes for last. That is exactly what a **low-pass filter** does ([page 7](/fields/digital-image-processing/frequency-filtering-and-aliasing.md)).
 
 And it's more than an analogy. Let the "temperature" be the brightness of an image and let it diffuse for a while: you get a **Gaussian blur**, where the longer you wait, the wider the blur. The spread of the Gaussian kernel grows with the square root of time (its variance is 2αt in the standard setup).
 
@@ -122,9 +122,9 @@ So when you press "Gaussian blur", you are running Fourier's rod experiment on a
 
 ## Why he made life "complex"
 
-Fourier wrote his series with sines and cosines. The tidier notation of page 5 packs them into one expression with a spinning arrow, e^(−jθ) = cos θ − j sin θ, which is just Euler's formula doing book-keeping.
+Fourier wrote his series with sines and cosines. The tidier notation of page 6 packs them into one expression with a spinning arrow, e^(−jθ) = cos θ − j sin θ, which is just Euler's formula doing book-keeping.
 
-The side effect is that the answer for each frequency is a **complex number**: a magnitude and a phase, as in the swapped-faces experiment of page 5. So yes, it's quite fair to say Fourier made your life complex. In the literal sense.
+The side effect is that the answer for each frequency is a **complex number**: a magnitude and a phase, as in the swapped-faces experiment of page 6. So yes, it's quite fair to say Fourier made your life complex. In the literal sense.
 
 ---
 
@@ -140,14 +140,14 @@ Not bad for a man who also had roads to build.
 
 A prefect in Grenoble, trying to understand a cooling bar, found that you can break any shape into waves, let each wave live its own life, and put them back together. Two centuries later that same trick:
 
-- finds the periodic noise in a scanner's output (page 6),
-- explains why blur and low-pass are the same thing (page 3 and 6),
-- turns convolution into multiplication (page 5),
+- finds the periodic noise in a scanner's output (page 7),
+- explains why blur and low-pass are the same thing (page 4 and page 7),
+- turns convolution into multiplication (page 6),
 - and sits inside the compression that shrinks your photos.
 
 **Takeaway:** Fourier's one idea, "split it into waves, handle each wave, add them back", is why the frequency domain exists.
 
-**Next:** back to the main route. [Part 5: The Fourier transform for images](/fields/digital-image-processing/fourier-transform-for-images.md) shows what that idea looks like on a grid of pixels.
+**Next:** back to the main route. [Part 6: The Fourier transform for images](/fields/digital-image-processing/fourier-transform-for-images.md) shows what that idea looks like on a grid of pixels.
 
 ### References
 
