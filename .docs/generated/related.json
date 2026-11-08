@@ -451,6 +451,11 @@
         "title": "k3s vs kubeadm: Furnished Flat or Empty Unit?"
       },
       {
+        "id": "kubectl-troubleshooting",
+        "path": "tips/kubectl-troubleshooting.md",
+        "title": "kubectl Troubleshooting Cheat Sheet: Five Questions, in Order"
+      },
+      {
         "id": "your-kubeconfig-is-a-house-key",
         "path": "fields/devops/kubernetes/your-kubeconfig-is-a-house-key.md",
         "title": "Your kubeconfig Is a House Key"
@@ -469,11 +474,6 @@
         "id": "kubernetes-at-hpc-scale",
         "path": "fields/devops/kubernetes/kubernetes-at-hpc-scale.md",
         "title": "Kubernetes at HPC Scale: The Front Desk Meets a 100,000-Task Array"
-      },
-      {
-        "id": "kubectl-troubleshooting",
-        "path": "tips/kubectl-troubleshooting.md",
-        "title": "kubectl Troubleshooting Cheat Sheet: Five Questions, in Order"
       }
     ]
   },

@@ -10,6 +10,7 @@ relations:
   prerequisites: [kubernetes-in-five-nouns]
   related: [broken-pods-rogues-gallery, kubernetes-at-hpc-scale, oomkilled-with-memory-to-spare]
 sidebar_label: kubectl troubleshooting
+order: 11
 ---
 
 # kubectl Troubleshooting Cheat Sheet: Five Questions, in Order
@@ -34,7 +35,7 @@ Think of a nurse doing rounds. She doesn't start with surgery. She checks the sa
 Do the same with a pod. Where is it, what does it say, what did the cluster say about it, why did it die, and only then, how do I look inside. The order matters because each step is cheaper than the next, and the first three fix most tickets. [Part 4](/fields/devops/kubernetes/broken-pods-rogues-gallery.md) is the long version of this ritual with the gallery of failures. This page is the short one.
 
 > [!NOTE]
-> Every command here comes from the Kubernetes reference pages read on 8 November 2026. I didn't run this sheet on a cluster. Replace `POD`, `NS` and `JOB` with your own names.
+> The commands come from the Kubernetes reference pages. I also ran them on 8 November 2026 against deliberately broken pods and a failing Indexed Job, on a throwaway single-node k3s v1.37.2+k3s1 (Ubuntu 22.04.3, kernel 5.15.0-91), destroyed afterwards. Where the real output differed from what I expected, the page says so. Not tested: a multi-node cluster, other Kubernetes versions, and `kubectl debug` in a real terminal (my run had no TTY, so it fell back to streaming logs). Replace `POD`, `NS` and `JOB` with your own names.
 
 ---
 
@@ -64,7 +65,13 @@ kubectl logs job/JOB                      # a Job's first container
 kubectl logs -f POD --timestamps          # follow it live, with times
 ```
 
-The one people forget is `-p`. A pod in `CrashLoopBackOff` keeps restarting, so plain `kubectl logs` shows the new, empty instance. The docs describe `--previous` as printing "the logs for the previous instance of the container in a pod if it exists."
+The one people forget is `-p`. A pod in `CrashLoopBackOff` keeps restarting, so the container you ask for may be a new one with nothing in it yet. The docs describe `--previous` as printing "the logs for the previous instance of the container in a pod if it exists."
+
+What the test showed:
+
+- On a pod that exits with code 3, plain `kubectl logs crasher` printed `starting` and `fatal-detail-here`, because it was between restarts and the last instance had just died. `kubectl logs -p crasher` printed `unable to retrieve container logs for containerd://...` instead. So if `-p` fails, try plain `logs` as well, and the other way round.
+- `kubectl logs -p` on a pod that never restarted failed with `previous terminated container "c" in pod "fine" not found`. That's the correct answer: there is no previous instance.
+- With a label selector, one bad pod makes the whole command exit 1, although the other pods' logs still print. In the test, `kubectl logs -l app=demo --all-containers` printed the healthy pod and then `container "c" in pod "badimage" is waiting to start: image can't be pulled`.
 
 Two limits from the docs: with a selector, `--tail` defaults to 10 lines, and `--max-log-requests` defaults to 5 pods followed at once.
 
@@ -79,7 +86,7 @@ kubectl events -n NS --types=Warning      # only the bad news
 kubectl events -A --watch                 # watch events arrive
 ```
 
-`describe` prints "a detailed description of the selected resources, including related resources such as events". Read the **Events** section at the bottom first: the scheduler writes its reason there, such as `Insufficient nvidia.com/gpu`.
+`describe` prints "a detailed description of the selected resources, including related resources such as events". Read the **Events** section at the bottom first: the scheduler writes its reason there. In the test, a pod asking for 64 CPUs got `0/1 nodes are available: 1 Insufficient cpu. preemption: 0/1 nodes are available: 1 Preemption is not helpful for scheduling.` A GPU request fails the same way, with `Insufficient nvidia.com/gpu`. The bad-image pod showed `ErrImagePull` first and `ImagePullBackOff` a few seconds later, with the registry's `not found` message in between.
 
 > [!TIP]
 > For several pods or a prefix match, `describe` doesn't show events unless you ask: `--show-events` defaults to true only for a single object. Name the pod.
@@ -95,15 +102,18 @@ kubectl get pod POD -o yaml               # look at status.containerStatuses[].l
 kubectl get pod POD -o go-template='{{range .status.containerStatuses}}{{.name}}: {{.lastState.terminated.message}}{{"\n"}}{{end}}'
 ```
 
-Look for `lastState.terminated`: it carries `exitCode`, `reason` and `message`. `OOMKilled` there means the memory limit, and [part 10](/fields/devops/kubernetes/oomkilled-with-memory-to-spare.md) explains why it can happen with RAM to spare.
+Look for `lastState.terminated`: it carries `exitCode`, `reason` and `message`. In the test, a container that tried to hold about 100 MB under a 20Mi limit showed `OOMKilled exit 137`. That means the memory limit, and [part 10](/fields/devops/kubernetes/oomkilled-with-memory-to-spare.md) explains why it can happen with RAM to spare.
 
-Your program can leave a note too. The docs say Kubernetes reads a termination message from `/dev/termination-log` by default. If the file is empty and the container failed, setting `terminationMessagePolicy: FallbackToLogsOnError` uses the last chunk of the log instead, limited to 2048 bytes or 80 lines. You can't change `terminationMessagePath` after the pod has started.
+Your program can leave a note too. The docs say Kubernetes reads a termination message from `/dev/termination-log` by default. If the file is empty and the container failed, setting `terminationMessagePolicy: FallbackToLogsOnError` uses the last chunk of the log instead, limited to 2048 bytes or 80 lines. You can't change `terminationMessagePath` after the pod has started. In the test, a container that wrote `fatal-detail-here` to stderr and exited with 3 got that line back in `lastState.terminated.message` with `FallbackToLogsOnError`, and the same field was empty for a pod that had never started.
+
+> [!NOTE]
+> `lastState` holds the previous run. For a pod with `restartPolicy: Never`, such as a Job's pod, there is no restart, so look under `state.terminated` instead.
 
 | What you see | Where to look |
 | --- | --- |
 | `Pending` | `describe`, Events: the scheduler's reason |
 | `ImagePullBackOff` | `describe`: the image name, the registry, the pull secret |
-| `CrashLoopBackOff` | `logs -p`, then `lastState.terminated` |
+| `Error`, then `CrashLoopBackOff` | `logs` and `logs -p`, then `lastState.terminated` |
 | `OOMKilled` | `lastState.terminated.reason`, then the memory limit |
 | `Completed` but wrong | `logs`: the exit code was 0, so look at the program |
 
@@ -123,6 +133,8 @@ The docs describe the first form as adding "an ephemeral container to an already
 
 My recommendation: prefer `--copy-to` on anything that matters. A debug session in the real pod can disturb the very problem you came to see, and a copy can be thrown away.
 
+What the test showed: all three forms worked. The ephemeral container appeared in `spec.ephemeralContainers` and, with `--target`, could see the original container's process (`sh -c echo all good; sleep 3600` as PID 1). The `--copy-to` copy ran as a second pod, `fine-debug`, with `2/2` containers, and the node form listed the host's `/`. A copy is a real pod: delete it when you're done, and look at `kubectl get pods` afterwards for a leftover node-debugger pod. I didn't check what happens to that one.
+
 > [!WARNING]
 > `kubectl debug node/...` runs in the node's host namespaces. Treat it like root on that machine, and check who is allowed to do it ([part 13](/fields/devops/kubernetes/rbac-and-the-limited-viewer.md)).
 
@@ -130,27 +142,37 @@ My recommendation: prefer `--copy-to` on anything that matters. A debug session 
 
 ## The Job that lost index 417
 
-[Page 15](/fields/devops/kubernetes/kubernetes-at-hpc-scale.md) ended on a challenge: index 417 of an Indexed Job failed twice. Here is the same ritual, applied to it.
+[Page 15](/fields/devops/kubernetes/kubernetes-at-hpc-scale.md) ended on a challenge: index 417 of an Indexed Job failed twice. Here is the same ritual, applied to a small version of it: a 6-index Job where index 4 always exits 1, with `backoffLimitPerIndex: 1` and `ttlSecondsAfterFinished: 60`.
 
 ```bash
-kubectl get job JOB -o jsonpath='{.status.failedIndexes}'   # which indexes failed
-kubectl get pods -l batch.kubernetes.io/job-completion-index=417   # that index's pod, if it still exists
-kubectl logs -p -l batch.kubernetes.io/job-completion-index=417    # what it said, if the pod is still there
+kubectl get job JOB -o jsonpath='{.status.failedIndexes}'                 # which indexes failed
+kubectl get pods -l batch.kubernetes.io/job-name=JOB,batch.kubernetes.io/job-completion-index=417   # that index's pods
+kubectl logs -l batch.kubernetes.io/job-name=JOB,batch.kubernetes.io/job-completion-index=417       # what they said
 ```
 
-The Job docs say indexes that exceed the per-index backoff limit go into `.status.failedIndexes`, and that the completion index is also a pod label (v1.28 and later). The selector above would match pods from every Job in the namespace that has index 417. In a shared namespace, add the Job's own label to the selector.
+What the test showed:
 
-If the pod is already gone, as `ttlSecondsAfterFinished` will make it, you have three places left:
+- `failedIndexes` printed `4`, and `completedIndexes` printed `0-3,5`. The Job's status was `Failed` with `5/6` completions, as the docs say it would be.
+- Index 4 had **two pods**, `sweep-4-b9ljl` and `sweep-4-4clfz`, both in `Error`. With `restartPolicy: Never` a retry is a new pod, not a restart, so the selector returns every attempt and `logs` printed both.
+- `kubectl logs -p` failed here: `previous terminated container "task" in pod "sweep-4-4clfz" not found`. Use plain `logs`.
+- `kubectl logs job/JOB` is not the way to find the failure. It printed `Found 7 pods, using pod/sweep-0-29gs6`: the first pod, which was a healthy one.
+- The pods carry both `batch.kubernetes.io/job-name=sweep` and the older `job-name=sweep`, so you can scope the selector to one Job.
+
+If the pods are already gone, what is left depends on what deleted them:
 
 ```bash
-kubectl describe job JOB            # the Job's own events: why pods failed or were replaced
+kubectl describe job JOB            # the Job's events: pods created, "Job has failed indexes"
 kubectl events --for job/JOB        # the same, as a list
-kubectl get job JOB -o yaml         # conditions and counters in status
+kubectl get job JOB -o jsonpath='{.status.conditions}'   # why it failed
 ```
 
-That's all the cluster will tell you. The logs of a deleted pod are gone with it, so a site that expects to debug after the fact needs logs shipped off the cluster before the TTL fires. That is a recommendation, not a Kubernetes rule.
+After I deleted the two pods by hand, all three still worked. The Job's events showed a `SuccessfulCreate` line per pod and `FailedIndexes`, and the conditions showed `reason: FailedIndexes`.
 
-**Takeaway:** ask the same five questions in the same order, and reach for `logs -p` and the Events section before anything else.
+After `ttlSecondsAfterFinished` fired, `kubectl get job sweep` and `describe job sweep` returned `jobs.batch "sweep" not found`, and `kubectl get pods` showed nothing for it. The TTL controller had deleted the Job together with its pods, as the docs say. Only `kubectl events --for job/sweep` still printed lines, and they only say that pods were created and that indexes failed. That was about 90 seconds in. I didn't measure how long events stay. They say nothing about why index 4 failed: the log lines `index-4-broke` and `task 4` were gone with the pods.
+
+So the TTL decides how long you can debug. My recommendation: ship logs off the cluster, or set the TTL long enough for the humans, before you rely on `ttlSecondsAfterFinished`. That is advice, not a Kubernetes rule.
+
+**Takeaway:** ask the same five questions in the same order, read the Events section before anything else, and remember that a Job's TTL deletes the evidence along with the pods.
 
 ---
 

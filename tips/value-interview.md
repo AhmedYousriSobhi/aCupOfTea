@@ -1,5 +1,6 @@
 ---
 summary: How to prepare for a value interview, including what the interviewer looks for, how to introduce yourself, and real questions to practise.
+order: 5
 ---
 # Tips - Value Interview
 

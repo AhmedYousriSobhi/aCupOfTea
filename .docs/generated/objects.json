@@ -835,8 +835,9 @@
     ],
     "id": "kubectl-troubleshooting",
     "level": "intermediate",
+    "order": 11,
     "path": "tips/kubectl-troubleshooting.md",
-    "reading_time_min": 5,
+    "reading_time_min": 9,
     "relations": {
       "prerequisites": [
         "kubernetes-in-five-nouns"

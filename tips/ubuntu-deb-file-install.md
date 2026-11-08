@@ -1,5 +1,6 @@
 ---
 summary: How to install a .deb file from the command line on Ubuntu and fix a dependencies error.
+order: 8
 ---
 # Tips - Ubuntu Debian File Installation
 
