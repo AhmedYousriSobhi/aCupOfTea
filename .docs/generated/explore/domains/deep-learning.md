@@ -18,5 +18,7 @@ Neural networks and deep architectures.
   [`distributed-training`](/.docs/generated/explore/tags/distributed-training.md) [`pytorch`](/.docs/generated/explore/tags/pytorch.md)
 - [Sequence Models](/fields/deep-learning/concepts/sequence-models.md) — How models handle ordered data like text, from RNNs and LSTMs to transformers and LLMs. *(intermediate · 6 min)*  
   [`llm`](/.docs/generated/explore/tags/llm.md) [`rnn`](/.docs/generated/explore/tags/rnn.md) [`transformers`](/.docs/generated/explore/tags/transformers.md)
+- [Spatial Filtering](/fields/digital-image-processing/spatial-filtering.md) — Kernels, correlation versus convolution, padding and separability - blurring explained as a neighbourhood vote, with the mean and median compared on one noisy pixel. *(beginner · 7 min)*  
+  [`convolution`](/.docs/generated/explore/tags/convolution.md) [`filtering`](/.docs/generated/explore/tags/filtering.md) [`noise`](/.docs/generated/explore/tags/noise.md)
 
 [All domains](/.docs/generated/explore/domains.md)

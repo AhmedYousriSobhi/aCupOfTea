@@ -74,6 +74,10 @@ domains:
     label: Business
     description: Business context, KPIs and domain knowledge around the technical work.
     related: [software-engineering, machine-learning, recommender-systems, systems-and-hpc]
+  image-processing:
+    label: Image Processing
+    description: Digital images as signals - intensity, filtering, frequency domain, restoration and geometry.
+    related: [machine-learning, deep-learning, statistics]
   security:
     label: Security
     description: Access control, authentication and hardening.
@@ -109,6 +113,16 @@ tags:
     label: Clustering
   containers:
     label: Containers
+  convolution:
+    label: Convolution
+  filtering:
+    label: Filtering
+  fourier-transform:
+    label: Fourier Transform
+  noise:
+    label: Noise
+  sampling:
+    label: Sampling
   design:
     label: Design
     kind: technology
