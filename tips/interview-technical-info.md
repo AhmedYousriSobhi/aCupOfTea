@@ -1,5 +1,6 @@
 ---
 summary: Questions to ask the interviewer for a data scientist role, such as team structure, planning, deployed projects and tools, and what each answer tells you.
+order: 4
 ---
 # Tips - Technical Info
 

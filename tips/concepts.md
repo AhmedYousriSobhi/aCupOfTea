@@ -1,5 +1,6 @@
 ---
 summary: Short explanations of what a CPLD is and does on server boards, and why PCI is called a link.
+order: 2
 ---
 # Tips Concepts
 

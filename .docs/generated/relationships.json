@@ -46,14 +46,19 @@
     "related_by": []
   },
   "broken-pods-rogues-gallery": {
-    "prerequisite_of": [],
+    "prerequisite_of": [
+      "oomkilled-with-memory-to-spare"
+    ],
     "prerequisites": [
       "kubernetes-in-five-nouns"
     ],
     "related": [
       "containers-101"
     ],
-    "related_by": []
+    "related_by": [
+      "draining-a-gpu-node",
+      "kubectl-troubleshooting"
+    ]
   },
   "build-a-two-node-k3s-lab": {
     "prerequisite_of": [
@@ -66,7 +71,10 @@
     "related": [
       "containers-101"
     ],
-    "related_by": []
+    "related_by": [
+      "k3s-vs-kubeadm",
+      "your-kubeconfig-is-a-house-key"
+    ]
   },
   "containers-101": {
     "prerequisite_of": [
@@ -114,6 +122,24 @@
       "sequence-models"
     ],
     "related_by": []
+  },
+  "draining-a-gpu-node": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "kubernetes-in-five-nouns"
+    ],
+    "related": [
+      "broken-pods-rogues-gallery",
+      "isolating-gpu-workloads",
+      "job-execution-journey",
+      "slurm-kill-task-failed",
+      "slurm-preemption-requeue-signals",
+      "slurm-reboot-order"
+    ],
+    "related_by": [
+      "k3s-vs-kubeadm",
+      "oomkilled-with-memory-to-spare"
+    ]
   },
   "encoder-decoder-machine-translation": {
     "prerequisite_of": [],
@@ -254,7 +280,10 @@
     "related": [
       "slurm-accounting-multi-tenancy"
     ],
-    "related_by": []
+    "related_by": [
+      "draining-a-gpu-node",
+      "kubernetes-at-hpc-scale"
+    ]
   },
   "job-execution-journey": {
     "prerequisite_of": [],
@@ -265,16 +294,66 @@
       "ai-storage-rdma-gpudirect"
     ],
     "related_by": [
-      "openmp-mpi-on-kubernetes"
+      "draining-a-gpu-node",
+      "kubernetes-at-hpc-scale",
+      "openmp-mpi-on-kubernetes",
+      "polite-api-server-monitoring"
+    ]
+  },
+  "k3s-vs-kubeadm": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "kubernetes-in-five-nouns"
+    ],
+    "related": [
+      "build-a-two-node-k3s-lab",
+      "draining-a-gpu-node"
+    ],
+    "related_by": [
+      "rbac-and-the-limited-viewer",
+      "your-kubeconfig-is-a-house-key"
+    ]
+  },
+  "kubectl-troubleshooting": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "kubernetes-in-five-nouns"
+    ],
+    "related": [
+      "broken-pods-rogues-gallery",
+      "kubernetes-at-hpc-scale",
+      "oomkilled-with-memory-to-spare"
+    ],
+    "related_by": []
+  },
+  "kubernetes-at-hpc-scale": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "kubernetes-in-five-nouns"
+    ],
+    "related": [
+      "isolating-gpu-workloads",
+      "job-execution-journey",
+      "polite-api-server-monitoring"
+    ],
+    "related_by": [
+      "kubectl-troubleshooting"
     ]
   },
   "kubernetes-in-five-nouns": {
     "prerequisite_of": [
       "broken-pods-rogues-gallery",
       "build-a-two-node-k3s-lab",
+      "draining-a-gpu-node",
       "fake-gpus-in-kubernetes",
       "gpu-allocation-vs-utilization",
-      "nvidia-cluster-readiness-engine"
+      "k3s-vs-kubeadm",
+      "kubectl-troubleshooting",
+      "kubernetes-at-hpc-scale",
+      "nvidia-cluster-readiness-engine",
+      "polite-api-server-monitoring",
+      "rbac-and-the-limited-viewer",
+      "your-kubeconfig-is-a-house-key"
     ],
     "prerequisites": [
       "containers-101"
@@ -382,7 +461,9 @@
       "linux-mem-reclaim",
       "slurm-cgroups-in-practice"
     ],
-    "related_by": []
+    "related_by": [
+      "oomkilled-with-memory-to-spare"
+    ]
   },
   "linux-memory-pressure-overview": {
     "prerequisite_of": [],
@@ -597,6 +678,20 @@
     "related": [],
     "related_by": []
   },
+  "oomkilled-with-memory-to-spare": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "broken-pods-rogues-gallery"
+    ],
+    "related": [
+      "draining-a-gpu-node",
+      "linux-memory-free-vs-available",
+      "slurm-cgroups-in-practice"
+    ],
+    "related_by": [
+      "kubectl-troubleshooting"
+    ]
+  },
   "openmp-and-open-mpi-overview": {
     "prerequisite_of": [],
     "prerequisites": [],
@@ -698,6 +793,19 @@
       "openmp-open-mpi-name-mixup"
     ]
   },
+  "polite-api-server-monitoring": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "kubernetes-in-five-nouns"
+    ],
+    "related": [
+      "job-execution-journey",
+      "rbac-and-the-limited-viewer"
+    ],
+    "related_by": [
+      "kubernetes-at-hpc-scale"
+    ]
+  },
   "principal-component-analysis": {
     "prerequisite_of": [],
     "prerequisites": [],
@@ -720,6 +828,19 @@
     "related": [],
     "related_by": [
       "nccl-collective-communication"
+    ]
+  },
+  "rbac-and-the-limited-viewer": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "kubernetes-in-five-nouns"
+    ],
+    "related": [
+      "k3s-vs-kubeadm",
+      "your-kubeconfig-is-a-house-key"
+    ],
+    "related_by": [
+      "polite-api-server-monitoring"
     ]
   },
   "regression-imputing": {
@@ -814,6 +935,7 @@
     ],
     "related_by": [
       "linux-memory-free-vs-available",
+      "oomkilled-with-memory-to-spare",
       "slurm-gpu-affinity-socket-lie",
       "slurm-kill-task-failed",
       "slurm-pam-adopt-ssh-access",
@@ -862,6 +984,7 @@
       "slurm-cgroups-in-practice"
     ],
     "related_by": [
+      "draining-a-gpu-node",
       "slurm-gpu-affinity-socket-lie",
       "slurm-preemption-requeue-signals",
       "slurm-slurmstepd",
@@ -923,6 +1046,7 @@
       "slurm-upgrade-order"
     ],
     "related_by": [
+      "draining-a-gpu-node",
       "slurm-backfill-tuning"
     ]
   },
@@ -934,6 +1058,7 @@
       "slurm-upgrade-order"
     ],
     "related_by": [
+      "draining-a-gpu-node",
       "slurm-pam-adopt-ssh-access",
       "slurm-spool-dir-full"
     ]
@@ -1007,5 +1132,18 @@
     "prerequisites": [],
     "related": [],
     "related_by": []
+  },
+  "your-kubeconfig-is-a-house-key": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "kubernetes-in-five-nouns"
+    ],
+    "related": [
+      "build-a-two-node-k3s-lab",
+      "k3s-vs-kubeadm"
+    ],
+    "related_by": [
+      "rbac-and-the-limited-viewer"
+    ]
   }
 }

@@ -348,6 +348,43 @@
       "concept"
     ]
   },
+  "draining-a-gpu-node": {
+    "domains": [
+      "devops",
+      "systems-and-hpc"
+    ],
+    "id": "draining-a-gpu-node",
+    "level": "intermediate",
+    "order": 9,
+    "path": "fields/devops/kubernetes/draining-a-gpu-node.md",
+    "reading_time_min": 10,
+    "relations": {
+      "prerequisites": [
+        "kubernetes-in-five-nouns"
+      ],
+      "related": [
+        "broken-pods-rogues-gallery",
+        "isolating-gpu-workloads",
+        "job-execution-journey",
+        "slurm-kill-task-failed",
+        "slurm-preemption-requeue-signals",
+        "slurm-reboot-order"
+      ]
+    },
+    "status": "stable",
+    "summary": "Why kubectl drain means the opposite of Slurm's drain, how the SIGTERM-to-SIGKILL clock works, five ways a long training run dies anyway, and a runbook that keeps the checkpoint.",
+    "tags": [
+      "gpu",
+      "hpc",
+      "kubernetes"
+    ],
+    "title": "Draining a GPU Node With a Three-Day Run on It",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
   "encoder-decoder-machine-translation": {
     "domains": [
       "deep-learning",
@@ -757,6 +794,101 @@
     "type": "concept",
     "types": [
       "concept"
+    ]
+  },
+  "k3s-vs-kubeadm": {
+    "domains": [
+      "devops",
+      "systems-and-hpc"
+    ],
+    "id": "k3s-vs-kubeadm",
+    "level": "intermediate",
+    "order": 11,
+    "path": "fields/devops/kubernetes/k3s-vs-kubeadm.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [
+        "kubernetes-in-five-nouns"
+      ],
+      "related": [
+        "build-a-two-node-k3s-lab",
+        "draining-a-gpu-node"
+      ]
+    },
+    "status": "stable",
+    "summary": "k3s and kubeadm deliver the same conformant Kubernetes; what each installs, how upgrades and HA differ, and how to choose for a lab, edge box or GPU cluster.",
+    "tags": [
+      "containers",
+      "kubernetes"
+    ],
+    "title": "k3s vs kubeadm: Furnished Flat or Empty Unit?",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
+  "kubectl-troubleshooting": {
+    "domains": [
+      "devops",
+      "systems-and-hpc"
+    ],
+    "id": "kubectl-troubleshooting",
+    "level": "intermediate",
+    "order": 11,
+    "path": "tips/kubectl-troubleshooting.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [
+        "kubernetes-in-five-nouns"
+      ],
+      "related": [
+        "broken-pods-rogues-gallery",
+        "kubernetes-at-hpc-scale",
+        "oomkilled-with-memory-to-spare"
+      ]
+    },
+    "status": "stable",
+    "summary": "A kubectl cheat sheet for a pod or Job that won't work: where is it, what does it say, what did the cluster say, why did it die, and how to look inside. Commands from the Kubernetes reference.",
+    "tags": [
+      "kubernetes"
+    ],
+    "title": "kubectl Troubleshooting Cheat Sheet: Five Questions, in Order",
+    "type": "reference",
+    "types": [
+      "reference"
+    ]
+  },
+  "kubernetes-at-hpc-scale": {
+    "domains": [
+      "devops",
+      "systems-and-hpc"
+    ],
+    "id": "kubernetes-at-hpc-scale",
+    "level": "intermediate",
+    "order": 15,
+    "path": "fields/devops/kubernetes/kubernetes-at-hpc-scale.md",
+    "reading_time_min": 10,
+    "relations": {
+      "prerequisites": [
+        "kubernetes-in-five-nouns"
+      ],
+      "related": [
+        "isolating-gpu-workloads",
+        "job-execution-journey",
+        "polite-api-server-monitoring"
+      ]
+    },
+    "status": "stable",
+    "summary": "What changes when a cluster gets big and the work looks like an HPC job array: the published limits, where the pressure lands, and how to turn an array into one Indexed Job.",
+    "tags": [
+      "kubernetes"
+    ],
+    "title": "Kubernetes at HPC Scale: The Front Desk Meets a 100,000-Task Array",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
     ]
   },
   "kubernetes-in-five-nouns": {
@@ -1588,6 +1720,39 @@
       "concept"
     ]
   },
+  "oomkilled-with-memory-to-spare": {
+    "domains": [
+      "devops",
+      "systems-and-hpc"
+    ],
+    "id": "oomkilled-with-memory-to-spare",
+    "level": "intermediate",
+    "order": 10,
+    "path": "fields/devops/kubernetes/oomkilled-with-memory-to-spare.md",
+    "reading_time_min": 11,
+    "relations": {
+      "prerequisites": [
+        "broken-pods-rogues-gallery"
+      ],
+      "related": [
+        "draining-a-gpu-node",
+        "linux-memory-free-vs-available",
+        "slurm-cgroups-in-practice"
+      ]
+    },
+    "status": "stable",
+    "summary": "Why a training pod is OOMKilled on a node with memory free: three killers, per-container limits, working set, /dev/shm, QoS and a spike no dashboard caught.",
+    "tags": [
+      "gpu",
+      "kubernetes"
+    ],
+    "title": "The Pod Killed With Memory to Spare",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
   "openmp-and-open-mpi-overview": {
     "domains": [
       "software-engineering",
@@ -1880,6 +2045,37 @@
       "guide"
     ]
   },
+  "polite-api-server-monitoring": {
+    "domains": [
+      "devops",
+      "systems-and-hpc"
+    ],
+    "id": "polite-api-server-monitoring",
+    "level": "intermediate",
+    "order": 14,
+    "path": "fields/devops/kubernetes/polite-api-server-monitoring.md",
+    "reading_time_min": 10,
+    "relations": {
+      "prerequisites": [
+        "kubernetes-in-five-nouns"
+      ],
+      "related": [
+        "job-execution-journey",
+        "rbac-and-the-limited-viewer"
+      ]
+    },
+    "status": "stable",
+    "summary": "Why polling the API server every second hurts, measured on a lab: 20 lists vs 1 list and a watch, what a list costs in bytes, the priority lane monitors share, and five habits for a polite monitor.",
+    "tags": [
+      "kubernetes"
+    ],
+    "title": "Polite API Server Monitoring: Leave Your Number, Don't Knock Every Second",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
   "principal-component-analysis": {
     "domains": [
       "machine-learning",
@@ -1951,6 +2147,37 @@
     "type": "note",
     "types": [
       "note"
+    ]
+  },
+  "rbac-and-the-limited-viewer": {
+    "domains": [
+      "devops",
+      "systems-and-hpc"
+    ],
+    "id": "rbac-and-the-limited-viewer",
+    "level": "intermediate",
+    "order": 13,
+    "path": "fields/devops/kubernetes/rbac-and-the-limited-viewer.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [
+        "kubernetes-in-five-nouns"
+      ],
+      "related": [
+        "k3s-vs-kubeadm",
+        "your-kubeconfig-is-a-house-key"
+      ]
+    },
+    "status": "stable",
+    "summary": "Read a Forbidden error as the rule you need, build a read-only user in two commands, and see RBAC's guardrails and why the binding is the off switch for a certificate.",
+    "tags": [
+      "kubernetes"
+    ],
+    "title": "RBAC: The Error Message Writes the Rule for You",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
     ]
   },
   "regression-imputing": {
@@ -2718,6 +2945,37 @@
     "type": "note",
     "types": [
       "note"
+    ]
+  },
+  "your-kubeconfig-is-a-house-key": {
+    "domains": [
+      "devops",
+      "systems-and-hpc"
+    ],
+    "id": "your-kubeconfig-is-a-house-key",
+    "level": "intermediate",
+    "order": 12,
+    "path": "fields/devops/kubernetes/your-kubeconfig-is-a-house-key.md",
+    "reading_time_min": 8,
+    "relations": {
+      "prerequisites": [
+        "kubernetes-in-five-nouns"
+      ],
+      "related": [
+        "build-a-two-node-k3s-lab",
+        "k3s-vs-kubeadm"
+      ]
+    },
+    "status": "stable",
+    "summary": "What a kubeconfig holds, how kubectl picks one, why a leaked certificate can't be revoked, and how to issue each person a short-lived key instead of sharing yours.",
+    "tags": [
+      "kubernetes"
+    ],
+    "title": "Your kubeconfig Is a House Key",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
     ]
   }
 }
