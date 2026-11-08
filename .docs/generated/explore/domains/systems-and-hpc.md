@@ -56,6 +56,8 @@ Benchmarks, schedulers, system administration, high-performance computing.
   [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md)
 - [Isolating GPU Workloads: Taints, Labels and the Device Plugin](/fields/devops/kubernetes/isolating-gpu-workloads.md) — How the NVIDIA device plugin exposes GPUs to pods, why taints alone don't dedicate GPU nodes, and why distributed training needs all-or-nothing scheduling. *(intermediate · 9 min)*  
   [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`kubernetes`](/.docs/generated/explore/tags/kubernetes.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md)
+- [k3s vs kubeadm: Furnished Flat or Empty Unit?](/fields/devops/kubernetes/k3s-vs-kubeadm.md) — k3s and kubeadm deliver the same conformant Kubernetes; what each installs, how upgrades and HA differ, and how to choose for a lab, edge box or GPU cluster. *(intermediate · 9 min)*  
+  [`containers`](/.docs/generated/explore/tags/containers.md) [`kubernetes`](/.docs/generated/explore/tags/kubernetes.md)
 - [Kill Task Failed: A Murder Mystery With No Body (and One Drained Node)](/fields/schedulers/slurm-kill-task-failed.md) — Slurm job death (SIGTERM, KillWait, SIGKILL) fails on uninterruptible sleep, draining nodes. Raising timeouts rarely helps. Debug these with UnkillableStepProgram. *(intermediate · 7 min)*  
   [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [Kitchens With Cooks: Hybrid MPI+OpenMP and the Binding Trap](/fields/system-administration/openmp-and-open-mpi/hybrid-and-the-binding-trap.md) — Why big jobs use MPI across nodes and OpenMP inside them, and the default - Open MPI pinning each rank to one core - that makes your threads queue on a single CPU. Tested, with the fix. *(intermediate · 7 min)*  
@@ -99,6 +101,8 @@ Benchmarks, schedulers, system administration, high-performance computing.
 - [Pressure Stall Information: Measuring Time Lost, Not Bytes Left](/fields/system-administration/linux-memory-pressure/memory-pressure-psi.md) — How to read /proc/pressure/memory, why the share of time tasks spend stalled is a better alarm than free bytes, and how to get woken by the kernel the moment a threshold is crossed. *(intermediate · 8 min)*
 - [PyTorch DDP](/fields/libraries-frameworks-containers/102-pytorch-ddp.md) — A short pointer page on PyTorch Distributed Data Parallel: a recommended distributed training tutorial and a related read on the Python GIL. *(1 min)*  
   [`distributed-training`](/.docs/generated/explore/tags/distributed-training.md) [`pytorch`](/.docs/generated/explore/tags/pytorch.md)
+- [RBAC: The Error Message Writes the Rule for You](/fields/devops/kubernetes/rbac-and-the-limited-viewer.md) — Read a Forbidden error as the rule you need, build a read-only user in two commands, and see RBAC's guardrails and why the binding is the off switch for a certificate. *(intermediate · 9 min)*  
+  [`kubernetes`](/.docs/generated/explore/tags/kubernetes.md)
 - [RDMA, InfiniBand and GPUDirect: Taking the CPU Out of the Way](/fields/system-administration/ai-storage-and-fabric/rdma-infiniband-gpudirect.md) — Why AI clusters use RDMA fabrics (InfiniBand or RoCE), what kernel bypass and zero-copy mean, and how GPUDirect RDMA and GPUDirect Storage move data straight into GPU memory. *(intermediate · 8 min)*  
   [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md) [`storage`](/.docs/generated/explore/tags/storage.md)
 - [Reading the GPU's Vital Signs](/fields/system-administration/gpu-failure-prediction/collecting-the-signals.md) — The telemetry concepts behind GPU failure prediction - counters, gauges and events, volatile versus persistent, in-band versus out-of-band - and the ways each one misleads. *(intermediate · 9 min)*  
@@ -157,5 +161,7 @@ Benchmarks, schedulers, system administration, high-performance computing.
   [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md)
 - [Your GPU Has Core Affinity. Slurm Has Socket Affinity. They Are Not Speaking.](/fields/schedulers/slurm-gpu-affinity-socket-lie.md) — gres.conf Cores= schedules per socket, not core. Fix topology via l3cache_as_socket or numa_node_as_socket. Also covers four 1-GPU schemes and how MIG, MPS, and sharding isolate workloads. *(advanced · 10 min)*  
   [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
+- [Your kubeconfig Is a House Key](/fields/devops/kubernetes/your-kubeconfig-is-a-house-key.md) — What a kubeconfig holds, how kubectl picks one, why a leaked certificate can't be revoked, and how to issue each person a short-lived key instead of sharing yours. *(intermediate · 8 min)*  
+  [`kubernetes`](/.docs/generated/explore/tags/kubernetes.md)
 
 [All domains](/.docs/generated/explore/domains.md)

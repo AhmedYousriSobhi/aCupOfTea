@@ -796,6 +796,38 @@
       "concept"
     ]
   },
+  "k3s-vs-kubeadm": {
+    "domains": [
+      "devops",
+      "systems-and-hpc"
+    ],
+    "id": "k3s-vs-kubeadm",
+    "level": "intermediate",
+    "order": 11,
+    "path": "fields/devops/kubernetes/k3s-vs-kubeadm.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [
+        "kubernetes-in-five-nouns"
+      ],
+      "related": [
+        "build-a-two-node-k3s-lab",
+        "draining-a-gpu-node"
+      ]
+    },
+    "status": "stable",
+    "summary": "k3s and kubeadm deliver the same conformant Kubernetes; what each installs, how upgrades and HA differ, and how to choose for a lab, edge box or GPU cluster.",
+    "tags": [
+      "containers",
+      "kubernetes"
+    ],
+    "title": "k3s vs kubeadm: Furnished Flat or Empty Unit?",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
   "kubernetes-in-five-nouns": {
     "domains": [
       "systems-and-hpc"
@@ -2023,6 +2055,37 @@
       "note"
     ]
   },
+  "rbac-and-the-limited-viewer": {
+    "domains": [
+      "devops",
+      "systems-and-hpc"
+    ],
+    "id": "rbac-and-the-limited-viewer",
+    "level": "intermediate",
+    "order": 13,
+    "path": "fields/devops/kubernetes/rbac-and-the-limited-viewer.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [
+        "kubernetes-in-five-nouns"
+      ],
+      "related": [
+        "k3s-vs-kubeadm",
+        "your-kubeconfig-is-a-house-key"
+      ]
+    },
+    "status": "stable",
+    "summary": "Read a Forbidden error as the rule you need, build a read-only user in two commands, and see RBAC's guardrails and why the binding is the off switch for a certificate.",
+    "tags": [
+      "kubernetes"
+    ],
+    "title": "RBAC: The Error Message Writes the Rule for You",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
   "regression-imputing": {
     "domains": [
       "machine-learning",
@@ -2788,6 +2851,37 @@
     "type": "note",
     "types": [
       "note"
+    ]
+  },
+  "your-kubeconfig-is-a-house-key": {
+    "domains": [
+      "devops",
+      "systems-and-hpc"
+    ],
+    "id": "your-kubeconfig-is-a-house-key",
+    "level": "intermediate",
+    "order": 12,
+    "path": "fields/devops/kubernetes/your-kubeconfig-is-a-house-key.md",
+    "reading_time_min": 8,
+    "relations": {
+      "prerequisites": [
+        "kubernetes-in-five-nouns"
+      ],
+      "related": [
+        "build-a-two-node-k3s-lab",
+        "k3s-vs-kubeadm"
+      ]
+    },
+    "status": "stable",
+    "summary": "What a kubeconfig holds, how kubectl picks one, why a leaked certificate can't be revoked, and how to issue each person a short-lived key instead of sharing yours.",
+    "tags": [
+      "kubernetes"
+    ],
+    "title": "Your kubeconfig Is a House Key",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
     ]
   }
 }

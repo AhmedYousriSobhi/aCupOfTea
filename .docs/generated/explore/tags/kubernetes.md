@@ -16,15 +16,21 @@
   [`devops`](/.docs/generated/explore/tags/devops.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`kubernetes`](/.docs/generated/explore/tags/kubernetes.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md)
 - [Isolating GPU Workloads: Taints, Labels and the Device Plugin](/fields/devops/kubernetes/isolating-gpu-workloads.md) — How the NVIDIA device plugin exposes GPUs to pods, why taints alone don't dedicate GPU nodes, and why distributed training needs all-or-nothing scheduling. *(intermediate · 9 min)*  
   [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`kubernetes`](/.docs/generated/explore/tags/kubernetes.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md)
+- [k3s vs kubeadm: Furnished Flat or Empty Unit?](/fields/devops/kubernetes/k3s-vs-kubeadm.md) — k3s and kubeadm deliver the same conformant Kubernetes; what each installs, how upgrades and HA differ, and how to choose for a lab, edge box or GPU cluster. *(intermediate · 9 min)*  
+  [`containers`](/.docs/generated/explore/tags/containers.md) [`kubernetes`](/.docs/generated/explore/tags/kubernetes.md)
 - [Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster](/fields/devops/kubernetes/kubernetes-in-five-nouns.md) — The five Kubernetes nouns (node, pod, namespace, event, API server) explained through HPC analogies, for someone who just inherited a cluster. *(advanced · 8 min)*  
   [`kubernetes`](/.docs/generated/explore/tags/kubernetes.md)
 - [No Login Node, No Hostfile: OpenMP and MPI on Kubernetes](/fields/system-administration/openmp-and-open-mpi/mpi-and-openmp-on-kubernetes.md) — How an MPIJob turns pods into an MPI cluster - launcher, workers, headless Service, SSH keys, hostfile - and which three numbers keep the binding trap away. *(intermediate · 9 min)*  
   [`hpc`](/.docs/generated/explore/tags/hpc.md) [`kubernetes`](/.docs/generated/explore/tags/kubernetes.md) [`mpi`](/.docs/generated/explore/tags/mpi.md) [`openmp`](/.docs/generated/explore/tags/openmp.md)
+- [RBAC: The Error Message Writes the Rule for You](/fields/devops/kubernetes/rbac-and-the-limited-viewer.md) — Read a Forbidden error as the rule you need, build a read-only user in two commands, and see RBAC's guardrails and why the binding is the off switch for a certificate. *(intermediate · 9 min)*  
+  [`kubernetes`](/.docs/generated/explore/tags/kubernetes.md)
 - [The Cluster That Passed Every Test Except the One That Mattered](/fields/devops/kubernetes/nvidia-cluster-readiness-engine.md) — Even when traditional monitoring tools show all GPUs and networks operating normally, subtle bottlenecks—like a single slow GPU or a degraded network link—can silently drag down the performance of an *(intermediate · 10 min)*  
   [`hpc`](/.docs/generated/explore/tags/hpc.md) [`kubernetes`](/.docs/generated/explore/tags/kubernetes.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md)
 - [The Job Execution Journey: From `kubectl apply` to the First All-Reduce](/fields/devops/kubernetes/job-execution-journey.md) — From kubectl apply to the first NCCL all-reduce of an 8-GPU job, via the API server, Kueue, operators, scheduler, device plugin, runtime and Multus. *(intermediate · 13 min)*  
   [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`kubernetes`](/.docs/generated/explore/tags/kubernetes.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md)
 - [The Pod Killed With Memory to Spare](/fields/devops/kubernetes/oomkilled-with-memory-to-spare.md) — Why a training pod is OOMKilled on a node with memory free: three killers, per-container limits, working set, /dev/shm, QoS and a spike no dashboard caught. *(intermediate · 11 min)*  
   [`gpu`](/.docs/generated/explore/tags/gpu.md) [`kubernetes`](/.docs/generated/explore/tags/kubernetes.md)
+- [Your kubeconfig Is a House Key](/fields/devops/kubernetes/your-kubeconfig-is-a-house-key.md) — What a kubeconfig holds, how kubectl picks one, why a leaked certificate can't be revoked, and how to issue each person a short-lived key instead of sharing yours. *(intermediate · 8 min)*  
+  [`kubernetes`](/.docs/generated/explore/tags/kubernetes.md)
 
 [All tags](/.docs/generated/explore/tags.md)

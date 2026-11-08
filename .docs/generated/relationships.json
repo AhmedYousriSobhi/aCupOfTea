@@ -70,7 +70,10 @@
     "related": [
       "containers-101"
     ],
-    "related_by": []
+    "related_by": [
+      "k3s-vs-kubeadm",
+      "your-kubeconfig-is-a-house-key"
+    ]
   },
   "containers-101": {
     "prerequisite_of": [
@@ -133,6 +136,7 @@
       "slurm-reboot-order"
     ],
     "related_by": [
+      "k3s-vs-kubeadm",
       "oomkilled-with-memory-to-spare"
     ]
   },
@@ -292,6 +296,20 @@
       "openmp-mpi-on-kubernetes"
     ]
   },
+  "k3s-vs-kubeadm": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "kubernetes-in-five-nouns"
+    ],
+    "related": [
+      "build-a-two-node-k3s-lab",
+      "draining-a-gpu-node"
+    ],
+    "related_by": [
+      "rbac-and-the-limited-viewer",
+      "your-kubeconfig-is-a-house-key"
+    ]
+  },
   "kubernetes-in-five-nouns": {
     "prerequisite_of": [
       "broken-pods-rogues-gallery",
@@ -299,7 +317,10 @@
       "draining-a-gpu-node",
       "fake-gpus-in-kubernetes",
       "gpu-allocation-vs-utilization",
-      "nvidia-cluster-readiness-engine"
+      "k3s-vs-kubeadm",
+      "nvidia-cluster-readiness-engine",
+      "rbac-and-the-limited-viewer",
+      "your-kubeconfig-is-a-house-key"
     ],
     "prerequisites": [
       "containers-101"
@@ -761,6 +782,17 @@
       "nccl-collective-communication"
     ]
   },
+  "rbac-and-the-limited-viewer": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "kubernetes-in-five-nouns"
+    ],
+    "related": [
+      "k3s-vs-kubeadm",
+      "your-kubeconfig-is-a-house-key"
+    ],
+    "related_by": []
+  },
   "regression-imputing": {
     "prerequisite_of": [],
     "prerequisites": [],
@@ -1050,5 +1082,18 @@
     "prerequisites": [],
     "related": [],
     "related_by": []
+  },
+  "your-kubeconfig-is-a-house-key": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "kubernetes-in-five-nouns"
+    ],
+    "related": [
+      "build-a-two-node-k3s-lab",
+      "k3s-vs-kubeadm"
+    ],
+    "related_by": [
+      "rbac-and-the-limited-viewer"
+    ]
   }
 }

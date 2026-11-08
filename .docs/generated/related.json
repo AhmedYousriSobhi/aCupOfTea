@@ -122,6 +122,16 @@
         "id": "containers-101",
         "path": "fields/libraries-frameworks-containers/101-containers.md",
         "title": "Containers 101"
+      },
+      {
+        "id": "k3s-vs-kubeadm",
+        "path": "fields/devops/kubernetes/k3s-vs-kubeadm.md",
+        "title": "k3s vs kubeadm: Furnished Flat or Empty Unit?"
+      },
+      {
+        "id": "your-kubeconfig-is-a-house-key",
+        "path": "fields/devops/kubernetes/your-kubeconfig-is-a-house-key.md",
+        "title": "Your kubeconfig Is a House Key"
       }
     ],
     "required_by": [
@@ -160,6 +170,11 @@
         "id": "isolating-gpu-workloads",
         "path": "fields/devops/kubernetes/isolating-gpu-workloads.md",
         "title": "Isolating GPU Workloads: Taints, Labels and the Device Plugin"
+      },
+      {
+        "id": "k3s-vs-kubeadm",
+        "path": "fields/devops/kubernetes/k3s-vs-kubeadm.md",
+        "title": "k3s vs kubeadm: Furnished Flat or Empty Unit?"
       },
       {
         "id": "slurm-kill-task-failed",
@@ -300,6 +315,38 @@
     ],
     "required_by": []
   },
+  "fields/devops/kubernetes/k3s-vs-kubeadm.md": {
+    "prerequisites": [
+      {
+        "id": "kubernetes-in-five-nouns",
+        "path": "fields/devops/kubernetes/kubernetes-in-five-nouns.md",
+        "title": "Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster"
+      }
+    ],
+    "related": [
+      {
+        "id": "build-a-two-node-k3s-lab",
+        "path": "fields/devops/kubernetes/build-a-two-node-k3s-lab.md",
+        "title": "Build a Two-Node Kubernetes Lab on Your Laptop (and Survive the DNS Pothole)"
+      },
+      {
+        "id": "draining-a-gpu-node",
+        "path": "fields/devops/kubernetes/draining-a-gpu-node.md",
+        "title": "Draining a GPU Node With a Three-Day Run on It"
+      },
+      {
+        "id": "rbac-and-the-limited-viewer",
+        "path": "fields/devops/kubernetes/rbac-and-the-limited-viewer.md",
+        "title": "RBAC: The Error Message Writes the Rule for You"
+      },
+      {
+        "id": "your-kubeconfig-is-a-house-key",
+        "path": "fields/devops/kubernetes/your-kubeconfig-is-a-house-key.md",
+        "title": "Your kubeconfig Is a House Key"
+      }
+    ],
+    "required_by": []
+  },
   "fields/devops/kubernetes/kubernetes-in-five-nouns.md": {
     "prerequisites": [
       {
@@ -345,6 +392,21 @@
         "id": "draining-a-gpu-node",
         "path": "fields/devops/kubernetes/draining-a-gpu-node.md",
         "title": "Draining a GPU Node With a Three-Day Run on It"
+      },
+      {
+        "id": "k3s-vs-kubeadm",
+        "path": "fields/devops/kubernetes/k3s-vs-kubeadm.md",
+        "title": "k3s vs kubeadm: Furnished Flat or Empty Unit?"
+      },
+      {
+        "id": "your-kubeconfig-is-a-house-key",
+        "path": "fields/devops/kubernetes/your-kubeconfig-is-a-house-key.md",
+        "title": "Your kubeconfig Is a House Key"
+      },
+      {
+        "id": "rbac-and-the-limited-viewer",
+        "path": "fields/devops/kubernetes/rbac-and-the-limited-viewer.md",
+        "title": "RBAC: The Error Message Writes the Rule for You"
       }
     ]
   },
@@ -388,6 +450,55 @@
         "id": "linux-memory-free-vs-available",
         "path": "fields/system-administration/linux-memory-pressure/linux-memory-free-vs-available.md",
         "title": "The Server That Looked Full: Free vs Available Memory, Cache, and What Is Really Used"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/devops/kubernetes/rbac-and-the-limited-viewer.md": {
+    "prerequisites": [
+      {
+        "id": "kubernetes-in-five-nouns",
+        "path": "fields/devops/kubernetes/kubernetes-in-five-nouns.md",
+        "title": "Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster"
+      }
+    ],
+    "related": [
+      {
+        "id": "k3s-vs-kubeadm",
+        "path": "fields/devops/kubernetes/k3s-vs-kubeadm.md",
+        "title": "k3s vs kubeadm: Furnished Flat or Empty Unit?"
+      },
+      {
+        "id": "your-kubeconfig-is-a-house-key",
+        "path": "fields/devops/kubernetes/your-kubeconfig-is-a-house-key.md",
+        "title": "Your kubeconfig Is a House Key"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/devops/kubernetes/your-kubeconfig-is-a-house-key.md": {
+    "prerequisites": [
+      {
+        "id": "kubernetes-in-five-nouns",
+        "path": "fields/devops/kubernetes/kubernetes-in-five-nouns.md",
+        "title": "Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster"
+      }
+    ],
+    "related": [
+      {
+        "id": "build-a-two-node-k3s-lab",
+        "path": "fields/devops/kubernetes/build-a-two-node-k3s-lab.md",
+        "title": "Build a Two-Node Kubernetes Lab on Your Laptop (and Survive the DNS Pothole)"
+      },
+      {
+        "id": "k3s-vs-kubeadm",
+        "path": "fields/devops/kubernetes/k3s-vs-kubeadm.md",
+        "title": "k3s vs kubeadm: Furnished Flat or Empty Unit?"
+      },
+      {
+        "id": "rbac-and-the-limited-viewer",
+        "path": "fields/devops/kubernetes/rbac-and-the-limited-viewer.md",
+        "title": "RBAC: The Error Message Writes the Rule for You"
       }
     ],
     "required_by": []

@@ -6,7 +6,7 @@ Pages grouped by topic tag.
 
 - [Affinity](/.docs/generated/explore/tags/affinity.md) (3)
 - [Clustering](/.docs/generated/explore/tags/clustering.md) (2)
-- [Containers](/.docs/generated/explore/tags/containers.md) (3)
+- [Containers](/.docs/generated/explore/tags/containers.md) (4)
 - [Design](/.docs/generated/explore/tags/design.md) (1)
 - [Dev](/.docs/generated/explore/tags/dev.md) (1)
 - [Devops](/.docs/generated/explore/tags/devops.md) (3)
@@ -14,7 +14,7 @@ Pages grouped by topic tag.
 - [Encoder-Decoder](/.docs/generated/explore/tags/encoder-decoder.md) (1)
 - [GPU](/.docs/generated/explore/tags/gpu.md) (36)
 - [Hpc](/.docs/generated/explore/tags/hpc.md) (55)
-- [Kubernetes](/.docs/generated/explore/tags/kubernetes.md) (12)
+- [Kubernetes](/.docs/generated/explore/tags/kubernetes.md) (15)
 - [Large Language Models](/.docs/generated/explore/tags/llm.md) (7)
 - [Model Evaluation](/.docs/generated/explore/tags/model-evaluation.md) (2)
 - [MPI](/.docs/generated/explore/tags/mpi.md) (9)

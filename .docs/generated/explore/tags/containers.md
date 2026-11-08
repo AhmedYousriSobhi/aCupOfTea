@@ -6,6 +6,8 @@
   [`containers`](/.docs/generated/explore/tags/containers.md) [`devops`](/.docs/generated/explore/tags/devops.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`kubernetes`](/.docs/generated/explore/tags/kubernetes.md)
 - [Containers 101](/fields/libraries-frameworks-containers/101-containers.md) — Containers from the ground up: what happens at boot, kernel and user space, virtual machines, then namespaces, cgroups and Linux containers. *(8 min)*  
   [`containers`](/.docs/generated/explore/tags/containers.md)
+- [k3s vs kubeadm: Furnished Flat or Empty Unit?](/fields/devops/kubernetes/k3s-vs-kubeadm.md) — k3s and kubeadm deliver the same conformant Kubernetes; what each installs, how upgrades and HA differ, and how to choose for a lab, edge box or GPU cluster. *(intermediate · 9 min)*  
+  [`containers`](/.docs/generated/explore/tags/containers.md) [`kubernetes`](/.docs/generated/explore/tags/kubernetes.md)
 - [Singularity](/fields/libraries-frameworks-containers/101-singularity.md) — Singularity (rootless containers for HPC): installing it, building SIF images, converting from Docker, bind mounts and definition-file variables. *(10 min)*  
   [`containers`](/.docs/generated/explore/tags/containers.md)
 

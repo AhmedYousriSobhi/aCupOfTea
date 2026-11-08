@@ -23,6 +23,7 @@
     "objects": [
       "build-a-two-node-k3s-lab",
       "containers-101",
+      "k3s-vs-kubeadm",
       "singularity-containers"
     ]
   },
@@ -171,10 +172,13 @@
       "gpu-allocation-vs-utilization",
       "isolating-gpu-workloads",
       "job-execution-journey",
+      "k3s-vs-kubeadm",
       "kubernetes-in-five-nouns",
       "nvidia-cluster-readiness-engine",
       "oomkilled-with-memory-to-spare",
-      "openmp-mpi-on-kubernetes"
+      "openmp-mpi-on-kubernetes",
+      "rbac-and-the-limited-viewer",
+      "your-kubeconfig-is-a-house-key"
     ]
   },
   "llm": {

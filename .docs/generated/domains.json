@@ -33,9 +33,12 @@
       "gpu-allocation-vs-utilization",
       "isolating-gpu-workloads",
       "job-execution-journey",
+      "k3s-vs-kubeadm",
       "nvidia-cluster-readiness-engine",
       "oomkilled-with-memory-to-spare",
-      "openmp-mpi-on-kubernetes"
+      "openmp-mpi-on-kubernetes",
+      "rbac-and-the-limited-viewer",
+      "your-kubeconfig-is-a-house-key"
     ]
   },
   "generative-ai": {
@@ -180,6 +183,7 @@
       "hpc-workloads",
       "isolating-gpu-workloads",
       "job-execution-journey",
+      "k3s-vs-kubeadm",
       "kubernetes-in-five-nouns",
       "linux-mem-cgroup-v2",
       "linux-mem-mlockall",
@@ -221,6 +225,7 @@
       "openmp-open-mpi-name-mixup",
       "parallel-execution-and-affinity",
       "pytorch-ddp",
+      "rbac-and-the-limited-viewer",
       "singularity-containers",
       "slurm-accounting-multi-tenancy",
       "slurm-backfill-tuning",
@@ -238,7 +243,8 @@
       "slurm-reboot-order",
       "slurm-slurmstepd",
       "slurm-spool-dir-full",
-      "slurm-upgrade-order"
+      "slurm-upgrade-order",
+      "your-kubeconfig-is-a-house-key"
     ]
   }
 }
