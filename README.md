@@ -45,12 +45,12 @@ Not sure where to begin? Each of these takes one cup, roughly the reading time s
 
 ## 🆕 Recently added
 
-- 2026-11-05 · [No Login Node, No Hostfile: OpenMP and MPI on Kubernetes](/fields/system-administration/openmp-and-open-mpi/mpi-and-openmp-on-kubernetes.md)
-- 2026-11-05 · [Who Starts the Ranks? OpenMP and MPI Under Slurm](/fields/system-administration/openmp-and-open-mpi/mpi-and-openmp-under-slurm.md)
-- 2026-11-05 · [Kitchens With Cooks: Hybrid MPI+OpenMP and the Binding Trap](/fields/system-administration/openmp-and-open-mpi/hybrid-and-the-binding-trap.md)
-- 2026-11-05 · [Know It on Sight: Reading OpenMP and MPI Code, Builds and Job Scripts](/fields/system-administration/openmp-and-open-mpi/spotting-openmp-and-mpi-code.md)
-- 2026-11-05 · [Not Twins, Not Even Cousins: OpenMP, MPI and Open MPI](/fields/system-administration/openmp-and-open-mpi/the-name-mixup.md)
-- 2026-11-05 · [Cooks and Kitchens: Threads, Ranks and the One Mental Model](/fields/system-administration/openmp-and-open-mpi/threads-and-ranks.md)
+- 2026-11-08 · [kubectl Troubleshooting Cheat Sheet: Five Questions, in Order](/tips/kubectl-troubleshooting.md)
+- 2026-11-08 · [Kubernetes at HPC Scale: The Front Desk Meets a 100,000-Task Array](/fields/devops/kubernetes/kubernetes-at-hpc-scale.md)
+- 2026-11-08 · [Polite API Server Monitoring: Leave Your Number, Don't Knock Every Second](/fields/devops/kubernetes/polite-api-server-monitoring.md)
+- 2026-11-08 · [k3s vs kubeadm: Furnished Flat or Empty Unit?](/fields/devops/kubernetes/k3s-vs-kubeadm.md)
+- 2026-11-08 · [RBAC: The Error Message Writes the Rule for You](/fields/devops/kubernetes/rbac-and-the-limited-viewer.md)
+- 2026-11-08 · [Your kubeconfig Is a House Key](/fields/devops/kubernetes/your-kubeconfig-is-a-house-key.md)
 
 <!-- recent:end -->
 
