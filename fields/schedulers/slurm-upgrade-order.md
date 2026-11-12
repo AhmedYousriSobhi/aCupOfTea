@@ -19,7 +19,7 @@ relations:
 
 # Upgrading Slurm: The Order, the Window, and the Parts That Bite
 
-> **Part of the [schedulers](https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/fields/schedulers/slurm-intro.md) directory.** The [reboot-order page](https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/fields/schedulers/slurm-reboot-order.md) covers patching the OS underneath Slurm and says plainly that it assumes you are *not* upgrading Slurm itself. This is the other half. Everything here comes from SchedMD's Upgrade Guide and is not tested on a live cluster; read the guide for your exact target version before a real maintenance window.
+> **Part of the [schedulers](/fields/schedulers/slurm-intro.md) directory.** The [reboot-order page](/fields/schedulers/slurm-reboot-order.md) covers patching the OS underneath Slurm and says plainly that it assumes you are *not* upgrading Slurm itself. This is the other half. Everything here comes from SchedMD's Upgrade Guide and is not tested on a live cluster; read the guide for your exact target version before a real maintenance window. For what changed in the versions between 23.11 and 26.05, see [Version changes](/fields/schedulers/slurm-version-changes.md).
 
 ## Table of Contents
 
@@ -99,7 +99,7 @@ flowchart LR
 
 The rule underneath it: **`slurmdbd` must be at the same or a higher major release than `slurmctld`**, and close enough to be within the window. That forces the database daemon to go first. If you run a backup `slurmdbd` host, upgrade it at the same time as the primary.
 
-Everything below the database follows the same dependency logic as the [reboot order](https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/fields/schedulers/slurm-reboot-order.md): the thing others talk to goes first, the things that talk to it follow.
+Everything below the database follows the same dependency logic as the [reboot order](/fields/schedulers/slurm-reboot-order.md): the thing others talk to goes first, the things that talk to it follow.
 
 * * *
 
@@ -141,7 +141,7 @@ The reason is a timeout. If you start the daemon with systemd and the conversion
 6. Start the backup `slurmdbd` if you have one.
 7. Check that `sacct` and `sacctmgr` return data.
 
-**What the rest of the cluster does meanwhile.** Scheduling continues. `slurmctld` queues accounting messages in its DBD Agent queue. While `slurmdbd` is down, `sacct`, `sacctmgr` and any `slurmrestd` paths containing `slurmdb` fail. Watch `slurmctld` memory and the agent queue size in `sdiag`, because the guide says the queue must not exceed the configured `MaxDBDMsgs`, and a long outage puts accounting records at risk. This is the same cache-while-down behavior described in the [multi-tenancy page](https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/fields/schedulers/slurm-accounting-multi-tenancy.md#when-slurmdbd-goes-down), now with a deadline attached.
+**What the rest of the cluster does meanwhile.** Scheduling continues. `slurmctld` queues accounting messages in its DBD Agent queue. While `slurmdbd` is down, `sacct`, `sacctmgr` and any `slurmrestd` paths containing `slurmdb` fail. Watch `slurmctld` memory and the agent queue size in `sdiag`, because the guide says the queue must not exceed the configured `MaxDBDMsgs`, and a long outage puts accounting records at risk. This is the same cache-while-down behavior described in the [multi-tenancy page](/fields/schedulers/slurm-accounting-multi-tenancy.md#when-slurmdbd-goes-down), now with a deadline attached.
 
 > [!NOTE]
 > If you are also moving the accounting database to MariaDB 10.2.1 or later from an older MariaDB or from MySQL, the guide says to be on `slurmdbd` 22.05.7 or newer first, because those versions handle the changed MariaDB defaults.
@@ -179,7 +179,7 @@ On a cluster with multi-day training jobs, that means "upgraded" is a state that
 
 - Do not schedule the *next* hop of a multi-step upgrade until the old jobs have drained.
 - Do not announce a new feature to users the moment the daemons restart.
-- This is one more reason to use the [`MAINT` reservation approach](https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/fields/schedulers/slurm-reboot-order.md#phase-0--scheduling) from the reboot page: an empty cluster has no old stepds.
+- This is one more reason to use the [`MAINT` reservation approach](/fields/schedulers/slurm-reboot-order.md#phase-0--scheduling) from the reboot page: an empty cluster has no old stepds.
 
 * * *
 

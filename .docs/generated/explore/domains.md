@@ -17,4 +17,4 @@ Pages grouped by subject. Folders stay the primary location; this is an overlay.
 - [Software Engineering](/.docs/generated/explore/domains/software-engineering.md) (17): Engineering practice, patterns and tooling.
 - [Statistics](/.docs/generated/explore/domains/statistics.md) (26): Statistical methods and probability.
 - [System Design](/.docs/generated/explore/domains/system-design.md) (6): Software System Design
-- [Systems and HPC](/.docs/generated/explore/domains/systems-and-hpc.md) (108): Benchmarks, schedulers, system administration, high-performance computing.
+- [Systems and HPC](/.docs/generated/explore/domains/systems-and-hpc.md) (114): Benchmarks, schedulers, system administration, high-performance computing.

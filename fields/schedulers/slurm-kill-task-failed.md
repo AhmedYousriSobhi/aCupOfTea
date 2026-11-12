@@ -19,7 +19,7 @@ relations:
 
 # Kill Task Failed: A Murder Mystery With No Body (and One Drained Node)
 
-> **Part of the [schedulers](https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/fields/schedulers/slurm-intro.md) directory.** Option names and the kill sequence come from the Slurm documentation and from support tickets and mailing-list threads where SchedMD staff and site admins describe the behavior. Nothing here was run on a live cluster for this page. Scenarios are invented for illustration.
+> **Part of the [schedulers](/fields/schedulers/slurm-intro.md) directory.** Option names and the kill sequence come from the Slurm documentation and from support tickets and mailing-list threads where SchedMD staff and site admins describe the behavior. Nothing here was run on a live cluster for this page. Scenarios are invented for illustration.
 
 ## Table of Contents
 
@@ -114,7 +114,7 @@ So when you see a drained node after a job, check which story it is:
 | `slurmd` log shows the epilog finishing with an error | Your epilog returned non-zero |
 | `dmesg` shows hung-task warnings | The kernel was already unhappy before Slurm noticed |
 
-The epilog also runs **outside** the job's cgroup, which matters if your check looks at device numbers. [The cgroups page](https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/fields/schedulers/slurm-cgroups-in-practice.md) and the [GPU affinity page](https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/fields/schedulers/slurm-gpu-affinity-socket-lie.md) explain how the same GPU can have different numbers inside and outside.
+The epilog also runs **outside** the job's cgroup, which matters if your check looks at device numbers. [The cgroups page](/fields/schedulers/slurm-cgroups-in-practice.md) and the [GPU affinity page](/fields/schedulers/slurm-gpu-affinity-socket-lie.md) explain how the same GPU can have different numbers inside and outside.
 
 * * *
 
@@ -175,7 +175,7 @@ ps -eo pid,user,stat,wchan:32,cmd | awk '$3 ~ /^D/'
 scontrol update NodeName=gpu-node-17 State=RESUME
 ```
 
-If processes are still stuck, resuming just feeds the next job to the same problem. At that point the options are fixing the filesystem path, rebooting the node (see the [reboot order page](https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/fields/schedulers/slurm-reboot-order.md)), or both.
+If processes are still stuck, resuming just feeds the next job to the same problem. At that point the options are fixing the filesystem path, rebooting the node (see the [reboot order page](/fields/schedulers/slurm-reboot-order.md)), or both.
 
 * * *
 

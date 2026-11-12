@@ -20,7 +20,7 @@ relations:
 
 # SlurmdSpoolDir Is Full: The Drain That Is Not About the Spool Directory
 
-> **Part of the [schedulers](https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/fields/schedulers/slurm-intro.md) directory.** The reason string, the recovery steps and the contents of the directory come from site documentation, mailing-list threads, a vendor support article and the `slurmd` man page. Nothing was run on a live cluster for this page, and the invented scenario is just that.
+> **Part of the [schedulers](/fields/schedulers/slurm-intro.md) directory.** The reason string, the recovery steps and the contents of the directory come from site documentation, mailing-list threads, a vendor support article and the `slurmd` man page. Nothing was run on a live cluster for this page, and the invented scenario is just that.
 
 ## Table of Contents
 
@@ -75,7 +75,7 @@ The administrator documentation is thin on this, and the person who started the 
 | `cred_state` (and `.old`, `.new`) | Credential state that `slurmd` rewrites; a `cred_state.new` write is the file in the failure message below | A permissions thread listing the directory; a site troubleshooting page |
 | `hwloc_topo_whole.xml` | A cached topology file | The same permissions thread |
 | `conf-cache/` | Configuration files fetched by `slurmd` in configless mode, with `/run/slurm/conf` pointing at it | Niflheim site documentation |
-| `<nodename>_<jobid>.<stepid>` | Unix sockets for running steps, described on the [slurmstepd page](https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/fields/schedulers/slurm-slurmstepd.md) | Slurm source |
+| `<nodename>_<jobid>.<stepid>` | Unix sockets for running steps, described on the [slurmstepd page](/fields/schedulers/slurm-slurmstepd.md) | Slurm source |
 | A core file, if `slurmd` crashes | The man page says a core file goes to `SlurmdSpoolDir`, or `/var/tmp/` as a last resort, unless `slurmd` runs with `-D` | `slurmd` man page |
 
 Batch scripts are bounded: `max_script_size` in `SchedulerParameters` defaults to 4 MB. To fill a disk with scripts you would need an extraordinary number of jobs, which is why the list's first reaction was "can your job scripts contain large amounts of data?" and its second was "is the spool directory on shared storage?".
@@ -200,7 +200,7 @@ It is common to mix up the two directories that Slurm needs. They live on differ
 | Setting | Lives on | Holds | Remember |
 |---|---|---|---|
 | `SlurmdSpoolDir` | Every compute node, local disk | Per-node job scripts, credential state, config cache, step sockets | Fills up with the node's disk. Full means the node drains |
-| `StateSaveLocation` | The controller (and shared for HA) | The controller's state: jobs, nodes, reservations | Back it up before upgrades, as in the [upgrade page](https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/fields/schedulers/slurm-upgrade-order.md) |
+| `StateSaveLocation` | The controller (and shared for HA) | The controller's state: jobs, nodes, reservations | Back it up before upgrades, as in the [upgrade page](/fields/schedulers/slurm-upgrade-order.md) |
 
 An old SchedMD reply sums up the division in one line: the controller keeps its state in `StateSaveLocation` and the job information in `SlurmdSpoolDir`, so with both directories intact you have what you need to restore state after a restart.
 

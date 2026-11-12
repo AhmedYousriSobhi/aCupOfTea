@@ -20,7 +20,7 @@ relations:
 
 # Your GPU Has Core Affinity. Slurm Has Socket Affinity. They Are Not Speaking.
 
-> **Part of the [schedulers](https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/fields/schedulers/slurm-intro.md) directory**, and the missing neighbor of the [mixed-GPU series](https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/fields/schedulers/slurm-mixed-gpus/README.md): that series is about *which* GPUs a job gets, this page is about *where* they sit. Everything below comes from SchedMD's GRES documentation for Slurm 26.05 and the `gres.conf` man page. None of it was run on a live cluster for this page.
+> **Part of the [schedulers](/fields/schedulers/slurm-intro.md) directory**, and the missing neighbor of the [mixed-GPU series](/fields/schedulers/slurm-mixed-gpus/README.md): that series is about *which* GPUs a job gets, this page is about *where* they sit. Everything below comes from SchedMD's GRES documentation for Slurm 26.05 and the `gres.conf` man page. None of it was run on a live cluster for this page.
 
 ## Table of Contents
 
@@ -129,7 +129,7 @@ The GRES guide spends a surprising number of lines on numbering, and for good re
 | `/dev/nvidiaN` | By Linux minor number. The mapping to NVML numbers is, in the docs' words, nondeterministic and system dependent, and can change between boots after hardware or OS changes |
 | Inside a job with device cgroups | Renumbered from 0, whatever the physical device was |
 
-That last row has a consequence that trips up site scripts. If a job is allocated `/dev/nvidia1` and devices are constrained by cgroup (see the [cgroups page](https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/fields/schedulers/slurm-cgroups-in-practice.md)), the job sees `CUDA_VISIBLE_DEVICES=0`. The Prolog and Epilog, which run **outside** any cgroup, see `CUDA_VISIBLE_DEVICES=1`. An epilog that cleans up "the GPU the job used" by reading its own environment has to translate between the two.
+That last row has a consequence that trips up site scripts. If a job is allocated `/dev/nvidia1` and devices are constrained by cgroup (see the [cgroups page](/fields/schedulers/slurm-cgroups-in-practice.md)), the job sees `CUDA_VISIBLE_DEVICES=0`. The Prolog and Epilog, which run **outside** any cgroup, see `CUDA_VISIBLE_DEVICES=1`. An epilog that cleans up "the GPU the job used" by reading its own environment has to translate between the two.
 
 Two housekeeping rules from the docs: list `File=` entries in increasing numeric order, and do an after-boot check that each device file still belongs to the GPU you think it does. The docs describe the assignment as "fairly stable", which is a phrase worth remembering at 3 a.m.
 
