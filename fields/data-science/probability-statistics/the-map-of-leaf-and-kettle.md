@@ -2,8 +2,8 @@
 id: the-map-of-leaf-and-kettle
 title: "The Map of Leaf & Kettle: Every Idea So Far in One Walk Through the Shop"
 sidebar_label: The map of the shop
-summary: A concept map, decision chart and definitions sheet for the whole series so far, laid out as a memory palace of nine rooms in one tea shop, one vivid object per idea.
-order: 7
+summary: 'A concept map, decision chart and definitions sheet for the whole series, as a memory palace in one tea shop: nine rooms for describing data, an upstairs for chance.'
+order: 16
 level: beginner
 type: guide
 domains:
@@ -30,7 +30,7 @@ relations:
 - [Prologue: the apprentice's first morning](#prologue-the-apprentices-first-morning)
 - [The whole picture on one page](#the-whole-picture-on-one-page)
 - [Which tool for which question](#which-tool-for-which-question)
-- [The memory palace: nine rooms](#the-memory-palace-nine-rooms)
+- [The memory palace: downstairs and upstairs](#the-memory-palace-downstairs-and-upstairs)
 - [Definitions at a glance](#definitions-at-a-glance)
 - [The formula sheet](#the-formula-sheet)
 - [The mistakes that cost the most](#the-mistakes-that-cost-the-most)
@@ -98,10 +98,19 @@ mindmap
       Percentile
       z-score
       Box plot
-    Still to come
-      Chance and probability
-      Confidence intervals
-      Hypothesis testing
+    Chance
+      Counting the ways
+      Conditional and Bayes
+      Expected value
+      Binomial and Poisson
+      Normal curve
+    From sample to claim
+      Sampling distribution
+      Confidence interval
+      Hypothesis test
+    Two columns
+      Correlation
+      Regression
 ```
 
 And the two jobs that all of it serves:
@@ -143,7 +152,7 @@ And the picture question, separately:
 
 * * *
 
-## The memory palace: nine rooms
+## The memory palace: downstairs and upstairs
 
 The oldest memory trick there is: put each idea on a vivid object in a place you know, then walk the same route every time. The shop is the place. Walk it in this order, and **never more than three or four things per room**.
 
@@ -265,6 +274,22 @@ Two exam results taped to the till, and two rulers hanging beside them.
 
 *Hook:* a score has no position without its crowd. **Histogram first, to look. Box plot second, to compare.**
 
+### Upstairs: the chance wing (Rooms 10 to 18)
+
+The same walk, one floor up. Each room is one part of the series, with one object to remember and one question to carry in.
+
+| Room | Part | The object | The idea | The question to carry |
+|---|---|---|---|---|
+| 10 · The Lucky Roll | [7](/fields/data-science/probability-statistics/counting-the-ways.md) | A **grid of 36 ways** by the till | Probability is the share of the equally likely ways. Shaded cells are an event, the overlap cell is counted once, and a rectangle means independent | Why did Ravi's 11/36 overcount? |
+| 11 · The Alarm Bell | [8](/fields/data-science/probability-statistics/the-test-that-was-99-percent-accurate.md) | A **tree of 100,000 tins** | Conditional probability shrinks the crowd to the positives and counts again. "99% accurate" is P(positive given bad), not P(bad given positive) | Which crowd are you counting inside? |
+| 12 · The Lucky Tin | [9](/fields/data-science/probability-statistics/what-to-expect.md) | A **card bag** with a prize table | A random variable is a number on each outcome. Expected value is the seesaw again, weighted by probability | The expected prize is 4.5 and no card says 4.5 |
+| 13 · Coins and Calls | [10](/fields/data-science/probability-statistics/coins-and-calls.md) | **Ten customers** choosing, and a **phone** ringing | A distribution is a recipe for who gets how much probability. Binomial counts yeses, Poisson counts events in a window | Three is the average, not the answer |
+| 14 · The Bell Curve | [11](/fields/data-science/probability-statistics/the-bell-curve.md) | **Bags of tea** never exactly 100 g | Many small nudges add up to a bell. Probability is area, and the z-score is one ruler for every bell | Is the average of ten bags also a bell? |
+| 15 · The Thousand Sips | [12](/fields/data-science/probability-statistics/why-averages-behave.md) | A **pot** sipped again and again | An average is itself random. The pile of sips is the sampling distribution, and its spread is `σ / √n` | Which pile is narrower, 2 cups or 30? |
+| 16 · The Net | [13](/fields/data-science/probability-statistics/how-sure-are-you.md) | A **net** over a fixed target | A confidence interval is the estimate plus or minus a margin. The 95% describes the method, not one net | Narrow is not the same as right |
+| 17 · The Courtroom | [14](/fields/data-science/probability-statistics/the-courtroom-for-numbers.md) | A **judge** who presumes luck | The null is "luck only", and the p-value is how often luck matches the evidence | Could plain luck do this? |
+| 18 · The Scatter Plot Over the Till | [15](/fields/data-science/probability-statistics/two-things-moving-together.md) | A **scatter plot** and a **line** | Correlation is paired z-scores agreeing. The regression line is least squared walking again | The number is a summary, the picture is the crowd |
+
 * * *
 
 ## Definitions at a glance
@@ -352,12 +377,53 @@ Two exam results taped to the till, and two rulers hanging beside them.
 | **Box plot** | Min, Q1, median, Q3, max, with whiskers to the last point inside the fences | 6 |
 | **Fences** | `Q1 − 1.5 × IQR` and `Q3 + 1.5 × IQR`; points beyond are drawn alone | 6 |
 
-### Coming up
+### Chance (parts 7 to 11)
 
-| Term | One-line preview |
-|---|---|
-| **Confidence interval** | A range of plausible values for a population parameter |
-| **Hypothesis test** | A structured way to ask whether an observed difference could be luck |
+| Term | Definition | Part |
+|---|---|---|
+| **Sample space** | The list of all possible outcomes | [7](/fields/data-science/probability-statistics/counting-the-ways.md) |
+| **Event** | A group of outcomes from that list | 7 |
+| **Complement** | Everything the event is not; "at least one" is 1 minus "none" | 7 |
+| **Independent** | Knowing one tells you nothing about the other | 7 |
+| **Conditional probability** | `P(A given B)`: shrink the crowd to B, count A inside it | [8](/fields/data-science/probability-statistics/the-test-that-was-99-percent-accurate.md) |
+| **Base rate** | How common the thing is before any clue | 8 |
+| **Natural frequencies** | Whole-number counts in a tree instead of percentages | 8 |
+| **Bayes' rule** | The flip from `P(B given A)` to `P(A given B)` | 8 |
+| **Random variable** | A number attached to each way things could turn out | [9](/fields/data-science/probability-statistics/what-to-expect.md) |
+| **Expected value** | The balance point of the values weighted by probability, `Σ x × p` | 9 |
+| **Probability table** | Each possible value with its probability; they sum to 1 | 9 |
+| **Distribution** | A table of how much probability each value gets | [10](/fields/data-science/probability-statistics/coins-and-calls.md) |
+| **Binomial** | The count of yeses in `n` independent tries with the same `p` | 10 |
+| **Poisson** | The count of events in a window at a constant rate | 10 |
+| **Normal curve** | A bell set by two dials, the mean and the SD; total area 1 | [11](/fields/data-science/probability-statistics/the-bell-curve.md) |
+| **Density** | The height of the curve, not a probability; probability is area | 11 |
+| **Standard normal** | The bell with mean 0 and SD 1; every normal becomes it through z | 11 |
+| **68-95-99.7 rule** | The share within 1, 2 and 3 SD: 68.27%, 95.45%, 99.73% | 11 |
+
+### From a sample to a claim (parts 12 to 14)
+
+| Term | Definition | Part |
+|---|---|---|
+| **Sampling distribution** | The averages you would get from many samples of size `n` | [12](/fields/data-science/probability-statistics/why-averages-behave.md) |
+| **Standard error** | The spread of sample averages, `σ / √n` | 12 |
+| **Law of large numbers** | Averages converge on the mean of what you draw from | 12 |
+| **Central limit theorem** | Sample averages approach a bell, whatever the crowd looks like | 12 |
+| **Confidence interval** | Estimate `± z × SE`: an honest "give or take" | [13](/fields/data-science/probability-statistics/how-sure-are-you.md) |
+| **Confidence level (95%)** | The share of repeated nets that catch the truth: a property of the method | 13 |
+| **Bootstrap** | Resample your sample with replacement, take the middle 95% of the means | 13 |
+| **Null hypothesis** | The "luck only" assumption: the labels mean nothing | [14](/fields/data-science/probability-statistics/the-courtroom-for-numbers.md) |
+| **p-value** | How often luck alone gives a result at least this extreme | 14 |
+| **False alarm / missed effect** | Rejecting a true null / keeping a false one | 14 |
+| **p-hacking** | Testing many things and reporting the one that "worked" | 14 |
+
+### Two columns (part 15)
+
+| Term | Definition | Part |
+|---|---|---|
+| **Scatter plot** | One dot per pair; draw it before computing `r` | [15](/fields/data-science/probability-statistics/two-things-moving-together.md) |
+| **Correlation** (`r`) | The average product of paired z-scores, from −1 to +1; straight-line togetherness only | 15 |
+| **Residual** | Actual minus the line: the leftover | 15 |
+| **Regression line** | The line with the smallest total squared residual | 15 |
 
 * * *
 
@@ -397,6 +463,21 @@ POSITION     percentile rank = (below + 0.5 × equal) / n × 100
              z = (x − mean) / SD
              fences: Q1 − 1.5 × IQR   and   Q3 + 1.5 × IQR
              quartile methods differ between tools: pick one, say which
+
+CHANCE       P(event) = ways / all ways (equally likely only)
+             P(A or B) = P(A) + P(B) − P(A and B)      P(A and B) = P(A) × P(B) if independent
+             P(A given B) = count(A and B) / count(B)
+             P(A given B) = P(B given A) × P(A) / P(B)
+             E[X] = Σ x × p       E[aX + b] = a E[X] + b       E[X + Y] = E[X] + E[Y]
+             binomial: P(k) = C(n,k) p^k (1−p)^(n−k)    mean np    variance np(1−p)
+             Poisson:  P(k) = e^−λ λ^k / k!             mean = variance = λ
+             normal:   z = (x − mean) / SD     probability = area
+
+FROM SAMPLE  SE = σ / √n   (4× the data halves it)      CI = estimate ± z × SE   (z = 1.96 for 95%)
+TO CLAIM     small samples use t instead of z           p small = luck is a poor explanation
+             P(at least one false alarm in k tests) = 1 − 0.95^k
+
+TWO COLUMNS  r = mean of (z_x × z_y)      slope = r × SD(y) / SD(x)      r² = share of squared miss removed
 ```
 
 * * *
@@ -419,6 +500,15 @@ POSITION     percentile rank = (below + 0.5 × equal) / n × 100
 | Quoting SD for data with one wild value | Room 8 | Use the median and IQR, or fix the value |
 | Comparing raw scores from different crowds | Room 9 | Convert to z-scores or percentile ranks |
 | Trusting a box plot to show two clumps | Room 9 | Draw the histogram first |
+| Adding probabilities of overlapping events | Room 10 | Subtract the overlap |
+| Treating `P(positive given sick)` as `P(sick given positive)` | Room 11 | Rebuild the tree, count only the positives |
+| "Expected" means "most likely" | Room 12 | It is the balance point; no outcome need equal it |
+| Trusting Poisson without checking variance ≈ mean | Room 13 | Compare the variance with the mean |
+| Using the bell on a two-clump crowd | Room 14 | Draw the histogram first |
+| "A bigger sample fixes bias" | Room 15 | It shrinks chance wobble, never bias |
+| "95% chance the truth is in this interval" | Room 16 | The 95% describes the method, not one interval |
+| "p = 0.03 means a 3% chance the null is true" | Room 17 | `p` assumes the null: it is data given the null |
+| "Correlated, so one causes the other" | Room 18 | Look for a hidden third thing, and draw it |
 
 * * *
 
@@ -449,4 +539,4 @@ Tala does not reach for the Average button. She walks the shop in her head, quic
 
 Mira, wiping a cup behind the counter, does not say anything. She does not have to. The first week of anyone's training is learning the words. The second is learning which room each one lives in, and the third is learning to ask the room's question before reaching for the formula.
 
-The shop has one more wing. After the rooms for describing what you have comes the long corridor of chance: the next cups.
+The shop has an upstairs now: the rooms for chance, from the grid of ways to the scatter plot over the till. It is built from the same bricks as downstairs: the expected value is the seesaw again, the z-score finally meets the bell, and the regression line is the least squared walking of Room 8.

@@ -21,7 +21,7 @@ relations:
 
 # Where Do You Stand? Percentiles, Z-Scores and the Box Plot
 
-> **Part 6 of 13.** Part of the [Probability & Statistics](/fields/data-science/probability-statistics/README.md) series. It continues from [How Far From the Middle?](/fields/data-science/probability-statistics/how-far-from-the-middle.md), where every summary was a stand-in for a crowd. By the end you will place any single value inside its crowd with two rulers, and see that the box plot is not a new graph to memorize but the staircase you already know, read at four marks. The scenario is invented, and every figure can be checked by hand.
+> **Part 6 of 15.** Part of the [Probability & Statistics](/fields/data-science/probability-statistics/README.md) series. It continues from [How Far From the Middle?](/fields/data-science/probability-statistics/how-far-from-the-middle.md), where every summary was a stand-in for a crowd. By the end you will place any single value inside its crowd with two rulers, and see that the box plot is not a new graph to memorize but the staircase you already know, read at four marks. The scenario is invented, and every figure can be checked by hand.
 
 ## Table of Contents
 

@@ -20,7 +20,7 @@ relations:
 
 # How Far From the Middle? One Question Behind Every Summary Number
 
-> **Part 5 of 13.** Part of the [Probability & Statistics](/fields/data-science/probability-statistics/README.md) series, and the sequel to [The Number on the Tin](/fields/data-science/probability-statistics/the-number-on-the-tin.md), where the "typical" score was a score nobody gave. By the end you will know why there are three middles and a pile of spreads, and that they are **one question** asked with different rulers. Far less to memorize than it looked.
+> **Part 5 of 15.** Part of the [Probability & Statistics](/fields/data-science/probability-statistics/README.md) series, and the sequel to [The Number on the Tin](/fields/data-science/probability-statistics/the-number-on-the-tin.md), where the "typical" score was a score nobody gave. By the end you will know why there are three middles and a pile of spreads, and that they are **one question** asked with different rulers. Far less to memorize than it looked.
 
 ## Table of Contents
 

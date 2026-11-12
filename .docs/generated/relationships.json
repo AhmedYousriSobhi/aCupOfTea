@@ -158,6 +158,20 @@
       "your-kubeconfig-is-a-house-key"
     ]
   },
+  "coins-and-calls": {
+    "prerequisite_of": [
+      "the-bell-curve"
+    ],
+    "prerequisites": [
+      "what-to-expect"
+    ],
+    "related": [
+      "probability-statistics-series"
+    ],
+    "related_by": [
+      "probability-statistics-series"
+    ]
+  },
   "containers-101": {
     "prerequisite_of": [
       "kubernetes-in-five-nouns",
@@ -171,6 +185,20 @@
       "fake-gpus-in-kubernetes",
       "gpu-allocation-vs-utilization",
       "nvidia-cluster-readiness-engine"
+    ]
+  },
+  "counting-the-ways": {
+    "prerequisite_of": [
+      "the-test-that-was-99-percent-accurate"
+    ],
+    "prerequisites": [
+      "where-do-you-stand"
+    ],
+    "related": [
+      "probability-statistics-series"
+    ],
+    "related_by": [
+      "probability-statistics-series"
     ]
   },
   "cpu-affinity": {
@@ -491,6 +519,20 @@
     "related_by": [
       "probability-statistics-series",
       "the-map-of-leaf-and-kettle"
+    ]
+  },
+  "how-sure-are-you": {
+    "prerequisite_of": [
+      "the-courtroom-for-numbers"
+    ],
+    "prerequisites": [
+      "why-averages-behave"
+    ],
+    "related": [
+      "probability-statistics-series"
+    ],
+    "related_by": [
+      "probability-statistics-series"
     ]
   },
   "hpc-systems-overview": {
@@ -1058,22 +1100,40 @@
     "prerequisite_of": [],
     "prerequisites": [],
     "related": [
+      "coins-and-calls",
+      "counting-the-ways",
       "data-types-and-frequency-tables",
       "draw-it-before-you-describe-it",
       "how-far-from-the-middle",
+      "how-sure-are-you",
       "stir-the-pot-population-and-sampling",
+      "the-bell-curve",
+      "the-courtroom-for-numbers",
       "the-map-of-leaf-and-kettle",
       "the-number-on-the-tin",
-      "where-do-you-stand"
+      "the-test-that-was-99-percent-accurate",
+      "two-things-moving-together",
+      "what-to-expect",
+      "where-do-you-stand",
+      "why-averages-behave"
     ],
     "related_by": [
+      "coins-and-calls",
+      "counting-the-ways",
       "data-types-and-frequency-tables",
       "draw-it-before-you-describe-it",
       "how-far-from-the-middle",
+      "how-sure-are-you",
       "stir-the-pot-population-and-sampling",
+      "the-bell-curve",
+      "the-courtroom-for-numbers",
       "the-map-of-leaf-and-kettle",
       "the-number-on-the-tin",
-      "where-do-you-stand"
+      "the-test-that-was-99-percent-accurate",
+      "two-things-moving-together",
+      "what-to-expect",
+      "where-do-you-stand",
+      "why-averages-behave"
     ]
   },
   "pytorch-101": {
@@ -1513,6 +1573,34 @@
       "the-map-of-leaf-and-kettle"
     ]
   },
+  "the-bell-curve": {
+    "prerequisite_of": [
+      "why-averages-behave"
+    ],
+    "prerequisites": [
+      "coins-and-calls"
+    ],
+    "related": [
+      "probability-statistics-series"
+    ],
+    "related_by": [
+      "probability-statistics-series"
+    ]
+  },
+  "the-courtroom-for-numbers": {
+    "prerequisite_of": [
+      "two-things-moving-together"
+    ],
+    "prerequisites": [
+      "how-sure-are-you"
+    ],
+    "related": [
+      "probability-statistics-series"
+    ],
+    "related_by": [
+      "probability-statistics-series"
+    ]
+  },
   "the-map-of-leaf-and-kettle": {
     "prerequisite_of": [],
     "prerequisites": [],
@@ -1547,6 +1635,20 @@
       "the-map-of-leaf-and-kettle"
     ]
   },
+  "the-test-that-was-99-percent-accurate": {
+    "prerequisite_of": [
+      "what-to-expect"
+    ],
+    "prerequisites": [
+      "counting-the-ways"
+    ],
+    "related": [
+      "probability-statistics-series"
+    ],
+    "related_by": [
+      "probability-statistics-series"
+    ]
+  },
   "threat-model-and-first-launch": {
     "prerequisite_of": [
       "sign-in-hygiene"
@@ -1560,6 +1662,18 @@
     "prerequisites": [],
     "related": [],
     "related_by": []
+  },
+  "two-things-moving-together": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "the-courtroom-for-numbers"
+    ],
+    "related": [
+      "probability-statistics-series"
+    ],
+    "related_by": [
+      "probability-statistics-series"
+    ]
   },
   "unsupervised-learning": {
     "prerequisite_of": [
@@ -1651,8 +1765,24 @@
     ],
     "related_by": []
   },
+  "what-to-expect": {
+    "prerequisite_of": [
+      "coins-and-calls"
+    ],
+    "prerequisites": [
+      "the-test-that-was-99-percent-accurate"
+    ],
+    "related": [
+      "probability-statistics-series"
+    ],
+    "related_by": [
+      "probability-statistics-series"
+    ]
+  },
   "where-do-you-stand": {
-    "prerequisite_of": [],
+    "prerequisite_of": [
+      "counting-the-ways"
+    ],
     "prerequisites": [
       "how-far-from-the-middle"
     ],
@@ -1664,6 +1794,20 @@
     "related_by": [
       "probability-statistics-series",
       "the-map-of-leaf-and-kettle"
+    ]
+  },
+  "why-averages-behave": {
+    "prerequisite_of": [
+      "how-sure-are-you"
+    ],
+    "prerequisites": [
+      "the-bell-curve"
+    ],
+    "related": [
+      "probability-statistics-series"
+    ],
+    "related_by": [
+      "probability-statistics-series"
     ]
   },
   "your-kubeconfig-is-a-house-key": {

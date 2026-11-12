@@ -432,6 +432,34 @@
       "guide"
     ]
   },
+  "coins-and-calls": {
+    "domains": [
+      "statistics"
+    ],
+    "id": "coins-and-calls",
+    "level": "intermediate",
+    "order": 10,
+    "path": "fields/data-science/probability-statistics/coins-and-calls.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [
+        "what-to-expect"
+      ],
+      "related": [
+        "probability-statistics-series"
+      ]
+    },
+    "status": "stable",
+    "summary": "A named distribution is a recipe for who gets how much probability. Binomial fits \"how many yeses in n tries\", Poisson fits \"how many events in a window\". Know the question and the assumptions.",
+    "tags": [
+      "statistics"
+    ],
+    "title": "Coins and Calls: Binomial and Poisson as Recipes",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
   "containers-101": {
     "domains": [
       "software-engineering",
@@ -451,6 +479,34 @@
       "containers"
     ],
     "title": "Containers 101",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "counting-the-ways": {
+    "domains": [
+      "statistics"
+    ],
+    "id": "counting-the-ways",
+    "level": "beginner",
+    "order": 7,
+    "path": "fields/data-science/probability-statistics/counting-the-ways.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [
+        "where-do-you-stand"
+      ],
+      "related": [
+        "probability-statistics-series"
+      ]
+    },
+    "status": "stable",
+    "summary": "Probability is the share of the equally likely ways. So \"or\" adds, \"and\" multiplies, and \"at least one\" is 1 minus none, because of what each does to the list of ways.",
+    "tags": [
+      "statistics"
+    ],
+    "title": "Counting the Ways: Probability as a Share of the List",
     "type": "concept",
     "types": [
       "concept"
@@ -538,7 +594,7 @@
     "level": "beginner",
     "order": 2,
     "path": "fields/data-science/probability-statistics/data-types-and-frequency-tables.md",
-    "reading_time_min": 16,
+    "reading_time_min": 13,
     "relations": {
       "prerequisites": [],
       "related": [
@@ -1269,6 +1325,34 @@
       "statistics"
     ],
     "title": "How Far From the Middle? One Question Behind Every Summary Number",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "how-sure-are-you": {
+    "domains": [
+      "statistics"
+    ],
+    "id": "how-sure-are-you",
+    "level": "intermediate",
+    "order": 13,
+    "path": "fields/data-science/probability-statistics/how-sure-are-you.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [
+        "why-averages-behave"
+      ],
+      "related": [
+        "probability-statistics-series"
+      ]
+    },
+    "status": "stable",
+    "summary": "A confidence interval is an honest \"about this, give or take\": the estimate plus or minus a margin built from the standard error. The 95% describes the method, not one interval.",
+    "tags": [
+      "statistics"
+    ],
+    "title": "How Sure Are You? Confidence Intervals",
     "type": "concept",
     "types": [
       "concept"
@@ -2693,17 +2777,26 @@
     "id": "probability-statistics-series",
     "level": "beginner",
     "path": "fields/data-science/probability-statistics/README.md",
-    "reading_time_min": 5,
+    "reading_time_min": 6,
     "relations": {
       "prerequisites": [],
       "related": [
+        "coins-and-calls",
+        "counting-the-ways",
         "data-types-and-frequency-tables",
         "draw-it-before-you-describe-it",
         "how-far-from-the-middle",
+        "how-sure-are-you",
         "stir-the-pot-population-and-sampling",
+        "the-bell-curve",
+        "the-courtroom-for-numbers",
         "the-map-of-leaf-and-kettle",
         "the-number-on-the-tin",
-        "where-do-you-stand"
+        "the-test-that-was-99-percent-accurate",
+        "two-things-moving-together",
+        "what-to-expect",
+        "where-do-you-stand",
+        "why-averages-behave"
       ]
     },
     "status": "stable",
@@ -3765,7 +3858,7 @@
     "level": "beginner",
     "order": 1,
     "path": "fields/data-science/probability-statistics/stir-the-pot-population-and-sampling.md",
-    "reading_time_min": 12,
+    "reading_time_min": 11,
     "relations": {
       "prerequisites": [],
       "related": [
@@ -3785,15 +3878,71 @@
       "concept"
     ]
   },
+  "the-bell-curve": {
+    "domains": [
+      "statistics"
+    ],
+    "id": "the-bell-curve",
+    "level": "intermediate",
+    "order": 11,
+    "path": "fields/data-science/probability-statistics/the-bell-curve.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [
+        "coins-and-calls"
+      ],
+      "related": [
+        "probability-statistics-series"
+      ]
+    },
+    "status": "stable",
+    "summary": "Many small nudges add up to a bell. For continuous data probability is area, and the z-score makes every bell the same bell, so one table serves all of them, until the data are not a bell.",
+    "tags": [
+      "statistics"
+    ],
+    "title": "The Bell Curve: Probability as Area, and One Ruler for Every Bell",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "the-courtroom-for-numbers": {
+    "domains": [
+      "statistics"
+    ],
+    "id": "the-courtroom-for-numbers",
+    "level": "intermediate",
+    "order": 14,
+    "path": "fields/data-science/probability-statistics/the-courtroom-for-numbers.md",
+    "reading_time_min": 10,
+    "relations": {
+      "prerequisites": [
+        "how-sure-are-you"
+      ],
+      "related": [
+        "probability-statistics-series"
+      ]
+    },
+    "status": "stable",
+    "summary": "A hypothesis test asks one question: could plain luck have produced a difference this big? Shuffle the labels and count. What the p-value is, what it is not, and how testing twenty things fools you.",
+    "tags": [
+      "statistics"
+    ],
+    "title": "The Courtroom for Numbers: Could Plain Luck Do This?",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
   "the-map-of-leaf-and-kettle": {
     "domains": [
       "statistics"
     ],
     "id": "the-map-of-leaf-and-kettle",
     "level": "beginner",
-    "order": 7,
+    "order": 16,
     "path": "fields/data-science/probability-statistics/the-map-of-leaf-and-kettle.md",
-    "reading_time_min": 17,
+    "reading_time_min": 23,
     "relations": {
       "prerequisites": [],
       "related": [
@@ -3807,7 +3956,7 @@
       ]
     },
     "status": "stable",
-    "summary": "A concept map, decision chart and definitions sheet for the whole series so far, laid out as a memory palace of nine rooms in one tea shop, one vivid object per idea.",
+    "summary": "A concept map, decision chart and definitions sheet for the whole series, as a memory palace in one tea shop: nine rooms for describing data, an upstairs for chance.",
     "tags": [
       "statistics"
     ],
@@ -3825,7 +3974,7 @@
     "level": "beginner",
     "order": 4,
     "path": "fields/data-science/probability-statistics/the-number-on-the-tin.md",
-    "reading_time_min": 15,
+    "reading_time_min": 12,
     "relations": {
       "prerequisites": [],
       "related": [
@@ -3835,11 +3984,39 @@
       ]
     },
     "status": "stable",
-    "summary": "Why a perfectly computed average can describe nobody: the mean as a balance point, the median, the mode, how outliers pull them apart, and how to choose.",
+    "summary": "Why a perfectly computed average can describe nobody: \"typical\" is ambiguous, and mean, median and mode are three honest answers to three different questions. Look at the picture first.",
     "tags": [
       "statistics"
     ],
     "title": "The Number on the Tin: Mean, Median and Mode",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "the-test-that-was-99-percent-accurate": {
+    "domains": [
+      "statistics"
+    ],
+    "id": "the-test-that-was-99-percent-accurate",
+    "level": "beginner",
+    "order": 8,
+    "path": "fields/data-science/probability-statistics/the-test-that-was-99-percent-accurate.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [
+        "counting-the-ways"
+      ],
+      "related": [
+        "probability-statistics-series"
+      ]
+    },
+    "status": "stable",
+    "summary": "Conditional probability is \"shrink the crowd to those who match, then count again\". Bayes' rule is that count read the other way; a tree of whole tins shows why a 99% test is often wrong.",
+    "tags": [
+      "statistics"
+    ],
+    "title": "The Test That Was 99% Accurate: Conditional Probability and Bayes' Rule",
     "type": "concept",
     "types": [
       "concept"
@@ -3889,6 +4066,34 @@
     "summary": "A step-by-step learning path for time series analysis, from the basics through data preparation, analysis techniques and forecasting to advanced techniques and practical projects.",
     "tags": [],
     "title": "Time Series Analysis",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "two-things-moving-together": {
+    "domains": [
+      "statistics"
+    ],
+    "id": "two-things-moving-together",
+    "level": "intermediate",
+    "order": 15,
+    "path": "fields/data-science/probability-statistics/two-things-moving-together.md",
+    "reading_time_min": 11,
+    "relations": {
+      "prerequisites": [
+        "the-courtroom-for-numbers"
+      ],
+      "related": [
+        "probability-statistics-series"
+      ]
+    },
+    "status": "stable",
+    "summary": "Correlation is the average product of paired z-scores, a number about straight-line togetherness only. The regression line is least squared walking applied to a line. Graph first, always.",
+    "tags": [
+      "statistics"
+    ],
+    "title": "Two Things Moving Together: Correlation and the Line",
     "type": "concept",
     "types": [
       "concept"
@@ -4123,6 +4328,34 @@
       "concept"
     ]
   },
+  "what-to-expect": {
+    "domains": [
+      "statistics"
+    ],
+    "id": "what-to-expect",
+    "level": "beginner",
+    "order": 9,
+    "path": "fields/data-science/probability-statistics/what-to-expect.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [
+        "the-test-that-was-99-percent-accurate"
+      ],
+      "related": [
+        "probability-statistics-series"
+      ]
+    },
+    "status": "stable",
+    "summary": "A random variable is a number attached to each way things could turn out. Expected value and variance are the mean and the leftover walk of earlier parts, weighted by probability instead of frequency.",
+    "tags": [
+      "statistics"
+    ],
+    "title": "What to Expect: Random Variables and Expected Value",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
   "where-do-you-stand": {
     "domains": [
       "statistics"
@@ -4148,6 +4381,35 @@
       "statistics"
     ],
     "title": "Where Do You Stand? Percentiles, Z-Scores and the Box Plot",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "why-averages-behave": {
+    "domains": [
+      "statistics"
+    ],
+    "id": "why-averages-behave",
+    "level": "intermediate",
+    "order": 12,
+    "path": "fields/data-science/probability-statistics/why-averages-behave.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [
+        "the-bell-curve"
+      ],
+      "related": [
+        "probability-statistics-series"
+      ]
+    },
+    "status": "stable",
+    "summary": "An average is itself random: every sample gives a different one. Their spread shrinks as sigma over root n, and whatever the crowd looks like, sample averages pile into a bell. Bias is not cured.",
+    "tags": [
+      "sampling",
+      "statistics"
+    ],
+    "title": "Why Averages Behave: The Sip You Could Take a Thousand Times",
     "type": "concept",
     "types": [
       "concept"
