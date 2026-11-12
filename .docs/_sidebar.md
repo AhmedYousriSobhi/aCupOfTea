@@ -199,6 +199,7 @@
       * [RBAC and the limited viewer](fields/devops/kubernetes/rbac-and-the-limited-viewer.md)
       * [Polite API server monitoring](fields/devops/kubernetes/polite-api-server-monitoring.md)
       * [Kubernetes at HPC scale](fields/devops/kubernetes/kubernetes-at-hpc-scale.md)
+      * [kubectl troubleshooting](fields/devops/kubernetes/cheatsheet.md)
     * [**Ansible**](fields/devops/ansible/README.md)
       * [1. Installing Ansible](fields/devops/ansible/getting-started.md)
       * [2. Inventory and ad-hoc](fields/devops/ansible/inventory-and-ad-hoc.md)
@@ -290,5 +291,4 @@
   * [Ubuntu Debian File Installation](tips/ubuntu-deb-file-install.md)
   * [Git](tips/version-control-git.md)
   * [Markdown](tips/markdown.md)
-  * [kubectl troubleshooting](tips/kubectl-troubleshooting.md)
 * [**Journal**](journal/README.md)
