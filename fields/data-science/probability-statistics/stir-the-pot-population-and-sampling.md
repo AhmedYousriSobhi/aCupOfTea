@@ -2,6 +2,7 @@
 id: stir-the-pot-population-and-sampling
 title: "Stir the Pot First: Population, Sample, and Why We Guess"
 sidebar_label: Stir the pot first
+order: 1
 summary: 'Why a sip judges a pot of tea only if you stir it: population versus sample, four ways to draw a sample, the poll that asked 2.4 million and still erred.'
 level: beginner
 type: concept

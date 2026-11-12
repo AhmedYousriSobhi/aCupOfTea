@@ -2,6 +2,7 @@
 id: the-number-on-the-tin
 title: "The Number on the Tin: Mean, Median and Mode"
 sidebar_label: The number on the tin
+order: 4
 summary: 'Why a perfectly computed average can describe nobody: the mean as a balance point, the median, the mode, how outliers pull them apart, and how to choose.'
 level: beginner
 type: concept

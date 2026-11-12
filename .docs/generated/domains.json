@@ -179,13 +179,16 @@
       "dip-intensity-transforms-histograms",
       "dip-noise-restoration",
       "draw-it-before-you-describe-it",
+      "how-far-from-the-middle",
       "principal-component-analysis",
       "probability-statistics-series",
       "regression-imputing",
       "stir-the-pot-population-and-sampling",
+      "the-map-of-leaf-and-kettle",
       "the-number-on-the-tin",
       "time-series-analysis",
-      "unsupervised-learning"
+      "unsupervised-learning",
+      "where-do-you-stand"
     ]
   },
   "system-design": {

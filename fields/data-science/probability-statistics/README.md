@@ -15,6 +15,9 @@ relations:
     - data-types-and-frequency-tables
     - draw-it-before-you-describe-it
     - the-number-on-the-tin
+    - how-far-from-the-middle
+    - where-do-you-stand
+    - the-map-of-leaf-and-kettle
 ---
 
 # Probability & Statistics, One Sip at a Time
@@ -22,6 +25,16 @@ relations:
 Most people do not struggle with statistics because the formulas are hard. They struggle because the **ideas** arrive before the reason for them. Why divide by `n − 1`? Why does a p-value not mean what it sounds like? Why is a 99% accurate test often wrong?
 
 This series goes the other way. Every page starts with something that **goes wrong** for a small, invented tea shop, and the idea shows up as the fix. The formulas come last, when you already know what they are for.
+
+## Feeling lost? Start here
+
+If the series feels like too many numbers, too many graphs and too many steps, hold on to three ideas. Everything else is built from them.
+
+1. **A summary is a stand-in for a crowd.** Mean, median and mode are not rival formulas. They are one question, *how much should a long walk hurt?*, asked three ways. Spread is how badly the stand-in still misses. ([Part 5](/fields/data-science/probability-statistics/how-far-from-the-middle.md))
+2. **Graphs are one table seen three ways.** The histogram shows how much lives where. The ogive shows how many are at or below. The box plot is the ogive keeping only its landmarks. Look first, with the histogram. ([Part 6](/fields/data-science/probability-statistics/where-do-you-stand.md))
+3. **A value has no meaning without its crowd.** Ask "better than what?", then place it with a rank (percentile) or a distance (z-score).
+
+Then keep [The Map of Leaf & Kettle](/fields/data-science/probability-statistics/the-map-of-leaf-and-kettle.md) open as a reference. It lays every idea in the series out as nine rooms of one shop, so you recall a room instead of a formula.
 
 ## How each page is built
 
@@ -41,8 +54,8 @@ This series goes the other way. Every page starts with something that **goes wro
 | 2 | [Mira's Notebook](https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/fields/data-science/probability-statistics/data-types-and-frequency-tables.md) | What kind of data is this, and how do I count it honestly? | Written |
 | 3 | [Draw It Before You Describe It](https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/fields/data-science/probability-statistics/draw-it-before-you-describe-it.md) | Which picture answers which question: histogram, polygon or ogive? | Written |
 | 4 | [The Number on the Tin](https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/fields/data-science/probability-statistics/the-number-on-the-tin.md) | What does "typical" mean: mean, median or mode? | Written |
-| 5 | How Far From the Middle? | Variance, standard deviation, IQR, and the mystery of `n − 1` | Planned |
-| 6 | Where Do You Stand? | Percentiles, z-scores and box plots | Planned |
+| 5 | [How Far From the Middle?](/fields/data-science/probability-statistics/how-far-from-the-middle.md) | Why are there three middles and so many spreads? Variance, SD, IQR and the mystery of `n − 1` | Written |
+| 6 | [Where Do You Stand?](/fields/data-science/probability-statistics/where-do-you-stand.md) | How does one value find its place in a crowd? Percentiles, z-scores and the box plot | Written |
 | 7 | Counting the Ways | Sample spaces, events and the rules of probability | Planned |
 | 8 | The Test That Was 99% Accurate | Conditional probability and Bayes' rule | Planned |
 | 9 | What to Expect | Random variables, expected value and variance | Planned |
@@ -50,6 +63,7 @@ This series goes the other way. Every page starts with something that **goes wro
 | 11 | Why Averages Behave | Sampling distributions and the central limit theorem | Planned |
 | 12 | How Sure Are You? | Confidence intervals | Planned |
 | 13 | The Courtroom for Numbers | Hypothesis tests, p-values and how they get misused | Planned |
+| Ref | [The Map of Leaf & Kettle](/fields/data-science/probability-statistics/the-map-of-leaf-and-kettle.md) | Every idea so far as a memory palace, a decision chart and a definitions sheet | Grows with the series |
 
 The order is deliberate. Pages 1 to 6 are about **describing what you have**: where the data came from, what kind it is, what it looks like, where its middle is, how spread out it is, and where one value sits within it. Pages 7 to 10 build the language of **chance**. Pages 11 to 13 join the two: using a sample to make an honest statement about something you cannot fully see.
 

@@ -536,6 +536,7 @@
     ],
     "id": "data-types-and-frequency-tables",
     "level": "beginner",
+    "order": 2,
     "path": "fields/data-science/probability-statistics/data-types-and-frequency-tables.md",
     "reading_time_min": 16,
     "relations": {
@@ -922,6 +923,7 @@
     ],
     "id": "draw-it-before-you-describe-it",
     "level": "beginner",
+    "order": 3,
     "path": "fields/data-science/probability-statistics/draw-it-before-you-describe-it.md",
     "reading_time_min": 11,
     "relations": {
@@ -1238,6 +1240,35 @@
       "nvidia"
     ],
     "title": "How GPU Memory Fails, and Why You Can See It Coming",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "how-far-from-the-middle": {
+    "domains": [
+      "statistics"
+    ],
+    "id": "how-far-from-the-middle",
+    "level": "beginner",
+    "order": 5,
+    "path": "fields/data-science/probability-statistics/how-far-from-the-middle.md",
+    "reading_time_min": 11,
+    "relations": {
+      "prerequisites": [
+        "the-number-on-the-tin"
+      ],
+      "related": [
+        "probability-statistics-series",
+        "the-map-of-leaf-and-kettle"
+      ]
+    },
+    "status": "stable",
+    "summary": "Mean, median and mode are one question asked with three rulers: how much should a long walk hurt? Spread is what is left over. Variance, SD, IQR and the n-1 mystery fall out of that.",
+    "tags": [
+      "statistics"
+    ],
+    "title": "How Far From the Middle? One Question Behind Every Summary Number",
     "type": "concept",
     "types": [
       "concept"
@@ -2662,14 +2693,17 @@
     "id": "probability-statistics-series",
     "level": "beginner",
     "path": "fields/data-science/probability-statistics/README.md",
-    "reading_time_min": 4,
+    "reading_time_min": 5,
     "relations": {
       "prerequisites": [],
       "related": [
         "data-types-and-frequency-tables",
         "draw-it-before-you-describe-it",
+        "how-far-from-the-middle",
         "stir-the-pot-population-and-sampling",
-        "the-number-on-the-tin"
+        "the-map-of-leaf-and-kettle",
+        "the-number-on-the-tin",
+        "where-do-you-stand"
       ]
     },
     "status": "stable",
@@ -3729,6 +3763,7 @@
     ],
     "id": "stir-the-pot-population-and-sampling",
     "level": "beginner",
+    "order": 1,
     "path": "fields/data-science/probability-statistics/stir-the-pot-population-and-sampling.md",
     "reading_time_min": 12,
     "relations": {
@@ -3750,12 +3785,45 @@
       "concept"
     ]
   },
+  "the-map-of-leaf-and-kettle": {
+    "domains": [
+      "statistics"
+    ],
+    "id": "the-map-of-leaf-and-kettle",
+    "level": "beginner",
+    "order": 7,
+    "path": "fields/data-science/probability-statistics/the-map-of-leaf-and-kettle.md",
+    "reading_time_min": 17,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "data-types-and-frequency-tables",
+        "draw-it-before-you-describe-it",
+        "how-far-from-the-middle",
+        "probability-statistics-series",
+        "stir-the-pot-population-and-sampling",
+        "the-number-on-the-tin",
+        "where-do-you-stand"
+      ]
+    },
+    "status": "stable",
+    "summary": "A concept map, decision chart and definitions sheet for the whole series so far, laid out as a memory palace of nine rooms in one tea shop, one vivid object per idea.",
+    "tags": [
+      "statistics"
+    ],
+    "title": "The Map of Leaf & Kettle: Every Idea So Far in One Walk Through the Shop",
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
+  },
   "the-number-on-the-tin": {
     "domains": [
       "statistics"
     ],
     "id": "the-number-on-the-tin",
     "level": "beginner",
+    "order": 4,
     "path": "fields/data-science/probability-statistics/the-number-on-the-tin.md",
     "reading_time_min": 15,
     "relations": {
@@ -4050,6 +4118,36 @@
       "victoriametrics"
     ],
     "title": "The Prometheus That Ate the Head Node: Why VictoriaMetrics",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "where-do-you-stand": {
+    "domains": [
+      "statistics"
+    ],
+    "id": "where-do-you-stand",
+    "level": "beginner",
+    "order": 6,
+    "path": "fields/data-science/probability-statistics/where-do-you-stand.md",
+    "reading_time_min": 10,
+    "relations": {
+      "prerequisites": [
+        "how-far-from-the-middle"
+      ],
+      "related": [
+        "draw-it-before-you-describe-it",
+        "probability-statistics-series",
+        "the-map-of-leaf-and-kettle"
+      ]
+    },
+    "status": "stable",
+    "summary": "A score means nothing without its crowd. Two rulers give it a position: rank (percentile) and distance in spreads (z-score). The box plot is just the ogive read at four landmarks.",
+    "tags": [
+      "statistics"
+    ],
+    "title": "Where Do You Stand? Percentiles, Z-Scores and the Box Plot",
     "type": "concept",
     "types": [
       "concept"

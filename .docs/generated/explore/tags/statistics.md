@@ -4,13 +4,19 @@
 
 - [Draw It Before You Describe It: Three Pictures of the Same Fifty Days](/fields/data-science/probability-statistics/draw-it-before-you-describe-it.md) — Why a table of counts glazes eyes and a picture does not: the histogram, frequency polygon and ogive built from one table, and the mistakes that make them lie. *(beginner · 11 min)*  
   [`statistics`](/.docs/generated/explore/tags/statistics.md)
+- [How Far From the Middle? One Question Behind Every Summary Number](/fields/data-science/probability-statistics/how-far-from-the-middle.md) — Mean, median and mode are one question asked with three rulers: how much should a long walk hurt? Spread is what is left over. Variance, SD, IQR and the n-1 mystery fall out of that. *(beginner · 11 min)*  
+  [`statistics`](/.docs/generated/explore/tags/statistics.md)
 - [Mira's Notebook: What Kind of Data Is This, and How Do You Count It?](/fields/data-science/probability-statistics/data-types-and-frequency-tables.md) — Why you cannot average a blend name: the four kinds of data, and how to turn raw numbers into honest category, ungrouped and grouped frequency tables. *(beginner · 16 min)*  
   [`statistics`](/.docs/generated/explore/tags/statistics.md)
-- [Probability & Statistics, One Sip at a Time](/fields/data-science/probability-statistics/README.md) — A slow-brewed series on the ideas in probability and statistics that make people say "wait, why?", each one told as a small story in a tea shop. *(beginner · 4 min)*  
+- [Probability & Statistics, One Sip at a Time](/fields/data-science/probability-statistics/README.md) — A slow-brewed series on the ideas in probability and statistics that make people say "wait, why?", each one told as a small story in a tea shop. *(beginner · 5 min)*  
   [`statistics`](/.docs/generated/explore/tags/statistics.md)
 - [Stir the Pot First: Population, Sample, and Why We Guess](/fields/data-science/probability-statistics/stir-the-pot-population-and-sampling.md) — Why a sip judges a pot of tea only if you stir it: population versus sample, four ways to draw a sample, the poll that asked 2.4 million and still erred. *(beginner · 12 min)*  
   [`sampling`](/.docs/generated/explore/tags/sampling.md) [`statistics`](/.docs/generated/explore/tags/statistics.md)
+- [The Map of Leaf & Kettle: Every Idea So Far in One Walk Through the Shop](/fields/data-science/probability-statistics/the-map-of-leaf-and-kettle.md) — A concept map, decision chart and definitions sheet for the whole series so far, laid out as a memory palace of nine rooms in one tea shop, one vivid object per idea. *(beginner · 17 min)*  
+  [`statistics`](/.docs/generated/explore/tags/statistics.md)
 - [The Number on the Tin: Mean, Median and Mode](/fields/data-science/probability-statistics/the-number-on-the-tin.md) — Why a perfectly computed average can describe nobody: the mean as a balance point, the median, the mode, how outliers pull them apart, and how to choose. *(beginner · 15 min)*  
+  [`statistics`](/.docs/generated/explore/tags/statistics.md)
+- [Where Do You Stand? Percentiles, Z-Scores and the Box Plot](/fields/data-science/probability-statistics/where-do-you-stand.md) — A score means nothing without its crowd. Two rulers give it a position: rank (percentile) and distance in spreads (z-score). The box plot is just the ogive read at four landmarks. *(beginner · 10 min)*  
   [`statistics`](/.docs/generated/explore/tags/statistics.md)
 
 [All tags](/.docs/generated/explore/tags.md)

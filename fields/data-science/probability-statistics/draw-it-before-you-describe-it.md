@@ -2,6 +2,7 @@
 id: draw-it-before-you-describe-it
 title: "Draw It Before You Describe It: Three Pictures of the Same Fifty Days"
 sidebar_label: Draw it first
+order: 3
 summary: 'Why a table of counts glazes eyes and a picture does not: the histogram, frequency polygon and ogive built from one table, and the mistakes that make them lie.'
 level: beginner
 type: concept

@@ -2,6 +2,7 @@
 id: data-types-and-frequency-tables
 title: "Mira's Notebook: What Kind of Data Is This, and How Do You Count It?"
 sidebar_label: Data types and frequency tables
+order: 2
 summary: 'Why you cannot average a blend name: the four kinds of data, and how to turn raw numbers into honest category, ungrouped and grouped frequency tables.'
 level: beginner
 type: concept

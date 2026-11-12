@@ -206,6 +206,7 @@
       "draw-it-before-you-describe-it",
       "probability-statistics-series",
       "stir-the-pot-population-and-sampling",
+      "the-map-of-leaf-and-kettle",
       "the-number-on-the-tin"
     ]
   },
@@ -357,7 +358,9 @@
     ],
     "related_by": [
       "probability-statistics-series",
-      "the-number-on-the-tin"
+      "the-map-of-leaf-and-kettle",
+      "the-number-on-the-tin",
+      "where-do-you-stand"
     ]
   },
   "encoder-decoder-machine-translation": {
@@ -473,6 +476,22 @@
     "prerequisites": [],
     "related": [],
     "related_by": []
+  },
+  "how-far-from-the-middle": {
+    "prerequisite_of": [
+      "where-do-you-stand"
+    ],
+    "prerequisites": [
+      "the-number-on-the-tin"
+    ],
+    "related": [
+      "probability-statistics-series",
+      "the-map-of-leaf-and-kettle"
+    ],
+    "related_by": [
+      "probability-statistics-series",
+      "the-map-of-leaf-and-kettle"
+    ]
   },
   "hpc-systems-overview": {
     "prerequisite_of": [],
@@ -1041,14 +1060,20 @@
     "related": [
       "data-types-and-frequency-tables",
       "draw-it-before-you-describe-it",
+      "how-far-from-the-middle",
       "stir-the-pot-population-and-sampling",
-      "the-number-on-the-tin"
+      "the-map-of-leaf-and-kettle",
+      "the-number-on-the-tin",
+      "where-do-you-stand"
     ],
     "related_by": [
       "data-types-and-frequency-tables",
       "draw-it-before-you-describe-it",
+      "how-far-from-the-middle",
       "stir-the-pot-population-and-sampling",
-      "the-number-on-the-tin"
+      "the-map-of-leaf-and-kettle",
+      "the-number-on-the-tin",
+      "where-do-you-stand"
     ]
   },
   "pytorch-101": {
@@ -1484,11 +1509,32 @@
     ],
     "related_by": [
       "data-types-and-frequency-tables",
-      "probability-statistics-series"
+      "probability-statistics-series",
+      "the-map-of-leaf-and-kettle"
+    ]
+  },
+  "the-map-of-leaf-and-kettle": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "data-types-and-frequency-tables",
+      "draw-it-before-you-describe-it",
+      "how-far-from-the-middle",
+      "probability-statistics-series",
+      "stir-the-pot-population-and-sampling",
+      "the-number-on-the-tin",
+      "where-do-you-stand"
+    ],
+    "related_by": [
+      "how-far-from-the-middle",
+      "probability-statistics-series",
+      "where-do-you-stand"
     ]
   },
   "the-number-on-the-tin": {
-    "prerequisite_of": [],
+    "prerequisite_of": [
+      "how-far-from-the-middle"
+    ],
     "prerequisites": [],
     "related": [
       "data-types-and-frequency-tables",
@@ -1497,7 +1543,8 @@
     ],
     "related_by": [
       "draw-it-before-you-describe-it",
-      "probability-statistics-series"
+      "probability-statistics-series",
+      "the-map-of-leaf-and-kettle"
     ]
   },
   "threat-model-and-first-launch": {
@@ -1603,6 +1650,21 @@
       "gpu-allocation-vs-utilization"
     ],
     "related_by": []
+  },
+  "where-do-you-stand": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "how-far-from-the-middle"
+    ],
+    "related": [
+      "draw-it-before-you-describe-it",
+      "probability-statistics-series",
+      "the-map-of-leaf-and-kettle"
+    ],
+    "related_by": [
+      "probability-statistics-series",
+      "the-map-of-leaf-and-kettle"
+    ]
   },
   "your-kubeconfig-is-a-house-key": {
     "prerequisite_of": [],
