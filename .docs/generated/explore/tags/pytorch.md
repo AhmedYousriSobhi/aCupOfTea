@@ -2,6 +2,8 @@
 
 # PyTorch
 
+- [Launching Distributed Training on Slurm: srun, torchrun, and the Rank Contract](/fields/schedulers/slurm-ai-clusters/launching-distributed-training.md) — Why a 2-node training job can run on one node, the environment PyTorch needs from Slurm, launching with srun or torchrun, and the double-launch trap - tested with PyTorch 2.15 on Slurm 23.11. *(intermediate · 6 min)*  
+  [`distributed-training`](/.docs/generated/explore/tags/distributed-training.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`pytorch`](/.docs/generated/explore/tags/pytorch.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [PyTorch 101](/fields/libraries-frameworks-containers/101-pytorch.md) — Notes for starting with PyTorch: where to learn, data type precision, GPU properties, the training loop, making predictions, and saving and loading models. *(6 min)*  
   [`pytorch`](/.docs/generated/explore/tags/pytorch.md)
 - [PyTorch DDP](/fields/libraries-frameworks-containers/102-pytorch-ddp.md) — A short pointer page on PyTorch Distributed Data Parallel: a recommended distributed training tutorial and a related read on the Python GIL. *(1 min)*  

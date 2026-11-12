@@ -53,6 +53,116 @@
     ],
     "required_by": []
   },
+  "fields/data-science/probability-statistics/README.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "draw-it-before-you-describe-it",
+        "path": "fields/data-science/probability-statistics/draw-it-before-you-describe-it.md",
+        "title": "Draw It Before You Describe It: Three Pictures of the Same Fifty Days"
+      },
+      {
+        "id": "data-types-and-frequency-tables",
+        "path": "fields/data-science/probability-statistics/data-types-and-frequency-tables.md",
+        "title": "Mira's Notebook: What Kind of Data Is This, and How Do You Count It?"
+      },
+      {
+        "id": "stir-the-pot-population-and-sampling",
+        "path": "fields/data-science/probability-statistics/stir-the-pot-population-and-sampling.md",
+        "title": "Stir the Pot First: Population, Sample, and Why We Guess"
+      },
+      {
+        "id": "the-number-on-the-tin",
+        "path": "fields/data-science/probability-statistics/the-number-on-the-tin.md",
+        "title": "The Number on the Tin: Mean, Median and Mode"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/data-science/probability-statistics/data-types-and-frequency-tables.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "draw-it-before-you-describe-it",
+        "path": "fields/data-science/probability-statistics/draw-it-before-you-describe-it.md",
+        "title": "Draw It Before You Describe It: Three Pictures of the Same Fifty Days"
+      },
+      {
+        "id": "probability-statistics-series",
+        "path": "fields/data-science/probability-statistics/README.md",
+        "title": "Probability & Statistics, One Sip at a Time"
+      },
+      {
+        "id": "stir-the-pot-population-and-sampling",
+        "path": "fields/data-science/probability-statistics/stir-the-pot-population-and-sampling.md",
+        "title": "Stir the Pot First: Population, Sample, and Why We Guess"
+      },
+      {
+        "id": "the-number-on-the-tin",
+        "path": "fields/data-science/probability-statistics/the-number-on-the-tin.md",
+        "title": "The Number on the Tin: Mean, Median and Mode"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/data-science/probability-statistics/draw-it-before-you-describe-it.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "data-types-and-frequency-tables",
+        "path": "fields/data-science/probability-statistics/data-types-and-frequency-tables.md",
+        "title": "Mira's Notebook: What Kind of Data Is This, and How Do You Count It?"
+      },
+      {
+        "id": "probability-statistics-series",
+        "path": "fields/data-science/probability-statistics/README.md",
+        "title": "Probability & Statistics, One Sip at a Time"
+      },
+      {
+        "id": "the-number-on-the-tin",
+        "path": "fields/data-science/probability-statistics/the-number-on-the-tin.md",
+        "title": "The Number on the Tin: Mean, Median and Mode"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/data-science/probability-statistics/stir-the-pot-population-and-sampling.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "data-types-and-frequency-tables",
+        "path": "fields/data-science/probability-statistics/data-types-and-frequency-tables.md",
+        "title": "Mira's Notebook: What Kind of Data Is This, and How Do You Count It?"
+      },
+      {
+        "id": "probability-statistics-series",
+        "path": "fields/data-science/probability-statistics/README.md",
+        "title": "Probability & Statistics, One Sip at a Time"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/data-science/probability-statistics/the-number-on-the-tin.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "draw-it-before-you-describe-it",
+        "path": "fields/data-science/probability-statistics/draw-it-before-you-describe-it.md",
+        "title": "Draw It Before You Describe It: Three Pictures of the Same Fifty Days"
+      },
+      {
+        "id": "data-types-and-frequency-tables",
+        "path": "fields/data-science/probability-statistics/data-types-and-frequency-tables.md",
+        "title": "Mira's Notebook: What Kind of Data Is This, and How Do You Count It?"
+      },
+      {
+        "id": "probability-statistics-series",
+        "path": "fields/data-science/probability-statistics/README.md",
+        "title": "Probability & Statistics, One Sip at a Time"
+      }
+    ],
+    "required_by": []
+  },
   "fields/deep-learning/concepts/basics.md": {
     "prerequisites": [],
     "related": [],
@@ -80,6 +190,172 @@
         "title": "Encoder-Decoder for Machine Translation"
       }
     ]
+  },
+  "fields/devops/ansible/cheatsheet.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "ansible-inventory",
+        "path": "fields/devops/ansible/inventory-and-ad-hoc.md",
+        "title": "Four Nodes Said \"Too Many Open Files\": Inventories and Ad-Hoc Commands"
+      },
+      {
+        "id": "ansible-roles",
+        "path": "fields/devops/ansible/roles-and-variables.md",
+        "title": "The GPU Node That Thought It Had 1000 MB: Roles and Variables"
+      },
+      {
+        "id": "ansible-getting-started",
+        "path": "fields/devops/ansible/getting-started.md",
+        "title": "The Laptop That Ran Ansible 2.16: An Install You Can Trust"
+      },
+      {
+        "id": "ansible-vault",
+        "path": "fields/devops/ansible/secrets-and-vault.md",
+        "title": "The Munge Key in Git: Secrets, Vault and Rotation"
+      },
+      {
+        "id": "ansible-idempotence",
+        "path": "fields/devops/ansible/idempotence-and-handlers.md",
+        "title": "The Playbook That Restarted slurmd Every Night: Idempotence and Handlers"
+      },
+      {
+        "id": "ansible-rolling",
+        "path": "fields/devops/ansible/rolling-maintenance.md",
+        "title": "The Reboot That Killed a Week of Jobs: Rolling Maintenance with Slurm"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/devops/ansible/getting-started.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "ansible-cheatsheet",
+        "path": "fields/devops/ansible/cheatsheet.md",
+        "title": "Ansible Cheatsheet: Every Step from the Series"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "ansible-inventory",
+        "path": "fields/devops/ansible/inventory-and-ad-hoc.md",
+        "title": "Four Nodes Said \"Too Many Open Files\": Inventories and Ad-Hoc Commands"
+      }
+    ]
+  },
+  "fields/devops/ansible/idempotence-and-handlers.md": {
+    "prerequisites": [
+      {
+        "id": "ansible-inventory",
+        "path": "fields/devops/ansible/inventory-and-ad-hoc.md",
+        "title": "Four Nodes Said \"Too Many Open Files\": Inventories and Ad-Hoc Commands"
+      }
+    ],
+    "related": [
+      {
+        "id": "ansible-cheatsheet",
+        "path": "fields/devops/ansible/cheatsheet.md",
+        "title": "Ansible Cheatsheet: Every Step from the Series"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "ansible-roles",
+        "path": "fields/devops/ansible/roles-and-variables.md",
+        "title": "The GPU Node That Thought It Had 1000 MB: Roles and Variables"
+      }
+    ]
+  },
+  "fields/devops/ansible/inventory-and-ad-hoc.md": {
+    "prerequisites": [
+      {
+        "id": "ansible-getting-started",
+        "path": "fields/devops/ansible/getting-started.md",
+        "title": "The Laptop That Ran Ansible 2.16: An Install You Can Trust"
+      }
+    ],
+    "related": [
+      {
+        "id": "ansible-cheatsheet",
+        "path": "fields/devops/ansible/cheatsheet.md",
+        "title": "Ansible Cheatsheet: Every Step from the Series"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "ansible-idempotence",
+        "path": "fields/devops/ansible/idempotence-and-handlers.md",
+        "title": "The Playbook That Restarted slurmd Every Night: Idempotence and Handlers"
+      }
+    ]
+  },
+  "fields/devops/ansible/roles-and-variables.md": {
+    "prerequisites": [
+      {
+        "id": "ansible-idempotence",
+        "path": "fields/devops/ansible/idempotence-and-handlers.md",
+        "title": "The Playbook That Restarted slurmd Every Night: Idempotence and Handlers"
+      }
+    ],
+    "related": [
+      {
+        "id": "ansible-cheatsheet",
+        "path": "fields/devops/ansible/cheatsheet.md",
+        "title": "Ansible Cheatsheet: Every Step from the Series"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "ansible-rolling",
+        "path": "fields/devops/ansible/rolling-maintenance.md",
+        "title": "The Reboot That Killed a Week of Jobs: Rolling Maintenance with Slurm"
+      },
+      {
+        "id": "ansible-vault",
+        "path": "fields/devops/ansible/secrets-and-vault.md",
+        "title": "The Munge Key in Git: Secrets, Vault and Rotation"
+      }
+    ]
+  },
+  "fields/devops/ansible/rolling-maintenance.md": {
+    "prerequisites": [
+      {
+        "id": "ansible-roles",
+        "path": "fields/devops/ansible/roles-and-variables.md",
+        "title": "The GPU Node That Thought It Had 1000 MB: Roles and Variables"
+      }
+    ],
+    "related": [
+      {
+        "id": "ansible-cheatsheet",
+        "path": "fields/devops/ansible/cheatsheet.md",
+        "title": "Ansible Cheatsheet: Every Step from the Series"
+      },
+      {
+        "id": "nhc-build-and-install",
+        "path": "fields/system-administration/node-health-check/build-and-install.md",
+        "title": "Build and Install NHC"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/devops/ansible/secrets-and-vault.md": {
+    "prerequisites": [
+      {
+        "id": "ansible-roles",
+        "path": "fields/devops/ansible/roles-and-variables.md",
+        "title": "The GPU Node That Thought It Had 1000 MB: Roles and Variables"
+      }
+    ],
+    "related": [
+      {
+        "id": "ansible-cheatsheet",
+        "path": "fields/devops/ansible/cheatsheet.md",
+        "title": "Ansible Cheatsheet: Every Step from the Series"
+      }
+    ],
+    "required_by": []
   },
   "fields/devops/kubernetes/broken-pods-rogues-gallery.md": {
     "prerequisites": [
@@ -250,6 +526,11 @@
         "id": "containers-101",
         "path": "fields/libraries-frameworks-containers/101-containers.md",
         "title": "Containers 101"
+      },
+      {
+        "id": "vm-why-victoriametrics",
+        "path": "fields/devops/victoriametrics/why-victoriametrics.md",
+        "title": "The Prometheus That Ate the Head Node: Why VictoriaMetrics"
       }
     ],
     "required_by": [
@@ -606,6 +887,174 @@
       }
     ],
     "required_by": []
+  },
+  "fields/devops/victoriametrics/cheatsheet.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "vm-single-node",
+        "path": "fields/devops/victoriametrics/single-node-in-ten-minutes.md",
+        "title": "A Single Node You Can Trust: Installing VictoriaMetrics Properly"
+      },
+      {
+        "id": "vm-metricsql-vmalert",
+        "path": "fields/devops/victoriametrics/metricsql-and-vmalert.md",
+        "title": "MetricsQL Surprises and Alerts You Can Test"
+      },
+      {
+        "id": "vm-retention-backups",
+        "path": "fields/devops/victoriametrics/retention-disk-and-backups.md",
+        "title": "Retention, Full Disks and Backups: Looking After the Data Once It Lands"
+      },
+      {
+        "id": "vm-vmagent-buffering",
+        "path": "fields/devops/victoriametrics/vmagent-and-the-network-blip.md",
+        "title": "vmagent and the Network Blip: Keeping Metrics Through an Outage"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/devops/victoriametrics/metricsql-and-vmalert.md": {
+    "prerequisites": [
+      {
+        "id": "vm-single-node",
+        "path": "fields/devops/victoriametrics/single-node-in-ten-minutes.md",
+        "title": "A Single Node You Can Trust: Installing VictoriaMetrics Properly"
+      }
+    ],
+    "related": [
+      {
+        "id": "vm-retention-backups",
+        "path": "fields/devops/victoriametrics/retention-disk-and-backups.md",
+        "title": "Retention, Full Disks and Backups: Looking After the Data Once It Lands"
+      },
+      {
+        "id": "vm-cheatsheet",
+        "path": "fields/devops/victoriametrics/cheatsheet.md",
+        "title": "VictoriaMetrics Cheatsheet: Every Step from the Series"
+      },
+      {
+        "id": "vm-vmagent-buffering",
+        "path": "fields/devops/victoriametrics/vmagent-and-the-network-blip.md",
+        "title": "vmagent and the Network Blip: Keeping Metrics Through an Outage"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "slurm-openmetrics",
+        "path": "fields/schedulers/slurm-ai-clusters/metrics-openmetrics.md",
+        "title": "Slurm Metrics Without an Exporter: OpenMetrics into VictoriaMetrics"
+      }
+    ]
+  },
+  "fields/devops/victoriametrics/retention-disk-and-backups.md": {
+    "prerequisites": [
+      {
+        "id": "vm-single-node",
+        "path": "fields/devops/victoriametrics/single-node-in-ten-minutes.md",
+        "title": "A Single Node You Can Trust: Installing VictoriaMetrics Properly"
+      }
+    ],
+    "related": [
+      {
+        "id": "vm-metricsql-vmalert",
+        "path": "fields/devops/victoriametrics/metricsql-and-vmalert.md",
+        "title": "MetricsQL Surprises and Alerts You Can Test"
+      },
+      {
+        "id": "vm-cheatsheet",
+        "path": "fields/devops/victoriametrics/cheatsheet.md",
+        "title": "VictoriaMetrics Cheatsheet: Every Step from the Series"
+      },
+      {
+        "id": "vm-vmagent-buffering",
+        "path": "fields/devops/victoriametrics/vmagent-and-the-network-blip.md",
+        "title": "vmagent and the Network Blip: Keeping Metrics Through an Outage"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/devops/victoriametrics/single-node-in-ten-minutes.md": {
+    "prerequisites": [
+      {
+        "id": "vm-why-victoriametrics",
+        "path": "fields/devops/victoriametrics/why-victoriametrics.md",
+        "title": "The Prometheus That Ate the Head Node: Why VictoriaMetrics"
+      }
+    ],
+    "related": [
+      {
+        "id": "vm-cheatsheet",
+        "path": "fields/devops/victoriametrics/cheatsheet.md",
+        "title": "VictoriaMetrics Cheatsheet: Every Step from the Series"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "vm-vmagent-buffering",
+        "path": "fields/devops/victoriametrics/vmagent-and-the-network-blip.md",
+        "title": "vmagent and the Network Blip: Keeping Metrics Through an Outage"
+      },
+      {
+        "id": "vm-retention-backups",
+        "path": "fields/devops/victoriametrics/retention-disk-and-backups.md",
+        "title": "Retention, Full Disks and Backups: Looking After the Data Once It Lands"
+      },
+      {
+        "id": "vm-metricsql-vmalert",
+        "path": "fields/devops/victoriametrics/metricsql-and-vmalert.md",
+        "title": "MetricsQL Surprises and Alerts You Can Test"
+      },
+      {
+        "id": "slurm-openmetrics",
+        "path": "fields/schedulers/slurm-ai-clusters/metrics-openmetrics.md",
+        "title": "Slurm Metrics Without an Exporter: OpenMetrics into VictoriaMetrics"
+      }
+    ]
+  },
+  "fields/devops/victoriametrics/vmagent-and-the-network-blip.md": {
+    "prerequisites": [
+      {
+        "id": "vm-single-node",
+        "path": "fields/devops/victoriametrics/single-node-in-ten-minutes.md",
+        "title": "A Single Node You Can Trust: Installing VictoriaMetrics Properly"
+      }
+    ],
+    "related": [
+      {
+        "id": "vm-metricsql-vmalert",
+        "path": "fields/devops/victoriametrics/metricsql-and-vmalert.md",
+        "title": "MetricsQL Surprises and Alerts You Can Test"
+      },
+      {
+        "id": "vm-retention-backups",
+        "path": "fields/devops/victoriametrics/retention-disk-and-backups.md",
+        "title": "Retention, Full Disks and Backups: Looking After the Data Once It Lands"
+      },
+      {
+        "id": "vm-cheatsheet",
+        "path": "fields/devops/victoriametrics/cheatsheet.md",
+        "title": "VictoriaMetrics Cheatsheet: Every Step from the Series"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/devops/victoriametrics/why-victoriametrics.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "gpu-allocation-vs-utilization",
+        "path": "fields/devops/kubernetes/gpu-allocation-vs-utilization.md",
+        "title": "Booked Is Not Busy: GPU Allocation vs Utilization"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "vm-single-node",
+        "path": "fields/devops/victoriametrics/single-node-in-ten-minutes.md",
+        "title": "A Single Node You Can Trust: Installing VictoriaMetrics Properly"
+      }
+    ]
   },
   "fields/digital-image-processing/edges-and-sharpening.md": {
     "prerequisites": [
@@ -992,6 +1441,11 @@
         "title": "Mixing GPU Types in Slurm - Overview"
       },
       {
+        "id": "slurm-pending-reasons",
+        "path": "fields/schedulers/slurm-pending-jobs/why-is-my-job-pending.md",
+        "title": "Reading the Reason Column: Why Is My Slurm Job Pending?"
+      },
+      {
         "id": "slurm-cgroups-in-practice",
         "path": "fields/schedulers/slurm-cgroups-in-practice.md",
         "title": "Slurm cgroups in Practice: What Gets Constrained, and Where the Numbers Lie"
@@ -1000,9 +1454,191 @@
         "id": "slurm-upgrade-order",
         "path": "fields/schedulers/slurm-upgrade-order.md",
         "title": "Upgrading Slurm: The Order, the Window, and the Parts That Bite"
+      },
+      {
+        "id": "slurm-priority-multifactor",
+        "path": "fields/schedulers/slurm-pending-jobs/who-goes-first.md",
+        "title": "Who Goes First: Slurm's Priority Number, Taken Apart"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "slurm-qos-limits",
+        "path": "fields/schedulers/slurm-pending-jobs/limits-that-wait-forever.md",
+        "title": "Limits That Wait Forever: QOS and Account Limits in Practice"
+      }
+    ]
+  },
+  "fields/schedulers/slurm-ai-clusters/containers-with-pyxis.md": {
+    "prerequisites": [
+      {
+        "id": "slurm-distributed-training",
+        "path": "fields/schedulers/slurm-ai-clusters/launching-distributed-training.md",
+        "title": "Launching Distributed Training on Slurm: srun, torchrun, and the Rank Contract"
+      }
+    ],
+    "related": [
+      {
+        "id": "slurm-lab-cheatsheet",
+        "path": "fields/schedulers/slurm-ai-clusters/lab-build-cheatsheet.md",
+        "title": "Lab Build Cheatsheet: A Slurm AI Cluster in Containers"
+      },
+      {
+        "id": "slurm-gpu-health-checks",
+        "path": "fields/schedulers/slurm-ai-clusters/gpu-health-checks.md",
+        "title": "When a GPU Falls Off the Bus: Health Checks That Drain the Node"
       }
     ],
     "required_by": []
+  },
+  "fields/schedulers/slurm-ai-clusters/gpu-health-checks.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "slurm-containers-pyxis",
+        "path": "fields/schedulers/slurm-ai-clusters/containers-with-pyxis.md",
+        "title": "Containers on Slurm with Pyxis and Enroot"
+      },
+      {
+        "id": "slurm-kill-task-failed",
+        "path": "fields/schedulers/slurm-kill-task-failed.md",
+        "title": "Kill Task Failed: A Murder Mystery With No Body (and One Drained Node)"
+      },
+      {
+        "id": "slurm-lab-cheatsheet",
+        "path": "fields/schedulers/slurm-ai-clusters/lab-build-cheatsheet.md",
+        "title": "Lab Build Cheatsheet: A Slurm AI Cluster in Containers"
+      },
+      {
+        "id": "slurm-openmetrics",
+        "path": "fields/schedulers/slurm-ai-clusters/metrics-openmetrics.md",
+        "title": "Slurm Metrics Without an Exporter: OpenMetrics into VictoriaMetrics"
+      },
+      {
+        "id": "slurm-spool-dir-full",
+        "path": "fields/schedulers/slurm-spool-dir-full.md",
+        "title": "SlurmdSpoolDir Is Full: The Drain That Is Not About the Spool Directory"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/schedulers/slurm-ai-clusters/lab-build-cheatsheet.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "slurm-containers-pyxis",
+        "path": "fields/schedulers/slurm-ai-clusters/containers-with-pyxis.md",
+        "title": "Containers on Slurm with Pyxis and Enroot"
+      },
+      {
+        "id": "slurm-topology-placement",
+        "path": "fields/schedulers/slurm-ai-clusters/topology-aware-placement.md",
+        "title": "Keep the Job on One Switch: Topology-Aware Placement in Slurm"
+      },
+      {
+        "id": "slurm-distributed-training",
+        "path": "fields/schedulers/slurm-ai-clusters/launching-distributed-training.md",
+        "title": "Launching Distributed Training on Slurm: srun, torchrun, and the Rank Contract"
+      },
+      {
+        "id": "slurm-pending-reasons",
+        "path": "fields/schedulers/slurm-pending-jobs/why-is-my-job-pending.md",
+        "title": "Reading the Reason Column: Why Is My Slurm Job Pending?"
+      },
+      {
+        "id": "slurm-openmetrics",
+        "path": "fields/schedulers/slurm-ai-clusters/metrics-openmetrics.md",
+        "title": "Slurm Metrics Without an Exporter: OpenMetrics into VictoriaMetrics"
+      },
+      {
+        "id": "slurm-gpu-health-checks",
+        "path": "fields/schedulers/slurm-ai-clusters/gpu-health-checks.md",
+        "title": "When a GPU Falls Off the Bus: Health Checks That Drain the Node"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/schedulers/slurm-ai-clusters/launching-distributed-training.md": {
+    "prerequisites": [
+      {
+        "id": "slurm-topology-placement",
+        "path": "fields/schedulers/slurm-ai-clusters/topology-aware-placement.md",
+        "title": "Keep the Job on One Switch: Topology-Aware Placement in Slurm"
+      }
+    ],
+    "related": [
+      {
+        "id": "slurm-lab-cheatsheet",
+        "path": "fields/schedulers/slurm-ai-clusters/lab-build-cheatsheet.md",
+        "title": "Lab Build Cheatsheet: A Slurm AI Cluster in Containers"
+      },
+      {
+        "id": "slurm-job-script-tale",
+        "path": "fields/schedulers/slurm-job-script-tale.md",
+        "title": "The Tale of a Slurm Job Script: Submission Is a Commitment, Not a Promise"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "slurm-containers-pyxis",
+        "path": "fields/schedulers/slurm-ai-clusters/containers-with-pyxis.md",
+        "title": "Containers on Slurm with Pyxis and Enroot"
+      }
+    ]
+  },
+  "fields/schedulers/slurm-ai-clusters/metrics-openmetrics.md": {
+    "prerequisites": [
+      {
+        "id": "vm-single-node",
+        "path": "fields/devops/victoriametrics/single-node-in-ten-minutes.md",
+        "title": "A Single Node You Can Trust: Installing VictoriaMetrics Properly"
+      },
+      {
+        "id": "vm-metricsql-vmalert",
+        "path": "fields/devops/victoriametrics/metricsql-and-vmalert.md",
+        "title": "MetricsQL Surprises and Alerts You Can Test"
+      }
+    ],
+    "related": [
+      {
+        "id": "slurm-backfill-tuning",
+        "path": "fields/schedulers/slurm-backfill-tuning.md",
+        "title": "Backfill Tuning: The Planner That Can Only See One Day Ahead"
+      },
+      {
+        "id": "slurm-lab-cheatsheet",
+        "path": "fields/schedulers/slurm-ai-clusters/lab-build-cheatsheet.md",
+        "title": "Lab Build Cheatsheet: A Slurm AI Cluster in Containers"
+      },
+      {
+        "id": "slurm-gpu-health-checks",
+        "path": "fields/schedulers/slurm-ai-clusters/gpu-health-checks.md",
+        "title": "When a GPU Falls Off the Bus: Health Checks That Drain the Node"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/schedulers/slurm-ai-clusters/topology-aware-placement.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "slurm-backfill-tuning",
+        "path": "fields/schedulers/slurm-backfill-tuning.md",
+        "title": "Backfill Tuning: The Planner That Can Only See One Day Ahead"
+      },
+      {
+        "id": "slurm-lab-cheatsheet",
+        "path": "fields/schedulers/slurm-ai-clusters/lab-build-cheatsheet.md",
+        "title": "Lab Build Cheatsheet: A Slurm AI Cluster in Containers"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "slurm-distributed-training",
+        "path": "fields/schedulers/slurm-ai-clusters/launching-distributed-training.md",
+        "title": "Launching Distributed Training on Slurm: srun, torchrun, and the Rank Contract"
+      }
+    ]
   },
   "fields/schedulers/slurm-backfill-tuning.md": {
     "prerequisites": [],
@@ -1011,6 +1647,21 @@
         "id": "slurm-preemption-requeue-signals",
         "path": "fields/schedulers/slurm-preemption-requeue-signals.md",
         "title": "Dying Politely: Preemption, Requeue and the Signals Your Training Job Ignores"
+      },
+      {
+        "id": "slurm-topology-placement",
+        "path": "fields/schedulers/slurm-ai-clusters/topology-aware-placement.md",
+        "title": "Keep the Job on One Switch: Topology-Aware Placement in Slurm"
+      },
+      {
+        "id": "slurm-pending-reasons",
+        "path": "fields/schedulers/slurm-pending-jobs/why-is-my-job-pending.md",
+        "title": "Reading the Reason Column: Why Is My Slurm Job Pending?"
+      },
+      {
+        "id": "slurm-openmetrics",
+        "path": "fields/schedulers/slurm-ai-clusters/metrics-openmetrics.md",
+        "title": "Slurm Metrics Without an Exporter: OpenMetrics into VictoriaMetrics"
       },
       {
         "id": "slurm-accounting-multi-tenancy",
@@ -1114,6 +1765,11 @@
         "title": "Backfill Tuning: The Planner That Can Only See One Day Ahead"
       },
       {
+        "id": "slurm-distributed-training",
+        "path": "fields/schedulers/slurm-ai-clusters/launching-distributed-training.md",
+        "title": "Launching Distributed Training on Slurm: srun, torchrun, and the Rank Contract"
+      },
+      {
         "id": "slurm-spool-dir-full",
         "path": "fields/schedulers/slurm-spool-dir-full.md",
         "title": "SlurmdSpoolDir Is Full: The Drain That Is Not About the Spool Directory"
@@ -1158,6 +1814,11 @@
         "id": "slurm-slurmstepd",
         "path": "fields/schedulers/slurm-slurmstepd.md",
         "title": "slurmstepd: The Small Daemon That Actually Runs Your Job"
+      },
+      {
+        "id": "slurm-gpu-health-checks",
+        "path": "fields/schedulers/slurm-ai-clusters/gpu-health-checks.md",
+        "title": "When a GPU Falls Off the Bus: Health Checks That Drain the Node"
       },
       {
         "id": "slurm-gpu-affinity-socket-lie",
@@ -1242,6 +1903,82 @@
       }
     ],
     "required_by": []
+  },
+  "fields/schedulers/slurm-pending-jobs/limits-that-wait-forever.md": {
+    "prerequisites": [
+      {
+        "id": "slurm-pending-reasons",
+        "path": "fields/schedulers/slurm-pending-jobs/why-is-my-job-pending.md",
+        "title": "Reading the Reason Column: Why Is My Slurm Job Pending?"
+      },
+      {
+        "id": "slurm-accounting-multi-tenancy",
+        "path": "fields/schedulers/slurm-accounting-multi-tenancy.md",
+        "title": "Slurm Multi-Tenancy: Who Stores the Rules, Who Enforces Them"
+      }
+    ],
+    "related": [
+      {
+        "id": "slurm-priority-multifactor",
+        "path": "fields/schedulers/slurm-pending-jobs/who-goes-first.md",
+        "title": "Who Goes First: Slurm's Priority Number, Taken Apart"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/schedulers/slurm-pending-jobs/who-goes-first.md": {
+    "prerequisites": [
+      {
+        "id": "slurm-pending-reasons",
+        "path": "fields/schedulers/slurm-pending-jobs/why-is-my-job-pending.md",
+        "title": "Reading the Reason Column: Why Is My Slurm Job Pending?"
+      }
+    ],
+    "related": [
+      {
+        "id": "slurm-qos-limits",
+        "path": "fields/schedulers/slurm-pending-jobs/limits-that-wait-forever.md",
+        "title": "Limits That Wait Forever: QOS and Account Limits in Practice"
+      },
+      {
+        "id": "slurm-accounting-multi-tenancy",
+        "path": "fields/schedulers/slurm-accounting-multi-tenancy.md",
+        "title": "Slurm Multi-Tenancy: Who Stores the Rules, Who Enforces Them"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/schedulers/slurm-pending-jobs/why-is-my-job-pending.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "slurm-backfill-tuning",
+        "path": "fields/schedulers/slurm-backfill-tuning.md",
+        "title": "Backfill Tuning: The Planner That Can Only See One Day Ahead"
+      },
+      {
+        "id": "slurm-lab-cheatsheet",
+        "path": "fields/schedulers/slurm-ai-clusters/lab-build-cheatsheet.md",
+        "title": "Lab Build Cheatsheet: A Slurm AI Cluster in Containers"
+      },
+      {
+        "id": "slurm-accounting-multi-tenancy",
+        "path": "fields/schedulers/slurm-accounting-multi-tenancy.md",
+        "title": "Slurm Multi-Tenancy: Who Stores the Rules, Who Enforces Them"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "slurm-priority-multifactor",
+        "path": "fields/schedulers/slurm-pending-jobs/who-goes-first.md",
+        "title": "Who Goes First: Slurm's Priority Number, Taken Apart"
+      },
+      {
+        "id": "slurm-qos-limits",
+        "path": "fields/schedulers/slurm-pending-jobs/limits-that-wait-forever.md",
+        "title": "Limits That Wait Forever: QOS and Account Limits in Practice"
+      }
+    ]
   },
   "fields/schedulers/slurm-preemption-requeue-signals.md": {
     "prerequisites": [],
@@ -1358,6 +2095,11 @@
         "id": "slurm-job-script-tale",
         "path": "fields/schedulers/slurm-job-script-tale.md",
         "title": "The Tale of a Slurm Job Script: Submission Is a Commitment, Not a Promise"
+      },
+      {
+        "id": "slurm-gpu-health-checks",
+        "path": "fields/schedulers/slurm-ai-clusters/gpu-health-checks.md",
+        "title": "When a GPU Falls Off the Bus: Health Checks That Drain the Node"
       }
     ],
     "required_by": []
@@ -1832,7 +2574,13 @@
         "title": "Why Your Cluster Needs a Bouncer"
       }
     ],
-    "related": [],
+    "related": [
+      {
+        "id": "ansible-rolling",
+        "path": "fields/devops/ansible/rolling-maintenance.md",
+        "title": "The Reboot That Killed a Week of Jobs: Rolling Maintenance with Slurm"
+      }
+    ],
     "required_by": [
       {
         "id": "nhc-writing-nhc-conf",

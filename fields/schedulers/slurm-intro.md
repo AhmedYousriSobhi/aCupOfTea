@@ -24,6 +24,7 @@ relations:
   - [Why Slurm, specifically](#why-slurm-specifically)
   - [The Slurm architecture, at a glance](#the-slurm-architecture-at-a-glance)
   - [Where to go from here](#where-to-go-from-here)
+  - [References](#references)
 
 ---
 
@@ -120,7 +121,7 @@ Every post in this directory assumes familiarity with this shape — worth inter
 
 - **`slurmctld`** — the decision-maker. Tracks partition/node state, runs the scheduling algorithm, decides what runs where and when — and *enforces* account limits, when `AccountingStorageEnforce` tells it to.
 - **`slurmdbd`** — the memory. Persists accounting data (who ran what, for how long, using how much) plus accounts, limits and QOS definitions to a database, which is what fairshare calculations and usage reporting draw from.
-- **`slurmd`** — the muscle. Runs on every compute node, actually launches job steps, and (with `task/cgroup` + `PrologFlags=contain` enabled) enforces resource containment — including adopting SSH sessions via `pam_slurm_adopt`.
+- **`slurmd`** — the muscle. Runs on every compute node, actually launches job steps, and (with `task/cgroup` + `PrologFlags=contain` enabled) enforces resource containment — including adopting SSH sessions via `pam_slurm_adopt` (which also needs `pam_systemd` out of the way).
 - **`sacctmgr`** and friends (`sacct`, `sreport`) — not daemons, but command-line clients that read and write accounting data *through* `slurmdbd`. All of this traffic is authenticated with **MUNGE**.
 
 Every operational task you'll do — a rolling reboot, a security hardening pass, a Slurm version upgrade — ultimately comes down to safely coordinating these roles without letting them get out of sync with each other.
@@ -135,6 +136,18 @@ Every operational task you'll do — a rolling reboot, a security hardening pass
 - New to Slurm entirely? Start with the [official Slurm quickstart](https://slurm.schedmd.com/quickstart.html) for the user-facing side (`sbatch`, `srun`, `squeue`) before diving into the admin-focused posts here.
 - Sharing a cluster between teams? [Slurm multi-tenancy](/fields/schedulers/slurm-accounting-multi-tenancy.md) covers associations, limits, QOS and fairshare — and the one missing `slurm.conf` line that makes limits do nothing.
 - Running more than one GPU generation? [Mixing GPU types in Slurm](/fields/schedulers/slurm-mixed-gpus/README.md) explains heterogeneous jobs, the bare-`|` constraint trap, and why mixed training disappoints.
-- Already running a cluster and hardening it? Start with [`slurm-pam-adopt-blog.md`](/fields/schedulers/slurm-pam-adopt-ssh-access.md) — it's a small config change that closes a real, commonly-overlooked gap.
-- Planning your next maintenance window? [`slurm-reboot-order-blog.md`](/fields/schedulers/slurm-reboot-order.md) is the checklist to have open in a second tab while you work.
+- Users asking why their job won't start? [Why Is My Job Still Pending?](/fields/schedulers/slurm-pending-jobs/README.md) reads the reason column, opens up the priority number, and finds the limits that make jobs wait forever.
+- Running GPU training? [Slurm for AI Clusters](/fields/schedulers/slurm-ai-clusters/README.md) covers topology-aware placement, launching PyTorch across nodes, containers with Pyxis, GPU health checks and metrics, with a [lab cheatsheet](/fields/schedulers/slurm-ai-clusters/lab-build-cheatsheet.md) to build your own test cluster.
+- Already running a cluster and hardening it? Start with [pam_slurm_adopt](/fields/schedulers/slurm-pam-adopt-ssh-access.md) — it's a small config change that closes a real, commonly-overlooked gap.
+- Planning your next maintenance window? [the reboot order](/fields/schedulers/slurm-reboot-order.md) is the checklist to have open in a second tab while you work.
 - Wondering how scheduler decisions (rank placement, node allocation) connect to the performance numbers you actually measure? That's where this directory hands off to the [benchmarks series](/fields/benchmarks/benchmarking-guide.md) — specifically the [parallel execution & affinity guide](/fields/benchmarks/parallel-execution-affinity-master-guide.md), which picks up exactly where Slurm's node allocation leaves off.
+
+---
+
+## References
+
+- [Slurm Quick Start User Guide](https://slurm.schedmd.com/quickstart.html): commands and the daemon architecture.
+- [Slurm Quick Start Administrator Guide](https://slurm.schedmd.com/quickstart_admin.html): slurmctld, slurmd, slurmdbd and how they're configured.
+- [Slurm overview](https://slurm.schedmd.com/overview.html): what Slurm does and its plugin design.
+- [Slurm accounting](https://slurm.schedmd.com/accounting.html): slurmdbd, sacctmgr and `AccountingStorageEnforce`.
+- [MUNGE](https://github.com/dun/munge): the authentication service the daemons use.

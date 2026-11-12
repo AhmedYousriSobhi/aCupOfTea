@@ -5,8 +5,8 @@
 Pages grouped by subject. Folders stay the primary location; this is an overlay.
 
 - [Business](/.docs/generated/explore/domains/business.md) (4): Business context, KPIs and domain knowledge around the technical work.
-- [Deep Learning](/.docs/generated/explore/domains/deep-learning.md) (8): Neural networks and deep architectures.
-- [Devops](/.docs/generated/explore/domains/devops.md) (16): Field
+- [Deep Learning](/.docs/generated/explore/domains/deep-learning.md) (9): Neural networks and deep architectures.
+- [Devops](/.docs/generated/explore/domains/devops.md) (29): Field
 - [Generative AI](/.docs/generated/explore/domains/generative-ai.md) (9): Generative models, LLMs and their tooling.
 - [Image Processing](/.docs/generated/explore/domains/image-processing.md) (11): Digital images as signals - intensity, filtering, frequency domain, restoration and geometry.
 - [Kubernates](/.docs/generated/explore/domains/kubernates.md) (5): devops-orchestraiton
@@ -15,6 +15,6 @@ Pages grouped by subject. Folders stay the primary location; this is an overlay.
 - [Reinforcement Learning](/.docs/generated/explore/domains/reinforcement-learning.md) (1): Agents learning through reward and interaction.
 - [Security](/.docs/generated/explore/domains/security.md) (1): Access control, authentication and hardening.
 - [Software Engineering](/.docs/generated/explore/domains/software-engineering.md) (17): Engineering practice, patterns and tooling.
-- [Statistics](/.docs/generated/explore/domains/statistics.md) (9): Statistical methods and probability.
+- [Statistics](/.docs/generated/explore/domains/statistics.md) (14): Statistical methods and probability.
 - [System Design](/.docs/generated/explore/domains/system-design.md) (6): Software System Design
-- [Systems and HPC](/.docs/generated/explore/domains/systems-and-hpc.md) (88): Benchmarks, schedulers, system administration, high-performance computing.
+- [Systems and HPC](/.docs/generated/explore/domains/systems-and-hpc.md) (108): Benchmarks, schedulers, system administration, high-performance computing.

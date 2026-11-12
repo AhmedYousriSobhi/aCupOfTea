@@ -25,7 +25,7 @@ tags: [slurm, gpu, hpc]
   - [Way 3: heterogeneous jobs, the real thing](#way-3-heterogeneous-jobs-the-real-thing)
   - [Way 4: heterogeneous steps, mixing inside one allocation](#way-4-heterogeneous-steps-mixing-inside-one-allocation)
   - [The four ways side by side](#the-four-ways-side-by-side)
-    - [References](#references)
+  - [References](#references)
 
 ---
 
@@ -177,7 +177,9 @@ Useful when the allocation is uniform but the work isn't, for example one proces
 
 So it works. Then why does everyone who tries to *train* across H100s and A100s come back disappointed? That's [part 2](/fields/schedulers/slurm-mixed-gpus/why-mixed-training-disappoints.md).
 
-### References
+---
+
+## References
 - [Slurm: Heterogeneous Job Support](https://slurm.schedmd.com/heterogeneous_jobs.html)
 - [Slurm: Generic Resource (GRES) Scheduling](https://slurm.schedmd.com/gres.html)
 - [Slurm `sbatch` man page, `--constraint` operators (mirror of the official man page)](https://manpages.org/sbatch)
