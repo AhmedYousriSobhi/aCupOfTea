@@ -15,6 +15,7 @@ relations:
     - how-sure-are-you
   related:
     - probability-statistics-series
+    - why-averages-behave
 ---
 
 # The Courtroom for Numbers: Could Plain Luck Do This?

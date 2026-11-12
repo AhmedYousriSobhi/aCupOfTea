@@ -166,6 +166,7 @@
       "what-to-expect"
     ],
     "related": [
+      "counting-the-ways",
       "probability-statistics-series"
     ],
     "related_by": [
@@ -198,6 +199,7 @@
       "probability-statistics-series"
     ],
     "related_by": [
+      "coins-and-calls",
       "probability-statistics-series"
     ]
   },
@@ -224,8 +226,12 @@
     "related_by": []
   },
   "data-types-and-frequency-tables": {
-    "prerequisite_of": [],
-    "prerequisites": [],
+    "prerequisite_of": [
+      "draw-it-before-you-describe-it"
+    ],
+    "prerequisites": [
+      "stir-the-pot-population-and-sampling"
+    ],
     "related": [
       "probability-statistics-series",
       "stir-the-pot-population-and-sampling"
@@ -377,8 +383,12 @@
     ]
   },
   "draw-it-before-you-describe-it": {
-    "prerequisite_of": [],
-    "prerequisites": [],
+    "prerequisite_of": [
+      "the-number-on-the-tin"
+    ],
+    "prerequisites": [
+      "data-types-and-frequency-tables"
+    ],
     "related": [
       "data-types-and-frequency-tables",
       "probability-statistics-series",
@@ -386,8 +396,10 @@
     ],
     "related_by": [
       "probability-statistics-series",
+      "the-bell-curve",
       "the-map-of-leaf-and-kettle",
       "the-number-on-the-tin",
+      "two-things-moving-together",
       "where-do-you-stand"
     ]
   },
@@ -518,7 +530,10 @@
     ],
     "related_by": [
       "probability-statistics-series",
-      "the-map-of-leaf-and-kettle"
+      "the-map-of-leaf-and-kettle",
+      "two-things-moving-together",
+      "what-to-expect",
+      "why-averages-behave"
     ]
   },
   "how-sure-are-you": {
@@ -1561,7 +1576,9 @@
     ]
   },
   "stir-the-pot-population-and-sampling": {
-    "prerequisite_of": [],
+    "prerequisite_of": [
+      "data-types-and-frequency-tables"
+    ],
     "prerequisites": [],
     "related": [
       "data-types-and-frequency-tables",
@@ -1570,7 +1587,8 @@
     "related_by": [
       "data-types-and-frequency-tables",
       "probability-statistics-series",
-      "the-map-of-leaf-and-kettle"
+      "the-map-of-leaf-and-kettle",
+      "why-averages-behave"
     ]
   },
   "the-bell-curve": {
@@ -1581,7 +1599,9 @@
       "coins-and-calls"
     ],
     "related": [
-      "probability-statistics-series"
+      "draw-it-before-you-describe-it",
+      "probability-statistics-series",
+      "where-do-you-stand"
     ],
     "related_by": [
       "probability-statistics-series"
@@ -1595,7 +1615,8 @@
       "how-sure-are-you"
     ],
     "related": [
-      "probability-statistics-series"
+      "probability-statistics-series",
+      "why-averages-behave"
     ],
     "related_by": [
       "probability-statistics-series"
@@ -1623,7 +1644,9 @@
     "prerequisite_of": [
       "how-far-from-the-middle"
     ],
-    "prerequisites": [],
+    "prerequisites": [
+      "draw-it-before-you-describe-it"
+    ],
     "related": [
       "data-types-and-frequency-tables",
       "draw-it-before-you-describe-it",
@@ -1632,7 +1655,8 @@
     "related_by": [
       "draw-it-before-you-describe-it",
       "probability-statistics-series",
-      "the-map-of-leaf-and-kettle"
+      "the-map-of-leaf-and-kettle",
+      "what-to-expect"
     ]
   },
   "the-test-that-was-99-percent-accurate": {
@@ -1669,7 +1693,10 @@
       "the-courtroom-for-numbers"
     ],
     "related": [
-      "probability-statistics-series"
+      "draw-it-before-you-describe-it",
+      "how-far-from-the-middle",
+      "probability-statistics-series",
+      "where-do-you-stand"
     ],
     "related_by": [
       "probability-statistics-series"
@@ -1773,7 +1800,9 @@
       "the-test-that-was-99-percent-accurate"
     ],
     "related": [
-      "probability-statistics-series"
+      "how-far-from-the-middle",
+      "probability-statistics-series",
+      "the-number-on-the-tin"
     ],
     "related_by": [
       "probability-statistics-series"
@@ -1793,7 +1822,9 @@
     ],
     "related_by": [
       "probability-statistics-series",
-      "the-map-of-leaf-and-kettle"
+      "the-bell-curve",
+      "the-map-of-leaf-and-kettle",
+      "two-things-moving-together"
     ]
   },
   "why-averages-behave": {
@@ -1804,10 +1835,13 @@
       "the-bell-curve"
     ],
     "related": [
-      "probability-statistics-series"
+      "how-far-from-the-middle",
+      "probability-statistics-series",
+      "stir-the-pot-population-and-sampling"
     ],
     "related_by": [
-      "probability-statistics-series"
+      "probability-statistics-series",
+      "the-courtroom-for-numbers"
     ]
   },
   "your-kubeconfig-is-a-house-key": {

@@ -15,6 +15,9 @@ relations:
     - the-courtroom-for-numbers
   related:
     - probability-statistics-series
+    - draw-it-before-you-describe-it
+    - how-far-from-the-middle
+    - where-do-you-stand
 ---
 
 # Two Things Moving Together: Correlation and the Line
@@ -205,7 +208,7 @@ All four traps share a cure, and it is the one [Part 3](/fields/data-science/pro
 
 ## Anscombe's quartet: four crowds, one set of numbers
 
-In 1973 the statistician Francis Anscombe built four small data sets, 11 points each, to make exactly this point. The data is as given in Wikipedia's article on the quartet (the paper itself was not retrievable), and every summary below was recomputed in Python. Sets I to III share the same x values.
+In 1973 the statistician Francis Anscombe built four small data sets, 11 points each, to make exactly this point. The data is copied from the table in his paper (checked value by value against the JSTOR scan), and every summary below was recomputed in Python. Sets I to III share the same x values.
 
 ```python
 x123 = [10, 8, 13, 9, 11, 14, 6, 4, 12, 7, 5]
@@ -312,6 +315,6 @@ Everything in one place: [The Map of Leaf & Kettle](/fields/data-science/probabi
 ## References
 
 - Python `statistics` module: `correlation` (added in 3.10; `method='ranked'` added in 3.12) and `linear_regression` (added in 3.10; `proportional` added in 3.11). All code on this page ran on Python 3.14.4, stdlib only. <https://docs.python.org/3/library/statistics.html>
-- Anscombe, F. J. (1973), *Graphs in Statistical Analysis*, The American Statistician 27(1): 17-21. <https://doi.org/10.1080/00031305.1973.10478966>. The paper itself was not retrieved here, so it is not quoted. The data and the shared summaries (mean 9, variance 11, mean 7.50, r 0.816, line y = 3 + 0.5x) come from the Wikipedia article on Anscombe's quartet <https://en.wikipedia.org/wiki/Anscombe%27s_quartet>, and the summaries were recomputed above.
+- Anscombe, F. J. (1973), *Graphs in Statistical Analysis*, The American Statistician 27(1): 17-21. <https://doi.org/10.1080/00031305.1973.10478966>. The paper's table gives the four data sets and states the shared summaries (mean of x 9.0, mean of y 7.5, regression line y = 3 + 0.5x, multiple R² 0.667, so r = 0.816). The data on this page match that table value by value, and the summaries were recomputed above.
 - The Ravi tea table and the simulated sun/iced-tea/sunburn data are invented for this page (fixed seed 7).
 - Every other number on this page was recomputed with Python 3.14.4.

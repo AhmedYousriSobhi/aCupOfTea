@@ -11,6 +11,8 @@ domains:
 tags:
   - statistics
 relations:
+  prerequisites:
+    - draw-it-before-you-describe-it
   related:
     - probability-statistics-series
     - draw-it-before-you-describe-it

@@ -11,6 +11,8 @@ domains:
 tags:
   - statistics
 relations:
+  prerequisites:
+    - data-types-and-frequency-tables
   related:
     - probability-statistics-series
     - data-types-and-frequency-tables

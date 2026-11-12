@@ -446,6 +446,7 @@
         "what-to-expect"
       ],
       "related": [
+        "counting-the-ways",
         "probability-statistics-series"
       ]
     },
@@ -596,7 +597,9 @@
     "path": "fields/data-science/probability-statistics/data-types-and-frequency-tables.md",
     "reading_time_min": 13,
     "relations": {
-      "prerequisites": [],
+      "prerequisites": [
+        "stir-the-pot-population-and-sampling"
+      ],
       "related": [
         "probability-statistics-series",
         "stir-the-pot-population-and-sampling"
@@ -983,7 +986,9 @@
     "path": "fields/data-science/probability-statistics/draw-it-before-you-describe-it.md",
     "reading_time_min": 11,
     "relations": {
-      "prerequisites": [],
+      "prerequisites": [
+        "data-types-and-frequency-tables"
+      ],
       "related": [
         "data-types-and-frequency-tables",
         "probability-statistics-series",
@@ -3892,7 +3897,9 @@
         "coins-and-calls"
       ],
       "related": [
-        "probability-statistics-series"
+        "draw-it-before-you-describe-it",
+        "probability-statistics-series",
+        "where-do-you-stand"
       ]
     },
     "status": "stable",
@@ -3920,7 +3927,8 @@
         "how-sure-are-you"
       ],
       "related": [
-        "probability-statistics-series"
+        "probability-statistics-series",
+        "why-averages-behave"
       ]
     },
     "status": "stable",
@@ -3976,7 +3984,9 @@
     "path": "fields/data-science/probability-statistics/the-number-on-the-tin.md",
     "reading_time_min": 12,
     "relations": {
-      "prerequisites": [],
+      "prerequisites": [
+        "draw-it-before-you-describe-it"
+      ],
       "related": [
         "data-types-and-frequency-tables",
         "draw-it-before-you-describe-it",
@@ -4085,7 +4095,10 @@
         "the-courtroom-for-numbers"
       ],
       "related": [
-        "probability-statistics-series"
+        "draw-it-before-you-describe-it",
+        "how-far-from-the-middle",
+        "probability-statistics-series",
+        "where-do-you-stand"
       ]
     },
     "status": "stable",
@@ -4342,7 +4355,9 @@
         "the-test-that-was-99-percent-accurate"
       ],
       "related": [
-        "probability-statistics-series"
+        "how-far-from-the-middle",
+        "probability-statistics-series",
+        "the-number-on-the-tin"
       ]
     },
     "status": "stable",
@@ -4394,13 +4409,15 @@
     "level": "intermediate",
     "order": 12,
     "path": "fields/data-science/probability-statistics/why-averages-behave.md",
-    "reading_time_min": 9,
+    "reading_time_min": 10,
     "relations": {
       "prerequisites": [
         "the-bell-curve"
       ],
       "related": [
-        "probability-statistics-series"
+        "how-far-from-the-middle",
+        "probability-statistics-series",
+        "stir-the-pot-population-and-sampling"
       ]
     },
     "status": "stable",

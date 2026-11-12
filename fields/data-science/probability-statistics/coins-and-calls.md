@@ -15,6 +15,7 @@ relations:
     - what-to-expect
   related:
     - probability-statistics-series
+    - counting-the-ways
 ---
 
 # Coins and Calls: Binomial and Poisson as Recipes

@@ -16,6 +16,8 @@ relations:
     - the-bell-curve
   related:
     - probability-statistics-series
+    - how-far-from-the-middle
+    - stir-the-pot-population-and-sampling
 ---
 
 # Why Averages Behave: The Sip You Could Take a Thousand Times
@@ -271,5 +273,6 @@ BIAS                   not cured by n: tight and wrong
 
 - NIST/SEMATECH e-Handbook of Statistical Methods, section 1.3.6.6.1, *Normal Distribution*, "Theoretical Justification - Central Limit Theorem": the statements of approximate normality, the centre at the population mean and the sigma over root N standard deviation. <https://www.itl.nist.gov/div898/handbook/eda/section3/eda3661.htm>
 - MIT OpenCourseWare 18.05, Introduction to Probability and Statistics (Spring 2022), reading on the law of large numbers and the central limit theorem (sections "Formal statement of the law of large numbers" and "Statement of the Central Limit Theorem"). The PDF text could not be read here, so the finite-variance condition is stated as the standard textbook condition, not quoted. <https://ocw.mit.edu/courses/18-05-introduction-to-probability-and-statistics-spring-2022/mit18_05_s22_class06-prep-b.pdf>
+- OpenStax *Introductory Statistics 2e*, section 7.1, *The Central Limit Theorem for Sample Means*: sample means tend toward a normal distribution for any population shape, centred on the population mean with standard deviation σ/√n (the standard error); the text gives no minimum sample size, so "n ≥ 30" on this page is a rule of thumb, not something that source states. <https://openstax.org/books/introductory-statistics-2e/pages/7-1-the-central-limit-theorem-for-sample-means-averages>
 - Python `random` module: `seed` and `choices` (draws with replacement); seeded output is reproducible on a given Python version but may change between versions. <https://docs.python.org/3/library/random.html>
 - Every number on this page was simulated or recomputed with Python 3.14.4, standard library only, seed 12.

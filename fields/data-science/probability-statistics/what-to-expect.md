@@ -15,6 +15,8 @@ relations:
     - the-test-that-was-99-percent-accurate
   related:
     - probability-statistics-series
+    - how-far-from-the-middle
+    - the-number-on-the-tin
 ---
 
 # What to Expect: Random Variables and Expected Value

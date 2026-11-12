@@ -50,7 +50,7 @@ Statistical methods and probability.
   [`statistics`](/.docs/generated/explore/tags/statistics.md)
 - [Where Do You Stand? Percentiles, Z-Scores and the Box Plot](/fields/data-science/probability-statistics/where-do-you-stand.md) — A score means nothing without its crowd. Two rulers give it a position: rank (percentile) and distance in spreads (z-score). The box plot is just the ogive read at four landmarks. *(beginner · 10 min)*  
   [`statistics`](/.docs/generated/explore/tags/statistics.md)
-- [Why Averages Behave: The Sip You Could Take a Thousand Times](/fields/data-science/probability-statistics/why-averages-behave.md) — An average is itself random: every sample gives a different one. Their spread shrinks as sigma over root n, and whatever the crowd looks like, sample averages pile into a bell. Bias is not cured. *(intermediate · 9 min)*  
+- [Why Averages Behave: The Sip You Could Take a Thousand Times](/fields/data-science/probability-statistics/why-averages-behave.md) — An average is itself random: every sample gives a different one. Their spread shrinks as sigma over root n, and whatever the crowd looks like, sample averages pile into a bell. Bias is not cured. *(intermediate · 10 min)*  
   [`sampling`](/.docs/generated/explore/tags/sampling.md) [`statistics`](/.docs/generated/explore/tags/statistics.md)
 
 [All domains](/.docs/generated/explore/domains.md)

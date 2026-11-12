@@ -88,7 +88,7 @@ Run it backwards and you get the **percentile value**: the 75th percentile is th
 | **Q2**, the median | 50th | Half are below |
 | **Q3**, third quartile | 75th | Three quarters are below |
 
-**The trap nobody mentions: different tools give different quartiles.** For the numbers 1 to 9, Python's `statistics.quantiles` returns quartiles **2.5 and 7.5** by default (`method='exclusive'`) and **3 and 7** with `method='inclusive'`. Both are legitimate: they differ in how they interpolate between data points. NumPy's documentation lists nine selectable methods, numbered after Hyndman and Fan's survey of the definitions statistical software uses.
+**The trap nobody mentions: different tools give different quartiles.** For the numbers 1 to 9, Python's `statistics.quantiles` returns quartiles **2.5 and 7.5** by default (`method='exclusive'`) and **3 and 7** with `method='inclusive'`. Both are legitimate: they differ in how they interpolate between data points. R's documentation lists nine quantile types, with type 7 as the default, and cites Hyndman and Fan (1996), who recommended type 8. NumPy's documentation lists the same nine, numbered the same way, with its default `linear` being type 7.
 
 ```python
 import statistics as st
@@ -255,5 +255,6 @@ HISTOGRAM FIRST (shape, clumps).   BOX PLOT SECOND (compare groups).
 - NIST/SEMATECH e-Handbook of Statistical Methods, *Box Plot*: quartiles, the 1.5 × IQR fences and the outlier circles. <https://www.itl.nist.gov/div898/handbook/eda/section3/boxplot.htm>
 - Python `statistics` module: `quantiles` with `method='exclusive'` (default) and `'inclusive'`. Verified against Python 3.14.4. <https://docs.python.org/3/library/statistics.html>
 - NumPy `percentile`: nine selectable methods, default `'linear'`. This page did not run NumPy (not installed in the test environment), so no NumPy output is shown. <https://numpy.org/doc/stable/reference/generated/numpy.percentile.html>
-- Hyndman, R. J. and Fan, Y. (1996), *Sample Quantiles in Statistical Packages*, The American Statistician 50(4). <https://doi.org/10.1080/00031305.1996.10473566>. Cited as the origin of the numbering NumPy uses. The paper itself was not retrievable here, so its contents are not quoted.
+- Hyndman, R. J. and Fan, Y. (1996), *Sample Quantiles in Statistical Packages*, The American Statistician 50(4). <https://doi.org/10.1080/00031305.1996.10473566>. The origin of the nine-type numbering. The paper itself was not retrievable here, so it is cited through the R documentation below, which names it and states its recommendation.
+- R documentation, `quantile` (package stats): nine types, default type 7, Hyndman and Fan (1996) cited, type 8 recommended by them. <https://stat.ethz.ch/R-manual/R-devel/library/stats/html/quantile.html>
 - Every other number on this page was recomputed with Python 3.14.4.

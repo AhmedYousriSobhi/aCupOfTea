@@ -15,6 +15,8 @@ relations:
     - coins-and-calls
   related:
     - probability-statistics-series
+    - draw-it-before-you-describe-it
+    - where-do-you-stand
 ---
 
 # The Bell Curve: Probability as Area, and One Ruler for Every Bell

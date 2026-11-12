@@ -149,6 +149,11 @@
     ],
     "related": [
       {
+        "id": "counting-the-ways",
+        "path": "fields/data-science/probability-statistics/counting-the-ways.md",
+        "title": "Counting the Ways: Probability as a Share of the List"
+      },
+      {
         "id": "probability-statistics-series",
         "path": "fields/data-science/probability-statistics/README.md",
         "title": "Probability & Statistics, One Sip at a Time"
@@ -172,6 +177,11 @@
     ],
     "related": [
       {
+        "id": "coins-and-calls",
+        "path": "fields/data-science/probability-statistics/coins-and-calls.md",
+        "title": "Coins and Calls: Binomial and Poisson as Recipes"
+      },
+      {
         "id": "probability-statistics-series",
         "path": "fields/data-science/probability-statistics/README.md",
         "title": "Probability & Statistics, One Sip at a Time"
@@ -186,22 +196,18 @@
     ]
   },
   "fields/data-science/probability-statistics/data-types-and-frequency-tables.md": {
-    "prerequisites": [],
-    "related": [
-      {
-        "id": "draw-it-before-you-describe-it",
-        "path": "fields/data-science/probability-statistics/draw-it-before-you-describe-it.md",
-        "title": "Draw It Before You Describe It: Three Pictures of the Same Fifty Days"
-      },
-      {
-        "id": "probability-statistics-series",
-        "path": "fields/data-science/probability-statistics/README.md",
-        "title": "Probability & Statistics, One Sip at a Time"
-      },
+    "prerequisites": [
       {
         "id": "stir-the-pot-population-and-sampling",
         "path": "fields/data-science/probability-statistics/stir-the-pot-population-and-sampling.md",
         "title": "Stir the Pot First: Population, Sample, and Why We Guess"
+      }
+    ],
+    "related": [
+      {
+        "id": "probability-statistics-series",
+        "path": "fields/data-science/probability-statistics/README.md",
+        "title": "Probability & Statistics, One Sip at a Time"
       },
       {
         "id": "the-map-of-leaf-and-kettle",
@@ -214,20 +220,32 @@
         "title": "The Number on the Tin: Mean, Median and Mode"
       }
     ],
-    "required_by": []
+    "required_by": [
+      {
+        "id": "draw-it-before-you-describe-it",
+        "path": "fields/data-science/probability-statistics/draw-it-before-you-describe-it.md",
+        "title": "Draw It Before You Describe It: Three Pictures of the Same Fifty Days"
+      }
+    ]
   },
   "fields/data-science/probability-statistics/draw-it-before-you-describe-it.md": {
-    "prerequisites": [],
-    "related": [
+    "prerequisites": [
       {
         "id": "data-types-and-frequency-tables",
         "path": "fields/data-science/probability-statistics/data-types-and-frequency-tables.md",
         "title": "Mira's Notebook: What Kind of Data Is This, and How Do You Count It?"
-      },
+      }
+    ],
+    "related": [
       {
         "id": "probability-statistics-series",
         "path": "fields/data-science/probability-statistics/README.md",
         "title": "Probability & Statistics, One Sip at a Time"
+      },
+      {
+        "id": "the-bell-curve",
+        "path": "fields/data-science/probability-statistics/the-bell-curve.md",
+        "title": "The Bell Curve: Probability as Area, and One Ruler for Every Bell"
       },
       {
         "id": "the-map-of-leaf-and-kettle",
@@ -235,9 +253,9 @@
         "title": "The Map of Leaf & Kettle: Every Idea So Far in One Walk Through the Shop"
       },
       {
-        "id": "the-number-on-the-tin",
-        "path": "fields/data-science/probability-statistics/the-number-on-the-tin.md",
-        "title": "The Number on the Tin: Mean, Median and Mode"
+        "id": "two-things-moving-together",
+        "path": "fields/data-science/probability-statistics/two-things-moving-together.md",
+        "title": "Two Things Moving Together: Correlation and the Line"
       },
       {
         "id": "where-do-you-stand",
@@ -245,7 +263,13 @@
         "title": "Where Do You Stand? Percentiles, Z-Scores and the Box Plot"
       }
     ],
-    "required_by": []
+    "required_by": [
+      {
+        "id": "the-number-on-the-tin",
+        "path": "fields/data-science/probability-statistics/the-number-on-the-tin.md",
+        "title": "The Number on the Tin: Mean, Median and Mode"
+      }
+    ]
   },
   "fields/data-science/probability-statistics/how-far-from-the-middle.md": {
     "prerequisites": [
@@ -265,6 +289,21 @@
         "id": "the-map-of-leaf-and-kettle",
         "path": "fields/data-science/probability-statistics/the-map-of-leaf-and-kettle.md",
         "title": "The Map of Leaf & Kettle: Every Idea So Far in One Walk Through the Shop"
+      },
+      {
+        "id": "two-things-moving-together",
+        "path": "fields/data-science/probability-statistics/two-things-moving-together.md",
+        "title": "Two Things Moving Together: Correlation and the Line"
+      },
+      {
+        "id": "what-to-expect",
+        "path": "fields/data-science/probability-statistics/what-to-expect.md",
+        "title": "What to Expect: Random Variables and Expected Value"
+      },
+      {
+        "id": "why-averages-behave",
+        "path": "fields/data-science/probability-statistics/why-averages-behave.md",
+        "title": "Why Averages Behave: The Sip You Could Take a Thousand Times"
       }
     ],
     "required_by": [
@@ -302,11 +341,6 @@
     "prerequisites": [],
     "related": [
       {
-        "id": "data-types-and-frequency-tables",
-        "path": "fields/data-science/probability-statistics/data-types-and-frequency-tables.md",
-        "title": "Mira's Notebook: What Kind of Data Is This, and How Do You Count It?"
-      },
-      {
         "id": "probability-statistics-series",
         "path": "fields/data-science/probability-statistics/README.md",
         "title": "Probability & Statistics, One Sip at a Time"
@@ -315,9 +349,20 @@
         "id": "the-map-of-leaf-and-kettle",
         "path": "fields/data-science/probability-statistics/the-map-of-leaf-and-kettle.md",
         "title": "The Map of Leaf & Kettle: Every Idea So Far in One Walk Through the Shop"
+      },
+      {
+        "id": "why-averages-behave",
+        "path": "fields/data-science/probability-statistics/why-averages-behave.md",
+        "title": "Why Averages Behave: The Sip You Could Take a Thousand Times"
       }
     ],
-    "required_by": []
+    "required_by": [
+      {
+        "id": "data-types-and-frequency-tables",
+        "path": "fields/data-science/probability-statistics/data-types-and-frequency-tables.md",
+        "title": "Mira's Notebook: What Kind of Data Is This, and How Do You Count It?"
+      }
+    ]
   },
   "fields/data-science/probability-statistics/the-bell-curve.md": {
     "prerequisites": [
@@ -329,9 +374,19 @@
     ],
     "related": [
       {
+        "id": "draw-it-before-you-describe-it",
+        "path": "fields/data-science/probability-statistics/draw-it-before-you-describe-it.md",
+        "title": "Draw It Before You Describe It: Three Pictures of the Same Fifty Days"
+      },
+      {
         "id": "probability-statistics-series",
         "path": "fields/data-science/probability-statistics/README.md",
         "title": "Probability & Statistics, One Sip at a Time"
+      },
+      {
+        "id": "where-do-you-stand",
+        "path": "fields/data-science/probability-statistics/where-do-you-stand.md",
+        "title": "Where Do You Stand? Percentiles, Z-Scores and the Box Plot"
       }
     ],
     "required_by": [
@@ -355,6 +410,11 @@
         "id": "probability-statistics-series",
         "path": "fields/data-science/probability-statistics/README.md",
         "title": "Probability & Statistics, One Sip at a Time"
+      },
+      {
+        "id": "why-averages-behave",
+        "path": "fields/data-science/probability-statistics/why-averages-behave.md",
+        "title": "Why Averages Behave: The Sip You Could Take a Thousand Times"
       }
     ],
     "required_by": [
@@ -407,13 +467,14 @@
     "required_by": []
   },
   "fields/data-science/probability-statistics/the-number-on-the-tin.md": {
-    "prerequisites": [],
-    "related": [
+    "prerequisites": [
       {
         "id": "draw-it-before-you-describe-it",
         "path": "fields/data-science/probability-statistics/draw-it-before-you-describe-it.md",
         "title": "Draw It Before You Describe It: Three Pictures of the Same Fifty Days"
-      },
+      }
+    ],
+    "related": [
       {
         "id": "data-types-and-frequency-tables",
         "path": "fields/data-science/probability-statistics/data-types-and-frequency-tables.md",
@@ -428,6 +489,11 @@
         "id": "the-map-of-leaf-and-kettle",
         "path": "fields/data-science/probability-statistics/the-map-of-leaf-and-kettle.md",
         "title": "The Map of Leaf & Kettle: Every Idea So Far in One Walk Through the Shop"
+      },
+      {
+        "id": "what-to-expect",
+        "path": "fields/data-science/probability-statistics/what-to-expect.md",
+        "title": "What to Expect: Random Variables and Expected Value"
       }
     ],
     "required_by": [
@@ -471,9 +537,24 @@
     ],
     "related": [
       {
+        "id": "draw-it-before-you-describe-it",
+        "path": "fields/data-science/probability-statistics/draw-it-before-you-describe-it.md",
+        "title": "Draw It Before You Describe It: Three Pictures of the Same Fifty Days"
+      },
+      {
+        "id": "how-far-from-the-middle",
+        "path": "fields/data-science/probability-statistics/how-far-from-the-middle.md",
+        "title": "How Far From the Middle? One Question Behind Every Summary Number"
+      },
+      {
         "id": "probability-statistics-series",
         "path": "fields/data-science/probability-statistics/README.md",
         "title": "Probability & Statistics, One Sip at a Time"
+      },
+      {
+        "id": "where-do-you-stand",
+        "path": "fields/data-science/probability-statistics/where-do-you-stand.md",
+        "title": "Where Do You Stand? Percentiles, Z-Scores and the Box Plot"
       }
     ],
     "required_by": []
@@ -488,9 +569,19 @@
     ],
     "related": [
       {
+        "id": "how-far-from-the-middle",
+        "path": "fields/data-science/probability-statistics/how-far-from-the-middle.md",
+        "title": "How Far From the Middle? One Question Behind Every Summary Number"
+      },
+      {
         "id": "probability-statistics-series",
         "path": "fields/data-science/probability-statistics/README.md",
         "title": "Probability & Statistics, One Sip at a Time"
+      },
+      {
+        "id": "the-number-on-the-tin",
+        "path": "fields/data-science/probability-statistics/the-number-on-the-tin.md",
+        "title": "The Number on the Tin: Mean, Median and Mode"
       }
     ],
     "required_by": [
@@ -521,9 +612,19 @@
         "title": "Probability & Statistics, One Sip at a Time"
       },
       {
+        "id": "the-bell-curve",
+        "path": "fields/data-science/probability-statistics/the-bell-curve.md",
+        "title": "The Bell Curve: Probability as Area, and One Ruler for Every Bell"
+      },
+      {
         "id": "the-map-of-leaf-and-kettle",
         "path": "fields/data-science/probability-statistics/the-map-of-leaf-and-kettle.md",
         "title": "The Map of Leaf & Kettle: Every Idea So Far in One Walk Through the Shop"
+      },
+      {
+        "id": "two-things-moving-together",
+        "path": "fields/data-science/probability-statistics/two-things-moving-together.md",
+        "title": "Two Things Moving Together: Correlation and the Line"
       }
     ],
     "required_by": [
@@ -544,9 +645,24 @@
     ],
     "related": [
       {
+        "id": "how-far-from-the-middle",
+        "path": "fields/data-science/probability-statistics/how-far-from-the-middle.md",
+        "title": "How Far From the Middle? One Question Behind Every Summary Number"
+      },
+      {
         "id": "probability-statistics-series",
         "path": "fields/data-science/probability-statistics/README.md",
         "title": "Probability & Statistics, One Sip at a Time"
+      },
+      {
+        "id": "stir-the-pot-population-and-sampling",
+        "path": "fields/data-science/probability-statistics/stir-the-pot-population-and-sampling.md",
+        "title": "Stir the Pot First: Population, Sample, and Why We Guess"
+      },
+      {
+        "id": "the-courtroom-for-numbers",
+        "path": "fields/data-science/probability-statistics/the-courtroom-for-numbers.md",
+        "title": "The Courtroom for Numbers: Could Plain Luck Do This?"
       }
     ],
     "required_by": [

@@ -11,6 +11,8 @@ domains:
 tags:
   - statistics
 relations:
+  prerequisites:
+    - stir-the-pot-population-and-sampling
   related:
     - probability-statistics-series
     - stir-the-pot-population-and-sampling
@@ -231,15 +233,7 @@ With the idea in hand, the recipe is five lines, each with its reason:
 
 Mira deletes the two "Average" cells and rebuilds the sheet column by column, asking of each: what can I do with two of these?
 
-| Column | Kind | What she does with it |
-|---|---|---|
-| Customer ID | Nominal (a label written with digits) | Nothing. It identifies a customer, and that is all it does |
-| Favorite blend | Nominal | A category table, and the most common blend |
-| Strength preference | Ordinal | A category table in order, and later a middle value |
-| Cups per week | Discrete | An ungrouped table, and an average that means something |
-| Brewing temperature | Continuous | A grouped table with proper boundaries, and an average |
-
-When the helpful assistant offers to click "Average" again, she knows what to ask first.
+The customer ID is a label, so it gets nothing. The blend gets a category table. Cups per week and brewing temperature are the only two columns where an average now means something. When the helpful assistant offers to click "Average" again, she knows what to ask first.
 
 **Challenge.** An average of cups per week is now allowed, but the tasting scores' average, 75.2, described nobody. When can one number stand in for a column? The next cup is about that.
 
