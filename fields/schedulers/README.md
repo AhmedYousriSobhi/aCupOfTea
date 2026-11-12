@@ -16,6 +16,12 @@ Forty people share a cluster. Everyone wants the GPUs now. Somebody has to decid
 | [slurm-accounting-multi-tenancy](/fields/schedulers/slurm-accounting-multi-tenancy.md) | Who stores and who enforces multi-tenant rules: slurmdbd, associations, QOS, fairshare |
 | [slurm-backfill-tuning](/fields/schedulers/slurm-backfill-tuning.md) | Why a short bf_window hides long jobs, and how to tune backfill with sdiag |
 | [slurm-preemption-requeue-signals](/fields/schedulers/slurm-preemption-requeue-signals.md) | Preemption modes, GraceTime, signals your training job ignores, and a requeue-safe wrapper |
+| [slurm-qos-preemption-setup](/fields/schedulers/slurm-qos-preemption-setup.md) | Setting up QOS preemption with requeue, step by step, with a drill that proves it works |
+| [slurm-job-submit-lua](/fields/schedulers/slurm-job-submit-lua.md) | The job_submit.lua plugin: routing jobs to the right QOS, requiring time limits, and how it fails |
+| [slurm-signals-cheatsheet](/fields/schedulers/slurm-signals-cheatsheet.md) | Every signal Slurm sends, whether the batch shell or the srun steps hear it, and how late it arrives |
+| [slurm-reservations-and-maintenance](/fields/schedulers/slurm-reservations-and-maintenance.md) | Reserving nodes for maintenance or people, and what happens to jobs that fit or overlap |
+| [slurm-sacct-job-forensics](/fields/schedulers/slurm-sacct-job-forensics.md) | Reading sacct to find out how a job ended: states, exit codes, requeued runs |
+| [slurm-version-changes](/fields/schedulers/slurm-version-changes.md) | What changed between Slurm 23.11 and 26.05 for preemption, Lua, reservations, signals, accounting and cgroups, plus the security timeline |
 | [slurm-kill-task-failed](/fields/schedulers/slurm-kill-task-failed.md) | Why jobs fail to die on uninterruptible sleep, drain the node, and how to debug it |
 | [slurm-spool-dir-full](/fields/schedulers/slurm-spool-dir-full.md) | The "SlurmdSpoolDir is full" drain: the real culprit and a triage runbook |
 | [slurm-pam-adopt-ssh-access](/fields/schedulers/slurm-pam-adopt-ssh-access.md) | Closing the SSH backdoor with pam_slurm_adopt |
@@ -31,8 +37,8 @@ Forty people share a cluster. Everyone wants the GPUs now. Somebody has to decid
 |------------------|------|
 | You are new to schedulers | [slurm-intro](/fields/schedulers/slurm-intro.md), then [slurm-job-script-tale](/fields/schedulers/slurm-job-script-tale.md) |
 | Jobs misbehave or nodes drain | [slurm-kill-task-failed](/fields/schedulers/slurm-kill-task-failed.md), [slurm-spool-dir-full](/fields/schedulers/slurm-spool-dir-full.md) |
-| You run a multi-user cluster | [slurm-accounting-multi-tenancy](/fields/schedulers/slurm-accounting-multi-tenancy.md), [slurm-backfill-tuning](/fields/schedulers/slurm-backfill-tuning.md), [slurm-preemption-requeue-signals](/fields/schedulers/slurm-preemption-requeue-signals.md) |
-| Users ask why their job isn't running | [slurm-pending-jobs](/fields/schedulers/slurm-pending-jobs/README.md) |
-| You maintain the cluster | [slurm-reboot-order](/fields/schedulers/slurm-reboot-order.md), [slurm-upgrade-order](/fields/schedulers/slurm-upgrade-order.md) |
-| You run GPU training jobs | [slurm-ai-clusters](/fields/schedulers/slurm-ai-clusters/README.md), [slurm-gpu-affinity-socket-lie](/fields/schedulers/slurm-gpu-affinity-socket-lie.md) |
+| You run a multi-user cluster | [slurm-accounting-multi-tenancy](/fields/schedulers/slurm-accounting-multi-tenancy.md), [slurm-backfill-tuning](/fields/schedulers/slurm-backfill-tuning.md), [slurm-preemption-requeue-signals](/fields/schedulers/slurm-preemption-requeue-signals.md), [slurm-qos-preemption-setup](/fields/schedulers/slurm-qos-preemption-setup.md), [slurm-job-submit-lua](/fields/schedulers/slurm-job-submit-lua.md) |
+| Users ask why their job isn't running, or where it went | [slurm-pending-jobs](/fields/schedulers/slurm-pending-jobs/README.md), [slurm-sacct-job-forensics](/fields/schedulers/slurm-sacct-job-forensics.md) |
+| You maintain the cluster | [slurm-version-changes](/fields/schedulers/slurm-version-changes.md), [slurm-reservations-and-maintenance](/fields/schedulers/slurm-reservations-and-maintenance.md), [slurm-reboot-order](/fields/schedulers/slurm-reboot-order.md), [slurm-upgrade-order](/fields/schedulers/slurm-upgrade-order.md) |
+| You run GPU training jobs | [slurm-signals-cheatsheet](/fields/schedulers/slurm-signals-cheatsheet.md), [slurm-ai-clusters](/fields/schedulers/slurm-ai-clusters/README.md), [slurm-gpu-affinity-socket-lie](/fields/schedulers/slurm-gpu-affinity-socket-lie.md) |
 | You want to build a lab to try all this | [lab build cheatsheet](/fields/schedulers/slurm-ai-clusters/lab-build-cheatsheet.md) |

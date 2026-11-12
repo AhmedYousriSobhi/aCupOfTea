@@ -20,7 +20,7 @@ relations:
 
 # Slurm cgroups in Practice: What Gets Constrained, and Where the Numbers Lie
 
-> **Part of the [schedulers](https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/fields/schedulers/slurm-intro.md) directory.** The intro says `slurmd` "enforces resource containment" with `task/cgroup`. This page opens that sentence up: what exactly is fenced, what is not, and how to check which one you have. Commands and option names come from SchedMD's documentation for Slurm 26.05. They were not run on a live cluster for this page, so try them on a test node first.
+> **Part of the [schedulers](/fields/schedulers/slurm-intro.md) directory.** The intro says `slurmd` "enforces resource containment" with `task/cgroup`. This page opens that sentence up: what exactly is fenced, what is not, and how to check which one you have. Commands and option names come from SchedMD's documentation for Slurm 26.05. They were not run on a live cluster for this page, so try them on a test node first.
 
 ## Table of Contents
 
@@ -58,7 +58,7 @@ Two files cooperate. `slurm.conf` loads the plugins. `cgroup.conf` (same directo
 |---|---|---|---|
 | `ProctrackType=proctrack/cgroup` | `slurm.conf` | Tracks every process in a step, so a cancel reaches all of them | n/a |
 | `TaskPlugin=task/cgroup,task/affinity` | `slurm.conf` | Loads the plugin that applies the `Constrain*` switches below | n/a |
-| `PrologFlags=Contain` | `slurm.conf` | Creates the "extern" step that [`pam_slurm_adopt`](https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/fields/schedulers/slurm-pam-adopt-ssh-access.md) needs | off |
+| `PrologFlags=Contain` | `slurm.conf` | Creates the "extern" step that [`pam_slurm_adopt`](/fields/schedulers/slurm-pam-adopt-ssh-access.md) needs | off |
 | `ConstrainCores` | `cgroup.conf` | Limits a job to its allocated cores (cpuset) | `no` |
 | `ConstrainDevices` | `cgroup.conf` | Limits access to GRES devices, meaning GPUs | `no` |
 | `ConstrainRAMSpace` | `cgroup.conf` | Sets soft and hard RAM limits from the allocation | `no` |
@@ -163,7 +163,7 @@ Knobs worth knowing:
 - **`IgnoreSystemd`** exists for development. The docs call it dangerous on a systemd machine, because systemd may modify the cgroups under running jobs.
 - **`EnableControllers`** is for old kernels and old systemd (RHEL8 is the documented example) where not every controller is enabled down the tree.
 
-This is also where [`pam_slurm_adopt`](https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/fields/schedulers/slurm-pam-adopt-ssh-access.md) plugs in. The `cgroup.conf` example says sites should configure it so users cannot escape the cgroups through `ssh`, and the cgroup v2 guide has its own section on running it there.
+This is also where [`pam_slurm_adopt`](/fields/schedulers/slurm-pam-adopt-ssh-access.md) plugs in. The `cgroup.conf` example says sites should configure it so users cannot escape the cgroups through `ssh`, and the cgroup v2 guide has its own section on running it there.
 
 * * *
 

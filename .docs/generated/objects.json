@@ -3095,7 +3095,10 @@
     "relations": {
       "prerequisites": [],
       "related": [
-        "slurm-mixed-gpus-overview"
+        "slurm-mixed-gpus-overview",
+        "slurm-preemption-requeue-signals",
+        "slurm-qos-preemption-setup",
+        "slurm-sacct-job-forensics"
       ]
     },
     "status": "stable",
@@ -3303,7 +3306,7 @@
     "level": "beginner",
     "order": 1,
     "path": "fields/schedulers/slurm-intro.md",
-    "reading_time_min": 9,
+    "reading_time_min": 10,
     "relations": {
       "prerequisites": [],
       "related": [
@@ -3355,6 +3358,37 @@
       "guide"
     ]
   },
+  "slurm-job-submit-lua": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-job-submit-lua",
+    "level": "intermediate",
+    "order": 15,
+    "path": "fields/schedulers/slurm-job-submit-lua.md",
+    "reading_time_min": 11,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "slurm-accounting-multi-tenancy",
+        "slurm-backfill-tuning",
+        "slurm-mixed-gpus-where-shine",
+        "slurm-preemption-requeue-signals",
+        "slurm-qos-preemption-setup"
+      ]
+    },
+    "status": "stable",
+    "summary": "What the Lua job_submit plugin is, where its script lives, what it can read and return, four tested recipes (QOS routing, time limits, requeue, exclusive), and how it fails.",
+    "tags": [
+      "hpc",
+      "slurm"
+    ],
+    "title": "The Receptionist Who Rewrites Your Badge: job_submit.lua",
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
+  },
   "slurm-kill-task-failed": {
     "domains": [
       "systems-and-hpc"
@@ -3391,7 +3425,7 @@
     "level": "intermediate",
     "order": 6,
     "path": "fields/schedulers/slurm-ai-clusters/lab-build-cheatsheet.md",
-    "reading_time_min": 8,
+    "reading_time_min": 9,
     "relations": {
       "prerequisites": [],
       "related": [
@@ -3400,6 +3434,7 @@
         "slurm-gpu-health-checks",
         "slurm-openmetrics",
         "slurm-pending-reasons",
+        "slurm-qos-preemption-setup",
         "slurm-topology-placement"
       ]
     },
@@ -3627,16 +3662,20 @@
     "level": "intermediate",
     "order": 8,
     "path": "fields/schedulers/slurm-preemption-requeue-signals.md",
-    "reading_time_min": 9,
+    "reading_time_min": 13,
     "relations": {
       "prerequisites": [],
       "related": [
+        "slurm-accounting-multi-tenancy",
+        "slurm-job-submit-lua",
         "slurm-kill-task-failed",
+        "slurm-qos-preemption-setup",
+        "slurm-signals-cheatsheet",
         "slurm-upgrade-order"
       ]
     },
     "status": "stable",
-    "summary": "How Slurm preemption modes differ, what GraceTime and --signal really send and when, why a bash trap never fires while  trainer runs, and a requeue-safe checkpoint wrapper that cannot loop forever.",
+    "summary": "How Slurm preemption modes differ, what GraceTime and --signal send and to whom, why a bash trap never fires while the trainer runs, and a requeue-safe checkpoint wrapper that cannot loop.",
     "tags": [
       "gpu",
       "hpc",
@@ -3709,6 +3748,38 @@
       "guide"
     ]
   },
+  "slurm-qos-preemption-setup": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-qos-preemption-setup",
+    "level": "intermediate",
+    "order": 14,
+    "path": "fields/schedulers/slurm-qos-preemption-setup.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [
+        "slurm-accounting-multi-tenancy"
+      ],
+      "related": [
+        "slurm-job-submit-lua",
+        "slurm-preemption-requeue-signals",
+        "slurm-qos-limits",
+        "slurm-signals-cheatsheet"
+      ]
+    },
+    "status": "stable",
+    "summary": "A step-by-step setup of QOS-based requeue preemption (slurm.conf, sacctmgr, who may use what), a drill that proves it works, and the quiet ways it goes wrong.",
+    "tags": [
+      "hpc",
+      "slurm"
+    ],
+    "title": "The Guest List: Setting Up QOS Preemption Without Starting a War",
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
+  },
   "slurm-reboot-order": {
     "domains": [
       "system-design",
@@ -3737,6 +3808,98 @@
     "types": [
       "concept",
       "experiment"
+    ]
+  },
+  "slurm-reservations-and-maintenance": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-reservations-and-maintenance",
+    "level": "intermediate",
+    "order": 17,
+    "path": "fields/schedulers/slurm-reservations-and-maintenance.md",
+    "reading_time_min": 8,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "slurm-backfill-tuning",
+        "slurm-job-submit-lua",
+        "slurm-pending-reasons",
+        "slurm-reboot-order",
+        "slurm-spool-dir-full"
+      ]
+    },
+    "status": "stable",
+    "summary": "How to block nodes ahead of time with scontrol reservations, what happens to jobs that fit before the window and jobs that do not, and what users see while it is open.",
+    "tags": [
+      "hpc",
+      "slurm"
+    ],
+    "title": "Calling Dibs on Nodes: Reservations, Maintenance Windows and the Job That Fit",
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
+  },
+  "slurm-sacct-job-forensics": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-sacct-job-forensics",
+    "level": "beginner",
+    "order": 18,
+    "path": "fields/schedulers/slurm-sacct-job-forensics.md",
+    "reading_time_min": 8,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "slurm-accounting-multi-tenancy",
+        "slurm-cgroups-in-practice",
+        "slurm-pending-reasons",
+        "slurm-preemption-requeue-signals",
+        "slurm-qos-preemption-setup"
+      ]
+    },
+    "status": "stable",
+    "summary": "How to find out what happened to a job that has gone, with sacct states, exit codes (exit:signal), requeued runs, useful fields, and the neighbors scontrol, sstat and sreport.",
+    "tags": [
+      "hpc",
+      "slurm"
+    ],
+    "title": "Autopsy of a Job: Reading sacct Like a Coroner",
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
+  },
+  "slurm-signals-cheatsheet": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-signals-cheatsheet",
+    "level": "intermediate",
+    "order": 16,
+    "path": "fields/schedulers/slurm-signals-cheatsheet.md",
+    "reading_time_min": 8,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "slurm-kill-task-failed",
+        "slurm-preemption-requeue-signals",
+        "slurm-qos-preemption-setup",
+        "slurm-slurmstepd"
+      ]
+    },
+    "status": "stable",
+    "summary": "Which signals Slurm sends at preemption, GraceTime, --signal, time limits and scancel, whether the batch shell or the srun steps receive them, and how late they really arrive.",
+    "tags": [
+      "hpc",
+      "slurm"
+    ],
+    "title": "Who Gets Told What: Every Signal Slurm Sends, and Who Actually Hears It",
+    "type": "reference",
+    "types": [
+      "reference"
     ]
   },
   "slurm-slurmstepd": {
@@ -3835,7 +3998,7 @@
     "level": "intermediate",
     "order": 13,
     "path": "fields/schedulers/slurm-upgrade-order.md",
-    "reading_time_min": 12,
+    "reading_time_min": 13,
     "relations": {
       "prerequisites": [],
       "related": [
@@ -3853,6 +4016,40 @@
     "type": "guide",
     "types": [
       "guide"
+    ]
+  },
+  "slurm-version-changes": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-version-changes",
+    "level": "intermediate",
+    "order": 19,
+    "path": "fields/schedulers/slurm-version-changes.md",
+    "reading_time_min": 12,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "slurm-cgroups-in-practice",
+        "slurm-job-submit-lua",
+        "slurm-preemption-requeue-signals",
+        "slurm-qos-preemption-setup",
+        "slurm-reservations-and-maintenance",
+        "slurm-sacct-job-forensics",
+        "slurm-signals-cheatsheet",
+        "slurm-upgrade-order"
+      ]
+    },
+    "status": "stable",
+    "summary": "A per-topic tour of what changed in Slurm between 23.11 and 26.05 for preemption, job_submit/lua, reservations, signals, accounting and cgroups, with the security-fix timeline and upgrade paths.",
+    "tags": [
+      "hpc",
+      "slurm"
+    ],
+    "title": "The Changelog Nobody Reads: What Moved Between Slurm 23.11 and 26.05",
+    "type": "reference",
+    "types": [
+      "reference"
     ]
   },
   "stir-the-pot-population-and-sampling": {

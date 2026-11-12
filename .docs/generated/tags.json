@@ -197,6 +197,7 @@
       "slurm-gpu-health-checks",
       "slurm-intro",
       "slurm-job-script-tale",
+      "slurm-job-submit-lua",
       "slurm-kill-task-failed",
       "slurm-lab-cheatsheet",
       "slurm-mixed-gpus-four-ways",
@@ -209,11 +210,16 @@
       "slurm-preemption-requeue-signals",
       "slurm-priority-multifactor",
       "slurm-qos-limits",
+      "slurm-qos-preemption-setup",
       "slurm-reboot-order",
+      "slurm-reservations-and-maintenance",
+      "slurm-sacct-job-forensics",
+      "slurm-signals-cheatsheet",
       "slurm-slurmstepd",
       "slurm-spool-dir-full",
       "slurm-topology-placement",
-      "slurm-upgrade-order"
+      "slurm-upgrade-order",
+      "slurm-version-changes"
     ]
   },
   "kubernetes": {
@@ -419,6 +425,7 @@
       "slurm-gpu-health-checks",
       "slurm-intro",
       "slurm-job-script-tale",
+      "slurm-job-submit-lua",
       "slurm-kill-task-failed",
       "slurm-lab-cheatsheet",
       "slurm-mixed-gpus-four-ways",
@@ -431,11 +438,16 @@
       "slurm-preemption-requeue-signals",
       "slurm-priority-multifactor",
       "slurm-qos-limits",
+      "slurm-qos-preemption-setup",
       "slurm-reboot-order",
+      "slurm-reservations-and-maintenance",
+      "slurm-sacct-job-forensics",
+      "slurm-signals-cheatsheet",
       "slurm-slurmstepd",
       "slurm-spool-dir-full",
       "slurm-topology-placement",
-      "slurm-upgrade-order"
+      "slurm-upgrade-order",
+      "slurm-version-changes"
     ]
   },
   "software": {

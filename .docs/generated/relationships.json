@@ -1242,19 +1242,26 @@
   },
   "slurm-accounting-multi-tenancy": {
     "prerequisite_of": [
-      "slurm-qos-limits"
+      "slurm-qos-limits",
+      "slurm-qos-preemption-setup"
     ],
     "prerequisites": [],
     "related": [
-      "slurm-mixed-gpus-overview"
+      "slurm-mixed-gpus-overview",
+      "slurm-preemption-requeue-signals",
+      "slurm-qos-preemption-setup",
+      "slurm-sacct-job-forensics"
     ],
     "related_by": [
       "isolating-gpu-workloads",
       "slurm-backfill-tuning",
       "slurm-cgroups-in-practice",
+      "slurm-job-submit-lua",
       "slurm-kill-task-failed",
       "slurm-pending-reasons",
+      "slurm-preemption-requeue-signals",
       "slurm-priority-multifactor",
+      "slurm-sacct-job-forensics",
       "slurm-upgrade-order"
     ]
   },
@@ -1267,8 +1274,10 @@
     ],
     "related_by": [
       "slurm-job-script-tale",
+      "slurm-job-submit-lua",
       "slurm-openmetrics",
       "slurm-pending-reasons",
+      "slurm-reservations-and-maintenance",
       "slurm-topology-placement"
     ]
   },
@@ -1285,7 +1294,9 @@
       "slurm-gpu-affinity-socket-lie",
       "slurm-kill-task-failed",
       "slurm-pam-adopt-ssh-access",
-      "slurm-slurmstepd"
+      "slurm-sacct-job-forensics",
+      "slurm-slurmstepd",
+      "slurm-version-changes"
     ]
   },
   "slurm-containers-pyxis": {
@@ -1367,6 +1378,23 @@
       "slurm-intro"
     ]
   },
+  "slurm-job-submit-lua": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "slurm-accounting-multi-tenancy",
+      "slurm-backfill-tuning",
+      "slurm-mixed-gpus-where-shine",
+      "slurm-preemption-requeue-signals",
+      "slurm-qos-preemption-setup"
+    ],
+    "related_by": [
+      "slurm-preemption-requeue-signals",
+      "slurm-qos-preemption-setup",
+      "slurm-reservations-and-maintenance",
+      "slurm-version-changes"
+    ]
+  },
   "slurm-kill-task-failed": {
     "prerequisite_of": [],
     "prerequisites": [],
@@ -1379,6 +1407,7 @@
       "slurm-gpu-affinity-socket-lie",
       "slurm-gpu-health-checks",
       "slurm-preemption-requeue-signals",
+      "slurm-signals-cheatsheet",
       "slurm-slurmstepd",
       "slurm-spool-dir-full"
     ]
@@ -1392,6 +1421,7 @@
       "slurm-gpu-health-checks",
       "slurm-openmetrics",
       "slurm-pending-reasons",
+      "slurm-qos-preemption-setup",
       "slurm-topology-placement"
     ],
     "related_by": []
@@ -1418,7 +1448,9 @@
       "slurm-mixed-gpus-why-disappoints"
     ],
     "related": [],
-    "related_by": []
+    "related_by": [
+      "slurm-job-submit-lua"
+    ]
   },
   "slurm-mixed-gpus-why-disappoints": {
     "prerequisite_of": [
@@ -1468,19 +1500,31 @@
       "slurm-backfill-tuning"
     ],
     "related_by": [
-      "slurm-lab-cheatsheet"
+      "slurm-lab-cheatsheet",
+      "slurm-reservations-and-maintenance",
+      "slurm-sacct-job-forensics"
     ]
   },
   "slurm-preemption-requeue-signals": {
     "prerequisite_of": [],
     "prerequisites": [],
     "related": [
+      "slurm-accounting-multi-tenancy",
+      "slurm-job-submit-lua",
       "slurm-kill-task-failed",
+      "slurm-qos-preemption-setup",
+      "slurm-signals-cheatsheet",
       "slurm-upgrade-order"
     ],
     "related_by": [
       "draining-a-gpu-node",
-      "slurm-backfill-tuning"
+      "slurm-accounting-multi-tenancy",
+      "slurm-backfill-tuning",
+      "slurm-job-submit-lua",
+      "slurm-qos-preemption-setup",
+      "slurm-sacct-job-forensics",
+      "slurm-signals-cheatsheet",
+      "slurm-version-changes"
     ]
   },
   "slurm-priority-multifactor": {
@@ -1504,7 +1548,30 @@
     "related": [
       "slurm-priority-multifactor"
     ],
-    "related_by": []
+    "related_by": [
+      "slurm-qos-preemption-setup"
+    ]
+  },
+  "slurm-qos-preemption-setup": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "slurm-accounting-multi-tenancy"
+    ],
+    "related": [
+      "slurm-job-submit-lua",
+      "slurm-preemption-requeue-signals",
+      "slurm-qos-limits",
+      "slurm-signals-cheatsheet"
+    ],
+    "related_by": [
+      "slurm-accounting-multi-tenancy",
+      "slurm-job-submit-lua",
+      "slurm-lab-cheatsheet",
+      "slurm-preemption-requeue-signals",
+      "slurm-sacct-job-forensics",
+      "slurm-signals-cheatsheet",
+      "slurm-version-changes"
+    ]
   },
   "slurm-reboot-order": {
     "prerequisite_of": [],
@@ -1516,7 +1583,52 @@
     "related_by": [
       "draining-a-gpu-node",
       "slurm-pam-adopt-ssh-access",
+      "slurm-reservations-and-maintenance",
       "slurm-spool-dir-full"
+    ]
+  },
+  "slurm-reservations-and-maintenance": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "slurm-backfill-tuning",
+      "slurm-job-submit-lua",
+      "slurm-pending-reasons",
+      "slurm-reboot-order",
+      "slurm-spool-dir-full"
+    ],
+    "related_by": [
+      "slurm-version-changes"
+    ]
+  },
+  "slurm-sacct-job-forensics": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "slurm-accounting-multi-tenancy",
+      "slurm-cgroups-in-practice",
+      "slurm-pending-reasons",
+      "slurm-preemption-requeue-signals",
+      "slurm-qos-preemption-setup"
+    ],
+    "related_by": [
+      "slurm-accounting-multi-tenancy",
+      "slurm-version-changes"
+    ]
+  },
+  "slurm-signals-cheatsheet": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "slurm-kill-task-failed",
+      "slurm-preemption-requeue-signals",
+      "slurm-qos-preemption-setup",
+      "slurm-slurmstepd"
+    ],
+    "related_by": [
+      "slurm-preemption-requeue-signals",
+      "slurm-qos-preemption-setup",
+      "slurm-version-changes"
     ]
   },
   "slurm-slurmstepd": {
@@ -1532,6 +1644,7 @@
       "openmp-mpi-under-slurm",
       "slurm-intro",
       "slurm-job-script-tale",
+      "slurm-signals-cheatsheet",
       "slurm-spool-dir-full"
     ]
   },
@@ -1547,6 +1660,7 @@
       "slurm-gpu-health-checks",
       "slurm-job-script-tale",
       "slurm-reboot-order",
+      "slurm-reservations-and-maintenance",
       "slurm-slurmstepd"
     ]
   },
@@ -1572,8 +1686,24 @@
     ],
     "related_by": [
       "slurm-preemption-requeue-signals",
-      "slurm-reboot-order"
+      "slurm-reboot-order",
+      "slurm-version-changes"
     ]
+  },
+  "slurm-version-changes": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "slurm-cgroups-in-practice",
+      "slurm-job-submit-lua",
+      "slurm-preemption-requeue-signals",
+      "slurm-qos-preemption-setup",
+      "slurm-reservations-and-maintenance",
+      "slurm-sacct-job-forensics",
+      "slurm-signals-cheatsheet",
+      "slurm-upgrade-order"
+    ],
+    "related_by": []
   },
   "stir-the-pot-population-and-sampling": {
     "prerequisite_of": [
