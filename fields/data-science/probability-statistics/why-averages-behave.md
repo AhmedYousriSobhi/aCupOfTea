@@ -186,10 +186,10 @@ These are the places people trip, so be exact:
 |---|---|
 | "Large samples make the data bell-shaped." | No. The 30 scores in your sample still show two clumps. Only the **average** over repeated samples is bell-shaped. |
 | "With n of at least 30, it is guaranteed normal." | No. 30 is a **rule of thumb**, not a theorem. The theorem is a limit as n grows; how fast it arrives depends on how lopsided the crowd is. Heavily skewed crowds need more. |
-| "It works for any population." | It needs a **finite variance** (and independent draws). Some populations, such as the Cauchy distribution, have no finite variance and the sample average never settles. |
+| "It works for any population." | It needs a mean and standard deviation to exist (and independent draws). Some populations, such as the Cauchy distribution, have neither, so the theorem does not apply. |
 | "More data fixes everything." | It shrinks **random** error only. See below. |
 
-The finite-variance condition is the standard textbook statement of the theorem; the MIT 18.05 reading on the law of large numbers and the central limit theorem covers it (its text could not be extracted here, so it is not quoted).
+The condition comes from the statement in the MIT 18.05 reading (variables "having mean μ and standard deviation σ"). NIST's handbook lists the Cauchy distribution's mean and standard deviation as undefined, which is why it is the standard example of a crowd the theorem cannot tame.
 
 * * *
 
@@ -252,7 +252,7 @@ SAMPLING DISTRIBUTION  the averages you would get from many samples of size n
 CENTRE                 the population mean (unbiased sampling)
 STANDARD ERROR         sigma / sqrt(n)  (4x the sample to halve it)
 LAW OF LARGE NUMBERS   averages converge on the mean of what you draw from
-CENTRAL LIMIT THEOREM  averages approach a bell, whatever the crowd (finite variance)
+CENTRAL LIMIT THEOREM  averages approach a bell, whatever the crowd (mean and SD must exist)
 n >= 30                rule of thumb only; skewed crowds need more
 BIAS                   not cured by n: tight and wrong
 ```
@@ -272,7 +272,8 @@ BIAS                   not cured by n: tight and wrong
 ## References
 
 - NIST/SEMATECH e-Handbook of Statistical Methods, section 1.3.6.6.1, *Normal Distribution*, "Theoretical Justification - Central Limit Theorem": the statements of approximate normality, the centre at the population mean and the sigma over root N standard deviation. <https://www.itl.nist.gov/div898/handbook/eda/section3/eda3661.htm>
-- MIT OpenCourseWare 18.05, Introduction to Probability and Statistics (Spring 2022), reading on the law of large numbers and the central limit theorem (sections "Formal statement of the law of large numbers" and "Statement of the Central Limit Theorem"). The PDF text could not be read here, so the finite-variance condition is stated as the standard textbook condition, not quoted. <https://ocw.mit.edu/courses/18-05-introduction-to-probability-and-statistics-spring-2022/mit18_05_s22_class06-prep-b.pdf>
+- MIT OpenCourseWare 18.05, Introduction to Probability and Statistics (Spring 2022), Class 6 reading on the central limit theorem and the law of large numbers, section 5.2: for independent, identically distributed variables with mean μ and standard deviation σ, the average is approximately N(μ, σ²/n) for large n, and the precise statement is that the cdf of the standardized average converges to the standard normal cdf. Read from the PDF's page images, since its text layer is not extractable. <https://ocw.mit.edu/courses/18-05-introduction-to-probability-and-statistics-spring-2022/mit18_05_s22_class06-prep-b.pdf>
 - OpenStax *Introductory Statistics 2e*, section 7.1, *The Central Limit Theorem for Sample Means*: sample means tend toward a normal distribution for any population shape, centred on the population mean with standard deviation σ/√n (the standard error); the text gives no minimum sample size, so "n ≥ 30" on this page is a rule of thumb, not something that source states. <https://openstax.org/books/introductory-statistics-2e/pages/7-1-the-central-limit-theorem-for-sample-means-averages>
+- NIST/SEMATECH e-Handbook, section 1.3.6.6.3, *Cauchy Distribution*: the mean and standard deviation are listed as undefined. <https://www.itl.nist.gov/div898/handbook/eda/section3/eda3663.htm>
 - Python `random` module: `seed` and `choices` (draws with replacement); seeded output is reproducible on a given Python version but may change between versions. <https://docs.python.org/3/library/random.html>
 - Every number on this page was simulated or recomputed with Python 3.14.4, standard library only, seed 12.
