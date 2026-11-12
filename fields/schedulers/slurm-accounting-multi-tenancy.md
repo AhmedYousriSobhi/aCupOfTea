@@ -28,7 +28,7 @@ relations:
   - [QOS and fairshare: the other two dials](#qos-and-fairshare-the-other-two-dials)
   - [Turning it on safely](#turning-it-on-safely)
   - [When slurmdbd goes down](#when-slurmdbd-goes-down)
-    - [References](#references)
+  - [References](#references)
 
 ---
 
@@ -198,7 +198,9 @@ What you lose while it's down: **changes**. `sacctmgr` edits can't land, new use
 
 For what happens when tenants ask for *different* hardware in one job, see [mixing GPU types in Slurm](/fields/schedulers/slurm-mixed-gpus/README.md).
 
-### References
+---
+
+## References
 - [Slurm: Accounting and Resource Limits](https://slurm.schedmd.com/accounting.html)
 - [Slurm: Resource Limits (associations, enforcement options)](https://slurm.schedmd.com/resource_limits.html)
 - [Slurm `slurm.conf` man page, `AccountingStorageEnforce`](https://www.mankier.com/5/slurm.conf)

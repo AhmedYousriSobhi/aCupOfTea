@@ -27,7 +27,7 @@ relations:
   - [Can you rebalance the work?](#can-you-rebalance-the-work)
   - [The queue tax: what co-scheduling costs](#the-queue-tax-what-co-scheduling-costs)
   - [So is it "not functional"?](#so-is-it-not-functional)
-    - [References](#references)
+  - [References](#references)
 
 ---
 
@@ -171,7 +171,9 @@ So the precise way to say it: **Slurm's mixed allocation is functional; tightly 
 
 So if mixing H100s and A100s in one training run is usually a bad idea, why did SchedMD build heterogeneous jobs at all? Because the boat was never the point. [Part 3](/fields/schedulers/slurm-mixed-gpus/where-hetjobs-shine.md) shows the workloads where different hardware for different parts is exactly right.
 
-### References
+---
+
+## References
 - [Slurm: Heterogeneous Job Support (limitations, scheduling, system administrator information)](https://slurm.schedmd.com/heterogeneous_jobs.html)
 - [NVIDIA H100 Tensor Core GPU datasheet](https://www.nvidia.com/en-us/data-center/h100/)
 - [NVIDIA A100 Tensor Core GPU datasheet](https://www.nvidia.com/en-us/data-center/a100/)

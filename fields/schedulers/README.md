@@ -22,6 +22,8 @@ Forty people share a cluster. Everyone wants the GPUs now. Somebody has to decid
 | [slurm-reboot-order](/fields/schedulers/slurm-reboot-order.md) | Rebooting a Slurm cluster without losing jobs |
 | [slurm-upgrade-order](/fields/schedulers/slurm-upgrade-order.md) | The order to upgrade Slurm daemons, the version window, and the parts that bite |
 | [slurm-mixed-gpus](/fields/schedulers/slurm-mixed-gpus/README.md) | Series: mixing H100s and A100s in one Slurm job, and when it pays off |
+| [slurm-pending-jobs](/fields/schedulers/slurm-pending-jobs/README.md) | Series: why is my job still pending - reason codes, multifactor priority, and QOS limits that wait forever |
+| [slurm-ai-clusters](/fields/schedulers/slurm-ai-clusters/README.md) | Series: Slurm for AI clusters - topology, distributed training, containers, GPU health checks, metrics, and a lab cheatsheet |
 
 ## The route
 
@@ -30,4 +32,7 @@ Forty people share a cluster. Everyone wants the GPUs now. Somebody has to decid
 | You are new to schedulers | [slurm-intro](/fields/schedulers/slurm-intro.md), then [slurm-job-script-tale](/fields/schedulers/slurm-job-script-tale.md) |
 | Jobs misbehave or nodes drain | [slurm-kill-task-failed](/fields/schedulers/slurm-kill-task-failed.md), [slurm-spool-dir-full](/fields/schedulers/slurm-spool-dir-full.md) |
 | You run a multi-user cluster | [slurm-accounting-multi-tenancy](/fields/schedulers/slurm-accounting-multi-tenancy.md), [slurm-backfill-tuning](/fields/schedulers/slurm-backfill-tuning.md), [slurm-preemption-requeue-signals](/fields/schedulers/slurm-preemption-requeue-signals.md) |
+| Users ask why their job isn't running | [slurm-pending-jobs](/fields/schedulers/slurm-pending-jobs/README.md) |
 | You maintain the cluster | [slurm-reboot-order](/fields/schedulers/slurm-reboot-order.md), [slurm-upgrade-order](/fields/schedulers/slurm-upgrade-order.md) |
+| You run GPU training jobs | [slurm-ai-clusters](/fields/schedulers/slurm-ai-clusters/README.md), [slurm-gpu-affinity-socket-lie](/fields/schedulers/slurm-gpu-affinity-socket-lie.md) |
+| You want to build a lab to try all this | [lab build cheatsheet](/fields/schedulers/slurm-ai-clusters/lab-build-cheatsheet.md) |

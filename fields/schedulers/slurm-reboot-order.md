@@ -12,7 +12,7 @@ relations:
 ---
 # Rebooting a Slurm Cluster Without Losing Your Job (Or Anyone Else's)
 
-> **Part of the `schedulers/` series.** Sourced and expanded from a [classic r/HPC thread](https://www.reddit.com/r/HPC/comments/ipij91/slurm_reboot_order/) that every cluster admin eventually rediscovers the hard way.
+> **Part of the `schedulers/` series.** Sourced and expanded from a [classic r/HPC thread](https://www.reddit.com/r/HPC/comments/ipij91/slurm_reboot_order/) that every cluster admin eventually rediscovers the hard way. The full-outage sequence is for when the control plane needs rebooting too; if only compute nodes do, [Slurm can do it for you](#when-only-the-compute-nodes-need-a-reboot) without an outage.
 
 ## Table of Contents
 - [Rebooting a Slurm Cluster Without Losing Your Job (Or Anyone Else's)](#rebooting-a-slurm-cluster-without-losing-your-job-or-anyone-elses)
@@ -28,7 +28,9 @@ relations:
     - [Phase 5 — Controlled reopening](#phase-5--controlled-reopening)
   - [The order, visualized](#the-order-visualized)
   - [Why this order and not another](#why-this-order-and-not-another)
+  - [When only the compute nodes need a reboot](#when-only-the-compute-nodes-need-a-reboot)
   - [The honest caveat](#the-honest-caveat)
+  - [References](#references)
 
 ---
 
@@ -143,6 +145,58 @@ Bring anything up out of order — say, compute nodes before the controller is c
 
 ---
 
+## When only the compute nodes need a reboot
+
+Most reboots aren't whole-cluster events. A kernel or driver update on the compute nodes doesn't need the controller, the database or the login nodes to go anywhere. For that, Slurm has a rolling reboot built in:
+
+```bash
+scontrol reboot ASAP nextstate=RESUME reason="kernel CHG-2001" cn[001-400]
+```
+
+| Piece | What it does |
+| --- | --- |
+| `reboot` | Runs `RebootProgram` from `slurm.conf` on each node when it's idle. Nothing happens without `RebootProgram` set |
+| `ASAP` | Drains each node right away, so no new jobs land there; running jobs finish normally first |
+| `nextstate=RESUME` | Clears the drain and the reason once the node has rebooted and slurmd registered again. `nextstate=DOWN` leaves it down for you to check. With `ASAP` and no `nextstate`, newer man pages (26.11) say it defaults to `UNDRAIN`; the 23.11 page doesn't say, so set it explicitly |
+| `reason=` | What `sinfo -R` shows while it's out. Put the ticket there |
+
+We ran it on two lab nodes (Slurm 23.11.4, `RebootProgram=/usr/sbin/reboot`): cn001 was idle, cn002 had a 40-second job.
+
+```text
+NODELIST STATE    REASON
+cn001    reboot^  kernel CHG-2001 : reboot issued
+cn002    draining@ kernel CHG-2001
+```
+
+cn001 went straight to reboot (`^` = reboot issued). cn002 drained (`@` = reboot pending) and waited; its job finished `COMPLETED 0:0`, and only then did the node reboot. No job was killed, and nobody ran a loop.
+
+The last step didn't complete in our lab, and the reason is worth knowing. Both containers did reboot, but stayed in `reboot^` until we resumed them by hand. The controller only accepts a reboot once the node reports a **boot time later than the reboot request** (`waiting_for_node_boot()` in `node_mgr.c`), and containers report their host's boot time, so it never moves. On real hardware the boot time changes and the node returns on its own. The same check is what catches a node that *didn't* reboot: after `ResumeTimeout` it's marked `DOWN` instead of quietly resuming.
+
+When to use which:
+
+| Situation | Use |
+| --- | --- |
+| Compute nodes only: kernel, driver, firmware | `scontrol reboot ASAP nextstate=RESUME`, maybe a few racks at a time |
+| You need a canary and a health check before resume | A rolling playbook, like [Rolling maintenance](/fields/devops/ansible/rolling-maintenance.md) in the Ansible series |
+| Controller, database or login nodes too | The full sequence on this page |
+
+`nextstate=RESUME` puts the node back as soon as slurmd registers, but not blindly: the man page says slurmd runs `HealthCheckProgram` once after the reboot, *before* it registers. If that's [NHC](/fields/system-administration/node-health-check/README.md), a node that comes back without its mounts or GPUs is drained instead of resumed.
+
+---
+
 ## The honest caveat
 
 This exact sequence scales down cleanly to a handful of nodes and a weekend maintenance window. On genuinely large systems, expect the process to stretch, and expect pressure from whoever's paying the bills — **every hour of downtime on a large cluster can cost thousands of euros**, and that pressure is real regardless of how careful you're being. Two things help more than anything else at that scale: a longer prep list than you think you need, and enough colleagues in the loop that the to-do list isn't resting on one person's memory at 3 AM.
+
+**Takeaway:** for a whole-cluster outage, go database → slurmdbd → slurmctld → front-ends → compute with partitions held `DOWN`; for compute-only reboots, let `scontrol reboot ASAP nextstate=RESUME` drain and return each node for you.
+
+---
+
+## References
+
+- [scontrol(1): reboot](https://slurm.schedmd.com/scontrol.html#OPT_reboot): `ASAP`, `nextstate`, `reason`.
+- [slurm.conf(5): RebootProgram](https://slurm.schedmd.com/slurm.conf.html#OPT_RebootProgram), [ResumeTimeout](https://slurm.schedmd.com/slurm.conf.html#OPT_ResumeTimeout), [ReturnToService](https://slurm.schedmd.com/slurm.conf.html#OPT_ReturnToService).
+- [sinfo(1): node state codes](https://slurm.schedmd.com/sinfo.html#SECTION_NODE-STATE-CODES): `@` reboot pending, `^` reboot issued.
+- [Slurm reservations](https://slurm.schedmd.com/reservations.html): the `MAINT` flag.
+- [Slurm source, `node_mgr.c`](https://github.com/SchedMD/slurm/blob/slurm-23-11-4-1/src/slurmctld/node_mgr.c): `waiting_for_node_boot()`, the boot-time check.
+- [r/HPC: Slurm reboot order](https://www.reddit.com/r/HPC/comments/ipij91/slurm_reboot_order/): the thread this page grew from.

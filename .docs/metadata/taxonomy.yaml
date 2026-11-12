@@ -104,6 +104,19 @@ domains:
     related: [software-engineering]
 
 tags:
+  ansible:
+    label: Ansible
+    kind: technology
+  monitoring:
+    label: Monitoring
+  prometheus:
+    label: Prometheus
+    kind: technology
+  statistics:
+    label: Statistics
+  victoriametrics:
+    label: VictoriaMetrics
+    kind: technology
   affinity:
     label: Affinity
   applications:
