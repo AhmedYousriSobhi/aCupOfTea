@@ -6,5 +6,7 @@
   [`convolution`](/.docs/generated/explore/tags/convolution.md) [`filtering`](/.docs/generated/explore/tags/filtering.md) [`fourier-transform`](/.docs/generated/explore/tags/fourier-transform.md) [`sampling`](/.docs/generated/explore/tags/sampling.md)
 - [Images Are Just Matrices](/fields/digital-image-processing/images-are-just-matrices.md) — A pixel is a number in a grid - sampling, quantization, bit depth, coordinates and neighbours, and why 200 + 100 can equal 44. *(beginner · 7 min)*  
   [`sampling`](/.docs/generated/explore/tags/sampling.md)
+- [Stir the Pot First: Population, Sample, and Why We Guess](/fields/data-science/probability-statistics/stir-the-pot-population-and-sampling.md) — Why a sip judges a pot of tea only if you stir it: population versus sample, four ways to draw a sample, the poll that asked 2.4 million and still erred. *(beginner · 12 min)*  
+  [`sampling`](/.docs/generated/explore/tags/sampling.md) [`statistics`](/.docs/generated/explore/tags/statistics.md)
 
 [All tags](/.docs/generated/explore/tags.md)

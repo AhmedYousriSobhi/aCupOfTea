@@ -32,4 +32,4 @@ A short series on Kubernetes, written by someone who runs GPU clusters for a liv
  
 ## Also on the shelf
 
-- [kubectl troubleshooting cheat sheet](/tips/kubectl-troubleshooting.md): five questions, in order, for a pod or Job that won't work (lives in `tips/`)
+- [kubectl troubleshooting cheat sheet](/fields/devops/kubernetes/cheatsheet.md): five questions, in order, for a pod or Job that won't work

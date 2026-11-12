@@ -37,6 +37,88 @@
       "job-execution-journey"
     ]
   },
+  "ansible-cheatsheet": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "ansible-getting-started",
+      "ansible-idempotence",
+      "ansible-inventory",
+      "ansible-roles",
+      "ansible-rolling",
+      "ansible-vault"
+    ],
+    "related_by": []
+  },
+  "ansible-getting-started": {
+    "prerequisite_of": [
+      "ansible-inventory"
+    ],
+    "prerequisites": [],
+    "related": [],
+    "related_by": [
+      "ansible-cheatsheet"
+    ]
+  },
+  "ansible-idempotence": {
+    "prerequisite_of": [
+      "ansible-roles"
+    ],
+    "prerequisites": [
+      "ansible-inventory"
+    ],
+    "related": [],
+    "related_by": [
+      "ansible-cheatsheet"
+    ]
+  },
+  "ansible-inventory": {
+    "prerequisite_of": [
+      "ansible-idempotence"
+    ],
+    "prerequisites": [
+      "ansible-getting-started"
+    ],
+    "related": [],
+    "related_by": [
+      "ansible-cheatsheet"
+    ]
+  },
+  "ansible-roles": {
+    "prerequisite_of": [
+      "ansible-rolling",
+      "ansible-vault"
+    ],
+    "prerequisites": [
+      "ansible-idempotence"
+    ],
+    "related": [],
+    "related_by": [
+      "ansible-cheatsheet"
+    ]
+  },
+  "ansible-rolling": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "ansible-roles"
+    ],
+    "related": [
+      "nhc-build-and-install"
+    ],
+    "related_by": [
+      "ansible-cheatsheet"
+    ]
+  },
+  "ansible-vault": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "ansible-roles"
+    ],
+    "related": [],
+    "related_by": [
+      "ansible-cheatsheet"
+    ]
+  },
   "bias-variance-trade-off": {
     "prerequisite_of": [],
     "prerequisites": [],
@@ -112,6 +194,20 @@
     ],
     "related": [],
     "related_by": []
+  },
+  "data-types-and-frequency-tables": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "probability-statistics-series",
+      "stir-the-pot-population-and-sampling"
+    ],
+    "related_by": [
+      "draw-it-before-you-describe-it",
+      "probability-statistics-series",
+      "stir-the-pot-population-and-sampling",
+      "the-number-on-the-tin"
+    ]
   },
   "deep-learning-basics": {
     "prerequisite_of": [
@@ -251,6 +347,19 @@
       "oomkilled-with-memory-to-spare"
     ]
   },
+  "draw-it-before-you-describe-it": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "data-types-and-frequency-tables",
+      "probability-statistics-series",
+      "the-number-on-the-tin"
+    ],
+    "related_by": [
+      "probability-statistics-series",
+      "the-number-on-the-tin"
+    ]
+  },
   "encoder-decoder-machine-translation": {
     "prerequisite_of": [],
     "prerequisites": [
@@ -285,7 +394,9 @@
     "related": [
       "containers-101"
     ],
-    "related_by": []
+    "related_by": [
+      "vm-why-victoriametrics"
+    ]
   },
   "gpu-failure-prediction-overview": {
     "prerequisite_of": [],
@@ -684,7 +795,9 @@
       "nhc-why-node-health-check"
     ],
     "related": [],
-    "related_by": []
+    "related_by": [
+      "ansible-rolling"
+    ]
   },
   "nhc-case-study": {
     "prerequisite_of": [],
@@ -922,6 +1035,22 @@
     "related": [],
     "related_by": []
   },
+  "probability-statistics-series": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "data-types-and-frequency-tables",
+      "draw-it-before-you-describe-it",
+      "stir-the-pot-population-and-sampling",
+      "the-number-on-the-tin"
+    ],
+    "related_by": [
+      "data-types-and-frequency-tables",
+      "draw-it-before-you-describe-it",
+      "stir-the-pot-population-and-sampling",
+      "the-number-on-the-tin"
+    ]
+  },
   "pytorch-101": {
     "prerequisite_of": [
       "pytorch-ddp"
@@ -1012,7 +1141,9 @@
     "related_by": []
   },
   "slurm-accounting-multi-tenancy": {
-    "prerequisite_of": [],
+    "prerequisite_of": [
+      "slurm-qos-limits"
+    ],
     "prerequisites": [],
     "related": [
       "slurm-mixed-gpus-overview"
@@ -1022,6 +1153,8 @@
       "slurm-backfill-tuning",
       "slurm-cgroups-in-practice",
       "slurm-kill-task-failed",
+      "slurm-pending-reasons",
+      "slurm-priority-multifactor",
       "slurm-upgrade-order"
     ]
   },
@@ -1033,7 +1166,10 @@
       "slurm-preemption-requeue-signals"
     ],
     "related_by": [
-      "slurm-job-script-tale"
+      "slurm-job-script-tale",
+      "slurm-openmetrics",
+      "slurm-pending-reasons",
+      "slurm-topology-placement"
     ]
   },
   "slurm-cgroups-in-practice": {
@@ -1052,6 +1188,36 @@
       "slurm-slurmstepd"
     ]
   },
+  "slurm-containers-pyxis": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "slurm-distributed-training"
+    ],
+    "related": [
+      "slurm-gpu-health-checks"
+    ],
+    "related_by": [
+      "slurm-distributed-training",
+      "slurm-gpu-health-checks",
+      "slurm-lab-cheatsheet"
+    ]
+  },
+  "slurm-distributed-training": {
+    "prerequisite_of": [
+      "slurm-containers-pyxis"
+    ],
+    "prerequisites": [
+      "slurm-topology-placement"
+    ],
+    "related": [
+      "slurm-containers-pyxis",
+      "slurm-job-script-tale"
+    ],
+    "related_by": [
+      "slurm-lab-cheatsheet",
+      "slurm-topology-placement"
+    ]
+  },
   "slurm-gpu-affinity-socket-lie": {
     "prerequisite_of": [],
     "prerequisites": [],
@@ -1060,6 +1226,20 @@
       "slurm-kill-task-failed"
     ],
     "related_by": []
+  },
+  "slurm-gpu-health-checks": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "slurm-containers-pyxis",
+      "slurm-kill-task-failed",
+      "slurm-spool-dir-full"
+    ],
+    "related_by": [
+      "slurm-containers-pyxis",
+      "slurm-lab-cheatsheet",
+      "slurm-openmetrics"
+    ]
   },
   "slurm-intro": {
     "prerequisite_of": [
@@ -1083,6 +1263,7 @@
       "slurm-spool-dir-full"
     ],
     "related_by": [
+      "slurm-distributed-training",
       "slurm-intro"
     ]
   },
@@ -1096,10 +1277,24 @@
     "related_by": [
       "draining-a-gpu-node",
       "slurm-gpu-affinity-socket-lie",
+      "slurm-gpu-health-checks",
       "slurm-preemption-requeue-signals",
       "slurm-slurmstepd",
       "slurm-spool-dir-full"
     ]
+  },
+  "slurm-lab-cheatsheet": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "slurm-containers-pyxis",
+      "slurm-distributed-training",
+      "slurm-gpu-health-checks",
+      "slurm-openmetrics",
+      "slurm-pending-reasons",
+      "slurm-topology-placement"
+    ],
+    "related_by": []
   },
   "slurm-mixed-gpus-four-ways": {
     "prerequisite_of": [
@@ -1135,6 +1330,20 @@
     "related": [],
     "related_by": []
   },
+  "slurm-openmetrics": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "vm-metricsql-vmalert",
+      "vm-single-node"
+    ],
+    "related": [
+      "slurm-backfill-tuning",
+      "slurm-gpu-health-checks"
+    ],
+    "related_by": [
+      "slurm-lab-cheatsheet"
+    ]
+  },
   "slurm-pam-adopt-ssh-access": {
     "prerequisite_of": [],
     "prerequisites": [],
@@ -1148,6 +1357,20 @@
       "slurm-upgrade-order"
     ]
   },
+  "slurm-pending-reasons": {
+    "prerequisite_of": [
+      "slurm-priority-multifactor",
+      "slurm-qos-limits"
+    ],
+    "prerequisites": [],
+    "related": [
+      "slurm-accounting-multi-tenancy",
+      "slurm-backfill-tuning"
+    ],
+    "related_by": [
+      "slurm-lab-cheatsheet"
+    ]
+  },
   "slurm-preemption-requeue-signals": {
     "prerequisite_of": [],
     "prerequisites": [],
@@ -1159,6 +1382,29 @@
       "draining-a-gpu-node",
       "slurm-backfill-tuning"
     ]
+  },
+  "slurm-priority-multifactor": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "slurm-pending-reasons"
+    ],
+    "related": [
+      "slurm-accounting-multi-tenancy"
+    ],
+    "related_by": [
+      "slurm-qos-limits"
+    ]
+  },
+  "slurm-qos-limits": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "slurm-accounting-multi-tenancy",
+      "slurm-pending-reasons"
+    ],
+    "related": [
+      "slurm-priority-multifactor"
+    ],
+    "related_by": []
   },
   "slurm-reboot-order": {
     "prerequisite_of": [],
@@ -1198,9 +1444,23 @@
       "slurm-slurmstepd"
     ],
     "related_by": [
+      "slurm-gpu-health-checks",
       "slurm-job-script-tale",
       "slurm-reboot-order",
       "slurm-slurmstepd"
+    ]
+  },
+  "slurm-topology-placement": {
+    "prerequisite_of": [
+      "slurm-distributed-training"
+    ],
+    "prerequisites": [],
+    "related": [
+      "slurm-backfill-tuning",
+      "slurm-distributed-training"
+    ],
+    "related_by": [
+      "slurm-lab-cheatsheet"
     ]
   },
   "slurm-upgrade-order": {
@@ -1213,6 +1473,31 @@
     "related_by": [
       "slurm-preemption-requeue-signals",
       "slurm-reboot-order"
+    ]
+  },
+  "stir-the-pot-population-and-sampling": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "data-types-and-frequency-tables",
+      "probability-statistics-series"
+    ],
+    "related_by": [
+      "data-types-and-frequency-tables",
+      "probability-statistics-series"
+    ]
+  },
+  "the-number-on-the-tin": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "data-types-and-frequency-tables",
+      "draw-it-before-you-describe-it",
+      "probability-statistics-series"
+    ],
+    "related_by": [
+      "draw-it-before-you-describe-it",
+      "probability-statistics-series"
     ]
   },
   "threat-model-and-first-launch": {
@@ -1241,6 +1526,82 @@
     "prerequisite_of": [],
     "prerequisites": [],
     "related": [],
+    "related_by": []
+  },
+  "vm-cheatsheet": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "vm-metricsql-vmalert",
+      "vm-retention-backups",
+      "vm-single-node",
+      "vm-vmagent-buffering"
+    ],
+    "related_by": []
+  },
+  "vm-metricsql-vmalert": {
+    "prerequisite_of": [
+      "slurm-openmetrics"
+    ],
+    "prerequisites": [
+      "vm-single-node"
+    ],
+    "related": [
+      "vm-retention-backups",
+      "vm-vmagent-buffering"
+    ],
+    "related_by": [
+      "vm-cheatsheet"
+    ]
+  },
+  "vm-retention-backups": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "vm-single-node"
+    ],
+    "related": [
+      "vm-vmagent-buffering"
+    ],
+    "related_by": [
+      "vm-cheatsheet",
+      "vm-metricsql-vmalert"
+    ]
+  },
+  "vm-single-node": {
+    "prerequisite_of": [
+      "slurm-openmetrics",
+      "vm-metricsql-vmalert",
+      "vm-retention-backups",
+      "vm-vmagent-buffering"
+    ],
+    "prerequisites": [
+      "vm-why-victoriametrics"
+    ],
+    "related": [],
+    "related_by": [
+      "vm-cheatsheet"
+    ]
+  },
+  "vm-vmagent-buffering": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "vm-single-node"
+    ],
+    "related": [],
+    "related_by": [
+      "vm-cheatsheet",
+      "vm-metricsql-vmalert",
+      "vm-retention-backups"
+    ]
+  },
+  "vm-why-victoriametrics": {
+    "prerequisite_of": [
+      "vm-single-node"
+    ],
+    "prerequisites": [],
+    "related": [
+      "gpu-allocation-vs-utilization"
+    ],
     "related_by": []
   },
   "your-kubeconfig-is-a-house-key": {

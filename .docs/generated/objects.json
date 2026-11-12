@@ -131,6 +131,213 @@
       "concept"
     ]
   },
+  "ansible-cheatsheet": {
+    "domains": [
+      "devops"
+    ],
+    "id": "ansible-cheatsheet",
+    "level": "intermediate",
+    "order": 7,
+    "path": "fields/devops/ansible/cheatsheet.md",
+    "reading_time_min": 6,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "ansible-getting-started",
+        "ansible-idempotence",
+        "ansible-inventory",
+        "ansible-roles",
+        "ansible-rolling",
+        "ansible-vault"
+      ]
+    },
+    "status": "stable",
+    "summary": "The Ansible series as direct steps - pinned install, ansible.cfg, inventory and host keys, ad-hoc commands, idempotent playbooks with handlers, a role, rolling maintenance, vault.",
+    "tags": [
+      "ansible",
+      "slurm"
+    ],
+    "title": "Ansible Cheatsheet: Every Step from the Series",
+    "type": "reference",
+    "types": [
+      "reference",
+      "guide"
+    ]
+  },
+  "ansible-getting-started": {
+    "domains": [
+      "devops",
+      "systems-and-hpc"
+    ],
+    "id": "ansible-getting-started",
+    "level": "beginner",
+    "order": 1,
+    "path": "fields/devops/ansible/getting-started.md",
+    "reading_time_min": 10,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "A pinned Ansible install per project, which Python the control machine and the nodes need, ansible.cfg, SSH host keys, and the errors you hit on the first runs.",
+    "tags": [
+      "ansible",
+      "slurm"
+    ],
+    "title": "The Laptop That Ran Ansible 2.16: An Install You Can Trust",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
+  "ansible-idempotence": {
+    "domains": [
+      "devops",
+      "systems-and-hpc"
+    ],
+    "id": "ansible-idempotence",
+    "level": "intermediate",
+    "order": 3,
+    "path": "fields/devops/ansible/idempotence-and-handlers.md",
+    "reading_time_min": 8,
+    "relations": {
+      "prerequisites": [
+        "ansible-inventory"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Why a playbook should report changed only when it changed something, templates instead of shell, handlers that restart only when needed, --check --diff, and the handler that never ran.",
+    "tags": [
+      "ansible",
+      "slurm"
+    ],
+    "title": "The Playbook That Restarted slurmd Every Night: Idempotence and Handlers",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
+  "ansible-inventory": {
+    "domains": [
+      "devops",
+      "systems-and-hpc"
+    ],
+    "id": "ansible-inventory",
+    "level": "beginner",
+    "order": 2,
+    "path": "fields/devops/ansible/inventory-and-ad-hoc.md",
+    "reading_time_min": 8,
+    "relations": {
+      "prerequisites": [
+        "ansible-getting-started"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Inventory groups and ranges, group_vars with overrides, targeting patterns, ad-hoc commands across the cluster, the node that was down, and checking a change in a fresh login.",
+    "tags": [
+      "ansible",
+      "slurm"
+    ],
+    "title": "Four Nodes Said \"Too Many Open Files\": Inventories and Ad-Hoc Commands",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
+  "ansible-roles": {
+    "domains": [
+      "devops",
+      "systems-and-hpc"
+    ],
+    "id": "ansible-roles",
+    "level": "intermediate",
+    "order": 4,
+    "path": "fields/devops/ansible/roles-and-variables.md",
+    "reading_time_min": 8,
+    "relations": {
+      "prerequisites": [
+        "ansible-idempotence"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Turn a playbook into a role, load OS-specific variables with first_found, put site values in defaults not vars, use hostvars for per-node values in templates, and check every node got the same config.",
+    "tags": [
+      "ansible",
+      "slurm"
+    ],
+    "title": "The GPU Node That Thought It Had 1000 MB: Roles and Variables",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
+  "ansible-rolling": {
+    "domains": [
+      "devops",
+      "systems-and-hpc"
+    ],
+    "id": "ansible-rolling",
+    "level": "advanced",
+    "order": 5,
+    "path": "fields/devops/ansible/rolling-maintenance.md",
+    "reading_time_min": 10,
+    "relations": {
+      "prerequisites": [
+        "ansible-roles"
+      ],
+      "related": [
+        "nhc-build-and-install"
+      ]
+    },
+    "status": "stable",
+    "summary": "Change busy compute nodes safely - drain through Slurm, wait for jobs, one canary first, stop on the first failure, check the node really came back, a dry run that is really dry, and rollback.",
+    "tags": [
+      "ansible",
+      "slurm"
+    ],
+    "title": "The Reboot That Killed a Week of Jobs: Rolling Maintenance with Slurm",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
+  "ansible-vault": {
+    "domains": [
+      "devops",
+      "systems-and-hpc"
+    ],
+    "id": "ansible-vault",
+    "level": "intermediate",
+    "order": 6,
+    "path": "fields/devops/ansible/secrets-and-vault.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [
+        "ansible-roles"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Keep secrets in an Ansible repo with vault, rotate a leaked munge key on every host at once, what 2.22's secret masking hides and misses, no_log, and a commit guard.",
+    "tags": [
+      "ansible",
+      "slurm"
+    ],
+    "title": "The Munge Key in Git: Secrets, Vault and Rotation",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
   "bias-variance-trade-off": {
     "domains": [
       "machine-learning",
@@ -321,6 +528,32 @@
     "type": "problem",
     "types": [
       "problem"
+    ]
+  },
+  "data-types-and-frequency-tables": {
+    "domains": [
+      "statistics"
+    ],
+    "id": "data-types-and-frequency-tables",
+    "level": "beginner",
+    "path": "fields/data-science/probability-statistics/data-types-and-frequency-tables.md",
+    "reading_time_min": 16,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "probability-statistics-series",
+        "stir-the-pot-population-and-sampling"
+      ]
+    },
+    "status": "stable",
+    "summary": "Why you cannot average a blend name: the four kinds of data, and how to turn raw numbers into honest category, ungrouped and grouped frequency tables.",
+    "tags": [
+      "statistics"
+    ],
+    "title": "Mira's Notebook: What Kind of Data Is This, and How Do You Count It?",
+    "type": "concept",
+    "types": [
+      "concept"
     ]
   },
   "deep-learning-basics": {
@@ -681,6 +914,33 @@
     "types": [
       "concept",
       "guide"
+    ]
+  },
+  "draw-it-before-you-describe-it": {
+    "domains": [
+      "statistics"
+    ],
+    "id": "draw-it-before-you-describe-it",
+    "level": "beginner",
+    "path": "fields/data-science/probability-statistics/draw-it-before-you-describe-it.md",
+    "reading_time_min": 11,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "data-types-and-frequency-tables",
+        "probability-statistics-series",
+        "the-number-on-the-tin"
+      ]
+    },
+    "status": "stable",
+    "summary": "Why a table of counts glazes eyes and a picture does not: the histogram, frequency polygon and ogive built from one table, and the mistakes that make them lie.",
+    "tags": [
+      "statistics"
+    ],
+    "title": "Draw It Before You Describe It: Three Pictures of the Same Fifty Days",
+    "type": "concept",
+    "types": [
+      "concept"
     ]
   },
   "encoder-decoder-machine-translation": {
@@ -1133,8 +1393,7 @@
     ],
     "id": "kubectl-troubleshooting",
     "level": "intermediate",
-    "order": 11,
-    "path": "tips/kubectl-troubleshooting.md",
+    "path": "fields/devops/kubernetes/cheatsheet.md",
     "reading_time_min": 9,
     "relations": {
       "prerequisites": [
@@ -2396,6 +2655,34 @@
       "concept"
     ]
   },
+  "probability-statistics-series": {
+    "domains": [
+      "statistics"
+    ],
+    "id": "probability-statistics-series",
+    "level": "beginner",
+    "path": "fields/data-science/probability-statistics/README.md",
+    "reading_time_min": 4,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "data-types-and-frequency-tables",
+        "draw-it-before-you-describe-it",
+        "stir-the-pot-population-and-sampling",
+        "the-number-on-the-tin"
+      ]
+    },
+    "status": "stable",
+    "summary": "A slow-brewed series on the ideas in probability and statistics that make people say \"wait, why?\", each one told as a small story in a tea shop.",
+    "tags": [
+      "statistics"
+    ],
+    "title": "Probability & Statistics, One Sip at a Time",
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
+  },
   "pytorch-101": {
     "domains": [
       "deep-learning",
@@ -2749,6 +3036,72 @@
       "concept"
     ]
   },
+  "slurm-containers-pyxis": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-containers-pyxis",
+    "level": "intermediate",
+    "order": 3,
+    "path": "fields/schedulers/slurm-ai-clusters/containers-with-pyxis.md",
+    "reading_time_min": 8,
+    "relations": {
+      "prerequisites": [
+        "slurm-distributed-training"
+      ],
+      "related": [
+        "slurm-gpu-health-checks"
+      ]
+    },
+    "status": "stable",
+    "summary": "Running Slurm job steps in containers with Pyxis and Enroot - the node that silently ran outside the container, read-only images, mounts, node-local paths, named containers, and the PyTorch env hook.",
+    "tags": [
+      "containers",
+      "hpc",
+      "nvidia",
+      "slurm"
+    ],
+    "title": "Containers on Slurm with Pyxis and Enroot",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
+  "slurm-distributed-training": {
+    "domains": [
+      "deep-learning",
+      "systems-and-hpc"
+    ],
+    "id": "slurm-distributed-training",
+    "level": "intermediate",
+    "order": 2,
+    "path": "fields/schedulers/slurm-ai-clusters/launching-distributed-training.md",
+    "reading_time_min": 6,
+    "relations": {
+      "prerequisites": [
+        "slurm-topology-placement"
+      ],
+      "related": [
+        "slurm-containers-pyxis",
+        "slurm-job-script-tale"
+      ]
+    },
+    "status": "stable",
+    "summary": "Why a 2-node training job can run on one node, the environment PyTorch needs from Slurm, launching with srun or torchrun, and the double-launch trap - tested with PyTorch 2.15 on Slurm 23.11.",
+    "tags": [
+      "distributed-training",
+      "hpc",
+      "pytorch",
+      "slurm"
+    ],
+    "title": "Launching Distributed Training on Slurm: srun, torchrun, and the Rank Contract",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
   "slurm-gpu-affinity-socket-lie": {
     "domains": [
       "systems-and-hpc"
@@ -2778,6 +3131,38 @@
       "concept"
     ]
   },
+  "slurm-gpu-health-checks": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-gpu-health-checks",
+    "level": "intermediate",
+    "order": 4,
+    "path": "fields/schedulers/slurm-ai-clusters/gpu-health-checks.md",
+    "reading_time_min": 7,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "slurm-containers-pyxis",
+        "slurm-kill-task-failed",
+        "slurm-spool-dir-full"
+      ]
+    },
+    "status": "stable",
+    "summary": "A tested Slurm HealthCheckProgram that drains a node when a GPU disappears, the bug where it overwrote the admin's drain reason, what slurmd does on restart, and the per-GPU drain coming in 26.11.",
+    "tags": [
+      "gpu",
+      "hpc",
+      "nvidia",
+      "slurm"
+    ],
+    "title": "When a GPU Falls Off the Bus: Health Checks That Drain the Node",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
   "slurm-intro": {
     "domains": [
       "systems-and-hpc"
@@ -2786,7 +3171,7 @@
     "level": "beginner",
     "order": 1,
     "path": "fields/schedulers/slurm-intro.md",
-    "reading_time_min": 8,
+    "reading_time_min": 9,
     "relations": {
       "prerequisites": [],
       "related": [
@@ -2864,6 +3249,40 @@
     "type": "concept",
     "types": [
       "concept"
+    ]
+  },
+  "slurm-lab-cheatsheet": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-lab-cheatsheet",
+    "level": "intermediate",
+    "order": 6,
+    "path": "fields/schedulers/slurm-ai-clusters/lab-build-cheatsheet.md",
+    "reading_time_min": 8,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "slurm-containers-pyxis",
+        "slurm-distributed-training",
+        "slurm-gpu-health-checks",
+        "slurm-openmetrics",
+        "slurm-pending-reasons",
+        "slurm-topology-placement"
+      ]
+    },
+    "status": "stable",
+    "summary": "Every step used to build the Slurm lab behind the pending-jobs and AI-cluster series - node image, Slurm 23.11 with accounting, topology, PyTorch, Enroot and Pyxis, health check, Slurm 26.05, metrics.",
+    "tags": [
+      "containers",
+      "hpc",
+      "slurm"
+    ],
+    "title": "Lab Build Cheatsheet: A Slurm AI Cluster in Containers",
+    "type": "reference",
+    "types": [
+      "reference",
+      "guide"
     ]
   },
   "slurm-mixed-gpus-four-ways": {
@@ -2976,6 +3395,40 @@
       "concept"
     ]
   },
+  "slurm-openmetrics": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-openmetrics",
+    "level": "intermediate",
+    "order": 5,
+    "path": "fields/schedulers/slurm-ai-clusters/metrics-openmetrics.md",
+    "reading_time_min": 6,
+    "relations": {
+      "prerequisites": [
+        "vm-metricsql-vmalert",
+        "vm-single-node"
+      ],
+      "related": [
+        "slurm-backfill-tuning",
+        "slurm-gpu-health-checks"
+      ]
+    },
+    "status": "stable",
+    "summary": "Slurm 25.11+ serves OpenMetrics from slurmctld - scraping it into VictoriaMetrics, idle CPUs fixed by DefMemPerCPU, MiB in _bytes metrics until 26.11, open access, and a tested alert.",
+    "tags": [
+      "hpc",
+      "monitoring",
+      "slurm",
+      "victoriametrics"
+    ],
+    "title": "Slurm Metrics Without an Exporter: OpenMetrics into VictoriaMetrics",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
   "slurm-pam-adopt-ssh-access": {
     "domains": [
       "security",
@@ -2985,7 +3438,7 @@
     "level": "intermediate",
     "order": 11,
     "path": "fields/schedulers/slurm-pam-adopt-ssh-access.md",
-    "reading_time_min": 4,
+    "reading_time_min": 8,
     "relations": {
       "prerequisites": [],
       "related": [
@@ -3002,6 +3455,35 @@
     "title": "pam_slurm_adopt: Closing the Slurm SSH Backdoor",
     "type": "guide",
     "types": [
+      "guide"
+    ]
+  },
+  "slurm-pending-reasons": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-pending-reasons",
+    "level": "beginner",
+    "order": 1,
+    "path": "fields/schedulers/slurm-pending-jobs/why-is-my-job-pending.md",
+    "reading_time_min": 7,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "slurm-accounting-multi-tenancy",
+        "slurm-backfill-tuning"
+      ]
+    },
+    "status": "stable",
+    "summary": "What Slurm's common pending reasons mean, which ones fix themselves and which never will, what users can fix without an admin, and a small triage script tested against each reason.",
+    "tags": [
+      "hpc",
+      "slurm"
+    ],
+    "title": "Reading the Reason Column: Why Is My Slurm Job Pending?",
+    "type": "concept",
+    "types": [
+      "concept",
       "guide"
     ]
   },
@@ -3034,6 +3516,67 @@
       "guide"
     ]
   },
+  "slurm-priority-multifactor": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-priority-multifactor",
+    "level": "intermediate",
+    "order": 2,
+    "path": "fields/schedulers/slurm-pending-jobs/who-goes-first.md",
+    "reading_time_min": 8,
+    "relations": {
+      "prerequisites": [
+        "slurm-pending-reasons"
+      ],
+      "related": [
+        "slurm-accounting-multi-tenancy"
+      ]
+    },
+    "status": "stable",
+    "summary": "How Slurm's multifactor priority is computed from age, fairshare and QOS weights, why every weight defaults to zero, how Fair Tree turns usage into a rank, and reading sprio and sshare.",
+    "tags": [
+      "hpc",
+      "slurm"
+    ],
+    "title": "Who Goes First: Slurm's Priority Number, Taken Apart",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
+  "slurm-qos-limits": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-qos-limits",
+    "level": "intermediate",
+    "order": 3,
+    "path": "fields/schedulers/slurm-pending-jobs/limits-that-wait-forever.md",
+    "reading_time_min": 7,
+    "relations": {
+      "prerequisites": [
+        "slurm-accounting-multi-tenancy",
+        "slurm-pending-reasons"
+      ],
+      "related": [
+        "slurm-priority-multifactor"
+      ]
+    },
+    "status": "stable",
+    "summary": "How Slurm QOS and account GPU limits behave on a real queue - the job that never runs, the second QOS that slips past a cap, partition QOS, DenyOnLimit, and live usage via assoc_mgr.",
+    "tags": [
+      "hpc",
+      "slurm"
+    ],
+    "title": "Limits That Wait Forever: QOS and Account Limits in Practice",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
   "slurm-reboot-order": {
     "domains": [
       "system-design",
@@ -3043,7 +3586,7 @@
     "level": "intermediate",
     "order": 12,
     "path": "fields/schedulers/slurm-reboot-order.md",
-    "reading_time_min": 6,
+    "reading_time_min": 9,
     "relations": {
       "prerequisites": [],
       "related": [
@@ -3122,6 +3665,36 @@
       "guide"
     ]
   },
+  "slurm-topology-placement": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-topology-placement",
+    "level": "intermediate",
+    "order": 1,
+    "path": "fields/schedulers/slurm-ai-clusters/topology-aware-placement.md",
+    "reading_time_min": 7,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "slurm-backfill-tuning",
+        "slurm-distributed-training"
+      ]
+    },
+    "status": "stable",
+    "summary": "How Slurm places multi-node jobs with and without a topology plugin - topology/tree, --switches, topology/block that refuses to straddle, the 25.05 topology.yaml, and a fatal block config.",
+    "tags": [
+      "distributed-training",
+      "hpc",
+      "slurm"
+    ],
+    "title": "Keep the Job on One Switch: Topology-Aware Placement in Slurm",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
   "slurm-upgrade-order": {
     "domains": [
       "systems-and-hpc"
@@ -3148,6 +3721,60 @@
     "type": "guide",
     "types": [
       "guide"
+    ]
+  },
+  "stir-the-pot-population-and-sampling": {
+    "domains": [
+      "statistics"
+    ],
+    "id": "stir-the-pot-population-and-sampling",
+    "level": "beginner",
+    "path": "fields/data-science/probability-statistics/stir-the-pot-population-and-sampling.md",
+    "reading_time_min": 12,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "data-types-and-frequency-tables",
+        "probability-statistics-series"
+      ]
+    },
+    "status": "stable",
+    "summary": "Why a sip judges a pot of tea only if you stir it: population versus sample, four ways to draw a sample, the poll that asked 2.4 million and still erred.",
+    "tags": [
+      "sampling",
+      "statistics"
+    ],
+    "title": "Stir the Pot First: Population, Sample, and Why We Guess",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "the-number-on-the-tin": {
+    "domains": [
+      "statistics"
+    ],
+    "id": "the-number-on-the-tin",
+    "level": "beginner",
+    "path": "fields/data-science/probability-statistics/the-number-on-the-tin.md",
+    "reading_time_min": 15,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "data-types-and-frequency-tables",
+        "draw-it-before-you-describe-it",
+        "probability-statistics-series"
+      ]
+    },
+    "status": "stable",
+    "summary": "Why a perfectly computed average can describe nobody: the mean as a balance point, the median, the mode, how outliers pull them apart, and how to choose.",
+    "tags": [
+      "statistics"
+    ],
+    "title": "The Number on the Tin: Mean, Median and Mode",
+    "type": "concept",
+    "types": [
+      "concept"
     ]
   },
   "threat-model-and-first-launch": {
@@ -3243,6 +3870,189 @@
     "type": "note",
     "types": [
       "note"
+    ]
+  },
+  "vm-cheatsheet": {
+    "domains": [
+      "devops"
+    ],
+    "id": "vm-cheatsheet",
+    "level": "intermediate",
+    "order": 6,
+    "path": "fields/devops/victoriametrics/cheatsheet.md",
+    "reading_time_min": 6,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "vm-metricsql-vmalert",
+        "vm-retention-backups",
+        "vm-single-node",
+        "vm-vmagent-buffering"
+      ]
+    },
+    "status": "stable",
+    "summary": "The VictoriaMetrics series as direct steps - verified install, service user, scrape config, admin keys, systemd unit, vmagent with a pinned queue, retention, backups, restore test, and tested alerts.",
+    "tags": [
+      "monitoring",
+      "victoriametrics"
+    ],
+    "title": "VictoriaMetrics Cheatsheet: Every Step from the Series",
+    "type": "reference",
+    "types": [
+      "reference",
+      "guide"
+    ]
+  },
+  "vm-metricsql-vmalert": {
+    "domains": [
+      "devops",
+      "systems-and-hpc"
+    ],
+    "id": "vm-metricsql-vmalert",
+    "level": "intermediate",
+    "order": 5,
+    "path": "fields/devops/victoriametrics/metricsql-and-vmalert.md",
+    "reading_time_min": 10,
+    "relations": {
+      "prerequisites": [
+        "vm-single-node"
+      ],
+      "related": [
+        "vm-retention-backups",
+        "vm-vmagent-buffering"
+      ]
+    },
+    "status": "stable",
+    "summary": "Why increase() gives different answers in Prometheus and VictoriaMetrics on the same data, and alert rules whose tests are proven to fail when the rule is wrong.",
+    "tags": [
+      "monitoring",
+      "prometheus",
+      "victoriametrics"
+    ],
+    "title": "MetricsQL Surprises and Alerts You Can Test",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
+  "vm-retention-backups": {
+    "domains": [
+      "devops",
+      "systems-and-hpc"
+    ],
+    "id": "vm-retention-backups",
+    "level": "intermediate",
+    "order": 4,
+    "path": "fields/devops/victoriametrics/retention-disk-and-backups.md",
+    "reading_time_min": 11,
+    "relations": {
+      "prerequisites": [
+        "vm-single-node"
+      ],
+      "related": [
+        "vm-vmagent-buffering"
+      ]
+    },
+    "status": "stable",
+    "summary": "What -retentionPeriod really deletes and when, how to size the disk from a real test run, the read-only mode that /health doesn't report, and an hourly backup job proven by restoring it.",
+    "tags": [
+      "monitoring",
+      "storage",
+      "victoriametrics"
+    ],
+    "title": "Retention, Full Disks and Backups: Looking After the Data Once It Lands",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
+  "vm-single-node": {
+    "domains": [
+      "devops",
+      "systems-and-hpc"
+    ],
+    "id": "vm-single-node",
+    "level": "intermediate",
+    "order": 2,
+    "path": "fields/devops/victoriametrics/single-node-in-ten-minutes.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [
+        "vm-why-victoriametrics"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Install single-node VictoriaMetrics from a verified tarball, run it under systemd, reload scrape config safely, and close the delete endpoint that is open by default.",
+    "tags": [
+      "monitoring",
+      "prometheus",
+      "victoriametrics"
+    ],
+    "title": "A Single Node You Can Trust: Installing VictoriaMetrics Properly",
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
+  },
+  "vm-vmagent-buffering": {
+    "domains": [
+      "devops",
+      "systems-and-hpc"
+    ],
+    "id": "vm-vmagent-buffering",
+    "level": "intermediate",
+    "order": 3,
+    "path": "fields/devops/victoriametrics/vmagent-and-the-network-blip.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [
+        "vm-single-node"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "How vmagent buffers metrics on disk while storage is down, the URL edit that silently deletes that buffer, the v1.156.0 flag that prevents it, and how to size the queue.",
+    "tags": [
+      "monitoring",
+      "victoriametrics"
+    ],
+    "title": "vmagent and the Network Blip: Keeping Metrics Through an Outage",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
+  "vm-why-victoriametrics": {
+    "domains": [
+      "devops",
+      "systems-and-hpc"
+    ],
+    "id": "vm-why-victoriametrics",
+    "level": "beginner",
+    "order": 1,
+    "path": "fields/devops/victoriametrics/why-victoriametrics.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "gpu-allocation-vs-utilization"
+      ]
+    },
+    "status": "stable",
+    "summary": "What VictoriaMetrics is and isn't, its components in one table, when single-node is enough and when a cluster earns its complexity, and which features are free.",
+    "tags": [
+      "monitoring",
+      "prometheus",
+      "victoriametrics"
+    ],
+    "title": "The Prometheus That Ate the Head Node: Why VictoriaMetrics",
+    "type": "concept",
+    "types": [
+      "concept"
     ]
   },
   "your-kubeconfig-is-a-house-key": {

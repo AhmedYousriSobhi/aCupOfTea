@@ -34,7 +34,7 @@ relations:
     - [Teach users the three lines](#teach-users-the-three-lines)
   - [The decision table](#the-decision-table)
   - [The interview answer](#the-interview-answer)
-    - [References](#references)
+  - [References](#references)
 
 ---
 
@@ -210,7 +210,9 @@ Most mixing problems are vocabulary problems. Put this in your user docs:
 
 That's the series. You started with "Slurm can't" and "it doesn't really work." You're leaving with "it works, here's exactly when to use it." Back to the [overview](/fields/schedulers/slurm-mixed-gpus/README.md).
 
-### References
+---
+
+## References
 - [Slurm: Heterogeneous Job Support (examples, heterogeneous steps, system administrator information)](https://slurm.schedmd.com/heterogeneous_jobs.html)
 - [Slurm: Generic Resource (GRES) Scheduling (GPU types, AutoDetect, `slurmd -C`)](https://slurm.schedmd.com/gres.html)
 - [Slurm `sbatch` man page, `--constraint` operators (mirror of the official man page)](https://manpages.org/sbatch)

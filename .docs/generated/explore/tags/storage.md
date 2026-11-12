@@ -6,6 +6,8 @@
   [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`storage`](/.docs/generated/explore/tags/storage.md)
 - [RDMA, InfiniBand and GPUDirect: Taking the CPU Out of the Way](/fields/system-administration/ai-storage-and-fabric/rdma-infiniband-gpudirect.md) — Why AI clusters use RDMA fabrics (InfiniBand or RoCE), what kernel bypass and zero-copy mean, and how GPUDirect RDMA and GPUDirect Storage move data straight into GPU memory. *(intermediate · 8 min)*  
   [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md) [`storage`](/.docs/generated/explore/tags/storage.md)
+- [Retention, Full Disks and Backups: Looking After the Data Once It Lands](/fields/devops/victoriametrics/retention-disk-and-backups.md) — What -retentionPeriod really deletes and when, how to size the disk from a real test run, the read-only mode that /health doesn't report, and an hourly backup job proven by restoring it. *(intermediate · 11 min)*  
+  [`monitoring`](/.docs/generated/explore/tags/monitoring.md) [`storage`](/.docs/generated/explore/tags/storage.md) [`victoriametrics`](/.docs/generated/explore/tags/victoriametrics.md)
 - [Storage and Fabric for AI Clusters - Overview](/fields/system-administration/ai-storage-and-fabric/README.md) — A two-part series on keeping thousands of GPUs fed - parallel filesystems, small files and checkpoint storms, then RDMA, InfiniBand, RoCE and GPUDirect. *(intermediate · 2 min)*  
   [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md) [`storage`](/.docs/generated/explore/tags/storage.md)
 

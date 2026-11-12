@@ -11,8 +11,11 @@ Each subdirectory focuses on a specific area, with in-depth knowledge, concepts 
 | [computer-science-engineering](/fields/computer-science-engineering/README.md) | Computer Science Engineering fundamentals |
 | [benchmarks](/fields/benchmarks/README.md) | HPC benchmarks: HPL, STREAM, OSU, NCCL and how to read them |
 | [data-collection](/fields/data-collection/README.md) | Data gathering and scraping techniques |
+| [data-science](/fields/data-science/README.md) | Probability, statistics and reasoning about data |
 | [deep-learning](/fields/deep-learning/README.md) | Neural networks, CNNs, RNNs, and deep learning concepts |
 | [design-patterns](/fields/design-patterns/README.md) | Software design patterns for ML/AI systems |
+| [devops](/fields/devops/README.md) | Ansible, Kubernetes, VictoriaMetrics and the machines that run code |
+| [digital-image-processing](/fields/digital-image-processing/README.md) | Images as matrices: filtering, Fourier, restoration and geometry |
 | [generative-ai](/fields/generative-ai/README.md) | LLMs, LangChain, and generative models |
 | [libraries-frameworks-containers](/fields/libraries-frameworks-containers/README.md) | Tools like Pandas, PyTorch, Docker |
 | [recommender-systems](/fields/recommender-systems/README.md) | Recommendation algorithms and systems |

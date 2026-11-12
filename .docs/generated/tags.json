@@ -7,6 +7,18 @@
       "parallel-execution-and-affinity"
     ]
   },
+  "ansible": {
+    "label": "Ansible",
+    "objects": [
+      "ansible-cheatsheet",
+      "ansible-getting-started",
+      "ansible-idempotence",
+      "ansible-inventory",
+      "ansible-roles",
+      "ansible-rolling",
+      "ansible-vault"
+    ]
+  },
   "applications": {
     "label": "Applications",
     "objects": []
@@ -24,7 +36,9 @@
       "build-a-two-node-k3s-lab",
       "containers-101",
       "k3s-vs-kubeadm",
-      "singularity-containers"
+      "singularity-containers",
+      "slurm-containers-pyxis",
+      "slurm-lab-cheatsheet"
     ]
   },
   "convolution": {
@@ -60,7 +74,9 @@
     "label": "Distributed Training",
     "objects": [
       "nccl-collective-communication",
-      "pytorch-ddp"
+      "pytorch-ddp",
+      "slurm-distributed-training",
+      "slurm-topology-placement"
     ]
   },
   "encoder-decoder": {
@@ -123,6 +139,7 @@
       "slurm-accounting-multi-tenancy",
       "slurm-cgroups-in-practice",
       "slurm-gpu-affinity-socket-lie",
+      "slurm-gpu-health-checks",
       "slurm-mixed-gpus-four-ways",
       "slurm-mixed-gpus-overview",
       "slurm-mixed-gpus-where-shine",
@@ -174,19 +191,28 @@
       "slurm-accounting-multi-tenancy",
       "slurm-backfill-tuning",
       "slurm-cgroups-in-practice",
+      "slurm-containers-pyxis",
+      "slurm-distributed-training",
       "slurm-gpu-affinity-socket-lie",
+      "slurm-gpu-health-checks",
       "slurm-intro",
       "slurm-job-script-tale",
       "slurm-kill-task-failed",
+      "slurm-lab-cheatsheet",
       "slurm-mixed-gpus-four-ways",
       "slurm-mixed-gpus-overview",
       "slurm-mixed-gpus-where-shine",
       "slurm-mixed-gpus-why-disappoints",
+      "slurm-openmetrics",
       "slurm-pam-adopt-ssh-access",
+      "slurm-pending-reasons",
       "slurm-preemption-requeue-signals",
+      "slurm-priority-multifactor",
+      "slurm-qos-limits",
       "slurm-reboot-order",
       "slurm-slurmstepd",
       "slurm-spool-dir-full",
+      "slurm-topology-placement",
       "slurm-upgrade-order"
     ]
   },
@@ -230,6 +256,18 @@
     "objects": [
       "accuracy-paradox",
       "bias-variance-trade-off"
+    ]
+  },
+  "monitoring": {
+    "label": "Monitoring",
+    "objects": [
+      "slurm-openmetrics",
+      "vm-cheatsheet",
+      "vm-metricsql-vmalert",
+      "vm-retention-backups",
+      "vm-single-node",
+      "vm-vmagent-buffering",
+      "vm-why-victoriametrics"
     ]
   },
   "mpi": {
@@ -286,6 +324,8 @@
       "nhc-case-study",
       "nhc-custom-checks",
       "nvidia-cluster-readiness-engine",
+      "slurm-containers-pyxis",
+      "slurm-gpu-health-checks",
       "slurm-mixed-gpus-overview",
       "slurm-mixed-gpus-where-shine",
       "slurm-mixed-gpus-why-disappoints"
@@ -314,11 +354,20 @@
       "threat-model-and-first-launch"
     ]
   },
+  "prometheus": {
+    "label": "Prometheus",
+    "objects": [
+      "vm-metricsql-vmalert",
+      "vm-single-node",
+      "vm-why-victoriametrics"
+    ]
+  },
   "pytorch": {
     "label": "PyTorch",
     "objects": [
       "pytorch-101",
-      "pytorch-ddp"
+      "pytorch-ddp",
+      "slurm-distributed-training"
     ]
   },
   "rnn": {
@@ -332,13 +381,21 @@
     "label": "Sampling",
     "objects": [
       "dip-frequency-filtering-aliasing",
-      "dip-images-are-matrices"
+      "dip-images-are-matrices",
+      "stir-the-pot-population-and-sampling"
     ]
   },
   "slurm": {
     "label": "Slurm",
     "objects": [
       "ai-infrastructure-core-concepts",
+      "ansible-cheatsheet",
+      "ansible-getting-started",
+      "ansible-idempotence",
+      "ansible-inventory",
+      "ansible-roles",
+      "ansible-rolling",
+      "ansible-vault",
       "gpu-failure-prediction-overview",
       "gpu-pred-alert-to-drain",
       "gpu-pred-runbook",
@@ -355,19 +412,28 @@
       "slurm-accounting-multi-tenancy",
       "slurm-backfill-tuning",
       "slurm-cgroups-in-practice",
+      "slurm-containers-pyxis",
+      "slurm-distributed-training",
       "slurm-gpu-affinity-socket-lie",
+      "slurm-gpu-health-checks",
       "slurm-intro",
       "slurm-job-script-tale",
       "slurm-kill-task-failed",
+      "slurm-lab-cheatsheet",
       "slurm-mixed-gpus-four-ways",
       "slurm-mixed-gpus-overview",
       "slurm-mixed-gpus-where-shine",
       "slurm-mixed-gpus-why-disappoints",
+      "slurm-openmetrics",
       "slurm-pam-adopt-ssh-access",
+      "slurm-pending-reasons",
       "slurm-preemption-requeue-signals",
+      "slurm-priority-multifactor",
+      "slurm-qos-limits",
       "slurm-reboot-order",
       "slurm-slurmstepd",
       "slurm-spool-dir-full",
+      "slurm-topology-placement",
       "slurm-upgrade-order"
     ]
   },
@@ -386,12 +452,23 @@
       "sign-in-hygiene"
     ]
   },
+  "statistics": {
+    "label": "Statistics",
+    "objects": [
+      "data-types-and-frequency-tables",
+      "draw-it-before-you-describe-it",
+      "probability-statistics-series",
+      "stir-the-pot-population-and-sampling",
+      "the-number-on-the-tin"
+    ]
+  },
   "storage": {
     "label": "Storage",
     "objects": [
       "ai-storage-and-fabric-overview",
       "ai-storage-parallel-filesystems",
-      "ai-storage-rdma-gpudirect"
+      "ai-storage-rdma-gpudirect",
+      "vm-retention-backups"
     ]
   },
   "system-design": {
@@ -413,6 +490,18 @@
       "llm-perf-sparsity-vs-quantization",
       "llm-perf-structured-sparsity",
       "sequence-models"
+    ]
+  },
+  "victoriametrics": {
+    "label": "VictoriaMetrics",
+    "objects": [
+      "slurm-openmetrics",
+      "vm-cheatsheet",
+      "vm-metricsql-vmalert",
+      "vm-retention-backups",
+      "vm-single-node",
+      "vm-vmagent-buffering",
+      "vm-why-victoriametrics"
     ]
   }
 }

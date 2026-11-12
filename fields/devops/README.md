@@ -17,7 +17,8 @@ The focus is practical and HPC-flavoured. Examples lean on GPU clusters, Slurm-s
 | Section | What you'll find | Best with |
 | --- | --- | --- |
 | [Kubernetes](/fields/devops/kubernetes/README.md) | Core concepts, a two-node lab you can break on purpose, RBAC, monitoring, and what changes at HPC scale | A strong builder's tea |
-| [Ansible](/fields/devops/ansible.md) | Installing Ansible (Ubuntu or an isolated Mamba environment), checking it works, and fixing the first-run errors. A series of Ansible stories is planned | A quick cup |
+| [Ansible](/fields/devops/ansible/README.md) | A six-part series for cluster admins: a pinned install, inventories, idempotent playbooks and handlers, roles, rolling Slurm maintenance with a canary, secrets with vault, and a cheatsheet | A long pot |
+| [VictoriaMetrics](/fields/devops/victoriametrics/README.md) | Why it exists, a locked-down single node, vmagent through outages, retention and tested backups, MetricsQL vs PromQL, alerts with tests that can fail, and a cheatsheet | A long pot |
 | Observability | Prometheus, DCGM Exporter, Grafana, and the difference between "allocated" and "utilized" | *Brewing* |
 | CI/CD | Pipelines that fail early and loudly, instead of late and quietly | *Brewing* |
 

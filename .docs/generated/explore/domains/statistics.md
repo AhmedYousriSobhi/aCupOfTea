@@ -8,13 +8,23 @@ Statistical methods and probability.
   [`model-evaluation`](/.docs/generated/explore/tags/model-evaluation.md)
 - [Bias and Variance Trade-Off](/fields/tabular-data/data-evaluation/model-behavior/bias-variance-trade-off.md) — What bias and variance are, how they trade off, and the difference between a model that is consistent but inaccurate and one that is inconsistent but accurate. *(7 min)*  
   [`model-evaluation`](/.docs/generated/explore/tags/model-evaluation.md)
+- [Draw It Before You Describe It: Three Pictures of the Same Fifty Days](/fields/data-science/probability-statistics/draw-it-before-you-describe-it.md) — Why a table of counts glazes eyes and a picture does not: the histogram, frequency polygon and ogive built from one table, and the mistakes that make them lie. *(beginner · 11 min)*  
+  [`statistics`](/.docs/generated/explore/tags/statistics.md)
 - [Intensity Transforms and Histograms](/fields/digital-image-processing/intensity-transforms-and-histograms.md) — Rescue a dark image with one formula - negatives, log, gamma and histogram equalization, with the CDF worked out by hand on a tiny image. *(beginner · 7 min)*
+- [Mira's Notebook: What Kind of Data Is This, and How Do You Count It?](/fields/data-science/probability-statistics/data-types-and-frequency-tables.md) — Why you cannot average a blend name: the four kinds of data, and how to turn raw numbers into honest category, ungrouped and grouped frequency tables. *(beginner · 16 min)*  
+  [`statistics`](/.docs/generated/explore/tags/statistics.md)
 - [Noise and Restoration](/fields/digital-image-processing/noise-and-restoration.md) — The degradation model g = h*f + n, common noise types, why inverse filtering explodes, and how the Wiener filter gives up gracefully - with PSNR to score the result. *(intermediate · 7 min)*  
   [`filtering`](/.docs/generated/explore/tags/filtering.md) [`noise`](/.docs/generated/explore/tags/noise.md)
 - [Principal Component Analysis (PCA)](/fields/tabular-data/data-feature-engineering/pca.md) — When to use PCA, how to choose the number of components, how to read explained variance, and how PCA compares with kernel PCA. *(14 min)*
+- [Probability & Statistics, One Sip at a Time](/fields/data-science/probability-statistics/README.md) — A slow-brewed series on the ideas in probability and statistics that make people say "wait, why?", each one told as a small story in a tea shop. *(beginner · 4 min)*  
+  [`statistics`](/.docs/generated/explore/tags/statistics.md)
 - [Regression Imputing](/fields/tabular-data/data-processing/handling-missing-data/regression-imputing.md) — How to fill missing values by predicting them with a regression model built on the other features. *(3 min)*
+- [Stir the Pot First: Population, Sample, and Why We Guess](/fields/data-science/probability-statistics/stir-the-pot-population-and-sampling.md) — Why a sip judges a pot of tea only if you stir it: population versus sample, four ways to draw a sample, the poll that asked 2.4 million and still erred. *(beginner · 12 min)*  
+  [`sampling`](/.docs/generated/explore/tags/sampling.md) [`statistics`](/.docs/generated/explore/tags/statistics.md)
 - [The Fourier Transform for Images](/fields/digital-image-processing/fourier-transform-for-images.md) — What the 2D DFT really says - an image as a sum of waves, magnitude versus phase, a 4-point DFT done by hand, and the convolution theorem that turns sliding windows into multiplication. *(intermediate · 8 min)*  
   [`convolution`](/.docs/generated/explore/tags/convolution.md) [`filtering`](/.docs/generated/explore/tags/filtering.md) [`fourier-transform`](/.docs/generated/explore/tags/fourier-transform.md)
+- [The Number on the Tin: Mean, Median and Mode](/fields/data-science/probability-statistics/the-number-on-the-tin.md) — Why a perfectly computed average can describe nobody: the mean as a balance point, the median, the mode, how outliers pull them apart, and how to choose. *(beginner · 15 min)*  
+  [`statistics`](/.docs/generated/explore/tags/statistics.md)
 - [Time Series Analysis](/fields/tabular-data/concept-in-time-series/timeseriesfield.md) — A step-by-step learning path for time series analysis, from the basics through data preparation, analysis techniques and forecasting to advanced techniques and practical projects. *(7 min)*
 - [Unsupervised Learning](/fields/tabular-data/concept-in-machine-learning/ml-unsupervised.md) — Unsupervised learning notes on clustering (K-means, picking an algorithm and the number of clusters) and dimensionality reduction such as PCA, plus the curse of dimensionality. *(22 min)*  
   [`clustering`](/.docs/generated/explore/tags/clustering.md)
