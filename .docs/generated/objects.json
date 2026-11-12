@@ -1393,8 +1393,7 @@
     ],
     "id": "kubectl-troubleshooting",
     "level": "intermediate",
-    "order": 11,
-    "path": "tips/kubectl-troubleshooting.md",
+    "path": "fields/devops/kubernetes/cheatsheet.md",
     "reading_time_min": 9,
     "relations": {
       "prerequisites": [

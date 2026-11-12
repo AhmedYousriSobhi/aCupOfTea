@@ -45,12 +45,12 @@ Not sure where to begin? Each of these takes one cup, roughly the reading time s
 
 ## 🆕 Recently added
 
-- 2026-11-08 · [Meet Fourier](/fields/digital-image-processing/meet-fourier.md)
-- 2026-11-08 · [Edges and Sharpening](/fields/digital-image-processing/edges-and-sharpening.md)
-- 2026-11-08 · [The Fourier Transform for Images](/fields/digital-image-processing/fourier-transform-for-images.md)
-- 2026-11-08 · [Frequency Filtering and Aliasing](/fields/digital-image-processing/frequency-filtering-and-aliasing.md)
-- 2026-11-08 · [Geometric Transforms and Interpolation](/fields/digital-image-processing/geometric-transforms-and-interpolation.md)
-- 2026-11-08 · [Images Are Just Matrices](/fields/digital-image-processing/images-are-just-matrices.md)
+- 2026-11-12 · [Mira's Notebook: What Kind of Data Is This, and How Do You Count It?](/fields/data-science/probability-statistics/data-types-and-frequency-tables.md)
+- 2026-11-12 · [Draw It Before You Describe It: Three Pictures of the Same Fifty Days](/fields/data-science/probability-statistics/draw-it-before-you-describe-it.md)
+- 2026-11-12 · [Stir the Pot First: Population, Sample, and Why We Guess](/fields/data-science/probability-statistics/stir-the-pot-population-and-sampling.md)
+- 2026-11-12 · [The Number on the Tin: Mean, Median and Mode](/fields/data-science/probability-statistics/the-number-on-the-tin.md)
+- 2026-11-12 · [Ansible Cheatsheet: Every Step from the Series](/fields/devops/ansible/cheatsheet.md)
+- 2026-11-12 · [The Laptop That Ran Ansible 2.16: An Install You Can Trust](/fields/devops/ansible/getting-started.md)
 
 <!-- recent:end -->
 

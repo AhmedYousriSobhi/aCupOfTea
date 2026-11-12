@@ -10,7 +10,6 @@ relations:
   prerequisites: [kubernetes-in-five-nouns]
   related: [broken-pods-rogues-gallery, kubernetes-at-hpc-scale, oomkilled-with-memory-to-spare]
 sidebar_label: kubectl troubleshooting
-order: 11
 ---
 
 # kubectl Troubleshooting Cheat Sheet: Five Questions, in Order
