@@ -1958,9 +1958,19 @@
     "prerequisites": [],
     "related": [
       {
+        "id": "slurm-sacct-job-forensics",
+        "path": "fields/schedulers/slurm-sacct-job-forensics.md",
+        "title": "Autopsy of a Job: Reading sacct Like a Coroner"
+      },
+      {
         "id": "slurm-backfill-tuning",
         "path": "fields/schedulers/slurm-backfill-tuning.md",
         "title": "Backfill Tuning: The Planner That Can Only See One Day Ahead"
+      },
+      {
+        "id": "slurm-preemption-requeue-signals",
+        "path": "fields/schedulers/slurm-preemption-requeue-signals.md",
+        "title": "Dying Politely: Preemption, Requeue and the Signals Your Training Job Ignores"
       },
       {
         "id": "isolating-gpu-workloads",
@@ -1988,6 +1998,11 @@
         "title": "Slurm cgroups in Practice: What Gets Constrained, and Where the Numbers Lie"
       },
       {
+        "id": "slurm-job-submit-lua",
+        "path": "fields/schedulers/slurm-job-submit-lua.md",
+        "title": "The Receptionist Who Rewrites Your Badge: job_submit.lua"
+      },
+      {
         "id": "slurm-upgrade-order",
         "path": "fields/schedulers/slurm-upgrade-order.md",
         "title": "Upgrading Slurm: The Order, the Window, and the Parts That Bite"
@@ -2003,6 +2018,11 @@
         "id": "slurm-qos-limits",
         "path": "fields/schedulers/slurm-pending-jobs/limits-that-wait-forever.md",
         "title": "Limits That Wait Forever: QOS and Account Limits in Practice"
+      },
+      {
+        "id": "slurm-qos-preemption-setup",
+        "path": "fields/schedulers/slurm-qos-preemption-setup.md",
+        "title": "The Guest List: Setting Up QOS Preemption Without Starting a War"
       }
     ]
   },
@@ -2086,6 +2106,11 @@
         "id": "slurm-openmetrics",
         "path": "fields/schedulers/slurm-ai-clusters/metrics-openmetrics.md",
         "title": "Slurm Metrics Without an Exporter: OpenMetrics into VictoriaMetrics"
+      },
+      {
+        "id": "slurm-qos-preemption-setup",
+        "path": "fields/schedulers/slurm-qos-preemption-setup.md",
+        "title": "The Guest List: Setting Up QOS Preemption Without Starting a War"
       },
       {
         "id": "slurm-gpu-health-checks",
@@ -2181,6 +2206,11 @@
     "prerequisites": [],
     "related": [
       {
+        "id": "slurm-reservations-and-maintenance",
+        "path": "fields/schedulers/slurm-reservations-and-maintenance.md",
+        "title": "Calling Dibs on Nodes: Reservations, Maintenance Windows and the Job That Fit"
+      },
+      {
         "id": "slurm-preemption-requeue-signals",
         "path": "fields/schedulers/slurm-preemption-requeue-signals.md",
         "title": "Dying Politely: Preemption, Requeue and the Signals Your Training Job Ignores"
@@ -2206,6 +2236,11 @@
         "title": "Slurm Multi-Tenancy: Who Stores the Rules, Who Enforces Them"
       },
       {
+        "id": "slurm-job-submit-lua",
+        "path": "fields/schedulers/slurm-job-submit-lua.md",
+        "title": "The Receptionist Who Rewrites Your Badge: job_submit.lua"
+      },
+      {
         "id": "slurm-job-script-tale",
         "path": "fields/schedulers/slurm-job-script-tale.md",
         "title": "The Tale of a Slurm Job Script: Submission Is a Commitment, Not a Promise"
@@ -2216,6 +2251,11 @@
   "fields/schedulers/slurm-cgroups-in-practice.md": {
     "prerequisites": [],
     "related": [
+      {
+        "id": "slurm-sacct-job-forensics",
+        "path": "fields/schedulers/slurm-sacct-job-forensics.md",
+        "title": "Autopsy of a Job: Reading sacct Like a Coroner"
+      },
       {
         "id": "slurm-kill-task-failed",
         "path": "fields/schedulers/slurm-kill-task-failed.md",
@@ -2235,6 +2275,11 @@
         "id": "slurm-slurmstepd",
         "path": "fields/schedulers/slurm-slurmstepd.md",
         "title": "slurmstepd: The Small Daemon That Actually Runs Your Job"
+      },
+      {
+        "id": "slurm-version-changes",
+        "path": "fields/schedulers/slurm-version-changes.md",
+        "title": "The Changelog Nobody Reads: What Moved Between Slurm 23.11 and 26.05"
       },
       {
         "id": "oomkilled-with-memory-to-spare",
@@ -2319,6 +2364,47 @@
     ],
     "required_by": []
   },
+  "fields/schedulers/slurm-job-submit-lua.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "slurm-backfill-tuning",
+        "path": "fields/schedulers/slurm-backfill-tuning.md",
+        "title": "Backfill Tuning: The Planner That Can Only See One Day Ahead"
+      },
+      {
+        "id": "slurm-reservations-and-maintenance",
+        "path": "fields/schedulers/slurm-reservations-and-maintenance.md",
+        "title": "Calling Dibs on Nodes: Reservations, Maintenance Windows and the Job That Fit"
+      },
+      {
+        "id": "slurm-preemption-requeue-signals",
+        "path": "fields/schedulers/slurm-preemption-requeue-signals.md",
+        "title": "Dying Politely: Preemption, Requeue and the Signals Your Training Job Ignores"
+      },
+      {
+        "id": "slurm-accounting-multi-tenancy",
+        "path": "fields/schedulers/slurm-accounting-multi-tenancy.md",
+        "title": "Slurm Multi-Tenancy: Who Stores the Rules, Who Enforces Them"
+      },
+      {
+        "id": "slurm-version-changes",
+        "path": "fields/schedulers/slurm-version-changes.md",
+        "title": "The Changelog Nobody Reads: What Moved Between Slurm 23.11 and 26.05"
+      },
+      {
+        "id": "slurm-qos-preemption-setup",
+        "path": "fields/schedulers/slurm-qos-preemption-setup.md",
+        "title": "The Guest List: Setting Up QOS Preemption Without Starting a War"
+      },
+      {
+        "id": "slurm-mixed-gpus-where-shine",
+        "path": "fields/schedulers/slurm-mixed-gpus/where-hetjobs-shine.md",
+        "title": "Where Heterogeneous Jobs Shine"
+      }
+    ],
+    "required_by": []
+  },
   "fields/schedulers/slurm-kill-task-failed.md": {
     "prerequisites": [],
     "related": [
@@ -2358,6 +2444,11 @@
         "title": "When a GPU Falls Off the Bus: Health Checks That Drain the Node"
       },
       {
+        "id": "slurm-signals-cheatsheet",
+        "path": "fields/schedulers/slurm-signals-cheatsheet.md",
+        "title": "Who Gets Told What: Every Signal Slurm Sends, and Who Actually Hears It"
+      },
+      {
         "id": "slurm-gpu-affinity-socket-lie",
         "path": "fields/schedulers/slurm-gpu-affinity-socket-lie.md",
         "title": "Your GPU Has Core Affinity. Slurm Has Socket Affinity. They Are Not Speaking."
@@ -2395,7 +2486,13 @@
         "title": "Why Mixed-GPU Training Disappoints"
       }
     ],
-    "related": [],
+    "related": [
+      {
+        "id": "slurm-job-submit-lua",
+        "path": "fields/schedulers/slurm-job-submit-lua.md",
+        "title": "The Receptionist Who Rewrites Your Badge: job_submit.lua"
+      }
+    ],
     "required_by": []
   },
   "fields/schedulers/slurm-mixed-gpus/why-mixed-training-disappoints.md": {
@@ -2456,6 +2553,11 @@
     ],
     "related": [
       {
+        "id": "slurm-qos-preemption-setup",
+        "path": "fields/schedulers/slurm-qos-preemption-setup.md",
+        "title": "The Guest List: Setting Up QOS Preemption Without Starting a War"
+      },
+      {
         "id": "slurm-priority-multifactor",
         "path": "fields/schedulers/slurm-pending-jobs/who-goes-first.md",
         "title": "Who Goes First: Slurm's Priority Number, Taken Apart"
@@ -2489,9 +2591,19 @@
     "prerequisites": [],
     "related": [
       {
+        "id": "slurm-sacct-job-forensics",
+        "path": "fields/schedulers/slurm-sacct-job-forensics.md",
+        "title": "Autopsy of a Job: Reading sacct Like a Coroner"
+      },
+      {
         "id": "slurm-backfill-tuning",
         "path": "fields/schedulers/slurm-backfill-tuning.md",
         "title": "Backfill Tuning: The Planner That Can Only See One Day Ahead"
+      },
+      {
+        "id": "slurm-reservations-and-maintenance",
+        "path": "fields/schedulers/slurm-reservations-and-maintenance.md",
+        "title": "Calling Dibs on Nodes: Reservations, Maintenance Windows and the Job That Fit"
       },
       {
         "id": "slurm-lab-cheatsheet",
@@ -2521,6 +2633,11 @@
     "prerequisites": [],
     "related": [
       {
+        "id": "slurm-sacct-job-forensics",
+        "path": "fields/schedulers/slurm-sacct-job-forensics.md",
+        "title": "Autopsy of a Job: Reading sacct Like a Coroner"
+      },
+      {
         "id": "slurm-backfill-tuning",
         "path": "fields/schedulers/slurm-backfill-tuning.md",
         "title": "Backfill Tuning: The Planner That Can Only See One Day Ahead"
@@ -2536,9 +2653,81 @@
         "title": "Kill Task Failed: A Murder Mystery With No Body (and One Drained Node)"
       },
       {
+        "id": "slurm-accounting-multi-tenancy",
+        "path": "fields/schedulers/slurm-accounting-multi-tenancy.md",
+        "title": "Slurm Multi-Tenancy: Who Stores the Rules, Who Enforces Them"
+      },
+      {
+        "id": "slurm-version-changes",
+        "path": "fields/schedulers/slurm-version-changes.md",
+        "title": "The Changelog Nobody Reads: What Moved Between Slurm 23.11 and 26.05"
+      },
+      {
+        "id": "slurm-qos-preemption-setup",
+        "path": "fields/schedulers/slurm-qos-preemption-setup.md",
+        "title": "The Guest List: Setting Up QOS Preemption Without Starting a War"
+      },
+      {
+        "id": "slurm-job-submit-lua",
+        "path": "fields/schedulers/slurm-job-submit-lua.md",
+        "title": "The Receptionist Who Rewrites Your Badge: job_submit.lua"
+      },
+      {
         "id": "slurm-upgrade-order",
         "path": "fields/schedulers/slurm-upgrade-order.md",
         "title": "Upgrading Slurm: The Order, the Window, and the Parts That Bite"
+      },
+      {
+        "id": "slurm-signals-cheatsheet",
+        "path": "fields/schedulers/slurm-signals-cheatsheet.md",
+        "title": "Who Gets Told What: Every Signal Slurm Sends, and Who Actually Hears It"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/schedulers/slurm-qos-preemption-setup.md": {
+    "prerequisites": [
+      {
+        "id": "slurm-accounting-multi-tenancy",
+        "path": "fields/schedulers/slurm-accounting-multi-tenancy.md",
+        "title": "Slurm Multi-Tenancy: Who Stores the Rules, Who Enforces Them"
+      }
+    ],
+    "related": [
+      {
+        "id": "slurm-sacct-job-forensics",
+        "path": "fields/schedulers/slurm-sacct-job-forensics.md",
+        "title": "Autopsy of a Job: Reading sacct Like a Coroner"
+      },
+      {
+        "id": "slurm-preemption-requeue-signals",
+        "path": "fields/schedulers/slurm-preemption-requeue-signals.md",
+        "title": "Dying Politely: Preemption, Requeue and the Signals Your Training Job Ignores"
+      },
+      {
+        "id": "slurm-lab-cheatsheet",
+        "path": "fields/schedulers/slurm-ai-clusters/lab-build-cheatsheet.md",
+        "title": "Lab Build Cheatsheet: A Slurm AI Cluster in Containers"
+      },
+      {
+        "id": "slurm-qos-limits",
+        "path": "fields/schedulers/slurm-pending-jobs/limits-that-wait-forever.md",
+        "title": "Limits That Wait Forever: QOS and Account Limits in Practice"
+      },
+      {
+        "id": "slurm-version-changes",
+        "path": "fields/schedulers/slurm-version-changes.md",
+        "title": "The Changelog Nobody Reads: What Moved Between Slurm 23.11 and 26.05"
+      },
+      {
+        "id": "slurm-job-submit-lua",
+        "path": "fields/schedulers/slurm-job-submit-lua.md",
+        "title": "The Receptionist Who Rewrites Your Badge: job_submit.lua"
+      },
+      {
+        "id": "slurm-signals-cheatsheet",
+        "path": "fields/schedulers/slurm-signals-cheatsheet.md",
+        "title": "Who Gets Told What: Every Signal Slurm Sends, and Who Actually Hears It"
       }
     ],
     "required_by": []
@@ -2546,6 +2735,11 @@
   "fields/schedulers/slurm-reboot-order.md": {
     "prerequisites": [],
     "related": [
+      {
+        "id": "slurm-reservations-and-maintenance",
+        "path": "fields/schedulers/slurm-reservations-and-maintenance.md",
+        "title": "Calling Dibs on Nodes: Reservations, Maintenance Windows and the Job That Fit"
+      },
       {
         "id": "draining-a-gpu-node",
         "path": "fields/devops/kubernetes/draining-a-gpu-node.md",
@@ -2565,6 +2759,109 @@
         "id": "slurm-upgrade-order",
         "path": "fields/schedulers/slurm-upgrade-order.md",
         "title": "Upgrading Slurm: The Order, the Window, and the Parts That Bite"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/schedulers/slurm-reservations-and-maintenance.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "slurm-backfill-tuning",
+        "path": "fields/schedulers/slurm-backfill-tuning.md",
+        "title": "Backfill Tuning: The Planner That Can Only See One Day Ahead"
+      },
+      {
+        "id": "slurm-pending-reasons",
+        "path": "fields/schedulers/slurm-pending-jobs/why-is-my-job-pending.md",
+        "title": "Reading the Reason Column: Why Is My Slurm Job Pending?"
+      },
+      {
+        "id": "slurm-reboot-order",
+        "path": "fields/schedulers/slurm-reboot-order.md",
+        "title": "Rebooting a Slurm Cluster Without Losing Your Job (Or Anyone Else's)"
+      },
+      {
+        "id": "slurm-spool-dir-full",
+        "path": "fields/schedulers/slurm-spool-dir-full.md",
+        "title": "SlurmdSpoolDir Is Full: The Drain That Is Not About the Spool Directory"
+      },
+      {
+        "id": "slurm-version-changes",
+        "path": "fields/schedulers/slurm-version-changes.md",
+        "title": "The Changelog Nobody Reads: What Moved Between Slurm 23.11 and 26.05"
+      },
+      {
+        "id": "slurm-job-submit-lua",
+        "path": "fields/schedulers/slurm-job-submit-lua.md",
+        "title": "The Receptionist Who Rewrites Your Badge: job_submit.lua"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/schedulers/slurm-sacct-job-forensics.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "slurm-preemption-requeue-signals",
+        "path": "fields/schedulers/slurm-preemption-requeue-signals.md",
+        "title": "Dying Politely: Preemption, Requeue and the Signals Your Training Job Ignores"
+      },
+      {
+        "id": "slurm-pending-reasons",
+        "path": "fields/schedulers/slurm-pending-jobs/why-is-my-job-pending.md",
+        "title": "Reading the Reason Column: Why Is My Slurm Job Pending?"
+      },
+      {
+        "id": "slurm-cgroups-in-practice",
+        "path": "fields/schedulers/slurm-cgroups-in-practice.md",
+        "title": "Slurm cgroups in Practice: What Gets Constrained, and Where the Numbers Lie"
+      },
+      {
+        "id": "slurm-accounting-multi-tenancy",
+        "path": "fields/schedulers/slurm-accounting-multi-tenancy.md",
+        "title": "Slurm Multi-Tenancy: Who Stores the Rules, Who Enforces Them"
+      },
+      {
+        "id": "slurm-version-changes",
+        "path": "fields/schedulers/slurm-version-changes.md",
+        "title": "The Changelog Nobody Reads: What Moved Between Slurm 23.11 and 26.05"
+      },
+      {
+        "id": "slurm-qos-preemption-setup",
+        "path": "fields/schedulers/slurm-qos-preemption-setup.md",
+        "title": "The Guest List: Setting Up QOS Preemption Without Starting a War"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/schedulers/slurm-signals-cheatsheet.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "slurm-preemption-requeue-signals",
+        "path": "fields/schedulers/slurm-preemption-requeue-signals.md",
+        "title": "Dying Politely: Preemption, Requeue and the Signals Your Training Job Ignores"
+      },
+      {
+        "id": "slurm-kill-task-failed",
+        "path": "fields/schedulers/slurm-kill-task-failed.md",
+        "title": "Kill Task Failed: A Murder Mystery With No Body (and One Drained Node)"
+      },
+      {
+        "id": "slurm-slurmstepd",
+        "path": "fields/schedulers/slurm-slurmstepd.md",
+        "title": "slurmstepd: The Small Daemon That Actually Runs Your Job"
+      },
+      {
+        "id": "slurm-version-changes",
+        "path": "fields/schedulers/slurm-version-changes.md",
+        "title": "The Changelog Nobody Reads: What Moved Between Slurm 23.11 and 26.05"
+      },
+      {
+        "id": "slurm-qos-preemption-setup",
+        "path": "fields/schedulers/slurm-qos-preemption-setup.md",
+        "title": "The Guest List: Setting Up QOS Preemption Without Starting a War"
       }
     ],
     "required_by": []
@@ -2603,6 +2900,11 @@
         "title": "The Tale of a Slurm Job Script: Submission Is a Commitment, Not a Promise"
       },
       {
+        "id": "slurm-signals-cheatsheet",
+        "path": "fields/schedulers/slurm-signals-cheatsheet.md",
+        "title": "Who Gets Told What: Every Signal Slurm Sends, and Who Actually Hears It"
+      },
+      {
         "id": "openmp-mpi-under-slurm",
         "path": "fields/system-administration/openmp-and-open-mpi/mpi-and-openmp-under-slurm.md",
         "title": "Who Starts the Ranks? OpenMP and MPI Under Slurm"
@@ -2613,6 +2915,11 @@
   "fields/schedulers/slurm-spool-dir-full.md": {
     "prerequisites": [],
     "related": [
+      {
+        "id": "slurm-reservations-and-maintenance",
+        "path": "fields/schedulers/slurm-reservations-and-maintenance.md",
+        "title": "Calling Dibs on Nodes: Reservations, Maintenance Windows and the Job That Fit"
+      },
       {
         "id": "slurm-kill-task-failed",
         "path": "fields/schedulers/slurm-kill-task-failed.md",
@@ -2663,6 +2970,57 @@
         "id": "slurm-accounting-multi-tenancy",
         "path": "fields/schedulers/slurm-accounting-multi-tenancy.md",
         "title": "Slurm Multi-Tenancy: Who Stores the Rules, Who Enforces Them"
+      },
+      {
+        "id": "slurm-version-changes",
+        "path": "fields/schedulers/slurm-version-changes.md",
+        "title": "The Changelog Nobody Reads: What Moved Between Slurm 23.11 and 26.05"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/schedulers/slurm-version-changes.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "slurm-sacct-job-forensics",
+        "path": "fields/schedulers/slurm-sacct-job-forensics.md",
+        "title": "Autopsy of a Job: Reading sacct Like a Coroner"
+      },
+      {
+        "id": "slurm-reservations-and-maintenance",
+        "path": "fields/schedulers/slurm-reservations-and-maintenance.md",
+        "title": "Calling Dibs on Nodes: Reservations, Maintenance Windows and the Job That Fit"
+      },
+      {
+        "id": "slurm-preemption-requeue-signals",
+        "path": "fields/schedulers/slurm-preemption-requeue-signals.md",
+        "title": "Dying Politely: Preemption, Requeue and the Signals Your Training Job Ignores"
+      },
+      {
+        "id": "slurm-cgroups-in-practice",
+        "path": "fields/schedulers/slurm-cgroups-in-practice.md",
+        "title": "Slurm cgroups in Practice: What Gets Constrained, and Where the Numbers Lie"
+      },
+      {
+        "id": "slurm-qos-preemption-setup",
+        "path": "fields/schedulers/slurm-qos-preemption-setup.md",
+        "title": "The Guest List: Setting Up QOS Preemption Without Starting a War"
+      },
+      {
+        "id": "slurm-job-submit-lua",
+        "path": "fields/schedulers/slurm-job-submit-lua.md",
+        "title": "The Receptionist Who Rewrites Your Badge: job_submit.lua"
+      },
+      {
+        "id": "slurm-upgrade-order",
+        "path": "fields/schedulers/slurm-upgrade-order.md",
+        "title": "Upgrading Slurm: The Order, the Window, and the Parts That Bite"
+      },
+      {
+        "id": "slurm-signals-cheatsheet",
+        "path": "fields/schedulers/slurm-signals-cheatsheet.md",
+        "title": "Who Gets Told What: Every Signal Slurm Sends, and Who Actually Hears It"
       }
     ],
     "required_by": []

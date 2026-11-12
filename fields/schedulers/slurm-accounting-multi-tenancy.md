@@ -9,7 +9,7 @@ type: concept
 domains: [systems-and-hpc]
 tags: [slurm, hpc, gpu]
 relations:
-  related: [slurm-mixed-gpus-overview]
+  related: [slurm-mixed-gpus-overview, slurm-qos-preemption-setup, slurm-preemption-requeue-signals, slurm-sacct-job-forensics]
 ---
 
 # Slurm Multi-Tenancy: Who Stores the Rules, Who Enforces Them
@@ -159,6 +159,15 @@ Limits say **how much**. Two more mechanisms say **who goes first**.
 | Grp/Max limits | "How much may you hold?" | Yes, hard |
 | QOS | "Under which policy does this job run?" | Can, through its own limits |
 | Fairshare | "Who goes next?" | No, it reorders |
+
+A preemption rule is just a field on a QOS. The preemptor lists the QOS it may evict, and the victim says how it is evicted:
+
+```bash
+sacctmgr -i modify qos high set Preempt=scavenger
+sacctmgr -i modify qos scavenger set PreemptMode=requeue
+```
+
+It only takes effect once `PreemptType=preempt/qos` is set in `slurm.conf`. [The Guest List](/fields/schedulers/slurm-qos-preemption-setup.md) walks through the whole setup with a drill, and [Autopsy of a Job](/fields/schedulers/slurm-sacct-job-forensics.md) shows how to read the result in `sacct`.
 
 The opinionated default for a shared GPU cluster: **fairshare for everyday fairness, Grp limits only for promises you've actually made** (like "the vision lab gets 16 GPUs"), and a preemptible QOS so idle GPUs don't stay idle.
 

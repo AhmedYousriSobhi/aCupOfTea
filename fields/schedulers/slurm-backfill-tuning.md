@@ -19,7 +19,7 @@ relations:
 
 # Backfill Tuning: The Planner That Can Only See One Day Ahead
 
-> **Part of the [schedulers](https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/fields/schedulers/slurm-intro.md) directory.** The intro explains what backfill is. This page is about the knobs, the failure modes, and the one counter screen (`sdiag`) that tells you whether either matters. Defaults and option descriptions come from SchedMD's Scheduling Configuration Guide for Slurm 26.05 and the `sdiag` man page. Tuning advice and logs come from SchedMD support tickets and the slurm-users list. Nothing here was run on a live cluster, the invented scenario is just that, and the `sdiag` sample uses made-up numbers.
+> **Part of the [schedulers](/fields/schedulers/slurm-intro.md) directory.** The intro explains what backfill is. This page is about the knobs, the failure modes, and the one counter screen (`sdiag`) that tells you whether either matters. Defaults and option descriptions come from SchedMD's Scheduling Configuration Guide for Slurm 26.05 and the `sdiag` man page. Tuning advice and logs come from SchedMD support tickets and the slurm-users list. Nothing here was run on a live cluster, the invented scenario is just that, and the `sdiag` sample uses made-up numbers.
 
 ## Table of Contents
 
@@ -144,7 +144,7 @@ sacct -X -s CD -S 2026-10-01 -E now -n -P -o User,ElapsedRaw,TimelimitRaw \
  | sort -t= -k3 -n
 ```
 
-A ratio near 1.0 means honest limits. A ratio of 0.1 means that user is booking ten times the table they use. Reports like this are better used for a friendly conversation than for punishment, since users have good reasons to pad (a job killed at the limit loses all its work), and the [preemption page](https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/fields/schedulers/slurm-preemption-requeue-signals.md) covers making jobs safe to shorten.
+A ratio near 1.0 means honest limits. A ratio of 0.1 means that user is booking ten times the table they use. Reports like this are better used for a friendly conversation than for punishment, since users have good reasons to pad (a job killed at the limit loses all its work), and the [preemption page](/fields/schedulers/slurm-preemption-requeue-signals.md) covers making jobs safe to shorten.
 
 * * *
 

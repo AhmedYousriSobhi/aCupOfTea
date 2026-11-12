@@ -9,28 +9,30 @@ type: [reference, guide]
 domains: [systems-and-hpc]
 tags: [slurm, hpc, containers]
 relations:
-  related: [slurm-topology-placement, slurm-distributed-training, slurm-containers-pyxis, slurm-gpu-health-checks, slurm-openmetrics, slurm-pending-reasons]
+  related: [slurm-topology-placement, slurm-distributed-training, slurm-containers-pyxis, slurm-gpu-health-checks, slurm-openmetrics, slurm-pending-reasons, slurm-qos-preemption-setup]
 ---
 
 # Lab Build Cheatsheet: A Slurm AI Cluster in Containers
 
 > **Part 6 of [Slurm for AI Clusters](/fields/schedulers/slurm-ai-clusters/README.md)**, and the lab behind [Why Is My Job Still Pending?](/fields/schedulers/slurm-pending-jobs/README.md) too. Direct steps, in order, to build the same cluster on one Linux machine: one controller, four CPU nodes, one node with four fake GPUs, and a second small cluster on Slurm 26.05.
 
-- [What you get](#what-you-get)
-- [0. The host](#0-the-host)
-- [1. The node image](#1-the-node-image)
-- [2. Start the containers](#2-start-the-containers)
-- [3. Munge, names and users](#3-munge-names-and-users)
-- [4. Slurm 23.11 with accounting](#4-slurm-2311-with-accounting)
-- [5. Accounts, QOS and limits](#5-accounts-qos-and-limits)
-- [6. Topology variants](#6-topology-variants)
-- [7. PyTorch](#7-pytorch)
-- [8. Containers: Enroot and Pyxis](#8-containers-enroot-and-pyxis)
-- [9. GPU health check](#9-gpu-health-check)
-- [10. Slurm 26.05 from source](#10-slurm-2605-from-source)
-- [11. Metrics into VictoriaMetrics](#11-metrics-into-victoriametrics)
-- [When the lab breaks](#when-the-lab-breaks)
-- [References](#references)
+- [Lab Build Cheatsheet: A Slurm AI Cluster in Containers](#lab-build-cheatsheet-a-slurm-ai-cluster-in-containers)
+  - [What you get](#what-you-get)
+  - [0. The host](#0-the-host)
+  - [1. The node image](#1-the-node-image)
+  - [2. Start the containers](#2-start-the-containers)
+  - [3. Munge, names and users](#3-munge-names-and-users)
+  - [4. Slurm 23.11 with accounting](#4-slurm-2311-with-accounting)
+  - [5. Accounts, QOS and limits](#5-accounts-qos-and-limits)
+  - [5b. Preemption drill (optional)](#5b-preemption-drill-optional)
+  - [6. Topology variants](#6-topology-variants)
+  - [7. PyTorch](#7-pytorch)
+  - [8. Containers: Enroot and Pyxis](#8-containers-enroot-and-pyxis)
+  - [9. GPU health check](#9-gpu-health-check)
+  - [10. Slurm 26.05 from source](#10-slurm-2605-from-source)
+  - [11. Metrics into VictoriaMetrics](#11-metrics-into-victoriametrics)
+  - [When the lab breaks](#when-the-lab-breaks)
+  - [References](#references)
 
 > [!NOTE]
 > Every command here was run while building the lab for these pages, on an Ubuntu 24.04 host. They're collected from several sessions into one order; the whole sequence was **not** re-run from an empty machine in one go. Lab-only shortcuts (privileged containers, a password in a config file, world-writable directories) are marked. Don't copy them into production.
@@ -278,6 +280,30 @@ physics|bob|gpu-normal,normal|
 ```
 
 The pending series' `whypending` script goes to `/usr/local/bin/whypending` on `head01`; it's printed in full in [part 1](/fields/schedulers/slurm-pending-jobs/why-is-my-job-pending.md#a-triage-script-and-the-bug-we-found-in-it).
+
+---
+
+## 5b. Preemption drill (optional)
+
+Want to see an urgent job evict a running one on this lab? This reuses the `urgent` QOS from step 5 as the preemptor and adds a requeueable `scavenger` victim. The same sequence was run, with `low` and `high_physics` as the names, on a separate two-node test cluster (Slurm 23.11.4) and is explained step by step in [The Guest List](/fields/schedulers/slurm-qos-preemption-setup.md). It was **not** re-run on this container lab, so treat the names below as an adaptation.
+
+Add to the `slurm.conf` template (through `extra_slurm_conf`), then restart `slurmctld`, because `PreemptType` is not picked up by a plain reconfigure:
+
+```text
+PreemptType=preempt/qos
+PreemptMode=REQUEUE
+```
+
+Then, on `head01`:
+
+```bash
+sacctmgr -i add qos scavenger
+sacctmgr -i modify qos scavenger set PreemptMode=requeue GraceTime=60
+sacctmgr -i modify qos urgent set Preempt=scavenger
+sacctmgr -i modify user alice,bob,carol,admin set qos+=scavenger
+```
+
+The drill: fill the `cpu` partition with `scavenger` jobs submitted with `--requeue`, then submit one `urgent` job from `carol`. The scavenger job should show `PREEMPTED` and then run again; `sacct -X -D` shows both lives (see [Autopsy of a Job](/fields/schedulers/slurm-sacct-job-forensics.md)). If nothing happens, check that the victim has `--requeue` and that the `urgent` job really asked for the same nodes.
 
 ---
 
