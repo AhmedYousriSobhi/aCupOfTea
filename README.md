@@ -45,12 +45,12 @@ Not sure where to begin? Each of these takes one cup, roughly the reading time s
 
 ## 🆕 Recently added
 
-- 2026-11-12 · [Coins and Calls: Binomial and Poisson as Recipes](/fields/data-science/probability-statistics/coins-and-calls.md)
-- 2026-11-12 · [Counting the Ways: Probability as a Share of the List](/fields/data-science/probability-statistics/counting-the-ways.md)
-- 2026-11-12 · [How Sure Are You? Confidence Intervals](/fields/data-science/probability-statistics/how-sure-are-you.md)
-- 2026-11-12 · [The Bell Curve: Probability as Area, and One Ruler for Every Bell](/fields/data-science/probability-statistics/the-bell-curve.md)
-- 2026-11-12 · [The Courtroom for Numbers: Could Plain Luck Do This?](/fields/data-science/probability-statistics/the-courtroom-for-numbers.md)
-- 2026-11-12 · [The Test That Was 99% Accurate: Conditional Probability and Bayes' Rule](/fields/data-science/probability-statistics/the-test-that-was-99-percent-accurate.md)
+- 2026-11-13 · [The Receptionist Who Rewrites Your Badge: job_submit.lua](/fields/schedulers/slurm-job-submit-lua.md)
+- 2026-11-13 · [The Guest List: Setting Up QOS Preemption Without Starting a War](/fields/schedulers/slurm-qos-preemption-setup.md)
+- 2026-11-13 · [Calling Dibs on Nodes: Reservations, Maintenance Windows and the Job That Fit](/fields/schedulers/slurm-reservations-and-maintenance.md)
+- 2026-11-13 · [Autopsy of a Job: Reading sacct Like a Coroner](/fields/schedulers/slurm-sacct-job-forensics.md)
+- 2026-11-13 · [Who Gets Told What: Every Signal Slurm Sends, and Who Actually Hears It](/fields/schedulers/slurm-signals-cheatsheet.md)
+- 2026-11-13 · [The Changelog Nobody Reads: What Moved Between Slurm 23.11 and 26.05](/fields/schedulers/slurm-version-changes.md)
 
 <!-- recent:end -->
 
