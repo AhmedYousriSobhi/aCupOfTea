@@ -382,7 +382,8 @@
     "objects": [
       "dip-frequency-filtering-aliasing",
       "dip-images-are-matrices",
-      "stir-the-pot-population-and-sampling"
+      "stir-the-pot-population-and-sampling",
+      "why-averages-behave"
     ]
   },
   "slurm": {
@@ -455,11 +456,23 @@
   "statistics": {
     "label": "Statistics",
     "objects": [
+      "coins-and-calls",
+      "counting-the-ways",
       "data-types-and-frequency-tables",
       "draw-it-before-you-describe-it",
+      "how-far-from-the-middle",
+      "how-sure-are-you",
       "probability-statistics-series",
       "stir-the-pot-population-and-sampling",
-      "the-number-on-the-tin"
+      "the-bell-curve",
+      "the-courtroom-for-numbers",
+      "the-map-of-leaf-and-kettle",
+      "the-number-on-the-tin",
+      "the-test-that-was-99-percent-accurate",
+      "two-things-moving-together",
+      "what-to-expect",
+      "where-do-you-stand",
+      "why-averages-behave"
     ]
   },
   "storage": {

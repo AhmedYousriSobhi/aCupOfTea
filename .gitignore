@@ -15,3 +15,5 @@ _site/
 
 # Local Claude Code skills (personal tooling, not part of the knowledge base)
 .claude/skills/
+
+.claude/
