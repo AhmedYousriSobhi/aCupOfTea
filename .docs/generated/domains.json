@@ -174,18 +174,30 @@
     "objects": [
       "accuracy-paradox",
       "bias-variance-trade-off",
+      "coins-and-calls",
+      "counting-the-ways",
       "data-types-and-frequency-tables",
       "dip-fourier-transform-images",
       "dip-intensity-transforms-histograms",
       "dip-noise-restoration",
       "draw-it-before-you-describe-it",
+      "how-far-from-the-middle",
+      "how-sure-are-you",
       "principal-component-analysis",
       "probability-statistics-series",
       "regression-imputing",
       "stir-the-pot-population-and-sampling",
+      "the-bell-curve",
+      "the-courtroom-for-numbers",
+      "the-map-of-leaf-and-kettle",
       "the-number-on-the-tin",
+      "the-test-that-was-99-percent-accurate",
       "time-series-analysis",
-      "unsupervised-learning"
+      "two-things-moving-together",
+      "unsupervised-learning",
+      "what-to-expect",
+      "where-do-you-stand",
+      "why-averages-behave"
     ]
   },
   "system-design": {
