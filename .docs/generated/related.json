@@ -378,7 +378,7 @@
       },
       {
         "id": "kubectl-troubleshooting",
-        "path": "tips/kubectl-troubleshooting.md",
+        "path": "fields/devops/kubernetes/cheatsheet.md",
         "title": "kubectl Troubleshooting Cheat Sheet: Five Questions, in Order"
       }
     ],
@@ -427,6 +427,33 @@
         "title": "Booked Is Not Busy: GPU Allocation vs Utilization"
       }
     ]
+  },
+  "fields/devops/kubernetes/cheatsheet.md": {
+    "prerequisites": [
+      {
+        "id": "kubernetes-in-five-nouns",
+        "path": "fields/devops/kubernetes/kubernetes-in-five-nouns.md",
+        "title": "Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster"
+      }
+    ],
+    "related": [
+      {
+        "id": "broken-pods-rogues-gallery",
+        "path": "fields/devops/kubernetes/broken-pods-rogues-gallery.md",
+        "title": "Broken Pods: A Rogues' Gallery (and the One Command That Catches Them All)"
+      },
+      {
+        "id": "kubernetes-at-hpc-scale",
+        "path": "fields/devops/kubernetes/kubernetes-at-hpc-scale.md",
+        "title": "Kubernetes at HPC Scale: The Front Desk Meets a 100,000-Task Array"
+      },
+      {
+        "id": "oomkilled-with-memory-to-spare",
+        "path": "fields/devops/kubernetes/oomkilled-with-memory-to-spare.md",
+        "title": "The Pod Killed With Memory to Spare"
+      }
+    ],
+    "required_by": []
   },
   "fields/devops/kubernetes/draining-a-gpu-node.md": {
     "prerequisites": [
@@ -664,7 +691,7 @@
       },
       {
         "id": "kubectl-troubleshooting",
-        "path": "tips/kubectl-troubleshooting.md",
+        "path": "fields/devops/kubernetes/cheatsheet.md",
         "title": "kubectl Troubleshooting Cheat Sheet: Five Questions, in Order"
       },
       {
@@ -732,11 +759,6 @@
         "title": "k3s vs kubeadm: Furnished Flat or Empty Unit?"
       },
       {
-        "id": "kubectl-troubleshooting",
-        "path": "tips/kubectl-troubleshooting.md",
-        "title": "kubectl Troubleshooting Cheat Sheet: Five Questions, in Order"
-      },
-      {
         "id": "your-kubeconfig-is-a-house-key",
         "path": "fields/devops/kubernetes/your-kubeconfig-is-a-house-key.md",
         "title": "Your kubeconfig Is a House Key"
@@ -755,6 +777,11 @@
         "id": "kubernetes-at-hpc-scale",
         "path": "fields/devops/kubernetes/kubernetes-at-hpc-scale.md",
         "title": "Kubernetes at HPC Scale: The Front Desk Meets a 100,000-Task Array"
+      },
+      {
+        "id": "kubectl-troubleshooting",
+        "path": "fields/devops/kubernetes/cheatsheet.md",
+        "title": "kubectl Troubleshooting Cheat Sheet: Five Questions, in Order"
       }
     ]
   },
@@ -791,7 +818,7 @@
       },
       {
         "id": "kubectl-troubleshooting",
-        "path": "tips/kubectl-troubleshooting.md",
+        "path": "fields/devops/kubernetes/cheatsheet.md",
         "title": "kubectl Troubleshooting Cheat Sheet: Five Questions, in Order"
       },
       {
@@ -3001,33 +3028,6 @@
         "id": "parallel-execution-and-affinity",
         "path": "fields/benchmarks/parallel-execution-affinity-master-guide.md",
         "title": "Parallel Execution and Affinity"
-      }
-    ],
-    "required_by": []
-  },
-  "tips/kubectl-troubleshooting.md": {
-    "prerequisites": [
-      {
-        "id": "kubernetes-in-five-nouns",
-        "path": "fields/devops/kubernetes/kubernetes-in-five-nouns.md",
-        "title": "Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster"
-      }
-    ],
-    "related": [
-      {
-        "id": "broken-pods-rogues-gallery",
-        "path": "fields/devops/kubernetes/broken-pods-rogues-gallery.md",
-        "title": "Broken Pods: A Rogues' Gallery (and the One Command That Catches Them All)"
-      },
-      {
-        "id": "kubernetes-at-hpc-scale",
-        "path": "fields/devops/kubernetes/kubernetes-at-hpc-scale.md",
-        "title": "Kubernetes at HPC Scale: The Front Desk Meets a 100,000-Task Array"
-      },
-      {
-        "id": "oomkilled-with-memory-to-spare",
-        "path": "fields/devops/kubernetes/oomkilled-with-memory-to-spare.md",
-        "title": "The Pod Killed With Memory to Spare"
       }
     ],
     "required_by": []
