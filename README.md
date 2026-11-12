@@ -45,12 +45,12 @@ Not sure where to begin? Each of these takes one cup, roughly the reading time s
 
 ## 🆕 Recently added
 
-- 2026-11-12 · [Mira's Notebook: What Kind of Data Is This, and How Do You Count It?](/fields/data-science/probability-statistics/data-types-and-frequency-tables.md)
-- 2026-11-12 · [Draw It Before You Describe It: Three Pictures of the Same Fifty Days](/fields/data-science/probability-statistics/draw-it-before-you-describe-it.md)
-- 2026-11-12 · [Stir the Pot First: Population, Sample, and Why We Guess](/fields/data-science/probability-statistics/stir-the-pot-population-and-sampling.md)
-- 2026-11-12 · [The Number on the Tin: Mean, Median and Mode](/fields/data-science/probability-statistics/the-number-on-the-tin.md)
-- 2026-11-12 · [Ansible Cheatsheet: Every Step from the Series](/fields/devops/ansible/cheatsheet.md)
-- 2026-11-12 · [The Laptop That Ran Ansible 2.16: An Install You Can Trust](/fields/devops/ansible/getting-started.md)
+- 2026-11-12 · [Coins and Calls: Binomial and Poisson as Recipes](/fields/data-science/probability-statistics/coins-and-calls.md)
+- 2026-11-12 · [Counting the Ways: Probability as a Share of the List](/fields/data-science/probability-statistics/counting-the-ways.md)
+- 2026-11-12 · [How Sure Are You? Confidence Intervals](/fields/data-science/probability-statistics/how-sure-are-you.md)
+- 2026-11-12 · [The Bell Curve: Probability as Area, and One Ruler for Every Bell](/fields/data-science/probability-statistics/the-bell-curve.md)
+- 2026-11-12 · [The Courtroom for Numbers: Could Plain Luck Do This?](/fields/data-science/probability-statistics/the-courtroom-for-numbers.md)
+- 2026-11-12 · [The Test That Was 99% Accurate: Conditional Probability and Bayes' Rule](/fields/data-science/probability-statistics/the-test-that-was-99-percent-accurate.md)
 
 <!-- recent:end -->
 
