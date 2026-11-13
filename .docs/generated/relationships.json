@@ -1349,7 +1349,8 @@
     "related_by": [
       "slurm-containers-pyxis",
       "slurm-lab-cheatsheet",
-      "slurm-openmetrics"
+      "slurm-openmetrics",
+      "slurm-smoke-node-readiness"
     ]
   },
   "slurm-intro": {
@@ -1392,6 +1393,9 @@
       "slurm-preemption-requeue-signals",
       "slurm-qos-preemption-setup",
       "slurm-reservations-and-maintenance",
+      "slurm-smoke-config-change",
+      "slurm-smoke-control-plane",
+      "slurm-smoke-policy",
       "slurm-version-changes"
     ]
   },
@@ -1409,6 +1413,7 @@
       "slurm-preemption-requeue-signals",
       "slurm-signals-cheatsheet",
       "slurm-slurmstepd",
+      "slurm-smoke-node-readiness",
       "slurm-spool-dir-full"
     ]
   },
@@ -1502,7 +1507,8 @@
     "related_by": [
       "slurm-lab-cheatsheet",
       "slurm-reservations-and-maintenance",
-      "slurm-sacct-job-forensics"
+      "slurm-sacct-job-forensics",
+      "slurm-smoke-control-plane"
     ]
   },
   "slurm-preemption-requeue-signals": {
@@ -1524,6 +1530,7 @@
       "slurm-qos-preemption-setup",
       "slurm-sacct-job-forensics",
       "slurm-signals-cheatsheet",
+      "slurm-smoke-policy",
       "slurm-version-changes"
     ]
   },
@@ -1570,6 +1577,7 @@
       "slurm-preemption-requeue-signals",
       "slurm-sacct-job-forensics",
       "slurm-signals-cheatsheet",
+      "slurm-smoke-policy",
       "slurm-version-changes"
     ]
   },
@@ -1584,6 +1592,9 @@
       "draining-a-gpu-node",
       "slurm-pam-adopt-ssh-access",
       "slurm-reservations-and-maintenance",
+      "slurm-smoke-after-upgrade",
+      "slurm-smoke-config-change",
+      "slurm-smoke-node-readiness",
       "slurm-spool-dir-full"
     ]
   },
@@ -1598,6 +1609,8 @@
       "slurm-spool-dir-full"
     ],
     "related_by": [
+      "slurm-smoke-config-change",
+      "slurm-smoke-node-readiness",
       "slurm-version-changes"
     ]
   },
@@ -1613,6 +1626,7 @@
     ],
     "related_by": [
       "slurm-accounting-multi-tenancy",
+      "slurm-smoke-control-plane",
       "slurm-version-changes"
     ]
   },
@@ -1628,6 +1642,7 @@
     "related_by": [
       "slurm-preemption-requeue-signals",
       "slurm-qos-preemption-setup",
+      "slurm-smoke-policy",
       "slurm-version-changes"
     ]
   },
@@ -1647,6 +1662,100 @@
       "slurm-signals-cheatsheet",
       "slurm-spool-dir-full"
     ]
+  },
+  "slurm-smoke-after-upgrade": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "slurm-smoke-control-plane"
+    ],
+    "related": [
+      "slurm-reboot-order",
+      "slurm-smoke-config-change",
+      "slurm-upgrade-order",
+      "slurm-version-changes"
+    ],
+    "related_by": [
+      "slurm-smoke-config-change",
+      "slurm-smoke-control-plane",
+      "slurm-smoke-regression-suites"
+    ]
+  },
+  "slurm-smoke-config-change": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "slurm-smoke-control-plane"
+    ],
+    "related": [
+      "slurm-job-submit-lua",
+      "slurm-reboot-order",
+      "slurm-reservations-and-maintenance",
+      "slurm-smoke-after-upgrade"
+    ],
+    "related_by": [
+      "slurm-smoke-after-upgrade",
+      "slurm-smoke-control-plane",
+      "slurm-smoke-policy"
+    ]
+  },
+  "slurm-smoke-control-plane": {
+    "prerequisite_of": [
+      "slurm-smoke-after-upgrade",
+      "slurm-smoke-config-change",
+      "slurm-smoke-node-readiness",
+      "slurm-smoke-policy",
+      "slurm-smoke-regression-suites"
+    ],
+    "prerequisites": [],
+    "related": [
+      "slurm-job-submit-lua",
+      "slurm-pending-reasons",
+      "slurm-sacct-job-forensics",
+      "slurm-smoke-after-upgrade",
+      "slurm-smoke-config-change"
+    ],
+    "related_by": []
+  },
+  "slurm-smoke-node-readiness": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "slurm-smoke-control-plane"
+    ],
+    "related": [
+      "slurm-gpu-health-checks",
+      "slurm-kill-task-failed",
+      "slurm-reboot-order",
+      "slurm-reservations-and-maintenance"
+    ],
+    "related_by": []
+  },
+  "slurm-smoke-policy": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "slurm-smoke-control-plane"
+    ],
+    "related": [
+      "slurm-job-submit-lua",
+      "slurm-preemption-requeue-signals",
+      "slurm-qos-preemption-setup",
+      "slurm-signals-cheatsheet",
+      "slurm-smoke-config-change"
+    ],
+    "related_by": [
+      "slurm-smoke-regression-suites"
+    ]
+  },
+  "slurm-smoke-regression-suites": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "slurm-smoke-control-plane"
+    ],
+    "related": [
+      "slurm-smoke-after-upgrade",
+      "slurm-smoke-policy",
+      "slurm-upgrade-order",
+      "slurm-version-changes"
+    ],
+    "related_by": []
   },
   "slurm-spool-dir-full": {
     "prerequisite_of": [],
@@ -1687,6 +1796,8 @@
     "related_by": [
       "slurm-preemption-requeue-signals",
       "slurm-reboot-order",
+      "slurm-smoke-after-upgrade",
+      "slurm-smoke-regression-suites",
       "slurm-version-changes"
     ]
   },
@@ -1703,7 +1814,10 @@
       "slurm-signals-cheatsheet",
       "slurm-upgrade-order"
     ],
-    "related_by": []
+    "related_by": [
+      "slurm-smoke-after-upgrade",
+      "slurm-smoke-regression-suites"
+    ]
   },
   "stir-the-pot-population-and-sampling": {
     "prerequisite_of": [

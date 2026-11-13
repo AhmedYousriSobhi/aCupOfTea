@@ -2052,6 +2052,11 @@
     "prerequisites": [],
     "related": [
       {
+        "id": "slurm-smoke-node-readiness",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-node-readiness.md",
+        "title": "Back From the Repair Shop: Is This Node Fit to Return to Service?"
+      },
+      {
         "id": "slurm-containers-pyxis",
         "path": "fields/schedulers/slurm-ai-clusters/containers-with-pyxis.md",
         "title": "Containers on Slurm with Pyxis and Enroot"
@@ -2252,6 +2257,11 @@
     "prerequisites": [],
     "related": [
       {
+        "id": "slurm-smoke-node-readiness",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-node-readiness.md",
+        "title": "Back From the Repair Shop: Is This Node Fit to Return to Service?"
+      },
+      {
         "id": "draining-a-gpu-node",
         "path": "fields/devops/kubernetes/draining-a-gpu-node.md",
         "title": "Draining a GPU Node With a Three-Day Run on It"
@@ -2329,6 +2339,11 @@
     "prerequisites": [],
     "related": [
       {
+        "id": "slurm-smoke-node-readiness",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-node-readiness.md",
+        "title": "Back From the Repair Shop: Is This Node Fit to Return to Service?"
+      },
+      {
         "id": "slurm-reservations-and-maintenance",
         "path": "fields/schedulers/slurm-cluster-operations/slurm-reservations-and-maintenance.md",
         "title": "Calling Dibs on Nodes: Reservations, Maintenance Windows and the Job That Fit"
@@ -2339,6 +2354,11 @@
         "title": "Draining a GPU Node With a Three-Day Run on It"
       },
       {
+        "id": "slurm-smoke-config-change",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-config-change.md",
+        "title": "Measure Twice, Reconfigure Once: Smoke-Testing a slurm.conf Change"
+      },
+      {
         "id": "slurm-pam-adopt-ssh-access",
         "path": "fields/schedulers/slurm-cluster-operations/slurm-pam-adopt-ssh-access.md",
         "title": "pam_slurm_adopt: Closing the Slurm SSH Backdoor"
@@ -2347,6 +2367,11 @@
         "id": "slurm-spool-dir-full",
         "path": "fields/schedulers/slurm-cluster-operations/slurm-spool-dir-full.md",
         "title": "SlurmdSpoolDir Is Full: The Drain That Is Not About the Spool Directory"
+      },
+      {
+        "id": "slurm-smoke-after-upgrade",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-after-upgrade.md",
+        "title": "The Morning After the Upgrade: Smoke Tests for the Change You Cannot Undo"
       },
       {
         "id": "slurm-upgrade-order",
@@ -2360,9 +2385,19 @@
     "prerequisites": [],
     "related": [
       {
+        "id": "slurm-smoke-node-readiness",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-node-readiness.md",
+        "title": "Back From the Repair Shop: Is This Node Fit to Return to Service?"
+      },
+      {
         "id": "slurm-backfill-tuning",
         "path": "fields/schedulers/slurm-backfill-tuning.md",
         "title": "Backfill Tuning: The Planner That Can Only See One Day Ahead"
+      },
+      {
+        "id": "slurm-smoke-config-change",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-config-change.md",
+        "title": "Measure Twice, Reconfigure Once: Smoke-Testing a slurm.conf Change"
       },
       {
         "id": "slurm-pending-reasons",
@@ -2455,6 +2490,16 @@
         "id": "slurm-version-changes",
         "path": "fields/schedulers/slurm-cluster-operations/slurm-version-changes.md",
         "title": "The Changelog Nobody Reads: What Moved Between Slurm 23.11 and 26.05"
+      },
+      {
+        "id": "slurm-smoke-after-upgrade",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-after-upgrade.md",
+        "title": "The Morning After the Upgrade: Smoke Tests for the Change You Cannot Undo"
+      },
+      {
+        "id": "slurm-smoke-regression-suites",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-regression-suites.md",
+        "title": "When Smoke Becomes a Fire Drill: SchedMD's Test Suite, ReFrame and the Baseline Rule"
       }
     ],
     "required_by": []
@@ -2488,6 +2533,11 @@
         "title": "The Guest List: Setting Up QOS Preemption Without Starting a War"
       },
       {
+        "id": "slurm-smoke-after-upgrade",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-after-upgrade.md",
+        "title": "The Morning After the Upgrade: Smoke Tests for the Change You Cannot Undo"
+      },
+      {
         "id": "slurm-job-submit-lua",
         "path": "fields/schedulers/slurm-preemption/slurm-job-submit-lua.md",
         "title": "The Receptionist Who Rewrites Your Badge: job_submit.lua"
@@ -2496,6 +2546,11 @@
         "id": "slurm-upgrade-order",
         "path": "fields/schedulers/slurm-cluster-operations/slurm-upgrade-order.md",
         "title": "Upgrading Slurm: The Order, the Window, and the Parts That Bite"
+      },
+      {
+        "id": "slurm-smoke-regression-suites",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-regression-suites.md",
+        "title": "When Smoke Becomes a Fire Drill: SchedMD's Test Suite, ReFrame and the Baseline Rule"
       },
       {
         "id": "slurm-signals-cheatsheet",
@@ -2799,6 +2854,11 @@
         "id": "slurm-accounting-multi-tenancy",
         "path": "fields/schedulers/slurm-accounting-multi-tenancy.md",
         "title": "Slurm Multi-Tenancy: Who Stores the Rules, Who Enforces Them"
+      },
+      {
+        "id": "slurm-smoke-control-plane",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-control-plane.md",
+        "title": "The Cluster That Worked Perfectly and Remembered Nothing: a Two-Minute Slurm Smoke Test"
       }
     ],
     "required_by": [
@@ -2828,9 +2888,19 @@
         "title": "Calling Dibs on Nodes: Reservations, Maintenance Windows and the Job That Fit"
       },
       {
+        "id": "slurm-smoke-policy",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-policy.md",
+        "title": "Does the Rulebook Still Work? Smoke-Testing QOS, Submit Rules and Preemption"
+      },
+      {
         "id": "slurm-preemption-requeue-signals",
         "path": "fields/schedulers/slurm-preemption/slurm-preemption-requeue-signals.md",
         "title": "Dying Politely: Preemption, Requeue and the Signals Your Training Job Ignores"
+      },
+      {
+        "id": "slurm-smoke-config-change",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-config-change.md",
+        "title": "Measure Twice, Reconfigure Once: Smoke-Testing a slurm.conf Change"
       },
       {
         "id": "slurm-accounting-multi-tenancy",
@@ -2841,6 +2911,11 @@
         "id": "slurm-version-changes",
         "path": "fields/schedulers/slurm-cluster-operations/slurm-version-changes.md",
         "title": "The Changelog Nobody Reads: What Moved Between Slurm 23.11 and 26.05"
+      },
+      {
+        "id": "slurm-smoke-control-plane",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-control-plane.md",
+        "title": "The Cluster That Worked Perfectly and Remembered Nothing: a Two-Minute Slurm Smoke Test"
       },
       {
         "id": "slurm-qos-preemption-setup",
@@ -2867,6 +2942,11 @@
         "id": "slurm-backfill-tuning",
         "path": "fields/schedulers/slurm-backfill-tuning.md",
         "title": "Backfill Tuning: The Planner That Can Only See One Day Ahead"
+      },
+      {
+        "id": "slurm-smoke-policy",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-policy.md",
+        "title": "Does the Rulebook Still Work? Smoke-Testing QOS, Submit Rules and Preemption"
       },
       {
         "id": "draining-a-gpu-node",
@@ -2926,6 +3006,11 @@
         "title": "Autopsy of a Job: Reading sacct Like a Coroner"
       },
       {
+        "id": "slurm-smoke-policy",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-policy.md",
+        "title": "Does the Rulebook Still Work? Smoke-Testing QOS, Submit Rules and Preemption"
+      },
+      {
         "id": "slurm-preemption-requeue-signals",
         "path": "fields/schedulers/slurm-preemption/slurm-preemption-requeue-signals.md",
         "title": "Dying Politely: Preemption, Requeue and the Signals Your Training Job Ignores"
@@ -2961,6 +3046,11 @@
   "fields/schedulers/slurm-preemption/slurm-signals-cheatsheet.md": {
     "prerequisites": [],
     "related": [
+      {
+        "id": "slurm-smoke-policy",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-policy.md",
+        "title": "Does the Rulebook Still Work? Smoke-Testing QOS, Submit Rules and Preemption"
+      },
       {
         "id": "slurm-preemption-requeue-signals",
         "path": "fields/schedulers/slurm-preemption/slurm-preemption-requeue-signals.md",
@@ -3018,9 +3108,241 @@
         "title": "The Changelog Nobody Reads: What Moved Between Slurm 23.11 and 26.05"
       },
       {
+        "id": "slurm-smoke-control-plane",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-control-plane.md",
+        "title": "The Cluster That Worked Perfectly and Remembered Nothing: a Two-Minute Slurm Smoke Test"
+      },
+      {
         "id": "slurm-qos-preemption-setup",
         "path": "fields/schedulers/slurm-preemption/slurm-qos-preemption-setup.md",
         "title": "The Guest List: Setting Up QOS Preemption Without Starting a War"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/schedulers/slurm-smoke-tests/slurm-smoke-after-upgrade.md": {
+    "prerequisites": [
+      {
+        "id": "slurm-smoke-control-plane",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-control-plane.md",
+        "title": "The Cluster That Worked Perfectly and Remembered Nothing: a Two-Minute Slurm Smoke Test"
+      }
+    ],
+    "related": [
+      {
+        "id": "slurm-smoke-config-change",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-config-change.md",
+        "title": "Measure Twice, Reconfigure Once: Smoke-Testing a slurm.conf Change"
+      },
+      {
+        "id": "slurm-reboot-order",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-reboot-order.md",
+        "title": "Rebooting a Slurm Cluster Without Losing Your Job (Or Anyone Else's)"
+      },
+      {
+        "id": "slurm-version-changes",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-version-changes.md",
+        "title": "The Changelog Nobody Reads: What Moved Between Slurm 23.11 and 26.05"
+      },
+      {
+        "id": "slurm-upgrade-order",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-upgrade-order.md",
+        "title": "Upgrading Slurm: The Order, the Window, and the Parts That Bite"
+      },
+      {
+        "id": "slurm-smoke-regression-suites",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-regression-suites.md",
+        "title": "When Smoke Becomes a Fire Drill: SchedMD's Test Suite, ReFrame and the Baseline Rule"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/schedulers/slurm-smoke-tests/slurm-smoke-config-change.md": {
+    "prerequisites": [
+      {
+        "id": "slurm-smoke-control-plane",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-control-plane.md",
+        "title": "The Cluster That Worked Perfectly and Remembered Nothing: a Two-Minute Slurm Smoke Test"
+      }
+    ],
+    "related": [
+      {
+        "id": "slurm-reservations-and-maintenance",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-reservations-and-maintenance.md",
+        "title": "Calling Dibs on Nodes: Reservations, Maintenance Windows and the Job That Fit"
+      },
+      {
+        "id": "slurm-smoke-policy",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-policy.md",
+        "title": "Does the Rulebook Still Work? Smoke-Testing QOS, Submit Rules and Preemption"
+      },
+      {
+        "id": "slurm-reboot-order",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-reboot-order.md",
+        "title": "Rebooting a Slurm Cluster Without Losing Your Job (Or Anyone Else's)"
+      },
+      {
+        "id": "slurm-smoke-after-upgrade",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-after-upgrade.md",
+        "title": "The Morning After the Upgrade: Smoke Tests for the Change You Cannot Undo"
+      },
+      {
+        "id": "slurm-job-submit-lua",
+        "path": "fields/schedulers/slurm-preemption/slurm-job-submit-lua.md",
+        "title": "The Receptionist Who Rewrites Your Badge: job_submit.lua"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/schedulers/slurm-smoke-tests/slurm-smoke-control-plane.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "slurm-sacct-job-forensics",
+        "path": "fields/schedulers/slurm-sacct-job-forensics.md",
+        "title": "Autopsy of a Job: Reading sacct Like a Coroner"
+      },
+      {
+        "id": "slurm-pending-reasons",
+        "path": "fields/schedulers/slurm-pending-jobs/why-is-my-job-pending.md",
+        "title": "Reading the Reason Column: Why Is My Slurm Job Pending?"
+      },
+      {
+        "id": "slurm-job-submit-lua",
+        "path": "fields/schedulers/slurm-preemption/slurm-job-submit-lua.md",
+        "title": "The Receptionist Who Rewrites Your Badge: job_submit.lua"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "slurm-smoke-config-change",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-config-change.md",
+        "title": "Measure Twice, Reconfigure Once: Smoke-Testing a slurm.conf Change"
+      },
+      {
+        "id": "slurm-smoke-after-upgrade",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-after-upgrade.md",
+        "title": "The Morning After the Upgrade: Smoke Tests for the Change You Cannot Undo"
+      },
+      {
+        "id": "slurm-smoke-policy",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-policy.md",
+        "title": "Does the Rulebook Still Work? Smoke-Testing QOS, Submit Rules and Preemption"
+      },
+      {
+        "id": "slurm-smoke-node-readiness",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-node-readiness.md",
+        "title": "Back From the Repair Shop: Is This Node Fit to Return to Service?"
+      },
+      {
+        "id": "slurm-smoke-regression-suites",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-regression-suites.md",
+        "title": "When Smoke Becomes a Fire Drill: SchedMD's Test Suite, ReFrame and the Baseline Rule"
+      }
+    ]
+  },
+  "fields/schedulers/slurm-smoke-tests/slurm-smoke-node-readiness.md": {
+    "prerequisites": [
+      {
+        "id": "slurm-smoke-control-plane",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-control-plane.md",
+        "title": "The Cluster That Worked Perfectly and Remembered Nothing: a Two-Minute Slurm Smoke Test"
+      }
+    ],
+    "related": [
+      {
+        "id": "slurm-reservations-and-maintenance",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-reservations-and-maintenance.md",
+        "title": "Calling Dibs on Nodes: Reservations, Maintenance Windows and the Job That Fit"
+      },
+      {
+        "id": "slurm-kill-task-failed",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-kill-task-failed.md",
+        "title": "Kill Task Failed: A Murder Mystery With No Body (and One Drained Node)"
+      },
+      {
+        "id": "slurm-reboot-order",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-reboot-order.md",
+        "title": "Rebooting a Slurm Cluster Without Losing Your Job (Or Anyone Else's)"
+      },
+      {
+        "id": "slurm-gpu-health-checks",
+        "path": "fields/schedulers/slurm-ai-clusters/gpu-health-checks.md",
+        "title": "When a GPU Falls Off the Bus: Health Checks That Drain the Node"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/schedulers/slurm-smoke-tests/slurm-smoke-policy.md": {
+    "prerequisites": [
+      {
+        "id": "slurm-smoke-control-plane",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-control-plane.md",
+        "title": "The Cluster That Worked Perfectly and Remembered Nothing: a Two-Minute Slurm Smoke Test"
+      }
+    ],
+    "related": [
+      {
+        "id": "slurm-preemption-requeue-signals",
+        "path": "fields/schedulers/slurm-preemption/slurm-preemption-requeue-signals.md",
+        "title": "Dying Politely: Preemption, Requeue and the Signals Your Training Job Ignores"
+      },
+      {
+        "id": "slurm-smoke-config-change",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-config-change.md",
+        "title": "Measure Twice, Reconfigure Once: Smoke-Testing a slurm.conf Change"
+      },
+      {
+        "id": "slurm-qos-preemption-setup",
+        "path": "fields/schedulers/slurm-preemption/slurm-qos-preemption-setup.md",
+        "title": "The Guest List: Setting Up QOS Preemption Without Starting a War"
+      },
+      {
+        "id": "slurm-job-submit-lua",
+        "path": "fields/schedulers/slurm-preemption/slurm-job-submit-lua.md",
+        "title": "The Receptionist Who Rewrites Your Badge: job_submit.lua"
+      },
+      {
+        "id": "slurm-smoke-regression-suites",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-regression-suites.md",
+        "title": "When Smoke Becomes a Fire Drill: SchedMD's Test Suite, ReFrame and the Baseline Rule"
+      },
+      {
+        "id": "slurm-signals-cheatsheet",
+        "path": "fields/schedulers/slurm-preemption/slurm-signals-cheatsheet.md",
+        "title": "Who Gets Told What: Every Signal Slurm Sends, and Who Actually Hears It"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/schedulers/slurm-smoke-tests/slurm-smoke-regression-suites.md": {
+    "prerequisites": [
+      {
+        "id": "slurm-smoke-control-plane",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-control-plane.md",
+        "title": "The Cluster That Worked Perfectly and Remembered Nothing: a Two-Minute Slurm Smoke Test"
+      }
+    ],
+    "related": [
+      {
+        "id": "slurm-smoke-policy",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-policy.md",
+        "title": "Does the Rulebook Still Work? Smoke-Testing QOS, Submit Rules and Preemption"
+      },
+      {
+        "id": "slurm-version-changes",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-version-changes.md",
+        "title": "The Changelog Nobody Reads: What Moved Between Slurm 23.11 and 26.05"
+      },
+      {
+        "id": "slurm-smoke-after-upgrade",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-after-upgrade.md",
+        "title": "The Morning After the Upgrade: Smoke Tests for the Change You Cannot Undo"
+      },
+      {
+        "id": "slurm-upgrade-order",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-upgrade-order.md",
+        "title": "Upgrading Slurm: The Order, the Window, and the Parts That Bite"
       }
     ],
     "required_by": []
