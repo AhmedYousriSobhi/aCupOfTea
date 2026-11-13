@@ -213,7 +213,7 @@ Fixes, roughly in order:
 
 | This page | Elsewhere in the repo |
 |---|---|
-| The container's memory limit | Slurm's `ConstrainRAMSpace`, with the same kernel OOM killer behind it ([cgroups page](/fields/schedulers/slurm-cgroups-in-practice.md)) |
+| The container's memory limit | Slurm's `ConstrainRAMSpace`, with the same kernel OOM killer behind it ([cgroups page](/fields/schedulers/slurm-inside-a-job/slurm-cgroups-in-practice.md)) |
 | Kernel kills one container, the kubelet may restart it | With Slurm, `OOMKillStep` makes the whole step die instead (same page) |
 | Working set vs usage | "Available" vs "free" at container scale ([free vs available](/fields/system-administration/linux-memory-pressure/linux-memory-free-vs-available.md)) |
 | `/dev/shm` and memory `emptyDir` in the limit | The `shared` column in `free` |

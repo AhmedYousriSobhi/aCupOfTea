@@ -208,4 +208,4 @@ The first log line now says `world_size=16`, both nodes' GPUs show load, and the
 - [PyTorch: torchrun (Elastic Launch)](https://docs.pytorch.org/docs/stable/elastic/run.html): `--nnodes`, `--nproc-per-node`, c10d rendezvous, the environment it sets.
 - [PyTorch: torch.distributed](https://docs.pytorch.org/docs/stable/distributed.html): `init_process_group`, `env://` initialization, backends.
 - [NCCL environment variables](https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/env.html): `NCCL_DEBUG`, `NCCL_SOCKET_IFNAME`.
-- [The job script tale](/fields/schedulers/slurm-job-script-tale.md): what Slurm does with the batch script.
+- [The job script tale](/fields/schedulers/slurm-inside-a-job/slurm-job-script-tale.md): what Slurm does with the batch script.

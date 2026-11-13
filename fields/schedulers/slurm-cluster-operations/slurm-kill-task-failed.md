@@ -1,7 +1,7 @@
 ---
 id: slurm-kill-task-failed
 title: "Kill Task Failed: A Murder Mystery With No Body (and One Drained Node)"
-order: 9
+order: 6
 sidebar_label: Kill task failed
 summary: Slurm job death (SIGTERM, KillWait, SIGKILL) fails on uninterruptible sleep, draining nodes. Raising timeouts rarely helps. Debug these with UnkillableStepProgram.
 level: intermediate
@@ -114,7 +114,7 @@ So when you see a drained node after a job, check which story it is:
 | `slurmd` log shows the epilog finishing with an error | Your epilog returned non-zero |
 | `dmesg` shows hung-task warnings | The kernel was already unhappy before Slurm noticed |
 
-The epilog also runs **outside** the job's cgroup, which matters if your check looks at device numbers. [The cgroups page](/fields/schedulers/slurm-cgroups-in-practice.md) and the [GPU affinity page](/fields/schedulers/slurm-gpu-affinity-socket-lie.md) explain how the same GPU can have different numbers inside and outside.
+The epilog also runs **outside** the job's cgroup, which matters if your check looks at device numbers. [The cgroups page](/fields/schedulers/slurm-inside-a-job/slurm-cgroups-in-practice.md) and the [GPU affinity page](/fields/schedulers/slurm-inside-a-job/slurm-gpu-affinity-socket-lie.md) explain how the same GPU can have different numbers inside and outside.
 
 * * *
 
@@ -175,7 +175,7 @@ ps -eo pid,user,stat,wchan:32,cmd | awk '$3 ~ /^D/'
 scontrol update NodeName=gpu-node-17 State=RESUME
 ```
 
-If processes are still stuck, resuming just feeds the next job to the same problem. At that point the options are fixing the filesystem path, rebooting the node (see the [reboot order page](/fields/schedulers/slurm-reboot-order.md)), or both.
+If processes are still stuck, resuming just feeds the next job to the same problem. At that point the options are fixing the filesystem path, rebooting the node (see the [reboot order page](/fields/schedulers/slurm-cluster-operations/slurm-reboot-order.md)), or both.
 
 * * *
 

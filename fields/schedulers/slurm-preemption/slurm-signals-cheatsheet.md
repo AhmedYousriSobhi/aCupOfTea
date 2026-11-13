@@ -1,7 +1,7 @@
 ---
 id: slurm-signals-cheatsheet
 title: "Who Gets Told What: Every Signal Slurm Sends, and Who Actually Hears It"
-order: 16
+order: 4
 sidebar_label: Signals cheat sheet
 summary: Which signals Slurm sends at preemption, GraceTime, --signal, time limits and scancel, whether the batch shell or the srun steps receive them, and how late they really arrive.
 level: intermediate
@@ -21,7 +21,7 @@ relations:
 
 # Who Gets Told What: Every Signal Slurm Sends, and Who Actually Hears It
 
-> **Part of the [schedulers](/fields/schedulers/slurm-intro.md) directory.** The timings below were measured on a two-node test cluster (Slurm 23.11.4, `KillWait=30`, accounting on, both `slurmd` daemons on one Ubuntu 24.04 machine), with a probe script that logged every signal it received and ignored `SIGTERM` on purpose, so the kill deadline could be seen. Each number is one run, so read them as a shape and not as a specification. Another Slurm version may behave differently, and the [preemption page](/fields/schedulers/slurm-preemption-requeue-signals.md) quotes the newer 26.05 guide. Run the probe in [Measure it yourself](#measure-it-yourself) on your own cluster.
+> **Part of the [schedulers](/fields/schedulers/slurm-intro.md) directory.** The timings below were measured on a two-node test cluster (Slurm 23.11.4, `KillWait=30`, accounting on, both `slurmd` daemons on one Ubuntu 24.04 machine), with a probe script that logged every signal it received and ignored `SIGTERM` on purpose, so the kill deadline could be seen. Each number is one run, so read them as a shape and not as a specification. Another Slurm version may behave differently, and the [preemption page](/fields/schedulers/slurm-preemption/slurm-preemption-requeue-signals.md) quotes the newer 26.05 guide. Run the probe in [Measure it yourself](#measure-it-yourself) on your own cluster.
 
 ## Table of Contents
 
@@ -43,7 +43,7 @@ relations:
 
 ## The message that went to the wrong address
 
-Ana has done everything the [preemption page](/fields/schedulers/slurm-preemption-requeue-signals.md) asked. Her batch script traps `SIGTERM`, runs the trainer in the background, and waits. Her admin has set a two-minute `GraceTime` on the cluster. On Saturday night her job is preempted, and she reads the log on Sunday expecting a calm "caught signal, checkpoint saved".
+Ana has done everything the [preemption page](/fields/schedulers/slurm-preemption/slurm-preemption-requeue-signals.md) asked. Her batch script traps `SIGTERM`, runs the trainer in the background, and waits. Her admin has set a two-minute `GraceTime` on the cluster. On Saturday night her job is preempted, and she reads the log on Sunday expecting a calm "caught signal, checkpoint saved".
 
 The log says nothing at all until the very last second, when everything dies at once. The checkpoint is a day old.
 
@@ -195,7 +195,7 @@ Signals are letters with an address on them. Half of the debugging is checking w
 
 ## Version notes
 
-Every timing above is from 23.11.4. The changelogs add: a default `UnkillableStepTimeout` of 60 s (24.05); `SIGKILL` through the `cgroup.kill` interface (25.05); and in 26.05 "KillWait will be honored when the task does not end with the TERM signal", `srun --ignore-signals`, and no delay in cancelling a job while `slurmstepd` is launching a task. The `KillWait` line concerns exactly the case measured here, so rerun the probe first. [Version changes 23.11 to 26.05](/fields/schedulers/slurm-version-changes.md#signals-and-killing-jobs) has the list.
+Every timing above is from 23.11.4. The changelogs add: a default `UnkillableStepTimeout` of 60 s (24.05); `SIGKILL` through the `cgroup.kill` interface (25.05); and in 26.05 "KillWait will be honored when the task does not end with the TERM signal", `srun --ignore-signals`, and no delay in cancelling a job while `slurmstepd` is launching a task. The `KillWait` line concerns exactly the case measured here, so rerun the probe first. [Version changes 23.11 to 26.05](/fields/schedulers/slurm-cluster-operations/slurm-version-changes.md#signals-and-killing-jobs) has the list.
 
 ---
 
@@ -207,7 +207,7 @@ Next Saturday the job is preempted again. This time the log has a calm line abou
 
 **Takeaway:** a job has two listeners, the batch shell and the `srun` steps; the early `GraceTime` warning goes to the steps, the `--signal=B:` warning goes to the shell (and only at preemption with `send_user_signal`), and every timing is a tick, so budget for lateness.
 
-**Next:** back to [Dying Politely](/fields/schedulers/slurm-preemption-requeue-signals.md) for the checkpoint-and-requeue wrapper that these signals feed.
+**Next:** back to [Dying Politely](/fields/schedulers/slurm-preemption/slurm-preemption-requeue-signals.md) for the checkpoint-and-requeue wrapper that these signals feed.
 
 ---
 

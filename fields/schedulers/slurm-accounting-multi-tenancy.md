@@ -2,7 +2,7 @@
 id: slurm-accounting-multi-tenancy
 title: "Slurm Multi-Tenancy: Who Stores the Rules, Who Enforces Them"
 sidebar_label: Slurm accounting & multi-tenancy
-order: 6
+order: 2
 summary: How slurmctld, slurmd, slurmdbd and sacctmgr split the work of multi-tenant accounting, why limits you set can silently do nothing, and how associations, TRES limits, QOS and fairshare fit together.
 level: intermediate
 type: concept
@@ -167,7 +167,7 @@ sacctmgr -i modify qos high set Preempt=scavenger
 sacctmgr -i modify qos scavenger set PreemptMode=requeue
 ```
 
-It only takes effect once `PreemptType=preempt/qos` is set in `slurm.conf`. [The Guest List](/fields/schedulers/slurm-qos-preemption-setup.md) walks through the whole setup with a drill, and [Autopsy of a Job](/fields/schedulers/slurm-sacct-job-forensics.md) shows how to read the result in `sacct`.
+It only takes effect once `PreemptType=preempt/qos` is set in `slurm.conf`. [The Guest List](/fields/schedulers/slurm-preemption/slurm-qos-preemption-setup.md) walks through the whole setup with a drill, and [Autopsy of a Job](/fields/schedulers/slurm-sacct-job-forensics.md) shows how to read the result in `sacct`.
 
 The opinionated default for a shared GPU cluster: **fairshare for everyday fairness, Grp limits only for promises you've actually made** (like "the vision lab gets 16 GPUs"), and a preemptible QOS so idle GPUs don't stay idle.
 

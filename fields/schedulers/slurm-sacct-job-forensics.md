@@ -1,7 +1,7 @@
 ---
 id: slurm-sacct-job-forensics
 title: "Autopsy of a Job: Reading sacct Like a Coroner"
-order: 18
+order: 4
 sidebar_label: Job forensics with sacct
 summary: How to find out what happened to a job that has gone, with sacct states, exit codes (exit:signal), requeued runs, useful fields, and the neighbors scontrol, sstat and sreport.
 level: beginner
@@ -122,13 +122,13 @@ JobID|State|Timelimit|Elapsed|ExitCode
 23|TIMEOUT|00:02:00|00:02:26|0:9
 ```
 
-`TIMEOUT` is unambiguous. The `Elapsed` is longer than the `Timelimit` here, by 26 seconds, because Slurm checks limits on a periodic tick and then waits `KillWait` for the job to exit after `SIGTERM`. The [signals cheat sheet](/fields/schedulers/slurm-signals-cheatsheet.md#everything-arrives-late-and-sometimes-early) has the timings. In that test the job ignored `SIGTERM` on purpose, which is why the signal in `ExitCode` is `9`.
+`TIMEOUT` is unambiguous. The `Elapsed` is longer than the `Timelimit` here, by 26 seconds, because Slurm checks limits on a periodic tick and then waits `KillWait` for the job to exit after `SIGTERM`. The [signals cheat sheet](/fields/schedulers/slurm-preemption/slurm-signals-cheatsheet.md#everything-arrives-late-and-sometimes-early) has the timings. In that test the job ignored `SIGTERM` on purpose, which is why the signal in `ExitCode` is `9`.
 
 ---
 
 ## The job that was evicted
 
-Under [QOS preemption](/fields/schedulers/slurm-qos-preemption-setup.md), the verdict is `PREEMPTED`. What happens next depends on whether the job could be requeued, and `sacct` shows both endings.
+Under [QOS preemption](/fields/schedulers/slurm-preemption/slurm-qos-preemption-setup.md), the verdict is `PREEMPTED`. What happens next depends on whether the job could be requeued, and `sacct` shows both endings.
 
 A victim that could **not** be requeued is simply gone:
 
@@ -153,7 +153,7 @@ JobID|QOS|State
 
 Job 55 appears twice: first run `PREEMPTED`, second run `RUNNING`. Without `-D`, a requeued job showed only its latest run in the test (checked on a similar job, where the plain line read `CANCELLED` and `-D` revealed the earlier `PREEMPTED`). While the job is still alive, `scontrol show job 55 | grep Restarts` gives the count (`Restarts=1`).
 
-So "my job restarted from the beginning and I lost a day" is answered by `-D`: yes, it was evicted at that time by that QOS. That is a question for the [preemption page](/fields/schedulers/slurm-preemption-requeue-signals.md), not for the filesystem.
+So "my job restarted from the beginning and I lost a day" is answered by `-D`: yes, it was evicted at that time by that QOS. That is a question for the [preemption page](/fields/schedulers/slurm-preemption/slurm-preemption-requeue-signals.md), not for the filesystem.
 
 ---
 
@@ -171,7 +171,7 @@ So "my job restarted from the beginning and I lost a day" is answered by `-D`: y
 | `Reservation` | Which reservation it used, if any |
 | `SubmitLine`, `WorkDir`, `Comment` | What was typed, and from where |
 | `ReqTRES`, `AllocTRES` | What was asked for, and what was given |
-| `MaxRSS` | Peak memory of the steps. **Empty unless the cluster gathers it** (`JobAcctGatherType`); the [cgroups page](/fields/schedulers/slurm-cgroups-in-practice.md) explains why those numbers are samples |
+| `MaxRSS` | Peak memory of the steps. **Empty unless the cluster gathers it** (`JobAcctGatherType`); the [cgroups page](/fields/schedulers/slurm-inside-a-job/slurm-cgroups-in-practice.md) explains why those numbers are samples |
 
 (`Restart` is not a column. The test cluster refused it. Use `-D` and `scontrol show job`.)
 
@@ -202,7 +202,7 @@ When a job is missing, ask in this order:
 
 ## Version notes
 
-Outputs are from 23.11.4. Later versions add the job's output, error and input paths to accounting (24.05), `ReqReservation` and step `TimeLimit` columns (25.05), and in 26.05 `sluid` and step `submit_line` in `--json` and `--yaml`, with a 26.05.4 fix for corrupted earlier requeue records. The notes for the development 26.11 say the name, not the UID, of whoever cancelled a job is recorded, so the `CANCELLED by 30033` form above may change. [Version changes 23.11 to 26.05](/fields/schedulers/slurm-version-changes.md#accounting-sacct-and-sacctmgr) has the list.
+Outputs are from 23.11.4. Later versions add the job's output, error and input paths to accounting (24.05), `ReqReservation` and step `TimeLimit` columns (25.05), and in 26.05 `sluid` and step `submit_line` in `--json` and `--yaml`, with a 26.05.4 fix for corrupted earlier requeue records. The notes for the development 26.11 say the name, not the UID, of whoever cancelled a job is recorded, so the `CANCELLED by 30033` form above may change. [Version changes 23.11 to 26.05](/fields/schedulers/slurm-cluster-operations/slurm-version-changes.md#accounting-sacct-and-sacctmgr) has the list.
 
 ---
 

@@ -96,7 +96,8 @@ class DryRun(unittest.TestCase):
 
     def test_folder_ranking(self):
         folders = new_page.scan()
-        self.assertIn("fields/schedulers", new_page.suggest_folders("Slurm job arrays", folders)[:5])
+        top = new_page.suggest_folders("Slurm job arrays", folders)[:5]
+        self.assertTrue(all(f.startswith("fields/schedulers") for f in top[:3]), top)
 
 
 class Prompts(unittest.TestCase):

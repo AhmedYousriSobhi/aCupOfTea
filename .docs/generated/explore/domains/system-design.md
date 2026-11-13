@@ -4,7 +4,7 @@
 
 Software System Design
 
-- [Rebooting a Slurm Cluster Without Losing Your Job (Or Anyone Else's)](/fields/schedulers/slurm-reboot-order.md) — The step-by-step order for rebooting a Slurm cluster: drain, lock access, control plane first, then front-end and compute nodes, and reopen in a controlled way. *(intermediate · 9 min)*  
+- [Rebooting a Slurm Cluster Without Losing Your Job (Or Anyone Else's)](/fields/schedulers/slurm-cluster-operations/slurm-reboot-order.md) — The step-by-step order for rebooting a Slurm cluster: drain, lock access, control plane first, then front-end and compute nodes, and reopen in a controlled way. *(intermediate · 9 min)*  
   [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [Reviewing the Design: Where Would You Push Back?](/programming/local-app-accounts/reviewing-the-design.md) — Six review questions the design leaves open, a table of mistakes it avoids, the Designing Data-Intensive Applications chapters that explain why, and six exercises. *(intermediate · 6 min)*  
   [`programming`](/.docs/generated/explore/tags/programming.md) [`software`](/.docs/generated/explore/tags/software.md) [`system-design`](/.docs/generated/explore/tags/system-design.md)
