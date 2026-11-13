@@ -1,0 +1,4225 @@
+{
+  "business/hpc-industry/101-hpc.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "hpc-workloads",
+        "path": "business/hpc-industry/workloads.md",
+        "title": "HPC Workloads"
+      }
+    ],
+    "required_by": []
+  },
+  "business/hpc-industry/workloads.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "hpc-systems-overview",
+        "path": "business/hpc-industry/101-hpc.md",
+        "title": "HPC Systems"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/benchmarks/nccl.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "pytorch-ddp",
+        "path": "fields/libraries-frameworks-containers/102-pytorch-ddp.md",
+        "title": "PyTorch DDP"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/benchmarks/parallel-execution-affinity-master-guide.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "cpu-affinity",
+        "path": "programming/operating-system/process-cpu-affinity.md",
+        "title": "CPU Affinity"
+      },
+      {
+        "id": "openmp-mpi-hybrid-binding-trap",
+        "path": "fields/system-administration/openmp-and-open-mpi/hybrid-and-the-binding-trap.md",
+        "title": "Kitchens With Cooks: Hybrid MPI+OpenMP and the Binding Trap"
+      },
+      {
+        "id": "openmp-open-mpi-name-mixup",
+        "path": "fields/system-administration/openmp-and-open-mpi/the-name-mixup.md",
+        "title": "Not Twins, Not Even Cousins: OpenMP, MPI and Open MPI"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/data-science/probability-statistics/README.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "coins-and-calls",
+        "path": "fields/data-science/probability-statistics/coins-and-calls.md",
+        "title": "Coins and Calls: Binomial and Poisson as Recipes"
+      },
+      {
+        "id": "counting-the-ways",
+        "path": "fields/data-science/probability-statistics/counting-the-ways.md",
+        "title": "Counting the Ways: Probability as a Share of the List"
+      },
+      {
+        "id": "draw-it-before-you-describe-it",
+        "path": "fields/data-science/probability-statistics/draw-it-before-you-describe-it.md",
+        "title": "Draw It Before You Describe It: Three Pictures of the Same Fifty Days"
+      },
+      {
+        "id": "how-far-from-the-middle",
+        "path": "fields/data-science/probability-statistics/how-far-from-the-middle.md",
+        "title": "How Far From the Middle? One Question Behind Every Summary Number"
+      },
+      {
+        "id": "how-sure-are-you",
+        "path": "fields/data-science/probability-statistics/how-sure-are-you.md",
+        "title": "How Sure Are You? Confidence Intervals"
+      },
+      {
+        "id": "data-types-and-frequency-tables",
+        "path": "fields/data-science/probability-statistics/data-types-and-frequency-tables.md",
+        "title": "Mira's Notebook: What Kind of Data Is This, and How Do You Count It?"
+      },
+      {
+        "id": "stir-the-pot-population-and-sampling",
+        "path": "fields/data-science/probability-statistics/stir-the-pot-population-and-sampling.md",
+        "title": "Stir the Pot First: Population, Sample, and Why We Guess"
+      },
+      {
+        "id": "the-bell-curve",
+        "path": "fields/data-science/probability-statistics/the-bell-curve.md",
+        "title": "The Bell Curve: Probability as Area, and One Ruler for Every Bell"
+      },
+      {
+        "id": "the-courtroom-for-numbers",
+        "path": "fields/data-science/probability-statistics/the-courtroom-for-numbers.md",
+        "title": "The Courtroom for Numbers: Could Plain Luck Do This?"
+      },
+      {
+        "id": "the-map-of-leaf-and-kettle",
+        "path": "fields/data-science/probability-statistics/the-map-of-leaf-and-kettle.md",
+        "title": "The Map of Leaf & Kettle: Every Idea So Far in One Walk Through the Shop"
+      },
+      {
+        "id": "the-number-on-the-tin",
+        "path": "fields/data-science/probability-statistics/the-number-on-the-tin.md",
+        "title": "The Number on the Tin: Mean, Median and Mode"
+      },
+      {
+        "id": "the-test-that-was-99-percent-accurate",
+        "path": "fields/data-science/probability-statistics/the-test-that-was-99-percent-accurate.md",
+        "title": "The Test That Was 99% Accurate: Conditional Probability and Bayes' Rule"
+      },
+      {
+        "id": "two-things-moving-together",
+        "path": "fields/data-science/probability-statistics/two-things-moving-together.md",
+        "title": "Two Things Moving Together: Correlation and the Line"
+      },
+      {
+        "id": "what-to-expect",
+        "path": "fields/data-science/probability-statistics/what-to-expect.md",
+        "title": "What to Expect: Random Variables and Expected Value"
+      },
+      {
+        "id": "where-do-you-stand",
+        "path": "fields/data-science/probability-statistics/where-do-you-stand.md",
+        "title": "Where Do You Stand? Percentiles, Z-Scores and the Box Plot"
+      },
+      {
+        "id": "why-averages-behave",
+        "path": "fields/data-science/probability-statistics/why-averages-behave.md",
+        "title": "Why Averages Behave: The Sip You Could Take a Thousand Times"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/data-science/probability-statistics/coins-and-calls.md": {
+    "prerequisites": [
+      {
+        "id": "what-to-expect",
+        "path": "fields/data-science/probability-statistics/what-to-expect.md",
+        "title": "What to Expect: Random Variables and Expected Value"
+      }
+    ],
+    "related": [
+      {
+        "id": "counting-the-ways",
+        "path": "fields/data-science/probability-statistics/counting-the-ways.md",
+        "title": "Counting the Ways: Probability as a Share of the List"
+      },
+      {
+        "id": "probability-statistics-series",
+        "path": "fields/data-science/probability-statistics/README.md",
+        "title": "Probability & Statistics, One Sip at a Time"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "the-bell-curve",
+        "path": "fields/data-science/probability-statistics/the-bell-curve.md",
+        "title": "The Bell Curve: Probability as Area, and One Ruler for Every Bell"
+      }
+    ]
+  },
+  "fields/data-science/probability-statistics/counting-the-ways.md": {
+    "prerequisites": [
+      {
+        "id": "where-do-you-stand",
+        "path": "fields/data-science/probability-statistics/where-do-you-stand.md",
+        "title": "Where Do You Stand? Percentiles, Z-Scores and the Box Plot"
+      }
+    ],
+    "related": [
+      {
+        "id": "coins-and-calls",
+        "path": "fields/data-science/probability-statistics/coins-and-calls.md",
+        "title": "Coins and Calls: Binomial and Poisson as Recipes"
+      },
+      {
+        "id": "probability-statistics-series",
+        "path": "fields/data-science/probability-statistics/README.md",
+        "title": "Probability & Statistics, One Sip at a Time"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "the-test-that-was-99-percent-accurate",
+        "path": "fields/data-science/probability-statistics/the-test-that-was-99-percent-accurate.md",
+        "title": "The Test That Was 99% Accurate: Conditional Probability and Bayes' Rule"
+      }
+    ]
+  },
+  "fields/data-science/probability-statistics/data-types-and-frequency-tables.md": {
+    "prerequisites": [
+      {
+        "id": "stir-the-pot-population-and-sampling",
+        "path": "fields/data-science/probability-statistics/stir-the-pot-population-and-sampling.md",
+        "title": "Stir the Pot First: Population, Sample, and Why We Guess"
+      }
+    ],
+    "related": [
+      {
+        "id": "probability-statistics-series",
+        "path": "fields/data-science/probability-statistics/README.md",
+        "title": "Probability & Statistics, One Sip at a Time"
+      },
+      {
+        "id": "the-map-of-leaf-and-kettle",
+        "path": "fields/data-science/probability-statistics/the-map-of-leaf-and-kettle.md",
+        "title": "The Map of Leaf & Kettle: Every Idea So Far in One Walk Through the Shop"
+      },
+      {
+        "id": "the-number-on-the-tin",
+        "path": "fields/data-science/probability-statistics/the-number-on-the-tin.md",
+        "title": "The Number on the Tin: Mean, Median and Mode"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "draw-it-before-you-describe-it",
+        "path": "fields/data-science/probability-statistics/draw-it-before-you-describe-it.md",
+        "title": "Draw It Before You Describe It: Three Pictures of the Same Fifty Days"
+      }
+    ]
+  },
+  "fields/data-science/probability-statistics/draw-it-before-you-describe-it.md": {
+    "prerequisites": [
+      {
+        "id": "data-types-and-frequency-tables",
+        "path": "fields/data-science/probability-statistics/data-types-and-frequency-tables.md",
+        "title": "Mira's Notebook: What Kind of Data Is This, and How Do You Count It?"
+      }
+    ],
+    "related": [
+      {
+        "id": "probability-statistics-series",
+        "path": "fields/data-science/probability-statistics/README.md",
+        "title": "Probability & Statistics, One Sip at a Time"
+      },
+      {
+        "id": "the-bell-curve",
+        "path": "fields/data-science/probability-statistics/the-bell-curve.md",
+        "title": "The Bell Curve: Probability as Area, and One Ruler for Every Bell"
+      },
+      {
+        "id": "the-map-of-leaf-and-kettle",
+        "path": "fields/data-science/probability-statistics/the-map-of-leaf-and-kettle.md",
+        "title": "The Map of Leaf & Kettle: Every Idea So Far in One Walk Through the Shop"
+      },
+      {
+        "id": "two-things-moving-together",
+        "path": "fields/data-science/probability-statistics/two-things-moving-together.md",
+        "title": "Two Things Moving Together: Correlation and the Line"
+      },
+      {
+        "id": "where-do-you-stand",
+        "path": "fields/data-science/probability-statistics/where-do-you-stand.md",
+        "title": "Where Do You Stand? Percentiles, Z-Scores and the Box Plot"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "the-number-on-the-tin",
+        "path": "fields/data-science/probability-statistics/the-number-on-the-tin.md",
+        "title": "The Number on the Tin: Mean, Median and Mode"
+      }
+    ]
+  },
+  "fields/data-science/probability-statistics/how-far-from-the-middle.md": {
+    "prerequisites": [
+      {
+        "id": "the-number-on-the-tin",
+        "path": "fields/data-science/probability-statistics/the-number-on-the-tin.md",
+        "title": "The Number on the Tin: Mean, Median and Mode"
+      }
+    ],
+    "related": [
+      {
+        "id": "probability-statistics-series",
+        "path": "fields/data-science/probability-statistics/README.md",
+        "title": "Probability & Statistics, One Sip at a Time"
+      },
+      {
+        "id": "the-map-of-leaf-and-kettle",
+        "path": "fields/data-science/probability-statistics/the-map-of-leaf-and-kettle.md",
+        "title": "The Map of Leaf & Kettle: Every Idea So Far in One Walk Through the Shop"
+      },
+      {
+        "id": "two-things-moving-together",
+        "path": "fields/data-science/probability-statistics/two-things-moving-together.md",
+        "title": "Two Things Moving Together: Correlation and the Line"
+      },
+      {
+        "id": "what-to-expect",
+        "path": "fields/data-science/probability-statistics/what-to-expect.md",
+        "title": "What to Expect: Random Variables and Expected Value"
+      },
+      {
+        "id": "why-averages-behave",
+        "path": "fields/data-science/probability-statistics/why-averages-behave.md",
+        "title": "Why Averages Behave: The Sip You Could Take a Thousand Times"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "where-do-you-stand",
+        "path": "fields/data-science/probability-statistics/where-do-you-stand.md",
+        "title": "Where Do You Stand? Percentiles, Z-Scores and the Box Plot"
+      }
+    ]
+  },
+  "fields/data-science/probability-statistics/how-sure-are-you.md": {
+    "prerequisites": [
+      {
+        "id": "why-averages-behave",
+        "path": "fields/data-science/probability-statistics/why-averages-behave.md",
+        "title": "Why Averages Behave: The Sip You Could Take a Thousand Times"
+      }
+    ],
+    "related": [
+      {
+        "id": "probability-statistics-series",
+        "path": "fields/data-science/probability-statistics/README.md",
+        "title": "Probability & Statistics, One Sip at a Time"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "the-courtroom-for-numbers",
+        "path": "fields/data-science/probability-statistics/the-courtroom-for-numbers.md",
+        "title": "The Courtroom for Numbers: Could Plain Luck Do This?"
+      }
+    ]
+  },
+  "fields/data-science/probability-statistics/stir-the-pot-population-and-sampling.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "probability-statistics-series",
+        "path": "fields/data-science/probability-statistics/README.md",
+        "title": "Probability & Statistics, One Sip at a Time"
+      },
+      {
+        "id": "the-map-of-leaf-and-kettle",
+        "path": "fields/data-science/probability-statistics/the-map-of-leaf-and-kettle.md",
+        "title": "The Map of Leaf & Kettle: Every Idea So Far in One Walk Through the Shop"
+      },
+      {
+        "id": "why-averages-behave",
+        "path": "fields/data-science/probability-statistics/why-averages-behave.md",
+        "title": "Why Averages Behave: The Sip You Could Take a Thousand Times"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "data-types-and-frequency-tables",
+        "path": "fields/data-science/probability-statistics/data-types-and-frequency-tables.md",
+        "title": "Mira's Notebook: What Kind of Data Is This, and How Do You Count It?"
+      }
+    ]
+  },
+  "fields/data-science/probability-statistics/the-bell-curve.md": {
+    "prerequisites": [
+      {
+        "id": "coins-and-calls",
+        "path": "fields/data-science/probability-statistics/coins-and-calls.md",
+        "title": "Coins and Calls: Binomial and Poisson as Recipes"
+      }
+    ],
+    "related": [
+      {
+        "id": "draw-it-before-you-describe-it",
+        "path": "fields/data-science/probability-statistics/draw-it-before-you-describe-it.md",
+        "title": "Draw It Before You Describe It: Three Pictures of the Same Fifty Days"
+      },
+      {
+        "id": "probability-statistics-series",
+        "path": "fields/data-science/probability-statistics/README.md",
+        "title": "Probability & Statistics, One Sip at a Time"
+      },
+      {
+        "id": "where-do-you-stand",
+        "path": "fields/data-science/probability-statistics/where-do-you-stand.md",
+        "title": "Where Do You Stand? Percentiles, Z-Scores and the Box Plot"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "why-averages-behave",
+        "path": "fields/data-science/probability-statistics/why-averages-behave.md",
+        "title": "Why Averages Behave: The Sip You Could Take a Thousand Times"
+      }
+    ]
+  },
+  "fields/data-science/probability-statistics/the-courtroom-for-numbers.md": {
+    "prerequisites": [
+      {
+        "id": "how-sure-are-you",
+        "path": "fields/data-science/probability-statistics/how-sure-are-you.md",
+        "title": "How Sure Are You? Confidence Intervals"
+      }
+    ],
+    "related": [
+      {
+        "id": "probability-statistics-series",
+        "path": "fields/data-science/probability-statistics/README.md",
+        "title": "Probability & Statistics, One Sip at a Time"
+      },
+      {
+        "id": "why-averages-behave",
+        "path": "fields/data-science/probability-statistics/why-averages-behave.md",
+        "title": "Why Averages Behave: The Sip You Could Take a Thousand Times"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "two-things-moving-together",
+        "path": "fields/data-science/probability-statistics/two-things-moving-together.md",
+        "title": "Two Things Moving Together: Correlation and the Line"
+      }
+    ]
+  },
+  "fields/data-science/probability-statistics/the-map-of-leaf-and-kettle.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "draw-it-before-you-describe-it",
+        "path": "fields/data-science/probability-statistics/draw-it-before-you-describe-it.md",
+        "title": "Draw It Before You Describe It: Three Pictures of the Same Fifty Days"
+      },
+      {
+        "id": "how-far-from-the-middle",
+        "path": "fields/data-science/probability-statistics/how-far-from-the-middle.md",
+        "title": "How Far From the Middle? One Question Behind Every Summary Number"
+      },
+      {
+        "id": "data-types-and-frequency-tables",
+        "path": "fields/data-science/probability-statistics/data-types-and-frequency-tables.md",
+        "title": "Mira's Notebook: What Kind of Data Is This, and How Do You Count It?"
+      },
+      {
+        "id": "probability-statistics-series",
+        "path": "fields/data-science/probability-statistics/README.md",
+        "title": "Probability & Statistics, One Sip at a Time"
+      },
+      {
+        "id": "stir-the-pot-population-and-sampling",
+        "path": "fields/data-science/probability-statistics/stir-the-pot-population-and-sampling.md",
+        "title": "Stir the Pot First: Population, Sample, and Why We Guess"
+      },
+      {
+        "id": "the-number-on-the-tin",
+        "path": "fields/data-science/probability-statistics/the-number-on-the-tin.md",
+        "title": "The Number on the Tin: Mean, Median and Mode"
+      },
+      {
+        "id": "where-do-you-stand",
+        "path": "fields/data-science/probability-statistics/where-do-you-stand.md",
+        "title": "Where Do You Stand? Percentiles, Z-Scores and the Box Plot"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/data-science/probability-statistics/the-number-on-the-tin.md": {
+    "prerequisites": [
+      {
+        "id": "draw-it-before-you-describe-it",
+        "path": "fields/data-science/probability-statistics/draw-it-before-you-describe-it.md",
+        "title": "Draw It Before You Describe It: Three Pictures of the Same Fifty Days"
+      }
+    ],
+    "related": [
+      {
+        "id": "data-types-and-frequency-tables",
+        "path": "fields/data-science/probability-statistics/data-types-and-frequency-tables.md",
+        "title": "Mira's Notebook: What Kind of Data Is This, and How Do You Count It?"
+      },
+      {
+        "id": "probability-statistics-series",
+        "path": "fields/data-science/probability-statistics/README.md",
+        "title": "Probability & Statistics, One Sip at a Time"
+      },
+      {
+        "id": "the-map-of-leaf-and-kettle",
+        "path": "fields/data-science/probability-statistics/the-map-of-leaf-and-kettle.md",
+        "title": "The Map of Leaf & Kettle: Every Idea So Far in One Walk Through the Shop"
+      },
+      {
+        "id": "what-to-expect",
+        "path": "fields/data-science/probability-statistics/what-to-expect.md",
+        "title": "What to Expect: Random Variables and Expected Value"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "how-far-from-the-middle",
+        "path": "fields/data-science/probability-statistics/how-far-from-the-middle.md",
+        "title": "How Far From the Middle? One Question Behind Every Summary Number"
+      }
+    ]
+  },
+  "fields/data-science/probability-statistics/the-test-that-was-99-percent-accurate.md": {
+    "prerequisites": [
+      {
+        "id": "counting-the-ways",
+        "path": "fields/data-science/probability-statistics/counting-the-ways.md",
+        "title": "Counting the Ways: Probability as a Share of the List"
+      }
+    ],
+    "related": [
+      {
+        "id": "probability-statistics-series",
+        "path": "fields/data-science/probability-statistics/README.md",
+        "title": "Probability & Statistics, One Sip at a Time"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "what-to-expect",
+        "path": "fields/data-science/probability-statistics/what-to-expect.md",
+        "title": "What to Expect: Random Variables and Expected Value"
+      }
+    ]
+  },
+  "fields/data-science/probability-statistics/two-things-moving-together.md": {
+    "prerequisites": [
+      {
+        "id": "the-courtroom-for-numbers",
+        "path": "fields/data-science/probability-statistics/the-courtroom-for-numbers.md",
+        "title": "The Courtroom for Numbers: Could Plain Luck Do This?"
+      }
+    ],
+    "related": [
+      {
+        "id": "draw-it-before-you-describe-it",
+        "path": "fields/data-science/probability-statistics/draw-it-before-you-describe-it.md",
+        "title": "Draw It Before You Describe It: Three Pictures of the Same Fifty Days"
+      },
+      {
+        "id": "how-far-from-the-middle",
+        "path": "fields/data-science/probability-statistics/how-far-from-the-middle.md",
+        "title": "How Far From the Middle? One Question Behind Every Summary Number"
+      },
+      {
+        "id": "probability-statistics-series",
+        "path": "fields/data-science/probability-statistics/README.md",
+        "title": "Probability & Statistics, One Sip at a Time"
+      },
+      {
+        "id": "where-do-you-stand",
+        "path": "fields/data-science/probability-statistics/where-do-you-stand.md",
+        "title": "Where Do You Stand? Percentiles, Z-Scores and the Box Plot"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/data-science/probability-statistics/what-to-expect.md": {
+    "prerequisites": [
+      {
+        "id": "the-test-that-was-99-percent-accurate",
+        "path": "fields/data-science/probability-statistics/the-test-that-was-99-percent-accurate.md",
+        "title": "The Test That Was 99% Accurate: Conditional Probability and Bayes' Rule"
+      }
+    ],
+    "related": [
+      {
+        "id": "how-far-from-the-middle",
+        "path": "fields/data-science/probability-statistics/how-far-from-the-middle.md",
+        "title": "How Far From the Middle? One Question Behind Every Summary Number"
+      },
+      {
+        "id": "probability-statistics-series",
+        "path": "fields/data-science/probability-statistics/README.md",
+        "title": "Probability & Statistics, One Sip at a Time"
+      },
+      {
+        "id": "the-number-on-the-tin",
+        "path": "fields/data-science/probability-statistics/the-number-on-the-tin.md",
+        "title": "The Number on the Tin: Mean, Median and Mode"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "coins-and-calls",
+        "path": "fields/data-science/probability-statistics/coins-and-calls.md",
+        "title": "Coins and Calls: Binomial and Poisson as Recipes"
+      }
+    ]
+  },
+  "fields/data-science/probability-statistics/where-do-you-stand.md": {
+    "prerequisites": [
+      {
+        "id": "how-far-from-the-middle",
+        "path": "fields/data-science/probability-statistics/how-far-from-the-middle.md",
+        "title": "How Far From the Middle? One Question Behind Every Summary Number"
+      }
+    ],
+    "related": [
+      {
+        "id": "draw-it-before-you-describe-it",
+        "path": "fields/data-science/probability-statistics/draw-it-before-you-describe-it.md",
+        "title": "Draw It Before You Describe It: Three Pictures of the Same Fifty Days"
+      },
+      {
+        "id": "probability-statistics-series",
+        "path": "fields/data-science/probability-statistics/README.md",
+        "title": "Probability & Statistics, One Sip at a Time"
+      },
+      {
+        "id": "the-bell-curve",
+        "path": "fields/data-science/probability-statistics/the-bell-curve.md",
+        "title": "The Bell Curve: Probability as Area, and One Ruler for Every Bell"
+      },
+      {
+        "id": "the-map-of-leaf-and-kettle",
+        "path": "fields/data-science/probability-statistics/the-map-of-leaf-and-kettle.md",
+        "title": "The Map of Leaf & Kettle: Every Idea So Far in One Walk Through the Shop"
+      },
+      {
+        "id": "two-things-moving-together",
+        "path": "fields/data-science/probability-statistics/two-things-moving-together.md",
+        "title": "Two Things Moving Together: Correlation and the Line"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "counting-the-ways",
+        "path": "fields/data-science/probability-statistics/counting-the-ways.md",
+        "title": "Counting the Ways: Probability as a Share of the List"
+      }
+    ]
+  },
+  "fields/data-science/probability-statistics/why-averages-behave.md": {
+    "prerequisites": [
+      {
+        "id": "the-bell-curve",
+        "path": "fields/data-science/probability-statistics/the-bell-curve.md",
+        "title": "The Bell Curve: Probability as Area, and One Ruler for Every Bell"
+      }
+    ],
+    "related": [
+      {
+        "id": "how-far-from-the-middle",
+        "path": "fields/data-science/probability-statistics/how-far-from-the-middle.md",
+        "title": "How Far From the Middle? One Question Behind Every Summary Number"
+      },
+      {
+        "id": "probability-statistics-series",
+        "path": "fields/data-science/probability-statistics/README.md",
+        "title": "Probability & Statistics, One Sip at a Time"
+      },
+      {
+        "id": "stir-the-pot-population-and-sampling",
+        "path": "fields/data-science/probability-statistics/stir-the-pot-population-and-sampling.md",
+        "title": "Stir the Pot First: Population, Sample, and Why We Guess"
+      },
+      {
+        "id": "the-courtroom-for-numbers",
+        "path": "fields/data-science/probability-statistics/the-courtroom-for-numbers.md",
+        "title": "The Courtroom for Numbers: Could Plain Luck Do This?"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "how-sure-are-you",
+        "path": "fields/data-science/probability-statistics/how-sure-are-you.md",
+        "title": "How Sure Are You? Confidence Intervals"
+      }
+    ]
+  },
+  "fields/deep-learning/concepts/basics.md": {
+    "prerequisites": [],
+    "related": [],
+    "required_by": [
+      {
+        "id": "sequence-models",
+        "path": "fields/deep-learning/concepts/sequence-models.md",
+        "title": "Sequence Models"
+      }
+    ]
+  },
+  "fields/deep-learning/concepts/sequence-models.md": {
+    "prerequisites": [
+      {
+        "id": "deep-learning-basics",
+        "path": "fields/deep-learning/concepts/basics.md",
+        "title": "Deep Learning Basics"
+      }
+    ],
+    "related": [],
+    "required_by": [
+      {
+        "id": "encoder-decoder-machine-translation",
+        "path": "fields/generative-ai/machine-translator/encoder-decoder.md",
+        "title": "Encoder-Decoder for Machine Translation"
+      }
+    ]
+  },
+  "fields/devops/ansible/cheatsheet.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "ansible-inventory",
+        "path": "fields/devops/ansible/inventory-and-ad-hoc.md",
+        "title": "Four Nodes Said \"Too Many Open Files\": Inventories and Ad-Hoc Commands"
+      },
+      {
+        "id": "ansible-roles",
+        "path": "fields/devops/ansible/roles-and-variables.md",
+        "title": "The GPU Node That Thought It Had 1000 MB: Roles and Variables"
+      },
+      {
+        "id": "ansible-getting-started",
+        "path": "fields/devops/ansible/getting-started.md",
+        "title": "The Laptop That Ran Ansible 2.16: An Install You Can Trust"
+      },
+      {
+        "id": "ansible-vault",
+        "path": "fields/devops/ansible/secrets-and-vault.md",
+        "title": "The Munge Key in Git: Secrets, Vault and Rotation"
+      },
+      {
+        "id": "ansible-idempotence",
+        "path": "fields/devops/ansible/idempotence-and-handlers.md",
+        "title": "The Playbook That Restarted slurmd Every Night: Idempotence and Handlers"
+      },
+      {
+        "id": "ansible-rolling",
+        "path": "fields/devops/ansible/rolling-maintenance.md",
+        "title": "The Reboot That Killed a Week of Jobs: Rolling Maintenance with Slurm"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/devops/ansible/getting-started.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "ansible-cheatsheet",
+        "path": "fields/devops/ansible/cheatsheet.md",
+        "title": "Ansible Cheatsheet: Every Step from the Series"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "ansible-inventory",
+        "path": "fields/devops/ansible/inventory-and-ad-hoc.md",
+        "title": "Four Nodes Said \"Too Many Open Files\": Inventories and Ad-Hoc Commands"
+      }
+    ]
+  },
+  "fields/devops/ansible/idempotence-and-handlers.md": {
+    "prerequisites": [
+      {
+        "id": "ansible-inventory",
+        "path": "fields/devops/ansible/inventory-and-ad-hoc.md",
+        "title": "Four Nodes Said \"Too Many Open Files\": Inventories and Ad-Hoc Commands"
+      }
+    ],
+    "related": [
+      {
+        "id": "ansible-cheatsheet",
+        "path": "fields/devops/ansible/cheatsheet.md",
+        "title": "Ansible Cheatsheet: Every Step from the Series"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "ansible-roles",
+        "path": "fields/devops/ansible/roles-and-variables.md",
+        "title": "The GPU Node That Thought It Had 1000 MB: Roles and Variables"
+      }
+    ]
+  },
+  "fields/devops/ansible/inventory-and-ad-hoc.md": {
+    "prerequisites": [
+      {
+        "id": "ansible-getting-started",
+        "path": "fields/devops/ansible/getting-started.md",
+        "title": "The Laptop That Ran Ansible 2.16: An Install You Can Trust"
+      }
+    ],
+    "related": [
+      {
+        "id": "ansible-cheatsheet",
+        "path": "fields/devops/ansible/cheatsheet.md",
+        "title": "Ansible Cheatsheet: Every Step from the Series"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "ansible-idempotence",
+        "path": "fields/devops/ansible/idempotence-and-handlers.md",
+        "title": "The Playbook That Restarted slurmd Every Night: Idempotence and Handlers"
+      }
+    ]
+  },
+  "fields/devops/ansible/roles-and-variables.md": {
+    "prerequisites": [
+      {
+        "id": "ansible-idempotence",
+        "path": "fields/devops/ansible/idempotence-and-handlers.md",
+        "title": "The Playbook That Restarted slurmd Every Night: Idempotence and Handlers"
+      }
+    ],
+    "related": [
+      {
+        "id": "ansible-cheatsheet",
+        "path": "fields/devops/ansible/cheatsheet.md",
+        "title": "Ansible Cheatsheet: Every Step from the Series"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "ansible-rolling",
+        "path": "fields/devops/ansible/rolling-maintenance.md",
+        "title": "The Reboot That Killed a Week of Jobs: Rolling Maintenance with Slurm"
+      },
+      {
+        "id": "ansible-vault",
+        "path": "fields/devops/ansible/secrets-and-vault.md",
+        "title": "The Munge Key in Git: Secrets, Vault and Rotation"
+      }
+    ]
+  },
+  "fields/devops/ansible/rolling-maintenance.md": {
+    "prerequisites": [
+      {
+        "id": "ansible-roles",
+        "path": "fields/devops/ansible/roles-and-variables.md",
+        "title": "The GPU Node That Thought It Had 1000 MB: Roles and Variables"
+      }
+    ],
+    "related": [
+      {
+        "id": "ansible-cheatsheet",
+        "path": "fields/devops/ansible/cheatsheet.md",
+        "title": "Ansible Cheatsheet: Every Step from the Series"
+      },
+      {
+        "id": "nhc-build-and-install",
+        "path": "fields/system-administration/node-health-check/build-and-install.md",
+        "title": "Build and Install NHC"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/devops/ansible/secrets-and-vault.md": {
+    "prerequisites": [
+      {
+        "id": "ansible-roles",
+        "path": "fields/devops/ansible/roles-and-variables.md",
+        "title": "The GPU Node That Thought It Had 1000 MB: Roles and Variables"
+      }
+    ],
+    "related": [
+      {
+        "id": "ansible-cheatsheet",
+        "path": "fields/devops/ansible/cheatsheet.md",
+        "title": "Ansible Cheatsheet: Every Step from the Series"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/devops/kubernetes/broken-pods-rogues-gallery.md": {
+    "prerequisites": [
+      {
+        "id": "kubernetes-in-five-nouns",
+        "path": "fields/devops/kubernetes/kubernetes-in-five-nouns.md",
+        "title": "Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster"
+      }
+    ],
+    "related": [
+      {
+        "id": "containers-101",
+        "path": "fields/libraries-frameworks-containers/101-containers.md",
+        "title": "Containers 101"
+      },
+      {
+        "id": "draining-a-gpu-node",
+        "path": "fields/devops/kubernetes/draining-a-gpu-node.md",
+        "title": "Draining a GPU Node With a Three-Day Run on It"
+      },
+      {
+        "id": "kubectl-troubleshooting",
+        "path": "fields/devops/kubernetes/cheatsheet.md",
+        "title": "kubectl Troubleshooting Cheat Sheet: Five Questions, in Order"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "oomkilled-with-memory-to-spare",
+        "path": "fields/devops/kubernetes/oomkilled-with-memory-to-spare.md",
+        "title": "The Pod Killed With Memory to Spare"
+      }
+    ]
+  },
+  "fields/devops/kubernetes/build-a-two-node-k3s-lab.md": {
+    "prerequisites": [
+      {
+        "id": "kubernetes-in-five-nouns",
+        "path": "fields/devops/kubernetes/kubernetes-in-five-nouns.md",
+        "title": "Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster"
+      }
+    ],
+    "related": [
+      {
+        "id": "containers-101",
+        "path": "fields/libraries-frameworks-containers/101-containers.md",
+        "title": "Containers 101"
+      },
+      {
+        "id": "k3s-vs-kubeadm",
+        "path": "fields/devops/kubernetes/k3s-vs-kubeadm.md",
+        "title": "k3s vs kubeadm: Furnished Flat or Empty Unit?"
+      },
+      {
+        "id": "your-kubeconfig-is-a-house-key",
+        "path": "fields/devops/kubernetes/your-kubeconfig-is-a-house-key.md",
+        "title": "Your kubeconfig Is a House Key"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "fake-gpus-in-kubernetes",
+        "path": "fields/devops/kubernetes/fake-gpus-in-kubernetes.md",
+        "title": "Fake GPUs in Kubernetes: Learn GPU Scheduling Without Owning a GPU"
+      },
+      {
+        "id": "gpu-allocation-vs-utilization",
+        "path": "fields/devops/kubernetes/gpu-allocation-vs-utilization.md",
+        "title": "Booked Is Not Busy: GPU Allocation vs Utilization"
+      }
+    ]
+  },
+  "fields/devops/kubernetes/cheatsheet.md": {
+    "prerequisites": [
+      {
+        "id": "kubernetes-in-five-nouns",
+        "path": "fields/devops/kubernetes/kubernetes-in-five-nouns.md",
+        "title": "Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster"
+      }
+    ],
+    "related": [
+      {
+        "id": "broken-pods-rogues-gallery",
+        "path": "fields/devops/kubernetes/broken-pods-rogues-gallery.md",
+        "title": "Broken Pods: A Rogues' Gallery (and the One Command That Catches Them All)"
+      },
+      {
+        "id": "kubernetes-at-hpc-scale",
+        "path": "fields/devops/kubernetes/kubernetes-at-hpc-scale.md",
+        "title": "Kubernetes at HPC Scale: The Front Desk Meets a 100,000-Task Array"
+      },
+      {
+        "id": "oomkilled-with-memory-to-spare",
+        "path": "fields/devops/kubernetes/oomkilled-with-memory-to-spare.md",
+        "title": "The Pod Killed With Memory to Spare"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/devops/kubernetes/draining-a-gpu-node.md": {
+    "prerequisites": [
+      {
+        "id": "kubernetes-in-five-nouns",
+        "path": "fields/devops/kubernetes/kubernetes-in-five-nouns.md",
+        "title": "Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster"
+      }
+    ],
+    "related": [
+      {
+        "id": "broken-pods-rogues-gallery",
+        "path": "fields/devops/kubernetes/broken-pods-rogues-gallery.md",
+        "title": "Broken Pods: A Rogues' Gallery (and the One Command That Catches Them All)"
+      },
+      {
+        "id": "slurm-preemption-requeue-signals",
+        "path": "fields/schedulers/slurm-preemption/slurm-preemption-requeue-signals.md",
+        "title": "Dying Politely: Preemption, Requeue and the Signals Your Training Job Ignores"
+      },
+      {
+        "id": "isolating-gpu-workloads",
+        "path": "fields/devops/kubernetes/isolating-gpu-workloads.md",
+        "title": "Isolating GPU Workloads: Taints, Labels and the Device Plugin"
+      },
+      {
+        "id": "k3s-vs-kubeadm",
+        "path": "fields/devops/kubernetes/k3s-vs-kubeadm.md",
+        "title": "k3s vs kubeadm: Furnished Flat or Empty Unit?"
+      },
+      {
+        "id": "slurm-kill-task-failed",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-kill-task-failed.md",
+        "title": "Kill Task Failed: A Murder Mystery With No Body (and One Drained Node)"
+      },
+      {
+        "id": "slurm-reboot-order",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-reboot-order.md",
+        "title": "Rebooting a Slurm Cluster Without Losing Your Job (Or Anyone Else's)"
+      },
+      {
+        "id": "job-execution-journey",
+        "path": "fields/devops/kubernetes/job-execution-journey.md",
+        "title": "The Job Execution Journey: From `kubectl apply` to the First All-Reduce"
+      },
+      {
+        "id": "oomkilled-with-memory-to-spare",
+        "path": "fields/devops/kubernetes/oomkilled-with-memory-to-spare.md",
+        "title": "The Pod Killed With Memory to Spare"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/devops/kubernetes/fake-gpus-in-kubernetes.md": {
+    "prerequisites": [
+      {
+        "id": "build-a-two-node-k3s-lab",
+        "path": "fields/devops/kubernetes/build-a-two-node-k3s-lab.md",
+        "title": "Build a Two-Node Kubernetes Lab on Your Laptop (and Survive the DNS Pothole)"
+      },
+      {
+        "id": "kubernetes-in-five-nouns",
+        "path": "fields/devops/kubernetes/kubernetes-in-five-nouns.md",
+        "title": "Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster"
+      }
+    ],
+    "related": [
+      {
+        "id": "containers-101",
+        "path": "fields/libraries-frameworks-containers/101-containers.md",
+        "title": "Containers 101"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "isolating-gpu-workloads",
+        "path": "fields/devops/kubernetes/isolating-gpu-workloads.md",
+        "title": "Isolating GPU Workloads: Taints, Labels and the Device Plugin"
+      }
+    ]
+  },
+  "fields/devops/kubernetes/gpu-allocation-vs-utilization.md": {
+    "prerequisites": [
+      {
+        "id": "build-a-two-node-k3s-lab",
+        "path": "fields/devops/kubernetes/build-a-two-node-k3s-lab.md",
+        "title": "Build a Two-Node Kubernetes Lab on Your Laptop (and Survive the DNS Pothole)"
+      },
+      {
+        "id": "kubernetes-in-five-nouns",
+        "path": "fields/devops/kubernetes/kubernetes-in-five-nouns.md",
+        "title": "Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster"
+      }
+    ],
+    "related": [
+      {
+        "id": "containers-101",
+        "path": "fields/libraries-frameworks-containers/101-containers.md",
+        "title": "Containers 101"
+      },
+      {
+        "id": "vm-why-victoriametrics",
+        "path": "fields/devops/victoriametrics/why-victoriametrics.md",
+        "title": "The Prometheus That Ate the Head Node: Why VictoriaMetrics"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "isolating-gpu-workloads",
+        "path": "fields/devops/kubernetes/isolating-gpu-workloads.md",
+        "title": "Isolating GPU Workloads: Taints, Labels and the Device Plugin"
+      }
+    ]
+  },
+  "fields/devops/kubernetes/isolating-gpu-workloads.md": {
+    "prerequisites": [
+      {
+        "id": "gpu-allocation-vs-utilization",
+        "path": "fields/devops/kubernetes/gpu-allocation-vs-utilization.md",
+        "title": "Booked Is Not Busy: GPU Allocation vs Utilization"
+      },
+      {
+        "id": "fake-gpus-in-kubernetes",
+        "path": "fields/devops/kubernetes/fake-gpus-in-kubernetes.md",
+        "title": "Fake GPUs in Kubernetes: Learn GPU Scheduling Without Owning a GPU"
+      }
+    ],
+    "related": [
+      {
+        "id": "draining-a-gpu-node",
+        "path": "fields/devops/kubernetes/draining-a-gpu-node.md",
+        "title": "Draining a GPU Node With a Three-Day Run on It"
+      },
+      {
+        "id": "kubernetes-at-hpc-scale",
+        "path": "fields/devops/kubernetes/kubernetes-at-hpc-scale.md",
+        "title": "Kubernetes at HPC Scale: The Front Desk Meets a 100,000-Task Array"
+      },
+      {
+        "id": "slurm-accounting-multi-tenancy",
+        "path": "fields/schedulers/slurm-accounting-multi-tenancy.md",
+        "title": "Slurm Multi-Tenancy: Who Stores the Rules, Who Enforces Them"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "job-execution-journey",
+        "path": "fields/devops/kubernetes/job-execution-journey.md",
+        "title": "The Job Execution Journey: From `kubectl apply` to the First All-Reduce"
+      }
+    ]
+  },
+  "fields/devops/kubernetes/job-execution-journey.md": {
+    "prerequisites": [
+      {
+        "id": "isolating-gpu-workloads",
+        "path": "fields/devops/kubernetes/isolating-gpu-workloads.md",
+        "title": "Isolating GPU Workloads: Taints, Labels and the Device Plugin"
+      }
+    ],
+    "related": [
+      {
+        "id": "draining-a-gpu-node",
+        "path": "fields/devops/kubernetes/draining-a-gpu-node.md",
+        "title": "Draining a GPU Node With a Three-Day Run on It"
+      },
+      {
+        "id": "kubernetes-at-hpc-scale",
+        "path": "fields/devops/kubernetes/kubernetes-at-hpc-scale.md",
+        "title": "Kubernetes at HPC Scale: The Front Desk Meets a 100,000-Task Array"
+      },
+      {
+        "id": "openmp-mpi-on-kubernetes",
+        "path": "fields/system-administration/openmp-and-open-mpi/mpi-and-openmp-on-kubernetes.md",
+        "title": "No Login Node, No Hostfile: OpenMP and MPI on Kubernetes"
+      },
+      {
+        "id": "polite-api-server-monitoring",
+        "path": "fields/devops/kubernetes/polite-api-server-monitoring.md",
+        "title": "Polite API Server Monitoring: Leave Your Number, Don't Knock Every Second"
+      },
+      {
+        "id": "ai-storage-rdma-gpudirect",
+        "path": "fields/system-administration/ai-storage-and-fabric/rdma-infiniband-gpudirect.md",
+        "title": "RDMA, InfiniBand and GPUDirect: Taking the CPU Out of the Way"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/devops/kubernetes/k3s-vs-kubeadm.md": {
+    "prerequisites": [
+      {
+        "id": "kubernetes-in-five-nouns",
+        "path": "fields/devops/kubernetes/kubernetes-in-five-nouns.md",
+        "title": "Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster"
+      }
+    ],
+    "related": [
+      {
+        "id": "build-a-two-node-k3s-lab",
+        "path": "fields/devops/kubernetes/build-a-two-node-k3s-lab.md",
+        "title": "Build a Two-Node Kubernetes Lab on Your Laptop (and Survive the DNS Pothole)"
+      },
+      {
+        "id": "draining-a-gpu-node",
+        "path": "fields/devops/kubernetes/draining-a-gpu-node.md",
+        "title": "Draining a GPU Node With a Three-Day Run on It"
+      },
+      {
+        "id": "rbac-and-the-limited-viewer",
+        "path": "fields/devops/kubernetes/rbac-and-the-limited-viewer.md",
+        "title": "RBAC: The Error Message Writes the Rule for You"
+      },
+      {
+        "id": "your-kubeconfig-is-a-house-key",
+        "path": "fields/devops/kubernetes/your-kubeconfig-is-a-house-key.md",
+        "title": "Your kubeconfig Is a House Key"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/devops/kubernetes/kubernetes-at-hpc-scale.md": {
+    "prerequisites": [
+      {
+        "id": "kubernetes-in-five-nouns",
+        "path": "fields/devops/kubernetes/kubernetes-in-five-nouns.md",
+        "title": "Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster"
+      }
+    ],
+    "related": [
+      {
+        "id": "isolating-gpu-workloads",
+        "path": "fields/devops/kubernetes/isolating-gpu-workloads.md",
+        "title": "Isolating GPU Workloads: Taints, Labels and the Device Plugin"
+      },
+      {
+        "id": "kubectl-troubleshooting",
+        "path": "fields/devops/kubernetes/cheatsheet.md",
+        "title": "kubectl Troubleshooting Cheat Sheet: Five Questions, in Order"
+      },
+      {
+        "id": "polite-api-server-monitoring",
+        "path": "fields/devops/kubernetes/polite-api-server-monitoring.md",
+        "title": "Polite API Server Monitoring: Leave Your Number, Don't Knock Every Second"
+      },
+      {
+        "id": "job-execution-journey",
+        "path": "fields/devops/kubernetes/job-execution-journey.md",
+        "title": "The Job Execution Journey: From `kubectl apply` to the First All-Reduce"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/devops/kubernetes/kubernetes-in-five-nouns.md": {
+    "prerequisites": [
+      {
+        "id": "containers-101",
+        "path": "fields/libraries-frameworks-containers/101-containers.md",
+        "title": "Containers 101"
+      }
+    ],
+    "related": [
+      {
+        "id": "openmp-mpi-on-kubernetes",
+        "path": "fields/system-administration/openmp-and-open-mpi/mpi-and-openmp-on-kubernetes.md",
+        "title": "No Login Node, No Hostfile: OpenMP and MPI on Kubernetes"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "build-a-two-node-k3s-lab",
+        "path": "fields/devops/kubernetes/build-a-two-node-k3s-lab.md",
+        "title": "Build a Two-Node Kubernetes Lab on Your Laptop (and Survive the DNS Pothole)"
+      },
+      {
+        "id": "fake-gpus-in-kubernetes",
+        "path": "fields/devops/kubernetes/fake-gpus-in-kubernetes.md",
+        "title": "Fake GPUs in Kubernetes: Learn GPU Scheduling Without Owning a GPU"
+      },
+      {
+        "id": "broken-pods-rogues-gallery",
+        "path": "fields/devops/kubernetes/broken-pods-rogues-gallery.md",
+        "title": "Broken Pods: A Rogues' Gallery (and the One Command That Catches Them All)"
+      },
+      {
+        "id": "gpu-allocation-vs-utilization",
+        "path": "fields/devops/kubernetes/gpu-allocation-vs-utilization.md",
+        "title": "Booked Is Not Busy: GPU Allocation vs Utilization"
+      },
+      {
+        "id": "nvidia-cluster-readiness-engine",
+        "path": "fields/devops/kubernetes/nvidia-cluster-readiness-engine.md",
+        "title": "The Cluster That Passed Every Test Except the One That Mattered"
+      },
+      {
+        "id": "draining-a-gpu-node",
+        "path": "fields/devops/kubernetes/draining-a-gpu-node.md",
+        "title": "Draining a GPU Node With a Three-Day Run on It"
+      },
+      {
+        "id": "k3s-vs-kubeadm",
+        "path": "fields/devops/kubernetes/k3s-vs-kubeadm.md",
+        "title": "k3s vs kubeadm: Furnished Flat or Empty Unit?"
+      },
+      {
+        "id": "your-kubeconfig-is-a-house-key",
+        "path": "fields/devops/kubernetes/your-kubeconfig-is-a-house-key.md",
+        "title": "Your kubeconfig Is a House Key"
+      },
+      {
+        "id": "rbac-and-the-limited-viewer",
+        "path": "fields/devops/kubernetes/rbac-and-the-limited-viewer.md",
+        "title": "RBAC: The Error Message Writes the Rule for You"
+      },
+      {
+        "id": "polite-api-server-monitoring",
+        "path": "fields/devops/kubernetes/polite-api-server-monitoring.md",
+        "title": "Polite API Server Monitoring: Leave Your Number, Don't Knock Every Second"
+      },
+      {
+        "id": "kubernetes-at-hpc-scale",
+        "path": "fields/devops/kubernetes/kubernetes-at-hpc-scale.md",
+        "title": "Kubernetes at HPC Scale: The Front Desk Meets a 100,000-Task Array"
+      },
+      {
+        "id": "kubectl-troubleshooting",
+        "path": "fields/devops/kubernetes/cheatsheet.md",
+        "title": "kubectl Troubleshooting Cheat Sheet: Five Questions, in Order"
+      }
+    ]
+  },
+  "fields/devops/kubernetes/nvidia-cluster-readiness-engine.md": {
+    "prerequisites": [
+      {
+        "id": "kubernetes-in-five-nouns",
+        "path": "fields/devops/kubernetes/kubernetes-in-five-nouns.md",
+        "title": "Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster"
+      }
+    ],
+    "related": [
+      {
+        "id": "containers-101",
+        "path": "fields/libraries-frameworks-containers/101-containers.md",
+        "title": "Containers 101"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/devops/kubernetes/oomkilled-with-memory-to-spare.md": {
+    "prerequisites": [
+      {
+        "id": "broken-pods-rogues-gallery",
+        "path": "fields/devops/kubernetes/broken-pods-rogues-gallery.md",
+        "title": "Broken Pods: A Rogues' Gallery (and the One Command That Catches Them All)"
+      }
+    ],
+    "related": [
+      {
+        "id": "draining-a-gpu-node",
+        "path": "fields/devops/kubernetes/draining-a-gpu-node.md",
+        "title": "Draining a GPU Node With a Three-Day Run on It"
+      },
+      {
+        "id": "kubectl-troubleshooting",
+        "path": "fields/devops/kubernetes/cheatsheet.md",
+        "title": "kubectl Troubleshooting Cheat Sheet: Five Questions, in Order"
+      },
+      {
+        "id": "slurm-cgroups-in-practice",
+        "path": "fields/schedulers/slurm-inside-a-job/slurm-cgroups-in-practice.md",
+        "title": "Slurm cgroups in Practice: What Gets Constrained, and Where the Numbers Lie"
+      },
+      {
+        "id": "linux-memory-free-vs-available",
+        "path": "fields/system-administration/linux-memory-pressure/linux-memory-free-vs-available.md",
+        "title": "The Server That Looked Full: Free vs Available Memory, Cache, and What Is Really Used"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/devops/kubernetes/polite-api-server-monitoring.md": {
+    "prerequisites": [
+      {
+        "id": "kubernetes-in-five-nouns",
+        "path": "fields/devops/kubernetes/kubernetes-in-five-nouns.md",
+        "title": "Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster"
+      }
+    ],
+    "related": [
+      {
+        "id": "kubernetes-at-hpc-scale",
+        "path": "fields/devops/kubernetes/kubernetes-at-hpc-scale.md",
+        "title": "Kubernetes at HPC Scale: The Front Desk Meets a 100,000-Task Array"
+      },
+      {
+        "id": "rbac-and-the-limited-viewer",
+        "path": "fields/devops/kubernetes/rbac-and-the-limited-viewer.md",
+        "title": "RBAC: The Error Message Writes the Rule for You"
+      },
+      {
+        "id": "job-execution-journey",
+        "path": "fields/devops/kubernetes/job-execution-journey.md",
+        "title": "The Job Execution Journey: From `kubectl apply` to the First All-Reduce"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/devops/kubernetes/rbac-and-the-limited-viewer.md": {
+    "prerequisites": [
+      {
+        "id": "kubernetes-in-five-nouns",
+        "path": "fields/devops/kubernetes/kubernetes-in-five-nouns.md",
+        "title": "Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster"
+      }
+    ],
+    "related": [
+      {
+        "id": "k3s-vs-kubeadm",
+        "path": "fields/devops/kubernetes/k3s-vs-kubeadm.md",
+        "title": "k3s vs kubeadm: Furnished Flat or Empty Unit?"
+      },
+      {
+        "id": "polite-api-server-monitoring",
+        "path": "fields/devops/kubernetes/polite-api-server-monitoring.md",
+        "title": "Polite API Server Monitoring: Leave Your Number, Don't Knock Every Second"
+      },
+      {
+        "id": "your-kubeconfig-is-a-house-key",
+        "path": "fields/devops/kubernetes/your-kubeconfig-is-a-house-key.md",
+        "title": "Your kubeconfig Is a House Key"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/devops/kubernetes/your-kubeconfig-is-a-house-key.md": {
+    "prerequisites": [
+      {
+        "id": "kubernetes-in-five-nouns",
+        "path": "fields/devops/kubernetes/kubernetes-in-five-nouns.md",
+        "title": "Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster"
+      }
+    ],
+    "related": [
+      {
+        "id": "build-a-two-node-k3s-lab",
+        "path": "fields/devops/kubernetes/build-a-two-node-k3s-lab.md",
+        "title": "Build a Two-Node Kubernetes Lab on Your Laptop (and Survive the DNS Pothole)"
+      },
+      {
+        "id": "k3s-vs-kubeadm",
+        "path": "fields/devops/kubernetes/k3s-vs-kubeadm.md",
+        "title": "k3s vs kubeadm: Furnished Flat or Empty Unit?"
+      },
+      {
+        "id": "rbac-and-the-limited-viewer",
+        "path": "fields/devops/kubernetes/rbac-and-the-limited-viewer.md",
+        "title": "RBAC: The Error Message Writes the Rule for You"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/devops/victoriametrics/cheatsheet.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "vm-single-node",
+        "path": "fields/devops/victoriametrics/single-node-in-ten-minutes.md",
+        "title": "A Single Node You Can Trust: Installing VictoriaMetrics Properly"
+      },
+      {
+        "id": "vm-metricsql-vmalert",
+        "path": "fields/devops/victoriametrics/metricsql-and-vmalert.md",
+        "title": "MetricsQL Surprises and Alerts You Can Test"
+      },
+      {
+        "id": "vm-retention-backups",
+        "path": "fields/devops/victoriametrics/retention-disk-and-backups.md",
+        "title": "Retention, Full Disks and Backups: Looking After the Data Once It Lands"
+      },
+      {
+        "id": "vm-vmagent-buffering",
+        "path": "fields/devops/victoriametrics/vmagent-and-the-network-blip.md",
+        "title": "vmagent and the Network Blip: Keeping Metrics Through an Outage"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/devops/victoriametrics/metricsql-and-vmalert.md": {
+    "prerequisites": [
+      {
+        "id": "vm-single-node",
+        "path": "fields/devops/victoriametrics/single-node-in-ten-minutes.md",
+        "title": "A Single Node You Can Trust: Installing VictoriaMetrics Properly"
+      }
+    ],
+    "related": [
+      {
+        "id": "vm-retention-backups",
+        "path": "fields/devops/victoriametrics/retention-disk-and-backups.md",
+        "title": "Retention, Full Disks and Backups: Looking After the Data Once It Lands"
+      },
+      {
+        "id": "vm-cheatsheet",
+        "path": "fields/devops/victoriametrics/cheatsheet.md",
+        "title": "VictoriaMetrics Cheatsheet: Every Step from the Series"
+      },
+      {
+        "id": "vm-vmagent-buffering",
+        "path": "fields/devops/victoriametrics/vmagent-and-the-network-blip.md",
+        "title": "vmagent and the Network Blip: Keeping Metrics Through an Outage"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "slurm-openmetrics",
+        "path": "fields/schedulers/slurm-ai-clusters/metrics-openmetrics.md",
+        "title": "Slurm Metrics Without an Exporter: OpenMetrics into VictoriaMetrics"
+      }
+    ]
+  },
+  "fields/devops/victoriametrics/retention-disk-and-backups.md": {
+    "prerequisites": [
+      {
+        "id": "vm-single-node",
+        "path": "fields/devops/victoriametrics/single-node-in-ten-minutes.md",
+        "title": "A Single Node You Can Trust: Installing VictoriaMetrics Properly"
+      }
+    ],
+    "related": [
+      {
+        "id": "vm-metricsql-vmalert",
+        "path": "fields/devops/victoriametrics/metricsql-and-vmalert.md",
+        "title": "MetricsQL Surprises and Alerts You Can Test"
+      },
+      {
+        "id": "vm-cheatsheet",
+        "path": "fields/devops/victoriametrics/cheatsheet.md",
+        "title": "VictoriaMetrics Cheatsheet: Every Step from the Series"
+      },
+      {
+        "id": "vm-vmagent-buffering",
+        "path": "fields/devops/victoriametrics/vmagent-and-the-network-blip.md",
+        "title": "vmagent and the Network Blip: Keeping Metrics Through an Outage"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/devops/victoriametrics/single-node-in-ten-minutes.md": {
+    "prerequisites": [
+      {
+        "id": "vm-why-victoriametrics",
+        "path": "fields/devops/victoriametrics/why-victoriametrics.md",
+        "title": "The Prometheus That Ate the Head Node: Why VictoriaMetrics"
+      }
+    ],
+    "related": [
+      {
+        "id": "vm-cheatsheet",
+        "path": "fields/devops/victoriametrics/cheatsheet.md",
+        "title": "VictoriaMetrics Cheatsheet: Every Step from the Series"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "vm-vmagent-buffering",
+        "path": "fields/devops/victoriametrics/vmagent-and-the-network-blip.md",
+        "title": "vmagent and the Network Blip: Keeping Metrics Through an Outage"
+      },
+      {
+        "id": "vm-retention-backups",
+        "path": "fields/devops/victoriametrics/retention-disk-and-backups.md",
+        "title": "Retention, Full Disks and Backups: Looking After the Data Once It Lands"
+      },
+      {
+        "id": "vm-metricsql-vmalert",
+        "path": "fields/devops/victoriametrics/metricsql-and-vmalert.md",
+        "title": "MetricsQL Surprises and Alerts You Can Test"
+      },
+      {
+        "id": "slurm-openmetrics",
+        "path": "fields/schedulers/slurm-ai-clusters/metrics-openmetrics.md",
+        "title": "Slurm Metrics Without an Exporter: OpenMetrics into VictoriaMetrics"
+      }
+    ]
+  },
+  "fields/devops/victoriametrics/vmagent-and-the-network-blip.md": {
+    "prerequisites": [
+      {
+        "id": "vm-single-node",
+        "path": "fields/devops/victoriametrics/single-node-in-ten-minutes.md",
+        "title": "A Single Node You Can Trust: Installing VictoriaMetrics Properly"
+      }
+    ],
+    "related": [
+      {
+        "id": "vm-metricsql-vmalert",
+        "path": "fields/devops/victoriametrics/metricsql-and-vmalert.md",
+        "title": "MetricsQL Surprises and Alerts You Can Test"
+      },
+      {
+        "id": "vm-retention-backups",
+        "path": "fields/devops/victoriametrics/retention-disk-and-backups.md",
+        "title": "Retention, Full Disks and Backups: Looking After the Data Once It Lands"
+      },
+      {
+        "id": "vm-cheatsheet",
+        "path": "fields/devops/victoriametrics/cheatsheet.md",
+        "title": "VictoriaMetrics Cheatsheet: Every Step from the Series"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/devops/victoriametrics/why-victoriametrics.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "gpu-allocation-vs-utilization",
+        "path": "fields/devops/kubernetes/gpu-allocation-vs-utilization.md",
+        "title": "Booked Is Not Busy: GPU Allocation vs Utilization"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "vm-single-node",
+        "path": "fields/devops/victoriametrics/single-node-in-ten-minutes.md",
+        "title": "A Single Node You Can Trust: Installing VictoriaMetrics Properly"
+      }
+    ]
+  },
+  "fields/digital-image-processing/edges-and-sharpening.md": {
+    "prerequisites": [
+      {
+        "id": "dip-spatial-filtering",
+        "path": "fields/digital-image-processing/spatial-filtering.md",
+        "title": "Spatial Filtering"
+      }
+    ],
+    "related": [],
+    "required_by": []
+  },
+  "fields/digital-image-processing/fourier-transform-for-images.md": {
+    "prerequisites": [
+      {
+        "id": "dip-spatial-filtering",
+        "path": "fields/digital-image-processing/spatial-filtering.md",
+        "title": "Spatial Filtering"
+      }
+    ],
+    "related": [
+      {
+        "id": "dip-meet-fourier",
+        "path": "fields/digital-image-processing/meet-fourier.md",
+        "title": "Meet Fourier"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "dip-frequency-filtering-aliasing",
+        "path": "fields/digital-image-processing/frequency-filtering-and-aliasing.md",
+        "title": "Frequency Filtering and Aliasing"
+      },
+      {
+        "id": "dip-wavelets-multiresolution",
+        "path": "fields/digital-image-processing/wavelets-and-multiresolution-processing.md",
+        "title": "Wavelets and Multiresolution Processing"
+      }
+    ]
+  },
+  "fields/digital-image-processing/frequency-filtering-and-aliasing.md": {
+    "prerequisites": [
+      {
+        "id": "dip-fourier-transform-images",
+        "path": "fields/digital-image-processing/fourier-transform-for-images.md",
+        "title": "The Fourier Transform for Images"
+      }
+    ],
+    "related": [
+      {
+        "id": "dip-geometric-transforms-interpolation",
+        "path": "fields/digital-image-processing/geometric-transforms-and-interpolation.md",
+        "title": "Geometric Transforms and Interpolation"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "dip-noise-restoration",
+        "path": "fields/digital-image-processing/noise-and-restoration.md",
+        "title": "Noise and Restoration"
+      }
+    ]
+  },
+  "fields/digital-image-processing/geometric-transforms-and-interpolation.md": {
+    "prerequisites": [
+      {
+        "id": "dip-images-are-matrices",
+        "path": "fields/digital-image-processing/images-are-just-matrices.md",
+        "title": "Images Are Just Matrices"
+      }
+    ],
+    "related": [
+      {
+        "id": "dip-frequency-filtering-aliasing",
+        "path": "fields/digital-image-processing/frequency-filtering-and-aliasing.md",
+        "title": "Frequency Filtering and Aliasing"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/digital-image-processing/images-are-just-matrices.md": {
+    "prerequisites": [],
+    "related": [],
+    "required_by": [
+      {
+        "id": "dip-geometric-transforms-interpolation",
+        "path": "fields/digital-image-processing/geometric-transforms-and-interpolation.md",
+        "title": "Geometric Transforms and Interpolation"
+      },
+      {
+        "id": "dip-intensity-transforms-histograms",
+        "path": "fields/digital-image-processing/intensity-transforms-and-histograms.md",
+        "title": "Intensity Transforms and Histograms"
+      }
+    ]
+  },
+  "fields/digital-image-processing/intensity-transforms-and-histograms.md": {
+    "prerequisites": [
+      {
+        "id": "dip-images-are-matrices",
+        "path": "fields/digital-image-processing/images-are-just-matrices.md",
+        "title": "Images Are Just Matrices"
+      }
+    ],
+    "related": [],
+    "required_by": [
+      {
+        "id": "dip-spatial-filtering",
+        "path": "fields/digital-image-processing/spatial-filtering.md",
+        "title": "Spatial Filtering"
+      }
+    ]
+  },
+  "fields/digital-image-processing/meet-fourier.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "dip-fourier-transform-images",
+        "path": "fields/digital-image-processing/fourier-transform-for-images.md",
+        "title": "The Fourier Transform for Images"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/digital-image-processing/noise-and-restoration.md": {
+    "prerequisites": [
+      {
+        "id": "dip-frequency-filtering-aliasing",
+        "path": "fields/digital-image-processing/frequency-filtering-and-aliasing.md",
+        "title": "Frequency Filtering and Aliasing"
+      }
+    ],
+    "related": [
+      {
+        "id": "dip-wavelets-multiresolution",
+        "path": "fields/digital-image-processing/wavelets-and-multiresolution-processing.md",
+        "title": "Wavelets and Multiresolution Processing"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/digital-image-processing/spatial-filtering.md": {
+    "prerequisites": [
+      {
+        "id": "dip-intensity-transforms-histograms",
+        "path": "fields/digital-image-processing/intensity-transforms-and-histograms.md",
+        "title": "Intensity Transforms and Histograms"
+      }
+    ],
+    "related": [],
+    "required_by": [
+      {
+        "id": "dip-edges-sharpening",
+        "path": "fields/digital-image-processing/edges-and-sharpening.md",
+        "title": "Edges and Sharpening"
+      },
+      {
+        "id": "dip-fourier-transform-images",
+        "path": "fields/digital-image-processing/fourier-transform-for-images.md",
+        "title": "The Fourier Transform for Images"
+      }
+    ]
+  },
+  "fields/digital-image-processing/wavelets-and-multiresolution-processing.md": {
+    "prerequisites": [
+      {
+        "id": "dip-fourier-transform-images",
+        "path": "fields/digital-image-processing/fourier-transform-for-images.md",
+        "title": "The Fourier Transform for Images"
+      }
+    ],
+    "related": [
+      {
+        "id": "dip-noise-restoration",
+        "path": "fields/digital-image-processing/noise-and-restoration.md",
+        "title": "Noise and Restoration"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/generative-ai/llm-inference-performance/compute-bound-vs-memory-bound.md": {
+    "prerequisites": [],
+    "related": [],
+    "required_by": [
+      {
+        "id": "llm-perf-inference-roofline",
+        "path": "fields/generative-ai/llm-inference-performance/llm-inference-on-the-roofline.md",
+        "title": "LLM Inference on the Roofline"
+      }
+    ]
+  },
+  "fields/generative-ai/llm-inference-performance/llm-inference-on-the-roofline.md": {
+    "prerequisites": [
+      {
+        "id": "llm-perf-compute-vs-memory-bound",
+        "path": "fields/generative-ai/llm-inference-performance/compute-bound-vs-memory-bound.md",
+        "title": "Compute-Bound vs Memory-Bandwidth-Bound"
+      }
+    ],
+    "related": [],
+    "required_by": [
+      {
+        "id": "llm-perf-sizing-70b",
+        "path": "fields/generative-ai/llm-inference-performance/sizing-a-70b-model.md",
+        "title": "Sizing a 70B Model with a Pencil"
+      }
+    ]
+  },
+  "fields/generative-ai/llm-inference-performance/optimizations-on-the-roofline.md": {
+    "prerequisites": [
+      {
+        "id": "llm-perf-sizing-70b",
+        "path": "fields/generative-ai/llm-inference-performance/sizing-a-70b-model.md",
+        "title": "Sizing a 70B Model with a Pencil"
+      }
+    ],
+    "related": [],
+    "required_by": [
+      {
+        "id": "llm-perf-structured-sparsity",
+        "path": "fields/generative-ai/llm-inference-performance/structured-sparsity.md",
+        "title": "2:4 Sparsity: Half the Weights, Not Half the Time"
+      }
+    ]
+  },
+  "fields/generative-ai/llm-inference-performance/sizing-a-70b-model.md": {
+    "prerequisites": [
+      {
+        "id": "llm-perf-inference-roofline",
+        "path": "fields/generative-ai/llm-inference-performance/llm-inference-on-the-roofline.md",
+        "title": "LLM Inference on the Roofline"
+      }
+    ],
+    "related": [],
+    "required_by": [
+      {
+        "id": "llm-perf-optimizations",
+        "path": "fields/generative-ai/llm-inference-performance/optimizations-on-the-roofline.md",
+        "title": "Optimizations, Mapped to the Roofline"
+      }
+    ]
+  },
+  "fields/generative-ai/llm-inference-performance/sparsity-vs-quantization.md": {
+    "prerequisites": [
+      {
+        "id": "llm-perf-structured-sparsity",
+        "path": "fields/generative-ai/llm-inference-performance/structured-sparsity.md",
+        "title": "2:4 Sparsity: Half the Weights, Not Half the Time"
+      }
+    ],
+    "related": [],
+    "required_by": []
+  },
+  "fields/generative-ai/llm-inference-performance/structured-sparsity.md": {
+    "prerequisites": [
+      {
+        "id": "llm-perf-optimizations",
+        "path": "fields/generative-ai/llm-inference-performance/optimizations-on-the-roofline.md",
+        "title": "Optimizations, Mapped to the Roofline"
+      }
+    ],
+    "related": [],
+    "required_by": [
+      {
+        "id": "llm-perf-sparsity-vs-quantization",
+        "path": "fields/generative-ai/llm-inference-performance/sparsity-vs-quantization.md",
+        "title": "Sparsity vs Quantization: Who Pays, and Who Wins"
+      }
+    ]
+  },
+  "fields/generative-ai/machine-translator/encoder-decoder.md": {
+    "prerequisites": [
+      {
+        "id": "sequence-models",
+        "path": "fields/deep-learning/concepts/sequence-models.md",
+        "title": "Sequence Models"
+      }
+    ],
+    "related": [],
+    "required_by": []
+  },
+  "fields/libraries-frameworks-containers/101-containers.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "gpu-allocation-vs-utilization",
+        "path": "fields/devops/kubernetes/gpu-allocation-vs-utilization.md",
+        "title": "Booked Is Not Busy: GPU Allocation vs Utilization"
+      },
+      {
+        "id": "broken-pods-rogues-gallery",
+        "path": "fields/devops/kubernetes/broken-pods-rogues-gallery.md",
+        "title": "Broken Pods: A Rogues' Gallery (and the One Command That Catches Them All)"
+      },
+      {
+        "id": "build-a-two-node-k3s-lab",
+        "path": "fields/devops/kubernetes/build-a-two-node-k3s-lab.md",
+        "title": "Build a Two-Node Kubernetes Lab on Your Laptop (and Survive the DNS Pothole)"
+      },
+      {
+        "id": "fake-gpus-in-kubernetes",
+        "path": "fields/devops/kubernetes/fake-gpus-in-kubernetes.md",
+        "title": "Fake GPUs in Kubernetes: Learn GPU Scheduling Without Owning a GPU"
+      },
+      {
+        "id": "nvidia-cluster-readiness-engine",
+        "path": "fields/devops/kubernetes/nvidia-cluster-readiness-engine.md",
+        "title": "The Cluster That Passed Every Test Except the One That Mattered"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "kubernetes-in-five-nouns",
+        "path": "fields/devops/kubernetes/kubernetes-in-five-nouns.md",
+        "title": "Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster"
+      },
+      {
+        "id": "singularity-containers",
+        "path": "fields/libraries-frameworks-containers/101-singularity.md",
+        "title": "Singularity"
+      }
+    ]
+  },
+  "fields/libraries-frameworks-containers/101-pytorch.md": {
+    "prerequisites": [],
+    "related": [],
+    "required_by": [
+      {
+        "id": "pytorch-ddp",
+        "path": "fields/libraries-frameworks-containers/102-pytorch-ddp.md",
+        "title": "PyTorch DDP"
+      }
+    ]
+  },
+  "fields/libraries-frameworks-containers/101-singularity.md": {
+    "prerequisites": [
+      {
+        "id": "containers-101",
+        "path": "fields/libraries-frameworks-containers/101-containers.md",
+        "title": "Containers 101"
+      }
+    ],
+    "related": [],
+    "required_by": []
+  },
+  "fields/libraries-frameworks-containers/102-pytorch-ddp.md": {
+    "prerequisites": [
+      {
+        "id": "pytorch-101",
+        "path": "fields/libraries-frameworks-containers/101-pytorch.md",
+        "title": "PyTorch 101"
+      }
+    ],
+    "related": [
+      {
+        "id": "nccl-collective-communication",
+        "path": "fields/benchmarks/nccl.md",
+        "title": "NCCL"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/schedulers/slurm-accounting-multi-tenancy.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "slurm-sacct-job-forensics",
+        "path": "fields/schedulers/slurm-sacct-job-forensics.md",
+        "title": "Autopsy of a Job: Reading sacct Like a Coroner"
+      },
+      {
+        "id": "slurm-backfill-tuning",
+        "path": "fields/schedulers/slurm-backfill-tuning.md",
+        "title": "Backfill Tuning: The Planner That Can Only See One Day Ahead"
+      },
+      {
+        "id": "slurm-preemption-requeue-signals",
+        "path": "fields/schedulers/slurm-preemption/slurm-preemption-requeue-signals.md",
+        "title": "Dying Politely: Preemption, Requeue and the Signals Your Training Job Ignores"
+      },
+      {
+        "id": "isolating-gpu-workloads",
+        "path": "fields/devops/kubernetes/isolating-gpu-workloads.md",
+        "title": "Isolating GPU Workloads: Taints, Labels and the Device Plugin"
+      },
+      {
+        "id": "slurm-kill-task-failed",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-kill-task-failed.md",
+        "title": "Kill Task Failed: A Murder Mystery With No Body (and One Drained Node)"
+      },
+      {
+        "id": "slurm-mixed-gpus-overview",
+        "path": "fields/schedulers/slurm-mixed-gpus/README.md",
+        "title": "Mixing GPU Types in Slurm - Overview"
+      },
+      {
+        "id": "slurm-pending-reasons",
+        "path": "fields/schedulers/slurm-pending-jobs/why-is-my-job-pending.md",
+        "title": "Reading the Reason Column: Why Is My Slurm Job Pending?"
+      },
+      {
+        "id": "slurm-cgroups-in-practice",
+        "path": "fields/schedulers/slurm-inside-a-job/slurm-cgroups-in-practice.md",
+        "title": "Slurm cgroups in Practice: What Gets Constrained, and Where the Numbers Lie"
+      },
+      {
+        "id": "slurm-job-submit-lua",
+        "path": "fields/schedulers/slurm-preemption/slurm-job-submit-lua.md",
+        "title": "The Receptionist Who Rewrites Your Badge: job_submit.lua"
+      },
+      {
+        "id": "slurm-upgrade-order",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-upgrade-order.md",
+        "title": "Upgrading Slurm: The Order, the Window, and the Parts That Bite"
+      },
+      {
+        "id": "slurm-priority-multifactor",
+        "path": "fields/schedulers/slurm-pending-jobs/who-goes-first.md",
+        "title": "Who Goes First: Slurm's Priority Number, Taken Apart"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "slurm-qos-preemption-setup",
+        "path": "fields/schedulers/slurm-preemption/slurm-qos-preemption-setup.md",
+        "title": "The Guest List: Setting Up QOS Preemption Without Starting a War"
+      },
+      {
+        "id": "slurm-qos-limits",
+        "path": "fields/schedulers/slurm-pending-jobs/limits-that-wait-forever.md",
+        "title": "Limits That Wait Forever: QOS and Account Limits in Practice"
+      }
+    ]
+  },
+  "fields/schedulers/slurm-ai-clusters/containers-with-pyxis.md": {
+    "prerequisites": [
+      {
+        "id": "slurm-distributed-training",
+        "path": "fields/schedulers/slurm-ai-clusters/launching-distributed-training.md",
+        "title": "Launching Distributed Training on Slurm: srun, torchrun, and the Rank Contract"
+      }
+    ],
+    "related": [
+      {
+        "id": "slurm-lab-cheatsheet",
+        "path": "fields/schedulers/slurm-ai-clusters/lab-build-cheatsheet.md",
+        "title": "Lab Build Cheatsheet: A Slurm AI Cluster in Containers"
+      },
+      {
+        "id": "slurm-gpu-health-checks",
+        "path": "fields/schedulers/slurm-ai-clusters/gpu-health-checks.md",
+        "title": "When a GPU Falls Off the Bus: Health Checks That Drain the Node"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/schedulers/slurm-ai-clusters/gpu-health-checks.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "slurm-smoke-node-readiness",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-node-readiness.md",
+        "title": "Back From the Repair Shop: Is This Node Fit to Return to Service?"
+      },
+      {
+        "id": "slurm-containers-pyxis",
+        "path": "fields/schedulers/slurm-ai-clusters/containers-with-pyxis.md",
+        "title": "Containers on Slurm with Pyxis and Enroot"
+      },
+      {
+        "id": "slurm-kill-task-failed",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-kill-task-failed.md",
+        "title": "Kill Task Failed: A Murder Mystery With No Body (and One Drained Node)"
+      },
+      {
+        "id": "slurm-lab-cheatsheet",
+        "path": "fields/schedulers/slurm-ai-clusters/lab-build-cheatsheet.md",
+        "title": "Lab Build Cheatsheet: A Slurm AI Cluster in Containers"
+      },
+      {
+        "id": "slurm-openmetrics",
+        "path": "fields/schedulers/slurm-ai-clusters/metrics-openmetrics.md",
+        "title": "Slurm Metrics Without an Exporter: OpenMetrics into VictoriaMetrics"
+      },
+      {
+        "id": "slurm-spool-dir-full",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-spool-dir-full.md",
+        "title": "SlurmdSpoolDir Is Full: The Drain That Is Not About the Spool Directory"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/schedulers/slurm-ai-clusters/lab-build-cheatsheet.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "slurm-containers-pyxis",
+        "path": "fields/schedulers/slurm-ai-clusters/containers-with-pyxis.md",
+        "title": "Containers on Slurm with Pyxis and Enroot"
+      },
+      {
+        "id": "slurm-topology-placement",
+        "path": "fields/schedulers/slurm-ai-clusters/topology-aware-placement.md",
+        "title": "Keep the Job on One Switch: Topology-Aware Placement in Slurm"
+      },
+      {
+        "id": "slurm-distributed-training",
+        "path": "fields/schedulers/slurm-ai-clusters/launching-distributed-training.md",
+        "title": "Launching Distributed Training on Slurm: srun, torchrun, and the Rank Contract"
+      },
+      {
+        "id": "slurm-pending-reasons",
+        "path": "fields/schedulers/slurm-pending-jobs/why-is-my-job-pending.md",
+        "title": "Reading the Reason Column: Why Is My Slurm Job Pending?"
+      },
+      {
+        "id": "slurm-openmetrics",
+        "path": "fields/schedulers/slurm-ai-clusters/metrics-openmetrics.md",
+        "title": "Slurm Metrics Without an Exporter: OpenMetrics into VictoriaMetrics"
+      },
+      {
+        "id": "slurm-qos-preemption-setup",
+        "path": "fields/schedulers/slurm-preemption/slurm-qos-preemption-setup.md",
+        "title": "The Guest List: Setting Up QOS Preemption Without Starting a War"
+      },
+      {
+        "id": "slurm-gpu-health-checks",
+        "path": "fields/schedulers/slurm-ai-clusters/gpu-health-checks.md",
+        "title": "When a GPU Falls Off the Bus: Health Checks That Drain the Node"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/schedulers/slurm-ai-clusters/launching-distributed-training.md": {
+    "prerequisites": [
+      {
+        "id": "slurm-topology-placement",
+        "path": "fields/schedulers/slurm-ai-clusters/topology-aware-placement.md",
+        "title": "Keep the Job on One Switch: Topology-Aware Placement in Slurm"
+      }
+    ],
+    "related": [
+      {
+        "id": "slurm-lab-cheatsheet",
+        "path": "fields/schedulers/slurm-ai-clusters/lab-build-cheatsheet.md",
+        "title": "Lab Build Cheatsheet: A Slurm AI Cluster in Containers"
+      },
+      {
+        "id": "slurm-job-script-tale",
+        "path": "fields/schedulers/slurm-inside-a-job/slurm-job-script-tale.md",
+        "title": "The Tale of a Slurm Job Script: Submission Is a Commitment, Not a Promise"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "slurm-containers-pyxis",
+        "path": "fields/schedulers/slurm-ai-clusters/containers-with-pyxis.md",
+        "title": "Containers on Slurm with Pyxis and Enroot"
+      }
+    ]
+  },
+  "fields/schedulers/slurm-ai-clusters/metrics-openmetrics.md": {
+    "prerequisites": [
+      {
+        "id": "vm-single-node",
+        "path": "fields/devops/victoriametrics/single-node-in-ten-minutes.md",
+        "title": "A Single Node You Can Trust: Installing VictoriaMetrics Properly"
+      },
+      {
+        "id": "vm-metricsql-vmalert",
+        "path": "fields/devops/victoriametrics/metricsql-and-vmalert.md",
+        "title": "MetricsQL Surprises and Alerts You Can Test"
+      }
+    ],
+    "related": [
+      {
+        "id": "slurm-backfill-tuning",
+        "path": "fields/schedulers/slurm-backfill-tuning.md",
+        "title": "Backfill Tuning: The Planner That Can Only See One Day Ahead"
+      },
+      {
+        "id": "slurm-lab-cheatsheet",
+        "path": "fields/schedulers/slurm-ai-clusters/lab-build-cheatsheet.md",
+        "title": "Lab Build Cheatsheet: A Slurm AI Cluster in Containers"
+      },
+      {
+        "id": "slurm-gpu-health-checks",
+        "path": "fields/schedulers/slurm-ai-clusters/gpu-health-checks.md",
+        "title": "When a GPU Falls Off the Bus: Health Checks That Drain the Node"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/schedulers/slurm-ai-clusters/topology-aware-placement.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "slurm-backfill-tuning",
+        "path": "fields/schedulers/slurm-backfill-tuning.md",
+        "title": "Backfill Tuning: The Planner That Can Only See One Day Ahead"
+      },
+      {
+        "id": "slurm-lab-cheatsheet",
+        "path": "fields/schedulers/slurm-ai-clusters/lab-build-cheatsheet.md",
+        "title": "Lab Build Cheatsheet: A Slurm AI Cluster in Containers"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "slurm-distributed-training",
+        "path": "fields/schedulers/slurm-ai-clusters/launching-distributed-training.md",
+        "title": "Launching Distributed Training on Slurm: srun, torchrun, and the Rank Contract"
+      }
+    ]
+  },
+  "fields/schedulers/slurm-backfill-tuning.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "slurm-reservations-and-maintenance",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-reservations-and-maintenance.md",
+        "title": "Calling Dibs on Nodes: Reservations, Maintenance Windows and the Job That Fit"
+      },
+      {
+        "id": "slurm-preemption-requeue-signals",
+        "path": "fields/schedulers/slurm-preemption/slurm-preemption-requeue-signals.md",
+        "title": "Dying Politely: Preemption, Requeue and the Signals Your Training Job Ignores"
+      },
+      {
+        "id": "slurm-topology-placement",
+        "path": "fields/schedulers/slurm-ai-clusters/topology-aware-placement.md",
+        "title": "Keep the Job on One Switch: Topology-Aware Placement in Slurm"
+      },
+      {
+        "id": "slurm-pending-reasons",
+        "path": "fields/schedulers/slurm-pending-jobs/why-is-my-job-pending.md",
+        "title": "Reading the Reason Column: Why Is My Slurm Job Pending?"
+      },
+      {
+        "id": "slurm-openmetrics",
+        "path": "fields/schedulers/slurm-ai-clusters/metrics-openmetrics.md",
+        "title": "Slurm Metrics Without an Exporter: OpenMetrics into VictoriaMetrics"
+      },
+      {
+        "id": "slurm-accounting-multi-tenancy",
+        "path": "fields/schedulers/slurm-accounting-multi-tenancy.md",
+        "title": "Slurm Multi-Tenancy: Who Stores the Rules, Who Enforces Them"
+      },
+      {
+        "id": "slurm-job-submit-lua",
+        "path": "fields/schedulers/slurm-preemption/slurm-job-submit-lua.md",
+        "title": "The Receptionist Who Rewrites Your Badge: job_submit.lua"
+      },
+      {
+        "id": "slurm-job-script-tale",
+        "path": "fields/schedulers/slurm-inside-a-job/slurm-job-script-tale.md",
+        "title": "The Tale of a Slurm Job Script: Submission Is a Commitment, Not a Promise"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/schedulers/slurm-cluster-operations/slurm-kill-task-failed.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "slurm-smoke-node-readiness",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-node-readiness.md",
+        "title": "Back From the Repair Shop: Is This Node Fit to Return to Service?"
+      },
+      {
+        "id": "draining-a-gpu-node",
+        "path": "fields/devops/kubernetes/draining-a-gpu-node.md",
+        "title": "Draining a GPU Node With a Three-Day Run on It"
+      },
+      {
+        "id": "slurm-preemption-requeue-signals",
+        "path": "fields/schedulers/slurm-preemption/slurm-preemption-requeue-signals.md",
+        "title": "Dying Politely: Preemption, Requeue and the Signals Your Training Job Ignores"
+      },
+      {
+        "id": "slurm-cgroups-in-practice",
+        "path": "fields/schedulers/slurm-inside-a-job/slurm-cgroups-in-practice.md",
+        "title": "Slurm cgroups in Practice: What Gets Constrained, and Where the Numbers Lie"
+      },
+      {
+        "id": "slurm-accounting-multi-tenancy",
+        "path": "fields/schedulers/slurm-accounting-multi-tenancy.md",
+        "title": "Slurm Multi-Tenancy: Who Stores the Rules, Who Enforces Them"
+      },
+      {
+        "id": "slurm-spool-dir-full",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-spool-dir-full.md",
+        "title": "SlurmdSpoolDir Is Full: The Drain That Is Not About the Spool Directory"
+      },
+      {
+        "id": "slurm-slurmstepd",
+        "path": "fields/schedulers/slurm-inside-a-job/slurm-slurmstepd.md",
+        "title": "slurmstepd: The Small Daemon That Actually Runs Your Job"
+      },
+      {
+        "id": "slurm-gpu-health-checks",
+        "path": "fields/schedulers/slurm-ai-clusters/gpu-health-checks.md",
+        "title": "When a GPU Falls Off the Bus: Health Checks That Drain the Node"
+      },
+      {
+        "id": "slurm-signals-cheatsheet",
+        "path": "fields/schedulers/slurm-preemption/slurm-signals-cheatsheet.md",
+        "title": "Who Gets Told What: Every Signal Slurm Sends, and Who Actually Hears It"
+      },
+      {
+        "id": "slurm-gpu-affinity-socket-lie",
+        "path": "fields/schedulers/slurm-inside-a-job/slurm-gpu-affinity-socket-lie.md",
+        "title": "Your GPU Has Core Affinity. Slurm Has Socket Affinity. They Are Not Speaking."
+      }
+    ],
+    "required_by": []
+  },
+  "fields/schedulers/slurm-cluster-operations/slurm-pam-adopt-ssh-access.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "slurm-reboot-order",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-reboot-order.md",
+        "title": "Rebooting a Slurm Cluster Without Losing Your Job (Or Anyone Else's)"
+      },
+      {
+        "id": "slurm-cgroups-in-practice",
+        "path": "fields/schedulers/slurm-inside-a-job/slurm-cgroups-in-practice.md",
+        "title": "Slurm cgroups in Practice: What Gets Constrained, and Where the Numbers Lie"
+      },
+      {
+        "id": "slurm-upgrade-order",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-upgrade-order.md",
+        "title": "Upgrading Slurm: The Order, the Window, and the Parts That Bite"
+      },
+      {
+        "id": "openmp-mpi-under-slurm",
+        "path": "fields/system-administration/openmp-and-open-mpi/mpi-and-openmp-under-slurm.md",
+        "title": "Who Starts the Ranks? OpenMP and MPI Under Slurm"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/schedulers/slurm-cluster-operations/slurm-reboot-order.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "slurm-smoke-node-readiness",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-node-readiness.md",
+        "title": "Back From the Repair Shop: Is This Node Fit to Return to Service?"
+      },
+      {
+        "id": "slurm-reservations-and-maintenance",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-reservations-and-maintenance.md",
+        "title": "Calling Dibs on Nodes: Reservations, Maintenance Windows and the Job That Fit"
+      },
+      {
+        "id": "draining-a-gpu-node",
+        "path": "fields/devops/kubernetes/draining-a-gpu-node.md",
+        "title": "Draining a GPU Node With a Three-Day Run on It"
+      },
+      {
+        "id": "slurm-smoke-config-change",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-config-change.md",
+        "title": "Measure Twice, Reconfigure Once: Smoke-Testing a slurm.conf Change"
+      },
+      {
+        "id": "slurm-pam-adopt-ssh-access",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-pam-adopt-ssh-access.md",
+        "title": "pam_slurm_adopt: Closing the Slurm SSH Backdoor"
+      },
+      {
+        "id": "slurm-spool-dir-full",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-spool-dir-full.md",
+        "title": "SlurmdSpoolDir Is Full: The Drain That Is Not About the Spool Directory"
+      },
+      {
+        "id": "slurm-smoke-after-upgrade",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-after-upgrade.md",
+        "title": "The Morning After the Upgrade: Smoke Tests for the Change You Cannot Undo"
+      },
+      {
+        "id": "slurm-upgrade-order",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-upgrade-order.md",
+        "title": "Upgrading Slurm: The Order, the Window, and the Parts That Bite"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/schedulers/slurm-cluster-operations/slurm-reservations-and-maintenance.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "slurm-smoke-node-readiness",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-node-readiness.md",
+        "title": "Back From the Repair Shop: Is This Node Fit to Return to Service?"
+      },
+      {
+        "id": "slurm-backfill-tuning",
+        "path": "fields/schedulers/slurm-backfill-tuning.md",
+        "title": "Backfill Tuning: The Planner That Can Only See One Day Ahead"
+      },
+      {
+        "id": "slurm-smoke-config-change",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-config-change.md",
+        "title": "Measure Twice, Reconfigure Once: Smoke-Testing a slurm.conf Change"
+      },
+      {
+        "id": "slurm-pending-reasons",
+        "path": "fields/schedulers/slurm-pending-jobs/why-is-my-job-pending.md",
+        "title": "Reading the Reason Column: Why Is My Slurm Job Pending?"
+      },
+      {
+        "id": "slurm-reboot-order",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-reboot-order.md",
+        "title": "Rebooting a Slurm Cluster Without Losing Your Job (Or Anyone Else's)"
+      },
+      {
+        "id": "slurm-spool-dir-full",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-spool-dir-full.md",
+        "title": "SlurmdSpoolDir Is Full: The Drain That Is Not About the Spool Directory"
+      },
+      {
+        "id": "slurm-version-changes",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-version-changes.md",
+        "title": "The Changelog Nobody Reads: What Moved Between Slurm 23.11 and 26.05"
+      },
+      {
+        "id": "slurm-job-submit-lua",
+        "path": "fields/schedulers/slurm-preemption/slurm-job-submit-lua.md",
+        "title": "The Receptionist Who Rewrites Your Badge: job_submit.lua"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/schedulers/slurm-cluster-operations/slurm-spool-dir-full.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "slurm-reservations-and-maintenance",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-reservations-and-maintenance.md",
+        "title": "Calling Dibs on Nodes: Reservations, Maintenance Windows and the Job That Fit"
+      },
+      {
+        "id": "slurm-kill-task-failed",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-kill-task-failed.md",
+        "title": "Kill Task Failed: A Murder Mystery With No Body (and One Drained Node)"
+      },
+      {
+        "id": "slurm-reboot-order",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-reboot-order.md",
+        "title": "Rebooting a Slurm Cluster Without Losing Your Job (Or Anyone Else's)"
+      },
+      {
+        "id": "slurm-slurmstepd",
+        "path": "fields/schedulers/slurm-inside-a-job/slurm-slurmstepd.md",
+        "title": "slurmstepd: The Small Daemon That Actually Runs Your Job"
+      },
+      {
+        "id": "slurm-job-script-tale",
+        "path": "fields/schedulers/slurm-inside-a-job/slurm-job-script-tale.md",
+        "title": "The Tale of a Slurm Job Script: Submission Is a Commitment, Not a Promise"
+      },
+      {
+        "id": "slurm-gpu-health-checks",
+        "path": "fields/schedulers/slurm-ai-clusters/gpu-health-checks.md",
+        "title": "When a GPU Falls Off the Bus: Health Checks That Drain the Node"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/schedulers/slurm-cluster-operations/slurm-upgrade-order.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "slurm-preemption-requeue-signals",
+        "path": "fields/schedulers/slurm-preemption/slurm-preemption-requeue-signals.md",
+        "title": "Dying Politely: Preemption, Requeue and the Signals Your Training Job Ignores"
+      },
+      {
+        "id": "slurm-pam-adopt-ssh-access",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-pam-adopt-ssh-access.md",
+        "title": "pam_slurm_adopt: Closing the Slurm SSH Backdoor"
+      },
+      {
+        "id": "slurm-reboot-order",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-reboot-order.md",
+        "title": "Rebooting a Slurm Cluster Without Losing Your Job (Or Anyone Else's)"
+      },
+      {
+        "id": "slurm-accounting-multi-tenancy",
+        "path": "fields/schedulers/slurm-accounting-multi-tenancy.md",
+        "title": "Slurm Multi-Tenancy: Who Stores the Rules, Who Enforces Them"
+      },
+      {
+        "id": "slurm-version-changes",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-version-changes.md",
+        "title": "The Changelog Nobody Reads: What Moved Between Slurm 23.11 and 26.05"
+      },
+      {
+        "id": "slurm-smoke-after-upgrade",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-after-upgrade.md",
+        "title": "The Morning After the Upgrade: Smoke Tests for the Change You Cannot Undo"
+      },
+      {
+        "id": "slurm-smoke-regression-suites",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-regression-suites.md",
+        "title": "When Smoke Becomes a Fire Drill: SchedMD's Test Suite, ReFrame and the Baseline Rule"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/schedulers/slurm-cluster-operations/slurm-version-changes.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "slurm-sacct-job-forensics",
+        "path": "fields/schedulers/slurm-sacct-job-forensics.md",
+        "title": "Autopsy of a Job: Reading sacct Like a Coroner"
+      },
+      {
+        "id": "slurm-reservations-and-maintenance",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-reservations-and-maintenance.md",
+        "title": "Calling Dibs on Nodes: Reservations, Maintenance Windows and the Job That Fit"
+      },
+      {
+        "id": "slurm-preemption-requeue-signals",
+        "path": "fields/schedulers/slurm-preemption/slurm-preemption-requeue-signals.md",
+        "title": "Dying Politely: Preemption, Requeue and the Signals Your Training Job Ignores"
+      },
+      {
+        "id": "slurm-cgroups-in-practice",
+        "path": "fields/schedulers/slurm-inside-a-job/slurm-cgroups-in-practice.md",
+        "title": "Slurm cgroups in Practice: What Gets Constrained, and Where the Numbers Lie"
+      },
+      {
+        "id": "slurm-qos-preemption-setup",
+        "path": "fields/schedulers/slurm-preemption/slurm-qos-preemption-setup.md",
+        "title": "The Guest List: Setting Up QOS Preemption Without Starting a War"
+      },
+      {
+        "id": "slurm-smoke-after-upgrade",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-after-upgrade.md",
+        "title": "The Morning After the Upgrade: Smoke Tests for the Change You Cannot Undo"
+      },
+      {
+        "id": "slurm-job-submit-lua",
+        "path": "fields/schedulers/slurm-preemption/slurm-job-submit-lua.md",
+        "title": "The Receptionist Who Rewrites Your Badge: job_submit.lua"
+      },
+      {
+        "id": "slurm-upgrade-order",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-upgrade-order.md",
+        "title": "Upgrading Slurm: The Order, the Window, and the Parts That Bite"
+      },
+      {
+        "id": "slurm-smoke-regression-suites",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-regression-suites.md",
+        "title": "When Smoke Becomes a Fire Drill: SchedMD's Test Suite, ReFrame and the Baseline Rule"
+      },
+      {
+        "id": "slurm-signals-cheatsheet",
+        "path": "fields/schedulers/slurm-preemption/slurm-signals-cheatsheet.md",
+        "title": "Who Gets Told What: Every Signal Slurm Sends, and Who Actually Hears It"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/schedulers/slurm-inside-a-job/slurm-cgroups-in-practice.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "slurm-sacct-job-forensics",
+        "path": "fields/schedulers/slurm-sacct-job-forensics.md",
+        "title": "Autopsy of a Job: Reading sacct Like a Coroner"
+      },
+      {
+        "id": "slurm-kill-task-failed",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-kill-task-failed.md",
+        "title": "Kill Task Failed: A Murder Mystery With No Body (and One Drained Node)"
+      },
+      {
+        "id": "slurm-pam-adopt-ssh-access",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-pam-adopt-ssh-access.md",
+        "title": "pam_slurm_adopt: Closing the Slurm SSH Backdoor"
+      },
+      {
+        "id": "slurm-accounting-multi-tenancy",
+        "path": "fields/schedulers/slurm-accounting-multi-tenancy.md",
+        "title": "Slurm Multi-Tenancy: Who Stores the Rules, Who Enforces Them"
+      },
+      {
+        "id": "slurm-slurmstepd",
+        "path": "fields/schedulers/slurm-inside-a-job/slurm-slurmstepd.md",
+        "title": "slurmstepd: The Small Daemon That Actually Runs Your Job"
+      },
+      {
+        "id": "slurm-version-changes",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-version-changes.md",
+        "title": "The Changelog Nobody Reads: What Moved Between Slurm 23.11 and 26.05"
+      },
+      {
+        "id": "oomkilled-with-memory-to-spare",
+        "path": "fields/devops/kubernetes/oomkilled-with-memory-to-spare.md",
+        "title": "The Pod Killed With Memory to Spare"
+      },
+      {
+        "id": "linux-memory-free-vs-available",
+        "path": "fields/system-administration/linux-memory-pressure/linux-memory-free-vs-available.md",
+        "title": "The Server That Looked Full: Free vs Available Memory, Cache, and What Is Really Used"
+      },
+      {
+        "id": "slurm-gpu-affinity-socket-lie",
+        "path": "fields/schedulers/slurm-inside-a-job/slurm-gpu-affinity-socket-lie.md",
+        "title": "Your GPU Has Core Affinity. Slurm Has Socket Affinity. They Are Not Speaking."
+      }
+    ],
+    "required_by": []
+  },
+  "fields/schedulers/slurm-inside-a-job/slurm-gpu-affinity-socket-lie.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "slurm-kill-task-failed",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-kill-task-failed.md",
+        "title": "Kill Task Failed: A Murder Mystery With No Body (and One Drained Node)"
+      },
+      {
+        "id": "slurm-cgroups-in-practice",
+        "path": "fields/schedulers/slurm-inside-a-job/slurm-cgroups-in-practice.md",
+        "title": "Slurm cgroups in Practice: What Gets Constrained, and Where the Numbers Lie"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/schedulers/slurm-inside-a-job/slurm-job-script-tale.md": {
+    "prerequisites": [
+      {
+        "id": "slurm-intro",
+        "path": "fields/schedulers/slurm-intro.md",
+        "title": "Schedulers: The Traffic Controller Nobody Thanks Until It Breaks"
+      }
+    ],
+    "related": [
+      {
+        "id": "slurm-backfill-tuning",
+        "path": "fields/schedulers/slurm-backfill-tuning.md",
+        "title": "Backfill Tuning: The Planner That Can Only See One Day Ahead"
+      },
+      {
+        "id": "slurm-distributed-training",
+        "path": "fields/schedulers/slurm-ai-clusters/launching-distributed-training.md",
+        "title": "Launching Distributed Training on Slurm: srun, torchrun, and the Rank Contract"
+      },
+      {
+        "id": "slurm-spool-dir-full",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-spool-dir-full.md",
+        "title": "SlurmdSpoolDir Is Full: The Drain That Is Not About the Spool Directory"
+      },
+      {
+        "id": "slurm-slurmstepd",
+        "path": "fields/schedulers/slurm-inside-a-job/slurm-slurmstepd.md",
+        "title": "slurmstepd: The Small Daemon That Actually Runs Your Job"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/schedulers/slurm-inside-a-job/slurm-slurmstepd.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "slurm-kill-task-failed",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-kill-task-failed.md",
+        "title": "Kill Task Failed: A Murder Mystery With No Body (and One Drained Node)"
+      },
+      {
+        "id": "linux-mem-mlockall",
+        "path": "fields/system-administration/linux-memory-pressure/memory-locking-mlockall.md",
+        "title": "Memory Locking: Keeping a Rescuer in RAM with mlockall"
+      },
+      {
+        "id": "slurm-intro",
+        "path": "fields/schedulers/slurm-intro.md",
+        "title": "Schedulers: The Traffic Controller Nobody Thanks Until It Breaks"
+      },
+      {
+        "id": "slurm-cgroups-in-practice",
+        "path": "fields/schedulers/slurm-inside-a-job/slurm-cgroups-in-practice.md",
+        "title": "Slurm cgroups in Practice: What Gets Constrained, and Where the Numbers Lie"
+      },
+      {
+        "id": "slurm-spool-dir-full",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-spool-dir-full.md",
+        "title": "SlurmdSpoolDir Is Full: The Drain That Is Not About the Spool Directory"
+      },
+      {
+        "id": "slurm-job-script-tale",
+        "path": "fields/schedulers/slurm-inside-a-job/slurm-job-script-tale.md",
+        "title": "The Tale of a Slurm Job Script: Submission Is a Commitment, Not a Promise"
+      },
+      {
+        "id": "slurm-signals-cheatsheet",
+        "path": "fields/schedulers/slurm-preemption/slurm-signals-cheatsheet.md",
+        "title": "Who Gets Told What: Every Signal Slurm Sends, and Who Actually Hears It"
+      },
+      {
+        "id": "openmp-mpi-under-slurm",
+        "path": "fields/system-administration/openmp-and-open-mpi/mpi-and-openmp-under-slurm.md",
+        "title": "Who Starts the Ranks? OpenMP and MPI Under Slurm"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/schedulers/slurm-intro.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "slurm-slurmstepd",
+        "path": "fields/schedulers/slurm-inside-a-job/slurm-slurmstepd.md",
+        "title": "slurmstepd: The Small Daemon That Actually Runs Your Job"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "slurm-job-script-tale",
+        "path": "fields/schedulers/slurm-inside-a-job/slurm-job-script-tale.md",
+        "title": "The Tale of a Slurm Job Script: Submission Is a Commitment, Not a Promise"
+      }
+    ]
+  },
+  "fields/schedulers/slurm-mixed-gpus/README.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "slurm-accounting-multi-tenancy",
+        "path": "fields/schedulers/slurm-accounting-multi-tenancy.md",
+        "title": "Slurm Multi-Tenancy: Who Stores the Rules, Who Enforces Them"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/schedulers/slurm-mixed-gpus/four-ways-to-mix-gpus.md": {
+    "prerequisites": [],
+    "related": [],
+    "required_by": [
+      {
+        "id": "slurm-mixed-gpus-why-disappoints",
+        "path": "fields/schedulers/slurm-mixed-gpus/why-mixed-training-disappoints.md",
+        "title": "Why Mixed-GPU Training Disappoints"
+      }
+    ]
+  },
+  "fields/schedulers/slurm-mixed-gpus/where-hetjobs-shine.md": {
+    "prerequisites": [
+      {
+        "id": "slurm-mixed-gpus-why-disappoints",
+        "path": "fields/schedulers/slurm-mixed-gpus/why-mixed-training-disappoints.md",
+        "title": "Why Mixed-GPU Training Disappoints"
+      }
+    ],
+    "related": [
+      {
+        "id": "slurm-job-submit-lua",
+        "path": "fields/schedulers/slurm-preemption/slurm-job-submit-lua.md",
+        "title": "The Receptionist Who Rewrites Your Badge: job_submit.lua"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/schedulers/slurm-mixed-gpus/why-mixed-training-disappoints.md": {
+    "prerequisites": [
+      {
+        "id": "slurm-mixed-gpus-four-ways",
+        "path": "fields/schedulers/slurm-mixed-gpus/four-ways-to-mix-gpus.md",
+        "title": "Four Ways to Ask Slurm for Mixed GPUs"
+      }
+    ],
+    "related": [],
+    "required_by": [
+      {
+        "id": "slurm-mixed-gpus-where-shine",
+        "path": "fields/schedulers/slurm-mixed-gpus/where-hetjobs-shine.md",
+        "title": "Where Heterogeneous Jobs Shine"
+      }
+    ]
+  },
+  "fields/schedulers/slurm-pending-jobs/limits-that-wait-forever.md": {
+    "prerequisites": [
+      {
+        "id": "slurm-pending-reasons",
+        "path": "fields/schedulers/slurm-pending-jobs/why-is-my-job-pending.md",
+        "title": "Reading the Reason Column: Why Is My Slurm Job Pending?"
+      },
+      {
+        "id": "slurm-accounting-multi-tenancy",
+        "path": "fields/schedulers/slurm-accounting-multi-tenancy.md",
+        "title": "Slurm Multi-Tenancy: Who Stores the Rules, Who Enforces Them"
+      }
+    ],
+    "related": [
+      {
+        "id": "slurm-qos-preemption-setup",
+        "path": "fields/schedulers/slurm-preemption/slurm-qos-preemption-setup.md",
+        "title": "The Guest List: Setting Up QOS Preemption Without Starting a War"
+      },
+      {
+        "id": "slurm-priority-multifactor",
+        "path": "fields/schedulers/slurm-pending-jobs/who-goes-first.md",
+        "title": "Who Goes First: Slurm's Priority Number, Taken Apart"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/schedulers/slurm-pending-jobs/who-goes-first.md": {
+    "prerequisites": [
+      {
+        "id": "slurm-pending-reasons",
+        "path": "fields/schedulers/slurm-pending-jobs/why-is-my-job-pending.md",
+        "title": "Reading the Reason Column: Why Is My Slurm Job Pending?"
+      }
+    ],
+    "related": [
+      {
+        "id": "slurm-qos-limits",
+        "path": "fields/schedulers/slurm-pending-jobs/limits-that-wait-forever.md",
+        "title": "Limits That Wait Forever: QOS and Account Limits in Practice"
+      },
+      {
+        "id": "slurm-accounting-multi-tenancy",
+        "path": "fields/schedulers/slurm-accounting-multi-tenancy.md",
+        "title": "Slurm Multi-Tenancy: Who Stores the Rules, Who Enforces Them"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/schedulers/slurm-pending-jobs/why-is-my-job-pending.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "slurm-sacct-job-forensics",
+        "path": "fields/schedulers/slurm-sacct-job-forensics.md",
+        "title": "Autopsy of a Job: Reading sacct Like a Coroner"
+      },
+      {
+        "id": "slurm-backfill-tuning",
+        "path": "fields/schedulers/slurm-backfill-tuning.md",
+        "title": "Backfill Tuning: The Planner That Can Only See One Day Ahead"
+      },
+      {
+        "id": "slurm-reservations-and-maintenance",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-reservations-and-maintenance.md",
+        "title": "Calling Dibs on Nodes: Reservations, Maintenance Windows and the Job That Fit"
+      },
+      {
+        "id": "slurm-lab-cheatsheet",
+        "path": "fields/schedulers/slurm-ai-clusters/lab-build-cheatsheet.md",
+        "title": "Lab Build Cheatsheet: A Slurm AI Cluster in Containers"
+      },
+      {
+        "id": "slurm-accounting-multi-tenancy",
+        "path": "fields/schedulers/slurm-accounting-multi-tenancy.md",
+        "title": "Slurm Multi-Tenancy: Who Stores the Rules, Who Enforces Them"
+      },
+      {
+        "id": "slurm-smoke-control-plane",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-control-plane.md",
+        "title": "The Cluster That Worked Perfectly and Remembered Nothing: a Two-Minute Slurm Smoke Test"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "slurm-priority-multifactor",
+        "path": "fields/schedulers/slurm-pending-jobs/who-goes-first.md",
+        "title": "Who Goes First: Slurm's Priority Number, Taken Apart"
+      },
+      {
+        "id": "slurm-qos-limits",
+        "path": "fields/schedulers/slurm-pending-jobs/limits-that-wait-forever.md",
+        "title": "Limits That Wait Forever: QOS and Account Limits in Practice"
+      }
+    ]
+  },
+  "fields/schedulers/slurm-preemption/slurm-job-submit-lua.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "slurm-backfill-tuning",
+        "path": "fields/schedulers/slurm-backfill-tuning.md",
+        "title": "Backfill Tuning: The Planner That Can Only See One Day Ahead"
+      },
+      {
+        "id": "slurm-reservations-and-maintenance",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-reservations-and-maintenance.md",
+        "title": "Calling Dibs on Nodes: Reservations, Maintenance Windows and the Job That Fit"
+      },
+      {
+        "id": "slurm-smoke-policy",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-policy.md",
+        "title": "Does the Rulebook Still Work? Smoke-Testing QOS, Submit Rules and Preemption"
+      },
+      {
+        "id": "slurm-preemption-requeue-signals",
+        "path": "fields/schedulers/slurm-preemption/slurm-preemption-requeue-signals.md",
+        "title": "Dying Politely: Preemption, Requeue and the Signals Your Training Job Ignores"
+      },
+      {
+        "id": "slurm-smoke-config-change",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-config-change.md",
+        "title": "Measure Twice, Reconfigure Once: Smoke-Testing a slurm.conf Change"
+      },
+      {
+        "id": "slurm-accounting-multi-tenancy",
+        "path": "fields/schedulers/slurm-accounting-multi-tenancy.md",
+        "title": "Slurm Multi-Tenancy: Who Stores the Rules, Who Enforces Them"
+      },
+      {
+        "id": "slurm-version-changes",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-version-changes.md",
+        "title": "The Changelog Nobody Reads: What Moved Between Slurm 23.11 and 26.05"
+      },
+      {
+        "id": "slurm-smoke-control-plane",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-control-plane.md",
+        "title": "The Cluster That Worked Perfectly and Remembered Nothing: a Two-Minute Slurm Smoke Test"
+      },
+      {
+        "id": "slurm-qos-preemption-setup",
+        "path": "fields/schedulers/slurm-preemption/slurm-qos-preemption-setup.md",
+        "title": "The Guest List: Setting Up QOS Preemption Without Starting a War"
+      },
+      {
+        "id": "slurm-mixed-gpus-where-shine",
+        "path": "fields/schedulers/slurm-mixed-gpus/where-hetjobs-shine.md",
+        "title": "Where Heterogeneous Jobs Shine"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/schedulers/slurm-preemption/slurm-preemption-requeue-signals.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "slurm-sacct-job-forensics",
+        "path": "fields/schedulers/slurm-sacct-job-forensics.md",
+        "title": "Autopsy of a Job: Reading sacct Like a Coroner"
+      },
+      {
+        "id": "slurm-backfill-tuning",
+        "path": "fields/schedulers/slurm-backfill-tuning.md",
+        "title": "Backfill Tuning: The Planner That Can Only See One Day Ahead"
+      },
+      {
+        "id": "slurm-smoke-policy",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-policy.md",
+        "title": "Does the Rulebook Still Work? Smoke-Testing QOS, Submit Rules and Preemption"
+      },
+      {
+        "id": "draining-a-gpu-node",
+        "path": "fields/devops/kubernetes/draining-a-gpu-node.md",
+        "title": "Draining a GPU Node With a Three-Day Run on It"
+      },
+      {
+        "id": "slurm-kill-task-failed",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-kill-task-failed.md",
+        "title": "Kill Task Failed: A Murder Mystery With No Body (and One Drained Node)"
+      },
+      {
+        "id": "slurm-accounting-multi-tenancy",
+        "path": "fields/schedulers/slurm-accounting-multi-tenancy.md",
+        "title": "Slurm Multi-Tenancy: Who Stores the Rules, Who Enforces Them"
+      },
+      {
+        "id": "slurm-version-changes",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-version-changes.md",
+        "title": "The Changelog Nobody Reads: What Moved Between Slurm 23.11 and 26.05"
+      },
+      {
+        "id": "slurm-qos-preemption-setup",
+        "path": "fields/schedulers/slurm-preemption/slurm-qos-preemption-setup.md",
+        "title": "The Guest List: Setting Up QOS Preemption Without Starting a War"
+      },
+      {
+        "id": "slurm-job-submit-lua",
+        "path": "fields/schedulers/slurm-preemption/slurm-job-submit-lua.md",
+        "title": "The Receptionist Who Rewrites Your Badge: job_submit.lua"
+      },
+      {
+        "id": "slurm-upgrade-order",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-upgrade-order.md",
+        "title": "Upgrading Slurm: The Order, the Window, and the Parts That Bite"
+      },
+      {
+        "id": "slurm-signals-cheatsheet",
+        "path": "fields/schedulers/slurm-preemption/slurm-signals-cheatsheet.md",
+        "title": "Who Gets Told What: Every Signal Slurm Sends, and Who Actually Hears It"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/schedulers/slurm-preemption/slurm-qos-preemption-setup.md": {
+    "prerequisites": [
+      {
+        "id": "slurm-accounting-multi-tenancy",
+        "path": "fields/schedulers/slurm-accounting-multi-tenancy.md",
+        "title": "Slurm Multi-Tenancy: Who Stores the Rules, Who Enforces Them"
+      }
+    ],
+    "related": [
+      {
+        "id": "slurm-sacct-job-forensics",
+        "path": "fields/schedulers/slurm-sacct-job-forensics.md",
+        "title": "Autopsy of a Job: Reading sacct Like a Coroner"
+      },
+      {
+        "id": "slurm-smoke-policy",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-policy.md",
+        "title": "Does the Rulebook Still Work? Smoke-Testing QOS, Submit Rules and Preemption"
+      },
+      {
+        "id": "slurm-preemption-requeue-signals",
+        "path": "fields/schedulers/slurm-preemption/slurm-preemption-requeue-signals.md",
+        "title": "Dying Politely: Preemption, Requeue and the Signals Your Training Job Ignores"
+      },
+      {
+        "id": "slurm-lab-cheatsheet",
+        "path": "fields/schedulers/slurm-ai-clusters/lab-build-cheatsheet.md",
+        "title": "Lab Build Cheatsheet: A Slurm AI Cluster in Containers"
+      },
+      {
+        "id": "slurm-qos-limits",
+        "path": "fields/schedulers/slurm-pending-jobs/limits-that-wait-forever.md",
+        "title": "Limits That Wait Forever: QOS and Account Limits in Practice"
+      },
+      {
+        "id": "slurm-version-changes",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-version-changes.md",
+        "title": "The Changelog Nobody Reads: What Moved Between Slurm 23.11 and 26.05"
+      },
+      {
+        "id": "slurm-job-submit-lua",
+        "path": "fields/schedulers/slurm-preemption/slurm-job-submit-lua.md",
+        "title": "The Receptionist Who Rewrites Your Badge: job_submit.lua"
+      },
+      {
+        "id": "slurm-signals-cheatsheet",
+        "path": "fields/schedulers/slurm-preemption/slurm-signals-cheatsheet.md",
+        "title": "Who Gets Told What: Every Signal Slurm Sends, and Who Actually Hears It"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/schedulers/slurm-preemption/slurm-signals-cheatsheet.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "slurm-smoke-policy",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-policy.md",
+        "title": "Does the Rulebook Still Work? Smoke-Testing QOS, Submit Rules and Preemption"
+      },
+      {
+        "id": "slurm-preemption-requeue-signals",
+        "path": "fields/schedulers/slurm-preemption/slurm-preemption-requeue-signals.md",
+        "title": "Dying Politely: Preemption, Requeue and the Signals Your Training Job Ignores"
+      },
+      {
+        "id": "slurm-kill-task-failed",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-kill-task-failed.md",
+        "title": "Kill Task Failed: A Murder Mystery With No Body (and One Drained Node)"
+      },
+      {
+        "id": "slurm-slurmstepd",
+        "path": "fields/schedulers/slurm-inside-a-job/slurm-slurmstepd.md",
+        "title": "slurmstepd: The Small Daemon That Actually Runs Your Job"
+      },
+      {
+        "id": "slurm-version-changes",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-version-changes.md",
+        "title": "The Changelog Nobody Reads: What Moved Between Slurm 23.11 and 26.05"
+      },
+      {
+        "id": "slurm-qos-preemption-setup",
+        "path": "fields/schedulers/slurm-preemption/slurm-qos-preemption-setup.md",
+        "title": "The Guest List: Setting Up QOS Preemption Without Starting a War"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/schedulers/slurm-sacct-job-forensics.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "slurm-preemption-requeue-signals",
+        "path": "fields/schedulers/slurm-preemption/slurm-preemption-requeue-signals.md",
+        "title": "Dying Politely: Preemption, Requeue and the Signals Your Training Job Ignores"
+      },
+      {
+        "id": "slurm-pending-reasons",
+        "path": "fields/schedulers/slurm-pending-jobs/why-is-my-job-pending.md",
+        "title": "Reading the Reason Column: Why Is My Slurm Job Pending?"
+      },
+      {
+        "id": "slurm-cgroups-in-practice",
+        "path": "fields/schedulers/slurm-inside-a-job/slurm-cgroups-in-practice.md",
+        "title": "Slurm cgroups in Practice: What Gets Constrained, and Where the Numbers Lie"
+      },
+      {
+        "id": "slurm-accounting-multi-tenancy",
+        "path": "fields/schedulers/slurm-accounting-multi-tenancy.md",
+        "title": "Slurm Multi-Tenancy: Who Stores the Rules, Who Enforces Them"
+      },
+      {
+        "id": "slurm-version-changes",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-version-changes.md",
+        "title": "The Changelog Nobody Reads: What Moved Between Slurm 23.11 and 26.05"
+      },
+      {
+        "id": "slurm-smoke-control-plane",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-control-plane.md",
+        "title": "The Cluster That Worked Perfectly and Remembered Nothing: a Two-Minute Slurm Smoke Test"
+      },
+      {
+        "id": "slurm-qos-preemption-setup",
+        "path": "fields/schedulers/slurm-preemption/slurm-qos-preemption-setup.md",
+        "title": "The Guest List: Setting Up QOS Preemption Without Starting a War"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/schedulers/slurm-smoke-tests/slurm-smoke-after-upgrade.md": {
+    "prerequisites": [
+      {
+        "id": "slurm-smoke-control-plane",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-control-plane.md",
+        "title": "The Cluster That Worked Perfectly and Remembered Nothing: a Two-Minute Slurm Smoke Test"
+      }
+    ],
+    "related": [
+      {
+        "id": "slurm-smoke-config-change",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-config-change.md",
+        "title": "Measure Twice, Reconfigure Once: Smoke-Testing a slurm.conf Change"
+      },
+      {
+        "id": "slurm-reboot-order",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-reboot-order.md",
+        "title": "Rebooting a Slurm Cluster Without Losing Your Job (Or Anyone Else's)"
+      },
+      {
+        "id": "slurm-version-changes",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-version-changes.md",
+        "title": "The Changelog Nobody Reads: What Moved Between Slurm 23.11 and 26.05"
+      },
+      {
+        "id": "slurm-upgrade-order",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-upgrade-order.md",
+        "title": "Upgrading Slurm: The Order, the Window, and the Parts That Bite"
+      },
+      {
+        "id": "slurm-smoke-regression-suites",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-regression-suites.md",
+        "title": "When Smoke Becomes a Fire Drill: SchedMD's Test Suite, ReFrame and the Baseline Rule"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/schedulers/slurm-smoke-tests/slurm-smoke-config-change.md": {
+    "prerequisites": [
+      {
+        "id": "slurm-smoke-control-plane",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-control-plane.md",
+        "title": "The Cluster That Worked Perfectly and Remembered Nothing: a Two-Minute Slurm Smoke Test"
+      }
+    ],
+    "related": [
+      {
+        "id": "slurm-reservations-and-maintenance",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-reservations-and-maintenance.md",
+        "title": "Calling Dibs on Nodes: Reservations, Maintenance Windows and the Job That Fit"
+      },
+      {
+        "id": "slurm-smoke-policy",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-policy.md",
+        "title": "Does the Rulebook Still Work? Smoke-Testing QOS, Submit Rules and Preemption"
+      },
+      {
+        "id": "slurm-reboot-order",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-reboot-order.md",
+        "title": "Rebooting a Slurm Cluster Without Losing Your Job (Or Anyone Else's)"
+      },
+      {
+        "id": "slurm-smoke-after-upgrade",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-after-upgrade.md",
+        "title": "The Morning After the Upgrade: Smoke Tests for the Change You Cannot Undo"
+      },
+      {
+        "id": "slurm-job-submit-lua",
+        "path": "fields/schedulers/slurm-preemption/slurm-job-submit-lua.md",
+        "title": "The Receptionist Who Rewrites Your Badge: job_submit.lua"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/schedulers/slurm-smoke-tests/slurm-smoke-control-plane.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "slurm-sacct-job-forensics",
+        "path": "fields/schedulers/slurm-sacct-job-forensics.md",
+        "title": "Autopsy of a Job: Reading sacct Like a Coroner"
+      },
+      {
+        "id": "slurm-pending-reasons",
+        "path": "fields/schedulers/slurm-pending-jobs/why-is-my-job-pending.md",
+        "title": "Reading the Reason Column: Why Is My Slurm Job Pending?"
+      },
+      {
+        "id": "slurm-job-submit-lua",
+        "path": "fields/schedulers/slurm-preemption/slurm-job-submit-lua.md",
+        "title": "The Receptionist Who Rewrites Your Badge: job_submit.lua"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "slurm-smoke-config-change",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-config-change.md",
+        "title": "Measure Twice, Reconfigure Once: Smoke-Testing a slurm.conf Change"
+      },
+      {
+        "id": "slurm-smoke-after-upgrade",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-after-upgrade.md",
+        "title": "The Morning After the Upgrade: Smoke Tests for the Change You Cannot Undo"
+      },
+      {
+        "id": "slurm-smoke-policy",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-policy.md",
+        "title": "Does the Rulebook Still Work? Smoke-Testing QOS, Submit Rules and Preemption"
+      },
+      {
+        "id": "slurm-smoke-node-readiness",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-node-readiness.md",
+        "title": "Back From the Repair Shop: Is This Node Fit to Return to Service?"
+      },
+      {
+        "id": "slurm-smoke-regression-suites",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-regression-suites.md",
+        "title": "When Smoke Becomes a Fire Drill: SchedMD's Test Suite, ReFrame and the Baseline Rule"
+      }
+    ]
+  },
+  "fields/schedulers/slurm-smoke-tests/slurm-smoke-node-readiness.md": {
+    "prerequisites": [
+      {
+        "id": "slurm-smoke-control-plane",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-control-plane.md",
+        "title": "The Cluster That Worked Perfectly and Remembered Nothing: a Two-Minute Slurm Smoke Test"
+      }
+    ],
+    "related": [
+      {
+        "id": "slurm-reservations-and-maintenance",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-reservations-and-maintenance.md",
+        "title": "Calling Dibs on Nodes: Reservations, Maintenance Windows and the Job That Fit"
+      },
+      {
+        "id": "slurm-kill-task-failed",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-kill-task-failed.md",
+        "title": "Kill Task Failed: A Murder Mystery With No Body (and One Drained Node)"
+      },
+      {
+        "id": "slurm-reboot-order",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-reboot-order.md",
+        "title": "Rebooting a Slurm Cluster Without Losing Your Job (Or Anyone Else's)"
+      },
+      {
+        "id": "slurm-gpu-health-checks",
+        "path": "fields/schedulers/slurm-ai-clusters/gpu-health-checks.md",
+        "title": "When a GPU Falls Off the Bus: Health Checks That Drain the Node"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/schedulers/slurm-smoke-tests/slurm-smoke-policy.md": {
+    "prerequisites": [
+      {
+        "id": "slurm-smoke-control-plane",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-control-plane.md",
+        "title": "The Cluster That Worked Perfectly and Remembered Nothing: a Two-Minute Slurm Smoke Test"
+      }
+    ],
+    "related": [
+      {
+        "id": "slurm-preemption-requeue-signals",
+        "path": "fields/schedulers/slurm-preemption/slurm-preemption-requeue-signals.md",
+        "title": "Dying Politely: Preemption, Requeue and the Signals Your Training Job Ignores"
+      },
+      {
+        "id": "slurm-smoke-config-change",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-config-change.md",
+        "title": "Measure Twice, Reconfigure Once: Smoke-Testing a slurm.conf Change"
+      },
+      {
+        "id": "slurm-qos-preemption-setup",
+        "path": "fields/schedulers/slurm-preemption/slurm-qos-preemption-setup.md",
+        "title": "The Guest List: Setting Up QOS Preemption Without Starting a War"
+      },
+      {
+        "id": "slurm-job-submit-lua",
+        "path": "fields/schedulers/slurm-preemption/slurm-job-submit-lua.md",
+        "title": "The Receptionist Who Rewrites Your Badge: job_submit.lua"
+      },
+      {
+        "id": "slurm-smoke-regression-suites",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-regression-suites.md",
+        "title": "When Smoke Becomes a Fire Drill: SchedMD's Test Suite, ReFrame and the Baseline Rule"
+      },
+      {
+        "id": "slurm-signals-cheatsheet",
+        "path": "fields/schedulers/slurm-preemption/slurm-signals-cheatsheet.md",
+        "title": "Who Gets Told What: Every Signal Slurm Sends, and Who Actually Hears It"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/schedulers/slurm-smoke-tests/slurm-smoke-regression-suites.md": {
+    "prerequisites": [
+      {
+        "id": "slurm-smoke-control-plane",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-control-plane.md",
+        "title": "The Cluster That Worked Perfectly and Remembered Nothing: a Two-Minute Slurm Smoke Test"
+      }
+    ],
+    "related": [
+      {
+        "id": "slurm-smoke-policy",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-policy.md",
+        "title": "Does the Rulebook Still Work? Smoke-Testing QOS, Submit Rules and Preemption"
+      },
+      {
+        "id": "slurm-version-changes",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-version-changes.md",
+        "title": "The Changelog Nobody Reads: What Moved Between Slurm 23.11 and 26.05"
+      },
+      {
+        "id": "slurm-smoke-after-upgrade",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-after-upgrade.md",
+        "title": "The Morning After the Upgrade: Smoke Tests for the Change You Cannot Undo"
+      },
+      {
+        "id": "slurm-upgrade-order",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-upgrade-order.md",
+        "title": "Upgrading Slurm: The Order, the Window, and the Parts That Bite"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/system-administration/ai-storage-and-fabric/parallel-filesystems-for-ai.md": {
+    "prerequisites": [],
+    "related": [],
+    "required_by": [
+      {
+        "id": "ai-storage-rdma-gpudirect",
+        "path": "fields/system-administration/ai-storage-and-fabric/rdma-infiniband-gpudirect.md",
+        "title": "RDMA, InfiniBand and GPUDirect: Taking the CPU Out of the Way"
+      }
+    ]
+  },
+  "fields/system-administration/ai-storage-and-fabric/rdma-infiniband-gpudirect.md": {
+    "prerequisites": [
+      {
+        "id": "ai-storage-parallel-filesystems",
+        "path": "fields/system-administration/ai-storage-and-fabric/parallel-filesystems-for-ai.md",
+        "title": "Parallel Filesystems: Why 10,000 GPUs Can Starve on a Full Disk"
+      }
+    ],
+    "related": [
+      {
+        "id": "job-execution-journey",
+        "path": "fields/devops/kubernetes/job-execution-journey.md",
+        "title": "The Job Execution Journey: From `kubectl apply` to the First All-Reduce"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/system-administration/gpu-failure-prediction/README.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "nhc-auto-remediation",
+        "path": "fields/system-administration/node-health-check/auto-remediation.md",
+        "title": "Auto-Remediation: From Detected to Fixed, Safely"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/system-administration/gpu-failure-prediction/collecting-the-signals.md": {
+    "prerequisites": [
+      {
+        "id": "gpu-pred-what-fails",
+        "path": "fields/system-administration/gpu-failure-prediction/what-fails-and-what-warns.md",
+        "title": "How GPU Memory Fails, and Why You Can See It Coming"
+      }
+    ],
+    "related": [],
+    "required_by": [
+      {
+        "id": "gpu-pred-rules",
+        "path": "fields/system-administration/gpu-failure-prediction/rules-that-predict.md",
+        "title": "From Signals to Decisions"
+      }
+    ]
+  },
+  "fields/system-administration/gpu-failure-prediction/from-alert-to-drain.md": {
+    "prerequisites": [
+      {
+        "id": "gpu-pred-rules",
+        "path": "fields/system-administration/gpu-failure-prediction/rules-that-predict.md",
+        "title": "From Signals to Decisions"
+      }
+    ],
+    "related": [
+      {
+        "id": "nhc-auto-remediation",
+        "path": "fields/system-administration/node-health-check/auto-remediation.md",
+        "title": "Auto-Remediation: From Detected to Fixed, Safely"
+      },
+      {
+        "id": "gpu-pred-runbook",
+        "path": "fields/system-administration/gpu-failure-prediction/runbook.md",
+        "title": "Runbook: Deploying GPU Failure Prediction End to End"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "gpu-pred-backtesting",
+        "path": "fields/system-administration/gpu-failure-prediction/scoring-and-backtesting.md",
+        "title": "Is the Prediction Any Good?"
+      }
+    ]
+  },
+  "fields/system-administration/gpu-failure-prediction/rules-that-predict.md": {
+    "prerequisites": [
+      {
+        "id": "gpu-pred-collecting-signals",
+        "path": "fields/system-administration/gpu-failure-prediction/collecting-the-signals.md",
+        "title": "Reading the GPU's Vital Signs"
+      }
+    ],
+    "related": [
+      {
+        "id": "gpu-pred-runbook",
+        "path": "fields/system-administration/gpu-failure-prediction/runbook.md",
+        "title": "Runbook: Deploying GPU Failure Prediction End to End"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "gpu-pred-alert-to-drain",
+        "path": "fields/system-administration/gpu-failure-prediction/from-alert-to-drain.md",
+        "title": "Acting Without Making It Worse"
+      }
+    ]
+  },
+  "fields/system-administration/gpu-failure-prediction/runbook.md": {
+    "prerequisites": [
+      {
+        "id": "gpu-pred-what-fails",
+        "path": "fields/system-administration/gpu-failure-prediction/what-fails-and-what-warns.md",
+        "title": "How GPU Memory Fails, and Why You Can See It Coming"
+      }
+    ],
+    "related": [
+      {
+        "id": "gpu-pred-alert-to-drain",
+        "path": "fields/system-administration/gpu-failure-prediction/from-alert-to-drain.md",
+        "title": "Acting Without Making It Worse"
+      },
+      {
+        "id": "nhc-auto-remediation",
+        "path": "fields/system-administration/node-health-check/auto-remediation.md",
+        "title": "Auto-Remediation: From Detected to Fixed, Safely"
+      },
+      {
+        "id": "gpu-pred-rules",
+        "path": "fields/system-administration/gpu-failure-prediction/rules-that-predict.md",
+        "title": "From Signals to Decisions"
+      },
+      {
+        "id": "gpu-pred-backtesting",
+        "path": "fields/system-administration/gpu-failure-prediction/scoring-and-backtesting.md",
+        "title": "Is the Prediction Any Good?"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/system-administration/gpu-failure-prediction/scoring-and-backtesting.md": {
+    "prerequisites": [
+      {
+        "id": "gpu-pred-alert-to-drain",
+        "path": "fields/system-administration/gpu-failure-prediction/from-alert-to-drain.md",
+        "title": "Acting Without Making It Worse"
+      }
+    ],
+    "related": [
+      {
+        "id": "gpu-pred-runbook",
+        "path": "fields/system-administration/gpu-failure-prediction/runbook.md",
+        "title": "Runbook: Deploying GPU Failure Prediction End to End"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/system-administration/gpu-failure-prediction/what-fails-and-what-warns.md": {
+    "prerequisites": [],
+    "related": [],
+    "required_by": [
+      {
+        "id": "gpu-pred-collecting-signals",
+        "path": "fields/system-administration/gpu-failure-prediction/collecting-the-signals.md",
+        "title": "Reading the GPU's Vital Signs"
+      },
+      {
+        "id": "gpu-pred-runbook",
+        "path": "fields/system-administration/gpu-failure-prediction/runbook.md",
+        "title": "Runbook: Deploying GPU Failure Prediction End to End"
+      }
+    ]
+  },
+  "fields/system-administration/linux-memory-pressure/cgroup-v2-memory-control.md": {
+    "prerequisites": [
+      {
+        "id": "linux-mem-reclaim",
+        "path": "fields/system-administration/linux-memory-pressure/how-linux-reclaims-memory.md",
+        "title": "How Linux Reclaims Memory: Cache, Swap and the Two Kinds of Stall"
+      }
+    ],
+    "related": [
+      {
+        "id": "linux-mem-mlockall",
+        "path": "fields/system-administration/linux-memory-pressure/memory-locking-mlockall.md",
+        "title": "Memory Locking: Keeping a Rescuer in RAM with mlockall"
+      },
+      {
+        "id": "linux-mem-psi",
+        "path": "fields/system-administration/linux-memory-pressure/memory-pressure-psi.md",
+        "title": "Pressure Stall Information: Measuring Time Lost, Not Bytes Left"
+      },
+      {
+        "id": "linux-mem-oom-killer",
+        "path": "fields/system-administration/linux-memory-pressure/the-oom-killer.md",
+        "title": "The OOM Killer: Who Gets Thrown Overboard, and Why So Late"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "linux-mem-rescuer-checklist",
+        "path": "fields/system-administration/linux-memory-pressure/rescuer-checklist.md",
+        "title": "Making a Rescuer Survive: CPU, Protection and a Checklist"
+      }
+    ]
+  },
+  "fields/system-administration/linux-memory-pressure/how-linux-reclaims-memory.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "linux-memory-free-vs-available",
+        "path": "fields/system-administration/linux-memory-pressure/linux-memory-free-vs-available.md",
+        "title": "The Server That Looked Full: Free vs Available Memory, Cache, and What Is Really Used"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "linux-mem-psi",
+        "path": "fields/system-administration/linux-memory-pressure/memory-pressure-psi.md",
+        "title": "Pressure Stall Information: Measuring Time Lost, Not Bytes Left"
+      },
+      {
+        "id": "linux-mem-oom-killer",
+        "path": "fields/system-administration/linux-memory-pressure/the-oom-killer.md",
+        "title": "The OOM Killer: Who Gets Thrown Overboard, and Why So Late"
+      },
+      {
+        "id": "linux-mem-cgroup-v2",
+        "path": "fields/system-administration/linux-memory-pressure/cgroup-v2-memory-control.md",
+        "title": "cgroup v2 Memory Control: The Levers Between Doing Nothing and Killing"
+      },
+      {
+        "id": "linux-mem-mlockall",
+        "path": "fields/system-administration/linux-memory-pressure/memory-locking-mlockall.md",
+        "title": "Memory Locking: Keeping a Rescuer in RAM with mlockall"
+      }
+    ]
+  },
+  "fields/system-administration/linux-memory-pressure/linux-memory-free-vs-available.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "linux-mem-reclaim",
+        "path": "fields/system-administration/linux-memory-pressure/how-linux-reclaims-memory.md",
+        "title": "How Linux Reclaims Memory: Cache, Swap and the Two Kinds of Stall"
+      },
+      {
+        "id": "linux-mem-psi",
+        "path": "fields/system-administration/linux-memory-pressure/memory-pressure-psi.md",
+        "title": "Pressure Stall Information: Measuring Time Lost, Not Bytes Left"
+      },
+      {
+        "id": "slurm-cgroups-in-practice",
+        "path": "fields/schedulers/slurm-inside-a-job/slurm-cgroups-in-practice.md",
+        "title": "Slurm cgroups in Practice: What Gets Constrained, and Where the Numbers Lie"
+      },
+      {
+        "id": "oomkilled-with-memory-to-spare",
+        "path": "fields/devops/kubernetes/oomkilled-with-memory-to-spare.md",
+        "title": "The Pod Killed With Memory to Spare"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/system-administration/linux-memory-pressure/memory-locking-mlockall.md": {
+    "prerequisites": [
+      {
+        "id": "linux-mem-reclaim",
+        "path": "fields/system-administration/linux-memory-pressure/how-linux-reclaims-memory.md",
+        "title": "How Linux Reclaims Memory: Cache, Swap and the Two Kinds of Stall"
+      }
+    ],
+    "related": [
+      {
+        "id": "linux-mem-cgroup-v2",
+        "path": "fields/system-administration/linux-memory-pressure/cgroup-v2-memory-control.md",
+        "title": "cgroup v2 Memory Control: The Levers Between Doing Nothing and Killing"
+      },
+      {
+        "id": "slurm-slurmstepd",
+        "path": "fields/schedulers/slurm-inside-a-job/slurm-slurmstepd.md",
+        "title": "slurmstepd: The Small Daemon That Actually Runs Your Job"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "linux-mem-rescuer-checklist",
+        "path": "fields/system-administration/linux-memory-pressure/rescuer-checklist.md",
+        "title": "Making a Rescuer Survive: CPU, Protection and a Checklist"
+      }
+    ]
+  },
+  "fields/system-administration/linux-memory-pressure/memory-pressure-psi.md": {
+    "prerequisites": [
+      {
+        "id": "linux-mem-reclaim",
+        "path": "fields/system-administration/linux-memory-pressure/how-linux-reclaims-memory.md",
+        "title": "How Linux Reclaims Memory: Cache, Swap and the Two Kinds of Stall"
+      }
+    ],
+    "related": [
+      {
+        "id": "linux-mem-cgroup-v2",
+        "path": "fields/system-administration/linux-memory-pressure/cgroup-v2-memory-control.md",
+        "title": "cgroup v2 Memory Control: The Levers Between Doing Nothing and Killing"
+      },
+      {
+        "id": "linux-mem-rescuer-checklist",
+        "path": "fields/system-administration/linux-memory-pressure/rescuer-checklist.md",
+        "title": "Making a Rescuer Survive: CPU, Protection and a Checklist"
+      },
+      {
+        "id": "linux-mem-oom-killer",
+        "path": "fields/system-administration/linux-memory-pressure/the-oom-killer.md",
+        "title": "The OOM Killer: Who Gets Thrown Overboard, and Why So Late"
+      },
+      {
+        "id": "linux-memory-free-vs-available",
+        "path": "fields/system-administration/linux-memory-pressure/linux-memory-free-vs-available.md",
+        "title": "The Server That Looked Full: Free vs Available Memory, Cache, and What Is Really Used"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/system-administration/linux-memory-pressure/rescuer-checklist.md": {
+    "prerequisites": [
+      {
+        "id": "linux-mem-cgroup-v2",
+        "path": "fields/system-administration/linux-memory-pressure/cgroup-v2-memory-control.md",
+        "title": "cgroup v2 Memory Control: The Levers Between Doing Nothing and Killing"
+      },
+      {
+        "id": "linux-mem-mlockall",
+        "path": "fields/system-administration/linux-memory-pressure/memory-locking-mlockall.md",
+        "title": "Memory Locking: Keeping a Rescuer in RAM with mlockall"
+      }
+    ],
+    "related": [
+      {
+        "id": "linux-mem-psi",
+        "path": "fields/system-administration/linux-memory-pressure/memory-pressure-psi.md",
+        "title": "Pressure Stall Information: Measuring Time Lost, Not Bytes Left"
+      },
+      {
+        "id": "linux-mem-oom-killer",
+        "path": "fields/system-administration/linux-memory-pressure/the-oom-killer.md",
+        "title": "The OOM Killer: Who Gets Thrown Overboard, and Why So Late"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/system-administration/linux-memory-pressure/the-oom-killer.md": {
+    "prerequisites": [
+      {
+        "id": "linux-mem-reclaim",
+        "path": "fields/system-administration/linux-memory-pressure/how-linux-reclaims-memory.md",
+        "title": "How Linux Reclaims Memory: Cache, Swap and the Two Kinds of Stall"
+      }
+    ],
+    "related": [
+      {
+        "id": "linux-mem-cgroup-v2",
+        "path": "fields/system-administration/linux-memory-pressure/cgroup-v2-memory-control.md",
+        "title": "cgroup v2 Memory Control: The Levers Between Doing Nothing and Killing"
+      },
+      {
+        "id": "linux-mem-rescuer-checklist",
+        "path": "fields/system-administration/linux-memory-pressure/rescuer-checklist.md",
+        "title": "Making a Rescuer Survive: CPU, Protection and a Checklist"
+      },
+      {
+        "id": "linux-mem-psi",
+        "path": "fields/system-administration/linux-memory-pressure/memory-pressure-psi.md",
+        "title": "Pressure Stall Information: Measuring Time Lost, Not Bytes Left"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/system-administration/node-health-check/architecture-driven-nhc.md": {
+    "prerequisites": [
+      {
+        "id": "nhc-rollout-at-scale",
+        "path": "fields/system-administration/node-health-check/rollout-at-scale.md",
+        "title": "Rolling NHC Out to a Fleet Without Draining Everything"
+      },
+      {
+        "id": "nhc-writing-nhc-conf",
+        "path": "fields/system-administration/node-health-check/writing-nhc-conf.md",
+        "title": "Writing nhc.conf That Actually Fits Your Cluster"
+      },
+      {
+        "id": "nhc-custom-checks",
+        "path": "fields/system-administration/node-health-check/custom-checks.md",
+        "title": "Writing Your Own NHC Checks"
+      }
+    ],
+    "related": [],
+    "required_by": [
+      {
+        "id": "nhc-case-study",
+        "path": "fields/system-administration/node-health-check/case-study-build-me-an-nhc.md",
+        "title": "Case Study: \"Build Us an NHC\", From a Vague Ask to a Validated Proposal"
+      }
+    ]
+  },
+  "fields/system-administration/node-health-check/auto-remediation.md": {
+    "prerequisites": [
+      {
+        "id": "nhc-slurm-integration",
+        "path": "fields/system-administration/node-health-check/slurm-integration.md",
+        "title": "Plugging NHC into Slurm (and Friends)"
+      },
+      {
+        "id": "nhc-rollout-at-scale",
+        "path": "fields/system-administration/node-health-check/rollout-at-scale.md",
+        "title": "Rolling NHC Out to a Fleet Without Draining Everything"
+      }
+    ],
+    "related": [
+      {
+        "id": "gpu-pred-alert-to-drain",
+        "path": "fields/system-administration/gpu-failure-prediction/from-alert-to-drain.md",
+        "title": "Acting Without Making It Worse"
+      },
+      {
+        "id": "gpu-failure-prediction-overview",
+        "path": "fields/system-administration/gpu-failure-prediction/README.md",
+        "title": "Predicting GPU Node Failures - Overview"
+      },
+      {
+        "id": "gpu-pred-runbook",
+        "path": "fields/system-administration/gpu-failure-prediction/runbook.md",
+        "title": "Runbook: Deploying GPU Failure Prediction End to End"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/system-administration/node-health-check/build-and-install.md": {
+    "prerequisites": [
+      {
+        "id": "nhc-why-node-health-check",
+        "path": "fields/system-administration/node-health-check/why-node-health-check.md",
+        "title": "Why Your Cluster Needs a Bouncer"
+      }
+    ],
+    "related": [
+      {
+        "id": "ansible-rolling",
+        "path": "fields/devops/ansible/rolling-maintenance.md",
+        "title": "The Reboot That Killed a Week of Jobs: Rolling Maintenance with Slurm"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "nhc-writing-nhc-conf",
+        "path": "fields/system-administration/node-health-check/writing-nhc-conf.md",
+        "title": "Writing nhc.conf That Actually Fits Your Cluster"
+      }
+    ]
+  },
+  "fields/system-administration/node-health-check/case-study-build-me-an-nhc.md": {
+    "prerequisites": [
+      {
+        "id": "nhc-architecture-driven",
+        "path": "fields/system-administration/node-health-check/architecture-driven-nhc.md",
+        "title": "Architecture-Driven NHC: Generate Health Checks from Your Cluster's Definition"
+      }
+    ],
+    "related": [],
+    "required_by": []
+  },
+  "fields/system-administration/node-health-check/cheat-sheet.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "nhc-troubleshooting",
+        "path": "fields/system-administration/node-health-check/troubleshooting.md",
+        "title": "NHC Troubleshooting: Symptom First"
+      },
+      {
+        "id": "nhc-writing-nhc-conf",
+        "path": "fields/system-administration/node-health-check/writing-nhc-conf.md",
+        "title": "Writing nhc.conf That Actually Fits Your Cluster"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/system-administration/node-health-check/custom-checks.md": {
+    "prerequisites": [
+      {
+        "id": "nhc-writing-nhc-conf",
+        "path": "fields/system-administration/node-health-check/writing-nhc-conf.md",
+        "title": "Writing nhc.conf That Actually Fits Your Cluster"
+      }
+    ],
+    "related": [],
+    "required_by": [
+      {
+        "id": "nhc-architecture-driven",
+        "path": "fields/system-administration/node-health-check/architecture-driven-nhc.md",
+        "title": "Architecture-Driven NHC: Generate Health Checks from Your Cluster's Definition"
+      }
+    ]
+  },
+  "fields/system-administration/node-health-check/rollout-at-scale.md": {
+    "prerequisites": [
+      {
+        "id": "nhc-slurm-integration",
+        "path": "fields/system-administration/node-health-check/slurm-integration.md",
+        "title": "Plugging NHC into Slurm (and Friends)"
+      }
+    ],
+    "related": [],
+    "required_by": [
+      {
+        "id": "nhc-auto-remediation",
+        "path": "fields/system-administration/node-health-check/auto-remediation.md",
+        "title": "Auto-Remediation: From Detected to Fixed, Safely"
+      },
+      {
+        "id": "nhc-architecture-driven",
+        "path": "fields/system-administration/node-health-check/architecture-driven-nhc.md",
+        "title": "Architecture-Driven NHC: Generate Health Checks from Your Cluster's Definition"
+      }
+    ]
+  },
+  "fields/system-administration/node-health-check/slurm-integration.md": {
+    "prerequisites": [
+      {
+        "id": "nhc-writing-nhc-conf",
+        "path": "fields/system-administration/node-health-check/writing-nhc-conf.md",
+        "title": "Writing nhc.conf That Actually Fits Your Cluster"
+      }
+    ],
+    "related": [
+      {
+        "id": "nhc-why-node-health-check",
+        "path": "fields/system-administration/node-health-check/why-node-health-check.md",
+        "title": "Why Your Cluster Needs a Bouncer"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "nhc-rollout-at-scale",
+        "path": "fields/system-administration/node-health-check/rollout-at-scale.md",
+        "title": "Rolling NHC Out to a Fleet Without Draining Everything"
+      },
+      {
+        "id": "nhc-auto-remediation",
+        "path": "fields/system-administration/node-health-check/auto-remediation.md",
+        "title": "Auto-Remediation: From Detected to Fixed, Safely"
+      },
+      {
+        "id": "nhc-troubleshooting",
+        "path": "fields/system-administration/node-health-check/troubleshooting.md",
+        "title": "NHC Troubleshooting: Symptom First"
+      }
+    ]
+  },
+  "fields/system-administration/node-health-check/troubleshooting.md": {
+    "prerequisites": [
+      {
+        "id": "nhc-slurm-integration",
+        "path": "fields/system-administration/node-health-check/slurm-integration.md",
+        "title": "Plugging NHC into Slurm (and Friends)"
+      }
+    ],
+    "related": [
+      {
+        "id": "nhc-cheat-sheet",
+        "path": "fields/system-administration/node-health-check/cheat-sheet.md",
+        "title": "NHC Cheat Sheet"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/system-administration/node-health-check/why-node-health-check.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "nhc-slurm-integration",
+        "path": "fields/system-administration/node-health-check/slurm-integration.md",
+        "title": "Plugging NHC into Slurm (and Friends)"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "nhc-build-and-install",
+        "path": "fields/system-administration/node-health-check/build-and-install.md",
+        "title": "Build and Install NHC"
+      }
+    ]
+  },
+  "fields/system-administration/node-health-check/writing-nhc-conf.md": {
+    "prerequisites": [
+      {
+        "id": "nhc-build-and-install",
+        "path": "fields/system-administration/node-health-check/build-and-install.md",
+        "title": "Build and Install NHC"
+      }
+    ],
+    "related": [
+      {
+        "id": "nhc-cheat-sheet",
+        "path": "fields/system-administration/node-health-check/cheat-sheet.md",
+        "title": "NHC Cheat Sheet"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "nhc-slurm-integration",
+        "path": "fields/system-administration/node-health-check/slurm-integration.md",
+        "title": "Plugging NHC into Slurm (and Friends)"
+      },
+      {
+        "id": "nhc-custom-checks",
+        "path": "fields/system-administration/node-health-check/custom-checks.md",
+        "title": "Writing Your Own NHC Checks"
+      },
+      {
+        "id": "nhc-architecture-driven",
+        "path": "fields/system-administration/node-health-check/architecture-driven-nhc.md",
+        "title": "Architecture-Driven NHC: Generate Health Checks from Your Cluster's Definition"
+      }
+    ]
+  },
+  "fields/system-administration/openmp-and-open-mpi/hybrid-and-the-binding-trap.md": {
+    "prerequisites": [
+      {
+        "id": "openmp-mpi-threads-and-ranks",
+        "path": "fields/system-administration/openmp-and-open-mpi/threads-and-ranks.md",
+        "title": "Cooks and Kitchens: Threads, Ranks and the One Mental Model"
+      }
+    ],
+    "related": [
+      {
+        "id": "parallel-execution-and-affinity",
+        "path": "fields/benchmarks/parallel-execution-affinity-master-guide.md",
+        "title": "Parallel Execution and Affinity"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "openmp-mpi-under-slurm",
+        "path": "fields/system-administration/openmp-and-open-mpi/mpi-and-openmp-under-slurm.md",
+        "title": "Who Starts the Ranks? OpenMP and MPI Under Slurm"
+      }
+    ]
+  },
+  "fields/system-administration/openmp-and-open-mpi/mpi-and-openmp-on-kubernetes.md": {
+    "prerequisites": [
+      {
+        "id": "openmp-mpi-under-slurm",
+        "path": "fields/system-administration/openmp-and-open-mpi/mpi-and-openmp-under-slurm.md",
+        "title": "Who Starts the Ranks? OpenMP and MPI Under Slurm"
+      }
+    ],
+    "related": [
+      {
+        "id": "kubernetes-in-five-nouns",
+        "path": "fields/devops/kubernetes/kubernetes-in-five-nouns.md",
+        "title": "Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster"
+      },
+      {
+        "id": "job-execution-journey",
+        "path": "fields/devops/kubernetes/job-execution-journey.md",
+        "title": "The Job Execution Journey: From `kubectl apply` to the First All-Reduce"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/system-administration/openmp-and-open-mpi/mpi-and-openmp-under-slurm.md": {
+    "prerequisites": [
+      {
+        "id": "openmp-mpi-hybrid-binding-trap",
+        "path": "fields/system-administration/openmp-and-open-mpi/hybrid-and-the-binding-trap.md",
+        "title": "Kitchens With Cooks: Hybrid MPI+OpenMP and the Binding Trap"
+      }
+    ],
+    "related": [
+      {
+        "id": "slurm-pam-adopt-ssh-access",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-pam-adopt-ssh-access.md",
+        "title": "pam_slurm_adopt: Closing the Slurm SSH Backdoor"
+      },
+      {
+        "id": "slurm-slurmstepd",
+        "path": "fields/schedulers/slurm-inside-a-job/slurm-slurmstepd.md",
+        "title": "slurmstepd: The Small Daemon That Actually Runs Your Job"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "openmp-mpi-on-kubernetes",
+        "path": "fields/system-administration/openmp-and-open-mpi/mpi-and-openmp-on-kubernetes.md",
+        "title": "No Login Node, No Hostfile: OpenMP and MPI on Kubernetes"
+      }
+    ]
+  },
+  "fields/system-administration/openmp-and-open-mpi/spotting-openmp-and-mpi-code.md": {
+    "prerequisites": [
+      {
+        "id": "openmp-mpi-threads-and-ranks",
+        "path": "fields/system-administration/openmp-and-open-mpi/threads-and-ranks.md",
+        "title": "Cooks and Kitchens: Threads, Ranks and the One Mental Model"
+      }
+    ],
+    "related": [],
+    "required_by": []
+  },
+  "fields/system-administration/openmp-and-open-mpi/the-name-mixup.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "parallel-execution-and-affinity",
+        "path": "fields/benchmarks/parallel-execution-affinity-master-guide.md",
+        "title": "Parallel Execution and Affinity"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "openmp-mpi-where-they-came-from",
+        "path": "fields/system-administration/openmp-and-open-mpi/where-they-came-from.md",
+        "title": "Two Tribes, One Problem: Where OpenMP and MPI Came From"
+      },
+      {
+        "id": "openmp-mpi-threads-and-ranks",
+        "path": "fields/system-administration/openmp-and-open-mpi/threads-and-ranks.md",
+        "title": "Cooks and Kitchens: Threads, Ranks and the One Mental Model"
+      }
+    ]
+  },
+  "fields/system-administration/openmp-and-open-mpi/threads-and-ranks.md": {
+    "prerequisites": [
+      {
+        "id": "openmp-open-mpi-name-mixup",
+        "path": "fields/system-administration/openmp-and-open-mpi/the-name-mixup.md",
+        "title": "Not Twins, Not Even Cousins: OpenMP, MPI and Open MPI"
+      }
+    ],
+    "related": [],
+    "required_by": [
+      {
+        "id": "openmp-mpi-spotting-the-code",
+        "path": "fields/system-administration/openmp-and-open-mpi/spotting-openmp-and-mpi-code.md",
+        "title": "Know It on Sight: Reading OpenMP and MPI Code, Builds and Job Scripts"
+      },
+      {
+        "id": "openmp-mpi-hybrid-binding-trap",
+        "path": "fields/system-administration/openmp-and-open-mpi/hybrid-and-the-binding-trap.md",
+        "title": "Kitchens With Cooks: Hybrid MPI+OpenMP and the Binding Trap"
+      }
+    ]
+  },
+  "fields/system-administration/openmp-and-open-mpi/where-they-are-going.md": {
+    "prerequisites": [
+      {
+        "id": "openmp-mpi-where-they-came-from",
+        "path": "fields/system-administration/openmp-and-open-mpi/where-they-came-from.md",
+        "title": "Two Tribes, One Problem: Where OpenMP and MPI Came From"
+      }
+    ],
+    "related": [],
+    "required_by": []
+  },
+  "fields/system-administration/openmp-and-open-mpi/where-they-came-from.md": {
+    "prerequisites": [
+      {
+        "id": "openmp-open-mpi-name-mixup",
+        "path": "fields/system-administration/openmp-and-open-mpi/the-name-mixup.md",
+        "title": "Not Twins, Not Even Cousins: OpenMP, MPI and Open MPI"
+      }
+    ],
+    "related": [],
+    "required_by": [
+      {
+        "id": "openmp-mpi-where-they-are-going",
+        "path": "fields/system-administration/openmp-and-open-mpi/where-they-are-going.md",
+        "title": "Two Tickets About the Future: OpenMP 6, MPI 5 and What Never Expires"
+      }
+    ]
+  },
+  "fields/tabular-data/concept-in-machine-learning/ml-unsupervised.md": {
+    "prerequisites": [],
+    "related": [],
+    "required_by": [
+      {
+        "id": "customer-segmentation-problem",
+        "path": "problems/customer-segmentation.md",
+        "title": "Customer Segmentation"
+      }
+    ]
+  },
+  "fields/tabular-data/data-evaluation/classification/accuracy-paradox.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "bias-variance-trade-off",
+        "path": "fields/tabular-data/data-evaluation/model-behavior/bias-variance-trade-off.md",
+        "title": "Bias and Variance Trade-Off"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/tabular-data/data-evaluation/model-behavior/bias-variance-trade-off.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "accuracy-paradox",
+        "path": "fields/tabular-data/data-evaluation/classification/accuracy-paradox.md",
+        "title": "Accuracy Paradox"
+      }
+    ],
+    "required_by": []
+  },
+  "problems/customer-segmentation.md": {
+    "prerequisites": [
+      {
+        "id": "unsupervised-learning",
+        "path": "fields/tabular-data/concept-in-machine-learning/ml-unsupervised.md",
+        "title": "Unsupervised Learning"
+      }
+    ],
+    "related": [],
+    "required_by": []
+  },
+  "programming/local-app-accounts/sessions-and-two-walls.md": {
+    "prerequisites": [
+      {
+        "id": "sign-in-hygiene",
+        "path": "programming/local-app-accounts/sign-in-hygiene.md",
+        "title": "Sign-In Hygiene: How the Clerk Says \"No\" Without Giving Anything Away"
+      }
+    ],
+    "related": [],
+    "required_by": []
+  },
+  "programming/local-app-accounts/sign-in-hygiene.md": {
+    "prerequisites": [
+      {
+        "id": "threat-model-and-first-launch",
+        "path": "programming/local-app-accounts/threat-model-and-first-launch.md",
+        "title": "Two People, One Laptop: What Accounts Should (and Shouldn't) Promise"
+      }
+    ],
+    "related": [],
+    "required_by": [
+      {
+        "id": "sessions-and-two-walls",
+        "path": "programming/local-app-accounts/sessions-and-two-walls.md",
+        "title": "Who's Home, and What May They Touch? Sessions and Two Walls"
+      }
+    ]
+  },
+  "programming/local-app-accounts/threat-model-and-first-launch.md": {
+    "prerequisites": [],
+    "related": [],
+    "required_by": [
+      {
+        "id": "sign-in-hygiene",
+        "path": "programming/local-app-accounts/sign-in-hygiene.md",
+        "title": "Sign-In Hygiene: How the Clerk Says \"No\" Without Giving Anything Away"
+      }
+    ]
+  },
+  "programming/operating-system/process-cpu-affinity.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "parallel-execution-and-affinity",
+        "path": "fields/benchmarks/parallel-execution-affinity-master-guide.md",
+        "title": "Parallel Execution and Affinity"
+      }
+    ],
+    "required_by": []
+  }
+}

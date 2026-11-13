@@ -1,0 +1,89 @@
+# cluster-example.yaml -- the architecture definition that NHC is generated from.
+# One file describes what every node class SHOULD look like. nhc_gen.py turns it
+# into nhc.conf, nhc-epilog.conf, nhc-deep.conf and their sysconfig files.
+
+cluster: acme
+
+defaults:
+  memory_fudge: 3%          # tolerance for check_hw_physmem
+  timeouts:                 # NHC watchdog per context (seconds)
+    nhc: 50                 # periodic: stay below Slurm's 60 s kill
+    nhc-epilog: 20
+    nhc-deep: 900
+  ping_targets: [slurmctl01]
+
+# Shared filesystems, referenced by name from the classes below
+storage:
+  home:
+    mountpoint: /home
+    type: nfs
+    source: "nas01:/export/home"
+  scratch:
+    mountpoint: /scratch
+    type: lustre
+    source: "*@o2ib*:/scratch"
+  apps:
+    mountpoint: /apps
+    type: nfs
+    source: "nas01:/export/apps"
+    read_only: true
+
+# Interconnects: link rate in Gb/s and the HCAs that must be up at that rate
+fabrics:
+  hdr:
+    rate: 200
+    devices: [mlx5_0]
+  ndr-rail:
+    rate: 400
+    devices: [mlx5_0, mlx5_1, mlx5_2, mlx5_3, mlx5_4, mlx5_5, mlx5_6, mlx5_7]
+
+# What each role implies, independent of hardware
+roles:
+  compute:
+    services: [sshd, munge]
+    user_hygiene: true      # only Slurm-launched user processes allowed
+  login:
+    services: [sshd, munge]
+    user_hygiene: false
+
+# Hardware classes. `nodes` uses Slurm hostlist syntax.
+classes:
+  cpu-std:
+    nodes: "cn[001-480]"
+    role: compute
+    cpu: {sockets: 2, cores: 128, threads: 128}
+    numa_nodes: 8
+    memory: 512GB
+    fabric: hdr
+    mounts: [home, scratch, apps]
+
+  cpu-bigmem:
+    nodes: "cn[481-512]"
+    role: compute
+    cpu: {sockets: 2, cores: 128, threads: 128}
+    numa_nodes: 8
+    memory: 2TB
+    fabric: hdr
+    mounts: [home, scratch, apps]
+
+  gpu-h100:
+    nodes: "gpu[01-30],gpu32"          # gpu31 is out for RMA
+    role: compute
+    cpu: {sockets: 2, cores: 96, threads: 192}
+    numa_nodes: 2
+    memory: 2TB
+    fabric: ndr-rail
+    mounts: [home, scratch, apps]
+    gpus:
+      count: 8
+      model: "H100"
+      fatal_xids: [48, 79, 94, 95, 119]
+      deep_diag_level: 2
+
+  login:
+    nodes: "login[01-02]"
+    role: login
+    cpu: {sockets: 2, cores: 64, threads: 128}
+    memory: 1TB
+    fabric: hdr
+    mounts: [home, apps]

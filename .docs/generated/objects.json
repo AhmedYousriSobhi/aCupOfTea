@@ -1,0 +1,4855 @@
+{
+  "accuracy-paradox": {
+    "domains": [
+      "machine-learning",
+      "statistics"
+    ],
+    "id": "accuracy-paradox",
+    "level": "",
+    "path": "fields/tabular-data/data-evaluation/classification/accuracy-paradox.md",
+    "reading_time_min": 4,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Why accuracy can look high and still mislead on imbalanced classification, with the accuracy paradox explained.",
+    "tags": [
+      "model-evaluation"
+    ],
+    "title": "Accuracy Paradox",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "ai-infrastructure-core-concepts": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "ai-infrastructure-core-concepts",
+    "level": "intermediate",
+    "path": "business/hpc-industry/ai-infrastructure-core-concepts.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Six concepts every AI-infrastructure engineer gets asked about, each fact-checked with a 30-second answer and a pointer to where to go deeper.",
+    "tags": [
+      "gpu",
+      "hpc",
+      "kubernetes",
+      "nvidia",
+      "slurm"
+    ],
+    "title": "Core AI Infrastructure Concepts: A Map",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "ai-storage-and-fabric-overview": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "ai-storage-and-fabric-overview",
+    "level": "intermediate",
+    "path": "fields/system-administration/ai-storage-and-fabric/README.md",
+    "reading_time_min": 2,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "A two-part series on keeping thousands of GPUs fed - parallel filesystems, small files and checkpoint storms, then RDMA, InfiniBand, RoCE and GPUDirect.",
+    "tags": [
+      "gpu",
+      "hpc",
+      "nvidia",
+      "storage"
+    ],
+    "title": "Storage and Fabric for AI Clusters - Overview",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "ai-storage-parallel-filesystems": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "ai-storage-parallel-filesystems",
+    "level": "intermediate",
+    "order": 1,
+    "path": "fields/system-administration/ai-storage-and-fabric/parallel-filesystems-for-ai.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "How Lustre-style parallel filesystems split metadata from data, why millions of small files starve GPUs, how striping works, and why checkpoints - not datasets - set your storage peak.",
+    "tags": [
+      "gpu",
+      "hpc",
+      "storage"
+    ],
+    "title": "Parallel Filesystems: Why 10,000 GPUs Can Starve on a Full Disk",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "ai-storage-rdma-gpudirect": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "ai-storage-rdma-gpudirect",
+    "level": "intermediate",
+    "order": 2,
+    "path": "fields/system-administration/ai-storage-and-fabric/rdma-infiniband-gpudirect.md",
+    "reading_time_min": 8,
+    "relations": {
+      "prerequisites": [
+        "ai-storage-parallel-filesystems"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Why AI clusters use RDMA fabrics (InfiniBand or RoCE), what kernel bypass and zero-copy mean, and how GPUDirect RDMA and GPUDirect Storage move data straight into GPU memory.",
+    "tags": [
+      "gpu",
+      "hpc",
+      "nvidia",
+      "storage"
+    ],
+    "title": "RDMA, InfiniBand and GPUDirect: Taking the CPU Out of the Way",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "ansible-cheatsheet": {
+    "domains": [
+      "devops"
+    ],
+    "id": "ansible-cheatsheet",
+    "level": "intermediate",
+    "order": 7,
+    "path": "fields/devops/ansible/cheatsheet.md",
+    "reading_time_min": 6,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "ansible-getting-started",
+        "ansible-idempotence",
+        "ansible-inventory",
+        "ansible-roles",
+        "ansible-rolling",
+        "ansible-vault"
+      ]
+    },
+    "status": "stable",
+    "summary": "The Ansible series as direct steps - pinned install, ansible.cfg, inventory and host keys, ad-hoc commands, idempotent playbooks with handlers, a role, rolling maintenance, vault.",
+    "tags": [
+      "ansible",
+      "slurm"
+    ],
+    "title": "Ansible Cheatsheet: Every Step from the Series",
+    "type": "reference",
+    "types": [
+      "reference",
+      "guide"
+    ]
+  },
+  "ansible-getting-started": {
+    "domains": [
+      "devops",
+      "systems-and-hpc"
+    ],
+    "id": "ansible-getting-started",
+    "level": "beginner",
+    "order": 1,
+    "path": "fields/devops/ansible/getting-started.md",
+    "reading_time_min": 10,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "A pinned Ansible install per project, which Python the control machine and the nodes need, ansible.cfg, SSH host keys, and the errors you hit on the first runs.",
+    "tags": [
+      "ansible",
+      "slurm"
+    ],
+    "title": "The Laptop That Ran Ansible 2.16: An Install You Can Trust",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
+  "ansible-idempotence": {
+    "domains": [
+      "devops",
+      "systems-and-hpc"
+    ],
+    "id": "ansible-idempotence",
+    "level": "intermediate",
+    "order": 3,
+    "path": "fields/devops/ansible/idempotence-and-handlers.md",
+    "reading_time_min": 8,
+    "relations": {
+      "prerequisites": [
+        "ansible-inventory"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Why a playbook should report changed only when it changed something, templates instead of shell, handlers that restart only when needed, --check --diff, and the handler that never ran.",
+    "tags": [
+      "ansible",
+      "slurm"
+    ],
+    "title": "The Playbook That Restarted slurmd Every Night: Idempotence and Handlers",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
+  "ansible-inventory": {
+    "domains": [
+      "devops",
+      "systems-and-hpc"
+    ],
+    "id": "ansible-inventory",
+    "level": "beginner",
+    "order": 2,
+    "path": "fields/devops/ansible/inventory-and-ad-hoc.md",
+    "reading_time_min": 8,
+    "relations": {
+      "prerequisites": [
+        "ansible-getting-started"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Inventory groups and ranges, group_vars with overrides, targeting patterns, ad-hoc commands across the cluster, the node that was down, and checking a change in a fresh login.",
+    "tags": [
+      "ansible",
+      "slurm"
+    ],
+    "title": "Four Nodes Said \"Too Many Open Files\": Inventories and Ad-Hoc Commands",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
+  "ansible-roles": {
+    "domains": [
+      "devops",
+      "systems-and-hpc"
+    ],
+    "id": "ansible-roles",
+    "level": "intermediate",
+    "order": 4,
+    "path": "fields/devops/ansible/roles-and-variables.md",
+    "reading_time_min": 8,
+    "relations": {
+      "prerequisites": [
+        "ansible-idempotence"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Turn a playbook into a role, load OS-specific variables with first_found, put site values in defaults not vars, use hostvars for per-node values in templates, and check every node got the same config.",
+    "tags": [
+      "ansible",
+      "slurm"
+    ],
+    "title": "The GPU Node That Thought It Had 1000 MB: Roles and Variables",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
+  "ansible-rolling": {
+    "domains": [
+      "devops",
+      "systems-and-hpc"
+    ],
+    "id": "ansible-rolling",
+    "level": "advanced",
+    "order": 5,
+    "path": "fields/devops/ansible/rolling-maintenance.md",
+    "reading_time_min": 10,
+    "relations": {
+      "prerequisites": [
+        "ansible-roles"
+      ],
+      "related": [
+        "nhc-build-and-install"
+      ]
+    },
+    "status": "stable",
+    "summary": "Change busy compute nodes safely - drain through Slurm, wait for jobs, one canary first, stop on the first failure, check the node really came back, a dry run that is really dry, and rollback.",
+    "tags": [
+      "ansible",
+      "slurm"
+    ],
+    "title": "The Reboot That Killed a Week of Jobs: Rolling Maintenance with Slurm",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
+  "ansible-vault": {
+    "domains": [
+      "devops",
+      "systems-and-hpc"
+    ],
+    "id": "ansible-vault",
+    "level": "intermediate",
+    "order": 6,
+    "path": "fields/devops/ansible/secrets-and-vault.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [
+        "ansible-roles"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Keep secrets in an Ansible repo with vault, rotate a leaked munge key on every host at once, what 2.22's secret masking hides and misses, no_log, and a commit guard.",
+    "tags": [
+      "ansible",
+      "slurm"
+    ],
+    "title": "The Munge Key in Git: Secrets, Vault and Rotation",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
+  "bias-variance-trade-off": {
+    "domains": [
+      "machine-learning",
+      "statistics"
+    ],
+    "id": "bias-variance-trade-off",
+    "level": "",
+    "path": "fields/tabular-data/data-evaluation/model-behavior/bias-variance-trade-off.md",
+    "reading_time_min": 7,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "accuracy-paradox"
+      ]
+    },
+    "status": "stable",
+    "summary": "What bias and variance are, how they trade off, and the difference between a model that is consistent but inaccurate and one that is inconsistent but accurate.",
+    "tags": [
+      "model-evaluation"
+    ],
+    "title": "Bias and Variance Trade-Off",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "broken-pods-rogues-gallery": {
+    "domains": [
+      "devops",
+      "kubernates",
+      "systems-and-hpc"
+    ],
+    "id": "broken-pods-rogues-gallery",
+    "level": "intermediate",
+    "order": 4,
+    "path": "fields/devops/kubernetes/broken-pods-rogues-gallery.md",
+    "reading_time_min": 6,
+    "relations": {
+      "prerequisites": [
+        "kubernetes-in-five-nouns"
+      ],
+      "related": [
+        "containers-101"
+      ]
+    },
+    "status": "stable",
+    "summary": "How to recognise CrashLoop, OOMKilled, ImagePull and Pending pods by reading status, events and previous logs.",
+    "tags": [
+      "devops",
+      "hpc",
+      "kubernetes",
+      "nvidia"
+    ],
+    "title": "Broken Pods: A Rogues' Gallery (and the One Command That Catches Them All)",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
+  "build-a-two-node-k3s-lab": {
+    "domains": [
+      "devops",
+      "kubernates",
+      "systems-and-hpc"
+    ],
+    "id": "build-a-two-node-k3s-lab",
+    "level": "intermediate",
+    "order": 2,
+    "path": "fields/devops/kubernetes/build-a-two-node-k3s-lab.md",
+    "reading_time_min": 7,
+    "relations": {
+      "prerequisites": [
+        "kubernetes-in-five-nouns"
+      ],
+      "related": [
+        "containers-101"
+      ]
+    },
+    "status": "stable",
+    "summary": "Build a two-VM Kubernetes lab on your laptop with Vagrant, libvirt and k3s, and dodge the DNS and network potholes.",
+    "tags": [
+      "containers",
+      "devops",
+      "hpc",
+      "kubernetes"
+    ],
+    "title": "Build a Two-Node Kubernetes Lab on Your Laptop (and Survive the DNS Pothole)",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
+  "coins-and-calls": {
+    "domains": [
+      "statistics"
+    ],
+    "id": "coins-and-calls",
+    "level": "intermediate",
+    "order": 10,
+    "path": "fields/data-science/probability-statistics/coins-and-calls.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [
+        "what-to-expect"
+      ],
+      "related": [
+        "counting-the-ways",
+        "probability-statistics-series"
+      ]
+    },
+    "status": "stable",
+    "summary": "A named distribution is a recipe for who gets how much probability. Binomial fits \"how many yeses in n tries\", Poisson fits \"how many events in a window\". Know the question and the assumptions.",
+    "tags": [
+      "statistics"
+    ],
+    "title": "Coins and Calls: Binomial and Poisson as Recipes",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "containers-101": {
+    "domains": [
+      "software-engineering",
+      "systems-and-hpc"
+    ],
+    "id": "containers-101",
+    "level": "",
+    "path": "fields/libraries-frameworks-containers/101-containers.md",
+    "reading_time_min": 8,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Containers from the ground up: what happens at boot, kernel and user space, virtual machines, then namespaces, cgroups and Linux containers.",
+    "tags": [
+      "containers"
+    ],
+    "title": "Containers 101",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "counting-the-ways": {
+    "domains": [
+      "statistics"
+    ],
+    "id": "counting-the-ways",
+    "level": "beginner",
+    "order": 7,
+    "path": "fields/data-science/probability-statistics/counting-the-ways.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [
+        "where-do-you-stand"
+      ],
+      "related": [
+        "probability-statistics-series"
+      ]
+    },
+    "status": "stable",
+    "summary": "Probability is the share of the equally likely ways. So \"or\" adds, \"and\" multiplies, and \"at least one\" is 1 minus none, because of what each does to the list of ways.",
+    "tags": [
+      "statistics"
+    ],
+    "title": "Counting the Ways: Probability as a Share of the List",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "cpu-affinity": {
+    "domains": [
+      "software-engineering",
+      "systems-and-hpc"
+    ],
+    "id": "cpu-affinity",
+    "level": "",
+    "path": "programming/operating-system/process-cpu-affinity.md",
+    "reading_time_min": 5,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "What CPU affinity is, why pinning processes to cores helps and the challenges of multitasking, and how to set it.",
+    "tags": [
+      "affinity"
+    ],
+    "title": "CPU Affinity",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "cuda-101": {
+    "domains": [
+      "deep-learning",
+      "systems-and-hpc"
+    ],
+    "id": "cuda-101",
+    "level": "",
+    "path": "fields/libraries-frameworks-containers/101-cuda.md",
+    "reading_time_min": 7,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "What CUDA is and why it is named that, what a thread really is, memory coalescing, and the path of code from CPU to GPU.",
+    "tags": [
+      "gpu"
+    ],
+    "title": "CUDA 101",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "customer-segmentation-problem": {
+    "domains": [
+      "business",
+      "machine-learning"
+    ],
+    "id": "customer-segmentation-problem",
+    "level": "",
+    "path": "problems/customer-segmentation.md",
+    "reading_time_min": 6,
+    "relations": {
+      "prerequisites": [
+        "unsupervised-learning"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "What customer segmentation is, with the key points, aspects and concepts to consider when you split customers into groups.",
+    "tags": [
+      "clustering"
+    ],
+    "title": "Customer Segmentation",
+    "type": "problem",
+    "types": [
+      "problem"
+    ]
+  },
+  "data-types-and-frequency-tables": {
+    "domains": [
+      "statistics"
+    ],
+    "id": "data-types-and-frequency-tables",
+    "level": "beginner",
+    "order": 2,
+    "path": "fields/data-science/probability-statistics/data-types-and-frequency-tables.md",
+    "reading_time_min": 13,
+    "relations": {
+      "prerequisites": [
+        "stir-the-pot-population-and-sampling"
+      ],
+      "related": [
+        "probability-statistics-series",
+        "stir-the-pot-population-and-sampling"
+      ]
+    },
+    "status": "stable",
+    "summary": "Why you cannot average a blend name: the four kinds of data, and how to turn raw numbers into honest category, ungrouped and grouped frequency tables.",
+    "tags": [
+      "statistics"
+    ],
+    "title": "Mira's Notebook: What Kind of Data Is This, and How Do You Count It?",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "deep-learning-basics": {
+    "domains": [
+      "deep-learning"
+    ],
+    "id": "deep-learning-basics",
+    "level": "beginner",
+    "path": "fields/deep-learning/concepts/basics.md",
+    "reading_time_min": 30,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "sequence-models"
+      ]
+    },
+    "status": "stable",
+    "summary": "Neurons, loss and cost, and the common activation functions, explained from first principles.",
+    "tags": [
+      "neural-networks"
+    ],
+    "title": "Deep Learning Basics",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "digital-image-processing-overview": {
+    "domains": [
+      "image-processing"
+    ],
+    "id": "digital-image-processing-overview",
+    "level": "beginner",
+    "path": "fields/digital-image-processing/README.md",
+    "reading_time_min": 5,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "The math of digital image processing, made friendly - a nine-part series from pixels as matrices to filters, Fourier, restoration, geometry and wavelets, for anyone coming back to the subject.",
+    "tags": [
+      "convolution",
+      "fourier-transform"
+    ],
+    "title": "Digital Image Processing - Overview",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "dip-edges-sharpening": {
+    "domains": [
+      "image-processing"
+    ],
+    "id": "dip-edges-sharpening",
+    "level": "beginner",
+    "order": 5,
+    "path": "fields/digital-image-processing/edges-and-sharpening.md",
+    "reading_time_min": 7,
+    "relations": {
+      "prerequisites": [
+        "dip-spatial-filtering"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Derivatives as differences between neighbours - gradient, Sobel, Laplacian and unsharp masking, plus a one-line example that shows exactly where sharpening halos come from.",
+    "tags": [
+      "filtering",
+      "noise"
+    ],
+    "title": "Edges and Sharpening",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "dip-fourier-transform-images": {
+    "domains": [
+      "image-processing",
+      "statistics"
+    ],
+    "id": "dip-fourier-transform-images",
+    "level": "intermediate",
+    "order": 7,
+    "path": "fields/digital-image-processing/fourier-transform-for-images.md",
+    "reading_time_min": 8,
+    "relations": {
+      "prerequisites": [
+        "dip-spatial-filtering"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "What the 2D DFT really says - an image as a sum of waves, magnitude versus phase, a 4-point DFT done by hand, and the convolution theorem that turns sliding windows into multiplication.",
+    "tags": [
+      "convolution",
+      "filtering",
+      "fourier-transform"
+    ],
+    "title": "The Fourier Transform for Images",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "dip-frequency-filtering-aliasing": {
+    "domains": [
+      "image-processing"
+    ],
+    "id": "dip-frequency-filtering-aliasing",
+    "level": "intermediate",
+    "order": 8,
+    "path": "fields/digital-image-processing/frequency-filtering-and-aliasing.md",
+    "reading_time_min": 7,
+    "relations": {
+      "prerequisites": [
+        "dip-fourier-transform-images"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Low-pass, high-pass and notch filters as masks on the spectrum, why the ideal filter rings, and how sampling too coarsely creates moire - with the Nyquist rule worked on one number.",
+    "tags": [
+      "convolution",
+      "filtering",
+      "fourier-transform",
+      "sampling"
+    ],
+    "title": "Frequency Filtering and Aliasing",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "dip-geometric-transforms-interpolation": {
+    "domains": [
+      "image-processing",
+      "machine-learning"
+    ],
+    "id": "dip-geometric-transforms-interpolation",
+    "level": "intermediate",
+    "order": 2,
+    "path": "fields/digital-image-processing/geometric-transforms-and-interpolation.md",
+    "reading_time_min": 7,
+    "relations": {
+      "prerequisites": [
+        "dip-images-are-matrices"
+      ],
+      "related": [
+        "dip-frequency-filtering-aliasing"
+      ]
+    },
+    "status": "stable",
+    "summary": "Moving the whole map - affine transforms in homogeneous coordinates, why you must map backwards, and nearest, bilinear and bicubic interpolation with a bilinear example worked by hand.",
+    "tags": [],
+    "title": "Geometric Transforms and Interpolation",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "dip-images-are-matrices": {
+    "domains": [
+      "image-processing"
+    ],
+    "id": "dip-images-are-matrices",
+    "level": "beginner",
+    "order": 1,
+    "path": "fields/digital-image-processing/images-are-just-matrices.md",
+    "reading_time_min": 7,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "A pixel is a number in a grid - sampling, quantization, bit depth, coordinates and neighbours, and why 200 + 100 can equal 44.",
+    "tags": [
+      "sampling"
+    ],
+    "title": "Images Are Just Matrices",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "dip-intensity-transforms-histograms": {
+    "domains": [
+      "image-processing",
+      "statistics"
+    ],
+    "id": "dip-intensity-transforms-histograms",
+    "level": "beginner",
+    "order": 3,
+    "path": "fields/digital-image-processing/intensity-transforms-and-histograms.md",
+    "reading_time_min": 7,
+    "relations": {
+      "prerequisites": [
+        "dip-images-are-matrices"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Rescue a dark image with one formula - negatives, log, gamma and histogram equalization, with the CDF worked out by hand on a tiny image.",
+    "tags": [],
+    "title": "Intensity Transforms and Histograms",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "dip-meet-fourier": {
+    "domains": [
+      "image-processing"
+    ],
+    "id": "dip-meet-fourier",
+    "level": "beginner",
+    "order": 6,
+    "path": "fields/digital-image-processing/meet-fourier.md",
+    "reading_time_min": 7,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "dip-fourier-transform-images"
+      ]
+    },
+    "status": "stable",
+    "summary": "The story of Joseph Fourier, the prefect who drained swamps and studied heat, and why his idea that heat spreads as a sum of sine waves ended up inside every image filter.",
+    "tags": [
+      "fourier-transform"
+    ],
+    "title": "Meet Fourier",
+    "type": "note",
+    "types": [
+      "note"
+    ]
+  },
+  "dip-noise-restoration": {
+    "domains": [
+      "image-processing",
+      "statistics"
+    ],
+    "id": "dip-noise-restoration",
+    "level": "intermediate",
+    "order": 9,
+    "path": "fields/digital-image-processing/noise-and-restoration.md",
+    "reading_time_min": 7,
+    "relations": {
+      "prerequisites": [
+        "dip-frequency-filtering-aliasing"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "The degradation model g = h*f + n, common noise types, why inverse filtering explodes, and how the Wiener filter gives up gracefully - with PSNR to score the result.",
+    "tags": [
+      "filtering",
+      "noise"
+    ],
+    "title": "Noise and Restoration",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "dip-spatial-filtering": {
+    "domains": [
+      "deep-learning",
+      "image-processing"
+    ],
+    "id": "dip-spatial-filtering",
+    "level": "beginner",
+    "order": 4,
+    "path": "fields/digital-image-processing/spatial-filtering.md",
+    "reading_time_min": 7,
+    "relations": {
+      "prerequisites": [
+        "dip-intensity-transforms-histograms"
+      ],
+      "related": [
+        "dip-fourier-transform-images"
+      ]
+    },
+    "status": "stable",
+    "summary": "Kernels, correlation versus convolution, padding and separability - blurring explained as a neighbourhood vote, with the mean and median compared on one noisy pixel.",
+    "tags": [
+      "convolution",
+      "filtering",
+      "noise"
+    ],
+    "title": "Spatial Filtering",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "dip-wavelets-multiresolution": {
+    "domains": [
+      "image-processing"
+    ],
+    "id": "dip-wavelets-multiresolution",
+    "level": "intermediate",
+    "order": 10,
+    "path": "fields/digital-image-processing/wavelets-and-multiresolution-processing.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [
+        "dip-fourier-transform-images"
+      ],
+      "related": [
+        "dip-noise-restoration"
+      ]
+    },
+    "status": "stable",
+    "summary": "Seeing an image at several scales at once - pyramids, a Haar wavelet transform by hand, the four 2D subbands, and why mostly-zero detail makes denoising and compression work.",
+    "tags": [
+      "fourier-transform"
+    ],
+    "title": "Wavelets and Multiresolution Processing",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "draining-a-gpu-node": {
+    "domains": [
+      "devops",
+      "systems-and-hpc"
+    ],
+    "id": "draining-a-gpu-node",
+    "level": "intermediate",
+    "order": 9,
+    "path": "fields/devops/kubernetes/draining-a-gpu-node.md",
+    "reading_time_min": 10,
+    "relations": {
+      "prerequisites": [
+        "kubernetes-in-five-nouns"
+      ],
+      "related": [
+        "broken-pods-rogues-gallery",
+        "isolating-gpu-workloads",
+        "job-execution-journey",
+        "slurm-kill-task-failed",
+        "slurm-preemption-requeue-signals",
+        "slurm-reboot-order"
+      ]
+    },
+    "status": "stable",
+    "summary": "Why kubectl drain means the opposite of Slurm's drain, how the SIGTERM-to-SIGKILL clock works, five ways a long training run dies anyway, and a runbook that keeps the checkpoint.",
+    "tags": [
+      "gpu",
+      "hpc",
+      "kubernetes"
+    ],
+    "title": "Draining a GPU Node With a Three-Day Run on It",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
+  "draw-it-before-you-describe-it": {
+    "domains": [
+      "statistics"
+    ],
+    "id": "draw-it-before-you-describe-it",
+    "level": "beginner",
+    "order": 3,
+    "path": "fields/data-science/probability-statistics/draw-it-before-you-describe-it.md",
+    "reading_time_min": 11,
+    "relations": {
+      "prerequisites": [
+        "data-types-and-frequency-tables"
+      ],
+      "related": [
+        "data-types-and-frequency-tables",
+        "probability-statistics-series",
+        "the-number-on-the-tin"
+      ]
+    },
+    "status": "stable",
+    "summary": "Why a table of counts glazes eyes and a picture does not: the histogram, frequency polygon and ogive built from one table, and the mistakes that make them lie.",
+    "tags": [
+      "statistics"
+    ],
+    "title": "Draw It Before You Describe It: Three Pictures of the Same Fifty Days",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "encoder-decoder-machine-translation": {
+    "domains": [
+      "deep-learning",
+      "generative-ai",
+      "natural-language-processing"
+    ],
+    "id": "encoder-decoder-machine-translation",
+    "level": "intermediate",
+    "path": "fields/generative-ai/machine-translator/encoder-decoder.md",
+    "reading_time_min": 3,
+    "relations": {
+      "prerequisites": [
+        "sequence-models"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "The encoder-decoder idea behind neural machine translation, with a basic seq2seq model.",
+    "tags": [
+      "encoder-decoder",
+      "rnn"
+    ],
+    "title": "Encoder-Decoder for Machine Translation",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "fake-gpus-in-kubernetes": {
+    "domains": [
+      "devops",
+      "kubernates",
+      "systems-and-hpc"
+    ],
+    "id": "fake-gpus-in-kubernetes",
+    "level": "intermediate",
+    "order": 3,
+    "path": "fields/devops/kubernetes/fake-gpus-in-kubernetes.md",
+    "reading_time_min": 6,
+    "relations": {
+      "prerequisites": [
+        "build-a-two-node-k3s-lab",
+        "kubernetes-in-five-nouns"
+      ],
+      "related": [
+        "containers-101"
+      ]
+    },
+    "status": "stable",
+    "summary": "Patch a node with a fake nvidia.com/gpu counter to learn GPU scheduling without owning a GPU.",
+    "tags": [
+      "devops",
+      "hpc",
+      "kubernetes",
+      "nvidia"
+    ],
+    "title": "Fake GPUs in Kubernetes: Learn GPU Scheduling Without Owning a GPU",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
+  "gpu-allocation-vs-utilization": {
+    "domains": [
+      "devops",
+      "kubernates",
+      "systems-and-hpc"
+    ],
+    "id": "gpu-allocation-vs-utilization",
+    "level": "intermediate",
+    "order": 5,
+    "path": "fields/devops/kubernetes/gpu-allocation-vs-utilization.md",
+    "reading_time_min": 7,
+    "relations": {
+      "prerequisites": [
+        "build-a-two-node-k3s-lab",
+        "kubernetes-in-five-nouns"
+      ],
+      "related": [
+        "containers-101"
+      ]
+    },
+    "status": "stable",
+    "summary": "The scheduler knows who has booked the GPUs, not whether they’re busy, so use kubectl for the first question and DCGM-style telemetry for the second.",
+    "tags": [
+      "dev",
+      "hpc",
+      "kubernetes"
+    ],
+    "title": "Booked Is Not Busy: GPU Allocation vs Utilization",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
+  "gpu-failure-prediction-overview": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "gpu-failure-prediction-overview",
+    "level": "advanced",
+    "path": "fields/system-administration/gpu-failure-prediction/README.md",
+    "reading_time_min": 5,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "nhc-auto-remediation"
+      ]
+    },
+    "status": "stable",
+    "summary": "A five-part series on how GPU memory fails, what its telemetry really says, and how to turn that into predictions you can trust before a training run dies.",
+    "tags": [
+      "gpu",
+      "hpc",
+      "nvidia",
+      "slurm"
+    ],
+    "title": "Predicting GPU Node Failures - Overview",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "gpu-pred-alert-to-drain": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "gpu-pred-alert-to-drain",
+    "level": "advanced",
+    "order": 4,
+    "path": "fields/system-administration/gpu-failure-prediction/from-alert-to-drain.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [
+        "gpu-pred-rules"
+      ],
+      "related": [
+        "nhc-auto-remediation"
+      ]
+    },
+    "status": "stable",
+    "summary": "The principles of safe automated response to GPU failure predictions - reversibility, drain semantics, blast radius, drain budgets, staged rollout and rollback.",
+    "tags": [
+      "gpu",
+      "hpc",
+      "nvidia",
+      "slurm"
+    ],
+    "title": "Acting Without Making It Worse",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "gpu-pred-backtesting": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "gpu-pred-backtesting",
+    "level": "advanced",
+    "order": 5,
+    "path": "fields/system-administration/gpu-failure-prediction/scoring-and-backtesting.md",
+    "reading_time_min": 10,
+    "relations": {
+      "prerequisites": [
+        "gpu-pred-alert-to-drain"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "How to judge GPU failure predictions - base rates, precision, recall, lead time, horizons, label quality, leakage and drift - and when a learned model is worth it.",
+    "tags": [
+      "gpu",
+      "hpc",
+      "nvidia"
+    ],
+    "title": "Is the Prediction Any Good?",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "gpu-pred-collecting-signals": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "gpu-pred-collecting-signals",
+    "level": "intermediate",
+    "order": 2,
+    "path": "fields/system-administration/gpu-failure-prediction/collecting-the-signals.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [
+        "gpu-pred-what-fails"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "The telemetry concepts behind GPU failure prediction - counters, gauges and events, volatile versus persistent, in-band versus out-of-band - and the ways each one misleads.",
+    "tags": [
+      "gpu",
+      "hpc",
+      "nvidia"
+    ],
+    "title": "Reading the GPU's Vital Signs",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "gpu-pred-rules": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "gpu-pred-rules",
+    "level": "advanced",
+    "order": 3,
+    "path": "fields/system-administration/gpu-failure-prediction/rules-that-predict.md",
+    "reading_time_min": 10,
+    "relations": {
+      "prerequisites": [
+        "gpu-pred-collecting-signals"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "How to design GPU failure rules - state, event and trend rules, personal baselines, persistence, noise floors and action tiers - and the traps that make rules silently fail.",
+    "tags": [
+      "gpu",
+      "hpc",
+      "nvidia"
+    ],
+    "title": "From Signals to Decisions",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "gpu-pred-runbook": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "gpu-pred-runbook",
+    "level": "advanced",
+    "order": 6,
+    "path": "fields/system-administration/gpu-failure-prediction/runbook.md",
+    "reading_time_min": 15,
+    "relations": {
+      "prerequisites": [
+        "gpu-pred-what-fails"
+      ],
+      "related": [
+        "gpu-pred-alert-to-drain",
+        "gpu-pred-backtesting",
+        "gpu-pred-rules",
+        "nhc-auto-remediation"
+      ]
+    },
+    "status": "stable",
+    "summary": "The hands-on companion to the series - counters file, node checks, tested Prometheus rules, Alertmanager routing, a guarded Slurm drain hook and a backtest, step by step.",
+    "tags": [
+      "gpu",
+      "hpc",
+      "nvidia",
+      "slurm"
+    ],
+    "title": "Runbook: Deploying GPU Failure Prediction End to End",
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
+  },
+  "gpu-pred-what-fails": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "gpu-pred-what-fails",
+    "level": "intermediate",
+    "order": 1,
+    "path": "fields/system-administration/gpu-failure-prediction/what-fails-and-what-warns.md",
+    "reading_time_min": 11,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "How ECC, row remapping and error containment work on NVIDIA GPUs, why memory errors repeat and cluster, and the error ladder that makes failure predictable.",
+    "tags": [
+      "gpu",
+      "hpc",
+      "nvidia"
+    ],
+    "title": "How GPU Memory Fails, and Why You Can See It Coming",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "how-far-from-the-middle": {
+    "domains": [
+      "statistics"
+    ],
+    "id": "how-far-from-the-middle",
+    "level": "beginner",
+    "order": 5,
+    "path": "fields/data-science/probability-statistics/how-far-from-the-middle.md",
+    "reading_time_min": 11,
+    "relations": {
+      "prerequisites": [
+        "the-number-on-the-tin"
+      ],
+      "related": [
+        "probability-statistics-series",
+        "the-map-of-leaf-and-kettle"
+      ]
+    },
+    "status": "stable",
+    "summary": "Mean, median and mode are one question asked with three rulers: how much should a long walk hurt? Spread is what is left over. Variance, SD, IQR and the n-1 mystery fall out of that.",
+    "tags": [
+      "statistics"
+    ],
+    "title": "How Far From the Middle? One Question Behind Every Summary Number",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "how-sure-are-you": {
+    "domains": [
+      "statistics"
+    ],
+    "id": "how-sure-are-you",
+    "level": "intermediate",
+    "order": 13,
+    "path": "fields/data-science/probability-statistics/how-sure-are-you.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [
+        "why-averages-behave"
+      ],
+      "related": [
+        "probability-statistics-series"
+      ]
+    },
+    "status": "stable",
+    "summary": "A confidence interval is an honest \"about this, give or take\": the estimate plus or minus a margin built from the standard error. The 95% describes the method, not one interval.",
+    "tags": [
+      "statistics"
+    ],
+    "title": "How Sure Are You? Confidence Intervals",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "hpc-systems-overview": {
+    "domains": [
+      "business",
+      "systems-and-hpc"
+    ],
+    "id": "hpc-systems-overview",
+    "level": "",
+    "path": "business/hpc-industry/101-hpc.md",
+    "reading_time_min": 29,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "hpc-workloads"
+      ]
+    },
+    "status": "stable",
+    "summary": "What HPC systems are, what an HPC systems team does, the skills the role needs, and how it compares with MLOps for someone coming from data science.",
+    "tags": [],
+    "title": "HPC Systems",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "hpc-workloads": {
+    "domains": [
+      "business",
+      "systems-and-hpc"
+    ],
+    "id": "hpc-workloads",
+    "level": "",
+    "path": "business/hpc-industry/workloads.md",
+    "reading_time_min": 10,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "What an HPC workload is, the common types, how Linux relates to them, and how RDMA and data science workloads fit in.",
+    "tags": [],
+    "title": "HPC Workloads",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "isolating-gpu-workloads": {
+    "domains": [
+      "devops",
+      "systems-and-hpc"
+    ],
+    "id": "isolating-gpu-workloads",
+    "level": "intermediate",
+    "order": 7,
+    "path": "fields/devops/kubernetes/isolating-gpu-workloads.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [
+        "fake-gpus-in-kubernetes",
+        "gpu-allocation-vs-utilization"
+      ],
+      "related": [
+        "slurm-accounting-multi-tenancy"
+      ]
+    },
+    "status": "stable",
+    "summary": "How the NVIDIA device plugin exposes GPUs to pods, why taints alone don't dedicate GPU nodes, and why distributed training needs all-or-nothing scheduling.",
+    "tags": [
+      "gpu",
+      "hpc",
+      "kubernetes",
+      "nvidia"
+    ],
+    "title": "Isolating GPU Workloads: Taints, Labels and the Device Plugin",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "job-execution-journey": {
+    "domains": [
+      "devops",
+      "systems-and-hpc"
+    ],
+    "id": "job-execution-journey",
+    "level": "intermediate",
+    "order": 8,
+    "path": "fields/devops/kubernetes/job-execution-journey.md",
+    "reading_time_min": 13,
+    "relations": {
+      "prerequisites": [
+        "isolating-gpu-workloads"
+      ],
+      "related": [
+        "ai-storage-rdma-gpudirect"
+      ]
+    },
+    "status": "stable",
+    "summary": "From kubectl apply to the first NCCL all-reduce of an 8-GPU job, via the API server, Kueue, operators, scheduler, device plugin, runtime and Multus.",
+    "tags": [
+      "gpu",
+      "hpc",
+      "kubernetes",
+      "nvidia"
+    ],
+    "title": "The Job Execution Journey: From `kubectl apply` to the First All-Reduce",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "k3s-vs-kubeadm": {
+    "domains": [
+      "devops",
+      "systems-and-hpc"
+    ],
+    "id": "k3s-vs-kubeadm",
+    "level": "intermediate",
+    "order": 11,
+    "path": "fields/devops/kubernetes/k3s-vs-kubeadm.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [
+        "kubernetes-in-five-nouns"
+      ],
+      "related": [
+        "build-a-two-node-k3s-lab",
+        "draining-a-gpu-node"
+      ]
+    },
+    "status": "stable",
+    "summary": "k3s and kubeadm deliver the same conformant Kubernetes; what each installs, how upgrades and HA differ, and how to choose for a lab, edge box or GPU cluster.",
+    "tags": [
+      "containers",
+      "kubernetes"
+    ],
+    "title": "k3s vs kubeadm: Furnished Flat or Empty Unit?",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
+  "kubectl-troubleshooting": {
+    "domains": [
+      "devops",
+      "systems-and-hpc"
+    ],
+    "id": "kubectl-troubleshooting",
+    "level": "intermediate",
+    "path": "fields/devops/kubernetes/cheatsheet.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [
+        "kubernetes-in-five-nouns"
+      ],
+      "related": [
+        "broken-pods-rogues-gallery",
+        "kubernetes-at-hpc-scale",
+        "oomkilled-with-memory-to-spare"
+      ]
+    },
+    "status": "stable",
+    "summary": "A kubectl cheat sheet for a pod or Job that won't work: where is it, what does it say, what did the cluster say, why did it die, and how to look inside. Commands from the Kubernetes reference.",
+    "tags": [
+      "kubernetes"
+    ],
+    "title": "kubectl Troubleshooting Cheat Sheet: Five Questions, in Order",
+    "type": "reference",
+    "types": [
+      "reference"
+    ]
+  },
+  "kubernetes-at-hpc-scale": {
+    "domains": [
+      "devops",
+      "systems-and-hpc"
+    ],
+    "id": "kubernetes-at-hpc-scale",
+    "level": "intermediate",
+    "order": 15,
+    "path": "fields/devops/kubernetes/kubernetes-at-hpc-scale.md",
+    "reading_time_min": 10,
+    "relations": {
+      "prerequisites": [
+        "kubernetes-in-five-nouns"
+      ],
+      "related": [
+        "isolating-gpu-workloads",
+        "job-execution-journey",
+        "polite-api-server-monitoring"
+      ]
+    },
+    "status": "stable",
+    "summary": "What changes when a cluster gets big and the work looks like an HPC job array: the published limits, where the pressure lands, and how to turn an array into one Indexed Job.",
+    "tags": [
+      "kubernetes"
+    ],
+    "title": "Kubernetes at HPC Scale: The Front Desk Meets a 100,000-Task Array",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
+  "kubernetes-in-five-nouns": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "kubernetes-in-five-nouns",
+    "level": "advanced",
+    "order": 1,
+    "path": "fields/devops/kubernetes/kubernetes-in-five-nouns.md",
+    "reading_time_min": 8,
+    "relations": {
+      "prerequisites": [
+        "containers-101"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "The five Kubernetes nouns (node, pod, namespace, event, API server) explained through HPC analogies, for someone who just inherited a cluster.",
+    "tags": [
+      "kubernetes"
+    ],
+    "title": "Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
+  "linux-mem-cgroup-v2": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "linux-mem-cgroup-v2",
+    "level": "intermediate",
+    "order": 5,
+    "path": "fields/system-administration/linux-memory-pressure/cgroup-v2-memory-control.md",
+    "reading_time_min": 12,
+    "relations": {
+      "prerequisites": [
+        "linux-mem-reclaim"
+      ],
+      "related": [
+        "linux-mem-oom-killer",
+        "linux-mem-psi"
+      ]
+    },
+    "status": "stable",
+    "summary": "The memory files of a cgroup v2 group, from protection (min, low) to throttling (high) to the hard cap (max), plus the active levers: reclaim, freeze and kill, and why they need privilege.",
+    "tags": [],
+    "title": "cgroup v2 Memory Control: The Levers Between Doing Nothing and Killing",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "linux-mem-mlockall": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "linux-mem-mlockall",
+    "level": "intermediate",
+    "order": 6,
+    "path": "fields/system-administration/linux-memory-pressure/memory-locking-mlockall.md",
+    "reading_time_min": 12,
+    "relations": {
+      "prerequisites": [
+        "linux-mem-reclaim"
+      ],
+      "related": [
+        "linux-mem-cgroup-v2",
+        "linux-mem-rescuer-checklist",
+        "slurm-slurmstepd"
+      ]
+    },
+    "status": "stable",
+    "summary": "Why a program that rescues a machine under memory pressure must pin its own pages in RAM, what mlockall does, why the 8 MiB limit exists, and why root gets the real lock - explained with a tow truck.",
+    "tags": [],
+    "title": "Memory Locking: Keeping a Rescuer in RAM with mlockall",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "linux-mem-oom-killer": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "linux-mem-oom-killer",
+    "level": "intermediate",
+    "order": 4,
+    "path": "fields/system-administration/linux-memory-pressure/the-oom-killer.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [
+        "linux-mem-reclaim"
+      ],
+      "related": [
+        "linux-mem-cgroup-v2",
+        "linux-mem-psi"
+      ]
+    },
+    "status": "stable",
+    "summary": "How the kernel decides when it is out of memory and whom to kill, how oom_score_adj shields or sacrifices a process, and why userspace killers like systemd-oomd act earlier than the kernel.",
+    "tags": [],
+    "title": "The OOM Killer: Who Gets Thrown Overboard, and Why So Late",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "linux-mem-psi": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "linux-mem-psi",
+    "level": "intermediate",
+    "order": 3,
+    "path": "fields/system-administration/linux-memory-pressure/memory-pressure-psi.md",
+    "reading_time_min": 8,
+    "relations": {
+      "prerequisites": [
+        "linux-mem-reclaim"
+      ],
+      "related": [
+        "linux-mem-oom-killer"
+      ]
+    },
+    "status": "stable",
+    "summary": "How to read /proc/pressure/memory, why the share of time tasks spend stalled is a better alarm than free bytes, and how to get woken by the kernel the moment a threshold is crossed.",
+    "tags": [],
+    "title": "Pressure Stall Information: Measuring Time Lost, Not Bytes Left",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "linux-mem-reclaim": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "linux-mem-reclaim",
+    "level": "intermediate",
+    "order": 2,
+    "path": "fields/system-administration/linux-memory-pressure/how-linux-reclaims-memory.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "linux-mem-psi"
+      ]
+    },
+    "status": "stable",
+    "summary": "Why free memory near zero is normal, which pages the kernel can drop for free and which need swap, how kswapd and direct reclaim differ, and why the second one is where programs stall.",
+    "tags": [],
+    "title": "How Linux Reclaims Memory: Cache, Swap and the Two Kinds of Stall",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "linux-mem-rescuer-checklist": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "linux-mem-rescuer-checklist",
+    "level": "intermediate",
+    "order": 7,
+    "path": "fields/system-administration/linux-memory-pressure/rescuer-checklist.md",
+    "reading_time_min": 8,
+    "relations": {
+      "prerequisites": [
+        "linux-mem-cgroup-v2",
+        "linux-mem-mlockall"
+      ],
+      "related": [
+        "linux-mem-oom-killer",
+        "linux-mem-psi"
+      ]
+    },
+    "status": "stable",
+    "summary": "Beyond memory locking, what keeps an emergency program running under load - real-time priority, an OOM shield, restart and watchdog - and one checklist that ties all six pages together.",
+    "tags": [],
+    "title": "Making a Rescuer Survive: CPU, Protection and a Checklist",
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
+  },
+  "linux-memory-free-vs-available": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "linux-memory-free-vs-available",
+    "level": "beginner",
+    "order": 1,
+    "path": "fields/system-administration/linux-memory-pressure/linux-memory-free-vs-available.md",
+    "reading_time_min": 10,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "linux-mem-psi",
+        "linux-mem-reclaim",
+        "slurm-cgroups-in-practice"
+      ]
+    },
+    "status": "stable",
+    "summary": "One real free -h snapshot explained - why free is the wrong number, what buff/cache and shared hold, why the columns sum above total, and how to find what is really used.",
+    "tags": [],
+    "title": "The Server That Looked Full: Free vs Available Memory, Cache, and What Is Really Used",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "linux-memory-pressure-overview": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "linux-memory-pressure-overview",
+    "level": "intermediate",
+    "path": "fields/system-administration/linux-memory-pressure/README.md",
+    "reading_time_min": 6,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "A six-part series on what Linux does when RAM runs short - reclaim, PSI, the OOM killer, cgroup levers, memory locking - and how to build a rescuer that still works at the worst moment.",
+    "tags": [],
+    "title": "Linux Memory Pressure - Overview",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "llm-inference-performance-overview": {
+    "domains": [
+      "generative-ai",
+      "systems-and-hpc"
+    ],
+    "id": "llm-inference-performance-overview",
+    "level": "intermediate",
+    "path": "fields/generative-ai/llm-inference-performance/README.md",
+    "reading_time_min": 4,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Why a GPU with 3x the TFLOPS can make your chatbot only 1.6x faster - a four-part series on the roofline, LLM inference and the optimizations that actually work.",
+    "tags": [
+      "gpu",
+      "llm",
+      "nvidia",
+      "transformers"
+    ],
+    "title": "LLM Inference Performance - Overview",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "llm-perf-compute-vs-memory-bound": {
+    "domains": [
+      "generative-ai",
+      "systems-and-hpc"
+    ],
+    "id": "llm-perf-compute-vs-memory-bound",
+    "level": "intermediate",
+    "order": 1,
+    "path": "fields/generative-ai/llm-inference-performance/compute-bound-vs-memory-bound.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Why a 3x faster GPU can give you 1.6x - arithmetic intensity, the ridge point and the roofline, explained with a pizza kitchen and two lines of arithmetic.",
+    "tags": [
+      "gpu",
+      "nvidia"
+    ],
+    "title": "Compute-Bound vs Memory-Bandwidth-Bound",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "llm-perf-inference-roofline": {
+    "domains": [
+      "generative-ai",
+      "systems-and-hpc"
+    ],
+    "id": "llm-perf-inference-roofline",
+    "level": "intermediate",
+    "order": 2,
+    "path": "fields/generative-ai/llm-inference-performance/llm-inference-on-the-roofline.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [
+        "llm-perf-compute-vs-memory-bound"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Why your chatbot reads a novel-length prompt in a blink but types its answer like a tired intern - prefill, decode, batching and the KV cache on the roofline.",
+    "tags": [
+      "gpu",
+      "llm",
+      "transformers"
+    ],
+    "title": "LLM Inference on the Roofline",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "llm-perf-optimizations": {
+    "domains": [
+      "generative-ai",
+      "systems-and-hpc"
+    ],
+    "id": "llm-perf-optimizations",
+    "level": "intermediate",
+    "order": 4,
+    "path": "fields/generative-ai/llm-inference-performance/optimizations-on-the-roofline.md",
+    "reading_time_min": 12,
+    "relations": {
+      "prerequisites": [
+        "llm-perf-sizing-70b"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Five proposals in one meeting, one roofline to judge them - batching, PagedAttention, quantization, tensor parallelism, FlashAttention, speculative decoding, disaggregation, and how to measure.",
+    "tags": [
+      "gpu",
+      "llm",
+      "nvidia",
+      "transformers"
+    ],
+    "title": "Optimizations, Mapped to the Roofline",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "llm-perf-sizing-70b": {
+    "domains": [
+      "generative-ai",
+      "systems-and-hpc"
+    ],
+    "id": "llm-perf-sizing-70b",
+    "level": "intermediate",
+    "order": 3,
+    "path": "fields/generative-ai/llm-inference-performance/sizing-a-70b-model.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [
+        "llm-perf-inference-roofline"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "A live whiteboard walk-through - Llama 2 70B on 8xH100, from \"does it fit?\" to the exact token-rate ceilings at batch 1 and batch 64, using only a datasheet.",
+    "tags": [
+      "gpu",
+      "llm",
+      "nvidia",
+      "transformers"
+    ],
+    "title": "Sizing a 70B Model with a Pencil",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "llm-perf-sparsity-vs-quantization": {
+    "domains": [
+      "generative-ai",
+      "systems-and-hpc"
+    ],
+    "id": "llm-perf-sparsity-vs-quantization",
+    "level": "intermediate",
+    "order": 6,
+    "path": "fields/generative-ai/llm-inference-performance/sparsity-vs-quantization.md",
+    "reading_time_min": 10,
+    "relations": {
+      "prerequisites": [
+        "llm-perf-structured-sparsity"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "What it costs to prune an LLM to 2:4, how much accuracy goes with it, how it compares with FP8 and 4-bit quantization, and why the usual order is quantize first, sparsify second.",
+    "tags": [
+      "gpu",
+      "llm",
+      "nvidia",
+      "transformers"
+    ],
+    "title": "Sparsity vs Quantization: Who Pays, and Who Wins",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "llm-perf-structured-sparsity": {
+    "domains": [
+      "generative-ai",
+      "systems-and-hpc"
+    ],
+    "id": "llm-perf-structured-sparsity",
+    "level": "intermediate",
+    "order": 5,
+    "path": "fields/generative-ai/llm-inference-performance/structured-sparsity.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [
+        "llm-perf-optimizations"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "How NVIDIA's 2:4 structured sparsity works, what it really saves (44% of weight bytes, not 50%), and why its doubled TFLOPS help prefill while decode only feels the byte savings.",
+    "tags": [
+      "gpu",
+      "llm",
+      "nvidia",
+      "transformers"
+    ],
+    "title": "2:4 Sparsity: Half the Weights, Not Half the Time",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "nccl-collective-communication": {
+    "domains": [
+      "deep-learning",
+      "systems-and-hpc"
+    ],
+    "id": "nccl-collective-communication",
+    "level": "",
+    "path": "fields/benchmarks/nccl.md",
+    "reading_time_min": 19,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "pytorch-ddp"
+      ]
+    },
+    "status": "stable",
+    "summary": "What NCCL is, its collectives, ring and tree topologies, key environment variables and common failures, and how an all-reduce benchmark runs and is read.",
+    "tags": [
+      "distributed-training",
+      "gpu"
+    ],
+    "title": "NCCL",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "nhc-architecture-driven": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "nhc-architecture-driven",
+    "level": "advanced",
+    "order": 9,
+    "path": "fields/system-administration/node-health-check/architecture-driven-nhc.md",
+    "reading_time_min": 12,
+    "relations": {
+      "prerequisites": [
+        "nhc-custom-checks",
+        "nhc-rollout-at-scale",
+        "nhc-writing-nhc-conf"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Describe your cluster's architecture once in YAML, generate every NHC config from it, cross-check it against slurm.conf, and prove the result with real NHC before it ships.",
+    "tags": [
+      "gpu",
+      "hpc",
+      "slurm"
+    ],
+    "title": "Architecture-Driven NHC: Generate Health Checks from Your Cluster's Definition",
+    "type": "guide",
+    "types": [
+      "guide",
+      "project"
+    ]
+  },
+  "nhc-auto-remediation": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "nhc-auto-remediation",
+    "level": "advanced",
+    "order": 7,
+    "path": "fields/system-administration/node-health-check/auto-remediation.md",
+    "reading_time_min": 8,
+    "relations": {
+      "prerequisites": [
+        "nhc-rollout-at-scale",
+        "nhc-slurm-integration"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Turn NHC drains into automatic fixes with an escalation ladder, built-in fix actions, a node-doctor loop on the controller, and guard rails against reboot storms.",
+    "tags": [
+      "hpc",
+      "slurm"
+    ],
+    "title": "Auto-Remediation: From Detected to Fixed, Safely",
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
+  },
+  "nhc-build-and-install": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "nhc-build-and-install",
+    "level": "beginner",
+    "order": 2,
+    "path": "fields/system-administration/node-health-check/build-and-install.md",
+    "reading_time_min": 5,
+    "relations": {
+      "prerequisites": [
+        "nhc-why-node-health-check"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Get NHC onto your nodes from a release RPM, the release tarball or the Git tree, run its unit tests and know where every file lands.",
+    "tags": [
+      "hpc"
+    ],
+    "title": "Build and Install NHC",
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
+  },
+  "nhc-case-study": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "nhc-case-study",
+    "level": "advanced",
+    "order": 10,
+    "path": "fields/system-administration/node-health-check/case-study-build-me-an-nhc.md",
+    "reading_time_min": 17,
+    "relations": {
+      "prerequisites": [
+        "nhc-architecture-driven"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "A client asks for an NHC for their DGX H100 and AMD EPYC Slurm cluster; the discovery questions, first proposal, validation against vendor specs, and the final answer.",
+    "tags": [
+      "gpu",
+      "hpc",
+      "nvidia",
+      "slurm"
+    ],
+    "title": "Case Study: \"Build Us an NHC\", From a Vague Ask to a Validated Proposal",
+    "type": "guide",
+    "types": [
+      "guide",
+      "project"
+    ]
+  },
+  "nhc-cheat-sheet": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "nhc-cheat-sheet",
+    "level": "intermediate",
+    "order": 11,
+    "path": "fields/system-administration/node-health-check/cheat-sheet.md",
+    "reading_time_min": 6,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "nhc-troubleshooting",
+        "nhc-writing-nhc-conf"
+      ]
+    },
+    "status": "stable",
+    "summary": "Every NHC command, option, variable, config pattern and Slurm knob from the series on one page.",
+    "tags": [
+      "hpc",
+      "slurm"
+    ],
+    "title": "NHC Cheat Sheet",
+    "type": "reference",
+    "types": [
+      "reference"
+    ]
+  },
+  "nhc-custom-checks": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "nhc-custom-checks",
+    "level": "advanced",
+    "order": 6,
+    "path": "fields/system-administration/node-health-check/custom-checks.md",
+    "reading_time_min": 7,
+    "relations": {
+      "prerequisites": [
+        "nhc-writing-nhc-conf"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Build a site .nhc module the way upstream does, with cached data, clear failure messages, fast bash, and practical GPU checks.",
+    "tags": [
+      "gpu",
+      "hpc",
+      "nvidia"
+    ],
+    "title": "Writing Your Own NHC Checks",
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
+  },
+  "nhc-rollout-at-scale": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "nhc-rollout-at-scale",
+    "level": "intermediate",
+    "order": 5,
+    "path": "fields/system-administration/node-health-check/rollout-at-scale.md",
+    "reading_time_min": 6,
+    "relations": {
+      "prerequisites": [
+        "nhc-slurm-integration"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "A dry-run, canary, enforce plan for deploying NHC or a new nhc.conf to hundreds of nodes, with a circuit breaker for bad pushes.",
+    "tags": [
+      "hpc",
+      "slurm"
+    ],
+    "title": "Rolling NHC Out to a Fleet Without Draining Everything",
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
+  },
+  "nhc-slurm-integration": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "nhc-slurm-integration",
+    "level": "intermediate",
+    "order": 4,
+    "path": "fields/system-administration/node-health-check/slurm-integration.md",
+    "reading_time_min": 7,
+    "relations": {
+      "prerequisites": [
+        "nhc-writing-nhc-conf"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "The three slurm.conf lines, which node states to check, timeouts that don't fight each other, prolog and epilog patterns, reboots, plus PBS and cron.",
+    "tags": [
+      "hpc",
+      "slurm"
+    ],
+    "title": "Plugging NHC into Slurm (and Friends)",
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
+  },
+  "nhc-troubleshooting": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "nhc-troubleshooting",
+    "level": "intermediate",
+    "order": 8,
+    "path": "fields/system-administration/node-health-check/troubleshooting.md",
+    "reading_time_min": 8,
+    "relations": {
+      "prerequisites": [
+        "nhc-slurm-integration"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Symptom-first fixes for false drains, nodes that never resume, slurmd that won't register, timeouts, hanging df, and checks that pass by hand but fail under Slurm.",
+    "tags": [
+      "hpc",
+      "slurm"
+    ],
+    "title": "NHC Troubleshooting: Symptom First",
+    "type": "guide",
+    "types": [
+      "guide",
+      "reference"
+    ]
+  },
+  "nhc-why-node-health-check": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "nhc-why-node-health-check",
+    "level": "beginner",
+    "order": 1,
+    "path": "fields/system-administration/node-health-check/why-node-health-check.md",
+    "reading_time_min": 7,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "nhc-slurm-integration"
+      ]
+    },
+    "status": "stable",
+    "summary": "One broken node can eat a whole queue of jobs; this is what NHC is, how it decides a node is sick, and how it tells the scheduler.",
+    "tags": [
+      "hpc",
+      "slurm"
+    ],
+    "title": "Why Your Cluster Needs a Bouncer",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "nhc-writing-nhc-conf": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "nhc-writing-nhc-conf",
+    "level": "intermediate",
+    "order": 3,
+    "path": "fields/system-administration/node-health-check/writing-nhc-conf.md",
+    "reading_time_min": 8,
+    "relations": {
+      "prerequisites": [
+        "nhc-build-and-install"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "The config syntax, match strings, variables and contexts, plus copy-ready starter configs for CPU, GPU and login nodes.",
+    "tags": [
+      "gpu",
+      "hpc"
+    ],
+    "title": "Writing nhc.conf That Actually Fits Your Cluster",
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
+  },
+  "nvidia-cluster-readiness-engine": {
+    "domains": [
+      "devops",
+      "kubernates",
+      "systems-and-hpc"
+    ],
+    "id": "nvidia-cluster-readiness-engine",
+    "level": "intermediate",
+    "order": 6,
+    "path": "fields/devops/kubernetes/nvidia-cluster-readiness-engine.md",
+    "reading_time_min": 10,
+    "relations": {
+      "prerequisites": [
+        "kubernetes-in-five-nouns"
+      ],
+      "related": [
+        "containers-101"
+      ]
+    },
+    "status": "stable",
+    "summary": "Even when traditional monitoring tools show all GPUs and networks operating normally, subtle bottlenecks—like a single slow GPU or a degraded network link—can silently drag down the performance of an",
+    "tags": [
+      "hpc",
+      "kubernetes",
+      "nvidia"
+    ],
+    "title": "The Cluster That Passed Every Test Except the One That Mattered",
+    "type": "concept",
+    "types": [
+      "concept",
+      "note"
+    ]
+  },
+  "old-data-and-background-work": {
+    "domains": [
+      "software-engineering",
+      "system-design"
+    ],
+    "id": "old-data-and-background-work",
+    "level": "intermediate",
+    "path": "programming/local-app-accounts/old-data-and-background-work.md",
+    "reading_time_min": 6,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "How to give pre-existing data an owner without surprises, and why background monitors and their cached readings must follow the signed-in person.",
+    "tags": [
+      "programming",
+      "software-engineering",
+      "system-design"
+    ],
+    "title": "The Orphans Come Home: Old Data and Background Work",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "oomkilled-with-memory-to-spare": {
+    "domains": [
+      "devops",
+      "systems-and-hpc"
+    ],
+    "id": "oomkilled-with-memory-to-spare",
+    "level": "intermediate",
+    "order": 10,
+    "path": "fields/devops/kubernetes/oomkilled-with-memory-to-spare.md",
+    "reading_time_min": 11,
+    "relations": {
+      "prerequisites": [
+        "broken-pods-rogues-gallery"
+      ],
+      "related": [
+        "draining-a-gpu-node",
+        "linux-memory-free-vs-available",
+        "slurm-cgroups-in-practice"
+      ]
+    },
+    "status": "stable",
+    "summary": "Why a training pod is OOMKilled on a node with memory free: three killers, per-container limits, working set, /dev/shm, QoS and a spike no dashboard caught.",
+    "tags": [
+      "gpu",
+      "kubernetes"
+    ],
+    "title": "The Pod Killed With Memory to Spare",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
+  "openmp-and-open-mpi-overview": {
+    "domains": [
+      "software-engineering",
+      "systems-and-hpc"
+    ],
+    "id": "openmp-and-open-mpi-overview",
+    "level": "beginner",
+    "path": "fields/system-administration/openmp-and-open-mpi/README.md",
+    "reading_time_min": 3,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "An eight-part series that untangles OpenMP, MPI and Open MPI - what each is, where they came from, how to read their code, how to combine them and how Slurm and Kubernetes run them.",
+    "tags": [],
+    "title": "OpenMP and Open MPI - Overview",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "openmp-mpi-hybrid-binding-trap": {
+    "domains": [
+      "software-engineering",
+      "systems-and-hpc"
+    ],
+    "id": "openmp-mpi-hybrid-binding-trap",
+    "level": "intermediate",
+    "order": 5,
+    "path": "fields/system-administration/openmp-and-open-mpi/hybrid-and-the-binding-trap.md",
+    "reading_time_min": 7,
+    "relations": {
+      "prerequisites": [
+        "openmp-mpi-threads-and-ranks"
+      ],
+      "related": [
+        "parallel-execution-and-affinity"
+      ]
+    },
+    "status": "stable",
+    "summary": "Why big jobs use MPI across nodes and OpenMP inside them, and the default - Open MPI pinning each rank to one core - that makes your threads queue on a single CPU. Tested, with the fix.",
+    "tags": [
+      "affinity",
+      "hpc",
+      "mpi",
+      "openmp"
+    ],
+    "title": "Kitchens With Cooks: Hybrid MPI+OpenMP and the Binding Trap",
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
+  },
+  "openmp-mpi-on-kubernetes": {
+    "domains": [
+      "devops",
+      "systems-and-hpc"
+    ],
+    "id": "openmp-mpi-on-kubernetes",
+    "level": "intermediate",
+    "order": 8,
+    "path": "fields/system-administration/openmp-and-open-mpi/mpi-and-openmp-on-kubernetes.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [
+        "openmp-mpi-under-slurm"
+      ],
+      "related": [
+        "job-execution-journey",
+        "kubernetes-in-five-nouns"
+      ]
+    },
+    "status": "stable",
+    "summary": "How an MPIJob turns pods into an MPI cluster - launcher, workers, headless Service, SSH keys, hostfile - and which three numbers keep the binding trap away.",
+    "tags": [
+      "hpc",
+      "kubernetes",
+      "mpi",
+      "openmp"
+    ],
+    "title": "No Login Node, No Hostfile: OpenMP and MPI on Kubernetes",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "openmp-mpi-spotting-the-code": {
+    "domains": [
+      "software-engineering",
+      "systems-and-hpc"
+    ],
+    "id": "openmp-mpi-spotting-the-code",
+    "level": "beginner",
+    "order": 4,
+    "path": "fields/system-administration/openmp-and-open-mpi/spotting-openmp-and-mpi-code.md",
+    "reading_time_min": 7,
+    "relations": {
+      "prerequisites": [
+        "openmp-mpi-threads-and-ranks"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "A field guide to recognizing OpenMP, MPI or both in 30 seconds - the include lines, the pragmas, the function prefixes, the compile commands, the launch lines and the environment variables.",
+    "tags": [
+      "hpc",
+      "mpi",
+      "openmp"
+    ],
+    "title": "Know It on Sight: Reading OpenMP and MPI Code, Builds and Job Scripts",
+    "type": "reference",
+    "types": [
+      "reference"
+    ]
+  },
+  "openmp-mpi-threads-and-ranks": {
+    "domains": [
+      "software-engineering",
+      "systems-and-hpc"
+    ],
+    "id": "openmp-mpi-threads-and-ranks",
+    "level": "beginner",
+    "order": 3,
+    "path": "fields/system-administration/openmp-and-open-mpi/threads-and-ranks.md",
+    "reading_time_min": 7,
+    "relations": {
+      "prerequisites": [
+        "openmp-open-mpi-name-mixup"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Run one tiny program of each kind and watch the difference - OpenMP threads sharing one memory (and a data race), MPI ranks with separate memory (and a reduction) - on a real 4-core machine.",
+    "tags": [
+      "hpc",
+      "mpi",
+      "openmp"
+    ],
+    "title": "Cooks and Kitchens: Threads, Ranks and the One Mental Model",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "openmp-mpi-under-slurm": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "openmp-mpi-under-slurm",
+    "level": "intermediate",
+    "order": 7,
+    "path": "fields/system-administration/openmp-and-open-mpi/mpi-and-openmp-under-slurm.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [
+        "openmp-mpi-hybrid-binding-trap"
+      ],
+      "related": [
+        "slurm-pam-adopt-ssh-access",
+        "slurm-slurmstepd"
+      ]
+    },
+    "status": "stable",
+    "summary": "How Slurm launches MPI ranks and OpenMP threads - srun direct launch, mpirun inside an allocation, PMIx as the address book, and how ntasks and cpus-per-task decide the binding trap from part 5.",
+    "tags": [
+      "hpc",
+      "mpi",
+      "openmp",
+      "slurm"
+    ],
+    "title": "Who Starts the Ranks? OpenMP and MPI Under Slurm",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "openmp-mpi-where-they-are-going": {
+    "domains": [
+      "software-engineering",
+      "systems-and-hpc"
+    ],
+    "id": "openmp-mpi-where-they-are-going",
+    "level": "beginner",
+    "order": 6,
+    "path": "fields/system-administration/openmp-and-open-mpi/where-they-are-going.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [
+        "openmp-mpi-where-they-came-from"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "OpenMP 6.0 and MPI 5.0 are out. Do you have to rewrite everything? Two Monday tickets, the new GPU annex and the standard delivery box, and the ideas that will outlive every version number.",
+    "tags": [
+      "hpc",
+      "mpi",
+      "openmp"
+    ],
+    "title": "Two Tickets About the Future: OpenMP 6, MPI 5 and What Never Expires",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "openmp-mpi-where-they-came-from": {
+    "domains": [
+      "software-engineering",
+      "systems-and-hpc"
+    ],
+    "id": "openmp-mpi-where-they-came-from",
+    "level": "beginner",
+    "order": 2,
+    "path": "fields/system-administration/openmp-and-open-mpi/where-they-came-from.md",
+    "reading_time_min": 6,
+    "relations": {
+      "prerequisites": [
+        "openmp-open-mpi-name-mixup"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "The 1990s story - shared-memory vendors each had their own directives, distributed-memory users each had their own message libraries, and two committees fixed it from opposite sides.",
+    "tags": [
+      "hpc",
+      "mpi",
+      "openmp"
+    ],
+    "title": "Two Tribes, One Problem: Where OpenMP and MPI Came From",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "openmp-open-mpi-name-mixup": {
+    "domains": [
+      "software-engineering",
+      "systems-and-hpc"
+    ],
+    "id": "openmp-open-mpi-name-mixup",
+    "level": "beginner",
+    "order": 1,
+    "path": "fields/system-administration/openmp-and-open-mpi/the-name-mixup.md",
+    "reading_time_min": 6,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "parallel-execution-and-affinity"
+      ]
+    },
+    "status": "stable",
+    "summary": "OpenMP and Open MPI differ by one space and share almost nothing. Three names, three jobs - an API for threads, a standard for messages, and one program that implements the second.",
+    "tags": [
+      "hpc",
+      "mpi",
+      "openmp"
+    ],
+    "title": "Not Twins, Not Even Cousins: OpenMP, MPI and Open MPI",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "parallel-execution-and-affinity": {
+    "domains": [
+      "software-engineering",
+      "systems-and-hpc"
+    ],
+    "id": "parallel-execution-and-affinity",
+    "level": "",
+    "path": "fields/benchmarks/parallel-execution-affinity-master-guide.md",
+    "reading_time_min": 5,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "cpu-affinity"
+      ]
+    },
+    "status": "stable",
+    "summary": "How to place processes, threads and GPUs on a node: srun vs mpirun, NUMA, CPU binding syntax and GPU mapping, with tuning advice for HPL and NCCL.",
+    "tags": [
+      "affinity",
+      "mpi",
+      "slurm"
+    ],
+    "title": "Parallel Execution and Affinity",
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
+  },
+  "polite-api-server-monitoring": {
+    "domains": [
+      "devops",
+      "systems-and-hpc"
+    ],
+    "id": "polite-api-server-monitoring",
+    "level": "intermediate",
+    "order": 14,
+    "path": "fields/devops/kubernetes/polite-api-server-monitoring.md",
+    "reading_time_min": 10,
+    "relations": {
+      "prerequisites": [
+        "kubernetes-in-five-nouns"
+      ],
+      "related": [
+        "job-execution-journey",
+        "rbac-and-the-limited-viewer"
+      ]
+    },
+    "status": "stable",
+    "summary": "Why polling the API server every second hurts, measured on a lab: 20 lists vs 1 list and a watch, what a list costs in bytes, the priority lane monitors share, and five habits for a polite monitor.",
+    "tags": [
+      "kubernetes"
+    ],
+    "title": "Polite API Server Monitoring: Leave Your Number, Don't Knock Every Second",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
+  "principal-component-analysis": {
+    "domains": [
+      "machine-learning",
+      "statistics"
+    ],
+    "id": "principal-component-analysis",
+    "level": "",
+    "path": "fields/tabular-data/data-feature-engineering/pca.md",
+    "reading_time_min": 14,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "When to use PCA, how to choose the number of components, how to read explained variance, and how PCA compares with kernel PCA.",
+    "tags": [],
+    "title": "Principal Component Analysis (PCA)",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "probability-statistics-series": {
+    "domains": [
+      "statistics"
+    ],
+    "id": "probability-statistics-series",
+    "level": "beginner",
+    "path": "fields/data-science/probability-statistics/README.md",
+    "reading_time_min": 6,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "coins-and-calls",
+        "counting-the-ways",
+        "data-types-and-frequency-tables",
+        "draw-it-before-you-describe-it",
+        "how-far-from-the-middle",
+        "how-sure-are-you",
+        "stir-the-pot-population-and-sampling",
+        "the-bell-curve",
+        "the-courtroom-for-numbers",
+        "the-map-of-leaf-and-kettle",
+        "the-number-on-the-tin",
+        "the-test-that-was-99-percent-accurate",
+        "two-things-moving-together",
+        "what-to-expect",
+        "where-do-you-stand",
+        "why-averages-behave"
+      ]
+    },
+    "status": "stable",
+    "summary": "A slow-brewed series on the ideas in probability and statistics that make people say \"wait, why?\", each one told as a small story in a tea shop.",
+    "tags": [
+      "statistics"
+    ],
+    "title": "Probability & Statistics, One Sip at a Time",
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
+  },
+  "pytorch-101": {
+    "domains": [
+      "deep-learning",
+      "software-engineering"
+    ],
+    "id": "pytorch-101",
+    "level": "",
+    "path": "fields/libraries-frameworks-containers/101-pytorch.md",
+    "reading_time_min": 6,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Notes for starting with PyTorch: where to learn, data type precision, GPU properties, the training loop, making predictions, and saving and loading models.",
+    "tags": [
+      "pytorch"
+    ],
+    "title": "PyTorch 101",
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
+  },
+  "pytorch-ddp": {
+    "domains": [
+      "deep-learning",
+      "systems-and-hpc"
+    ],
+    "id": "pytorch-ddp",
+    "level": "",
+    "path": "fields/libraries-frameworks-containers/102-pytorch-ddp.md",
+    "reading_time_min": 1,
+    "relations": {
+      "prerequisites": [
+        "pytorch-101"
+      ],
+      "related": []
+    },
+    "status": "draft",
+    "summary": "A short pointer page on PyTorch Distributed Data Parallel: a recommended distributed training tutorial and a related read on the Python GIL.",
+    "tags": [
+      "distributed-training",
+      "pytorch"
+    ],
+    "title": "PyTorch DDP",
+    "type": "note",
+    "types": [
+      "note"
+    ]
+  },
+  "rbac-and-the-limited-viewer": {
+    "domains": [
+      "devops",
+      "systems-and-hpc"
+    ],
+    "id": "rbac-and-the-limited-viewer",
+    "level": "intermediate",
+    "order": 13,
+    "path": "fields/devops/kubernetes/rbac-and-the-limited-viewer.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [
+        "kubernetes-in-five-nouns"
+      ],
+      "related": [
+        "k3s-vs-kubeadm",
+        "your-kubeconfig-is-a-house-key"
+      ]
+    },
+    "status": "stable",
+    "summary": "Read a Forbidden error as the rule you need, build a read-only user in two commands, and see RBAC's guardrails and why the binding is the off switch for a certificate.",
+    "tags": [
+      "kubernetes"
+    ],
+    "title": "RBAC: The Error Message Writes the Rule for You",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
+  "regression-imputing": {
+    "domains": [
+      "machine-learning",
+      "statistics"
+    ],
+    "id": "regression-imputing",
+    "level": "",
+    "path": "fields/tabular-data/data-processing/handling-missing-data/regression-imputing.md",
+    "reading_time_min": 3,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "How to fill missing values by predicting them with a regression model built on the other features.",
+    "tags": [],
+    "title": "Regression Imputing",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "reinforcement-learning-basics": {
+    "domains": [
+      "machine-learning",
+      "reinforcement-learning"
+    ],
+    "id": "reinforcement-learning-basics",
+    "level": "",
+    "path": "fields/reinforcement-learning/concepts-in-reinforcement-learning/basics.md",
+    "reading_time_min": 8,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Reinforcement learning basics: how an agent learns by trial and error, its components, policies, exploration vs exploitation, Markov decision processes and early algorithms.",
+    "tags": [],
+    "title": "Reinforcement Learning Basics",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "reviewing-the-design": {
+    "domains": [
+      "software-engineering",
+      "system-design"
+    ],
+    "id": "reviewing-the-design",
+    "level": "intermediate",
+    "path": "programming/local-app-accounts/reviewing-the-design.md",
+    "reading_time_min": 6,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Six review questions the design leaves open, a table of mistakes it avoids, the Designing Data-Intensive Applications chapters that explain why, and six exercises.",
+    "tags": [
+      "programming",
+      "software",
+      "system-design"
+    ],
+    "title": "Reviewing the Design: Where Would You Push Back?",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
+  "sequence-models": {
+    "domains": [
+      "deep-learning",
+      "generative-ai",
+      "natural-language-processing"
+    ],
+    "id": "sequence-models",
+    "level": "intermediate",
+    "path": "fields/deep-learning/concepts/sequence-models.md",
+    "reading_time_min": 6,
+    "relations": {
+      "prerequisites": [
+        "deep-learning-basics"
+      ],
+      "related": [
+        "encoder-decoder-machine-translation"
+      ]
+    },
+    "status": "stable",
+    "summary": "How models handle ordered data like text, from RNNs and LSTMs to transformers and LLMs.",
+    "tags": [
+      "llm",
+      "rnn",
+      "transformers"
+    ],
+    "title": "Sequence Models",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "sessions-and-two-walls": {
+    "domains": [
+      "software-engineering",
+      "system-design"
+    ],
+    "id": "sessions-and-two-walls",
+    "level": "intermediate",
+    "path": "programming/local-app-accounts/sessions-and-two-walls.md",
+    "reading_time_min": 6,
+    "relations": {
+      "prerequisites": [
+        "sign-in-hygiene"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "How an app remembers who is signed in, why remember-me stores a fingerprint instead of a token, and why authorization needs one check at the door and another at the data.",
+    "tags": [
+      "programming",
+      "software-engineering",
+      "system-design"
+    ],
+    "title": "Who's Home, and What May They Touch? Sessions and Two Walls",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
+  "sign-in-hygiene": {
+    "domains": [
+      "software-engineering",
+      "system-design"
+    ],
+    "id": "sign-in-hygiene",
+    "level": "intermediate",
+    "path": "programming/local-app-accounts/sign-in-hygiene.md",
+    "reading_time_min": 5,
+    "relations": {
+      "prerequisites": [
+        "threat-model-and-first-launch"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Slow self-describing password hashes, a decoy check for unknown users, one identical error message, and throttling that cannot be used to lock someone out forever.",
+    "tags": [
+      "programming",
+      "software-engineering",
+      "system-design"
+    ],
+    "title": "Sign-In Hygiene: How the Clerk Says \"No\" Without Giving Anything Away",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
+  "singularity-containers": {
+    "domains": [
+      "software-engineering",
+      "systems-and-hpc"
+    ],
+    "id": "singularity-containers",
+    "level": "",
+    "path": "fields/libraries-frameworks-containers/101-singularity.md",
+    "reading_time_min": 10,
+    "relations": {
+      "prerequisites": [
+        "containers-101"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Singularity (rootless containers for HPC): installing it, building SIF images, converting from Docker, bind mounts and definition-file variables.",
+    "tags": [
+      "containers"
+    ],
+    "title": "Singularity",
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
+  },
+  "slurm-accounting-multi-tenancy": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-accounting-multi-tenancy",
+    "level": "intermediate",
+    "order": 2,
+    "path": "fields/schedulers/slurm-accounting-multi-tenancy.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "slurm-mixed-gpus-overview",
+        "slurm-preemption-requeue-signals",
+        "slurm-qos-preemption-setup",
+        "slurm-sacct-job-forensics"
+      ]
+    },
+    "status": "stable",
+    "summary": "How slurmctld, slurmd, slurmdbd and sacctmgr split the work of multi-tenant accounting, why limits you set can silently do nothing, and how associations, TRES limits, QOS and fairshare fit together.",
+    "tags": [
+      "gpu",
+      "hpc",
+      "slurm"
+    ],
+    "title": "Slurm Multi-Tenancy: Who Stores the Rules, Who Enforces Them",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "slurm-backfill-tuning": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-backfill-tuning",
+    "level": "advanced",
+    "order": 3,
+    "path": "fields/schedulers/slurm-backfill-tuning.md",
+    "reading_time_min": 21,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "slurm-accounting-multi-tenancy",
+        "slurm-preemption-requeue-signals"
+      ]
+    },
+    "status": "stable",
+    "summary": "Slurm backfill relies on accurate time limits. A 1-day bf_window hides 7-day jobs, causing squeue drift. Use sdiag to tune bf_window, bf_resolution, bf_max_job_test, and bf_max_time.",
+    "tags": [
+      "hpc",
+      "slurm"
+    ],
+    "title": "Backfill Tuning: The Planner That Can Only See One Day Ahead",
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
+  },
+  "slurm-cgroups-in-practice": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-cgroups-in-practice",
+    "level": "intermediate",
+    "order": 3,
+    "path": "fields/schedulers/slurm-inside-a-job/slurm-cgroups-in-practice.md",
+    "reading_time_min": 11,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "slurm-accounting-multi-tenancy",
+        "slurm-pam-adopt-ssh-access"
+      ]
+    },
+    "status": "stable",
+    "summary": "Which cgroup.conf switches actually fence a Slurm job, why every one of them defaults to off, how v1 and v2 differ, and why sacct's memory numbers are samples and not measurements.",
+    "tags": [
+      "gpu",
+      "hpc",
+      "slurm"
+    ],
+    "title": "Slurm cgroups in Practice: What Gets Constrained, and Where the Numbers Lie",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "slurm-containers-pyxis": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-containers-pyxis",
+    "level": "intermediate",
+    "order": 3,
+    "path": "fields/schedulers/slurm-ai-clusters/containers-with-pyxis.md",
+    "reading_time_min": 8,
+    "relations": {
+      "prerequisites": [
+        "slurm-distributed-training"
+      ],
+      "related": [
+        "slurm-gpu-health-checks"
+      ]
+    },
+    "status": "stable",
+    "summary": "Running Slurm job steps in containers with Pyxis and Enroot - the node that silently ran outside the container, read-only images, mounts, node-local paths, named containers, and the PyTorch env hook.",
+    "tags": [
+      "containers",
+      "hpc",
+      "nvidia",
+      "slurm"
+    ],
+    "title": "Containers on Slurm with Pyxis and Enroot",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
+  "slurm-distributed-training": {
+    "domains": [
+      "deep-learning",
+      "systems-and-hpc"
+    ],
+    "id": "slurm-distributed-training",
+    "level": "intermediate",
+    "order": 2,
+    "path": "fields/schedulers/slurm-ai-clusters/launching-distributed-training.md",
+    "reading_time_min": 6,
+    "relations": {
+      "prerequisites": [
+        "slurm-topology-placement"
+      ],
+      "related": [
+        "slurm-containers-pyxis",
+        "slurm-job-script-tale"
+      ]
+    },
+    "status": "stable",
+    "summary": "Why a 2-node training job can run on one node, the environment PyTorch needs from Slurm, launching with srun or torchrun, and the double-launch trap - tested with PyTorch 2.15 on Slurm 23.11.",
+    "tags": [
+      "distributed-training",
+      "hpc",
+      "pytorch",
+      "slurm"
+    ],
+    "title": "Launching Distributed Training on Slurm: srun, torchrun, and the Rank Contract",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
+  "slurm-gpu-affinity-socket-lie": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-gpu-affinity-socket-lie",
+    "level": "advanced",
+    "order": 4,
+    "path": "fields/schedulers/slurm-inside-a-job/slurm-gpu-affinity-socket-lie.md",
+    "reading_time_min": 10,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "slurm-cgroups-in-practice",
+        "slurm-kill-task-failed"
+      ]
+    },
+    "status": "stable",
+    "summary": "gres.conf Cores= schedules per socket, not core. Fix topology via l3cache_as_socket or numa_node_as_socket. Also covers four 1-GPU schemes and how MIG, MPS, and sharding isolate workloads.",
+    "tags": [
+      "gpu",
+      "hpc",
+      "slurm"
+    ],
+    "title": "Your GPU Has Core Affinity. Slurm Has Socket Affinity. They Are Not Speaking.",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "slurm-gpu-health-checks": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-gpu-health-checks",
+    "level": "intermediate",
+    "order": 4,
+    "path": "fields/schedulers/slurm-ai-clusters/gpu-health-checks.md",
+    "reading_time_min": 7,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "slurm-containers-pyxis",
+        "slurm-kill-task-failed",
+        "slurm-spool-dir-full"
+      ]
+    },
+    "status": "stable",
+    "summary": "A tested Slurm HealthCheckProgram that drains a node when a GPU disappears, the bug where it overwrote the admin's drain reason, what slurmd does on restart, and the per-GPU drain coming in 26.11.",
+    "tags": [
+      "gpu",
+      "hpc",
+      "nvidia",
+      "slurm"
+    ],
+    "title": "When a GPU Falls Off the Bus: Health Checks That Drain the Node",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
+  "slurm-intro": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-intro",
+    "level": "beginner",
+    "order": 1,
+    "path": "fields/schedulers/slurm-intro.md",
+    "reading_time_min": 10,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "slurm-job-script-tale",
+        "slurm-slurmstepd"
+      ]
+    },
+    "status": "stable",
+    "summary": "What a cluster scheduler does, how it differs from the OS scheduler, the scheduler landscape, the concepts they share, and the Slurm architecture at a glance.",
+    "tags": [
+      "hpc",
+      "slurm"
+    ],
+    "title": "Schedulers: The Traffic Controller Nobody Thanks Until It Breaks",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "slurm-job-script-tale": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-job-script-tale",
+    "level": "intermediate",
+    "order": 1,
+    "path": "fields/schedulers/slurm-inside-a-job/slurm-job-script-tale.md",
+    "reading_time_min": 11,
+    "relations": {
+      "prerequisites": [
+        "slurm-intro"
+      ],
+      "related": [
+        "slurm-backfill-tuning",
+        "slurm-slurmstepd",
+        "slurm-spool-dir-full"
+      ]
+    },
+    "status": "stable",
+    "summary": "Why editing a script after sbatch changes nothing, where Slurm keeps the frozen copy, what stays live, how to read the script back, and how to keep runs traceable.",
+    "tags": [
+      "hpc",
+      "slurm"
+    ],
+    "title": "The Tale of a Slurm Job Script: Submission Is a Commitment, Not a Promise",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
+  "slurm-job-submit-lua": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-job-submit-lua",
+    "level": "intermediate",
+    "order": 3,
+    "path": "fields/schedulers/slurm-preemption/slurm-job-submit-lua.md",
+    "reading_time_min": 11,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "slurm-accounting-multi-tenancy",
+        "slurm-backfill-tuning",
+        "slurm-mixed-gpus-where-shine",
+        "slurm-preemption-requeue-signals",
+        "slurm-qos-preemption-setup"
+      ]
+    },
+    "status": "stable",
+    "summary": "What the Lua job_submit plugin is, where its script lives, what it can read and return, four tested recipes (QOS routing, time limits, requeue, exclusive), and how it fails.",
+    "tags": [
+      "hpc",
+      "slurm"
+    ],
+    "title": "The Receptionist Who Rewrites Your Badge: job_submit.lua",
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
+  },
+  "slurm-kill-task-failed": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-kill-task-failed",
+    "level": "intermediate",
+    "order": 6,
+    "path": "fields/schedulers/slurm-cluster-operations/slurm-kill-task-failed.md",
+    "reading_time_min": 7,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "slurm-accounting-multi-tenancy",
+        "slurm-cgroups-in-practice"
+      ]
+    },
+    "status": "stable",
+    "summary": "Slurm job death (SIGTERM, KillWait, SIGKILL) fails on uninterruptible sleep, draining nodes. Raising timeouts rarely helps. Debug these with UnkillableStepProgram.",
+    "tags": [
+      "hpc",
+      "slurm"
+    ],
+    "title": "Kill Task Failed: A Murder Mystery With No Body (and One Drained Node)",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "slurm-lab-cheatsheet": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-lab-cheatsheet",
+    "level": "intermediate",
+    "order": 6,
+    "path": "fields/schedulers/slurm-ai-clusters/lab-build-cheatsheet.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "slurm-containers-pyxis",
+        "slurm-distributed-training",
+        "slurm-gpu-health-checks",
+        "slurm-openmetrics",
+        "slurm-pending-reasons",
+        "slurm-qos-preemption-setup",
+        "slurm-topology-placement"
+      ]
+    },
+    "status": "stable",
+    "summary": "Every step used to build the Slurm lab behind the pending-jobs and AI-cluster series - node image, Slurm 23.11 with accounting, topology, PyTorch, Enroot and Pyxis, health check, Slurm 26.05, metrics.",
+    "tags": [
+      "containers",
+      "hpc",
+      "slurm"
+    ],
+    "title": "Lab Build Cheatsheet: A Slurm AI Cluster in Containers",
+    "type": "reference",
+    "types": [
+      "reference",
+      "guide"
+    ]
+  },
+  "slurm-mixed-gpus-four-ways": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-mixed-gpus-four-ways",
+    "level": "intermediate",
+    "order": 1,
+    "path": "fields/schedulers/slurm-mixed-gpus/four-ways-to-mix-gpus.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Typed GRES, constraint operators, heterogeneous jobs and heterogeneous steps - what each one actually allocates, and the one-character constraint that mixes GPU types by accident.",
+    "tags": [
+      "gpu",
+      "hpc",
+      "slurm"
+    ],
+    "title": "Four Ways to Ask Slurm for Mixed GPUs",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "slurm-mixed-gpus-overview": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-mixed-gpus-overview",
+    "level": "intermediate",
+    "path": "fields/schedulers/slurm-mixed-gpus/README.md",
+    "reading_time_min": 3,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Slurm can allocate H100s and A100s in one job - four different ways. A three-part series on what each actually gives you, why mixed training disappoints, and where it shines.",
+    "tags": [
+      "gpu",
+      "hpc",
+      "nvidia",
+      "slurm"
+    ],
+    "title": "Mixing GPU Types in Slurm - Overview",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "slurm-mixed-gpus-where-shine": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-mixed-gpus-where-shine",
+    "level": "intermediate",
+    "order": 3,
+    "path": "fields/schedulers/slurm-mixed-gpus/where-hetjobs-shine.md",
+    "reading_time_min": 10,
+    "relations": {
+      "prerequisites": [
+        "slurm-mixed-gpus-why-disappoints"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "The workloads where mixing GPU types in one Slurm job is exactly right, how admins should label and guard a multi-generation cluster, a decision table, and the interview answer.",
+    "tags": [
+      "gpu",
+      "hpc",
+      "nvidia",
+      "slurm"
+    ],
+    "title": "Where Heterogeneous Jobs Shine",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "slurm-mixed-gpus-why-disappoints": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-mixed-gpus-why-disappoints",
+    "level": "intermediate",
+    "order": 2,
+    "path": "fields/schedulers/slurm-mixed-gpus/why-mixed-training-disappoints.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [
+        "slurm-mixed-gpus-four-ways"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Why 8 H100s plus 8 A100s train like 16 A100s, which H100 features the A100s switch off, and what co-scheduling a heterogeneous job costs you in the queue.",
+    "tags": [
+      "gpu",
+      "hpc",
+      "nvidia",
+      "slurm"
+    ],
+    "title": "Why Mixed-GPU Training Disappoints",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "slurm-openmetrics": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-openmetrics",
+    "level": "intermediate",
+    "order": 5,
+    "path": "fields/schedulers/slurm-ai-clusters/metrics-openmetrics.md",
+    "reading_time_min": 6,
+    "relations": {
+      "prerequisites": [
+        "vm-metricsql-vmalert",
+        "vm-single-node"
+      ],
+      "related": [
+        "slurm-backfill-tuning",
+        "slurm-gpu-health-checks"
+      ]
+    },
+    "status": "stable",
+    "summary": "Slurm 25.11+ serves OpenMetrics from slurmctld - scraping it into VictoriaMetrics, idle CPUs fixed by DefMemPerCPU, MiB in _bytes metrics until 26.11, open access, and a tested alert.",
+    "tags": [
+      "hpc",
+      "monitoring",
+      "slurm",
+      "victoriametrics"
+    ],
+    "title": "Slurm Metrics Without an Exporter: OpenMetrics into VictoriaMetrics",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
+  "slurm-pam-adopt-ssh-access": {
+    "domains": [
+      "security",
+      "systems-and-hpc"
+    ],
+    "id": "slurm-pam-adopt-ssh-access",
+    "level": "intermediate",
+    "order": 5,
+    "path": "fields/schedulers/slurm-cluster-operations/slurm-pam-adopt-ssh-access.md",
+    "reading_time_min": 8,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "slurm-cgroups-in-practice",
+        "slurm-reboot-order"
+      ]
+    },
+    "status": "stable",
+    "summary": "Why users can SSH into a node and escape their job's limits, and how pam_slurm_adopt closes the backdoor by admitting only users with a job there and adopting the session into its cgroup.",
+    "tags": [
+      "hpc",
+      "slurm"
+    ],
+    "title": "pam_slurm_adopt: Closing the Slurm SSH Backdoor",
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
+  },
+  "slurm-pending-reasons": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-pending-reasons",
+    "level": "beginner",
+    "order": 1,
+    "path": "fields/schedulers/slurm-pending-jobs/why-is-my-job-pending.md",
+    "reading_time_min": 7,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "slurm-accounting-multi-tenancy",
+        "slurm-backfill-tuning"
+      ]
+    },
+    "status": "stable",
+    "summary": "What Slurm's common pending reasons mean, which ones fix themselves and which never will, what users can fix without an admin, and a small triage script tested against each reason.",
+    "tags": [
+      "hpc",
+      "slurm"
+    ],
+    "title": "Reading the Reason Column: Why Is My Slurm Job Pending?",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
+  "slurm-preemption-requeue-signals": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-preemption-requeue-signals",
+    "level": "intermediate",
+    "order": 1,
+    "path": "fields/schedulers/slurm-preemption/slurm-preemption-requeue-signals.md",
+    "reading_time_min": 13,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "slurm-accounting-multi-tenancy",
+        "slurm-job-submit-lua",
+        "slurm-kill-task-failed",
+        "slurm-qos-preemption-setup",
+        "slurm-signals-cheatsheet",
+        "slurm-upgrade-order"
+      ]
+    },
+    "status": "stable",
+    "summary": "How Slurm preemption modes differ, what GraceTime and --signal send and to whom, why a bash trap never fires while the trainer runs, and a requeue-safe checkpoint wrapper that cannot loop.",
+    "tags": [
+      "gpu",
+      "hpc",
+      "slurm"
+    ],
+    "title": "Dying Politely: Preemption, Requeue and the Signals Your Training Job Ignores",
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
+  },
+  "slurm-priority-multifactor": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-priority-multifactor",
+    "level": "intermediate",
+    "order": 2,
+    "path": "fields/schedulers/slurm-pending-jobs/who-goes-first.md",
+    "reading_time_min": 8,
+    "relations": {
+      "prerequisites": [
+        "slurm-pending-reasons"
+      ],
+      "related": [
+        "slurm-accounting-multi-tenancy"
+      ]
+    },
+    "status": "stable",
+    "summary": "How Slurm's multifactor priority is computed from age, fairshare and QOS weights, why every weight defaults to zero, how Fair Tree turns usage into a rank, and reading sprio and sshare.",
+    "tags": [
+      "hpc",
+      "slurm"
+    ],
+    "title": "Who Goes First: Slurm's Priority Number, Taken Apart",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
+  "slurm-qos-limits": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-qos-limits",
+    "level": "intermediate",
+    "order": 3,
+    "path": "fields/schedulers/slurm-pending-jobs/limits-that-wait-forever.md",
+    "reading_time_min": 7,
+    "relations": {
+      "prerequisites": [
+        "slurm-accounting-multi-tenancy",
+        "slurm-pending-reasons"
+      ],
+      "related": [
+        "slurm-priority-multifactor"
+      ]
+    },
+    "status": "stable",
+    "summary": "How Slurm QOS and account GPU limits behave on a real queue - the job that never runs, the second QOS that slips past a cap, partition QOS, DenyOnLimit, and live usage via assoc_mgr.",
+    "tags": [
+      "hpc",
+      "slurm"
+    ],
+    "title": "Limits That Wait Forever: QOS and Account Limits in Practice",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
+  "slurm-qos-preemption-setup": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-qos-preemption-setup",
+    "level": "intermediate",
+    "order": 2,
+    "path": "fields/schedulers/slurm-preemption/slurm-qos-preemption-setup.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [
+        "slurm-accounting-multi-tenancy"
+      ],
+      "related": [
+        "slurm-job-submit-lua",
+        "slurm-preemption-requeue-signals",
+        "slurm-qos-limits",
+        "slurm-signals-cheatsheet"
+      ]
+    },
+    "status": "stable",
+    "summary": "A step-by-step setup of QOS-based requeue preemption (slurm.conf, sacctmgr, who may use what), a drill that proves it works, and the quiet ways it goes wrong.",
+    "tags": [
+      "hpc",
+      "slurm"
+    ],
+    "title": "The Guest List: Setting Up QOS Preemption Without Starting a War",
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
+  },
+  "slurm-reboot-order": {
+    "domains": [
+      "system-design",
+      "systems-and-hpc"
+    ],
+    "id": "slurm-reboot-order",
+    "level": "intermediate",
+    "order": 2,
+    "path": "fields/schedulers/slurm-cluster-operations/slurm-reboot-order.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "slurm-spool-dir-full",
+        "slurm-upgrade-order"
+      ]
+    },
+    "status": "stable",
+    "summary": "The step-by-step order for rebooting a Slurm cluster: drain, lock access, control plane first, then front-end and compute nodes, and reopen in a controlled way.",
+    "tags": [
+      "hpc",
+      "slurm"
+    ],
+    "title": "Rebooting a Slurm Cluster Without Losing Your Job (Or Anyone Else's)",
+    "type": "concept",
+    "types": [
+      "concept",
+      "experiment"
+    ]
+  },
+  "slurm-reservations-and-maintenance": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-reservations-and-maintenance",
+    "level": "intermediate",
+    "order": 1,
+    "path": "fields/schedulers/slurm-cluster-operations/slurm-reservations-and-maintenance.md",
+    "reading_time_min": 8,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "slurm-backfill-tuning",
+        "slurm-job-submit-lua",
+        "slurm-pending-reasons",
+        "slurm-reboot-order",
+        "slurm-spool-dir-full"
+      ]
+    },
+    "status": "stable",
+    "summary": "How to block nodes ahead of time with scontrol reservations, what happens to jobs that fit before the window and jobs that do not, and what users see while it is open.",
+    "tags": [
+      "hpc",
+      "slurm"
+    ],
+    "title": "Calling Dibs on Nodes: Reservations, Maintenance Windows and the Job That Fit",
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
+  },
+  "slurm-sacct-job-forensics": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-sacct-job-forensics",
+    "level": "beginner",
+    "order": 4,
+    "path": "fields/schedulers/slurm-sacct-job-forensics.md",
+    "reading_time_min": 8,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "slurm-accounting-multi-tenancy",
+        "slurm-cgroups-in-practice",
+        "slurm-pending-reasons",
+        "slurm-preemption-requeue-signals",
+        "slurm-qos-preemption-setup"
+      ]
+    },
+    "status": "stable",
+    "summary": "How to find out what happened to a job that has gone, with sacct states, exit codes (exit:signal), requeued runs, useful fields, and the neighbors scontrol, sstat and sreport.",
+    "tags": [
+      "hpc",
+      "slurm"
+    ],
+    "title": "Autopsy of a Job: Reading sacct Like a Coroner",
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
+  },
+  "slurm-signals-cheatsheet": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-signals-cheatsheet",
+    "level": "intermediate",
+    "order": 4,
+    "path": "fields/schedulers/slurm-preemption/slurm-signals-cheatsheet.md",
+    "reading_time_min": 8,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "slurm-kill-task-failed",
+        "slurm-preemption-requeue-signals",
+        "slurm-qos-preemption-setup",
+        "slurm-slurmstepd"
+      ]
+    },
+    "status": "stable",
+    "summary": "Which signals Slurm sends at preemption, GraceTime, --signal, time limits and scancel, whether the batch shell or the srun steps receive them, and how late they really arrive.",
+    "tags": [
+      "hpc",
+      "slurm"
+    ],
+    "title": "Who Gets Told What: Every Signal Slurm Sends, and Who Actually Hears It",
+    "type": "reference",
+    "types": [
+      "reference"
+    ]
+  },
+  "slurm-slurmstepd": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-slurmstepd",
+    "level": "intermediate",
+    "order": 2,
+    "path": "fields/schedulers/slurm-inside-a-job/slurm-slurmstepd.md",
+    "reading_time_min": 11,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "slurm-cgroups-in-practice",
+        "slurm-kill-task-failed",
+        "slurm-spool-dir-full"
+      ]
+    },
+    "status": "stable",
+    "summary": "slurmstepd (1/step/node) bridges slurmd's fork and task start. Jobs survive slurmd restarts via SlurmdSpoolDir sockets. Covers how to find, count, and read stepds on busy nodes.",
+    "tags": [
+      "hpc",
+      "slurm"
+    ],
+    "title": "slurmstepd: The Small Daemon That Actually Runs Your Job",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "slurm-smoke-after-upgrade": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-smoke-after-upgrade",
+    "level": "intermediate",
+    "order": 3,
+    "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-after-upgrade.md",
+    "reading_time_min": 8,
+    "relations": {
+      "prerequisites": [
+        "slurm-smoke-control-plane"
+      ],
+      "related": [
+        "slurm-reboot-order",
+        "slurm-smoke-config-change",
+        "slurm-upgrade-order",
+        "slurm-version-changes"
+      ]
+    },
+    "status": "stable",
+    "summary": "What to check around a Slurm upgrade: a backup proven by restoring it, versions on every node, a before/after snapshot, the control-plane smoke test, and why downgrading is not supported.",
+    "tags": [
+      "hpc",
+      "slurm"
+    ],
+    "title": "The Morning After the Upgrade: Smoke Tests for the Change You Cannot Undo",
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
+  },
+  "slurm-smoke-config-change": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-smoke-config-change",
+    "level": "intermediate",
+    "order": 2,
+    "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-config-change.md",
+    "reading_time_min": 8,
+    "relations": {
+      "prerequisites": [
+        "slurm-smoke-control-plane"
+      ],
+      "related": [
+        "slurm-job-submit-lua",
+        "slurm-reboot-order",
+        "slurm-reservations-and-maintenance",
+        "slurm-smoke-after-upgrade"
+      ]
+    },
+    "status": "stable",
+    "summary": "What a bad slurm.conf does (typo, partition naming a missing node) and the dry runs that catch it first: a snapshot diff, sbatch --test-only and a canary partition.",
+    "tags": [
+      "hpc",
+      "slurm"
+    ],
+    "title": "Measure Twice, Reconfigure Once: Smoke-Testing a slurm.conf Change",
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
+  },
+  "slurm-smoke-control-plane": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-smoke-control-plane",
+    "level": "beginner",
+    "order": 1,
+    "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-control-plane.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "slurm-job-submit-lua",
+        "slurm-pending-reasons",
+        "slurm-sacct-job-forensics",
+        "slurm-smoke-after-upgrade",
+        "slurm-smoke-config-change"
+      ]
+    },
+    "status": "stable",
+    "summary": "A six-check, two-minute Slurm smoke test (MUNGE, controller, nodes, srun, sbatch, sacct) as one script with three outcomes, tested against four injected failures and a busy cluster.",
+    "tags": [
+      "hpc",
+      "slurm"
+    ],
+    "title": "The Cluster That Worked Perfectly and Remembered Nothing: a Two-Minute Slurm Smoke Test",
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
+  },
+  "slurm-smoke-node-readiness": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-smoke-node-readiness",
+    "level": "intermediate",
+    "order": 5,
+    "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-node-readiness.md",
+    "reading_time_min": 8,
+    "relations": {
+      "prerequisites": [
+        "slurm-smoke-control-plane"
+      ],
+      "related": [
+        "slurm-gpu-health-checks",
+        "slurm-kill-task-failed",
+        "slurm-reboot-order",
+        "slurm-reservations-and-maintenance"
+      ]
+    },
+    "status": "stable",
+    "summary": "Why idle does not mean a node is healthy, what Slurm does when hardware and slurm.conf disagree (and how config_overrides hides it), and a reservation fence for a probe job.",
+    "tags": [
+      "hpc",
+      "slurm"
+    ],
+    "title": "Back From the Repair Shop: Is This Node Fit to Return to Service?",
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
+  },
+  "slurm-smoke-policy": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-smoke-policy",
+    "level": "intermediate",
+    "order": 4,
+    "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-policy.md",
+    "reading_time_min": 7,
+    "relations": {
+      "prerequisites": [
+        "slurm-smoke-control-plane"
+      ],
+      "related": [
+        "slurm-job-submit-lua",
+        "slurm-preemption-requeue-signals",
+        "slurm-qos-preemption-setup",
+        "slurm-signals-cheatsheet",
+        "slurm-smoke-config-change"
+      ]
+    },
+    "status": "stable",
+    "summary": "A two-stage smoke test for QOS, submit rules and preemption: routing and refusals with no resources, then a real eviction and requeue, with a full script and its output.",
+    "tags": [
+      "hpc",
+      "slurm"
+    ],
+    "title": "Does the Rulebook Still Work? Smoke-Testing QOS, Submit Rules and Preemption",
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
+  },
+  "slurm-smoke-regression-suites": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-smoke-regression-suites",
+    "level": "advanced",
+    "order": 6,
+    "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-regression-suites.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [
+        "slurm-smoke-control-plane"
+      ],
+      "related": [
+        "slurm-smoke-after-upgrade",
+        "slurm-smoke-policy",
+        "slurm-upgrade-order",
+        "slurm-version-changes"
+      ]
+    },
+    "status": "stable",
+    "summary": "What SchedMD's test suite and ReFrame do, how both were run against a live test cluster, and why results only mean something against a baseline taken before the change.",
+    "tags": [
+      "hpc",
+      "slurm"
+    ],
+    "title": "When Smoke Becomes a Fire Drill: SchedMD's Test Suite, ReFrame and the Baseline Rule",
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
+  },
+  "slurm-spool-dir-full": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-spool-dir-full",
+    "level": "intermediate",
+    "order": 7,
+    "path": "fields/schedulers/slurm-cluster-operations/slurm-spool-dir-full.md",
+    "reading_time_min": 10,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "slurm-kill-task-failed",
+        "slurm-reboot-order",
+        "slurm-slurmstepd"
+      ]
+    },
+    "status": "stable",
+    "summary": "Why slurmd drains node with reason \"SlurmdSpoolDir is full\", why culprit is filesystem underneath, what slurmd keeps in spool directory, a triage runbook, how to stop jobs from filling the disk.",
+    "tags": [
+      "hpc",
+      "slurm"
+    ],
+    "title": "SlurmdSpoolDir Is Full: The Drain That Is Not About the Spool Directory",
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
+  },
+  "slurm-topology-placement": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-topology-placement",
+    "level": "intermediate",
+    "order": 1,
+    "path": "fields/schedulers/slurm-ai-clusters/topology-aware-placement.md",
+    "reading_time_min": 7,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "slurm-backfill-tuning",
+        "slurm-distributed-training"
+      ]
+    },
+    "status": "stable",
+    "summary": "How Slurm places multi-node jobs with and without a topology plugin - topology/tree, --switches, topology/block that refuses to straddle, the 25.05 topology.yaml, and a fatal block config.",
+    "tags": [
+      "distributed-training",
+      "hpc",
+      "slurm"
+    ],
+    "title": "Keep the Job on One Switch: Topology-Aware Placement in Slurm",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
+  "slurm-upgrade-order": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-upgrade-order",
+    "level": "intermediate",
+    "order": 3,
+    "path": "fields/schedulers/slurm-cluster-operations/slurm-upgrade-order.md",
+    "reading_time_min": 13,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "slurm-accounting-multi-tenancy",
+        "slurm-pam-adopt-ssh-access"
+      ]
+    },
+    "status": "stable",
+    "summary": "Order Slurm daemons must be upgraded in, how far apart two versions can be, what to back up, why slurmdbd needs a hand-started first run, and why a cluster is not upgraded until last old job finishes.",
+    "tags": [
+      "hpc",
+      "slurm"
+    ],
+    "title": "Upgrading Slurm: The Order, the Window, and the Parts That Bite",
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
+  },
+  "slurm-version-changes": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-version-changes",
+    "level": "intermediate",
+    "order": 4,
+    "path": "fields/schedulers/slurm-cluster-operations/slurm-version-changes.md",
+    "reading_time_min": 12,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "slurm-cgroups-in-practice",
+        "slurm-job-submit-lua",
+        "slurm-preemption-requeue-signals",
+        "slurm-qos-preemption-setup",
+        "slurm-reservations-and-maintenance",
+        "slurm-sacct-job-forensics",
+        "slurm-signals-cheatsheet",
+        "slurm-upgrade-order"
+      ]
+    },
+    "status": "stable",
+    "summary": "A per-topic tour of what changed in Slurm between 23.11 and 26.05 for preemption, job_submit/lua, reservations, signals, accounting and cgroups, with the security-fix timeline and upgrade paths.",
+    "tags": [
+      "hpc",
+      "slurm"
+    ],
+    "title": "The Changelog Nobody Reads: What Moved Between Slurm 23.11 and 26.05",
+    "type": "reference",
+    "types": [
+      "reference"
+    ]
+  },
+  "stir-the-pot-population-and-sampling": {
+    "domains": [
+      "statistics"
+    ],
+    "id": "stir-the-pot-population-and-sampling",
+    "level": "beginner",
+    "order": 1,
+    "path": "fields/data-science/probability-statistics/stir-the-pot-population-and-sampling.md",
+    "reading_time_min": 11,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "data-types-and-frequency-tables",
+        "probability-statistics-series"
+      ]
+    },
+    "status": "stable",
+    "summary": "Why a sip judges a pot of tea only if you stir it: population versus sample, four ways to draw a sample, the poll that asked 2.4 million and still erred.",
+    "tags": [
+      "sampling",
+      "statistics"
+    ],
+    "title": "Stir the Pot First: Population, Sample, and Why We Guess",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "the-bell-curve": {
+    "domains": [
+      "statistics"
+    ],
+    "id": "the-bell-curve",
+    "level": "intermediate",
+    "order": 11,
+    "path": "fields/data-science/probability-statistics/the-bell-curve.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [
+        "coins-and-calls"
+      ],
+      "related": [
+        "draw-it-before-you-describe-it",
+        "probability-statistics-series",
+        "where-do-you-stand"
+      ]
+    },
+    "status": "stable",
+    "summary": "Many small nudges add up to a bell. For continuous data probability is area, and the z-score makes every bell the same bell, so one table serves all of them, until the data are not a bell.",
+    "tags": [
+      "statistics"
+    ],
+    "title": "The Bell Curve: Probability as Area, and One Ruler for Every Bell",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "the-courtroom-for-numbers": {
+    "domains": [
+      "statistics"
+    ],
+    "id": "the-courtroom-for-numbers",
+    "level": "intermediate",
+    "order": 14,
+    "path": "fields/data-science/probability-statistics/the-courtroom-for-numbers.md",
+    "reading_time_min": 10,
+    "relations": {
+      "prerequisites": [
+        "how-sure-are-you"
+      ],
+      "related": [
+        "probability-statistics-series",
+        "why-averages-behave"
+      ]
+    },
+    "status": "stable",
+    "summary": "A hypothesis test asks one question: could plain luck have produced a difference this big? Shuffle the labels and count. What the p-value is, what it is not, and how testing twenty things fools you.",
+    "tags": [
+      "statistics"
+    ],
+    "title": "The Courtroom for Numbers: Could Plain Luck Do This?",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "the-map-of-leaf-and-kettle": {
+    "domains": [
+      "statistics"
+    ],
+    "id": "the-map-of-leaf-and-kettle",
+    "level": "beginner",
+    "order": 16,
+    "path": "fields/data-science/probability-statistics/the-map-of-leaf-and-kettle.md",
+    "reading_time_min": 23,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "data-types-and-frequency-tables",
+        "draw-it-before-you-describe-it",
+        "how-far-from-the-middle",
+        "probability-statistics-series",
+        "stir-the-pot-population-and-sampling",
+        "the-number-on-the-tin",
+        "where-do-you-stand"
+      ]
+    },
+    "status": "stable",
+    "summary": "A concept map, decision chart and definitions sheet for the whole series, as a memory palace in one tea shop: nine rooms for describing data, an upstairs for chance.",
+    "tags": [
+      "statistics"
+    ],
+    "title": "The Map of Leaf & Kettle: Every Idea So Far in One Walk Through the Shop",
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
+  },
+  "the-number-on-the-tin": {
+    "domains": [
+      "statistics"
+    ],
+    "id": "the-number-on-the-tin",
+    "level": "beginner",
+    "order": 4,
+    "path": "fields/data-science/probability-statistics/the-number-on-the-tin.md",
+    "reading_time_min": 12,
+    "relations": {
+      "prerequisites": [
+        "draw-it-before-you-describe-it"
+      ],
+      "related": [
+        "data-types-and-frequency-tables",
+        "draw-it-before-you-describe-it",
+        "probability-statistics-series"
+      ]
+    },
+    "status": "stable",
+    "summary": "Why a perfectly computed average can describe nobody: \"typical\" is ambiguous, and mean, median and mode are three honest answers to three different questions. Look at the picture first.",
+    "tags": [
+      "statistics"
+    ],
+    "title": "The Number on the Tin: Mean, Median and Mode",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "the-test-that-was-99-percent-accurate": {
+    "domains": [
+      "statistics"
+    ],
+    "id": "the-test-that-was-99-percent-accurate",
+    "level": "beginner",
+    "order": 8,
+    "path": "fields/data-science/probability-statistics/the-test-that-was-99-percent-accurate.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [
+        "counting-the-ways"
+      ],
+      "related": [
+        "probability-statistics-series"
+      ]
+    },
+    "status": "stable",
+    "summary": "Conditional probability is \"shrink the crowd to those who match, then count again\". Bayes' rule is that count read the other way; a tree of whole tins shows why a 99% test is often wrong.",
+    "tags": [
+      "statistics"
+    ],
+    "title": "The Test That Was 99% Accurate: Conditional Probability and Bayes' Rule",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "threat-model-and-first-launch": {
+    "domains": [
+      "software-engineering",
+      "system-design"
+    ],
+    "id": "threat-model-and-first-launch",
+    "level": "beginner",
+    "path": "programming/local-app-accounts/threat-model-and-first-launch.md",
+    "reading_time_min": 4,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Before writing any account code, state what accounts will and will not protect, then handle the very first sign-up gracefully.",
+    "tags": [
+      "design",
+      "programming",
+      "software"
+    ],
+    "title": "Two People, One Laptop: What Accounts Should (and Shouldn't) Promise",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
+  "time-series-analysis": {
+    "domains": [
+      "machine-learning",
+      "statistics"
+    ],
+    "id": "time-series-analysis",
+    "level": "",
+    "path": "fields/tabular-data/concept-in-time-series/timeseriesfield.md",
+    "reading_time_min": 7,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "A step-by-step learning path for time series analysis, from the basics through data preparation, analysis techniques and forecasting to advanced techniques and practical projects.",
+    "tags": [],
+    "title": "Time Series Analysis",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "two-things-moving-together": {
+    "domains": [
+      "statistics"
+    ],
+    "id": "two-things-moving-together",
+    "level": "intermediate",
+    "order": 15,
+    "path": "fields/data-science/probability-statistics/two-things-moving-together.md",
+    "reading_time_min": 11,
+    "relations": {
+      "prerequisites": [
+        "the-courtroom-for-numbers"
+      ],
+      "related": [
+        "draw-it-before-you-describe-it",
+        "how-far-from-the-middle",
+        "probability-statistics-series",
+        "where-do-you-stand"
+      ]
+    },
+    "status": "stable",
+    "summary": "Correlation is the average product of paired z-scores, a number about straight-line togetherness only. The regression line is least squared walking applied to a line. Graph first, always.",
+    "tags": [
+      "statistics"
+    ],
+    "title": "Two Things Moving Together: Correlation and the Line",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "unsupervised-learning": {
+    "domains": [
+      "machine-learning",
+      "statistics"
+    ],
+    "id": "unsupervised-learning",
+    "level": "",
+    "path": "fields/tabular-data/concept-in-machine-learning/ml-unsupervised.md",
+    "reading_time_min": 22,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Unsupervised learning notes on clustering (K-means, picking an algorithm and the number of clusters) and dimensionality reduction such as PCA, plus the curse of dimensionality.",
+    "tags": [
+      "clustering"
+    ],
+    "title": "Unsupervised Learning",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "used-cars-retailer-kpis": {
+    "domains": [
+      "business",
+      "machine-learning"
+    ],
+    "id": "used-cars-retailer-kpis",
+    "level": "",
+    "path": "business/used-cars-retailer.md",
+    "reading_time_min": 7,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "The KPIs a used-car buying and selling company should target, how to calculate each, and the projects that relate to them.",
+    "tags": [],
+    "title": "Used Cars Retailer Company",
+    "type": "note",
+    "types": [
+      "note"
+    ]
+  },
+  "vm-cheatsheet": {
+    "domains": [
+      "devops"
+    ],
+    "id": "vm-cheatsheet",
+    "level": "intermediate",
+    "order": 6,
+    "path": "fields/devops/victoriametrics/cheatsheet.md",
+    "reading_time_min": 6,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "vm-metricsql-vmalert",
+        "vm-retention-backups",
+        "vm-single-node",
+        "vm-vmagent-buffering"
+      ]
+    },
+    "status": "stable",
+    "summary": "The VictoriaMetrics series as direct steps - verified install, service user, scrape config, admin keys, systemd unit, vmagent with a pinned queue, retention, backups, restore test, and tested alerts.",
+    "tags": [
+      "monitoring",
+      "victoriametrics"
+    ],
+    "title": "VictoriaMetrics Cheatsheet: Every Step from the Series",
+    "type": "reference",
+    "types": [
+      "reference",
+      "guide"
+    ]
+  },
+  "vm-metricsql-vmalert": {
+    "domains": [
+      "devops",
+      "systems-and-hpc"
+    ],
+    "id": "vm-metricsql-vmalert",
+    "level": "intermediate",
+    "order": 5,
+    "path": "fields/devops/victoriametrics/metricsql-and-vmalert.md",
+    "reading_time_min": 10,
+    "relations": {
+      "prerequisites": [
+        "vm-single-node"
+      ],
+      "related": [
+        "vm-retention-backups",
+        "vm-vmagent-buffering"
+      ]
+    },
+    "status": "stable",
+    "summary": "Why increase() gives different answers in Prometheus and VictoriaMetrics on the same data, and alert rules whose tests are proven to fail when the rule is wrong.",
+    "tags": [
+      "monitoring",
+      "prometheus",
+      "victoriametrics"
+    ],
+    "title": "MetricsQL Surprises and Alerts You Can Test",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
+  "vm-retention-backups": {
+    "domains": [
+      "devops",
+      "systems-and-hpc"
+    ],
+    "id": "vm-retention-backups",
+    "level": "intermediate",
+    "order": 4,
+    "path": "fields/devops/victoriametrics/retention-disk-and-backups.md",
+    "reading_time_min": 11,
+    "relations": {
+      "prerequisites": [
+        "vm-single-node"
+      ],
+      "related": [
+        "vm-vmagent-buffering"
+      ]
+    },
+    "status": "stable",
+    "summary": "What -retentionPeriod really deletes and when, how to size the disk from a real test run, the read-only mode that /health doesn't report, and an hourly backup job proven by restoring it.",
+    "tags": [
+      "monitoring",
+      "storage",
+      "victoriametrics"
+    ],
+    "title": "Retention, Full Disks and Backups: Looking After the Data Once It Lands",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
+  "vm-single-node": {
+    "domains": [
+      "devops",
+      "systems-and-hpc"
+    ],
+    "id": "vm-single-node",
+    "level": "intermediate",
+    "order": 2,
+    "path": "fields/devops/victoriametrics/single-node-in-ten-minutes.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [
+        "vm-why-victoriametrics"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "Install single-node VictoriaMetrics from a verified tarball, run it under systemd, reload scrape config safely, and close the delete endpoint that is open by default.",
+    "tags": [
+      "monitoring",
+      "prometheus",
+      "victoriametrics"
+    ],
+    "title": "A Single Node You Can Trust: Installing VictoriaMetrics Properly",
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
+  },
+  "vm-vmagent-buffering": {
+    "domains": [
+      "devops",
+      "systems-and-hpc"
+    ],
+    "id": "vm-vmagent-buffering",
+    "level": "intermediate",
+    "order": 3,
+    "path": "fields/devops/victoriametrics/vmagent-and-the-network-blip.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [
+        "vm-single-node"
+      ],
+      "related": []
+    },
+    "status": "stable",
+    "summary": "How vmagent buffers metrics on disk while storage is down, the URL edit that silently deletes that buffer, the v1.156.0 flag that prevents it, and how to size the queue.",
+    "tags": [
+      "monitoring",
+      "victoriametrics"
+    ],
+    "title": "vmagent and the Network Blip: Keeping Metrics Through an Outage",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  },
+  "vm-why-victoriametrics": {
+    "domains": [
+      "devops",
+      "systems-and-hpc"
+    ],
+    "id": "vm-why-victoriametrics",
+    "level": "beginner",
+    "order": 1,
+    "path": "fields/devops/victoriametrics/why-victoriametrics.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "gpu-allocation-vs-utilization"
+      ]
+    },
+    "status": "stable",
+    "summary": "What VictoriaMetrics is and isn't, its components in one table, when single-node is enough and when a cluster earns its complexity, and which features are free.",
+    "tags": [
+      "monitoring",
+      "prometheus",
+      "victoriametrics"
+    ],
+    "title": "The Prometheus That Ate the Head Node: Why VictoriaMetrics",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "what-to-expect": {
+    "domains": [
+      "statistics"
+    ],
+    "id": "what-to-expect",
+    "level": "beginner",
+    "order": 9,
+    "path": "fields/data-science/probability-statistics/what-to-expect.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [
+        "the-test-that-was-99-percent-accurate"
+      ],
+      "related": [
+        "how-far-from-the-middle",
+        "probability-statistics-series",
+        "the-number-on-the-tin"
+      ]
+    },
+    "status": "stable",
+    "summary": "A random variable is a number attached to each way things could turn out. Expected value and variance are the mean and the leftover walk of earlier parts, weighted by probability instead of frequency.",
+    "tags": [
+      "statistics"
+    ],
+    "title": "What to Expect: Random Variables and Expected Value",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "where-do-you-stand": {
+    "domains": [
+      "statistics"
+    ],
+    "id": "where-do-you-stand",
+    "level": "beginner",
+    "order": 6,
+    "path": "fields/data-science/probability-statistics/where-do-you-stand.md",
+    "reading_time_min": 10,
+    "relations": {
+      "prerequisites": [
+        "how-far-from-the-middle"
+      ],
+      "related": [
+        "draw-it-before-you-describe-it",
+        "probability-statistics-series",
+        "the-map-of-leaf-and-kettle"
+      ]
+    },
+    "status": "stable",
+    "summary": "A score means nothing without its crowd. Two rulers give it a position: rank (percentile) and distance in spreads (z-score). The box plot is just the ogive read at four landmarks.",
+    "tags": [
+      "statistics"
+    ],
+    "title": "Where Do You Stand? Percentiles, Z-Scores and the Box Plot",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "why-averages-behave": {
+    "domains": [
+      "statistics"
+    ],
+    "id": "why-averages-behave",
+    "level": "intermediate",
+    "order": 12,
+    "path": "fields/data-science/probability-statistics/why-averages-behave.md",
+    "reading_time_min": 10,
+    "relations": {
+      "prerequisites": [
+        "the-bell-curve"
+      ],
+      "related": [
+        "how-far-from-the-middle",
+        "probability-statistics-series",
+        "stir-the-pot-population-and-sampling"
+      ]
+    },
+    "status": "stable",
+    "summary": "An average is itself random: every sample gives a different one. Their spread shrinks as sigma over root n, and whatever the crowd looks like, sample averages pile into a bell. Bias is not cured.",
+    "tags": [
+      "sampling",
+      "statistics"
+    ],
+    "title": "Why Averages Behave: The Sip You Could Take a Thousand Times",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "your-kubeconfig-is-a-house-key": {
+    "domains": [
+      "devops",
+      "systems-and-hpc"
+    ],
+    "id": "your-kubeconfig-is-a-house-key",
+    "level": "intermediate",
+    "order": 12,
+    "path": "fields/devops/kubernetes/your-kubeconfig-is-a-house-key.md",
+    "reading_time_min": 8,
+    "relations": {
+      "prerequisites": [
+        "kubernetes-in-five-nouns"
+      ],
+      "related": [
+        "build-a-two-node-k3s-lab",
+        "k3s-vs-kubeadm"
+      ]
+    },
+    "status": "stable",
+    "summary": "What a kubeconfig holds, how kubectl picks one, why a leaked certificate can't be revoked, and how to issue each person a short-lived key instead of sharing yours.",
+    "tags": [
+      "kubernetes"
+    ],
+    "title": "Your kubeconfig Is a House Key",
+    "type": "concept",
+    "types": [
+      "concept",
+      "guide"
+    ]
+  }
+}

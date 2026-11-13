@@ -1,0 +1,9 @@
+# Expected NHC check counts per host and context for case-study-delta-cluster.yaml
+# Use with: EXPECTED_FILE=case-study-delta-expected.txt GPU_HOST=dgx05 nhc_test_harness.sh build
+cpu007    nhc         14
+dgx05     nhc         27
+login01   nhc         11
+mgmt01    nhc          4
+dgx05     nhc-epilog   9
+cpu007    nhc-epilog   5
+dgx05     nhc-deep    28
