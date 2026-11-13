@@ -1,7 +1,7 @@
 ---
 id: slurm-job-script-tale
 title: "The Tale of a Slurm Job Script: Submission Is a Commitment, Not a Promise"
-order: 2
+order: 1
 sidebar_label: The job script tale
 summary: Why editing a script after sbatch changes nothing, where Slurm keeps the frozen copy, what stays live, how to read the script back, and how to keep runs traceable.
 level: intermediate
@@ -78,10 +78,10 @@ sbatch ──(network)──> slurmctld ──> <StateSaveLocation>/hash.N/job.<
 
 Two consequences worth knowing:
 
-- **A damaged state directory can be fatal for a job.** In a SchedMD ticket, a zero-length `script` file made `slurmctld` log that it could not find the batch script and stop with "Check file system serving StateSaveLocation as that directory may be missing or corrupted". That is why the [upgrade page](/fields/schedulers/slurm-upgrade-order.md) backs this directory up before anything else.
+- **A damaged state directory can be fatal for a job.** In a SchedMD ticket, a zero-length `script` file made `slurmctld` log that it could not find the batch script and stop with "Check file system serving StateSaveLocation as that directory may be missing or corrupted". That is why the [upgrade page](/fields/schedulers/slurm-cluster-operations/slurm-upgrade-order.md) backs this directory up before anything else.
 - **Arrays share one copy.** A SchedMD talk on cluster field notes points out that array jobs cost far less than many individual jobs, because only one job script and environment file is kept for the whole array.
 
-On the node side, the [spool directory page](/fields/schedulers/slurm-spool-dir-full.md) explains why a full disk there drains the node: `slurmd` cannot write the script it is about to run.
+On the node side, the [spool directory page](/fields/schedulers/slurm-cluster-operations/slurm-spool-dir-full.md) explains why a full disk there drains the node: `slurmd` cannot write the script it is about to run.
 
 * * *
 
@@ -160,7 +160,7 @@ Cancel and resubmit is the only way to change the **script**. For some other cha
 
 Two related cases:
 
-- **Requeue.** A requeued job returns to pending and runs again. Since the controller holds the script, I would expect the original text to run even if you have edited the file since, but I found no source that says so. Test it with a short job. The [preemption page](/fields/schedulers/slurm-preemption-requeue-signals.md) covers writing scripts that survive requeue.
+- **Requeue.** A requeued job returns to pending and runs again. Since the controller holds the script, I would expect the original text to run even if you have edited the file since, but I found no source that says so. Test it with a short job. The [preemption page](/fields/schedulers/slurm-preemption/slurm-preemption-requeue-signals.md) covers writing scripts that survive requeue.
 - **Dependent jobs.** If `job2` was submitted with `--dependency=afterok:<job1>`, it carries its own snapshot taken when *it* was submitted. Fixing `job.sh` and resubmitting job 1 does not update job 2.
 
 * * *
@@ -246,7 +246,7 @@ afterwards       AccountingStoreFlags=job_script,job_env (21.08+) then sacct -B 
 
 **Takeaway:** Submission freezes the letter and its envelope (script, options, environment). Everything the letter points to is still out in the world.
 
-**Next:** [slurmstepd: The Small Daemon That Actually Runs Your Job](/fields/schedulers/slurm-slurmstepd.md)
+**Next:** [slurmstepd: The Small Daemon That Actually Runs Your Job](/fields/schedulers/slurm-inside-a-job/slurm-slurmstepd.md)
 
 * * *
 

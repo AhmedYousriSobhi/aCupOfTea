@@ -104,7 +104,7 @@ The preStop hook and your shutdown run on the same clock. The pod lifecycle docs
 
 Exit codes tell the story afterward. By the usual 128 + signal convention, **137** is SIGKILL (the lock change) and **143** is a SIGTERM nobody caught.
 
-If that sounds like Slurm's [`KillWait`](/fields/schedulers/slurm-preemption-requeue-signals.md), it is: ask politely, wait a fixed time, kill. So how does a run still die even when the manager is polite?
+If that sounds like Slurm's [`KillWait`](/fields/schedulers/slurm-preemption/slurm-preemption-requeue-signals.md), it is: ask politely, wait a fixed time, kill. So how does a run still die even when the manager is polite?
 
 * * *
 
@@ -226,7 +226,7 @@ spec:
 
 ## Back to the two tickets
 
-Ticket 1 gets a one-line answer: Slurm's drain is a cordon, and nothing is broken. Ticket 2 takes longer. Sana's `kubectl drain` did exactly what its reference says: cordon, evict, SIGTERM, 30 seconds, SIGKILL. Her trainer had no handler, her checkpoint sat on the wrong volume, and the clock was the default, so she hit four of the five doors. One Slurm habit survives the move, though: Slurm can warn a job minutes before its end with `--signal=B:USR1@300`, and as far as I could find Kubernetes has no equivalent, so the pod hears about an eviction only when the clock has already started. Checkpoint **regularly**, and treat the SIGTERM checkpoint as the last chance, not the only one. (A pod stuck in `Terminating` is a cousin of [Kill task failed](/fields/schedulers/slurm-kill-task-failed.md); for the Slurm-side order of operations see [rolling reboot order](/fields/schedulers/slurm-reboot-order.md).)
+Ticket 1 gets a one-line answer: Slurm's drain is a cordon, and nothing is broken. Ticket 2 takes longer. Sana's `kubectl drain` did exactly what its reference says: cordon, evict, SIGTERM, 30 seconds, SIGKILL. Her trainer had no handler, her checkpoint sat on the wrong volume, and the clock was the default, so she hit four of the five doors. One Slurm habit survives the move, though: Slurm can warn a job minutes before its end with `--signal=B:USR1@300`, and as far as I could find Kubernetes has no equivalent, so the pod hears about an eviction only when the clock has already started. Checkpoint **regularly**, and treat the SIGTERM checkpoint as the last chance, not the only one. (A pod stuck in `Terminating` is a cousin of [Kill task failed](/fields/schedulers/slurm-cluster-operations/slurm-kill-task-failed.md); for the Slurm-side order of operations see [rolling reboot order](/fields/schedulers/slurm-cluster-operations/slurm-reboot-order.md).)
 
 **Takeaway:** in Kubernetes the gentle command is `cordon`, and `drain` is the one that evicts. Give a long run a handler, a PVC, a measured grace period and a pod failure policy *before* maintenance night.
 

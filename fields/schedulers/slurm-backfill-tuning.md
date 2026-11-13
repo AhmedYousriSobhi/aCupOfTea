@@ -1,7 +1,7 @@
 ---
 id: slurm-backfill-tuning
 title: "Backfill Tuning: The Planner That Can Only See One Day Ahead"
-order: 7
+order: 3
 sidebar_label: Backfill tuning
 summary: Slurm backfill relies on accurate time limits. A 1-day bf_window hides 7-day jobs, causing squeue drift. Use sdiag to tune bf_window, bf_resolution, bf_max_job_test, and bf_max_time.
 level: advanced
@@ -144,7 +144,7 @@ sacct -X -s CD -S 2026-10-01 -E now -n -P -o User,ElapsedRaw,TimelimitRaw \
  | sort -t= -k3 -n
 ```
 
-A ratio near 1.0 means honest limits. A ratio of 0.1 means that user is booking ten times the table they use. Reports like this are better used for a friendly conversation than for punishment, since users have good reasons to pad (a job killed at the limit loses all its work), and the [preemption page](/fields/schedulers/slurm-preemption-requeue-signals.md) covers making jobs safe to shorten.
+A ratio near 1.0 means honest limits. A ratio of 0.1 means that user is booking ten times the table they use. Reports like this are better used for a friendly conversation than for punishment, since users have good reasons to pad (a job killed at the limit loses all its work), and the [preemption page](/fields/schedulers/slurm-preemption/slurm-preemption-requeue-signals.md) covers making jobs safe to shorten.
 
 * * *
 

@@ -1,7 +1,7 @@
 ---
 id: slurm-preemption-requeue-signals
 title: "Dying Politely: Preemption, Requeue and the Signals Your Training Job Ignores"
-order: 8
+order: 1
 sidebar_label: Preemption, requeue and signals
 summary: How Slurm preemption modes differ, what GraceTime and --signal send and to whom, why a bash trap never fires while the trainer runs, and a requeue-safe checkpoint wrapper that cannot loop.
 level: intermediate
@@ -24,7 +24,7 @@ relations:
 
 # Dying Politely: Preemption, Requeue and the Signals Your Training Job Ignores
 
-> **Part of the [schedulers](/fields/schedulers/slurm-intro.md) directory.** Preemption behavior comes from SchedMD's Preemption guide for Slurm 26.05. Signal details come from site documentation and the `sbatch` options as described there. Where a paragraph says **Tested**, the behavior was measured on a two-node test cluster running Slurm 23.11.4, so it can differ from the 26.05 guide and from your version. The wrapper script is still a sketch and was not run as a whole, so test it with a short job before trusting a week-long run to it. The [signals cheat sheet](/fields/schedulers/slurm-signals-cheatsheet.md) holds the measured timelines.
+> **Part of the [schedulers](/fields/schedulers/slurm-intro.md) directory.** Preemption behavior comes from SchedMD's Preemption guide for Slurm 26.05. Signal details come from site documentation and the `sbatch` options as described there. Where a paragraph says **Tested**, the behavior was measured on a two-node test cluster running Slurm 23.11.4, so it can differ from the 26.05 guide and from your version. The wrapper script is still a sketch and was not run as a whole, so test it with a short job before trusting a week-long run to it. The [signals cheat sheet](/fields/schedulers/slurm-preemption/slurm-signals-cheatsheet.md) holds the measured timelines.
 
 ## Table of Contents
 
@@ -67,7 +67,7 @@ Nobody did anything wrong in the dramatic sense. Everybody just assumed that "re
 
 `PreemptType` decides *who* may preempt whom: `preempt/partition_prio` compares partition `PriorityTier` values, and `preempt/qos` uses rules stored in the accounting database. `PreemptMode` can then be set per partition or per QOS, so one cluster can requeue one queue and suspend another.
 
-**Tested:** a victim with `JobRequeue=0` and no `--requeue` ended as `PREEMPTED` and vanished from the queue; the same eviction with the job requeueable left a second run waiting. Two more details from the same tests: `PreemptType=preempt/none` is the off switch, but it must be paired with `PreemptMode=OFF`, because `preempt/none` with `PreemptMode=REQUEUE` is refused and the controller will not start. And `PreemptMode` accepted a `WITHIN` modifier (shown as `WITHIN,REQUEUE`), though what it does was not tested. The commands to set all of this up are in [the QOS preemption setup page](/fields/schedulers/slurm-qos-preemption-setup.md).
+**Tested:** a victim with `JobRequeue=0` and no `--requeue` ended as `PREEMPTED` and vanished from the queue; the same eviction with the job requeueable left a second run waiting. Two more details from the same tests: `PreemptType=preempt/none` is the off switch, but it must be paired with `PreemptMode=OFF`, because `preempt/none` with `PreemptMode=REQUEUE` is refused and the controller will not start. And `PreemptMode` accepted a `WITHIN` modifier (shown as `WITHIN,REQUEUE`), though what it does was not tested. The commands to set all of this up are in [the QOS preemption setup page](/fields/schedulers/slurm-preemption/slurm-qos-preemption-setup.md).
 
 > [!WARNING]
 > Suspend and GPUs make an awkward couple. The GRES guide says that when a job is suspended, its generic resources **do not become available to other jobs**. A suspended job keeps its GPUs allocated, so suspending is a poor way to free GPUs for a preemptor. Requeue or cancel is the way to actually release them.
@@ -188,7 +188,7 @@ What each piece is for:
 > The wrapper handles `USR1`. A preemption with `GraceTime` delivers `SIGTERM` to the job instead, and you may want a second trap for it that calls the same function. Remember the double `SIGTERM` described earlier.
 
 > [!WARNING]
-> **Tested: this wrapper does not receive the early `SIGTERM`.** It starts the trainer with `python train.py &`, which is a child of the batch shell and not a step, and the early `GraceTime` signal went only to `srun` steps. Two ways to close the gap: start the trainer with `srun python train.py &` so it hears the early `SIGTERM` itself, or have the admin set `PreemptParameters=send_user_signal` so the `USR1` from `--signal` reaches the batch shell at preemption. In both cases the final `SIGTERM` at the end of the grace period still arrives, so keep the trap for it. The [signals cheat sheet](/fields/schedulers/slurm-signals-cheatsheet.md#which-design-to-choose) lays out the choice.
+> **Tested: this wrapper does not receive the early `SIGTERM`.** It starts the trainer with `python train.py &`, which is a child of the batch shell and not a step, and the early `GraceTime` signal went only to `srun` steps. Two ways to close the gap: start the trainer with `srun python train.py &` so it hears the early `SIGTERM` itself, or have the admin set `PreemptParameters=send_user_signal` so the `USR1` from `--signal` reaches the batch shell at preemption. In both cases the final `SIGTERM` at the end of the grace period still arrives, so keep the trap for it. The [signals cheat sheet](/fields/schedulers/slurm-preemption/slurm-signals-cheatsheet.md#which-design-to-choose) lays out the choice.
 
 * * *
 
@@ -209,7 +209,7 @@ For the administrators, a handful of details from the guide that are easy to mis
 
 - **Backfill reserves whole nodes.** If a job preempts during a backfill pass, the whole nodes of the preempted jobs are reserved for the preemptor, even when it asked for less. One preemptor can therefore evict more than it needed to.
 - **`PreemptExemptTime`** sets a minimum runtime before a job may be preempted, honored for `REQUEUE` and `CANCEL`.
-- **Exclusivity blocks preemption.** `--exclusive=user` and `--exclusive=mcs` stop a job from preempting or being preempted by other users' jobs. The guide suggests using a job-submit plugin to disable those options if you rely on preemption. **Tested:** a [Lua submit script](/fields/schedulers/slurm-job-submit-lua.md#recipe-4-defuse-user-exclusive-jobs) can do exactly that, by turning `--exclusive=user` (`job_desc.shared == 2`) into plain `--exclusive`. Plain `--exclusive` did not block preemption in the tests.
+- **Exclusivity blocks preemption.** `--exclusive=user` and `--exclusive=mcs` stop a job from preempting or being preempted by other users' jobs. The guide suggests using a job-submit plugin to disable those options if you rely on preemption. **Tested:** a [Lua submit script](/fields/schedulers/slurm-preemption/slurm-job-submit-lua.md#recipe-4-defuse-user-exclusive-jobs) can do exactly that, by turning `--exclusive=user` (`job_desc.shared == 2`) into plain `--exclusive`. Plain `--exclusive` did not block preemption in the tests.
 - **Heterogeneous jobs** are preempted only if all components are eligible, and one component's mode (`SUSPEND` beats `REQUEUE` beats `CANCEL`) sets the mode for all.
 - **Licenses are not freed by suspend.** Reclaiming them needs `REQUEUE` or `CANCEL` plus `PreemptParameters=reclaim_licenses`.
 - **Plugin changes need a restart.** Changing `PriorityTier` or `OverSubscribe` only needs `scontrol reconfig`; changing preemption plugin settings needs a full restart of the daemons.
@@ -218,7 +218,7 @@ For the administrators, a handful of details from the guide that are easy to mis
 
 ## Setting it up
 
-Everything above assumes preemption is switched on, and it is off by default. The short version for QOS-based requeue (the full walkthrough, with a drill that proves it works, is on [its own page](/fields/schedulers/slurm-qos-preemption-setup.md)):
+Everything above assumes preemption is switched on, and it is off by default. The short version for QOS-based requeue (the full walkthrough, with a drill that proves it works, is on [its own page](/fields/schedulers/slurm-preemption/slurm-qos-preemption-setup.md)):
 
 ```text
 # slurm.conf
@@ -235,7 +235,7 @@ sacctmgr -i add qos high_bio
 sacctmgr -i modify qos high_bio set Preempt=low
 ```
 
-`Preempt=` goes on the preemptor and `PreemptMode`, `GraceTime` and `PreemptExemptTime` go on the victim. Changing `PreemptType` needs a `slurmctld` restart. If you want jobs to land in `low` or `high_<account>` without users typing the full name, a [Lua submit script](/fields/schedulers/slurm-job-submit-lua.md) does the routing.
+`Preempt=` goes on the preemptor and `PreemptMode`, `GraceTime` and `PreemptExemptTime` go on the victim. Changing `PreemptType` needs a `slurmctld` restart. If you want jobs to land in `low` or `high_<account>` without users typing the full name, a [Lua submit script](/fields/schedulers/slurm-preemption/slurm-job-submit-lua.md) does the routing.
 
 * * *
 
@@ -247,7 +247,7 @@ The signal measurements on this page were taken on 23.11.4. Between 23.11 and 26
 - **25.05:** a new `PRIORITY` preemption option, and deleting a QOS removes it from other QOSes' preempt lists.
 - **26.05:** `PreemptExemptTime` also applies to `suspend,gang` under `preempt/partition_prio`.
 
-No changelog entry mentions the `GraceTime` signal targets or `send_user_signal`, so rerun the probe on your version. The full list is on [Version changes 23.11 to 26.05](/fields/schedulers/slurm-version-changes.md#preemption).
+No changelog entry mentions the `GraceTime` signal targets or `send_user_signal`, so rerun the probe on your version. The full list is on [Version changes 23.11 to 26.05](/fields/schedulers/slurm-cluster-operations/slurm-version-changes.md#preemption).
 
 * * *
 
@@ -281,7 +281,7 @@ Nobody was dramatic. "Requeue" still meant "start the script again", but this ti
 
 **Takeaway:** requeue means "start the script again", so the job must catch its warning (steps hear `GraceTime`'s `SIGTERM`, the batch shell hears `--signal=B:` only with `send_user_signal`), save at a safe boundary, and find its own checkpoint on restart.
 
-**Next:** [The Guest List](/fields/schedulers/slurm-qos-preemption-setup.md) shows how to switch preemption on and prove it works with a drill.
+**Next:** [The Guest List](/fields/schedulers/slurm-preemption/slurm-qos-preemption-setup.md) shows how to switch preemption on and prove it works with a drill.
 
 * * *
 

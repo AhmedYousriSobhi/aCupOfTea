@@ -1,7 +1,7 @@
 ---
 id: slurm-qos-preemption-setup
 title: "The Guest List: Setting Up QOS Preemption Without Starting a War"
-order: 14
+order: 2
 sidebar_label: QOS preemption setup
 summary: A step-by-step setup of QOS-based requeue preemption (slurm.conf, sacctmgr, who may use what), a drill that proves it works, and the quiet ways it goes wrong.
 level: intermediate
@@ -23,7 +23,7 @@ relations:
 
 # The Guest List: Setting Up QOS Preemption Without Starting a War
 
-> **Part of the [schedulers](/fields/schedulers/slurm-intro.md) directory.** The [preemption page](/fields/schedulers/slurm-preemption-requeue-signals.md) explains what preemption *is*. This page is the other half: the commands that switch it on. Everything here was run on a two-node test cluster (Slurm 23.11.4, accounting on, both `slurmd` daemons on one Ubuntu 24.04 machine) and then adapted to read well. The names are invented. Your site's defaults, and your Slurm version, may differ, so run the drill in step 4 before you trust it.
+> **Part of the [schedulers](/fields/schedulers/slurm-intro.md) directory.** The [preemption page](/fields/schedulers/slurm-preemption/slurm-preemption-requeue-signals.md) explains what preemption *is*. This page is the other half: the commands that switch it on. Everything here was run on a two-node test cluster (Slurm 23.11.4, accounting on, both `slurmd` daemons on one Ubuntu 24.04 machine) and then adapted to read well. The names are invented. Your site's defaults, and your Slurm version, may differ, so run the drill in step 4 before you trust it.
 
 ## Table of Contents
 
@@ -64,7 +64,7 @@ Preemption by QOS is not one setting. It is three settings living in three place
 | The tiers themselves | The accounting database (`sacctmgr`) | "`low` exists; `high_bio` may evict `low`" |
 | Who may use which tier | Associations (`sacctmgr`) | "Users in account `bio` may submit to `high_bio`" |
 
-A fourth, optional piece decides which tier a job *lands in* when the user doesn't say. That is either a default QOS on the association or the [Lua submit script](/fields/schedulers/slurm-job-submit-lua.md). Neither is preemption itself: they only put a label on the job.
+A fourth, optional piece decides which tier a job *lands in* when the user doesn't say. That is either a default QOS on the association or the [Lua submit script](/fields/schedulers/slurm-preemption/slurm-job-submit-lua.md). Neither is preemption itself: they only put a label on the job.
 
 ---
 
@@ -157,7 +157,7 @@ Now the question from the beginning: which tier does a job get when the user typ
 | Way | How | Good for |
 |---|---|---|
 | Default QOS on the association | `sacctmgr modify user alice set DefaultQOS=low` | Plain defaults, nothing to maintain |
-| Submit script | [`job_submit.lua`](/fields/schedulers/slurm-job-submit-lua.md) | Rewriting what the user typed, e.g. `--qos=high` into `high_<account>` |
+| Submit script | [`job_submit.lua`](/fields/schedulers/slurm-preemption/slurm-job-submit-lua.md) | Rewriting what the user typed, e.g. `--qos=high` into `high_<account>` |
 
 In the test cluster, a job submitted with no `--qos` by a user whose `DefaultQOS` was `low` came out as `low`, with the submit script doing nothing. If "everyone types `--qos=high_bio` themselves" is acceptable, you can stop here and skip Lua entirely.
 
@@ -209,10 +209,10 @@ Requeue=1 Restarts=1
 
 Read the output like a detective. Job `55` appears twice because `-D` shows every run of a requeued job: first run `PREEMPTED`, second run `RUNNING` again. `Restarts=1` is the proof of a requeue, as opposed to a cancel. And the preemptor ran, which is the point.
 
-After the high job finishes, the victim starts again on its own. A script that does not look for its own checkpoint will start from the top, which is why the [preemption page](/fields/schedulers/slurm-preemption-requeue-signals.md) spends so long on resuming.
+After the high job finishes, the victim starts again on its own. A script that does not look for its own checkpoint will start from the top, which is why the [preemption page](/fields/schedulers/slurm-preemption/slurm-preemption-requeue-signals.md) spends so long on resuming.
 
 > [!NOTE]
-> The drill's victim used `sleep`, which dies on the first `SIGTERM`, so the preemptor started as soon as the victim was told. A real training job that ignores `SIGTERM` gets `KillWait` (30 seconds here) on top of the grace time before `SIGKILL`. The [signals cheat sheet](/fields/schedulers/slurm-signals-cheatsheet.md) has the measured timings.
+> The drill's victim used `sleep`, which dies on the first `SIGTERM`, so the preemptor started as soon as the victim was told. A real training job that ignores `SIGTERM` gets `KillWait` (30 seconds here) on top of the grace time before `SIGKILL`. The [signals cheat sheet](/fields/schedulers/slurm-preemption/slurm-signals-cheatsheet.md) has the measured timings.
 
 ---
 
@@ -220,11 +220,11 @@ After the high job finishes, the victim starts again on its own. A script that d
 
 | Symptom | Cause | What to check |
 |---|---|---|
-| The victim is **gone**, not requeued. `sacct` shows `PREEMPTED` and no second run | It was not requeueable: `JobRequeue=0` and no `--requeue` | `scontrol show job <id>` shows `Requeue=0`. Set `JobRequeue=1`, or make the [submit script](/fields/schedulers/slurm-job-submit-lua.md#recipe-3-make-the-victims-requeueable) set it |
+| The victim is **gone**, not requeued. `sacct` shows `PREEMPTED` and no second run | It was not requeueable: `JobRequeue=0` and no `--requeue` | `scontrol show job <id>` shows `Requeue=0`. Set `JobRequeue=1`, or make the [submit script](/fields/schedulers/slurm-preemption/slurm-job-submit-lua.md#recipe-3-make-the-victims-requeueable) set it |
 | Nothing is ever evicted | `Preempt=` is missing on the high QOS, or on the wrong side | `sacctmgr show qos format=Name,Preempt` |
 | Nothing is evicted for the first half hour | `PreemptExemptTime` is longer than the job has run | The exempt time on the victim QOS |
 | `Invalid qos specification` on submit | The user's association does not include that QOS | `sacctmgr show assoc user=<name> format=Account,QOS%30` |
-| A high job still waits behind a low one | The low job asked for `--exclusive=user` or `--exclusive=mcs`, which block cross-user preemption | Plain `--exclusive` was fine in the test; see the [preemption page](/fields/schedulers/slurm-preemption-requeue-signals.md#preemption-fine-print) |
+| A high job still waits behind a low one | The low job asked for `--exclusive=user` or `--exclusive=mcs`, which block cross-user preemption | Plain `--exclusive` was fine in the test; see the [preemption page](/fields/schedulers/slurm-preemption/slurm-preemption-requeue-signals.md#preemption-fine-print) |
 
 Two more are worth a sentence each. Jobs that were already running or pending before you switched this on keep their old QOS and are not preemptible until they finish, and that is a feature. And `PreemptMode=SUSPEND` keeps a suspended job's GPUs allocated, so for GPU clusters requeue is the mode that actually frees anything.
 
@@ -245,7 +245,7 @@ To roll back, set **both** `PreemptType=preempt/none` and `PreemptMode=OFF`, and
 
 ## Version notes
 
-The drill output on this page came from Slurm 23.11.4. Since then: 24.05 treats a job that was signalled during `GraceTime` as preempted for `CANCEL` and `REQUEUE`; 25.05 adds a `PRIORITY` option and removes a deleted QOS from other QOSes' preempt lists; 26.05 applies `PreemptExemptTime` to `suspend,gang` under `preempt/partition_prio`. Rerun the drill after any upgrade. [Version changes 23.11 to 26.05](/fields/schedulers/slurm-version-changes.md#preemption) has the list.
+The drill output on this page came from Slurm 23.11.4. Since then: 24.05 treats a job that was signalled during `GraceTime` as preempted for `CANCEL` and `REQUEUE`; 25.05 adds a `PRIORITY` option and removes a deleted QOS from other QOSes' preempt lists; 26.05 applies `PreemptExemptTime` to `suspend,gang` under `preempt/partition_prio`. Rerun the drill after any upgrade. [Version changes 23.11 to 26.05](/fields/schedulers/slurm-cluster-operations/slurm-version-changes.md#preemption) has the list.
 
 ---
 
@@ -257,7 +257,7 @@ The student wakes up in the morning to a log with one extra line and a job that 
 
 **Takeaway:** preemption by QOS is three settings that must agree (`slurm.conf`, the QOS rules, and who may use them), `Preempt=` goes on the preemptor and `GraceTime` on the victim, and only a drill with `Restarts=1` proves it works.
 
-**Next:** [The Receptionist Who Rewrites Your Badge](/fields/schedulers/slurm-job-submit-lua.md) shows how a submit script routes jobs into these tiers automatically.
+**Next:** [The Receptionist Who Rewrites Your Badge](/fields/schedulers/slurm-preemption/slurm-job-submit-lua.md) shows how a submit script routes jobs into these tiers automatically.
 
 ---
 

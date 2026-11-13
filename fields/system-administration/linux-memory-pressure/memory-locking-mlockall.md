@@ -232,7 +232,7 @@ Pinning pages fixes one stall. It is not armor.
 - **It isn't free for the machine.** Locked pages are lost to everyone else. Keep the rescuer small, and never lock a big cache "just in case".
 - **It counts inside cgroup limits.** In a container with a memory cap, locked pages count against it and can't be reclaimed to get back under it.
 
-Slurm does this for its own node daemon: `slurmd -M` locks it into memory, as described in [slurmstepd](/fields/schedulers/slurm-slurmstepd.md).
+Slurm does this for its own node daemon: `slurmd -M` locks it into memory, as described in [slurmstepd](/fields/schedulers/slurm-inside-a-job/slurm-slurmstepd.md).
 
 The same call has a second, unrelated use: programs that hold secrets (keys, passwords) lock that memory so it never reaches a swap file on disk.
 

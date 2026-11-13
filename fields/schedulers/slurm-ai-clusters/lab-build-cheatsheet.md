@@ -285,7 +285,7 @@ The pending series' `whypending` script goes to `/usr/local/bin/whypending` on `
 
 ## 5b. Preemption drill (optional)
 
-Want to see an urgent job evict a running one on this lab? This reuses the `urgent` QOS from step 5 as the preemptor and adds a requeueable `scavenger` victim. The same sequence was run, with `low` and `high_physics` as the names, on a separate two-node test cluster (Slurm 23.11.4) and is explained step by step in [The Guest List](/fields/schedulers/slurm-qos-preemption-setup.md). It was **not** re-run on this container lab, so treat the names below as an adaptation.
+Want to see an urgent job evict a running one on this lab? This reuses the `urgent` QOS from step 5 as the preemptor and adds a requeueable `scavenger` victim. The same sequence was run, with `low` and `high_physics` as the names, on a separate two-node test cluster (Slurm 23.11.4) and is explained step by step in [The Guest List](/fields/schedulers/slurm-preemption/slurm-qos-preemption-setup.md). It was **not** re-run on this container lab, so treat the names below as an adaptation.
 
 Add to the `slurm.conf` template (through `extra_slurm_conf`), then restart `slurmctld`, because `PreemptType` is not picked up by a plain reconfigure:
 
@@ -539,7 +539,7 @@ Expected: three `up` series with value `1`, and `SUCCESS`.
 | Ansible: `Attempting to decrypt but no vault secrets found` | The inventory has vault-encrypted vars | `vault_password_file` in `ansible.cfg` |
 | 26.05 daemons: `auth/munge` fatal | Started before munge | `systemctl restart munge`, then start them again |
 | `slurmctld` exits after a topology change | Unequal block sizes | See step 6 |
-| `scontrol reboot` leaves nodes in `reboot^` | Containers report the host's boot time | Lab artifact; `scontrol update nodename=... state=resume` ([reboot order](/fields/schedulers/slurm-reboot-order.md)) |
+| `scontrol reboot` leaves nodes in `reboot^` | Containers report the host's boot time | Lab artifact; `scontrol update nodename=... state=resume` ([reboot order](/fields/schedulers/slurm-cluster-operations/slurm-reboot-order.md)) |
 | `scancel -u alice -u bob` cancels only bob's jobs | Only the last `-u` counts | Loop: `for u in alice bob; do scancel -u $u; done` |
 
 Teardown: `~/alab/lab.sh down`, then `docker rm -f s26a s26b s26c`.

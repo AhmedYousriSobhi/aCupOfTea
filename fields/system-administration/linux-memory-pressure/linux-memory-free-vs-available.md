@@ -232,7 +232,7 @@ The engineer's panic was premature. The question to ask is not "why is free so l
 | Memory pressure (PSI `some`/`full`) rising | Yes. It measures stalls, not usage |
 | OOM-kill messages in the kernel log | Yes, and by then you are late |
 
-A footnote for cluster people: on a Slurm node, jobs live inside cgroups, and in cgroup v2 a job's `memory.current` includes its page cache. That is reclaimable under the job's limit, so a high number is not automatically a job about to be killed. The [cgroups page](/fields/schedulers/slurm-cgroups-in-practice.md) explains what actually gets enforced, and `memory.stat` splits a cgroup's usage into anonymous, file and shared parts the same way this page splits the host's.
+A footnote for cluster people: on a Slurm node, jobs live inside cgroups, and in cgroup v2 a job's `memory.current` includes its page cache. That is reclaimable under the job's limit, so a high number is not automatically a job about to be killed. The [cgroups page](/fields/schedulers/slurm-inside-a-job/slurm-cgroups-in-practice.md) explains what actually gets enforced, and `memory.stat` splits a cgroup's usage into anonymous, file and shared parts the same way this page splits the host's.
 
 * * *
 

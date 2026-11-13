@@ -36,6 +36,6 @@ Each page opens with a failure we reproduced in a lab, then fixes it.
 ## Related pages
 
 - [Why Is My Job Still Pending?](/fields/schedulers/slurm-pending-jobs/README.md): reason codes, priority and limits, on the same lab.
-- [GPU affinity and the socket lie](/fields/schedulers/slurm-gpu-affinity-socket-lie.md): which CPUs a GPU job gets.
+- [GPU affinity and the socket lie](/fields/schedulers/slurm-inside-a-job/slurm-gpu-affinity-socket-lie.md): which CPUs a GPU job gets.
 - [Mixed GPUs](/fields/schedulers/slurm-mixed-gpus/README.md): H100s and A100s in one job.
-- [Preemption, requeue and signals](/fields/schedulers/slurm-preemption-requeue-signals.md): keeping a long training run alive.
+- [Preemption, requeue and signals](/fields/schedulers/slurm-preemption/slurm-preemption-requeue-signals.md): keeping a long training run alive.
