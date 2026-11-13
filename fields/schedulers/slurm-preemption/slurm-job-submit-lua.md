@@ -1,7 +1,7 @@
 ---
 id: slurm-job-submit-lua
 title: "The Receptionist Who Rewrites Your Badge: job_submit.lua"
-order: 15
+order: 3
 sidebar_label: Job submit plugin (Lua)
 summary: What the Lua job_submit plugin is, where its script lives, what it can read and return, four tested recipes (QOS routing, time limits, requeue, exclusive), and how it fails.
 level: intermediate
@@ -75,7 +75,7 @@ Two functions make a script. Slurm calls them by name:
 | `slurm_job_submit(job_desc, part_list, submit_uid)` | A job is submitted | Defaults, routing, rejecting |
 | `slurm_job_modify(job_desc, job_rec, part_list, modify_uid)` | A job is changed with `scontrol update` | Applying the same rules, so nobody bypasses them |
 
-This is the receptionist from the title. She sees every visitor, can write a different name on the badge, and can turn people away at the door. She does not decide who gets a seat (that is the scheduler), and she knows nothing about [preemption](/fields/schedulers/slurm-qos-preemption-setup.md). She only decides what the badge says.
+This is the receptionist from the title. She sees every visitor, can write a different name on the badge, and can turn people away at the door. She does not decide who gets a seat (that is the scheduler), and she knows nothing about [preemption](/fields/schedulers/slurm-preemption/slurm-qos-preemption-setup.md). She only decides what the badge says.
 
 ---
 
@@ -164,7 +164,7 @@ The first line is `log_user`; the second is the standard text for the error code
 
 ## Recipe 1: default the QOS and route "high"
 
-The most common job for the receptionist, and the reason this page exists next to the [QOS preemption setup](/fields/schedulers/slurm-qos-preemption-setup.md). A job with no QOS goes to `low`. A job that asks for plain `high` is renamed to the account's own tier, `high_<account>`.
+The most common job for the receptionist, and the reason this page exists next to the [QOS preemption setup](/fields/schedulers/slurm-preemption/slurm-qos-preemption-setup.md). A job with no QOS goes to `low`. A job that asks for plain `high` is renamed to the account's own tier, `high_<account>`.
 
 ```lua
 if job_desc.qos == nil or job_desc.qos == "" then
@@ -218,7 +218,7 @@ If your cluster has `JobRequeue=1` (a common default), this recipe changes nothi
 
 ## Recipe 4: defuse user-exclusive jobs
 
-The [preemption page](/fields/schedulers/slurm-preemption-requeue-signals.md#preemption-fine-print) notes that `--exclusive=user` and `--exclusive=mcs` stop a job from preempting or being preempted by other users' jobs, and suggests a submit plugin to disable them where you rely on preemption. In `job_desc.shared`, `--exclusive=user` is `2` and plain `--exclusive` is `0`:
+The [preemption page](/fields/schedulers/slurm-preemption/slurm-preemption-requeue-signals.md#preemption-fine-print) notes that `--exclusive=user` and `--exclusive=mcs` stop a job from preempting or being preempted by other users' jobs, and suggests a submit plugin to disable them where you rely on preemption. In `job_desc.shared`, `--exclusive=user` is `2` and plain `--exclusive` is `0`:
 
 ```lua
 if job_desc.shared == 2 then
@@ -329,13 +329,13 @@ The pattern is that a running controller forgives a bad edit, and a starting con
 - **It is not free.** It runs on every submission, in the controller. Keep it short, with no file reads, no network calls and no waiting.
 - **It does not see jobs already in the queue.** Existing jobs keep what they had until someone modifies them, and then `slurm_job_modify` applies.
 - **It is not one call per job for heterogeneous jobs.** Slurm's documentation notes that it runs separately for each component; see [where hetjobs shine](/fields/schedulers/slurm-mixed-gpus/where-hetjobs-shine.md).
-- **It does not do preemption.** It labels jobs. The [QOS setup](/fields/schedulers/slurm-qos-preemption-setup.md) decides what the labels mean.
+- **It does not do preemption.** It labels jobs. The [QOS setup](/fields/schedulers/slurm-preemption/slurm-qos-preemption-setup.md) decides what the labels mean.
 
 ---
 
 ## Version notes
 
-The script on this page was tested on Slurm 23.11.4. Later versions add: `curr_dependency` (24.05.2); `assoc_qos` and `slurm.get_qos_priority()` (24.11); a crash fix when reading `assoc_qos` for an association that does not exist (25.05.3); and, in 26.05, a stack trace in the log on runtime errors plus `core_spec` and `thread_spec` in `job_desc`. 26.05 also replaces `ExclusiveUser` and `ExclusiveTopo` in partition definitions with `Exclusive=[NO|NODE|USER|TOPO]`, which is worth knowing for Recipe 4. None of these were tested here. [Version changes 23.11 to 26.05](/fields/schedulers/slurm-version-changes.md#job_submitlua) has the details.
+The script on this page was tested on Slurm 23.11.4. Later versions add: `curr_dependency` (24.05.2); `assoc_qos` and `slurm.get_qos_priority()` (24.11); a crash fix when reading `assoc_qos` for an association that does not exist (25.05.3); and, in 26.05, a stack trace in the log on runtime errors plus `core_spec` and `thread_spec` in `job_desc`. 26.05 also replaces `ExclusiveUser` and `ExclusiveTopo` in partition definitions with `Exclusive=[NO|NODE|USER|TOPO]`, which is worth knowing for Recipe 4. None of these were tested here. [Version changes 23.11 to 26.05](/fields/schedulers/slurm-cluster-operations/slurm-version-changes.md#job_submitlua) has the details.
 
 ---
 
@@ -347,7 +347,7 @@ By the following Monday there are no boulders. Nobody was shamed in an email. Th
 
 **Takeaway:** the Lua submit script is a receptionist inside `slurmctld`: it can read, rewrite or refuse every job at the door, a running controller forgives a broken edit but a restarting one does not, so put the file in place first and check its syntax before you save.
 
-**Next:** [Who Gets Told What](/fields/schedulers/slurm-signals-cheatsheet.md) covers every signal Slurm sends to a job, and who actually receives it.
+**Next:** [Who Gets Told What](/fields/schedulers/slurm-preemption/slurm-signals-cheatsheet.md) covers every signal Slurm sends to a job, and who actually receives it.
 
 ---
 

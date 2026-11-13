@@ -3089,7 +3089,7 @@
     ],
     "id": "slurm-accounting-multi-tenancy",
     "level": "intermediate",
-    "order": 6,
+    "order": 2,
     "path": "fields/schedulers/slurm-accounting-multi-tenancy.md",
     "reading_time_min": 9,
     "relations": {
@@ -3120,7 +3120,7 @@
     ],
     "id": "slurm-backfill-tuning",
     "level": "advanced",
-    "order": 7,
+    "order": 3,
     "path": "fields/schedulers/slurm-backfill-tuning.md",
     "reading_time_min": 21,
     "relations": {
@@ -3148,8 +3148,8 @@
     ],
     "id": "slurm-cgroups-in-practice",
     "level": "intermediate",
-    "order": 4,
-    "path": "fields/schedulers/slurm-cgroups-in-practice.md",
+    "order": 3,
+    "path": "fields/schedulers/slurm-inside-a-job/slurm-cgroups-in-practice.md",
     "reading_time_min": 11,
     "relations": {
       "prerequisites": [],
@@ -3243,8 +3243,8 @@
     ],
     "id": "slurm-gpu-affinity-socket-lie",
     "level": "advanced",
-    "order": 5,
-    "path": "fields/schedulers/slurm-gpu-affinity-socket-lie.md",
+    "order": 4,
+    "path": "fields/schedulers/slurm-inside-a-job/slurm-gpu-affinity-socket-lie.md",
     "reading_time_min": 10,
     "relations": {
       "prerequisites": [],
@@ -3332,8 +3332,8 @@
     ],
     "id": "slurm-job-script-tale",
     "level": "intermediate",
-    "order": 2,
-    "path": "fields/schedulers/slurm-job-script-tale.md",
+    "order": 1,
+    "path": "fields/schedulers/slurm-inside-a-job/slurm-job-script-tale.md",
     "reading_time_min": 11,
     "relations": {
       "prerequisites": [
@@ -3364,8 +3364,8 @@
     ],
     "id": "slurm-job-submit-lua",
     "level": "intermediate",
-    "order": 15,
-    "path": "fields/schedulers/slurm-job-submit-lua.md",
+    "order": 3,
+    "path": "fields/schedulers/slurm-preemption/slurm-job-submit-lua.md",
     "reading_time_min": 11,
     "relations": {
       "prerequisites": [],
@@ -3395,8 +3395,8 @@
     ],
     "id": "slurm-kill-task-failed",
     "level": "intermediate",
-    "order": 9,
-    "path": "fields/schedulers/slurm-kill-task-failed.md",
+    "order": 6,
+    "path": "fields/schedulers/slurm-cluster-operations/slurm-kill-task-failed.md",
     "reading_time_min": 7,
     "relations": {
       "prerequisites": [],
@@ -3603,8 +3603,8 @@
     ],
     "id": "slurm-pam-adopt-ssh-access",
     "level": "intermediate",
-    "order": 11,
-    "path": "fields/schedulers/slurm-pam-adopt-ssh-access.md",
+    "order": 5,
+    "path": "fields/schedulers/slurm-cluster-operations/slurm-pam-adopt-ssh-access.md",
     "reading_time_min": 8,
     "relations": {
       "prerequisites": [],
@@ -3660,8 +3660,8 @@
     ],
     "id": "slurm-preemption-requeue-signals",
     "level": "intermediate",
-    "order": 8,
-    "path": "fields/schedulers/slurm-preemption-requeue-signals.md",
+    "order": 1,
+    "path": "fields/schedulers/slurm-preemption/slurm-preemption-requeue-signals.md",
     "reading_time_min": 13,
     "relations": {
       "prerequisites": [],
@@ -3754,8 +3754,8 @@
     ],
     "id": "slurm-qos-preemption-setup",
     "level": "intermediate",
-    "order": 14,
-    "path": "fields/schedulers/slurm-qos-preemption-setup.md",
+    "order": 2,
+    "path": "fields/schedulers/slurm-preemption/slurm-qos-preemption-setup.md",
     "reading_time_min": 9,
     "relations": {
       "prerequisites": [
@@ -3787,8 +3787,8 @@
     ],
     "id": "slurm-reboot-order",
     "level": "intermediate",
-    "order": 12,
-    "path": "fields/schedulers/slurm-reboot-order.md",
+    "order": 2,
+    "path": "fields/schedulers/slurm-cluster-operations/slurm-reboot-order.md",
     "reading_time_min": 9,
     "relations": {
       "prerequisites": [],
@@ -3816,8 +3816,8 @@
     ],
     "id": "slurm-reservations-and-maintenance",
     "level": "intermediate",
-    "order": 17,
-    "path": "fields/schedulers/slurm-reservations-and-maintenance.md",
+    "order": 1,
+    "path": "fields/schedulers/slurm-cluster-operations/slurm-reservations-and-maintenance.md",
     "reading_time_min": 8,
     "relations": {
       "prerequisites": [],
@@ -3847,7 +3847,7 @@
     ],
     "id": "slurm-sacct-job-forensics",
     "level": "beginner",
-    "order": 18,
+    "order": 4,
     "path": "fields/schedulers/slurm-sacct-job-forensics.md",
     "reading_time_min": 8,
     "relations": {
@@ -3878,8 +3878,8 @@
     ],
     "id": "slurm-signals-cheatsheet",
     "level": "intermediate",
-    "order": 16,
-    "path": "fields/schedulers/slurm-signals-cheatsheet.md",
+    "order": 4,
+    "path": "fields/schedulers/slurm-preemption/slurm-signals-cheatsheet.md",
     "reading_time_min": 8,
     "relations": {
       "prerequisites": [],
@@ -3908,8 +3908,8 @@
     ],
     "id": "slurm-slurmstepd",
     "level": "intermediate",
-    "order": 3,
-    "path": "fields/schedulers/slurm-slurmstepd.md",
+    "order": 2,
+    "path": "fields/schedulers/slurm-inside-a-job/slurm-slurmstepd.md",
     "reading_time_min": 11,
     "relations": {
       "prerequisites": [],
@@ -3937,8 +3937,8 @@
     ],
     "id": "slurm-spool-dir-full",
     "level": "intermediate",
-    "order": 10,
-    "path": "fields/schedulers/slurm-spool-dir-full.md",
+    "order": 7,
+    "path": "fields/schedulers/slurm-cluster-operations/slurm-spool-dir-full.md",
     "reading_time_min": 10,
     "relations": {
       "prerequisites": [],
@@ -3996,8 +3996,8 @@
     ],
     "id": "slurm-upgrade-order",
     "level": "intermediate",
-    "order": 13,
-    "path": "fields/schedulers/slurm-upgrade-order.md",
+    "order": 3,
+    "path": "fields/schedulers/slurm-cluster-operations/slurm-upgrade-order.md",
     "reading_time_min": 13,
     "relations": {
       "prerequisites": [],
@@ -4024,8 +4024,8 @@
     ],
     "id": "slurm-version-changes",
     "level": "intermediate",
-    "order": 19,
-    "path": "fields/schedulers/slurm-version-changes.md",
+    "order": 4,
+    "path": "fields/schedulers/slurm-cluster-operations/slurm-version-changes.md",
     "reading_time_min": 12,
     "relations": {
       "prerequisites": [],

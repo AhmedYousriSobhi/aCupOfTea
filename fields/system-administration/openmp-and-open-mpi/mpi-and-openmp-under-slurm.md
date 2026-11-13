@@ -55,7 +55,7 @@ So there's one question: **who unlocks each kitchen and tells every head chef th
 | **2. `mpirun` in an allocation** | `mpirun`, using Slurm's machinery | "Slurm creates a resource allocation for the job and then mpirun launches tasks using Slurm's infrastructure (srun)." |
 | **3. Outside Slurm** | `mpirun` over SSH or RSH | "Slurm is not directly launching the user application in case 3," and the guide calls it "not a recommended way". |
 
-For Open MPI, the guide names mode 1 as the winner: "This is the preferred mode of operation since accounting features and affinity done by Slurm will become available." Mode 3 is the back door that sneaks into a kitchen the manager never knew was in use, which is why the repo has a page on [locking it with pam_slurm_adopt](/fields/schedulers/slurm-pam-adopt-ssh-access.md).
+For Open MPI, the guide names mode 1 as the winner: "This is the preferred mode of operation since accounting features and affinity done by Slurm will become available." Mode 3 is the back door that sneaks into a kitchen the manager never knew was in use, which is why the repo has a page on [locking it with pam_slurm_adopt](/fields/schedulers/slurm-cluster-operations/slurm-pam-adopt-ssh-access.md).
 
 What is the "initialization of communications" that mode 1 performs? That's where the ticket 1 mystery hides.
 
@@ -85,7 +85,7 @@ sequenceDiagram
     S->>R: fork and exec your ranks<br/>with their address book
 ```
 
-The key line is in the box: before the stepd starts your first instruction, its first job is "performs MPI setup, using the appropriate plugin" (see [slurmstepd](/fields/schedulers/slurm-slurmstepd.md) for the full order). Slurm builds the address book before the ranks exist, then hands each rank its copy. Which plugin is used?
+The key line is in the box: before the stepd starts your first instruction, its first job is "performs MPI setup, using the appropriate plugin" (see [slurmstepd](/fields/schedulers/slurm-inside-a-job/slurm-slurmstepd.md) for the full order). Slurm builds the address book before the ranks exist, then hands each rank its copy. Which plugin is used?
 
 - The cluster default comes from `MpiDefault` in `slurm.conf`.
 - You override it per job with `srun --mpi=<type>`.
@@ -186,5 +186,5 @@ Slurm gave you the kitchens for a while, with a manager who knows every key. Now
 
 - [Slurm MPI Users Guide: launch modes, PMI/PMIx, Open MPI notes](https://slurm.schedmd.com/mpi_guide.html)
 - [srun manual: `--mpi`, `--cpus-per-task`, `--cpu-bind`, `SLURM_CPUS_PER_TASK`](https://slurm.schedmd.com/srun.html)
-- [slurmstepd: The Small Daemon That Actually Runs Your Job (this repo)](/fields/schedulers/slurm-slurmstepd.md)
-- [Locking SSH access with pam_slurm_adopt (this repo)](/fields/schedulers/slurm-pam-adopt-ssh-access.md)
+- [slurmstepd: The Small Daemon That Actually Runs Your Job (this repo)](/fields/schedulers/slurm-inside-a-job/slurm-slurmstepd.md)
+- [Locking SSH access with pam_slurm_adopt (this repo)](/fields/schedulers/slurm-cluster-operations/slurm-pam-adopt-ssh-access.md)

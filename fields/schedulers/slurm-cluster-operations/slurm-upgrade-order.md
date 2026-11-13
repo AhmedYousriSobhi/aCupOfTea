@@ -1,7 +1,7 @@
 ---
 id: slurm-upgrade-order
 title: "Upgrading Slurm: The Order, the Window, and the Parts That Bite"
-order: 13
+order: 3
 sidebar_label: Upgrading Slurm
 summary: Order Slurm daemons must be upgraded in, how far apart two versions can be, what to back up, why slurmdbd needs a hand-started first run, and why a cluster is not upgraded until last old job finishes.
 level: intermediate
@@ -19,7 +19,7 @@ relations:
 
 # Upgrading Slurm: The Order, the Window, and the Parts That Bite
 
-> **Part of the [schedulers](/fields/schedulers/slurm-intro.md) directory.** The [reboot-order page](/fields/schedulers/slurm-reboot-order.md) covers patching the OS underneath Slurm and says plainly that it assumes you are *not* upgrading Slurm itself. This is the other half. Everything here comes from SchedMD's Upgrade Guide and is not tested on a live cluster; read the guide for your exact target version before a real maintenance window. For what changed in the versions between 23.11 and 26.05, see [Version changes](/fields/schedulers/slurm-version-changes.md).
+> **Part of the [schedulers](/fields/schedulers/slurm-intro.md) directory.** The [reboot-order page](/fields/schedulers/slurm-cluster-operations/slurm-reboot-order.md) covers patching the OS underneath Slurm and says plainly that it assumes you are *not* upgrading Slurm itself. This is the other half. Everything here comes from SchedMD's Upgrade Guide and is not tested on a live cluster; read the guide for your exact target version before a real maintenance window. For what changed in the versions between 23.11 and 26.05, see [Version changes](/fields/schedulers/slurm-cluster-operations/slurm-version-changes.md).
 
 ## Table of Contents
 
@@ -99,7 +99,7 @@ flowchart LR
 
 The rule underneath it: **`slurmdbd` must be at the same or a higher major release than `slurmctld`**, and close enough to be within the window. That forces the database daemon to go first. If you run a backup `slurmdbd` host, upgrade it at the same time as the primary.
 
-Everything below the database follows the same dependency logic as the [reboot order](/fields/schedulers/slurm-reboot-order.md): the thing others talk to goes first, the things that talk to it follow.
+Everything below the database follows the same dependency logic as the [reboot order](/fields/schedulers/slurm-cluster-operations/slurm-reboot-order.md): the thing others talk to goes first, the things that talk to it follow.
 
 * * *
 
@@ -179,7 +179,7 @@ On a cluster with multi-day training jobs, that means "upgraded" is a state that
 
 - Do not schedule the *next* hop of a multi-step upgrade until the old jobs have drained.
 - Do not announce a new feature to users the moment the daemons restart.
-- This is one more reason to use the [`MAINT` reservation approach](/fields/schedulers/slurm-reboot-order.md#phase-0--scheduling) from the reboot page: an empty cluster has no old stepds.
+- This is one more reason to use the [`MAINT` reservation approach](/fields/schedulers/slurm-cluster-operations/slurm-reboot-order.md#phase-0--scheduling) from the reboot page: an empty cluster has no old stepds.
 
 * * *
 

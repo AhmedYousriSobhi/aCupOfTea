@@ -1,7 +1,7 @@
 ---
 id: slurm-reservations-and-maintenance
 title: "Calling Dibs on Nodes: Reservations, Maintenance Windows and the Job That Fit"
-order: 17
+order: 1
 sidebar_label: Reservations and maintenance
 summary: How to block nodes ahead of time with scontrol reservations, what happens to jobs that fit before the window and jobs that do not, and what users see while it is open.
 level: intermediate
@@ -57,7 +57,7 @@ There is a fourth answer, and it makes the cluster tidy itself. Tell the schedul
 |---|---|---|
 | Drain the nodes (`scontrol update State=DRAIN`) | No new jobs, now. Running ones finish | The nodes sit idle from the moment the last job ends, however long before the maintenance that is |
 | Reserve the nodes ahead of time | Jobs that fit before the window start as normal. Longer ones wait | Needs honest time limits. Jobs without `--time` never fit |
-| Reboot on demand (`scontrol reboot ASAP`) | Drains, reboots and returns each node for you | Fine for a reboot; the [reboot order page](/fields/schedulers/slurm-reboot-order.md) covers when it is not enough |
+| Reboot on demand (`scontrol reboot ASAP`) | Drains, reboots and returns each node for you | Fine for a reboot; the [reboot order page](/fields/schedulers/slurm-cluster-operations/slurm-reboot-order.md) covers when it is not enough |
 
 A reservation is the only one of the three that uses the idle time before the window. The scheduler knows when the window opens, so it keeps filling the nodes with jobs that will end in time. This is the same trick [backfill](/fields/schedulers/slurm-backfill-tuning.md) plays with a reserved start for a big job: the short jobs slip into the gap.
 
@@ -119,7 +119,7 @@ JobID  Time limit  State    Reason
 
 The five-minute job started at once, because it would be finished long before the window opens. The thirty-minute job waits, because it would still be running when the window opened. Neither was refused. The scheduler just did the arithmetic.
 
-That arithmetic uses the **time limit**, not how long the job really takes. A job with no `--time` inherits the partition's `MaxTime`, which is usually days, and it can never fit a window. This is the reason the [Lua submit script](/fields/schedulers/slurm-job-submit-lua.md#recipe-2-demand-a-time-limit) insists on `--time`, and why the [backfill page](/fields/schedulers/slurm-backfill-tuning.md) keeps asking whether the limits are honest.
+That arithmetic uses the **time limit**, not how long the job really takes. A job with no `--time` inherits the partition's `MaxTime`, which is usually days, and it can never fit a window. This is the reason the [Lua submit script](/fields/schedulers/slurm-preemption/slurm-job-submit-lua.md#recipe-2-demand-a-time-limit) insists on `--time`, and why the [backfill page](/fields/schedulers/slurm-backfill-tuning.md) keeps asking whether the limits are honest.
 
 > [!NOTE]
 > The reason text does not say "maintenance". The pending reason in the test was `ReqNodeNotAvail, May be reserved for other job`, both before the window opened and while it was open. It is the same generic message you see for any reservation. When a user asks why their job waits, look at the reservation, not the reason: `sinfo -T` and `scontrol show reservation` give the real answer. The [pending reasons page](/fields/schedulers/slurm-pending-jobs/why-is-my-job-pending.md) covers the codes.
@@ -156,7 +156,7 @@ node1 idle
 node2 idle
 ```
 
-The nodes went back to `idle` straight away. The order for a real maintenance (reserve, wait, reboot, resume, delete) fits with the [reboot order page](/fields/schedulers/slurm-reboot-order.md).
+The nodes went back to `idle` straight away. The order for a real maintenance (reserve, wait, reboot, resume, delete) fits with the [reboot order page](/fields/schedulers/slurm-cluster-operations/slurm-reboot-order.md).
 
 ---
 
@@ -193,15 +193,15 @@ The node was held for the demo even against its own user, until the job said whi
 |---|---|---|
 | The window opens and the node is still full | Jobs that were already running overlap it. IGNORE_JOBS lets you create the reservation, not kill them | `squeue -w <node> -o "%i %u %L"` before the window |
 | Nothing ever starts on the reserved nodes, even for the right user | The job did not name the reservation | `--reservation=<name>`, and the user must be in `Users` or `Accounts` |
-| The short jobs do not slip in before the window | They have no `--time`, so they inherit the partition `MaxTime` | A required `--time`, from the [submit script](/fields/schedulers/slurm-job-submit-lua.md) |
+| The short jobs do not slip in before the window | They have no `--time`, so they inherit the partition `MaxTime` | A required `--time`, from the [submit script](/fields/schedulers/slurm-preemption/slurm-job-submit-lua.md) |
 | A user cannot tell why their job waits | The reason text does not mention the reservation | `sinfo -T` |
-| The reservation is gone after a controller problem | Reservations are saved in the controller's state directory | Back up `StateSaveLocation`, as the [spool directory page](/fields/schedulers/slurm-spool-dir-full.md) notes |
+| The reservation is gone after a controller problem | Reservations are saved in the controller's state directory | Back up `StateSaveLocation`, as the [spool directory page](/fields/schedulers/slurm-cluster-operations/slurm-spool-dir-full.md) notes |
 
 ---
 
 ## Version notes
 
-Tested on 23.11.4. Later versions add the `USER_DELETE` flag (24.05), `FORCE_START` for recurring reservations and a `ReqReservation` field in `sacct` (25.05), `AllowQOS` and `AllowPartition` access controls (25.11), and in 26.05 "Do not allocate maintenance nodes to new reservations". [Version changes 23.11 to 26.05](/fields/schedulers/slurm-version-changes.md#reservations) has the list.
+Tested on 23.11.4. Later versions add the `USER_DELETE` flag (24.05), `FORCE_START` for recurring reservations and a `ReqReservation` field in `sacct` (25.05), `AllowQOS` and `AllowPartition` access controls (25.11), and in 26.05 "Do not allocate maintenance nodes to new reservations". [Version changes 23.11 to 26.05](/fields/schedulers/slurm-cluster-operations/slurm-version-changes.md#reservations) has the list.
 
 ---
 

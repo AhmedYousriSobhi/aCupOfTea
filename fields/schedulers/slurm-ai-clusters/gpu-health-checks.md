@@ -213,4 +213,4 @@ Nothing changed in the GPU. Slurm got told to look.
 - [Slurm 26.11 release notes](https://github.com/SchedMD/slurm/blob/master/RELEASE_NOTES.md): per-device drain and the DEGRADED state.
 - [LBNL Node Health Check](https://github.com/mej/nhc): a health-check framework for Slurm.
 - [NVIDIA DCGM: diagnostics](https://docs.nvidia.com/datacenter/dcgm/latest/user-guide/dcgm-diagnostics.html): `dcgmi diag` run levels.
-- [When jobs won't die](/fields/schedulers/slurm-kill-task-failed.md) and [SlurmdSpoolDir is full](/fields/schedulers/slurm-spool-dir-full.md): two other reasons nodes drain.
+- [When jobs won't die](/fields/schedulers/slurm-cluster-operations/slurm-kill-task-failed.md) and [SlurmdSpoolDir is full](/fields/schedulers/slurm-cluster-operations/slurm-spool-dir-full.md): two other reasons nodes drain.

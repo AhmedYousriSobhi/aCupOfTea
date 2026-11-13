@@ -1,7 +1,7 @@
 ---
 id: slurm-version-changes
 title: "The Changelog Nobody Reads: What Moved Between Slurm 23.11 and 26.05"
-order: 19
+order: 4
 sidebar_label: Version changes 23.11 to 26.05
 summary: A per-topic tour of what changed in Slurm between 23.11 and 26.05 for preemption, job_submit/lua, reservations, signals, accounting and cgroups, with the security-fix timeline and upgrade paths.
 level: intermediate
@@ -95,7 +95,7 @@ Two things follow. First, 23.11 did receive security releases, up to at least 23
 | 25.05.1, 25.05.5 | `preempt/partition_prio` no longer lets a partition's `PreemptMode` default to `PRIORITY`. A fatal error when `min_exempt_priority` was not the last `PreemptParameters` option was fixed |
 | 26.05 | `PreemptExemptTime` now also applies to `PreemptMode=suspend,gang` under `preempt/partition_prio`. Partitions can be created or updated dynamically with `PreemptMode=Priority`. A segfault with QOS `SUSPEND` on an `OverSubscribe=YES` partition was fixed in 26.05.3 |
 
-What this means for the [preemption pages](/fields/schedulers/slurm-qos-preemption-setup.md): the 24.05 line affects how a victim that exits cleanly during `GraceTime` shows up in `sacct`. On 23.11 that was not tested here. The `GraceTime` signal behavior itself (the early `SIGTERM` reaching steps and not the batch shell) was measured on 23.11.4 only, and none of the changelogs read mention it, so it needs a rerun on the version you use.
+What this means for the [preemption pages](/fields/schedulers/slurm-preemption/slurm-qos-preemption-setup.md): the 24.05 line affects how a victim that exits cleanly during `GraceTime` shows up in `sacct`. On 23.11 that was not tested here. The `GraceTime` signal behavior itself (the early `SIGTERM` reaching steps and not the batch shell) was measured on 23.11.4 only, and none of the changelogs read mention it, so it needs a rerun on the version you use.
 
 ---
 
@@ -109,7 +109,7 @@ What this means for the [preemption pages](/fields/schedulers/slurm-qos-preempti
 | 26.05 | A Lua stack trace is logged on runtime errors in `slurm_job_submit()` and `slurm_job_modify()`. `core_spec` and `thread_spec` are exposed in `job_desc` |
 | 26.05 | In partition definitions `Exclusive=[NO\|NODE\|USER\|TOPO]` replaces `ExclusiveUser` and `ExclusiveTopo` |
 
-The [Lua page](/fields/schedulers/slurm-job-submit-lua.md) says a broken script is hard to debug. From 26.05 a runtime error leaves a stack trace in the log, which makes the failure-mode table there easier to use. The `assoc_qos` field in 24.11 is a candidate for a stronger version of Recipe 1: the script could check which QOS the user's association really allows before routing to `high_<account>`. That idea was not tested.
+The [Lua page](/fields/schedulers/slurm-preemption/slurm-job-submit-lua.md) says a broken script is hard to debug. From 26.05 a runtime error leaves a stack trace in the log, which makes the failure-mode table there easier to use. The `assoc_qos` field in 24.11 is a candidate for a stronger version of Recipe 1: the script could check which QOS the user's association really allows before routing to `high_<account>`. That idea was not tested.
 
 ---
 
@@ -122,7 +122,7 @@ The [Lua page](/fields/schedulers/slurm-job-submit-lua.md) says a broken script 
 | 25.11 | New reservation access controls, `AllowQOS` and `AllowPartition` |
 | 26.05 | "Do not allocate maintenance nodes to new reservations." `FLEX` plus `MAGNETIC` reservations can pick up jobs that extend past the end (26.05.2) |
 
-The [maintenance page](/fields/schedulers/slurm-reservations-and-maintenance.md) was tested on 23.11.4. The maintenance-flag behavior in 24.05.4 and 26.05 is about picking nodes for a second reservation, which that page did not exercise. The `ReqReservation` field is useful for the `sacct` question "did this job ask for a reservation?".
+The [maintenance page](/fields/schedulers/slurm-cluster-operations/slurm-reservations-and-maintenance.md) was tested on 23.11.4. The maintenance-flag behavior in 24.05.4 and 26.05 is about picking nodes for a second reservation, which that page did not exercise. The `ReqReservation` field is useful for the `sacct` question "did this job ask for a reservation?".
 
 ---
 
@@ -134,7 +134,7 @@ The [maintenance page](/fields/schedulers/slurm-reservations-and-maintenance.md)
 | 25.05 | "Sigkill user processes atomically by using cgroup.kill interface" |
 | 26.05 | "KillWait will be honored when the task does not end with the TERM signal." `srun --ignore-signals` stops specified signals being forwarded to tasks. After a task returns a non-zero code, `SIGCONT`, `SIGTERM` and `SIGKILL` go to the remaining tasks. Job cancellation is no longer delayed while `slurmstepd` is launching a task (26.05.2) |
 
-The [signals cheat sheet](/fields/schedulers/slurm-signals-cheatsheet.md) measured the `KillWait` and `SIGKILL` timing on 23.11.4 with a task that ignored `SIGTERM`. The 26.05 `KillWait` line is exactly about that case, so those timings are the first thing to rerun with the probe. The [kill-task-failed page](/fields/schedulers/slurm-kill-task-failed.md) is also affected by the `UnkillableStepTimeout` default.
+The [signals cheat sheet](/fields/schedulers/slurm-preemption/slurm-signals-cheatsheet.md) measured the `KillWait` and `SIGKILL` timing on 23.11.4 with a task that ignored `SIGTERM`. The 26.05 `KillWait` line is exactly about that case, so those timings are the first thing to rerun with the probe. The [kill-task-failed page](/fields/schedulers/slurm-cluster-operations/slurm-kill-task-failed.md) is also affected by the `UnkillableStepTimeout` default.
 
 ---
 
@@ -162,7 +162,7 @@ The last row matters for the [sacct page](/fields/schedulers/slurm-sacct-job-for
 | 25.11 | `slurmd` can be launched in a cgroup slice other than `system.slice` |
 | 26.05 | cgroup v2 paths are built from the SLUID instead of the numeric job ID. 26.05.2 adds an option to use the job ID again, and the default stays SLUID |
 
-The [cgroups page](/fields/schedulers/slurm-cgroups-in-practice.md) already covers the 26.05 path change. The 25.05 deprecation is the one to plan around, because a cluster on cgroup v1 will want to be on v2 before a later release removes v1. No removal was found in the notes read here.
+The [cgroups page](/fields/schedulers/slurm-inside-a-job/slurm-cgroups-in-practice.md) already covers the 26.05 path change. The 25.05 deprecation is the one to plan around, because a cluster on cgroup v1 will want to be on v2 before a later release removes v1. No removal was found in the notes read here.
 
 ---
 
@@ -175,7 +175,7 @@ The [cgroups page](/fields/schedulers/slurm-cgroups-in-practice.md) already cove
 | 26.11 (development) | 26.05, 25.11, 25.05 | Database schema changes may make the `slurmdbd` upgrade slower than usual |
 | 26.05 | Not checked | The 26.05 upgrade rules were not among the pages read |
 
-So a jump from 23.11 to 26.05 cannot be done in a single step under the rules found: 23.11 reaches 24.11 directly, and the hops after that need to be checked against each release's own notes. The [upgrade order page](/fields/schedulers/slurm-upgrade-order.md) covers the order of daemons for each hop.
+So a jump from 23.11 to 26.05 cannot be done in a single step under the rules found: 23.11 reaches 24.11 directly, and the hops after that need to be checked against each release's own notes. The [upgrade order page](/fields/schedulers/slurm-cluster-operations/slurm-upgrade-order.md) covers the order of daemons for each hop.
 
 ---
 
@@ -186,7 +186,7 @@ So a jump from 23.11 to 26.05 cannot be done in a single step under the rules fo
 | The early `GraceTime` `SIGTERM` goes to `srun` steps, not the batch shell | Not mentioned in the changelogs read, so unknown | The `probe.sh` in the signals page |
 | `--signal` fires at preemption only with `send_user_signal` | Same | The same probe |
 | A process that ignores `SIGTERM` is killed `KillWait` seconds later | 26.05 changed `KillWait` handling for tasks that do not end with `TERM` | The same probe, `GraceTime` at 0 |
-| A victim that exits cleanly during `GraceTime` | 24.05 treats it as preempted under `CANCEL` and `REQUEUE` | A drill from the [setup page](/fields/schedulers/slurm-qos-preemption-setup.md), then `sacct -X -D` |
+| A victim that exits cleanly during `GraceTime` | 24.05 treats it as preempted under `CANCEL` and `REQUEUE` | A drill from the [setup page](/fields/schedulers/slurm-preemption/slurm-qos-preemption-setup.md), then `sacct -X -D` |
 | `CANCELLED by <uid>` in `sacct` | 26.11 notes say a name is recorded instead | `sacct -X -P -o JobID,State%30` after a `scancel` |
 | Rollback needs `PreemptType=preempt/none` and `PreemptMode=OFF` | Not checked on other versions | A test controller before a real change |
 
@@ -200,7 +200,7 @@ None of it is dramatic. The upgrade happens on a Saturday, the config line nobod
 
 **Takeaway:** security fixes came as point releases on supported branches, so the goal is the latest point release of a supported version, not a particular major one, and the changes worth knowing are small and scattered (GraceTime and KillWait handling, `Exclusive=`, cgroup v1 deprecation, SLUID paths), so read each hop's notes before you cross it.
 
-**Next:** [the upgrade order page](/fields/schedulers/slurm-upgrade-order.md) covers which daemons to upgrade first on each hop.
+**Next:** [the upgrade order page](/fields/schedulers/slurm-cluster-operations/slurm-upgrade-order.md) covers which daemons to upgrade first on each hop.
 
 ---
 

@@ -1,7 +1,7 @@
 ---
 id: slurm-reboot-order
 sidebar_label: Rebooting a Slurm Cluster
-order: 12
+order: 2
 level: intermediate
 type: [concept, experiment]
 domains: [systems-and-hpc, system-design]

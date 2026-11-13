@@ -1,7 +1,7 @@
 ---
 id: slurm-gpu-affinity-socket-lie
 title: "Your GPU Has Core Affinity. Slurm Has Socket Affinity. They Are Not Speaking."
-order: 5
+order: 4
 sidebar_label: GPU affinity and the socket lie
 summary: gres.conf Cores= schedules per socket, not core. Fix topology via l3cache_as_socket or numa_node_as_socket. Also covers four 1-GPU schemes and how MIG, MPS, and sharding isolate workloads.
 level: advanced
@@ -129,7 +129,7 @@ The GRES guide spends a surprising number of lines on numbering, and for good re
 | `/dev/nvidiaN` | By Linux minor number. The mapping to NVML numbers is, in the docs' words, nondeterministic and system dependent, and can change between boots after hardware or OS changes |
 | Inside a job with device cgroups | Renumbered from 0, whatever the physical device was |
 
-That last row has a consequence that trips up site scripts. If a job is allocated `/dev/nvidia1` and devices are constrained by cgroup (see the [cgroups page](/fields/schedulers/slurm-cgroups-in-practice.md)), the job sees `CUDA_VISIBLE_DEVICES=0`. The Prolog and Epilog, which run **outside** any cgroup, see `CUDA_VISIBLE_DEVICES=1`. An epilog that cleans up "the GPU the job used" by reading its own environment has to translate between the two.
+That last row has a consequence that trips up site scripts. If a job is allocated `/dev/nvidia1` and devices are constrained by cgroup (see the [cgroups page](/fields/schedulers/slurm-inside-a-job/slurm-cgroups-in-practice.md)), the job sees `CUDA_VISIBLE_DEVICES=0`. The Prolog and Epilog, which run **outside** any cgroup, see `CUDA_VISIBLE_DEVICES=1`. An epilog that cleans up "the GPU the job used" by reading its own environment has to translate between the two.
 
 Two housekeeping rules from the docs: list `File=` entries in increasing numeric order, and do an after-boot check that each device file still belongs to the GPU you think it does. The docs describe the assignment as "fairly stable", which is a phrase worth remembering at 3 a.m.
 

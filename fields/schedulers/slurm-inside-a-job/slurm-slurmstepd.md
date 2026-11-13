@@ -1,7 +1,7 @@
 ---
 id: slurm-slurmstepd
 title: "slurmstepd: The Small Daemon That Actually Runs Your Job"
-order: 3
+order: 2
 sidebar_label: slurmstepd
 summary: slurmstepd (1/step/node) bridges slurmd's fork and task start. Jobs survive slurmd restarts via SlurmdSpoolDir sockets. Covers how to find, count, and read stepds on busy nodes.
 level: intermediate
@@ -63,7 +63,7 @@ Per the guide, `slurmd` tests that the job was not cancelled since the credentia
 
 | Step | Runs where | What it runs |
 |---|---|---|
-| **extern** | Every node of the job, if `PrologFlags=contain` is set | Nothing of yours. It exists to hold processes started outside Slurm, like `ssh` sessions adopted by [`pam_slurm_adopt`](/fields/schedulers/slurm-pam-adopt-ssh-access.md) |
+| **extern** | Every node of the job, if `PrologFlags=contain` is set | Nothing of yours. It exists to hold processes started outside Slurm, like `ssh` sessions adopted by [`pam_slurm_adopt`](/fields/schedulers/slurm-cluster-operations/slurm-pam-adopt-ssh-access.md) |
 | **batch** | The first node of an `sbatch` job | Your batch script |
 | **interactive** | The node with your shell, for `salloc` with `LaunchParameters=use_interactive_step` | The shell or command |
 | **normal** | Every node of each `srun` inside the job, shown in `sacct` as `jobid.stepid` | The command given to `srun` |
@@ -93,7 +93,7 @@ And in between, it runs several SPANK plugin hooks at various points.
 Three observations that explain things people find odd:
 
 - **The stepd is why your job runs as you.** `slurmd` runs as root. The step changes to your UID in step 4, before any task starts. A root-owned `slurmd` never runs your code directly.
-- **The stepd owns the container.** Process tracking (and, with the cgroup plugins, the resource limits described on the [cgroups page](/fields/schedulers/slurm-cgroups-in-practice.md)) is set up here, which is how "kill the job" later reaches every process.
+- **The stepd owns the container.** Process tracking (and, with the cgroup plugins, the resource limits described on the [cgroups page](/fields/schedulers/slurm-inside-a-job/slurm-cgroups-in-practice.md)) is set up here, which is how "kill the job" later reaches every process.
 - **Output does not travel through `slurmd`.** The stepd sets up the I/O path itself, either writing to files or connecting back to `srun`.
 
 * * *
@@ -104,7 +104,7 @@ An old SchedMD ticket answers a question every new admin eventually asks: can I 
 
 The reply adds a caveat in the same breath: lose the stepd and you lose the job. It also says that in practice this almost never happens, because the stepd is small and stable. The ticket dates from 2014, so treat the folklore with some age in mind, but the design has not changed in shape.
 
-This is why [the upgrade page](/fields/schedulers/slurm-upgrade-order.md) can say that running jobs survive a `slurmd` upgrade, and why the same page warns that a job started before the upgrade keeps running with the old stepd.
+This is why [the upgrade page](/fields/schedulers/slurm-cluster-operations/slurm-upgrade-order.md) can say that running jobs survive a `slurmd` upgrade, and why the same page warns that a job started before the upgrade keeps running with the old stepd.
 
 * * *
 
@@ -123,7 +123,7 @@ Two details from the source that matter in practice:
 - **A stale socket is cleaned up with some patience.** If a connection to a socket is refused (nothing is listening), the client treats it as stray, and in the version I read it removes the socket if it is at least ten minutes old.
 - **A step cannot be created twice.** If a socket with the same name already exists, the stepd logs that the socket already exists and fails to start the step.
 
-The practical rule that follows is a simple one, and the [spool directory page](/fields/schedulers/slurm-spool-dir-full.md) builds on it: **do not clean up `SlurmdSpoolDir` by hand while jobs are running.** The directory is where `slurmd` and its stepds find each other. That rule is my inference from the design rather than a sentence in the docs, so check with `ls` and a test node before you improvise.
+The practical rule that follows is a simple one, and the [spool directory page](/fields/schedulers/slurm-cluster-operations/slurm-spool-dir-full.md) builds on it: **do not clean up `SlurmdSpoolDir` by hand while jobs are running.** The directory is where `slurmd` and its stepds find each other. That rule is my inference from the design rather than a sentence in the docs, so check with `ls` and a test node before you improvise.
 
 * * *
 
@@ -138,7 +138,7 @@ A subtle point from the Job Launch Design Guide. When a job is cancelled or hits
 5. Run the `Epilog`
 6. Send an `epilog_complete` RPC to `slurmctld`
 
-The stepd is the one holding the container that makes step 3 reach every process, and it is the one that reports when tasks exit. When step 4 never finishes, you get the drained node described in [Kill Task Failed](/fields/schedulers/slurm-kill-task-failed.md). One log line from a support ticket on that failure reads "STEPD TERMINATED ON <node> ... DUE TO JOB NOT ENDING WITH SIGNALS", which is the stepd's side of the same story.
+The stepd is the one holding the container that makes step 3 reach every process, and it is the one that reports when tasks exit. When step 4 never finishes, you get the drained node described in [Kill Task Failed](/fields/schedulers/slurm-cluster-operations/slurm-kill-task-failed.md). One log line from a support ticket on that failure reads "STEPD TERMINATED ON <node> ... DUE TO JOB NOT ENDING WITH SIGNALS", which is the stepd's side of the same story.
 
 * * *
 
