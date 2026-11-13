@@ -3931,6 +3931,198 @@
       "concept"
     ]
   },
+  "slurm-smoke-after-upgrade": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-smoke-after-upgrade",
+    "level": "intermediate",
+    "order": 3,
+    "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-after-upgrade.md",
+    "reading_time_min": 8,
+    "relations": {
+      "prerequisites": [
+        "slurm-smoke-control-plane"
+      ],
+      "related": [
+        "slurm-reboot-order",
+        "slurm-smoke-config-change",
+        "slurm-upgrade-order",
+        "slurm-version-changes"
+      ]
+    },
+    "status": "stable",
+    "summary": "What to check around a Slurm upgrade: a backup proven by restoring it, versions on every node, a before/after snapshot, the control-plane smoke test, and why downgrading is not supported.",
+    "tags": [
+      "hpc",
+      "slurm"
+    ],
+    "title": "The Morning After the Upgrade: Smoke Tests for the Change You Cannot Undo",
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
+  },
+  "slurm-smoke-config-change": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-smoke-config-change",
+    "level": "intermediate",
+    "order": 2,
+    "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-config-change.md",
+    "reading_time_min": 8,
+    "relations": {
+      "prerequisites": [
+        "slurm-smoke-control-plane"
+      ],
+      "related": [
+        "slurm-job-submit-lua",
+        "slurm-reboot-order",
+        "slurm-reservations-and-maintenance",
+        "slurm-smoke-after-upgrade"
+      ]
+    },
+    "status": "stable",
+    "summary": "What a bad slurm.conf does (typo, partition naming a missing node) and the dry runs that catch it first: a snapshot diff, sbatch --test-only and a canary partition.",
+    "tags": [
+      "hpc",
+      "slurm"
+    ],
+    "title": "Measure Twice, Reconfigure Once: Smoke-Testing a slurm.conf Change",
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
+  },
+  "slurm-smoke-control-plane": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-smoke-control-plane",
+    "level": "beginner",
+    "order": 1,
+    "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-control-plane.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "slurm-job-submit-lua",
+        "slurm-pending-reasons",
+        "slurm-sacct-job-forensics",
+        "slurm-smoke-after-upgrade",
+        "slurm-smoke-config-change"
+      ]
+    },
+    "status": "stable",
+    "summary": "A six-check, two-minute Slurm smoke test (MUNGE, controller, nodes, srun, sbatch, sacct) as one script with three outcomes, tested against four injected failures and a busy cluster.",
+    "tags": [
+      "hpc",
+      "slurm"
+    ],
+    "title": "The Cluster That Worked Perfectly and Remembered Nothing: a Two-Minute Slurm Smoke Test",
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
+  },
+  "slurm-smoke-node-readiness": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-smoke-node-readiness",
+    "level": "intermediate",
+    "order": 5,
+    "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-node-readiness.md",
+    "reading_time_min": 8,
+    "relations": {
+      "prerequisites": [
+        "slurm-smoke-control-plane"
+      ],
+      "related": [
+        "slurm-gpu-health-checks",
+        "slurm-kill-task-failed",
+        "slurm-reboot-order",
+        "slurm-reservations-and-maintenance"
+      ]
+    },
+    "status": "stable",
+    "summary": "Why idle does not mean a node is healthy, what Slurm does when hardware and slurm.conf disagree (and how config_overrides hides it), and a reservation fence for a probe job.",
+    "tags": [
+      "hpc",
+      "slurm"
+    ],
+    "title": "Back From the Repair Shop: Is This Node Fit to Return to Service?",
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
+  },
+  "slurm-smoke-policy": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-smoke-policy",
+    "level": "intermediate",
+    "order": 4,
+    "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-policy.md",
+    "reading_time_min": 7,
+    "relations": {
+      "prerequisites": [
+        "slurm-smoke-control-plane"
+      ],
+      "related": [
+        "slurm-job-submit-lua",
+        "slurm-preemption-requeue-signals",
+        "slurm-qos-preemption-setup",
+        "slurm-signals-cheatsheet",
+        "slurm-smoke-config-change"
+      ]
+    },
+    "status": "stable",
+    "summary": "A two-stage smoke test for QOS, submit rules and preemption: routing and refusals with no resources, then a real eviction and requeue, with a full script and its output.",
+    "tags": [
+      "hpc",
+      "slurm"
+    ],
+    "title": "Does the Rulebook Still Work? Smoke-Testing QOS, Submit Rules and Preemption",
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
+  },
+  "slurm-smoke-regression-suites": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "slurm-smoke-regression-suites",
+    "level": "advanced",
+    "order": 6,
+    "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-regression-suites.md",
+    "reading_time_min": 9,
+    "relations": {
+      "prerequisites": [
+        "slurm-smoke-control-plane"
+      ],
+      "related": [
+        "slurm-smoke-after-upgrade",
+        "slurm-smoke-policy",
+        "slurm-upgrade-order",
+        "slurm-version-changes"
+      ]
+    },
+    "status": "stable",
+    "summary": "What SchedMD's test suite and ReFrame do, how both were run against a live test cluster, and why results only mean something against a baseline taken before the change.",
+    "tags": [
+      "hpc",
+      "slurm"
+    ],
+    "title": "When Smoke Becomes a Fire Drill: SchedMD's Test Suite, ReFrame and the Baseline Rule",
+    "type": "guide",
+    "types": [
+      "guide"
+    ]
+  },
   "slurm-spool-dir-full": {
     "domains": [
       "systems-and-hpc"

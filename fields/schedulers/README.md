@@ -15,6 +15,7 @@ Forty people share a cluster. Everyone wants the GPUs now. Somebody has to decid
 | [slurm-inside-a-job](/fields/schedulers/slurm-inside-a-job/README.md) | Series: one job from script to node - the frozen script, slurmstepd, cgroups and GPU affinity |
 | [slurm-preemption](/fields/schedulers/slurm-preemption/README.md) | Series: preemption, requeue, QOS setup, job_submit.lua and every signal Slurm sends |
 | [slurm-cluster-operations](/fields/schedulers/slurm-cluster-operations/README.md) | Series: reservations, reboots, upgrades, version changes, SSH access and drain runbooks |
+| [slurm-smoke-tests](/fields/schedulers/slurm-smoke-tests/README.md) | Series: smoke tests for Slurm - control plane, config changes, upgrades, policy, node readiness, and regression suites |
 | [slurm-mixed-gpus](/fields/schedulers/slurm-mixed-gpus/README.md) | Series: mixing H100s and A100s in one Slurm job, and when it pays off |
 | [slurm-pending-jobs](/fields/schedulers/slurm-pending-jobs/README.md) | Series: why is my job still pending - reason codes, multifactor priority, and QOS limits that wait forever |
 | [slurm-ai-clusters](/fields/schedulers/slurm-ai-clusters/README.md) | Series: Slurm for AI clusters - topology, distributed training, containers, GPU health checks, metrics, and a lab cheatsheet |
@@ -27,6 +28,6 @@ Forty people share a cluster. Everyone wants the GPUs now. Somebody has to decid
 | Jobs misbehave or nodes drain | [slurm-kill-task-failed](/fields/schedulers/slurm-cluster-operations/slurm-kill-task-failed.md), [slurm-spool-dir-full](/fields/schedulers/slurm-cluster-operations/slurm-spool-dir-full.md) |
 | You run a multi-user cluster | [slurm-accounting-multi-tenancy](/fields/schedulers/slurm-accounting-multi-tenancy.md), [slurm-backfill-tuning](/fields/schedulers/slurm-backfill-tuning.md), [Preemption and signals](/fields/schedulers/slurm-preemption/README.md) |
 | Users ask why their job isn't running, or where it went | [slurm-pending-jobs](/fields/schedulers/slurm-pending-jobs/README.md), [slurm-sacct-job-forensics](/fields/schedulers/slurm-sacct-job-forensics.md) |
-| You maintain the cluster | [Cluster operations](/fields/schedulers/slurm-cluster-operations/README.md) |
+| You maintain the cluster | [Cluster operations](/fields/schedulers/slurm-cluster-operations/README.md), [Smoke tests](/fields/schedulers/slurm-smoke-tests/README.md) |
 | You run GPU training jobs | [slurm-signals-cheatsheet](/fields/schedulers/slurm-preemption/slurm-signals-cheatsheet.md), [slurm-ai-clusters](/fields/schedulers/slurm-ai-clusters/README.md), [slurm-gpu-affinity-socket-lie](/fields/schedulers/slurm-inside-a-job/slurm-gpu-affinity-socket-lie.md) |
 | You want to build a lab to try all this | [lab build cheatsheet](/fields/schedulers/slurm-ai-clusters/lab-build-cheatsheet.md) |
