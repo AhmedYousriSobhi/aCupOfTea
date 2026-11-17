@@ -20,6 +20,8 @@ from urllib.parse import quote
 
 import yaml
 
+import social_cards
+
 DEFAULT_BASE = "https://ahmedyousrisobhi.github.io/aCupOfTea/"
 SITE_NAME = "aCupOfTea"
 IMAGE = ".docs/icons/icon-512.png"
@@ -94,7 +96,7 @@ def route(page):
     return "/" + d + ("/" if page.endswith("/README.md") else "")
 
 
-def render(page, title, desc, base):
+def render(page, title, desc, base, card=False):
     d = share_dir(page)
     depth = d.count("/") + 1
     target = "../" * depth + "#" + quote(route(page), safe="/")
@@ -119,10 +121,15 @@ def render(page, title, desc, base):
     ]
     if ds:
         lines.append(f'<meta property="og:description" content="{ds}">')
+    lines.append(f'<meta property="og:url" content="{html.escape(url, quote=True)}">')
+    if card:
+        lines += [f'<meta property="og:image" content="{base}{quote(d, safe="/")}/card.png">',
+                  '<meta property="og:image:width" content="1200">',
+                  '<meta property="og:image:height" content="630">',
+                  '<meta name="twitter:card" content="summary_large_image">']
+    else:
+        lines += [f'<meta property="og:image" content="{base}{IMAGE}">', '<meta name="twitter:card" content="summary">']
     lines += [
-        f'<meta property="og:url" content="{html.escape(url, quote=True)}">',
-        f'<meta property="og:image" content="{base}{IMAGE}">',
-        '<meta name="twitter:card" content="summary">',
         "</head>",
         "<body>",
         f'<p><a href="{html.escape(target, quote=True)}">{t}</a></p>',
@@ -131,6 +138,12 @@ def render(page, title, desc, base):
         "",
     ]
     return "\n".join(lines)
+
+
+def kicker(d, page):
+    """'Fields · Deep Learning': the folders above a page, in words (two at most)."""
+    parts = d.split("/")[:-1] if not page.endswith("/README.md") else d.split("/")[:-1]
+    return " \u00b7 ".join(w.replace("-", " ").title() for w in parts[:2])
 
 
 def write_share_pages(out, sources, base=DEFAULT_BASE):
@@ -150,7 +163,8 @@ def write_share_pages(out, sources, base=DEFAULT_BASE):
         if not title:
             title = os.path.basename(d)
         os.makedirs(os.path.dirname(target), exist_ok=True)
+        card = social_cards.write_card(os.path.join(os.path.dirname(target), "card.png"), title, desc, kicker(d, page))
         with open(target, "w", encoding="utf-8", newline="\n") as f:
-            f.write(render(page, title, desc, base))
+            f.write(render(page, title, desc, base, card))
         written += 1
     return written
