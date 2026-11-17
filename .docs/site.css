@@ -393,5 +393,10 @@ html.sp-lock{overflow:hidden}
 #sp mark{background:rgba(201,166,107,.4);color:inherit;border-radius:2px;padding:0 1px}
 @media print{#search-toggle,#sp{display:none!important}}
 
+.markdown-section .offline-series { margin: 1.6em 0 0.4em; display: flex; flex-wrap: wrap; align-items: center; gap: 0.6em 1em; font-size: 0.9em; }
+.markdown-section .offline-series button { min-height: 44px; padding: 0 1.1em; border: 1px solid var(--border-color); border-radius: 10px; background: transparent; color: var(--color-text); font: inherit; cursor: pointer; }
+.markdown-section .offline-series button:disabled { opacity: 0.6; cursor: progress; }
+.markdown-section .offline-series .offline-status { opacity: 0.8; }
+@media print { .markdown-section .offline-series { display: none; } }
 /* Pictures carry width and height (so the page does not jump); keep their shape when the column is narrower */
 .markdown-section img[height] { height: auto; }
