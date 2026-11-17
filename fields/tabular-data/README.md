@@ -1,3 +1,7 @@
+---
+sidebar_group: Tabular Data
+---
+
 # Fields - Tabular Data - Overview
 
 > Everything this knowledge base has on rows-and-columns data: cleaning it, exploring it, modeling it and judging the result. By the end you'll know which folder to open for the step you're stuck on.

@@ -5,7 +5,7 @@ order: 4
 summary: "How to recognise CrashLoop, OOMKilled, ImagePull and Pending pods by reading status, events and previous logs."
 level: intermediate
 type: [concept, guide]
-domains: [systems-and-hpc, devops, kubernates]
+domains: [systems-and-hpc, devops, kubernetes]
 tags: [kubernetes, hpc, devops, nvidia]
 relations:
   prerequisites: [kubernetes-in-five-nouns]

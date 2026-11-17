@@ -6,6 +6,8 @@ file it fetches all ~155 pages in the browser on first use (about 2 MB). With
 it, one request is enough. The index is built from the staged pages, so it holds
 exactly the text the site serves (front matter stripped, related-pages strip added; the strip itself is left out of the index).
 
+A page's authored `summary` (front matter, read from .docs/generated/objects.json) is its description in the results; pages without one fall back to the first 120 characters of text. Folder labels lose their Markdown bold.
+
 The parsing here mirrors the crawl in search.js on purpose: the same pages, the
 same sections, the same plain-text rules. Change one and change the other.
 
@@ -56,7 +58,25 @@ def sidebar_pages(site):
     return pages
 
 
-def index_page(page, text):
+def load_summaries(site):
+    """path -> authored summary, from the staged .docs/generated/objects.json."""
+    try:
+        with open(os.path.join(site, ".docs/generated/objects.json"), encoding="utf-8") as f:
+            objs = json.load(f)
+    except (OSError, ValueError):
+        return {}
+    if isinstance(objs, dict):
+        objs = objs.get("objects", list(objs.values()))
+    return {o["path"]: o["summary"] for o in objs
+            if isinstance(o, dict) and o.get("path") and o.get("summary")}
+
+
+def clean_label(label):
+    """Sidebar labels of folders are bold (**Name**); the index holds plain text."""
+    return re.sub(r"\s+", " ", label.replace("**", "")).strip()
+
+
+def index_page(page, text, summary=""):
     text = re.sub(r"^﻿?---[ \t]*\r?\n[\s\S]*?\r?\n---[ \t]*(\r?\n|$)", "", text, count=1)
     text = re.sub(r"<!-- related-block -->[\s\S]*?</div>", " ", text)  # links to other pages are not page text
     text = re.sub(r"```[\s\S]*?```", " ", text)
@@ -78,24 +98,27 @@ def index_page(page, text):
         if (head or body) and not re.match(r"^table of contents?$", head, re.I):
             out.append({"head": head, "id": s["id"], "body": body})
     first = next((s for s in out if len(s["body"]) > 40), None)
+    label = clean_label(page["label"])
+    desc = re.sub(r"\s+", " ", re.sub(r"[`*_]", "", summary)).strip() if summary else (utf16_prefix(first["body"], 120) if first else "")
     return {
-        "label": page["label"],
+        "label": label,
         "path": page["path"],
-        "title": plain(h1 or page["label"]),
-        "desc": utf16_prefix(first["body"], 120) if first else "",
+        "title": plain(h1 or label),
+        "desc": desc,
         "secs": out,
     }
 
 
 def build(site):
     index = []
+    summaries = load_summaries(site)
     for page in sidebar_pages(site):
         full = os.path.join(site, unquote(page["path"]))
         text = ""
         if os.path.isfile(full):
             with open(full, encoding="utf-8", newline="") as f:
                 text = f.read()
-        index.append(index_page(page, text))
+        index.append(index_page(page, text, summaries.get(unquote(page["path"]), "")))
     dest = os.path.join(site, OUT)
     with open(dest, "w", encoding="utf-8") as f:
         json.dump(index, f, ensure_ascii=False, separators=(",", ":"))
