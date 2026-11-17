@@ -6,7 +6,7 @@ order: 6
 summary: "Even when traditional monitoring tools show all GPUs and networks operating normally, subtle bottlenecks—like a single slow GPU or a degraded network link—can silently drag down the performance of an"
 level: intermediate
 type: [concept, note]
-domains: [systems-and-hpc, devops, kubernates]
+domains: [systems-and-hpc, devops, kubernetes]
 tags: [kubernetes, nvidia, hpc]
 relations:
   prerequisites: [kubernetes-in-five-nouns]

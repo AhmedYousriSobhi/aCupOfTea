@@ -91,9 +91,9 @@
       "dip-wavelets-multiresolution"
     ]
   },
-  "kubernates": {
-    "description": "devops-orchestraiton",
-    "label": "Kubernates",
+  "kubernetes": {
+    "description": "Container orchestration",
+    "label": "Kubernetes",
     "objects": [
       "broken-pods-rogues-gallery",
       "build-a-two-node-k3s-lab",
