@@ -257,6 +257,17 @@
   body .markdown-section pre[data-lang] .code-copy[data-note]::after { content: attr(data-note); }
   body .markdown-section pre[data-lang] .code-copy[data-note="Copied"] { color: var(--link); }
   @media (hover: none) { body .markdown-section pre[data-lang] .code-copy { opacity: 0.6; } }
+  /* Wrap-lines button next to Copy */
+  body .markdown-section pre[data-lang] .code-wrap {
+    position: absolute; top: 4px; right: 44px; z-index: 2; display: flex; align-items: center; justify-content: center;
+    width: 28px; height: 28px; padding: 0; border: 1px solid transparent; border-radius: 6px; cursor: pointer;
+    background: transparent; color: var(--color-text); opacity: 0; transition: opacity 0.15s, background 0.15s;
+  }
+  body .markdown-section pre[data-lang]:hover .code-wrap, body .markdown-section pre[data-lang] .code-wrap:focus-visible,
+  body .markdown-section pre[data-lang] .code-wrap[aria-pressed="true"] { opacity: 0.85; }
+  body .markdown-section pre[data-lang] .code-wrap:hover { background: color-mix(in srgb, var(--color-text) 14%, transparent); opacity: 1; }
+  @media (hover: none) { body .markdown-section pre[data-lang] .code-wrap { opacity: 0.6; } }
+  .markdown-section pre.wrapped code { white-space: pre-wrap; overflow-wrap: anywhere; }
   /* Copy-a-link button after h2/h3 (.docs/section-links.js) */
   .markdown-section .section-link-copy { background: transparent !important; box-shadow: none; position: relative; margin-left: 0.35em; padding: 4px; border: 0; background: transparent; color: var(--link); vertical-align: middle; cursor: pointer; opacity: 0; transition: opacity 0.15s; }
   .section-link-copy svg { display: block; }
@@ -330,11 +341,29 @@
   .sidebar-nav li.group.collapsed > ul { display: none; }
   /* Look of Docsify 4 kept: green bold links, no underline, compact menu */
   .markdown-section a:not(.anchor) {
-    color: var(--link); font-weight: 600; text-decoration: none !important;
-    background: none !important;
+    color: var(--link); font-weight: 400; background: none !important;
+    text-decoration: underline !important; text-decoration-thickness: 1px; text-underline-offset: 0.18em;
+    text-decoration-color: color-mix(in srgb, var(--link) 45%, transparent);
   }
-  .markdown-section a:not(.anchor):hover { text-decoration: underline !important; }
+  .markdown-section a:not(.anchor):hover { text-decoration-color: var(--link); }
+  .markdown-section .tag-chips a, .markdown-section .crumbs a { text-decoration: none !important; }
   :root { --sidebar-font-size: 15px; }
+  /* Desktop: the theme button sits in the top bar, left of the GitHub corner, not on the page */
+  @media (min-width: 769px) {
+    html body #theme-toggle { position: fixed; top: 6px; right: 84px; }
+    html body #theme-menu { position: fixed; top: 54px; right: 84px; max-height: calc(100vh - 70px); overflow-y: auto; }
+    nav.app-nav { margin-right: 140px; }
+  }
+  /* Print: only the page */
+  @media print {
+    nav.app-nav, .github-corner, aside.sidebar, button.sidebar-toggle, #theme-toggle, #theme-menu, aside.page-outline,
+    .save-page, .code-copy, .code-wrap, .section-link-copy, .page-footer, .pagination-item, #back-to-top, #read-progress { display: none !important; }
+    section.content, .markdown-section { position: static !important; left: 0 !important; margin: 0 !important; padding: 0 !important; max-width: none !important; }
+    html, body { background: #fff !important; color: #000 !important; }
+    .markdown-section pre code { white-space: pre-wrap !important; overflow-wrap: anywhere; }
+    .markdown-section a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 0.85em; word-break: break-all; }
+    .markdown-section h2, .markdown-section h3, .markdown-section pre, .markdown-section table, .markdown-section img { break-inside: avoid; }
+  }
 </style>
 
 <body>
