@@ -209,21 +209,85 @@ def learning_paths(objects):
     return sorted(paths, key=lambda p: (objects[p[0]]["title"].lower(), p[0]))
 
 
-def start_here(objects, tax):
+def build_paths(objects):
+    """Per page route (no .md): its place in a learning path, for the "Part 2 of 6 / Next" block
+    the site adds at the end of a page (.docs/reading-history.js)."""
+    out = {}
+    for order in learning_paths(objects):
+        total = len(order)
+        for n, i in enumerate(order):
+            nxt = objects[order[n + 1]] if n + 1 < total else None
+            out[objects[i]["path"][:-3]] = {
+                "pos": n + 1, "total": total,
+                "next": {"path": nxt["path"][:-3], "title": nxt["title"]} if nxt else None,
+            }
+    return out
+
+
+def folder_title(root, folder):
+    """A folder's series name from its README: sidebar_group, or the H1 before its last hyphen."""
+    rel = f"{folder}/README.md" if folder else "README.md"
+    try:
+        text = read_text(root, rel)
+    except OSError:
+        return ""
+    body = text
+    try:
+        fm = split_front_matter(text)
+    except ValueError:
+        fm = None
+    if fm:
+        try:
+            data = yaml.safe_load(fm[0]) or {}
+        except yaml.YAMLError:
+            data = {}
+        for key in ("sidebar_group",):
+            if isinstance(data, dict) and isinstance(data.get(key), str) and data[key].strip():
+                return data[key].strip()
+        body = text[fm[1]:]
+    m = re.search(r"^# +(.+?)\s*#*\s*$", FENCE_RE.sub("", body), re.MULTILINE)
+    if not m:
+        return ""
+    h1 = re.sub(r"\s+[-\u2013\u2014]\s+Overview$", "", m.group(1).strip(), flags=re.I)  # "Topic - Overview" is "Topic"
+    return h1.rsplit("-", 1)[-1].strip()
+
+
+def path_names(objects, paths, tax, root):
+    """One heading name per learning path: the series (folder) the path mostly lives in.
+
+    Falls back to the main subject; a name two paths share gets the first
+    page's title added, so every path is told apart."""
+    names = []
+    for order in paths:
+        dirs = {}
+        for i in order:
+            d = os.path.dirname(objects[i]["path"])
+            dirs[d] = dirs.get(d, 0) + 1
+        top_dir = sorted(dirs.items(), key=lambda kv: (-kv[1], kv[0]))[0][0]
+        names.append(folder_title(root, top_dir) if root else "")
+    seen = {}
+    for n in names:
+        seen[n] = seen.get(n, 0) + 1
+    return [f"{n} (from {objects[o[0]]['title']})" if n and seen[n] > 1 else n for n, o in zip(names, paths)]
+
+
+def start_here(objects, tax, root=None):
     lines = [HEADER, "# Start here\n",
              "Pick a cup: follow a path, grab a quick read, or start with the basics.\n"]
     paths = learning_paths(objects)
     if paths:
         lines.append("## Learning paths\n")
         lines.append("Read each path in order; every step builds on the one before.\n")
-        for order in paths:
+        names = path_names(objects, paths, tax, root)
+        for order, name in zip(paths, names):
             counts = {}
             for i in order:
                 for d in objects[i]["domains"]:
                     counts[d] = counts.get(d, 0) + 1
             top = sorted(counts.items(), key=lambda kv: (-kv[1], kv[0]))[0][0]
             total = sum(objects[i]["reading_time_min"] for i in order)
-            lines.append(f"### {tax['domains'][top]['label']} · {len(order)} steps · {total} min\n")
+            label = tax['domains'][top]['label']
+            lines.append(f"### {esc(name) + ' · ' if name else ''}{label} · {len(order)} steps · {total} min\n")
             for n, i in enumerate(order, 1):
                 o = objects[i]
                 line = f"{n}. [{esc(o['title'])}](/{o['path']})"
@@ -262,6 +326,7 @@ def generate(root):
     write(root, "objects.json", dump(objects))
     write(root, "relationships.json", dump(rels))
     write(root, "related.json", dump(build_related(objects, rels)))
+    write(root, "paths.json", dump(build_paths(objects)))
     write(root, "domains.json", dump({
         d: {"label": meta["label"], "description": meta.get("description", ""),
             "objects": by_domain.get(d, [])}
@@ -272,7 +337,7 @@ def generate(root):
 
     tag_link = lambda t: explore_url("tags", t)  # noqa: E731
 
-    write(root, f"{EXPLORE}/start-here.md", start_here(objects, tax))
+    write(root, f"{EXPLORE}/start-here.md", start_here(objects, tax, root))
 
     # Domains
     lines = [HEADER, "# Domains\n", "Pages grouped by subject. Folders stay the primary location; "

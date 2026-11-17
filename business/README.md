@@ -1,3 +1,7 @@
+---
+sidebar_group: Business
+---
+
 # Data Science in Business - Overview
 
 > A tour of the businesses a data scientist ends up working for: what they do, which numbers they watch, and which projects keep showing up.

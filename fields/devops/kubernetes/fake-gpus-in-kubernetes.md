@@ -5,7 +5,7 @@ order: 3
 summary: Patch a node with a fake nvidia.com/gpu counter to learn GPU scheduling without owning a GPU.
 level: intermediate
 type: [concept, guide]
-domains: [systems-and-hpc, devops, kubernates]
+domains: [systems-and-hpc, devops, kubernetes]
 tags: [hpc, nvidia, kubernetes, devops]
 relations:
   prerequisites: [kubernetes-in-five-nouns, build-a-two-node-k3s-lab]

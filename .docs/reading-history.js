@@ -70,12 +70,16 @@
     btn.className = 'save-page';
     function paint() {
       var on = isSaved(r);
-      btn.textContent = on ? '★ Saved' : '☆ Save for later';
+      btn.textContent = on ? '★' : '☆';
+      btn.setAttribute('aria-label', on ? 'Saved, click to remove' : 'Save for later');
+      btn.title = on ? 'Saved: click to remove' : 'Save for later';
       btn.setAttribute('aria-pressed', on ? 'true' : 'false');
     }
     btn.addEventListener('click', function () { toggleSaved(r, title); paint(); savedList(); });
     paint();
-    h1.parentNode.insertBefore(btn, h1.nextSibling);
+    // a star at the right end of the meta line under the title; pages without one get it under the title
+    var meta = document.querySelector('.markdown-section .reading-time');
+    if (meta) meta.appendChild(btn); else h1.parentNode.insertBefore(btn, h1.nextSibling);
   }
   // "Saved (N)" list in the side menu, hidden when empty
   function savedList() {
@@ -118,6 +122,132 @@
     box.appendChild(ul);
     box.open = wasOpen;
   }
+  // Learning paths: "Part 2 of 6" and a Next button at the end of a page, and
+  // "2 of 6 read" under each path on Start here (data: .docs/generated/paths.json).
+  var paths = null, pathsLoading = null;
+  function loadPaths() {
+    if (!pathsLoading) {
+      pathsLoading = fetch('./.docs/generated/paths.json').then(function (r) { return r.ok ? r.json() : {}; })
+        .catch(function () { return {}; }).then(function (d) { paths = d; return d; });
+    }
+    return pathsLoading;
+  }
+  function seriesBlock() {
+    var old = document.querySelector('.markdown-section .series-next');
+    if (old) old.remove();
+    var r = route();
+    if (!isContent(r)) return;
+    loadPaths().then(function (all) {
+      var e = all[r.replace(/^\//, '')], sec = document.querySelector('.markdown-section');
+      if (!e || !sec || route() !== r || sec.querySelector('.series-next')) return;
+      var box = document.createElement('div');
+      box.className = 'series-next';
+      var t = document.createElement('p');
+      t.textContent = 'Part ' + e.pos + ' of ' + e.total + ' in this learning path';
+      box.appendChild(t);
+      if (e.next) {
+        var a = document.createElement('a');
+        a.className = 'next-btn';
+        a.href = '#/' + e.next.path;
+        a.textContent = 'Next: ' + e.next.title + ' \u2192';
+        box.appendChild(a);
+      } else {
+        t.textContent += ' \u2014 you reached the last step.';
+      }
+      var before = sec.querySelector('.see-also, .page-footer, .docsify-pagination-container');
+      if (before) sec.insertBefore(box, before); else sec.appendChild(box);
+    });
+  }
+  function startProgress() {
+    if (route() !== '/.docs/generated/explore/start-here') return;
+    var read = load(KEY, {});
+    Array.prototype.forEach.call(document.querySelectorAll('.markdown-section h3'), function (h) {
+      var list = h.nextElementSibling;
+      if (!list || list.tagName !== 'OL') return;
+      var links = Array.prototype.slice.call(list.querySelectorAll(':scope > li > a[href^="#/"]'));
+      var done = 0, next = null;
+      links.forEach(function (a) {
+        var k = decodeURIComponent(a.getAttribute('href').replace(/^#/, '').split('?')[0]).replace(/\.md$/, '');
+        if (read[k]) done++; else if (!next) next = a;
+      });
+      if (!done) return;
+      var p = document.createElement('p');
+      p.className = 'path-progress';
+      p.textContent = done + ' of ' + links.length + ' read';
+      if (next) {
+        p.appendChild(document.createTextNode(' \u00b7 '));
+        var n = document.createElement('a');
+        n.href = next.getAttribute('href');
+        n.textContent = 'Next: ' + next.textContent;
+        p.appendChild(n);
+      }
+      h.parentNode.insertBefore(p, list);
+    });
+  }
+
+  // Move reading history and saved pages to another browser: a JSON file, no account.
+  function exportData() {
+    var data = { app: 'acupoftea', version: 1, read: load(KEY, {}), last: load(LAST, null), saved: saved() };
+    var url = URL.createObjectURL(new Blob([JSON.stringify(data, null, 1)], { type: 'application/json' }));
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'acupoftea-reading-data.json';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+  }
+  function importData(text) {
+    var d = JSON.parse(text);
+    if (!d || d.app !== 'acupoftea' || typeof d.read !== 'object' || !Array.isArray(d.saved)) throw new Error('not a reading-data file');
+    var read = load(KEY, {});
+    Object.keys(d.read).forEach(function (k) {
+      if (typeof d.read[k] === 'number' && k.charAt(0) === '/') read[k] = Math.max(read[k] || 0, d.read[k]);
+    });
+    save(KEY, read);
+    var have = saved();
+    d.saved.forEach(function (p) {
+      if (p && typeof p.route === 'string' && typeof p.title === 'string' && p.route.charAt(0) === '/' &&
+          !have.some(function (q) { return q.route === p.route; })) have.push({ route: p.route, title: p.title });
+    });
+    save(SAVED, have);
+    if (d.last && typeof d.last.route === 'string' && !load(LAST, null)) save(LAST, { route: d.last.route, title: String(d.last.title || '') });
+  }
+  function dataButtons() {
+    var menu = document.getElementById('theme-menu');
+    if (!menu || menu.querySelector('.data-row')) return;
+    var row = document.createElement('div');
+    row.className = 'data-row';
+    var note = document.createElement('span');
+    row.appendChild(note);
+    function btn(label, fn) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = label;
+      b.addEventListener('click', fn);
+      row.appendChild(b);
+    }
+    var file = document.createElement('input');
+    file.type = 'file';
+    file.accept = 'application/json,.json';
+    file.hidden = true;
+    file.addEventListener('change', function () {
+      var f = file.files && file.files[0];
+      if (!f) return;
+      f.text().then(function (t) {
+        importData(t);
+        note.textContent = 'Imported';
+        mark(); savedList(); saveButton(); startProgress();
+      }, function () { note.textContent = 'Could not read the file'; }).catch(function () { note.textContent = 'Not a reading-data file'; });
+      file.value = '';
+    });
+    note.textContent = 'Reading data';
+    btn('Export', exportData);
+    btn('Import', function () { file.click(); });
+    row.appendChild(file);
+    menu.appendChild(row);
+  }
+
   var cfg = window.$docsify = window.$docsify || {};
   cfg.plugins = [].concat(cfg.plugins || [], function (hook) {
     hook.doneEach(function () {
@@ -126,6 +256,10 @@
       record();
       saveButton();
       savedList();
+      seriesBlock();
+      startProgress();
+      dataButtons();
+      setTimeout(dataButtons, 300); // the theme menu is built just after the first page
       mark();
       setTimeout(mark, 300); // Docsify redraws the menu after the page loads
     });

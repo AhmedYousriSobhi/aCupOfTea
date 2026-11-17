@@ -97,10 +97,10 @@ domains:
   devops:
     label: Devops
     description: Field
-    related: [systems-and-hpc, kubernates]
-  kubernates:
-    label: Kubernates
-    description: devops-orchestraiton
+    related: [systems-and-hpc, kubernetes]
+  kubernetes:
+    label: Kubernetes
+    description: Container orchestration
     related: [systems-and-hpc, devops]
   system-design:
     label: System Design

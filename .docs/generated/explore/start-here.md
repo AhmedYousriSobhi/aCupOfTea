@@ -8,7 +8,7 @@ Pick a cup: follow a path, grab a quick read, or start with the basics.
 
 Read each path in order; every step builds on the one before.
 
-### Benchmarks and Performance · 6 steps · 58 min
+### LLM Inference Performance · Benchmarks and Performance · 6 steps · 58 min
 
 1. [Compute-Bound vs Memory-Bandwidth-Bound](/fields/generative-ai/llm-inference-performance/compute-bound-vs-memory-bound.md) — Why a 3x faster GPU can give you 1.6x - arithmetic intensity, the ridge point and the roofline, explained with a pizza kitchen and two lines of arithmetic. *(intermediate · 9 min)*
 2. [LLM Inference on the Roofline](/fields/generative-ai/llm-inference-performance/llm-inference-on-the-roofline.md) — Why your chatbot reads a novel-length prompt in a blink but types its answer like a tired intern - prefill, decode, batching and the KV cache on the roofline. *(intermediate · 9 min)*
@@ -17,7 +17,7 @@ Read each path in order; every step builds on the one before.
 5. [2:4 Sparsity: Half the Weights, Not Half the Time](/fields/generative-ai/llm-inference-performance/structured-sparsity.md) — How NVIDIA's 2:4 structured sparsity works, what it really saves (44% of weight bytes, not 50%), and why its doubled TFLOPS help prefill while decode only feels the byte savings. *(intermediate · 9 min)*
 6. [Sparsity vs Quantization: Who Pays, and Who Wins](/fields/generative-ai/llm-inference-performance/sparsity-vs-quantization.md) — What it costs to prune an LLM to 2:4, how much accuracy goes with it, how it compares with FP8 and 4-bit quantization, and why the usual order is quantize first, sparsify second. *(intermediate · 10 min)*
 
-### Systems and HPC · 18 steps · 160 min
+### Kubernetes · Systems and HPC · 18 steps · 160 min
 
 1. [Containers 101](/fields/libraries-frameworks-containers/101-containers.md) — Containers from the ground up: what happens at boot, kernel and user space, virtual machines, then namespaces, cgroups and Linux containers. *(8 min)*
 2. [Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster](/fields/devops/kubernetes/kubernetes-in-five-nouns.md) — The five Kubernetes nouns (node, pod, namespace, event, API server) explained through HPC analogies, for someone who just inherited a cluster. *(advanced · 8 min)*
@@ -38,19 +38,19 @@ Read each path in order; every step builds on the one before.
 17. [kubectl Troubleshooting Cheat Sheet: Five Questions, in Order](/fields/devops/kubernetes/cheatsheet.md) — A kubectl cheat sheet for a pod or Job that won't work: where is it, what does it say, what did the cluster say, why did it die, and how to look inside. Commands from the Kubernetes reference. *(intermediate · 9 min)*
 18. [Singularity](/fields/libraries-frameworks-containers/101-singularity.md) — Singularity (rootless containers for HPC): installing it, building SIF images, converting from Docker, bind mounts and definition-file variables. *(10 min)*
 
-### Deep Learning · 3 steps · 39 min
+### Concepts · Deep Learning · 3 steps · 39 min
 
 1. [Deep Learning Basics](/fields/deep-learning/concepts/basics.md) — Neurons, loss and cost, and the common activation functions, explained from first principles. *(beginner · 30 min · long read)*
 2. [Sequence Models](/fields/deep-learning/concepts/sequence-models.md) — How models handle ordered data like text, from RNNs and LSTMs to transformers and LLMs. *(intermediate · 6 min)*
 3. [Encoder-Decoder for Machine Translation](/fields/generative-ai/machine-translator/encoder-decoder.md) — The encoder-decoder idea behind neural machine translation, with a basic seq2seq model. *(intermediate · 3 min)*
 
-### Schedulers · 3 steps · 28 min
+### Mixing GPU Types in Slurm · Schedulers · 3 steps · 28 min
 
 1. [Four Ways to Ask Slurm for Mixed GPUs](/fields/schedulers/slurm-mixed-gpus/four-ways-to-mix-gpus.md) — Typed GRES, constraint operators, heterogeneous jobs and heterogeneous steps - what each one actually allocates, and the one-character constraint that mixes GPU types by accident. *(intermediate · 9 min)*
 2. [Why Mixed-GPU Training Disappoints](/fields/schedulers/slurm-mixed-gpus/why-mixed-training-disappoints.md) — Why 8 H100s plus 8 A100s train like 16 A100s, which H100 features the A100s switch off, and what co-scheduling a heterogeneous job costs you in the queue. *(intermediate · 9 min)*
 3. [Where Heterogeneous Jobs Shine](/fields/schedulers/slurm-mixed-gpus/where-hetjobs-shine.md) — The workloads where mixing GPU types in one Slurm job is exactly right, how admins should label and guard a multi-generation cluster, a decision table, and the interview answer. *(intermediate · 10 min)*
 
-### System Administration · 6 steps · 64 min
+### Predicting GPU Node Failures · System Administration · 6 steps · 64 min
 
 1. [How GPU Memory Fails, and Why You Can See It Coming](/fields/system-administration/gpu-failure-prediction/what-fails-and-what-warns.md) — How ECC, row remapping and error containment work on NVIDIA GPUs, why memory errors repeat and cluster, and the error ladder that makes failure predictable. *(intermediate · 11 min · long read)*
 2. [Reading the GPU's Vital Signs](/fields/system-administration/gpu-failure-prediction/collecting-the-signals.md) — The telemetry concepts behind GPU failure prediction - counters, gauges and events, volatile versus persistent, in-band versus out-of-band - and the ways each one misleads. *(intermediate · 9 min)*
@@ -59,7 +59,7 @@ Read each path in order; every step builds on the one before.
 5. [Is the Prediction Any Good?](/fields/system-administration/gpu-failure-prediction/scoring-and-backtesting.md) — How to judge GPU failure predictions - base rates, precision, recall, lead time, horizons, label quality, leakage and drift - and when a learned model is worth it. *(advanced · 10 min)*
 6. [Runbook: Deploying GPU Failure Prediction End to End](/fields/system-administration/gpu-failure-prediction/runbook.md) — The hands-on companion to the series - counters file, node checks, tested Prometheus rules, Alertmanager routing, a guarded Slurm drain hook and a backtest, step by step. *(advanced · 15 min · long read)*
 
-### System Administration · 6 steps · 58 min
+### Linux Memory Pressure · System Administration · 6 steps · 58 min
 
 1. [How Linux Reclaims Memory: Cache, Swap and the Two Kinds of Stall](/fields/system-administration/linux-memory-pressure/how-linux-reclaims-memory.md) — Why free memory near zero is normal, which pages the kernel can drop for free and which need swap, how kswapd and direct reclaim differ, and why the second one is where programs stall. *(intermediate · 9 min)*
 2. [Pressure Stall Information: Measuring Time Lost, Not Bytes Left](/fields/system-administration/linux-memory-pressure/memory-pressure-psi.md) — How to read /proc/pressure/memory, why the share of time tasks spend stalled is a better alarm than free bytes, and how to get woken by the kernel the moment a threshold is crossed. *(intermediate · 8 min)*
@@ -68,7 +68,7 @@ Read each path in order; every step builds on the one before.
 5. [Memory Locking: Keeping a Rescuer in RAM with mlockall](/fields/system-administration/linux-memory-pressure/memory-locking-mlockall.md) — Why a program that rescues a machine under memory pressure must pin its own pages in RAM, what mlockall does, why the 8 MiB limit exists, and why root gets the real lock - explained with a tow truck. *(intermediate · 12 min · long read)*
 6. [Making a Rescuer Survive: CPU, Protection and a Checklist](/fields/system-administration/linux-memory-pressure/rescuer-checklist.md) — Beyond memory locking, what keeps an emergency program running under load - real-time priority, an OOM shield, restart and watchdog - and one checklist that ties all six pages together. *(intermediate · 8 min)*
 
-### Image Processing · 9 steps · 66 min
+### Digital Image Processing · Image Processing · 9 steps · 66 min
 
 1. [Images Are Just Matrices](/fields/digital-image-processing/images-are-just-matrices.md) — A pixel is a number in a grid - sampling, quantization, bit depth, coordinates and neighbours, and why 200 + 100 can equal 44. *(beginner · 7 min)*
 2. [Geometric Transforms and Interpolation](/fields/digital-image-processing/geometric-transforms-and-interpolation.md) — Moving the whole map - affine transforms in homogeneous coordinates, why you must map backwards, and nearest, bilinear and bicubic interpolation with a bilinear example worked by hand. *(intermediate · 7 min)*
@@ -80,13 +80,13 @@ Read each path in order; every step builds on the one before.
 8. [Noise and Restoration](/fields/digital-image-processing/noise-and-restoration.md) — The degradation model g = h*f + n, common noise types, why inverse filtering explodes, and how the Wiener filter gives up gracefully - with PSNR to score the result. *(intermediate · 7 min)*
 9. [Wavelets and Multiresolution Processing](/fields/digital-image-processing/wavelets-and-multiresolution-processing.md) — Seeing an image at several scales at once - pyramids, a Haar wavelet transform by hand, the four 2D subbands, and why mostly-zero detail makes denoising and compression work. *(intermediate · 9 min)*
 
-### Schedulers · 3 steps · 21 min
+### Slurm for AI Clusters · Schedulers · 3 steps · 21 min
 
 1. [Keep the Job on One Switch: Topology-Aware Placement in Slurm](/fields/schedulers/slurm-ai-clusters/topology-aware-placement.md) — How Slurm places multi-node jobs with and without a topology plugin - topology/tree, --switches, topology/block that refuses to straddle, the 25.05 topology.yaml, and a fatal block config. *(intermediate · 7 min)*
 2. [Launching Distributed Training on Slurm: srun, torchrun, and the Rank Contract](/fields/schedulers/slurm-ai-clusters/launching-distributed-training.md) — Why a 2-node training job can run on one node, the environment PyTorch needs from Slurm, launching with srun or torchrun, and the double-launch trap - tested with PyTorch 2.15 on Slurm 23.11. *(intermediate · 6 min)*
 3. [Containers on Slurm with Pyxis and Enroot](/fields/schedulers/slurm-ai-clusters/containers-with-pyxis.md) — Running Slurm job steps in containers with Pyxis and Enroot - the node that silently ran outside the container, read-only images, mounts, node-local paths, named containers, and the PyTorch env hook. *(intermediate · 8 min)*
 
-### System Administration · 8 steps · 60 min
+### OpenMP and Open MPI · System Administration · 8 steps · 60 min
 
 1. [Not Twins, Not Even Cousins: OpenMP, MPI and Open MPI](/fields/system-administration/openmp-and-open-mpi/the-name-mixup.md) — OpenMP and Open MPI differ by one space and share almost nothing. Three names, three jobs - an API for threads, a standard for messages, and one program that implements the second. *(beginner · 6 min)*
 2. [Two Tribes, One Problem: Where OpenMP and MPI Came From](/fields/system-administration/openmp-and-open-mpi/where-they-came-from.md) — The 1990s story - shared-memory vendors each had their own directives, distributed-memory users each had their own message libraries, and two committees fixed it from opposite sides. *(beginner · 6 min)*
@@ -97,17 +97,17 @@ Read each path in order; every step builds on the one before.
 7. [Who Starts the Ranks? OpenMP and MPI Under Slurm](/fields/system-administration/openmp-and-open-mpi/mpi-and-openmp-under-slurm.md) — How Slurm launches MPI ranks and OpenMP threads - srun direct launch, mpirun inside an allocation, PMIx as the address book, and how ntasks and cpus-per-task decide the binding trap from part 5. *(intermediate · 9 min)*
 8. [No Login Node, No Hostfile: OpenMP and MPI on Kubernetes](/fields/system-administration/openmp-and-open-mpi/mpi-and-openmp-on-kubernetes.md) — How an MPIJob turns pods into an MPI cluster - launcher, workers, headless Service, SSH keys, hostfile - and which three numbers keep the binding trap away. *(intermediate · 9 min)*
 
-### System Administration · 2 steps · 17 min
+### Storage and Fabric for AI Clusters · System Administration · 2 steps · 17 min
 
 1. [Parallel Filesystems: Why 10,000 GPUs Can Starve on a Full Disk](/fields/system-administration/ai-storage-and-fabric/parallel-filesystems-for-ai.md) — How Lustre-style parallel filesystems split metadata from data, why millions of small files starve GPUs, how striping works, and why checkpoints - not datasets - set your storage peak. *(intermediate · 9 min)*
 2. [RDMA, InfiniBand and GPUDirect: Taking the CPU Out of the Way](/fields/system-administration/ai-storage-and-fabric/rdma-infiniband-gpudirect.md) — Why AI clusters use RDMA fabrics (InfiniBand or RoCE), what kernel bypass and zero-copy mean, and how GPUDirect RDMA and GPUDirect Storage move data straight into GPU memory. *(intermediate · 8 min)*
 
-### Deep Learning · 2 steps · 7 min
+### Libraries, Frameworks & Containers · Deep Learning · 2 steps · 7 min
 
 1. [PyTorch 101](/fields/libraries-frameworks-containers/101-pytorch.md) — Notes for starting with PyTorch: where to learn, data type precision, GPU properties, the training loop, making predictions, and saving and loading models. *(6 min)*
 2. [PyTorch DDP](/fields/libraries-frameworks-containers/102-pytorch-ddp.md) — A short pointer page on PyTorch Distributed Data Parallel: a recommended distributed training tutorial and a related read on the Python GIL. *(1 min)*
 
-### Systems and HPC · 5 steps · 40 min
+### Why Is My Job Pending? · Systems and HPC · 5 steps · 40 min
 
 1. [Reading the Reason Column: Why Is My Slurm Job Pending?](/fields/schedulers/slurm-pending-jobs/why-is-my-job-pending.md) — What Slurm's common pending reasons mean, which ones fix themselves and which never will, what users can fix without an admin, and a small triage script tested against each reason. *(beginner · 7 min)*
 2. [Slurm Multi-Tenancy: Who Stores the Rules, Who Enforces Them](/fields/schedulers/slurm-accounting-multi-tenancy.md) — How slurmctld, slurmd, slurmdbd and sacctmgr split the work of multi-tenant accounting, why limits you set can silently do nothing, and how associations, TRES limits, QOS and fairshare fit together. *(intermediate · 9 min)*
@@ -115,12 +115,12 @@ Read each path in order; every step builds on the one before.
 4. [Who Goes First: Slurm's Priority Number, Taken Apart](/fields/schedulers/slurm-pending-jobs/who-goes-first.md) — How Slurm's multifactor priority is computed from age, fairshare and QOS weights, why every weight defaults to zero, how Fair Tree turns usage into a rank, and reading sprio and sshare. *(intermediate · 8 min)*
 5. [Limits That Wait Forever: QOS and Account Limits in Practice](/fields/schedulers/slurm-pending-jobs/limits-that-wait-forever.md) — How Slurm QOS and account GPU limits behave on a real queue - the job that never runs, the second QOS that slips past a cap, partition QOS, DenyOnLimit, and live usage via assoc_mgr. *(intermediate · 7 min)*
 
-### Systems and HPC · 2 steps · 21 min
+### Schedulers · Systems and HPC · 2 steps · 21 min
 
 1. [Schedulers: The Traffic Controller Nobody Thanks Until It Breaks](/fields/schedulers/slurm-intro.md) — What a cluster scheduler does, how it differs from the OS scheduler, the scheduler landscape, the concepts they share, and the Slurm architecture at a glance. *(beginner · 10 min)*
 2. [The Tale of a Slurm Job Script: Submission Is a Commitment, Not a Promise](/fields/schedulers/slurm-inside-a-job/slurm-job-script-tale.md) — Why editing a script after sbatch changes nothing, where Slurm keeps the frozen copy, what stays live, how to read the script back, and how to keep runs traceable. *(intermediate · 11 min · long read)*
 
-### Statistics · 15 steps · 153 min
+### Probability & Statistics, One Sip at a Time · Statistics · 15 steps · 153 min
 
 1. [Stir the Pot First: Population, Sample, and Why We Guess](/fields/data-science/probability-statistics/stir-the-pot-population-and-sampling.md) — Why a sip judges a pot of tea only if you stir it: population versus sample, four ways to draw a sample, the poll that asked 2.4 million and still erred. *(beginner · 11 min · long read)*
 2. [Mira's Notebook: What Kind of Data Is This, and How Do You Count It?](/fields/data-science/probability-statistics/data-types-and-frequency-tables.md) — Why you cannot average a blend name: the four kinds of data, and how to turn raw numbers into honest category, ungrouped and grouped frequency tables. *(beginner · 13 min · long read)*
@@ -138,7 +138,7 @@ Read each path in order; every step builds on the one before.
 14. [The Courtroom for Numbers: Could Plain Luck Do This?](/fields/data-science/probability-statistics/the-courtroom-for-numbers.md) — A hypothesis test asks one question: could plain luck have produced a difference this big? Shuffle the labels and count. What the p-value is, what it is not, and how testing twenty things fools you. *(intermediate · 10 min)*
 15. [Two Things Moving Together: Correlation and the Line](/fields/data-science/probability-statistics/two-things-moving-together.md) — Correlation is the average product of paired z-scores, a number about straight-line togetherness only. The regression line is least squared walking applied to a line. Graph first, always. *(intermediate · 11 min · long read)*
 
-### Systems and HPC · 6 steps · 49 min
+### Smoke Tests · Systems and HPC · 6 steps · 49 min
 
 1. [The Cluster That Worked Perfectly and Remembered Nothing: a Two-Minute Slurm Smoke Test](/fields/schedulers/slurm-smoke-tests/slurm-smoke-control-plane.md) — A six-check, two-minute Slurm smoke test (MUNGE, controller, nodes, srun, sbatch, sacct) as one script with three outcomes, tested against four injected failures and a busy cluster. *(beginner · 9 min)*
 2. [Measure Twice, Reconfigure Once: Smoke-Testing a slurm.conf Change](/fields/schedulers/slurm-smoke-tests/slurm-smoke-config-change.md) — What a bad slurm.conf does (typo, partition naming a missing node) and the dry runs that catch it first: a snapshot diff, sbatch --test-only and a canary partition. *(intermediate · 8 min)*
@@ -147,7 +147,7 @@ Read each path in order; every step builds on the one before.
 5. [Back From the Repair Shop: Is This Node Fit to Return to Service?](/fields/schedulers/slurm-smoke-tests/slurm-smoke-node-readiness.md) — Why idle does not mean a node is healthy, what Slurm does when hardware and slurm.conf disagree (and how config_overrides hides it), and a reservation fence for a probe job. *(intermediate · 8 min)*
 6. [When Smoke Becomes a Fire Drill: SchedMD's Test Suite, ReFrame and the Baseline Rule](/fields/schedulers/slurm-smoke-tests/slurm-smoke-regression-suites.md) — What SchedMD's test suite and ReFrame do, how both were run against a live test cluster, and why results only mean something against a baseline taken before the change. *(advanced · 9 min)*
 
-### Devops · 6 steps · 53 min
+### Ansible · Devops · 6 steps · 53 min
 
 1. [The Laptop That Ran Ansible 2.16: An Install You Can Trust](/fields/devops/ansible/getting-started.md) — A pinned Ansible install per project, which Python the control machine and the nodes need, ansible.cfg, SSH host keys, and the errors you hit on the first runs. *(beginner · 10 min)*
 2. [Four Nodes Said "Too Many Open Files": Inventories and Ad-Hoc Commands](/fields/devops/ansible/inventory-and-ad-hoc.md) — Inventory groups and ranges, group_vars with overrides, targeting patterns, ad-hoc commands across the cluster, the node that was down, and checking a change in a fresh login. *(beginner · 8 min)*
@@ -156,7 +156,7 @@ Read each path in order; every step builds on the one before.
 5. [The Reboot That Killed a Week of Jobs: Rolling Maintenance with Slurm](/fields/devops/ansible/rolling-maintenance.md) — Change busy compute nodes safely - drain through Slurm, wait for jobs, one canary first, stop on the first failure, check the node really came back, a dry run that is really dry, and rollback. *(advanced · 10 min)*
 6. [The Munge Key in Git: Secrets, Vault and Rotation](/fields/devops/ansible/secrets-and-vault.md) — Keep secrets in an Ansible repo with vault, rotate a leaked munge key on every host at once, what 2.22's secret masking hides and misses, no_log, and a commit guard. *(intermediate · 9 min)*
 
-### Systems and HPC · 6 steps · 54 min
+### VictoriaMetrics · Systems and HPC · 6 steps · 54 min
 
 1. [The Prometheus That Ate the Head Node: Why VictoriaMetrics](/fields/devops/victoriametrics/why-victoriametrics.md) — What VictoriaMetrics is and isn't, its components in one table, when single-node is enough and when a cluster earns its complexity, and which features are free. *(beginner · 9 min)*
 2. [A Single Node You Can Trust: Installing VictoriaMetrics Properly](/fields/devops/victoriametrics/single-node-in-ten-minutes.md) — Install single-node VictoriaMetrics from a verified tarball, run it under systemd, reload scrape config safely, and close the delete endpoint that is open by default. *(intermediate · 9 min)*
@@ -165,18 +165,18 @@ Read each path in order; every step builds on the one before.
 5. [MetricsQL Surprises and Alerts You Can Test](/fields/devops/victoriametrics/metricsql-and-vmalert.md) — Why increase() gives different answers in Prometheus and VictoriaMetrics on the same data, and alert rules whose tests are proven to fail when the rule is wrong. *(intermediate · 10 min)*
 6. [Slurm Metrics Without an Exporter: OpenMetrics into VictoriaMetrics](/fields/schedulers/slurm-ai-clusters/metrics-openmetrics.md) — Slurm 25.11+ serves OpenMetrics from slurmctld - scraping it into VictoriaMetrics, idle CPUs fixed by DefMemPerCPU, MiB in _bytes metrics until 26.11, open access, and a tested alert. *(intermediate · 6 min)*
 
-### Software Engineering · 3 steps · 15 min
+### Local App Accounts · Software Engineering · 3 steps · 15 min
 
 1. [Two People, One Laptop: What Accounts Should (and Shouldn't) Promise](/programming/local-app-accounts/threat-model-and-first-launch.md) — Before writing any account code, state what accounts will and will not protect, then handle the very first sign-up gracefully. *(beginner · 4 min)*
 2. [Sign-In Hygiene: How the Clerk Says "No" Without Giving Anything Away](/programming/local-app-accounts/sign-in-hygiene.md) — Slow self-describing password hashes, a decoy check for unknown users, one identical error message, and throttling that cannot be used to lock someone out forever. *(intermediate · 5 min)*
 3. [Who's Home, and What May They Touch? Sessions and Two Walls](/programming/local-app-accounts/sessions-and-two-walls.md) — How an app remembers who is signed in, why remember-me stores a fingerprint instead of a token, and why authorization needs one check at the door and another at the data. *(intermediate · 6 min)*
 
-### Machine Learning · 2 steps · 28 min
+### Concept in Machine Learning · Machine Learning · 2 steps · 28 min
 
 1. [Unsupervised Learning](/fields/tabular-data/concept-in-machine-learning/ml-unsupervised.md) — Unsupervised learning notes on clustering (K-means, picking an algorithm and the number of clusters) and dimensionality reduction such as PCA, plus the curse of dimensionality. *(22 min · long read)*
 2. [Customer Segmentation](/problems/customer-segmentation.md) — What customer segmentation is, with the key points, aspects and concepts to consider when you split customers into groups. *(6 min)*
 
-### System Administration · 10 steps · 85 min
+### Node Health Check · System Administration · 10 steps · 85 min
 
 1. [Why Your Cluster Needs a Bouncer](/fields/system-administration/node-health-check/why-node-health-check.md) — One broken node can eat a whole queue of jobs; this is what NHC is, how it decides a node is sick, and how it tells the scheduler. *(beginner · 7 min)*
 2. [Build and Install NHC](/fields/system-administration/node-health-check/build-and-install.md) — Get NHC onto your nodes from a release RPM, the release tarball or the Git tree, run its unit tests and know where every file lands. *(beginner · 5 min)*
