@@ -326,6 +326,14 @@
   }
   .markdown-section a:not(.anchor):hover { text-decoration: underline !important; }
   :root { --sidebar-font-size: 15px; }
+  /* Learning paths: Next step at the end of a page, progress on Start here (.docs/reading-history.js) */
+  .markdown-section .series-next { margin: 2em 0 1em; padding: 0.9em 1em; border: 1px solid var(--border-color); border-left: 4px solid var(--link); border-radius: 8px; }
+  .markdown-section .series-next p { margin: 0 0 0.6em; font-size: 0.9em; opacity: 0.85; }
+  .markdown-section .series-next a.next-btn { display: inline-block; padding: 0.55em 1em; border-radius: 8px; background: var(--link); color: var(--color-bg) !important; font-weight: 600; text-decoration: none !important; }
+  .markdown-section .path-progress { margin: -0.3em 0 0.6em; font-size: 0.85em; opacity: 0.85; }
+  #theme-menu .data-row { display: flex; align-items: center; gap: 4px; margin-top: 6px; padding: 8px 4px 2px 10px; border-top: 1px solid var(--border-color); }
+  #theme-menu .data-row span { flex: 1; font-size: 0.85rem; opacity: 0.75; }
+  #theme-menu .data-row button { width: auto; padding: 6px 10px; font-size: 0.85rem; border: 1px solid var(--border-color); }
 </style>
 
 <body>
