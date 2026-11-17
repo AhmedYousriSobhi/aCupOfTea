@@ -392,3 +392,6 @@ html.sp-lock{overflow:hidden}
 .sp-top input::-webkit-search-cancel-button{display:none}
 #sp mark{background:rgba(201,166,107,.4);color:inherit;border-radius:2px;padding:0 1px}
 @media print{#search-toggle,#sp{display:none!important}}
+
+/* Pictures carry width and height (so the page does not jump); keep their shape when the column is narrower */
+.markdown-section img[height] { height: auto; }
