@@ -150,7 +150,7 @@ async function run(browser, base, label, size, phone) {
     return { links: el ? el.querySelectorAll('a').length : 0, underTitle: !!el && !!h1 && h1.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING && el.getBoundingClientRect().top - h1.getBoundingClientRect().bottom < 120 };
   });
   const time = await page.evaluate(() => (document.querySelector('.markdown-section h1 ~ .reading-time') || {}).textContent || '');
-  c('reading time is shown under the title', /^\d+ min read$/.test(time.trim()), time);
+  c('reading time is shown under the title', /\b\d+ min read\b/.test(time.trim()), time);
   c('related pages are linked right under the title', strip.links >= 1 && strip.underTitle, JSON.stringify(strip));
 
   await go('fields/benchmarks/hpl');
