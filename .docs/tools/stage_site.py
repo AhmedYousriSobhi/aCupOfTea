@@ -23,6 +23,8 @@ Copies the repo to --out, then in the COPY only:
   * writes sw.js (the read-offline service worker) at the site root from
     .docs/sw-template.js, versioned with the git commit so each deploy gets a
     new cache; it has to sit at the root to control every page.
+  * joins the local scripts that load before Docsify into one .docs/site.js
+    (index.html in the repo keeps them separate, so a local preview needs no build);
   * losslessly recompresses PNG and JPEG images (optimize_images.py; skipped
     when Pillow is not installed).
 Source files are never modified. Local `docsify serve` on the repo itself
@@ -325,6 +327,35 @@ def site_version(src):
         return time.strftime("%Y%m%d%H%M%S", time.gmtime())
 
 
+SCRIPT_TAG = r'[ \t]*<script src="\./\.docs/[\w-]+\.js"></script>\n'
+BUNDLE_RUN = re.compile(r'(?:' + SCRIPT_TAG + r')(?:' + SCRIPT_TAG + r'|[ \t]*<!--[^>]*-->\n)+')
+
+
+def bundle_scripts(out):
+    """Join the run of local scripts that loads before Docsify into .docs/site.js (one request, not 13).
+
+    Each file runs in its own try block, so one that throws cannot stop the rest, as with separate
+    script tags. The scripts keep their order. Returns the number bundled (0 when the run is not found).
+    """
+    index = os.path.join(out, "index.html")
+    with open(index, encoding="utf-8") as f:
+        html = f.read()
+    m = BUNDLE_RUN.search(html)
+    if not m:
+        return 0
+    names = re.findall(r'<script src="\./\.docs/([\w-]+\.js)"', m.group(0))
+    parts = []
+    for name in names:
+        with open(os.path.join(out, ".docs", name), encoding="utf-8") as f:
+            parts.append("/* %s */\ntry {\n%s\n} catch (e) { console.error(%s, e); }\n" % (name, f.read(), json.dumps(name)))
+    with open(os.path.join(out, ".docs", "site.js"), "w", encoding="utf-8") as f:
+        f.write("".join(parts))
+    html = html[:m.start()] + '  <script src="./.docs/site.js"></script>\n' + html[m.end():]
+    with open(index, "w", encoding="utf-8") as f:
+        f.write(html)
+    return len(names)
+
+
 def write_service_worker(src, out):
     """sw.js at the root of the staged site; (version, shell file count), or None without a template."""
     template = os.path.join(out, SW_TEMPLATE)
@@ -436,6 +467,7 @@ def stage(src, out, base_url=DEFAULT_BASE):
             json.dump(dates, f, sort_keys=True, separators=(",", ":"))
 
     n_idx, titles_size, body_size = build_search_index(out)
+    bundled = bundle_scripts(out)
     sw = write_service_worker(src, out)
     images = optimize_tree(out)
 
@@ -445,6 +477,7 @@ def stage(src, out, base_url=DEFAULT_BASE):
           f"reading time on {timed} pages, related strip on {appended} pages, "
           f"{n_code} code and notebook pages, {n_share} share pages, {len(recent)} recent pages, "
           f"last-updated dates for {len(dates)} pages, "
+          f"{bundled} scripts bundled into site.js, "
           f"search index of {n_idx} pages (titles {titles_size // 1024} KB, text {body_size // 1024} KB), "
           + (f"service worker {sw[0]} with {sw[1]} shell files" if sw else "no service worker")
           + f"; {images}")
