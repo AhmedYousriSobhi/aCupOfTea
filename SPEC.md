@@ -107,7 +107,7 @@ CLAUDE.md
 LICENSE             — CC BY 4.0, for writing and diagrams
 LICENSE-CODE        — MIT, for code (scripts, notebooks, .docs/ tooling)
 .gitignore
-index.html           — Docsify entry point: page shell, styles, Content-Security-Policy; settings in .docs/config.js
+index.html           — Docsify entry point: page shell and Content-Security-Policy; styles in .docs/site.css, settings in .docs/config.js
 .docs/               — site infrastructure:
                          _sidebar.md / _navbar.md (generated) + gen_sidebar.sh / gen_navbar.sh
                          search.js (site search)
