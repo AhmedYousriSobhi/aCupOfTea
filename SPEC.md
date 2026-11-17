@@ -162,7 +162,7 @@ Two navigation layers exist and both must stay accurate:
 
 Folder `README.md` indexes SHOULD list their pages in a `| File | Description |` table under `## Contents`, the format `new_page.py` updates automatically (§27). Converging the remaining list-style indexes is tracked in issue #77.
 
-**Search** (`.docs/search.js`) is an overlay that indexes the pages listed in the generated sidebar, so any page reachable from the sidebar is searchable with no extra step. On the deployed site the data comes from two prebuilt files that `stage_site.py` writes into the published copy (never committed): `.docs/index-titles.json` (one small entry per page, with type, level, domains and tags for the filters) and `.docs/index-body.json` (section text and fenced code, loaded on the first search for text). A local preview has no such files, so the search reads every page instead and gives the same results (without filters).
+**Search** (`.docs/search.js`) is an overlay that indexes the pages listed in the generated sidebar, so any page reachable from the sidebar is searchable with no extra step. On the deployed site the data comes from two prebuilt files that `stage_site.py` writes into the published copy (never committed): `.docs/index-titles.json` (one small entry per page, with type, level, domains and tags for the filters) and `.docs/index-body.json` (section text and fenced code, loaded on the first search for text). A local preview builds them once with `python3 .docs/tools/build_search_index.py --local` (git-ignored); without them the search says the index is not built.
 
 The sidebar governs what's reachable on the site; the folder `README.md` governs what's understandable when browsing the raw repo. Keep README indexes in sync with the folder contents.
 

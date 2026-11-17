@@ -14,10 +14,11 @@ serves (front matter stripped; the related-pages strip is left out):
 
 A page's authored `summary` (front matter, read from .docs/generated/objects.json) is its description in the results; pages without one fall back to the first 120 characters of text. Folder labels lose their Markdown bold.
 
-The parsing here mirrors the crawl in search.js on purpose: the same pages, the
-same sections, the same plain-text rules. Change one and change the other.
+For a local preview (`docsify serve` of the repo) run it on the repo itself:
+`--local` writes the two files into .docs/ (git-ignored) from the source pages
+and generated sidebar, so the preview searches like the deployed site.
 
-Usage: python3 .docs/tools/build_search_index.py SITE_DIR
+Usage: python3 .docs/tools/build_search_index.py SITE_DIR | --local
 """
 import json
 import os
@@ -25,6 +26,9 @@ import re
 import sys
 import unicodedata
 from urllib.parse import unquote
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from common import split_front_matter  # noqa: E402
 
 SIDEBAR = ".docs/_sidebar.md"
 OUT_TITLES = ".docs/index-titles.json"
@@ -90,7 +94,12 @@ def code_of(text):
 
 
 def index_page(page, text, summary="", meta=None):
-    text = re.sub(r"^﻿?---[ \t]*\r?\n[\s\S]*?\r?\n---[ \t]*(\r?\n|$)", "", text, count=1)
+    try:
+        split = split_front_matter(text)  # the same front matter rule as the page model
+    except ValueError:
+        split = None
+    if split:
+        text = text[split[1]:]
     text = re.sub(r"<!-- related-block -->[\s\S]*?</div>", " ", text)  # links to other pages are not page text
     code = code_of(text)
     text = re.sub(r"```[\s\S]*?```", " ", text)
@@ -160,7 +169,8 @@ def build(site):
 def main():
     if len(sys.argv) != 2:
         sys.exit(__doc__)
-    pages, t, b = build(sys.argv[1])
+    site = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))) if sys.argv[1] == "--local" else sys.argv[1]
+    pages, t, b = build(site)
     print(f"search index: {pages} pages, titles {t / 1024:.0f} KB, bodies {b / 1024:.0f} KB")
 
 

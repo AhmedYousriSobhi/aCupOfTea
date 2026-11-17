@@ -59,8 +59,8 @@ class Tree(unittest.TestCase):
             with open(os.path.join(root, rel), "w", encoding="utf-8") as fh:
                 fh.write(text)
         self.page = "fields/devops/kubernetes/kubernetes-in-five-nouns.md"
-        self.patches = [mock.patch.object(pd, "ROOT", root), mock.patch.object(new_page, "ROOT", root),
-                        mock.patch.object(new_page, "TAXONOMY", os.path.join(root, pd.TAXONOMY_REL))]
+        self.patches = [mock.patch.object(pd, "ROOT", root), mock.patch.object(new_page.sc, "ROOT", root),
+                        mock.patch.object(new_page.sc, "TAXONOMY", os.path.join(root, pd.TAXONOMY_REL))]
         for p in self.patches:
             p.start()
 
