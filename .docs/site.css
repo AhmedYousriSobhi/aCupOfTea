@@ -397,3 +397,5 @@ html.sp-lock{overflow:hidden}
 .markdown-section .offline-series button:disabled { opacity: 0.6; cursor: progress; }
 .markdown-section .offline-series .offline-status { opacity: 0.8; }
 @media print { .markdown-section .offline-series { display: none; } }
+/* Pictures carry width and height (so the page does not jump); keep their shape when the column is narrower */
+.markdown-section img[height] { height: auto; }
