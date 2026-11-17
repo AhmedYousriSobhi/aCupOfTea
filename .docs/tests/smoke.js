@@ -90,6 +90,23 @@ async function run(browser, base, label, size, phone) {
   c('home page lists recently added pages', home.recent);
   c('home page has no reading time', !home.time);
   if (phone) c('tables become cards on a phone', home.cards >= 1, 'stack tables: ' + home.cards);
+  if (phone) {
+    await go('fields/devops/kubernetes/cheatsheet', 3500);
+    const bar = await page.evaluate(() => {
+      const nav = document.querySelector('nav.app-nav').getBoundingClientRect();
+      const first = (document.querySelector('.markdown-section .crumbs') || document.querySelector('.markdown-section h1')).getBoundingClientRect();
+      const tog = document.querySelector('button.sidebar-toggle').getBoundingClientRect();
+      const rows = new Set([...document.querySelectorAll('nav.app-nav > ul > li')].filter((l) => l.offsetParent).map((l) => Math.round(l.getBoundingClientRect().top)));
+      const search = document.getElementById('search-toggle').getBoundingClientRect(), theme = document.getElementById('theme-toggle').getBoundingClientRect();
+      const last = [...document.querySelectorAll('nav.app-nav > ul > li')].filter((l) => l.offsetParent).pop().getBoundingClientRect();
+      return { navH: Math.round(nav.height), gap: Math.round(first.top - nav.bottom), rows: rows.size, menuTop: Math.round(tog.top), menuLabel: getComputedStyle(document.querySelector('button.sidebar-toggle'), '::after').content,
+        overlap: last.right > search.left || search.right > theme.left };
+    });
+    c('phone top bar is one row of at most 56px', bar.navH <= 56 && bar.rows === 1, JSON.stringify(bar));
+    c('phone page title starts within 24px of the top bar', bar.gap >= 0 && bar.gap <= 24, JSON.stringify(bar));
+    c('phone top bar has a labelled Menu button at the top and nothing overlaps', bar.menuTop < 8 && /Menu/.test(bar.menuLabel) && !bar.overlap, JSON.stringify(bar));
+    await go('');
+  }
 
   await go('fields/deep-learning/concepts/convolution', 4000);
   const conv = await page.evaluate(() => ({
