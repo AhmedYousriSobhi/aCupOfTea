@@ -3,7 +3,6 @@
   * [Start here](.docs/generated/explore/start-here.md)
   * [Domains](.docs/generated/explore/domains.md)
   * [Tags](.docs/generated/explore/tags.md)
-* [aCupOfTea Repository Specification](SPEC.md)
 * [**Fields**](fields/README.md)
   * [Computer Science Engineering ↗](https://github.com/AhmedYousriSobhi/CSE)
   * [**Benchmarks**](fields/benchmarks/README.md)
@@ -320,3 +319,6 @@
   * [Git](tips/version-control-git.md)
   * [Markdown](tips/markdown.md)
 * [**Journal**](journal/README.md)
+* **About this site**
+  * [Repository Specification](SPEC.md)
+  * [Contributing guide ↗](https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/.github/CONTRIBUTING.md)
