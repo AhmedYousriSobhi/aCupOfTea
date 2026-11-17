@@ -6,7 +6,7 @@ order: 3
 summary: How to design GPU failure rules - state, event and trend rules, personal baselines, persistence, noise floors and action tiers - and the traps that make rules silently fail.
 level: advanced
 type: concept
-domains: [systems-and-hpc]
+domains: [systems-and-hpc, system-administration]
 tags: [gpu, nvidia, hpc]
 relations:
   prerequisites: [gpu-pred-collecting-signals]

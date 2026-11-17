@@ -6,7 +6,7 @@ order: 2
 summary: The telemetry concepts behind GPU failure prediction - counters, gauges and events, volatile versus persistent, in-band versus out-of-band - and the ways each one misleads.
 level: intermediate
 type: concept
-domains: [systems-and-hpc]
+domains: [systems-and-hpc, system-administration]
 tags: [gpu, nvidia, hpc]
 relations:
   prerequisites: [gpu-pred-what-fails]

@@ -6,7 +6,7 @@ order: 1
 summary: One broken node can eat a whole queue of jobs; this is what NHC is, how it decides a node is sick, and how it tells the scheduler.
 level: beginner
 type: concept
-domains: [systems-and-hpc]
+domains: [systems-and-hpc, system-administration]
 tags: [hpc, slurm]
 relations:
   related: [nhc-slurm-integration]

@@ -6,7 +6,7 @@ order: 5
 summary: How to judge GPU failure predictions - base rates, precision, recall, lead time, horizons, label quality, leakage and drift - and when a learned model is worth it.
 level: advanced
 type: concept
-domains: [systems-and-hpc]
+domains: [systems-and-hpc, system-administration]
 tags: [gpu, nvidia, hpc]
 relations:
   prerequisites: [gpu-pred-alert-to-drain]

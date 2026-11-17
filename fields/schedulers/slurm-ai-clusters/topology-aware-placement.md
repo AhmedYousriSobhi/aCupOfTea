@@ -6,7 +6,7 @@ order: 1
 summary: How Slurm places multi-node jobs with and without a topology plugin - topology/tree, --switches, topology/block that refuses to straddle, the 25.05 topology.yaml, and a fatal block config.
 level: intermediate
 type: [concept, guide]
-domains: [systems-and-hpc]
+domains: [systems-and-hpc, schedulers]
 tags: [slurm, hpc, distributed-training]
 relations:
   related: [slurm-distributed-training, slurm-backfill-tuning]

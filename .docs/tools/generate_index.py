@@ -144,6 +144,8 @@ def group(objects, key):
 
 def meta_line(o):
     bits = [x for x in (o["level"], f"{o['reading_time_min']} min") if x]
+    if o["reading_time_min"] > QUICK_MIN:
+        bits.append("long read")  # more than one cup; the Quick reads list has the short ones
     return " · ".join(bits)
 
 

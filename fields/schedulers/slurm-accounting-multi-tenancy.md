@@ -6,7 +6,7 @@ order: 2
 summary: How slurmctld, slurmd, slurmdbd and sacctmgr split the work of multi-tenant accounting, why limits you set can silently do nothing, and how associations, TRES limits, QOS and fairshare fit together.
 level: intermediate
 type: concept
-domains: [systems-and-hpc]
+domains: [systems-and-hpc, schedulers]
 tags: [slurm, hpc, gpu]
 relations:
   related: [slurm-mixed-gpus-overview, slurm-qos-preemption-setup, slurm-preemption-requeue-signals, slurm-sacct-job-forensics]

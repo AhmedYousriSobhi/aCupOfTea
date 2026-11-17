@@ -6,7 +6,7 @@ order: 3
 summary: How Slurm QOS and account GPU limits behave on a real queue - the job that never runs, the second QOS that slips past a cap, partition QOS, DenyOnLimit, and live usage via assoc_mgr.
 level: intermediate
 type: [concept, guide]
-domains: [systems-and-hpc]
+domains: [systems-and-hpc, schedulers]
 tags: [slurm, hpc]
 relations:
   prerequisites: [slurm-pending-reasons, slurm-accounting-multi-tenancy]

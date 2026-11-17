@@ -6,7 +6,7 @@ order: 3
 summary: Running Slurm job steps in containers with Pyxis and Enroot - the node that silently ran outside the container, read-only images, mounts, node-local paths, named containers, and the PyTorch env hook.
 level: intermediate
 type: [concept, guide]
-domains: [systems-and-hpc]
+domains: [systems-and-hpc, schedulers]
 tags: [slurm, hpc, containers, nvidia]
 relations:
   prerequisites: [slurm-distributed-training]

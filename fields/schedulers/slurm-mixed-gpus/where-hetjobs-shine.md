@@ -6,7 +6,7 @@ order: 3
 summary: The workloads where mixing GPU types in one Slurm job is exactly right, how admins should label and guard a multi-generation cluster, a decision table, and the interview answer.
 level: intermediate
 type: concept
-domains: [systems-and-hpc]
+domains: [systems-and-hpc, schedulers]
 tags: [slurm, gpu, hpc, nvidia]
 relations:
   prerequisites: [slurm-mixed-gpus-why-disappoints]

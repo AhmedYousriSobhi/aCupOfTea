@@ -6,7 +6,7 @@ order: 7
 summary: Turn NHC drains into automatic fixes with an escalation ladder, built-in fix actions, a node-doctor loop on the controller, and guard rails against reboot storms.
 level: advanced
 type: guide
-domains: [systems-and-hpc]
+domains: [systems-and-hpc, system-administration]
 tags: [hpc, slurm]
 relations:
   prerequisites: [nhc-slurm-integration, nhc-rollout-at-scale]

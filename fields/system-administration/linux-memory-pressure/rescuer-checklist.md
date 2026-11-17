@@ -6,7 +6,7 @@ sidebar_label: "6. The rescuer checklist"
 summary: Beyond memory locking, what keeps an emergency program running under load - real-time priority, an OOM shield, restart and watchdog - and one checklist that ties all six pages together.
 level: intermediate
 type: guide
-domains: [systems-and-hpc]
+domains: [systems-and-hpc, system-administration]
 relations:
   prerequisites: [linux-mem-mlockall, linux-mem-cgroup-v2]
   related: [linux-mem-psi, linux-mem-oom-killer]

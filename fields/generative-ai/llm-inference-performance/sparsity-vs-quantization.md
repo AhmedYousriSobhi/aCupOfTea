@@ -6,7 +6,7 @@ order: 6
 summary: What it costs to prune an LLM to 2:4, how much accuracy goes with it, how it compares with FP8 and 4-bit quantization, and why the usual order is quantize first, sparsify second.
 level: intermediate
 type: concept
-domains: [generative-ai, systems-and-hpc]
+domains: [generative-ai, systems-and-hpc, benchmarks-and-performance]
 tags: [gpu, llm, nvidia, transformers]
 relations:
   prerequisites: [llm-perf-structured-sparsity]

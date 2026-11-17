@@ -6,7 +6,7 @@ order: 3
 summary: A live whiteboard walk-through - Llama 2 70B on 8xH100, from "does it fit?" to the exact token-rate ceilings at batch 1 and batch 64, using only a datasheet.
 level: intermediate
 type: concept
-domains: [generative-ai, systems-and-hpc]
+domains: [generative-ai, systems-and-hpc, benchmarks-and-performance]
 tags: [gpu, llm, nvidia, transformers]
 relations:
   prerequisites: [llm-perf-inference-roofline]

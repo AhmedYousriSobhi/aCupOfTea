@@ -5,7 +5,7 @@ sidebar_label: Overview
 summary: A five-part series on how GPU memory fails, what its telemetry really says, and how to turn that into predictions you can trust before a training run dies.
 level: advanced
 type: concept
-domains: [systems-and-hpc]
+domains: [systems-and-hpc, system-administration]
 tags: [gpu, nvidia, hpc, slurm]
 relations:
   related: [nhc-auto-remediation]

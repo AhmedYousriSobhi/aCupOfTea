@@ -70,6 +70,18 @@ domains:
     label: Systems and HPC
     description: Benchmarks, schedulers, system administration, high-performance computing.
     related: [software-engineering, security, machine-learning, deep-learning, system-design]
+  schedulers:
+    label: Schedulers
+    description: Job scheduling and resource management on clusters, mostly Slurm.
+    related: [systems-and-hpc, deep-learning, security, devops, system-design]
+  system-administration:
+    label: System Administration
+    description: "Running Linux hosts and clusters: memory, storage, node health, MPI and GPU failures."
+    related: [systems-and-hpc, software-engineering, devops, security]
+  benchmarks-and-performance:
+    label: Benchmarks and Performance
+    description: "Measuring and reasoning about performance: benchmarks, rooflines and inference speed."
+    related: [systems-and-hpc, deep-learning, generative-ai, software-engineering]
   business:
     label: Business
     description: Business context, KPIs and domain knowledge around the technical work.

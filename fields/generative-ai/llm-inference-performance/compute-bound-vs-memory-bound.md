@@ -6,7 +6,7 @@ order: 1
 summary: Why a 3x faster GPU can give you 1.6x - arithmetic intensity, the ridge point and the roofline, explained with a pizza kitchen and two lines of arithmetic.
 level: intermediate
 type: concept
-domains: [generative-ai, systems-and-hpc]
+domains: [generative-ai, systems-and-hpc, benchmarks-and-performance]
 tags: [gpu, nvidia]
 ---
 

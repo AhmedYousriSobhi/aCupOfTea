@@ -6,7 +6,7 @@ order: 11
 summary: Every NHC command, option, variable, config pattern and Slurm knob from the series on one page.
 level: intermediate
 type: reference
-domains: [systems-and-hpc]
+domains: [systems-and-hpc, system-administration]
 tags: [hpc, slurm]
 relations:
   related: [nhc-troubleshooting, nhc-writing-nhc-conf]

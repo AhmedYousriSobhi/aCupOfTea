@@ -6,7 +6,7 @@ order: 6
 summary: Build a site .nhc module the way upstream does, with cached data, clear failure messages, fast bash, and practical GPU checks.
 level: advanced
 type: guide
-domains: [systems-and-hpc]
+domains: [systems-and-hpc, system-administration]
 tags: [hpc, gpu, nvidia]
 relations:
   prerequisites: [nhc-writing-nhc-conf]
