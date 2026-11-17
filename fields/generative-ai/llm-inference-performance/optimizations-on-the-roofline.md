@@ -6,7 +6,7 @@ order: 4
 summary: Five proposals in one meeting, one roofline to judge them - batching, PagedAttention, quantization, tensor parallelism, FlashAttention, speculative decoding, disaggregation, and how to measure.
 level: intermediate
 type: concept
-domains: [generative-ai, systems-and-hpc]
+domains: [generative-ai, systems-and-hpc, benchmarks-and-performance]
 tags: [gpu, llm, nvidia, transformers]
 relations:
   prerequisites: [llm-perf-sizing-70b]

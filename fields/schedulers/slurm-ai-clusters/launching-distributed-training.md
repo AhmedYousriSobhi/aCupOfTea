@@ -6,7 +6,7 @@ order: 2
 summary: Why a 2-node training job can run on one node, the environment PyTorch needs from Slurm, launching with srun or torchrun, and the double-launch trap - tested with PyTorch 2.15 on Slurm 23.11.
 level: intermediate
 type: [concept, guide]
-domains: [systems-and-hpc, deep-learning]
+domains: [systems-and-hpc, deep-learning, schedulers]
 tags: [slurm, hpc, distributed-training, pytorch]
 relations:
   prerequisites: [slurm-topology-placement]

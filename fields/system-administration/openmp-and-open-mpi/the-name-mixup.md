@@ -6,7 +6,7 @@ sidebar_label: "1. The name mix-up"
 summary: OpenMP and Open MPI differ by one space and share almost nothing. Three names, three jobs - an API for threads, a standard for messages, and one program that implements the second.
 level: beginner
 type: concept
-domains: [systems-and-hpc, software-engineering]
+domains: [systems-and-hpc, software-engineering, system-administration]
 tags: [openmp, mpi, hpc]
 relations:
   related: [parallel-execution-and-affinity]

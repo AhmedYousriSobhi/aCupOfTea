@@ -6,7 +6,7 @@ order: 4
 summary: A tested Slurm HealthCheckProgram that drains a node when a GPU disappears, the bug where it overwrote the admin's drain reason, what slurmd does on restart, and the per-GPU drain coming in 26.11.
 level: intermediate
 type: [concept, guide]
-domains: [systems-and-hpc]
+domains: [systems-and-hpc, schedulers]
 tags: [slurm, hpc, gpu, nvidia]
 relations:
   related: [slurm-containers-pyxis, slurm-kill-task-failed, slurm-spool-dir-full]

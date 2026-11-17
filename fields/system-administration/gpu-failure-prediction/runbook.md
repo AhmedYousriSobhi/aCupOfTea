@@ -6,7 +6,7 @@ order: 6
 summary: The hands-on companion to the series - counters file, node checks, tested Prometheus rules, Alertmanager routing, a guarded Slurm drain hook and a backtest, step by step.
 level: advanced
 type: guide
-domains: [systems-and-hpc]
+domains: [systems-and-hpc, system-administration]
 tags: [gpu, nvidia, hpc, slurm]
 relations:
   prerequisites: [gpu-pred-what-fails]

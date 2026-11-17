@@ -4,7 +4,7 @@ sidebar_label: Rebooting a Slurm Cluster
 order: 2
 level: intermediate
 type: [concept, experiment]
-domains: [systems-and-hpc, system-design]
+domains: [systems-and-hpc, system-design, schedulers]
 summary: "The step-by-step order for rebooting a Slurm cluster: drain, lock access, control plane first, then front-end and compute nodes, and reopen in a controlled way."
 tags: [slurm, hpc]
 relations:

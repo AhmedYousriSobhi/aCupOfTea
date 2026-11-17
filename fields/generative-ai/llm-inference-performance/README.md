@@ -5,7 +5,7 @@ sidebar_label: Overview
 summary: Why a GPU with 3x the TFLOPS can make your chatbot only 1.6x faster - a four-part series on the roofline, LLM inference and the optimizations that actually work.
 level: intermediate
 type: concept
-domains: [generative-ai, systems-and-hpc]
+domains: [generative-ai, systems-and-hpc, benchmarks-and-performance]
 tags: [gpu, llm, nvidia, transformers]
 ---
 

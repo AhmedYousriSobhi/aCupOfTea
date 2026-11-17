@@ -6,7 +6,7 @@ order: 3
 summary: The config syntax, match strings, variables and contexts, plus copy-ready starter configs for CPU, GPU and login nodes.
 level: intermediate
 type: guide
-domains: [systems-and-hpc]
+domains: [systems-and-hpc, system-administration]
 tags: [hpc, gpu]
 relations:
   prerequisites: [nhc-build-and-install]

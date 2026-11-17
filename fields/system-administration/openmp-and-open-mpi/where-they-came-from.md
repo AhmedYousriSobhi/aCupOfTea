@@ -6,7 +6,7 @@ sidebar_label: "2. Where they came from"
 summary: The 1990s story - shared-memory vendors each had their own directives, distributed-memory users each had their own message libraries, and two committees fixed it from opposite sides.
 level: beginner
 type: concept
-domains: [systems-and-hpc, software-engineering]
+domains: [systems-and-hpc, software-engineering, system-administration]
 tags: [openmp, mpi, hpc]
 relations:
   prerequisites: [openmp-open-mpi-name-mixup]

@@ -6,7 +6,7 @@ order: 4
 summary: The three slurm.conf lines, which node states to check, timeouts that don't fight each other, prolog and epilog patterns, reboots, plus PBS and cron.
 level: intermediate
 type: guide
-domains: [systems-and-hpc]
+domains: [systems-and-hpc, system-administration]
 tags: [hpc, slurm]
 relations:
   prerequisites: [nhc-writing-nhc-conf]

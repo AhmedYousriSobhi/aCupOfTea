@@ -6,7 +6,7 @@ sidebar_label: "3. Threads and ranks"
 summary: Run one tiny program of each kind and watch the difference - OpenMP threads sharing one memory (and a data race), MPI ranks with separate memory (and a reduction) - on a real 4-core machine.
 level: beginner
 type: concept
-domains: [systems-and-hpc, software-engineering]
+domains: [systems-and-hpc, software-engineering, system-administration]
 tags: [openmp, mpi, hpc]
 relations:
   prerequisites: [openmp-open-mpi-name-mixup]

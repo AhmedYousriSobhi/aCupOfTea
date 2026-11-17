@@ -6,7 +6,7 @@ order: 8
 summary: Symptom-first fixes for false drains, nodes that never resume, slurmd that won't register, timeouts, hanging df, and checks that pass by hand but fail under Slurm.
 level: intermediate
 type: [guide, reference]
-domains: [systems-and-hpc]
+domains: [systems-and-hpc, system-administration]
 tags: [hpc, slurm]
 relations:
   prerequisites: [nhc-slurm-integration]

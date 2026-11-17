@@ -6,7 +6,7 @@ order: 2
 summary: Why AI clusters use RDMA fabrics (InfiniBand or RoCE), what kernel bypass and zero-copy mean, and how GPUDirect RDMA and GPUDirect Storage move data straight into GPU memory.
 level: intermediate
 type: concept
-domains: [systems-and-hpc]
+domains: [systems-and-hpc, system-administration]
 tags: [hpc, gpu, nvidia, storage]
 relations:
   prerequisites: [ai-storage-parallel-filesystems]

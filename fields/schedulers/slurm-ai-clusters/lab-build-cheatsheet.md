@@ -6,7 +6,7 @@ order: 6
 summary: Every step used to build the Slurm lab behind the pending-jobs and AI-cluster series - node image, Slurm 23.11 with accounting, topology, PyTorch, Enroot and Pyxis, health check, Slurm 26.05, metrics.
 level: intermediate
 type: [reference, guide]
-domains: [systems-and-hpc]
+domains: [systems-and-hpc, schedulers]
 tags: [slurm, hpc, containers]
 relations:
   related: [slurm-topology-placement, slurm-distributed-training, slurm-containers-pyxis, slurm-gpu-health-checks, slurm-openmetrics, slurm-pending-reasons, slurm-qos-preemption-setup]

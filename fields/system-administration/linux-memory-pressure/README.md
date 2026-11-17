@@ -5,7 +5,7 @@ sidebar_label: Overview
 summary: A six-part series on what Linux does when RAM runs short - reclaim, PSI, the OOM killer, cgroup levers, memory locking - and how to build a rescuer that still works at the worst moment.
 level: intermediate
 type: concept
-domains: [systems-and-hpc]
+domains: [systems-and-hpc, system-administration]
 ---
 
 # Linux Memory Pressure - Overview
