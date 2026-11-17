@@ -34,7 +34,8 @@
     :root { --scroll-padding-top: 72px; }
     nav.app-nav {
       top: 0 !important; left: 0 !important; right: 0 !important; margin: 0 !important;
-      min-height: 52px; padding: 4px 104px 4px 14px !important; border-radius: 0 !important;
+      height: 52px !important; min-height: 52px; padding: 4px 100px 4px 78px !important; border-radius: 0 !important;
+      flex-wrap: nowrap !important; overflow: hidden; box-sizing: border-box;
       justify-content: flex-start !important; align-items: center; gap: 4px 12px !important;
       border-bottom: 1px solid var(--border-color); z-index: 45;
     }
@@ -46,13 +47,18 @@
        but only over its button at the bottom; while the menu is open it still
        covers the rest of the screen, so a tap outside closes the menu. */
     body:not(:has(.sidebar.show)) .sidebar-toggle {
-      width: 44px; top: auto !important; bottom: 0;
-      height: calc(var(--sidebar-toggle-height) + 2 * var(--sidebar-toggle-margin-block));
+      width: 74px; top: 0 !important; bottom: auto; left: 0; height: 52px;
+      display: flex; align-items: center; justify-content: flex-start; gap: 8px; padding: 0 0 0 14px; z-index: 46;
     }
+    body:not(:has(.sidebar.show)) .sidebar-toggle::after { content: "Menu"; font: 600 0.95rem/1 'Inter', sans-serif; color: var(--color-text); }
+    /* the phone bar holds Home and Categories; the side menu lists every category and ends with the GitHub link */
+    nav.app-nav > ul { display: flex; flex-wrap: nowrap; margin: 0; padding: 0; }
+    nav.app-nav > ul > li { margin: 0 4px; }
+    nav.app-nav > ul > li:nth-child(n+3) { display: none; }
     body:has(.sidebar.show) #theme-toggle, body:has(.sidebar.show) #theme-menu { display: none; }
     section.content { padding-top: 52px !important; }
-    .markdown-section { padding-top: 12px !important; }
   }
+  @media (max-width: 400px) { nav.app-nav > ul > li:nth-child(2) { display: none; } } /* narrow phones: Home only, Categories are in the menu */
   .markdown-section .math-block { overflow-x: auto; padding: 0.2em 0; }
   /* Links to related pages, one line under the page title (added when the site is built) */
   /* Readers who ask for less motion: no sliding menu, fades or smooth scrolling */
@@ -200,6 +206,8 @@
   }
   @media (max-width: 768px) {
     app-nav, nav.app-nav { display: flex; flex-wrap: wrap; }
+    /* last, so it wins over the general rule above: the first line of the page sits 16px under the bar */
+    html body .markdown-section { margin-top: 0 !important; padding-top: 16px !important; }
   }
   @media (min-width: 1400px) { section.content { padding-right: 240px; } }
   /* Page outline (wide screens), see .docs/page-outline.js */
