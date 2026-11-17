@@ -23,6 +23,8 @@ Copies the repo to --out, then in the COPY only:
   * writes sw.js (the read-offline service worker) at the site root from
     .docs/sw-template.js, versioned with the git commit so each deploy gets a
     new cache; it has to sit at the root to control every page.
+  * writes a lossless WebP next to each PNG, points page images at it and gives them
+    width and height (webp_images.py);
   * losslessly recompresses PNG and JPEG images (optimize_images.py; skipped
     when Pillow is not installed).
 Source files are never modified. Local `docsify serve` on the repo itself
@@ -46,6 +48,7 @@ from common import list_pages, split_front_matter, submodule_paths  # noqa: E402
 from generate_index import reading_time_min  # noqa: E402
 from share_pages import DEFAULT_BASE, write_share_pages  # noqa: E402
 from optimize_images import optimize_tree  # noqa: E402
+from webp_images import convert_tree  # noqa: E402
 
 MARKER = ".stage-site"
 # Pages of the local authoring tools: they only work next to the local server (new_page.py --gui),
@@ -437,6 +440,7 @@ def stage(src, out, base_url=DEFAULT_BASE):
 
     n_idx, titles_size, body_size = build_search_index(out)
     sw = write_service_worker(src, out)
+    webp = convert_tree(out)
     images = optimize_tree(out)
 
     open(os.path.join(out, ".nojekyll"), "w").close()
@@ -447,7 +451,7 @@ def stage(src, out, base_url=DEFAULT_BASE):
           f"last-updated dates for {len(dates)} pages, "
           f"search index of {n_idx} pages (titles {titles_size // 1024} KB, text {body_size // 1024} KB), "
           + (f"service worker {sw[0]} with {sw[1]} shell files" if sw else "no service worker")
-          + f"; {images}")
+          + f"; {webp}; {images}")
 
 
 def main():

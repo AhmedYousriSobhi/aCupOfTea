@@ -376,6 +376,8 @@
     .markdown-section a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 0.85em; word-break: break-all; }
     .markdown-section h2, .markdown-section h3, .markdown-section pre, .markdown-section table, .markdown-section img { break-inside: avoid; }
   }
+  /* Pictures carry width and height (so the page does not jump); keep their shape when the column is narrower */
+  .markdown-section img[height] { height: auto; }
 </style>
 
 <body>
