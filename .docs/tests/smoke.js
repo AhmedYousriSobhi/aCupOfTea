@@ -442,6 +442,12 @@ async function offline(browser, base) {
     await page.waitForTimeout(2000);
     const controlled = await page.evaluate(() => !!navigator.serviceWorker.controller);
     c('a service worker is registered and controls the page after a reload', active && controlled, JSON.stringify({ active, controlled }));
+    // "Save this series for offline": one click fetches the folder, then a page never opened works offline
+    await page.goto(base + '/#/fields/devops/kubernetes/');
+    await page.waitForSelector('.offline-series button', { timeout: 8000 });
+    await page.click('.offline-series button');
+    await page.waitForFunction(() => /^Saved \d+ pages/.test((document.querySelector('.offline-status') || {}).textContent || ''), null, { timeout: 60000 });
+    c('the series button saves a folder for offline', true);
     await page.goto(base + '/#/fields/benchmarks/hpl');
     await page.waitForTimeout(3000);
     const online = await h1();
@@ -452,6 +458,12 @@ async function offline(browser, base) {
     await page.waitForTimeout(1000);
     const off = await h1();
     c('a page read before opens again offline', !!online.h1 && off.h1 === online.h1 && !off.lost, JSON.stringify({ online, off }));
+    const seriesPage = await page.evaluate(() => fetch('./.docs/_sidebar.md').then((r) => r.text()).then((t) => (t.match(/\]\(\/?(fields\/devops\/kubernetes\/[^)\s]+)\.md\)/g) || []).map((m) => m.replace(/^\]\(\/?/, '').slice(0, -4)).filter((p) => !/README$/.test(p) && p !== 'fields/devops/kubernetes').pop()));
+    await page.goto(base + '/#/' + seriesPage);
+    await page.reload();
+    await page.waitForFunction(() => document.querySelector('.markdown-section h1'), null, { timeout: 10000 }).catch(() => {});
+    const series = await h1();
+    c('a page of the saved series, never opened, opens offline', !!seriesPage && !!series.h1 && !series.lost, JSON.stringify({ seriesPage, series }));
   } catch (e) {
     c('read offline run finished', false, e.message.split('\n')[0]);
   } finally {
