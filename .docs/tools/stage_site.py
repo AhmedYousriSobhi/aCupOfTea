@@ -6,6 +6,7 @@ Copies the repo to --out, then in the COPY only:
     rendering and its search index stay clean;
   * puts the reading time ("6 min read") under the title of every content page
     (not the homepage and not folder indexes with a "## Contents" list);
+  * links the first use of each glossary term on a page to its entry (glossary_links.py);
   * puts a "Mentioned in" list (the pages that link to this one, backlinks.py) at the end of each page;
   * puts a one-line "Read first / See also / Read next" strip under the title of pages
     that have relations, from
@@ -54,6 +55,7 @@ from share_pages import DEFAULT_BASE, write_share_pages  # noqa: E402
 from optimize_images import optimize_tree  # noqa: E402
 import feeds  # noqa: E402
 import backlinks  # noqa: E402
+import glossary_links  # noqa: E402
 from webp_images import convert_tree  # noqa: E402
 
 MARKER = ".stage-site"
@@ -434,6 +436,8 @@ def stage(src, out, base_url=DEFAULT_BASE):
         with open(os.path.join(out, path), encoding="utf-8", newline="") as f:
             texts[path] = f.read()
     mentions = backlinks.build(texts)
+    glossary_terms = glossary_links.parse(texts.get(glossary_links.GLOSSARY, ""))
+    term_links = 0
     page_titles = {}
     for path, text in texts.items():
         h1 = re.search(r"^# +(.+?)\s*#*\s*$", text, re.M)
@@ -457,7 +461,9 @@ def stage(src, out, base_url=DEFAULT_BASE):
             at_end = render_see_also(related[path], summaries)
             appended += 1
         at_end += backlinks.render(mentions.get(path), page_titles, summaries)
-        new = put_related(drop_toc(path, new), under_title, crumbs, at_end)
+        body, n_terms = glossary_links.link_terms(path, drop_toc(path, new), glossary_terms)
+        term_links += n_terms
+        new = put_related(body, under_title, crumbs, at_end)
         if new != text:
             with open(full, "w", encoding="utf-8", newline="") as f:
                 f.write(new)
@@ -495,7 +501,7 @@ def stage(src, out, base_url=DEFAULT_BASE):
     open(os.path.join(out, MARKER), "w").close()
     print(f"staged {out}: stripped front matter from {stripped} pages, "
           f"reading time on {timed} pages, related strip on {appended} pages, "
-          f"{n_code} code and notebook pages, {n_share} share pages, sitemap of {n_sitemap} pages and a feed of {n_feed},  {len(recent)} recent pages, "
+          f"{term_links} glossary links, {n_code} code and notebook pages, {n_share} share pages, sitemap of {n_sitemap} pages and a feed of {n_feed},  {len(recent)} recent pages, "
           f"last-updated dates for {len(dates)} pages, "
           f"{bundled} scripts bundled into site.js, "
           f"search index of {n_idx} pages (titles {titles_size // 1024} KB, text {body_size // 1024} KB), "

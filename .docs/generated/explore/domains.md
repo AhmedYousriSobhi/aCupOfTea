@@ -20,4 +20,4 @@ Pages grouped by subject. Folders stay the primary location; this is an overlay.
 - [Statistics](/.docs/generated/explore/domains/statistics.md) (26): Statistical methods and probability.
 - [System Administration](/.docs/generated/explore/domains/system-administration.md) (37): Running Linux hosts and clusters: memory, storage, node health, MPI and GPU failures.
 - [System Design](/.docs/generated/explore/domains/system-design.md) (6): Software System Design
-- [Systems and HPC](/.docs/generated/explore/domains/systems-and-hpc.md) (120): Benchmarks, schedulers, system administration, high-performance computing.
+- [Systems and HPC](/.docs/generated/explore/domains/systems-and-hpc.md) (121): Benchmarks, schedulers, system administration, high-performance computing.

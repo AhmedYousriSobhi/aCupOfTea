@@ -8,6 +8,7 @@
   * [Problems](problems/README.md)
   * [Programming](programming/README.md)
   * [Projects](projects/README.md)
+  * [References](references/README.md)
   * [Tips](tips/README.md)
 
 * 🔗 External
