@@ -70,12 +70,16 @@
     btn.className = 'save-page';
     function paint() {
       var on = isSaved(r);
-      btn.textContent = on ? '★ Saved' : '☆ Save for later';
+      btn.textContent = on ? '★' : '☆';
+      btn.setAttribute('aria-label', on ? 'Saved, click to remove' : 'Save for later');
+      btn.title = on ? 'Saved: click to remove' : 'Save for later';
       btn.setAttribute('aria-pressed', on ? 'true' : 'false');
     }
     btn.addEventListener('click', function () { toggleSaved(r, title); paint(); savedList(); });
     paint();
-    h1.parentNode.insertBefore(btn, h1.nextSibling);
+    // a star at the right end of the meta line under the title; pages without one get it under the title
+    var meta = document.querySelector('.markdown-section .reading-time');
+    if (meta) meta.appendChild(btn); else h1.parentNode.insertBefore(btn, h1.nextSibling);
   }
   // "Saved (N)" list in the side menu, hidden when empty
   function savedList() {

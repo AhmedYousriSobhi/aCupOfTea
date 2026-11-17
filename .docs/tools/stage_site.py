@@ -61,13 +61,20 @@ SW_TEMPLATE = ".docs/sw-template.js"
 ASSET_RE = re.compile(r'<(?:script|link)\b[^>]*?\b(?:src|href)="((?:\./|https://cdn\.jsdelivr\.net/)[^"]+)"')
 
 
+TOP_LINKS = 2  # links per group in the strip under the title; the rest of a page's relations go to the end
+TOC_RE = re.compile(r"^#{1,3} +table of contents?\s*$", re.I)
+
+
+def esc_html(s):
+    return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace('"', "&quot;")
+
+
 def render_related(block):
-    """One line of links for the top of a page: read first, see also, read next."""
+    """One line under the title: read first and read next (at most TOP_LINKS links each).
+    'See also' goes to the end of the page (render_see_also)."""
     groups = []
-    for key, label in (("prerequisites", "Read first"),
-                       ("related", "See also"),
-                       ("required_by", "Read next")):
-        items = block.get(key) or []
+    for key, label in (("prerequisites", "Read first"), ("required_by", "Read next")):
+        items = (block.get(key) or [])[:TOP_LINKS]
         if items:
             links = ", ".join(f"[{i['title']}](/{i['path']})" for i in items)
             groups.append(f"**{label}:** {links}")
@@ -76,27 +83,163 @@ def render_related(block):
     return "\n".join([RELATED_MARK, '<div class="related-strip">', "", "  \u00b7  ".join(groups), "", "</div>", ""])
 
 
-def render_reading_time(path, body):
-    """'N min read' block for a content page; '' for the root docs and folder indexes."""
+def render_see_also(block, summaries):
+    """'See also' list for the end of the page, with each page's one-line summary."""
+    items = block.get("related") or []
+    if not items:
+        return ""
+    lines = [RELATED_MARK, '<div class="see-also">', "", "**See also**", ""]
+    for i in items:
+        line = f"- [{i['title']}](/{i['path']})"
+        if summaries.get(i["path"]):
+            line += f" \u2014 {summaries[i['path']]}"
+        lines.append(line)
+    return "\n".join(lines + ["", "</div>", ""])
+
+
+def folder_name(root, folder):
+    """A folder's menu name: its README's sidebar_group, else the H1 text after the last hyphen
+    (a trailing '- Overview' dropped); '' without a README."""
+    try:
+        with open(os.path.join(root, folder, "README.md"), encoding="utf-8") as f:
+            text = f.read()
+    except OSError:
+        return ""
+    m = re.search(r"^sidebar_group:\s*(.+?)\s*$", text.split("\n---", 1)[0] if text.startswith("---") else "", re.M)
+    if m:
+        return m.group(1).strip("'\"")
+    m = re.search(r"^# +(.+?)\s*#*\s*$", text, re.M)
+    if not m:
+        return ""
+    h1 = re.sub(r"\s+[-\u2013\u2014]\s+Overview$", "", m.group(1).strip(), flags=re.I)
+    return h1.rsplit("-", 1)[-1].strip()
+
+
+def render_breadcrumb(path, root):
+    """'Fields / Schedulers' above the title, each part linking to its folder index."""
+    parts = path.split("/")[:-1]
+    if path.endswith("/README.md"):
+        parts = parts[:-1]
+    crumbs = []
+    for n in range(1, len(parts) + 1):
+        folder = "/".join(parts[:n])
+        name = folder_name(root, folder) or parts[n - 1].replace("-", " ").title()
+        crumbs.append(f'<a href="#/{folder}/">{esc_html(name)}</a>')
+    if not crumbs:
+        return ""
+    return f'{RELATED_MARK}\n<nav class="crumbs" aria-label="Breadcrumb">{" / ".join(crumbs)}</nav>\n'
+
+
+def render_meta(path, body, meta, updated):
+    """Under the title: 'Intermediate · Guide · 7 min read · Updated 13 Nov 2026' and tag chips;
+    '' for the root docs and folder indexes."""
     if path in NOT_RECENT or (path.endswith("README.md") and INDEX_RE.search(body)):
         return ""
-    # same marker as the related strip: search drops it from the page text
-    return f'{RELATED_MARK}\n<div class="reading-time">{reading_time_min(body)} min read</div>\n'
+    bits = []
+    if meta.get("level"):
+        bits.append(meta["level"].capitalize())
+    kind = meta.get("type")
+    kind = kind[0] if isinstance(kind, list) and kind else kind
+    if kind and kind != "note":
+        bits.append(kind.capitalize())
+    bits.append(f"{reading_time_min(body)} min read")
+    if updated:
+        bits.append("Updated " + time.strftime("%-d %b %Y", time.strptime(updated, "%Y-%m-%d")))
+    out = f'{RELATED_MARK}\n<div class="reading-time">{" \u00b7 ".join(esc_html(b) for b in bits)}</div>\n'
+    tags = meta.get("tags") or []
+    if tags:
+        chips = " ".join(f'<a class="chip" href="#/.docs/generated/explore/tags/{esc_html(t)}">{esc_html(t)}</a>'
+                         for t in tags)
+        out += f'{RELATED_MARK}\n<div class="tag-chips">{chips}</div>\n'
+    return out
 
 
-def put_related(text, strip):
-    """Insert the strip right under the page's first # heading (at the top when there is none)."""
-    if not strip:
+ANCHOR_ITEM_RE = re.compile(r"^\s*(?:[-*+]|\d+[.)])\s+\[[^\]]+\]\(#[^)\s]+\)\s*$")
+
+
+def drop_anchor_list(lines):
+    """A bare list that only links to the page's own sections (4+ items), before the first ## heading."""
+    fence, i, first_h2 = False, 0, len(lines)
+    for n, line in enumerate(lines):
+        if line.lstrip().startswith(("```", "~~~")):
+            fence = not fence
+        if not fence and re.match(r"## ", line):
+            first_h2 = n
+            break
+    while i < first_h2:
+        if ANCHOR_ITEM_RE.match(lines[i].rstrip("\r\n")):
+            j = i
+            while j < len(lines) and ANCHOR_ITEM_RE.match(lines[j].rstrip("\r\n")):
+                j += 1
+            if j - i >= 4 and j <= first_h2:
+                k = j
+                while k < len(lines) and not lines[k].strip():
+                    k += 1
+                if k < len(lines) and re.fullmatch(r"(-{3,}|\*{3,}|_{3,})", lines[k].strip()):
+                    j = k + 1  # the rule that closed the list goes with it
+                return "".join(lines[:i] + lines[j:])
+            i = j
+        else:
+            i += 1
+    return "".join(lines)
+
+
+def drop_toc(path, text):
+    """Staged copy only: remove a page's hand-written 'Table of contents' section (the heading and
+    the list under it), or a bare list of links to its own sections. The site shows the page outline on wide screens and the section list in the
+    menu on narrow ones. The source file keeps it, so GitHub still shows it. Folder READMEs keep theirs."""
+    if path.endswith("README.md"):
         return text
     lines = text.splitlines(keepends=True)
+    fence, start = False, None
+    heads = 0
+    for i, line in enumerate(lines):
+        if line.lstrip().startswith(("```", "~~~")):
+            fence = not fence
+        if not fence and re.match(r"#{1,6} ", line):
+            heads += 1
+            if start is None and TOC_RE.match(line.rstrip("\r\n")):
+                start = i
+    if heads < 4:
+        return text
+    if start is None:
+        return drop_anchor_list(lines)
+    end = len(lines)
+    for j in range(start + 1, len(lines)):
+        ln = lines[j].strip()
+        if re.match(r"#{1,6} ", lines[j]) or re.fullmatch(r"(-{3,}|\*{3,}|_{3,})", ln):
+            end = j
+            break
+        if ln and not re.match(r"([-*+]|\d+[.)]) |\s", lines[j]):
+            return text  # prose, not just a link list: leave it
+    if end < len(lines) and re.fullmatch(r"(-{3,}|\*{3,}|_{3,})", lines[end].strip()):
+        end += 1  # the rule that closed the list goes with it
+    return "".join(lines[:start] + lines[end:])
+
+
+def put_related(text, strip, before="", end=""):
+    """Insert `strip` right under the page's first # heading (at the top when there is none),
+    `before` (the breadcrumb) just above that heading and `end` at the end of the page."""
+    if not (strip or before or end):
+        return text
+    lines = text.splitlines(keepends=True)
+    nl = "\r\n" if lines and lines[0].endswith("\r\n") else "\n"
     fence = False
+    out = None
     for i, line in enumerate(lines):
         if line.lstrip().startswith(("```", "~~~")):
             fence = not fence
         if not fence and line.startswith("# "):
-            nl = "\r\n" if line.endswith("\r\n") else "\n"
-            return "".join(lines[:i + 1]) + nl + strip.replace("\n", nl) + nl + "".join(lines[i + 1:])
-    return strip + "\n" + text
+            head = "".join(lines[:i])
+            if before:
+                head += before.replace("\n", nl) + nl
+            out = head + line + (nl + strip.replace("\n", nl) if strip else "") + nl + "".join(lines[i + 1:])
+            break
+    if out is None:
+        out = (before + "\n" if before else "") + (strip + "\n" if strip else "") + text
+    if end:
+        out = out.rstrip("\r\n") + nl + nl + end.replace("\n", nl)
+    return out
 
 
 def last_updated(src, pages):
@@ -209,6 +352,17 @@ def stage(src, out, base_url=DEFAULT_BASE):
         with open(rpath, encoding="utf-8") as f:
             related = json.load(f)
 
+    pages_all = list_pages(out, set(subs))
+    dates = last_updated(src, pages_all)
+    meta, summaries = {}, {}
+    opath = os.path.join(src, ".docs/generated/objects.json")
+    if os.path.exists(opath):
+        with open(opath, encoding="utf-8") as f:
+            objs = json.load(f)
+        objs = objs.get("objects", list(objs.values())) if isinstance(objs, dict) else objs
+        meta = {o["path"]: o for o in objs if isinstance(o, dict) and o.get("path")}
+        summaries = {k: v["summary"] for k, v in meta.items() if v.get("summary")}
+
     stripped = appended = timed = 0
     originals = {}
     for path in list_pages(out, set(subs)):
@@ -221,12 +375,15 @@ def stage(src, out, base_url=DEFAULT_BASE):
         if split is not None:
             new = text[split[1]:]
             stripped += 1
-        under_title = render_reading_time(path, new)
+        under_title = render_meta(path, new, meta.get(path, {}), dates.get(path))
         timed += bool(under_title)
+        crumbs = render_breadcrumb(path, out) if under_title else ""
+        at_end = ""
         if path in related:
             under_title += render_related(related[path])
+            at_end = render_see_also(related[path], summaries)
             appended += 1
-        new = put_related(new, under_title)
+        new = put_related(drop_toc(path, new), under_title, crumbs, at_end)
         if new != text:
             with open(full, "w", encoding="utf-8", newline="") as f:
                 f.write(new)
@@ -243,7 +400,6 @@ def stage(src, out, base_url=DEFAULT_BASE):
             with open(home, "w", encoding="utf-8", newline="") as f:
                 f.write(RECENT_RE.sub(lambda m: render_recent(out, recent), text, count=1))
 
-    dates = last_updated(src, list_pages(out, set(subs)))
     if dates:
         with open(os.path.join(out, ".docs/last-updated.json"), "w", encoding="utf-8") as f:
             json.dump(dates, f, sort_keys=True, separators=(",", ":"))
