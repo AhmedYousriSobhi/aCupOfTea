@@ -12,6 +12,7 @@ Copies the repo to --out, then in the COPY only:
     .docs/generated/related.json (run generate_index.py first);
   * writes a readable page next to every code file and notebook
     (name.py -> name.py.md, the address a Docsify link asks for; code_pages.py);
+  * writes sitemap.xml, feed.xml (Atom, the newest pages added) and robots.txt (feeds.py);
   * writes a share page (title and summary as Open Graph tags, then a redirect)
     at each page's folder address so link previews differ per page
     (share_pages.py);
@@ -51,6 +52,7 @@ from common import list_pages, split_front_matter, submodule_paths  # noqa: E402
 from generate_index import reading_time_min  # noqa: E402
 from share_pages import DEFAULT_BASE, write_share_pages  # noqa: E402
 from optimize_images import optimize_tree  # noqa: E402
+import feeds  # noqa: E402
 import backlinks  # noqa: E402
 from webp_images import convert_tree  # noqa: E402
 
@@ -464,6 +466,8 @@ def stage(src, out, base_url=DEFAULT_BASE):
     n_share = write_share_pages(out, originals, base_url)
 
     recent = recent_pages(src, list_pages(out, set(subs)))
+    n_sitemap, n_feed = feeds.write_all(out, base_url, [p for p in originals if p not in NOT_RECENT], dates,
+                                        recent_pages(src, list_pages(out, set(subs)), count=30), originals)
     home = os.path.join(out, "README.md")
     if os.path.exists(home):
         with open(home, encoding="utf-8", newline="") as f:
@@ -491,7 +495,7 @@ def stage(src, out, base_url=DEFAULT_BASE):
     open(os.path.join(out, MARKER), "w").close()
     print(f"staged {out}: stripped front matter from {stripped} pages, "
           f"reading time on {timed} pages, related strip on {appended} pages, "
-          f"{n_code} code and notebook pages, {n_share} share pages, {len(recent)} recent pages, "
+          f"{n_code} code and notebook pages, {n_share} share pages, sitemap of {n_sitemap} pages and a feed of {n_feed},  {len(recent)} recent pages, "
           f"last-updated dates for {len(dates)} pages, "
           f"{bundled} scripts bundled into site.js, "
           f"search index of {n_idx} pages (titles {titles_size // 1024} KB, text {body_size // 1024} KB), "
