@@ -319,7 +319,7 @@ async function run(browser, base, label, size, phone) {
   }
   const csp = await page.evaluate(() => {
     // docsify-pagination probes for `global` with eval inside try/catch and falls back; harmless
-    const before = window.__csp.filter((v) => !/^script-src eval\b.*docsify-pagination/.test(v));
+    const before = window.__csp.filter((v) => !/^script-src eval\b.*docsify-pagination/.test(v) && !/^style-src-elem https:\/\/fonts\.googleapis\.com\/css2\?family=Roboto\+Mono/.test(v)); // the two known, harmless ones: the eval probe, and the Google Fonts @import inside Docsify's vue.css (blocked on purpose; the site self-hosts its fonts)
     const s = document.createElement('script');
     s.textContent = 'window.__injected = true';
     document.body.appendChild(s);

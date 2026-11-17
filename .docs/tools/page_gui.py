@@ -52,7 +52,7 @@ FIELDS = ("summary", "type", "domains", "tags", "level")
 
 def taxonomy_types():
     out, inside = [], False
-    for line in new_page.read(new_page.TAXONOMY).splitlines():
+    for line in new_page.read(new_page.sc.TAXONOMY).splitlines():
         if re.match(r"^\S", line):
             inside = line.split("#")[0].rstrip() == "types:"
             continue
@@ -64,7 +64,7 @@ def taxonomy_types():
 
 def taxonomy_domains():
     out, current, inside = [], None, False
-    for line in new_page.read(new_page.TAXONOMY).splitlines():
+    for line in new_page.read(new_page.sc.TAXONOMY).splitlines():
         if re.match(r"^\S", line):
             inside = line.split("#")[0].rstrip() == "domains:"
             continue
@@ -97,7 +97,7 @@ def options(title="", folder=""):
     return {
         "folders": sorted(folders),
         "suggested_folders": new_page.suggest_folders(title, folders) if title.strip() else [],
-        "folder_exists": os.path.isdir(os.path.join(new_page.ROOT, folder)) if folder else None,
+        "folder_exists": os.path.isdir(os.path.join(new_page.sc.ROOT, folder)) if folder else None,
         "slug": new_page.slug(title),
         "similar": [{"path": r, "title": h} for r, h in new_page.similar_pages(title, folders)] if title.strip() else [],
         "default_type": types[:1] or ["concept"],
@@ -254,8 +254,8 @@ def terminal_prefix():
 
 
 def open_in_editor(d):
-    path = os.path.realpath(os.path.join(new_page.ROOT, str(d.get("path", ""))))
-    if not path.startswith(os.path.realpath(new_page.ROOT) + os.sep) or not os.path.isfile(path):
+    path = os.path.realpath(os.path.join(new_page.sc.ROOT, str(d.get("path", ""))))
+    if not path.startswith(os.path.realpath(new_page.sc.ROOT) + os.sep) or not os.path.isfile(path):
         return {"ok": False, "output": "No such page."}
     argv, blocks = page_doctor.editor_command(path, int(d.get("line") or 1))
     if not argv:
@@ -263,11 +263,11 @@ def open_in_editor(d):
     if blocks:   # a terminal editor needs a terminal: open one if there is a desktop, else say what to run
         prefix = terminal_prefix()
         if prefix:
-            subprocess.Popen(prefix + argv, cwd=new_page.ROOT, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            subprocess.Popen(prefix + argv, cwd=new_page.sc.ROOT, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             return {"ok": True, "output": "Opened %s in a new terminal window (%s)." % (os.path.basename(argv[0]), os.path.basename(prefix[0]))}
         return {"ok": False, "command": shlex.join(argv),
                 "output": "That editor runs in a terminal. Run it there:\n  " + shlex.join(argv)}
-    subprocess.Popen(argv, cwd=new_page.ROOT, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    subprocess.Popen(argv, cwd=new_page.sc.ROOT, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     return {"ok": True, "output": "Opened in " + os.path.basename(argv[0])}
 
 
@@ -280,7 +280,7 @@ def editable():
         for rel, h1 in pages:
             if os.path.basename(rel) == "README.md":
                 continue
-            m = re.match(r"---[ \t]*\r?\n(.*?)\r?\n---[ \t]*(?:\r?\n|\Z)", new_page.read(os.path.join(new_page.ROOT, rel)), re.S)
+            m = re.match(r"---[ \t]*\r?\n(.*?)\r?\n---[ \t]*(?:\r?\n|\Z)", new_page.read(os.path.join(new_page.sc.ROOT, rel)), re.S)
             if not m:
                 continue
             cur = new_page.parse_front(m.group(1).splitlines())
@@ -314,8 +314,8 @@ def update_page(d):
 def upload_image(d):
     """Save a picture next to a page, in its images/ folder, under a safe unused name. Returns the markdown to paste."""
     page = str(d.get("page", "")).strip("/")
-    full = os.path.realpath(os.path.join(new_page.ROOT, page))
-    root = os.path.realpath(new_page.ROOT)
+    full = os.path.realpath(os.path.join(new_page.sc.ROOT, page))
+    root = os.path.realpath(new_page.sc.ROOT)
     if not full.startswith(root + os.sep) or not page.endswith(".md") or not os.path.isfile(full) or page.split("/")[0].startswith("."):
         return {"ok": False, "output": "Choose a page of the repository."}
     stem, ext = os.path.splitext(str(d.get("filename", "")))
@@ -358,10 +358,10 @@ def relate(d):
     with LOCK:
         if b in new_page.related_map().get(a, set()):
             return {"ok": True, "output": "Already related."}
-        text = page_doctor.add_related(new_page.read(new_page.TAXONOMY), a, b)
+        text = page_doctor.add_related(new_page.read(new_page.sc.TAXONOMY), a, b)
         if text is None:
             return {"ok": False, "output": "Could not find %s in taxonomy.yaml." % a}
-        with open(new_page.TAXONOMY, "w", encoding="utf-8") as f:
+        with open(new_page.sc.TAXONOMY, "w", encoding="utf-8") as f:
             f.write(text)
     return {"ok": True, "output": "%s and %s are now marked as related in taxonomy.yaml." % (a, b)}
 
@@ -369,8 +369,8 @@ def relate(d):
 def reindex(d=None):
     """Rewrite .docs/generated (what CI checks is current)."""
     with LOCK:
-        r = subprocess.run([sys.executable, "-I", os.path.join(HERE, "generate_index.py"), "--root", new_page.ROOT],
-                           capture_output=True, text=True, cwd=new_page.ROOT)
+        r = subprocess.run([sys.executable, "-I", os.path.join(HERE, "generate_index.py"), "--root", new_page.sc.ROOT],
+                           capture_output=True, text=True, cwd=new_page.sc.ROOT)
     return {"ok": r.returncode == 0, "output": (r.stdout + r.stderr).strip() or "done"}
 
 

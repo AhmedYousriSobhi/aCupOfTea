@@ -20,7 +20,7 @@ import new_page  # noqa: E402
 import page_doctor  # noqa: E402
 import page_gui  # noqa: E402
 
-REAL_TAXONOMY = new_page.TAXONOMY
+REAL_TAXONOMY = new_page.sc.TAXONOMY
 
 
 class Api(unittest.TestCase):
@@ -38,8 +38,8 @@ class Api(unittest.TestCase):
             fh.write("---\nid: a-page\ntype: note\n---\n\n# A Page\n\nText.\n")
         with open(os.path.join(root, "notes", "hand-made.md"), "w", encoding="utf-8") as fh:
             fh.write("# Hand Made\n\nSome text.\n")
-        self.patches = [mock.patch.object(new_page, "ROOT", root), mock.patch.object(page_doctor, "ROOT", root),
-                        mock.patch.object(new_page, "TAXONOMY", os.path.join(root, ".docs", "metadata", "taxonomy.yaml")),
+        self.patches = [mock.patch.object(new_page.sc, "ROOT", root), mock.patch.object(page_doctor, "ROOT", root),
+                        mock.patch.object(new_page.sc, "TAXONOMY", os.path.join(root, ".docs", "metadata", "taxonomy.yaml")),
                         mock.patch.object(new_page, "regenerate_navigation", lambda: None)]
         for p in self.patches:
             p.start()
@@ -114,14 +114,14 @@ class Api(unittest.TestCase):
         r = self.create(dry_run=True)
         self.assertTrue(r["ok"], r)
         self.assertIn("type: [concept, guide]", r["output"])
-        self.assertFalse(os.path.exists(os.path.join(new_page.ROOT, "notes", "brand-new-idea.md")))
+        self.assertFalse(os.path.exists(os.path.join(new_page.sc.ROOT, "notes", "brand-new-idea.md")))
 
     def test_create_writes_the_page_and_the_index_row(self):
         r = self.create()
         self.assertTrue(r["ok"], r)
-        with open(os.path.join(new_page.ROOT, "notes", "brand-new-idea.md"), encoding="utf-8") as fh:
+        with open(os.path.join(new_page.sc.ROOT, "notes", "brand-new-idea.md"), encoding="utf-8") as fh:
             self.assertIn("domains: [software-engineering]", fh.read())
-        with open(os.path.join(new_page.ROOT, "notes", "README.md"), encoding="utf-8") as fh:
+        with open(os.path.join(new_page.sc.ROOT, "notes", "README.md"), encoding="utf-8") as fh:
             self.assertIn("| [brand-new-idea](/notes/brand-new-idea.md) | A short one. |", fh.read())
         self.assertIn("Reading time", r["check"])
 
@@ -133,13 +133,13 @@ class Api(unittest.TestCase):
     def test_new_folder_needs_the_checkbox(self):
         self.assertFalse(self.create(folder="notes/deeper")["ok"])
         self.assertTrue(self.create(folder="notes/deeper", create_folder=True)["ok"])
-        self.assertTrue(os.path.isfile(os.path.join(new_page.ROOT, "notes", "deeper", "brand-new-idea.md")))
+        self.assertTrue(os.path.isfile(os.path.join(new_page.sc.ROOT, "notes", "deeper", "brand-new-idea.md")))
 
     def test_new_subject_and_tag_are_added_to_the_taxonomy(self):
         r = self.create(domains=["devops"], new_domains=[{"key": "devops", "description": "Running software."}],
                         tags=["kubernetes"], new_tags=[{"key": "kubernetes", "label": "Kubernetes"}])
         self.assertTrue(r["ok"], r)
-        with open(new_page.TAXONOMY, encoding="utf-8") as fh:
+        with open(new_page.sc.TAXONOMY, encoding="utf-8") as fh:
             text = fh.read()
         self.assertIn("  devops:\n    label: Devops\n    description: Running software.\n", text)
         self.assertIn("  kubernetes:\n    label: Kubernetes\n", text)
@@ -148,7 +148,7 @@ class Api(unittest.TestCase):
         r = self.create(types=["tutorial"], new_types=[{"key": "tutorial", "description": "A step by step lesson."}],
                         domains=["devops", "systems-and-hpc"], new_domains=[{"key": "devops", "description": "Running software."}])
         self.assertTrue(r["ok"], r)
-        with open(new_page.TAXONOMY, encoding="utf-8") as fh:
+        with open(new_page.sc.TAXONOMY, encoding="utf-8") as fh:
             text = fh.read()
         self.assertIn("  tutorial: A step by step lesson.\n", text)
         self.assertIn("  devops:\n    label: Devops\n    description: Running software.\n    related: [systems-and-hpc]\n", text)
@@ -183,7 +183,7 @@ class Api(unittest.TestCase):
         r = self.json("/api/adopt", {"page": "notes/hand-made.md", "types": ["note"], "domains": ["security"],
                                      "tags": [], "summary": "Made by hand."})
         self.assertTrue(r["ok"], r)
-        with open(os.path.join(new_page.ROOT, "notes", "hand-made.md"), encoding="utf-8") as fh:
+        with open(os.path.join(new_page.sc.ROOT, "notes", "hand-made.md"), encoding="utf-8") as fh:
             text = fh.read()
         self.assertTrue(text.endswith("\n# Hand Made\n\nSome text.\n"))
         self.assertIn("summary: Made by hand.", text)
@@ -199,7 +199,7 @@ class Api(unittest.TestCase):
         r = self.json("/api/update", {"page": "notes/a.md", "summary": "Now with a summary.", "types": ["concept"],
                                       "domains": ["security"], "tags": [], "level": "beginner"})
         self.assertTrue(r["ok"], r)
-        with open(os.path.join(new_page.ROOT, "notes", "a.md"), encoding="utf-8") as fh:
+        with open(os.path.join(new_page.sc.ROOT, "notes", "a.md"), encoding="utf-8") as fh:
             text = fh.read()
         self.assertIn("summary: Now with a summary.", text)
         self.assertIn("type: concept", text)
@@ -208,7 +208,7 @@ class Api(unittest.TestCase):
         r = self.json("/api/update", {"page": "notes/a.md", "summary": "", "types": ["concept"], "domains": ["security"],
                                       "tags": [], "level": ""})             # clear summary and level
         self.assertTrue(r["ok"], r)
-        with open(os.path.join(new_page.ROOT, "notes", "a.md"), encoding="utf-8") as fh:
+        with open(os.path.join(new_page.sc.ROOT, "notes", "a.md"), encoding="utf-8") as fh:
             after = fh.read()
         self.assertNotIn("summary:", after)
         self.assertNotIn("level:", after)
@@ -226,7 +226,7 @@ class Api(unittest.TestCase):
         self.assertTrue(first["ok"], first)
         self.assertEqual(first["path"], "notes/images/my-photo.png")
         self.assertEqual(first["snippet"], "![A cup of tea](images/my-photo.png)")
-        self.assertTrue(os.path.isfile(os.path.join(new_page.ROOT, "notes", "images", "my-photo.png")))
+        self.assertTrue(os.path.isfile(os.path.join(new_page.sc.ROOT, "notes", "images", "my-photo.png")))
         self.assertEqual(self.upload()["path"], "notes/images/my-photo-2.png")
 
     def test_pictures_that_are_unsafe_or_undescribed_are_refused(self):
@@ -235,7 +235,7 @@ class Api(unittest.TestCase):
             r = self.upload(**kw)
             self.assertFalse(r["ok"], (kw, r))
             self.assertIn(word, r["output"])
-        self.assertFalse(os.path.exists(os.path.join(new_page.ROOT, "notes", "images")))
+        self.assertFalse(os.path.exists(os.path.join(new_page.sc.ROOT, "notes", "images")))
 
     def test_brackets_in_the_description_are_made_safe(self):
         self.assertEqual(self.upload(alt="a [cup]")["snippet"], "![a (cup)](images/my-photo.png)")
@@ -249,11 +249,11 @@ class Api(unittest.TestCase):
 
     def test_reindex_runs_the_generator(self):
         import shutil
-        shutil.copy(os.path.join(HERE, "..", "metadata", "schema.yaml"), os.path.join(new_page.ROOT, ".docs", "metadata", "schema.yaml"))
-        os.makedirs(os.path.join(new_page.ROOT, ".docs", "generated"), exist_ok=True)
+        shutil.copy(os.path.join(HERE, "..", "metadata", "schema.yaml"), os.path.join(new_page.sc.ROOT, ".docs", "metadata", "schema.yaml"))
+        os.makedirs(os.path.join(new_page.sc.ROOT, ".docs", "generated"), exist_ok=True)
         r = self.json("/api/reindex", {})
         self.assertTrue(r["ok"], r)
-        self.assertTrue(os.path.isfile(os.path.join(new_page.ROOT, ".docs", "generated", "objects.json")))
+        self.assertTrue(os.path.isfile(os.path.join(new_page.sc.ROOT, ".docs", "generated", "objects.json")))
 
     # ---- problems
     def test_open_refuses_paths_outside_the_repo(self):

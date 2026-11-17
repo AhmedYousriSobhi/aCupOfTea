@@ -297,7 +297,7 @@ def find_by_name(clean):
         return ""
     hits = set()
     for d, dirs, files in os.walk(ROOT):
-        dirs[:] = [x for x in dirs if not x.startswith(".") and x not in new_page.SKIP_DIRS]
+        dirs[:] = [x for x in dirs if not x.startswith(".") and x not in new_page.sc.SKIP_DIRS]
         rel_dir = os.path.relpath(d, ROOT).replace(os.sep, "/")
         for name in dirs + files:
             rel = name if rel_dir == "." else rel_dir + "/" + name
@@ -493,7 +493,7 @@ def readme_swap_issues(scope):
     """A folder README whose title belongs to its subfolder while the subfolder's README belongs to the folder."""
     readmes = {}
     for d, dirs, files in os.walk(ROOT):
-        dirs[:] = [x for x in dirs if not x.startswith(".") and x not in new_page.SKIP_DIRS]
+        dirs[:] = [x for x in dirs if not x.startswith(".") and x not in new_page.sc.SKIP_DIRS]
         if "README.md" in files:
             readmes[os.path.relpath(d, ROOT).replace(os.sep, "/")] = os.path.join(d, "README.md")
 

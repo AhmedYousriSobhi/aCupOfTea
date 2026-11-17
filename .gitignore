@@ -17,3 +17,7 @@ _site/
 .claude/skills/
 
 .claude/
+
+# Local search index (python3 .docs/tools/build_search_index.py --local)
+.docs/index-titles.json
+.docs/index-body.json
