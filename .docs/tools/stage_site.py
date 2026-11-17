@@ -290,6 +290,32 @@ def render_recent(out, recent):
     return "\n".join(lines + ["", "<!-- recent:end -->"])
 
 
+HOME_LOGO_RE = re.compile(r"\(https://github\.com/AhmedYousriSobhi/aCupOfTea/assets/[^)\s]+\)")
+HOME_ROW_RE = re.compile(r"^(\| \[[^\]]+\]\(/([^/)]+)/README\.md\)) \|", re.M)
+HOME_TOP_RE = re.compile(r"\A# aCupOfTea[ \t]*\r?\n# ([^\r\n]+)\r?\n")
+HOME_QUOTE_RE = re.compile(r"^> \*\*Knowledge, served in short sips\.\*\*[^\r\n]*\r?\n", re.M)
+
+
+def render_home(text, pages):
+    """The deployed homepage, built from README.md (the source is unchanged):
+    one H1 and the tagline under it, the logo from the repository, a Search button,
+    a place for 'Continue reading' (filled in the browser) and page counts in the menu table."""
+    text = HOME_TOP_RE.sub(lambda m: f"# aCupOfTea\n\n*{m.group(1)}*\n", text, count=1)
+    text = HOME_LOGO_RE.sub("(.docs/icons/logo.png)", text, count=1)
+    counts = {}
+    for p in pages:
+        top = p.split("/")[0]
+        if "/" in p and not p.endswith("README.md"):
+            counts[top] = counts.get(top, 0) + 1
+    text = HOME_ROW_RE.sub(
+        lambda m: f"{m.group(1)} <small>{counts[m.group(2)]} pages</small> |" if counts.get(m.group(2)) else m.group(0),
+        text)
+    extra = ('\n<div class="home-actions"><button type="button" class="home-search">'
+             '\U0001F50D Search pages and code</button></div>\n'
+             '<div class="home-continue" hidden></div>\n')
+    return HOME_QUOTE_RE.sub(lambda m: m.group(0) + extra, text, count=1)
+
+
 def site_version(src):
     """The git commit of the source (short), or a timestamp without git."""
     try:
@@ -393,6 +419,11 @@ def stage(src, out, base_url=DEFAULT_BASE):
 
     recent = recent_pages(src, list_pages(out, set(subs)))
     home = os.path.join(out, "README.md")
+    if os.path.exists(home):
+        with open(home, encoding="utf-8", newline="") as f:
+            text = f.read()
+        with open(home, "w", encoding="utf-8", newline="") as f:
+            f.write(render_home(text, list_pages(out, set(subs))))
     if recent and os.path.exists(home):
         with open(home, encoding="utf-8", newline="") as f:
             text = f.read()
