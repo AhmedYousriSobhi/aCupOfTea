@@ -1,58 +1,17 @@
 /* Search for the Docsify site, an overlay ("palette"): pages whose title matches, passages inside
  * pages, and code, with filters for type, level and domain. Replaces Docsify's built-in search.
  * Data: .docs/index-titles.json (loaded when the search opens) and .docs/index-body.json (text and
- * code, loaded on the first search for text); both written by stage_site.py. Without them (a local
- * preview) it reads every page in the sidebar. Every word must match (stop words are ignored). */
+ * code, loaded on the first search for text); both written by stage_site.py, or for a local preview by
+ * build_search_index.py --local. Every word must match (stop words are ignored). */
 (function () {
   var STOP = 'a an the is are was what how why do does of to in on for and or with it this that'.split(' ');
   var index = null, loading = null, bodyLoading = null, MAX_PAGES = 8, MAX_PASSAGES = 3, MAX_CODE = 8;
 
   function esc(s) { return s.replace(/[&<>"]/g, function (c) { return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]; }); }
-  function slug(h) {
-    var s = h.replace(/<[^>]+>/g, '').toLowerCase().replace(/'/g, '39').trim()
-      .replace(/[^\p{L}\p{N}\s_-]/gu, '').replace(/\s+/g, '-');
-    return /^\d/.test(s) ? '_' + s : s;
-  }
-  function plain(s) {
-    return s.replace(/!\[[^\]]*\]\([^)]*\)/g, ' ').replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
-      .replace(/[`*_>|#]/g, ' ').replace(/\s+/g, ' ').trim();
-  }
-  function crawl() {
-    return fetch(typeof window.$docsify.loadSidebar === 'string' ? window.$docsify.loadSidebar : './.docs/_sidebar.md').then(function (r) { return r.text(); }).then(function (side) {
-      var pages = [], seen = {};
-      side.replace(/\[([^\]]+)\]\(([^)\s]+\.md)\)/g, function (_, label, path) {
-        path = path.replace(/^\/+/, '');
-        if (!/^https?:/.test(path) && !seen[path]) { seen[path] = 1; pages.push({label: label.replace(/\*\*/g, '').trim(), path: path}); }
-      });
-      if (!seen['README.md']) pages.unshift({label: 'Home', path: 'README.md'});
-      return Promise.all(pages.map(function (p) {
-        return fetch('./' + p.path).then(function (r) { return r.ok ? r.text() : ''; }).catch(function () { return ''; })
-          .then(function (t) {
-            t = t.replace(/^\uFEFF?---[ \t]*\r?\n[\s\S]*?\r?\n---[ \t]*(\r?\n|$)/, '').replace(/<!-- related-block -->[\s\S]*?<\/div>/g, ' ').replace(/```[\s\S]*?```/g, ' ');
-            var lines = t.split(/\r?\n/), secs = [], cur = {head: '', id: '', text: []}, h1 = '';
-            lines.forEach(function (ln) {
-              var m = /^(#{1,3}) +(.+?)\s*#*\s*$/.exec(ln);
-              if (m) {
-                secs.push(cur);
-                if (m[1] === '#' && !h1) h1 = m[2];
-                cur = {head: m[2], id: slug(m[2]), text: []};
-              } else cur.text.push(ln);
-            });
-            secs.push(cur);
-            p.title = plain(h1 || p.label);
-            p.desc = '';
-            p.secs = secs.map(function (s) { return {head: plain(s.head), id: s.id, body: plain(s.text.join(' '))}; })
-              .filter(function (s) { return (s.head || s.body) && !/^table of contents?$/i.test(s.head); });
-            var first = p.secs.filter(function (s) { return s.body.length > 40; })[0];
-            if (first) p.desc = first.body.slice(0, 120);
-            return hay(p);
-          });
-      }));
-    });
-  }  function hay(p) { p.hay = (p.label + ' ' + p.title + ' ' + p.path.replace(/[-_\/.]/g, ' ')).toLowerCase(); return p; }
+  function hay(p) { p.hay = (p.label + ' ' + p.title + ' ' + p.path.replace(/[-_\/.]/g, ' ')).toLowerCase(); return p; }
 
   // Titles first (small), the text of the pages on the first search for text.
-  var crawled = false;
+  var missing = false; // no index files: a local preview that has not built them
   function getJSON(url) {
     return fetch(url).then(function (r) { if (!r.ok) throw new Error('missing ' + url); return r.json(); });
   }
@@ -62,13 +21,13 @@
       if (!Array.isArray(pages) || !pages.length) throw new Error('empty index');
       pages.forEach(function (p) { p.secs = []; p.code = ''; hay(p); });
       return pages;
-    }).catch(function () { crawled = true; return crawl(); }).then(function (pages) { index = pages; return pages; });
+    }).catch(function () { missing = true; return []; }).then(function (pages) { index = pages; return pages; });
     return loading;
   }
   function loadBody() {
     if (bodyLoading) return bodyLoading;
     bodyLoading = build().then(function (pages) {
-      if (crawled) return pages;
+      if (missing) return pages;
       return getJSON('./.docs/index-body.json').then(function (bodies) {
         pages.forEach(function (p) { var b = bodies[p.path]; if (b) { p.secs = b.secs || []; p.code = b.code || ''; } });
         return pages;
@@ -184,6 +143,9 @@
     if (btn) btn.addEventListener('click', function () { render(box, q, res, true); });
   }
 
+  function notBuilt(box) {
+    box.innerHTML = '<p class="sp-none">The search index is not built. Run <code>python3 .docs/tools/build_search_index.py --local</code> and reload.</p>';
+  }
   // Nothing typed: the page read last, recent and saved pages; with a filter set, the pages that match it.
   function readJSON(key, fb) { try { return JSON.parse(localStorage.getItem(key)) || fb; } catch (e) { return fb; } }
   function rest(box) {
@@ -286,10 +248,11 @@
     var input = d.querySelector('#sp-input'), box = d.querySelector('.sp-results'), filters = d.querySelector('.sp-filters'), timer;
     function go() {
       var q = input.value.trim();
-      if (!q) { box.innerHTML = '<p class="sp-none">Loading pages…</p>'; build().then(function () { if (!input.value.trim()) rest(box); }); return; }
+      if (!q) { box.innerHTML = '<p class="sp-none">Loading pages…</p>'; build().then(function () { if (!input.value.trim()) { if (missing) notBuilt(box); else rest(box); } }); return; }
       if (!index) box.innerHTML = '<p class="sp-none">Loading pages…</p>';
       build().then(function () {
         if (input.value.trim() !== q) return;
+        if (missing) { notBuilt(box); return; }
         render(box, q, run(q), false); // titles now, text as soon as it has loaded
         loadBody().then(function () { if (input.value.trim() === q) render(box, q, run(q), false); });
       });
