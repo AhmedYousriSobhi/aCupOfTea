@@ -22,6 +22,7 @@ const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/cs
   '.md': 'text/markdown; charset=utf-8', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg',
   '.gif': 'image/gif', '.svg': 'image/svg+xml', '.webp': 'image/webp' };
 
+const WEIGHT_BUDGET_KB = 900;
 let serverDown = false; // the offline check also stops the server, so nothing can come from the network
 const server = http.createServer((req, res) => {
   if (serverDown) return req.socket.destroy();
@@ -55,6 +56,13 @@ async function open(browser, size, phone) {
     document.addEventListener('securitypolicyviolation', (e) => window.__csp.push(e.violatedDirective + ' ' + (e.blockedURI || 'inline') + ' at ' + (e.sourceFile || '').split('/').pop() + ':' + e.lineNumber + ' on ' + location.hash));
   });
   page.libs = [];
+  page.bytes = 0; page.imgBytes = 0; page.biggestImg = [0, '']; // body bytes (uncompressed) fetched so far
+  page.on('response', async (r) => {
+    try {
+      const n = (await r.body()).length;
+      if ((r.headers()['content-type'] || '').startsWith('image/')) { page.imgBytes += n; if (n > page.biggestImg[0]) page.biggestImg = [n, r.url().slice(0, 90)]; } else page.bytes += n;
+    } catch (e) { /* redirects, aborted */ }
+  });
   page.on('request', (r) => { const m = r.url().match(/\/npm\/(mermaid|katex)@/); if (m) page.libs.push(m[1]); });
   return page;
 }
@@ -65,6 +73,12 @@ async function run(browser, base, label, size, phone) {
   const c = (name, ok, detail) => check(`[${engine} ${label}] ${name}`, ok, detail);
 
   await go('');
+  await page.waitForTimeout(1500);
+  // Page weight: scripts, styles, fonts and data a first visit downloads (uncompressed; the host compresses
+  // text, so this is an upper bound). Pictures are content and only reported. Budget = measured run + headroom.
+  const kb = Math.round(page.bytes / 1024);
+  console.log(`INFO [${engine} ${label}] first visit to the home page: ${kb} KB without pictures, ${Math.round(page.imgBytes / 1024)} KB pictures (largest ${Math.round(page.biggestImg[0] / 1024)} KB ${page.biggestImg[1]})`);
+  c('home page weight is within budget', kb <= WEIGHT_BUDGET_KB, kb + ' KB > ' + WEIGHT_BUDGET_KB + ' KB');
   const home = await page.evaluate(() => ({
     h1: (document.querySelector('.markdown-section h1') || {}).textContent,
     nav: document.querySelectorAll('.sidebar-nav li').length,
@@ -83,6 +97,22 @@ async function run(browser, base, label, size, phone) {
     first: (() => { const i = document.querySelector('.markdown-section img'); return !!i && i.complete && i.naturalWidth > 0; })(),
     footer: (document.querySelector('.page-footer') || {}).textContent || '',
   }));
+  const a11y = await page.evaluate(() => {
+    const bad = [];
+    const name = (e) => (e.getAttribute('aria-label') || e.getAttribute('title') || e.textContent || '').trim() ||
+      !!e.querySelector('img[alt]:not([alt=""]), [aria-label]');
+    document.querySelectorAll('.markdown-section img').forEach((i) => { if (!i.hasAttribute('alt')) bad.push('image without alt: ' + (i.getAttribute('src') || '').slice(-40)); });
+    document.querySelectorAll('a[href], button').forEach((e) => { if (!name(e)) bad.push('no name: ' + e.outerHTML.slice(0, 70)); });
+    document.querySelectorAll('input:not([type=hidden]):not([type=file]), select, textarea').forEach((e) => {
+      if (!e.getAttribute('aria-label') && !e.getAttribute('placeholder') && !e.id) bad.push('unlabelled field: ' + e.outerHTML.slice(0, 70));
+    });
+    const seen = {};
+    document.querySelectorAll('[id]').forEach((e) => { if (seen[e.id]) bad.push('duplicate id ' + e.id); seen[e.id] = 1; });
+    if (!document.documentElement.lang) bad.push('html has no lang');
+    if (!document.querySelector('main, [role=main], section.content')) bad.push('no main landmark');
+    return bad;
+  });
+  c('accessibility scan: names, alt text, labels, unique ids, language, landmark', a11y.length === 0, a11y.slice(0, 5).join(' | '));
   c('long page has its images', conv.imgs >= 80, 'images: ' + conv.imgs);
   c('first image loads', conv.first);
   c('page footer has an edit link and a date', /Edit this page/.test(conv.footer) && /Last updated \d{4}-\d{2}-\d{2}/.test(conv.footer), conv.footer);
