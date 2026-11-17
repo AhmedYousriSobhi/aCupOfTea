@@ -213,13 +213,38 @@ async function run(browser, base, label, size, phone) {
     // the menu stays open: on a phone the search box lives inside it
   }
   try {
-    await page.locator('.srch input').fill('convolution');
+    await page.locator('.srch input').click();
+    await page.waitForSelector('#sp:not([hidden]) #sp-input');
+    c('the search box opens the search overlay', true);
+    await page.fill('#sp-input', 'convolution');
     await page.waitForTimeout(3000);
-    c('search finds pages', (await page.locator('.srch-panel a').count()) >= 3);
-    await page.fill('.srch input', 'bias variance');
+    c('search finds pages', (await page.locator('#sp a.sp-item').count()) >= 3);
+    const groups = await page.evaluate(() => [...document.querySelectorAll('#sp .sp-group h3')].map((h) => h.firstChild.textContent));
+    c('results are grouped: pages and inside pages', groups[0] === 'Pages' && groups[1] === 'Inside pages', groups.join(','));
+    await page.fill('#sp-input', 'Conv2d');
     await page.waitForTimeout(2500);
-    await page.evaluate(() => document.querySelector('.srch-panel a.srch-item').click());
+    const codeGroup = await page.evaluate(() => [...document.querySelectorAll('#sp .sp-group h3')].some((h) => h.firstChild.textContent === 'Code'));
+    c('code is searched in its own group', codeGroup);
+    await page.fill('#sp-input', '');
+    await page.waitForTimeout(500);
+    const chips = await page.locator('#sp .sp-chip').count();
+    c('filter chips for type, level and domain', chips >= 6, 'chips: ' + chips);
+    await page.locator('#sp .sp-chip[data-key=level]').first().click();
+    await page.waitForTimeout(400);
+    const filtered = await page.evaluate(() => ({ items: document.querySelectorAll('#sp a.sp-item').length, on: document.querySelectorAll('#sp .sp-chip[aria-pressed=true]').length }));
+    c('a filter lists the pages that match it', filtered.items >= 1 && filtered.on === 1, JSON.stringify(filtered));
+    await page.locator('#sp .sp-chip[aria-pressed=true]').click();
+    await page.keyboard.press('Escape');
+    await page.waitForTimeout(300);
+    c('Escape closes the search overlay', await page.evaluate(() => document.getElementById('sp').hidden));
+    await page.keyboard.press('/');
+    await page.waitForTimeout(300);
+    c('"/" opens the search overlay', await page.evaluate(() => !document.getElementById('sp').hidden && document.activeElement.id === 'sp-input'));
+    await page.fill('#sp-input', 'bias variance');
+    await page.waitForTimeout(2500);
+    await page.evaluate(() => document.querySelector('#sp a.sp-item').click());
     await page.waitForTimeout(2000);
+    c('choosing a result closes the overlay', await page.evaluate(() => document.getElementById('sp').hidden));
     const where = await page.evaluate(() => {
       const here = document.querySelector('.sidebar-nav a.here') || document.querySelector('.sidebar-nav li.active > a');
       return { found: !!here, hidden: !!here && !!here.closest('li.group.collapsed, li.group.collapsed *') && !!here.closest('ul') && [...document.querySelectorAll('.sidebar-nav li.group.collapsed')].some((g) => g.contains(here)) };

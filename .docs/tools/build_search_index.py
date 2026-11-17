@@ -1,10 +1,16 @@
 #!/usr/bin/env python3
-"""Build .docs/search-index.json inside a staged site (stage_site.py calls this).
+"""Build the search index inside a staged site (stage_site.py calls this).
 
-The site search (.docs/search.js) needs the text of every page. Without this
-file it fetches all ~155 pages in the browser on first use (about 2 MB). With
-it, one request is enough. The index is built from the staged pages, so it holds
-exactly the text the site serves (front matter stripped, related-pages strip added; the strip itself is left out of the index).
+The site search (.docs/search.js) needs the text of every page. Without the
+index it fetches all pages in the browser on first use (about 2 MB). The index
+is two files, built from the staged pages, so it holds exactly the text the site
+serves (front matter stripped; the related-pages strip is left out):
+
+  .docs/index-titles.json  one entry per page: label, path, title, desc, type,
+                           level, minutes, domains, tags. Small, loaded when the
+                           search opens, and cached for offline use.
+  .docs/index-body.json    path -> {secs: sections of text, code: fenced code}.
+                           Loaded on the first search for text, not cached ahead.
 
 A page's authored `summary` (front matter, read from .docs/generated/objects.json) is its description in the results; pages without one fall back to the first 120 characters of text. Folder labels lose their Markdown bold.
 
@@ -21,7 +27,9 @@ import unicodedata
 from urllib.parse import unquote
 
 SIDEBAR = ".docs/_sidebar.md"
-OUT = ".docs/search-index.json"
+OUT_TITLES = ".docs/index-titles.json"
+OUT_BODY = ".docs/index-body.json"
+CODE_CAP = 30000  # characters of code kept per page
 
 
 def slug(heading):
@@ -58,8 +66,8 @@ def sidebar_pages(site):
     return pages
 
 
-def load_summaries(site):
-    """path -> authored summary, from the staged .docs/generated/objects.json."""
+def load_meta(site):
+    """path -> object from the staged .docs/generated/objects.json (summary, type, level, domains, tags)."""
     try:
         with open(os.path.join(site, ".docs/generated/objects.json"), encoding="utf-8") as f:
             objs = json.load(f)
@@ -67,8 +75,7 @@ def load_summaries(site):
         return {}
     if isinstance(objs, dict):
         objs = objs.get("objects", list(objs.values()))
-    return {o["path"]: o["summary"] for o in objs
-            if isinstance(o, dict) and o.get("path") and o.get("summary")}
+    return {o["path"]: o for o in objs if isinstance(o, dict) and o.get("path")}
 
 
 def clean_label(label):
@@ -76,9 +83,16 @@ def clean_label(label):
     return re.sub(r"\s+", " ", label.replace("**", "")).strip()
 
 
-def index_page(page, text, summary=""):
+def code_of(text):
+    """The fenced code of a page, one block after another, capped."""
+    blocks = re.findall(r"```[^\n]*\n([\s\S]*?)```", text)
+    return "\n".join(b.strip("\n") for b in blocks)[:CODE_CAP]
+
+
+def index_page(page, text, summary="", meta=None):
     text = re.sub(r"^﻿?---[ \t]*\r?\n[\s\S]*?\r?\n---[ \t]*(\r?\n|$)", "", text, count=1)
     text = re.sub(r"<!-- related-block -->[\s\S]*?</div>", " ", text)  # links to other pages are not page text
+    code = code_of(text)
     text = re.sub(r"```[\s\S]*?```", " ", text)
     secs, cur, h1 = [], {"head": "", "id": "", "text": []}, ""
     for line in re.split(r"\r?\n", text):
@@ -100,36 +114,54 @@ def index_page(page, text, summary=""):
     first = next((s for s in out if len(s["body"]) > 40), None)
     label = clean_label(page["label"])
     desc = re.sub(r"\s+", " ", re.sub(r"[`*_]", "", summary)).strip() if summary else (utf16_prefix(first["body"], 120) if first else "")
-    return {
+    meta = meta or {}
+    entry = {
         "label": label,
         "path": page["path"],
         "title": plain(h1 or label),
         "desc": desc,
         "secs": out,
+        "code": code,
     }
+    for key, src in (("type", "type"), ("level", "level"), ("min", "reading_time_min"),
+                     ("domains", "domains"), ("tags", "tags")):
+        if meta.get(src):
+            entry[key] = meta[src]
+    return entry
 
 
 def build(site):
-    index = []
-    summaries = load_summaries(site)
+    titles, bodies = [], {}
+    metas = load_meta(site)
     for page in sidebar_pages(site):
-        full = os.path.join(site, unquote(page["path"]))
+        key = unquote(page["path"])
+        full = os.path.join(site, key)
         text = ""
         if os.path.isfile(full):
             with open(full, encoding="utf-8", newline="") as f:
                 text = f.read()
-        index.append(index_page(page, text, summaries.get(unquote(page["path"]), "")))
-    dest = os.path.join(site, OUT)
-    with open(dest, "w", encoding="utf-8") as f:
-        json.dump(index, f, ensure_ascii=False, separators=(",", ":"))
-    return len(index), os.path.getsize(dest)
+        meta = metas.get(key, {})
+        entry = index_page(page, text, meta.get("summary", ""), meta)
+        body = {"secs": entry.pop("secs")}
+        code = entry.pop("code")
+        if code:
+            body["code"] = code
+        titles.append(entry)
+        bodies[page["path"]] = body
+    sizes = []
+    for name, data in ((OUT_TITLES, titles), (OUT_BODY, bodies)):
+        dest = os.path.join(site, name)
+        with open(dest, "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, separators=(",", ":"))
+        sizes.append(os.path.getsize(dest))
+    return len(titles), sizes[0], sizes[1]
 
 
 def main():
     if len(sys.argv) != 2:
         sys.exit(__doc__)
-    pages, size = build(sys.argv[1])
-    print(f"search index: {pages} pages, {size / 1024:.0f} KB -> {OUT}")
+    pages, t, b = build(sys.argv[1])
+    print(f"search index: {pages} pages, titles {t / 1024:.0f} KB, bodies {b / 1024:.0f} KB")
 
 
 if __name__ == "__main__":

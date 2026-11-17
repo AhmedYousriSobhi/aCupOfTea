@@ -18,7 +18,7 @@ Copies the repo to --out, then in the COPY only:
     the page footer, when the checkout has git history;
   * fills the homepage block between <!-- recent:start --> and <!-- recent:end -->
     with the pages most recently added (git history, renames excluded);
-  * writes .docs/search-index.json (build_search_index.py) so the site search
+  * writes .docs/index-titles.json and .docs/index-body.json (build_search_index.py) so the site search
     loads one file instead of fetching every page;
   * writes sw.js (the read-offline service worker) at the site root from
     .docs/sw-template.js, versioned with the git commit so each deploy gets a
@@ -308,7 +308,7 @@ def write_service_worker(src, out):
     with open(index, encoding="utf-8") as f:
         assets = [u[2:] if u.startswith("./") else u for u in ASSET_RE.findall(f.read())]
     shell = ["./", "index.html", ".docs/_sidebar.md", ".docs/_navbar.md", ".docs/_404.md", "README.md"]
-    shell += [p for p in (".docs/search-index.json", ".docs/last-updated.json")
+    shell += [p for p in (".docs/index-titles.json", ".docs/last-updated.json")
               if os.path.exists(os.path.join(out, p))]
     shell += [a for a in assets
               if a not in shell and (a.startswith("https://") or os.path.exists(os.path.join(out, a)))]
@@ -404,7 +404,7 @@ def stage(src, out, base_url=DEFAULT_BASE):
         with open(os.path.join(out, ".docs/last-updated.json"), "w", encoding="utf-8") as f:
             json.dump(dates, f, sort_keys=True, separators=(",", ":"))
 
-    n_idx, idx_size = build_search_index(out)
+    n_idx, titles_size, body_size = build_search_index(out)
     sw = write_service_worker(src, out)
     images = optimize_tree(out)
 
@@ -414,7 +414,7 @@ def stage(src, out, base_url=DEFAULT_BASE):
           f"reading time on {timed} pages, related strip on {appended} pages, "
           f"{n_code} code and notebook pages, {n_share} share pages, {len(recent)} recent pages, "
           f"last-updated dates for {len(dates)} pages, "
-          f"search index of {n_idx} pages ({idx_size // 1024} KB), "
+          f"search index of {n_idx} pages (titles {titles_size // 1024} KB, text {body_size // 1024} KB), "
           + (f"service worker {sw[0]} with {sw[1]} shell files" if sw else "no service worker")
           + f"; {images}")
 
