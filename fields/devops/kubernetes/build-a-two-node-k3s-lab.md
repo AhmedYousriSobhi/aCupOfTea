@@ -5,7 +5,7 @@ order: 2
 summary: "Build a two-VM Kubernetes lab on your laptop with Vagrant, libvirt and k3s, and dodge the DNS and network potholes."
 level: intermediate
 type: [concept, guide]
-domains: [systems-and-hpc, devops, kubernates]
+domains: [systems-and-hpc, devops, kubernetes]
 tags: [kubernetes, containers, hpc, devops]
 relations:
   prerequisites: [kubernetes-in-five-nouns]

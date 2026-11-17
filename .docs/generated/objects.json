@@ -367,7 +367,7 @@
   "broken-pods-rogues-gallery": {
     "domains": [
       "devops",
-      "kubernates",
+      "kubernetes",
       "systems-and-hpc"
     ],
     "id": "broken-pods-rogues-gallery",
@@ -401,7 +401,7 @@
   "build-a-two-node-k3s-lab": {
     "domains": [
       "devops",
-      "kubernates",
+      "kubernetes",
       "systems-and-hpc"
     ],
     "id": "build-a-two-node-k3s-lab",
@@ -1037,7 +1037,7 @@
   "fake-gpus-in-kubernetes": {
     "domains": [
       "devops",
-      "kubernates",
+      "kubernetes",
       "systems-and-hpc"
     ],
     "id": "fake-gpus-in-kubernetes",
@@ -1072,7 +1072,7 @@
   "gpu-allocation-vs-utilization": {
     "domains": [
       "devops",
-      "kubernates",
+      "kubernetes",
       "systems-and-hpc"
     ],
     "id": "gpu-allocation-vs-utilization",
@@ -2341,7 +2341,7 @@
   "nvidia-cluster-readiness-engine": {
     "domains": [
       "devops",
-      "kubernates",
+      "kubernetes",
       "systems-and-hpc"
     ],
     "id": "nvidia-cluster-readiness-engine",

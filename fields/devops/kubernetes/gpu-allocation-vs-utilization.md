@@ -5,7 +5,7 @@ order: 5
 summary: "The scheduler knows who has booked the GPUs, not whether they’re busy, so use kubectl for the first question and DCGM-style telemetry for the second."
 level: intermediate
 type: [concept, guide]
-domains: [systems-and-hpc, devops, kubernates]
+domains: [systems-and-hpc, devops, kubernetes]
 tags: [kubernetes, hpc, dev]
 relations:
   prerequisites: [build-a-two-node-k3s-lab, kubernetes-in-five-nouns]

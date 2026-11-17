@@ -21,7 +21,7 @@
       var pages = [], seen = {};
       side.replace(/\[([^\]]+)\]\(([^)\s]+\.md)\)/g, function (_, label, path) {
         path = path.replace(/^\/+/, '');
-        if (!/^https?:/.test(path) && !seen[path]) { seen[path] = 1; pages.push({label: label, path: path}); }
+        if (!/^https?:/.test(path) && !seen[path]) { seen[path] = 1; pages.push({label: label.replace(/\*\*/g, '').trim(), path: path}); }
       });
       if (!seen['README.md']) pages.unshift({label: 'Home', path: 'README.md'});
       return Promise.all(pages.map(function (p) {
@@ -115,7 +115,7 @@
     res.titles.slice(0, 10).forEach(function (x) {
       h += '<a class="srch-item" href="' + href(x.p) + '"><b>' + mark(x.p.label, res.ts) + '</b>' +
            '<span class="srch-path">' + esc(x.p.path.replace(/\/[^/]*$/, '') || 'home') + '</span>' +
-           (x.p.desc ? '<span class="srch-desc">' + esc(x.p.desc) + '\u2026</span>' : '') + '</a>';
+           (x.p.desc ? '<span class="srch-desc">' + esc(x.p.desc) + (x.p.desc.length >= 120 && !/[.!?]$/.test(x.p.desc) ? '\u2026' : '') + '</span>' : '') + '</a>';
     });
     h += '</div><div class="srch-group"><h3>Inside pages<span>' + res.passages.length + ' pages</span></h3>';
     if (!res.passages.length) h += '<p class="srch-none">Nothing found inside pages.</p>';
@@ -150,7 +150,7 @@
     '.srch-group h3 span{font-weight:400}' +
     '.srch-item{display:block;padding:.5rem .6rem;margin:0 -.6rem;border-radius:.5rem;color:inherit;text-decoration:none}' +
     '.srch-item:hover,.srch-item:focus{background:rgba(128,128,128,.14)}' +
-    '.srch-item b{display:block;font-weight:600;line-height:1.3;color:var(--theme-color,#42b983)}' +
+    '.srch-item b{display:block;font-weight:600;line-height:1.3;color:var(--link,var(--theme-color,#42b983))}' +
     '.srch-path,.srch-desc,.srch-more,.srch-none{display:block;font-size:.8rem;line-height:1.45;opacity:.78;overflow-wrap:anywhere}' +
     '.srch-path{font-size:.72rem;opacity:.55;margin-top:.1rem}' +
     '.srch-none{padding:.3rem 0;font-style:italic}' +
@@ -161,6 +161,15 @@
     '.sidebar.srch-open .sidebar-nav{display:none}';
 
   function install(hook) {
+    // "/" and Ctrl/Cmd+K focus the search box, unless the reader is typing somewhere.
+    document.addEventListener('keydown', function (e) {
+      var t = e.target, typing = t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName));
+      var combo = (e.ctrlKey || e.metaKey) && !e.altKey && e.key.toLowerCase() === 'k';
+      if (!combo && (typing || e.ctrlKey || e.metaKey || e.altKey || e.key !== '/')) return;
+      var box = document.querySelector('.srch input'); if (!box) return;
+      e.preventDefault();
+      box.focus(); box.select();
+    });
     hook.mounted(function () {
       var st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
     });
@@ -185,7 +194,21 @@
       box.addEventListener('click', function (e) { if (!e.target.closest('a')) e.stopPropagation(); });
       input.addEventListener('input', function () { clearTimeout(timer); timer = setTimeout(go, 150); });
       input.addEventListener('focus', function () { build(); });
-      input.addEventListener('keydown', function (e) { if (e.key === 'Escape') { input.value = ''; go(); } });
+      function items() { return Array.prototype.slice.call(panel.querySelectorAll('a.srch-item')); }
+      function move(step) {
+        var list = items(); if (!list.length) return;
+        var at = list.indexOf(document.activeElement), next = at < 0 ? (step > 0 ? 0 : list.length - 1) : at + step;
+        if (next < 0) { input.focus(); return; }
+        if (next < list.length) list[next].focus();
+      }
+      function onKey(e) {
+        if (e.key === 'Escape') { input.value = ''; go(); input.focus(); }
+        else if (e.key === 'ArrowDown') { e.preventDefault(); move(1); }
+        else if (e.key === 'ArrowUp') { e.preventDefault(); move(-1); }
+        else if (e.key === 'Enter' && document.activeElement === input) { var f = items()[0]; if (f) f.click(); }
+      }
+      input.addEventListener('keydown', onKey);
+      panel.addEventListener('keydown', onKey);
       panel.addEventListener('click', function (e) { if (e.target.closest('a')) { input.value = ''; panel.classList.remove('show'); side.classList.remove('srch-open'); panel.innerHTML = ''; } });
     });
   }

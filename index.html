@@ -119,9 +119,17 @@
   body .markdown-section pre[data-lang="output"] { background: transparent; margin-top: -0.6em; }
   .markdown-section pre[data-lang="output"]::after { content: "Output"; }
   .markdown-section .nb-output { overflow-x: auto; max-width: 100%; margin: -0.4em 0 1em; font-size: 0.9em; }
-  /* Reading time, one quiet line under the page title (added when the site is built) */
-  .markdown-section .reading-time { margin: -0.4em 0 1em; font-size: 0.85em; opacity: 0.75; }
-  .markdown-section .reading-time + .related-strip { margin-top: 0; }
+  /* Page header added when the site is built: breadcrumb above the title, a meta line and tag chips under it */
+  .markdown-section .crumbs { margin: 0 0 0.3em; font-size: 0.8em; opacity: 0.8; }
+  .markdown-section .crumbs a { font-weight: 400; }
+  .markdown-section .crumbs + h1 { margin-top: 0; }
+  .markdown-section .reading-time { display: flex; align-items: center; justify-content: space-between; gap: 0.6em; margin: -0.4em 0 0.6em; font-size: 0.85em; opacity: 0.85; }
+  .markdown-section .tag-chips { display: flex; flex-wrap: wrap; gap: 0.4em; margin: 0 0 1em; }
+  .markdown-section .tag-chips .chip { padding: 0.1em 0.6em; border: 1px solid var(--border-color); border-radius: 999px; font-size: 0.78em; font-weight: 400; text-decoration: none; }
+  .markdown-section .tag-chips + .related-strip, .markdown-section .reading-time + .related-strip { margin-top: 0; }
+  .markdown-section .see-also { margin: 2.2em 0 1em; padding-top: 0.8em; border-top: 1px solid var(--border-color); font-size: 0.92em; }
+  .markdown-section .see-also p { margin: 0 0 0.3em; }
+  .markdown-section .see-also ul { margin: 0; }
   .markdown-section .related-strip { margin: 0.4em 0 1.4em; font-size: 0.92em; line-height: 1.7; color: var(--textColor); opacity: 0.95; }
   .markdown-section .related-strip p { margin: 0; padding: 0.35em 0.8em; border-left: 3px solid var(--borderColor, #ccc); }
     /* Footer under each page: edit link and last-updated date */
@@ -249,6 +257,17 @@
   body .markdown-section pre[data-lang] .code-copy[data-note]::after { content: attr(data-note); }
   body .markdown-section pre[data-lang] .code-copy[data-note="Copied"] { color: var(--link); }
   @media (hover: none) { body .markdown-section pre[data-lang] .code-copy { opacity: 0.6; } }
+  /* Wrap-lines button next to Copy */
+  body .markdown-section pre[data-lang] .code-wrap {
+    position: absolute; top: 4px; right: 44px; z-index: 2; display: flex; align-items: center; justify-content: center;
+    width: 28px; height: 28px; padding: 0; border: 1px solid transparent; border-radius: 6px; cursor: pointer;
+    background: transparent; color: var(--color-text); opacity: 0; transition: opacity 0.15s, background 0.15s;
+  }
+  body .markdown-section pre[data-lang]:hover .code-wrap, body .markdown-section pre[data-lang] .code-wrap:focus-visible,
+  body .markdown-section pre[data-lang] .code-wrap[aria-pressed="true"] { opacity: 0.85; }
+  body .markdown-section pre[data-lang] .code-wrap:hover { background: color-mix(in srgb, var(--color-text) 14%, transparent); opacity: 1; }
+  @media (hover: none) { body .markdown-section pre[data-lang] .code-wrap { opacity: 0.6; } }
+  .markdown-section pre.wrapped code { white-space: pre-wrap; overflow-wrap: anywhere; }
   /* Copy-a-link button after h2/h3 (.docs/section-links.js) */
   .markdown-section .section-link-copy { background: transparent !important; box-shadow: none; position: relative; margin-left: 0.35em; padding: 4px; border: 0; background: transparent; color: var(--link); vertical-align: middle; cursor: pointer; opacity: 0; transition: opacity 0.15s; }
   .section-link-copy svg { display: block; }
@@ -268,7 +287,8 @@
   #saved-pages li button:hover, #saved-pages li button:focus-visible { opacity: 1; }
   .page-footer .share-link { padding: 0; border: 0; background: none; color: var(--link); font: inherit; font-weight: 600; cursor: pointer; }
   .page-footer .share-link:hover { text-decoration: underline; }
-  .save-page { display: block; margin: -0.2em 0 1em auto; padding: 6px 12px; min-height: 32px; border: 1px solid var(--border-color); border-radius: 8px; background: none; color: var(--link); font: inherit; font-size: 0.85em; font-weight: 600; cursor: pointer; }
+  .save-page { display: block; margin: -0.2em 0 1em auto; padding: 4px 10px; min-width: 36px; min-height: 36px; border: 1px solid var(--border-color); border-radius: 8px; background: none; color: var(--link); font: inherit; font-size: 1.1em; line-height: 1; cursor: pointer; }
+  .reading-time .save-page { margin: 0; flex: none; padding: 0; width: 36px; }
   .save-page[aria-pressed="true"] { border-color: var(--link); }
   /* Pages already read (see .docs/reading-history.js): a small check after the title, text keeps full contrast */
   .sidebar-nav li:not(.group) > a.read:not(.here)::after { content: ' ✓'; content: ' ✓' / ''; font-size: 0.8em; opacity: 0.55; }
@@ -321,10 +341,12 @@
   .sidebar-nav li.group.collapsed > ul { display: none; }
   /* Look of Docsify 4 kept: green bold links, no underline, compact menu */
   .markdown-section a:not(.anchor) {
-    color: var(--link); font-weight: 600; text-decoration: none !important;
-    background: none !important;
+    color: var(--link); font-weight: 400; background: none !important;
+    text-decoration: underline !important; text-decoration-thickness: 1px; text-underline-offset: 0.18em;
+    text-decoration-color: color-mix(in srgb, var(--link) 45%, transparent);
   }
-  .markdown-section a:not(.anchor):hover { text-decoration: underline !important; }
+  .markdown-section a:not(.anchor):hover { text-decoration-color: var(--link); }
+  .markdown-section .tag-chips a, .markdown-section .crumbs a { text-decoration: none !important; }
   :root { --sidebar-font-size: 15px; }
   /* Learning paths: Next step at the end of a page, progress on Start here (.docs/reading-history.js) */
   .markdown-section .series-next { margin: 2em 0 1em; padding: 0.9em 1em; border: 1px solid var(--border-color); border-left: 4px solid var(--link); border-radius: 8px; }
@@ -334,6 +356,22 @@
   #theme-menu .data-row { display: flex; align-items: center; gap: 4px; margin-top: 6px; padding: 8px 4px 2px 10px; border-top: 1px solid var(--border-color); }
   #theme-menu .data-row span { flex: 1; font-size: 0.85rem; opacity: 0.75; }
   #theme-menu .data-row button { width: auto; padding: 6px 10px; font-size: 0.85rem; border: 1px solid var(--border-color); }
+  /* Desktop: the theme button sits in the top bar, left of the GitHub corner, not on the page */
+  @media (min-width: 769px) {
+    html body #theme-toggle { position: fixed; top: 6px; right: 84px; }
+    html body #theme-menu { position: fixed; top: 54px; right: 84px; max-height: calc(100vh - 70px); overflow-y: auto; }
+    nav.app-nav { margin-right: 140px; }
+  }
+  /* Print: only the page */
+  @media print {
+    nav.app-nav, .github-corner, aside.sidebar, button.sidebar-toggle, #theme-toggle, #theme-menu, aside.page-outline,
+    .save-page, .code-copy, .code-wrap, .section-link-copy, .page-footer, .pagination-item, #back-to-top, #read-progress { display: none !important; }
+    section.content, .markdown-section { position: static !important; left: 0 !important; margin: 0 !important; padding: 0 !important; max-width: none !important; }
+    html, body { background: #fff !important; color: #000 !important; }
+    .markdown-section pre code { white-space: pre-wrap !important; overflow-wrap: anywhere; }
+    .markdown-section a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 0.85em; word-break: break-all; }
+    .markdown-section h2, .markdown-section h3, .markdown-section pre, .markdown-section table, .markdown-section img { break-inside: avoid; }
+  }
 </style>
 
 <body>

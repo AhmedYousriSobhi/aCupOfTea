@@ -9,7 +9,7 @@ Pages grouped by subject. Folders stay the primary location; this is an overlay.
 - [Devops](/.docs/generated/explore/domains/devops.md) (29): Field
 - [Generative AI](/.docs/generated/explore/domains/generative-ai.md) (9): Generative models, LLMs and their tooling.
 - [Image Processing](/.docs/generated/explore/domains/image-processing.md) (11): Digital images as signals - intensity, filtering, frequency domain, restoration and geometry.
-- [Kubernates](/.docs/generated/explore/domains/kubernates.md) (5): devops-orchestraiton
+- [Kubernetes](/.docs/generated/explore/domains/kubernetes.md) (5): Container orchestration
 - [Machine Learning](/.docs/generated/explore/domains/machine-learning.md) (10): Learning from data, general ML theory and practice.
 - [Natural Language Processing](/.docs/generated/explore/domains/natural-language-processing.md) (2): Text and language modelling, translation, sequence tasks.
 - [Reinforcement Learning](/.docs/generated/explore/domains/reinforcement-learning.md) (1): Agents learning through reward and interaction.
