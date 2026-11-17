@@ -6,6 +6,7 @@ Copies the repo to --out, then in the COPY only:
     rendering and its search index stay clean;
   * puts the reading time ("6 min read") under the title of every content page
     (not the homepage and not folder indexes with a "## Contents" list);
+  * puts a "Mentioned in" list (the pages that link to this one, backlinks.py) at the end of each page;
   * puts a one-line "Read first / See also / Read next" strip under the title of pages
     that have relations, from
     .docs/generated/related.json (run generate_index.py first);
@@ -52,6 +53,7 @@ from generate_index import reading_time_min  # noqa: E402
 from share_pages import DEFAULT_BASE, write_share_pages  # noqa: E402
 from optimize_images import optimize_tree  # noqa: E402
 import feeds  # noqa: E402
+import backlinks  # noqa: E402
 from webp_images import convert_tree  # noqa: E402
 
 MARKER = ".stage-site"
@@ -427,6 +429,15 @@ def stage(src, out, base_url=DEFAULT_BASE):
 
     stripped = appended = timed = 0
     originals = {}
+    texts = {}
+    for path in list_pages(out, set(subs)):
+        with open(os.path.join(out, path), encoding="utf-8", newline="") as f:
+            texts[path] = f.read()
+    mentions = backlinks.build(texts)
+    page_titles = {}
+    for path, text in texts.items():
+        h1 = re.search(r"^# +(.+?)\s*#*\s*$", text, re.M)
+        page_titles[path] = (meta.get(path, {}).get("title") or (h1.group(1) if h1 else path)).strip()
     for path in list_pages(out, set(subs)):
         full = os.path.join(out, path)
         with open(full, encoding="utf-8", newline="") as f:
@@ -445,6 +456,7 @@ def stage(src, out, base_url=DEFAULT_BASE):
             under_title += render_related(related[path])
             at_end = render_see_also(related[path], summaries)
             appended += 1
+        at_end += backlinks.render(mentions.get(path), page_titles, summaries)
         new = put_related(drop_toc(path, new), under_title, crumbs, at_end)
         if new != text:
             with open(full, "w", encoding="utf-8", newline="") as f:
