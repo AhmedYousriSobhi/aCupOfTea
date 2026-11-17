@@ -118,6 +118,31 @@
     box.appendChild(ul);
     box.open = wasOpen;
   }
+  // Homepage: the Search button focuses the search box, and the last page read is offered again.
+  function home() {
+    var btn = document.querySelector('.markdown-section .home-search');
+    if (btn && !btn.getAttribute('data-ready')) {
+      btn.setAttribute('data-ready', '1');
+      btn.addEventListener('click', function () {
+        var input = document.querySelector('.srch input');
+        if (input && !input.offsetParent) {
+          var t = document.querySelector('button.sidebar-toggle');
+          if (t) t.click();
+        }
+        setTimeout(function () { if (input) input.focus(); }, 150);
+      });
+    }
+    var box = document.querySelector('.markdown-section .home-continue'), last = load(LAST, null);
+    if (box && last && isContent(last.route)) {
+      box.textContent = '';
+      var a = document.createElement('a');
+      a.href = '#' + last.route;
+      a.textContent = '\u25b6 Continue: ' + last.title;
+      box.appendChild(a);
+      box.hidden = false;
+    }
+  }
+
   var cfg = window.$docsify = window.$docsify || {};
   cfg.plugins = [].concat(cfg.plugins || [], function (hook) {
     hook.doneEach(function () {
@@ -126,6 +151,7 @@
       record();
       saveButton();
       savedList();
+      home();
       mark();
       setTimeout(mark, 300); // Docsify redraws the menu after the page loads
     });
