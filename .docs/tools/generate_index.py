@@ -207,6 +207,21 @@ def learning_paths(objects):
     return sorted(paths, key=lambda p: (objects[p[0]]["title"].lower(), p[0]))
 
 
+def build_paths(objects):
+    """Per page route (no .md): its place in a learning path, for the "Part 2 of 6 / Next" block
+    the site adds at the end of a page (.docs/reading-history.js)."""
+    out = {}
+    for order in learning_paths(objects):
+        total = len(order)
+        for n, i in enumerate(order):
+            nxt = objects[order[n + 1]] if n + 1 < total else None
+            out[objects[i]["path"][:-3]] = {
+                "pos": n + 1, "total": total,
+                "next": {"path": nxt["path"][:-3], "title": nxt["title"]} if nxt else None,
+            }
+    return out
+
+
 def folder_title(root, folder):
     """A folder's series name from its README: sidebar_group, or the H1 before its last hyphen."""
     rel = f"{folder}/README.md" if folder else "README.md"
@@ -309,6 +324,7 @@ def generate(root):
     write(root, "objects.json", dump(objects))
     write(root, "relationships.json", dump(rels))
     write(root, "related.json", dump(build_related(objects, rels)))
+    write(root, "paths.json", dump(build_paths(objects)))
     write(root, "domains.json", dump({
         d: {"label": meta["label"], "description": meta.get("description", ""),
             "objects": by_domain.get(d, [])}

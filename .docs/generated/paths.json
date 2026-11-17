@@ -1,0 +1,910 @@
+{
+  "fields/data-science/probability-statistics/coins-and-calls": {
+    "next": {
+      "path": "fields/data-science/probability-statistics/the-bell-curve",
+      "title": "The Bell Curve: Probability as Area, and One Ruler for Every Bell"
+    },
+    "pos": 10,
+    "total": 15
+  },
+  "fields/data-science/probability-statistics/counting-the-ways": {
+    "next": {
+      "path": "fields/data-science/probability-statistics/the-test-that-was-99-percent-accurate",
+      "title": "The Test That Was 99% Accurate: Conditional Probability and Bayes' Rule"
+    },
+    "pos": 7,
+    "total": 15
+  },
+  "fields/data-science/probability-statistics/data-types-and-frequency-tables": {
+    "next": {
+      "path": "fields/data-science/probability-statistics/draw-it-before-you-describe-it",
+      "title": "Draw It Before You Describe It: Three Pictures of the Same Fifty Days"
+    },
+    "pos": 2,
+    "total": 15
+  },
+  "fields/data-science/probability-statistics/draw-it-before-you-describe-it": {
+    "next": {
+      "path": "fields/data-science/probability-statistics/the-number-on-the-tin",
+      "title": "The Number on the Tin: Mean, Median and Mode"
+    },
+    "pos": 3,
+    "total": 15
+  },
+  "fields/data-science/probability-statistics/how-far-from-the-middle": {
+    "next": {
+      "path": "fields/data-science/probability-statistics/where-do-you-stand",
+      "title": "Where Do You Stand? Percentiles, Z-Scores and the Box Plot"
+    },
+    "pos": 5,
+    "total": 15
+  },
+  "fields/data-science/probability-statistics/how-sure-are-you": {
+    "next": {
+      "path": "fields/data-science/probability-statistics/the-courtroom-for-numbers",
+      "title": "The Courtroom for Numbers: Could Plain Luck Do This?"
+    },
+    "pos": 13,
+    "total": 15
+  },
+  "fields/data-science/probability-statistics/stir-the-pot-population-and-sampling": {
+    "next": {
+      "path": "fields/data-science/probability-statistics/data-types-and-frequency-tables",
+      "title": "Mira's Notebook: What Kind of Data Is This, and How Do You Count It?"
+    },
+    "pos": 1,
+    "total": 15
+  },
+  "fields/data-science/probability-statistics/the-bell-curve": {
+    "next": {
+      "path": "fields/data-science/probability-statistics/why-averages-behave",
+      "title": "Why Averages Behave: The Sip You Could Take a Thousand Times"
+    },
+    "pos": 11,
+    "total": 15
+  },
+  "fields/data-science/probability-statistics/the-courtroom-for-numbers": {
+    "next": {
+      "path": "fields/data-science/probability-statistics/two-things-moving-together",
+      "title": "Two Things Moving Together: Correlation and the Line"
+    },
+    "pos": 14,
+    "total": 15
+  },
+  "fields/data-science/probability-statistics/the-number-on-the-tin": {
+    "next": {
+      "path": "fields/data-science/probability-statistics/how-far-from-the-middle",
+      "title": "How Far From the Middle? One Question Behind Every Summary Number"
+    },
+    "pos": 4,
+    "total": 15
+  },
+  "fields/data-science/probability-statistics/the-test-that-was-99-percent-accurate": {
+    "next": {
+      "path": "fields/data-science/probability-statistics/what-to-expect",
+      "title": "What to Expect: Random Variables and Expected Value"
+    },
+    "pos": 8,
+    "total": 15
+  },
+  "fields/data-science/probability-statistics/two-things-moving-together": {
+    "next": null,
+    "pos": 15,
+    "total": 15
+  },
+  "fields/data-science/probability-statistics/what-to-expect": {
+    "next": {
+      "path": "fields/data-science/probability-statistics/coins-and-calls",
+      "title": "Coins and Calls: Binomial and Poisson as Recipes"
+    },
+    "pos": 9,
+    "total": 15
+  },
+  "fields/data-science/probability-statistics/where-do-you-stand": {
+    "next": {
+      "path": "fields/data-science/probability-statistics/counting-the-ways",
+      "title": "Counting the Ways: Probability as a Share of the List"
+    },
+    "pos": 6,
+    "total": 15
+  },
+  "fields/data-science/probability-statistics/why-averages-behave": {
+    "next": {
+      "path": "fields/data-science/probability-statistics/how-sure-are-you",
+      "title": "How Sure Are You? Confidence Intervals"
+    },
+    "pos": 12,
+    "total": 15
+  },
+  "fields/deep-learning/concepts/basics": {
+    "next": {
+      "path": "fields/deep-learning/concepts/sequence-models",
+      "title": "Sequence Models"
+    },
+    "pos": 1,
+    "total": 3
+  },
+  "fields/deep-learning/concepts/sequence-models": {
+    "next": {
+      "path": "fields/generative-ai/machine-translator/encoder-decoder",
+      "title": "Encoder-Decoder for Machine Translation"
+    },
+    "pos": 2,
+    "total": 3
+  },
+  "fields/devops/ansible/getting-started": {
+    "next": {
+      "path": "fields/devops/ansible/inventory-and-ad-hoc",
+      "title": "Four Nodes Said \"Too Many Open Files\": Inventories and Ad-Hoc Commands"
+    },
+    "pos": 1,
+    "total": 6
+  },
+  "fields/devops/ansible/idempotence-and-handlers": {
+    "next": {
+      "path": "fields/devops/ansible/roles-and-variables",
+      "title": "The GPU Node That Thought It Had 1000 MB: Roles and Variables"
+    },
+    "pos": 3,
+    "total": 6
+  },
+  "fields/devops/ansible/inventory-and-ad-hoc": {
+    "next": {
+      "path": "fields/devops/ansible/idempotence-and-handlers",
+      "title": "The Playbook That Restarted slurmd Every Night: Idempotence and Handlers"
+    },
+    "pos": 2,
+    "total": 6
+  },
+  "fields/devops/ansible/roles-and-variables": {
+    "next": {
+      "path": "fields/devops/ansible/rolling-maintenance",
+      "title": "The Reboot That Killed a Week of Jobs: Rolling Maintenance with Slurm"
+    },
+    "pos": 4,
+    "total": 6
+  },
+  "fields/devops/ansible/rolling-maintenance": {
+    "next": {
+      "path": "fields/devops/ansible/secrets-and-vault",
+      "title": "The Munge Key in Git: Secrets, Vault and Rotation"
+    },
+    "pos": 5,
+    "total": 6
+  },
+  "fields/devops/ansible/secrets-and-vault": {
+    "next": null,
+    "pos": 6,
+    "total": 6
+  },
+  "fields/devops/kubernetes/broken-pods-rogues-gallery": {
+    "next": {
+      "path": "fields/devops/kubernetes/gpu-allocation-vs-utilization",
+      "title": "Booked Is Not Busy: GPU Allocation vs Utilization"
+    },
+    "pos": 5,
+    "total": 18
+  },
+  "fields/devops/kubernetes/build-a-two-node-k3s-lab": {
+    "next": {
+      "path": "fields/devops/kubernetes/fake-gpus-in-kubernetes",
+      "title": "Fake GPUs in Kubernetes: Learn GPU Scheduling Without Owning a GPU"
+    },
+    "pos": 3,
+    "total": 18
+  },
+  "fields/devops/kubernetes/cheatsheet": {
+    "next": {
+      "path": "fields/libraries-frameworks-containers/101-singularity",
+      "title": "Singularity"
+    },
+    "pos": 17,
+    "total": 18
+  },
+  "fields/devops/kubernetes/draining-a-gpu-node": {
+    "next": {
+      "path": "fields/devops/kubernetes/oomkilled-with-memory-to-spare",
+      "title": "The Pod Killed With Memory to Spare"
+    },
+    "pos": 10,
+    "total": 18
+  },
+  "fields/devops/kubernetes/fake-gpus-in-kubernetes": {
+    "next": {
+      "path": "fields/devops/kubernetes/broken-pods-rogues-gallery",
+      "title": "Broken Pods: A Rogues' Gallery (and the One Command That Catches Them All)"
+    },
+    "pos": 4,
+    "total": 18
+  },
+  "fields/devops/kubernetes/gpu-allocation-vs-utilization": {
+    "next": {
+      "path": "fields/devops/kubernetes/nvidia-cluster-readiness-engine",
+      "title": "The Cluster That Passed Every Test Except the One That Mattered"
+    },
+    "pos": 6,
+    "total": 18
+  },
+  "fields/devops/kubernetes/isolating-gpu-workloads": {
+    "next": {
+      "path": "fields/devops/kubernetes/job-execution-journey",
+      "title": "The Job Execution Journey: From `kubectl apply` to the First All-Reduce"
+    },
+    "pos": 8,
+    "total": 18
+  },
+  "fields/devops/kubernetes/job-execution-journey": {
+    "next": {
+      "path": "fields/devops/kubernetes/draining-a-gpu-node",
+      "title": "Draining a GPU Node With a Three-Day Run on It"
+    },
+    "pos": 9,
+    "total": 18
+  },
+  "fields/devops/kubernetes/k3s-vs-kubeadm": {
+    "next": {
+      "path": "fields/devops/kubernetes/your-kubeconfig-is-a-house-key",
+      "title": "Your kubeconfig Is a House Key"
+    },
+    "pos": 12,
+    "total": 18
+  },
+  "fields/devops/kubernetes/kubernetes-at-hpc-scale": {
+    "next": {
+      "path": "fields/devops/kubernetes/cheatsheet",
+      "title": "kubectl Troubleshooting Cheat Sheet: Five Questions, in Order"
+    },
+    "pos": 16,
+    "total": 18
+  },
+  "fields/devops/kubernetes/kubernetes-in-five-nouns": {
+    "next": {
+      "path": "fields/devops/kubernetes/build-a-two-node-k3s-lab",
+      "title": "Build a Two-Node Kubernetes Lab on Your Laptop (and Survive the DNS Pothole)"
+    },
+    "pos": 2,
+    "total": 18
+  },
+  "fields/devops/kubernetes/nvidia-cluster-readiness-engine": {
+    "next": {
+      "path": "fields/devops/kubernetes/isolating-gpu-workloads",
+      "title": "Isolating GPU Workloads: Taints, Labels and the Device Plugin"
+    },
+    "pos": 7,
+    "total": 18
+  },
+  "fields/devops/kubernetes/oomkilled-with-memory-to-spare": {
+    "next": {
+      "path": "fields/devops/kubernetes/k3s-vs-kubeadm",
+      "title": "k3s vs kubeadm: Furnished Flat or Empty Unit?"
+    },
+    "pos": 11,
+    "total": 18
+  },
+  "fields/devops/kubernetes/polite-api-server-monitoring": {
+    "next": {
+      "path": "fields/devops/kubernetes/kubernetes-at-hpc-scale",
+      "title": "Kubernetes at HPC Scale: The Front Desk Meets a 100,000-Task Array"
+    },
+    "pos": 15,
+    "total": 18
+  },
+  "fields/devops/kubernetes/rbac-and-the-limited-viewer": {
+    "next": {
+      "path": "fields/devops/kubernetes/polite-api-server-monitoring",
+      "title": "Polite API Server Monitoring: Leave Your Number, Don't Knock Every Second"
+    },
+    "pos": 14,
+    "total": 18
+  },
+  "fields/devops/kubernetes/your-kubeconfig-is-a-house-key": {
+    "next": {
+      "path": "fields/devops/kubernetes/rbac-and-the-limited-viewer",
+      "title": "RBAC: The Error Message Writes the Rule for You"
+    },
+    "pos": 13,
+    "total": 18
+  },
+  "fields/devops/victoriametrics/metricsql-and-vmalert": {
+    "next": {
+      "path": "fields/schedulers/slurm-ai-clusters/metrics-openmetrics",
+      "title": "Slurm Metrics Without an Exporter: OpenMetrics into VictoriaMetrics"
+    },
+    "pos": 5,
+    "total": 6
+  },
+  "fields/devops/victoriametrics/retention-disk-and-backups": {
+    "next": {
+      "path": "fields/devops/victoriametrics/metricsql-and-vmalert",
+      "title": "MetricsQL Surprises and Alerts You Can Test"
+    },
+    "pos": 4,
+    "total": 6
+  },
+  "fields/devops/victoriametrics/single-node-in-ten-minutes": {
+    "next": {
+      "path": "fields/devops/victoriametrics/vmagent-and-the-network-blip",
+      "title": "vmagent and the Network Blip: Keeping Metrics Through an Outage"
+    },
+    "pos": 2,
+    "total": 6
+  },
+  "fields/devops/victoriametrics/vmagent-and-the-network-blip": {
+    "next": {
+      "path": "fields/devops/victoriametrics/retention-disk-and-backups",
+      "title": "Retention, Full Disks and Backups: Looking After the Data Once It Lands"
+    },
+    "pos": 3,
+    "total": 6
+  },
+  "fields/devops/victoriametrics/why-victoriametrics": {
+    "next": {
+      "path": "fields/devops/victoriametrics/single-node-in-ten-minutes",
+      "title": "A Single Node You Can Trust: Installing VictoriaMetrics Properly"
+    },
+    "pos": 1,
+    "total": 6
+  },
+  "fields/digital-image-processing/edges-and-sharpening": {
+    "next": {
+      "path": "fields/digital-image-processing/fourier-transform-for-images",
+      "title": "The Fourier Transform for Images"
+    },
+    "pos": 5,
+    "total": 9
+  },
+  "fields/digital-image-processing/fourier-transform-for-images": {
+    "next": {
+      "path": "fields/digital-image-processing/frequency-filtering-and-aliasing",
+      "title": "Frequency Filtering and Aliasing"
+    },
+    "pos": 6,
+    "total": 9
+  },
+  "fields/digital-image-processing/frequency-filtering-and-aliasing": {
+    "next": {
+      "path": "fields/digital-image-processing/noise-and-restoration",
+      "title": "Noise and Restoration"
+    },
+    "pos": 7,
+    "total": 9
+  },
+  "fields/digital-image-processing/geometric-transforms-and-interpolation": {
+    "next": {
+      "path": "fields/digital-image-processing/intensity-transforms-and-histograms",
+      "title": "Intensity Transforms and Histograms"
+    },
+    "pos": 2,
+    "total": 9
+  },
+  "fields/digital-image-processing/images-are-just-matrices": {
+    "next": {
+      "path": "fields/digital-image-processing/geometric-transforms-and-interpolation",
+      "title": "Geometric Transforms and Interpolation"
+    },
+    "pos": 1,
+    "total": 9
+  },
+  "fields/digital-image-processing/intensity-transforms-and-histograms": {
+    "next": {
+      "path": "fields/digital-image-processing/spatial-filtering",
+      "title": "Spatial Filtering"
+    },
+    "pos": 3,
+    "total": 9
+  },
+  "fields/digital-image-processing/noise-and-restoration": {
+    "next": {
+      "path": "fields/digital-image-processing/wavelets-and-multiresolution-processing",
+      "title": "Wavelets and Multiresolution Processing"
+    },
+    "pos": 8,
+    "total": 9
+  },
+  "fields/digital-image-processing/spatial-filtering": {
+    "next": {
+      "path": "fields/digital-image-processing/edges-and-sharpening",
+      "title": "Edges and Sharpening"
+    },
+    "pos": 4,
+    "total": 9
+  },
+  "fields/digital-image-processing/wavelets-and-multiresolution-processing": {
+    "next": null,
+    "pos": 9,
+    "total": 9
+  },
+  "fields/generative-ai/llm-inference-performance/compute-bound-vs-memory-bound": {
+    "next": {
+      "path": "fields/generative-ai/llm-inference-performance/llm-inference-on-the-roofline",
+      "title": "LLM Inference on the Roofline"
+    },
+    "pos": 1,
+    "total": 6
+  },
+  "fields/generative-ai/llm-inference-performance/llm-inference-on-the-roofline": {
+    "next": {
+      "path": "fields/generative-ai/llm-inference-performance/sizing-a-70b-model",
+      "title": "Sizing a 70B Model with a Pencil"
+    },
+    "pos": 2,
+    "total": 6
+  },
+  "fields/generative-ai/llm-inference-performance/optimizations-on-the-roofline": {
+    "next": {
+      "path": "fields/generative-ai/llm-inference-performance/structured-sparsity",
+      "title": "2:4 Sparsity: Half the Weights, Not Half the Time"
+    },
+    "pos": 4,
+    "total": 6
+  },
+  "fields/generative-ai/llm-inference-performance/sizing-a-70b-model": {
+    "next": {
+      "path": "fields/generative-ai/llm-inference-performance/optimizations-on-the-roofline",
+      "title": "Optimizations, Mapped to the Roofline"
+    },
+    "pos": 3,
+    "total": 6
+  },
+  "fields/generative-ai/llm-inference-performance/sparsity-vs-quantization": {
+    "next": null,
+    "pos": 6,
+    "total": 6
+  },
+  "fields/generative-ai/llm-inference-performance/structured-sparsity": {
+    "next": {
+      "path": "fields/generative-ai/llm-inference-performance/sparsity-vs-quantization",
+      "title": "Sparsity vs Quantization: Who Pays, and Who Wins"
+    },
+    "pos": 5,
+    "total": 6
+  },
+  "fields/generative-ai/machine-translator/encoder-decoder": {
+    "next": null,
+    "pos": 3,
+    "total": 3
+  },
+  "fields/libraries-frameworks-containers/101-containers": {
+    "next": {
+      "path": "fields/devops/kubernetes/kubernetes-in-five-nouns",
+      "title": "Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster"
+    },
+    "pos": 1,
+    "total": 18
+  },
+  "fields/libraries-frameworks-containers/101-pytorch": {
+    "next": {
+      "path": "fields/libraries-frameworks-containers/102-pytorch-ddp",
+      "title": "PyTorch DDP"
+    },
+    "pos": 1,
+    "total": 2
+  },
+  "fields/libraries-frameworks-containers/101-singularity": {
+    "next": null,
+    "pos": 18,
+    "total": 18
+  },
+  "fields/libraries-frameworks-containers/102-pytorch-ddp": {
+    "next": null,
+    "pos": 2,
+    "total": 2
+  },
+  "fields/schedulers/slurm-accounting-multi-tenancy": {
+    "next": {
+      "path": "fields/schedulers/slurm-preemption/slurm-qos-preemption-setup",
+      "title": "The Guest List: Setting Up QOS Preemption Without Starting a War"
+    },
+    "pos": 2,
+    "total": 5
+  },
+  "fields/schedulers/slurm-ai-clusters/containers-with-pyxis": {
+    "next": null,
+    "pos": 3,
+    "total": 3
+  },
+  "fields/schedulers/slurm-ai-clusters/launching-distributed-training": {
+    "next": {
+      "path": "fields/schedulers/slurm-ai-clusters/containers-with-pyxis",
+      "title": "Containers on Slurm with Pyxis and Enroot"
+    },
+    "pos": 2,
+    "total": 3
+  },
+  "fields/schedulers/slurm-ai-clusters/metrics-openmetrics": {
+    "next": null,
+    "pos": 6,
+    "total": 6
+  },
+  "fields/schedulers/slurm-ai-clusters/topology-aware-placement": {
+    "next": {
+      "path": "fields/schedulers/slurm-ai-clusters/launching-distributed-training",
+      "title": "Launching Distributed Training on Slurm: srun, torchrun, and the Rank Contract"
+    },
+    "pos": 1,
+    "total": 3
+  },
+  "fields/schedulers/slurm-inside-a-job/slurm-job-script-tale": {
+    "next": null,
+    "pos": 2,
+    "total": 2
+  },
+  "fields/schedulers/slurm-intro": {
+    "next": {
+      "path": "fields/schedulers/slurm-inside-a-job/slurm-job-script-tale",
+      "title": "The Tale of a Slurm Job Script: Submission Is a Commitment, Not a Promise"
+    },
+    "pos": 1,
+    "total": 2
+  },
+  "fields/schedulers/slurm-mixed-gpus/four-ways-to-mix-gpus": {
+    "next": {
+      "path": "fields/schedulers/slurm-mixed-gpus/why-mixed-training-disappoints",
+      "title": "Why Mixed-GPU Training Disappoints"
+    },
+    "pos": 1,
+    "total": 3
+  },
+  "fields/schedulers/slurm-mixed-gpus/where-hetjobs-shine": {
+    "next": null,
+    "pos": 3,
+    "total": 3
+  },
+  "fields/schedulers/slurm-mixed-gpus/why-mixed-training-disappoints": {
+    "next": {
+      "path": "fields/schedulers/slurm-mixed-gpus/where-hetjobs-shine",
+      "title": "Where Heterogeneous Jobs Shine"
+    },
+    "pos": 2,
+    "total": 3
+  },
+  "fields/schedulers/slurm-pending-jobs/limits-that-wait-forever": {
+    "next": null,
+    "pos": 5,
+    "total": 5
+  },
+  "fields/schedulers/slurm-pending-jobs/who-goes-first": {
+    "next": {
+      "path": "fields/schedulers/slurm-pending-jobs/limits-that-wait-forever",
+      "title": "Limits That Wait Forever: QOS and Account Limits in Practice"
+    },
+    "pos": 4,
+    "total": 5
+  },
+  "fields/schedulers/slurm-pending-jobs/why-is-my-job-pending": {
+    "next": {
+      "path": "fields/schedulers/slurm-accounting-multi-tenancy",
+      "title": "Slurm Multi-Tenancy: Who Stores the Rules, Who Enforces Them"
+    },
+    "pos": 1,
+    "total": 5
+  },
+  "fields/schedulers/slurm-preemption/slurm-qos-preemption-setup": {
+    "next": {
+      "path": "fields/schedulers/slurm-pending-jobs/who-goes-first",
+      "title": "Who Goes First: Slurm's Priority Number, Taken Apart"
+    },
+    "pos": 3,
+    "total": 5
+  },
+  "fields/schedulers/slurm-smoke-tests/slurm-smoke-after-upgrade": {
+    "next": {
+      "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-policy",
+      "title": "Does the Rulebook Still Work? Smoke-Testing QOS, Submit Rules and Preemption"
+    },
+    "pos": 3,
+    "total": 6
+  },
+  "fields/schedulers/slurm-smoke-tests/slurm-smoke-config-change": {
+    "next": {
+      "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-after-upgrade",
+      "title": "The Morning After the Upgrade: Smoke Tests for the Change You Cannot Undo"
+    },
+    "pos": 2,
+    "total": 6
+  },
+  "fields/schedulers/slurm-smoke-tests/slurm-smoke-control-plane": {
+    "next": {
+      "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-config-change",
+      "title": "Measure Twice, Reconfigure Once: Smoke-Testing a slurm.conf Change"
+    },
+    "pos": 1,
+    "total": 6
+  },
+  "fields/schedulers/slurm-smoke-tests/slurm-smoke-node-readiness": {
+    "next": {
+      "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-regression-suites",
+      "title": "When Smoke Becomes a Fire Drill: SchedMD's Test Suite, ReFrame and the Baseline Rule"
+    },
+    "pos": 5,
+    "total": 6
+  },
+  "fields/schedulers/slurm-smoke-tests/slurm-smoke-policy": {
+    "next": {
+      "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-node-readiness",
+      "title": "Back From the Repair Shop: Is This Node Fit to Return to Service?"
+    },
+    "pos": 4,
+    "total": 6
+  },
+  "fields/schedulers/slurm-smoke-tests/slurm-smoke-regression-suites": {
+    "next": null,
+    "pos": 6,
+    "total": 6
+  },
+  "fields/system-administration/ai-storage-and-fabric/parallel-filesystems-for-ai": {
+    "next": {
+      "path": "fields/system-administration/ai-storage-and-fabric/rdma-infiniband-gpudirect",
+      "title": "RDMA, InfiniBand and GPUDirect: Taking the CPU Out of the Way"
+    },
+    "pos": 1,
+    "total": 2
+  },
+  "fields/system-administration/ai-storage-and-fabric/rdma-infiniband-gpudirect": {
+    "next": null,
+    "pos": 2,
+    "total": 2
+  },
+  "fields/system-administration/gpu-failure-prediction/collecting-the-signals": {
+    "next": {
+      "path": "fields/system-administration/gpu-failure-prediction/rules-that-predict",
+      "title": "From Signals to Decisions"
+    },
+    "pos": 2,
+    "total": 6
+  },
+  "fields/system-administration/gpu-failure-prediction/from-alert-to-drain": {
+    "next": {
+      "path": "fields/system-administration/gpu-failure-prediction/scoring-and-backtesting",
+      "title": "Is the Prediction Any Good?"
+    },
+    "pos": 4,
+    "total": 6
+  },
+  "fields/system-administration/gpu-failure-prediction/rules-that-predict": {
+    "next": {
+      "path": "fields/system-administration/gpu-failure-prediction/from-alert-to-drain",
+      "title": "Acting Without Making It Worse"
+    },
+    "pos": 3,
+    "total": 6
+  },
+  "fields/system-administration/gpu-failure-prediction/runbook": {
+    "next": null,
+    "pos": 6,
+    "total": 6
+  },
+  "fields/system-administration/gpu-failure-prediction/scoring-and-backtesting": {
+    "next": {
+      "path": "fields/system-administration/gpu-failure-prediction/runbook",
+      "title": "Runbook: Deploying GPU Failure Prediction End to End"
+    },
+    "pos": 5,
+    "total": 6
+  },
+  "fields/system-administration/gpu-failure-prediction/what-fails-and-what-warns": {
+    "next": {
+      "path": "fields/system-administration/gpu-failure-prediction/collecting-the-signals",
+      "title": "Reading the GPU's Vital Signs"
+    },
+    "pos": 1,
+    "total": 6
+  },
+  "fields/system-administration/linux-memory-pressure/cgroup-v2-memory-control": {
+    "next": {
+      "path": "fields/system-administration/linux-memory-pressure/memory-locking-mlockall",
+      "title": "Memory Locking: Keeping a Rescuer in RAM with mlockall"
+    },
+    "pos": 4,
+    "total": 6
+  },
+  "fields/system-administration/linux-memory-pressure/how-linux-reclaims-memory": {
+    "next": {
+      "path": "fields/system-administration/linux-memory-pressure/memory-pressure-psi",
+      "title": "Pressure Stall Information: Measuring Time Lost, Not Bytes Left"
+    },
+    "pos": 1,
+    "total": 6
+  },
+  "fields/system-administration/linux-memory-pressure/memory-locking-mlockall": {
+    "next": {
+      "path": "fields/system-administration/linux-memory-pressure/rescuer-checklist",
+      "title": "Making a Rescuer Survive: CPU, Protection and a Checklist"
+    },
+    "pos": 5,
+    "total": 6
+  },
+  "fields/system-administration/linux-memory-pressure/memory-pressure-psi": {
+    "next": {
+      "path": "fields/system-administration/linux-memory-pressure/the-oom-killer",
+      "title": "The OOM Killer: Who Gets Thrown Overboard, and Why So Late"
+    },
+    "pos": 2,
+    "total": 6
+  },
+  "fields/system-administration/linux-memory-pressure/rescuer-checklist": {
+    "next": null,
+    "pos": 6,
+    "total": 6
+  },
+  "fields/system-administration/linux-memory-pressure/the-oom-killer": {
+    "next": {
+      "path": "fields/system-administration/linux-memory-pressure/cgroup-v2-memory-control",
+      "title": "cgroup v2 Memory Control: The Levers Between Doing Nothing and Killing"
+    },
+    "pos": 3,
+    "total": 6
+  },
+  "fields/system-administration/node-health-check/architecture-driven-nhc": {
+    "next": {
+      "path": "fields/system-administration/node-health-check/case-study-build-me-an-nhc",
+      "title": "Case Study: \"Build Us an NHC\", From a Vague Ask to a Validated Proposal"
+    },
+    "pos": 9,
+    "total": 10
+  },
+  "fields/system-administration/node-health-check/auto-remediation": {
+    "next": {
+      "path": "fields/system-administration/node-health-check/troubleshooting",
+      "title": "NHC Troubleshooting: Symptom First"
+    },
+    "pos": 7,
+    "total": 10
+  },
+  "fields/system-administration/node-health-check/build-and-install": {
+    "next": {
+      "path": "fields/system-administration/node-health-check/writing-nhc-conf",
+      "title": "Writing nhc.conf That Actually Fits Your Cluster"
+    },
+    "pos": 2,
+    "total": 10
+  },
+  "fields/system-administration/node-health-check/case-study-build-me-an-nhc": {
+    "next": null,
+    "pos": 10,
+    "total": 10
+  },
+  "fields/system-administration/node-health-check/custom-checks": {
+    "next": {
+      "path": "fields/system-administration/node-health-check/auto-remediation",
+      "title": "Auto-Remediation: From Detected to Fixed, Safely"
+    },
+    "pos": 6,
+    "total": 10
+  },
+  "fields/system-administration/node-health-check/rollout-at-scale": {
+    "next": {
+      "path": "fields/system-administration/node-health-check/custom-checks",
+      "title": "Writing Your Own NHC Checks"
+    },
+    "pos": 5,
+    "total": 10
+  },
+  "fields/system-administration/node-health-check/slurm-integration": {
+    "next": {
+      "path": "fields/system-administration/node-health-check/rollout-at-scale",
+      "title": "Rolling NHC Out to a Fleet Without Draining Everything"
+    },
+    "pos": 4,
+    "total": 10
+  },
+  "fields/system-administration/node-health-check/troubleshooting": {
+    "next": {
+      "path": "fields/system-administration/node-health-check/architecture-driven-nhc",
+      "title": "Architecture-Driven NHC: Generate Health Checks from Your Cluster's Definition"
+    },
+    "pos": 8,
+    "total": 10
+  },
+  "fields/system-administration/node-health-check/why-node-health-check": {
+    "next": {
+      "path": "fields/system-administration/node-health-check/build-and-install",
+      "title": "Build and Install NHC"
+    },
+    "pos": 1,
+    "total": 10
+  },
+  "fields/system-administration/node-health-check/writing-nhc-conf": {
+    "next": {
+      "path": "fields/system-administration/node-health-check/slurm-integration",
+      "title": "Plugging NHC into Slurm (and Friends)"
+    },
+    "pos": 3,
+    "total": 10
+  },
+  "fields/system-administration/openmp-and-open-mpi/hybrid-and-the-binding-trap": {
+    "next": {
+      "path": "fields/system-administration/openmp-and-open-mpi/where-they-are-going",
+      "title": "Two Tickets About the Future: OpenMP 6, MPI 5 and What Never Expires"
+    },
+    "pos": 5,
+    "total": 8
+  },
+  "fields/system-administration/openmp-and-open-mpi/mpi-and-openmp-on-kubernetes": {
+    "next": null,
+    "pos": 8,
+    "total": 8
+  },
+  "fields/system-administration/openmp-and-open-mpi/mpi-and-openmp-under-slurm": {
+    "next": {
+      "path": "fields/system-administration/openmp-and-open-mpi/mpi-and-openmp-on-kubernetes",
+      "title": "No Login Node, No Hostfile: OpenMP and MPI on Kubernetes"
+    },
+    "pos": 7,
+    "total": 8
+  },
+  "fields/system-administration/openmp-and-open-mpi/spotting-openmp-and-mpi-code": {
+    "next": {
+      "path": "fields/system-administration/openmp-and-open-mpi/hybrid-and-the-binding-trap",
+      "title": "Kitchens With Cooks: Hybrid MPI+OpenMP and the Binding Trap"
+    },
+    "pos": 4,
+    "total": 8
+  },
+  "fields/system-administration/openmp-and-open-mpi/the-name-mixup": {
+    "next": {
+      "path": "fields/system-administration/openmp-and-open-mpi/where-they-came-from",
+      "title": "Two Tribes, One Problem: Where OpenMP and MPI Came From"
+    },
+    "pos": 1,
+    "total": 8
+  },
+  "fields/system-administration/openmp-and-open-mpi/threads-and-ranks": {
+    "next": {
+      "path": "fields/system-administration/openmp-and-open-mpi/spotting-openmp-and-mpi-code",
+      "title": "Know It on Sight: Reading OpenMP and MPI Code, Builds and Job Scripts"
+    },
+    "pos": 3,
+    "total": 8
+  },
+  "fields/system-administration/openmp-and-open-mpi/where-they-are-going": {
+    "next": {
+      "path": "fields/system-administration/openmp-and-open-mpi/mpi-and-openmp-under-slurm",
+      "title": "Who Starts the Ranks? OpenMP and MPI Under Slurm"
+    },
+    "pos": 6,
+    "total": 8
+  },
+  "fields/system-administration/openmp-and-open-mpi/where-they-came-from": {
+    "next": {
+      "path": "fields/system-administration/openmp-and-open-mpi/threads-and-ranks",
+      "title": "Cooks and Kitchens: Threads, Ranks and the One Mental Model"
+    },
+    "pos": 2,
+    "total": 8
+  },
+  "fields/tabular-data/concept-in-machine-learning/ml-unsupervised": {
+    "next": {
+      "path": "problems/customer-segmentation",
+      "title": "Customer Segmentation"
+    },
+    "pos": 1,
+    "total": 2
+  },
+  "problems/customer-segmentation": {
+    "next": null,
+    "pos": 2,
+    "total": 2
+  },
+  "programming/local-app-accounts/sessions-and-two-walls": {
+    "next": null,
+    "pos": 3,
+    "total": 3
+  },
+  "programming/local-app-accounts/sign-in-hygiene": {
+    "next": {
+      "path": "programming/local-app-accounts/sessions-and-two-walls",
+      "title": "Who's Home, and What May They Touch? Sessions and Two Walls"
+    },
+    "pos": 2,
+    "total": 3
+  },
+  "programming/local-app-accounts/threat-model-and-first-launch": {
+    "next": {
+      "path": "programming/local-app-accounts/sign-in-hygiene",
+      "title": "Sign-In Hygiene: How the Clerk Says \"No\" Without Giving Anything Away"
+    },
+    "pos": 1,
+    "total": 3
+  }
+}
