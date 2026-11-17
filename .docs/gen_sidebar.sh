@@ -78,6 +78,8 @@ generate_sidebar() {
         if [[ "$base" =~ $EXCLUDE_DIRS || "$base" =~ $EXCLUDE_FILES ]]; then continue; fi
         # Root README is already linked as "Home"
         if [ "$dir" == ".." ] && [ "$base" == "README.md" ]; then continue; fi
+        # SPEC.md is a maintainer document: it goes in the "About this site" group at the end
+        if [ "$dir" == ".." ] && [ "$base" == "SPEC.md" ]; then continue; fi
 
         if [ -d "$path" ]; then
             folders+=("$path")
@@ -200,5 +202,12 @@ generate_sidebar() {
 
 # Start recursion
 generate_sidebar ".." ""
+
+# About this site: the maintainer documents, last so readers meet the content first
+if [ -f "../SPEC.md" ]; then
+    echo "* **About this site**" >> $OUTPUT
+    echo "  * [Repository Specification](SPEC.md)" >> $OUTPUT
+    echo "  * [Contributing guide ↗](https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/.github/CONTRIBUTING.md)" >> $OUTPUT
+fi
 
 echo "Sidebar updated: Logic applied for single-word headers and dash-separated titles."
