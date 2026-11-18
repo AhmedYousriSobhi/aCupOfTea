@@ -14,9 +14,10 @@ Copies the repo to --out, then in the COPY only:
   * writes a readable page next to every code file and notebook
     (name.py -> name.py.md, the address a Docsify link asks for; code_pages.py);
   * writes sitemap.xml, feed.xml (Atom, the newest pages added) and robots.txt (feeds.py);
-  * writes a share page (title and summary as Open Graph tags, then a redirect)
-    at each page's folder address so link previews differ per page
-    (share_pages.py);
+  * writes a share page (title and summary as Open Graph tags, then the page as
+    static HTML that sends script-enabled readers on to its #/ page) at each
+    page's folder address so link previews differ per page and the text is
+    readable without JavaScript (share_pages.py, prerender.py);
   * writes .docs/last-updated.json (page -> date of its last git commit) for
     the page footer, when the checkout has git history;
   * fills the homepage block between <!-- recent:start --> and <!-- recent:end -->

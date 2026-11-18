@@ -29,8 +29,8 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install PyYAML and Pillow
-        run: pip install PyYAML==6.0.2 Pillow==12.3.0
+      - name: Install PyYAML, Pillow and markdown-it-py
+        run: pip install PyYAML==6.0.2 Pillow==12.3.0 markdown-it-py==3.0.0 mdurl==0.1.2
 
       - name: Set up Node
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0

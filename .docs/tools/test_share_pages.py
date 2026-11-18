@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Tests for share_pages.py: page metadata, share-page paths and the written HTML."""
 import os
+import re
 import sys
 import tempfile
 import unittest
@@ -52,12 +53,26 @@ class Write(unittest.TestCase):
             self.assertEqual(n, 2)
             self.assertFalse(os.path.exists(os.path.join(out, "index.html")))
             page = open(os.path.join(out, "a/b/index.html"), encoding="utf-8").read()
-            self.assertIn('content="0; url=../../#/a/b"', page)
             self.assertIn('og:url" content="https://example.org/site/a/b/"', page)
             self.assertIn("B &amp; &quot;C&quot;", page)
-            self.assertNotIn("<script", page)
             folder = open(os.path.join(out, "a/index.html"), encoding="utf-8").read()
-            self.assertIn('url=../#/a/"', folder)
+            if sp.prerender.available():
+                # the page itself, readable without JavaScript; the script (a file) goes on to #/
+                self.assertNotIn('http-equiv="refresh"', page)
+                self.assertIn('<script src="../../.docs/share-redirect.js" data-target="../../#/a/b"></script>', page)
+                self.assertIn("Content-Security-Policy", page)
+                self.assertIn("<p>Text &quot;quoted&quot;.</p>", page)
+                self.assertEqual(len(re.findall(r"<script", page)), 1)
+                self.assertIn('<script src="../.docs/share-redirect.js" data-target="../#/a/"></script>', folder)
+            else:
+                self.assertIn('content="0; url=../../#/a/b"', page)
+                self.assertNotIn("<script", page)
+                self.assertIn('url=../#/a/"', folder)
+
+    def test_without_renderer_stays_a_redirect(self):
+        html = sp.render("a/b.md", "B", "D", BASE)
+        self.assertIn('content="0; url=../../#/a/b"', html)
+        self.assertNotIn("<script", html)
 
     def test_readme_wins_over_same_named_page(self):
         with tempfile.TemporaryDirectory() as out:

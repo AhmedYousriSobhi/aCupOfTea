@@ -441,13 +441,47 @@ async function run(browser, base, label, size, phone) {
     const r = await fetch('./tips/kaggle-tips/');
     const t = r.ok ? await r.text() : '';
     const og = (t.match(/property="og:title" content="([^"]*)"/) || [])[1];
-    const refresh = (t.match(/http-equiv="refresh" content="0; url=([^"]*)"/) || [])[1];
+    const target = (t.match(/share-redirect\.js" data-target="([^"]*)"/) || t.match(/http-equiv="refresh" content="0; url=([^"]*)"/) || [])[1];
     const h1 = document.querySelector('.markdown-section h1').textContent.trim();
-    return { ok: r.ok, og, refresh, h1, button: !!document.querySelector('.page-footer .share-link') };
+    return { ok: r.ok, og, target, h1, button: !!document.querySelector('.page-footer .share-link') };
   });
-  c('a page has a share page with its own title and a "Copy share link" button', share.ok && !!share.og && share.refresh === '../../#/tips/kaggle-tips' && share.button, JSON.stringify(share));
+  c('a page has a share page with its own title and a "Copy share link" button', share.ok && !!share.og && share.target === '../../#/tips/kaggle-tips' && share.button, JSON.stringify(share));
   c('no script errors', page.errors.length === 0, page.errors.join(' | '));
   await page.context().close();
+}
+
+// Share pages (/folder/page/) hold the page as static HTML: readable with
+// JavaScript off, and with it on the reader goes straight on to the #/ page,
+// drawn once by Docsify, and Back does not return to the share page.
+async function sharePages(browser, base) {
+  const c = (name, ok, detail) => check(`[${engine} desktop] ${name}`, ok, detail);
+  const html = fs.readFileSync(path.join(root, 'tips/kaggle-tips/index.html'), 'utf8');
+  if (!/share-redirect\.js/.test(html)) return console.log(`SKIP [${engine} desktop] share pages are plain redirects (no Markdown renderer at build time)`);
+  let ctx = await browser.newContext({ viewport: { width: 1280, height: 800 }, javaScriptEnabled: false });
+  let page = await ctx.newPage();
+  await page.goto(base + '/tips/kaggle-tips/');
+  const still = await page.evaluate(() => ({ url: location.pathname + location.hash, h1: (document.querySelector('main h1') || {}).textContent || '',
+    text: document.querySelectorAll('main p').length, home: (document.querySelector('nav a') || {}).href }));
+  c('a share page is readable without JavaScript (title, text and links)', still.url === '/tips/kaggle-tips/' && still.h1.trim().length > 0 && still.text > 0 && still.home === base + '/', JSON.stringify(still));
+  await ctx.close();
+  ctx = await browser.newContext({ viewport: { width: 1280, height: 800 } });
+  page = await ctx.newPage();
+  const errors = [];
+  page.on('pageerror', (e) => errors.push(e.message.slice(0, 120)));
+  page.on('console', (m) => { if (/Content.Security.Policy|Refused/i.test(m.text()) && !/fonts\.googleapis\.com/.test(m.text())) errors.push(m.text().slice(0, 120)); });
+  await page.goto(base + '/');
+  await page.goto(base + '/tips/kaggle-tips/#some-section');
+  await page.waitForSelector('.markdown-section h1');
+  await page.waitForTimeout(1500);
+  const after = await page.evaluate(() => ({ path: location.pathname, hash: location.hash, h1s: document.querySelectorAll('.markdown-section h1').length,
+    leftover: /Open this page on the full site/.test(document.body.textContent), sidebar: document.querySelectorAll('.sidebar-nav a').length }));
+  c('a share page goes on to its #/ page, drawn once by Docsify with a working menu',
+    after.path === '/' && after.hash === '#/tips/kaggle-tips?id=some-section' && after.h1s === 1 && !after.leftover && after.sidebar > 10 && errors.length === 0,
+    JSON.stringify(after) + ' ' + errors.join(' | '));
+  await page.goBack();
+  await page.waitForTimeout(1000);
+  c('Back from it skips the share page', !/kaggle-tips/.test(page.url()), page.url());
+  await ctx.close();
 }
 
 // Read offline: the service worker (sw.js, written by stage_site.py) takes
@@ -526,6 +560,7 @@ async function reducedMotion(browser, base) {
       try { await run(browser, base, label, size, phone); }
       catch (e) { check(`[${engine} ${label}] run finished`, false, e.message.split('\n')[0]); }
     }
+    await sharePages(browser, base).catch((e) => check(`[${engine} desktop] share pages run finished`, false, e.message.split('\n')[0]));
     // Playwright's WebKit cannot reload a service-worker page with the network
     // emulated off ("internal error"); Safari itself supports service workers.
     if (engine === 'chromium') {
