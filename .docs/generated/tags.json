@@ -1,0 +1,544 @@
+{
+  "affinity": {
+    "label": "Affinity",
+    "objects": [
+      "cpu-affinity",
+      "openmp-mpi-hybrid-binding-trap",
+      "parallel-execution-and-affinity"
+    ]
+  },
+  "ansible": {
+    "label": "Ansible",
+    "objects": [
+      "ansible-cheatsheet",
+      "ansible-getting-started",
+      "ansible-idempotence",
+      "ansible-inventory",
+      "ansible-roles",
+      "ansible-rolling",
+      "ansible-vault"
+    ]
+  },
+  "applications": {
+    "label": "Applications",
+    "objects": []
+  },
+  "clustering": {
+    "label": "Clustering",
+    "objects": [
+      "customer-segmentation-problem",
+      "unsupervised-learning"
+    ]
+  },
+  "containers": {
+    "label": "Containers",
+    "objects": [
+      "build-a-two-node-k3s-lab",
+      "containers-101",
+      "k3s-vs-kubeadm",
+      "singularity-containers",
+      "slurm-containers-pyxis",
+      "slurm-lab-cheatsheet"
+    ]
+  },
+  "convolution": {
+    "label": "Convolution",
+    "objects": [
+      "digital-image-processing-overview",
+      "dip-fourier-transform-images",
+      "dip-frequency-filtering-aliasing",
+      "dip-spatial-filtering"
+    ]
+  },
+  "design": {
+    "label": "Design",
+    "objects": [
+      "threat-model-and-first-launch"
+    ]
+  },
+  "dev": {
+    "label": "Dev",
+    "objects": [
+      "gpu-allocation-vs-utilization"
+    ]
+  },
+  "devops": {
+    "label": "Devops",
+    "objects": [
+      "broken-pods-rogues-gallery",
+      "build-a-two-node-k3s-lab",
+      "fake-gpus-in-kubernetes"
+    ]
+  },
+  "distributed-training": {
+    "label": "Distributed Training",
+    "objects": [
+      "nccl-collective-communication",
+      "pytorch-ddp",
+      "slurm-distributed-training",
+      "slurm-topology-placement"
+    ]
+  },
+  "encoder-decoder": {
+    "label": "Encoder-Decoder",
+    "objects": [
+      "encoder-decoder-machine-translation"
+    ]
+  },
+  "filtering": {
+    "label": "Filtering",
+    "objects": [
+      "dip-edges-sharpening",
+      "dip-fourier-transform-images",
+      "dip-frequency-filtering-aliasing",
+      "dip-noise-restoration",
+      "dip-spatial-filtering"
+    ]
+  },
+  "fourier-transform": {
+    "label": "Fourier Transform",
+    "objects": [
+      "digital-image-processing-overview",
+      "dip-fourier-transform-images",
+      "dip-frequency-filtering-aliasing",
+      "dip-meet-fourier",
+      "dip-wavelets-multiresolution"
+    ]
+  },
+  "gpu": {
+    "label": "GPU",
+    "objects": [
+      "ai-infrastructure-core-concepts",
+      "ai-storage-and-fabric-overview",
+      "ai-storage-parallel-filesystems",
+      "ai-storage-rdma-gpudirect",
+      "cuda-101",
+      "draining-a-gpu-node",
+      "gpu-failure-prediction-overview",
+      "gpu-pred-alert-to-drain",
+      "gpu-pred-backtesting",
+      "gpu-pred-collecting-signals",
+      "gpu-pred-rules",
+      "gpu-pred-runbook",
+      "gpu-pred-what-fails",
+      "isolating-gpu-workloads",
+      "job-execution-journey",
+      "llm-inference-performance-overview",
+      "llm-perf-compute-vs-memory-bound",
+      "llm-perf-inference-roofline",
+      "llm-perf-optimizations",
+      "llm-perf-sizing-70b",
+      "llm-perf-sparsity-vs-quantization",
+      "llm-perf-structured-sparsity",
+      "nccl-collective-communication",
+      "nhc-architecture-driven",
+      "nhc-case-study",
+      "nhc-custom-checks",
+      "nhc-writing-nhc-conf",
+      "oomkilled-with-memory-to-spare",
+      "slurm-accounting-multi-tenancy",
+      "slurm-cgroups-in-practice",
+      "slurm-gpu-affinity-socket-lie",
+      "slurm-gpu-health-checks",
+      "slurm-mixed-gpus-four-ways",
+      "slurm-mixed-gpus-overview",
+      "slurm-mixed-gpus-where-shine",
+      "slurm-mixed-gpus-why-disappoints",
+      "slurm-preemption-requeue-signals"
+    ]
+  },
+  "hpc": {
+    "label": "Hpc",
+    "objects": [
+      "ai-infrastructure-core-concepts",
+      "ai-storage-and-fabric-overview",
+      "ai-storage-parallel-filesystems",
+      "ai-storage-rdma-gpudirect",
+      "broken-pods-rogues-gallery",
+      "build-a-two-node-k3s-lab",
+      "draining-a-gpu-node",
+      "fake-gpus-in-kubernetes",
+      "gpu-allocation-vs-utilization",
+      "gpu-failure-prediction-overview",
+      "gpu-pred-alert-to-drain",
+      "gpu-pred-backtesting",
+      "gpu-pred-collecting-signals",
+      "gpu-pred-rules",
+      "gpu-pred-runbook",
+      "gpu-pred-what-fails",
+      "isolating-gpu-workloads",
+      "job-execution-journey",
+      "nhc-architecture-driven",
+      "nhc-auto-remediation",
+      "nhc-build-and-install",
+      "nhc-case-study",
+      "nhc-cheat-sheet",
+      "nhc-custom-checks",
+      "nhc-rollout-at-scale",
+      "nhc-slurm-integration",
+      "nhc-troubleshooting",
+      "nhc-why-node-health-check",
+      "nhc-writing-nhc-conf",
+      "nvidia-cluster-readiness-engine",
+      "openmp-mpi-hybrid-binding-trap",
+      "openmp-mpi-on-kubernetes",
+      "openmp-mpi-spotting-the-code",
+      "openmp-mpi-threads-and-ranks",
+      "openmp-mpi-under-slurm",
+      "openmp-mpi-where-they-are-going",
+      "openmp-mpi-where-they-came-from",
+      "openmp-open-mpi-name-mixup",
+      "slurm-accounting-multi-tenancy",
+      "slurm-backfill-tuning",
+      "slurm-cgroups-in-practice",
+      "slurm-containers-pyxis",
+      "slurm-distributed-training",
+      "slurm-gpu-affinity-socket-lie",
+      "slurm-gpu-health-checks",
+      "slurm-intro",
+      "slurm-job-script-tale",
+      "slurm-job-submit-lua",
+      "slurm-kill-task-failed",
+      "slurm-lab-cheatsheet",
+      "slurm-mixed-gpus-four-ways",
+      "slurm-mixed-gpus-overview",
+      "slurm-mixed-gpus-where-shine",
+      "slurm-mixed-gpus-why-disappoints",
+      "slurm-openmetrics",
+      "slurm-pam-adopt-ssh-access",
+      "slurm-pending-reasons",
+      "slurm-preemption-requeue-signals",
+      "slurm-priority-multifactor",
+      "slurm-qos-limits",
+      "slurm-qos-preemption-setup",
+      "slurm-reboot-order",
+      "slurm-reservations-and-maintenance",
+      "slurm-sacct-job-forensics",
+      "slurm-signals-cheatsheet",
+      "slurm-slurmstepd",
+      "slurm-smoke-after-upgrade",
+      "slurm-smoke-config-change",
+      "slurm-smoke-control-plane",
+      "slurm-smoke-node-readiness",
+      "slurm-smoke-policy",
+      "slurm-smoke-regression-suites",
+      "slurm-spool-dir-full",
+      "slurm-topology-placement",
+      "slurm-upgrade-order",
+      "slurm-version-changes"
+    ]
+  },
+  "kubernetes": {
+    "label": "Kubernetes",
+    "objects": [
+      "ai-infrastructure-core-concepts",
+      "broken-pods-rogues-gallery",
+      "build-a-two-node-k3s-lab",
+      "draining-a-gpu-node",
+      "fake-gpus-in-kubernetes",
+      "gpu-allocation-vs-utilization",
+      "isolating-gpu-workloads",
+      "job-execution-journey",
+      "k3s-vs-kubeadm",
+      "kubectl-troubleshooting",
+      "kubernetes-at-hpc-scale",
+      "kubernetes-in-five-nouns",
+      "nvidia-cluster-readiness-engine",
+      "oomkilled-with-memory-to-spare",
+      "openmp-mpi-on-kubernetes",
+      "polite-api-server-monitoring",
+      "rbac-and-the-limited-viewer",
+      "your-kubeconfig-is-a-house-key"
+    ]
+  },
+  "llm": {
+    "label": "Large Language Models",
+    "objects": [
+      "llm-inference-performance-overview",
+      "llm-perf-inference-roofline",
+      "llm-perf-optimizations",
+      "llm-perf-sizing-70b",
+      "llm-perf-sparsity-vs-quantization",
+      "llm-perf-structured-sparsity",
+      "sequence-models"
+    ]
+  },
+  "model-evaluation": {
+    "label": "Model Evaluation",
+    "objects": [
+      "accuracy-paradox",
+      "bias-variance-trade-off"
+    ]
+  },
+  "monitoring": {
+    "label": "Monitoring",
+    "objects": [
+      "slurm-openmetrics",
+      "vm-cheatsheet",
+      "vm-metricsql-vmalert",
+      "vm-retention-backups",
+      "vm-single-node",
+      "vm-vmagent-buffering",
+      "vm-why-victoriametrics"
+    ]
+  },
+  "mpi": {
+    "label": "MPI",
+    "objects": [
+      "openmp-mpi-hybrid-binding-trap",
+      "openmp-mpi-on-kubernetes",
+      "openmp-mpi-spotting-the-code",
+      "openmp-mpi-threads-and-ranks",
+      "openmp-mpi-under-slurm",
+      "openmp-mpi-where-they-are-going",
+      "openmp-mpi-where-they-came-from",
+      "openmp-open-mpi-name-mixup",
+      "parallel-execution-and-affinity"
+    ]
+  },
+  "neural-networks": {
+    "label": "Neural Networks",
+    "objects": [
+      "deep-learning-basics"
+    ]
+  },
+  "noise": {
+    "label": "Noise",
+    "objects": [
+      "dip-edges-sharpening",
+      "dip-noise-restoration",
+      "dip-spatial-filtering"
+    ]
+  },
+  "nvidia": {
+    "label": "Nvidia",
+    "objects": [
+      "ai-infrastructure-core-concepts",
+      "ai-storage-and-fabric-overview",
+      "ai-storage-rdma-gpudirect",
+      "broken-pods-rogues-gallery",
+      "fake-gpus-in-kubernetes",
+      "gpu-failure-prediction-overview",
+      "gpu-pred-alert-to-drain",
+      "gpu-pred-backtesting",
+      "gpu-pred-collecting-signals",
+      "gpu-pred-rules",
+      "gpu-pred-runbook",
+      "gpu-pred-what-fails",
+      "isolating-gpu-workloads",
+      "job-execution-journey",
+      "llm-inference-performance-overview",
+      "llm-perf-compute-vs-memory-bound",
+      "llm-perf-optimizations",
+      "llm-perf-sizing-70b",
+      "llm-perf-sparsity-vs-quantization",
+      "llm-perf-structured-sparsity",
+      "nhc-case-study",
+      "nhc-custom-checks",
+      "nvidia-cluster-readiness-engine",
+      "slurm-containers-pyxis",
+      "slurm-gpu-health-checks",
+      "slurm-mixed-gpus-overview",
+      "slurm-mixed-gpus-where-shine",
+      "slurm-mixed-gpus-why-disappoints"
+    ]
+  },
+  "openmp": {
+    "label": "OpenMP",
+    "objects": [
+      "openmp-mpi-hybrid-binding-trap",
+      "openmp-mpi-on-kubernetes",
+      "openmp-mpi-spotting-the-code",
+      "openmp-mpi-threads-and-ranks",
+      "openmp-mpi-under-slurm",
+      "openmp-mpi-where-they-are-going",
+      "openmp-mpi-where-they-came-from",
+      "openmp-open-mpi-name-mixup"
+    ]
+  },
+  "programming": {
+    "label": "Programming",
+    "objects": [
+      "old-data-and-background-work",
+      "reviewing-the-design",
+      "sessions-and-two-walls",
+      "sign-in-hygiene",
+      "threat-model-and-first-launch"
+    ]
+  },
+  "prometheus": {
+    "label": "Prometheus",
+    "objects": [
+      "vm-metricsql-vmalert",
+      "vm-single-node",
+      "vm-why-victoriametrics"
+    ]
+  },
+  "pytorch": {
+    "label": "PyTorch",
+    "objects": [
+      "pytorch-101",
+      "pytorch-ddp",
+      "slurm-distributed-training"
+    ]
+  },
+  "rnn": {
+    "label": "Recurrent Neural Networks",
+    "objects": [
+      "encoder-decoder-machine-translation",
+      "sequence-models"
+    ]
+  },
+  "sampling": {
+    "label": "Sampling",
+    "objects": [
+      "dip-frequency-filtering-aliasing",
+      "dip-images-are-matrices",
+      "stir-the-pot-population-and-sampling",
+      "why-averages-behave"
+    ]
+  },
+  "slurm": {
+    "label": "Slurm",
+    "objects": [
+      "ai-infrastructure-core-concepts",
+      "ansible-cheatsheet",
+      "ansible-getting-started",
+      "ansible-idempotence",
+      "ansible-inventory",
+      "ansible-roles",
+      "ansible-rolling",
+      "ansible-vault",
+      "gpu-failure-prediction-overview",
+      "gpu-pred-alert-to-drain",
+      "gpu-pred-runbook",
+      "nhc-architecture-driven",
+      "nhc-auto-remediation",
+      "nhc-case-study",
+      "nhc-cheat-sheet",
+      "nhc-rollout-at-scale",
+      "nhc-slurm-integration",
+      "nhc-troubleshooting",
+      "nhc-why-node-health-check",
+      "openmp-mpi-under-slurm",
+      "parallel-execution-and-affinity",
+      "slurm-accounting-multi-tenancy",
+      "slurm-backfill-tuning",
+      "slurm-cgroups-in-practice",
+      "slurm-containers-pyxis",
+      "slurm-distributed-training",
+      "slurm-gpu-affinity-socket-lie",
+      "slurm-gpu-health-checks",
+      "slurm-intro",
+      "slurm-job-script-tale",
+      "slurm-job-submit-lua",
+      "slurm-kill-task-failed",
+      "slurm-lab-cheatsheet",
+      "slurm-mixed-gpus-four-ways",
+      "slurm-mixed-gpus-overview",
+      "slurm-mixed-gpus-where-shine",
+      "slurm-mixed-gpus-why-disappoints",
+      "slurm-openmetrics",
+      "slurm-pam-adopt-ssh-access",
+      "slurm-pending-reasons",
+      "slurm-preemption-requeue-signals",
+      "slurm-priority-multifactor",
+      "slurm-qos-limits",
+      "slurm-qos-preemption-setup",
+      "slurm-reboot-order",
+      "slurm-reservations-and-maintenance",
+      "slurm-sacct-job-forensics",
+      "slurm-signals-cheatsheet",
+      "slurm-slurmstepd",
+      "slurm-smoke-after-upgrade",
+      "slurm-smoke-config-change",
+      "slurm-smoke-control-plane",
+      "slurm-smoke-node-readiness",
+      "slurm-smoke-policy",
+      "slurm-smoke-regression-suites",
+      "slurm-spool-dir-full",
+      "slurm-topology-placement",
+      "slurm-upgrade-order",
+      "slurm-version-changes"
+    ]
+  },
+  "software": {
+    "label": "Software",
+    "objects": [
+      "reviewing-the-design",
+      "threat-model-and-first-launch"
+    ]
+  },
+  "software-engineering": {
+    "label": "Software Engineering",
+    "objects": [
+      "old-data-and-background-work",
+      "sessions-and-two-walls",
+      "sign-in-hygiene"
+    ]
+  },
+  "statistics": {
+    "label": "Statistics",
+    "objects": [
+      "coins-and-calls",
+      "counting-the-ways",
+      "data-types-and-frequency-tables",
+      "draw-it-before-you-describe-it",
+      "how-far-from-the-middle",
+      "how-sure-are-you",
+      "probability-statistics-series",
+      "stir-the-pot-population-and-sampling",
+      "the-bell-curve",
+      "the-courtroom-for-numbers",
+      "the-map-of-leaf-and-kettle",
+      "the-number-on-the-tin",
+      "the-test-that-was-99-percent-accurate",
+      "two-things-moving-together",
+      "what-to-expect",
+      "where-do-you-stand",
+      "why-averages-behave"
+    ]
+  },
+  "storage": {
+    "label": "Storage",
+    "objects": [
+      "ai-storage-and-fabric-overview",
+      "ai-storage-parallel-filesystems",
+      "ai-storage-rdma-gpudirect",
+      "vm-retention-backups"
+    ]
+  },
+  "system-design": {
+    "label": "System Design",
+    "objects": [
+      "old-data-and-background-work",
+      "reviewing-the-design",
+      "sessions-and-two-walls",
+      "sign-in-hygiene"
+    ]
+  },
+  "transformers": {
+    "label": "Transformers",
+    "objects": [
+      "llm-inference-performance-overview",
+      "llm-perf-inference-roofline",
+      "llm-perf-optimizations",
+      "llm-perf-sizing-70b",
+      "llm-perf-sparsity-vs-quantization",
+      "llm-perf-structured-sparsity",
+      "sequence-models"
+    ]
+  },
+  "victoriametrics": {
+    "label": "VictoriaMetrics",
+    "objects": [
+      "slurm-openmetrics",
+      "vm-cheatsheet",
+      "vm-metricsql-vmalert",
+      "vm-retention-backups",
+      "vm-single-node",
+      "vm-vmagent-buffering",
+      "vm-why-victoriametrics"
+    ]
+  }
+}

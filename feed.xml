@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>aCupOfTea</title>
+  <subtitle>Knowledge, served in short sips.</subtitle>
+  <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/"/>
+  <link rel="self" href="https://ahmedyousrisobhi.github.io/aCupOfTea/feed.xml"/>
+  <id>https://ahmedyousrisobhi.github.io/aCupOfTea/</id>
+  <updated>2026-11-17T00:00:00Z</updated>
+  <entry>
+    <title>Glossary</title>
+    <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/references/glossary/"/>
+    <id>https://ahmedyousrisobhi.github.io/aCupOfTea/references/glossary/</id>
+    <updated>2026-11-17T00:00:00Z</updated>
+    <summary>Short definitions of the acronyms used across the pages (GPU, MPI, NUMA, RDMA, QoS and more), each with a pointer to the page that explains it properly.</summary>
+  </entry>
+  <entry>
+    <title>The Morning After the Upgrade: Smoke Tests for the Change You Cannot Undo</title>
+    <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-smoke-tests/slurm-smoke-after-upgrade/"/>
+    <id>https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-smoke-tests/slurm-smoke-after-upgrade/</id>
+    <updated>2026-11-13T00:00:00Z</updated>
+    <summary>What to check around a Slurm upgrade: a backup proven by restoring it, versions on every node, a before/after snapshot, the control-plane smoke test, and why downgrading is not supported.</summary>
+  </entry>
+  <entry>
+    <title>Measure Twice, Reconfigure Once: Smoke-Testing a slurm.conf Change</title>
+    <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-smoke-tests/slurm-smoke-config-change/"/>
+    <id>https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-smoke-tests/slurm-smoke-config-change/</id>
+    <updated>2026-11-13T00:00:00Z</updated>
+    <summary>What a bad slurm.conf does (typo, partition naming a missing node) and the dry runs that catch it first: a snapshot diff, sbatch --test-only and a canary partition.</summary>
+  </entry>
+  <entry>
+    <title>The Cluster That Worked Perfectly and Remembered Nothing: a Two-Minute Slurm Smoke Test</title>
+    <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-smoke-tests/slurm-smoke-control-plane/"/>
+    <id>https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-smoke-tests/slurm-smoke-control-plane/</id>
+    <updated>2026-11-13T00:00:00Z</updated>
+    <summary>A six-check, two-minute Slurm smoke test (MUNGE, controller, nodes, srun, sbatch, sacct) as one script with three outcomes, tested against four injected failures and a busy cluster.</summary>
+  </entry>
+  <entry>
+    <title>Back From the Repair Shop: Is This Node Fit to Return to Service?</title>
+    <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-smoke-tests/slurm-smoke-node-readiness/"/>
+    <id>https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-smoke-tests/slurm-smoke-node-readiness/</id>
+    <updated>2026-11-13T00:00:00Z</updated>
+    <summary>Why idle does not mean a node is healthy, what Slurm does when hardware and slurm.conf disagree (and how configoverrides hides it), and a reservation fence for a probe job.</summary>
+  </entry>
+  <entry>
+    <title>Does the Rulebook Still Work? Smoke-Testing QOS, Submit Rules and Preemption</title>
+    <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-smoke-tests/slurm-smoke-policy/"/>
+    <id>https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-smoke-tests/slurm-smoke-policy/</id>
+    <updated>2026-11-13T00:00:00Z</updated>
+    <summary>A two-stage smoke test for QOS, submit rules and preemption: routing and refusals with no resources, then a real eviction and requeue, with a full script and its output.</summary>
+  </entry>
+  <entry>
+    <title>When Smoke Becomes a Fire Drill: SchedMD&#x27;s Test Suite, ReFrame and the Baseline Rule</title>
+    <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-smoke-tests/slurm-smoke-regression-suites/"/>
+    <id>https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-smoke-tests/slurm-smoke-regression-suites/</id>
+    <updated>2026-11-13T00:00:00Z</updated>
+    <summary>What SchedMD&#x27;s test suite and ReFrame do, how both were run against a live test cluster, and why results only mean something against a baseline taken before the change.</summary>
+  </entry>
+  <entry>
+    <title>Autopsy of a Job: Reading sacct Like a Coroner</title>
+    <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-sacct-job-forensics/"/>
+    <id>https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-sacct-job-forensics/</id>
+    <updated>2026-11-13T00:00:00Z</updated>
+    <summary>How to find out what happened to a job that has gone, with sacct states, exit codes (exit:signal), requeued runs, useful fields, and the neighbors scontrol, sstat and sreport.</summary>
+  </entry>
+  <entry>
+    <title>Coins and Calls: Binomial and Poisson as Recipes</title>
+    <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/coins-and-calls/"/>
+    <id>https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/coins-and-calls/</id>
+    <updated>2026-11-12T00:00:00Z</updated>
+    <summary>A named distribution is a recipe for who gets how much probability. Binomial fits &quot;how many yeses in n tries&quot;, Poisson fits &quot;how many events in a window&quot;. Know the question and the assumptions.</summary>
+  </entry>
+  <entry>
+    <title>Counting the Ways: Probability as a Share of the List</title>
+    <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/counting-the-ways/"/>
+    <id>https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/counting-the-ways/</id>
+    <updated>2026-11-12T00:00:00Z</updated>
+    <summary>Probability is the share of the equally likely ways. So &quot;or&quot; adds, &quot;and&quot; multiplies, and &quot;at least one&quot; is 1 minus none, because of what each does to the list of ways.</summary>
+  </entry>
+  <entry>
+    <title>How Sure Are You? Confidence Intervals</title>
+    <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/how-sure-are-you/"/>
+    <id>https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/how-sure-are-you/</id>
+    <updated>2026-11-12T00:00:00Z</updated>
+    <summary>A confidence interval is an honest &quot;about this, give or take&quot;: the estimate plus or minus a margin built from the standard error. The 95% describes the method, not one interval.</summary>
+  </entry>
+  <entry>
+    <title>The Bell Curve: Probability as Area, and One Ruler for Every Bell</title>
+    <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/the-bell-curve/"/>
+    <id>https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/the-bell-curve/</id>
+    <updated>2026-11-12T00:00:00Z</updated>
+    <summary>Many small nudges add up to a bell. For continuous data probability is area, and the z-score makes every bell the same bell, so one table serves all of them, until the data are not a bell.</summary>
+  </entry>
+  <entry>
+    <title>The Courtroom for Numbers: Could Plain Luck Do This?</title>
+    <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/the-courtroom-for-numbers/"/>
+    <id>https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/the-courtroom-for-numbers/</id>
+    <updated>2026-11-12T00:00:00Z</updated>
+    <summary>A hypothesis test asks one question: could plain luck have produced a difference this big? Shuffle the labels and count. What the p-value is, what it is not, and how testing twenty things fools you.</summary>
+  </entry>
+  <entry>
+    <title>The Test That Was 99% Accurate: Conditional Probability and Bayes&#x27; Rule</title>
+    <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/the-test-that-was-99-percent-accurate/"/>
+    <id>https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/the-test-that-was-99-percent-accurate/</id>
+    <updated>2026-11-12T00:00:00Z</updated>
+    <summary>Conditional probability is &quot;shrink the crowd to those who match, then count again&quot;. Bayes&#x27; rule is that count read the other way; a tree of whole tins shows why a 99% test is often wrong.</summary>
+  </entry>
+  <entry>
+    <title>Two Things Moving Together: Correlation and the Line</title>
+    <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/two-things-moving-together/"/>
+    <id>https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/two-things-moving-together/</id>
+    <updated>2026-11-12T00:00:00Z</updated>
+    <summary>Correlation is the average product of paired z-scores, a number about straight-line togetherness only. The regression line is least squared walking applied to a line. Graph first, always.</summary>
+  </entry>
+  <entry>
+    <title>What to Expect: Random Variables and Expected Value</title>
+    <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/what-to-expect/"/>
+    <id>https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/what-to-expect/</id>
+    <updated>2026-11-12T00:00:00Z</updated>
+    <summary>A random variable is a number attached to each way things could turn out. Expected value and variance are the mean and the leftover walk of earlier parts, weighted by probability instead of frequency.</summary>
+  </entry>
+  <entry>
+    <title>Why Averages Behave: The Sip You Could Take a Thousand Times</title>
+    <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/why-averages-behave/"/>
+    <id>https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/why-averages-behave/</id>
+    <updated>2026-11-12T00:00:00Z</updated>
+    <summary>An average is itself random: every sample gives a different one. Their spread shrinks as sigma over root n, and whatever the crowd looks like, sample averages pile into a bell. Bias is not cured.</summary>
+  </entry>
+  <entry>
+    <title>How Far From the Middle? One Question Behind Every Summary Number</title>
+    <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/how-far-from-the-middle/"/>
+    <id>https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/how-far-from-the-middle/</id>
+    <updated>2026-11-12T00:00:00Z</updated>
+    <summary>Mean, median and mode are one question asked with three rulers: how much should a long walk hurt? Spread is what is left over. Variance, SD, IQR and the n-1 mystery fall out of that.</summary>
+  </entry>
+  <entry>
+    <title>The Map of Leaf &amp; Kettle: Every Idea So Far in One Walk Through the Shop</title>
+    <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/the-map-of-leaf-and-kettle/"/>
+    <id>https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/the-map-of-leaf-and-kettle/</id>
+    <updated>2026-11-12T00:00:00Z</updated>
+    <summary>A concept map, decision chart and definitions sheet for the whole series, as a memory palace in one tea shop: nine rooms for describing data, an upstairs for chance.</summary>
+  </entry>
+  <entry>
+    <title>Where Do You Stand? Percentiles, Z-Scores and the Box Plot</title>
+    <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/where-do-you-stand/"/>
+    <id>https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/where-do-you-stand/</id>
+    <updated>2026-11-12T00:00:00Z</updated>
+    <summary>A score means nothing without its crowd. Two rulers give it a position: rank (percentile) and distance in spreads (z-score). The box plot is just the ogive read at four landmarks.</summary>
+  </entry>
+  <entry>
+    <title>Mira&#x27;s Notebook: What Kind of Data Is This, and How Do You Count It?</title>
+    <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/data-types-and-frequency-tables/"/>
+    <id>https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/data-types-and-frequency-tables/</id>
+    <updated>2026-11-12T00:00:00Z</updated>
+    <summary>Why you cannot average a blend name: the four kinds of data, and how to turn raw numbers into honest category, ungrouped and grouped frequency tables.</summary>
+  </entry>
+  <entry>
+    <title>Draw It Before You Describe It: Three Pictures of the Same Fifty Days</title>
+    <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/draw-it-before-you-describe-it/"/>
+    <id>https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/draw-it-before-you-describe-it/</id>
+    <updated>2026-11-12T00:00:00Z</updated>
+    <summary>Why a table of counts glazes eyes and a picture does not: the histogram, frequency polygon and ogive built from one table, and the mistakes that make them lie.</summary>
+  </entry>
+  <entry>
+    <title>Stir the Pot First: Population, Sample, and Why We Guess</title>
+    <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/stir-the-pot-population-and-sampling/"/>
+    <id>https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/stir-the-pot-population-and-sampling/</id>
+    <updated>2026-11-12T00:00:00Z</updated>
+    <summary>Why a sip judges a pot of tea only if you stir it: population versus sample, four ways to draw a sample, the poll that asked 2.4 million and still erred.</summary>
+  </entry>
+  <entry>
+    <title>The Number on the Tin: Mean, Median and Mode</title>
+    <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/the-number-on-the-tin/"/>
+    <id>https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/the-number-on-the-tin/</id>
+    <updated>2026-11-12T00:00:00Z</updated>
+    <summary>Why a perfectly computed average can describe nobody: &quot;typical&quot; is ambiguous, and mean, median and mode are three honest answers to three different questions. Look at the picture first.</summary>
+  </entry>
+  <entry>
+    <title>Ansible Cheatsheet: Every Step from the Series</title>
+    <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/ansible/cheatsheet/"/>
+    <id>https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/ansible/cheatsheet/</id>
+    <updated>2026-11-12T00:00:00Z</updated>
+    <summary>The Ansible series as direct steps - pinned install, ansible.cfg, inventory and host keys, ad-hoc commands, idempotent playbooks with handlers, a role, rolling maintenance, vault.</summary>
+  </entry>
+  <entry>
+    <title>The Laptop That Ran Ansible 2.16: An Install You Can Trust</title>
+    <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/ansible/getting-started/"/>
+    <id>https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/ansible/getting-started/</id>
+    <updated>2026-11-12T00:00:00Z</updated>
+    <summary>A pinned Ansible install per project, which Python the control machine and the nodes need, ansible.cfg, SSH host keys, and the errors you hit on the first runs.</summary>
+  </entry>
+  <entry>
+    <title>The Playbook That Restarted slurmd Every Night: Idempotence and Handlers</title>
+    <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/ansible/idempotence-and-handlers/"/>
+    <id>https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/ansible/idempotence-and-handlers/</id>
+    <updated>2026-11-12T00:00:00Z</updated>
+    <summary>Why a playbook should report changed only when it changed something, templates instead of shell, handlers that restart only when needed, --check --diff, and the handler that never ran.</summary>
+  </entry>
+  <entry>
+    <title>Four Nodes Said &quot;Too Many Open Files&quot;: Inventories and Ad-Hoc Commands</title>
+    <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/ansible/inventory-and-ad-hoc/"/>
+    <id>https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/ansible/inventory-and-ad-hoc/</id>
+    <updated>2026-11-12T00:00:00Z</updated>
+    <summary>Inventory groups and ranges, groupvars with overrides, targeting patterns, ad-hoc commands across the cluster, the node that was down, and checking a change in a fresh login.</summary>
+  </entry>
+  <entry>
+    <title>The GPU Node That Thought It Had 1000 MB: Roles and Variables</title>
+    <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/ansible/roles-and-variables/"/>
+    <id>https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/ansible/roles-and-variables/</id>
+    <updated>2026-11-12T00:00:00Z</updated>
+    <summary>Turn a playbook into a role, load OS-specific variables with firstfound, put site values in defaults not vars, use hostvars for per-node values in templates, and check every node got the same config.</summary>
+  </entry>
+  <entry>
+    <title>The Reboot That Killed a Week of Jobs: Rolling Maintenance with Slurm</title>
+    <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/ansible/rolling-maintenance/"/>
+    <id>https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/ansible/rolling-maintenance/</id>
+    <updated>2026-11-12T00:00:00Z</updated>
+    <summary>Change busy compute nodes safely - drain through Slurm, wait for jobs, one canary first, stop on the first failure, check the node really came back, a dry run that is really dry, and rollback.</summary>
+  </entry>
+</feed>

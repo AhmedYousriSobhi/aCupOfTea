@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ahmedyousrisobhi.github.io/aCupOfTea/sitemap.xml

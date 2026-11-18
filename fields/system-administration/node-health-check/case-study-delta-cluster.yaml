@@ -1,0 +1,53 @@
+# case-study-delta-cluster.yaml -- the client cluster from part 10 of the NHC series.
+# Hardware specs: NVIDIA DGX H100 User Guide, AMD EPYC 9654 product page (see the page).
+cluster: delta
+defaults:
+  memory_fudge: 3%
+  timeouts: {nhc: 50, nhc-epilog: 20, nhc-deep: 900}
+  ping_targets: [slurmctl01]
+service_map:
+  nvidia-fabricmanager: {user: root, daemon: nv-fabricmanager}
+storage:
+  home:    {mountpoint: /home, type: nfs, source: "nfs01:/export/home"}
+  scratch: {mountpoint: /lustre/scratch, type: lustre, source: "*@o2ib*:/scratch"}
+  raid:    {mountpoint: /raid, type: ext4, source: "/dev/md*"}
+fabrics:
+  hdr: {rate: 200, devices: [mlx5_0]}
+  dgx-compute:      # DGX H100 user guide, Table 6: the 8 OSFP compute ports
+    rate: 400
+    devices: [mlx5_0, mlx5_3, mlx5_4, mlx5_5, mlx5_6, mlx5_9, mlx5_10, mlx5_11]
+roles:
+  compute: {services: [sshd, munge], user_hygiene: true}
+  login:   {services: [sshd, munge], user_hygiene: false}
+classes:
+  cpu-genoa:
+    nodes: "cpu[001-120]"
+    role: compute
+    cpu: {sockets: 2, cores: 192, threads: 384}
+    numa_nodes: 2
+    memory: 768GB
+    fabric: hdr
+    mounts: [home, scratch]
+  dgx-h100:
+    nodes: "dgx[01-16]"
+    role: compute
+    cpu: {sockets: 2, cores: 112, threads: 224}
+    numa_nodes: 2
+    memory: 2TB
+    fabric: dgx-compute
+    mounts: [home, scratch, raid]
+    extra_services: [nvidia-fabricmanager]
+    gpus:
+      count: 8
+      model: "H100"
+      nvswitch: true
+      fatal_xids: [48, 64, 74, 79, 95, 119, 120]
+      deep_diag_level: 2
+  login:
+    nodes: "login[01-02]"
+    role: login
+    in_slurm: false
+    cpu: {sockets: 2, cores: 64, threads: 128}
+    memory: 384GB
+    fabric: hdr
+    mounts: [home, scratch]
