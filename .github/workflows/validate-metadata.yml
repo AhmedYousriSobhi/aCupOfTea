@@ -26,8 +26,8 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install PyYAML and markdown-it-py
-        run: pip install PyYAML==6.0.2 markdown-it-py==3.0.0 mdurl==0.1.2
+      - name: Install PyYAML
+        run: pip install PyYAML==6.0.2
 
       - name: Run the validation suite
         # front matter, internal links, generated indexes + sidebar + navbar up to date, all test_*.py
