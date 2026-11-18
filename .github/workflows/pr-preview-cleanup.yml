@@ -1,0 +1,44 @@
+name: PR preview cleanup
+
+# Removes pr-N/ from the gh-pages-preview branch when a PR closes. Runs no PR
+# code and never touches the production gh-pages branch.
+on:
+  pull_request:
+    types: [closed]
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    # Fork PRs never had a preview (and have a read-only token).
+    if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    concurrency:
+      group: pr-preview-branch
+      cancel-in-progress: false
+    env:
+      PR: ${{ github.event.pull_request.number }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Remove the preview
+        run: |
+          set -euo pipefail
+          git init -q preview
+          cd preview
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git"
+          if ! git fetch -q --depth=1 origin gh-pages-preview; then
+            echo "No gh-pages-preview branch; nothing to clean."
+            exit 0
+          fi
+          git checkout -q -b gh-pages-preview FETCH_HEAD
+          if [ ! -d "pr-${PR}" ]; then
+            echo "No preview for PR #${PR}."
+            exit 0
+          fi
+          git rm -rq "pr-${PR}"
+          git commit -q -m "preview: remove PR #${PR}"
+          git push -q origin gh-pages-preview

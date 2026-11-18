@@ -5,10 +5,6 @@ on:
     branches:
       - dev
       - main
-    paths:
-      - "index.html"
-      - ".docs/**"
-      - ".github/workflows/smoke-test.yml"
   workflow_dispatch:
 
 permissions:
@@ -63,3 +59,78 @@ jobs:
           name: staged-site-pr-${{ github.event.pull_request.number || github.run_id }}
           path: _site
           retention-days: 7
+
+  # Publish the staged site to the gh-pages-preview branch (never gh-pages,
+  # which is the production deploy) and comment the link on the PR. This job
+  # runs no PR code: it only downloads the artifact built above. Fork PRs get
+  # a read-only token, so they are skipped with a notice.
+  preview:
+    needs: smoke
+    if: ${{ github.event_name == 'pull_request' && !cancelled() && needs.smoke.result == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      pull-requests: write
+    concurrency:
+      group: pr-preview-branch
+      cancel-in-progress: false
+    env:
+      PR: ${{ github.event.pull_request.number }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Skip fork pull requests
+        id: fork
+        run: |
+          if [ "${{ github.event.pull_request.head.repo.full_name }}" != "${{ github.repository }}" ]; then
+            echo "::notice::Preview skipped: this PR comes from a fork, so the token is read-only. Download the staged-site artifact from the smoke-test run instead."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Download the staged site
+        if: steps.fork.outputs.skip != 'true'
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: staged-site-pr-${{ github.event.pull_request.number }}
+          path: site
+
+      - name: Publish to gh-pages-preview/pr-N
+        if: steps.fork.outputs.skip != 'true'
+        run: |
+          set -euo pipefail
+          repo="https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git"
+          git init -q preview
+          cd preview
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git remote add origin "$repo"
+          if git fetch -q --depth=1 origin gh-pages-preview; then
+            git checkout -q -b gh-pages-preview FETCH_HEAD
+          else
+            git checkout -q --orphan gh-pages-preview
+          fi
+          rm -rf "pr-${PR}"
+          mkdir -p "pr-${PR}"
+          cp -a ../site/. "pr-${PR}/"
+          touch .nojekyll
+          git add -A
+          git commit -q -m "preview: PR #${PR} at ${{ github.event.pull_request.head.sha }}" || echo "nothing changed"
+          git push -q origin gh-pages-preview
+
+      - name: Comment the preview link
+        if: steps.fork.outputs.skip != 'true'
+        run: |
+          set -euo pipefail
+          url="https://raw.githack.com/${{ github.repository }}/gh-pages-preview/pr-${PR}/index.html"
+          marker="<!-- pr-preview -->"
+          body="${marker}
+          Preview of this PR (built from ${{ github.event.pull_request.head.sha }}): ${url}
+
+          Served from the \`gh-pages-preview\` branch through raw.githack.com; removed when the PR closes. The production site is not touched."
+          body="$(printf '%s' "$body" | sed 's/^          //')"
+          id="$(gh api "repos/${{ github.repository }}/issues/${PR}/comments" --paginate --jq ".[] | select(.body | startswith(\"${marker}\")) | .id" | head -n1)"
+          if [ -n "$id" ]; then
+            gh api -X PATCH "repos/${{ github.repository }}/issues/comments/${id}" -f body="$body" >/dev/null
+          else
+            gh api "repos/${{ github.repository }}/issues/${PR}/comments" -f body="$body" >/dev/null
+          fi
