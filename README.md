@@ -45,12 +45,12 @@ Not sure where to begin? Each of these takes one cup, roughly the reading time s
 
 ## 🆕 Recently added
 
+- 2026-11-17 · [Glossary](/references/glossary.md)
 - 2026-11-13 · [The Morning After the Upgrade: Smoke Tests for the Change You Cannot Undo](/fields/schedulers/slurm-smoke-tests/slurm-smoke-after-upgrade.md)
 - 2026-11-13 · [Measure Twice, Reconfigure Once: Smoke-Testing a slurm.conf Change](/fields/schedulers/slurm-smoke-tests/slurm-smoke-config-change.md)
 - 2026-11-13 · [The Cluster That Worked Perfectly and Remembered Nothing: a Two-Minute Slurm Smoke Test](/fields/schedulers/slurm-smoke-tests/slurm-smoke-control-plane.md)
 - 2026-11-13 · [Back From the Repair Shop: Is This Node Fit to Return to Service?](/fields/schedulers/slurm-smoke-tests/slurm-smoke-node-readiness.md)
 - 2026-11-13 · [Does the Rulebook Still Work? Smoke-Testing QOS, Submit Rules and Preemption](/fields/schedulers/slurm-smoke-tests/slurm-smoke-policy.md)
-- 2026-11-13 · [When Smoke Becomes a Fire Drill: SchedMD's Test Suite, ReFrame and the Baseline Rule](/fields/schedulers/slurm-smoke-tests/slurm-smoke-regression-suites.md)
 
 <!-- recent:end -->
 
