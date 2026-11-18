@@ -49,8 +49,8 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install PyYAML, Pillow and markdown-it-py
-        run: pip install PyYAML==6.0.2 Pillow==12.3.0 markdown-it-py==3.0.0 mdurl==0.1.2
+      - name: Install PyYAML and Pillow
+        run: pip install PyYAML==6.0.2 Pillow==12.3.0
 
       - name: Validate and generate metadata indexes
         run: |

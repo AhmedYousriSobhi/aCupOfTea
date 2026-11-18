@@ -4,14 +4,11 @@
 Docsify pages live behind `#/` addresses, which link previews (chat apps, social
 cards) cannot read: every shared link would show the home page card. A share page
 is a tiny HTML file at the page's own folder address (`/fields/x/page/`) with that
-page's title and summary as Open Graph tags, then the page itself as static HTML
-(prerender.py), readable without JavaScript. `.docs/share-redirect.js`, loaded in
-<head>, sends a reader with JavaScript on to the real page (`/#/fields/x/page`)
-before the static copy is painted, so Docsify draws the page as usual. The share
-page has its own Content-Security-Policy: scripts from the site only, none inline.
+page's title and summary as Open Graph tags, and an instant redirect to the real
+page (`/#/fields/x/page`). No script is involved, so the site's CSP is unchanged.
 
-  page.md              -> <out>/page/index.html     goes on to #/page
-  folder/README.md     -> <out>/folder/index.html   goes on to #/folder/
+  page.md              -> <out>/page/index.html     redirects to #/page
+  folder/README.md     -> <out>/folder/index.html   redirects to #/folder/
   root README.md, code pages and generated pages get none.
 
 Used by stage_site.py; the staged copy only, sources are never touched.
@@ -23,19 +20,12 @@ from urllib.parse import quote
 
 import yaml
 
-import prerender
 import social_cards
 
 DEFAULT_BASE = "https://ahmedyousrisobhi.github.io/aCupOfTea/"
 SITE_NAME = "aCupOfTea"
 IMAGE = ".docs/icons/icon-512.png"
 MAX_DESC = 200
-CSP = ("default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; "
-       "object-src 'none'; frame-src 'none'; base-uri 'self'; form-action 'none'")
-STYLE = ("body{max-width:46rem;margin:0 auto;padding:1rem;font:16px/1.6 system-ui,sans-serif;color:#222;background:#fff}"
-         "img{max-width:100%;height:auto}pre{overflow-x:auto;background:#f6f6f6;padding:.75rem}"
-         "table{border-collapse:collapse;display:block;overflow-x:auto}td,th{border:1px solid #ccc;padding:.3rem .6rem}"
-         "nav,footer{font-size:.9rem}")
 SKIP_LINE = re.compile(r"^\s*(#|>|\||!\[|[-*+] |\d+\. |<|`{3}|:::|\$\$|---|===|\*{3}|\[!)")
 
 
@@ -106,13 +96,10 @@ def route(page):
     return "/" + d + ("/" if page.endswith("/README.md") else "")
 
 
-def render(page, title, desc, base, card=False, body=""):
-    """The share page. With `body` (the page as HTML) it is a readable static copy that sends
-    script-enabled readers on to the #/ page; without it, a plain redirect (no renderer installed)."""
+def render(page, title, desc, base, card=False):
     d = share_dir(page)
     depth = d.count("/") + 1
-    up = "../" * depth
-    target = up + "#" + quote(route(page), safe="/")
+    target = "../" * depth + "#" + quote(route(page), safe="/")
     url = base + quote(d, safe="/") + "/"
     t, ds = html.escape(title, quote=True), html.escape(desc, quote=True)
     lines = [
@@ -122,15 +109,7 @@ def render(page, title, desc, base, card=False, body=""):
         '<meta charset="UTF-8">',
         f"<title>{t}</title>",
         '<meta name="viewport" content="width=device-width, initial-scale=1.0">',
-    ]
-    if body:
-        lines += [
-            f'<meta http-equiv="Content-Security-Policy" content="{CSP}">',
-            f'<script src="{up}.docs/share-redirect.js" data-target="{html.escape(target, quote=True)}"></script>',
-        ]
-    else:
-        lines.append(f'<meta http-equiv="refresh" content="0; url={html.escape(target, quote=True)}">')
-    lines += [
+        f'<meta http-equiv="refresh" content="0; url={html.escape(target, quote=True)}">',
         f'<link rel="canonical" href="{html.escape(url, quote=True)}">',
     ]
     if ds:
@@ -150,19 +129,10 @@ def render(page, title, desc, base, card=False, body=""):
                   '<meta name="twitter:card" content="summary_large_image">']
     else:
         lines += [f'<meta property="og:image" content="{base}{IMAGE}">', '<meta name="twitter:card" content="summary">']
-    if not body:
-        lines += ["</head>", "<body>", f'<p><a href="{html.escape(target, quote=True)}">{t}</a></p>',
-                  "</body>", "</html>", ""]
-        return "\n".join(lines)
     lines += [
-        f"<style>{STYLE}</style>",
         "</head>",
         "<body>",
-        f'<nav><a href="{up}">{SITE_NAME}</a></nav>',
-        "<main>",
-        body.rstrip("\n"),
-        "</main>",
-        f'<footer><p><a href="{html.escape(target, quote=True)}">Open this page on the full site</a></p></footer>',
+        f'<p><a href="{html.escape(target, quote=True)}">{t}</a></p>',
         "</body>",
         "</html>",
         "",
@@ -181,10 +151,6 @@ def write_share_pages(out, sources, base=DEFAULT_BASE):
     if not base.endswith("/"):
         base += "/"
     written = 0
-    pages = set(sources)
-
-    def exists(path):
-        return os.path.isfile(os.path.join(out, path))
     # folder indexes first, so a page and a folder README with the same name keep the README
     for page in sorted(sources, key=lambda p: (not p.endswith("/README.md"), p)):
         d = share_dir(page)
@@ -199,7 +165,6 @@ def write_share_pages(out, sources, base=DEFAULT_BASE):
         os.makedirs(os.path.dirname(target), exist_ok=True)
         card = social_cards.write_card(os.path.join(os.path.dirname(target), "card.png"), title, desc, kicker(d, page))
         with open(target, "w", encoding="utf-8", newline="\n") as f:
-            up = "../" * (d.count("/") + 1)
-            f.write(render(page, title, desc, base, card, prerender.body_html(page, sources[page], up, pages, exists)))
+            f.write(render(page, title, desc, base, card))
         written += 1
     return written
