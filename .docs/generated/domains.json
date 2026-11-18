@@ -311,6 +311,7 @@
       "cuda-101",
       "draining-a-gpu-node",
       "fake-gpus-in-kubernetes",
+      "glossary",
       "gpu-allocation-vs-utilization",
       "gpu-failure-prediction-overview",
       "gpu-pred-alert-to-drain",

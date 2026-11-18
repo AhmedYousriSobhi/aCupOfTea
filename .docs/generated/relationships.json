@@ -426,6 +426,12 @@
     ],
     "related_by": []
   },
+  "glossary": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [],
+    "related_by": []
+  },
   "gpu-allocation-vs-utilization": {
     "prerequisite_of": [
       "isolating-gpu-workloads"

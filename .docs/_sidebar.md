@@ -319,6 +319,8 @@
   * [Git](tips/version-control-git.md)
   * [Markdown](tips/markdown.md)
 * [**Journal**](journal/README.md)
+* [**References**](references/README.md)
+  * [Glossary](references/glossary.md)
 * **About this site**
   * [Repository Specification](SPEC.md)
   * [Contributing guide ↗](https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/.github/CONTRIBUTING.md)

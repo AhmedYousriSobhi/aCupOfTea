@@ -1072,6 +1072,27 @@
       "guide"
     ]
   },
+  "glossary": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "glossary",
+    "level": "",
+    "path": "references/glossary.md",
+    "reading_time_min": 3,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "draft",
+    "summary": "Short definitions of the acronyms used across the pages (GPU, MPI, NUMA, RDMA, QoS and more), each with a pointer to the page that explains it properly.",
+    "tags": [],
+    "title": "Glossary",
+    "type": "reference",
+    "types": [
+      "reference"
+    ]
+  },
   "gpu-allocation-vs-utilization": {
     "domains": [
       "devops",

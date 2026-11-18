@@ -130,6 +130,19 @@ async function run(browser, base, label, size, phone) {
     return bad;
   });
   c('accessibility scan: names, alt text, labels, unique ids, language, landmark', a11y.length === 0, a11y.slice(0, 5).join(' | '));
+  if (!phone) {
+    // glossary: the first use of a term links to its entry, with the meaning as the tooltip
+    await go('fields/schedulers/slurm-mixed-gpus/four-ways-to-mix-gpus', 3500);
+    const term = await page.evaluate(() => { const a = document.querySelector('.markdown-section a[href*="references/glossary"]'); return a ? { href: a.getAttribute('href'), title: a.getAttribute('title'), text: a.textContent } : null; });
+    c('a glossary term links to its entry with the meaning as tooltip', !!term && /glossary\?id=/.test(term.href) && !!term.title, JSON.stringify(term));
+    if (term) {
+      await page.click('.markdown-section a[href*="references/glossary"]');
+      await page.waitForTimeout(2500);
+      const g = await page.evaluate(() => ({ h1: (document.querySelector('.markdown-section h1') || {}).textContent, hash: location.hash, target: !!document.querySelector('.markdown-section h2[id]') }));
+      c('the glossary link opens the glossary at that term', g.h1 === 'Glossary' && /references\/glossary/.test(g.hash) && g.target, JSON.stringify(g));
+    }
+    await go('fields/deep-learning/concepts/convolution', 4000);
+  }
   c('long page has its images', conv.imgs >= 80, 'images: ' + conv.imgs);
   c('first image loads', conv.first);
   c('page footer has an edit link and a date', /Edit this page/.test(conv.footer) && /Last updated \d{4}-\d{2}-\d{2}/.test(conv.footer), conv.footer);

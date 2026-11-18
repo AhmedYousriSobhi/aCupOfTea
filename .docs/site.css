@@ -408,3 +408,6 @@ html.sp-lock{overflow:hidden}
 @media print { .markdown-section .offline-series { display: none; } }
 /* Pictures carry width and height (so the page does not jump); keep their shape when the column is narrower */
 .markdown-section img[height] { height: auto; }
+
+/* Glossary terms (added when the site is built): a dotted underline, so they read as terms, not as loud links */
+.markdown-section a[href*="references/glossary?id="] { border-bottom: 1px dotted currentColor; text-decoration: none; }
