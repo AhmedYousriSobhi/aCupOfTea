@@ -471,7 +471,8 @@ async function sharePages(browser, base) {
   // the two known, harmless console lines: the Google Fonts @import in Docsify's vue.css and docsify-pagination's eval probe
   page.on('console', (m) => { if (/Content.Security.Policy|Refused/i.test(m.text()) && !/fonts\.googleapis\.com|unsafe-eval/.test(m.text())) errors.push(m.text().slice(0, 120)); });
   await page.goto(base + '/');
-  await page.goto(base + '/tips/kaggle-tips/#some-section');
+  // the share page redirects while it loads; WebKit reports that as a cancelled load, so only wait for the response and let the redirect finish
+  await page.goto(base + '/tips/kaggle-tips/#some-section', { waitUntil: 'commit' }).catch((e) => { if (!/cancelled|detached/i.test(e.message)) throw e; });
   await page.waitForSelector('.markdown-section h1');
   await page.waitForTimeout(1500);
   const after = await page.evaluate(() => ({ path: location.pathname, hash: location.hash, h1s: document.querySelectorAll('.markdown-section h1').length,
