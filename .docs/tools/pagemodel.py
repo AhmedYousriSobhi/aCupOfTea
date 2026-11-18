@@ -31,13 +31,20 @@ def group_before_last_hyphen(h1):
 class Page:
     """A page read from `path` (repo-relative `rel` for messages)."""
 
-    def __init__(self, path, rel=None):
+    def __init__(self, path, rel=None, text=None):
         self.path = path
         self.rel = rel or path
-        with open(path, encoding="utf-8", errors="replace", newline="") as f:
-            self.text = f.read()
+        if text is None:
+            with open(path, encoding="utf-8", errors="replace", newline="") as f:
+                text = f.read()
+        self.text = text
         self.front, self.body = self._front_matter(self.text)
         self.h1 = self._first_h1(self.body)
+
+    @classmethod
+    def from_text(cls, rel, text):
+        """A page from text already read (the staging step keeps each page's original text)."""
+        return cls(rel, rel, text)
 
     @staticmethod
     def _front_matter(text):
