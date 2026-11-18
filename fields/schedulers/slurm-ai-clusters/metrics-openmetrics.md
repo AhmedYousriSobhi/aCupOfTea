@@ -6,7 +6,7 @@ order: 5
 summary: Slurm 25.11+ serves OpenMetrics from slurmctld - scraping it into VictoriaMetrics, idle CPUs fixed by DefMemPerCPU, MiB in _bytes metrics until 26.11, open access, and a tested alert.
 level: intermediate
 type: [concept, guide]
-domains: [systems-and-hpc]
+domains: [systems-and-hpc, schedulers]
 tags: [slurm, hpc, monitoring, victoriametrics]
 relations:
   prerequisites: [vm-single-node, vm-metricsql-vmalert]

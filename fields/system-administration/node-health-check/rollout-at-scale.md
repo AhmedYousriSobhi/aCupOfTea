@@ -6,7 +6,7 @@ order: 5
 summary: A dry-run, canary, enforce plan for deploying NHC or a new nhc.conf to hundreds of nodes, with a circuit breaker for bad pushes.
 level: intermediate
 type: guide
-domains: [systems-and-hpc]
+domains: [systems-and-hpc, system-administration]
 tags: [hpc, slurm]
 relations:
   prerequisites: [nhc-slurm-integration]

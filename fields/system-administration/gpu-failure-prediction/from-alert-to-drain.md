@@ -6,7 +6,7 @@ order: 4
 summary: The principles of safe automated response to GPU failure predictions - reversibility, drain semantics, blast radius, drain budgets, staged rollout and rollback.
 level: advanced
 type: concept
-domains: [systems-and-hpc]
+domains: [systems-and-hpc, system-administration]
 tags: [gpu, nvidia, hpc, slurm]
 relations:
   prerequisites: [gpu-pred-rules]

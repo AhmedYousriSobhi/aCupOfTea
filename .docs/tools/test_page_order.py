@@ -25,8 +25,10 @@ class Repo:
     def __init__(self, pages):
         self.root = tempfile.mkdtemp()
         os.makedirs(os.path.join(self.root, ".docs", "metadata"))
-        for f in ("gen_sidebar.sh",):
-            shutil.copy(os.path.join(DOCS, f), os.path.join(self.root, ".docs", f))
+        os.makedirs(os.path.join(self.root, ".docs", "tools"))
+        shutil.copy(os.path.join(DOCS, "gen_sidebar.sh"), os.path.join(self.root, ".docs", "gen_sidebar.sh"))
+        for f in ("gen_sidebar.py", "pagemodel.py", "common.py"):
+            shutil.copy(os.path.join(DOCS, "tools", f), os.path.join(self.root, ".docs", "tools", f))
         for f in ("schema.yaml", "taxonomy.yaml"):
             shutil.copy(os.path.join(DOCS, "metadata", f), os.path.join(self.root, ".docs", "metadata", f))
         os.makedirs(os.path.join(self.root, "series"))

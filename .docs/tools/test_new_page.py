@@ -12,6 +12,7 @@ import unittest
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import new_page  # noqa: E402
+import page_prompts  # noqa: E402
 
 SCRIPT = os.path.join(HERE, "new_page.py")
 
@@ -111,7 +112,7 @@ class Prompts(unittest.TestCase):
         it = iter(typed)
         out = io.StringIO()
         patches = [mock.patch("builtins.input", lambda prompt="": next(it)),
-                   mock.patch("sys.stdout", out), mock.patch.object(new_page, "complete_with", lambda o: None)]
+                   mock.patch("sys.stdout", out), mock.patch.object(page_prompts, "complete_with", lambda o: None)]
         return ask, patches
 
     def run_with(self, patches, fn):
@@ -168,7 +169,7 @@ class Prompts(unittest.TestCase):
             path = os.path.join(d, "taxonomy.yaml")
             with open(path, "w", encoding="utf-8") as fh:
                 fh.write("types:\n  note: n\n\ndomains:\n  a:\n    label: A\n    description: x.\n    related: [b]\n  b:\n    label: B\n    description: y.\n\ntags:\n  t:\n    label: T\n")
-            old, new_page.TAXONOMY = new_page.TAXONOMY, path
+            old, new_page.sc.TAXONOMY = new_page.sc.TAXONOMY, path
             try:
                 new_page.add_types({"tutorial": "A lesson."})
                 new_page.add_domains({"c": ("C", "z.")}, ["a", "c"])
@@ -177,20 +178,20 @@ class Prompts(unittest.TestCase):
                 rel = new_page.related_map()
                 self.assertEqual((rel["a"], rel["c"], rel["b"]), ({"b", "c"}, {"a"}, {"a"}))     # read both ways
             finally:
-                new_page.TAXONOMY = old
+                new_page.sc.TAXONOMY = old
 
     def test_add_domains_writes_the_taxonomy(self):
         with tempfile.TemporaryDirectory() as d:
             path = os.path.join(d, "taxonomy.yaml")
             with open(path, "w", encoding="utf-8") as fh:
                 fh.write("domains:\n  a:\n    label: A\n    description: x.\n\ntags:\n  t:\n    label: T\n")
-            old, new_page.TAXONOMY = new_page.TAXONOMY, path
+            old, new_page.sc.TAXONOMY = new_page.sc.TAXONOMY, path
             try:
                 new_page.add_domains({"b": ("B", "y.")})
                 self.assertEqual(new_page.load_section("domains"), ["a", "b"])
                 self.assertEqual(new_page.load_section("tags"), ["t"])
             finally:
-                new_page.TAXONOMY = old
+                new_page.sc.TAXONOMY = old
 
 
 class Adopt(unittest.TestCase):
@@ -212,7 +213,7 @@ class Adopt(unittest.TestCase):
                     "--domains", "software-engineering", "--tags", "", "--prerequisites", "",
                     "--related", "", "--summary", "A short one.", *extra]
             out, code = io.StringIO(), 0
-            with mock.patch.object(new_page, "ROOT", root), mock.patch.object(new_page, "regenerate_navigation", lambda: None), \
+            with mock.patch.object(new_page.sc, "ROOT", root), mock.patch.object(new_page, "regenerate_navigation", lambda: None), \
                     mock.patch("sys.argv", argv), contextlib.redirect_stdout(out):
                 try:
                     new_page.main()
@@ -283,12 +284,12 @@ class Guards(unittest.TestCase):
         import io
         from unittest import mock
         out, code = io.StringIO(), 0
-        patches = [mock.patch.object(new_page, "ROOT", root), mock.patch.object(new_page, "regenerate_navigation", lambda: None),
+        patches = [mock.patch.object(new_page.sc, "ROOT", root), mock.patch.object(new_page, "regenerate_navigation", lambda: None),
                    mock.patch("sys.argv", ["new_page.py", *argv]), contextlib.redirect_stdout(out)]
         if typed is not None:
             it = iter(typed)
             patches += [mock.patch("builtins.input", lambda prompt="": next(it)), mock.patch.object(new_page.sys.stdin, "isatty", lambda: True),
-                        mock.patch.object(new_page, "complete_with", lambda o: None)]
+                        mock.patch.object(page_prompts, "complete_with", lambda o: None)]
         with contextlib.ExitStack() as stack:
             for p in patches:
                 stack.enter_context(p)
@@ -333,11 +334,11 @@ class Guards(unittest.TestCase):
             os.makedirs(os.path.join(root, "area", "sub"))
             with open(os.path.join(root, "area", "README.md"), "w", encoding="utf-8") as fh:
                 fh.write("# Area\n\n| Directory | Description |\n|---|---|\n| [other](/area/other/README.md) | O |\n")
-            old, new_page.ROOT = new_page.ROOT, root
+            old, new_page.sc.ROOT = new_page.sc.ROOT, root
             try:
                 msgs = new_page.create_folder_readme("area/sub", "area/sub/page.md", "A Page", "About it.")
             finally:
-                new_page.ROOT = old
+                new_page.sc.ROOT = old
             with open(os.path.join(root, "area", "sub", "README.md"), encoding="utf-8") as fh:
                 readme = fh.read()
             with open(os.path.join(root, "area", "README.md"), encoding="utf-8") as fh:
@@ -408,7 +409,7 @@ class Check(unittest.TestCase):
         with tempfile.TemporaryDirectory() as root:
             with open(os.path.join(root, "x.md"), "w", encoding="utf-8") as fh:
                 fh.write(page)
-            old, new_page.ROOT = new_page.ROOT, root
+            old, new_page.sc.ROOT = new_page.sc.ROOT, root
             try:
                 import contextlib
                 import io
@@ -416,7 +417,7 @@ class Check(unittest.TestCase):
                 with contextlib.redirect_stdout(out):
                     todos = new_page.check_page("x.md")
             finally:
-                new_page.ROOT = old
+                new_page.sc.ROOT = old
         text = out.getvalue()
         self.assertIn("Reading time: 3 min", text)   # 450+ words, code not counted
         self.assertIn("outline note", text)
@@ -432,11 +433,11 @@ class IndexLink(unittest.TestCase):
             path = os.path.join(root, "f", "README.md")
             with open(path, "w", encoding="utf-8") as fh:
                 fh.write(readme)
-            old, new_page.ROOT = new_page.ROOT, root
+            old, new_page.sc.ROOT = new_page.sc.ROOT, root
             try:
                 msg = new_page.link_in_readme("f", "f/beta.md", "Beta Page", "About beta.")
             finally:
-                new_page.ROOT = old
+                new_page.sc.ROOT = old
             with open(path, encoding="utf-8") as fh:
                 return msg, fh.read()
 

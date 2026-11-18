@@ -6,7 +6,7 @@ order: 5
 summary: How NVIDIA's 2:4 structured sparsity works, what it really saves (44% of weight bytes, not 50%), and why its doubled TFLOPS help prefill while decode only feels the byte savings.
 level: intermediate
 type: concept
-domains: [generative-ai, systems-and-hpc]
+domains: [generative-ai, systems-and-hpc, benchmarks-and-performance]
 tags: [gpu, llm, nvidia, transformers]
 relations:
   prerequisites: [llm-perf-optimizations]

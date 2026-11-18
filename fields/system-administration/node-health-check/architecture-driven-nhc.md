@@ -6,7 +6,7 @@ order: 9
 summary: Describe your cluster's architecture once in YAML, generate every NHC config from it, cross-check it against slurm.conf, and prove the result with real NHC before it ships.
 level: advanced
 type: [guide, project]
-domains: [systems-and-hpc]
+domains: [systems-and-hpc, system-administration]
 tags: [hpc, slurm, gpu]
 relations:
   prerequisites: [nhc-writing-nhc-conf, nhc-custom-checks, nhc-rollout-at-scale]

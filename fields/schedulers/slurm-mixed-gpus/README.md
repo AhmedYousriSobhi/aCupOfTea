@@ -5,7 +5,7 @@ sidebar_label: Overview
 summary: Slurm can allocate H100s and A100s in one job - four different ways. A three-part series on what each actually gives you, why mixed training disappoints, and where it shines.
 level: intermediate
 type: concept
-domains: [systems-and-hpc]
+domains: [systems-and-hpc, schedulers]
 tags: [slurm, gpu, hpc, nvidia]
 ---
 

@@ -6,7 +6,7 @@ sidebar_label: "8. On Kubernetes"
 summary: How an MPIJob turns pods into an MPI cluster - launcher, workers, headless Service, SSH keys, hostfile - and which three numbers keep the binding trap away.
 level: intermediate
 type: concept
-domains: [systems-and-hpc, devops]
+domains: [systems-and-hpc, devops, system-administration]
 tags: [kubernetes, mpi, openmp, hpc]
 relations:
   prerequisites: [openmp-mpi-under-slurm]

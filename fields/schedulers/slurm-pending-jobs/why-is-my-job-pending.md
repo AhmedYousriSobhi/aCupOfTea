@@ -6,7 +6,7 @@ order: 1
 summary: What Slurm's common pending reasons mean, which ones fix themselves and which never will, what users can fix without an admin, and a small triage script tested against each reason.
 level: beginner
 type: [concept, guide]
-domains: [systems-and-hpc]
+domains: [systems-and-hpc, schedulers]
 tags: [slurm, hpc]
 relations:
   related: [slurm-backfill-tuning, slurm-accounting-multi-tenancy]

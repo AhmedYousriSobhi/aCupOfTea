@@ -52,6 +52,7 @@
   },
   "ai-storage-and-fabric-overview": {
     "domains": [
+      "system-administration",
       "systems-and-hpc"
     ],
     "id": "ai-storage-and-fabric-overview",
@@ -78,6 +79,7 @@
   },
   "ai-storage-parallel-filesystems": {
     "domains": [
+      "system-administration",
       "systems-and-hpc"
     ],
     "id": "ai-storage-parallel-filesystems",
@@ -104,6 +106,7 @@
   },
   "ai-storage-rdma-gpudirect": {
     "domains": [
+      "system-administration",
       "systems-and-hpc"
     ],
     "id": "ai-storage-rdma-gpudirect",
@@ -367,7 +370,7 @@
   "broken-pods-rogues-gallery": {
     "domains": [
       "devops",
-      "kubernates",
+      "kubernetes",
       "systems-and-hpc"
     ],
     "id": "broken-pods-rogues-gallery",
@@ -401,7 +404,7 @@
   "build-a-two-node-k3s-lab": {
     "domains": [
       "devops",
-      "kubernates",
+      "kubernetes",
       "systems-and-hpc"
     ],
     "id": "build-a-two-node-k3s-lab",
@@ -1037,7 +1040,7 @@
   "fake-gpus-in-kubernetes": {
     "domains": [
       "devops",
-      "kubernates",
+      "kubernetes",
       "systems-and-hpc"
     ],
     "id": "fake-gpus-in-kubernetes",
@@ -1069,10 +1072,31 @@
       "guide"
     ]
   },
+  "glossary": {
+    "domains": [
+      "systems-and-hpc"
+    ],
+    "id": "glossary",
+    "level": "",
+    "path": "references/glossary.md",
+    "reading_time_min": 3,
+    "relations": {
+      "prerequisites": [],
+      "related": []
+    },
+    "status": "draft",
+    "summary": "Short definitions of the acronyms used across the pages (GPU, MPI, NUMA, RDMA, QoS and more), each with a pointer to the page that explains it properly.",
+    "tags": [],
+    "title": "Glossary",
+    "type": "reference",
+    "types": [
+      "reference"
+    ]
+  },
   "gpu-allocation-vs-utilization": {
     "domains": [
       "devops",
-      "kubernates",
+      "kubernetes",
       "systems-and-hpc"
     ],
     "id": "gpu-allocation-vs-utilization",
@@ -1105,6 +1129,7 @@
   },
   "gpu-failure-prediction-overview": {
     "domains": [
+      "system-administration",
       "systems-and-hpc"
     ],
     "id": "gpu-failure-prediction-overview",
@@ -1133,6 +1158,7 @@
   },
   "gpu-pred-alert-to-drain": {
     "domains": [
+      "system-administration",
       "systems-and-hpc"
     ],
     "id": "gpu-pred-alert-to-drain",
@@ -1164,6 +1190,7 @@
   },
   "gpu-pred-backtesting": {
     "domains": [
+      "system-administration",
       "systems-and-hpc"
     ],
     "id": "gpu-pred-backtesting",
@@ -1192,6 +1219,7 @@
   },
   "gpu-pred-collecting-signals": {
     "domains": [
+      "system-administration",
       "systems-and-hpc"
     ],
     "id": "gpu-pred-collecting-signals",
@@ -1220,6 +1248,7 @@
   },
   "gpu-pred-rules": {
     "domains": [
+      "system-administration",
       "systems-and-hpc"
     ],
     "id": "gpu-pred-rules",
@@ -1248,6 +1277,7 @@
   },
   "gpu-pred-runbook": {
     "domains": [
+      "system-administration",
       "systems-and-hpc"
     ],
     "id": "gpu-pred-runbook",
@@ -1282,6 +1312,7 @@
   },
   "gpu-pred-what-fails": {
     "domains": [
+      "system-administration",
       "systems-and-hpc"
     ],
     "id": "gpu-pred-what-fails",
@@ -1597,6 +1628,7 @@
   },
   "linux-mem-cgroup-v2": {
     "domains": [
+      "system-administration",
       "systems-and-hpc"
     ],
     "id": "linux-mem-cgroup-v2",
@@ -1624,6 +1656,7 @@
   },
   "linux-mem-mlockall": {
     "domains": [
+      "system-administration",
       "systems-and-hpc"
     ],
     "id": "linux-mem-mlockall",
@@ -1652,6 +1685,7 @@
   },
   "linux-mem-oom-killer": {
     "domains": [
+      "system-administration",
       "systems-and-hpc"
     ],
     "id": "linux-mem-oom-killer",
@@ -1679,6 +1713,7 @@
   },
   "linux-mem-psi": {
     "domains": [
+      "system-administration",
       "systems-and-hpc"
     ],
     "id": "linux-mem-psi",
@@ -1705,6 +1740,7 @@
   },
   "linux-mem-reclaim": {
     "domains": [
+      "system-administration",
       "systems-and-hpc"
     ],
     "id": "linux-mem-reclaim",
@@ -1729,6 +1765,7 @@
   },
   "linux-mem-rescuer-checklist": {
     "domains": [
+      "system-administration",
       "systems-and-hpc"
     ],
     "id": "linux-mem-rescuer-checklist",
@@ -1783,6 +1820,7 @@
   },
   "linux-memory-pressure-overview": {
     "domains": [
+      "system-administration",
       "systems-and-hpc"
     ],
     "id": "linux-memory-pressure-overview",
@@ -1804,6 +1842,7 @@
   },
   "llm-inference-performance-overview": {
     "domains": [
+      "benchmarks-and-performance",
       "generative-ai",
       "systems-and-hpc"
     ],
@@ -1831,6 +1870,7 @@
   },
   "llm-perf-compute-vs-memory-bound": {
     "domains": [
+      "benchmarks-and-performance",
       "generative-ai",
       "systems-and-hpc"
     ],
@@ -1857,6 +1897,7 @@
   },
   "llm-perf-inference-roofline": {
     "domains": [
+      "benchmarks-and-performance",
       "generative-ai",
       "systems-and-hpc"
     ],
@@ -1886,6 +1927,7 @@
   },
   "llm-perf-optimizations": {
     "domains": [
+      "benchmarks-and-performance",
       "generative-ai",
       "systems-and-hpc"
     ],
@@ -1916,6 +1958,7 @@
   },
   "llm-perf-sizing-70b": {
     "domains": [
+      "benchmarks-and-performance",
       "generative-ai",
       "systems-and-hpc"
     ],
@@ -1946,6 +1989,7 @@
   },
   "llm-perf-sparsity-vs-quantization": {
     "domains": [
+      "benchmarks-and-performance",
       "generative-ai",
       "systems-and-hpc"
     ],
@@ -1976,6 +2020,7 @@
   },
   "llm-perf-structured-sparsity": {
     "domains": [
+      "benchmarks-and-performance",
       "generative-ai",
       "systems-and-hpc"
     ],
@@ -2033,6 +2078,7 @@
   },
   "nhc-architecture-driven": {
     "domains": [
+      "system-administration",
       "systems-and-hpc"
     ],
     "id": "nhc-architecture-driven",
@@ -2064,6 +2110,7 @@
   },
   "nhc-auto-remediation": {
     "domains": [
+      "system-administration",
       "systems-and-hpc"
     ],
     "id": "nhc-auto-remediation",
@@ -2092,6 +2139,7 @@
   },
   "nhc-build-and-install": {
     "domains": [
+      "system-administration",
       "systems-and-hpc"
     ],
     "id": "nhc-build-and-install",
@@ -2118,6 +2166,7 @@
   },
   "nhc-case-study": {
     "domains": [
+      "system-administration",
       "systems-and-hpc"
     ],
     "id": "nhc-case-study",
@@ -2148,6 +2197,7 @@
   },
   "nhc-cheat-sheet": {
     "domains": [
+      "system-administration",
       "systems-and-hpc"
     ],
     "id": "nhc-cheat-sheet",
@@ -2176,6 +2226,7 @@
   },
   "nhc-custom-checks": {
     "domains": [
+      "system-administration",
       "systems-and-hpc"
     ],
     "id": "nhc-custom-checks",
@@ -2204,6 +2255,7 @@
   },
   "nhc-rollout-at-scale": {
     "domains": [
+      "system-administration",
       "systems-and-hpc"
     ],
     "id": "nhc-rollout-at-scale",
@@ -2231,6 +2283,7 @@
   },
   "nhc-slurm-integration": {
     "domains": [
+      "system-administration",
       "systems-and-hpc"
     ],
     "id": "nhc-slurm-integration",
@@ -2258,6 +2311,7 @@
   },
   "nhc-troubleshooting": {
     "domains": [
+      "system-administration",
       "systems-and-hpc"
     ],
     "id": "nhc-troubleshooting",
@@ -2286,6 +2340,7 @@
   },
   "nhc-why-node-health-check": {
     "domains": [
+      "system-administration",
       "systems-and-hpc"
     ],
     "id": "nhc-why-node-health-check",
@@ -2313,6 +2368,7 @@
   },
   "nhc-writing-nhc-conf": {
     "domains": [
+      "system-administration",
       "systems-and-hpc"
     ],
     "id": "nhc-writing-nhc-conf",
@@ -2341,7 +2397,7 @@
   "nvidia-cluster-readiness-engine": {
     "domains": [
       "devops",
-      "kubernates",
+      "kubernetes",
       "systems-and-hpc"
     ],
     "id": "nvidia-cluster-readiness-engine",
@@ -2433,6 +2489,7 @@
   "openmp-and-open-mpi-overview": {
     "domains": [
       "software-engineering",
+      "system-administration",
       "systems-and-hpc"
     ],
     "id": "openmp-and-open-mpi-overview",
@@ -2455,6 +2512,7 @@
   "openmp-mpi-hybrid-binding-trap": {
     "domains": [
       "software-engineering",
+      "system-administration",
       "systems-and-hpc"
     ],
     "id": "openmp-mpi-hybrid-binding-trap",
@@ -2487,6 +2545,7 @@
   "openmp-mpi-on-kubernetes": {
     "domains": [
       "devops",
+      "system-administration",
       "systems-and-hpc"
     ],
     "id": "openmp-mpi-on-kubernetes",
@@ -2520,6 +2579,7 @@
   "openmp-mpi-spotting-the-code": {
     "domains": [
       "software-engineering",
+      "system-administration",
       "systems-and-hpc"
     ],
     "id": "openmp-mpi-spotting-the-code",
@@ -2549,6 +2609,7 @@
   "openmp-mpi-threads-and-ranks": {
     "domains": [
       "software-engineering",
+      "system-administration",
       "systems-and-hpc"
     ],
     "id": "openmp-mpi-threads-and-ranks",
@@ -2577,6 +2638,7 @@
   },
   "openmp-mpi-under-slurm": {
     "domains": [
+      "system-administration",
       "systems-and-hpc"
     ],
     "id": "openmp-mpi-under-slurm",
@@ -2610,6 +2672,7 @@
   "openmp-mpi-where-they-are-going": {
     "domains": [
       "software-engineering",
+      "system-administration",
       "systems-and-hpc"
     ],
     "id": "openmp-mpi-where-they-are-going",
@@ -2639,6 +2702,7 @@
   "openmp-mpi-where-they-came-from": {
     "domains": [
       "software-engineering",
+      "system-administration",
       "systems-and-hpc"
     ],
     "id": "openmp-mpi-where-they-came-from",
@@ -2668,6 +2732,7 @@
   "openmp-open-mpi-name-mixup": {
     "domains": [
       "software-engineering",
+      "system-administration",
       "systems-and-hpc"
     ],
     "id": "openmp-open-mpi-name-mixup",
@@ -3085,6 +3150,7 @@
   },
   "slurm-accounting-multi-tenancy": {
     "domains": [
+      "schedulers",
       "systems-and-hpc"
     ],
     "id": "slurm-accounting-multi-tenancy",
@@ -3173,6 +3239,7 @@
   },
   "slurm-containers-pyxis": {
     "domains": [
+      "schedulers",
       "systems-and-hpc"
     ],
     "id": "slurm-containers-pyxis",
@@ -3206,6 +3273,7 @@
   "slurm-distributed-training": {
     "domains": [
       "deep-learning",
+      "schedulers",
       "systems-and-hpc"
     ],
     "id": "slurm-distributed-training",
@@ -3268,6 +3336,7 @@
   },
   "slurm-gpu-health-checks": {
     "domains": [
+      "schedulers",
       "systems-and-hpc"
     ],
     "id": "slurm-gpu-health-checks",
@@ -3300,6 +3369,7 @@
   },
   "slurm-intro": {
     "domains": [
+      "schedulers",
       "systems-and-hpc"
     ],
     "id": "slurm-intro",
@@ -3419,6 +3489,7 @@
   },
   "slurm-lab-cheatsheet": {
     "domains": [
+      "schedulers",
       "systems-and-hpc"
     ],
     "id": "slurm-lab-cheatsheet",
@@ -3454,6 +3525,7 @@
   },
   "slurm-mixed-gpus-four-ways": {
     "domains": [
+      "schedulers",
       "systems-and-hpc"
     ],
     "id": "slurm-mixed-gpus-four-ways",
@@ -3480,6 +3552,7 @@
   },
   "slurm-mixed-gpus-overview": {
     "domains": [
+      "schedulers",
       "systems-and-hpc"
     ],
     "id": "slurm-mixed-gpus-overview",
@@ -3506,6 +3579,7 @@
   },
   "slurm-mixed-gpus-where-shine": {
     "domains": [
+      "schedulers",
       "systems-and-hpc"
     ],
     "id": "slurm-mixed-gpus-where-shine",
@@ -3535,6 +3609,7 @@
   },
   "slurm-mixed-gpus-why-disappoints": {
     "domains": [
+      "schedulers",
       "systems-and-hpc"
     ],
     "id": "slurm-mixed-gpus-why-disappoints",
@@ -3564,6 +3639,7 @@
   },
   "slurm-openmetrics": {
     "domains": [
+      "schedulers",
       "systems-and-hpc"
     ],
     "id": "slurm-openmetrics",
@@ -3627,6 +3703,7 @@
   },
   "slurm-pending-reasons": {
     "domains": [
+      "schedulers",
       "systems-and-hpc"
     ],
     "id": "slurm-pending-reasons",
@@ -3689,6 +3766,7 @@
   },
   "slurm-priority-multifactor": {
     "domains": [
+      "schedulers",
       "systems-and-hpc"
     ],
     "id": "slurm-priority-multifactor",
@@ -3719,6 +3797,7 @@
   },
   "slurm-qos-limits": {
     "domains": [
+      "schedulers",
       "systems-and-hpc"
     ],
     "id": "slurm-qos-limits",
@@ -3782,6 +3861,7 @@
   },
   "slurm-reboot-order": {
     "domains": [
+      "schedulers",
       "system-design",
       "systems-and-hpc"
     ],
@@ -4154,6 +4234,7 @@
   },
   "slurm-topology-placement": {
     "domains": [
+      "schedulers",
       "systems-and-hpc"
     ],
     "id": "slurm-topology-placement",

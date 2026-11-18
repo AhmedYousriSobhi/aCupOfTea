@@ -6,7 +6,7 @@ sidebar_label: "6. Where they're going"
 summary: OpenMP 6.0 and MPI 5.0 are out. Do you have to rewrite everything? Two Monday tickets, the new GPU annex and the standard delivery box, and the ideas that will outlive every version number.
 level: beginner
 type: concept
-domains: [systems-and-hpc, software-engineering]
+domains: [systems-and-hpc, software-engineering, system-administration]
 tags: [openmp, mpi, hpc]
 relations:
   prerequisites: [openmp-mpi-where-they-came-from]

@@ -6,7 +6,7 @@ order: 10
 summary: A client asks for an NHC for their DGX H100 and AMD EPYC Slurm cluster; the discovery questions, first proposal, validation against vendor specs, and the final answer.
 level: advanced
 type: [guide, project]
-domains: [systems-and-hpc]
+domains: [systems-and-hpc, system-administration]
 tags: [hpc, slurm, gpu, nvidia]
 relations:
   prerequisites: [nhc-architecture-driven]

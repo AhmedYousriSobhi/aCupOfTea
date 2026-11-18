@@ -6,7 +6,7 @@ order: 2
 summary: How Slurm's multifactor priority is computed from age, fairshare and QOS weights, why every weight defaults to zero, how Fair Tree turns usage into a rank, and reading sprio and sshare.
 level: intermediate
 type: [concept, guide]
-domains: [systems-and-hpc]
+domains: [systems-and-hpc, schedulers]
 tags: [slurm, hpc]
 relations:
   prerequisites: [slurm-pending-reasons]

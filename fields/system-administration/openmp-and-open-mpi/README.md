@@ -5,7 +5,7 @@ sidebar_label: Overview
 summary: An eight-part series that untangles OpenMP, MPI and Open MPI - what each is, where they came from, how to read their code, how to combine them and how Slurm and Kubernetes run them.
 level: beginner
 type: concept
-domains: [systems-and-hpc, software-engineering]
+domains: [systems-and-hpc, software-engineering, system-administration]
 ---
 
 # OpenMP and Open MPI - Overview

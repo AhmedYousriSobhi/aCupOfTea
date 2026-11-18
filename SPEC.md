@@ -107,7 +107,7 @@ CLAUDE.md
 LICENSE             — CC BY 4.0, for writing and diagrams
 LICENSE-CODE        — MIT, for code (scripts, notebooks, .docs/ tooling)
 .gitignore
-index.html           — Docsify entry point: page shell, styles, Content-Security-Policy; settings in .docs/config.js
+index.html           — Docsify entry point: page shell and Content-Security-Policy; styles in .docs/site.css, settings in .docs/config.js
 .docs/               — site infrastructure:
                          _sidebar.md / _navbar.md (generated) + gen_sidebar.sh / gen_navbar.sh
                          search.js (site search)
@@ -130,7 +130,7 @@ index.html           — Docsify entry point: page shell, styles, Content-Securi
                          icons/ (favicon.svg, PNG sizes, site.webmanifest)
                          tests/smoke.js (browser smoke test of the staged site, run in Chromium and WebKit)
                          metadata/ (schema.yaml, taxonomy.yaml)
-                         tools/ (cupctl (one `cupctl <verb> <action>` entry point to all of these), check_all, validate, generate_index, stage_site, code_pages, build_search_index, optimize_images, share_pages, check_links, update_recent, check_pins, new_page, page_doctor, page_gui (+ page_gui.html), and the test_*.py files that CI runs)
+                         tools/ (cupctl (one `cupctl <verb> <action>` entry point to all of these), check_all, pagemodel (one page parser), gen_sidebar and gen_navbar (the menu generators behind gen_sidebar.sh / gen_navbar.sh), validate, generate_index, stage_site, code_pages, build_search_index, optimize_images, share_pages, check_links, update_recent, check_pins, new_page, page_doctor, page_gui (+ page_gui.html), and the test_*.py files that CI runs)
                          generated/ (indexes and Explore pages, generated)
                          hooks/pre-commit (regenerates sidebar, navbar and indexes on commit; opt in with core.hooksPath)
 .github/             — workflows (validate metadata, smoke test, pin check; deploy a staged copy to gh-pages), dependabot.yml (action updates) and CONTRIBUTING.md
@@ -162,7 +162,7 @@ Two navigation layers exist and both must stay accurate:
 
 Folder `README.md` indexes SHOULD list their pages in a `| File | Description |` table under `## Contents`, the format `new_page.py` updates automatically (§27). Converging the remaining list-style indexes is tracked in issue #77.
 
-**Search** (`.docs/search.js`) indexes the pages listed in the generated sidebar, so any page reachable from the sidebar is searchable with no extra step. On the deployed site the text comes from one prebuilt file, `.docs/search-index.json`, which `stage_site.py` writes into the published copy (never committed); a local preview has no such file, so the search reads every page instead and gives the same results.
+**Search** (`.docs/search.js`) is an overlay that indexes the pages listed in the generated sidebar, so any page reachable from the sidebar is searchable with no extra step. On the deployed site the data comes from two prebuilt files that `stage_site.py` writes into the published copy (never committed): `.docs/index-titles.json` (one small entry per page, with type, level, domains and tags for the filters) and `.docs/index-body.json` (section text and fenced code, loaded on the first search for text). A local preview builds them once with `python3 .docs/tools/build_search_index.py --local` (git-ignored); without them the search says the index is not built.
 
 The sidebar governs what's reachable on the site; the folder `README.md` governs what's understandable when browsing the raw repo. Keep README indexes in sync with the folder contents.
 
@@ -244,10 +244,10 @@ Content type, location and navigation are unchanged; metadata is an **overlay** 
 - **Reader aids:** optional `summary` (one line, max 200 chars) and `level` (beginner, intermediate, advanced) are authored; reading time is computed. They drive the Explore lists and a generated **Start here** page (learning paths from prerequisite chains, quick reads, beginner picks). Prerequisites must be acyclic.
 - **Vocabulary:** `type` (one value, or a list of at most two with the main one first) ∈ the kinds defined in `taxonomy.yaml` (concept, guide, reference, note, problem, project, experiment to start with; a new kind is added there with a one-line definition); `status` ∈ draft, stable, deprecated; relation types are exactly `related` and `prerequisites`; domains and tags are defined in `.docs/metadata/taxonomy.yaml`. A tag needs 2+ pages or must name a concrete technology, and a page carries at most 5 tags. Domain overlap rules (deep-learning vs machine-learning, generative-ai with natural-language-processing) are in `CLAUDE.md` §21.
 - **Location:** schema, taxonomy, tools and generated data live under `.docs/` (served by GitHub Pages), so the root allowlist (§13) is unchanged.
-- **Generated, deterministic:** `.docs/generated/` holds `objects.json`, `domains.json`, `tags.json`, `relationships.json` (with reverse links), `related.json` and the Explore pages. The sidebar gains an additive **Explore** section (Start here, Domains, Tags); the folder tree is untouched.
+- **Generated, deterministic:** `.docs/generated/` holds `objects.json`, `domains.json`, `tags.json`, `relationships.json` (with reverse links), `paths.json` (place of each page in its learning path), `related.json` and the Explore pages. The sidebar gains an additive **Explore** section (Start here, Domains, Tags); the folder tree is untouched.
 - **Submodules** are never written into and are skipped by the tools; relations may not target their content.
 - **Link previews:** the staged copy also holds a share page per content page at its folder address (title and summary as Open Graph tags, then a redirect to the `#/` page), so a shared link previews that page; `summary` in front matter feeds the description, else the first paragraph is used.
-- **Deployment:** the published site is a staging copy with front matter stripped and a "Read first / See also / Read next" strip under the title; repository sources are never rewritten.
+- **Deployment:** the published site is a staging copy with front matter stripped and a page header (breadcrumb, meta line, tag chips, a "Read first / Read next" strip) and "See also" at the end; repository sources are never rewritten.
 - **Reading order:** optional `order` (whole number from 1 up, unique within a folder) is a page's position in its folder: it drives the generated sidebar, the Previous/Next buttons, the "Read next" strip and Start here paths. A prerequisite in the same folder should have a smaller number.
 - **Partial front matter, `sidebar_label` and `sidebar_group`:** every field is optional (defaults: title = first H1, type = note, status = stable); `id` only for pages in relations. `sidebar_label` overrides a page's sidebar label without editing its heading; `sidebar_group` (folder `README.md` only) overrides the folder's group name. Labels must be unique within a folder and groups among sibling folders. A page with only these fields is not indexed and gets no domain.
 

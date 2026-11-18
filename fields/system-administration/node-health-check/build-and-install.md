@@ -6,7 +6,7 @@ order: 2
 summary: Get NHC onto your nodes from a release RPM, the release tarball or the Git tree, run its unit tests and know where every file lands.
 level: beginner
 type: guide
-domains: [systems-and-hpc]
+domains: [systems-and-hpc, system-administration]
 tags: [hpc]
 relations:
   prerequisites: [nhc-why-node-health-check]

@@ -11,11 +11,11 @@ Learning from data, general ML theory and practice.
 - [Customer Segmentation](/problems/customer-segmentation.md) — What customer segmentation is, with the key points, aspects and concepts to consider when you split customers into groups. *(6 min)*  
   [`clustering`](/.docs/generated/explore/tags/clustering.md)
 - [Geometric Transforms and Interpolation](/fields/digital-image-processing/geometric-transforms-and-interpolation.md) — Moving the whole map - affine transforms in homogeneous coordinates, why you must map backwards, and nearest, bilinear and bicubic interpolation with a bilinear example worked by hand. *(intermediate · 7 min)*
-- [Principal Component Analysis (PCA)](/fields/tabular-data/data-feature-engineering/pca.md) — When to use PCA, how to choose the number of components, how to read explained variance, and how PCA compares with kernel PCA. *(14 min)*
+- [Principal Component Analysis (PCA)](/fields/tabular-data/data-feature-engineering/pca.md) — When to use PCA, how to choose the number of components, how to read explained variance, and how PCA compares with kernel PCA. *(14 min · long read)*
 - [Regression Imputing](/fields/tabular-data/data-processing/handling-missing-data/regression-imputing.md) — How to fill missing values by predicting them with a regression model built on the other features. *(3 min)*
 - [Reinforcement Learning Basics](/fields/reinforcement-learning/concepts-in-reinforcement-learning/basics.md) — Reinforcement learning basics: how an agent learns by trial and error, its components, policies, exploration vs exploitation, Markov decision processes and early algorithms. *(8 min)*
 - [Time Series Analysis](/fields/tabular-data/concept-in-time-series/timeseriesfield.md) — A step-by-step learning path for time series analysis, from the basics through data preparation, analysis techniques and forecasting to advanced techniques and practical projects. *(7 min)*
-- [Unsupervised Learning](/fields/tabular-data/concept-in-machine-learning/ml-unsupervised.md) — Unsupervised learning notes on clustering (K-means, picking an algorithm and the number of clusters) and dimensionality reduction such as PCA, plus the curse of dimensionality. *(22 min)*  
+- [Unsupervised Learning](/fields/tabular-data/concept-in-machine-learning/ml-unsupervised.md) — Unsupervised learning notes on clustering (K-means, picking an algorithm and the number of clusters) and dimensionality reduction such as PCA, plus the curse of dimensionality. *(22 min · long read)*  
   [`clustering`](/.docs/generated/explore/tags/clustering.md)
 - [Used Cars Retailer Company](/business/used-cars-retailer.md) — The KPIs a used-car buying and selling company should target, how to calculate each, and the projects that relate to them. *(7 min)*
 

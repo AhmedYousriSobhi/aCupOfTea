@@ -6,7 +6,7 @@ order: 2
 summary: Why 8 H100s plus 8 A100s train like 16 A100s, which H100 features the A100s switch off, and what co-scheduling a heterogeneous job costs you in the queue.
 level: intermediate
 type: concept
-domains: [systems-and-hpc]
+domains: [systems-and-hpc, schedulers]
 tags: [slurm, gpu, hpc, nvidia]
 relations:
   prerequisites: [slurm-mixed-gpus-four-ways]

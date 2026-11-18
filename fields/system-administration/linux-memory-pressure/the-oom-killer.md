@@ -6,7 +6,7 @@ sidebar_label: "3. The OOM killer"
 summary: How the kernel decides when it is out of memory and whom to kill, how oom_score_adj shields or sacrifices a process, and why userspace killers like systemd-oomd act earlier than the kernel.
 level: intermediate
 type: concept
-domains: [systems-and-hpc]
+domains: [systems-and-hpc, system-administration]
 relations:
   prerequisites: [linux-mem-reclaim]
   related: [linux-mem-psi, linux-mem-cgroup-v2]

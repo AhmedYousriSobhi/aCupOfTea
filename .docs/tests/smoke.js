@@ -22,6 +22,7 @@ const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/cs
   '.md': 'text/markdown; charset=utf-8', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg',
   '.gif': 'image/gif', '.svg': 'image/svg+xml', '.webp': 'image/webp' };
 
+const WEIGHT_BUDGET_KB = 900;
 let serverDown = false; // the offline check also stops the server, so nothing can come from the network
 const server = http.createServer((req, res) => {
   if (serverDown) return req.socket.destroy();
@@ -55,6 +56,13 @@ async function open(browser, size, phone) {
     document.addEventListener('securitypolicyviolation', (e) => window.__csp.push(e.violatedDirective + ' ' + (e.blockedURI || 'inline') + ' at ' + (e.sourceFile || '').split('/').pop() + ':' + e.lineNumber + ' on ' + location.hash));
   });
   page.libs = [];
+  page.bytes = 0; page.imgBytes = 0; page.biggestImg = [0, '']; // body bytes (uncompressed) fetched so far
+  page.on('response', async (r) => {
+    try {
+      const n = (await r.body()).length;
+      if ((r.headers()['content-type'] || '').startsWith('image/')) { page.imgBytes += n; if (n > page.biggestImg[0]) page.biggestImg = [n, r.url().slice(0, 90)]; } else page.bytes += n;
+    } catch (e) { /* redirects, aborted */ }
+  });
   page.on('request', (r) => { const m = r.url().match(/\/npm\/(mermaid|katex)@/); if (m) page.libs.push(m[1]); });
   return page;
 }
@@ -65,6 +73,12 @@ async function run(browser, base, label, size, phone) {
   const c = (name, ok, detail) => check(`[${engine} ${label}] ${name}`, ok, detail);
 
   await go('');
+  await page.waitForTimeout(1500);
+  // Page weight: scripts, styles, fonts and data a first visit downloads (uncompressed; the host compresses
+  // text, so this is an upper bound). Pictures are content and only reported. Budget = measured run + headroom.
+  const kb = Math.round(page.bytes / 1024);
+  console.log(`INFO [${engine} ${label}] first visit to the home page: ${kb} KB without pictures, ${Math.round(page.imgBytes / 1024)} KB pictures (largest ${Math.round(page.biggestImg[0] / 1024)} KB ${page.biggestImg[1]})`);
+  c('home page weight is within budget', kb <= WEIGHT_BUDGET_KB, kb + ' KB > ' + WEIGHT_BUDGET_KB + ' KB');
   const home = await page.evaluate(() => ({
     h1: (document.querySelector('.markdown-section h1') || {}).textContent,
     nav: document.querySelectorAll('.sidebar-nav li').length,
@@ -76,6 +90,23 @@ async function run(browser, base, label, size, phone) {
   c('home page lists recently added pages', home.recent);
   c('home page has no reading time', !home.time);
   if (phone) c('tables become cards on a phone', home.cards >= 1, 'stack tables: ' + home.cards);
+  if (phone) {
+    await go('fields/devops/kubernetes/cheatsheet', 3500);
+    const bar = await page.evaluate(() => {
+      const nav = document.querySelector('nav.app-nav').getBoundingClientRect();
+      const first = (document.querySelector('.markdown-section .crumbs') || document.querySelector('.markdown-section h1')).getBoundingClientRect();
+      const tog = document.querySelector('button.sidebar-toggle').getBoundingClientRect();
+      const rows = new Set([...document.querySelectorAll('nav.app-nav > ul > li')].filter((l) => l.offsetParent).map((l) => Math.round(l.getBoundingClientRect().top)));
+      const search = document.getElementById('search-toggle').getBoundingClientRect(), theme = document.getElementById('theme-toggle').getBoundingClientRect();
+      const last = [...document.querySelectorAll('nav.app-nav > ul > li')].filter((l) => l.offsetParent).pop().getBoundingClientRect();
+      return { navH: Math.round(nav.height), gap: Math.round(first.top - nav.bottom), rows: rows.size, menuTop: Math.round(tog.top), menuLabel: getComputedStyle(document.querySelector('button.sidebar-toggle'), '::after').content,
+        overlap: last.right > search.left || search.right > theme.left };
+    });
+    c('phone top bar is one row of at most 56px', bar.navH <= 56 && bar.rows === 1, JSON.stringify(bar));
+    c('phone page title starts within 24px of the top bar', bar.gap >= 0 && bar.gap <= 24, JSON.stringify(bar));
+    c('phone top bar has a labelled Menu button at the top and nothing overlaps', bar.menuTop < 8 && /Menu/.test(bar.menuLabel) && !bar.overlap, JSON.stringify(bar));
+    await go('');
+  }
 
   await go('fields/deep-learning/concepts/convolution', 4000);
   const conv = await page.evaluate(() => ({
@@ -83,6 +114,35 @@ async function run(browser, base, label, size, phone) {
     first: (() => { const i = document.querySelector('.markdown-section img'); return !!i && i.complete && i.naturalWidth > 0; })(),
     footer: (document.querySelector('.page-footer') || {}).textContent || '',
   }));
+  const a11y = await page.evaluate(() => {
+    const bad = [];
+    const name = (e) => (e.getAttribute('aria-label') || e.getAttribute('title') || e.textContent || '').trim() ||
+      !!e.querySelector('img[alt]:not([alt=""]), [aria-label]');
+    document.querySelectorAll('.markdown-section img').forEach((i) => { if (!i.hasAttribute('alt')) bad.push('image without alt: ' + (i.getAttribute('src') || '').slice(-40)); });
+    document.querySelectorAll('a[href], button').forEach((e) => { if (!name(e)) bad.push('no name: ' + e.outerHTML.slice(0, 70)); });
+    document.querySelectorAll('input:not([type=hidden]):not([type=file]), select, textarea').forEach((e) => {
+      if (!e.getAttribute('aria-label') && !e.getAttribute('placeholder') && !e.id) bad.push('unlabelled field: ' + e.outerHTML.slice(0, 70));
+    });
+    const seen = {};
+    document.querySelectorAll('[id]').forEach((e) => { if (seen[e.id]) bad.push('duplicate id ' + e.id); seen[e.id] = 1; });
+    if (!document.documentElement.lang) bad.push('html has no lang');
+    if (!document.querySelector('main, [role=main], section.content')) bad.push('no main landmark');
+    return bad;
+  });
+  c('accessibility scan: names, alt text, labels, unique ids, language, landmark', a11y.length === 0, a11y.slice(0, 5).join(' | '));
+  if (!phone) {
+    // glossary: the first use of a term links to its entry, with the meaning as the tooltip
+    await go('fields/schedulers/slurm-mixed-gpus/four-ways-to-mix-gpus', 3500);
+    const term = await page.evaluate(() => { const a = document.querySelector('.markdown-section a[href*="references/glossary"]'); return a ? { href: a.getAttribute('href'), title: a.getAttribute('title'), text: a.textContent } : null; });
+    c('a glossary term links to its entry with the meaning as tooltip', !!term && /glossary\?id=/.test(term.href) && !!term.title, JSON.stringify(term));
+    if (term) {
+      await page.click('.markdown-section a[href*="references/glossary"]');
+      await page.waitForTimeout(2500);
+      const g = await page.evaluate(() => ({ h1: (document.querySelector('.markdown-section h1') || {}).textContent, hash: location.hash, target: !!document.querySelector('.markdown-section h2[id]') }));
+      c('the glossary link opens the glossary at that term', g.h1 === 'Glossary' && /references\/glossary/.test(g.hash) && g.target, JSON.stringify(g));
+    }
+    await go('fields/deep-learning/concepts/convolution', 4000);
+  }
   c('long page has its images', conv.imgs >= 80, 'images: ' + conv.imgs);
   c('first image loads', conv.first);
   c('page footer has an edit link and a date', /Edit this page/.test(conv.footer) && /Last updated \d{4}-\d{2}-\d{2}/.test(conv.footer), conv.footer);
@@ -150,7 +210,7 @@ async function run(browser, base, label, size, phone) {
     return { links: el ? el.querySelectorAll('a').length : 0, underTitle: !!el && !!h1 && h1.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING && el.getBoundingClientRect().top - h1.getBoundingClientRect().bottom < 120 };
   });
   const time = await page.evaluate(() => (document.querySelector('.markdown-section h1 ~ .reading-time') || {}).textContent || '');
-  c('reading time is shown under the title', /^\d+ min read$/.test(time.trim()), time);
+  c('reading time is shown under the title', /\b\d+ min read\b/.test(time.trim()), time);
   c('related pages are linked right under the title', strip.links >= 1 && strip.underTitle, JSON.stringify(strip));
 
   await go('fields/benchmarks/hpl');
@@ -213,13 +273,38 @@ async function run(browser, base, label, size, phone) {
     // the menu stays open: on a phone the search box lives inside it
   }
   try {
-    await page.locator('.srch input').fill('convolution');
+    await page.locator('.srch input').click();
+    await page.waitForSelector('#sp:not([hidden]) #sp-input');
+    c('the search box opens the search overlay', true);
+    await page.fill('#sp-input', 'convolution');
     await page.waitForTimeout(3000);
-    c('search finds pages', (await page.locator('.srch-panel a').count()) >= 3);
-    await page.fill('.srch input', 'bias variance');
+    c('search finds pages', (await page.locator('#sp a.sp-item').count()) >= 3);
+    const groups = await page.evaluate(() => [...document.querySelectorAll('#sp .sp-group h3')].map((h) => h.firstChild.textContent));
+    c('results are grouped: pages and inside pages', groups[0] === 'Pages' && groups[1] === 'Inside pages', groups.join(','));
+    await page.fill('#sp-input', 'Conv2d');
     await page.waitForTimeout(2500);
-    await page.evaluate(() => document.querySelector('.srch-panel a.srch-item').click());
+    const codeGroup = await page.evaluate(() => [...document.querySelectorAll('#sp .sp-group h3')].some((h) => h.firstChild.textContent === 'Code'));
+    c('code is searched in its own group', codeGroup);
+    await page.fill('#sp-input', '');
+    await page.waitForTimeout(500);
+    const chips = await page.locator('#sp .sp-chip').count();
+    c('filter chips for type, level and domain', chips >= 6, 'chips: ' + chips);
+    await page.locator('#sp .sp-chip[data-key=level]').first().click();
+    await page.waitForTimeout(400);
+    const filtered = await page.evaluate(() => ({ items: document.querySelectorAll('#sp a.sp-item').length, on: document.querySelectorAll('#sp .sp-chip[aria-pressed=true]').length }));
+    c('a filter lists the pages that match it', filtered.items >= 1 && filtered.on === 1, JSON.stringify(filtered));
+    await page.locator('#sp .sp-chip[aria-pressed=true]').click();
+    await page.keyboard.press('Escape');
+    await page.waitForTimeout(300);
+    c('Escape closes the search overlay', await page.evaluate(() => document.getElementById('sp').hidden));
+    await page.keyboard.press('/');
+    await page.waitForTimeout(300);
+    c('"/" opens the search overlay', await page.evaluate(() => !document.getElementById('sp').hidden && document.activeElement.id === 'sp-input'));
+    await page.fill('#sp-input', 'bias variance');
+    await page.waitForTimeout(2500);
+    await page.evaluate(() => document.querySelector('#sp a.sp-item').click());
     await page.waitForTimeout(2000);
+    c('choosing a result closes the overlay', await page.evaluate(() => document.getElementById('sp').hidden));
     const where = await page.evaluate(() => {
       const here = document.querySelector('.sidebar-nav a.here') || document.querySelector('.sidebar-nav li.active > a');
       return { found: !!here, hidden: !!here && !!here.closest('li.group.collapsed, li.group.collapsed *') && !!here.closest('ul') && [...document.querySelectorAll('.sidebar-nav li.group.collapsed')].some((g) => g.contains(here)) };
@@ -264,7 +349,7 @@ async function run(browser, base, label, size, phone) {
   }
   const csp = await page.evaluate(() => {
     // docsify-pagination probes for `global` with eval inside try/catch and falls back; harmless
-    const before = window.__csp.filter((v) => !/^script-src eval\b.*docsify-pagination/.test(v));
+    const before = window.__csp.filter((v) => !/^script-src eval\b.*docsify-pagination/.test(v) && !/^style-src-elem https:\/\/fonts\.googleapis\.com\/css2\?family=Roboto\+Mono/.test(v)); // the two known, harmless ones: the eval probe, and the Google Fonts @import inside Docsify's vue.css (blocked on purpose; the site self-hosts its fonts)
     const s = document.createElement('script');
     s.textContent = 'window.__injected = true';
     document.body.appendChild(s);
@@ -387,6 +472,12 @@ async function offline(browser, base) {
     await page.waitForTimeout(2000);
     const controlled = await page.evaluate(() => !!navigator.serviceWorker.controller);
     c('a service worker is registered and controls the page after a reload', active && controlled, JSON.stringify({ active, controlled }));
+    // "Save this series for offline": one click fetches the folder, then a page never opened works offline
+    await page.goto(base + '/#/fields/devops/kubernetes/');
+    await page.waitForSelector('.offline-series button', { timeout: 8000 });
+    await page.click('.offline-series button');
+    await page.waitForFunction(() => /^Saved \d+ pages/.test((document.querySelector('.offline-status') || {}).textContent || ''), null, { timeout: 60000 });
+    c('the series button saves a folder for offline', true);
     await page.goto(base + '/#/fields/benchmarks/hpl');
     await page.waitForTimeout(3000);
     const online = await h1();
@@ -397,6 +488,12 @@ async function offline(browser, base) {
     await page.waitForTimeout(1000);
     const off = await h1();
     c('a page read before opens again offline', !!online.h1 && off.h1 === online.h1 && !off.lost, JSON.stringify({ online, off }));
+    const seriesPage = await page.evaluate(() => fetch('./.docs/_sidebar.md').then((r) => r.text()).then((t) => (t.match(/\]\(\/?(fields\/devops\/kubernetes\/[^)\s]+)\.md\)/g) || []).map((m) => m.replace(/^\]\(\/?/, '').slice(0, -4)).filter((p) => !/README$/.test(p) && p !== 'fields/devops/kubernetes').pop()));
+    await page.goto(base + '/#/' + seriesPage);
+    await page.reload();
+    await page.waitForFunction(() => document.querySelector('.markdown-section h1'), null, { timeout: 10000 }).catch(() => {});
+    const series = await h1();
+    c('a page of the saved series, never opened, opens offline', !!seriesPage && !!series.h1 && !series.lost, JSON.stringify({ seriesPage, series }));
   } catch (e) {
     c('read offline run finished', false, e.message.split('\n')[0]);
   } finally {

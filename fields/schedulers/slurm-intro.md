@@ -5,7 +5,7 @@ order: 1
 summary: What a cluster scheduler does, how it differs from the OS scheduler, the scheduler landscape, the concepts they share, and the Slurm architecture at a glance.
 level: beginner
 type: concept
-domains: [systems-and-hpc]
+domains: [systems-and-hpc, schedulers]
 tags: [slurm, hpc]
 relations:
   related: [slurm-job-script-tale, slurm-slurmstepd]

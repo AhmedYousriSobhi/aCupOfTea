@@ -28,7 +28,7 @@ It could be installed along with [**CUDA toolkit**](https://developer.nvidia.com
 
 # How it looks?
 Let's run it in our terminal, and the output should be like this:
-![Nvidia-smi command run](https://i.postimg.cc/3R7ddh0X/Screenshot-from-2024-02-05-10-43-30.png)
+![Nvidia-smi command run](images/nvidia-smi-run.png)
 *Running Nvidia-smi in my local machine*
 
 From the output we can first get the following GPU ATTRIBUTES info:

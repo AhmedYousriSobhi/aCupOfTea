@@ -6,7 +6,7 @@ sidebar_label: "5. Hybrid and the binding trap"
 summary: Why big jobs use MPI across nodes and OpenMP inside them, and the default - Open MPI pinning each rank to one core - that makes your threads queue on a single CPU. Tested, with the fix.
 level: intermediate
 type: guide
-domains: [systems-and-hpc, software-engineering]
+domains: [systems-and-hpc, software-engineering, system-administration]
 tags: [openmp, mpi, affinity, hpc]
 relations:
   prerequisites: [openmp-mpi-threads-and-ranks]

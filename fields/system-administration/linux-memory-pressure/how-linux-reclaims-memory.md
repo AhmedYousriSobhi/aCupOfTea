@@ -6,7 +6,7 @@ sidebar_label: "1. How Linux reclaims memory"
 summary: Why free memory near zero is normal, which pages the kernel can drop for free and which need swap, how kswapd and direct reclaim differ, and why the second one is where programs stall.
 level: intermediate
 type: concept
-domains: [systems-and-hpc]
+domains: [systems-and-hpc, system-administration]
 relations:
   related: [linux-mem-psi]
 ---

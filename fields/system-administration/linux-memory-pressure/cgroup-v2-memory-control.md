@@ -6,7 +6,7 @@ sidebar_label: "4. cgroup v2 memory control"
 summary: "The memory files of a cgroup v2 group, from protection (min, low) to throttling (high) to the hard cap (max), plus the active levers: reclaim, freeze and kill, and why they need privilege."
 level: intermediate
 type: concept
-domains: [systems-and-hpc]
+domains: [systems-and-hpc, system-administration]
 relations:
   prerequisites: [linux-mem-reclaim]
   related: [linux-mem-oom-killer, linux-mem-psi]

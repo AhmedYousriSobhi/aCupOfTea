@@ -6,7 +6,7 @@ order: 1
 summary: How ECC, row remapping and error containment work on NVIDIA GPUs, why memory errors repeat and cluster, and the error ladder that makes failure predictable.
 level: intermediate
 type: concept
-domains: [systems-and-hpc]
+domains: [systems-and-hpc, system-administration]
 tags: [gpu, nvidia, hpc]
 ---
 

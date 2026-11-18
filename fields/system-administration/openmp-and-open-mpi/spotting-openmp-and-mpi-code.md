@@ -6,7 +6,7 @@ sidebar_label: "4. Spotting the code"
 summary: A field guide to recognizing OpenMP, MPI or both in 30 seconds - the include lines, the pragmas, the function prefixes, the compile commands, the launch lines and the environment variables.
 level: beginner
 type: reference
-domains: [systems-and-hpc, software-engineering]
+domains: [systems-and-hpc, software-engineering, system-administration]
 tags: [openmp, mpi, hpc]
 relations:
   prerequisites: [openmp-mpi-threads-and-ranks]

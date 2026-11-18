@@ -6,7 +6,7 @@ sidebar_label: "2. Memory pressure (PSI)"
 summary: How to read /proc/pressure/memory, why the share of time tasks spend stalled is a better alarm than free bytes, and how to get woken by the kernel the moment a threshold is crossed.
 level: intermediate
 type: concept
-domains: [systems-and-hpc]
+domains: [systems-and-hpc, system-administration]
 relations:
   prerequisites: [linux-mem-reclaim]
   related: [linux-mem-oom-killer]

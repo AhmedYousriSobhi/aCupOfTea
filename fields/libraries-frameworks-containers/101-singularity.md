@@ -112,7 +112,7 @@ singularity build --fakeroot adder.sif adder.def
 
 > Doing this allows you to pretend to be the root user inside of your container without actually granting singularity elevated privilleges on host system.
 
-![adder.sig](https://i.postimg.cc/L6nF9WvG/Screenshot-from-2024-02-18-14-09-28.png)
+![adder.sig](images/singularity-adder-sig.png)
 *Building Sif container for app adder*
 
 To run the app:
@@ -130,7 +130,7 @@ Now we have our first impression of using Singularity, let's go deeper and under
 Benefits|During testing and debugging you may want an image format that is writable, you can also use *shell*, *exec* & *run* commands|This ensures reproducible and verifiable images.
 |Code|singularity build --fakeroot adder.sif adder.def|singularity build --fakeroot --sandbox adder_sandbox/ adder.def
 
-![sandbox image format](https://i.postimg.cc/FK6XL5pM/Screenshot-from-2024-02-18-15-13-19.png)
+![sandbox image format](images/singularity-sandbox-format.png)
 *Sandbox format is a directory with 21 files included*
 
 Check Singularity docs for [Sandbox Directories](https://docs.sylabs.io/guides/3.5/user-guide/quick_start.html#sandbox-directories) sections.
@@ -154,7 +154,7 @@ This should come from many different reasons:
 - Unlike Sandbox, refers to the directory-based container image format used Singularity, where the container image is represented as a directory containing the filesystem layers and associated metadate. So Singularity accesses the env variables, labels and other info needed directoly from local filesystem.
 
 Let's see the size from converting sandbox format to SIF format:
-![size](https://i.postimg.cc/RVn57Phk/Screenshot-from-2024-02-18-15-28-25.png)
+![size](images/singularity-image-size.png)
 *Converting from sandbox to sif format, and check the size*
 
 ## 5.4- Immutable Images Modification?
@@ -173,7 +173,7 @@ To inspect the definition file that was used to build the image [both sif & sand
 singularity inspect --deffile adder.sig
 ```
 
-![inspect def file](https://i.postimg.cc/fRwZjcdD/Screenshot-from-2024-02-18-16-12-46.png)
+![inspect def file](images/singularity-inspect-def-file.png)
 *Inspect definition file of a Singularity image*
 
 ## 5.6- Running Container from Docker File
@@ -217,7 +217,7 @@ singularity shell --no-home adder.sif
 # Equivalent to
 singularity shell --no-mount home adder.sif
 ```
-![unmount home](https://i.postimg.cc/wjwCGsND/Screenshot-from-2024-02-18-20-59-27.png)
+![unmount home](images/singularity-unmount-home.png)
 *Unmount $HOME directory from Image*
 
 ```bash
@@ -228,7 +228,7 @@ singularity exec --bind ~/source:/mnt adder.sif ls /mnt
 
 singularity exec adder.sif ls /mnt
 ```
-![bind option](https://i.postimg.cc/HWFtWWwX/Screenshot-from-2024-02-18-20-40-44.png)
+![bind option](images/singularity-bind-option.png)
 *Bind directory into /mnt directory*
 
 ### --mount
@@ -311,7 +311,7 @@ singularity build --fakeroot --build-arg arg4=<SOME_VALUE> rocky9.3.sif rocky9.3
 
 You can set any value you want even if it's a environment variable of the local host (e.g. $PATH, etc...). 
 
-![--build-arg](https://i.postimg.cc/RVsyfhxJ/Screenshot-from-2024-02-29-13-18-30.png)
+![--build-arg](images/singularity-build-arg.png)
 
 # 6- Tips, Notes & Troubleshooting
 
@@ -323,7 +323,7 @@ Tip| It is recommended by sylabs (Singularity creators), and Dockers to not buil
 Tip|From the [docs](https://docs.sylabs.io/guides/latest/user-guide/bind_paths_and_mounts.html#using-bind-or-mount-with-the-writable-flag), binding paths to non-existent points within the container can result in unexpected behavior when used in conjunction with the --writable flag, and is therefore disallowed. If you need to specify bind paths in combination with the --writable flag, please ensure that the appropriate bind points exist within the container. If they do not already exist, it will be necessary to modify the container and create them.
 Tip| You can export $SINGULARITY_BIND as env variable with all directories you want to mount inside your container.
 Tip| Not highly recommended to build a OCI-SIF container from Dockerfile using --oci, It may break any runscripts or conda environments in the container!. That's because the Singularity is not fully optimized for OCI standard container format yet. "They basically don't speek the same language!!".
-Tip|Try to add more info/description for def file, to be documented, using sections {%labels, %help}, so you can easily use commands {inspect, run-help} to get that documentation. "A good container tells the user how to interact with it"</br>![Terminal output of singularity run-help and inspect showing a container's labels and metadata](https://i.postimg.cc/52gzd9Rg/Screenshot-from-2024-02-29-09-37-09.png)
+Tip|Try to add more info/description for def file, to be documented, using sections {%labels, %help}, so you can easily use commands {inspect, run-help} to get that documentation. "A good container tells the user how to interact with it"</br>![Terminal output of singularity run-help and inspect showing a container's labels and metadata](images/singularity-run-help-inspect.png)
 
 # 7- Apptainer
 update: The new version of singularity is called [apptainer](https://apptainer.org/) one can install that easily on rockylinux.

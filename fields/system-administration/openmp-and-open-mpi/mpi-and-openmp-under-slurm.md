@@ -6,7 +6,7 @@ sidebar_label: "7. Under Slurm"
 summary: How Slurm launches MPI ranks and OpenMP threads - srun direct launch, mpirun inside an allocation, PMIx as the address book, and how ntasks and cpus-per-task decide the binding trap from part 5.
 level: intermediate
 type: concept
-domains: [systems-and-hpc]
+domains: [systems-and-hpc, system-administration]
 tags: [slurm, mpi, openmp, hpc]
 relations:
   prerequisites: [openmp-mpi-hybrid-binding-trap]

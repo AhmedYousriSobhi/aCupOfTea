@@ -6,7 +6,7 @@ order: 2
 summary: Why your chatbot reads a novel-length prompt in a blink but types its answer like a tired intern - prefill, decode, batching and the KV cache on the roofline.
 level: intermediate
 type: concept
-domains: [generative-ai, systems-and-hpc]
+domains: [generative-ai, systems-and-hpc, benchmarks-and-performance]
 tags: [gpu, llm, transformers]
 relations:
   prerequisites: [llm-perf-compute-vs-memory-bound]
