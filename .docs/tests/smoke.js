@@ -468,7 +468,8 @@ async function sharePages(browser, base) {
   page = await ctx.newPage();
   const errors = [];
   page.on('pageerror', (e) => errors.push(e.message.slice(0, 120)));
-  page.on('console', (m) => { if (/Content.Security.Policy|Refused/i.test(m.text()) && !/fonts\.googleapis\.com/.test(m.text())) errors.push(m.text().slice(0, 120)); });
+  // the two known, harmless console lines: the Google Fonts @import in Docsify's vue.css and docsify-pagination's eval probe
+  page.on('console', (m) => { if (/Content.Security.Policy|Refused/i.test(m.text()) && !/fonts\.googleapis\.com|unsafe-eval/.test(m.text())) errors.push(m.text().slice(0, 120)); });
   await page.goto(base + '/');
   await page.goto(base + '/tips/kaggle-tips/#some-section');
   await page.waitForSelector('.markdown-section h1');
