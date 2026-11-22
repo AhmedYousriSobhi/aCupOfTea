@@ -89,5 +89,5 @@ Facts come from NVIDIA documentation and published field studies (Meta's Llama 3
 ## Related reading in this repo
 
 - [Node Health Check series](/fields/system-administration/node-health-check/README.md): the reactive side. NHC catches a node that is already broken; this series tries to get there first.
-- [Auto-remediation with NHC](/fields/system-administration/node-health-check/auto-remediation.md): what happens after a predictive drain.
+- [Auto-remediation with NHC](/fields/system-administration/node-health-check/checks-and-remediation/auto-remediation.md): what happens after a predictive drain.
 - [The cluster that passed every test except the one that mattered](/fields/devops/kubernetes/nvidia-cluster-readiness-engine.md): failures that per-GPU counters can't see.

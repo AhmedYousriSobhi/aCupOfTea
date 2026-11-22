@@ -742,7 +742,7 @@ Stop new drains without undoing old ones: set `MODE=dryrun` and restart the serv
 | `GpuFatalXid` 79 | Collect evidence, reboot | Expect recurrence; report to the vendor |
 | `GpuRowRemapFailure` | Keep it drained | Field diagnostic validates the flag for RMA |
 
-GPU reset limits depend on the platform (NVSwitch and Fabric Manager state); check NVIDIA's reset-capabilities table before automating resets. For the fix-and-verify loop, see [NHC auto-remediation](/fields/system-administration/node-health-check/auto-remediation.md).
+GPU reset limits depend on the platform (NVSwitch and Fabric Manager state); check NVIDIA's reset-capabilities table before automating resets. For the fix-and-verify loop, see [NHC auto-remediation](/fields/system-administration/node-health-check/checks-and-remediation/auto-remediation.md).
 
 ---
 

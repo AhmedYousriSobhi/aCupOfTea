@@ -102,7 +102,7 @@ Rule: **NHC's timeout must be shorter than Slurm's.** When NHC's watchdog fires,
 
 What if your checks genuinely need minutes (GPU stress, bandwidth tests)? Don't stretch the periodic timeout. Pick one:
 
-1. **Move them** to a deep context run from cron or by your remediation loop ([part 7](/fields/system-administration/node-health-check/auto-remediation.md)).
+1. **Move them** to a deep context run from cron or by your remediation loop ([part 7](/fields/system-administration/node-health-check/checks-and-remediation/auto-remediation.md)).
 2. **Detached mode** (`DETACHED_MODE=1` in sysconfig): NHC forks, returns *the previous run's* result immediately, and runs the checks in the background. `slurmd` never blocks. The catch: a fresh failure is only acted on at the **next** run, so a job can land on a node that broke five minutes ago.
 
 > [!NOTE]
@@ -145,7 +145,7 @@ Next run, every check passes, the online helper sees a reason starting with `NHC
 
 ## Draining etiquette for humans
 
-Because of the `NHC:` handshake from [part 1](/fields/system-administration/node-health-check/why-node-health-check.md#the-nhc-handshake):
+Because of the `NHC:` handshake from [part 1](/fields/system-administration/node-health-check/getting-started/why-node-health-check.md#the-nhc-handshake):
 
 ```bash
 # ✅ Good: a reason that isn't NHC's. NHC will never resume this node.
@@ -167,7 +167,7 @@ Two more NHC 1.5 behaviors worth knowing:
 
 ## Boot and reboot: the sneaky part
 
-`slurmd` runs the health check **when it starts, before it registers with the controller**. A failing check at boot means the node doesn't register as healthy. That's great when the check is right and baffling when your config is wrong (see [troubleshooting](/fields/system-administration/node-health-check/troubleshooting.md)).
+`slurmd` runs the health check **when it starts, before it registers with the controller**. A failing check at boot means the node doesn't register as healthy. That's great when the check is right and baffling when your config is wrong (see [troubleshooting](/fields/system-administration/node-health-check/checks-and-remediation/troubleshooting.md)).
 
 Reboots via `scontrol reboot` used to be a mess: Slurm clears the DRAIN flag when a node comes back from an `ASAP` reboot, which could wipe out what the health check had decided. NHC 1.5 merged a set of fixes for this ([PR #115](https://github.com/mej/nhc/pull/115) by Trey Dockendorf). After a plain `scontrol reboot`, the helper keeps the node drained until NHC itself onlines it, and it no longer fights the `Reboot ASAP` reason. If you reboot nodes from automation, **run 1.5**.
 
@@ -226,7 +226,7 @@ That runs every 5 MOM intervals plus at job start and end. For NHC to offline no
 
 **Kubernetes**: NHC 1.5 ships `check_kube*` checks, and Azure documents a pattern that runs AzNHC in an init container and **taints** the node (`NoExecute`) on failure, the k8s equivalent of a drain.
 
-Next up: getting this onto hundreds of nodes without draining all of them on the first run, in [part 5](/fields/system-administration/node-health-check/rollout-at-scale.md).
+Next up: getting this onto hundreds of nodes without draining all of them on the first run, in [part 5](/fields/system-administration/node-health-check/getting-started/rollout-at-scale.md).
 
 > **Takeaway:** three `slurm.conf` lines plus `NHC_RM=slurm`; keep NHC's timeout under Slurm's; use `CYCLE` on big clusters; never drain without a reason; run 1.5 if you reboot nodes from automation.
 

@@ -46,7 +46,7 @@ Know your hardware classes before writing expectations about them:
 clush -bw @compute "/usr/sbin/nhc-genconf -H '*' -c -"
 ```
 
-`clush -b` folds identical output together, so each block is one hardware class with its node list. Three blocks where you expected one? You just found the nodes with a missing DIMM or a BIOS that disabled hyperthreading. Write the config from the *majority* of each class ([part 3](/fields/system-administration/node-health-check/writing-nhc-conf.md)).
+`clush -b` folds identical output together, so each block is one hardware class with its node list. Three blocks where you expected one? You just found the nodes with a missing DIMM or a BIOS that disabled hyperthreading. Write the config from the *majority* of each class ([part 3](/fields/system-administration/node-health-check/getting-started/writing-nhc-conf.md)).
 
 ---
 
@@ -146,7 +146,7 @@ clush -bw @compute "/usr/sbin/nhc -a -l- -c /tmp/candidate.conf MARK_OFFLINE=0"
 
 - Count of nodes with an `NHC:` reason, over time (the circuit breaker's number).
 - Top 10 NHC failure messages this week. The top one is your next hardware conversation or config fix.
-- Time from NHC drain to resume. Long tails mean manual work you could automate ([part 7](/fields/system-administration/node-health-check/auto-remediation.md)).
+- Time from NHC drain to resume. Long tails mean manual work you could automate ([part 7](/fields/system-administration/node-health-check/checks-and-remediation/auto-remediation.md)).
 
 A crude exporter is ten lines: `sinfo -h -N -R -o '%E'` piped into a textfile for node_exporter's textfile collector.
 
@@ -157,7 +157,7 @@ A crude exporter is ten lines: `sinfo -h -N -R -o '%E'` piped into a textfile fo
 Sooner or later, someone running a tightly coupled MPI code will ask whether NHC is stealing their cycles. Upstream designed NHC to keep "OS jitter" minimal (bash builtins, few forks) and reports no significant jitter in practice, including on very sensitive systems. If it *is* a concern on your cluster, upstream's own suggestions:
 
 1. Raise `HealthCheckInterval` from 300 to 3600 seconds.
-2. Use `HealthCheckNodeState=IDLE` (or `NONDRAINED_IDLE`, knowing [the trade-off](/fields/system-administration/node-health-check/slurm-integration.md#which-nodes-should-get-checked-healthchecknodestate)) so busy nodes aren't checked.
+2. Use `HealthCheckNodeState=IDLE` (or `NONDRAINED_IDLE`, knowing [the trade-off](/fields/system-administration/node-health-check/getting-started/slurm-integration.md#which-nodes-should-get-checked-healthchecknodestate)) so busy nodes aren't checked.
 3. Have heavier checks skip or slim down when a job is running on the node, and rely on the epilog to cover job boundaries.
 
 Measure before and after with the user's actual code. Feelings are not a benchmark.

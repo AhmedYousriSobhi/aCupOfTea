@@ -153,7 +153,7 @@ The drain buys time. This is what the time is for, condensed from NVIDIA's triag
 | Xid 79 | Collect evidence, reboot | Expect it to recur; report to the vendor |
 | Remap failure | Keep it drained | NVIDIA's field diagnostic validates the flag for RMA |
 
-Reset limits depend on the platform. On Hopper and later systems with NVSwitch, GPUs can be reset individually; older NVSwitch systems may need the Fabric Manager running, or all connected GPUs reset together. Check NVIDIA's reset-capabilities table before automating resets. For the fix-and-verify loop itself, see [NHC auto-remediation](/fields/system-administration/node-health-check/auto-remediation.md).
+Reset limits depend on the platform. On Hopper and later systems with NVSwitch, GPUs can be reset individually; older NVSwitch systems may need the Fabric Manager running, or all connected GPUs reset together. Check NVIDIA's reset-capabilities table before automating resets. For the fix-and-verify loop itself, see [NHC auto-remediation](/fields/system-administration/node-health-check/checks-and-remediation/auto-remediation.md).
 
 **Takeaway:** automate only the reversible step (drain), cap your automation's blast radius with a budget, earn trust through dry run → canary → enforce, make every action findable and undoable, and make sure humans hear about all of it.
 
