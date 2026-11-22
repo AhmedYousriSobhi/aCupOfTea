@@ -203,9 +203,9 @@ A fictional but realistic cluster: 512 CPU nodes `cn001-512`, 32 GPU nodes `gpu0
 Notes on the choices:
 
 - **Section 1 runs first** because if `/` is read-only or `sshd` is dead, nothing else matters.
-- **`check_ps_service -S`** restarts a missing daemon *and* fails the check, so the node drains now and comes back on the next clean run. That's auto-remediation in one flag; [part 7](/fields/system-administration/node-health-check/auto-remediation.md) goes deeper.
+- **`check_ps_service -S`** restarts a missing daemon *and* fails the check, so the node drains now and comes back on the next clean run. That's auto-remediation in one flag; [part 7](/fields/system-administration/node-health-check/checks-and-remediation/auto-remediation.md) goes deeper.
 - **Swap pinned to zero** catches the node that booted the wrong image with a swap partition.
-- **The Xid line** fails if the kernel log contains the listed, hardware-flavored NVIDIA Xid codes (double-bit ECC, fallen off the bus and friends). Xids stay in `dmesg` until reboot, which is what you want here: these need a reset anyway. Tune the list to your GPUs and NVIDIA's current Xid catalogue. [Part 6](/fields/system-administration/node-health-check/custom-checks.md) builds richer GPU checks.
+- **The Xid line** fails if the kernel log contains the listed, hardware-flavored NVIDIA Xid codes (double-bit ECC, fallen off the bus and friends). Xids stay in `dmesg` until reboot, which is what you want here: these need a reset anyway. Tune the list to your GPUs and NVIDIA's current Xid catalogue. [Part 6](/fields/system-administration/node-health-check/checks-and-remediation/custom-checks.md) builds richer GPU checks.
 - **The rogue-process checks only log** at first. Switch to `kill` only after you've watched the logs for a week and trust them.
 
 ---
@@ -220,7 +220,7 @@ A *context* is a named configuration. The name comes from how NHC was invoked (d
 | `nhc -n nhc-epilog` | `/etc/nhc/nhc-epilog.conf` | `/etc/sysconfig/nhc-epilog` |
 | `nhc-deep` (a symlink to `nhc`) | `/etc/nhc/nhc-deep.conf` | `/etc/sysconfig/nhc-deep` |
 
-A tidy layout for the "four moments" from [part 1](/fields/system-administration/node-health-check/why-node-health-check.md#four-moments-to-check-a-node):
+A tidy layout for the "four moments" from [part 1](/fields/system-administration/node-health-check/getting-started/why-node-health-check.md#four-moments-to-check-a-node):
 
 ```bash
 ln -s nhc /usr/sbin/nhc-epilog     # fast post-job checks
@@ -250,7 +250,7 @@ echo $?
 
 On 1.5 you can even test another node's config lines from your desk with `-m host` (masquerade): `nhc -a -v -l- -m gpu07 MARK_OFFLINE=0`. The checks still run against *this* machine's hardware, so treat it as a "which lines apply to gpu07?" tool, not a remote health check.
 
-Each failure is either **a config bug** (your expectation is wrong; fix the line) or **a node bug** (the node is wrong; fix the node). Telling those apart across a whole fleet is what [part 5](/fields/system-administration/node-health-check/rollout-at-scale.md) is about. But first, let's plug NHC into Slurm in [part 4](/fields/system-administration/node-health-check/slurm-integration.md).
+Each failure is either **a config bug** (your expectation is wrong; fix the line) or **a node bug** (the node is wrong; fix the node). Telling those apart across a whole fleet is what [part 5](/fields/system-administration/node-health-check/getting-started/rollout-at-scale.md) is about. But first, let's plug NHC into Slurm in [part 4](/fields/system-administration/node-health-check/getting-started/slurm-integration.md).
 
 > **Takeaway:** order checks cheap-to-expensive, generate a draft with `nhc-genconf` on known-good nodes, keep "early" variables in the sysconfig file, and iterate with `nhc -a -v -l- MARK_OFFLINE=0` until it's silent.
 
