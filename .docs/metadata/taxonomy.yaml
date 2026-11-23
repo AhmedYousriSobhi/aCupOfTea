@@ -104,14 +104,6 @@ domains:
     related: [systems-and-hpc, devops]
   system-design:
     label: System Design
-    description: Design Software Systems
-    related: [software-engineering]
-  system-design:
-    label: System Design
-    description: Software System Design
-    related: [software-engineering]
-  system-design:
-    label: System Design
     description: Software System Design
     related: [software-engineering]
 
