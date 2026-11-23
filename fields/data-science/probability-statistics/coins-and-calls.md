@@ -22,20 +22,6 @@ relations:
 
 > **Part 10 of 15.** Part of the [Probability & Statistics](/fields/data-science/probability-statistics/README.md) series. It continues from [What to Expect](/fields/data-science/probability-statistics/what-to-expect.md), where a long-run average (E[X]) and a spread became two numbers you can compute from a table of chances. Here we build two such tables from a question. The scenario numbers are invented, and every figure was recomputed with Python.
 
-## Table of Contents
-
-- [Prologue: ten customers, one smoky blend](#prologue-ten-customers-one-smoky-blend)
-- [A distribution is a recipe](#a-distribution-is-a-recipe)
-- [Binomial: count the ways, weigh each way](#binomial-count-the-ways-weigh-each-way)
-- [The shorthand, and what to expect](#the-shorthand-and-what-to-expect)
-- [Poisson: many tiny chances](#poisson-many-tiny-chances)
-- [When the recipe lies](#when-the-recipe-lies)
-- [Check yourself](#check-yourself)
-- [Back to the story](#back-to-the-story)
-- [Cheat sheet](#cheat-sheet)
-- [Answers](#answers)
-- [References](#references)
-
 * * *
 
 ## Prologue: ten customers, one smoky blend

@@ -13,14 +13,6 @@ tags: [hpc, gpu, nvidia, storage]
 
 > A two-part series on the least glamorous way to waste a GPU: making it wait for data. By the end you'll know how parallel filesystems and RDMA fabrics keep 10,000 GPUs fed, and how to tell when they don't.
 
-## Table of Contents
-- [Storage and Fabric for AI Clusters - Overview](#storage-and-fabric-for-ai-clusters---overview)
-  - [Table of Contents](#table-of-contents)
-  - [The claim, and what's missing from it](#the-claim-and-whats-missing-from-it)
-  - [The route](#the-route)
-  - [Contents](#contents)
-  - [Related reading in this repo](#related-reading-in-this-repo)
-
 ---
 
 ## The claim, and what's missing from it

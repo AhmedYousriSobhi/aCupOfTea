@@ -17,14 +17,6 @@ sidebar_label: Kubernetes at HPC scale
 
 > **Part 15 of the Kubernetes series.** A Slurm habit that costs nothing on Slurm can bury a Kubernetes cluster. By the end you'll know the limits the project publishes, where the pressure lands first, and how to turn a job array into one object that the cluster can carry.
 
-- [The array](#the-array)
-- [What the project promises](#what-the-project-promises)
-- [Where the pressure lands](#where-the-pressure-lands)
-- [Your array, as one Job](#your-array-as-one-job)
-- [What gang scheduling changes at this size](#what-gang-scheduling-changes-at-this-size)
-- [Back to the array](#back-to-the-array)
-- [References](#references)
-
 ---
 
 ## The array

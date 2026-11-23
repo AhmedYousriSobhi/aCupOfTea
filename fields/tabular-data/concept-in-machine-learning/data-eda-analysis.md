@@ -4,20 +4,6 @@ summary: The machine learning workflow, how data gets messy, and how to handle m
 # Tabular Data - Concepts in Machine Learning - Data EDA and Analysis
 
 # Table of Content
-- [Tabular Data - Concepts in Machine Learning - Data EDA and Analysis](#tabular-data---concepts-in-machine-learning---data-eda-and-analysis)
-- [Table of Content](#table-of-content)
-- [1. Machine Learning Workflow](#1-machine-learning-workflow)
-- [2. Decisions in analytics are increasingly driven by data and models, and key aspects of our Machine Learning Workflow are getting depend on cleaning data](#2-decisions-in-analytics-are-increasingly-driven-by-data-and-models-and-key-aspects-of-our-machine-learning-workflow-are-getting-depend-on-cleaning-data)
-- [3. How data can be messy:](#3-how-data-can-be-messy)
-- [4- Dealing with missing data:](#4--dealing-with-missing-data)
-- [5- Dealing with outliers](#5--dealing-with-outliers)
-- [6. Exploratory Data Analysis (EDA):](#6-exploratory-data-analysis-eda)
-- [7- EDA techniques:](#7--eda-techniques)
-- [8- Feature Engineering and Variable Transformation:](#8--feature-engineering-and-variable-transformation)
-- [9- Transformations](#9--transformations)
-- [25- Correlation vs Causation:](#25--correlation-vs-causation)
-- [Credits:](#credits)
-
 # 1. Machine Learning Workflow
 
 |Step|Description|

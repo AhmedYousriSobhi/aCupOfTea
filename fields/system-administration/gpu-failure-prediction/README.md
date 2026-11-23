@@ -15,16 +15,6 @@ relations:
 
 > A five-part series on the "AIOps" half of a classic AI-infrastructure interview question: how do you see a GPU dying *before* it takes a training run down with it? It's about understanding, not tooling: by the end you'll be able to reason about GPU failures, judge any monitoring setup, and defend your design in a review or an interview.
 
-## Table of Contents
-- [Predicting GPU Node Failures - Overview](#predicting-gpu-node-failures---overview)
-  - [Table of Contents](#table-of-contents)
-  - [The question this series answers](#the-question-this-series-answers)
-  - [The five ideas, one per page](#the-five-ideas-one-per-page)
-  - [Who this is for](#who-this-is-for)
-  - [What the series assumes](#what-the-series-assumes)
-  - [Contents](#contents)
-  - [Related reading in this repo](#related-reading-in-this-repo)
-
 ---
 
 ## The question this series answers

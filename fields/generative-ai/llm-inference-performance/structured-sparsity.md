@@ -16,19 +16,6 @@ relations:
 
 > **Part 5 of the [LLM Inference Performance series](/fields/generative-ai/llm-inference-performance/README.md).** Remember the asterisk from [part 1](/fields/generative-ai/llm-inference-performance/compute-bound-vs-memory-bound.md#the-asterisk-that-doubles-your-mistake)? The H100's headline 1,979 TFLOPS is "with sparsity." This page is about that asterisk: what 2:4 structured sparsity is, what the hardware actually does with it, and what it buys you on the roofline. By the end you'll be able to fact-check every common claim about it, including a few that sound right and aren't.
 
-## Table of Contents
-- [2:4 Sparsity: Half the Weights, Not Half the Time](#24-sparsity-half-the-weights-not-half-the-time)
-  - [Table of Contents](#table-of-contents)
-  - [The slide with the big number](#the-slide-with-the-big-number)
-  - [The pattern: two of every four](#the-pattern-two-of-every-four)
-  - [What the hardware actually does](#what-the-hardware-actually-does)
-  - [Try it before you scroll](#try-it-before-you-scroll)
-  - [The metadata tax: 44%, not 50%](#the-metadata-tax-44-not-50)
-  - [Sparsity on the roofline: two different gifts](#sparsity-on-the-roofline-two-different-gifts)
-  - [The 70B model, pruned](#the-70b-model-pruned)
-  - [Fact-checking the usual pitch](#fact-checking-the-usual-pitch)
-    - [References](#references)
-
 ---
 
 ## The slide with the big number

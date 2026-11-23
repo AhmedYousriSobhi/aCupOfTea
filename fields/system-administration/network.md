@@ -3,14 +3,6 @@ summary: Short notes on IP addresses and masks, how to work out an address range
 ---
 # System Administration - Network
 
-## Table of Contents
-- [System Administration - Network](#system-administration---network)
-  - [Table of Contents](#table-of-contents)
-  - [What is what?](#what-is-what)
-  - [Switch](#switch)
-  - [Router](#router)
-  - [VLAN](#vlan)
-
 ## What is what?
 - **IP** ? 
   - Each NIC card is defined by it's `IP`. There are two defined IPs; Private and Public.

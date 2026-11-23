@@ -22,20 +22,6 @@ relations:
 
 > **Part 5 of 15.** Part of the [Probability & Statistics](/fields/data-science/probability-statistics/README.md) series, and the sequel to [The Number on the Tin](/fields/data-science/probability-statistics/the-number-on-the-tin.md), where the "typical" score was a score nobody gave. By the end you will know why there are three middles and a pile of spreads, and that they are **one question** asked with different rulers. Far less to memorize than it looked.
 
-## Table of Contents
-
-- [Prologue: the cart on Kettle Street](#prologue-the-cart-on-kettle-street)
-- [Three rules for one cart](#three-rules-for-one-cart)
-- [Why the median counts heads and the mean balances](#why-the-median-counts-heads-and-the-mean-balances)
-- [What is left over: spread](#what-is-left-over-spread)
-- [The one-house test](#the-one-house-test)
-- [The n − 1 mystery](#the-n--1-mystery)
-- [Check yourself](#check-yourself)
-- [Back to the story](#back-to-the-story)
-- [Cheat sheet](#cheat-sheet)
-- [Answers](#answers)
-- [References](#references)
-
 * * *
 
 ## Prologue: the cart on Kettle Street

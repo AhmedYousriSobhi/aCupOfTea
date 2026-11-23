@@ -17,15 +17,6 @@ relations:
 
 > **Part 11 of the Kubernetes series.** Two colleagues, two confident answers, one cluster to stand up. By the end you'll know what each tool actually installs, what each leaves for you, and which one to pick for a lab, an edge box and a GPU cluster.
 
-- [The Friday request](#the-friday-request)
-- [Same landlord, different keys](#same-landlord-different-keys)
-- [What you get on day one](#what-you-get-on-day-one)
-- [The part nobody asks about: day two](#the-part-nobody-asks-about-day-two)
-- [High availability, honestly](#high-availability-honestly)
-- [Picking one](#picking-one)
-- [Back to Priya](#back-to-priya)
-- [References](#references)
-
 ---
 
 ## The Friday request

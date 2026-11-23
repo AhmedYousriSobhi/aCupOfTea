@@ -16,21 +16,6 @@ relations:
 
 > **Part 2 of the [VictoriaMetrics series](/fields/devops/victoriametrics/README.md).** [Part 1](/fields/devops/victoriametrics/why-victoriametrics.md) explained what VictoriaMetrics is. By the end of this page you'll have a single node running under systemd, scraping targets, reloading config without surprises, and refusing to delete data for strangers.
 
-- [A Single Node You Can Trust: Installing VictoriaMetrics Properly](#a-single-node-you-can-trust-installing-victoriametrics-properly)
-  - [The intern and the empty dashboard](#the-intern-and-the-empty-dashboard)
-  - [Before you start](#before-you-start)
-  - [Step 1: download and verify](#step-1-download-and-verify)
-  - [Step 2: a user and two directories](#step-2-a-user-and-two-directories)
-  - [Step 3: what to scrape](#step-3-what-to-scrape)
-  - [Step 4: two admin keys](#step-4-two-admin-keys)
-  - [Step 5: the systemd unit](#step-5-the-systemd-unit)
-  - [Step 6: start it and check it](#step-6-start-it-and-check-it)
-  - [Two things that look broken but aren't](#two-things-that-look-broken-but-arent)
-  - [Changing config without a surprise](#changing-config-without-a-surprise)
-  - [Why the admin keys matter](#why-the-admin-keys-matter)
-  - [Back to the intern](#back-to-the-intern)
-  - [References](#references)
-
 ---
 
 ## The intern and the empty dashboard

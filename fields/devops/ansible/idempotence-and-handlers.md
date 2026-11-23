@@ -16,17 +16,6 @@ relations:
 
 > **Part 3 of the [Ansible series](/fields/devops/ansible/README.md).** [Part 2](/fields/devops/ansible/inventory-and-ad-hoc.md) made one-off changes with ad-hoc commands. This page writes a playbook that deploys `slurm.conf` to the whole cluster, restarts daemons only when the file really changed, previews changes before making them, and survives a failure halfway through.
 
-- [Changed, every night](#changed-every-night)
-- [Idempotent: say what, not how](#idempotent-say-what-not-how)
-- [The version that started it all](#the-version-that-started-it-all)
-- [A template and two handlers](#a-template-and-two-handlers)
-- [Preview with --check --diff](#preview-with---check---diff)
-- [The handler that never ran](#the-handler-that-never-ran)
-- [Started, then restarted](#started-then-restarted)
-- [The finished playbook](#the-finished-playbook)
-- [Back to the nightly run](#back-to-the-nightly-run)
-- [References](#references)
-
 ---
 
 ## Changed, every night

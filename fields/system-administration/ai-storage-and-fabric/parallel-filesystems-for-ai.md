@@ -14,20 +14,6 @@ tags: [hpc, gpu, storage]
 
 > **Part 1 of the [Storage and Fabric for AI Clusters series](/fields/system-administration/ai-storage-and-fabric/README.md).** A GPU that's waiting for data is the most expensive idle hardware in your building. This page explains how parallel filesystems like Lustre keep thousands of GPUs fed, the two workloads that break them (small files and checkpoints), and what to do about each. By the end you'll be able to diagnose a data-starved training job and explain the fix.
 
-## Table of Contents
-- [Parallel Filesystems: Why 10,000 GPUs Can Starve on a Full Disk](#parallel-filesystems-why-10000-gpus-can-starve-on-a-full-disk)
-  - [Table of Contents](#table-of-contents)
-  - [The training run with a heartbeat](#the-training-run-with-a-heartbeat)
-  - [Why a normal file server can't do this](#why-a-normal-file-server-cant-do-this)
-  - [Lustre in one picture: the librarian and the shelves](#lustre-in-one-picture-the-librarian-and-the-shelves)
-  - [Striping: one file, many servers](#striping-one-file-many-servers)
-  - [Try it before you scroll](#try-it-before-you-scroll)
-  - [The small-file trap](#the-small-file-trap)
-  - [The checkpoint storm](#the-checkpoint-storm)
-  - [Lustre, GPFS, or something else?](#lustre-gpfs-or-something-else)
-  - [Symptom, cause, fix](#symptom-cause-fix)
-    - [References](#references)
-
 ---
 
 ## The training run with a heartbeat

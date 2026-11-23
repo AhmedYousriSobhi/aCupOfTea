@@ -5,21 +5,6 @@ summary: Deeper answers to three questions, why scp is secure, what it means tha
 
 The target of this page is to learn more deeper things that come to our minds.
 
-## Table of Contents
-- [System Administration - Under the Hood](#system-administration---under-the-hood)
-  - [Table of Contents](#table-of-contents)
-  - [1. SCP - Why it's secured?](#1-scp---why-its-secured)
-    - [How it Works Under The Hood?](#how-it-works-under-the-hood)
-    - [Direction Matters](#direction-matters)
-    - [Who opens the SSH Connection?](#who-opens-the-ssh-connection)
-    - [What happens after SSH connects](#what-happens-after-ssh-connects)
-  - [2. Directory is a Logical Container](#2-directory-is-a-logical-container)
-    - [1. What the Phrase Assumes?](#1-what-the-phrase-assumes)
-    - [2. What's True and what's easy to misunderstand?](#2-whats-true-and-whats-easy-to-misunderstand)
-  - [3. Unix Like System ?!](#3-unix-like-system-)
-    - [1. Historical Context](#1-historical-context)
-    - [2. Core Traits of Unix-like Systems](#2-core-traits-of-unix-like-systems)
-
 ## 1. SCP - Why it's secured?
 - The `cp` in scp comes from the Unix command cp (copy).
 - But unlike cp, which copies files locally, scp allows copying across networked systems.

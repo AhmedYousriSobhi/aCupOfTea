@@ -14,12 +14,6 @@ tags:
 # Tabular Data - Data Evaluation - Classification - Accuracy Paradox
 
 ## Table of Content
-- [Tabular Data - Data Evaluation - Classification - Accuracy Paradox](#tabular-data---data-evaluation---classification---accuracy-paradox)
-  - [Table of Content](#table-of-content)
-  - [Accuracy Fails for Imbalanced Classification](#accuracy-fails-for-imbalanced-classification)
-  - [Accuracy Paradox](#accuracy-paradox)
-  - [Credits](#credits)
-
 In a Classification machine learning problem, one of the common most-used evaluation metric is __Accuracy__.
 
 ```

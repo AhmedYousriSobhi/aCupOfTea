@@ -24,21 +24,6 @@ relations:
 
 > **Part 1 of [Slurm Smoke Tests](/fields/schedulers/slurm-smoke-tests/README.md).** Every command, script and output here was run on a two-node test cluster (Slurm 23.11.4, accounting on, both `slurmd` daemons on one Ubuntu 24.04 machine), including the failures, which were injected on purpose. The node names, users and the story are invented. SchedMD does not define a "smoke test", so the checks below are a synthesis of what its [admin](https://slurm.schedmd.com/quickstart_admin.html), [troubleshooting](https://slurm.schedmd.com/troubleshoot.html) and [upgrade](https://slurm.schedmd.com/upgrades.html) guides tell you to verify, in one script.
 
-## Table of Contents
-
-- [The Cluster That Worked Perfectly and Remembered Nothing: a Two-Minute Slurm Smoke Test](#the-cluster-that-worked-perfectly-and-remembered-nothing-a-two-minute-slurm-smoke-test)
-  - [Table of Contents](#table-of-contents)
-  - [The cluster that remembered nothing](#the-cluster-that-remembered-nothing)
-  - [What a smoke test is, and is not](#what-a-smoke-test-is-and-is-not)
-  - [The script](#the-script)
-  - [Break it on purpose](#break-it-on-purpose)
-  - [When the cluster is just busy](#when-the-cluster-is-just-busy)
-  - [Things that make a healthy cluster fail](#things-that-make-a-healthy-cluster-fail)
-  - [Where to run it](#where-to-run-it)
-  - [Version notes](#version-notes)
-  - [Back to the cluster that remembered nothing](#back-to-the-cluster-that-remembered-nothing)
-  - [References](#references)
-
 ---
 
 ## The cluster that remembered nothing

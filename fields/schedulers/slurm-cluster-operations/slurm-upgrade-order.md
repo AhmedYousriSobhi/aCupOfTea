@@ -21,23 +21,6 @@ relations:
 
 > **Part of the [schedulers](/fields/schedulers/slurm-intro.md) directory.** The [reboot-order page](/fields/schedulers/slurm-cluster-operations/slurm-reboot-order.md) covers patching the OS underneath Slurm and says plainly that it assumes you are *not* upgrading Slurm itself. This is the other half. Everything here comes from SchedMD's Upgrade Guide and is not tested on a live cluster; read the guide for your exact target version before a real maintenance window. For what changed in the versions between 23.11 and 26.05, see [Version changes](/fields/schedulers/slurm-cluster-operations/slurm-version-changes.md).
 
-## Table of Contents
-
-- [Upgrading Slurm: The Order, the Window, and the Parts That Bite](#upgrading-slurm-the-order-the-window-and-the-parts-that-bite)
-  - [Table of Contents](#table-of-contents)
-  - [The upgrade that fails on startup](#the-upgrade-that-fails-on-startup)
-  - [The compatibility window](#the-compatibility-window)
-  - [The order, and why it is the order](#the-order-and-why-it-is-the-order)
-  - [Backups: three things, not one](#backups-three-things-not-one)
-  - [Stage 1: slurmdbd, the slow one](#stage-1-slurmdbd-the-slow-one)
-  - [Stage 2: slurmctld, with the timeouts raised](#stage-2-slurmctld-with-the-timeouts-raised)
-  - [Stage 3: slurmd, and the old stepds](#stage-3-slurmd-and-the-old-stepds)
-  - [Stage 4: everything that links against Slurm](#stage-4-everything-that-links-against-slurm)
-  - [Packaging traps](#packaging-traps)
-  - [There is no undo](#there-is-no-undo)
-  - [Pre-flight checklist](#pre-flight-checklist)
-  - [References](#references)
-
 * * *
 
 ## The upgrade that fails on startup

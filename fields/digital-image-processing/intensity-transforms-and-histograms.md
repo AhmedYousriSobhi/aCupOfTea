@@ -15,20 +15,6 @@ relations:
 
 > **Part 3 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** A pixel transform is a lookup table: the old number goes in, a new one comes out. By the end you'll pick between log, gamma and histogram equalization on purpose, and you'll see why equalization is a cumulative sum in disguise.
 
-## Table of Contents
-- [Intensity Transforms and Histograms](#intensity-transforms-and-histograms)
-  - [Table of Contents](#table-of-contents)
-  - [The unreadable X-ray](#the-unreadable-x-ray)
-  - [One citizen at a time](#one-citizen-at-a-time)
-  - [The three workhorses](#the-three-workhorses)
-  - [The town's census: the histogram](#the-towns-census-the-histogram)
-  - [Try it before you scroll](#try-it-before-you-scroll)
-  - [Histogram equalization by hand](#histogram-equalization-by-hand)
-  - [Why a cumulative sum flattens things](#why-a-cumulative-sum-flattens-things)
-  - [What equalization costs](#what-equalization-costs)
-  - [Back to the X-ray](#back-to-the-x-ray)
-    - [References](#references)
-
 ---
 
 ## The unreadable X-ray
