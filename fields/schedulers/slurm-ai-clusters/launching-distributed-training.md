@@ -17,16 +17,6 @@ relations:
 
 > **Part 2 of [Slurm for AI Clusters](/fields/schedulers/slurm-ai-clusters/README.md)** [Part 1](/fields/schedulers/slurm-ai-clusters/topology-aware-placement.md) got the job good nodes. This page gets a process started on each of them with the right rank. By the end you'll have two working launch scripts, and you'll recognise the three ways they usually break.
 
-- [Sixteen GPUs, eight busy](#sixteen-gpus-eight-busy)
-- [The batch script runs on one node](#the-batch-script-runs-on-one-node)
-- [What PyTorch needs from Slurm](#what-pytorch-needs-from-slurm)
-- [Way 1: srun starts every rank](#way-1-srun-starts-every-rank)
-- [Way 2: srun starts torchrun, torchrun starts the ranks](#way-2-srun-starts-torchrun-torchrun-starts-the-ranks)
-- [Three ways it breaks](#three-ways-it-breaks)
-- [On real GPUs](#on-real-gpus)
-- [Back to the eight idle GPUs](#back-to-the-eight-idle-gpus)
-- [References](#references)
-
 ---
 
 ## Sixteen GPUs, eight busy

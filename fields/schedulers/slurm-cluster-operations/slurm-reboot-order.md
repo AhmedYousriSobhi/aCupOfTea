@@ -14,24 +14,6 @@ relations:
 
 > **Part of the `schedulers/` series.** Sourced and expanded from a [classic r/HPC thread](https://www.reddit.com/r/HPC/comments/ipij91/slurm_reboot_order/) that every cluster admin eventually rediscovers the hard way. The full-outage sequence is for when the control plane needs rebooting too; if only compute nodes do, [Slurm can do it for you](#when-only-the-compute-nodes-need-a-reboot) without an outage.
 
-## Table of Contents
-- [Rebooting a Slurm Cluster Without Losing Your Job (Or Anyone Else's)](#rebooting-a-slurm-cluster-without-losing-your-job-or-anyone-elses)
-  - [Table of Contents](#table-of-contents)
-  - [The question every new admin eventually asks](#the-question-every-new-admin-eventually-asks)
-  - [Before you touch anything: five things to have ready](#before-you-touch-anything-five-things-to-have-ready)
-  - [The full reboot sequence](#the-full-reboot-sequence)
-    - [Phase 0 — Scheduling](#phase-0--scheduling)
-    - [Phase 1 — Locking down access](#phase-1--locking-down-access)
-    - [Phase 2 — Control plane first](#phase-2--control-plane-first)
-    - [Phase 3 — Front-end nodes](#phase-3--front-end-nodes)
-    - [Phase 4 — Compute nodes](#phase-4--compute-nodes)
-    - [Phase 5 — Controlled reopening](#phase-5--controlled-reopening)
-  - [The order, visualized](#the-order-visualized)
-  - [Why this order and not another](#why-this-order-and-not-another)
-  - [When only the compute nodes need a reboot](#when-only-the-compute-nodes-need-a-reboot)
-  - [The honest caveat](#the-honest-caveat)
-  - [References](#references)
-
 ---
 
 ## The question every new admin eventually asks

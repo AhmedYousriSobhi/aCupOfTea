@@ -16,16 +16,6 @@ relations:
 
 > **Part 1 of [Slurm for AI Clusters](/fields/schedulers/slurm-ai-clusters/README.md)** A multi-node training job is only as fast as the slowest link between its nodes. By the end you'll know where Slurm puts a job when it knows nothing about your network, how to tell it, and the difference between "prefer one switch" and "never leave the block".
 
-- [The Tuesday slowdown](#the-tuesday-slowdown)
-- [Where Slurm puts a job by default](#where-slurm-puts-a-job-by-default)
-- [topology/tree: prefer one switch](#topologytree-prefer-one-switch)
-- [--switches: wait for one switch](#--switches-wait-for-one-switch)
-- [topology/block: never straddle](#topologyblock-never-straddle)
-- [Two topologies in one cluster (25.05+)](#two-topologies-in-one-cluster-2505)
-- [Which one to use](#which-one-to-use)
-- [Back to Tuesday](#back-to-tuesday)
-- [References](#references)
-
 ---
 
 ## The Tuesday slowdown

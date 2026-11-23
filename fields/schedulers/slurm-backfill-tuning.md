@@ -21,28 +21,6 @@ relations:
 
 > **Part of the [schedulers](/fields/schedulers/slurm-intro.md) directory.** The intro explains what backfill is. This page is about the knobs, the failure modes, and the one counter screen (`sdiag`) that tells you whether either matters. Defaults and option descriptions come from SchedMD's Scheduling Configuration Guide for Slurm 26.05 and the `sdiag` man page. Tuning advice and logs come from SchedMD support tickets and the slurm-users list. Nothing here was run on a live cluster, the invented scenario is just that, and the `sdiag` sample uses made-up numbers.
 
-## Table of Contents
-
-- [Backfill Tuning: The Planner That Can Only See One Day Ahead](#backfill-tuning-the-planner-that-can-only-see-one-day-ahead)
-  - [Table of Contents](#table-of-contents)
-  - [The planner with a one-day calendar](#the-planner-with-a-one-day-calendar)
-  - [Two schedulers, several clocks](#two-schedulers-several-clocks)
-  - [How backfill actually thinks](#how-backfill-actually-thinks)
-  - [The window and the resolution](#the-window-and-the-resolution)
-  - [Backfill is only as honest as your time limits](#backfill-is-only-as-honest-as-your-time-limits)
-  - [Why squeue --start drifts](#why-squeue---start-drifts)
-  - [Depth and the time budget](#depth-and-the-time-budget)
-  - [Per-user limits and job arrays](#per-user-limits-and-job-arrays)
-    - [What bf\_max\_job\_user does](#what-bf_max_job_user-does)
-    - [Reading the 12345\_\[1-1000\] lines](#reading-the-12345_1-1000-lines)
-    - [How arrays meet the scheduler](#how-arrays-meet-the-scheduler)
-    - [So what about 1000 tasks and bf\_max\_job\_user=50?](#so-what-about-1000-tasks-and-bf_max_job_user50)
-  - [Reading sdiag](#reading-sdiag)
-  - [A tuning recipe: one knob at a time](#a-tuning-recipe-one-knob-at-a-time)
-  - [When you need to watch it think](#when-you-need-to-watch-it-think)
-  - [Cheat sheet](#cheat-sheet)
-  - [References](#references)
-
 * * *
 
 ## The planner with a one-day calendar
@@ -378,9 +356,9 @@ These logs are large. Capture a ten-minute window, filter by the job ID, and put
 
 * * *
 
-## Cheat sheet
+## 📜 The Scroll (keep this)
 
-```
+```text
 Window     bf_window (min) >= longest MaxTime; default 1440; range 1..43200
 Resolution raise it when you raise the window (10080 / 600 is a documented example)
 Depth      bf_max_job_test default 100  -> deep queues are invisible by default

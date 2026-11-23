@@ -17,18 +17,6 @@ relations:
 
 > **Part 3 of [Slurm for AI Clusters](/fields/schedulers/slurm-ai-clusters/README.md)** [Part 2](/fields/schedulers/slurm-ai-clusters/launching-distributed-training.md) started the ranks. Now they run inside a container image, so every node has the same CUDA, the same PyTorch, the same everything. By the end you'll run a multi-node step in a container with one `srun` flag, and you'll know the settings that make it work for every user, not just the admin who tested it.
 
-- [Two ranks from a different universe](#two-ranks-from-a-different-universe)
-- [What Pyxis and Enroot are](#what-pyxis-and-enroot-are)
-- [Installing, and the dependencies nobody lists](#installing-and-the-dependencies-nobody-lists)
-- [The first container step](#the-first-container-step)
-- [It works as admin, fails as a user](#it-works-as-admin-fails-as-a-user)
-- [Read-only by default, and mounts](#read-only-by-default-and-mounts)
-- [Named containers outlive the job](#named-containers-outlive-the-job)
-- [The PyTorch hook](#the-pytorch-hook)
-- [Images from a registry](#images-from-a-registry)
-- [Back to the two odd ranks](#back-to-the-two-odd-ranks)
-- [References](#references)
-
 ---
 
 ## Two ranks from a different universe
