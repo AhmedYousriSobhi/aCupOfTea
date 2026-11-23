@@ -24,20 +24,6 @@ relations:
 
 > **Part 12 of 15.** Part of the [Probability & Statistics](/fields/data-science/probability-statistics/README.md) series. It joins two halves: the sip from a stirred pot in [Stir the Pot First](/fields/data-science/probability-statistics/stir-the-pot-population-and-sampling.md) and the bell from [The Bell Curve](/fields/data-science/probability-statistics/the-bell-curve.md). By the end you will see an average as a random thing with its own shape and spread, and know exactly what makes it trustworthy and what cannot. Every number below was simulated with a fixed seed.
 
-## Table of Contents
-
-- [Prologue: two sips, two answers](#prologue-two-sips-two-answers)
-- [An average is a random thing](#an-average-is-a-random-thing)
-- [Fact 1: the spread of averages shrinks](#fact-1-the-spread-of-averages-shrinks)
-- [Fact 2: the averages pile into a bell](#fact-2-the-averages-pile-into-a-bell)
-- [What the theorem does not say](#what-the-theorem-does-not-say)
-- [The failure path: a biased sip](#the-failure-path-a-biased-sip)
-- [Check yourself](#check-yourself)
-- [Back to the story](#back-to-the-story)
-- [Cheat sheet](#cheat-sheet)
-- [Answers](#answers)
-- [References](#references)
-
 * * *
 
 ## Prologue: two sips, two answers

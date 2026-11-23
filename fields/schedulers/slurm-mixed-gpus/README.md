@@ -13,16 +13,6 @@ tags: [slurm, gpu, hpc, nvidia]
 
 > A three-part series on a question that sounds simple: *can one Slurm job get H100s and A100s at the same time?* Short answer: yes, in four different ways. Long answer: the scheduler part works fine; what usually breaks is the job you put on top of it. By the end you'll know which way to use, which to avoid, and how to explain the difference.
 
-## Table of Contents
-- [Mixing GPU Types in Slurm - Overview](#mixing-gpu-types-in-slurm---overview)
-  - [Table of Contents](#table-of-contents)
-  - [The myth, the correction, and the real answer](#the-myth-the-correction-and-the-real-answer)
-  - [The route](#the-route)
-  - [Who this is for](#who-this-is-for)
-  - [What this series is based on](#what-this-series-is-based-on)
-  - [Contents](#contents)
-  - [Related reading in this repo](#related-reading-in-this-repo)
-
 ---
 
 ## The myth, the correction, and the real answer

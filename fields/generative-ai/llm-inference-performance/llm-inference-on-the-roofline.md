@@ -16,19 +16,6 @@ relations:
 
 > **Part 2 of the [LLM Inference Performance series](/fields/generative-ai/llm-inference-performance/README.md).** An LLM is two completely different workloads pretending to be one. By the end of this page you'll know which half is pizza and which is dumplings, why batching is the closest thing to free money in AI infrastructure, and the one piece of memory that batching can never fix.
 
-## Table of Contents
-- [LLM Inference on the Roofline](#llm-inference-on-the-roofline)
-  - [Table of Contents](#table-of-contents)
-  - [Two tickets in the support queue](#two-tickets-in-the-support-queue)
-  - [The librarian who reads the whole library for one word](#the-librarian-who-reads-the-whole-library-for-one-word)
-  - [Reading the prompt: the dumpling phase](#reading-the-prompt-the-dumpling-phase)
-  - [Batching: the bus instead of the taxi](#batching-the-bus-instead-of-the-taxi)
-  - [Try it before you scroll](#try-it-before-you-scroll)
-  - [The KV cache: the luggage that doesn't share](#the-kv-cache-the-luggage-that-doesnt-share)
-  - [The whole story on one roof](#the-whole-story-on-one-roof)
-  - [What users actually feel](#what-users-actually-feel)
-    - [References](#references)
-
 ---
 
 ## Two tickets in the support queue

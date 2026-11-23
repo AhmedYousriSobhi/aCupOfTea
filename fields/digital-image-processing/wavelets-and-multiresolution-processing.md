@@ -17,20 +17,6 @@ relations:
 
 > **Part 9 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** Fourier tells you which waves are in the town but not where they sing. Wavelets fix that by looking at the town at several zoom levels at once. By the end you'll build a Haar transform by hand, read the four subbands of a 2-D transform, and see why throwing away tiny coefficients is the secret of both denoising and JPEG 2000.
 
-## Table of Contents
-- [Wavelets and Multiresolution Processing](#wavelets-and-multiresolution-processing)
-  - [Table of Contents](#table-of-contents)
-  - [The scratch that is everywhere](#the-scratch-that-is-everywhere)
-  - [A map with zoom levels](#a-map-with-zoom-levels)
-  - [Image pyramids](#image-pyramids)
-  - [Try it before you scroll](#try-it-before-you-scroll)
-  - [The Haar wavelet by hand](#the-haar-wavelet-by-hand)
-  - [From one row to a whole image](#from-one-row-to-a-whole-image)
-  - [Why mostly-zero is a gift](#why-mostly-zero-is-a-gift)
-  - [Where you meet wavelets](#where-you-meet-wavelets)
-  - [Back to the scratch](#back-to-the-scratch)
-    - [References](#references)
-
 ---
 
 ## The scratch that is everywhere

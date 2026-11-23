@@ -22,20 +22,6 @@ relations:
 
 > **Part of the [schedulers](/fields/schedulers/slurm-intro.md) directory.** The intro says `slurmd` "enforces resource containment" with `task/cgroup`. This page opens that sentence up: what exactly is fenced, what is not, and how to check which one you have. Commands and option names come from SchedMD's documentation for Slurm 26.05. They were not run on a live cluster for this page, so try them on a test node first.
 
-## Table of Contents
-
-- [Slurm cgroups in Practice: What Gets Constrained, and Where the Numbers Lie](#slurm-cgroups-in-practice-what-gets-constrained-and-where-the-numbers-lie)
-  - [Table of Contents](#table-of-contents)
-  - [The eight-GPU job that could see eight GPUs](#the-eight-gpu-job-that-could-see-eight-gpus)
-  - [One switchboard, two files](#one-switchboard-two-files)
-  - [cgroup v1 or v2: check before you debug](#cgroup-v1-or-v2-check-before-you-debug)
-  - [Memory: two killers, pick one](#memory-two-killers-pick-one)
-  - [Where the numbers lie](#where-the-numbers-lie)
-  - [systemd and the scope nobody sees](#systemd-and-the-scope-nobody-sees)
-  - [Verify it in ten minutes](#verify-it-in-ten-minutes)
-  - [The mental model to keep](#the-mental-model-to-keep)
-  - [References](#references)
-
 * * *
 
 ## The eight-GPU job that could see eight GPUs
@@ -201,9 +187,9 @@ Read the results like this:
 
 * * *
 
-## The mental model to keep
+## 📜 The Scroll (keep this)
 
-```
+```text
 slurm.conf  : loads the plugins     (task/cgroup, proctrack/cgroup, PrologFlags=Contain)
 cgroup.conf : switches on the fences (cores, devices, RAM, swap) -> all default OFF
 

@@ -16,21 +16,6 @@ relations:
 
 > **Part 6 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** The same town, heard as a choir instead of seen as a grid (curious who started it? [Meet Fourier](/fields/digital-image-processing/meet-fourier.md)). By the end you'll read the DFT formula as "how much of each wave is in this image", compute a small one by hand, and know why the convolution theorem makes the whole frequency domain worth the trouble.
 
-## Table of Contents
-- [The Fourier Transform for Images](#the-fourier-transform-for-images)
-  - [Table of Contents](#table-of-contents)
-  - [Two faces, swapped](#two-faces-swapped)
-  - [A town as a choir](#a-town-as-a-choir)
-  - [The 1-D DFT, slowly](#the-1-d-dft-slowly)
-  - [Try it before you scroll](#try-it-before-you-scroll)
-  - [A 4-point DFT by hand](#a-4-point-dft-by-hand)
-  - [From one dimension to two](#from-one-dimension-to-two)
-  - [Reading a spectrum picture](#reading-a-spectrum-picture)
-  - [Magnitude tells how much, phase tells where](#magnitude-tells-how-much-phase-tells-where)
-  - [The convolution theorem](#the-convolution-theorem)
-  - [Back to the swapped faces](#back-to-the-swapped-faces)
-    - [References](#references)
-
 ---
 
 ## Two faces, swapped

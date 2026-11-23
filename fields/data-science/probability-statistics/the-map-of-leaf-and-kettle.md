@@ -25,18 +25,6 @@ relations:
 
 > **Part of the [Probability & Statistics](https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/fields/data-science/probability-statistics/README.md) series.** This is the reference page: no new ideas, only the old ones laid out so you can find and remember them. Each row says which page to go back to for the full story. It grows as the series does.
 
-## Table of Contents
-
-- [Prologue: the apprentice's first morning](#prologue-the-apprentices-first-morning)
-- [The whole picture on one page](#the-whole-picture-on-one-page)
-- [Which tool for which question](#which-tool-for-which-question)
-- [The memory palace: downstairs and upstairs](#the-memory-palace-downstairs-and-upstairs)
-- [Definitions at a glance](#definitions-at-a-glance)
-- [The formula sheet](#the-formula-sheet)
-- [The mistakes that cost the most](#the-mistakes-that-cost-the-most)
-- [Walk the shop with your eyes closed](#walk-the-shop-with-your-eyes-closed)
-- [Back to the story](#back-to-the-story)
-
 * * *
 
 ## Prologue: the apprentice's first morning
