@@ -24,12 +24,6 @@ relations:
 ![Title card reading Sequence Models under the heading Deep Learning](images/sequence-models-01.png)
 
 # Table of Content
-- [Deep Learning - Concepts - Sequence Models](#deep-learning---concepts---sequence-models)
-- [Table of Content](#table-of-content)
-- [History of Large Language Model](#history-of-large-language-model)
-- [Examples of Sequence Data](#examples-of-sequence-data)
-- [Different between NLP and LLM](#different-between-nlp-and-llm)
-
 # History of Large Language Model
 The term "Large Language Model" (LLM) refers to a class of artificial intelligence models designed for natural language understanding and generation tasks. The history of LLMs is closely tied to the development and advancement of deep learning and neural network-based models for language processing. Here's a brief history of LLMs:
 

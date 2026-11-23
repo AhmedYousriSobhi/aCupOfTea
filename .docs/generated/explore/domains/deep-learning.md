@@ -6,7 +6,7 @@ Neural networks and deep architectures.
 
 - [CUDA 101](/fields/libraries-frameworks-containers/101-cuda.md) — What CUDA is and why it is named that, what a thread really is, memory coalescing, and the path of code from CPU to GPU. *(7 min)*  
   [`gpu`](/.docs/generated/explore/tags/gpu.md)
-- [Deep Learning Basics](/fields/deep-learning/concepts/basics.md) — Neurons, loss and cost, and the common activation functions, explained from first principles. *(beginner · 30 min · long read)*  
+- [Deep Learning Basics](/fields/deep-learning/concepts/basics.md) — Neurons, loss and cost, and the common activation functions, explained from first principles. *(beginner · 29 min · long read)*  
   [`neural-networks`](/.docs/generated/explore/tags/neural-networks.md)
 - [Encoder-Decoder for Machine Translation](/fields/generative-ai/machine-translator/encoder-decoder.md) — The encoder-decoder idea behind neural machine translation, with a basic seq2seq model. *(intermediate · 3 min)*  
   [`encoder-decoder`](/.docs/generated/explore/tags/encoder-decoder.md) [`rnn`](/.docs/generated/explore/tags/rnn.md)
