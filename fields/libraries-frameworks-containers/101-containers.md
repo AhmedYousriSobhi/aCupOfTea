@@ -175,7 +175,7 @@ Docker says "Docker shares the Kernel of the Host"!! let's dive deep to explore 
 ## gVisor: Independed Kernel
 To work on secured, efficient container, we can try to make the container uses an independed kernel, then consider [gVisor](https://github.com/google/gvisor) from google.
 
-![gvisor](https://gvisor.dev/docs/Layers.png)
+![gvisor](images/gvisor-layers.png)
 
 # References
 - IBM tutorial to explain the concept of Containerization, found [here](https://www.youtube.com/watch?v=0qotVMX-J5s).

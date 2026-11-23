@@ -1,0 +1,2 @@
+components-of-kubernetes.svg: https://kubernetes.io/images/docs/components-of-kubernetes.svg
+  The Kubernetes Authors, CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/), from the Kubernetes documentation.
