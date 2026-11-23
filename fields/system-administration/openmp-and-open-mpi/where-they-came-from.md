@@ -18,13 +18,6 @@ relations:
 
 ## Contents
 
-- [The problem: every vendor spoke its own dialect](#the-problem-every-vendor-spoke-its-own-dialect)
-- [Tribe 1: the message passers (MPI)](#tribe-1-the-message-passers-mpi)
-- [Try it before you scroll](#try-it-before-you-scroll)
-- [Tribe 2: the shared-memory crowd (OpenMP)](#tribe-2-the-shared-memory-crowd-openmp)
-- [Where Open MPI was born](#where-open-mpi-was-born)
-- [The whole timeline on one screen](#the-whole-timeline-on-one-screen)
-
 ---
 
 ## The problem: every vendor spoke its own dialect

@@ -16,19 +16,6 @@ relations:
 
 > **Part 8 of the [Node Health Check series](/fields/system-administration/node-health-check/README.md).** Find your symptom, follow the steps. Bookmark this one; future you at 2 AM will be grateful.
 
-## Table of Contents
-- [The debugging toolkit](#the-debugging-toolkit)
-- [1. A healthy node keeps getting drained](#1-a-healthy-node-keeps-getting-drained)
-- [2. The problem is fixed but the node never comes back](#2-the-problem-is-fixed-but-the-node-never-comes-back)
-- [3. Node is drained, but not by NHC](#3-node-is-drained-but-not-by-nhc)
-- [4. After boot, the node never registers with Slurm](#4-after-boot-the-node-never-registers-with-slurm)
-- [5. NHC times out, or gets killed silently](#5-nhc-times-out-or-gets-killed-silently)
-- [6. Works when I run it, fails under slurmd](#6-works-when-i-run-it-fails-under-slurmd)
-- [7. My config change does nothing](#7-my-config-change-does-nothing)
-- [8. Weird errors: 126, 127, "no checks", "Unsupported RM"](#8-weird-errors-126-127-no-checks-unsupported-rm)
-- [9. Build and install problems](#9-build-and-install-problems)
-- [Still stuck?](#still-stuck)
-
 ---
 
 ## The debugging toolkit

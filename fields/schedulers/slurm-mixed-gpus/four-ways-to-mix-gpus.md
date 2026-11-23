@@ -14,19 +14,6 @@ tags: [slurm, gpu, hpc]
 
 > **Part 1 of the [Mixing GPU Types in Slurm series](/fields/schedulers/slurm-mixed-gpus/README.md).** Slurm doesn't have one way to give a job different GPUs. It has four, and they behave very differently. By the end of this page you'll know what each one allocates, which one to reach for, and why a single `|` in a constraint has quietly mixed GPU types on more clusters than any heterogeneous job ever has.
 
-## Table of Contents
-- [Four Ways to Ask Slurm for Mixed GPUs](#four-ways-to-ask-slurm-for-mixed-gpus)
-  - [Table of Contents](#table-of-contents)
-  - [The job that started fast and ran slow](#the-job-that-started-fast-and-ran-slow)
-  - [First, how Slurm knows a GPU's type](#first-how-slurm-knows-a-gpus-type)
-  - [Way 1: typed GRES, one kind per request](#way-1-typed-gres-one-kind-per-request)
-  - [Way 2: constraints, and the trap in the bar](#way-2-constraints-and-the-trap-in-the-bar)
-  - [Try it before you scroll](#try-it-before-you-scroll)
-  - [Way 3: heterogeneous jobs, the real thing](#way-3-heterogeneous-jobs-the-real-thing)
-  - [Way 4: heterogeneous steps, mixing inside one allocation](#way-4-heterogeneous-steps-mixing-inside-one-allocation)
-  - [The four ways side by side](#the-four-ways-side-by-side)
-  - [References](#references)
-
 ---
 
 ## The job that started fast and ran slow

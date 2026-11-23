@@ -16,19 +16,6 @@ relations:
 
 > **Part 5 of the [Predicting GPU Node Failures series](/fields/system-administration/gpu-failure-prediction/README.md), the last one.** A prediction you never checked is a superstition. This page gives you the ideas to check one: why rare events fool intuition, the three numbers that describe a predictor, the mistakes that make those numbers lie, and when a machine-learning model is actually worth it. By the end you'll be able to defend (or demolish) any "we predict GPU failures" claim.
 
-## Table of Contents
-- [Is the Prediction Any Good?](#is-the-prediction-any-good)
-  - [Table of Contents](#table-of-contents)
-  - [Concept 1: the base-rate trap](#concept-1-the-base-rate-trap)
-  - [Concept 2: four outcomes, three numbers](#concept-2-four-outcomes-three-numbers)
-  - [Concept 3: the horizon](#concept-3-the-horizon)
-  - [Concept 4: what counts as a failure](#concept-4-what-counts-as-a-failure)
-  - [Concept 5: backtesting, and how it lies](#concept-5-backtesting-and-how-it-lies)
-  - [Rules or a model?](#rules-or-a-model)
-  - [What a model must never do](#what-a-model-must-never-do)
-  - [The interview answer, revisited](#the-interview-answer-revisited)
-    - [References](#references)
-
 ---
 
 ## Concept 1: the base-rate trap

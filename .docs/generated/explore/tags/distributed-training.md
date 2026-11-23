@@ -2,7 +2,7 @@
 
 # Distributed Training
 
-- [Keep the Job on One Switch: Topology-Aware Placement in Slurm](/fields/schedulers/slurm-ai-clusters/topology-aware-placement.md) — How Slurm places multi-node jobs with and without a topology plugin - topology/tree, --switches, topology/block that refuses to straddle, the 25.05 topology.yaml, and a fatal block config. *(intermediate · 7 min)*  
+- [Keep the Job on One Switch: Topology-Aware Placement in Slurm](/fields/schedulers/slurm-ai-clusters/topology-aware-placement.md) — How Slurm places multi-node jobs with and without a topology plugin - topology/tree, --switches, topology/block that refuses to straddle, the 25.05 topology.yaml, and a fatal block config. *(intermediate · 6 min)*  
   [`distributed-training`](/.docs/generated/explore/tags/distributed-training.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [Launching Distributed Training on Slurm: srun, torchrun, and the Rank Contract](/fields/schedulers/slurm-ai-clusters/launching-distributed-training.md) — Why a 2-node training job can run on one node, the environment PyTorch needs from Slurm, launching with srun or torchrun, and the double-launch trap - tested with PyTorch 2.15 on Slurm 23.11. *(intermediate · 6 min)*  
   [`distributed-training`](/.docs/generated/explore/tags/distributed-training.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`pytorch`](/.docs/generated/explore/tags/pytorch.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)

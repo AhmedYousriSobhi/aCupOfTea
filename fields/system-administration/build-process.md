@@ -4,36 +4,6 @@ summary: Why and how to configure the build of a Linux package, with a closer lo
 # System Administration - Build Process
 
 # Mystic Map
-- [System Administration - Build Process](#system-administration---build-process)
-- [Mystic Map](#mystic-map)
-- [Why Configure the Build Process for Applications or Packages in Linux?](#why-configure-the-build-process-for-applications-or-packages-in-linux)
-- [Key Steps in the Build Configuration Process](#key-steps-in-the-build-configuration-process)
-- [Common Tools and Commands](#common-tools-and-commands)
-- [CMake](#cmake)
-  - [Overview and History](#overview-and-history)
-  - [How CMake Works Internally](#how-cmake-works-internally)
-  - [Cmake follows a two-phase process](#cmake-follows-a-two-phase-process)
-  - [How to configure using CMake](#how-to-configure-using-cmake)
-    - [1- Basic Structure of CMakeLists.txt](#1--basic-structure-of-cmakeliststxt)
-    - [2- Running CMake](#2--running-cmake)
-    - [3- Common Default Parameters](#3--common-default-parameters)
-  - [Cleaning the Build Directory](#cleaning-the-build-directory)
-    - [1- Using *--build* with *--target clean* option](#1--using---build-with---target-clean-option)
-    - [2- Using *-E rm* Command](#2--using--e-rm-command)
-    - [3- Using CMake Scripting with a Clean Target](#3--using-cmake-scripting-with-a-clean-target)
-  - [Advanced Tips and Tricks for CMake Command Line](#advanced-tips-and-tricks-for-cmake-command-line)
-  - [Using find\_package and Config Modules](#using-find_package-and-config-modules)
-    - [Common Issues and Solutions with find\_package](#common-issues-and-solutions-with-find_package)
-      - [1. *Package Not Found*](#1-package-not-found)
-      - [2. *Version Mismatch*](#2-version-mismatch)
-      - [3. *Incorrect Find.cmake Module*](#3-incorrect-findcmake-module)
-      - [4. *Missing Dependencies*](#4-missing-dependencies)
-      - [5. *Incorrect Package Config File Location*](#5-incorrect-package-config-file-location)
-      - [6. *Case Sensitivity Issues*](#6-case-sensitivity-issues)
-      - [7. *Incorrect Usage of find\_package Options*](#7-incorrect-usage-of-find_package-options)
-      - [8. *Custom Installation Locations*](#8-custom-installation-locations)
-
-
 # Why Configure the Build Process for Applications or Packages in Linux?
 Configuring the build process for applications or packages in Linux is crucial for several reasons:
 1. Customization: Allows tailoring the software to specific needs by enabling or disabling features, optimizing for particular hardware, or integrating with other software components.

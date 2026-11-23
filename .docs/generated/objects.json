@@ -113,7 +113,7 @@
     "level": "intermediate",
     "order": 2,
     "path": "fields/system-administration/ai-storage-and-fabric/rdma-infiniband-gpudirect.md",
-    "reading_time_min": 8,
+    "reading_time_min": 7,
     "relations": {
       "prerequisites": [
         "ai-storage-parallel-filesystems"
@@ -987,7 +987,7 @@
     "level": "beginner",
     "order": 3,
     "path": "fields/data-science/probability-statistics/draw-it-before-you-describe-it.md",
-    "reading_time_min": 11,
+    "reading_time_min": 10,
     "relations": {
       "prerequisites": [
         "data-types-and-frequency-tables"
@@ -1135,7 +1135,7 @@
     "id": "gpu-failure-prediction-overview",
     "level": "advanced",
     "path": "fields/system-administration/gpu-failure-prediction/README.md",
-    "reading_time_min": 5,
+    "reading_time_min": 4,
     "relations": {
       "prerequisites": [],
       "related": [
@@ -1165,7 +1165,7 @@
     "level": "advanced",
     "order": 4,
     "path": "fields/system-administration/gpu-failure-prediction/from-alert-to-drain.md",
-    "reading_time_min": 9,
+    "reading_time_min": 8,
     "relations": {
       "prerequisites": [
         "gpu-pred-rules"
@@ -1255,7 +1255,7 @@
     "level": "advanced",
     "order": 3,
     "path": "fields/system-administration/gpu-failure-prediction/rules-that-predict.md",
-    "reading_time_min": 10,
+    "reading_time_min": 9,
     "relations": {
       "prerequisites": [
         "gpu-pred-collecting-signals"
@@ -1635,7 +1635,7 @@
     "level": "intermediate",
     "order": 5,
     "path": "fields/system-administration/linux-memory-pressure/cgroup-v2-memory-control.md",
-    "reading_time_min": 12,
+    "reading_time_min": 11,
     "relations": {
       "prerequisites": [
         "linux-mem-reclaim"
@@ -1663,7 +1663,7 @@
     "level": "intermediate",
     "order": 6,
     "path": "fields/system-administration/linux-memory-pressure/memory-locking-mlockall.md",
-    "reading_time_min": 12,
+    "reading_time_min": 11,
     "relations": {
       "prerequisites": [
         "linux-mem-reclaim"
@@ -1692,7 +1692,7 @@
     "level": "intermediate",
     "order": 4,
     "path": "fields/system-administration/linux-memory-pressure/the-oom-killer.md",
-    "reading_time_min": 9,
+    "reading_time_min": 8,
     "relations": {
       "prerequisites": [
         "linux-mem-reclaim"
@@ -2297,7 +2297,7 @@
     "level": "advanced",
     "order": 6,
     "path": "fields/system-administration/node-health-check/checks-and-remediation/custom-checks.md",
-    "reading_time_min": 7,
+    "reading_time_min": 6,
     "relations": {
       "prerequisites": [
         "nhc-writing-nhc-conf"
@@ -2715,7 +2715,7 @@
     "level": "intermediate",
     "order": 5,
     "path": "fields/system-administration/openmp-and-open-mpi/hybrid-and-the-binding-trap.md",
-    "reading_time_min": 7,
+    "reading_time_min": 6,
     "relations": {
       "prerequisites": [
         "openmp-mpi-threads-and-ranks"
@@ -2875,7 +2875,7 @@
     "level": "beginner",
     "order": 6,
     "path": "fields/system-administration/openmp-and-open-mpi/where-they-are-going.md",
-    "reading_time_min": 9,
+    "reading_time_min": 8,
     "relations": {
       "prerequisites": [
         "openmp-mpi-where-they-came-from"
@@ -3412,7 +3412,7 @@
     "level": "intermediate",
     "order": 3,
     "path": "fields/schedulers/slurm-inside-a-job/slurm-cgroups-in-practice.md",
-    "reading_time_min": 11,
+    "reading_time_min": 10,
     "relations": {
       "prerequisites": [],
       "related": [
@@ -3509,7 +3509,7 @@
     "level": "advanced",
     "order": 4,
     "path": "fields/schedulers/slurm-inside-a-job/slurm-gpu-affinity-socket-lie.md",
-    "reading_time_min": 10,
+    "reading_time_min": 9,
     "relations": {
       "prerequisites": [],
       "related": [
@@ -3572,7 +3572,7 @@
     "level": "beginner",
     "order": 1,
     "path": "fields/schedulers/slurm-intro.md",
-    "reading_time_min": 10,
+    "reading_time_min": 9,
     "relations": {
       "prerequisites": [],
       "related": [
@@ -3632,7 +3632,7 @@
     "level": "intermediate",
     "order": 3,
     "path": "fields/schedulers/slurm-preemption/slurm-job-submit-lua.md",
-    "reading_time_min": 11,
+    "reading_time_min": 10,
     "relations": {
       "prerequisites": [],
       "related": [
@@ -3692,7 +3692,7 @@
     "level": "intermediate",
     "order": 6,
     "path": "fields/schedulers/slurm-ai-clusters/lab-build-cheatsheet.md",
-    "reading_time_min": 9,
+    "reading_time_min": 8,
     "relations": {
       "prerequisites": [],
       "related": [
@@ -3728,7 +3728,7 @@
     "level": "intermediate",
     "order": 1,
     "path": "fields/schedulers/slurm-mixed-gpus/four-ways-to-mix-gpus.md",
-    "reading_time_min": 9,
+    "reading_time_min": 8,
     "relations": {
       "prerequisites": [],
       "related": []
@@ -3782,7 +3782,7 @@
     "level": "intermediate",
     "order": 3,
     "path": "fields/schedulers/slurm-mixed-gpus/where-hetjobs-shine.md",
-    "reading_time_min": 10,
+    "reading_time_min": 9,
     "relations": {
       "prerequisites": [
         "slurm-mixed-gpus-why-disappoints"
@@ -3877,7 +3877,7 @@
     "level": "intermediate",
     "order": 5,
     "path": "fields/schedulers/slurm-cluster-operations/slurm-pam-adopt-ssh-access.md",
-    "reading_time_min": 8,
+    "reading_time_min": 7,
     "relations": {
       "prerequisites": [],
       "related": [
@@ -3969,7 +3969,7 @@
     "level": "intermediate",
     "order": 2,
     "path": "fields/schedulers/slurm-pending-jobs/who-goes-first.md",
-    "reading_time_min": 8,
+    "reading_time_min": 7,
     "relations": {
       "prerequisites": [
         "slurm-pending-reasons"
@@ -4437,7 +4437,7 @@
     "level": "intermediate",
     "order": 1,
     "path": "fields/schedulers/slurm-ai-clusters/topology-aware-placement.md",
-    "reading_time_min": 7,
+    "reading_time_min": 6,
     "relations": {
       "prerequisites": [],
       "related": [
@@ -4467,7 +4467,7 @@
     "level": "intermediate",
     "order": 3,
     "path": "fields/schedulers/slurm-cluster-operations/slurm-upgrade-order.md",
-    "reading_time_min": 13,
+    "reading_time_min": 12,
     "relations": {
       "prerequisites": [],
       "related": [
@@ -4495,7 +4495,7 @@
     "level": "intermediate",
     "order": 4,
     "path": "fields/schedulers/slurm-cluster-operations/slurm-version-changes.md",
-    "reading_time_min": 12,
+    "reading_time_min": 11,
     "relations": {
       "prerequisites": [],
       "related": [
@@ -4587,7 +4587,7 @@
     "level": "intermediate",
     "order": 14,
     "path": "fields/data-science/probability-statistics/the-courtroom-for-numbers.md",
-    "reading_time_min": 10,
+    "reading_time_min": 9,
     "relations": {
       "prerequisites": [
         "how-sure-are-you"
@@ -4616,7 +4616,7 @@
     "level": "beginner",
     "order": 16,
     "path": "fields/data-science/probability-statistics/the-map-of-leaf-and-kettle.md",
-    "reading_time_min": 23,
+    "reading_time_min": 22,
     "relations": {
       "prerequisites": [],
       "related": [
@@ -4678,7 +4678,7 @@
     "level": "beginner",
     "order": 8,
     "path": "fields/data-science/probability-statistics/the-test-that-was-99-percent-accurate.md",
-    "reading_time_min": 9,
+    "reading_time_min": 8,
     "relations": {
       "prerequisites": [
         "counting-the-ways"

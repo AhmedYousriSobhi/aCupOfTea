@@ -22,21 +22,6 @@ relations:
 
 > **Part of the [schedulers](/fields/schedulers/slurm-intro.md) directory**, and the missing neighbor of the [mixed-GPU series](/fields/schedulers/slurm-mixed-gpus/README.md): that series is about *which* GPUs a job gets, this page is about *where* they sit. Everything below comes from SchedMD's GRES documentation for Slurm 26.05 and the `gres.conf` man page. None of it was run on a live cluster for this page.
 
-## Table of Contents
-
-- [Your GPU Has Core Affinity. Slurm Has Socket Affinity. They Are Not Speaking.](#your-gpu-has-core-affinity-slurm-has-socket-affinity-they-are-not-speaking)
-  - [Table of Contents](#table-of-contents)
-  - [The comforting misconception](#the-comforting-misconception)
-  - [What the docs actually say](#what-the-docs-actually-say)
-  - [Making Slurm's sockets match the hardware](#making-slurms-sockets-match-the-hardware)
-  - [One GPU, four names](#one-gpu-four-names)
-  - [AutoDetect: nvml, nvidia, and what each can see](#autodetect-nvml-nvidia-and-what-each-can-see)
-  - [The library that will not let go](#the-library-that-will-not-let-go)
-  - [Sharing a GPU: MIG, MPS, shards](#sharing-a-gpu-mig-mps-shards)
-  - [Steps want all your GPUs by default](#steps-want-all-your-gpus-by-default)
-  - [A debugging routine for a bad GPU node](#a-debugging-routine-for-a-bad-gpu-node)
-  - [References](#references)
-
 * * *
 
 ## The comforting misconception

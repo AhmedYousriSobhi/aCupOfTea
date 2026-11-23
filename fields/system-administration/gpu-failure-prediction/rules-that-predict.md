@@ -16,19 +16,6 @@ relations:
 
 > **Part 3 of the [Predicting GPU Node Failures series](/fields/system-administration/gpu-failure-prediction/README.md).** A signal is not a decision. This page is about the thinking between the two: what kinds of rules exist, how to make a rule notice change without crying wolf, and how to tie each rule to a specific action. By the end you'll be able to design a GPU failure rule set on a whiteboard and explain every line of it.
 
-## Table of Contents
-- [From Signals to Decisions](#from-signals-to-decisions)
-  - [Table of Contents](#table-of-contents)
-  - [Concept 1: three kinds of rule](#concept-1-three-kinds-of-rule)
-  - [Concept 2: compare a GPU with itself](#concept-2-compare-a-gpu-with-itself)
-  - [Concept 3: persistence and noise floors](#concept-3-persistence-and-noise-floors)
-  - [Concept 4: tiers that map to actions](#concept-4-tiers-that-map-to-actions)
-  - [The rule set, on one page](#the-rule-set-on-one-page)
-  - [The first-event trap](#the-first-event-trap)
-  - [Rules are code: test them](#rules-are-code-test-them)
-  - [Knobs are opinions](#knobs-are-opinions)
-    - [References](#references)
-
 ---
 
 ## Concept 1: three kinds of rule

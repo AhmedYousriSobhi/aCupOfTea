@@ -19,14 +19,6 @@ relations:
 
 ## Contents
 
-- [Two tickets, one job script](#two-tickets-one-job-script)
-- [The building manager](#the-building-manager)
-- [Under the hood: the road from sbatch to rank](#under-the-hood-the-road-from-sbatch-to-rank)
-- [Try it before you scroll](#try-it-before-you-scroll)
-- [Two lines decide the binding trap](#two-lines-decide-the-binding-trap)
-- [A job script you can trust](#a-job-script-you-can-trust)
-- [Back to the two tickets](#back-to-the-two-tickets)
-
 ---
 
 ## Two tickets, one job script

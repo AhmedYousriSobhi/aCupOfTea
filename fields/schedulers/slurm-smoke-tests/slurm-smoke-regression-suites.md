@@ -25,19 +25,6 @@ relations:
 
 > **Part 6 of [Slurm Smoke Tests](/fields/schedulers/slurm-smoke-tests/README.md).** The runs below were done on a two-node test cluster (Slurm 23.11.4 from the Ubuntu package, accounting on, a Lua submit script that requires `--time`, both `slurmd` daemons on one Ubuntu 24.04 machine with 2 CPUs). Both tools were run as an ordinary user. Each run is one run, on a deliberately small and unusual machine, so the pass and fail counts describe *this* cluster, not Slurm. The names and the story are invented. **Do not run either suite against a production cluster without reading its documentation first.** SchedMD's own README says its automatic-configuration mode "is not supported for use with local installations".
 
-## Table of Contents
-
-- [When Smoke Becomes a Fire Drill: SchedMD's Test Suite, ReFrame and the Baseline Rule](#when-smoke-becomes-a-fire-drill-schedmds-test-suite-reframe-and-the-baseline-rule)
-  - [Table of Contents](#table-of-contents)
-  - [The night before](#the-night-before)
-  - [Smoke test or regression suite](#smoke-test-or-regression-suite)
-  - [SchedMD's own suite](#schedmds-own-suite)
-  - [ReFrame](#reframe)
-  - [Which tool for which question](#which-tool-for-which-question)
-  - [Version notes](#version-notes)
-  - [Back to the night before](#back-to-the-night-before)
-  - [References](#references)
-
 ---
 
 ## The night before

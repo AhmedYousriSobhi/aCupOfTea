@@ -16,26 +16,6 @@ relations:
 
 > **Part 3 of the [Mixing GPU Types in Slurm series](/fields/schedulers/slurm-mixed-gpus/README.md), the last one.** [Part 2](/fields/schedulers/slurm-mixed-gpus/why-mixed-training-disappoints.md) showed why one synchronous training run across H100s and A100s is usually a bad deal. This page is the other half: the jobs where different hardware for different parts is exactly the right design. By the end you'll have the rule that separates the two, a setup guide for admins, and an answer that turns "Slurm can't do that" into a strong interview moment.
 
-## Table of Contents
-- [Where Heterogeneous Jobs Shine](#where-heterogeneous-jobs-shine)
-  - [Table of Contents](#table-of-contents)
-  - [The restaurant, not the rowing boat](#the-restaurant-not-the-rowing-boat)
-  - [The rule: mix across roles, not within a role](#the-rule-mix-across-roles-not-within-a-role)
-  - [Pattern 1: trainer and rollout workers](#pattern-1-trainer-and-rollout-workers)
-  - [Pattern 2: server and clients](#pattern-2-server-and-clients)
-  - [Pattern 3: "either kind, never both"](#pattern-3-either-kind-never-both)
-  - [Pattern 4: uneven layouts in one allocation](#pattern-4-uneven-layouts-in-one-allocation)
-  - [Try it before you scroll](#try-it-before-you-scroll)
-  - [For admins: setting up a multi-generation cluster](#for-admins-setting-up-a-multi-generation-cluster)
-    - [Label GPUs and nodes the same way](#label-gpus-and-nodes-the-same-way)
-    - [Decide how partitions map to generations](#decide-how-partitions-map-to-generations)
-    - [Guard against the accidental mix](#guard-against-the-accidental-mix)
-    - [Tune the controls heterogeneous jobs care about](#tune-the-controls-heterogeneous-jobs-care-about)
-    - [Teach users the three lines](#teach-users-the-three-lines)
-  - [The decision table](#the-decision-table)
-  - [The interview answer](#the-interview-answer)
-  - [References](#references)
-
 ---
 
 ## The restaurant, not the rowing boat

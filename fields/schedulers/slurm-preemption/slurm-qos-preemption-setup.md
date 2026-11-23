@@ -25,23 +25,6 @@ relations:
 
 > **Part of the [schedulers](/fields/schedulers/slurm-intro.md) directory.** The [preemption page](/fields/schedulers/slurm-preemption/slurm-preemption-requeue-signals.md) explains what preemption *is*. This page is the other half: the commands that switch it on. Everything here was run on a two-node test cluster (Slurm 23.11.4, accounting on, both `slurmd` daemons on one Ubuntu 24.04 machine) and then adapted to read well. The names are invented. Your site's defaults, and your Slurm version, may differ, so run the drill in step 4 before you trust it.
 
-## Table of Contents
-
-- [The Guest List: Setting Up QOS Preemption Without Starting a War](#the-guest-list-setting-up-qos-preemption-without-starting-a-war)
-  - [Table of Contents](#table-of-contents)
-  - [The Thursday before the deadline](#the-thursday-before-the-deadline)
-  - [Three dials, one cluster](#three-dials-one-cluster)
-  - [Step 1: switch preemption on](#step-1-switch-preemption-on)
-  - [Step 2: define the two tiers](#step-2-define-the-two-tiers)
-  - [Step 3: let people use the tiers](#step-3-let-people-use-the-tiers)
-  - [Partition priority instead?](#partition-priority-instead)
-  - [Step 4: prove it with a drill](#step-4-prove-it-with-a-drill)
-  - [Five ways this goes quietly wrong](#five-ways-this-goes-quietly-wrong)
-  - [Rolling it out, and back](#rolling-it-out-and-back)
-  - [Version notes](#version-notes)
-  - [Back to the Thursday](#back-to-the-thursday)
-  - [References](#references)
-
 ---
 
 ## The Thursday before the deadline

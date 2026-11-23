@@ -21,15 +21,6 @@ The scene: you reserve a nice 4-core node, start 2 ranks with 4 threads each, an
 
 ## Contents
 
-- [Why combine them](#why-combine-them)
-- [Binding in one paragraph](#binding-in-one-paragraph)
-- [The trap, caught on camera](#the-trap-caught-on-camera)
-- [Try it before you scroll](#try-it-before-you-scroll)
-- [The fix](#the-fix)
-- [Proof it matters](#proof-it-matters)
-- [A surprise on the way](#a-surprise-on-the-way)
-- [The safe path](#the-safe-path)
-
 ---
 
 ## Why combine them

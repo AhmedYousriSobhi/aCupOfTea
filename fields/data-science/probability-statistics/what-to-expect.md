@@ -23,21 +23,6 @@ relations:
 
 > **Part 9 of 15.** Part of the [Probability & Statistics](/fields/data-science/probability-statistics/README.md) series, after [The Test That Was 99 Percent Accurate](/fields/data-science/probability-statistics/the-test-that-was-99-percent-accurate.md). By the end you will know that expected value is **not a new idea**: it is the seesaw of [The Number on the Tin](/fields/data-science/probability-statistics/the-number-on-the-tin.md) and the leftover walk of [How Far From the Middle?](/fields/data-science/probability-statistics/how-far-from-the-middle.md), with probability in place of frequency.
 
-## Table of Contents
-
-- [Prologue: the lucky tin](#prologue-the-lucky-tin)
-- [A number for every way it could go](#a-number-for-every-way-it-could-go)
-- [The seesaw again](#the-seesaw-again)
-- [The surprise: nobody wins 4.5](#the-surprise-nobody-wins-45)
-- [What is left over, again](#what-is-left-over-again)
-- [Expect, don't predict](#expect-dont-predict)
-- [Shifting and adding](#shifting-and-adding)
-- [Check yourself](#check-yourself)
-- [Back to the story](#back-to-the-story)
-- [Cheat sheet](#cheat-sheet)
-- [Answers](#answers)
-- [References](#references)
-
 * * *
 
 ## Prologue: the lucky tin
