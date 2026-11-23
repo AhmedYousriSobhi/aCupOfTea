@@ -16,16 +16,6 @@ relations:
 
 > **Part 7 of the [Node Health Check series](/fields/system-administration/node-health-check/README.md).** Draining a sick node is defense. This page is offense: fixing the boring 80% of failures without a human, while making sure automation never turns one bad node into a hundred.
 
-## Table of Contents
-- [The loop](#the-loop)
-- [The escalation ladder](#the-escalation-ladder)
-- [Rung 0: fix in place with NHC's own flags](#rung-0-fix-in-place-with-nhcs-own-flags)
-- [What you must never auto-fix](#what-you-must-never-auto-fix)
-- [Rungs 1-2: the node doctor](#rungs-1-2-the-node-doctor)
-- [Guard rails, or how not to reboot the whole cluster](#guard-rails-or-how-not-to-reboot-the-whole-cluster)
-- [Rung 3: hand off to humans and vendors](#rung-3-hand-off-to-humans-and-vendors)
-- [Notifications without the spam](#notifications-without-the-spam)
-
 ---
 
 ## The loop

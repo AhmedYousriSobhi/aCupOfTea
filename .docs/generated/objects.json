@@ -113,7 +113,7 @@
     "level": "intermediate",
     "order": 2,
     "path": "fields/system-administration/ai-storage-and-fabric/rdma-infiniband-gpudirect.md",
-    "reading_time_min": 8,
+    "reading_time_min": 7,
     "relations": {
       "prerequisites": [
         "ai-storage-parallel-filesystems"
@@ -1135,7 +1135,7 @@
     "id": "gpu-failure-prediction-overview",
     "level": "advanced",
     "path": "fields/system-administration/gpu-failure-prediction/README.md",
-    "reading_time_min": 5,
+    "reading_time_min": 4,
     "relations": {
       "prerequisites": [],
       "related": [
@@ -1165,7 +1165,7 @@
     "level": "advanced",
     "order": 4,
     "path": "fields/system-administration/gpu-failure-prediction/from-alert-to-drain.md",
-    "reading_time_min": 9,
+    "reading_time_min": 8,
     "relations": {
       "prerequisites": [
         "gpu-pred-rules"
@@ -1255,7 +1255,7 @@
     "level": "advanced",
     "order": 3,
     "path": "fields/system-administration/gpu-failure-prediction/rules-that-predict.md",
-    "reading_time_min": 10,
+    "reading_time_min": 9,
     "relations": {
       "prerequisites": [
         "gpu-pred-collecting-signals"
@@ -1635,7 +1635,7 @@
     "level": "intermediate",
     "order": 5,
     "path": "fields/system-administration/linux-memory-pressure/cgroup-v2-memory-control.md",
-    "reading_time_min": 12,
+    "reading_time_min": 11,
     "relations": {
       "prerequisites": [
         "linux-mem-reclaim"
@@ -1663,7 +1663,7 @@
     "level": "intermediate",
     "order": 6,
     "path": "fields/system-administration/linux-memory-pressure/memory-locking-mlockall.md",
-    "reading_time_min": 12,
+    "reading_time_min": 11,
     "relations": {
       "prerequisites": [
         "linux-mem-reclaim"
@@ -1692,7 +1692,7 @@
     "level": "intermediate",
     "order": 4,
     "path": "fields/system-administration/linux-memory-pressure/the-oom-killer.md",
-    "reading_time_min": 9,
+    "reading_time_min": 8,
     "relations": {
       "prerequisites": [
         "linux-mem-reclaim"
@@ -2297,7 +2297,7 @@
     "level": "advanced",
     "order": 6,
     "path": "fields/system-administration/node-health-check/checks-and-remediation/custom-checks.md",
-    "reading_time_min": 7,
+    "reading_time_min": 6,
     "relations": {
       "prerequisites": [
         "nhc-writing-nhc-conf"
@@ -2715,7 +2715,7 @@
     "level": "intermediate",
     "order": 5,
     "path": "fields/system-administration/openmp-and-open-mpi/hybrid-and-the-binding-trap.md",
-    "reading_time_min": 7,
+    "reading_time_min": 6,
     "relations": {
       "prerequisites": [
         "openmp-mpi-threads-and-ranks"
@@ -2875,7 +2875,7 @@
     "level": "beginner",
     "order": 6,
     "path": "fields/system-administration/openmp-and-open-mpi/where-they-are-going.md",
-    "reading_time_min": 9,
+    "reading_time_min": 8,
     "relations": {
       "prerequisites": [
         "openmp-mpi-where-they-came-from"

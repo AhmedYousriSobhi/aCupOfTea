@@ -16,21 +16,6 @@ relations:
 
 > **Part 5 of the [Linux Memory Pressure series](/fields/system-administration/linux-memory-pressure/README.md).** Some programs exist to act when the machine is out of memory: a watchdog that kills a runaway job, a daemon that pauses containers. Those programs have a trap waiting for them, and `mlockall` is the fix. By the end you'll know what the trap is, what the fix pins, what it costs, and why an ordinary user can only get half of it.
 
-## Table of Contents
-- [Memory Locking: Keeping a Rescuer in RAM with mlockall](#memory-locking-keeping-a-rescuer-in-ram-with-mlockall)
-  - [Table of Contents](#table-of-contents)
-  - [The tow truck that got towed](#the-tow-truck-that-got-towed)
-  - [Step 1: what swapping really is](#step-1-what-swapping-really-is)
-  - [Step 2: the trap](#step-2-the-trap)
-  - [Try it before you scroll](#try-it-before-you-scroll)
-  - [Step 3: the fix, mlockall](#step-3-the-fix-mlockall)
-  - [Step 4: the second half of the fix, pre-allocation](#step-4-the-second-half-of-the-fix-pre-allocation)
-  - [Step 5: the cost, and where 8 MiB comes from](#step-5-the-cost-and-where-8-mib-comes-from)
-  - [Root versus ordinary user](#root-versus-ordinary-user)
-  - [Check it on your own machine](#check-it-on-your-own-machine)
-  - [What locking does not do](#what-locking-does-not-do)
-  - [References](#references)
-
 ---
 
 ## The tow truck that got towed

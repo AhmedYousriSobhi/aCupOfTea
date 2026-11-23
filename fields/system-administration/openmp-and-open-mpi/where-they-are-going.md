@@ -18,14 +18,6 @@ relations:
 
 ## Contents
 
-- [Two tickets in the Monday queue](#two-tickets-in-the-monday-queue)
-- [OpenMP: the kitchen gets a loading dock](#openmp-the-kitchen-gets-a-loading-dock)
-- [MPI: the delivery box gets a standard size](#mpi-the-delivery-box-gets-a-standard-size)
-- [Try it before you scroll](#try-it-before-you-scroll)
-- [Open MPI today](#open-mpi-today)
-- [The tickets, answered](#the-tickets-answered)
-- [The whole series in six lines](#the-whole-series-in-six-lines)
-
 ---
 
 ## Two tickets in the Monday queue
