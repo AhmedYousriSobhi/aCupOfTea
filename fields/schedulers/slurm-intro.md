@@ -14,18 +14,6 @@ relations:
 
 > **Directory index for `schedulers/`.** Everything in here assumes you already know *what* a scheduler is in the abstract — this is the "here's the actual landscape, here's how the pieces fit, here's what to read next" primer.
 
-## Table of Contents
-- [Schedulers: The Traffic Controller Nobody Thanks Until It Breaks](#schedulers-the-traffic-controller-nobody-thanks-until-it-breaks)
-  - [Table of Contents](#table-of-contents)
-  - [What a scheduler actually does](#what-a-scheduler-actually-does)
-  - [Two very different meanings of "scheduler"](#two-very-different-meanings-of-scheduler)
-  - [The job-scheduler landscape](#the-job-scheduler-landscape)
-  - [The core concepts every scheduler shares](#the-core-concepts-every-scheduler-shares)
-  - [Why Slurm, specifically](#why-slurm-specifically)
-  - [The Slurm architecture, at a glance](#the-slurm-architecture-at-a-glance)
-  - [Where to go from here](#where-to-go-from-here)
-  - [References](#references)
-
 ---
 
 ## What a scheduler actually does

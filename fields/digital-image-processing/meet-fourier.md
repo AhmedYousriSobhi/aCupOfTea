@@ -16,20 +16,6 @@ relations:
 
 > **Interlude of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** Read it before or after [Part 6](/fields/digital-image-processing/fourier-transform-for-images.md). The man behind the transform was an administrator who studied heat in his spare time, and his one big idea explains why blur, low-pass filters and the heat on your stove are the same thing.
 
-## Table of Contents
-- [Meet Fourier](#meet-fourier)
-  - [Table of Contents](#table-of-contents)
-  - [The prefect with a side project](#the-prefect-with-a-side-project)
-  - [The timeline](#the-timeline)
-  - [The question: how does heat spread?](#the-question-how-does-heat-spread)
-  - [The trick: ask for sine shapes](#the-trick-ask-for-sine-shapes)
-  - [Try it before you scroll](#try-it-before-you-scroll)
-  - [Heat is a blur filter](#heat-is-a-blur-filter)
-  - [Why he made life "complex"](#why-he-made-life-complex)
-  - [One more thing he got ahead of everyone on](#one-more-thing-he-got-ahead-of-everyone-on)
-  - [Back to the prefect](#back-to-the-prefect)
-    - [References](#references)
-
 ---
 
 ## The prefect with a side project

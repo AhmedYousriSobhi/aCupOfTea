@@ -16,16 +16,6 @@ relations:
 
 > **Part 4 of the [Node Health Check series](/fields/system-administration/node-health-check/README.md).** NHC knows how to judge a node. Now we give it a schedule, a timeout that won't get it killed mid-sentence, and the right to drain.
 
-## Table of Contents
-- [The three lines](#the-three-lines)
-- [Which nodes should get checked? HealthCheckNodeState](#which-nodes-should-get-checked-healthchecknodestate)
-- [Timeouts: make sure the bouncer isn't shot mid-sentence](#timeouts-make-sure-the-bouncer-isnt-shot-mid-sentence)
-- [Life of a failure, end to end](#life-of-a-failure-end-to-end)
-- [Draining etiquette for humans](#draining-etiquette-for-humans)
-- [Boot and reboot: the sneaky part](#boot-and-reboot-the-sneaky-part)
-- [Prolog and Epilog: checks at job boundaries](#prolog-and-epilog-checks-at-job-boundaries)
-- [Not on Slurm? PBS, Grid Engine, cron, Kubernetes](#not-on-slurm-pbs-grid-engine-cron-kubernetes)
-
 ---
 
 ## The three lines

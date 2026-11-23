@@ -14,20 +14,6 @@ tags: [sampling]
 
 > **Part 1 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** An image is a grid of numbers and nothing more mysterious. By the end you'll know what sampling and quantization do to a scene, how to count the bytes in an image, and why adding two pixels can make them darker.
 
-## Table of Contents
-- [Images Are Just Matrices](#images-are-just-matrices)
-  - [Table of Contents](#table-of-contents)
-  - [The black rectangle](#the-black-rectangle)
-  - [From a scene to a grid](#from-a-scene-to-a-grid)
-  - [Sampling: how many citizens?](#sampling-how-many-citizens)
-  - [Quantization: how many shades per card?](#quantization-how-many-shades-per-card)
-  - [Counting bytes](#counting-bytes)
-  - [Rows, columns and the upside-down y](#rows-columns-and-the-upside-down-y)
-  - [Try it before you scroll](#try-it-before-you-scroll)
-  - [Neighbours and distances](#neighbours-and-distances)
-  - [Back to the black rectangle](#back-to-the-black-rectangle)
-    - [References](#references)
-
 ---
 
 ## The black rectangle

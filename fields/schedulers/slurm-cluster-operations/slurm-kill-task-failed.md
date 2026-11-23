@@ -21,20 +21,6 @@ relations:
 
 > **Part of the [schedulers](/fields/schedulers/slurm-intro.md) directory.** Option names and the kill sequence come from the Slurm documentation and from support tickets and mailing-list threads where SchedMD staff and site admins describe the behavior. Nothing here was run on a live cluster for this page. Scenarios are invented for illustration.
 
-## Table of Contents
-
-- [Kill Task Failed: A Murder Mystery With No Body (and One Drained Node)](#kill-task-failed-a-murder-mystery-with-no-body-and-one-drained-node)
-  - [Table of Contents](#table-of-contents)
-  - [The call comes in at 3 a.m.](#the-call-comes-in-at-3-am)
-  - [How a job is supposed to die](#how-a-job-is-supposed-to-die)
-  - [Suspect 1: the process that cannot hear you](#suspect-1-the-process-that-cannot-hear-you)
-  - [Suspect 2: the epilog with a temper](#suspect-2-the-epilog-with-a-temper)
-  - [Why raising the timeout is mostly a delay](#why-raising-the-timeout-is-mostly-a-delay)
-  - [The detective kit](#the-detective-kit)
-  - [Releasing the node](#releasing-the-node)
-  - [Case closed: the short version](#case-closed-the-short-version)
-  - [References](#references)
-
 * * *
 
 ## The call comes in at 3 a.m.
@@ -179,9 +165,9 @@ If processes are still stuck, resuming just feeds the next job to the same probl
 
 * * *
 
-## Case closed: the short version
+## 📜 The Scroll (keep this)
 
-```
+```text
 cancel -> SIGTERM -> [KillWait] -> SIGKILL -> [UnkillableStepTimeout] -> DRAIN
                                       ^
             a process in D state cannot receive it until the kernel lets go

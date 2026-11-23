@@ -17,16 +17,6 @@ relations:
 
 > **Part 5 of [Slurm for AI Clusters](/fields/schedulers/slurm-ai-clusters/README.md)** Since 25.11, `slurmctld` can serve its own metrics over HTTP. By the end you'll scrape them into VictoriaMetrics, read the two numbers that explained a half-empty cluster, and have a unit-tested alert that survives the metric change in 26.11.
 
-- [Idle CPUs, pending jobs](#idle-cpus-pending-jobs)
-- [Turning it on](#turning-it-on)
-- [Scraping it](#scraping-it)
-- [The two numbers that explained it](#the-two-numbers-that-explained-it)
-- [_bytes that are MiB](#_bytes-that-are-mib)
-- [An alert, and the bug its test caught](#an-alert-and-the-bug-its-test-caught)
-- [Who can read it](#who-can-read-it)
-- [Back to the half-empty cluster](#back-to-the-half-empty-cluster)
-- [References](#references)
-
 ---
 
 ## Idle CPUs, pending jobs

@@ -23,22 +23,6 @@ relations:
 
 > **Part 4 of 15.** Part of the [Probability & Statistics](/fields/data-science/probability-statistics/README.md) series. It continues from [Draw It Before You Describe It](/fields/data-science/probability-statistics/draw-it-before-you-describe-it.md), where Ravi asked for "one number" for a typical day. The scenario is invented, and every figure can be checked by hand.
 
-## Table of Contents
-
-- [Prologue: the number on the tin](#prologue-the-number-on-the-tin)
-- [The idea in one minute](#the-idea-in-one-minute)
-- [The mean: where the seesaw balances](#the-mean-where-the-seesaw-balances)
-- [The median: the one in the middle of the line](#the-median-the-one-in-the-middle-of-the-line)
-- [The mode: the most popular](#the-mode-the-most-popular)
-- [When the answers disagree](#when-the-answers-disagree)
-- [What grouping costs you](#what-grouping-costs-you)
-- [Choosing, and looking first](#choosing-and-looking-first)
-- [Check yourself](#check-yourself)
-- [Back to the story](#back-to-the-story)
-- [Cheat sheet](#cheat-sheet)
-- [Answers](#answers)
-- [References](#references)
-
 * * *
 
 ## Prologue: the number on the tin

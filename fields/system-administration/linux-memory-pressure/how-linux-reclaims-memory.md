@@ -15,19 +15,6 @@ relations:
 
 > **Part 1 of the [Linux Memory Pressure series](/fields/system-administration/linux-memory-pressure/README.md).** A Linux machine with almost no free memory is usually healthy, and a machine with plenty of free memory can still be in trouble. By the end of this page you'll know why, you'll be able to read `/proc/meminfo` without panic, and you'll know the exact moment a program starts to stall.
 
-## Table of Contents
-- [How Linux Reclaims Memory: Cache, Swap and the Two Kinds of Stall](#how-linux-reclaims-memory-cache-swap-and-the-two-kinds-of-stall)
-  - [Table of Contents](#table-of-contents)
-  - [The library with no empty desks](#the-library-with-no-empty-desks)
-  - [Three kinds of page](#three-kinds-of-page)
-  - [Try it before you scroll](#try-it-before-you-scroll)
-  - [Free is not available](#free-is-not-available)
-  - [Who does the clearing: kswapd and direct reclaim](#who-does-the-clearing-kswapd-and-direct-reclaim)
-  - [The knobs: swappiness, zram and zswap](#the-knobs-swappiness-zram-and-zswap)
-  - [Thrashing: when the clearing never ends](#thrashing-when-the-clearing-never-ends)
-  - [See it on your own machine](#see-it-on-your-own-machine)
-  - [References](#references)
-
 ---
 
 ## The library with no empty desks

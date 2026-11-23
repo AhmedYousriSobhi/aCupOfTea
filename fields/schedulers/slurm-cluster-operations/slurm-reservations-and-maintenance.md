@@ -24,21 +24,6 @@ relations:
 
 > **Part of the [schedulers](/fields/schedulers/slurm-intro.md) directory.** Every command and output here was run on a two-node test cluster (Slurm 23.11.4, accounting on, both `slurmd` daemons on one Ubuntu 24.04 machine). The names, dates and the story are invented. Reservation flags have many options, so this page covers the maintenance and "hold it for me" cases and points to the man page for the rest.
 
-## Table of Contents
-
-- [Calling Dibs on Nodes: Reservations, Maintenance Windows and the Job That Fit](#calling-dibs-on-nodes-reservations-maintenance-windows-and-the-job-that-fit)
-  - [Table of Contents](#table-of-contents)
-  - [Firmware Saturday](#firmware-saturday)
-  - [Three ways to clear a node](#three-ways-to-clear-a-node)
-  - [Creating the reservation](#creating-the-reservation)
-  - [The job that fits, and the job that does not](#the-job-that-fits-and-the-job-that-does-not)
-  - [When the window opens](#when-the-window-opens)
-  - [Reservations for people, not just for maintenance](#reservations-for-people-not-just-for-maintenance)
-  - [Things that go wrong](#things-that-go-wrong)
-  - [Version notes](#version-notes)
-  - [Back to Firmware Saturday](#back-to-firmware-saturday)
-  - [References](#references)
-
 ---
 
 ## Firmware Saturday

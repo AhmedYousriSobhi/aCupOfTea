@@ -22,21 +22,6 @@ relations:
 
 > **Part of the [schedulers](/fields/schedulers/slurm-intro.md) directory.** The reason string, the recovery steps and the contents of the directory come from site documentation, mailing-list threads, a vendor support article and the `slurmd` man page. Nothing was run on a live cluster for this page, and the invented scenario is just that.
 
-## Table of Contents
-
-- [SlurmdSpoolDir Is Full: The Drain That Is Not About the Spool Directory](#slurmdspooldir-is-full-the-drain-that-is-not-about-the-spool-directory)
-  - [Table of Contents](#table-of-contents)
-  - [The drain with the wrong name](#the-drain-with-the-wrong-name)
-  - [The directory is innocent, the filesystem is not](#the-directory-is-innocent-the-filesystem-is-not)
-  - [What slurmd actually keeps in there](#what-slurmd-actually-keeps-in-there)
-  - [The evidence that leaves the scene](#the-evidence-that-leaves-the-scene)
-  - [A triage runbook](#a-triage-runbook)
-  - [Bringing the node back](#bringing-the-node-back)
-  - [Prevention: give temp files somewhere else to live](#prevention-give-temp-files-somewhere-else-to-live)
-  - [Two spool directories, two different jobs](#two-spool-directories-two-different-jobs)
-  - [Cheat sheet](#cheat-sheet)
-  - [References](#references)
-
 * * *
 
 ## The drain with the wrong name
@@ -206,9 +191,9 @@ An old SchedMD reply sums up the division in one line: the controller keeps its 
 
 * * *
 
-## Cheat sheet
+## 📜 The Scroll (keep this)
 
-```
+```text
 Reason "SlurmdSpoolDir is full" = slurmd cannot write its own state (cred_state.new ... ENOSPC)
 Usual cause:   the FILESYSTEM is full, not the directory (often /tmp or /var/log on the same disk)
 Check:         df -h, df -i, du per directory, lsof +L1 (deleted-but-open files)

@@ -22,20 +22,6 @@ relations:
 
 > **Part 14 of 15.** Part of the [Probability & Statistics](/fields/data-science/probability-statistics/README.md) series. It continues from [How Sure Are You?](/fields/data-science/probability-statistics/how-sure-are-you.md), where a confidence interval put honest error bars on one number. By the end you will see every hypothesis test as one question, "could plain luck have produced a difference this big?", answer it by shuffling and counting, and know the three ways the answer gets misread. The scenario is invented, and every figure was recomputed with Python 3.14.4 (standard library only).
 
-## Table of Contents
-
-- [Prologue: the blend that won](#prologue-the-blend-that-won)
-- [The presumption of innocence](#the-presumption-of-innocence)
-- [Shuffle the labels and count](#shuffle-the-labels-and-count)
-- [What the p-value is, and is not](#what-the-p-value-is-and-is-not)
-- [Two ways to be wrong](#two-ways-to-be-wrong)
-- [Twenty tries](#twenty-tries)
-- [Back to the story](#back-to-the-story)
-- [Check yourself](#check-yourself)
-- [Cheat sheet](#cheat-sheet)
-- [Answers](#answers)
-- [References](#references)
-
 * * *
 
 ## Prologue: the blend that won
