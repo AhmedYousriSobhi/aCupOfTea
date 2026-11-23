@@ -25,20 +25,6 @@ relations:
 
 > **Part 3 of [Slurm Smoke Tests](/fields/schedulers/slurm-smoke-tests/README.md).** The commands and outputs below were run on a two-node test cluster (Slurm 23.11.4, accounting on, both `slurmd` daemons on one Ubuntu 24.04 machine). **No Slurm upgrade was performed**: there was only one version installed. What was tested is everything that surrounds one, namely the backup, the version reports, the snapshot and the restarts. The upgrade procedure itself is quoted from the [Slurm upgrade guide](https://slurm.schedmd.com/upgrades.html). The names and the story are invented. The order in which to upgrade the daemons is on the [upgrade order page](/fields/schedulers/slurm-cluster-operations/slurm-upgrade-order.md).
 
-## Table of Contents
-
-- [The Morning After the Upgrade: Smoke Tests for the Change You Cannot Undo](#the-morning-after-the-upgrade-smoke-tests-for-the-change-you-cannot-undo)
-  - [Table of Contents](#table-of-contents)
-  - [The undo button that isn't](#the-undo-button-that-isnt)
-  - [What the guide says to test](#what-the-guide-says-to-test)
-  - [Rung 1: a backup you have restored](#rung-1-a-backup-you-have-restored)
-  - [Rung 2: take the snapshot](#rung-2-take-the-snapshot)
-  - [Rung 3: after the daemons are back](#rung-3-after-the-daemons-are-back)
-  - [Do jobs survive the restart?](#do-jobs-survive-the-restart)
-  - [Version notes](#version-notes)
-  - [Back to the undo button that isn't](#back-to-the-undo-button-that-isnt)
-  - [References](#references)
-
 ---
 
 ## The undo button that isn't

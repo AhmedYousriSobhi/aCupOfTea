@@ -22,22 +22,6 @@ relations:
 
 > **Part of the [schedulers](/fields/schedulers/slurm-intro.md) directory.** The intro draws `slurmctld` and `slurmd` and then waves at "the job". This page is about the process that sits between `slurmd` and your code. Facts come from SchedMD's Job Launch Design Guide, support tickets, slurmd man pages and the Slurm source as I read it. Nothing was run on a live cluster for this page, and some details (such as socket handling) are from source files of different versions, so they are marked where it matters.
 
-## Table of Contents
-
-- [slurmstepd: The Small Daemon That Actually Runs Your Job](#slurmstepd-the-small-daemon-that-actually-runs-your-job)
-  - [Table of Contents](#table-of-contents)
-  - [The middle manager nobody draws](#the-middle-manager-nobody-draws)
-  - [One stepd per step per node](#one-stepd-per-step-per-node)
-  - [What it does before your code runs](#what-it-does-before-your-code-runs)
-  - [Why restarting slurmd does not kill jobs](#why-restarting-slurmd-does-not-kill-jobs)
-  - [The socket in the spool directory](#the-socket-in-the-spool-directory)
-  - [Who actually kills the job](#who-actually-kills-the-job)
-  - [The stepd has a memory footprint too](#the-stepd-has-a-memory-footprint-too)
-  - [The step manager: stepd with a promotion](#the-step-manager-stepd-with-a-promotion)
-  - [Field guide: find it, count it, read it](#field-guide-find-it-count-it-read-it)
-  - [Cheat sheet](#cheat-sheet)
-  - [References](#references)
-
 * * *
 
 ## The middle manager nobody draws
@@ -192,9 +176,9 @@ ls -l <that directory> | head
 
 * * *
 
-## Cheat sheet
+## 📜 The Scroll (keep this)
 
-```
+```text
 slurmctld  decides       slurmd  receives, validates, forks       slurmstepd  runs ONE step on ONE node
 
 stepd types:  extern (PrologFlags=contain) | batch | interactive | normal (jobid.stepid)

@@ -23,24 +23,6 @@ relations:
 >
 > Tested with Slurm **23.11.4** and `libpam-slurm-adopt` on Ubuntu 24.04 nodes (cgroup v1), against the pam_slurm_adopt documentation for Slurm 26.11.
 
-## Table of Contents
-- [The SSH Backdoor Every Slurm Cluster Has (Until You Close It)](#the-ssh-backdoor-every-slurm-cluster-has-until-you-close-it)
-  - [Table of Contents](#table-of-contents)
-  - [The problem nobody notices until it bites](#the-problem-nobody-notices-until-it-bites)
-  - [Enter `pam_slurm_adopt`](#enter-pam_slurm_adopt)
-  - [How it actually decides who gets in](#how-it-actually-decides-who-gets-in)
-  - [Installing it](#installing-it)
-  - [Configuring it — three places, three changes](#configuring-it--three-places-three-changes)
-    - [1. Slurm side](#1-slurm-side)
-    - [2. SSH side](#2-ssh-side)
-    - [3. PAM side](#3-pam-side)
-    - [4. Turn off pam\_systemd](#4-turn-off-pam_systemd)
-    - [5. Keep the admins in, and fail closed](#5-keep-the-admins-in-and-fail-closed)
-  - [Proving it on a node](#proving-it-on-a-node)
-  - [Roll it out like any risky change: one node first, this matrix, then the rest, with a root session open the whole time.](#roll-it-out-like-any-risky-change-one-node-first-this-matrix-then-the-rest-with-a-root-session-open-the-whole-time)
-  - [The mental model to keep](#the-mental-model-to-keep)
-  - [References](#references)
-
 ---
 
 ## The problem nobody notices until it bites
@@ -221,9 +203,9 @@ With all five steps on one node, we ran the whole matrix:
 Roll it out like any risky change: one node first, this matrix, then the rest, with a root session open the whole time.
 ---
 
-## The mental model to keep
+## 📜 The Scroll (keep this)
 
-```
+```text
 Without pam_slurm_adopt:
   Job resource limits  ═══╗
                            ╠══► enforced only for srun/sbatch-launched processes
