@@ -261,6 +261,28 @@ scontrol reboot ASAP nextstate=RESUME reason="kernel CHG-2001" cn[001-400]
 
 ---
 
+## Tips and tricks
+
+- Email yourself the `Reason` of every newly drained node from a cron job, so a 3 a.m. drain becomes a 9 a.m. one.
+- Put the ticket in `reason=` when you reboot. It is what `sinfo -R` shows.
+- Alert early: a node health check on free space, run through `HealthCheckProgram`, turns a surprise drain into a warning.
+- Give each job its own temp directory with the `namespace/tmpfs` plugin (`PrologFlags=Contain` and a `job_container.conf`). Before 25.11 it is `job_container/tmpfs`.
+- Set `TmpFS=/scratch` if that is where jobs write. Jobs can then ask for space with `--tmp`.
+- Before an upgrade, purge old accounting records. A smaller database means a shorter dump and schema update.
+- For a self-built Slurm, install each version in its own directory and point a symlink at the active one.
+
+## Warnings
+
+> [!WARNING]
+> There is no undo once any Slurm daemon has started after an upgrade. Back up `StateSaveLocation`, the config directory and the database first.
+
+- A running job is not killed when a maintenance window opens. Check its time limit before the window.
+- A routine system update can pull in the EPEL Slurm package. Add `exclude=slurm*` to the `[epel]` section.
+- Do not start `slurmdbd` through systemd the first time after an upgrade. If the conversion outlasts the unit's start timeout, systemd kills it halfway, which can lose data.
+- Put `SlurmdTimeout` and `SlurmctldTimeout` back after the upgrade, or a dead node takes far too long to notice.
+- `/etc/nologin` is wiped when a front-end boots. Re-apply it.
+- Mass cancels can drain nodes in batches when they all hit the same stalled mount.
+
 ## If it fails
 
 | What you see | Likely cause | Fix |

@@ -4,7 +4,7 @@
 
 Job scheduling and resource management on clusters, mostly Slurm.
 
-- [Check That Slurm Still Works After a Change](/fields/schedulers/slurm-smoke-tests/quick-guide.md) — Which check to run after a change, an upgrade, a policy edit or a repair, with the command and the output that means pass. *(intermediate · 5 min)*  
+- [Check That Slurm Still Works After a Change](/fields/schedulers/slurm-smoke-tests/quick-guide.md) — Which check to run after a change, an upgrade, a policy edit or a repair, with the command and the output that means pass. *(intermediate · 6 min)*  
   [`hpc`](/.docs/generated/explore/tags/hpc.md) [`quick`](/.docs/generated/explore/tags/quick.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [Containers on Slurm with Pyxis and Enroot](/fields/schedulers/slurm-ai-clusters/containers-with-pyxis.md) — Running Slurm job steps in containers with Pyxis and Enroot - the node that silently ran outside the container, read-only images, mounts, node-local paths, named containers, and the PyTorch env hook. *(intermediate · 8 min)*  
   [`containers`](/.docs/generated/explore/tags/containers.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
@@ -26,11 +26,11 @@ Job scheduling and resource management on clusters, mostly Slurm.
   [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [Rebooting a Slurm Cluster Without Losing Your Job (Or Anyone Else's)](/fields/schedulers/slurm-cluster-operations/slurm-reboot-order.md) — The step-by-step order for rebooting a Slurm cluster: drain, lock access, control plane first, then front-end and compute nodes, and reopen in a controlled way. *(intermediate · 9 min)*  
   [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
-- [Run Slurm Cluster Operations Without Losing Jobs](/fields/schedulers/slurm-cluster-operations/quick-guide.md) — Copy-paste steps for a drained node, a maintenance reservation, a reboot, an upgrade and SSH access, each with the expected output. *(intermediate · 7 min)*  
+- [Run Slurm Cluster Operations Without Losing Jobs](/fields/schedulers/slurm-cluster-operations/quick-guide.md) — Copy-paste steps for a drained node, a maintenance reservation, a reboot, an upgrade and SSH access, each with the expected output. *(intermediate · 8 min)*  
   [`hpc`](/.docs/generated/explore/tags/hpc.md) [`quick`](/.docs/generated/explore/tags/quick.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [Schedulers: The Traffic Controller Nobody Thanks Until It Breaks](/fields/schedulers/slurm-intro.md) — What a cluster scheduler does, how it differs from the OS scheduler, the scheduler landscape, the concepts they share, and the Slurm architecture at a glance. *(beginner · 10 min)*  
   [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
-- [Set Up QOS Preemption and Make Jobs Survive It](/fields/schedulers/slurm-preemption/quick-guide.md) — Steps to switch on QOS preemption, prove it with a drill, add a submit rule, and make a training job catch its warning and requeue. *(intermediate · 4 min)*  
+- [Set Up QOS Preemption and Make Jobs Survive It](/fields/schedulers/slurm-preemption/quick-guide.md) — Steps to switch on QOS preemption, prove it with a drill, add a submit rule, and make a training job catch its warning and requeue. *(intermediate · 5 min)*  
   [`hpc`](/.docs/generated/explore/tags/hpc.md) [`quick`](/.docs/generated/explore/tags/quick.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [Slurm Metrics Without an Exporter: OpenMetrics into VictoriaMetrics](/fields/schedulers/slurm-ai-clusters/metrics-openmetrics.md) — Slurm 25.11+ serves OpenMetrics from slurmctld - scraping it into VictoriaMetrics, idle CPUs fixed by DefMemPerCPU, MiB in _bytes metrics until 26.11, open access, and a tested alert. *(intermediate · 6 min)*  
   [`hpc`](/.docs/generated/explore/tags/hpc.md) [`monitoring`](/.docs/generated/explore/tags/monitoring.md) [`slurm`](/.docs/generated/explore/tags/slurm.md) [`victoriametrics`](/.docs/generated/explore/tags/victoriametrics.md)

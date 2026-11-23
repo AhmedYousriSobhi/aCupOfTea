@@ -108,6 +108,22 @@ sbatch -q urgent ...
 **Expect:** the job's `QOS` column in `sprio` is non-zero.
 **If not:** the QOS weight is 0.
 
+## Tips and tricks
+
+- Ask for the estimate first: `squeue --start -j <jobid>`.
+- Every priority weight defaults to 0, so turn on only the factors you want, with fairshare largest by a clear margin if groups must share fairly.
+- Users can lower their own time limit and release their own hold.
+- A small triage script (`whypending JOBID`) can print the reason, the number of jobs ahead and what to try.
+- `-1` clears a limit.
+
+## Warnings
+
+> [!WARNING]
+> A limit on a QOS binds only jobs running under that QOS. A second QOS bypasses your cap, so put caps on a partition QOS.
+
+- `DependencyNeverSatisfied`, `JobHeldUser` and `PartitionTimeLimit` never start by themselves.
+- Running jobs are not killed when you add a limit.
+
 ## If it fails
 
 | What you see | Likely cause | Fix |

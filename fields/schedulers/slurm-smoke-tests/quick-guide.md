@@ -166,6 +166,26 @@ comm -13 baseline.fails after.fails
 
 ---
 
+## Tips and tricks
+
+- Keep every snapshot. When something misbehaves on Thursday, "what changed since Monday" is a `diff`.
+- A canary partition also hosts the scheduled smoke test.
+- Give the probe reservation `Duration=10`. If you forget the last step, the fence expires on its own.
+- Let a health check do the routine part: `HealthCheckProgram=/usr/sbin/nhc` with `HealthCheckInterval=300`.
+- Wait several seconds after a daemon restart before running the smoke test. A run two seconds after reported busy nodes, and one six seconds after did not.
+- Give the test job `-t`, or set `SMOKE_TIME`, if a submit rule requires `--time`.
+
+## Warnings
+
+> [!WARNING]
+> No Slurm upgrade was performed while writing these pages. The upgrade checks are untested end to end.
+
+- With `slurmdbd` stopped, jobs run perfectly and nothing is recorded. Only `sacct` shows it.
+- A dead `slurmd` is invisible to `sinfo` for a while. Only launching a task on every node finds it quickly.
+- A drained node cannot run a job even inside a reservation, so create the reservation first and resume second.
+- With `config_overrides`, a node with half its configured CPUs shows `idle`.
+- A failed `scontrol reconfigure` is a warning with a delay on it.
+
 ## If it fails
 
 | What you see | Likely cause | Fix |

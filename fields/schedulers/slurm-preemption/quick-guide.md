@@ -140,6 +140,26 @@ relations:
 
 Timings are ticks, not stopwatches: the end of grace was noticed 3 to 25 s late on 23.11.4.
 
+## Tips and tricks
+
+- Use a user-defined signal such as `USR1`. `srun` passes it through.
+- Measure your own timings with `probe.sh` and your `GraceTime`. Do not guess.
+- `PreemptExemptTime` gives a job a minimum runtime before it can be preempted.
+- `--open-mode=append` keeps the first run's log when a requeue starts the second.
+- Changing `PriorityTier` or `OverSubscribe` needs only `scontrol reconfig`. Changing preemption plugin settings needs a full restart.
+- `GraceTime` is not used with `SUSPEND`. There is a separate `suspend_grace_time`.
+
+## Warnings
+
+> [!WARNING]
+> A broken `job_submit.lua` stops a restarting `slurmctld`: users then see "Unable to contact slurm controller".
+
+- A bash `trap` runs only after the foreground command ends, so background the trainer and `wait`.
+- A job that exits early still counts as preempted, whatever the reason.
+- One preemptor can evict more than it needed: backfill reserves whole nodes.
+- Suspend does not free licenses. Use `REQUEUE` or `CANCEL` with `PreemptParameters=reclaim_licenses`.
+- Requeue starts the script again. It does not resume it.
+
 ## If it fails
 
 | What you see | Likely cause | Fix |
