@@ -202,6 +202,7 @@
       "slurm-accounting-multi-tenancy",
       "slurm-backfill-tuning",
       "slurm-cgroups-in-practice",
+      "slurm-cluster-operations-quick",
       "slurm-containers-pyxis",
       "slurm-distributed-training",
       "slurm-gpu-affinity-socket-lie",
@@ -217,7 +218,9 @@
       "slurm-mixed-gpus-why-disappoints",
       "slurm-openmetrics",
       "slurm-pam-adopt-ssh-access",
+      "slurm-pending-jobs-quick",
       "slurm-pending-reasons",
+      "slurm-preemption-quick",
       "slurm-preemption-requeue-signals",
       "slurm-priority-multifactor",
       "slurm-qos-limits",
@@ -233,6 +236,7 @@
       "slurm-smoke-node-readiness",
       "slurm-smoke-policy",
       "slurm-smoke-regression-suites",
+      "slurm-smoke-tests-quick",
       "slurm-spool-dir-full",
       "slurm-topology-placement",
       "slurm-upgrade-order",
@@ -397,6 +401,15 @@
       "slurm-distributed-training"
     ]
   },
+  "quick": {
+    "label": "Quick guide",
+    "objects": [
+      "slurm-cluster-operations-quick",
+      "slurm-pending-jobs-quick",
+      "slurm-preemption-quick",
+      "slurm-smoke-tests-quick"
+    ]
+  },
   "rnn": {
     "label": "Recurrent Neural Networks",
     "objects": [
@@ -446,6 +459,7 @@
       "slurm-accounting-multi-tenancy",
       "slurm-backfill-tuning",
       "slurm-cgroups-in-practice",
+      "slurm-cluster-operations-quick",
       "slurm-containers-pyxis",
       "slurm-distributed-training",
       "slurm-gpu-affinity-socket-lie",
@@ -461,7 +475,9 @@
       "slurm-mixed-gpus-why-disappoints",
       "slurm-openmetrics",
       "slurm-pam-adopt-ssh-access",
+      "slurm-pending-jobs-quick",
       "slurm-pending-reasons",
+      "slurm-preemption-quick",
       "slurm-preemption-requeue-signals",
       "slurm-priority-multifactor",
       "slurm-qos-limits",
@@ -477,6 +493,7 @@
       "slurm-smoke-node-readiness",
       "slurm-smoke-policy",
       "slurm-smoke-regression-suites",
+      "slurm-smoke-tests-quick",
       "slurm-spool-dir-full",
       "slurm-topology-placement",
       "slurm-upgrade-order",

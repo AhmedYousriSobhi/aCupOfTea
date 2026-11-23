@@ -23,6 +23,7 @@ Pages 1 to 4 are best read in order before a maintenance window. Pages 5 to 7 st
 | [5. The SSH Backdoor](/fields/schedulers/slurm-cluster-operations/slurm-pam-adopt-ssh-access.md) | Closing SSH access that escapes job limits with `pam_slurm_adopt` |
 | [6. Kill Task Failed](/fields/schedulers/slurm-cluster-operations/slurm-kill-task-failed.md) | Why jobs fail to die on uninterruptible sleep, drain the node, and how to debug it |
 | [7. SlurmdSpoolDir Is Full](/fields/schedulers/slurm-cluster-operations/slurm-spool-dir-full.md) | The "SlurmdSpoolDir is full" drain: the real culprit and a triage runbook |
+| [Quick guide: Run Slurm Cluster Operations Without Losing Jobs](/fields/schedulers/slurm-cluster-operations/quick-guide.md) | Copy-paste steps for a drained node, a maintenance reservation, a reboot, an upgrade and SSH access |
 
 ---
 

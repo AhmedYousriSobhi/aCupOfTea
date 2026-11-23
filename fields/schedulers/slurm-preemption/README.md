@@ -20,6 +20,7 @@ Read parts 1 to 3 in order. Part 4 is the reference you come back to.
 | [2. The Guest List](/fields/schedulers/slurm-preemption/slurm-qos-preemption-setup.md) | Setting up QOS preemption with requeue, step by step, with a drill that proves it works |
 | [3. job_submit.lua](/fields/schedulers/slurm-preemption/slurm-job-submit-lua.md) | Routing jobs to the right QOS, requiring time limits, and how the plugin fails |
 | [4. Who Gets Told What](/fields/schedulers/slurm-preemption/slurm-signals-cheatsheet.md) | Every signal Slurm sends, whether the batch shell or the `srun` steps hear it, and how late it arrives |
+| [Quick guide: Set Up QOS Preemption and Make Jobs Survive It](/fields/schedulers/slurm-preemption/quick-guide.md) | Steps to switch on QOS preemption, prove it, add a submit rule and make a job requeue |
 
 ---
 
