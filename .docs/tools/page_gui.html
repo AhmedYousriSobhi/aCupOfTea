@@ -99,6 +99,7 @@
   .graph text { font-size:11px; fill:var(--text); }
   .graph .ok { stroke:var(--accent); stroke-width:2; }
   .graph .odd { stroke:var(--err); stroke-width:2; stroke-dasharray:5 4; }
+  .why { font-size:12px; margin-top:4px; } .why summary { cursor:pointer; color:var(--muted, inherit); } .why ul { margin:4px 0 0; padding-left:18px; }
   .graph .node { stroke:var(--card); stroke-width:2; }
   .brewed { display:flex; gap:14px; align-items:center; background:var(--card); border:1px solid var(--ok); border-radius:10px; padding:10px 16px; margin:8px 0; }
   .brewed strong { display:block; font-size:1.05rem; }
@@ -374,6 +375,8 @@ function metaForm(opts, have = [], onChange = () => {}, titleOf = () => "", path
   /* Subjects of one page should go together: say so when two are not marked as related in taxonomy.yaml. */
   const relNote = h("div", { class: "hint", "aria-live": "polite", role: "status" });
   const graph = h("div", { class: "graph" });
+  const goesWith = h("div", { class: "hint", "aria-live": "polite" });   // subjects that go with the ones picked: a click adds one
+  const why = h("div", { class: "why" });                              // what each picked subject means, and the evidence for each pair
   const relFix = h("div", { class: "actions" });
   const labelOf = key => (opts.domains.find(d => d.key === key) || { label: titleCase(key) }).label;
   function checkRelated() {
@@ -382,11 +385,9 @@ function metaForm(opts, have = [], onChange = () => {}, titleOf = () => "", path
       if (!fresh.includes(a) && !fresh.includes(b) && !(opts.related[a] || []).includes(b)) bad.push({ a, b, text: labelOf(a) + " and " + labelOf(b) });
     }));
     drawGraph(picked, fresh);
+    showGoesWith(picked);
+    showWhy(picked);
     relNote.textContent = bad.length ? "\u26a0 " + bad.map(p => p.text).join("; ") + (bad.length > 1 ? " are" : " is") + " not marked as related in taxonomy.yaml. A page usually belongs to one area; this is only a warning, you can still create it." : "";
-    if (bad.length) api("/api/pairs?subjects=" + encodeURIComponent(picked.join(","))).then(r => {   // why, from the pages and the words
-      const lines = (r.pairs || []).filter(p => bad.some(b => b.a === p.a && b.b === p.b)).map(p => labelOf(p.a) + " + " + labelOf(p.b) + ": " + p.why);
-      if (lines.length && relNote.textContent.startsWith("\u26a0")) relNote.textContent += " Evidence: " + lines.join(" | ");
-    }).catch(() => {});
     relFix.replaceChildren(...bad.map(p => h("button", { type: "button", onclick: async e => {
       const btn = e.currentTarget; btn.disabled = true;
       try {
@@ -395,6 +396,27 @@ function metaForm(opts, have = [], onChange = () => {}, titleOf = () => "", path
         else { btn.disabled = false; relNote.textContent = r.output; }
       } catch (x) { btn.disabled = false; relNote.textContent = String(x.message || x); }
     } }, "Mark " + p.text + " as related")));
+  }
+  function showGoesWith(picked) {
+    const known = picked.filter(a => !newDomains.some(d => d.key === a));
+    if (!known.length || picked.length >= limits.domains) { goesWith.replaceChildren(); return; }
+    const common = opts.domains.map(d => d.key).filter(k => !picked.includes(k) && known.every(a => (opts.related[a] || []).includes(k)));
+    goesWith.replaceChildren(...(common.length ? ["Goes with " + known.map(labelOf).join(" and ") + ": ", ...common.slice(0, 6).map(k =>
+      h("button", { type: "button", title: "Add " + labelOf(k), onclick: () => domains.set([...domains.get(), k]) }, labelOf(k)))] : []));
+  }
+  let whySeq = 0;
+  function showWhy(picked) {
+    const seq = ++whySeq;
+    if (!picked.length) { why.replaceChildren(); return; }
+    const describe = a => { const d = opts.domains.find(x => x.key === a); return d && d.description ? h("li", {}, h("b", {}, labelOf(a) + ": "), d.description) : null; };
+    const fill = pairs => {
+      const was = why.querySelector("details"), open = !!(was && was.open);   // keep it open while the picks change
+      const d = h("details", {}, h("summary", {}, "Why these subjects?"),
+        h("ul", {}, picked.map(describe).filter(Boolean), pairs.map(p => h("li", {}, h("b", {}, labelOf(p.a) + " + " + labelOf(p.b) + ": "), p.why))));
+      d.open = open; why.replaceChildren(d);
+    };
+    fill([]);
+    if (picked.length > 1) api("/api/pairs?subjects=" + encodeURIComponent(picked.join(","))).then(r => { if (seq === whySeq) fill(r.pairs || []); }).catch(() => {});
   }
   /* a long subject name on two lines, split at the space nearest the middle, so it fits beside the other labels */
   function wrapLabel(text) {
@@ -477,7 +499,7 @@ function metaForm(opts, have = [], onChange = () => {}, titleOf = () => "", path
     keepNote,
     keep("summary", () => field("Summary", "one line shown in search and Explore", h("div", {}, summary, count), summary)),
     keep("type", () => field("Kind of page", "one or two; the first you pick is the main one", h("div", {}, types.el, addType))),
-    keep("domains", () => field("Subjects", "up to " + limits.domains + " that go together; they put the page in Explore by subject", h("div", {}, domains.el, hintSubjects, graph, relNote, relFix, addDomain))),
+    keep("domains", () => field("Subjects", "up to " + limits.domains + " that go together; they put the page in Explore by subject", h("div", {}, domains.el, hintSubjects, goesWith, graph, relNote, relFix, why, addDomain))),
     more);
   const values = () => ({ summary: summary.value, types: types.get(), domains: domains.get(), tags: tags.state.items,
     level: level.value, prerequisites: prereq.state.items, related: related.state.items,
