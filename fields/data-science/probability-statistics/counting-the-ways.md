@@ -21,20 +21,6 @@ relations:
 
 > **Part 7 of 15.** Part of the [Probability & Statistics](/fields/data-science/probability-statistics/README.md) series. Parts 1 to 6 described data you **have**; from here on, chance. By the end you will see that most probability problems are counting problems in disguise, and that "or" adds and "and" multiplies because of what they do to a list. The scenario is invented, and every count was checked by listing the ways in Python.
 
-## Table of Contents
-
-- [Prologue: the lucky roll](#prologue-the-lucky-roll)
-- [The list of ways](#the-list-of-ways)
-- [Or adds, unless the ways overlap](#or-adds-unless-the-ways-overlap)
-- [At least one: count the none](#at-least-one-count-the-none)
-- [And multiplies, when the dice do not talk](#and-multiplies-when-the-dice-do-not-talk)
-- [Counting without writing it all out](#counting-without-writing-it-all-out)
-- [Back to the story](#back-to-the-story)
-- [Check yourself](#check-yourself)
-- [Cheat sheet](#cheat-sheet)
-- [Answers](#answers)
-- [References](#references)
-
 * * *
 
 ## Prologue: the lucky roll

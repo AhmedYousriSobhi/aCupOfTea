@@ -21,20 +21,6 @@ relations:
 
 > **Part 8 of 15.** Part of the [Probability & Statistics](/fields/data-science/probability-statistics/README.md) series. It continues from [Counting the Ways](/fields/data-science/probability-statistics/counting-the-ways.md), where probability became "count the outcomes you want, over all the outcomes". By the end you will see conditional probability as one move, shrinking the crowd, and Bayes' rule as nothing more than that move seen from the other side. The scenario is invented, and every number can be checked by hand.
 
-## Table of Contents
-
-- [Prologue: the alarm that rang](#prologue-the-alarm-that-rang)
-- [Shrink the crowd, then count again](#shrink-the-crowd-then-count-again)
-- [Build the crowd: 100,000 tins](#build-the-crowd-100000-tins)
-- [Two questions that sound alike](#two-questions-that-sound-alike)
-- [The formula, after the fact](#the-formula-after-the-fact)
-- [A second positive: beliefs move](#a-second-positive-beliefs-move)
-- [Check yourself](#check-yourself)
-- [Back to the story](#back-to-the-story)
-- [Cheat sheet](#cheat-sheet)
-- [Answers](#answers)
-- [References](#references)
-
 * * *
 
 ## Prologue: the alarm that rang
