@@ -34,7 +34,7 @@ and for a Comparison conclusion from Dask docs:
 A final good tip from the Dask developers, in case you manage 100GB or less of tabular CSV or JSON data, then you should forget about both Spark and Dask and use Postgres or MongoDB.
 
 # Dask Overview
-![architecture](https://docs.dask.org/en/stable/_images/dask-overview.svg)
+![architecture](images/dask-overview.svg)
 
 High level collections are used to generate task graphs which can be executed by schedulers on a single machine or a cluster.
 
