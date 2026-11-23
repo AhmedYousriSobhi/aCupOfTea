@@ -9,6 +9,7 @@ only suggests.
 
 Usage:
   python3 .docs/tools/suggest_subjects.py "Title" ["one-line summary"]
+  python3 .docs/tools/suggest_subjects.py --pair SUBJECT SUBJECT   # evidence for a pair
   python3 .docs/tools/suggest_subjects.py --evaluate     # leave-one-out check on the repo's own pages
 """
 import argparse
@@ -128,6 +129,49 @@ def suggest(title, summary, objects, taxonomy, skip_id=None, top_pages=5, top_su
     return {"subjects": subjects, "pages": related}
 
 
+def pair_evidence(a, b, objects, taxonomy, top_words=5):
+    """Why two subjects do or do not go together: {"declared", "pages", "words", "score"}.
+
+    declared = the hand-written `related` list says so (it stays the override); pages = titles of pages
+    that carry both; words = the vocabulary the two subjects share (their descriptions plus their pages);
+    score = TF-IDF cosine between the two subjects' texts.
+    """
+    domains = taxonomy.get("domains", {})
+    declared = b in (domains.get(a, {}).get("related") or []) or a in (domains.get(b, {}).get("related") or [])
+    carry = lambda d: [v for v in objects.values() if v.get("title") and d in (v.get("domains") or [])]
+    both = sorted(v["title"] for v in carry(a) if b in (v.get("domains") or []))
+    docs = {}
+    for d in (a, b):
+        meta = domains.get(d, {})
+        docs[d] = " ".join([meta.get("label", ""), meta.get("description", "")] * 2 + [page_text(v) for v in carry(d)])
+    index = Index({"x:" + a: docs[a], "x:" + b: docs[b]})
+    va, vb = index.vec["x:" + a], index.vec["x:" + b]
+    words = [t for _, t in sorted(((va[t] * vb[t], t) for t in va if t in vb), reverse=True)[:top_words]]
+    return {"declared": declared, "pages": both, "words": words, "score": index.cosine(va, vb)}
+
+
+def explain_pair(a, b, objects, taxonomy):
+    """One line of evidence for a pair of subjects, for a warning or a prompt."""
+    e = pair_evidence(a, b, objects, taxonomy)
+    bits = ["listed as related in taxonomy.yaml" if e["declared"] else "not listed as related in taxonomy.yaml"]
+    n = len(e["pages"])
+    bits.append(("1 page carries both" if n == 1 else "%d pages carry both" % n) if n else "no page carries both")
+    if e["words"]:
+        bits.append("shared words: " + ", ".join(e["words"]) + " (similarity %.2f)" % e["score"])
+    else:
+        bits.append("no shared vocabulary")
+    return "; ".join(bits)
+
+
+def pairs_for_root(root, subjects):
+    """[(a, b, evidence line)] for every pair of `subjects`; empty when the generated index is missing."""
+    try:
+        objects, taxonomy = load(root)
+    except (OSError, ValueError):
+        return []
+    return [(a, b, explain_pair(a, b, objects, taxonomy)) for i, a in enumerate(subjects) for b in subjects[i + 1:]]
+
+
 def for_root(root, title, summary="", skip_path=None):
     """suggest() for the repo at `root`; empty when the title is blank or the generated index is missing."""
     empty = {"subjects": [], "pages": []}
@@ -160,6 +204,7 @@ def main(argv=None):
     ap.add_argument("title", nargs="?")
     ap.add_argument("summary", nargs="?", default="")
     ap.add_argument("--evaluate", action="store_true", help="leave-one-out check on the repo's own pages")
+    ap.add_argument("--pair", nargs=2, metavar=("A", "B"), help="evidence for two subjects going together")
     ap.add_argument("--root", default=ROOT)
     args = ap.parse_args(argv)
     objects, taxonomy = load(args.root)
@@ -168,6 +213,15 @@ def main(argv=None):
         print("pages checked: %d" % total)
         print("top suggestion is one of the page's real subjects: %d (%.0f%%)" % (hit1, 100.0 * hit1 / max(total, 1)))
         print("one of the top 3 is a real subject:               %d (%.0f%%)" % (hit_any, 100.0 * hit_any / max(total, 1)))
+        return 0
+    if args.pair:
+        a, b = args.pair
+        for k in (a, b):
+            if k not in taxonomy.get("domains", {}):
+                ap.error("unknown subject: " + k)
+        print("%s + %s: %s" % (a, b, explain_pair(a, b, objects, taxonomy)))
+        for t in pair_evidence(a, b, objects, taxonomy)["pages"]:
+            print("  carries both: " + t)
         return 0
     if not args.title:
         ap.error("give a title, or --evaluate")

@@ -410,6 +410,10 @@ def choose_domains(args, ask, folder, folders, title, default=None, summary="", 
         if pairs:
             text = "; ".join("%s and %s" % p for p in pairs) + (" are" if len(pairs) > 1 else " is") + \
                 " not marked as related in taxonomy.yaml (a page usually belongs to one area)"
+            import suggest_subjects
+            for a, b, why in suggest_subjects.pairs_for_root(sc.ROOT, chosen):
+                if (a, b) in pairs or (b, a) in pairs:
+                    print("  %s + %s: %s" % (a, b, why))
             if can_ask:
                 print("  " + text)
                 if not ask.confirm("Keep these subjects together anyway?", default=True):

@@ -383,6 +383,10 @@ function metaForm(opts, have = [], onChange = () => {}, titleOf = () => "", path
     }));
     drawGraph(picked, fresh);
     relNote.textContent = bad.length ? "\u26a0 " + bad.map(p => p.text).join("; ") + (bad.length > 1 ? " are" : " is") + " not marked as related in taxonomy.yaml. A page usually belongs to one area; this is only a warning, you can still create it." : "";
+    if (bad.length) api("/api/pairs?subjects=" + encodeURIComponent(picked.join(","))).then(r => {   // why, from the pages and the words
+      const lines = (r.pairs || []).filter(p => bad.some(b => b.a === p.a && b.b === p.b)).map(p => labelOf(p.a) + " + " + labelOf(p.b) + ": " + p.why);
+      if (lines.length && relNote.textContent.startsWith("\u26a0")) relNote.textContent += " Evidence: " + lines.join(" | ");
+    }).catch(() => {});
     relFix.replaceChildren(...bad.map(p => h("button", { type: "button", onclick: async e => {
       const btn = e.currentTarget; btn.disabled = true;
       try {

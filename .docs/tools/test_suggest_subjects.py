@@ -34,6 +34,24 @@ class SuggestTest(unittest.TestCase):
         self.assertEqual(out["subjects"][0][0], "deep-learning")
         self.assertTrue(all(why for _, _, why in out["subjects"] + out["pages"]))
 
+    def test_pair_evidence_names_pages_and_words(self):
+        objs = dict(OBJECTS, both={"title": "GPU Job Queue", "summary": "Neural network training jobs in a queue.",
+                                   "domains": ["schedulers", "deep-learning"], "tags": []})
+        e = ss.pair_evidence("schedulers", "deep-learning", objs, TAXONOMY)
+        self.assertFalse(e["declared"])
+        self.assertEqual(e["pages"], ["GPU Job Queue"])
+        self.assertTrue(e["words"])
+        line = ss.explain_pair("schedulers", "deep-learning", objs, TAXONOMY)
+        self.assertIn("not listed as related", line)
+        self.assertIn("1 page carries both", line)
+
+    def test_pair_listed_in_taxonomy_without_shared_pages(self):
+        tax = {"domains": {"a": {"label": "A", "description": "alpha"}, "b": {"label": "B", "description": "beta", "related": ["a"]}}}
+        e = ss.pair_evidence("a", "b", {}, tax)
+        self.assertTrue(e["declared"])
+        self.assertIn("no page carries both", ss.explain_pair("a", "b", {}, tax))
+        self.assertIn("no shared vocabulary", ss.explain_pair("a", "b", {}, tax))
+
     def test_no_shared_word_suggests_nothing(self):
         out = ss.suggest("Quantum cooking", "", OBJECTS, TAXONOMY)
         self.assertEqual(out, {"subjects": [], "pages": []})

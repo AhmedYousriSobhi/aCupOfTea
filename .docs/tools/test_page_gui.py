@@ -116,6 +116,16 @@ class Api(unittest.TestCase):
         self.assertEqual([p["id"] for p in s["pages"]], ["a-page"])          # only pages with an id can be related
         self.assertEqual(self.json("/api/suggest?title=Slurm%20job%20priority&path=notes/a.md")["pages"], [])   # not itself
 
+    def test_pairs_explain_each_pair_of_subjects(self):
+        self.assertEqual(self.json("/api/pairs?subjects=a,b"), {"pairs": []})      # no index yet
+        os.makedirs(os.path.join(new_page.sc.ROOT, ".docs", "generated"), exist_ok=True)
+        with open(os.path.join(new_page.sc.ROOT, ".docs", "generated", "objects.json"), "w", encoding="utf-8") as fh:
+            json.dump({}, fh)
+        r = self.json("/api/pairs?subjects=security,software-engineering,deep-learning")["pairs"]
+        self.assertEqual([(p["a"], p["b"]) for p in r], [("security", "software-engineering"),
+                         ("security", "deep-learning"), ("software-engineering", "deep-learning")])
+        self.assertTrue(all(p["why"] for p in r))
+
     # ---- create
     def create(self, **kw):
         body = {"title": "Brand New Idea", "folder": "notes", "types": ["concept", "guide"],
