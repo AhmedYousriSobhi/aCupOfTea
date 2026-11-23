@@ -20,14 +20,6 @@ Think of this page as a detective's pocket guide. Every suspect leaves fingerpri
 
 ## Contents
 
-- [The 30-second triage](#the-30-second-triage)
-- [Spotting OpenMP](#spotting-openmp)
-- [Spotting MPI](#spotting-mpi)
-- [Spotting both: the hybrid fingerprint](#spotting-both-the-hybrid-fingerprint)
-- [Reading a job script](#reading-a-job-script)
-- [Try it before you scroll](#try-it-before-you-scroll)
-- [Three look-alikes that fool people](#three-look-alikes-that-fool-people)
-
 ---
 
 ## The 30-second triage

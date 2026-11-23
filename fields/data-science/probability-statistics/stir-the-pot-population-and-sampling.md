@@ -21,21 +21,6 @@ relations:
 
 > **Part 1 of 15.** Part of the [Probability & Statistics](/fields/data-science/probability-statistics/README.md) series. The tea shop and its customers are invented. The 1936 poll in the middle of the page is real, and its sources are listed at the end. By the end you will see why a sip can speak for a whole pot, and that the four famous sampling methods are **one idea** asked two ways.
 
-## Table of Contents
-
-- [Prologue: the Saturday morning poll](#prologue-the-saturday-morning-poll)
-- [The idea in one minute](#the-idea-in-one-minute)
-- [Three words, and why we sip at all](#three-words-and-why-we-sip-at-all)
-- [How you chose, not how many](#how-you-chose-not-how-many)
-- [Four ways to choose fairly, from two questions](#four-ways-to-choose-fairly-from-two-questions)
-- [The poll that asked 2.4 million people](#the-poll-that-asked-24-million-people)
-- [Two jobs for statistics](#two-jobs-for-statistics)
-- [Check yourself](#check-yourself)
-- [Back to the story](#back-to-the-story)
-- [Cheat sheet](#cheat-sheet)
-- [Answers](#answers)
-- [References](#references)
-
 * * *
 
 ## Prologue: the Saturday morning poll

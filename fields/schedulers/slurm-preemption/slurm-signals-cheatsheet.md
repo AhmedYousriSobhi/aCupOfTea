@@ -23,22 +23,6 @@ relations:
 
 > **Part of the [schedulers](/fields/schedulers/slurm-intro.md) directory.** The timings below were measured on a two-node test cluster (Slurm 23.11.4, `KillWait=30`, accounting on, both `slurmd` daemons on one Ubuntu 24.04 machine), with a probe script that logged every signal it received and ignored `SIGTERM` on purpose, so the kill deadline could be seen. Each number is one run, so read them as a shape and not as a specification. Another Slurm version may behave differently, and the [preemption page](/fields/schedulers/slurm-preemption/slurm-preemption-requeue-signals.md) quotes the newer 26.05 guide. Run the probe in [Measure it yourself](#measure-it-yourself) on your own cluster.
 
-## Table of Contents
-
-- [Who Gets Told What: Every Signal Slurm Sends, and Who Actually Hears It](#who-gets-told-what-every-signal-slurm-sends-and-who-actually-hears-it)
-  - [Table of Contents](#table-of-contents)
-  - [The message that went to the wrong address](#the-message-that-went-to-the-wrong-address)
-  - [Two kinds of listeners](#two-kinds-of-listeners)
-  - [Who sends what, and to whom](#who-sends-what-and-to-whom)
-  - [The timelines](#the-timelines)
-  - [Everything arrives late (and sometimes early)](#everything-arrives-late-and-sometimes-early)
-  - [Which design to choose](#which-design-to-choose)
-  - [Measure it yourself](#measure-it-yourself)
-  - [Cheat sheet](#cheat-sheet)
-  - [Version notes](#version-notes)
-  - [Back to Ana's Saturday night](#back-to-anas-saturday-night)
-  - [References](#references)
-
 ---
 
 ## The message that went to the wrong address
@@ -176,23 +160,6 @@ Submit it as the victim (`--exclusive`, requeueable, on a node you can spare), l
 
 ---
 
-## Cheat sheet
-
-```text
-Two listeners:    batch shell (your script)   vs   steps (things behind srun)
-Early SIGTERM:    GraceTime > 0 -> to srun STEPS at once, NOT to the batch shell (23.11.4)
-End of grace:     SIGCONT+SIGTERM to everyone; then KillWait -> SIGKILL
-Batch shell warn: --signal=B:USR1@N  +  PreemptParameters=send_user_signal (else only at the end)
-Timing:           ticks, not stopwatches; grace +3..+25 s, --signal can be late (52 s, not 90 s)
-scancel -s SIG:   steps by default; --batch for the shell
-Handler rules:    set a flag, never save inside the handler, make it idempotent
-Don't guess:      run probe.sh with your GraceTime and your version
-```
-
-Signals are letters with an address on them. Half of the debugging is checking whether the address was the shell or the step.
-
----
-
 ## Version notes
 
 Every timing above is from 23.11.4. The changelogs add: a default `UnkillableStepTimeout` of 60 s (24.05); `SIGKILL` through the `cgroup.kill` interface (25.05); and in 26.05 "KillWait will be honored when the task does not end with the TERM signal", `srun --ignore-signals`, and no delay in cancelling a job while `slurmstepd` is launching a task. The `KillWait` line concerns exactly the case measured here, so rerun the probe first. [Version changes 23.11 to 26.05](/fields/schedulers/slurm-cluster-operations/slurm-version-changes.md#signals-and-killing-jobs) has the list.
@@ -208,6 +175,23 @@ Next Saturday the job is preempted again. This time the log has a calm line abou
 **Takeaway:** a job has two listeners, the batch shell and the `srun` steps; the early `GraceTime` warning goes to the steps, the `--signal=B:` warning goes to the shell (and only at preemption with `send_user_signal`), and every timing is a tick, so budget for lateness.
 
 **Next:** back to [Dying Politely](/fields/schedulers/slurm-preemption/slurm-preemption-requeue-signals.md) for the checkpoint-and-requeue wrapper that these signals feed.
+
+---
+
+## 📜 The Scroll (keep this)
+
+```text
+Two listeners:    batch shell (your script)   vs   steps (things behind srun)
+Early SIGTERM:    GraceTime > 0 -> to srun STEPS at once, NOT to the batch shell (23.11.4)
+End of grace:     SIGCONT+SIGTERM to everyone; then KillWait -> SIGKILL
+Batch shell warn: --signal=B:USR1@N  +  PreemptParameters=send_user_signal (else only at the end)
+Timing:           ticks, not stopwatches; grace +3..+25 s, --signal can be late (52 s, not 90 s)
+scancel -s SIG:   steps by default; --batch for the shell
+Handler rules:    set a flag, never save inside the handler, make it idempotent
+Don't guess:      run probe.sh with your GraceTime and your version
+```
+
+Signals are letters with an address on them. Half of the debugging is checking whether the address was the shell or the step.
 
 ---
 

@@ -16,16 +16,6 @@ relations:
 
 > **Part 6 of the [Node Health Check series](/fields/system-administration/node-health-check/README.md).** The built-in checks cover the classics. Your cluster has its own weirdness: a licence daemon, a GPU generation with its own failure modes, a burst buffer. Time to teach the bouncer some new rules.
 
-## Table of Contents
-- [First, do you even need a module?](#first-do-you-even-need-a-module)
-- [The rules of the house](#the-rules-of-the-house)
-- [Skeleton: a module in five parts](#skeleton-a-module-in-five-parts)
-- [Real example: GPU count and ECC errors](#real-example-gpu-count-and-ecc-errors)
-- [Real example: wrapping DCGM](#real-example-wrapping-dcgm)
-- [Testing your check](#testing-your-check)
-- [Writing bash like NHC does](#writing-bash-like-nhc-does)
-- [Sharing upstream](#sharing-upstream)
-
 ---
 
 ## First, do you even need a module?

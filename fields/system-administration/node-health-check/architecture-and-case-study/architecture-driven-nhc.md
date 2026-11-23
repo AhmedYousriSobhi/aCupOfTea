@@ -16,21 +16,6 @@ relations:
 
 > **Part 9 of the [Node Health Check series](/fields/system-administration/node-health-check/README.md).** The capstone. Parts 3 to 7 taught you to write `nhc.conf` by hand. This part stops doing that: you describe what the cluster *is*, and NHC gets built from that description. Everything here was run against real NHC 1.5, and two of its bugs-in-waiting were found that way.
 
-## Table of Contents
-- [Architecture-Driven NHC: Generate Health Checks from Your Cluster's Definition](#architecture-driven-nhc-generate-health-checks-from-your-clusters-definition)
-  - [Table of Contents](#table-of-contents)
-  - [Three sources of truth, zero agreement](#three-sources-of-truth-zero-agreement)
-  - [The idea: health policy as code](#the-idea-health-policy-as-code)
-  - [Step 1: describe the architecture](#step-1-describe-the-architecture)
-  - [Step 2: the generator](#step-2-the-generator)
-  - [Step 3: the architecture check module](#step-3-the-architecture-check-module)
-  - [Step 4: prove it with real NHC before it ships](#step-4-prove-it-with-real-nhc-before-it-ships)
-  - [Two traps the tests caught](#two-traps-the-tests-caught)
-  - [Step 5: ship it through CI](#step-5-ship-it-through-ci)
-  - [Onboarding a new hardware generation](#onboarding-a-new-hardware-generation)
-  - [Growing the model](#growing-the-model)
-    - [References](#references)
-
 The files used on this page:
 
 | File | What it is |

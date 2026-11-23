@@ -16,24 +16,6 @@ relations:
 
 > **Part 6 of [Slurm for AI Clusters](/fields/schedulers/slurm-ai-clusters/README.md)**, and the lab behind [Why Is My Job Still Pending?](/fields/schedulers/slurm-pending-jobs/README.md) too. Direct steps, in order, to build the same cluster on one Linux machine: one controller, four CPU nodes, one node with four fake GPUs, and a second small cluster on Slurm 26.05.
 
-- [Lab Build Cheatsheet: A Slurm AI Cluster in Containers](#lab-build-cheatsheet-a-slurm-ai-cluster-in-containers)
-  - [What you get](#what-you-get)
-  - [0. The host](#0-the-host)
-  - [1. The node image](#1-the-node-image)
-  - [2. Start the containers](#2-start-the-containers)
-  - [3. Munge, names and users](#3-munge-names-and-users)
-  - [4. Slurm 23.11 with accounting](#4-slurm-2311-with-accounting)
-  - [5. Accounts, QOS and limits](#5-accounts-qos-and-limits)
-  - [5b. Preemption drill (optional)](#5b-preemption-drill-optional)
-  - [6. Topology variants](#6-topology-variants)
-  - [7. PyTorch](#7-pytorch)
-  - [8. Containers: Enroot and Pyxis](#8-containers-enroot-and-pyxis)
-  - [9. GPU health check](#9-gpu-health-check)
-  - [10. Slurm 26.05 from source](#10-slurm-2605-from-source)
-  - [11. Metrics into VictoriaMetrics](#11-metrics-into-victoriametrics)
-  - [When the lab breaks](#when-the-lab-breaks)
-  - [References](#references)
-
 > [!NOTE]
 > Every command here was run while building the lab for these pages, on an Ubuntu 24.04 host. They're collected from several sessions into one order; the whole sequence was **not** re-run from an empty machine in one go. Lab-only shortcuts (privileged containers, a password in a config file, world-writable directories) are marked. Don't copy them into production.
 

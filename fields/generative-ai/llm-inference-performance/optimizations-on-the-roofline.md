@@ -16,15 +16,6 @@ relations:
 
 > **Part 4 of the [LLM Inference Performance series](/fields/generative-ai/llm-inference-performance/README.md).** Every LLM serving optimization pulls one of five levers. Once you can name the lever, you can predict whether an idea will work before anyone spends a dollar on it. By the end of this page you'll judge five real proposals, meet three clever tricks nobody proposed, catch a dashboard lying to you, and give the 70B interview answer with reasons.
 
-## Table of Contents
-- [The meeting](#the-meeting)
-- [The five levers](#the-five-levers)
-- [Verdicts on the five proposals](#verdicts-on-the-five-proposals)
-- [Three tricks nobody proposed](#three-tricks-nobody-proposed)
-- [The dashboard that says 100%](#the-dashboard-that-says-100)
-- [Myths, busted](#myths-busted)
-- [The interview answer](#the-interview-answer)
-
 ---
 
 ## The meeting

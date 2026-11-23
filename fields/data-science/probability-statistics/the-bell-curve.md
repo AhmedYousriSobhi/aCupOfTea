@@ -23,21 +23,6 @@ relations:
 
 > **Part 11 of 15.** Part of the [Probability & Statistics](/fields/data-science/probability-statistics/README.md) series. It continues from [Coins and Calls](/fields/data-science/probability-statistics/coins-and-calls.md), where chance came as a table of counts. By the end you will know where the bell comes from, why probability on a bell is an area and not a height, how one ruler (the z-score) makes every bell the same bell, and when to refuse to use it. The scenario is invented, and every figure was recomputed with Python.
 
-## Table of Contents
-
-- [Prologue: the scale that is never exact](#prologue-the-scale-that-is-never-exact)
-- [Where the bell comes from](#where-the-bell-comes-from)
-- [Probability is area](#probability-is-area)
-- [Two dials, one bell](#two-dials-one-bell)
-- [The one ruler](#the-one-ruler)
-- [From z back to a value](#from-z-back-to-a-value)
-- [When the data are not a bell](#when-the-data-are-not-a-bell)
-- [Check yourself](#check-yourself)
-- [Back to the story](#back-to-the-story)
-- [Cheat sheet](#cheat-sheet)
-- [Answers](#answers)
-- [References](#references)
-
 * * *
 
 ## Prologue: the scale that is never exact
