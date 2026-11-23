@@ -441,7 +441,7 @@ async function run(browser, base, label, size, phone) {
     const r = await fetch('./tips/kaggle-tips/');
     const t = r.ok ? await r.text() : '';
     const og = (t.match(/property="og:title" content="([^"]*)"/) || [])[1];
-    const refresh = (t.match(/http-equiv="refresh" content="0; url=([^"]*)"/) || [])[1];
+    const refresh = (t.match(/prerender-redirect\.js" data-target="([^"]*)"/) || [])[1];
     const h1 = document.querySelector('.markdown-section h1').textContent.trim();
     return { ok: r.ok, og, refresh, h1, button: !!document.querySelector('.page-footer .share-link') };
   });
