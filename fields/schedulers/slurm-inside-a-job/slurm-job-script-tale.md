@@ -24,22 +24,6 @@ relations:
 
 > **Part of the [schedulers](/fields/schedulers/slurm-intro.md) directory.** The story below is the original tale. The sections after it check its claims against the Slurm man pages, SchedMD support tickets and the slurm-users list, and add what the story leaves out. The commands were not run on a live cluster for this page, so try them with a short test job first. The sources date from 2019 to 2023, and the accounting flags in the last sections need Slurm 21.08 or newer.
 
-## Table of Contents
-
-- [The Tale of a Slurm Job Script: Submission Is a Commitment, Not a Promise](#the-tale-of-a-slurm-job-script-submission-is-a-commitment-not-a-promise)
-  - [Table of Contents](#table-of-contents)
-  - [The tale](#the-tale)
-  - [Where the snapshot actually lives](#where-the-snapshot-actually-lives)
-  - [Frozen in time? Only the script and its environment](#frozen-in-time-only-the-script-and-its-environment)
-  - [How sbatch reads the script](#how-sbatch-reads-the-script)
-  - [Peeking at the frozen copy](#peeking-at-the-frozen-copy)
-  - [Changing your mind without starting over](#changing-your-mind-without-starting-over)
-  - [Best practice](#best-practice)
-  - [Making runs traceable](#making-runs-traceable)
-  - [The afterlife of a script](#the-afterlife-of-a-script)
-  - [Cheat sheet](#cheat-sheet)
-  - [References](#references)
-
 * * *
 
 ## The tale
@@ -232,9 +216,9 @@ Two cautions that are my own, not from the docs.
 
 * * *
 
-## Cheat sheet
+## 📜 The Scroll (keep this)
 
-```
+```text
 sbatch freezes   script text + options + environment (two files in StateSaveLocation) + cwd
 sbatch ignores   code, configs, data: read live at run time, by running AND pending jobs
 read it back     scontrol write batch_script <id> [file|-]    (owner or admin, while the record exists)

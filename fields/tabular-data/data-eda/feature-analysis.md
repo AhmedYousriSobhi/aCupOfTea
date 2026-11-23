@@ -4,13 +4,6 @@ summary: What a single feature tells you about your data, from constant and bina
 # Tabular Data - Data EDA - Feature Analysis
 
 ## Table of Content
-- [Tabular Data - Data EDA - Feature Analysis](#tabular-data---data-eda---feature-analysis)
-  - [Table of Content](#table-of-content)
-  - [Numerical Signled Valued Feature](#numerical-signled-valued-feature)
-  - [Binary Valued feature](#binary-valued-feature)
-  - [Uniform Distribution features](#uniform-distribution-features)
-  - [Non Perfect Uniform Distribution Feature](#non-perfect-uniform-distribution-feature)
-
 ## Numerical Signled Valued Feature
 If a column in your dataset contains only a single value throughout, it can provide some insights, although they may be limited. Here's how you can describe the insights from such a column:
 

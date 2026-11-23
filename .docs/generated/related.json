@@ -844,7 +844,7 @@
       },
       {
         "id": "nhc-build-and-install",
-        "path": "fields/system-administration/node-health-check/build-and-install.md",
+        "path": "fields/system-administration/node-health-check/getting-started/build-and-install.md",
         "title": "Build and Install NHC"
       }
     ],
@@ -2253,6 +2253,42 @@
     ],
     "required_by": []
   },
+  "fields/schedulers/slurm-cluster-operations/quick-guide.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "slurm-reservations-and-maintenance",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-reservations-and-maintenance.md",
+        "title": "Calling Dibs on Nodes: Reservations, Maintenance Windows and the Job That Fit"
+      },
+      {
+        "id": "slurm-kill-task-failed",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-kill-task-failed.md",
+        "title": "Kill Task Failed: A Murder Mystery With No Body (and One Drained Node)"
+      },
+      {
+        "id": "slurm-pam-adopt-ssh-access",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-pam-adopt-ssh-access.md",
+        "title": "pam_slurm_adopt: Closing the Slurm SSH Backdoor"
+      },
+      {
+        "id": "slurm-reboot-order",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-reboot-order.md",
+        "title": "Rebooting a Slurm Cluster Without Losing Your Job (Or Anyone Else's)"
+      },
+      {
+        "id": "slurm-spool-dir-full",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-spool-dir-full.md",
+        "title": "SlurmdSpoolDir Is Full: The Drain That Is Not About the Spool Directory"
+      },
+      {
+        "id": "slurm-upgrade-order",
+        "path": "fields/schedulers/slurm-cluster-operations/slurm-upgrade-order.md",
+        "title": "Upgrading Slurm: The Order, the Window, and the Parts That Bite"
+      }
+    ],
+    "required_by": []
+  },
   "fields/schedulers/slurm-cluster-operations/slurm-kill-task-failed.md": {
     "prerequisites": [],
     "related": [
@@ -2270,6 +2306,11 @@
         "id": "slurm-preemption-requeue-signals",
         "path": "fields/schedulers/slurm-preemption/slurm-preemption-requeue-signals.md",
         "title": "Dying Politely: Preemption, Requeue and the Signals Your Training Job Ignores"
+      },
+      {
+        "id": "slurm-cluster-operations-quick",
+        "path": "fields/schedulers/slurm-cluster-operations/quick-guide.md",
+        "title": "Run Slurm Cluster Operations Without Losing Jobs"
       },
       {
         "id": "slurm-cgroups-in-practice",
@@ -2318,6 +2359,11 @@
         "title": "Rebooting a Slurm Cluster Without Losing Your Job (Or Anyone Else's)"
       },
       {
+        "id": "slurm-cluster-operations-quick",
+        "path": "fields/schedulers/slurm-cluster-operations/quick-guide.md",
+        "title": "Run Slurm Cluster Operations Without Losing Jobs"
+      },
+      {
         "id": "slurm-cgroups-in-practice",
         "path": "fields/schedulers/slurm-inside-a-job/slurm-cgroups-in-practice.md",
         "title": "Slurm cgroups in Practice: What Gets Constrained, and Where the Numbers Lie"
@@ -2362,6 +2408,11 @@
         "id": "slurm-pam-adopt-ssh-access",
         "path": "fields/schedulers/slurm-cluster-operations/slurm-pam-adopt-ssh-access.md",
         "title": "pam_slurm_adopt: Closing the Slurm SSH Backdoor"
+      },
+      {
+        "id": "slurm-cluster-operations-quick",
+        "path": "fields/schedulers/slurm-cluster-operations/quick-guide.md",
+        "title": "Run Slurm Cluster Operations Without Losing Jobs"
       },
       {
         "id": "slurm-spool-dir-full",
@@ -2410,6 +2461,11 @@
         "title": "Rebooting a Slurm Cluster Without Losing Your Job (Or Anyone Else's)"
       },
       {
+        "id": "slurm-cluster-operations-quick",
+        "path": "fields/schedulers/slurm-cluster-operations/quick-guide.md",
+        "title": "Run Slurm Cluster Operations Without Losing Jobs"
+      },
+      {
         "id": "slurm-spool-dir-full",
         "path": "fields/schedulers/slurm-cluster-operations/slurm-spool-dir-full.md",
         "title": "SlurmdSpoolDir Is Full: The Drain That Is Not About the Spool Directory"
@@ -2446,6 +2502,11 @@
         "title": "Rebooting a Slurm Cluster Without Losing Your Job (Or Anyone Else's)"
       },
       {
+        "id": "slurm-cluster-operations-quick",
+        "path": "fields/schedulers/slurm-cluster-operations/quick-guide.md",
+        "title": "Run Slurm Cluster Operations Without Losing Jobs"
+      },
+      {
         "id": "slurm-slurmstepd",
         "path": "fields/schedulers/slurm-inside-a-job/slurm-slurmstepd.md",
         "title": "slurmstepd: The Small Daemon That Actually Runs Your Job"
@@ -2480,6 +2541,11 @@
         "id": "slurm-reboot-order",
         "path": "fields/schedulers/slurm-cluster-operations/slurm-reboot-order.md",
         "title": "Rebooting a Slurm Cluster Without Losing Your Job (Or Anyone Else's)"
+      },
+      {
+        "id": "slurm-cluster-operations-quick",
+        "path": "fields/schedulers/slurm-cluster-operations/quick-guide.md",
+        "title": "Run Slurm Cluster Operations Without Losing Jobs"
       },
       {
         "id": "slurm-accounting-multi-tenancy",
@@ -2793,9 +2859,35 @@
     ],
     "related": [
       {
+        "id": "slurm-pending-jobs-quick",
+        "path": "fields/schedulers/slurm-pending-jobs/quick-guide.md",
+        "title": "Find Out Why a Slurm Job Is Pending"
+      },
+      {
         "id": "slurm-qos-preemption-setup",
         "path": "fields/schedulers/slurm-preemption/slurm-qos-preemption-setup.md",
         "title": "The Guest List: Setting Up QOS Preemption Without Starting a War"
+      },
+      {
+        "id": "slurm-priority-multifactor",
+        "path": "fields/schedulers/slurm-pending-jobs/who-goes-first.md",
+        "title": "Who Goes First: Slurm's Priority Number, Taken Apart"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/schedulers/slurm-pending-jobs/quick-guide.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "slurm-qos-limits",
+        "path": "fields/schedulers/slurm-pending-jobs/limits-that-wait-forever.md",
+        "title": "Limits That Wait Forever: QOS and Account Limits in Practice"
+      },
+      {
+        "id": "slurm-pending-reasons",
+        "path": "fields/schedulers/slurm-pending-jobs/why-is-my-job-pending.md",
+        "title": "Reading the Reason Column: Why Is My Slurm Job Pending?"
       },
       {
         "id": "slurm-priority-multifactor",
@@ -2814,6 +2906,11 @@
       }
     ],
     "related": [
+      {
+        "id": "slurm-pending-jobs-quick",
+        "path": "fields/schedulers/slurm-pending-jobs/quick-guide.md",
+        "title": "Find Out Why a Slurm Job Is Pending"
+      },
       {
         "id": "slurm-qos-limits",
         "path": "fields/schedulers/slurm-pending-jobs/limits-that-wait-forever.md",
@@ -2846,6 +2943,11 @@
         "title": "Calling Dibs on Nodes: Reservations, Maintenance Windows and the Job That Fit"
       },
       {
+        "id": "slurm-pending-jobs-quick",
+        "path": "fields/schedulers/slurm-pending-jobs/quick-guide.md",
+        "title": "Find Out Why a Slurm Job Is Pending"
+      },
+      {
         "id": "slurm-lab-cheatsheet",
         "path": "fields/schedulers/slurm-ai-clusters/lab-build-cheatsheet.md",
         "title": "Lab Build Cheatsheet: A Slurm AI Cluster in Containers"
@@ -2874,6 +2976,32 @@
       }
     ]
   },
+  "fields/schedulers/slurm-preemption/quick-guide.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "slurm-preemption-requeue-signals",
+        "path": "fields/schedulers/slurm-preemption/slurm-preemption-requeue-signals.md",
+        "title": "Dying Politely: Preemption, Requeue and the Signals Your Training Job Ignores"
+      },
+      {
+        "id": "slurm-qos-preemption-setup",
+        "path": "fields/schedulers/slurm-preemption/slurm-qos-preemption-setup.md",
+        "title": "The Guest List: Setting Up QOS Preemption Without Starting a War"
+      },
+      {
+        "id": "slurm-job-submit-lua",
+        "path": "fields/schedulers/slurm-preemption/slurm-job-submit-lua.md",
+        "title": "The Receptionist Who Rewrites Your Badge: job_submit.lua"
+      },
+      {
+        "id": "slurm-signals-cheatsheet",
+        "path": "fields/schedulers/slurm-preemption/slurm-signals-cheatsheet.md",
+        "title": "Who Gets Told What: Every Signal Slurm Sends, and Who Actually Hears It"
+      }
+    ],
+    "required_by": []
+  },
   "fields/schedulers/slurm-preemption/slurm-job-submit-lua.md": {
     "prerequisites": [],
     "related": [
@@ -2901,6 +3029,11 @@
         "id": "slurm-smoke-config-change",
         "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-config-change.md",
         "title": "Measure Twice, Reconfigure Once: Smoke-Testing a slurm.conf Change"
+      },
+      {
+        "id": "slurm-preemption-quick",
+        "path": "fields/schedulers/slurm-preemption/quick-guide.md",
+        "title": "Set Up QOS Preemption and Make Jobs Survive It"
       },
       {
         "id": "slurm-accounting-multi-tenancy",
@@ -2957,6 +3090,11 @@
         "id": "slurm-kill-task-failed",
         "path": "fields/schedulers/slurm-cluster-operations/slurm-kill-task-failed.md",
         "title": "Kill Task Failed: A Murder Mystery With No Body (and One Drained Node)"
+      },
+      {
+        "id": "slurm-preemption-quick",
+        "path": "fields/schedulers/slurm-preemption/quick-guide.md",
+        "title": "Set Up QOS Preemption and Make Jobs Survive It"
       },
       {
         "id": "slurm-accounting-multi-tenancy",
@@ -3026,6 +3164,11 @@
         "title": "Limits That Wait Forever: QOS and Account Limits in Practice"
       },
       {
+        "id": "slurm-preemption-quick",
+        "path": "fields/schedulers/slurm-preemption/quick-guide.md",
+        "title": "Set Up QOS Preemption and Make Jobs Survive It"
+      },
+      {
         "id": "slurm-version-changes",
         "path": "fields/schedulers/slurm-cluster-operations/slurm-version-changes.md",
         "title": "The Changelog Nobody Reads: What Moved Between Slurm 23.11 and 26.05"
@@ -3060,6 +3203,11 @@
         "id": "slurm-kill-task-failed",
         "path": "fields/schedulers/slurm-cluster-operations/slurm-kill-task-failed.md",
         "title": "Kill Task Failed: A Murder Mystery With No Body (and One Drained Node)"
+      },
+      {
+        "id": "slurm-preemption-quick",
+        "path": "fields/schedulers/slurm-preemption/quick-guide.md",
+        "title": "Set Up QOS Preemption and Make Jobs Survive It"
       },
       {
         "id": "slurm-slurmstepd",
@@ -3120,6 +3268,42 @@
     ],
     "required_by": []
   },
+  "fields/schedulers/slurm-smoke-tests/quick-guide.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "slurm-smoke-node-readiness",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-node-readiness.md",
+        "title": "Back From the Repair Shop: Is This Node Fit to Return to Service?"
+      },
+      {
+        "id": "slurm-smoke-policy",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-policy.md",
+        "title": "Does the Rulebook Still Work? Smoke-Testing QOS, Submit Rules and Preemption"
+      },
+      {
+        "id": "slurm-smoke-config-change",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-config-change.md",
+        "title": "Measure Twice, Reconfigure Once: Smoke-Testing a slurm.conf Change"
+      },
+      {
+        "id": "slurm-smoke-control-plane",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-control-plane.md",
+        "title": "The Cluster That Worked Perfectly and Remembered Nothing: a Two-Minute Slurm Smoke Test"
+      },
+      {
+        "id": "slurm-smoke-after-upgrade",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-after-upgrade.md",
+        "title": "The Morning After the Upgrade: Smoke Tests for the Change You Cannot Undo"
+      },
+      {
+        "id": "slurm-smoke-regression-suites",
+        "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-regression-suites.md",
+        "title": "When Smoke Becomes a Fire Drill: SchedMD's Test Suite, ReFrame and the Baseline Rule"
+      }
+    ],
+    "required_by": []
+  },
   "fields/schedulers/slurm-smoke-tests/slurm-smoke-after-upgrade.md": {
     "prerequisites": [
       {
@@ -3129,6 +3313,11 @@
       }
     ],
     "related": [
+      {
+        "id": "slurm-smoke-tests-quick",
+        "path": "fields/schedulers/slurm-smoke-tests/quick-guide.md",
+        "title": "Check That Slurm Still Works After a Change"
+      },
       {
         "id": "slurm-smoke-config-change",
         "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-config-change.md",
@@ -3172,6 +3361,11 @@
         "title": "Calling Dibs on Nodes: Reservations, Maintenance Windows and the Job That Fit"
       },
       {
+        "id": "slurm-smoke-tests-quick",
+        "path": "fields/schedulers/slurm-smoke-tests/quick-guide.md",
+        "title": "Check That Slurm Still Works After a Change"
+      },
+      {
         "id": "slurm-smoke-policy",
         "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-policy.md",
         "title": "Does the Rulebook Still Work? Smoke-Testing QOS, Submit Rules and Preemption"
@@ -3201,6 +3395,11 @@
         "id": "slurm-sacct-job-forensics",
         "path": "fields/schedulers/slurm-sacct-job-forensics.md",
         "title": "Autopsy of a Job: Reading sacct Like a Coroner"
+      },
+      {
+        "id": "slurm-smoke-tests-quick",
+        "path": "fields/schedulers/slurm-smoke-tests/quick-guide.md",
+        "title": "Check That Slurm Still Works After a Change"
       },
       {
         "id": "slurm-pending-reasons",
@@ -3256,6 +3455,11 @@
         "title": "Calling Dibs on Nodes: Reservations, Maintenance Windows and the Job That Fit"
       },
       {
+        "id": "slurm-smoke-tests-quick",
+        "path": "fields/schedulers/slurm-smoke-tests/quick-guide.md",
+        "title": "Check That Slurm Still Works After a Change"
+      },
+      {
         "id": "slurm-kill-task-failed",
         "path": "fields/schedulers/slurm-cluster-operations/slurm-kill-task-failed.md",
         "title": "Kill Task Failed: A Murder Mystery With No Body (and One Drained Node)"
@@ -3282,6 +3486,11 @@
       }
     ],
     "related": [
+      {
+        "id": "slurm-smoke-tests-quick",
+        "path": "fields/schedulers/slurm-smoke-tests/quick-guide.md",
+        "title": "Check That Slurm Still Works After a Change"
+      },
       {
         "id": "slurm-preemption-requeue-signals",
         "path": "fields/schedulers/slurm-preemption/slurm-preemption-requeue-signals.md",
@@ -3324,6 +3533,11 @@
       }
     ],
     "related": [
+      {
+        "id": "slurm-smoke-tests-quick",
+        "path": "fields/schedulers/slurm-smoke-tests/quick-guide.md",
+        "title": "Check That Slurm Still Works After a Change"
+      },
       {
         "id": "slurm-smoke-policy",
         "path": "fields/schedulers/slurm-smoke-tests/slurm-smoke-policy.md",
@@ -3380,7 +3594,7 @@
     "related": [
       {
         "id": "nhc-auto-remediation",
-        "path": "fields/system-administration/node-health-check/auto-remediation.md",
+        "path": "fields/system-administration/node-health-check/checks-and-remediation/auto-remediation.md",
         "title": "Auto-Remediation: From Detected to Fixed, Safely"
       }
     ],
@@ -3414,7 +3628,7 @@
     "related": [
       {
         "id": "nhc-auto-remediation",
-        "path": "fields/system-administration/node-health-check/auto-remediation.md",
+        "path": "fields/system-administration/node-health-check/checks-and-remediation/auto-remediation.md",
         "title": "Auto-Remediation: From Detected to Fixed, Safely"
       },
       {
@@ -3470,7 +3684,7 @@
       },
       {
         "id": "nhc-auto-remediation",
-        "path": "fields/system-administration/node-health-check/auto-remediation.md",
+        "path": "fields/system-administration/node-health-check/checks-and-remediation/auto-remediation.md",
         "title": "Auto-Remediation: From Detected to Fixed, Safely"
       },
       {
@@ -3724,43 +3938,98 @@
     ],
     "required_by": []
   },
-  "fields/system-administration/node-health-check/architecture-driven-nhc.md": {
+  "fields/system-administration/node-health-check/architecture-and-case-study/architecture-driven-nhc.md": {
     "prerequisites": [
       {
         "id": "nhc-rollout-at-scale",
-        "path": "fields/system-administration/node-health-check/rollout-at-scale.md",
+        "path": "fields/system-administration/node-health-check/getting-started/rollout-at-scale.md",
         "title": "Rolling NHC Out to a Fleet Without Draining Everything"
       },
       {
         "id": "nhc-writing-nhc-conf",
-        "path": "fields/system-administration/node-health-check/writing-nhc-conf.md",
+        "path": "fields/system-administration/node-health-check/getting-started/writing-nhc-conf.md",
         "title": "Writing nhc.conf That Actually Fits Your Cluster"
       },
       {
         "id": "nhc-custom-checks",
-        "path": "fields/system-administration/node-health-check/custom-checks.md",
+        "path": "fields/system-administration/node-health-check/checks-and-remediation/custom-checks.md",
         "title": "Writing Your Own NHC Checks"
       }
     ],
-    "related": [],
+    "related": [
+      {
+        "id": "nhc-architecture-and-case-study-quick",
+        "path": "fields/system-administration/node-health-check/architecture-and-case-study/quick-guide.md",
+        "title": "Generate NHC from a Cluster Definition and Scope a Client Request"
+      }
+    ],
     "required_by": [
       {
         "id": "nhc-case-study",
-        "path": "fields/system-administration/node-health-check/case-study-build-me-an-nhc.md",
+        "path": "fields/system-administration/node-health-check/architecture-and-case-study/case-study-build-me-an-nhc.md",
         "title": "Case Study: \"Build Us an NHC\", From a Vague Ask to a Validated Proposal"
       }
     ]
   },
-  "fields/system-administration/node-health-check/auto-remediation.md": {
+  "fields/system-administration/node-health-check/architecture-and-case-study/case-study-build-me-an-nhc.md": {
+    "prerequisites": [
+      {
+        "id": "nhc-architecture-driven",
+        "path": "fields/system-administration/node-health-check/architecture-and-case-study/architecture-driven-nhc.md",
+        "title": "Architecture-Driven NHC: Generate Health Checks from Your Cluster's Definition"
+      }
+    ],
+    "related": [
+      {
+        "id": "nhc-architecture-and-case-study-quick",
+        "path": "fields/system-administration/node-health-check/architecture-and-case-study/quick-guide.md",
+        "title": "Generate NHC from a Cluster Definition and Scope a Client Request"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/system-administration/node-health-check/architecture-and-case-study/quick-guide.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "nhc-architecture-driven",
+        "path": "fields/system-administration/node-health-check/architecture-and-case-study/architecture-driven-nhc.md",
+        "title": "Architecture-Driven NHC: Generate Health Checks from Your Cluster's Definition"
+      },
+      {
+        "id": "nhc-case-study",
+        "path": "fields/system-administration/node-health-check/architecture-and-case-study/case-study-build-me-an-nhc.md",
+        "title": "Case Study: \"Build Us an NHC\", From a Vague Ask to a Validated Proposal"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/system-administration/node-health-check/cheat-sheet.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "nhc-troubleshooting",
+        "path": "fields/system-administration/node-health-check/checks-and-remediation/troubleshooting.md",
+        "title": "NHC Troubleshooting: Symptom First"
+      },
+      {
+        "id": "nhc-writing-nhc-conf",
+        "path": "fields/system-administration/node-health-check/getting-started/writing-nhc-conf.md",
+        "title": "Writing nhc.conf That Actually Fits Your Cluster"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/system-administration/node-health-check/checks-and-remediation/auto-remediation.md": {
     "prerequisites": [
       {
         "id": "nhc-slurm-integration",
-        "path": "fields/system-administration/node-health-check/slurm-integration.md",
+        "path": "fields/system-administration/node-health-check/getting-started/slurm-integration.md",
         "title": "Plugging NHC into Slurm (and Friends)"
       },
       {
         "id": "nhc-rollout-at-scale",
-        "path": "fields/system-administration/node-health-check/rollout-at-scale.md",
+        "path": "fields/system-administration/node-health-check/getting-started/rollout-at-scale.md",
         "title": "Rolling NHC Out to a Fleet Without Draining Everything"
       }
     ],
@@ -3779,19 +4048,100 @@
         "id": "gpu-pred-runbook",
         "path": "fields/system-administration/gpu-failure-prediction/runbook.md",
         "title": "Runbook: Deploying GPU Failure Prediction End to End"
+      },
+      {
+        "id": "nhc-checks-and-remediation-quick",
+        "path": "fields/system-administration/node-health-check/checks-and-remediation/quick-guide.md",
+        "title": "Write Checks, Fix Nodes and Troubleshoot NHC"
       }
     ],
     "required_by": []
   },
-  "fields/system-administration/node-health-check/build-and-install.md": {
+  "fields/system-administration/node-health-check/checks-and-remediation/custom-checks.md": {
+    "prerequisites": [
+      {
+        "id": "nhc-writing-nhc-conf",
+        "path": "fields/system-administration/node-health-check/getting-started/writing-nhc-conf.md",
+        "title": "Writing nhc.conf That Actually Fits Your Cluster"
+      }
+    ],
+    "related": [
+      {
+        "id": "nhc-checks-and-remediation-quick",
+        "path": "fields/system-administration/node-health-check/checks-and-remediation/quick-guide.md",
+        "title": "Write Checks, Fix Nodes and Troubleshoot NHC"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "nhc-architecture-driven",
+        "path": "fields/system-administration/node-health-check/architecture-and-case-study/architecture-driven-nhc.md",
+        "title": "Architecture-Driven NHC: Generate Health Checks from Your Cluster's Definition"
+      },
+      {
+        "id": "nhc-gpu-temperature-ceiling",
+        "path": "fields/system-administration/node-health-check/gpu-temperature/gpu-temperature-ceiling.md",
+        "title": "GPU Temperature in a Health Check: The Ceiling Rule"
+      }
+    ]
+  },
+  "fields/system-administration/node-health-check/checks-and-remediation/quick-guide.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "nhc-auto-remediation",
+        "path": "fields/system-administration/node-health-check/checks-and-remediation/auto-remediation.md",
+        "title": "Auto-Remediation: From Detected to Fixed, Safely"
+      },
+      {
+        "id": "nhc-troubleshooting",
+        "path": "fields/system-administration/node-health-check/checks-and-remediation/troubleshooting.md",
+        "title": "NHC Troubleshooting: Symptom First"
+      },
+      {
+        "id": "nhc-custom-checks",
+        "path": "fields/system-administration/node-health-check/checks-and-remediation/custom-checks.md",
+        "title": "Writing Your Own NHC Checks"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/system-administration/node-health-check/checks-and-remediation/troubleshooting.md": {
+    "prerequisites": [
+      {
+        "id": "nhc-slurm-integration",
+        "path": "fields/system-administration/node-health-check/getting-started/slurm-integration.md",
+        "title": "Plugging NHC into Slurm (and Friends)"
+      }
+    ],
+    "related": [
+      {
+        "id": "nhc-cheat-sheet",
+        "path": "fields/system-administration/node-health-check/cheat-sheet.md",
+        "title": "NHC Cheat Sheet"
+      },
+      {
+        "id": "nhc-checks-and-remediation-quick",
+        "path": "fields/system-administration/node-health-check/checks-and-remediation/quick-guide.md",
+        "title": "Write Checks, Fix Nodes and Troubleshoot NHC"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/system-administration/node-health-check/getting-started/build-and-install.md": {
     "prerequisites": [
       {
         "id": "nhc-why-node-health-check",
-        "path": "fields/system-administration/node-health-check/why-node-health-check.md",
+        "path": "fields/system-administration/node-health-check/getting-started/why-node-health-check.md",
         "title": "Why Your Cluster Needs a Bouncer"
       }
     ],
     "related": [
+      {
+        "id": "nhc-getting-started-quick",
+        "path": "fields/system-administration/node-health-check/getting-started/quick-guide.md",
+        "title": "Install, Configure and Roll Out NHC"
+      },
       {
         "id": "ansible-rolling",
         "path": "fields/devops/ansible/rolling-maintenance.md",
@@ -3801,153 +4151,154 @@
     "required_by": [
       {
         "id": "nhc-writing-nhc-conf",
-        "path": "fields/system-administration/node-health-check/writing-nhc-conf.md",
+        "path": "fields/system-administration/node-health-check/getting-started/writing-nhc-conf.md",
         "title": "Writing nhc.conf That Actually Fits Your Cluster"
       }
     ]
   },
-  "fields/system-administration/node-health-check/case-study-build-me-an-nhc.md": {
-    "prerequisites": [
-      {
-        "id": "nhc-architecture-driven",
-        "path": "fields/system-administration/node-health-check/architecture-driven-nhc.md",
-        "title": "Architecture-Driven NHC: Generate Health Checks from Your Cluster's Definition"
-      }
-    ],
-    "related": [],
-    "required_by": []
-  },
-  "fields/system-administration/node-health-check/cheat-sheet.md": {
+  "fields/system-administration/node-health-check/getting-started/quick-guide.md": {
     "prerequisites": [],
     "related": [
       {
-        "id": "nhc-troubleshooting",
-        "path": "fields/system-administration/node-health-check/troubleshooting.md",
-        "title": "NHC Troubleshooting: Symptom First"
+        "id": "nhc-build-and-install",
+        "path": "fields/system-administration/node-health-check/getting-started/build-and-install.md",
+        "title": "Build and Install NHC"
+      },
+      {
+        "id": "nhc-slurm-integration",
+        "path": "fields/system-administration/node-health-check/getting-started/slurm-integration.md",
+        "title": "Plugging NHC into Slurm (and Friends)"
+      },
+      {
+        "id": "nhc-rollout-at-scale",
+        "path": "fields/system-administration/node-health-check/getting-started/rollout-at-scale.md",
+        "title": "Rolling NHC Out to a Fleet Without Draining Everything"
       },
       {
         "id": "nhc-writing-nhc-conf",
-        "path": "fields/system-administration/node-health-check/writing-nhc-conf.md",
+        "path": "fields/system-administration/node-health-check/getting-started/writing-nhc-conf.md",
         "title": "Writing nhc.conf That Actually Fits Your Cluster"
       }
     ],
     "required_by": []
   },
-  "fields/system-administration/node-health-check/custom-checks.md": {
-    "prerequisites": [
-      {
-        "id": "nhc-writing-nhc-conf",
-        "path": "fields/system-administration/node-health-check/writing-nhc-conf.md",
-        "title": "Writing nhc.conf That Actually Fits Your Cluster"
-      }
-    ],
-    "related": [],
-    "required_by": [
-      {
-        "id": "nhc-architecture-driven",
-        "path": "fields/system-administration/node-health-check/architecture-driven-nhc.md",
-        "title": "Architecture-Driven NHC: Generate Health Checks from Your Cluster's Definition"
-      }
-    ]
-  },
-  "fields/system-administration/node-health-check/rollout-at-scale.md": {
+  "fields/system-administration/node-health-check/getting-started/rollout-at-scale.md": {
     "prerequisites": [
       {
         "id": "nhc-slurm-integration",
-        "path": "fields/system-administration/node-health-check/slurm-integration.md",
+        "path": "fields/system-administration/node-health-check/getting-started/slurm-integration.md",
         "title": "Plugging NHC into Slurm (and Friends)"
       }
     ],
-    "related": [],
+    "related": [
+      {
+        "id": "nhc-gpu-temperature-ceiling",
+        "path": "fields/system-administration/node-health-check/gpu-temperature/gpu-temperature-ceiling.md",
+        "title": "GPU Temperature in a Health Check: The Ceiling Rule"
+      },
+      {
+        "id": "nhc-gpu-temperature-idle-timer",
+        "path": "fields/system-administration/node-health-check/gpu-temperature/gpu-temperature-idle-timer.md",
+        "title": "GPU Temperature in a Health Check: The Idle Timer"
+      },
+      {
+        "id": "nhc-getting-started-quick",
+        "path": "fields/system-administration/node-health-check/getting-started/quick-guide.md",
+        "title": "Install, Configure and Roll Out NHC"
+      }
+    ],
     "required_by": [
       {
         "id": "nhc-auto-remediation",
-        "path": "fields/system-administration/node-health-check/auto-remediation.md",
+        "path": "fields/system-administration/node-health-check/checks-and-remediation/auto-remediation.md",
         "title": "Auto-Remediation: From Detected to Fixed, Safely"
       },
       {
         "id": "nhc-architecture-driven",
-        "path": "fields/system-administration/node-health-check/architecture-driven-nhc.md",
+        "path": "fields/system-administration/node-health-check/architecture-and-case-study/architecture-driven-nhc.md",
         "title": "Architecture-Driven NHC: Generate Health Checks from Your Cluster's Definition"
       }
     ]
   },
-  "fields/system-administration/node-health-check/slurm-integration.md": {
+  "fields/system-administration/node-health-check/getting-started/slurm-integration.md": {
     "prerequisites": [
       {
         "id": "nhc-writing-nhc-conf",
-        "path": "fields/system-administration/node-health-check/writing-nhc-conf.md",
+        "path": "fields/system-administration/node-health-check/getting-started/writing-nhc-conf.md",
         "title": "Writing nhc.conf That Actually Fits Your Cluster"
       }
     ],
     "related": [
       {
+        "id": "nhc-gpu-temperature-ceiling",
+        "path": "fields/system-administration/node-health-check/gpu-temperature/gpu-temperature-ceiling.md",
+        "title": "GPU Temperature in a Health Check: The Ceiling Rule"
+      },
+      {
+        "id": "nhc-gpu-temperature-idle-timer",
+        "path": "fields/system-administration/node-health-check/gpu-temperature/gpu-temperature-idle-timer.md",
+        "title": "GPU Temperature in a Health Check: The Idle Timer"
+      },
+      {
+        "id": "nhc-getting-started-quick",
+        "path": "fields/system-administration/node-health-check/getting-started/quick-guide.md",
+        "title": "Install, Configure and Roll Out NHC"
+      },
+      {
         "id": "nhc-why-node-health-check",
-        "path": "fields/system-administration/node-health-check/why-node-health-check.md",
+        "path": "fields/system-administration/node-health-check/getting-started/why-node-health-check.md",
         "title": "Why Your Cluster Needs a Bouncer"
       }
     ],
     "required_by": [
       {
         "id": "nhc-rollout-at-scale",
-        "path": "fields/system-administration/node-health-check/rollout-at-scale.md",
+        "path": "fields/system-administration/node-health-check/getting-started/rollout-at-scale.md",
         "title": "Rolling NHC Out to a Fleet Without Draining Everything"
       },
       {
         "id": "nhc-auto-remediation",
-        "path": "fields/system-administration/node-health-check/auto-remediation.md",
+        "path": "fields/system-administration/node-health-check/checks-and-remediation/auto-remediation.md",
         "title": "Auto-Remediation: From Detected to Fixed, Safely"
       },
       {
         "id": "nhc-troubleshooting",
-        "path": "fields/system-administration/node-health-check/troubleshooting.md",
+        "path": "fields/system-administration/node-health-check/checks-and-remediation/troubleshooting.md",
         "title": "NHC Troubleshooting: Symptom First"
       }
     ]
   },
-  "fields/system-administration/node-health-check/troubleshooting.md": {
-    "prerequisites": [
-      {
-        "id": "nhc-slurm-integration",
-        "path": "fields/system-administration/node-health-check/slurm-integration.md",
-        "title": "Plugging NHC into Slurm (and Friends)"
-      }
-    ],
-    "related": [
-      {
-        "id": "nhc-cheat-sheet",
-        "path": "fields/system-administration/node-health-check/cheat-sheet.md",
-        "title": "NHC Cheat Sheet"
-      }
-    ],
-    "required_by": []
-  },
-  "fields/system-administration/node-health-check/why-node-health-check.md": {
+  "fields/system-administration/node-health-check/getting-started/why-node-health-check.md": {
     "prerequisites": [],
     "related": [
       {
         "id": "nhc-slurm-integration",
-        "path": "fields/system-administration/node-health-check/slurm-integration.md",
+        "path": "fields/system-administration/node-health-check/getting-started/slurm-integration.md",
         "title": "Plugging NHC into Slurm (and Friends)"
       }
     ],
     "required_by": [
       {
         "id": "nhc-build-and-install",
-        "path": "fields/system-administration/node-health-check/build-and-install.md",
+        "path": "fields/system-administration/node-health-check/getting-started/build-and-install.md",
         "title": "Build and Install NHC"
       }
     ]
   },
-  "fields/system-administration/node-health-check/writing-nhc-conf.md": {
+  "fields/system-administration/node-health-check/getting-started/writing-nhc-conf.md": {
     "prerequisites": [
       {
         "id": "nhc-build-and-install",
-        "path": "fields/system-administration/node-health-check/build-and-install.md",
+        "path": "fields/system-administration/node-health-check/getting-started/build-and-install.md",
         "title": "Build and Install NHC"
       }
     ],
     "related": [
+      {
+        "id": "nhc-getting-started-quick",
+        "path": "fields/system-administration/node-health-check/getting-started/quick-guide.md",
+        "title": "Install, Configure and Roll Out NHC"
+      },
       {
         "id": "nhc-cheat-sheet",
         "path": "fields/system-administration/node-health-check/cheat-sheet.md",
@@ -3957,20 +4308,96 @@
     "required_by": [
       {
         "id": "nhc-slurm-integration",
-        "path": "fields/system-administration/node-health-check/slurm-integration.md",
+        "path": "fields/system-administration/node-health-check/getting-started/slurm-integration.md",
         "title": "Plugging NHC into Slurm (and Friends)"
       },
       {
         "id": "nhc-custom-checks",
-        "path": "fields/system-administration/node-health-check/custom-checks.md",
+        "path": "fields/system-administration/node-health-check/checks-and-remediation/custom-checks.md",
         "title": "Writing Your Own NHC Checks"
       },
       {
         "id": "nhc-architecture-driven",
-        "path": "fields/system-administration/node-health-check/architecture-driven-nhc.md",
+        "path": "fields/system-administration/node-health-check/architecture-and-case-study/architecture-driven-nhc.md",
         "title": "Architecture-Driven NHC: Generate Health Checks from Your Cluster's Definition"
       }
     ]
+  },
+  "fields/system-administration/node-health-check/gpu-temperature/gpu-temperature-ceiling.md": {
+    "prerequisites": [
+      {
+        "id": "nhc-custom-checks",
+        "path": "fields/system-administration/node-health-check/checks-and-remediation/custom-checks.md",
+        "title": "Writing Your Own NHC Checks"
+      }
+    ],
+    "related": [
+      {
+        "id": "nhc-gpu-temperature-quick",
+        "path": "fields/system-administration/node-health-check/gpu-temperature/quick-guide.md",
+        "title": "Add GPU Temperature Rules to a Health Check"
+      },
+      {
+        "id": "nhc-slurm-integration",
+        "path": "fields/system-administration/node-health-check/getting-started/slurm-integration.md",
+        "title": "Plugging NHC into Slurm (and Friends)"
+      },
+      {
+        "id": "nhc-rollout-at-scale",
+        "path": "fields/system-administration/node-health-check/getting-started/rollout-at-scale.md",
+        "title": "Rolling NHC Out to a Fleet Without Draining Everything"
+      }
+    ],
+    "required_by": [
+      {
+        "id": "nhc-gpu-temperature-idle-timer",
+        "path": "fields/system-administration/node-health-check/gpu-temperature/gpu-temperature-idle-timer.md",
+        "title": "GPU Temperature in a Health Check: The Idle Timer"
+      }
+    ]
+  },
+  "fields/system-administration/node-health-check/gpu-temperature/gpu-temperature-idle-timer.md": {
+    "prerequisites": [
+      {
+        "id": "nhc-gpu-temperature-ceiling",
+        "path": "fields/system-administration/node-health-check/gpu-temperature/gpu-temperature-ceiling.md",
+        "title": "GPU Temperature in a Health Check: The Ceiling Rule"
+      }
+    ],
+    "related": [
+      {
+        "id": "nhc-gpu-temperature-quick",
+        "path": "fields/system-administration/node-health-check/gpu-temperature/quick-guide.md",
+        "title": "Add GPU Temperature Rules to a Health Check"
+      },
+      {
+        "id": "nhc-slurm-integration",
+        "path": "fields/system-administration/node-health-check/getting-started/slurm-integration.md",
+        "title": "Plugging NHC into Slurm (and Friends)"
+      },
+      {
+        "id": "nhc-rollout-at-scale",
+        "path": "fields/system-administration/node-health-check/getting-started/rollout-at-scale.md",
+        "title": "Rolling NHC Out to a Fleet Without Draining Everything"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/system-administration/node-health-check/gpu-temperature/quick-guide.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "nhc-gpu-temperature-ceiling",
+        "path": "fields/system-administration/node-health-check/gpu-temperature/gpu-temperature-ceiling.md",
+        "title": "GPU Temperature in a Health Check: The Ceiling Rule"
+      },
+      {
+        "id": "nhc-gpu-temperature-idle-timer",
+        "path": "fields/system-administration/node-health-check/gpu-temperature/gpu-temperature-idle-timer.md",
+        "title": "GPU Temperature in a Health Check: The Idle Timer"
+      }
+    ],
+    "required_by": []
   },
   "fields/system-administration/openmp-and-open-mpi/hybrid-and-the-binding-trap.md": {
     "prerequisites": [

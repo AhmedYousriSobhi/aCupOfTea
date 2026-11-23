@@ -18,13 +18,6 @@ relations:
 
 ## Contents
 
-- [The meeting where nobody understood anybody](#the-meeting-where-nobody-understood-anybody)
-- [Three names, three jobs](#three-names-three-jobs)
-- [The kitchen analogy](#the-kitchen-analogy)
-- [Try it before you scroll](#try-it-before-you-scroll)
-- [Proof that Open MPI is not OpenMP](#proof-that-open-mpi-is-not-openmp)
-- [The cheat table](#the-cheat-table)
-
 ---
 
 ## The ticket that came back

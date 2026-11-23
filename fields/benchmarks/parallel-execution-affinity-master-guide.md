@@ -21,17 +21,6 @@ relations:
 
 > **Objective:** master topology-aware execution, process-to-core mapping, NUMA boundary alignment, and launcher behavior across SLURM, OpenMPI, and MPICH — because 90% of "mysterious" HPC performance problems are actually a misalignment between these layers, not a hardware fault.
 
-## Table of Contents
-- [1. The mental model](#1-the-mental-model)
-- [2. Process vs. thread — know your boundaries](#2-process-vs-thread--know-your-boundaries)
-- [3. `srun` vs. `mpirun`: pick a lane](#3-srun-vs-mpirun-pick-a-lane)
-- [4. NUMA architecture, in one picture](#4-numa-architecture-in-one-picture)
-- [5. CPU binding & affinity syntax](#5-cpu-binding--affinity-syntax)
-- [6. GPU topology & multi-GPU mapping](#6-gpu-topology--multi-gpu-mapping)
-- [7. Benchmarking-grade tuning (HPL, NCCL, etc.)](#7-benchmarking-grade-tuning-hpl-nccl-etc)
-- [8. Verify, don't assume](#8-verify-dont-assume)
-- [9. Decision matrix & copy-paste templates](#9-decision-matrix--copy-paste-templates)
-
 ---
 
 ## 1. The mental model

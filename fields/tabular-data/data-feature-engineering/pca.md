@@ -12,19 +12,6 @@ domains:
 # Tabular Data - DATA FEATURE ENGINEERING - PCA
 
 # Table of Content
-- [Tabular Data - DATA FEATURE ENGINEERING - PCA](#tabular-data---data-feature-engineering---pca)
-- [Table of Content](#table-of-content)
-- [How to decide whether to use PCA or not?](#how-to-decide-whether-to-use-pca-or-not)
-- [Should we split the data before appyling PCA?](#should-we-split-the-data-before-appyling-pca)
-- [Choosing the Number of PCA Components](#choosing-the-number-of-pca-components)
-- [PCA - Explained Variance](#pca---explained-variance)
-- [What does these explained\_variance\_ratio means?](#what-does-these-explained_variance_ratio-means)
-- [Are These Explained-Variance Values 'Good' or 'Bad'?](#are-these-explained-variance-values-good-or-bad)
-- [PCA Vs KPCA](#pca-vs-kpca)
-  - [Comparison](#comparison)
-  - [Which one to use?](#which-one-to-use)
-  - [Usage Examples](#usage-examples)
-
 # How to decide whether to use PCA or not?
 Deciding whether to use Principal Component Analysis (PCA) for dimensionality reduction depends on your specific dataset, objectives, and constraints. Here are some factors to consider when deciding whether or not to apply PCA:
 |Factor|Description|

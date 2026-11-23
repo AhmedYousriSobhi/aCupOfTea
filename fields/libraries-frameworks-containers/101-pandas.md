@@ -4,28 +4,6 @@ summary: "Pandas basics: what a DataFrame is, ways to create one, display option
 # 101 - Pandas
 
 # Table of Content
-- [101 - Pandas](#101---pandas)
-- [Table of Content](#table-of-content)
-- [Pandas Basics](#pandas-basics)
-  - [Concepts and Definitions](#concepts-and-definitions)
-    - [DataFrame](#dataframe)
-  - [Setting Display Options](#setting-display-options)
-  - [Methods to Create a DataFrame](#methods-to-create-a-dataframe)
-    - [from Lists or Arrays](#from-lists-or-arrays)
-    - [from List of Dictionaries](#from-list-of-dictionaries)
-    - [from a Numpy Array](#from-a-numpy-array)
-    - [from a Series or Dictionary of Series](#from-a-series-or-dictionary-of-series)
-    - [from a List of Tuples](#from-a-list-of-tuples)
-  - [Reading a CSV file](#reading-a-csv-file)
-    - [To Read Data from CSV File](#to-read-data-from-csv-file)
-    - [To Read CSV File from URL](#to-read-csv-file-from-url)
-    - [pd.read\_csv Method](#pdread_csv-method)
-    - [Assign Operations while reading a CSV File](#assign-operations-while-reading-a-csv-file)
-  - [Saving DataFrame as CSV File](#saving-dataframe-as-csv-file)
-  - [Data Exploring: Retrieving rows from a dataframe](#data-exploring-retrieving-rows-from-a-dataframe)
-  - [Data Exploring: DataFrame Schema](#data-exploring-dataframe-schema)
-- [Reference](#reference)
-
 # Pandas Basics
 ## Concepts and Definitions
 ### DataFrame

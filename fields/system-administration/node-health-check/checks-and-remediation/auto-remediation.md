@@ -16,16 +16,6 @@ relations:
 
 > **Part 7 of the [Node Health Check series](/fields/system-administration/node-health-check/README.md).** Draining a sick node is defense. This page is offense: fixing the boring 80% of failures without a human, while making sure automation never turns one bad node into a hundred.
 
-## Table of Contents
-- [The loop](#the-loop)
-- [The escalation ladder](#the-escalation-ladder)
-- [Rung 0: fix in place with NHC's own flags](#rung-0-fix-in-place-with-nhcs-own-flags)
-- [What you must never auto-fix](#what-you-must-never-auto-fix)
-- [Rungs 1-2: the node doctor](#rungs-1-2-the-node-doctor)
-- [Guard rails, or how not to reboot the whole cluster](#guard-rails-or-how-not-to-reboot-the-whole-cluster)
-- [Rung 3: hand off to humans and vendors](#rung-3-hand-off-to-humans-and-vendors)
-- [Notifications without the spam](#notifications-without-the-spam)
-
 ---
 
 ## The loop
@@ -107,7 +97,7 @@ Automation that hides problems is worse than no automation. Keep your hands off:
 - **Anything that kills user processes on a node running jobs.** With `HealthCheckNodeState=ANY`, `check_ps_unauth_users kill` or `check_ps_mem -k` can terminate a legitimate job if your "authorized" logic has a gap. Log first (`log syslog`), watch for weeks, then decide.
 - **Resetting error counters** (GPU ECC, IB port counters, `mcelog`) to make a check pass. You just erased the evidence the vendor will ask for.
 - **Recurring failures.** A node that needed a reboot three times this week is broken hardware wearing a fake moustache. That's rung 3.
-- **Anything during a cluster-wide event.** If 20% of nodes fail the same check at once, the problem is shared (fabric, filesystem, a bad config push). Rebooting 400 nodes makes it worse. That's the circuit breaker's job ([part 5](/fields/system-administration/node-health-check/rollout-at-scale.md#phase-4-enforce-everywhere-with-a-circuit-breaker)).
+- **Anything during a cluster-wide event.** If 20% of nodes fail the same check at once, the problem is shared (fabric, filesystem, a bad config push). Rebooting 400 nodes makes it worse. That's the circuit breaker's job ([part 5](/fields/system-administration/node-health-check/getting-started/rollout-at-scale.md#phase-4-enforce-everywhere-with-a-circuit-breaker)).
 
 ---
 
@@ -115,7 +105,7 @@ Automation that hides problems is worse than no automation. Keep your hands off:
 
 Rebooting and deep diagnostics don't belong inside NHC: they're slow, and a node can't reliably reboot itself in the middle of its own health check. Run a small **node doctor** on the controller (or wherever you run cluster automation). It reads NHC's drain reasons, matches them against rules, and acts.
 
-Prerequisites: `RebootProgram` set in `slurm.conf` (so `scontrol reboot` works), and **NHC 1.5** on the nodes so post-reboot drain handling is correct ([part 4](/fields/system-administration/node-health-check/slurm-integration.md#boot-and-reboot-the-sneaky-part)).
+Prerequisites: `RebootProgram` set in `slurm.conf` (so `scontrol reboot` works), and **NHC 1.5** on the nodes so post-reboot drain handling is correct ([part 4](/fields/system-administration/node-health-check/getting-started/slurm-integration.md#boot-and-reboot-the-sneaky-part)).
 
 ```bash
 #!/bin/bash
@@ -249,7 +239,7 @@ Nobody reads the 400th identical e-mail. Two NHC-native tools help:
 
 Page humans for **escalations and breaker trips**. Everything else is a dashboard.
 
-Next, when things don't behave: [part 8, troubleshooting](/fields/system-administration/node-health-check/troubleshooting.md).
+Next, when things don't behave: [part 8, troubleshooting](/fields/system-administration/node-health-check/checks-and-remediation/troubleshooting.md).
 
 > **Takeaway:** NHC already detects, drains, re-verifies and resumes. Add fixes in place with `-S`, `-r`, `-e`, and a small node doctor for reboots, guarded by dry-run, retry budgets, concurrency limits and an allowlist. When automation gives up, drop the `NHC:` prefix so a human owns the node.
 

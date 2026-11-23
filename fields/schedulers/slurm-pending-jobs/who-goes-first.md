@@ -17,17 +17,6 @@ relations:
 
 > **Part 2 of [Why Is My Job Still Pending?](/fields/schedulers/slurm-pending-jobs/README.md)** [Part 1](/fields/schedulers/slurm-pending-jobs/why-is-my-job-pending.md) showed that `Priority` means "not first in line". This page opens up the number that decides the line, so you can explain any order to a user and set the weights on purpose.
 
-- ["She submitted after me"](#she-submitted-after-me)
-- [The formula](#the-formula)
-- [The default that does nothing](#the-default-that-does-nothing)
-- [Reading sprio](#reading-sprio)
-- [Fairshare: why alice got 0.2](#fairshare-why-alice-got-02)
-- [Age: the slow climb](#age-the-slow-climb)
-- [QOS: the express lane](#qos-the-express-lane)
-- [Choosing weights](#choosing-weights)
-- [Back to the complaint](#back-to-the-complaint)
-- [References](#references)
-
 ---
 
 ## "She submitted after me"

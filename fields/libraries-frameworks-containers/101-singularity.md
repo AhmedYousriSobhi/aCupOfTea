@@ -17,30 +17,6 @@ relations:
 # 101 - Singularity
 
 # Table of Content
-- [101 - Singularity](#101---singularity)
-- [Table of Content](#table-of-content)
-- [1- Intro](#1--intro)
-- [2- Installation](#2--installation)
-- [3- Simple test - Docker alpine](#3--simple-test---docker-alpine)
-- [4- Build sif for Adder App](#4--build-sif-for-adder-app)
-- [5- More Deeper Singularity Tech](#5--more-deeper-singularity-tech)
-  - [5.1- Two Ways to Build a Container](#51--two-ways-to-build-a-container)
-  - [5.2- Converting Images from One Format to Another](#52--converting-images-from-one-format-to-another)
-  - [5.3- Notice: Size Difference between \[SIF, Sandbox\] Formats](#53--notice-size-difference-between-sif-sandbox-formats)
-  - [5.4- Immutable Images Modification?](#54--immutable-images-modification)
-  - [5.5- Inspect Definition File of a Container](#55--inspect-definition-file-of-a-container)
-  - [5.6- Running Container from Docker File](#56--running-container-from-docker-file)
-  - [5.7- singularity.conf file](#57--singularityconf-file)
-  - [5.8- System Bind](#58--system-bind)
-    - [--mount](#--mount)
-    - [SINGULARITY\_BIND](#singularity_bind)
-  - [5.9- Variable in .def File](#59--variable-in-def-file)
-    - [Setting Default Variables' Values](#setting-default-variables-values)
-    - [Assign build-time Variables' Values](#assign-build-time-variables-values)
-- [6- Tips, Notes \& Troubleshooting](#6--tips-notes--troubleshooting)
-- [7- Apptainer](#7--apptainer)
-- [References](#references)
-
 # 1- Intro
 Singularity is a rootless container solution, which means that we can bring up a container as user on a system, and the container process retains that user identity and cannot be used to gain additional privileges on the system.
 

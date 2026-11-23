@@ -2,7 +2,7 @@
 
 # Monitoring
 
-- [A Single Node You Can Trust: Installing VictoriaMetrics Properly](/fields/devops/victoriametrics/single-node-in-ten-minutes.md) — Install single-node VictoriaMetrics from a verified tarball, run it under systemd, reload scrape config safely, and close the delete endpoint that is open by default. *(intermediate · 9 min)*  
+- [A Single Node You Can Trust: Installing VictoriaMetrics Properly](/fields/devops/victoriametrics/single-node-in-ten-minutes.md) — Install single-node VictoriaMetrics from a verified tarball, run it under systemd, reload scrape config safely, and close the delete endpoint that is open by default. *(intermediate · 8 min)*  
   [`monitoring`](/.docs/generated/explore/tags/monitoring.md) [`prometheus`](/.docs/generated/explore/tags/prometheus.md) [`victoriametrics`](/.docs/generated/explore/tags/victoriametrics.md)
 - [MetricsQL Surprises and Alerts You Can Test](/fields/devops/victoriametrics/metricsql-and-vmalert.md) — Why increase() gives different answers in Prometheus and VictoriaMetrics on the same data, and alert rules whose tests are proven to fail when the rule is wrong. *(intermediate · 10 min)*  
   [`monitoring`](/.docs/generated/explore/tags/monitoring.md) [`prometheus`](/.docs/generated/explore/tags/prometheus.md) [`victoriametrics`](/.docs/generated/explore/tags/victoriametrics.md)

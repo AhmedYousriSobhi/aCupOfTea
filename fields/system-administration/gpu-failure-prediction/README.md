@@ -15,16 +15,6 @@ relations:
 
 > A five-part series on the "AIOps" half of a classic AI-infrastructure interview question: how do you see a GPU dying *before* it takes a training run down with it? It's about understanding, not tooling: by the end you'll be able to reason about GPU failures, judge any monitoring setup, and defend your design in a review or an interview.
 
-## Table of Contents
-- [Predicting GPU Node Failures - Overview](#predicting-gpu-node-failures---overview)
-  - [Table of Contents](#table-of-contents)
-  - [The question this series answers](#the-question-this-series-answers)
-  - [The five ideas, one per page](#the-five-ideas-one-per-page)
-  - [Who this is for](#who-this-is-for)
-  - [What the series assumes](#what-the-series-assumes)
-  - [Contents](#contents)
-  - [Related reading in this repo](#related-reading-in-this-repo)
-
 ---
 
 ## The question this series answers
@@ -89,5 +79,5 @@ Facts come from NVIDIA documentation and published field studies (Meta's Llama 3
 ## Related reading in this repo
 
 - [Node Health Check series](/fields/system-administration/node-health-check/README.md): the reactive side. NHC catches a node that is already broken; this series tries to get there first.
-- [Auto-remediation with NHC](/fields/system-administration/node-health-check/auto-remediation.md): what happens after a predictive drain.
+- [Auto-remediation with NHC](/fields/system-administration/node-health-check/checks-and-remediation/auto-remediation.md): what happens after a predictive drain.
 - [The cluster that passed every test except the one that mattered](/fields/devops/kubernetes/nvidia-cluster-readiness-engine.md): failures that per-GPU counters can't see.

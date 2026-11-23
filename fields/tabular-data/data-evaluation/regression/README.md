@@ -11,24 +11,6 @@ Your model predicted 310 and the real answer was 300. How wrong is that? It depe
 Short on time? Jump to the [comparison table](#comparison) or [A Good Tip](#a-good-tip).
 
 # Table of Content
-- [Tabular Data - Data Evaluation - Regression Evaluation Metrics](#tabular-data---data-evaluation---regression-evaluation-metrics)
-- [Table of Content](#table-of-content)
-- [Abstract](#abstract)
-- [MSE - Mean Squared Error](#mse---mean-squared-error)
-- [RMSE - Root Mean Squared Error](#rmse---root-mean-squared-error)
-- [Mean absolute error (MAE)](#mean-absolute-error-mae)
-- [R-squared (R^2)](#r-squared-r2)
-- [Adjusted R^2](#adjusted-r2)
-- [Mean absolute percentage error (MAPE)](#mean-absolute-percentage-error-mape)
-- [Root mean squared logarithmic error (RMSLE)](#root-mean-squared-logarithmic-error-rmsle)
-- [Median absolute error (MedAE)](#median-absolute-error-medae)
-- [Explained variance score (EVS)](#explained-variance-score-evs)
-- [AIC (Akaike information criterion)](#aic-akaike-information-criterion)
-- [BIC (Bayesian information criterion)](#bic-bayesian-information-criterion)
-- [Comparison](#comparison)
-- [A Good Tip](#a-good-tip)
-- [Accuracy Metric in Regression Problem](#accuracy-metric-in-regression-problem)
-
 # Abstract
 For a regression problem, the output is a continous number from the infinite values in the number world, unlike the classification problem, where the output should belong to either a binary value like [0, 1], or a multiclass output.
 

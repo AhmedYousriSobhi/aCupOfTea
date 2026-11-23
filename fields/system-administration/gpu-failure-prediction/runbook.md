@@ -17,17 +17,6 @@ relations:
 
 > **The deep-technical companion to the [Predicting GPU Node Failures series](/fields/system-administration/gpu-failure-prediction/README.md).** Parts 1-5 explain the *why*: how GPU memory fails, what telemetry means, how to design rules, act safely and measure predictions. This runbook is the *how*: every config, command and script you need to deploy it on a real cluster, in order, with expected output and a rollback for each risky step. Read the concept pages first; come back here with a root shell.
 
-## Table of Contents
-- [Before you start](#before-you-start)
-- [Phase 1: export the health signals](#phase-1-export-the-health-signals)
-- [Phase 2: node-side checks](#phase-2-node-side-checks)
-- [Phase 3: the Prometheus rules](#phase-3-the-prometheus-rules)
-- [Phase 4: alert routing](#phase-4-alert-routing)
-- [Phase 5: the drain hook](#phase-5-the-drain-hook)
-- [Phase 6: backtesting](#phase-6-backtesting)
-- [Troubleshooting](#troubleshooting)
-- [Day-2 checklist](#day-2-checklist)
-
 ---
 
 ## Before you start
@@ -742,7 +731,7 @@ Stop new drains without undoing old ones: set `MODE=dryrun` and restart the serv
 | `GpuFatalXid` 79 | Collect evidence, reboot | Expect recurrence; report to the vendor |
 | `GpuRowRemapFailure` | Keep it drained | Field diagnostic validates the flag for RMA |
 
-GPU reset limits depend on the platform (NVSwitch and Fabric Manager state); check NVIDIA's reset-capabilities table before automating resets. For the fix-and-verify loop, see [NHC auto-remediation](/fields/system-administration/node-health-check/auto-remediation.md).
+GPU reset limits depend on the platform (NVSwitch and Fabric Manager state); check NVIDIA's reset-capabilities table before automating resets. For the fix-and-verify loop, see [NHC auto-remediation](/fields/system-administration/node-health-check/checks-and-remediation/auto-remediation.md).
 
 ---
 

@@ -17,19 +17,6 @@ relations:
 
 > **Part 5 of the [Ansible series](/fields/devops/ansible/README.md).** [Part 4](/fields/devops/ansible/roles-and-variables.md) built a role that configures Slurm. This page changes nodes that are busy *running* jobs: drain each node, wait for its jobs to finish, do the work, prove it came back healthy, return it to service. One canary first, and a full stop at the first failure.
 
-- [All at once, at 14:00](#all-at-once-at-1400)
-- [The mental model: drain, change, prove, resume](#the-mental-model-drain-change-prove-resume)
-- [The playbook](#the-playbook)
-- [What each piece buys you](#what-each-piece-buys-you)
-- [Step 1: dry run](#step-1-dry-run)
-- [The dry run that hung](#the-dry-run-that-hung)
-- [Step 2: canary, then the rest](#step-2-canary-then-the-rest)
-- [When the canary comes back broken](#when-the-canary-comes-back-broken)
-- [Rollback](#rollback)
-- [How we caught our own weak health check](#how-we-caught-our-own-weak-health-check)
-- [Back to 14:00](#back-to-1400)
-- [References](#references)
-
 ---
 
 ## All at once, at 14:00

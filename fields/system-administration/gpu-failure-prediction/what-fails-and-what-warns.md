@@ -14,21 +14,6 @@ tags: [gpu, nvidia, hpc]
 
 > **Part 1 of the [Predicting GPU Node Failures series](/fields/system-administration/gpu-failure-prediction/README.md).** Prediction only works if failure leaves footprints before it happens. This page explains the hardware that leaves them: ECC, spare rows, error containment, and the field evidence that errors repeat. By the end you'll be able to draw the error ladder from memory and say which rungs are predictions and which are already failures.
 
-## Table of Contents
-- [How GPU Memory Fails, and Why You Can See It Coming](#how-gpu-memory-fails-and-why-you-can-see-it-coming)
-  - [Table of Contents](#table-of-contents)
-  - [A Friday night on cn042](#a-friday-night-on-cn042)
-  - [Why one GPU stops a thousand](#why-one-gpu-stops-a-thousand)
-  - [Concept 1: ECC, the first line of defense](#concept-1-ecc-the-first-line-of-defense)
-  - [Concept 2: soft errors versus hard errors](#concept-2-soft-errors-versus-hard-errors)
-  - [Concept 3: banks, rows and spare rows](#concept-3-banks-rows-and-spare-rows)
-  - [Concept 4: containing the damage](#concept-4-containing-the-damage)
-  - [The error ladder](#the-error-ladder)
-  - [What the field studies say](#what-the-field-studies-say)
-  - [What's predictable and what isn't](#whats-predictable-and-what-isnt)
-  - [What this is not for](#what-this-is-not-for)
-    - [References](#references)
-
 ---
 
 ## A Friday night on cn042

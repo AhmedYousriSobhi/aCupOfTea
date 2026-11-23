@@ -17,18 +17,7 @@ relations:
 > **Part 10 of the [Node Health Check series](/fields/system-administration/node-health-check/README.md).** The final exam. Everything from parts 1-9, applied to one realistic engagement: a vague request, ten minutes of thinking, a discovery call, a first proposal, a coffee, a validation pass that changes the proposal, and the answer that goes back.
 
 > [!NOTE]
-> **What's real here.** The client and their names are invented. The hardware is not: every spec comes from NVIDIA's and AMD's published documentation (linked in [References](#references)). Every command output on this page was produced by running the series' tools ([`nhc_gen.py`](/fields/system-administration/node-health-check/nhc_gen.py), [`nhc_test_harness.sh`](/fields/system-administration/node-health-check/nhc_test_harness.sh)) against this cluster's definition with real NHC 1.5. The inputs are in [`case-study-delta-cluster.yaml`](/fields/system-administration/node-health-check/case-study-delta-cluster.yaml) and [`case-study-delta-expected.txt`](/fields/system-administration/node-health-check/case-study-delta-expected.txt).
-
-## Table of Contents
-- [The ask](#the-ask)
-- [The ten minutes before you reply](#the-ten-minutes-before-you-reply)
-- [Discovery: the questions, and why each one matters](#discovery-the-questions-and-why-each-one-matters)
-- [What discovery told us](#what-discovery-told-us)
-- [The first proposal](#the-first-proposal)
-- [☕ Coffee, then validation](#-coffee-then-validation)
-- [The answer back to the client](#the-answer-back-to-the-client)
-- [The reusable checklist](#the-reusable-checklist)
-- [References](#references)
+> **What's real here.** The client and their names are invented. The hardware is not: every spec comes from NVIDIA's and AMD's published documentation (linked in [References](#references)). Every command output on this page was produced by running the series' tools ([`nhc_gen.py`](/fields/system-administration/node-health-check/architecture-and-case-study/nhc_gen.py), [`nhc_test_harness.sh`](/fields/system-administration/node-health-check/architecture-and-case-study/nhc_test_harness.sh)) against this cluster's definition with real NHC 1.5. The inputs are in [`case-study-delta-cluster.yaml`](/fields/system-administration/node-health-check/architecture-and-case-study/case-study-delta-cluster.yaml) and [`case-study-delta-expected.txt`](/fields/system-administration/node-health-check/architecture-and-case-study/case-study-delta-expected.txt).
 
 ---
 
@@ -38,7 +27,7 @@ Tuesday, 09:12. An email from the head of research computing at a university we'
 
 > *"Hi, we keep losing GPU jobs. Researchers say training runs hang at startup on some nodes, mostly after maintenance, and every few weeks a batch of CPU jobs dies with I/O errors. A colleague told us we need 'NHC'. Can you build us an NHC for our cluster? We run Slurm. How fast can you do it?"*
 
-It's tempting to reply with a link to [part 3](/fields/system-administration/node-health-check/writing-nhc-conf.md) and a sample config. Don't. "Build us an NHC" is a solution the client picked. Our job is to find the problem first.
+It's tempting to reply with a link to [part 3](/fields/system-administration/node-health-check/getting-started/writing-nhc-conf.md) and a sample config. Don't. "Build us an NHC" is a solution the client picked. Our job is to find the problem first.
 
 ---
 
@@ -51,13 +40,13 @@ Before typing a word, think through what you know and what you don't. Here's wha
 | Symptom from the email | Plausible causes | What would detect it |
 |---|---|---|
 | GPU jobs "hang at startup" on some nodes | NVSwitch fabric not initialized (a known cause of CUDA error 802 on DGX/HGX), a GPU missing, an IB rail down so NCCL stalls | GPU count, fabric state, per-HCA link checks |
-| "Mostly after maintenance" | Services not started after reboot, nodes returning to the pool before they're ready | Boot-time checks; NHC keeping rebooted nodes drained until checks pass ([part 4](/fields/system-administration/node-health-check/slurm-integration.md#boot-and-reboot-the-sneaky-part)) |
-| CPU jobs die with I/O errors, in batches | Lustre client evictions or a dropped mount on a subset of nodes: the classic black hole ([part 1](/fields/system-administration/node-health-check/why-node-health-check.md)) | Mount checks with type and source |
-| "Some nodes" | Heterogeneous hardware, or drift between identical nodes | Per-class expectations ([part 9](/fields/system-administration/node-health-check/architecture-driven-nhc.md)) |
+| "Mostly after maintenance" | Services not started after reboot, nodes returning to the pool before they're ready | Boot-time checks; NHC keeping rebooted nodes drained until checks pass ([part 4](/fields/system-administration/node-health-check/getting-started/slurm-integration.md#boot-and-reboot-the-sneaky-part)) |
+| CPU jobs die with I/O errors, in batches | Lustre client evictions or a dropped mount on a subset of nodes: the classic black hole ([part 1](/fields/system-administration/node-health-check/getting-started/why-node-health-check.md)) | Mount checks with type and source |
+| "Some nodes" | Heterogeneous hardware, or drift between identical nodes | Per-class expectations ([part 9](/fields/system-administration/node-health-check/architecture-and-case-study/architecture-driven-nhc.md)) |
 
 **2. List what you don't know but must.** Hardware classes and counts. Slurm version and current health-check settings. Who drains nodes today, and how. What tools already exist (NVSM, DCGM, monitoring). Operating systems. How they deploy config. How much automatic draining they'll tolerate. Who gets paged.
 
-**3. Name the risks of getting it wrong.** A bad config drains the whole cluster ([part 5](/fields/system-administration/node-health-check/rollout-at-scale.md)). Two tools both draining nodes fight each other. Expensive checks on GPU nodes slow training. Auto-fixes that hide hardware faults void the evidence the vendor will ask for.
+**3. Name the risks of getting it wrong.** A bad config drains the whole cluster ([part 5](/fields/system-administration/node-health-check/getting-started/rollout-at-scale.md)). Two tools both draining nodes fight each other. Expensive checks on GPU nodes slow training. Auto-fixes that hide hardware faults void the evidence the vendor will ask for.
 
 **4. Decide what to send back now.** Not a solution: a short reply that shows you understood, sets expectations, and asks for a discovery call plus a small data bundle.
 
@@ -84,8 +73,8 @@ A question you can't connect to a decision is a question you shouldn't ask. Each
 | Question | Why it matters |
 |---|---|
 | Slurm version? Current `HealthCheck*` settings? | Which `HealthCheckNodeState` values exist; whether anything runs today |
-| Who drains nodes today, and do they always set a reason? | The `NHC:` ownership contract ([part 1](/fields/system-administration/node-health-check/why-node-health-check.md#the-nhc-handshake)) only works if humans use reasons |
-| Do you reboot nodes with `scontrol reboot`? `ASAP`? | Decides whether NHC 1.5's reboot handling matters, and how remediation must call it ([part 7](/fields/system-administration/node-health-check/auto-remediation.md#rungs-1-2-the-node-doctor)) |
+| Who drains nodes today, and do they always set a reason? | The `NHC:` ownership contract ([part 1](/fields/system-administration/node-health-check/getting-started/why-node-health-check.md#the-nhc-handshake)) only works if humans use reasons |
+| Do you reboot nodes with `scontrol reboot`? `ASAP`? | Decides whether NHC 1.5's reboot handling matters, and how remediation must call it ([part 7](/fields/system-administration/node-health-check/checks-and-remediation/auto-remediation.md#rungs-1-2-the-node-doctor)) |
 | Existing Prolog/Epilog scripts? | Job-boundary checks must fit around them |
 
 **Hardware and OS**
@@ -119,7 +108,7 @@ A question you can't connect to a decision is a question you shouldn't ask. Each
 |---|---|
 | What else monitors or acts on node health (NVSM, BCM, DCGM exporter, custom scripts)? | Avoids two tools fighting over node state |
 | How is config deployed (Ansible, xCAT, image)? Is it in Git? | Delivery path and rollback |
-| Is there a test node or partition we can use? | Canary rollout ([part 5](/fields/system-administration/node-health-check/rollout-at-scale.md#phase-3-canary-enforcing-on-a-few-nodes)) |
+| Is there a test node or partition we can use? | Canary rollout ([part 5](/fields/system-administration/node-health-check/getting-started/rollout-at-scale.md#phase-3-canary-enforcing-on-a-few-nodes)) |
 | Who acts on a drained node, and how fast? | Decides how much auto-remediation is worth building |
 | Change windows, approvals? | Timeline |
 
@@ -173,10 +162,10 @@ Two things in the bundle jumped out immediately:
 Drafted right after the call (call it version 0.1):
 
 - **NHC 1.5** on all nodes, run by `slurmd` every 300 s, `HealthCheckNodeState=ANY,CYCLE`.
-- **Configs generated** from one architecture definition ([part 9](/fields/system-administration/node-health-check/architecture-driven-nhc.md)), with three contexts: periodic, epilog, deep.
+- **Configs generated** from one architecture definition ([part 9](/fields/system-administration/node-health-check/architecture-and-case-study/architecture-driven-nhc.md)), with three contexts: periodic, epilog, deep.
 - **Per class:** mounts, CPU/NUMA/memory, IB per HCA, services, rogue-process logging; on DGX also GPU count, GPU model, Xid scan, DCGM level 2 in the deep context only.
-- **Rollout:** dry run, canary on 2 DGX + 8 CPU nodes, enforce behind a circuit breaker ([part 5](/fields/system-administration/node-health-check/rollout-at-scale.md)).
-- **Remediation (phase 2):** node doctor reboots for a short list of failures, max 2 per day per node ([part 7](/fields/system-administration/node-health-check/auto-remediation.md)).
+- **Rollout:** dry run, canary on 2 DGX + 8 CPU nodes, enforce behind a circuit breaker ([part 5](/fields/system-administration/node-health-check/getting-started/rollout-at-scale.md)).
+- **Remediation (phase 2):** node doctor reboots for a short list of failures, max 2 per day per node ([part 7](/fields/system-administration/node-health-check/checks-and-remediation/auto-remediation.md)).
 
 It looks complete. It isn't.
 
@@ -192,13 +181,13 @@ Coffee isn't a joke step. Stepping away is how you stop reviewing your own draft
 | 2 | "Fabric Manager running" = GPUs usable | The client's own data showed FM `active` with fabric `In Progress`. Process liveness isn't fabric health | New check `check_arch_gpu_fabric`: every GPU must report `Completed, Success`. FM service check kept, with `-S` to restart it |
 | 3 | Drain on Xid 48, 79, 94, 95, 119 | NVIDIA's GPU debug guidelines: **94** (contained ECC) needs only the affected application restarted; **92** is informational; **64** and **95** need a reboot. Google Cloud's GPU troubleshooting guide: stop workloads and reset GPUs on **74** (NVLink) and **119** (GSP timeout) | Drain list becomes 48, 64, 74, 79, 95, 119, 120. Xid 94 goes to monitoring, not drains. (The client's Xid 13/31 history is application-side and correctly ignored) |
 | 4 | `slurm.conf` matches hardware | The generator's cross-check failed on the first run (output below): `slurm.conf` says 1 thread per core on EPYC nodes; the hardware has SMT on | Question for the client: intended or not? Must be resolved before rollout |
-| 5 | One package for everyone | DGX OS is Ubuntu-based; CPU nodes are Rocky 9 | RPM for Rocky; build from the release tarball for DGX OS, with `/etc/default/nhc` as its sysconfig path ([part 2](/fields/system-administration/node-health-check/build-and-install.md)) |
+| 5 | One package for everyone | DGX OS is Ubuntu-based; CPU nodes are Rocky 9 | RPM for Rocky; build from the release tarball for DGX OS, with `/etc/default/nhc` as its sysconfig path ([part 2](/fields/system-administration/node-health-check/getting-started/build-and-install.md)) |
 | 6 | DCGM level 2 in the deep context is fine anywhere | Level 2 runs about two minutes and loads the GPUs; Slurm kills the health check at 60 s | Confirmed: deep context only, never periodic, with its own `TIMEOUT=900` |
 | 7 | NHC is the only health tool | DGX OS ships NVSM, which does its own health monitoring and alerting | Ownership rule: NVSM and DCGM *alert*, only NHC *drains*. Written into the runbook |
 | 8 | Login nodes are like compute nodes | They're not Slurm nodes, so the cross-check would flag them as missing from `slurm.conf` | Marked `in_slurm: false`; no hygiene checks on login nodes |
 | 9 | `/raid` is ext4 on `/dev/md*` | That's what the client's `findmnt` showed on `dgx01` | Kept, but verified on all 16 DGX during the dry run before enforcing |
 
-Findings 2 and 8 needed new capabilities in the series' tools: a `service_map` and `extra_services` in the YAML for Fabric Manager, the `check_arch_gpu_fabric` module check, `in_slurm: false`, and a harness that accepts a client's expectations. They're now part of [`nhc_gen.py`](/fields/system-administration/node-health-check/nhc_gen.py), [`acme_arch.nhc`](/fields/system-administration/node-health-check/acme_arch.nhc) and [`nhc_test_harness.sh`](/fields/system-administration/node-health-check/nhc_test_harness.sh).
+Findings 2 and 8 needed new capabilities in the series' tools: a `service_map` and `extra_services` in the YAML for Fabric Manager, the `check_arch_gpu_fabric` module check, `in_slurm: false`, and a harness that accepts a client's expectations. They're now part of [`nhc_gen.py`](/fields/system-administration/node-health-check/architecture-and-case-study/nhc_gen.py), [`acme_arch.nhc`](/fields/system-administration/node-health-check/architecture-and-case-study/acme_arch.nhc) and [`nhc_test_harness.sh`](/fields/system-administration/node-health-check/architecture-and-case-study/nhc_test_harness.sh).
 
 **Finding 4, as the generator reported it.** The node lines from the client's `slurm.conf`:
 
@@ -250,7 +239,7 @@ check_ps_unauth_users log syslog
 check_ps_userproc_lineage log syslog
 ```
 
-**The test run**, real NHC 1.5 with fake GPUs and kernel logs ([part 9](/fields/system-administration/node-health-check/architecture-driven-nhc.md#step-4-prove-it-with-real-nhc-before-it-ships)):
+**The test run**, real NHC 1.5 with fake GPUs and kernel logs ([part 9](/fields/system-administration/node-health-check/architecture-and-case-study/architecture-driven-nhc.md#step-4-prove-it-with-real-nhc-before-it-ships)):
 
 ```text
 $ CI=true EXPECTED_FILE=case-study-delta-expected.txt GPU_HOST=dgx05 ./nhc_test_harness.sh build

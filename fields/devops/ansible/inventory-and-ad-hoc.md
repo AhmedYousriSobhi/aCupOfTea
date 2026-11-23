@@ -16,18 +16,6 @@ relations:
 
 > **Part 2 of the [Ansible series](/fields/devops/ansible/README.md).** [Part 1](/fields/devops/ansible/getting-started.md) got a pinned Ansible talking to every node. By the end of this page you'll describe the cluster in an inventory, change one setting on exactly the right nodes, catch the one that missed it, and prove the change in a fresh login.
 
-- [The loop that skipped a node](#the-loop-that-skipped-a-node)
-- [An inventory is a map with groups](#an-inventory-is-a-map-with-groups)
-- [Variables live next to the groups](#variables-live-next-to-the-groups)
-- [Aim before you fire](#aim-before-you-fire)
-- [The change, as one command](#the-change-as-one-command)
-- [The trap: checking through a reused connection](#the-trap-checking-through-a-reused-connection)
-- [A check you can rerun](#a-check-you-can-rerun)
-- [Catching up the node that was down](#catching-up-the-node-that-was-down)
-- [What ad-hoc commands are not for](#what-ad-hoc-commands-are-not-for)
-- [Back to the loop](#back-to-the-loop)
-- [References](#references)
-
 ---
 
 ## The loop that skipped a node

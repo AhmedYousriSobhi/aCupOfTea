@@ -21,7 +21,7 @@ The acronyms that come up again and again in these pages, in one sentence each. 
 
 ## DCGM
 
-**Data Center GPU Manager.** NVIDIA's tooling to monitor and diagnose GPUs in a data centre. Read more: [Custom checks for NHC](/fields/system-administration/node-health-check/custom-checks.md).
+**Data Center GPU Manager.** NVIDIA's tooling to monitor and diagnose GPUs in a data centre. Read more: [Custom checks for NHC](/fields/system-administration/node-health-check/checks-and-remediation/custom-checks.md).
 
 ## ECC
 

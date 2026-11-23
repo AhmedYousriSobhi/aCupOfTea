@@ -19,6 +19,7 @@ Tested on Slurm **23.11.4** (Ubuntu 24.04 packages) with slurmdbd and MariaDB, a
 | [1. Reading the Reason Column](/fields/schedulers/slurm-pending-jobs/why-is-my-job-pending.md) | What each common pending reason means, which ones fix themselves, which never will, and a small triage script |
 | [2. Who Goes First](/fields/schedulers/slurm-pending-jobs/who-goes-first.md) | The multifactor priority formula, fairshare, age and QOS weights, reading `sprio` and `sshare`, and the all-zero default |
 | [3. Limits That Wait Forever](/fields/schedulers/slurm-pending-jobs/limits-that-wait-forever.md) | QOS and account limits in practice, the second QOS that bypasses your cap, partition QOS, and `DenyOnLimit` |
+| [Quick guide: Find Out Why a Slurm Job Is Pending](/fields/schedulers/slurm-pending-jobs/quick-guide.md) | Read the reason column, tell waiting from never-starting, and roll out a limit safely |
 
 ---
 

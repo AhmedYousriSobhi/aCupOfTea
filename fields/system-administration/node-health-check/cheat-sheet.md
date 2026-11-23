@@ -1,7 +1,7 @@
 ---
 id: nhc-cheat-sheet
 title: NHC Cheat Sheet
-sidebar_label: "11. Cheat sheet"
+sidebar_label: "Cheat sheet"
 order: 11
 summary: Every NHC command, option, variable, config pattern and Slurm knob from the series on one page.
 level: intermediate
@@ -32,7 +32,7 @@ relations:
 | Fleet-wide dry run | `clush -bw @compute "nhc -a -l- MARK_OFFLINE=0"` |
 | Cron with de-duplicated mail | `nhc-wrapper -M ops@x.org -X 12h -n nhc-oob` |
 
-Rule: **flags first, `VAR=value` last.** Details: [part 2](/fields/system-administration/node-health-check/build-and-install.md#smoke-test), [part 3](/fields/system-administration/node-health-check/writing-nhc-conf.md#iterate-until-silent).
+Rule: **flags first, `VAR=value` last.** Details: [part 2](/fields/system-administration/node-health-check/getting-started/build-and-install.md#smoke-test), [part 3](/fields/system-administration/node-health-check/getting-started/writing-nhc-conf.md#iterate-until-silent).
 
 ## Command-line options
 
@@ -70,7 +70,7 @@ Rule: **flags first, `VAR=value` last.** Details: [part 2](/fields/system-admini
 | `HOSTNAME` | kernel hostname | sysconfig | `HOSTNAME="$HOSTNAME_S"` if the RM uses short names |
 | `LOGFILE` | `>>/var/log/nhc.log` | sysconfig / `-l` | |
 
-"Early" variables (sysconfig or command line only): `CONFDIR`, `CONFFILE`, `DETACHED_MODE`, `HELPERDIR`, `HOSTNAME`, `INCDIR`, `LOGFILE`, `NAME`, `TIMEOUT`. Remember: the **config file beats the command line**. See [part 3](/fields/system-administration/node-health-check/writing-nhc-conf.md#variables-and-the-precedence-trap).
+"Early" variables (sysconfig or command line only): `CONFDIR`, `CONFFILE`, `DETACHED_MODE`, `HELPERDIR`, `HOSTNAME`, `INCDIR`, `LOGFILE`, `NAME`, `TIMEOUT`. Remember: the **config file beats the command line**. See [part 3](/fields/system-administration/node-health-check/getting-started/writing-nhc-conf.md#variables-and-the-precedence-trap).
 
 ## Config syntax
 
@@ -128,7 +128,7 @@ HealthCheckNodeState=ANY,CYCLE
 | Reboot a node NHC drained, keep it drained | `scontrol reboot X` (avoid `ASAP` / `nextstate=`, which clear DRAIN) |
 | Health check config in effect | `scontrol show config \| grep -i healthcheck` |
 
-Details: [part 4](/fields/system-administration/node-health-check/slurm-integration.md), [part 7](/fields/system-administration/node-health-check/auto-remediation.md).
+Details: [part 4](/fields/system-administration/node-health-check/getting-started/slurm-integration.md), [part 7](/fields/system-administration/node-health-check/checks-and-remediation/auto-remediation.md).
 
 ## Files and paths
 

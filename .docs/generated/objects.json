@@ -113,7 +113,7 @@
     "level": "intermediate",
     "order": 2,
     "path": "fields/system-administration/ai-storage-and-fabric/rdma-infiniband-gpudirect.md",
-    "reading_time_min": 8,
+    "reading_time_min": 7,
     "relations": {
       "prerequisites": [
         "ai-storage-parallel-filesystems"
@@ -472,7 +472,7 @@
     "id": "containers-101",
     "level": "",
     "path": "fields/libraries-frameworks-containers/101-containers.md",
-    "reading_time_min": 8,
+    "reading_time_min": 7,
     "relations": {
       "prerequisites": [],
       "related": []
@@ -626,7 +626,7 @@
     "id": "deep-learning-basics",
     "level": "beginner",
     "path": "fields/deep-learning/concepts/basics.md",
-    "reading_time_min": 30,
+    "reading_time_min": 29,
     "relations": {
       "prerequisites": [],
       "related": [
@@ -788,7 +788,7 @@
     "level": "beginner",
     "order": 1,
     "path": "fields/digital-image-processing/images-are-just-matrices.md",
-    "reading_time_min": 7,
+    "reading_time_min": 6,
     "relations": {
       "prerequisites": [],
       "related": []
@@ -892,7 +892,7 @@
     "level": "beginner",
     "order": 4,
     "path": "fields/digital-image-processing/spatial-filtering.md",
-    "reading_time_min": 7,
+    "reading_time_min": 6,
     "relations": {
       "prerequisites": [
         "dip-intensity-transforms-histograms"
@@ -987,7 +987,7 @@
     "level": "beginner",
     "order": 3,
     "path": "fields/data-science/probability-statistics/draw-it-before-you-describe-it.md",
-    "reading_time_min": 11,
+    "reading_time_min": 10,
     "relations": {
       "prerequisites": [
         "data-types-and-frequency-tables"
@@ -1135,7 +1135,7 @@
     "id": "gpu-failure-prediction-overview",
     "level": "advanced",
     "path": "fields/system-administration/gpu-failure-prediction/README.md",
-    "reading_time_min": 5,
+    "reading_time_min": 4,
     "relations": {
       "prerequisites": [],
       "related": [
@@ -1165,7 +1165,7 @@
     "level": "advanced",
     "order": 4,
     "path": "fields/system-administration/gpu-failure-prediction/from-alert-to-drain.md",
-    "reading_time_min": 9,
+    "reading_time_min": 8,
     "relations": {
       "prerequisites": [
         "gpu-pred-rules"
@@ -1255,7 +1255,7 @@
     "level": "advanced",
     "order": 3,
     "path": "fields/system-administration/gpu-failure-prediction/rules-that-predict.md",
-    "reading_time_min": 10,
+    "reading_time_min": 9,
     "relations": {
       "prerequisites": [
         "gpu-pred-collecting-signals"
@@ -1545,7 +1545,7 @@
     "id": "kubectl-troubleshooting",
     "level": "intermediate",
     "path": "fields/devops/kubernetes/cheatsheet.md",
-    "reading_time_min": 9,
+    "reading_time_min": 8,
     "relations": {
       "prerequisites": [
         "kubernetes-in-five-nouns"
@@ -1635,7 +1635,7 @@
     "level": "intermediate",
     "order": 5,
     "path": "fields/system-administration/linux-memory-pressure/cgroup-v2-memory-control.md",
-    "reading_time_min": 12,
+    "reading_time_min": 11,
     "relations": {
       "prerequisites": [
         "linux-mem-reclaim"
@@ -1663,7 +1663,7 @@
     "level": "intermediate",
     "order": 6,
     "path": "fields/system-administration/linux-memory-pressure/memory-locking-mlockall.md",
-    "reading_time_min": 12,
+    "reading_time_min": 11,
     "relations": {
       "prerequisites": [
         "linux-mem-reclaim"
@@ -1692,7 +1692,7 @@
     "level": "intermediate",
     "order": 4,
     "path": "fields/system-administration/linux-memory-pressure/the-oom-killer.md",
-    "reading_time_min": 9,
+    "reading_time_min": 8,
     "relations": {
       "prerequisites": [
         "linux-mem-reclaim"
@@ -1997,7 +1997,7 @@
     "level": "intermediate",
     "order": 6,
     "path": "fields/generative-ai/llm-inference-performance/sparsity-vs-quantization.md",
-    "reading_time_min": 10,
+    "reading_time_min": 9,
     "relations": {
       "prerequisites": [
         "llm-perf-structured-sparsity"
@@ -2076,6 +2076,38 @@
       "concept"
     ]
   },
+  "nhc-architecture-and-case-study-quick": {
+    "domains": [
+      "system-administration",
+      "systems-and-hpc"
+    ],
+    "id": "nhc-architecture-and-case-study-quick",
+    "level": "advanced",
+    "order": 11,
+    "path": "fields/system-administration/node-health-check/architecture-and-case-study/quick-guide.md",
+    "reading_time_min": 5,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "nhc-architecture-driven",
+        "nhc-case-study"
+      ]
+    },
+    "status": "stable",
+    "summary": "Quick guide: generate NHC configs from one cluster definition, test them with real NHC in CI, and run the discovery and validation checklist for a client request.",
+    "tags": [
+      "gpu",
+      "hpc",
+      "nvidia",
+      "slurm"
+    ],
+    "title": "Generate NHC from a Cluster Definition and Scope a Client Request",
+    "type": "guide",
+    "types": [
+      "guide",
+      "reference"
+    ]
+  },
   "nhc-architecture-driven": {
     "domains": [
       "system-administration",
@@ -2084,7 +2116,7 @@
     "id": "nhc-architecture-driven",
     "level": "advanced",
     "order": 9,
-    "path": "fields/system-administration/node-health-check/architecture-driven-nhc.md",
+    "path": "fields/system-administration/node-health-check/architecture-and-case-study/architecture-driven-nhc.md",
     "reading_time_min": 12,
     "relations": {
       "prerequisites": [
@@ -2116,7 +2148,7 @@
     "id": "nhc-auto-remediation",
     "level": "advanced",
     "order": 7,
-    "path": "fields/system-administration/node-health-check/auto-remediation.md",
+    "path": "fields/system-administration/node-health-check/checks-and-remediation/auto-remediation.md",
     "reading_time_min": 8,
     "relations": {
       "prerequisites": [
@@ -2145,7 +2177,7 @@
     "id": "nhc-build-and-install",
     "level": "beginner",
     "order": 2,
-    "path": "fields/system-administration/node-health-check/build-and-install.md",
+    "path": "fields/system-administration/node-health-check/getting-started/build-and-install.md",
     "reading_time_min": 5,
     "relations": {
       "prerequisites": [
@@ -2172,7 +2204,7 @@
     "id": "nhc-case-study",
     "level": "advanced",
     "order": 10,
-    "path": "fields/system-administration/node-health-check/case-study-build-me-an-nhc.md",
+    "path": "fields/system-administration/node-health-check/architecture-and-case-study/case-study-build-me-an-nhc.md",
     "reading_time_min": 17,
     "relations": {
       "prerequisites": [
@@ -2224,6 +2256,38 @@
       "reference"
     ]
   },
+  "nhc-checks-and-remediation-quick": {
+    "domains": [
+      "system-administration",
+      "systems-and-hpc"
+    ],
+    "id": "nhc-checks-and-remediation-quick",
+    "level": "advanced",
+    "order": 9,
+    "path": "fields/system-administration/node-health-check/checks-and-remediation/quick-guide.md",
+    "reading_time_min": 6,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "nhc-auto-remediation",
+        "nhc-custom-checks",
+        "nhc-troubleshooting"
+      ]
+    },
+    "status": "stable",
+    "summary": "Quick guide: add a custom NHC check, automate safe fixes with a guarded node doctor, and troubleshoot drains, timeouts and silent config changes.",
+    "tags": [
+      "gpu",
+      "hpc",
+      "slurm"
+    ],
+    "title": "Write Checks, Fix Nodes and Troubleshoot NHC",
+    "type": "guide",
+    "types": [
+      "guide",
+      "reference"
+    ]
+  },
   "nhc-custom-checks": {
     "domains": [
       "system-administration",
@@ -2232,8 +2296,8 @@
     "id": "nhc-custom-checks",
     "level": "advanced",
     "order": 6,
-    "path": "fields/system-administration/node-health-check/custom-checks.md",
-    "reading_time_min": 7,
+    "path": "fields/system-administration/node-health-check/checks-and-remediation/custom-checks.md",
+    "reading_time_min": 6,
     "relations": {
       "prerequisites": [
         "nhc-writing-nhc-conf"
@@ -2253,6 +2317,138 @@
       "guide"
     ]
   },
+  "nhc-getting-started-quick": {
+    "domains": [
+      "system-administration",
+      "systems-and-hpc"
+    ],
+    "id": "nhc-getting-started-quick",
+    "level": "intermediate",
+    "order": 6,
+    "path": "fields/system-administration/node-health-check/getting-started/quick-guide.md",
+    "reading_time_min": 6,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "nhc-build-and-install",
+        "nhc-rollout-at-scale",
+        "nhc-slurm-integration",
+        "nhc-writing-nhc-conf"
+      ]
+    },
+    "status": "stable",
+    "summary": "Quick guide: install NHC, draft and test its config, wire it into Slurm with a safe timeout, and roll it out with a dry run, a canary and a circuit breaker.",
+    "tags": [
+      "hpc",
+      "slurm"
+    ],
+    "title": "Install, Configure and Roll Out NHC",
+    "type": "guide",
+    "types": [
+      "guide",
+      "reference"
+    ]
+  },
+  "nhc-gpu-temperature-ceiling": {
+    "domains": [
+      "system-administration",
+      "systems-and-hpc"
+    ],
+    "id": "nhc-gpu-temperature-ceiling",
+    "level": "advanced",
+    "order": 12,
+    "path": "fields/system-administration/node-health-check/gpu-temperature/gpu-temperature-ceiling.md",
+    "reading_time_min": 8,
+    "relations": {
+      "prerequisites": [
+        "nhc-custom-checks"
+      ],
+      "related": [
+        "nhc-rollout-at-scale",
+        "nhc-slurm-integration"
+      ]
+    },
+    "status": "stable",
+    "summary": "Add a GPU over-temperature ceiling to a health-check script: read temperature with one dcgmi call, drain without killing jobs, fail safe when the sensor can't be read, and pick the number.",
+    "tags": [
+      "gpu",
+      "hpc",
+      "nvidia",
+      "slurm"
+    ],
+    "title": "GPU Temperature in a Health Check: The Ceiling Rule",
+    "type": "guide",
+    "types": [
+      "guide",
+      "concept"
+    ]
+  },
+  "nhc-gpu-temperature-idle-timer": {
+    "domains": [
+      "system-administration",
+      "systems-and-hpc"
+    ],
+    "id": "nhc-gpu-temperature-idle-timer",
+    "level": "advanced",
+    "order": 13,
+    "path": "fields/system-administration/node-health-check/gpu-temperature/gpu-temperature-idle-timer.md",
+    "reading_time_min": 8,
+    "relations": {
+      "prerequisites": [
+        "nhc-gpu-temperature-ceiling"
+      ],
+      "related": [
+        "nhc-rollout-at-scale",
+        "nhc-slurm-integration"
+      ]
+    },
+    "status": "stable",
+    "summary": "Catch GPUs that run warm while doing nothing: a warn-then-drain timer, why 0% utilization alone is not idle, using the Slurm node state, and a read-only fleet scan before you enforce.",
+    "tags": [
+      "gpu",
+      "hpc",
+      "nvidia",
+      "slurm"
+    ],
+    "title": "GPU Temperature in a Health Check: The Idle Timer",
+    "type": "guide",
+    "types": [
+      "guide",
+      "concept"
+    ]
+  },
+  "nhc-gpu-temperature-quick": {
+    "domains": [
+      "system-administration",
+      "systems-and-hpc"
+    ],
+    "id": "nhc-gpu-temperature-quick",
+    "level": "advanced",
+    "order": 14,
+    "path": "fields/system-administration/node-health-check/gpu-temperature/quick-guide.md",
+    "reading_time_min": 4,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "nhc-gpu-temperature-ceiling",
+        "nhc-gpu-temperature-idle-timer"
+      ]
+    },
+    "status": "stable",
+    "summary": "Quick guide: a ceiling rule that drains above a limit, then an idle timer that warns before it drains, with a read-only fleet scan first.",
+    "tags": [
+      "gpu",
+      "hpc",
+      "nvidia",
+      "slurm"
+    ],
+    "title": "Add GPU Temperature Rules to a Health Check",
+    "type": "guide",
+    "types": [
+      "guide",
+      "reference"
+    ]
+  },
   "nhc-rollout-at-scale": {
     "domains": [
       "system-administration",
@@ -2261,7 +2457,7 @@
     "id": "nhc-rollout-at-scale",
     "level": "intermediate",
     "order": 5,
-    "path": "fields/system-administration/node-health-check/rollout-at-scale.md",
+    "path": "fields/system-administration/node-health-check/getting-started/rollout-at-scale.md",
     "reading_time_min": 6,
     "relations": {
       "prerequisites": [
@@ -2289,7 +2485,7 @@
     "id": "nhc-slurm-integration",
     "level": "intermediate",
     "order": 4,
-    "path": "fields/system-administration/node-health-check/slurm-integration.md",
+    "path": "fields/system-administration/node-health-check/getting-started/slurm-integration.md",
     "reading_time_min": 7,
     "relations": {
       "prerequisites": [
@@ -2317,7 +2513,7 @@
     "id": "nhc-troubleshooting",
     "level": "intermediate",
     "order": 8,
-    "path": "fields/system-administration/node-health-check/troubleshooting.md",
+    "path": "fields/system-administration/node-health-check/checks-and-remediation/troubleshooting.md",
     "reading_time_min": 8,
     "relations": {
       "prerequisites": [
@@ -2346,7 +2542,7 @@
     "id": "nhc-why-node-health-check",
     "level": "beginner",
     "order": 1,
-    "path": "fields/system-administration/node-health-check/why-node-health-check.md",
+    "path": "fields/system-administration/node-health-check/getting-started/why-node-health-check.md",
     "reading_time_min": 7,
     "relations": {
       "prerequisites": [],
@@ -2374,7 +2570,7 @@
     "id": "nhc-writing-nhc-conf",
     "level": "intermediate",
     "order": 3,
-    "path": "fields/system-administration/node-health-check/writing-nhc-conf.md",
+    "path": "fields/system-administration/node-health-check/getting-started/writing-nhc-conf.md",
     "reading_time_min": 8,
     "relations": {
       "prerequisites": [
@@ -2519,7 +2715,7 @@
     "level": "intermediate",
     "order": 5,
     "path": "fields/system-administration/openmp-and-open-mpi/hybrid-and-the-binding-trap.md",
-    "reading_time_min": 7,
+    "reading_time_min": 6,
     "relations": {
       "prerequisites": [
         "openmp-mpi-threads-and-ranks"
@@ -2679,7 +2875,7 @@
     "level": "beginner",
     "order": 6,
     "path": "fields/system-administration/openmp-and-open-mpi/where-they-are-going.md",
-    "reading_time_min": 9,
+    "reading_time_min": 8,
     "relations": {
       "prerequisites": [
         "openmp-mpi-where-they-came-from"
@@ -2888,7 +3084,7 @@
     "id": "pytorch-101",
     "level": "",
     "path": "fields/libraries-frameworks-containers/101-pytorch.md",
-    "reading_time_min": 6,
+    "reading_time_min": 5,
     "relations": {
       "prerequisites": [],
       "related": []
@@ -3216,7 +3412,7 @@
     "level": "intermediate",
     "order": 3,
     "path": "fields/schedulers/slurm-inside-a-job/slurm-cgroups-in-practice.md",
-    "reading_time_min": 11,
+    "reading_time_min": 10,
     "relations": {
       "prerequisites": [],
       "related": [
@@ -3235,6 +3431,41 @@
     "type": "concept",
     "types": [
       "concept"
+    ]
+  },
+  "slurm-cluster-operations-quick": {
+    "domains": [
+      "schedulers",
+      "systems-and-hpc"
+    ],
+    "id": "slurm-cluster-operations-quick",
+    "level": "intermediate",
+    "order": 8,
+    "path": "fields/schedulers/slurm-cluster-operations/quick-guide.md",
+    "reading_time_min": 8,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "slurm-kill-task-failed",
+        "slurm-pam-adopt-ssh-access",
+        "slurm-reboot-order",
+        "slurm-reservations-and-maintenance",
+        "slurm-spool-dir-full",
+        "slurm-upgrade-order"
+      ]
+    },
+    "status": "stable",
+    "summary": "Copy-paste steps for a drained node, a maintenance reservation, a reboot, an upgrade and SSH access, each with the expected output.",
+    "tags": [
+      "hpc",
+      "quick",
+      "slurm"
+    ],
+    "title": "Run Slurm Cluster Operations Without Losing Jobs",
+    "type": "guide",
+    "types": [
+      "guide",
+      "reference"
     ]
   },
   "slurm-containers-pyxis": {
@@ -3313,7 +3544,7 @@
     "level": "advanced",
     "order": 4,
     "path": "fields/schedulers/slurm-inside-a-job/slurm-gpu-affinity-socket-lie.md",
-    "reading_time_min": 10,
+    "reading_time_min": 9,
     "relations": {
       "prerequisites": [],
       "related": [
@@ -3376,7 +3607,7 @@
     "level": "beginner",
     "order": 1,
     "path": "fields/schedulers/slurm-intro.md",
-    "reading_time_min": 10,
+    "reading_time_min": 9,
     "relations": {
       "prerequisites": [],
       "related": [
@@ -3436,7 +3667,7 @@
     "level": "intermediate",
     "order": 3,
     "path": "fields/schedulers/slurm-preemption/slurm-job-submit-lua.md",
-    "reading_time_min": 11,
+    "reading_time_min": 10,
     "relations": {
       "prerequisites": [],
       "related": [
@@ -3496,7 +3727,7 @@
     "level": "intermediate",
     "order": 6,
     "path": "fields/schedulers/slurm-ai-clusters/lab-build-cheatsheet.md",
-    "reading_time_min": 9,
+    "reading_time_min": 8,
     "relations": {
       "prerequisites": [],
       "related": [
@@ -3532,7 +3763,7 @@
     "level": "intermediate",
     "order": 1,
     "path": "fields/schedulers/slurm-mixed-gpus/four-ways-to-mix-gpus.md",
-    "reading_time_min": 9,
+    "reading_time_min": 8,
     "relations": {
       "prerequisites": [],
       "related": []
@@ -3586,7 +3817,7 @@
     "level": "intermediate",
     "order": 3,
     "path": "fields/schedulers/slurm-mixed-gpus/where-hetjobs-shine.md",
-    "reading_time_min": 10,
+    "reading_time_min": 9,
     "relations": {
       "prerequisites": [
         "slurm-mixed-gpus-why-disappoints"
@@ -3681,7 +3912,7 @@
     "level": "intermediate",
     "order": 5,
     "path": "fields/schedulers/slurm-cluster-operations/slurm-pam-adopt-ssh-access.md",
-    "reading_time_min": 8,
+    "reading_time_min": 7,
     "relations": {
       "prerequisites": [],
       "related": [
@@ -3699,6 +3930,38 @@
     "type": "guide",
     "types": [
       "guide"
+    ]
+  },
+  "slurm-pending-jobs-quick": {
+    "domains": [
+      "schedulers",
+      "systems-and-hpc"
+    ],
+    "id": "slurm-pending-jobs-quick",
+    "level": "beginner",
+    "order": 4,
+    "path": "fields/schedulers/slurm-pending-jobs/quick-guide.md",
+    "reading_time_min": 4,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "slurm-pending-reasons",
+        "slurm-priority-multifactor",
+        "slurm-qos-limits"
+      ]
+    },
+    "status": "stable",
+    "summary": "Read the reason column, tell waiting from never-starting, see the priority breakdown and roll out a QOS limit safely.",
+    "tags": [
+      "hpc",
+      "quick",
+      "slurm"
+    ],
+    "title": "Find Out Why a Slurm Job Is Pending",
+    "type": "guide",
+    "types": [
+      "guide",
+      "reference"
     ]
   },
   "slurm-pending-reasons": {
@@ -3729,6 +3992,39 @@
     "types": [
       "concept",
       "guide"
+    ]
+  },
+  "slurm-preemption-quick": {
+    "domains": [
+      "schedulers",
+      "systems-and-hpc"
+    ],
+    "id": "slurm-preemption-quick",
+    "level": "intermediate",
+    "order": 5,
+    "path": "fields/schedulers/slurm-preemption/quick-guide.md",
+    "reading_time_min": 5,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "slurm-job-submit-lua",
+        "slurm-preemption-requeue-signals",
+        "slurm-qos-preemption-setup",
+        "slurm-signals-cheatsheet"
+      ]
+    },
+    "status": "stable",
+    "summary": "Steps to switch on QOS preemption, prove it with a drill, add a submit rule, and make a training job catch its warning and requeue.",
+    "tags": [
+      "hpc",
+      "quick",
+      "slurm"
+    ],
+    "title": "Set Up QOS Preemption and Make Jobs Survive It",
+    "type": "guide",
+    "types": [
+      "guide",
+      "reference"
     ]
   },
   "slurm-preemption-requeue-signals": {
@@ -3773,7 +4069,7 @@
     "level": "intermediate",
     "order": 2,
     "path": "fields/schedulers/slurm-pending-jobs/who-goes-first.md",
-    "reading_time_min": 8,
+    "reading_time_min": 7,
     "relations": {
       "prerequisites": [
         "slurm-pending-reasons"
@@ -4203,6 +4499,41 @@
       "guide"
     ]
   },
+  "slurm-smoke-tests-quick": {
+    "domains": [
+      "schedulers",
+      "systems-and-hpc"
+    ],
+    "id": "slurm-smoke-tests-quick",
+    "level": "intermediate",
+    "order": 7,
+    "path": "fields/schedulers/slurm-smoke-tests/quick-guide.md",
+    "reading_time_min": 6,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "slurm-smoke-after-upgrade",
+        "slurm-smoke-config-change",
+        "slurm-smoke-control-plane",
+        "slurm-smoke-node-readiness",
+        "slurm-smoke-policy",
+        "slurm-smoke-regression-suites"
+      ]
+    },
+    "status": "stable",
+    "summary": "Which check to run after a change, an upgrade, a policy edit or a repair, with the command and the output that means pass.",
+    "tags": [
+      "hpc",
+      "quick",
+      "slurm"
+    ],
+    "title": "Check That Slurm Still Works After a Change",
+    "type": "guide",
+    "types": [
+      "guide",
+      "reference"
+    ]
+  },
   "slurm-spool-dir-full": {
     "domains": [
       "systems-and-hpc"
@@ -4241,7 +4572,7 @@
     "level": "intermediate",
     "order": 1,
     "path": "fields/schedulers/slurm-ai-clusters/topology-aware-placement.md",
-    "reading_time_min": 7,
+    "reading_time_min": 6,
     "relations": {
       "prerequisites": [],
       "related": [
@@ -4271,7 +4602,7 @@
     "level": "intermediate",
     "order": 3,
     "path": "fields/schedulers/slurm-cluster-operations/slurm-upgrade-order.md",
-    "reading_time_min": 13,
+    "reading_time_min": 12,
     "relations": {
       "prerequisites": [],
       "related": [
@@ -4299,7 +4630,7 @@
     "level": "intermediate",
     "order": 4,
     "path": "fields/schedulers/slurm-cluster-operations/slurm-version-changes.md",
-    "reading_time_min": 12,
+    "reading_time_min": 11,
     "relations": {
       "prerequisites": [],
       "related": [
@@ -4391,7 +4722,7 @@
     "level": "intermediate",
     "order": 14,
     "path": "fields/data-science/probability-statistics/the-courtroom-for-numbers.md",
-    "reading_time_min": 10,
+    "reading_time_min": 9,
     "relations": {
       "prerequisites": [
         "how-sure-are-you"
@@ -4420,7 +4751,7 @@
     "level": "beginner",
     "order": 16,
     "path": "fields/data-science/probability-statistics/the-map-of-leaf-and-kettle.md",
-    "reading_time_min": 23,
+    "reading_time_min": 22,
     "relations": {
       "prerequisites": [],
       "related": [
@@ -4482,7 +4813,7 @@
     "level": "beginner",
     "order": 8,
     "path": "fields/data-science/probability-statistics/the-test-that-was-99-percent-accurate.md",
-    "reading_time_min": 9,
+    "reading_time_min": 8,
     "relations": {
       "prerequisites": [
         "counting-the-ways"
@@ -4733,7 +5064,7 @@
     "level": "intermediate",
     "order": 2,
     "path": "fields/devops/victoriametrics/single-node-in-ten-minutes.md",
-    "reading_time_min": 9,
+    "reading_time_min": 8,
     "relations": {
       "prerequisites": [
         "vm-why-victoriametrics"

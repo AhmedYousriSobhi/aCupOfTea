@@ -5,21 +5,6 @@ summary: A map of the HPC benchmarks (OSU, STREAM, HPL, NCCL, affinity), the one
 
 > One node. Five different questions. Five different tools. This is the map that ties `OSU`, `STREAM/BabelStream`, `HPL`, `NCCL`, and the execution/affinity layer together — plus the benchmarks that haven't come up yet but will, the moment you validate your next node.
 
-## Table of Contents
-- [The HPC Benchmarking Landscape: A Field Guide](#the-hpc-benchmarking-landscape-a-field-guide)
-  - [Table of Contents](#table-of-contents)
-  - [Why one benchmark is never enough](#why-one-benchmark-is-never-enough)
-  - [The mental map](#the-mental-map)
-  - [The core five — quick index](#the-core-five--quick-index)
-  - [The benchmarks we haven't covered yet](#the-benchmarks-we-havent-covered-yet)
-    - [Compute-adjacent](#compute-adjacent)
-    - [Memory \& storage adjacent](#memory--storage-adjacent)
-    - [Communication-adjacent](#communication-adjacent)
-  - [A complete node validation walkthrough](#a-complete-node-validation-walkthrough)
-  - [The diagnostic flowchart](#the-diagnostic-flowchart)
-  - [The one table to screenshot](#the-one-table-to-screenshot)
-  - [Further reading in this series](#further-reading-in-this-series)
-
 ---
 
 ## Why one benchmark is never enough

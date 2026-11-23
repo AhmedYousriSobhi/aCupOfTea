@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 260" role="img" aria-label="A GPU temperature line rises over time and crosses a dashed ceiling. At the crossing the health check drains the node with the reason GPU_TEMP_CRITICAL, and running jobs keep running.">
+<style>
+:root{--bg:#fff;--fg:#222;--box:#eef3ff;--line:#4a6cf7;--bad:#d33;--ok:#1a8f4c;--warn:#e8a200;--soft:#9aa5c4}
+@media (prefers-color-scheme:dark){:root{--bg:#1b1e24;--fg:#e8e8e8;--box:#262c3a;--line:#8aa2ff;--bad:#ff6b6b;--ok:#4cd68a;--warn:#ffc233;--soft:#6b7390}}
+rect.bg{fill:var(--bg)} text{fill:var(--fg);font-family:system-ui,sans-serif}
+.axis{stroke:var(--soft);stroke-width:2;fill:none}
+.ceil{stroke:var(--bad);stroke-width:2;stroke-dasharray:8 6}
+.temp{stroke:var(--line);stroke-width:4;fill:none;stroke-linecap:round;stroke-dasharray:640;animation:draw 8s infinite}
+.hit{animation:hit 8s infinite}
+@keyframes draw{0%{stroke-dashoffset:640}70%,100%{stroke-dashoffset:0}}
+@keyframes hit{0%,62%{opacity:0}70%,100%{opacity:1}}
+@media (prefers-reduced-motion:reduce){.temp{animation:none;stroke-dashoffset:0}.hit{animation:none;opacity:1}}
+</style>
+<rect class="bg" width="640" height="260"/>
+<path class="axis" d="M60 20 V220 H610"/>
+<text x="20" y="120" font-size="12" transform="rotate(-90 20 120)" text-anchor="middle">GPU temperature (C)</text>
+<text x="335" y="248" font-size="12" text-anchor="middle">time (one reading per health-check run)</text>
+<line class="ceil" x1="60" y1="70" x2="610" y2="70"/>
+<text x="68" y="62" font-size="13" style="fill:var(--bad)">ceiling (example value: 87 C)</text>
+<path class="temp" d="M70 190 C160 185 230 170 300 140 C370 108 420 82 470 52 C520 30 560 28 600 26"/>
+<g class="hit"><circle cx="440" cy="70" r="8" style="fill:var(--bad)"/><text x="450" y="115" font-size="13">drain: GPU_TEMP_CRITICAL</text><text x="450" y="132" font-size="13">running jobs keep running</text></g>
+</svg>

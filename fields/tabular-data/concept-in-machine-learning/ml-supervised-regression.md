@@ -4,35 +4,6 @@ summary: Supervised regression in context, covering interpretation versus predic
 # Tabular Data - Concepts in Machine Learning - Supervised Learning: Regression
 
 # Table of Content
-- [Tabular Data - Concepts in Machine Learning - Supervised Learning: Regression](#tabular-data---concepts-in-machine-learning---supervised-learning-regression)
-- [Table of Content](#table-of-content)
-- [Traditional Statistical Modeling vs Machine Learning](#traditional-statistical-modeling-vs-machine-learning)
-- [Machine Learning in Context with AI](#machine-learning-in-context-with-ai)
-- [Model: A Learning Algorithm](#model-a-learning-algorithm)
-- [Interpretation and Prediction:](#interpretation-and-prediction)
-	- [Interpretation](#interpretation)
-	- [Predection](#predection)
-- [R2 metric:](#r2-metric)
-- [Features \& Target Transformation](#features--target-transformation)
-	- [Train-Test Split](#train-test-split)
-	- [One-Hot Encoding](#one-hot-encoding)
-- [Cross Validation](#cross-validation)
-	- [KFold](#kfold)
-- [Bias-Variance Trade off:](#bias-variance-trade-off)
-- [Sources of Model Error](#sources-of-model-error)
-- [Regularization](#regularization)
-	- [Regularization as Feature Selection](#regularization-as-feature-selection)
-- [Feature Selection](#feature-selection)
-	- [Why feature selection is improtant?](#why-feature-selection-is-improtant)
-- [Ridge Regression](#ridge-regression)
-	- [Notes](#notes)
-- [Lasso Regression](#lasso-regression)
-- [Elastic Net](#elastic-net)
-- [Recursive Feature Elimination (RFE)](#recursive-feature-elimination-rfe)
-- [Regularization under the hood](#regularization-under-the-hood)
-	- [The Analytic View](#the-analytic-view)
-- [Credits:](#credits)
-
 # Traditional Statistical Modeling vs Machine Learning
 Traditional Statistical Modeling, we often know a good deal about the underlying process, thus we can choose a model of analysis that closely approximates that underlying process and use this to develop a predictive model.
 

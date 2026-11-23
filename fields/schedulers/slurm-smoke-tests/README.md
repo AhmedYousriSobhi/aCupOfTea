@@ -24,6 +24,7 @@ The pages stand alone. Read part 1 first if you are new to this; the rest each n
 | [4. Does the Rulebook Still Work?](/fields/schedulers/slurm-smoke-tests/slurm-smoke-policy.md) | A two-stage policy test: routing and refusals with no resources, then a real preemption drill |
 | [5. Back From the Repair Shop](/fields/schedulers/slurm-smoke-tests/slurm-smoke-node-readiness.md) | Why `idle` proves little, a hardware-versus-config check, and a reservation fence for a probe job |
 | [6. When Smoke Becomes a Fire Drill](/fields/schedulers/slurm-smoke-tests/slurm-smoke-regression-suites.md) | SchedMD's test suite and ReFrame, and the baseline rule |
+| [Quick guide: Check That Slurm Still Works After a Change](/fields/schedulers/slurm-smoke-tests/quick-guide.md) | Which check to run after a change, upgrade, policy edit or repair, with the output that means pass |
 
 ---
 

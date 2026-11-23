@@ -17,17 +17,6 @@ sidebar_label: RBAC and the limited viewer
 
 > **Part 13 of the Kubernetes series.** Mateo has his certificate and gets a wall of "Forbidden". By the end you'll read that error as a ready-made recipe, build a read-only user in four commands, and see why RBAC refuses to let anyone hand out keys they don't hold.
 
-- [Forbidden, again](#forbidden-again)
-- [The error is a sentence](#the-error-is-a-sentence)
-- [Four objects, one grammar](#four-objects-one-grammar)
-- [Build the limited viewer](#build-the-limited-viewer)
-- [Ask before you break things](#ask-before-you-break-things)
-- [Bind groups, not people](#bind-groups-not-people)
-- [Three traps that are actually guardrails](#three-traps-that-are-actually-guardrails)
-- [Revoking at the binding](#revoking-at-the-binding)
-- [Back to Mateo](#back-to-mateo)
-- [References](#references)
-
 ---
 
 ## Forbidden, again

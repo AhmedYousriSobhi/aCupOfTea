@@ -27,24 +27,6 @@ relations:
 
 > **Part of the [schedulers](/fields/schedulers/slurm-intro.md) directory.** This page was assembled from SchedMD's changelogs and release notes, read through a web fetch and summarized, so it quotes short lines and names the version each one belongs to. Nothing here was run: the tested pages in this directory ran on Slurm 23.11.4, and the [sources and coverage](#sources-and-coverage) section says exactly what was and was not read. For a real upgrade, read the official notes for every version you cross.
 
-## Table of Contents
-
-- [The Changelog Nobody Reads: What Moved Between Slurm 23.11 and 26.05](#the-changelog-nobody-reads-what-moved-between-slurm-2311-and-2605)
-  - [Table of Contents](#table-of-contents)
-  - [The config that survived three upgrades](#the-config-that-survived-three-upgrades)
-  - [Sources and coverage](#sources-and-coverage)
-  - [The security timeline](#the-security-timeline)
-  - [Preemption](#preemption)
-  - [job_submit/lua](#job_submitlua)
-  - [Reservations](#reservations)
-  - [Signals and killing jobs](#signals-and-killing-jobs)
-  - [Accounting, sacct and sacctmgr](#accounting-sacct-and-sacctmgr)
-  - [cgroups](#cgroups)
-  - [Upgrade paths](#upgrade-paths)
-  - [What the tested pages need re-checking](#what-the-tested-pages-need-re-checking)
-  - [Back to the config that survived three upgrades](#back-to-the-config-that-survived-three-upgrades)
-  - [References](#references)
-
 ## The config that survived three upgrades
 
 A site has a `slurm.conf` that was written in 2023. It has been copied to every new cluster since, with the care people give to a recipe from a grandmother: nobody remembers why each line is there, and nobody dares remove one. This autumn the admin plans to move from 23.11 to 26.05, because the old version stopped getting fixes, and checks the plan by reading the one page everybody reads: the install guide.

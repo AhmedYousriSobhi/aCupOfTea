@@ -15,24 +15,6 @@ tags:
 This blog is mainly designed to get a start with Pytorch, and where to start, so it does not have a complete guide, but the approach I used so far to study Pytorch, also adding some notes and information to document.
 
 # Table of Content
-- [101 - Pytorch](#101---pytorch)
-- [Table of Content](#table-of-content)
-- [How to Start?](#how-to-start)
-- [Precision in DataType](#precision-in-datatype)
-- [GPU Properties](#gpu-properties)
-  - [Break Down the Output](#break-down-the-output)
-    - [Architectures Mentioned](#architectures-mentioned)
-- [Pytorch Training Loop Steps](#pytorch-training-loop-steps)
-- [Pytorch Output Prediction](#pytorch-output-prediction)
-  - [In Classification problem:](#in-classification-problem)
-  - [to Load the Model](#to-load-the-model)
-- [Print Model Summary](#print-model-summary)
-- [Download Script to your code](#download-script-to-your-code)
-- [Check for Specific Version](#check-for-specific-version)
-- [Training on CPU is faster?](#training-on-cpu-is-faster)
-- [Common Deep Learning Issues](#common-deep-learning-issues)
-- [References](#references)
-
 # How to Start?
 If you are like me love to learn from books and articles rather than watching records and videos, so one of the most recommended start in Pytorch by following up with [learnpytorch - Zero to Mastery Learn PyTorch for Deep Learning](https://github.com/mrdbourke/pytorch-deep-learning/tree/main);
 - They provide a free course tutorial, explained with a great effort with many interesting notes.

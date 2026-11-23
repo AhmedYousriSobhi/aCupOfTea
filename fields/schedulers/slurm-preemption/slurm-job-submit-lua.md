@@ -24,26 +24,6 @@ relations:
 
 > **Part of the [schedulers](/fields/schedulers/slurm-intro.md) directory.** Everything here was run on a two-node test cluster (Slurm 23.11.4, accounting on, both `slurmd` daemons on one Ubuntu 24.04 machine), including the failures. Names and stories are invented. Field names and return codes can differ between Slurm versions, so print what your version gives you (the probe in [What the script can see](#what-the-script-can-see)) before you build on it.
 
-## Table of Contents
-
-- [The Receptionist Who Rewrites Your Badge: job_submit.lua](#the-receptionist-who-rewrites-your-badge-job_submitlua)
-  - [Table of Contents](#table-of-contents)
-  - [The seven-day job nobody meant](#the-seven-day-job-nobody-meant)
-  - [What the plugin is](#what-the-plugin-is)
-  - [Turning it on](#turning-it-on)
-  - [What the script can see](#what-the-script-can-see)
-  - [What the script can say back](#what-the-script-can-say-back)
-  - [Recipe 1: default the QOS and route "high"](#recipe-1-default-the-qos-and-route-high)
-  - [Recipe 2: demand a time limit](#recipe-2-demand-a-time-limit)
-  - [Recipe 3: make the victims requeueable](#recipe-3-make-the-victims-requeueable)
-  - [Recipe 4: defuse user-exclusive jobs](#recipe-4-defuse-user-exclusive-jobs)
-  - [The whole script](#the-whole-script)
-  - [Breaking it on purpose](#breaking-it-on-purpose)
-  - [Things the script is not](#things-the-script-is-not)
-  - [Version notes](#version-notes)
-  - [Back to the seven-day job](#back-to-the-seven-day-job)
-  - [References](#references)
-
 ---
 
 ## The seven-day job nobody meant
