@@ -25,20 +25,6 @@ relations:
 
 > **Part 2 of [Slurm Smoke Tests](/fields/schedulers/slurm-smoke-tests/README.md).** Everything here was run on a two-node test cluster (Slurm 23.11.4, accounting on, both `slurmd` daemons on one Ubuntu 24.04 machine), including the mistakes, which were made on purpose. Names and the story are invented. The [control-plane smoke test](/fields/schedulers/slurm-smoke-tests/slurm-smoke-control-plane.md) is the check this page runs at the end, so read it first.
 
-## Table of Contents
-
-- [Measure Twice, Reconfigure Once: Smoke-Testing a slurm.conf Change](#measure-twice-reconfigure-once-smoke-testing-a-slurmconf-change)
-  - [Table of Contents](#table-of-contents)
-  - [The partition for nodes that were not there yet](#the-partition-for-nodes-that-were-not-there-yet)
-  - [What Slurm does with a bad file](#what-slurm-does-with-a-bad-file)
-  - [Rung 1: look at the diff](#rung-1-look-at-the-diff)
-  - [Rung 2: ask Slurm without running anything](#rung-2-ask-slurm-without-running-anything)
-  - [Rung 3: a canary lane](#rung-3-a-canary-lane)
-  - [Rung 4: reconfigure, then check](#rung-4-reconfigure-then-check)
-  - [Version notes](#version-notes)
-  - [Back to the partition for nodes that were not there yet](#back-to-the-partition-for-nodes-that-were-not-there-yet)
-  - [References](#references)
-
 ---
 
 ## The partition for nodes that were not there yet

@@ -17,18 +17,6 @@ relations:
 
 > **Part 3 of [Why Is My Job Still Pending?](/fields/schedulers/slurm-pending-jobs/README.md)** [Part 2](/fields/schedulers/slurm-pending-jobs/who-goes-first.md) decided the order of the queue. Limits decide whether a job may start at all, whatever its priority. By the end you'll set a per-user GPU cap that actually holds, reject jobs that could never run, and read how close anyone is to a limit.
 
-- [The cap that didn't hold](#the-cap-that-didnt-hold)
-- [Two places a limit can live](#two-places-a-limit-can-live)
-- [The lab's limits](#the-labs-limits)
-- [A limit that clears by itself](#a-limit-that-clears-by-itself)
-- [A job that can never run](#a-job-that-can-never-run)
-- [The second QOS](#the-second-qos)
-- [Closing it with a partition QOS](#closing-it-with-a-partition-qos)
-- [Who is using what, right now](#who-is-using-what-right-now)
-- [Rolling out a new limit](#rolling-out-a-new-limit)
-- [Back to the cap](#back-to-the-cap)
-- [References](#references)
-
 ---
 
 ## The cap that didn't hold
