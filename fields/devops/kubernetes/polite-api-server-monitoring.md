@@ -17,17 +17,6 @@ sidebar_label: Polite API server monitoring
 
 > **Part 14 of the Kubernetes series.** A wallboard that "just refreshes every second" is a stack of requests on the cluster's front desk. By the end you'll know what a poll costs, how a watch costs almost nothing, which queue your tool stands in, and the five habits that make a monitor polite.
 
-- [The wallboard](#the-wallboard)
-- [Knocking vs leaving your number](#knocking-vs-leaving-your-number)
-- [What one list costs](#what-one-list-costs)
-- [The pattern: list once, then watch](#the-pattern-list-once-then-watch)
-- [Which queue are you in?](#which-queue-are-you-in)
-- [A key that only reads](#a-key-that-only-reads)
-- [The right tool for the question](#the-right-tool-for-the-question)
-- [Five habits](#five-habits)
-- [Back to the wallboard](#back-to-the-wallboard)
-- [References](#references)
-
 ---
 
 ## The wallboard

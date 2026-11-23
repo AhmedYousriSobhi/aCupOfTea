@@ -16,19 +16,6 @@ relations:
 
 > **Part 6 of the [Linux Memory Pressure series](/fields/system-administration/linux-memory-pressure/README.md).** Pinning a program in RAM stops one kind of stall. A machine in trouble has others: the program can be starved of CPU, killed by the OOM killer, or simply hung. This page covers the rest of what a rescuer needs, then gives one checklist for the whole series.
 
-## Table of Contents
-- [Making a Rescuer Survive: CPU, Protection and a Checklist](#making-a-rescuer-survive-cpu-protection-and-a-checklist)
-  - [Table of Contents](#table-of-contents)
-  - [The ambulance that is stuck in traffic](#the-ambulance-that-is-stuck-in-traffic)
-  - [Gap 1: CPU time](#gap-1-cpu-time)
-  - [Gap 2: being killed](#gap-2-being-killed)
-  - [Gap 3: hanging, and who watches the watcher](#gap-3-hanging-and-who-watches-the-watcher)
-  - [Try it before you scroll](#try-it-before-you-scroll)
-  - [The whole unit file](#the-whole-unit-file)
-  - [The checklist](#the-checklist)
-  - [Other uses of locked memory](#other-uses-of-locked-memory)
-  - [References](#references)
-
 ---
 
 ## The ambulance that is stuck in traffic

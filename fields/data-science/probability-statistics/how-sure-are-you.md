@@ -21,20 +21,6 @@ relations:
 
 > **Part 13 of 15.** Part of the [Probability & Statistics](/fields/data-science/probability-statistics/README.md) series. It continues from [Why Averages Behave](/fields/data-science/probability-statistics/why-averages-behave.md), where you learned how much a sample average wobbles (the standard error). By the end you will turn that wobble into an honest "give or take", know what the famous "95%" really claims, and know the one way a tight interval can still be wrong. The scenario is invented, and the simulation is labelled as simulated.
 
-## Table of Contents
-
-- [Prologue: the number on the tin, again](#prologue-the-number-on-the-tin-again)
-- [One number or a net](#one-number-or-a-net)
-- [What the 95% is about](#what-the-95-is-about)
-- [More data, narrower net](#more-data-narrower-net)
-- [No formula: shake the bag](#no-formula-shake-the-bag)
-- [Small samples, and the trap of a tight wrong answer](#small-samples-and-the-trap-of-a-tight-wrong-answer)
-- [Check yourself](#check-yourself)
-- [Back to the story](#back-to-the-story)
-- [Cheat sheet](#cheat-sheet)
-- [Answers](#answers)
-- [References](#references)
-
 * * *
 
 ## Prologue: the number on the tin, again

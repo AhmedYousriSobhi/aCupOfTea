@@ -17,19 +17,6 @@ relations:
 
 > **Part 5 of the [VictoriaMetrics series](/fields/devops/victoriametrics/README.md).** [Part 4](/fields/devops/victoriametrics/retention-disk-and-backups.md) kept the data safe. This page is about asking it questions: where MetricsQL and PromQL disagree on the same data, and how to write alert rules with tests that would actually catch a broken rule.
 
-- [MetricsQL Surprises and Alerts You Can Test](#metricsql-surprises-and-alerts-you-can-test)
-  - [The bug report that wasn't](#the-bug-report-that-wasnt)
-  - [Same data, two answers](#same-data-two-answers)
-  - [Why they disagree](#why-they-disagree)
-  - [Prometheus 3.16 closed the gap, and VictoriaMetrics can't read it](#prometheus-316-closed-the-gap-and-victoriametrics-cant-read-it)
-  - [Other differences you'll notice](#other-differences-youll-notice)
-  - [Three rules that watch the watchers](#three-rules-that-watch-the-watchers)
-  - [Tests that can fail](#tests-that-can-fail)
-  - [How our own tests lied to us](#how-our-own-tests-lied-to-us)
-  - [Run vmalert](#run-vmalert)
-  - [Back to the bug report](#back-to-the-bug-report)
-  - [References](#references)
-
 ---
 
 ## The bug report that wasn't

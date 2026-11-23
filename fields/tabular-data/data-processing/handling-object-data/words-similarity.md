@@ -3,16 +3,6 @@ summary: How to measure how similar two text values are with Levenshtein distanc
 ---
 # Tabular Data - Data Processing - Handling Objects Data - Words Similarity
 
-## Table of Contents
-- [Tabular Data - Data Processing - Handling Objects Data - Words Similarity](#tabular-data---data-processing---handling-objects-data---words-similarity)
-  - [Table of Contents](#table-of-contents)
-  - [Abstract](#abstract)
-  - [Methodology: Levenshtein Distance](#methodology-levenshtein-distance)
-  - [Diving Deep](#diving-deep)
-    - [Example](#example)
-  - [Implementation: fuzzywuzzy](#implementation-fuzzywuzzy)
-  - [Resources](#resources)
-
 ## Abstract
 We come into a case, where have a dataset containing a object column which are keywords of item's features.
 

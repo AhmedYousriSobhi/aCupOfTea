@@ -5,33 +5,6 @@ summary: "What state of the art means, shown through face detection and recognit
 ![Title card reading State-of-Art under the heading AI Realm](images/state-of-art-01.png)
 
 # Table of Content
-- [Deep Learning - Concepts -  State of Art](#deep-learning---concepts----state-of-art)
-- [Table of Content](#table-of-content)
-- [Abstract](#abstract)
-- [Architecture Vs Model](#architecture-vs-model)
-- [Id Face Extraction](#id-face-extraction)
-  - [Introduction](#introduction)
-  - [Approaches for ID Face Extraction](#approaches-for-id-face-extraction)
-  - [Face Detection](#face-detection)
-    - [History Timeline](#history-timeline)
-    - [Current Architectures](#current-architectures)
-  - [Face Recognition](#face-recognition)
-    - [Current Models](#current-models)
-  - [Exploring Detection Model: RetinaFace](#exploring-detection-model-retinaface)
-    - [RetinaFace Architecture](#retinaface-architecture)
-    - [RetinaFace Development](#retinaface-development)
-    - [Technical Information About RetinaFace](#technical-information-about-retinaface)
-    - [RetinaFace Benefits](#retinaface-benefits)
-    - [RetinaFace Applications](#retinaface-applications)
-  - [Face Embedding Representation](#face-embedding-representation)
-  - [Face Matching Comparision Methods](#face-matching-comparision-methods)
-    - [Distance Metric](#distance-metric)
-      - [Cosine Similarity](#cosine-similarity)
-      - [Eculidean Distance](#eculidean-distance)
-      - [Important Note](#important-note)
-  - [DeepFace](#deepface)
-    - [Face Representation Pickle File](#face-representation-pickle-file)
-  
 # Abstract
 Machine learning and deep learning have revolutionized the way we approach and solve real-life problems across various domains. This blog explores the applications of state-of-the-art models in addressing some of the most prominent challenges faced by society today. From image recognition and natural language processing to medical diagnostics and autonomous systems, machine learning algorithms have demonstrated exceptional capabilities in analyzing complex data patterns, making informed decisions, and driving innovation. This abstract provides an overview of the significant impact of these models on real-life scenarios, highlighting their ability to extract meaningful insights, enhance decision-making processes, and pave the way for future advancements. Through an examination of recent developments and breakthroughs, we showcase the power of machine learning and deep learning in transforming the landscape of problem-solving, ultimately leading to more efficient and effective solutions for a wide range of practical challenges
 

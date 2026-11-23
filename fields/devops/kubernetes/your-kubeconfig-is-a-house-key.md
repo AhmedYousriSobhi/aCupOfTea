@@ -17,15 +17,6 @@ sidebar_label: Your kubeconfig is a house key
 
 > **Part 12 of the Kubernetes series.** A file called `config` sits in your home directory and opens the whole cluster. By the end you'll know what's inside it, how `kubectl` picks which one to use, and how to hand out a smaller key.
 
-- [The ticket](#the-ticket)
-- [What's on the key ring](#whats-on-the-key-ring)
-- [Which key does kubectl pick?](#which-key-does-kubectl-pick)
-- [The key you can't take back](#the-key-you-cant-take-back)
-- [Where the master key comes from](#where-the-master-key-comes-from)
-- [Cutting a smaller key](#cutting-a-smaller-key)
-- [Back to the ticket](#back-to-the-ticket)
-- [References](#references)
-
 ---
 
 ## The ticket

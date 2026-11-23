@@ -16,19 +16,6 @@ relations:
 
 > **Part 2 of the [Predicting GPU Node Failures series](/fields/system-administration/gpu-failure-prediction/README.md).** [Part 1](/fields/system-administration/gpu-failure-prediction/what-fails-and-what-warns.md) described the error ladder. This page is about how the ladder reaches you: what kind of number each signal is, where it comes from, and how it can mislead you. By the end you'll be able to look at any GPU dashboard and say what it can and can't tell you.
 
-## Table of Contents
-- [Reading the GPU's Vital Signs](#reading-the-gpus-vital-signs)
-  - [Table of Contents](#table-of-contents)
-  - [A doctor's analogy](#a-doctors-analogy)
-  - [Concept 1: three shapes of signal](#concept-1-three-shapes-of-signal)
-  - [Concept 2: volatile versus persistent](#concept-2-volatile-versus-persistent)
-  - [Concept 3: where the numbers come from](#concept-3-where-the-numbers-come-from)
-  - [Concept 4: the cost of looking](#concept-4-the-cost-of-looking)
-  - [The ladder, as telemetry](#the-ladder-as-telemetry)
-  - [Five ways the numbers lie](#five-ways-the-numbers-lie)
-  - [Silence is not health](#silence-is-not-health)
-    - [References](#references)
-
 ---
 
 ## A doctor's analogy

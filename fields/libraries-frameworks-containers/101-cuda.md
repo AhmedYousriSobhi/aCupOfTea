@@ -14,16 +14,6 @@ tags:
 # 101 - Cuda
 
 # Table of Content
-- [101 - Cuda](#101---cuda)
-- [Table of Content](#table-of-content)
-- [CUDA](#cuda)
-- [Why the name CUDA?](#why-the-name-cuda)
-- [What is a Thread (really)](#what-is-a-thread-really)
-- [Memory Coalescing?](#memory-coalescing)
-- [Code Journey from CPU to GPU](#code-journey-from-cpu-to-gpu)
-- [A good to read](#a-good-to-read)
-- [References](#references)
-
 # CUDA
 CUDA (Compute Unified Device Architecture) is a parallel computing platform and application programming interface (API) developed by Nvidia. It allows software to leverage certain types of graphics processing units (GPUs) for accelerated general-purpose processing, a concept known as general-purpose computing on GPUs (GPGPU).
 

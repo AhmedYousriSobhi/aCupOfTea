@@ -4,7 +4,7 @@
 
 Field
 
-- [A Single Node You Can Trust: Installing VictoriaMetrics Properly](/fields/devops/victoriametrics/single-node-in-ten-minutes.md) — Install single-node VictoriaMetrics from a verified tarball, run it under systemd, reload scrape config safely, and close the delete endpoint that is open by default. *(intermediate · 9 min)*  
+- [A Single Node You Can Trust: Installing VictoriaMetrics Properly](/fields/devops/victoriametrics/single-node-in-ten-minutes.md) — Install single-node VictoriaMetrics from a verified tarball, run it under systemd, reload scrape config safely, and close the delete endpoint that is open by default. *(intermediate · 8 min)*  
   [`monitoring`](/.docs/generated/explore/tags/monitoring.md) [`prometheus`](/.docs/generated/explore/tags/prometheus.md) [`victoriametrics`](/.docs/generated/explore/tags/victoriametrics.md)
 - [Ansible Cheatsheet: Every Step from the Series](/fields/devops/ansible/cheatsheet.md) — The Ansible series as direct steps - pinned install, ansible.cfg, inventory and host keys, ad-hoc commands, idempotent playbooks with handlers, a role, rolling maintenance, vault. *(intermediate · 6 min)*  
   [`ansible`](/.docs/generated/explore/tags/ansible.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
@@ -24,7 +24,7 @@ Field
   [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`kubernetes`](/.docs/generated/explore/tags/kubernetes.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md)
 - [k3s vs kubeadm: Furnished Flat or Empty Unit?](/fields/devops/kubernetes/k3s-vs-kubeadm.md) — k3s and kubeadm deliver the same conformant Kubernetes; what each installs, how upgrades and HA differ, and how to choose for a lab, edge box or GPU cluster. *(intermediate · 9 min)*  
   [`containers`](/.docs/generated/explore/tags/containers.md) [`kubernetes`](/.docs/generated/explore/tags/kubernetes.md)
-- [kubectl Troubleshooting Cheat Sheet: Five Questions, in Order](/fields/devops/kubernetes/cheatsheet.md) — A kubectl cheat sheet for a pod or Job that won't work: where is it, what does it say, what did the cluster say, why did it die, and how to look inside. Commands from the Kubernetes reference. *(intermediate · 9 min)*  
+- [kubectl Troubleshooting Cheat Sheet: Five Questions, in Order](/fields/devops/kubernetes/cheatsheet.md) — A kubectl cheat sheet for a pod or Job that won't work: where is it, what does it say, what did the cluster say, why did it die, and how to look inside. Commands from the Kubernetes reference. *(intermediate · 8 min)*  
   [`kubernetes`](/.docs/generated/explore/tags/kubernetes.md)
 - [Kubernetes at HPC Scale: The Front Desk Meets a 100,000-Task Array](/fields/devops/kubernetes/kubernetes-at-hpc-scale.md) — What changes when a cluster gets big and the work looks like an HPC job array: the published limits, where the pressure lands, and how to turn an array into one Indexed Job. *(intermediate · 10 min)*  
   [`kubernetes`](/.docs/generated/explore/tags/kubernetes.md)

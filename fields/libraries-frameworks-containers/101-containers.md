@@ -16,23 +16,6 @@ tags:
 You mean Docker?!! NOO!! the concept of containerzation was an old concept, even introuced by linux in "C-Groups" which are short for "Controled Groups."
 
 # Table of Content
-- [101 - Containers](#101---containers)
-- [Table of Content](#table-of-content)
-- [What Happens When Power is on?](#what-happens-when-power-is-on)
-  - [Kernel](#kernel)
-  - [Kernel Space \& User Space](#kernel-space--user-space)
-- [Hypervisor Virtual Machine](#hypervisor-virtual-machine)
-- [From History to Container!](#from-history-to-container)
-  - [What is a Namespace?!](#what-is-a-namespace)
-  - [Namespace in Linux?](#namespace-in-linux)
-  - [Cgroups](#cgroups)
-  - [Linux Containers (LXC)](#linux-containers-lxc)
-- [Os of a Container?!](#os-of-a-container)
-- [How container become alive?](#how-container-become-alive)
-- [Containers Shares Kernel?](#containers-shares-kernel)
-  - [gVisor: Independed Kernel](#gvisor-independed-kernel)
-- [References](#references)
-
 # What Happens When Power is on?
 
 1. Power On and POST (Power-On Self-Test):

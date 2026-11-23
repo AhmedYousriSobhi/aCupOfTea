@@ -26,24 +26,6 @@ relations:
 
 > **Part of the [schedulers](/fields/schedulers/slurm-intro.md) directory.** Preemption behavior comes from SchedMD's Preemption guide for Slurm 26.05. Signal details come from site documentation and the `sbatch` options as described there. Where a paragraph says **Tested**, the behavior was measured on a two-node test cluster running Slurm 23.11.4, so it can differ from the 26.05 guide and from your version. The wrapper script is still a sketch and was not run as a whole, so test it with a short job before trusting a week-long run to it. The [signals cheat sheet](/fields/schedulers/slurm-preemption/slurm-signals-cheatsheet.md) holds the measured timelines.
 
-## Table of Contents
-
-- [Dying Politely: Preemption, Requeue and the Signals Your Training Job Ignores](#dying-politely-preemption-requeue-and-the-signals-your-training-job-ignores)
-  - [Table of Contents](#table-of-contents)
-  - [The week-long run that wasn't](#the-week-long-run-that-wasnt)
-  - [Four ways to be evicted](#four-ways-to-be-evicted)
-  - [GraceTime: the polite notice (and its twist)](#gracetime-the-polite-notice-and-its-twist)
-  - [--signal: the other notice](#--signal-the-other-notice)
-  - [Why your trap never fires](#why-your-trap-never-fires)
-  - [A requeue-safe wrapper](#a-requeue-safe-wrapper)
-  - [Requeue without the infinite loop](#requeue-without-the-infinite-loop)
-  - [Preemption fine print](#preemption-fine-print)
-  - [Setting it up](#setting-it-up)
-  - [Version notes](#version-notes)
-  - [Cheat sheet](#cheat-sheet)
-  - [Back to the week-long run](#back-to-the-week-long-run)
-  - [References](#references)
-
 * * *
 
 ## The week-long run that wasn't
@@ -251,9 +233,23 @@ No changelog entry mentions the `GraceTime` signal targets or `send_user_signal`
 
 * * *
 
-## Cheat sheet
+## Back to the week-long run
 
-```
+Replay the Friday submission with this page open. The researcher's job runs under a preemptible QOS, and the admin has switched on `send_user_signal`. Her wrapper starts the trainer with `srun`, so it hears `SIGTERM` itself, and `--signal=B:USR1@300` warns the batch shell as well. Both handlers do the same small thing: set a flag, save at the next step boundary, exit.
+
+On Sunday the better-funded group's job arrives. A second later the trainer is told to wrap up, and within a minute it has written a checkpoint and left. Slurm, seeing the job exit inside the grace period, treats it as preempted and puts it back in the queue (the changelog says that rule was added in 24.05 for `CANCEL` and `REQUEUE`, and a clean exit inside the window was not tested on 23.11). When a node frees up, the script runs again, finds the checkpoint, and carries on. The latest checkpoint is a minute old, not five hours.
+
+Nobody was dramatic. "Requeue" still meant "start the script again", but this time the script knew where it had stopped.
+
+**Takeaway:** requeue means "start the script again", so the job must catch its warning (steps hear `GraceTime`'s `SIGTERM`, the batch shell hears `--signal=B:` only with `send_user_signal`), save at a safe boundary, and find its own checkpoint on restart.
+
+**Next:** [The Guest List](/fields/schedulers/slurm-preemption/slurm-qos-preemption-setup.md) shows how to switch preemption on and prove it works with a drill.
+
+* * *
+
+## 📜 The Scroll (keep this)
+
+```text
 Preempt, then:    CANCEL (dead) | REQUEUE (needs --requeue) | SUSPEND (GPUs stay held)
 GraceTime:        SIGCONT+SIGTERM now, SIGCONT+SIGTERM+SIGKILL at the new end time
                   -> two SIGTERMs; make the handler idempotent
@@ -268,20 +264,6 @@ Loops:            cap with SLURM_RESTART_COUNT, require a minimum runtime
 ```
 
 Preemption is not a failure of the cluster. It is a contract, and the job's side of it is a script that can be killed at any moment and still make progress.
-
-* * *
-
-## Back to the week-long run
-
-Replay the Friday submission with this page open. The researcher's job runs under a preemptible QOS, and the admin has switched on `send_user_signal`. Her wrapper starts the trainer with `srun`, so it hears `SIGTERM` itself, and `--signal=B:USR1@300` warns the batch shell as well. Both handlers do the same small thing: set a flag, save at the next step boundary, exit.
-
-On Sunday the better-funded group's job arrives. A second later the trainer is told to wrap up, and within a minute it has written a checkpoint and left. Slurm, seeing the job exit inside the grace period, treats it as preempted and puts it back in the queue (the changelog says that rule was added in 24.05 for `CANCEL` and `REQUEUE`, and a clean exit inside the window was not tested on 23.11). When a node frees up, the script runs again, finds the checkpoint, and carries on. The latest checkpoint is a minute old, not five hours.
-
-Nobody was dramatic. "Requeue" still meant "start the script again", but this time the script knew where it had stopped.
-
-**Takeaway:** requeue means "start the script again", so the job must catch its warning (steps hear `GraceTime`'s `SIGTERM`, the batch shell hears `--signal=B:` only with `send_user_signal`), save at a safe boundary, and find its own checkpoint on restart.
-
-**Next:** [The Guest List](/fields/schedulers/slurm-preemption/slurm-qos-preemption-setup.md) shows how to switch preemption on and prove it works with a drill.
 
 * * *
 

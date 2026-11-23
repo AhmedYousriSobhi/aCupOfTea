@@ -16,19 +16,6 @@ relations:
 
 > **Part 3 of the [Linux Memory Pressure series](/fields/system-administration/linux-memory-pressure/README.md).** When reclaim can't free another page, the kernel kills a process. It will tell you which one in `dmesg`, but never why that one, and rarely early enough. By the end you'll be able to predict the victim, protect or sacrifice a process on purpose, and explain why the kernel is the *last* line of defence, not the first.
 
-## Table of Contents
-- [The OOM Killer: Who Gets Thrown Overboard, and Why So Late](#the-oom-killer-who-gets-thrown-overboard-and-why-so-late)
-  - [Table of Contents](#table-of-contents)
-  - [The overloaded ship](#the-overloaded-ship)
-  - [When the kernel decides it is out of memory](#when-the-kernel-decides-it-is-out-of-memory)
-  - [How the victim is chosen](#how-the-victim-is-chosen)
-  - [Try it before you scroll](#try-it-before-you-scroll)
-  - [Shielding and sacrificing: oom_score_adj](#shielding-and-sacrificing-oom_score_adj)
-  - [A smaller ship: OOM inside a cgroup](#a-smaller-ship-oom-inside-a-cgroup)
-  - [Why the kernel is late, and who acts earlier](#why-the-kernel-is-late-and-who-acts-earlier)
-  - [Read the crime scene](#read-the-crime-scene)
-  - [References](#references)
-
 ---
 
 ## The overloaded ship

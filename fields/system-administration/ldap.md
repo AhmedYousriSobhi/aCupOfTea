@@ -3,13 +3,6 @@ summary: First steps to install OpenLDAP on Fedora or CentOS, start slapd, open 
 ---
 # System Administration - LDAP
 
-## Table of Contents
-- [System Administration - LDAP](#system-administration---ldap)
-  - [Table of Contents](#table-of-contents)
-  - [Reference](#reference)
-  - [Motivation](#motivation)
-  - [Installation - OpenLdap](#installation---openldap)
-
 ## Reference
 - Youtube playlist: []()
 

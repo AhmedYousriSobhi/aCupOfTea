@@ -16,17 +16,6 @@ relations:
 
 > **Part 4 of [Slurm for AI Clusters](/fields/schedulers/slurm-ai-clusters/README.md)** GPUs fail in ways the scheduler can't see on its own. By the end you'll have a health check that takes a node with a missing GPU out of service within one interval, leaves running jobs alone, and doesn't trample a drain an admin set by hand.
 
-- [The node that ate the queue](#the-node-that-ate-the-queue)
-- [What Slurm does on its own](#what-slurm-does-on-its-own)
-- [HealthCheckProgram in one paragraph](#healthcheckprogram-in-one-paragraph)
-- [A GPU health check](#a-gpu-health-check)
-- [Pulling a GPU out](#pulling-a-gpu-out)
-- [The bug: it overwrote the admin's reason](#the-bug-it-overwrote-the-admins-reason)
-- [What a real check should test](#what-a-real-check-should-test)
-- [26.11: drain one GPU, not the node](#2611-drain-one-gpu-not-the-node)
-- [Back to the queue](#back-to-the-queue)
-- [References](#references)
-
 ---
 
 ## The node that ate the queue

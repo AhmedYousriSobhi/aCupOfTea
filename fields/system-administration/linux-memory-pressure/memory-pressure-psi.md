@@ -16,19 +16,6 @@ relations:
 
 > **Part 2 of the [Linux Memory Pressure series](/fields/system-administration/linux-memory-pressure/README.md).** "How much memory is left?" is the wrong question, because Linux keeps it nearly all in use on purpose. The right question is "how much time are programs losing waiting for memory?", and the kernel counts exactly that. By the end you'll read the three lines of `/proc/pressure/memory` at a glance and know how a rescuer program gets woken by them.
 
-## Table of Contents
-- [Pressure Stall Information: Measuring Time Lost, Not Bytes Left](#pressure-stall-information-measuring-time-lost-not-bytes-left)
-  - [Table of Contents](#table-of-contents)
-  - [The restaurant that watches the queue, not the pantry](#the-restaurant-that-watches-the-queue-not-the-pantry)
-  - [Reading the file](#reading-the-file)
-  - [Try it before you scroll](#try-it-before-you-scroll)
-  - [Some versus full](#some-versus-full)
-  - [Bytes versus time, with two examples](#bytes-versus-time-with-two-examples)
-  - [Getting woken up: triggers](#getting-woken-up-triggers)
-  - [Per group, and who uses it](#per-group-and-who-uses-it)
-  - [Check it on your own machine](#check-it-on-your-own-machine)
-  - [References](#references)
-
 ---
 
 ## The restaurant that watches the queue, not the pantry

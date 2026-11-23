@@ -23,21 +23,6 @@ relations:
 
 > **Part 6 of 15.** Part of the [Probability & Statistics](/fields/data-science/probability-statistics/README.md) series. It continues from [How Far From the Middle?](/fields/data-science/probability-statistics/how-far-from-the-middle.md), where every summary was a stand-in for a crowd. By the end you will place any single value inside its crowd with two rulers, and see that the box plot is not a new graph to memorize but the staircase you already know, read at four marks. The scenario is invented, and every figure can be checked by hand.
 
-## Table of Contents
-
-- [Prologue: 84 versus 61](#prologue-84-versus-61)
-- [A score needs a crowd](#a-score-needs-a-crowd)
-- [Ruler 1: rank, the percentile](#ruler-1-rank-the-percentile)
-- [Ruler 2: distance, the z-score](#ruler-2-distance-the-z-score)
-- [Which ruler when](#which-ruler-when)
-- [Fewer graphs, not more](#fewer-graphs-not-more)
-- [The box plot, and the clump it cannot see](#the-box-plot-and-the-clump-it-cannot-see)
-- [Check yourself](#check-yourself)
-- [Back to the story](#back-to-the-story)
-- [Cheat sheet](#cheat-sheet)
-- [Answers](#answers)
-- [References](#references)
-
 * * *
 
 ## Prologue: 84 versus 61

@@ -16,16 +16,6 @@ relations:
 
 > **Part 3 of the [Node Health Check series](/fields/system-administration/node-health-check/README.md).** The config *is* your health policy. This is where NHC stops being a tool and starts being *your* bouncer.
 
-## Table of Contents
-- [Anatomy of a line](#anatomy-of-a-line)
-- [Match strings: who runs what](#match-strings-who-runs-what)
-- [Let the machine write the first draft: nhc-genconf](#let-the-machine-write-the-first-draft-nhc-genconf)
-- [Variables, and the precedence trap](#variables-and-the-precedence-trap)
-- [The checks you'll actually use](#the-checks-youll-actually-use)
-- [Starter config: a real cluster](#starter-config-a-real-cluster)
-- [Contexts: one binary, many personalities](#contexts-one-binary-many-personalities)
-- [Iterate until silent](#iterate-until-silent)
-
 ---
 
 ## Anatomy of a line

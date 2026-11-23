@@ -3,17 +3,6 @@ summary: The common memory bugs in Linux programs (segfaults, leaks, buffer over
 ---
 # System Administration - Memory
 
-## Table of Contents
-- [System Administration - Memory](#system-administration---memory)
-  - [Table of Contents](#table-of-contents)
-  - [1- Memory Issues in Linux Application](#1--memory-issues-in-linux-application)
-    - [1.1- Segmentation Faults (segfaults)](#11--segmentation-faults-segfaults)
-    - [1.2- Memory Leaks](#12--memory-leaks)
-    - [1.3- Buffer Overflow](#13--buffer-overflow)
-  - [2- Memory Debugging Tools](#2--memory-debugging-tools)
-    - [2.1- What is Static Analysis?](#21--what-is-static-analysis)
-    - [2.2- Static Analysis Tools (Clang Analyzer)](#22--static-analysis-tools-clang-analyzer)
-
 ## 1- Memory Issues in Linux Application
 - Common memory issue:
     1. Segmentation faults (segfaults).

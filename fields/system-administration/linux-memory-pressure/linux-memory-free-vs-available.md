@@ -19,21 +19,6 @@ relations:
 
 > **Facts in this page come from the `free` man pages, `proc_meminfo(5)` and the kernel commit that added `MemAvailable`.** The scenario is invented. The numbers are a real `free -h` snapshot, and a few derived figures depend on one assumption that is flagged where it appears. Verify with the commands in each section, on your own machine.
 
-## Table of Contents
-
-- [The snapshot](#the-snapshot)
-- [The cast of columns](#the-cast-of-columns)
-- [The puzzle: the columns do not add up](#the-puzzle-the-columns-do-not-add-up)
-- [Free memory is a feature, not a symptom](#free-memory-is-a-feature-not-a-symptom)
-- [What cache really is](#what-cache-really-is)
-- [What is really used](#what-is-really-used)
-- [The swap clue](#the-swap-clue)
-- [The detective kit](#the-detective-kit)
-- [Verdict on ps331](#verdict-on-ps331)
-- [Which number to alert on](#which-number-to-alert-on)
-- [Cheat sheet](#cheat-sheet)
-- [References](#references)
-
 * * *
 
 ## The snapshot

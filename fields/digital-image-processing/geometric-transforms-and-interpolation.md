@@ -16,21 +16,6 @@ relations:
 
 > **Part 2 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** Every rotation, zoom and shift moves citizens to squares that don't exist. By the end you'll write a transform as one matrix, explain why real code loops over the **output** instead of the input, and compute a bilinear interpolation on paper.
 
-## Table of Contents
-- [Geometric Transforms and Interpolation](#geometric-transforms-and-interpolation)
-  - [Table of Contents](#table-of-contents)
-  - [The jagged scan](#the-jagged-scan)
-  - [Moving a citizen](#moving-a-citizen)
-  - [One matrix for everything: homogeneous coordinates](#one-matrix-for-everything-homogeneous-coordinates)
-  - [Order matters](#order-matters)
-  - [Try it before you scroll](#try-it-before-you-scroll)
-  - [Forward mapping leaves holes](#forward-mapping-leaves-holes)
-  - [Interpolation: guessing between citizens](#interpolation-guessing-between-citizens)
-  - [Bilinear, by hand](#bilinear-by-hand)
-  - [Beyond affine](#beyond-affine)
-  - [Back to the jagged scan](#back-to-the-jagged-scan)
-    - [References](#references)
-
 ---
 
 ## The jagged scan

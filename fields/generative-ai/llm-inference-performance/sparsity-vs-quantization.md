@@ -16,21 +16,6 @@ relations:
 
 > **Part 6 of the [LLM Inference Performance series](/fields/generative-ai/llm-inference-performance/README.md), the last one.** [Part 5](/fields/generative-ai/llm-inference-performance/structured-sparsity.md) showed what 2:4 sparsity does once a model is pruned. This page is about getting there: what pruning costs, what it does to accuracy, and how it stacks up against the cheaper-looking alternative, quantization. By the end you'll know which lever to pull first, and how to split the work between the research team and the infrastructure team.
 
-## Table of Contents
-- [Sparsity vs Quantization: Who Pays, and Who Wins](#sparsity-vs-quantization-who-pays-and-who-wins)
-  - [Table of Contents](#table-of-contents)
-  - ["Can't you just turn it on?"](#cant-you-just-turn-it-on)
-  - [Two ways to prune](#two-ways-to-prune)
-    - [The original recipe: prune, then retrain](#the-original-recipe-prune-then-retrain)
-    - [The LLM shortcut: one-shot pruning](#the-llm-shortcut-one-shot-pruning)
-  - [What it does to accuracy](#what-it-does-to-accuracy)
-  - [Two diets for the same model](#two-diets-for-the-same-model)
-  - [Try it before you scroll](#try-it-before-you-scroll)
-  - [Quantize first, sparsify second](#quantize-first-sparsify-second)
-  - [Who owns what](#who-owns-what)
-  - [The interview answer](#the-interview-answer)
-    - [References](#references)
-
 ---
 
 ## "Can't you just turn it on?"
