@@ -3433,6 +3433,41 @@
       "concept"
     ]
   },
+  "slurm-cluster-operations-quick": {
+    "domains": [
+      "schedulers",
+      "systems-and-hpc"
+    ],
+    "id": "slurm-cluster-operations-quick",
+    "level": "intermediate",
+    "order": 8,
+    "path": "fields/schedulers/slurm-cluster-operations/quick-guide.md",
+    "reading_time_min": 7,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "slurm-kill-task-failed",
+        "slurm-pam-adopt-ssh-access",
+        "slurm-reboot-order",
+        "slurm-reservations-and-maintenance",
+        "slurm-spool-dir-full",
+        "slurm-upgrade-order"
+      ]
+    },
+    "status": "stable",
+    "summary": "Copy-paste steps for a drained node, a maintenance reservation, a reboot, an upgrade and SSH access, each with the expected output.",
+    "tags": [
+      "hpc",
+      "quick",
+      "slurm"
+    ],
+    "title": "Run Slurm Cluster Operations Without Losing Jobs",
+    "type": "guide",
+    "types": [
+      "guide",
+      "reference"
+    ]
+  },
   "slurm-containers-pyxis": {
     "domains": [
       "schedulers",
@@ -3897,6 +3932,38 @@
       "guide"
     ]
   },
+  "slurm-pending-jobs-quick": {
+    "domains": [
+      "schedulers",
+      "systems-and-hpc"
+    ],
+    "id": "slurm-pending-jobs-quick",
+    "level": "beginner",
+    "order": 4,
+    "path": "fields/schedulers/slurm-pending-jobs/quick-guide.md",
+    "reading_time_min": 4,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "slurm-pending-reasons",
+        "slurm-priority-multifactor",
+        "slurm-qos-limits"
+      ]
+    },
+    "status": "stable",
+    "summary": "Read the reason column, tell waiting from never-starting, see the priority breakdown and roll out a QOS limit safely.",
+    "tags": [
+      "hpc",
+      "quick",
+      "slurm"
+    ],
+    "title": "Find Out Why a Slurm Job Is Pending",
+    "type": "guide",
+    "types": [
+      "guide",
+      "reference"
+    ]
+  },
   "slurm-pending-reasons": {
     "domains": [
       "schedulers",
@@ -3925,6 +3992,39 @@
     "types": [
       "concept",
       "guide"
+    ]
+  },
+  "slurm-preemption-quick": {
+    "domains": [
+      "schedulers",
+      "systems-and-hpc"
+    ],
+    "id": "slurm-preemption-quick",
+    "level": "intermediate",
+    "order": 5,
+    "path": "fields/schedulers/slurm-preemption/quick-guide.md",
+    "reading_time_min": 4,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "slurm-job-submit-lua",
+        "slurm-preemption-requeue-signals",
+        "slurm-qos-preemption-setup",
+        "slurm-signals-cheatsheet"
+      ]
+    },
+    "status": "stable",
+    "summary": "Steps to switch on QOS preemption, prove it with a drill, add a submit rule, and make a training job catch its warning and requeue.",
+    "tags": [
+      "hpc",
+      "quick",
+      "slurm"
+    ],
+    "title": "Set Up QOS Preemption and Make Jobs Survive It",
+    "type": "guide",
+    "types": [
+      "guide",
+      "reference"
     ]
   },
   "slurm-preemption-requeue-signals": {
@@ -4397,6 +4497,41 @@
     "type": "guide",
     "types": [
       "guide"
+    ]
+  },
+  "slurm-smoke-tests-quick": {
+    "domains": [
+      "schedulers",
+      "systems-and-hpc"
+    ],
+    "id": "slurm-smoke-tests-quick",
+    "level": "intermediate",
+    "order": 7,
+    "path": "fields/schedulers/slurm-smoke-tests/quick-guide.md",
+    "reading_time_min": 5,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "slurm-smoke-after-upgrade",
+        "slurm-smoke-config-change",
+        "slurm-smoke-control-plane",
+        "slurm-smoke-node-readiness",
+        "slurm-smoke-policy",
+        "slurm-smoke-regression-suites"
+      ]
+    },
+    "status": "stable",
+    "summary": "Which check to run after a change, an upgrade, a policy edit or a repair, with the command and the output that means pass.",
+    "tags": [
+      "hpc",
+      "quick",
+      "slurm"
+    ],
+    "title": "Check That Slurm Still Works After a Change",
+    "type": "guide",
+    "types": [
+      "guide",
+      "reference"
     ]
   },
   "slurm-spool-dir-full": {

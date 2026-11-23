@@ -121,6 +121,8 @@ tags:
     kind: technology
   monitoring:
     label: Monitoring
+  quick:
+    label: Quick guide
   prometheus:
     label: Prometheus
     kind: technology
