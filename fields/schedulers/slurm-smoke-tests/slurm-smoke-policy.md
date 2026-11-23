@@ -26,20 +26,6 @@ relations:
 
 > **Part 4 of [Slurm Smoke Tests](/fields/schedulers/slurm-smoke-tests/README.md).** The script and every output below were run on a two-node test cluster (Slurm 23.11.4, accounting on, QOS preemption with requeue, a `job_submit.lua` that routes and refuses jobs, both `slurmd` daemons on one Ubuntu 24.04 machine). The accounts, users and the story are invented. The policy under test is the one built in [The Guest List](/fields/schedulers/slurm-preemption/slurm-qos-preemption-setup.md) and [The Receptionist Who Rewrites Your Badge](/fields/schedulers/slurm-preemption/slurm-job-submit-lua.md). Read the [control-plane smoke test](/fields/schedulers/slurm-smoke-tests/slurm-smoke-control-plane.md) first.
 
-## Table of Contents
-
-- [Does the Rulebook Still Work? Smoke-Testing QOS, Submit Rules and Preemption](#does-the-rulebook-still-work-smoke-testing-qos-submit-rules-and-preemption)
-  - [Table of Contents](#table-of-contents)
-  - [The monitor that was refused](#the-monitor-that-was-refused)
-  - [Why policy needs its own test](#why-policy-needs-its-own-test)
-  - [The script](#the-script)
-  - [What each check proves](#what-each-check-proves)
-  - [Things the drill showed](#things-the-drill-showed)
-  - [When to run it](#when-to-run-it)
-  - [Version notes](#version-notes)
-  - [Back to the monitor that was refused](#back-to-the-monitor-that-was-refused)
-  - [References](#references)
-
 ---
 
 ## The monitor that was refused

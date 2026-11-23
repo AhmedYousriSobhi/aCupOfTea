@@ -3412,7 +3412,7 @@
     "level": "intermediate",
     "order": 3,
     "path": "fields/schedulers/slurm-inside-a-job/slurm-cgroups-in-practice.md",
-    "reading_time_min": 11,
+    "reading_time_min": 10,
     "relations": {
       "prerequisites": [],
       "related": [
@@ -3509,7 +3509,7 @@
     "level": "advanced",
     "order": 4,
     "path": "fields/schedulers/slurm-inside-a-job/slurm-gpu-affinity-socket-lie.md",
-    "reading_time_min": 10,
+    "reading_time_min": 9,
     "relations": {
       "prerequisites": [],
       "related": [
@@ -3572,7 +3572,7 @@
     "level": "beginner",
     "order": 1,
     "path": "fields/schedulers/slurm-intro.md",
-    "reading_time_min": 10,
+    "reading_time_min": 9,
     "relations": {
       "prerequisites": [],
       "related": [
@@ -3632,7 +3632,7 @@
     "level": "intermediate",
     "order": 3,
     "path": "fields/schedulers/slurm-preemption/slurm-job-submit-lua.md",
-    "reading_time_min": 11,
+    "reading_time_min": 10,
     "relations": {
       "prerequisites": [],
       "related": [
@@ -3692,7 +3692,7 @@
     "level": "intermediate",
     "order": 6,
     "path": "fields/schedulers/slurm-ai-clusters/lab-build-cheatsheet.md",
-    "reading_time_min": 9,
+    "reading_time_min": 8,
     "relations": {
       "prerequisites": [],
       "related": [
@@ -3728,7 +3728,7 @@
     "level": "intermediate",
     "order": 1,
     "path": "fields/schedulers/slurm-mixed-gpus/four-ways-to-mix-gpus.md",
-    "reading_time_min": 9,
+    "reading_time_min": 8,
     "relations": {
       "prerequisites": [],
       "related": []
@@ -3782,7 +3782,7 @@
     "level": "intermediate",
     "order": 3,
     "path": "fields/schedulers/slurm-mixed-gpus/where-hetjobs-shine.md",
-    "reading_time_min": 10,
+    "reading_time_min": 9,
     "relations": {
       "prerequisites": [
         "slurm-mixed-gpus-why-disappoints"
@@ -3877,7 +3877,7 @@
     "level": "intermediate",
     "order": 5,
     "path": "fields/schedulers/slurm-cluster-operations/slurm-pam-adopt-ssh-access.md",
-    "reading_time_min": 8,
+    "reading_time_min": 7,
     "relations": {
       "prerequisites": [],
       "related": [
@@ -3969,7 +3969,7 @@
     "level": "intermediate",
     "order": 2,
     "path": "fields/schedulers/slurm-pending-jobs/who-goes-first.md",
-    "reading_time_min": 8,
+    "reading_time_min": 7,
     "relations": {
       "prerequisites": [
         "slurm-pending-reasons"
@@ -4437,7 +4437,7 @@
     "level": "intermediate",
     "order": 1,
     "path": "fields/schedulers/slurm-ai-clusters/topology-aware-placement.md",
-    "reading_time_min": 7,
+    "reading_time_min": 6,
     "relations": {
       "prerequisites": [],
       "related": [
@@ -4467,7 +4467,7 @@
     "level": "intermediate",
     "order": 3,
     "path": "fields/schedulers/slurm-cluster-operations/slurm-upgrade-order.md",
-    "reading_time_min": 13,
+    "reading_time_min": 12,
     "relations": {
       "prerequisites": [],
       "related": [
@@ -4495,7 +4495,7 @@
     "level": "intermediate",
     "order": 4,
     "path": "fields/schedulers/slurm-cluster-operations/slurm-version-changes.md",
-    "reading_time_min": 12,
+    "reading_time_min": 11,
     "relations": {
       "prerequisites": [],
       "related": [
