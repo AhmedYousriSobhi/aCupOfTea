@@ -16,21 +16,6 @@ relations:
 
 > **Part 3 of the [LLM Inference Performance series](/fields/generative-ai/llm-inference-performance/README.md).** This page is a whiteboard session. One real model, one real server, seven questions an interviewer could ask, and the arithmetic to answer each one live. By the end you'll be able to size any model on any GPU in about five minutes, and you'll have caught the batching myth red-handed.
 
-## Table of Contents
-- [Sizing a 70B Model with a Pencil](#sizing-a-70b-model-with-a-pencil)
-  - [Table of Contents](#table-of-contents)
-  - [The marker is in your hand](#the-marker-is-in-your-hand)
-  - [Question 1: "Does it fit?"](#question-1-does-it-fit)
-  - [Question 2: "How much does each conversation cost?"](#question-2-how-much-does-each-conversation-cost)
-  - [Question 3: "How many users can we hold?"](#question-3-how-many-users-can-we-hold)
-  - [Question 4: "How fast for one user?"](#question-4-how-fast-for-one-user)
-  - [Question 5: "And with 64 users?"](#question-5-and-with-64-users)
-  - [Question 6: "So just batch more until it's compute-bound?"](#question-6-so-just-batch-more-until-its-compute-bound)
-  - [Question 7: "What about the prompt?"](#question-7-what-about-the-prompt)
-  - [Bonus round: FP8](#bonus-round-fp8)
-  - [The five-line cheat sheet](#the-five-line-cheat-sheet)
-    - [References](#references)
-
 ---
 
 ## The marker is in your hand
