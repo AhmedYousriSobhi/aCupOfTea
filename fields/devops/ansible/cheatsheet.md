@@ -16,20 +16,6 @@ relations:
 
 > **Part 7 of [Ansible](/fields/devops/ansible/README.md)** The series as one list of commands, in the order you'd build the `cluster-ansible` project. Each step links to the page that explains it, shows its output, and shows how it fails.
 
-- [Ansible Cheatsheet: Every Step from the Series](#ansible-cheatsheet-every-step-from-the-series)
-  - [Before you start](#before-you-start)
-  - [1. A pinned install](#1-a-pinned-install)
-  - [2. ansible.cfg](#2-ansiblecfg)
-  - [3. Inventory and host keys](#3-inventory-and-host-keys)
-  - [4. Variables and patterns](#4-variables-and-patterns)
-  - [5. Ad-hoc change, and a check that logs in fresh](#5-ad-hoc-change-and-a-check-that-logs-in-fresh)
-  - [6. An idempotent playbook with handlers](#6-an-idempotent-playbook-with-handlers)
-  - [7. The slurm role](#7-the-slurm-role)
-  - [8. Rolling maintenance](#8-rolling-maintenance)
-  - [9. Secrets with vault](#9-secrets-with-vault)
-  - [Quick reference](#quick-reference)
-  - [References](#references)
-
 ---
 
 ## Before you start

@@ -16,21 +16,6 @@ relations:
 
 > **Part 7 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** Give the choir a volume knob for every singer, then find out what happens when the town is too small to hear the fast ones. By the end you'll design a filter as a mask, explain ringing, and compute an alias by hand.
 
-## Table of Contents
-- [Frequency Filtering and Aliasing](#frequency-filtering-and-aliasing)
-  - [Table of Contents](#table-of-contents)
-  - [The shirt that shimmers](#the-shirt-that-shimmers)
-  - [The recipe: transform, multiply, transform back](#the-recipe-transform-multiply-transform-back)
-  - [Low-pass: three ways to turn the highs down](#low-pass-three-ways-to-turn-the-highs-down)
-  - [Why the ideal filter rings](#why-the-ideal-filter-rings)
-  - [High-pass and notch](#high-pass-and-notch)
-  - [Try it before you scroll](#try-it-before-you-scroll)
-  - [Sampling and the Nyquist rule](#sampling-and-the-nyquist-rule)
-  - [Aliasing in practice](#aliasing-in-practice)
-  - [Wraparound: the border gotcha](#wraparound-the-border-gotcha)
-  - [Back to the shirt](#back-to-the-shirt)
-    - [References](#references)
-
 ---
 
 ## The shirt that shimmers

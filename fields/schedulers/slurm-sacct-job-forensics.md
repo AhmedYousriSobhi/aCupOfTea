@@ -24,22 +24,6 @@ relations:
 
 > **Part of the [schedulers](/fields/schedulers/slurm-intro.md) directory.** The outputs below were produced on a two-node test cluster (Slurm 23.11.4, accounting on, both `slurmd` daemons on one Ubuntu 24.04 machine), with jobs created to die in each way. Job numbers and users are invented. `sacct` needs the accounting database, so on a cluster without `slurmdbd` it has nothing to read.
 
-## Table of Contents
-
-- [Autopsy of a Job: Reading sacct Like a Coroner](#autopsy-of-a-job-reading-sacct-like-a-coroner)
-  - [Table of Contents](#table-of-contents)
-  - [The job that vanished](#the-job-that-vanished)
-  - [First, find the body](#first-find-the-body)
-  - [Reading the verdict](#reading-the-verdict)
-  - [Dying of old age](#dying-of-old-age)
-  - [The job that was evicted](#the-job-that-was-evicted)
-  - [The fields worth knowing](#the-fields-worth-knowing)
-  - [The neighbors on the shelf](#the-neighbors-on-the-shelf)
-  - [Four questions for the coroner](#four-questions-for-the-coroner)
-  - [Version notes](#version-notes)
-  - [Back to the vanished job](#back-to-the-vanished-job)
-  - [References](#references)
-
 ---
 
 ## The job that vanished

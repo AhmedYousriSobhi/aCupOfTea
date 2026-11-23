@@ -14,16 +14,6 @@ tags: [convolution, fourier-transform]
 
 > A nine-part series for people returning to digital image processing (DIP) who want the **why** behind the formulas before going back to the textbook. By the end you'll read `s = c·r^γ`, `F(u,v)` and `H(u,v)G(u,v)` without flinching, and know which one to reach for when a real image misbehaves.
 
-## Table of Contents
-- [Digital Image Processing - Overview](#digital-image-processing---overview)
-  - [Table of Contents](#table-of-contents)
-  - [Welcome to Pixel Town](#welcome-to-pixel-town)
-  - [The route](#the-route)
-  - [Who this is for](#who-this-is-for)
-  - [Conventions used in the series](#conventions-used-in-the-series)
-  - [Contents](#contents)
-  - [Related reading in this repo](#related-reading-in-this-repo)
-
 ---
 
 ## Welcome to Pixel Town

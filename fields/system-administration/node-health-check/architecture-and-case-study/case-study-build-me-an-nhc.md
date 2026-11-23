@@ -19,17 +19,6 @@ relations:
 > [!NOTE]
 > **What's real here.** The client and their names are invented. The hardware is not: every spec comes from NVIDIA's and AMD's published documentation (linked in [References](#references)). Every command output on this page was produced by running the series' tools ([`nhc_gen.py`](/fields/system-administration/node-health-check/architecture-and-case-study/nhc_gen.py), [`nhc_test_harness.sh`](/fields/system-administration/node-health-check/architecture-and-case-study/nhc_test_harness.sh)) against this cluster's definition with real NHC 1.5. The inputs are in [`case-study-delta-cluster.yaml`](/fields/system-administration/node-health-check/architecture-and-case-study/case-study-delta-cluster.yaml) and [`case-study-delta-expected.txt`](/fields/system-administration/node-health-check/architecture-and-case-study/case-study-delta-expected.txt).
 
-## Table of Contents
-- [The ask](#the-ask)
-- [The ten minutes before you reply](#the-ten-minutes-before-you-reply)
-- [Discovery: the questions, and why each one matters](#discovery-the-questions-and-why-each-one-matters)
-- [What discovery told us](#what-discovery-told-us)
-- [The first proposal](#the-first-proposal)
-- [☕ Coffee, then validation](#-coffee-then-validation)
-- [The answer back to the client](#the-answer-back-to-the-client)
-- [The reusable checklist](#the-reusable-checklist)
-- [References](#references)
-
 ---
 
 ## The ask

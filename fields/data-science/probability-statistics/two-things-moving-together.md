@@ -24,21 +24,6 @@ relations:
 
 > **Part 15 of 15.** Part of the [Probability & Statistics](/fields/data-science/probability-statistics/README.md) series. It continues from [The Courtroom for Numbers](/fields/data-science/probability-statistics/the-courtroom-for-numbers.md). By the end you will measure how two columns move together, draw the line through them, and know exactly when to distrust both. There is nothing new to memorize: two ideas you already own are reused. The scenario is invented, and every figure can be checked by hand.
 
-## Table of Contents
-
-- [Prologue: cold days, full cups](#prologue-cold-days-full-cups)
-- [Draw it first](#draw-it-first)
-- [Idea 1: do the z-scores rise and fall together?](#idea-1-do-the-z-scores-rise-and-fall-together)
-- [Idea 2: the line is least squared walking](#idea-2-the-line-is-least-squared-walking)
-- [Where it lies: four traps](#where-it-lies-four-traps)
-- [Anscombe's quartet: four crowds, one set of numbers](#anscombes-quartet-four-crowds-one-set-of-numbers)
-- [Check yourself](#check-yourself)
-- [Back to the story](#back-to-the-story)
-- [Cheat sheet](#cheat-sheet)
-- [The series in three sentences](#the-series-in-three-sentences)
-- [Answers](#answers)
-- [References](#references)
-
 * * *
 
 ## Prologue: cold days, full cups

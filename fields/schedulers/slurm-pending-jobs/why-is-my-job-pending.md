@@ -16,16 +16,6 @@ relations:
 
 > **Part 1 of [Why Is My Job Still Pending?](/fields/schedulers/slurm-pending-jobs/README.md)** By the end you'll read any pending job's reason in one look, know whether it will ever start, and have a script that tells users what to try before they open a ticket.
 
-- [Two days in the queue](#two-days-in-the-queue)
-- [Where the reason lives](#where-the-reason-lives)
-- [Only one job says Resources](#only-one-job-says-resources)
-- [The common reasons, produced on purpose](#the-common-reasons-produced-on-purpose)
-- [Rejected before it ever queues](#rejected-before-it-ever-queues)
-- [What users can fix themselves](#what-users-can-fix-themselves)
-- [A triage script, and the bug we found in it](#a-triage-script-and-the-bug-we-found-in-it)
-- [Back to the two days](#back-to-the-two-days)
-- [References](#references)
-
 ---
 
 ## Two days in the queue

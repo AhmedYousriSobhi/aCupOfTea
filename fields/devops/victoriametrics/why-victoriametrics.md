@@ -16,15 +16,6 @@ relations:
 
 > **Part 1 of the [VictoriaMetrics series](/fields/devops/victoriametrics/README.md).** No commands yet, just the mental model. By the end you'll know what VictoriaMetrics is, which of its pieces you need, whether one box will do, and what it won't do for you.
 
-- [The 02:40 page](#the-0240-page)
-- [One binary that stores, scrapes and answers](#one-binary-that-stores-scrapes-and-answers)
-- [The cast](#the-cast)
-- [One box or a cluster?](#one-box-or-a-cluster)
-- [What's free and what isn't](#whats-free-and-what-isnt)
-- [What it's not for](#what-its-not-for)
-- [Back to the head node](#back-to-the-head-node)
-- [References](#references)
-
 ---
 
 ## The 02:40 page

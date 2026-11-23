@@ -16,20 +16,6 @@ relations:
 
 > **Part 5 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** An edge is where neighbours disagree, and calculus is the tool for measuring disagreement. By the end you'll build Sobel and Laplacian kernels from first principles and explain why sharpening draws halos and amplifies noise.
 
-## Table of Contents
-- [Edges and Sharpening](#edges-and-sharpening)
-  - [Table of Contents](#table-of-contents)
-  - [The sharpen button that made things worse](#the-sharpen-button-that-made-things-worse)
-  - [A derivative is a difference](#a-derivative-is-a-difference)
-  - [Seeing it on one row](#seeing-it-on-one-row)
-  - [The gradient: how strong, which way](#the-gradient-how-strong-which-way)
-  - [Sobel: differentiate and smooth in one kernel](#sobel-differentiate-and-smooth-in-one-kernel)
-  - [Try it before you scroll](#try-it-before-you-scroll)
-  - [The Laplacian and sharpening](#the-laplacian-and-sharpening)
-  - [Unsharp masking: the sharpening everyone actually uses](#unsharp-masking-the-sharpening-everyone-actually-uses)
-  - [Back to the sharpen button](#back-to-the-sharpen-button)
-    - [References](#references)
-
 ---
 
 ## The sharpen button that made things worse

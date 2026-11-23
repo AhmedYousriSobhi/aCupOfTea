@@ -16,20 +16,6 @@ relations:
 
 > **Part 8 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** Real photos arrive blurred and noisy, and the obvious cure for the blur is also the fastest way to destroy the picture. By the end you'll write the damage as an equation, pick a filter by noise type, and see why Wiener is inverse filtering with common sense added.
 
-## Table of Contents
-- [Noise and Restoration](#noise-and-restoration)
-  - [Table of Contents](#table-of-contents)
-  - [The photo that turned to static](#the-photo-that-turned-to-static)
-  - [The damage, as an equation](#the-damage-as-an-equation)
-  - [A field guide to noise](#a-field-guide-to-noise)
-  - [Matching the filter to the noise](#matching-the-filter-to-the-noise)
-  - [Try it before you scroll](#try-it-before-you-scroll)
-  - [Inverse filtering: dividing by the blur](#inverse-filtering-dividing-by-the-blur)
-  - [Wiener: dividing with manners](#wiener-dividing-with-manners)
-  - [Scoring a restoration](#scoring-a-restoration)
-  - [Back to the static](#back-to-the-static)
-    - [References](#references)
-
 ---
 
 ## The photo that turned to static

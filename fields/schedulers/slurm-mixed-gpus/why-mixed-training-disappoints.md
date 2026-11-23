@@ -16,19 +16,6 @@ relations:
 
 > **Part 2 of the [Mixing GPU Types in Slurm series](/fields/schedulers/slurm-mixed-gpus/README.md).** [Part 1](/fields/schedulers/slurm-mixed-gpus/four-ways-to-mix-gpus.md) showed that Slurm can allocate H100s and A100s to one job. This page is about what happens next. By the end you'll be able to explain, with datasheet numbers, why a mixed training run is slower than it looks, and list the scheduling costs heterogeneous jobs carry even when the workload is perfect.
 
-## Table of Contents
-- [Why Mixed-GPU Training Disappoints](#why-mixed-gpu-training-disappoints)
-  - [Table of Contents](#table-of-contents)
-  - [Doing it properly this time](#doing-it-properly-this-time)
-  - [The rowing boat rule](#the-rowing-boat-rule)
-  - [The numbers: how much the fast GPUs wait](#the-numbers-how-much-the-fast-gpus-wait)
-  - [Try it before you scroll](#try-it-before-you-scroll)
-  - [The features the A100s switch off](#the-features-the-a100s-switch-off)
-  - [Can you rebalance the work?](#can-you-rebalance-the-work)
-  - [The queue tax: what co-scheduling costs](#the-queue-tax-what-co-scheduling-costs)
-  - [So is it "not functional"?](#so-is-it-not-functional)
-  - [References](#references)
-
 ---
 
 ## Doing it properly this time

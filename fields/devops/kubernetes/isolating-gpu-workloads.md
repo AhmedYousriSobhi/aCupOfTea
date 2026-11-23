@@ -16,18 +16,6 @@ relations:
 
 > **Page 7 of the [Kubernetes series](/fields/devops/kubernetes/README.md).** [Page 3](/fields/devops/kubernetes/fake-gpus-in-kubernetes.md) faked GPUs with a hand-patched counter. This page is the real thing: how a device plugin advertises GPUs, how to keep web services off your GPU nodes and GPU jobs on them, and why a 64-GPU training job needs a kind of scheduling Kubernetes was never built for. By the end you'll be able to design GPU isolation on a shared cluster and explain where Kubernetes still differs from Slurm.
 
-## Table of Contents
-- [Isolating GPU Workloads: Taints, Labels and the Device Plugin](#isolating-gpu-workloads-taints-labels-and-the-device-plugin)
-  - [Table of Contents](#table-of-contents)
-  - [The logging agent that ate a GPU node](#the-logging-agent-that-ate-a-gpu-node)
-  - [Concept 1: the device plugin is a translator](#concept-1-the-device-plugin-is-a-translator)
-  - [Concept 2: labels attract, taints repel](#concept-2-labels-attract-taints-repel)
-  - [The trap: a toleration is a permission, not a destination](#the-trap-a-toleration-is-a-permission-not-a-destination)
-  - [Try it before you scroll](#try-it-before-you-scroll)
-  - [Concept 3: training jobs need all-or-nothing](#concept-3-training-jobs-need-all-or-nothing)
-  - [Slurm and Kubernetes, side by side](#slurm-and-kubernetes-side-by-side)
-    - [References](#references)
-
 ---
 
 ## The logging agent that ate a GPU node

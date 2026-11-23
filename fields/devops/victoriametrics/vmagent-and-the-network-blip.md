@@ -16,17 +16,6 @@ relations:
 
 > **Part 3 of the [VictoriaMetrics series](/fields/devops/victoriametrics/README.md).** [Part 2](/fields/devops/victoriametrics/single-node-in-ten-minutes.md) gave you a single node that scrapes its own targets. This page moves scraping to a vmagent and proves, on a lab, that it keeps every sample through a storage outage, and the one edit that throws them away.
 
-- [The switch upgrade](#the-switch-upgrade)
-- [Collect at the edge, store in the middle](#collect-at-the-edge-store-in-the-middle)
-- [Run it](#run-it)
-- [The outage test](#the-outage-test)
-- [The trap: tidy up a URL, lose the buffer](#the-trap-tidy-up-a-url-lose-the-buffer)
-- [The fix: pin the queue path](#the-fix-pin-the-queue-path)
-- [How big should the buffer be?](#how-big-should-the-buffer-be)
-- [What vmagent is not for](#what-vmagent-is-not-for)
-- [Back to the switch upgrade](#back-to-the-switch-upgrade)
-- [References](#references)
-
 ---
 
 ## The switch upgrade

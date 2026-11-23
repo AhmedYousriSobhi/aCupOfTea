@@ -17,19 +17,6 @@ relations:
 
 > **Part 4 of the [Predicting GPU Node Failures series](/fields/system-administration/gpu-failure-prediction/README.md).** A prediction nobody acts on at 23:10 on a Friday is a log line. But automation that acts on predictions can do more damage than any single GPU. This page is about the principles that keep automated response safe. By the end you'll be able to say which actions to automate, how to limit the harm a bad rule can do, and how to roll it out without betting the cluster.
 
-## Table of Contents
-- [Acting Without Making It Worse](#acting-without-making-it-worse)
-  - [Table of Contents](#table-of-contents)
-  - [The real risk is your own automation](#the-real-risk-is-your-own-automation)
-  - [Principle 1: automate the reversible, hand off the irreversible](#principle-1-automate-the-reversible-hand-off-the-irreversible)
-  - [Principle 2: lead time must beat drain time](#principle-2-lead-time-must-beat-drain-time)
-  - [Principle 3: correlated alerts are rarely correlated hardware](#principle-3-correlated-alerts-are-rarely-correlated-hardware)
-  - [Principle 4: earn trust in stages](#principle-4-earn-trust-in-stages)
-  - [Principle 5: every action must be findable and undoable](#principle-5-every-action-must-be-findable-and-undoable)
-  - [Principle 6: humans hear about everything](#principle-6-humans-hear-about-everything)
-  - [After the drain: reset, reboot or RMA](#after-the-drain-reset-reboot-or-rma)
-    - [References](#references)
-
 ---
 
 ## The real risk is your own automation
