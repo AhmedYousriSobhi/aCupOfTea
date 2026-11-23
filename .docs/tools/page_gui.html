@@ -357,7 +357,7 @@ function addBox({ keyLabel, keyPlaceholder, button, toggleText, onAdd }) {
 
 /* The questions about a page. The essentials (summary, kind, subjects) come first; tags, level and related
    pages are folded into "More options". Fields in `have` are already in the page and left alone. */
-function metaForm(opts, have = [], onChange = () => {}, titleOf = () => "") {
+function metaForm(opts, have = [], onChange = () => {}, titleOf = () => "", pathOf = () => "") {
   const limits = opts.limits;
   const summary = h("input", { type: "text", maxlength: "200" });
   const count = h("span", { class: "hint", "aria-live": "off" }, "0/200");
@@ -383,6 +383,10 @@ function metaForm(opts, have = [], onChange = () => {}, titleOf = () => "") {
     }));
     drawGraph(picked, fresh);
     relNote.textContent = bad.length ? "\u26a0 " + bad.map(p => p.text).join("; ") + (bad.length > 1 ? " are" : " is") + " not marked as related in taxonomy.yaml. A page usually belongs to one area; this is only a warning, you can still create it." : "";
+    if (bad.length) api("/api/pairs?subjects=" + encodeURIComponent(picked.join(","))).then(r => {   // why, from the pages and the words
+      const lines = (r.pairs || []).filter(p => bad.some(b => b.a === p.a && b.b === p.b)).map(p => labelOf(p.a) + " + " + labelOf(p.b) + ": " + p.why);
+      if (lines.length && relNote.textContent.startsWith("\u26a0")) relNote.textContent += " Evidence: " + lines.join(" | ");
+    }).catch(() => {});
     relFix.replaceChildren(...bad.map(p => h("button", { type: "button", onclick: async e => {
       const btn = e.currentTarget; btn.disabled = true;
       try {
@@ -436,12 +440,29 @@ function metaForm(opts, have = [], onChange = () => {}, titleOf = () => "") {
   const prereq = chipInput({ known: ids, onChange: () => { moreChanged(); onChange(); } });
   const related = chipInput({ known: ids, onChange: () => { moreChanged(); onChange(); } });
   const keep = (key, make) => have.includes(key) ? null : make();
+  /* Subjects and related pages suggested from the words of the title and summary (suggest_subjects.py): a click adds one. */
+  const hintSubjects = h("div", { class: "hint", "aria-live": "polite" });
+  const hintPages = h("div", { class: "hint", "aria-live": "polite" });
+  const suggest = debounce(async () => {
+    const title = titleOf();
+    if (!title.trim()) { hintSubjects.replaceChildren(); hintPages.replaceChildren(); return; }
+    const s = await api("/api/suggest?title=" + encodeURIComponent(title) + "&summary=" + encodeURIComponent(summary.value) + "&path=" + encodeURIComponent(pathOf()));
+    const pick = (label, why, fn) => h("button", { type: "button", title: why, onclick: fn }, label);
+    hintSubjects.replaceChildren(...(s.subjects.length ? ["Suggested from the text: ", ...s.subjects.map(x => pick(labelOf(x.key) + " (" + x.score + ")", x.why, () => {
+      if (!domains.has(x.key) || !domains.get().includes(x.key)) { if (domains.get().length < limits.domains) domains.set([...domains.get(), x.key]); }
+    }))] : []));
+    hintPages.replaceChildren(...(s.pages.length ? ["Closest pages by text: ", ...s.pages.slice(0, 4).map(x => pick(x.id + " (" + x.score + ")", x.why, () => {
+      if (!related.state.items.includes(x.id)) related.set([...related.state.items, x.id]);
+    }))] : []));
+  }, 400);
+  summary.addEventListener("input", suggest);
+  suggest();
   const moreParts = [
     keep("tags", () => field("Tags", "up to " + limits.tags + "; a new tag is added to taxonomy.yaml", tags.el, tags.input)),
     keep("level", () => field("Level", "beginner pages show under Beginner friendly", level, level)),
     keep("relations", () => h("div", {},
       field("Read first (prerequisites)", "ids of pages", prereq.el, prereq.input),
-      field("See also (related)", "ids of pages", related.el, related.input)))].filter(Boolean);
+      field("See also (related)", "ids of pages", related.el, related.input), hintPages))].filter(Boolean);
   function moreChanged() {
     const bits = [];
     if (tags.state.items.length) bits.push(tags.state.items.length + " tag" + (tags.state.items.length > 1 ? "s" : ""));
@@ -456,14 +477,14 @@ function metaForm(opts, have = [], onChange = () => {}, titleOf = () => "") {
     keepNote,
     keep("summary", () => field("Summary", "one line shown in search and Explore", h("div", {}, summary, count), summary)),
     keep("type", () => field("Kind of page", "one or two; the first you pick is the main one", h("div", {}, types.el, addType))),
-    keep("domains", () => field("Subjects", "up to " + limits.domains + " that go together; they put the page in Explore by subject", h("div", {}, domains.el, graph, relNote, relFix, addDomain))),
+    keep("domains", () => field("Subjects", "up to " + limits.domains + " that go together; they put the page in Explore by subject", h("div", {}, domains.el, hintSubjects, graph, relNote, relFix, addDomain))),
     more);
   const values = () => ({ summary: summary.value, types: types.get(), domains: domains.get(), tags: tags.state.items,
     level: level.value, prerequisites: prereq.state.items, related: related.state.items,
     new_domains: newDomains.filter(d => domains.get().includes(d.key)),
     new_types: newTypes.filter(d => types.get().includes(d.key)),
     new_tags: tags.state.items.filter(t => tags.state.isNew.has(t)).map(t => ({ key: t, label: titleCase(t) })) });
-  return { el, more, types, domains, tags, level, summary, prereq, related, values,
+  return { el, more, types, domains, tags, level, summary, prereq, related, values, suggest,
     /* put saved answers back (a draft) */
     restore(v) {
       summary.value = v.summary || ""; count.textContent = summary.value.length + "/200";
@@ -569,7 +590,7 @@ async function newTab(view) {
     if (!touched && folder.value.trim()) { restoring = true; meta.domains.set(o.default_domains); meta.types.set(o.default_type); restoring = false; }
     changed();
   }, 300);
-  title.addEventListener("input", refresh); folder.addEventListener("input", refresh);
+  title.addEventListener("input", () => meta.suggest()); title.addEventListener("input", refresh); folder.addEventListener("input", refresh);
   name.addEventListener("input", () => { nameEdited = true; changed(); });
   createFolder.addEventListener("change", changed);
   function valid() {
@@ -662,7 +683,7 @@ async function adoptTab(view) {
   let meta = null;
   const picker = pagePicker({ pages, label: p => p.path + (p.title ? "  –  " + p.title : "") + (p.missing.length ? "   [missing: " + p.missing.map(k => FIELD_NAMES[k]).join(", ") + "]" : ""),
     extra: p => "missing " + p.missing.map(k => FIELD_NAMES[k]).join(" "), card: pageCard,
-    onChoose(p) { out.replaceChildren(); meta = metaForm(opts, p.have); holder.replaceChildren(meta.el); } });
+    onChoose(p) { out.replaceChildren(); meta = metaForm(opts, p.have, undefined, () => p.title || "", () => p.path); holder.replaceChildren(meta.el); } });
   if (preselect) { picker.choose(preselect); preselect = null; }      // sent here by a problem in Fix problems
   const submit = async (btn, dry) => {
     if (!meta) { resultBox(out)({ ok: false, output: "Choose a page first." }); picker.focus(); return; }
@@ -691,7 +712,7 @@ async function editTab(view) {
       h("div", { class: "meta" }, p.values.types.map(t => h("span", { class: "tag" }, kindIcon(t), t)),
         p.values.domains.map(d => h("span", { class: "tag" }, dot(d), d)), p.values.tags.map(t => h("span", { class: "tag" }, "#" + t)),
         p.values.level ? h("span", { class: "tag" }, p.values.level) : null)),
-    onChoose(p) { out.replaceChildren(); meta = metaForm(opts, []); holder.replaceChildren(meta.el); meta.restore(p.values);
+    onChoose(p) { out.replaceChildren(); meta = metaForm(opts, [], undefined, () => p.title || "", () => p.path); holder.replaceChildren(meta.el); meta.restore(p.values);
       if (meta.more && (p.values.tags.length || p.values.level || p.values.prerequisites.length || p.values.related.length)) meta.more.open = true; } });
   const submit = async (btn, dry) => {
     if (!meta) { resultBox(out)({ ok: false, output: "Choose a page first." }); picker.focus(); return; }
