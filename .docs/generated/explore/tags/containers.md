@@ -4,7 +4,7 @@
 
 - [Build a Two-Node Kubernetes Lab on Your Laptop (and Survive the DNS Pothole)](/fields/devops/kubernetes/build-a-two-node-k3s-lab.md) — Build a two-VM Kubernetes lab on your laptop with Vagrant, libvirt and k3s, and dodge the DNS and network potholes. *(intermediate · 7 min)*  
   [`containers`](/.docs/generated/explore/tags/containers.md) [`devops`](/.docs/generated/explore/tags/devops.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`kubernetes`](/.docs/generated/explore/tags/kubernetes.md)
-- [Containers 101](/fields/libraries-frameworks-containers/101-containers.md) — Containers from the ground up: what happens at boot, kernel and user space, virtual machines, then namespaces, cgroups and Linux containers. *(8 min)*  
+- [Containers 101](/fields/libraries-frameworks-containers/101-containers.md) — Containers from the ground up: what happens at boot, kernel and user space, virtual machines, then namespaces, cgroups and Linux containers. *(7 min)*  
   [`containers`](/.docs/generated/explore/tags/containers.md)
 - [Containers on Slurm with Pyxis and Enroot](/fields/schedulers/slurm-ai-clusters/containers-with-pyxis.md) — Running Slurm job steps in containers with Pyxis and Enroot - the node that silently ran outside the container, read-only images, mounts, node-local paths, named containers, and the PyTorch env hook. *(intermediate · 8 min)*  
   [`containers`](/.docs/generated/explore/tags/containers.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)

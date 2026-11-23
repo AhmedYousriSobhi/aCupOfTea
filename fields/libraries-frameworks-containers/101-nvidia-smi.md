@@ -8,18 +8,6 @@ In our daily work, we use GPU alot rather than CPU in the heavy computations, so
 In this doc, we will try to talk about main points and the support points for these main points, so please refer to the main source of knowledge "The Official DOCUMENTATION" for [nvidia-smi](https://developer.download.nvidia.com/compute/DCGM/docs/nvidia-smi-367.38.pdf)
 
 # Table of Content
-- [101 - Nvidia-smi](#101---nvidia-smi)
-- [Table of Content](#table-of-content)
-- [What is NVSMI?](#what-is-nvsmi)
-- [Where to get?](#where-to-get)
-- [How it looks?](#how-it-looks)
-- [Output Desicription](#output-desicription)
-  - [GPU's State Table](#gpus-state-table)
-  - [Processes Table](#processes-table)
-- [Driver models](#driver-models)
-- [Conrtol Your GPUs](#conrtol-your-gpus)
-- [Note](#note)
-- [References](#references)
 # What is NVSMI?
 Also known as Nvidia-smi, which is a command line utility tool by Nvidia.
 
