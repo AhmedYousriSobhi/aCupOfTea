@@ -1997,7 +1997,7 @@
     "level": "intermediate",
     "order": 6,
     "path": "fields/generative-ai/llm-inference-performance/sparsity-vs-quantization.md",
-    "reading_time_min": 10,
+    "reading_time_min": 9,
     "relations": {
       "prerequisites": [
         "llm-perf-structured-sparsity"

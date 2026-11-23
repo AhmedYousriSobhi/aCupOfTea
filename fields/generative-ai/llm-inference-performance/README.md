@@ -13,16 +13,6 @@ tags: [gpu, llm, nvidia, transformers]
 
 > A six-part series on the most expensive misunderstanding in AI infrastructure: buying compute when you're short of bandwidth. By the end you'll be able to predict a model's speed on any GPU with a pencil, explain why vLLM, quantization, tensor parallelism and 2:4 sparsity work instead of just naming them, and decode the asterisk on every GPU datasheet.
 
-## Table of Contents
-- [LLM Inference Performance - Overview](#llm-inference-performance---overview)
-  - [Table of Contents](#table-of-contents)
-  - [The upgrade that didn't upgrade](#the-upgrade-that-didnt-upgrade)
-  - [The route](#the-route)
-  - [Who this is for](#who-this-is-for)
-  - [The numbers we'll use](#the-numbers-well-use)
-  - [Contents](#contents)
-  - [Related reading in this repo](#related-reading-in-this-repo)
-
 ---
 
 ## The upgrade that didn't upgrade

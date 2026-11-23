@@ -10,17 +10,6 @@ sidebar_group: LLM VSCode
 Large language models (LLMs) have the potential to revolutionize programming, making it more efficient, accessible, and creative. 
 
 # Table of Content
-- [Generative AI - LLM VSCode](#generative-ai---llm-vscode)
-- [Table of Content](#table-of-content)
-- [Motivation](#motivation)
-- [Llm-VsCode](#llm-vscode)
-  - [Promoting and Suggesstions](#promoting-and-suggesstions)
-  - [Rate Limit Reached Warning](#rate-limit-reached-warning)
-- [StarCoder](#starcoder)
-  - [Notebooks support](#notebooks-support)
-  - [Configuration](#configuration)
-  - [Usage of StarCoder](#usage-of-starcoder)
-
 # Motivation
 LLMs can help programmers in a variety of ways, including:
 

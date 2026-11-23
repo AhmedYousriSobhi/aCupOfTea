@@ -14,20 +14,6 @@ tags: [gpu, nvidia]
 
 > **Part 1 of the [LLM Inference Performance series](/fields/generative-ai/llm-inference-performance/README.md).** A GPU has two speed limits, and your workload always hits one of them first. By the end of this page you'll know which one, using only a datasheet and one division, and you'll never again be surprised by an "upgrade" that didn't upgrade.
 
-## Table of Contents
-- [Compute-Bound vs Memory-Bandwidth-Bound](#compute-bound-vs-memory-bandwidth-bound)
-  - [Table of Contents](#table-of-contents)
-  - [The pizza place that hired the wrong person](#the-pizza-place-that-hired-the-wrong-person)
-  - [One number about the recipe](#one-number-about-the-recipe)
-  - [One number about the kitchen](#one-number-about-the-kitchen)
-  - [Try it before you scroll](#try-it-before-you-scroll)
-  - [The roofline: the whole idea in one picture](#the-roofline-the-whole-idea-in-one-picture)
-  - [Two workloads, opposite fates](#two-workloads-opposite-fates)
-  - [Plot twist: there are four walls, not two](#plot-twist-there-are-four-walls-not-two)
-  - [The asterisk that doubles your mistake](#the-asterisk-that-doubles-your-mistake)
-    - [What the roofline is not](#what-the-roofline-is-not)
-    - [References](#references)
-
 ---
 
 ## The pizza place that hired the wrong person
