@@ -17,15 +17,6 @@ relations:
 # Date Evaluation - Model Behavior - Bias & Variance Trade Off
 
 # Table of Content
-- [Date Evaluation - Model Behavior - Bias \& Variance Trade Off](#date-evaluation---model-behavior---bias--variance-trade-off)
-- [Table of Content](#table-of-content)
-- [Bias](#bias)
-- [Variance](#variance)
-- [Bias-Variance Trade-Off](#bias-variance-trade-off)
-- [Consistent vs Accurate](#consistent-vs-accurate)
-  - [Consistent but Inaccurate](#consistent-but-inaccurate)
-  - [Incosistent but Accurate](#incosistent-but-accurate)
-
 # Bias
 Bias refers to the error introduced by approximating a real-world problem, which may be complex, by a simplified model. Bias in a machine learning model occurs when the predicted values are further from the actual values.
 

@@ -15,29 +15,6 @@ tags:
 Unsupervised machine learning is a type of machine learning where the model is trained on a dataset without labeled target values or explicit supervision. In unsupervised learning, the algorithm is tasked with finding patterns, structures, or relationships within the data on its own. 
 
 # Table of Content
-- [Tabular Data - Concepts in Machine Learning - Unsupervised Learning](#tabular-data---concepts-in-machine-learning---unsupervised-learning)
-- [Table of Content](#table-of-content)
-- [Description of Unspervised ML](#description-of-unspervised-ml)
-- [Two cases of unsupervised learning](#two-cases-of-unsupervised-learning)
-- [The Curse of dimensionality](#the-curse-of-dimensionality)
-- [K-means](#k-means)
-- [Choosing the right Clustering ALgorithm](#choosing-the-right-clustering-algorithm)
-- [Clustering Algorithms Comparison](#clustering-algorithms-comparison)
-- [Determining The Number of Clusters](#determining-the-number-of-clusters)
-  - [Silhouette Score](#silhouette-score)
-  - [Elbow Method](#elbow-method)
-    - [Python Implementation](#python-implementation)
-- [Dimensionality Reduction Techniques](#dimensionality-reduction-techniques)
-  - [Technical Comparison](#technical-comparison)
-- [Principal Component Analysis (PCA)](#principal-component-analysis-pca)
-  - [Example: Dimensionality Reduction using PCA](#example-dimensionality-reduction-using-pca)
-  - [PCA Algorithm](#pca-algorithm)
-  - [PRACTICE PROBLEMS BASED ON PRINCIPAL COMPONENT ANALYSIS](#practice-problems-based-on-principal-component-analysis)
-    - [Problem-01](#problem-01)
-    - [Solution](#solution)
-  - [PCA Technical Points](#pca-technical-points)
-- [Credits](#credits)
-  
 # Description of Unspervised ML
 Here's a description of unsupervised machine learning:
 
