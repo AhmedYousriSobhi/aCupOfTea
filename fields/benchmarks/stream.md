@@ -6,18 +6,6 @@ sidebar_label: STREAM and BabelStream
 
 > **TL;DR** — Compute (HPL) gets all the glory. Communication (OSU/NCCL) gets all the debugging attention. Memory bandwidth quietly decides how fast *everything else* actually runs, and almost nobody benchmarks it first.
 
-## Table of Contents
-- [STREAM \& BabelStream: Measuring the Thing Everyone Forgets to Measure](#stream--babelstream-measuring-the-thing-everyone-forgets-to-measure)
-  - [Table of Contents](#table-of-contents)
-  - [Why this benchmark exists](#why-this-benchmark-exists)
-  - [Picking your flavor of STREAM](#picking-your-flavor-of-stream)
-  - [1. Classic STREAM (CPU)](#1-classic-stream-cpu)
-  - [2. BabelStream (the GPU workhorse)](#2-babelstream-the-gpu-workhorse)
-    - [Walking through the math](#walking-through-the-math)
-    - [Choosing arraysize on an H200](#choosing-arraysize-on-an-h200)
-  - [3. STREAM-GPU (the vendor-strict version)](#3-stream-gpu-the-vendor-strict-version)
-  - [Quick-reference cheat sheet](#quick-reference-cheat-sheet)
-
 ---
 
 ## Why this benchmark exists
