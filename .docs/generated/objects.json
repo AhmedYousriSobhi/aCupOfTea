@@ -788,7 +788,7 @@
     "level": "beginner",
     "order": 1,
     "path": "fields/digital-image-processing/images-are-just-matrices.md",
-    "reading_time_min": 7,
+    "reading_time_min": 6,
     "relations": {
       "prerequisites": [],
       "related": []
@@ -892,7 +892,7 @@
     "level": "beginner",
     "order": 4,
     "path": "fields/digital-image-processing/spatial-filtering.md",
-    "reading_time_min": 7,
+    "reading_time_min": 6,
     "relations": {
       "prerequisites": [
         "dip-intensity-transforms-histograms"
