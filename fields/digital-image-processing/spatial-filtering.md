@@ -17,20 +17,6 @@ relations:
 
 > **Part 4 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** Now the citizens talk to their neighbours. By the end you'll compute a filtered pixel by hand, know why convolution flips the kernel (and why CNN libraries quietly don't), and see why a Gaussian blur costs far less than it looks.
 
-## Table of Contents
-- [Spatial Filtering](#spatial-filtering)
-  - [Table of Contents](#table-of-contents)
-  - [One bad pixel](#one-bad-pixel)
-  - [The neighbourhood vote](#the-neighbourhood-vote)
-  - [Correlation and convolution](#correlation-and-convolution)
-  - [Try it before you scroll](#try-it-before-you-scroll)
-  - [Mean versus median](#mean-versus-median)
-  - [The edge of the map](#the-edge-of-the-map)
-  - [Gaussian blur and the separability trick](#gaussian-blur-and-the-separability-trick)
-  - [The CNN connection](#the-cnn-connection)
-  - [Back to the bad pixel](#back-to-the-bad-pixel)
-    - [References](#references)
-
 ---
 
 ## One bad pixel
