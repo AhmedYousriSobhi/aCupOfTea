@@ -16,16 +16,6 @@ relations:
 
 > **Part 4 of the [Ansible series](/fields/devops/ansible/README.md).** [Part 3](/fields/devops/ansible/idempotence-and-handlers.md) built a playbook that deploys `slurm.conf` safely. This page turns it into a **role** that works on Ubuntu and Rocky, takes per-group values from the inventory, and proves every node ended up with the same file.
 
-- [Big jobs that never start](#big-jobs-that-never-start)
-- [What a role is](#what-a-role-is)
-- [The OS-family maze, done right](#the-os-family-maze-done-right)
-- [defaults or vars? The precedence trap](#defaults-or-vars-the-precedence-trap)
-- [Whose value is it?](#whose-value-is-it)
-- [Prove every node got the same file](#prove-every-node-got-the-same-file)
-- [The finished role](#the-finished-role)
-- [Back to the big jobs](#back-to-the-big-jobs)
-- [References](#references)
-
 ---
 
 ## Big jobs that never start

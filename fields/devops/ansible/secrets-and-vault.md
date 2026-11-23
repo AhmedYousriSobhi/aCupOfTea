@@ -16,18 +16,6 @@ relations:
 
 > **Part 6 of the [Ansible series](/fields/devops/ansible/README.md).** [Part 5](/fields/devops/ansible/rolling-maintenance.md) changed busy nodes safely. This last page handles the secrets those playbooks need: encrypt them in the repo, replace one that leaked, roll the new one out without breaking the cluster, and keep secrets out of logs.
 
-- [The Munge Key in Git: Secrets, Vault and Rotation](#the-munge-key-in-git-secrets-vault-and-rotation)
-  - [Found in a fork](#found-in-a-fork)
-  - [Why this key matters](#why-this-key-matters)
-  - [Vault in five minutes](#vault-in-five-minutes)
-  - [Encrypting isn't enough: history](#encrypting-isnt-enough-history)
-  - [Rotating without splitting the cluster](#rotating-without-splitting-the-cluster)
-  - [What ansible-core 2.22 hides, and what it doesn't](#what-ansible-core-222-hides-and-what-it-doesnt)
-  - [When the password is missing or wrong](#when-the-password-is-missing-or-wrong)
-  - [A guard that stops the next one](#a-guard-that-stops-the-next-one)
-  - [Back to the fork](#back-to-the-fork)
-  - [References](#references)
-
 ---
 
 ## Found in a fork

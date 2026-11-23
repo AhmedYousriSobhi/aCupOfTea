@@ -16,22 +16,6 @@ relations:
 
 > **Page 8 of the [Kubernetes series](/fields/devops/kubernetes/README.md).** A distributed training job passes through about a dozen components before its first gradient crosses the network. This page follows one 8-GPU job through all of them, in the order they actually run, and fact-checks a popular description of that journey along the way. By the end you'll know which component to blame when a job is stuck, and you'll be able to narrate the whole path in an interview without the three mistakes most descriptions make.
 
-## Table of Contents
-- [The Job Execution Journey: From `kubectl apply` to the First All-Reduce](#the-job-execution-journey-from-kubectl-apply-to-the-first-all-reduce)
-  - [Table of Contents](#table-of-contents)
-  - [Where is my job?](#where-is-my-job)
-  - [The popular version, fact-checked](#the-popular-version-fact-checked)
-  - [Stop 1: the API server's four gates](#stop-1-the-api-servers-four-gates)
-  - [Stop 2: Kueue says "not yet"](#stop-2-kueue-says-not-yet)
-  - [Stop 3: the operator builds the job](#stop-3-the-operator-builds-the-job)
-  - [Stop 4: kube-scheduler picks nodes](#stop-4-kube-scheduler-picks-nodes)
-  - [Try it before you scroll](#try-it-before-you-scroll)
-  - [Stop 5: the kubelet and the device plugin](#stop-5-the-kubelet-and-the-device-plugin)
-  - [Stop 6: network first, then containers](#stop-6-network-first-then-containers)
-  - [The whole journey on one page](#the-whole-journey-on-one-page)
-  - [When it gets stuck: which stop to check](#when-it-gets-stuck-which-stop-to-check)
-    - [References](#references)
-
 ---
 
 ## Where is my job?

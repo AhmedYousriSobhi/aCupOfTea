@@ -16,15 +16,6 @@ sidebar_label: kubectl troubleshooting
 
 > **A companion to the [Kubernetes series](/fields/devops/kubernetes/README.md).** It's 6 PM, a pod is wrong, and you remember half of a command. This page is the shelf: five questions, asked in the same order every time, with the command for each.
 
-- [The ritual](#the-ritual)
-- [1. Where is it?](#1-where-is-it)
-- [2. What does it say?](#2-what-does-it-say)
-- [3. What did the cluster say?](#3-what-did-the-cluster-say)
-- [4. Why did it die?](#4-why-did-it-die)
-- [5. How do I look inside?](#5-how-do-i-look-inside)
-- [The Job that lost index 417](#the-job-that-lost-index-417)
-- [References](#references)
-
 ---
 
 ## The ritual
