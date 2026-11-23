@@ -66,7 +66,11 @@
     *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; }
   }
   /* Reading progress bar and back-to-top button (.docs/reading-progress.js) */
-  #read-progress { position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 70; background: var(--theme-color); transform-origin: 0 50%; transform: scaleX(0); pointer-events: none; }
+  #read-progress { position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 70; pointer-events: none; }
+  #read-progress[hidden] { display: none; }
+  #read-progress span { position: absolute; top: 0; bottom: 0; left: 0; width: 0; }
+  #read-progress .read-main { background: #2e9d5b; }
+  #read-progress .read-extra { background: #9aa3b2; }
   #back-to-top { position: fixed; right: 16px; bottom: 20px; z-index: 55; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--border-color, #ddd); background: var(--color-bg); color: var(--theme-color); display: flex; align-items: center; justify-content: center; padding: 0; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
   /* the Previous/Next links end the page: keep room below them so the button never covers Next */
   .docsify-pagination-container { margin-bottom: 72px; }
