@@ -16,16 +16,6 @@ relations:
 
 > **Part 5 of the [Node Health Check series](/fields/system-administration/node-health-check/README.md).** A config typo in `nhc.conf` is the fastest way to take a 2,000-node cluster to zero. Here's how to make that impossible, or at least boring.
 
-## Table of Contents
-- [The failure mode we're designing against](#the-failure-mode-were-designing-against)
-- [Phase 0: inventory](#phase-0-inventory)
-- [Phase 1: dry run, fleet-wide](#phase-1-dry-run-fleet-wide)
-- [Phase 2: triage, config bug or node bug?](#phase-2-triage-config-bug-or-node-bug)
-- [Phase 3: canary, enforcing on a few nodes](#phase-3-canary-enforcing-on-a-few-nodes)
-- [Phase 4: enforce everywhere, with a circuit breaker](#phase-4-enforce-everywhere-with-a-circuit-breaker)
-- [Day two: logs, metrics and config changes](#day-two-logs-metrics-and-config-changes)
-- [Jitter: the "NHC slowed my job" conversation](#jitter-the-nhc-slowed-my-job-conversation)
-
 ---
 
 ## The failure mode we're designing against

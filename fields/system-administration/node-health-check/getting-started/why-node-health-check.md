@@ -16,15 +16,6 @@ relations:
 
 > **Part 1 of the [Node Health Check series](/fields/system-administration/node-health-check/README.md).** No commands to run yet. Grab the tea, this one is the "why" and the mental model everything else hangs on.
 
-## Table of Contents
-- [The night one node ate 400 jobs](#the-night-one-node-ate-400-jobs)
-- [Meet NHC](#meet-nhc)
-- [How it works, in one picture](#how-it-works-in-one-picture)
-- [The "NHC:" handshake](#the-nhc-handshake)
-- [Four moments to check a node](#four-moments-to-check-a-node)
-- [What NHC is not](#what-nhc-is-not)
-- [Where we go next](#where-we-go-next)
-
 ---
 
 ## The night one node ate 400 jobs

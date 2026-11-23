@@ -2,7 +2,7 @@
 
 # Slurm
 
-- [Acting Without Making It Worse](/fields/system-administration/gpu-failure-prediction/from-alert-to-drain.md) — The principles of safe automated response to GPU failure predictions - reversibility, drain semantics, blast radius, drain budgets, staged rollout and rollback. *(advanced · 9 min)*  
+- [Acting Without Making It Worse](/fields/system-administration/gpu-failure-prediction/from-alert-to-drain.md) — The principles of safe automated response to GPU failure predictions - reversibility, drain semantics, blast radius, drain budgets, staged rollout and rollback. *(advanced · 8 min)*  
   [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [Add GPU Temperature Rules to a Health Check](/fields/system-administration/node-health-check/gpu-temperature/quick-guide.md) — Quick guide: a ceiling rule that drains above a limit, then an idle timer that warns before it drains, with a read-only fleet scan first. *(advanced · 4 min)*  
   [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
@@ -66,7 +66,7 @@
   [`affinity`](/.docs/generated/explore/tags/affinity.md) [`mpi`](/.docs/generated/explore/tags/mpi.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [Plugging NHC into Slurm (and Friends)](/fields/system-administration/node-health-check/getting-started/slurm-integration.md) — The three slurm.conf lines, which node states to check, timeouts that don't fight each other, prolog and epilog patterns, reboots, plus PBS and cron. *(intermediate · 7 min)*  
   [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
-- [Predicting GPU Node Failures - Overview](/fields/system-administration/gpu-failure-prediction/README.md) — A five-part series on how GPU memory fails, what its telemetry really says, and how to turn that into predictions you can trust before a training run dies. *(advanced · 5 min)*  
+- [Predicting GPU Node Failures - Overview](/fields/system-administration/gpu-failure-prediction/README.md) — A five-part series on how GPU memory fails, what its telemetry really says, and how to turn that into predictions you can trust before a training run dies. *(advanced · 4 min)*  
   [`gpu`](/.docs/generated/explore/tags/gpu.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`nvidia`](/.docs/generated/explore/tags/nvidia.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [Reading the Reason Column: Why Is My Slurm Job Pending?](/fields/schedulers/slurm-pending-jobs/why-is-my-job-pending.md) — What Slurm's common pending reasons mean, which ones fix themselves and which never will, what users can fix without an admin, and a small triage script tested against each reason. *(beginner · 7 min)*  
   [`hpc`](/.docs/generated/explore/tags/hpc.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)

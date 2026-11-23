@@ -3,14 +3,6 @@ summary: How to set up Vagrant with the libvirt provider and sync a folder betwe
 ---
 # System Administration - Virtual Machines
 
-## Table of Contents
-- [System Administration - Virtual Machines](#system-administration---virtual-machines)
-  - [Table of Contents](#table-of-contents)
-  - [Vagrant - Provider Libvirt](#vagrant---provider-libvirt)
-    - [Installation - Steps](#installation---steps)
-    - [Synching Folder between Host and VMs](#synching-folder-between-host-and-vms)
-  - [References](#references)
-
 ## Vagrant - Provider Libvirt
 ### Installation - Steps
 1. Make sure your hardware supports the necessary virtualisation extensions for Kernel-based Virtual Machine (KVM). To check this, enter the following from a terminal prompt:

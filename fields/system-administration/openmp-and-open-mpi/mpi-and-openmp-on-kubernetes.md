@@ -19,14 +19,6 @@ relations:
 
 ## Contents
 
-- [Two tickets from the new platform](#two-tickets-from-the-new-platform)
-- [The city of shipping containers](#the-city-of-shipping-containers)
-- [Under the hood: what an MPIJob builds](#under-the-hood-what-an-mpijob-builds)
-- [Try it before you scroll](#try-it-before-you-scroll)
-- [An MPIJob for the hybrid program](#an-mpijob-for-the-hybrid-program)
-- [Three numbers that must agree](#three-numbers-that-must-agree)
-- [Back to the two tickets](#back-to-the-two-tickets)
-
 ---
 
 ## Two tickets from the new platform
