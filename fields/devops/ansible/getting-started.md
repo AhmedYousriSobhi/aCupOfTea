@@ -14,19 +14,6 @@ tags: [ansible, slurm]
 
 > **Part 1 of the [Ansible series](/fields/devops/ansible/README.md).** By the end you'll have a pinned Ansible in a project folder, a config file it actually reads, every node's SSH host key checked, and a ping that answers `pong` from the whole cluster.
 
-- [Two laptops, one playbook](#two-laptops-one-playbook)
-- [Which Ansible, which Python](#which-ansible-which-python)
-- [Step 1: a pinned install per project](#step-1-a-pinned-install-per-project)
-- [Step 2: an ansible.cfg it will actually read](#step-2-an-ansiblecfg-it-will-actually-read)
-- [Step 3: a first inventory](#step-3-a-first-inventory)
-- [Step 4: first contact and host keys](#step-4-first-contact-and-host-keys)
-- [When a node is reinstalled](#when-a-node-is-reinstalled)
-- [When a node's Python is too old](#when-a-nodes-python-is-too-old)
-- [Which Python did it pick?](#which-python-did-it-pick)
-- [Your editor](#your-editor)
-- [Back to the two laptops](#back-to-the-two-laptops)
-- [References](#references)
-
 ---
 
 ## Two laptops, one playbook
