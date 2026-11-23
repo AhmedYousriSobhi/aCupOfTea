@@ -6,21 +6,6 @@ sidebar_label: HPL and the TOP500
 
 > HPL is the benchmark everyone's heard of and almost nobody fully understands. This is the deep dive — from "what is DGEMM" to "why is my node only getting 80% of theoretical peak" — written the way I actually think about it when a job finishes and the number on screen doesn't match what I expected.
 
-## Table of Contents
-- [HPL: The Benchmark That Built the TOP500 (and Why Your GFLOPS Number Lies a Little)](#hpl-the-benchmark-that-built-the-top500-and-why-your-gflops-number-lies-a-little)
-  - [Table of Contents](#table-of-contents)
-  - [Part 1 — What HPL Actually Measures](#part-1--what-hpl-actually-measures)
-    - [The core kernel: DGEMM](#the-core-kernel-dgemm)
-    - [P × Q: the grid shape that decides your fate](#p--q-the-grid-shape-that-decides-your-fate)
-    - [MPI rank placement: the mistake almost everyone makes](#mpi-rank-placement-the-mistake-almost-everyone-makes)
-    - [Debugging checklist](#debugging-checklist)
-  - [Part 2 — Calculating Theoretical Peak (HPL-CPU)](#part-2--calculating-theoretical-peak-hpl-cpu)
-    - [The building blocks: SIMD, AVX-512, FMA](#the-building-blocks-simd-avx-512-fma)
-    - [Doing the math](#doing-the-math)
-    - [The AVX frequency trap](#the-avx-frequency-trap)
-    - [Quick reference](#quick-reference)
-  - [Part 3 — HPL-GPU: A Completely Different Animal](#part-3--hpl-gpu-a-completely-different-animal)
-
 ---
 
 ## Part 1 — What HPL Actually Measures

@@ -19,29 +19,6 @@ relations:
 
 This document summarizes key concepts, interpretations, and practical guidance derived from NCCL AllReduce benchmarking on an 8×H200 NVLink system.
 
-## Table of Contents
-- [Benchmarks - NCCL](#benchmarks---nccl)
-  - [Table of Contents](#table-of-contents)
-  - [Motivation](#motivation)
-  - [1. What is NCCL?](#1-what-is-nccl)
-  - [2. The Core Primitives (The "Collectives")](#2-the-core-primitives-the-collectives)
-  - [3. NCCL Execution Topologies: Rings Vs Tree](#3-nccl-execution-topologies-rings-vs-tree)
-  - [4. Advanced Hardware Interconnect Protocols](#4-advanced-hardware-interconnect-protocols)
-  - [5. Essential Telemetry Environment Variables for Engineering](#5-essential-telemetry-environment-variables-for-engineering)
-  - [6. Common Structural Failures an HPC Engineer Must Triage](#6-common-structural-failures-an-hpc-engineer-must-triage)
-  - [7. What would be different between: `mpirun -np 8 all_readuce - g 1` Vs. `mpirun -np 8 all_readuce - g 8`](#7-what-would-be-different-between-mpirun--np-8-all_readuce---g-1-vs-mpirun--np-8-all_readuce---g-8)
-  - [8. Structural workflow of how a distributed GPU benchmark initializes, executes, and outputs results](#8-structural-workflow-of-how-a-distributed-gpu-benchmark-initializes-executes-and-outputs-results)
-  - [9.](#9)
-  - [10. What happens in NCCL teast using mpirun -np 8 with -g 1?](#10-what-happens-in-nccl-teast-using-mpirun--np-8-with--g-1)
-  - [2. NCCL AllReduce Basics](#2-nccl-allreduce-basics)
-  - [2. In-place vs Out-of-place](#2-in-place-vs-out-of-place)
-  - [3. Important NCCL Metrics](#3-important-nccl-metrics)
-  - [4. BusBW vs NVLink (critical concept)](#4-busbw-vs-nvlink-critical-concept)
-  - [5. Example for benchmark result interpretation](#5-example-for-benchmark-result-interpretation)
-  - [6. Message size sweep behavior](#6-message-size-sweep-behavior)
-  - [7. Critical Flag Definitions:](#7-critical-flag-definitions)
-  - [11. Performance interpretation (H200 NVLink)](#11-performance-interpretation-h200-nvlink)
-
 ---
 ## Motivation
 For a High-Performance Computing (HPC) Performance Engineer, mastering NCCL (NVIDIA Collective Communications Library) is one of the most critical skills for scaling Deep Learning (LLMs, Mixture of Experts) and distributed AI workloads. When handling massive models across clusters of H100/H200 or Blackwell GPUs, performance bottlenecks almost always shift from pure compute (TFLOPS) to communication fabric.
