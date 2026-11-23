@@ -14,17 +14,6 @@ domains:
 Time series analysis is a crucial skill in the field of data science, as it allows us to extract valuable insights from data that evolves over time. Let's break down the learning process step by step:
 
 # Table of Content
-- [Tabular Data - Concepts in Time Series - Time Series Analysis](#tabular-data---concepts-in-time-series---time-series-analysis)
-- [Table of Content](#table-of-content)
-- [Step 1: Understanding The Basics](#step-1-understanding-the-basics)
-- [Step 2: Data Preparation and Exploration](#step-2-data-preparation-and-exploration)
-- [Step 3: Time Series Analysis Techniques](#step-3-time-series-analysis-techniques)
-- [Step 4: Forecasting](#step-4-forecasting)
-- [Step 5: Advanced Techniques](#step-5-advanced-techniques)
-  - [Objective](#objective)
-  - [Techniques](#techniques)
-- [Step 6: Practical Projects and Applications](#step-6-practical-projects-and-applications)
-
 # Step 1: Understanding The Basics
 Time series data is a sequence of observations collected at equally spaced time intervals. These observations could be stock prices, temperature readings, sales data, and more. Start by grasping the fundamental concepts:
 
