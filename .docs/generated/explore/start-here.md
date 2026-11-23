@@ -38,9 +38,9 @@ Read each path in order; every step builds on the one before.
 17. [kubectl Troubleshooting Cheat Sheet: Five Questions, in Order](/fields/devops/kubernetes/cheatsheet.md) — A kubectl cheat sheet for a pod or Job that won't work: where is it, what does it say, what did the cluster say, why did it die, and how to look inside. Commands from the Kubernetes reference. *(intermediate · 8 min)*
 18. [Singularity](/fields/libraries-frameworks-containers/101-singularity.md) — Singularity (rootless containers for HPC): installing it, building SIF images, converting from Docker, bind mounts and definition-file variables. *(10 min)*
 
-### Concepts · Deep Learning · 3 steps · 39 min
+### Concepts · Deep Learning · 3 steps · 38 min
 
-1. [Deep Learning Basics](/fields/deep-learning/concepts/basics.md) — Neurons, loss and cost, and the common activation functions, explained from first principles. *(beginner · 30 min · long read)*
+1. [Deep Learning Basics](/fields/deep-learning/concepts/basics.md) — Neurons, loss and cost, and the common activation functions, explained from first principles. *(beginner · 29 min · long read)*
 2. [Sequence Models](/fields/deep-learning/concepts/sequence-models.md) — How models handle ordered data like text, from RNNs and LSTMs to transformers and LLMs. *(intermediate · 6 min)*
 3. [Encoder-Decoder for Machine Translation](/fields/generative-ai/machine-translator/encoder-decoder.md) — The encoder-decoder idea behind neural machine translation, with a basic seq2seq model. *(intermediate · 3 min)*
 
@@ -348,7 +348,7 @@ Read each path in order; every step builds on the one before.
 - [Build and Install NHC](/fields/system-administration/node-health-check/getting-started/build-and-install.md) — Get NHC onto your nodes from a release RPM, the release tarball or the Git tree, run its unit tests and know where every file lands. *(beginner · 5 min)*
 - [Cooks and Kitchens: Threads, Ranks and the One Mental Model](/fields/system-administration/openmp-and-open-mpi/threads-and-ranks.md) — Run one tiny program of each kind and watch the difference - OpenMP threads sharing one memory (and a data race), MPI ranks with separate memory (and a reduction) - on a real 4-core machine. *(beginner · 7 min)*
 - [Counting the Ways: Probability as a Share of the List](/fields/data-science/probability-statistics/counting-the-ways.md) — Probability is the share of the equally likely ways. So "or" adds, "and" multiplies, and "at least one" is 1 minus none, because of what each does to the list of ways. *(beginner · 9 min)*
-- [Deep Learning Basics](/fields/deep-learning/concepts/basics.md) — Neurons, loss and cost, and the common activation functions, explained from first principles. *(beginner · 30 min · long read)*
+- [Deep Learning Basics](/fields/deep-learning/concepts/basics.md) — Neurons, loss and cost, and the common activation functions, explained from first principles. *(beginner · 29 min · long read)*
 - [Digital Image Processing - Overview](/fields/digital-image-processing/README.md) — The math of digital image processing, made friendly - a nine-part series from pixels as matrices to filters, Fourier, restoration, geometry and wavelets, for anyone coming back to the subject. *(beginner · 5 min)*
 - [Draw It Before You Describe It: Three Pictures of the Same Fifty Days](/fields/data-science/probability-statistics/draw-it-before-you-describe-it.md) — Why a table of counts glazes eyes and a picture does not: the histogram, frequency polygon and ogive built from one table, and the mistakes that make them lie. *(beginner · 10 min)*
 - [Edges and Sharpening](/fields/digital-image-processing/edges-and-sharpening.md) — Derivatives as differences between neighbours - gradient, Sobel, Laplacian and unsharp masking, plus a one-line example that shows exactly where sharpening halos come from. *(beginner · 7 min)*

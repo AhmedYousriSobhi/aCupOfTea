@@ -2,7 +2,7 @@
 
 # Neural Networks
 
-- [Deep Learning Basics](/fields/deep-learning/concepts/basics.md) — Neurons, loss and cost, and the common activation functions, explained from first principles. *(beginner · 30 min · long read)*  
+- [Deep Learning Basics](/fields/deep-learning/concepts/basics.md) — Neurons, loss and cost, and the common activation functions, explained from first principles. *(beginner · 29 min · long read)*  
   [`neural-networks`](/.docs/generated/explore/tags/neural-networks.md)
 
 [All tags](/.docs/generated/explore/tags.md)
