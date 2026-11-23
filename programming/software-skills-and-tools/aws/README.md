@@ -44,7 +44,7 @@ You can choose the AWS services that are right for your HPC needs based on the s
 # What is Kubernetes?
 Kubernetes is an open-source container orchestration platform. It automates the deployment, scaling, and management of containerized applications. Kubernetes makes it easy to deploy applications across multiple hosts, and it provides a number of features that make it easy to manage and scale applications.
 
-![kubernetes](https://kubernetes.io/images/docs/components-of-kubernetes.svg)
+![kubernetes](images/components-of-kubernetes.svg)
 
 Kubernetes is based on the concept of a cluster. A cluster is a group of machines that work together to run containerized applications. Kubernetes uses a master node to manage the cluster. The master node is responsible for scheduling containers to the worker nodes, and it also monitors the health of the cluster.
 

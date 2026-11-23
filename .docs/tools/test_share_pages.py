@@ -52,12 +52,13 @@ class Write(unittest.TestCase):
             self.assertEqual(n, 2)
             self.assertFalse(os.path.exists(os.path.join(out, "index.html")))
             page = open(os.path.join(out, "a/b/index.html"), encoding="utf-8").read()
-            self.assertIn('content="0; url=../../#/a/b"', page)
+            self.assertIn('data-target="../../#/a/b"', page)
+            self.assertNotIn("http-equiv", page)
             self.assertIn('og:url" content="https://example.org/site/a/b/"', page)
             self.assertIn("B &amp; &quot;C&quot;", page)
-            self.assertNotIn("<script", page)
+            self.assertNotIn("<script>", page)  # no inline script: the redirect is a file
             folder = open(os.path.join(out, "a/index.html"), encoding="utf-8").read()
-            self.assertIn('url=../#/a/"', folder)
+            self.assertIn('data-target="../#/a/"', folder)
 
     def test_readme_wins_over_same_named_page(self):
         with tempfile.TemporaryDirectory() as out:

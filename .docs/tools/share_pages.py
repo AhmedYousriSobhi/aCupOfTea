@@ -4,8 +4,11 @@
 Docsify pages live behind `#/` addresses, which link previews (chat apps, social
 cards) cannot read: every shared link would show the home page card. A share page
 is a tiny HTML file at the page's own folder address (`/fields/x/page/`) with that
-page's title and summary as Open Graph tags, and an instant redirect to the real
-page (`/#/fields/x/page`). No script is involved, so the site's CSP is unchanged.
+page's title and summary as Open Graph tags and the page's text as static HTML
+(prerender.py), so search engines and readers without JavaScript get the text.
+A script file (`.docs/prerender-redirect.js`, no inline script: the CSP forbids it)
+sends browsers on to the real page (`/#/fields/x/page`). A meta refresh is not
+used: crawlers treat it as a redirect and would skip the text.
 
   page.md              -> <out>/page/index.html     redirects to #/page
   folder/README.md     -> <out>/folder/index.html   redirects to #/folder/
@@ -20,6 +23,7 @@ from urllib.parse import quote
 
 import yaml
 
+import prerender
 import social_cards
 
 DEFAULT_BASE = "https://ahmedyousrisobhi.github.io/aCupOfTea/"
@@ -96,12 +100,13 @@ def route(page):
     return "/" + d + ("/" if page.endswith("/README.md") else "")
 
 
-def render(page, title, desc, base, card=False):
+def render(page, title, desc, base, card=False, text=""):
     d = share_dir(page)
     depth = d.count("/") + 1
     target = "../" * depth + "#" + quote(route(page), safe="/")
     url = base + quote(d, safe="/") + "/"
     t, ds = html.escape(title, quote=True), html.escape(desc, quote=True)
+    body = prerender.render_body(drop_first_h1(text), page, depth) if text else ""
     lines = [
         "<!DOCTYPE html>",
         '<html lang="en">',
@@ -109,7 +114,6 @@ def render(page, title, desc, base, card=False):
         '<meta charset="UTF-8">',
         f"<title>{t}</title>",
         '<meta name="viewport" content="width=device-width, initial-scale=1.0">',
-        f'<meta http-equiv="refresh" content="0; url={html.escape(target, quote=True)}">',
         f'<link rel="canonical" href="{html.escape(url, quote=True)}">',
     ]
     if ds:
@@ -132,12 +136,24 @@ def render(page, title, desc, base, card=False):
     lines += [
         "</head>",
         "<body>",
-        f'<p><a href="{html.escape(target, quote=True)}">{t}</a></p>',
+        f'<script src="{"../" * depth}.docs/prerender-redirect.js" data-target="{html.escape(target, quote=True)}"></script>',
+        "<main>",
+        f"<h1>{t}</h1>",
+        f"<p><em>{ds}</em></p>" if ds else "",
+        body,
+        f'<p><a href="{html.escape(target, quote=True)}">Open the interactive version of this page</a></p>',
+        "</main>",
         "</body>",
         "</html>",
         "",
     ]
     return "\n".join(lines)
+
+
+def drop_first_h1(text):
+    """The page's body without front matter and the first H1 (the share page writes its own)."""
+    body = prerender.strip_front_matter(text)
+    return re.sub(r"^\s*# .*\n?", "", body, count=1)
 
 
 def kicker(d, page):
@@ -165,6 +181,6 @@ def write_share_pages(out, sources, base=DEFAULT_BASE):
         os.makedirs(os.path.dirname(target), exist_ok=True)
         card = social_cards.write_card(os.path.join(os.path.dirname(target), "card.png"), title, desc, kicker(d, page))
         with open(target, "w", encoding="utf-8", newline="\n") as f:
-            f.write(render(page, title, desc, base, card))
+            f.write(render(page, title, desc, base, card, sources[page]))
         written += 1
     return written

@@ -90,7 +90,7 @@ def adopt(args, ask):
     print("\nAdopting %s  (title: \"%s\")" % (rel, title))
     if have:
         print("Keeping what the front matter already has: %s" % ", ".join(have))
-    meta = ask_metadata(args, ask, title, folder, folders, have)
+    meta = ask_metadata(args, ask, title, folder, folders, have, summary=summary, rel=rel)
     page_id = name if name not in meta["ids"] else slug(folder.split("/")[-1] + "-" + name)
     first = text.find("\n")
     eol = "\r\n" if first > 0 and text[first - 1] == "\r" else "\n"
@@ -164,7 +164,8 @@ def update(args, ask):
             types, _ = got, changed.add("types")
     domains = cur.get("domains", [])
     if given(args.domains):
-        got, meta["new_domains"] = choose_domains(args, ask, folder, folders, title, default=show(domains))
+        got, meta["new_domains"] = choose_domains(args, ask, folder, folders, title, default=show(domains),
+                                         summary=cur.get("summary", ""), rel=rel)
         if got != domains:
             domains, _ = got, changed.add("domains")
     tags = cur.get("tags", [])
@@ -292,7 +293,7 @@ def main(argv=None):
         sys.exit("error: %s already exists" % page_rel)
     new_folder = not os.path.isdir(os.path.join(sc.ROOT, folder))
 
-    meta = ask_metadata(args, ask, title, folder, folders)
+    meta = ask_metadata(args, ask, title, folder, folders, summary=summary)
     page_id = name if name not in meta["ids"] else slug(folder.split("/")[-1] + "-" + name)
     fm = front_matter_lines(page_id, title, summary, meta)
     intro = summary or "<!-- One or two sentences: what will the reader learn? -->"

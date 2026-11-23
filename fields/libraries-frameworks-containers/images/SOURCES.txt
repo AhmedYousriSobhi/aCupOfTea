@@ -1,0 +1,4 @@
+dask-overview.svg: https://docs.dask.org/en/stable/_images/dask-overview.svg
+  Dask documentation, Dask developers, BSD 3-Clause License.
+gvisor-layers.png: https://gvisor.dev/docs/Layers.png
+  gVisor documentation, The gVisor Authors, Apache License 2.0.
