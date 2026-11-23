@@ -16,22 +16,6 @@ relations:
 
 > **Part 6 of [VictoriaMetrics](/fields/devops/victoriametrics/README.md)** The series as one list of commands, in the order you'd run them on a new host. Each step links to the page that explains it, shows its output, and shows how it fails.
 
-- [VictoriaMetrics Cheatsheet: Every Step from the Series](#victoriametrics-cheatsheet-every-step-from-the-series)
-  - [Before you start](#before-you-start)
-  - [1. Download and verify](#1-download-and-verify)
-  - [2. User, directories, keys](#2-user-directories-keys)
-  - [3. Scrape config](#3-scrape-config)
-  - [4. The service](#4-the-service)
-  - [5. Reload safely](#5-reload-safely)
-  - [6. vmagent at the edge](#6-vmagent-at-the-edge)
-  - [7. Retention and disk](#7-retention-and-disk)
-  - [8. Backups](#8-backups)
-  - [9. Prove the backup](#9-prove-the-backup)
-  - [10. Alerts with tests](#10-alerts-with-tests)
-  - [11. Run vmalert](#11-run-vmalert)
-  - [Quick reference](#quick-reference)
-  - [References](#references)
-
 ---
 
 ## Before you start

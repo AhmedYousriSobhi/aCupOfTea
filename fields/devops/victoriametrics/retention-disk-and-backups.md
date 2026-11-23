@@ -17,17 +17,6 @@ relations:
 
 > **Part 4 of the [VictoriaMetrics series](/fields/devops/victoriametrics/README.md).** [Part 3](/fields/devops/victoriametrics/vmagent-and-the-network-blip.md) got every sample to the database. This page keeps them there: how much disk you really need, what happens when it runs out, and a backup you've actually restored.
 
-- [Healthy, according to the health check](#healthy-according-to-the-health-check)
-- [What retention really deletes, and when](#what-retention-really-deletes-and-when)
-- [Sizing the disk from a real test](#sizing-the-disk-from-a-real-test)
-- [When the disk fills up](#when-the-disk-fills-up)
-- [Backups: snapshot, copy, restore](#backups-snapshot-copy-restore)
-- [An hourly job you can leave running](#an-hourly-job-you-can-leave-running)
-- [Proving the backup](#proving-the-backup)
-- [Changing retention safely](#changing-retention-safely)
-- [Back to the weekend](#back-to-the-weekend)
-- [References](#references)
-
 ---
 
 ## Healthy, according to the health check

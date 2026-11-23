@@ -16,20 +16,6 @@ relations:
 
 > **Part of the [schedulers](/fields/schedulers/slurm-intro.md) directory.** The [intro](/fields/schedulers/slurm-intro.md#the-slurm-architecture-at-a-glance) sketched Slurm's three daemons. This page zooms in on the part that makes a shared cluster fair: accounts, limits and usage history. By the end you'll know which daemon stores the rules, which one enforces them, what `sacctmgr` actually is, and the one missing line in `slurm.conf` that makes every limit you set do nothing.
 
-## Table of Contents
-- [Slurm Multi-Tenancy: Who Stores the Rules, Who Enforces Them](#slurm-multi-tenancy-who-stores-the-rules-who-enforces-them)
-  - [Table of Contents](#table-of-contents)
-  - [The limit that wasn't](#the-limit-that-wasnt)
-  - [Four programs, four jobs](#four-programs-four-jobs)
-  - [Correcting a common summary](#correcting-a-common-summary)
-  - [Associations: the unit of fairness](#associations-the-unit-of-fairness)
-  - [Limits: Grp versus Max](#limits-grp-versus-max)
-  - [Try it before you scroll](#try-it-before-you-scroll)
-  - [QOS and fairshare: the other two dials](#qos-and-fairshare-the-other-two-dials)
-  - [Turning it on safely](#turning-it-on-safely)
-  - [When slurmdbd goes down](#when-slurmdbd-goes-down)
-  - [References](#references)
-
 ---
 
 ## The limit that wasn't

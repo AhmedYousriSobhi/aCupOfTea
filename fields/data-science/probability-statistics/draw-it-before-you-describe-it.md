@@ -33,21 +33,6 @@ A table of counts hides its shape. A picture shows it, and which picture you dra
 
 The rest of the page is the reason behind those three sentences.
 
-## Table of Contents
-
-- [Prologue: Ravi's blank stare](#prologue-ravis-blank-stare)
-- [One table, three questions](#one-table-three-questions)
-- [Question 1: how much lives here?](#question-1-how-much-lives-here)
-- [Question 2: how do two crowds compare?](#question-2-how-do-two-crowds-compare)
-- [Question 3: how many are at or below here?](#question-3-how-many-are-at-or-below-here)
-- [The short recipe](#the-short-recipe)
-- [Ways these pictures lie](#ways-these-pictures-lie)
-- [Check yourself](#check-yourself)
-- [Back to the story](#back-to-the-story)
-- [Cheat sheet](#cheat-sheet)
-- [Answers](#answers)
-- [References](#references)
-
 * * *
 
 ## Prologue: Ravi's blank stare

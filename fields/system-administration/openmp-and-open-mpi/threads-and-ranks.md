@@ -20,14 +20,6 @@ The case file: I asked four threads to count to 100 million. Two out of three ti
 
 ## Contents
 
-- [The mental model in two sentences](#the-mental-model-in-two-sentences)
-- [OpenMP: one process, many threads](#openmp-one-process-many-threads)
-- [Try it before you scroll](#try-it-before-you-scroll)
-- [The bug OpenMP invites: a data race](#the-bug-openmp-invites-a-data-race)
-- [MPI: many processes, many ranks](#mpi-many-processes-many-ranks)
-- [The bug MPI invites: not enough slots, and waiting forever](#the-bug-mpi-invites-not-enough-slots-and-waiting-forever)
-- [Side by side](#side-by-side)
-
 ---
 
 ## The mental model in two sentences

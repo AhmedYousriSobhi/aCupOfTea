@@ -16,19 +16,6 @@ relations:
 
 > **Part 4 of the [Linux Memory Pressure series](/fields/system-administration/linux-memory-pressure/README.md).** Detection ([part 2](/fields/system-administration/linux-memory-pressure/memory-pressure-psi.md)) is only half a rescuer. The other half is a set of levers it can pull, and cgroups have a surprisingly fine one for every stage, from "slow this group down" to "remove it". By the end you'll know what each memory file does, in which order you'd pull them, and which ones an ordinary user can't touch.
 
-## Table of Contents
-- [cgroup v2 Memory Control: The Levers Between Doing Nothing and Killing](#cgroup-v2-memory-control-the-levers-between-doing-nothing-and-killing)
-  - [Table of Contents](#table-of-contents)
-  - [The hotel with a group booking](#the-hotel-with-a-group-booking)
-  - [What a cgroup is, in one paragraph](#what-a-cgroup-is-in-one-paragraph)
-  - [The four limit files](#the-four-limit-files)
-  - [Try it before you scroll](#try-it-before-you-scroll)
-  - [The active levers: reclaim, freeze, kill](#the-active-levers-reclaim-freeze-kill)
-  - [The escalation ladder](#the-escalation-ladder)
-  - [Who may pull the levers](#who-may-pull-the-levers)
-  - [Look at your own groups](#look-at-your-own-groups)
-  - [References](#references)
-
 ---
 
 ## The hotel with a group booking

@@ -25,21 +25,6 @@ relations:
 
 > **Part 5 of [Slurm Smoke Tests](/fields/schedulers/slurm-smoke-tests/README.md).** The commands and outputs below were run on a two-node test cluster (Slurm 23.11.4, accounting on, both `slurmd` daemons on one Ubuntu 24.04 machine, which has 2 CPUs and about 8 GB of memory). **The test cluster has no GPUs**, so nothing here was run against one, and the GPU section says so. The names and the story are invented. For the health-check program that drains a node by itself, read [When a GPU Falls Off the Bus](/fields/schedulers/slurm-ai-clusters/gpu-health-checks.md), which this page does not repeat.
 
-## Table of Contents
-
-- [Back From the Repair Shop: Is This Node Fit to Return to Service?](#back-from-the-repair-shop-is-this-node-fit-to-return-to-service)
-  - [Table of Contents](#table-of-contents)
-  - [Node 17 is idle](#node-17-is-idle)
-  - [What `idle` does and does not prove](#what-idle-does-and-does-not-prove)
-  - [What Slurm does by default](#what-slurm-does-by-default)
-  - [Compare the hardware with the promise](#compare-the-hardware-with-the-promise)
-  - [Run a probe before the users do](#run-a-probe-before-the-users-do)
-  - [Let a health check do the routine part](#let-a-health-check-do-the-routine-part)
-  - [And the GPUs?](#and-the-gpus)
-  - [Version notes](#version-notes)
-  - [Back to node 17](#back-to-node-17)
-  - [References](#references)
-
 ---
 
 ## Node 17 is idle

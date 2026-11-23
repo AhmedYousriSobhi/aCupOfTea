@@ -16,16 +16,6 @@ relations:
 
 > **Part 2 of the [Node Health Check series](/fields/system-administration/node-health-check/README.md).** By the end of this page NHC is installed on a node, its 800-odd unit tests are green, and you know where every file lives.
 
-## Table of Contents
-- [Pick your route](#pick-your-route)
-- [Before you start: the one trap everyone falls into](#before-you-start-the-one-trap-everyone-falls-into)
-- [Route A: release RPM (RHEL, Rocky, Alma, Oracle)](#route-a-release-rpm-rhel-rocky-alma-oracle)
-- [Route B: release tarball (any distro)](#route-b-release-tarball-any-distro)
-- [Route C: straight from Git](#route-c-straight-from-git)
-- [Where everything lands](#where-everything-lands)
-- [Smoke test](#smoke-test)
-- [Getting it onto 500 nodes](#getting-it-onto-500-nodes)
-
 ---
 
 ## Pick your route

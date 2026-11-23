@@ -16,18 +16,6 @@ relations:
 
 > **Part 2 of the [Storage and Fabric for AI Clusters series](/fields/system-administration/ai-storage-and-fabric/README.md).** [Part 1](/fields/system-administration/ai-storage-and-fabric/parallel-filesystems-for-ai.md) built the storage. This page is the road between storage, GPUs and other GPUs. By the end you'll know why AI clusters use RDMA instead of ordinary networking, what InfiniBand and RoCE are, and how GPUDirect lets data skip the CPU entirely.
 
-## Table of Contents
-- [RDMA, InfiniBand and GPUDirect: Taking the CPU Out of the Way](#rdma-infiniband-and-gpudirect-taking-the-cpu-out-of-the-way)
-  - [Table of Contents](#table-of-contents)
-  - [The fast network with a slow middleman](#the-fast-network-with-a-slow-middleman)
-  - [Two fabrics, two jobs](#two-fabrics-two-jobs)
-  - [RDMA: three things the CPU stops doing](#rdma-three-things-the-cpu-stops-doing)
-  - [InfiniBand or RoCE?](#infiniband-or-roce)
-  - [GPUDirect: skipping one more stop](#gpudirect-skipping-one-more-stop)
-  - [Try it before you scroll](#try-it-before-you-scroll)
-  - [How to know if the fabric is starving your GPUs](#how-to-know-if-the-fabric-is-starving-your-gpus)
-    - [References](#references)
-
 ---
 
 ## The fast network with a slow middleman

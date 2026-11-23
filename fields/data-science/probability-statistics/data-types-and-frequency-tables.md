@@ -28,21 +28,6 @@ relations:
 - **A frequency table is counting without losing the shape.** Tally how often each value appears, and the crowd's outline stays visible.
 - **A grouped table is drawers for values.** When values are too many, sort them into equal drawers. The drawers must touch, because measured values have no gaps between them. That one fact explains class boundaries.
 
-## Table of Contents
-
-- [The idea in one minute](#the-idea-in-one-minute)
-- [Prologue: the average blend](#prologue-the-average-blend)
-- [What can you do with two of them?](#what-can-you-do-with-two-of-them)
-- [Counting without losing the shape](#counting-without-losing-the-shape)
-- [Drawers for values: the grouped table](#drawers-for-values-the-grouped-table)
-- [Why the drawers must touch](#why-the-drawers-must-touch)
-- [The recipe, short](#the-recipe-short)
-- [Check yourself](#check-yourself)
-- [Back to the story](#back-to-the-story)
-- [Cheat sheet](#cheat-sheet)
-- [Answers](#answers)
-- [References](#references)
-
 * * *
 
 ## Prologue: the average blend
