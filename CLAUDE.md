@@ -1,3 +1,6 @@
+---
+summary: "Working rules for the repository maintainer: the organizational-phase scope, structure-versus-content rule, naming, git flow, Docsify navigation and validation checklist."
+---
 # CLAUDE.md
 
 ## Repository
