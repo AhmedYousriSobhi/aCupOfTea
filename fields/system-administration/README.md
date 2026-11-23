@@ -13,12 +13,14 @@ The training run died at 3 AM. Was it the node, the network, the memory or the f
 | [build-process](/fields/system-administration/build-process.md) | Software build and CI/CD processes |
 | [Hardware](/fields/system-administration/hw.md) | Hardware issues and solutions |
 | [ldap](/fields/system-administration/ldap.md) | LDAP directory services |
-| [linux-admin](/fields/system-administration/linux-admin/README.md) | Linux administration guides |
+| [linux-administration-i](/fields/system-administration/linux-administration-i.md) | Linux administration fundamentals |
+| [mpi](/fields/system-administration/mpi.md) | Running and binding MPI ranks on Linux |
 | [memory](/fields/system-administration/memory.md) | Memory management and optimization |
 | [linux-memory-pressure](/fields/system-administration/linux-memory-pressure/README.md) | Series: reclaim, PSI, the OOM killer, cgroup levers and memory locking for a rescuer program |
 | [network](/fields/system-administration/network.md) | Networking fundamentals |
 | [node-health-check](/fields/system-administration/node-health-check/README.md) | Series: LBNL Node Health Check (NHC) from install to auto-remediation |
 | [q-and-a](/fields/system-administration/q-and-a.md) | Common sysadmin Q&A |
+| [under-the-hood](/fields/system-administration/under-the-hood.md) | Deep dive into Linux internals |
 | [virtual-machines](/fields/system-administration/virtual-machines.md) | Virtual machine management |
 | [gpu-failure-prediction](/fields/system-administration/gpu-failure-prediction/README.md) | Series: predicting GPU node failures and draining before jobs die |
 | [ai-storage-and-fabric](/fields/system-administration/ai-storage-and-fabric/README.md) | Series: parallel filesystems, RDMA, InfiniBand and GPUDirect for GPU clusters |

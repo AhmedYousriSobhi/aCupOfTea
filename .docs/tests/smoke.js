@@ -155,13 +155,13 @@ async function run(browser, base, label, size, phone) {
     window.scrollTo(0, document.documentElement.scrollHeight / 2);
     await new Promise((r) => setTimeout(r, 300));
     const bar = document.getElementById('read-progress');
-    const t = bar.style.transform;
+    const t = bar.querySelector('.read-main').style.width;
     const shown = !document.getElementById('back-to-top').hidden;
     const icon = Math.round(document.querySelector('#back-to-top svg').getBoundingClientRect().width);
     const nav = Math.round(document.querySelector('nav.app-nav').getBoundingClientRect().top);
     document.getElementById('back-to-top').click();
     await new Promise((r) => setTimeout(r, 1500));
-    return { before, bar: !bar.hidden && /scaleX\(0\.[1-9]/.test(t), shown, icon, nav, back: Math.round(window.scrollY) };
+    return { before, bar: !bar.hidden && parseFloat(t) > 10, shown, icon, nav, back: Math.round(window.scrollY) };
   });
   c('progress bar and back-to-top work on a long page', !prog.before && prog.bar && prog.shown && prog.icon > 10 && prog.back < 20, JSON.stringify(prog));
   c('top menu stays on screen while scrolling', prog.nav === 0, 'menu top ' + prog.nav);
