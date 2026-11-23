@@ -4,7 +4,7 @@
 
 Engineering practice, patterns and tooling.
 
-- [Containers 101](/fields/libraries-frameworks-containers/101-containers.md) — Containers from the ground up: what happens at boot, kernel and user space, virtual machines, then namespaces, cgroups and Linux containers. *(8 min)*  
+- [Containers 101](/fields/libraries-frameworks-containers/101-containers.md) — Containers from the ground up: what happens at boot, kernel and user space, virtual machines, then namespaces, cgroups and Linux containers. *(7 min)*  
   [`containers`](/.docs/generated/explore/tags/containers.md)
 - [Cooks and Kitchens: Threads, Ranks and the One Mental Model](/fields/system-administration/openmp-and-open-mpi/threads-and-ranks.md) — Run one tiny program of each kind and watch the difference - OpenMP threads sharing one memory (and a data race), MPI ranks with separate memory (and a reduction) - on a real 4-core machine. *(beginner · 7 min)*  
   [`hpc`](/.docs/generated/explore/tags/hpc.md) [`mpi`](/.docs/generated/explore/tags/mpi.md) [`openmp`](/.docs/generated/explore/tags/openmp.md)
@@ -19,7 +19,7 @@ Engineering practice, patterns and tooling.
 - [OpenMP and Open MPI - Overview](/fields/system-administration/openmp-and-open-mpi/README.md) — An eight-part series that untangles OpenMP, MPI and Open MPI - what each is, where they came from, how to read their code, how to combine them and how Slurm and Kubernetes run them. *(beginner · 3 min)*
 - [Parallel Execution and Affinity](/fields/benchmarks/parallel-execution-affinity-master-guide.md) — How to place processes, threads and GPUs on a node: srun vs mpirun, NUMA, CPU binding syntax and GPU mapping, with tuning advice for HPL and NCCL. *(5 min)*  
   [`affinity`](/.docs/generated/explore/tags/affinity.md) [`mpi`](/.docs/generated/explore/tags/mpi.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
-- [PyTorch 101](/fields/libraries-frameworks-containers/101-pytorch.md) — Notes for starting with PyTorch: where to learn, data type precision, GPU properties, the training loop, making predictions, and saving and loading models. *(6 min)*  
+- [PyTorch 101](/fields/libraries-frameworks-containers/101-pytorch.md) — Notes for starting with PyTorch: where to learn, data type precision, GPU properties, the training loop, making predictions, and saving and loading models. *(5 min)*  
   [`pytorch`](/.docs/generated/explore/tags/pytorch.md)
 - [Reviewing the Design: Where Would You Push Back?](/programming/local-app-accounts/reviewing-the-design.md) — Six review questions the design leaves open, a table of mistakes it avoids, the Designing Data-Intensive Applications chapters that explain why, and six exercises. *(intermediate · 6 min)*  
   [`programming`](/.docs/generated/explore/tags/programming.md) [`software`](/.docs/generated/explore/tags/software.md) [`system-design`](/.docs/generated/explore/tags/system-design.md)

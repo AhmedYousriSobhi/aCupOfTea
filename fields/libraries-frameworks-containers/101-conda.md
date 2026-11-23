@@ -4,34 +4,6 @@ summary: "Conda basics: creating, listing, removing and sharing environments, pl
 # Packages - Conda
 
 # Table of Content
-- [Packages - Conda](#packages---conda)
-- [Table of Content](#table-of-content)
-- [1- Conda Environment](#1--conda-environment)
-  - [1.1- What is Conda?](#11--what-is-conda)
-  - [1.2- What is a **conda environment**?](#12--what-is-a-conda-environment)
-  - [1.3- Base Environment](#13--base-environment)
-  - [1.4- Create a New Environment](#14--create-a-new-environment)
-  - [1.5- Check Envrionment List](#15--check-envrionment-list)
-  - [1.6- Exit an Environment](#16--exit-an-environment)
-  - [1.7- Question](#17--question)
-  - [1.8- Remove an Environment](#18--remove-an-environment)
-  - [1.9- A Note About Executing program](#19--a-note-about-executing-program)
-  - [1.10- Saving Environment Variables](#110--saving-environment-variables)
-  - [1.11- Sharing an Environment](#111--sharing-an-environment)
-- [2- Conda Channels](#2--conda-channels)
-  - [2.1- Specifying Channels When Installing Packages](#21--specifying-channels-when-installing-packages)
-  - [2.2- Conda .condarc file!](#22--conda-condarc-file)
-    - [2.2.1- Where conda command search for .condarc?](#221--where-conda-command-search-for-condarc)
-    - [2.2.2- Want to Configure Channels and Their Priority for a Single Env?](#222--want-to-configure-channels-and-their-priority-for-a-single-env)
-  - [2.3- Managing Channels](#23--managing-channels)
-- [3- Managing Packages](#3--managing-packages)
-  - [3.1- Searching for Pacakges](#31--searching-for-pacakges)
-  - [3.2- Installing Packages](#32--installing-packages)
-    - [3.2.1- Install Packages on Created Environment](#321--install-packages-on-created-environment)
-    - [3.2.2- Install Packages While Creating Environment](#322--install-packages-while-creating-environment)
-  - [3.3- Update Conda](#33--update-conda)
-- [Reference](#reference)
-
 # 1- Conda Environment
 ## 1.1- What is Conda?
 > The package and environment manager program bundled with Anaconda that installs and updates conda packages and their dependencies. Conda also lets you easily switch between conda environments on your local computer.

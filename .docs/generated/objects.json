@@ -472,7 +472,7 @@
     "id": "containers-101",
     "level": "",
     "path": "fields/libraries-frameworks-containers/101-containers.md",
-    "reading_time_min": 8,
+    "reading_time_min": 7,
     "relations": {
       "prerequisites": [],
       "related": []
@@ -3084,7 +3084,7 @@
     "id": "pytorch-101",
     "level": "",
     "path": "fields/libraries-frameworks-containers/101-pytorch.md",
-    "reading_time_min": 6,
+    "reading_time_min": 5,
     "relations": {
       "prerequisites": [],
       "related": []
