@@ -35,10 +35,10 @@ The files used on this page:
 
 | File | What it is |
 |------|-----------|
-| [`cluster-example.yaml`](/fields/system-administration/node-health-check/cluster-example.yaml) | The architecture definition: classes, roles, fabrics, storage, GPUs |
-| [`nhc_gen.py`](/fields/system-administration/node-health-check/nhc_gen.py) | Validates the definition, cross-checks `slurm.conf`, writes all NHC configs |
-| [`acme_arch.nhc`](/fields/system-administration/node-health-check/acme_arch.nhc) | NHC module with the architecture checks the generated configs call |
-| [`nhc_test_harness.sh`](/fields/system-administration/node-health-check/nhc_test_harness.sh) | The Step 4 tests as one CI script with assertions; exits non-zero on any failure |
+| [`cluster-example.yaml`](/fields/system-administration/node-health-check/architecture-and-case-study/cluster-example.yaml) | The architecture definition: classes, roles, fabrics, storage, GPUs |
+| [`nhc_gen.py`](/fields/system-administration/node-health-check/architecture-and-case-study/nhc_gen.py) | Validates the definition, cross-checks `slurm.conf`, writes all NHC configs |
+| [`acme_arch.nhc`](/fields/system-administration/node-health-check/architecture-and-case-study/acme_arch.nhc) | NHC module with the architecture checks the generated configs call |
+| [`nhc_test_harness.sh`](/fields/system-administration/node-health-check/architecture-and-case-study/nhc_test_harness.sh) | The Step 4 tests as one CI script with assertions; exits non-zero on any failure |
 
 ---
 
@@ -110,14 +110,14 @@ gpu-h100:
     deep_diag_level: 2
 ```
 
-How each fact becomes a check, and in which context ([part 3](/fields/system-administration/node-health-check/writing-nhc-conf.md#contexts-one-binary-many-personalities)):
+How each fact becomes a check, and in which context ([part 3](/fields/system-administration/node-health-check/getting-started/writing-nhc-conf.md#contexts-one-binary-many-personalities)):
 
 | Architecture fact | Generated check | periodic | epilog | deep |
 |-------------------|----------------|:--:|:--:|:--:|
 | `mounts` | `check_fs_mount_rw` / `_ro` with type and source | ✅ | ✅ | ✅ |
 | `gpus.count` | `check_arch_gpu_count` | ✅ | ✅ | ✅ |
 | `gpus.fatal_xids` | `check_cmd_dmesg` with a negated Xid regex | ✅ | ✅ | ✅ |
-| role `services` | `check_ps_service -S` (self-healing, [part 7](/fields/system-administration/node-health-check/auto-remediation.md)) | ✅ | | ✅ |
+| role `services` | `check_ps_service -S` (self-healing, [part 7](/fields/system-administration/node-health-check/checks-and-remediation/auto-remediation.md)) | ✅ | | ✅ |
 | `cpu` | `check_hw_cpuinfo` | ✅ | | ✅ |
 | `numa_nodes` | `check_arch_numa_nodes` | ✅ | | ✅ |
 | `memory` + fudge | `check_hw_physmem` | ✅ | | ✅ |
@@ -126,7 +126,7 @@ How each fact becomes a check, and in which context ([part 3](/fields/system-adm
 | role `user_hygiene` | `check_ps_unauth_users`, `check_ps_userproc_lineage` (log only) | ✅ | | ✅ |
 | `gpus.deep_diag_level` | `check_arch_dcgm_diag` | | | ✅ |
 
-Ordering inside each class is cheapest-and-most-likely-first: mounts, then GPUs, then everything else. The epilog context stops after the GPU lines because every second there is added to every job ([part 4](/fields/system-administration/node-health-check/slurm-integration.md#prolog-and-epilog-checks-at-job-boundaries)).
+Ordering inside each class is cheapest-and-most-likely-first: mounts, then GPUs, then everything else. The epilog context stops after the GPU lines because every second there is added to every job ([part 4](/fields/system-administration/node-health-check/getting-started/slurm-integration.md#prolog-and-epilog-checks-at-job-boundaries)).
 
 ---
 
@@ -160,7 +160,7 @@ OK: 545 nodes in 4 classes -> nhc.conf, nhc-epilog.conf, nhc-deep.conf in build/
 
 The coverage check is the most valuable line in the whole tool. It turns "nodes silently without health checks" from an invisible state into a failed build.
 
-**3. Translate hostlists.** Slurm and NHC disagree on range syntax ([part 3](/fields/system-administration/node-health-check/writing-nhc-conf.md#match-strings-who-runs-what)): NHC allows one range per name and no commas inside brackets. The generator converts:
+**3. Translate hostlists.** Slurm and NHC disagree on range syntax ([part 3](/fields/system-administration/node-health-check/getting-started/writing-nhc-conf.md#match-strings-who-runs-what)): NHC allows one range per name and no commas inside brackets. The generator converts:
 
 | Slurm hostlist (in YAML) | NHC target (generated) |
 |---|---|
@@ -168,7 +168,7 @@ The coverage check is the most valuable line in the whole tool. It turns "nodes 
 | `gpu[01-30],gpu32` | `{gpu[01-30],gpu32}` |
 | `cn[001-010,015]` | `{cn[001-010],cn015}` |
 
-**4. Emit one file per context**, plus a sysconfig file each, so "early" settings like `TIMEOUT` land where NHC actually reads them ([part 3](/fields/system-administration/node-health-check/writing-nhc-conf.md#variables-and-the-precedence-trap)). An excerpt of the generated periodic config:
+**4. Emit one file per context**, plus a sysconfig file each, so "early" settings like `TIMEOUT` land where NHC actually reads them ([part 3](/fields/system-administration/node-health-check/getting-started/writing-nhc-conf.md#variables-and-the-precedence-trap)). An excerpt of the generated periodic config:
 
 ```bash
 ##############################################################################
@@ -215,7 +215,7 @@ Built-in checks cover CPUs, memory, mounts and IB. `acme_arch.nhc` adds the arch
 | `check_arch_gpu_model S` | Every GPU's name contains `S`. Catches the wrong card swapped in by a well-meaning technician |
 | `check_arch_dcgm_diag L [secs]` | `dcgmi diag -r L` reports no failure. Deep context only |
 
-It follows [part 6](/fields/system-administration/node-health-check/custom-checks.md#the-rules-of-the-house)'s rules, including one that testing this page added to the list: **declare module globals with `declare -g`**. More on that below.
+It follows [part 6](/fields/system-administration/node-health-check/checks-and-remediation/custom-checks.md#the-rules-of-the-house)'s rules, including one that testing this page added to the list: **declare module globals with `declare -g`**. More on that below.
 
 Install it next to the built-ins: `/etc/nhc/scripts/acme_arch.nhc`.
 
@@ -230,7 +230,7 @@ Generated configs are only trustworthy if something executes them. NHC 1.5 can r
 - Module command variables (`ARCH_NVSMI`, `ARCH_NUMA_ONLINE`) and `NHC_DMESG_CMD` can point at fakes.
 
 > [!WARNING]
-> **Run these tests only in CI or a throwaway container.** `MARK_OFFLINE=0` stops draining, not fixing: checks with auto-fix flags still act. In testing, NHC tried to start `sshd` and `munge` and created `/scratch` and `/apps` on the test machine. [`nhc_test_harness.sh`](/fields/system-administration/node-health-check/nhc_test_harness.sh) refuses to run outside CI or a container unless you pass `--force`.
+> **Run these tests only in CI or a throwaway container.** `MARK_OFFLINE=0` stops draining, not fixing: checks with auto-fix flags still act. In testing, NHC tried to start `sshd` and `munge` and created `/scratch` and `/apps` on the test machine. [`nhc_test_harness.sh`](/fields/system-administration/node-health-check/architecture-and-case-study/nhc_test_harness.sh) refuses to run outside CI or a container unless you pass `--force`.
 
 ```bash
 git clone --depth 1 --branch 1.5 https://github.com/mej/nhc.git /tmp/nhc
@@ -295,7 +295,7 @@ done
 
 Real hardware failures are rare and you can't schedule them. Fakes let you prove every check fails when it should, on every commit.
 
-**All three tests in one script.** [`nhc_test_harness.sh`](/fields/system-administration/node-health-check/nhc_test_harness.sh) runs them with assertions. Expected check counts per host live in a block at the top; update them when `cluster.yaml` changes. On the example cluster:
+**All three tests in one script.** [`nhc_test_harness.sh`](/fields/system-administration/node-health-check/architecture-and-case-study/nhc_test_harness.sh) runs them with assertions. Expected check counts per host live in a block at the top; update them when `cluster.yaml` changes. On the example cluster:
 
 ```text
 $ CI=true ./nhc_test_harness.sh build
@@ -317,9 +317,9 @@ With the backslash bug from the next section put back into the config, it report
 
 Both of these were in the first draft of this series. Neither shows up when you test checks with `nhc -e`, only when real NHC reads a real config and loads a real module. That's the whole argument for Step 4.
 
-**Trap 1: backslashes vanish from config lines.** The Xid regex was first written with `\(PCI:...\)`. Through `nhc -e` it worked. Through the config file it **passed even with Xid 79 in the log**: NHC's config parser drops backslashes, `\(` became `(`, and the regex turned into a group that can never match the real line. A health check that always passes is worse than none, because it looks like coverage. The fix is bracket expressions, which need no escaping: `[(]`, `[)]`, `[[]`, `[]]`, `[.]`. The generator emits only those. [Part 3](/fields/system-administration/node-health-check/writing-nhc-conf.md#contexts-one-binary-many-personalities) now carries a warning about it.
+**Trap 1: backslashes vanish from config lines.** The Xid regex was first written with `\(PCI:...\)`. Through `nhc -e` it worked. Through the config file it **passed even with Xid 79 in the log**: NHC's config parser drops backslashes, `\(` became `(`, and the regex turned into a group that can never match the real line. A health check that always passes is worse than none, because it looks like coverage. The fix is bracket expressions, which need no escaping: `[(]`, `[)]`, `[[]`, `[]]`, `[.]`. The generator emits only those. [Part 3](/fields/system-administration/node-health-check/getting-started/writing-nhc-conf.md#contexts-one-binary-many-personalities) now carries a warning about it.
 
-**Trap 2: module variables that disappear.** `check_arch_numa_nodes` first failed with `cannot read` and an *empty* path. NHC loads modules by sourcing them **inside a function**, and in bash a plain `declare` inside a function makes a local variable. The module's defaults existed only while the file was being loaded. It hid in testing because passing `ARCH_NVSMI=...` on the command line sets a global that masks the bug, while on a real node, with no override, every GPU node would have drained with "nvidia-smi failed". Fix: `declare -g`. [Part 6](/fields/system-administration/node-health-check/custom-checks.md#the-rules-of-the-house) now lists it as a rule.
+**Trap 2: module variables that disappear.** `check_arch_numa_nodes` first failed with `cannot read` and an *empty* path. NHC loads modules by sourcing them **inside a function**, and in bash a plain `declare` inside a function makes a local variable. The module's defaults existed only while the file was being loaded. It hid in testing because passing `ARCH_NVSMI=...` on the command line sets a global that masks the bug, while on a real node, with no override, every GPU node would have drained with "nvidia-smi failed". Fix: `declare -g`. [Part 6](/fields/system-administration/node-health-check/checks-and-remediation/custom-checks.md#the-rules-of-the-house) now lists it as a rule.
 
 A third thing worth knowing from the harness: when NHC couldn't find its modules (a wrong `INCDIR`), it still ended with **"completed successfully; 0 passed"**. Treat "0 passed" as a failure in your tests and your monitoring.
 
@@ -347,7 +347,7 @@ jobs:
         with: {name: nhc-build, path: build/}
 ```
 
-Then deliver `build/` and `acme_arch.nhc` the way you deliver any config: an RPM such as `acme-nhc-config` (with `Requires: lbnl-nhc`, versioned per Git tag, which makes rollback a `dnf downgrade`), or your Ansible role from [part 2](/fields/system-administration/node-health-check/build-and-install.md#getting-it-onto-500-nodes). The rollout itself is still dry run, canary, enforce, behind the circuit breaker ([part 5](/fields/system-administration/node-health-check/rollout-at-scale.md)). Generation makes the config *correct*; it doesn't make it *safe to push to 2,000 nodes at once*.
+Then deliver `build/` and `acme_arch.nhc` the way you deliver any config: an RPM such as `acme-nhc-config` (with `Requires: lbnl-nhc`, versioned per Git tag, which makes rollback a `dnf downgrade`), or your Ansible role from [part 2](/fields/system-administration/node-health-check/getting-started/build-and-install.md#getting-it-onto-500-nodes). The rollout itself is still dry run, canary, enforce, behind the circuit breaker ([part 5](/fields/system-administration/node-health-check/getting-started/rollout-at-scale.md)). Generation makes the config *correct*; it doesn't make it *safe to push to 2,000 nodes at once*.
 
 > [!TIP]
 > Keep `slurm.conf` and `cluster.yaml` in the same repository. Then a pull request that adds nodes to Slurm but not to the architecture fails its own CI, and the reviewer sees both halves of the change in one diff.
@@ -361,7 +361,7 @@ The payoff. A new rack of 64 GPU nodes arrives with a different GPU model and a 
 1. **Add one class** to `cluster.yaml`: `gpu-next`, `nodes: "gpx[01-64]"`, its CPU, NUMA, memory, fabric and `gpus` block.
 2. **Add the `NodeName` line** to `slurm.conf` in the same pull request.
 3. **CI generates and tests.** Forgot the Slurm line? Forgot the class? Typo in the GPU count? The build fails and says which.
-4. **Bring the rack up in canary mode** ([part 5](/fields/system-administration/node-health-check/rollout-at-scale.md#phase-3-canary-enforcing-on-a-few-nodes)), then into production.
+4. **Bring the rack up in canary mode** ([part 5](/fields/system-administration/node-health-check/getting-started/rollout-at-scale.md#phase-3-canary-enforcing-on-a-few-nodes)), then into production.
 
 Every new node gets health checks on day one, without anyone writing an NHC line.
 
@@ -377,7 +377,7 @@ The example covers the essentials. Common next additions, each a YAML field plus
 | Kernel and driver versions | `check_file_contents /proc/sys/kernel/osrelease '<version>*'` and `/proc/driver/nvidia/version` |
 | NVLink / GPU topology | Golden copy of `nvidia-smi topo -m` per class, compared by a small module check |
 | HCA firmware and port GUIDs | `ibstat` output through `check_cmd_output` |
-| CPU frequency governor, THP, hugepages | `check_file_contents` on `/sys` files ([part 6](/fields/system-administration/node-health-check/custom-checks.md#first-do-you-even-need-a-module)) |
+| CPU frequency governor, THP, hugepages | `check_file_contents` on `/sys` files ([part 6](/fields/system-administration/node-health-check/checks-and-remediation/custom-checks.md#first-do-you-even-need-a-module)) |
 | Local NVMe scratch | `check_fs_mount_rw` plus `check_fs_size` per class |
 
 One honest limit: everything here is still a **per-node** truth. A cluster where every node passes can still have a degraded fabric path or one slow GPU dragging a 512-GPU job ([related reading](/fields/devops/kubernetes/nvidia-cluster-readiness-engine.md)). Multi-node tests (NCCL, MPI benchmarks) are the layer above, and they can be generated from the same architecture file.

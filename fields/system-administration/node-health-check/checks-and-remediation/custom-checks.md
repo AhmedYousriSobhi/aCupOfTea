@@ -172,7 +172,7 @@ Design notes:
 - **Volatile vs aggregate counters.** Volatile counters reset with the driver; aggregate ones persist. Which one to alert on, and at what threshold, depends on your GPU generation's error-recovery features (row remapping and friends). Read NVIDIA's guidance for your hardware and adjust the field name.
 - **Field names change between driver versions.** Check `nvidia-smi --help-query-gpu` on your nodes before trusting this verbatim.
 
-Pair it with the `dmesg` Xid one-liner from [part 3](/fields/system-administration/node-health-check/writing-nhc-conf.md#starter-config-a-real-cluster), and you have count, memory errors and kernel-reported faults covered in milliseconds.
+Pair it with the `dmesg` Xid one-liner from [part 3](/fields/system-administration/node-health-check/getting-started/writing-nhc-conf.md#starter-config-a-real-cluster), and you have count, memory errors and kernel-reported faults covered in milliseconds.
 
 ---
 
@@ -231,7 +231,7 @@ BASH_XTRACEFD=33 33>/tmp/nhc-trace.out nhc -d -v -x -l- -e 'check_acme_gpu_ecc 0
 nhc -l- -e 'check_acme_gpu_count 9' MARK_OFFLINE=0; echo "rc=$?"   # should be non-zero
 ```
 
-Remember the ordering rule from [part 2](/fields/system-administration/node-health-check/build-and-install.md#smoke-test): flags first, `VAR=value` pairs last. Also run these as a real root shell rather than through `sudo`, which closes extra file descriptors like the `33` used for the trace.
+Remember the ordering rule from [part 2](/fields/system-administration/node-health-check/getting-started/build-and-install.md#smoke-test): flags first, `VAR=value` pairs last. Also run these as a real root shell rather than through `sudo`, which closes extra file descriptors like the `33` used for the trace.
 
 Step 4 is the one people skip. A check that has never failed in testing is a check you don't know works.
 
@@ -261,7 +261,7 @@ For matching, call NHC's own `mcheck "$string" "$match_string"` so your check ac
 
 Wrote something others would want (a check for a common NIC, filesystem or GPU)? Upstream welcomes pull requests. Include the header comment, keep the naming convention, and add unit tests under `test/` like the existing modules. Several of the GPU and Kubernetes checks in 1.5 started life as exactly that kind of site module (LANL, CSC).
 
-Next: turning "detected" into "fixed" without turning your cluster into a reboot loop, in [part 7](/fields/system-administration/node-health-check/auto-remediation.md).
+Next: turning "detected" into "fixed" without turning your cluster into a reboot loop, in [part 7](/fields/system-administration/node-health-check/checks-and-remediation/auto-remediation.md).
 
 > **Takeaway:** try `check_cmd_output` first; write a module when you need logic. Namespace globals, cache expensive data, bound every command with a timeout, write failure messages a human can act on, and prove each check fails when it should.
 

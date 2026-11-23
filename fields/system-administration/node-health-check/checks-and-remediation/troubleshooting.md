@@ -61,7 +61,7 @@ nhc -V -V -V
 
 | Likely cause | Tell-tale | Fix |
 |-------------|-----------|-----|
-| Expectation is wrong for this hardware class | Same failure on all nodes of a class | Fix the config line or its target ([part 3](/fields/system-administration/node-health-check/writing-nhc-conf.md)) |
+| Expectation is wrong for this hardware class | Same failure on all nodes of a class | Fix the config line or its target ([part 3](/fields/system-administration/node-health-check/getting-started/writing-nhc-conf.md)) |
 | Memory check without fudge factor | `check_hw_physmem` complaining by a few hundred MB | Add a fudge: `check_hw_physmem 512GB 512GB 3%` |
 | Threshold checks during busy hours | `check_ps_loadavg`, `check_fs_free` fail only by day | Raise thresholds, or move them to a non-draining context |
 | Flaky network check | `check_net_ping` fails randomly | More packets and a longer wait (`-c 3 -W 3`); check the target isn't overloaded |
@@ -125,7 +125,7 @@ Typical boot-time-only failures:
 
 ## 5. NHC times out, or gets killed silently
 
-Two clocks again ([part 4](/fields/system-administration/node-health-check/slurm-integration.md#timeouts-make-sure-the-bouncer-isnt-shot-mid-sentence)):
+Two clocks again ([part 4](/fields/system-administration/node-health-check/getting-started/slurm-integration.md#timeouts-make-sure-the-bouncer-isnt-shot-mid-sentence)):
 
 - **NHC's watchdog fired** (default 30 s): you'll see a timeout failure in `nhc.log` and a drain reason saying so. Something in your checks was slow.
 - **Slurm killed NHC** (60 s, or `HealthCheckTimeout`): no NHC message at all, just a truncated log. Your `TIMEOUT` is higher than Slurm's. Lower it.
@@ -164,7 +164,7 @@ Your shell and `slurmd`'s environment are not the same:
 ## 7. My config change does nothing
 
 - **Wrong file for the context.** `nhc -n foo` reads `/etc/nhc/foo.conf`, not `nhc.conf`. Check what's loaded with `nhc -V -V -V` (1.5) and `-v` output.
-- **Early-only variable set in the config.** `TIMEOUT`, `DETACHED_MODE`, `LOGFILE`, `CONFFILE`, `NAME`... go in the sysconfig file or on the command line ([part 3](/fields/system-administration/node-health-check/writing-nhc-conf.md#variables-and-the-precedence-trap)).
+- **Early-only variable set in the config.** `TIMEOUT`, `DETACHED_MODE`, `LOGFILE`, `CONFFILE`, `NAME`... go in the sysconfig file or on the command line ([part 3](/fields/system-administration/node-health-check/getting-started/writing-nhc-conf.md#variables-and-the-precedence-trap)).
 - **Config beats command line.** `nhc FOO=1` loses to `FOO=0` in the config.
 - **Custom module not loading.** It must end in `.nhc` and live in `/etc/nhc/scripts/` (or `$INCDIR`). `bash -n` it for syntax errors.
 - **Variable set after it's used.** Lines execute in order; assignments must come before the checks that need them.
@@ -186,7 +186,7 @@ Your shell and `slurmd`'s environment are not the same:
 
 ## 9. Build and install problems
 
-- **`./configure: No such file or directory`**: you downloaded GitHub's auto-generated "Source code" archive. Use the `lbnl-nhc-<ver>.tar.xz` release asset, or run `./autogen.sh` first ([part 2](/fields/system-administration/node-health-check/build-and-install.md#before-you-start-the-one-trap-everyone-falls-into)).
+- **`./configure: No such file or directory`**: you downloaded GitHub's auto-generated "Source code" archive. Use the `lbnl-nhc-<ver>.tar.xz` release asset, or run `./autogen.sh` first ([part 2](/fields/system-administration/node-health-check/getting-started/build-and-install.md#before-you-start-the-one-trap-everyone-falls-into)).
 - **`make test` fails**: something about your platform breaks an assumption (bash version, `/proc` layout). That's a real bug report: post the output.
 - **Helpers not found**: the `--libexecdir` you built with doesn't match where NHC looks. Compare `nhc -V -V -V` with the files on disk, or set `HELPERDIR` in the sysconfig file.
 

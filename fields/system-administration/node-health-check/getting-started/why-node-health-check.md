@@ -80,7 +80,7 @@ flowchart TD
 
 A few things worth burning into memory:
 
-1. **One config for the whole cluster.** Every line in `nhc.conf` looks like `target || check`. Each node only runs the lines whose target matches its own hostname. More on this in [part 3](/fields/system-administration/node-health-check/writing-nhc-conf.md).
+1. **One config for the whole cluster.** Every line in `nhc.conf` looks like `target || check`. Each node only runs the lines whose target matches its own hostname. More on this in [part 3](/fields/system-administration/node-health-check/getting-started/writing-nhc-conf.md).
 2. **First failure wins (by default).** NHC stops at the first failing check, reports it and exits non-zero. Use `-a` when you want to see *every* failure, which is exactly what you want while debugging.
 3. **Silence is golden.** A healthy run prints nothing and exits `0`. Details go to `/var/log/nhc.log`.
 4. **NHC takes action itself.** The scheduler only *runs* the program. Slurm's own docs say any action must be performed by the program, and NHC's helper scripts do the draining and resuming.
@@ -125,7 +125,7 @@ Health checks aren't one thing. Mature sites check at several moments, each with
 | **Job boundaries** | Prolog / Epilog | Seconds (it delays jobs!) | "Is it safe to start?" / "Did the last job break something?" |
 | **On demand / deep** | You, cron, after a drain | Minutes are fine | Stress tests, DCGM level 2-3 diagnostics, burn-in |
 
-NHC can serve all four with **contexts**: separate configs for the same binary (see [part 3](/fields/system-administration/node-health-check/writing-nhc-conf.md#contexts-one-binary-many-personalities)). The golden rule: *the more often a check runs, the cheaper it must be.*
+NHC can serve all four with **contexts**: separate configs for the same binary (see [part 3](/fields/system-administration/node-health-check/getting-started/writing-nhc-conf.md#contexts-one-binary-many-personalities)). The golden rule: *the more often a check runs, the cheaper it must be.*
 
 ---
 
@@ -142,7 +142,7 @@ Knowing the edges saves you from asking it to do things it was never built for:
 
 ## Where we go next
 
-Enough theory. In [part 2](/fields/system-administration/node-health-check/build-and-install.md) we get NHC built, installed and passing its own test suite on a node.
+Enough theory. In [part 2](/fields/system-administration/node-health-check/getting-started/build-and-install.md) we get NHC built, installed and passing its own test suite on a node.
 
 > **Takeaway:** a fast-failing node looks like the most available node in the cluster. NHC is the bouncer that drains it with a readable `NHC:` reason, and resumes it once it's healthy again, without touching nodes a human drained.
 

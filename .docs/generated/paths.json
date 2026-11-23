@@ -735,82 +735,98 @@
     "pos": 3,
     "total": 6
   },
-  "fields/system-administration/node-health-check/architecture-driven-nhc": {
+  "fields/system-administration/node-health-check/architecture-and-case-study/architecture-driven-nhc": {
     "next": {
-      "path": "fields/system-administration/node-health-check/case-study-build-me-an-nhc",
+      "path": "fields/system-administration/node-health-check/architecture-and-case-study/case-study-build-me-an-nhc",
       "title": "Case Study: \"Build Us an NHC\", From a Vague Ask to a Validated Proposal"
     },
     "pos": 9,
-    "total": 10
+    "total": 12
   },
-  "fields/system-administration/node-health-check/auto-remediation": {
+  "fields/system-administration/node-health-check/architecture-and-case-study/case-study-build-me-an-nhc": {
     "next": {
-      "path": "fields/system-administration/node-health-check/troubleshooting",
+      "path": "fields/system-administration/node-health-check/gpu-temperature/gpu-temperature-ceiling",
+      "title": "GPU Temperature in a Health Check: The Ceiling Rule"
+    },
+    "pos": 10,
+    "total": 12
+  },
+  "fields/system-administration/node-health-check/checks-and-remediation/auto-remediation": {
+    "next": {
+      "path": "fields/system-administration/node-health-check/checks-and-remediation/troubleshooting",
       "title": "NHC Troubleshooting: Symptom First"
     },
     "pos": 7,
-    "total": 10
+    "total": 12
   },
-  "fields/system-administration/node-health-check/build-and-install": {
+  "fields/system-administration/node-health-check/checks-and-remediation/custom-checks": {
     "next": {
-      "path": "fields/system-administration/node-health-check/writing-nhc-conf",
-      "title": "Writing nhc.conf That Actually Fits Your Cluster"
-    },
-    "pos": 2,
-    "total": 10
-  },
-  "fields/system-administration/node-health-check/case-study-build-me-an-nhc": {
-    "next": null,
-    "pos": 10,
-    "total": 10
-  },
-  "fields/system-administration/node-health-check/custom-checks": {
-    "next": {
-      "path": "fields/system-administration/node-health-check/auto-remediation",
+      "path": "fields/system-administration/node-health-check/checks-and-remediation/auto-remediation",
       "title": "Auto-Remediation: From Detected to Fixed, Safely"
     },
     "pos": 6,
-    "total": 10
+    "total": 12
   },
-  "fields/system-administration/node-health-check/rollout-at-scale": {
+  "fields/system-administration/node-health-check/checks-and-remediation/troubleshooting": {
     "next": {
-      "path": "fields/system-administration/node-health-check/custom-checks",
-      "title": "Writing Your Own NHC Checks"
-    },
-    "pos": 5,
-    "total": 10
-  },
-  "fields/system-administration/node-health-check/slurm-integration": {
-    "next": {
-      "path": "fields/system-administration/node-health-check/rollout-at-scale",
-      "title": "Rolling NHC Out to a Fleet Without Draining Everything"
-    },
-    "pos": 4,
-    "total": 10
-  },
-  "fields/system-administration/node-health-check/troubleshooting": {
-    "next": {
-      "path": "fields/system-administration/node-health-check/architecture-driven-nhc",
+      "path": "fields/system-administration/node-health-check/architecture-and-case-study/architecture-driven-nhc",
       "title": "Architecture-Driven NHC: Generate Health Checks from Your Cluster's Definition"
     },
     "pos": 8,
-    "total": 10
+    "total": 12
   },
-  "fields/system-administration/node-health-check/why-node-health-check": {
+  "fields/system-administration/node-health-check/getting-started/build-and-install": {
     "next": {
-      "path": "fields/system-administration/node-health-check/build-and-install",
+      "path": "fields/system-administration/node-health-check/getting-started/writing-nhc-conf",
+      "title": "Writing nhc.conf That Actually Fits Your Cluster"
+    },
+    "pos": 2,
+    "total": 12
+  },
+  "fields/system-administration/node-health-check/getting-started/rollout-at-scale": {
+    "next": {
+      "path": "fields/system-administration/node-health-check/checks-and-remediation/custom-checks",
+      "title": "Writing Your Own NHC Checks"
+    },
+    "pos": 5,
+    "total": 12
+  },
+  "fields/system-administration/node-health-check/getting-started/slurm-integration": {
+    "next": {
+      "path": "fields/system-administration/node-health-check/getting-started/rollout-at-scale",
+      "title": "Rolling NHC Out to a Fleet Without Draining Everything"
+    },
+    "pos": 4,
+    "total": 12
+  },
+  "fields/system-administration/node-health-check/getting-started/why-node-health-check": {
+    "next": {
+      "path": "fields/system-administration/node-health-check/getting-started/build-and-install",
       "title": "Build and Install NHC"
     },
     "pos": 1,
-    "total": 10
+    "total": 12
   },
-  "fields/system-administration/node-health-check/writing-nhc-conf": {
+  "fields/system-administration/node-health-check/getting-started/writing-nhc-conf": {
     "next": {
-      "path": "fields/system-administration/node-health-check/slurm-integration",
+      "path": "fields/system-administration/node-health-check/getting-started/slurm-integration",
       "title": "Plugging NHC into Slurm (and Friends)"
     },
     "pos": 3,
-    "total": 10
+    "total": 12
+  },
+  "fields/system-administration/node-health-check/gpu-temperature/gpu-temperature-ceiling": {
+    "next": {
+      "path": "fields/system-administration/node-health-check/gpu-temperature/gpu-temperature-idle-timer",
+      "title": "GPU Temperature in a Health Check: The Idle Timer"
+    },
+    "pos": 11,
+    "total": 12
+  },
+  "fields/system-administration/node-health-check/gpu-temperature/gpu-temperature-idle-timer": {
+    "next": null,
+    "pos": 12,
+    "total": 12
   },
   "fields/system-administration/openmp-and-open-mpi/hybrid-and-the-binding-trap": {
     "next": {

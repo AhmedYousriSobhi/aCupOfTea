@@ -128,7 +128,7 @@ Whichever route you took (with the prefixes above), you get this layout:
 | Path | What it is |
 |------|-----------|
 | `/usr/sbin/nhc` | The driver script. This is what Slurm will run. |
-| `/usr/sbin/nhc-genconf` | Scans a node and writes a starter config ([part 3](/fields/system-administration/node-health-check/writing-nhc-conf.md)). |
+| `/usr/sbin/nhc-genconf` | Scans a node and writes a starter config ([part 3](/fields/system-administration/node-health-check/getting-started/writing-nhc-conf.md)). |
 | `/usr/sbin/nhc-wrapper` | Runs NHC from cron/loops with de-duplicated e-mail alerts. |
 | `/etc/nhc/nhc.conf` | The config. The shipped one is a *catalogue of examples*, not a working config. |
 | `/etc/nhc/scripts/*.nhc` | Check modules (`common.nhc`, `lbnl_fs.nhc`, `lbnl_hw.nhc`, `lanl_nvgpu.nhc`, ...). Only files ending in `.nhc` are loaded. |
@@ -157,7 +157,7 @@ sudo nhc -e 'check_fs_mount_rw -f /' && echo "root fs is rw, NHC works"
 sudo nhc -d -v -t 0 -l- MARK_OFFLINE=0
 ```
 
-The second one will probably *complain* (the stock config is generic). That's fine. Writing a config that fits your nodes is [part 3](/fields/system-administration/node-health-check/writing-nhc-conf.md).
+The second one will probably *complain* (the stock config is generic). That's fine. Writing a config that fits your nodes is [part 3](/fields/system-administration/node-health-check/getting-started/writing-nhc-conf.md).
 
 > [!IMPORTANT]
 > Notice the shape of that second command: **options first, then `VAR=value` pairs**. NHC reads trailing `VAR=value` arguments as settings, and they must come after every flag.
@@ -197,7 +197,7 @@ A minimal Ansible sketch:
   loop: [acme_gpu.nhc]
 ```
 
-How to roll the *config* out without draining the whole cluster by accident has its own page: [part 5](/fields/system-administration/node-health-check/rollout-at-scale.md).
+How to roll the *config* out without draining the whole cluster by accident has its own page: [part 5](/fields/system-administration/node-health-check/getting-started/rollout-at-scale.md).
 
 > **Takeaway:** use the release tarball or RPM (never GitHub's auto "Source code" archives), run `make test`, put the package in the image and the config in Git.
 

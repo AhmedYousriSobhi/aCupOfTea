@@ -844,6 +844,15 @@
     ],
     "related_by": []
   },
+  "nhc-architecture-and-case-study-quick": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "nhc-architecture-driven",
+      "nhc-case-study"
+    ],
+    "related_by": []
+  },
   "nhc-architecture-driven": {
     "prerequisite_of": [
       "nhc-case-study"
@@ -854,7 +863,9 @@
       "nhc-writing-nhc-conf"
     ],
     "related": [],
-    "related_by": []
+    "related_by": [
+      "nhc-architecture-and-case-study-quick"
+    ]
   },
   "nhc-auto-remediation": {
     "prerequisite_of": [],
@@ -866,7 +877,8 @@
     "related_by": [
       "gpu-failure-prediction-overview",
       "gpu-pred-alert-to-drain",
-      "gpu-pred-runbook"
+      "gpu-pred-runbook",
+      "nhc-checks-and-remediation-quick"
     ]
   },
   "nhc-build-and-install": {
@@ -878,7 +890,8 @@
     ],
     "related": [],
     "related_by": [
-      "ansible-rolling"
+      "ansible-rolling",
+      "nhc-getting-started-quick"
     ]
   },
   "nhc-case-study": {
@@ -887,7 +900,9 @@
       "nhc-architecture-driven"
     ],
     "related": [],
-    "related_by": []
+    "related_by": [
+      "nhc-architecture-and-case-study-quick"
+    ]
   },
   "nhc-cheat-sheet": {
     "prerequisite_of": [],
@@ -898,14 +913,75 @@
     ],
     "related_by": []
   },
+  "nhc-checks-and-remediation-quick": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "nhc-auto-remediation",
+      "nhc-custom-checks",
+      "nhc-troubleshooting"
+    ],
+    "related_by": []
+  },
   "nhc-custom-checks": {
     "prerequisite_of": [
-      "nhc-architecture-driven"
+      "nhc-architecture-driven",
+      "nhc-gpu-temperature-ceiling"
     ],
     "prerequisites": [
       "nhc-writing-nhc-conf"
     ],
     "related": [],
+    "related_by": [
+      "nhc-checks-and-remediation-quick"
+    ]
+  },
+  "nhc-getting-started-quick": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "nhc-build-and-install",
+      "nhc-rollout-at-scale",
+      "nhc-slurm-integration",
+      "nhc-writing-nhc-conf"
+    ],
+    "related_by": []
+  },
+  "nhc-gpu-temperature-ceiling": {
+    "prerequisite_of": [
+      "nhc-gpu-temperature-idle-timer"
+    ],
+    "prerequisites": [
+      "nhc-custom-checks"
+    ],
+    "related": [
+      "nhc-rollout-at-scale",
+      "nhc-slurm-integration"
+    ],
+    "related_by": [
+      "nhc-gpu-temperature-quick"
+    ]
+  },
+  "nhc-gpu-temperature-idle-timer": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "nhc-gpu-temperature-ceiling"
+    ],
+    "related": [
+      "nhc-rollout-at-scale",
+      "nhc-slurm-integration"
+    ],
+    "related_by": [
+      "nhc-gpu-temperature-quick"
+    ]
+  },
+  "nhc-gpu-temperature-quick": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "nhc-gpu-temperature-ceiling",
+      "nhc-gpu-temperature-idle-timer"
+    ],
     "related_by": []
   },
   "nhc-rollout-at-scale": {
@@ -917,7 +993,11 @@
       "nhc-slurm-integration"
     ],
     "related": [],
-    "related_by": []
+    "related_by": [
+      "nhc-getting-started-quick",
+      "nhc-gpu-temperature-ceiling",
+      "nhc-gpu-temperature-idle-timer"
+    ]
   },
   "nhc-slurm-integration": {
     "prerequisite_of": [
@@ -930,6 +1010,9 @@
     ],
     "related": [],
     "related_by": [
+      "nhc-getting-started-quick",
+      "nhc-gpu-temperature-ceiling",
+      "nhc-gpu-temperature-idle-timer",
       "nhc-why-node-health-check"
     ]
   },
@@ -940,7 +1023,8 @@
     ],
     "related": [],
     "related_by": [
-      "nhc-cheat-sheet"
+      "nhc-cheat-sheet",
+      "nhc-checks-and-remediation-quick"
     ]
   },
   "nhc-why-node-health-check": {
@@ -964,7 +1048,8 @@
     ],
     "related": [],
     "related_by": [
-      "nhc-cheat-sheet"
+      "nhc-cheat-sheet",
+      "nhc-getting-started-quick"
     ]
   },
   "nvidia-cluster-readiness-engine": {
