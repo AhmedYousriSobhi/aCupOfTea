@@ -103,6 +103,19 @@ class Api(unittest.TestCase):
     def test_options_report_a_missing_folder(self):
         self.assertFalse(self.json("/api/options?folder=notes/new-one")["folder_exists"])
 
+    def test_suggest_from_the_text_needs_the_index_and_skips_pages_without_an_id(self):
+        self.assertEqual(self.json("/api/suggest?title=Slurm%20job%20priority"), {"subjects": [], "pages": []})   # no index yet
+        os.makedirs(os.path.join(new_page.sc.ROOT, ".docs", "generated"))
+        with open(os.path.join(new_page.sc.ROOT, ".docs", "generated", "objects.json"), "w", encoding="utf-8") as fh:
+            json.dump({"a-page": {"id": "a-page", "title": "Slurm Job Priority", "summary": "How the queue orders jobs.",
+                                  "domains": ["systems-and-hpc"], "tags": [], "path": "notes/a.md"},
+                       "no-id": {"title": "Slurm Queue", "summary": "Jobs wait in a queue.", "domains": ["systems-and-hpc"],
+                                 "tags": [], "path": "notes/hand-made.md"}}, fh)
+        s = self.json("/api/suggest?title=Slurm%20job%20priority&summary=Queue%20order")
+        self.assertEqual(s["subjects"][0]["key"], "systems-and-hpc")
+        self.assertEqual([p["id"] for p in s["pages"]], ["a-page"])          # only pages with an id can be related
+        self.assertEqual(self.json("/api/suggest?title=Slurm%20job%20priority&path=notes/a.md")["pages"], [])   # not itself
+
     # ---- create
     def create(self, **kw):
         body = {"title": "Brand New Idea", "folder": "notes", "types": ["concept", "guide"],

@@ -112,6 +112,15 @@ def options(title="", folder=""):
     }
 
 
+def suggest(title="", summary="", path=""):
+    """Subjects and closest pages for the words of a title and summary (suggest_subjects.py)."""
+    import suggest_subjects
+    out = suggest_subjects.for_root(new_page.sc.ROOT, title, summary, skip_path=path or None)
+    ids = {p["id"] for p in page_ids(new_page.scan())}
+    return {"subjects": [{"key": k, "score": round(s, 2), "why": w} for k, s, w in out["subjects"]],
+            "pages": [{"id": k, "score": round(s, 2), "why": w} for k, s, w in out["pages"] if k in ids]}
+
+
 def all_pages():
     """Every content page (path and title), for pickers that work on any page."""
     return sorted(({"path": rel, "title": h1} for pages in new_page.scan().values() for rel, h1 in pages
@@ -378,6 +387,7 @@ def reindex(d=None):
 
 GET_ROUTES = {
     "/api/options": lambda q: options(q.get("title", [""])[0], q.get("folder", [""])[0]),
+    "/api/suggest": lambda q: suggest(q.get("title", [""])[0], q.get("summary", [""])[0], q.get("path", [""])[0]),
     "/api/adoptable": lambda q: adoptable(),
     "/api/issues": lambda q: issues(q.get("scope", ["changed"])[0], q.get("pictures", [""])[0] == "1"),
     "/api/check": lambda q: {"output": check_report(q.get("page", [""])[0])},

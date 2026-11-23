@@ -358,7 +358,13 @@ def default_domains(folder, folders, title):
     return near or guess_domains(title, folder)
 
 
-def choose_domains(args, ask, folder, folders, title, default=None):
+def text_hint(title, summary="", rel=""):
+    """Subjects and pages suggested by the words of the title and summary (suggest_subjects.py)."""
+    import suggest_subjects
+    return suggest_subjects.for_root(sc.ROOT, title, summary, skip_path=rel or None)
+
+
+def choose_domains(args, ask, folder, folders, title, default=None, summary="", rel=""):
     """One to three related subjects. Returns (domains, new_domains); an unknown subject is matched to a
     known one ("hpc" -> systems-and-hpc) or, when typed in answer to the question, can be added."""
     domains = load_section("domains")
@@ -368,6 +374,12 @@ def choose_domains(args, ask, folder, folders, title, default=None):
         near = default_domains(folder, folders, title)
         print("\nSubjects (domains) put the page in Explore by subject; up to %d related ones, comma separated." % MAX_DOMAINS)
         print("Known: %s" % ", ".join(domains + list(new)))
+        said = text_hint(title, summary, rel)["subjects"]
+        if said:
+            print("Suggested from the words of the title and summary:")
+            for key, score, why in said:
+                print("  %s (%.2f): %s" % (key, score, why))
+            near = near or [said[0][0]]
         complete_with(domains + list(new))
         return ask.text("Domains", default if default is not None else ", ".join(near[:MAX_DOMAINS]), required=False)
 
@@ -420,11 +432,11 @@ def page_ids(raw, ids, role):
     return out
 
 
-def ask_metadata(args, ask, title, folder, folders, have=()):
+def ask_metadata(args, ask, title, folder, folders, have=(), summary="", rel=""):
     """The questions every page gets: type, subjects, tags, level, prerequisites, related.
     Fields named in `have` (already in the page's front matter) are not asked."""
     types, new_types = ([], {}) if "type" in have else choose_type(args, ask, folder, folders)
-    domains, new_domains = ([], {}) if "domains" in have else choose_domains(args, ask, folder, folders, title)
+    domains, new_domains = ([], {}) if "domains" in have else choose_domains(args, ask, folder, folders, title, summary=summary, rel=rel)
     tags, new_tags = ([], {}) if "tags" in have else choose_tags(args, ask, title, load_tags())
 
     def parse_level(raw):
@@ -439,6 +451,9 @@ def ask_metadata(args, ask, title, folder, folders, have=()):
     def ask_ids(heading, label):
         def prompt():
             print("\n%s: ids of pages to %s (comma separated, Tab completes)." % (heading, label))
+            close = [(k, s, w) for k, s, w in text_hint(title, summary, rel)["pages"] if k in ids]
+            if close:
+                print("Closest by text: " + "; ".join("%s (%.2f)" % (k, s) for k, s, _ in close[:3]))
             complete_with(sorted(ids))
             return ask.text(heading, required=False)
         return prompt

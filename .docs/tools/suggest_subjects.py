@@ -84,12 +84,12 @@ def load(root=ROOT):
     return objects, taxonomy
 
 
-def suggest(title, summary, objects, taxonomy, skip_id=None, top_pages=5, top_subjects=3):
+def suggest(title, summary, objects, taxonomy, skip_id=None, top_pages=5, top_subjects=3, skip_path=None):
     """Return {"subjects": [(key, score, reason)], "pages": [(id, score, reason)]}.
 
     subject score = 0.4 * match with the subject's description + 0.6 * the best-matching pages that carry it.
     """
-    pages = {k: v for k, v in objects.items() if k != skip_id and v.get("title")}
+    pages = {k: v for k, v in objects.items() if k != skip_id and v.get("title") and (skip_path is None or v.get("path") != skip_path)}
     domains = taxonomy.get("domains", {})
     docs = {"page:" + k: page_text(v) for k, v in pages.items()}
     for d, meta in domains.items():
@@ -126,6 +126,18 @@ def suggest(title, summary, objects, taxonomy, skip_id=None, top_pages=5, top_su
         words = index.shared(q, "page:" + k)
         related.append((k, s, "shares: " + ", ".join(words)))
     return {"subjects": subjects, "pages": related}
+
+
+def for_root(root, title, summary="", skip_path=None):
+    """suggest() for the repo at `root`; empty when the title is blank or the generated index is missing."""
+    empty = {"subjects": [], "pages": []}
+    if not (title or "").strip():
+        return empty
+    try:
+        objects, taxonomy = load(root)
+    except (OSError, ValueError):
+        return empty
+    return suggest(title, summary, objects, taxonomy, skip_path=skip_path)
 
 
 def evaluate(objects, taxonomy, limit=None):
