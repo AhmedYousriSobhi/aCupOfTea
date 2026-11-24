@@ -1,6 +1,6 @@
 ---
 id: dip-noise-restoration
-title: Noise and Restoration
+title: "The Photo That Turned to Static: Noise and Restoration"
 sidebar_label: 8. Noise and restoration
 order: 9
 summary: The degradation model g = h*f + n, common noise types, why inverse filtering explodes, and how the Wiener filter gives up gracefully - with PSNR to score the result.
@@ -12,23 +12,53 @@ relations:
   prerequisites: [dip-frequency-filtering-aliasing]
 ---
 
-# Noise and Restoration
+# The Photo That Turned to Static: Noise and Restoration
 
-> **Part 8 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** Real photos arrive blurred and noisy, and the obvious cure for the blur is also the fastest way to destroy the picture. By the end you'll write the damage as an equation, pick a filter by noise type, and see why Wiener is inverse filtering with common sense added.
+> **Part 8 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** Real photos arrive blurred and noisy, and the obvious cure for the blur is also the fastest way to destroy the picture. *Mira, Ravi and the traffic-camera team are invented; the maths and numbers are real.*
+
+Mira will un-blur a licence plate with a method that is correct on paper and that will replace the whole photo with static. The mistake will be one division. It will be, mathematically, perfectly sound.
+
+**By the end of this page you will be able to:**
+
+- Write the damage to a photo as an equation.
+- Pick a filter by noise type.
+- Explain why dividing out a blur amplifies noise, with the numbers.
+- Explain how the Wiener filter gives up gracefully.
+- Score a restoration with PSNR.
 
 ---
 
-## The photo that turned to static
+## The plate that became static
 
-A security camera shot a licence plate while the car was moving. The image is smeared in one direction. A colleague says: "We know the blur. Divide it out. Easy."
+A traffic camera shot a licence plate while the car was moving. The image is smeared in one direction. The traffic team knows the blur, and Ravi says: "We know the blur. Divide it out. Easy."
 
-They run the program. The smear is gone, and so is the car, the road and the plate. The whole picture has been replaced by a coarse checkerboard of static.
+Mira runs the program. The smear is gone, and so is the car, the road and the plate. The whole picture has been replaced by a coarse checkerboard of static.
 
-They divided by a number that was nearly zero. That one sentence is the plot of this page.
+Her first reading is the obvious one: **a bug in her division code.**
 
 ---
 
-## The damage, as an equation
+## Three suspects
+
+**Attempt 1: check the code.** She tests the division on a small image with no noise. It recovers the original exactly. The code is fine.
+
+**Attempt 2: re-measure the blur.** Maybe the smear length is slightly wrong. She tries the nearest few values. Static, every time.
+
+**Attempt 3: clean up the static afterwards.** She runs a median filter on the result and queues the pipeline for the whole day's captures. Ravi sees the output side by side with the originals: "The plates were readable before you started." She stops the queue.
+
+So far:
+
+- The division is correct, and the blur is about right.
+- A median on the output cannot get the plate back.
+- The pipeline made every capture worse than the original.
+
+That leaves one question: **why does a correct inverse, on a real photo, produce noise?**
+
+---
+
+## The damage, the noise and the safe way to divide
+
+### The damage, as an equation
 
 Most restoration starts from one model. The true image f is blurred by something h (motion, defocus, atmosphere), then noise η is added:
 
@@ -50,9 +80,7 @@ flowchart LR
 
 *Going forward is easy and always loses something. Going backward is guesswork with a good model.*
 
----
-
-## A field guide to noise
+### A field guide to noise
 
 Noise isn't one thing. Which type you have decides which tool to use.
 
@@ -65,9 +93,7 @@ Noise isn't one thing. Which type you have decides which tool to use.
 
 Each has a statistical model, which is why this page lives next to statistics: the filters below come from asking "what is the best guess given how the noise behaves?".
 
----
-
-## Matching the filter to the noise
+### Matching the filter to the noise
 
 | Noise | Reach for | Why |
 |---|---|---|
@@ -81,9 +107,7 @@ Each has a statistical model, which is why this page lives next to statistics: t
 
 Smoothing noise also smooths edges, so the question is always how much detail you can afford to lose.
 
----
-
-## Try it before you scroll
+### Try it before you scroll
 
 ☕ Your blur H has a value of 0.01 at some frequency, and the noise N is about 1 there. If you "undo the blur" by dividing the observed G by H, **how much is the noise amplified at that frequency?**
 
@@ -91,9 +115,7 @@ Smoothing noise also smooths edges, so the question is always how much detail yo
 
 **Answer:** **100 times**. Read on.
 
----
-
-## Inverse filtering: dividing by the blur
+### Inverse filtering: dividing by the blur
 
 The naive plan: if G = H·F + N, divide by H.
 
@@ -105,9 +127,7 @@ That's the static in the opening scene: the "restored" image is dominated by amp
 
 The honest summary: **you can't recover what the blur erased**, and trying to makes things much worse.
 
----
-
-## Wiener: dividing with manners
+### Wiener: dividing with manners
 
 The **Wiener filter** also inverts the blur, but it knows when to stop. Here's the version with a constant K, which stands for the noise-to-signal power ratio:
 
@@ -132,9 +152,7 @@ K is usually tuned by eye: too small and the noise creeps back, too big and the 
 
 [Restoration lab](/fields/digital-image-processing/labs/restoration.html#embed ':ignore')
 
----
-
-## Scoring a restoration
+### Scoring a restoration
 
 How do you know the result is better? When you have a clean reference, use the mean squared error and its logarithmic cousin, the **peak signal-to-noise ratio**:
 
@@ -148,13 +166,44 @@ PSNR is easy to compute and only loosely matches how a human judges quality: a r
 
 ## Back to the static
 
+Mira prints the blur's strength at a high frequency: a tiny number. The noise there is not tiny. She divides one by the other and sees what happened: they divided by a number that was nearly zero.
+
 Your colleague's plan was correct on paper and murderous in practice. The blur had pushed the high frequencies close to zero, noise was hiding there too, and dividing by H made the noise a hundred times louder than the thing they wanted.
 
 Wiener's fix is the same principle in every area of engineering: **don't trust a measurement more than it deserves**. Where the signal is strong, undo the damage. Where it's buried, stay quiet.
 
+She switches to Wiener with a K tuned by eye, and reads the plate.
+
+---
+
+## Never again: restoring a photo
+
+| Do | Because |
+|---|---|
+| Write the damage first: `g = h * f + η`, in frequency `G = H F + N` | It shows what you can and cannot undo |
+| Match the filter to the noise | Gaussian: mean or Gaussian blur; salt-and-pepper: median; periodic: notch; several frames of a still scene: average them |
+| Never invert a blur without a safety | `N / H` explodes where `H` is small (H = 0.01, N ≈ 1: about 100 times) |
+| Use Wiener and tune K by eye | Too small and the noise creeps back; too big and it stays blurry |
+| Score with PSNR, but do not trust it alone | MSE = 100 gives about 28.1 dB; every 3 dB is about half the MSE; it only loosely matches the eye |
+| Average frames only when the noise is independent and zero-mean | A fixed pattern (hot pixels) does not average out |
+
 **Takeaway:** write the damage as G = HF + N, match the filter to the noise, and never invert a blur without a Wiener-style safety.
 
 **Next:** all of these tools see the town at **one scale**. What if the useful structure lives at several sizes at once? [Part 9: Wavelets and multiresolution processing](/fields/digital-image-processing/wavelets-and-multiresolution-processing.md).
+
+---
+
+## 📜 The Scroll (keep this)
+
+```text
+Symptom:  "Un-blurred" photo is static
+Cause:    F_hat = G/H = F + N/H: where H is tiny the noise is multiplied (H=0.01, N~1 -> ~100x)
+Check:    How small is |H| at high frequencies? Is there noise at all?
+Do not:   Invert a blur without a safety term
+Fix:      Wiener: [H* / (|H|^2 + K)] G  (H=0.01, K=0.01 -> gain ~0.99); tune K by eye
+Score:    PSNR = 10 log10(MAX^2 / MSE); MSE 100 -> ~28.1 dB
+```
+
 
 ### References
 

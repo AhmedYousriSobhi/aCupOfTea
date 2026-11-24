@@ -1,6 +1,6 @@
 ---
 id: dip-intensity-transforms-histograms
-title: Intensity Transforms and Histograms
+title: "The Unreadable X-ray: Intensity Transforms and Histograms"
 sidebar_label: 3. Intensity transforms
 order: 3
 summary: Rescue a dark image with one formula - negatives, log, gamma and histogram equalization, with the CDF worked out by hand on a tiny image.
@@ -11,21 +11,55 @@ relations:
   prerequisites: [dip-images-are-matrices]
 ---
 
-# Intensity Transforms and Histograms
+# The Unreadable X-ray: Intensity Transforms and Histograms
 
-> **Part 3 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** A pixel transform is a lookup table: the old number goes in, a new one comes out. By the end you'll pick between log, gamma and histogram equalization on purpose, and you'll see why equalization is a cumulative sum in disguise.
+> **Part 3 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** *Mira, Ravi and the radiology team are invented; the maths and numbers are real.*
+
+On Monday morning Mira will be asked to make a dark X-ray readable. She will find a fix that looks right on the first scan and will be one keystroke from applying it to every scan the hospital owns. Her fix will be reasonable. It will also be a guess.
+
+**By the end of this page you will be able to:**
+
+- Describe a pixel transform as a lookup table.
+- Choose between negative, log and gamma on purpose.
+- Read a histogram as a census of gray levels.
+- Build histogram equalization by hand on a tiny image, and say why it is a cumulative sum in disguise.
+- Name what equalization costs.
 
 ---
 
-## The unreadable X-ray
+## The X-ray nobody can read
 
-A radiologist sends you the kind of scan from [page 1](/fields/digital-image-processing/images-are-just-matrices.md). Technically it's fine, but every value sits between 0 and about 60 out of 255. The bones are in there, one shade apart, and nobody can see the difference.
+Dr. Okafor sends Mira the kind of scan from [page 1](/fields/digital-image-processing/images-are-just-matrices.md). Technically it is fine, but every value sits between 0 and about 60 out of 255. The bones are in there, one shade apart, and nobody can see the difference.
 
-You don't need a smarter algorithm. You need to **spread the numbers out**. In Pixel Town terms: every citizen is whispering. Tell them all to speak up, and speak up in the right proportions.
+The radiologist's request is short: "Can you make this readable?"
+
+Mira's first reading is the obvious one: the picture needs **more light**. In Pixel Town terms, every citizen is whispering.
 
 ---
 
-## One citizen at a time
+## Three ways to turn up the volume
+
+**Attempt 1: flip it.** A negative turns dark into bright. Mira applies one. The bones are now white-ish on a dark-ish background and still one shade apart. It looks different. It is no easier to read.
+
+**Attempt 2: try a curve and eyeball it.** She tries a power law with a gamma below 1, then another, then a log. Each one lifts the picture a little. She settles on the one that looks best on this scan and moves on.
+
+**Attempt 3: put it in the pipeline.** She hard-codes that gamma into the viewer's loading step, so that every scan the hospital sends gets "fixed" automatically. She has the pull request open. Ravi reads it and asks one question: "Did you look at what the other scans look like?"
+
+She had not. This was the only one she had opened.
+
+So far:
+
+- Flipping and curve-fitting by eye made the scan look different, not clearly better.
+- The chosen curve was tuned to a single image.
+- It was about to run on every scan, dark ones and well-exposed ones alike.
+
+That leaves one question: **which transform, and how much?** You would be guessing. There is a method that measures the image first.
+
+---
+
+## A lookup table, a census and a running total
+
+### One citizen at a time
 
 An **intensity transform** changes each pixel using only that pixel's own value. No neighbours involved:
 
@@ -41,9 +75,7 @@ flowchart LR
 
 *Same idea whether T is a formula or a table someone computed from the histogram.*
 
----
-
-## The three workhorses
+### The three workhorses
 
 All three assume r is normalized to [0, 1] unless stated, and c is a scaling constant.
 
@@ -61,9 +93,7 @@ A few things worth knowing:
 
 For the dark X-ray, a γ below 1 or a log would already help a lot. But which one, and how much? You'd be guessing. There's a method that **measures** the image first.
 
----
-
-## The town's census: the histogram
+### The histogram: the town's census
 
 The **histogram** counts how many citizens hold each card value:
 
@@ -73,9 +103,7 @@ Here n_k is the number of pixels with gray level r_k, and dividing by the total 
 
 A histogram throws away **where** pixels are and keeps only **how many**. Two completely different pictures can have the same histogram. Still, it tells you at a glance that your X-ray is a heap of bars squeezed against the left wall.
 
----
-
-## Try it before you scroll
+### Try it before you scroll
 
 ☕ A dark image has most pixels at low values. You want the output to use the **whole range evenly**. If you have to describe the transform T using the histogram, which running total of the histogram would you use?
 
@@ -83,9 +111,7 @@ A histogram throws away **where** pixels are and keeps only **how many**. Two co
 
 **Answer:** the cumulative sum. That's histogram equalization.
 
----
-
-## Histogram equalization by hand
+### Histogram equalization by hand
 
 The rule is:
 
@@ -125,9 +151,7 @@ Libraries differ in small details. Some subtract the smallest nonzero cumulative
 
 [Intensity transforms lab](/fields/digital-image-processing/labs/intensity-transforms.html#embed ':ignore')
 
----
-
-## Why a cumulative sum flattens things
+### Why a cumulative sum flattens things
 
 Here's the idea behind the formula. Treat gray levels as a continuous random variable r with density p(r). Define:
 
@@ -137,9 +161,7 @@ That integral is the cumulative distribution function (CDF) of r. A classic prob
 
 In discrete images, there are only L levels to move pixels between, and many pixels share one level. They have to move **together**. That's why the table above merged levels 4, 5, 6 and 7 into one and why the output is only roughly flat.
 
----
-
-## What equalization costs
+### What equalization costs
 
 Equalization is automatic, which is both its charm and its danger.
 
@@ -156,13 +178,48 @@ A common refinement applies equalization on small tiles with a limit on how much
 
 ## Back to the X-ray
 
+Mira plots the histogram of the scan. It is a heap of bars squeezed against the left wall, which is what 0 to about 60 out of 255 looks like. She plots the histogram of another scan, and it spreads across the whole range. One gamma would have rescued the first and bleached the second.
+
+The scan never needed a smarter algorithm, or more light. It needed the numbers **spread out**: tell every citizen to speak up, and to speak up in the right proportions.
+
 Your scan lived between 0 and about 60. A gamma below 1 would lift it, and equalization would spread it automatically by sending "darkest 25% of citizens" to "lowest quarter of the range". Neither adds information. They only make the information that was already there **visible**.
 
+She closes the pull request, and builds the lookup table from the scan's own cumulative sum instead. The bones separate. She tells Dr. Okafor it took a measurement and a running total.
+
 That's the limit of one-citizen-at-a-time tools: they never look at neighbours. A noisy speck stays a noisy speck, only brighter. To deal with the speck we need citizens who talk to each other.
+
+---
+
+## Never again: measure before you transform
+
+| Do | Because |
+|---|---|
+| Plot the histogram first: `h(r_k) = n_k` | It shows at a glance whether the image is squeezed |
+| Think of the transform as a lookup table with L entries | Applying it to a million pixels is a million table reads |
+| Pick by what you see | Negative for white-on-dark detail; log for a huge range crushed into a few bright values; gamma below 1 to brighten darks, above 1 to darken |
+| Want no parameters? Equalize | `s_k = (L-1) · Σ p(r_j)`: a cumulative sum and a lookup |
+| Expect the cost | Levels merge, so information is lost; noise in flat regions is amplified; a well-exposed image can look worse |
+| Need to tame the noise problem | CLAHE: equalize small tiles with a limit on how much a bin may grow (`createCLAHE` in OpenCV) |
+
+Never tune one image and run it on all of them.
 
 **Takeaway:** an intensity transform is a lookup table; histogram equalization builds that table from the CDF, and it trades lost levels for visible contrast.
 
 **Next:** what happens when each pixel's new value depends on its neighbours? [Part 4: Spatial filtering](/fields/digital-image-processing/spatial-filtering.md).
+
+---
+
+## 📜 The Scroll (keep this)
+
+```text
+Symptom:  Every value sits between 0 and ~60 of 255; bones one shade apart
+Cause:    The values are squeezed into a corner of the range
+Check:    Plot the histogram; look for bars against one wall
+Do not:   Tune a curve on one scan and run it on all of them
+Fix:      Equalize: s_k = (L-1) * cumulative share; level 0 -> 3 in the 8x8 example
+Cost:     Merged levels, amplified noise in flat areas; CLAHE tames it
+```
+
 
 ### References
 

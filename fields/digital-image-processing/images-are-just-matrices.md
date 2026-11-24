@@ -1,6 +1,6 @@
 ---
 id: dip-images-are-matrices
-title: Images Are Just Matrices
+title: "The Scan That Opened Black: Images Are Just Matrices"
 sidebar_label: 1. Images are just matrices
 order: 1
 summary: A pixel is a number in a grid - sampling, quantization, bit depth, coordinates and neighbours, and why 200 + 100 can equal 44.
@@ -10,23 +10,59 @@ domains: [image-processing]
 tags: [sampling]
 ---
 
-# Images Are Just Matrices
+# The Scan That Opened Black: Images Are Just Matrices
 
-> **Part 1 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** An image is a grid of numbers and nothing more mysterious. By the end you'll know what sampling and quantization do to a scene, how to count the bytes in an image, and why adding two pixels can make them darker.
+> **Part 1 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** *Mira, Ravi and the radiology team are invented; the maths and numbers are real.*
+
+At 09:40 Mira will open a medical scan that is, by every check she can run, perfectly fine. It will be black. She will spend a morning proving, with great care, that nothing is wrong with it, and every proof will be correct.
+
+**By the end of this page you will be able to:**
+
+- Explain what sampling and quantization throw away on purpose.
+- Count the bytes in an uncompressed image.
+- Predict what `250 + 10` does in NumPy and in OpenCV, and why it matters.
+- Find the axis, type and range mistakes behind most "mystery" image bugs.
+- Say why a file can be correct, a viewer can be correct, and the picture still look black.
 
 ---
 
-## The black rectangle
+## The scan that opened black
 
-A colleague sends you a medical scan. "It's a 16-bit PNG," they say. "Open it in anything."
+Mira is the newest engineer on a small imaging team. At 09:40 Dr. Okafor, a radiologist, sends her a scan and one line of instructions:
 
-You open it. A black rectangle. You check the file size: fine. You check the dimensions: fine. You squint at the screen: still black.
+> "It's a 16-bit PNG. Open it in anything."
 
-Nothing is broken. The file is correct, and so is your viewer. They just disagree about what the number **4095** means. Hold that thought; we'll solve it at the end of the page. First we need to know what a pixel is.
+She opens it in the team's viewer. A black rectangle. She checks the file size: fine. She checks the dimensions: fine. She squints at the screen. Still black.
+
+Her first reading is the obvious one: the file is broken.
+
+It is not. The file is correct, and so is the viewer. They just disagree about what the number **4095** means. Hold that thought; the dig below shows what a pixel is, and the verdict comes back to it.
 
 ---
 
-## From a scene to a grid
+## Three fixes that sounded reasonable
+
+**Attempt 1: download it again.** Mira fetches the file a second time. The checksum matches. Same black rectangle.
+
+**Attempt 2: try another viewer.** Ravi, the senior engineer, suggests she convert it to 8 bits "so every viewer agrees". She does. It agrees: every viewer now shows the same black rectangle, in fewer bits.
+
+**Attempt 3: fix the archive.** Mira writes a small batch script that converts every scan to 8 bits and saves the result over the original, so nobody else ever hits this. She types the command and lets her finger hover over Enter. Ravi, walking past with a coffee, reads the screen and says one word: "Originals."
+
+She does not press Enter.
+
+So far:
+
+- The file is not corrupt, and the viewer is not broken.
+- Converting it did not help.
+- Overwriting the originals would have been a one-way trip.
+
+That leaves one question: **if the file, the viewer and the pixels are all fine, what exactly are they disagreeing about?** To answer it we need to know what a pixel is.
+
+---
+
+## A town of numbers: what the file actually holds
+
+### From a scene to a grid
 
 Welcome to **Pixel Town**: a town on a perfect grid, one citizen per square, each holding a card with one number for how bright they are.
 
@@ -47,9 +83,7 @@ $$f = \begin{bmatrix} f(0,0) & f(0,1) & \cdots & f(0,N-1) \\ \vdots & & & \vdots
 
 That's the whole object. Every algorithm in this series is "do something to this matrix".
 
----
-
-## Sampling: how many citizens?
+### Sampling: how many citizens?
 
 **Sampling** picks the grid size. More squares means finer detail, up to the limit of the optics.
 
@@ -57,9 +91,7 @@ Too few squares and small things fall between citizens and vanish, or worse, tur
 
 Spatial resolution is simply how many samples you take per unit of the scene. "12 megapixels" means roughly twelve million citizens. It says nothing about how good each card is, which brings us to the other half.
 
----
-
-## Quantization: how many shades per card?
+### Quantization: how many shades per card?
 
 **Quantization** rounds each brightness into one of L allowed levels. With k bits per pixel:
 
@@ -74,9 +106,7 @@ $$L = 2^k$$
 
 Use too few levels and smooth gradients break into visible steps called **false contouring**. Eight bits is enough for most screens; deeper data matters when you plan to stretch the contrast later.
 
----
-
-## Counting bytes
+### Counting bytes
 
 Storage for an uncompressed grayscale image is just the number of squares times the bits on each card:
 
@@ -84,9 +114,7 @@ $$\text{bits} = M \times N \times k$$
 
 A 1024 × 768 image at 8 bits: 1024 × 768 = 786,432 pixels, times 8 bits is 6,291,456 bits, which is **786,432 bytes** (768 KiB). A colour image with three channels (red, green, blue) triples that. Compression changes the file size, never the matrix once it is decoded.
 
----
-
-## Rows, columns and the upside-down y
+### Rows, columns and the upside-down y
 
 Two conventions trip up everyone at least once.
 
@@ -102,9 +130,7 @@ So `img[y, x]` is the pixel at column x, row y. If your result looks transposed,
 > [!NOTE]
 > OpenCV also stores colour channels in BGR order, not RGB. Show a BGR array with an RGB viewer and every face turns blue.
 
----
-
-## Try it before you scroll
+### Try it before you scroll
 
 ☕ In a `uint8` image, a pixel holds 250. Your code adds 10 to it. **What is the new value?**
 
@@ -119,9 +145,7 @@ So `img[y, x]` is the pixel at column x, row y. If your result looks transposed,
 
 A bright pixel becoming almost black is the classic "why is there a dark speckle where the sky was?" bug. NumPy wraps; OpenCV's `add` saturates (clips). Convert to a wider type first (`float32`) if you want arithmetic that behaves.
 
----
-
-## Neighbours and distances
+### Neighbours and distances
 
 Almost every operation in later pages looks at a pixel **and the pixels around it**, so we need words for "around".
 
@@ -142,15 +166,47 @@ The names come from taxis on a street grid versus a chess king. You'll meet D4 a
 
 ## Back to the black rectangle
 
-Your scan is stored in a 16-bit container (values 0 to 65,535), but the sensor only produces 12 bits (0 to 4095). The brightest possible pixel is 4095, and the viewer maps 65,535 to white:
+Mira reads the file header instead of trusting the viewer. The scan is stored in a **16-bit container** (values 0 to 65,535), but the sensor only produces **12 bits** (0 to 4095). The brightest possible pixel is 4095, and the viewer maps 65,535 to white:
 
 $$\frac{4095}{65535} \approx 0.0625$$
 
 The brightest pixel in the picture is shown at about **6%** of full brightness. To a human eye, that's a black rectangle with extra steps. The data is fine; it needs its contrast stretched, which is exactly what the next page does.
 
+She stretches the contrast on a **copy** and the bones appear. The originals stay as they were, 12 bits and all. She tells Dr. Okafor the file was fine. Dr. Okafor says that is what the last three people said, too.
+
+Mira had proved, correctly, that nothing was wrong. That was the whole problem.
+
+---
+
+## Never again: five questions before you trust a pixel
+
+| Ask | Why |
+|---|---|
+| What is the bit depth, and what is the sensor's real maximum? | A 12-bit sensor in a 16-bit container tops out near 6% of white |
+| What type is the array? | NumPy `uint8` wraps (`250 + 10` is 4, `200 + 100` is 44); OpenCV `cv2.add` saturates at 255 |
+| Do I need arithmetic that behaves? | Convert to a wider type first, such as `float32` |
+| Which axis is first? | `img[y, x]` is column x, row y; a transposed result means they were swapped |
+| Which channel order? | OpenCV is BGR; show it in an RGB viewer and every face turns blue |
+
+Never overwrite an original to fix a display problem: stretch a copy.
+
 **Takeaway:** an image is a matrix of integers with a finite number of levels, and most "mystery" bugs are the wrong type, the wrong axis or the wrong range.
 
 **Next:** every rotation, zoom and shift sends a citizen to a square that doesn't exist. What number do you write on the squares left behind? [Part 2: Geometric transforms and interpolation](/fields/digital-image-processing/geometric-transforms-and-interpolation.md).
+
+---
+
+## 📜 The Scroll (keep this)
+
+```text
+Symptom:  A correct file shows as a black rectangle
+Cause:    12-bit data in a 16-bit container: 4095 / 65535 = 0.0625, about 6% of white
+Check:    bits per pixel k, L = 2^k, the sensor's real maximum
+Do not:   add uint8 pixels in NumPy and expect saturation; swap img[y, x]; overwrite originals
+Fix:      stretch the contrast on a copy (next page)
+Bytes:    M x N x k bits; 1024 x 768 at 8 bits = 786,432 bytes
+```
+
 
 ### References
 

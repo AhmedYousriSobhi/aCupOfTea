@@ -712,7 +712,7 @@
     "level": "beginner",
     "order": 5,
     "path": "fields/digital-image-processing/edges-and-sharpening.md",
-    "reading_time_min": 7,
+    "reading_time_min": 9,
     "relations": {
       "prerequisites": [
         "dip-spatial-filtering"
@@ -725,7 +725,7 @@
       "filtering",
       "noise"
     ],
-    "title": "Edges and Sharpening",
+    "title": "The Sharpen Button That Made Things Worse: Edges and Sharpening",
     "type": "concept",
     "types": [
       "concept"
@@ -740,7 +740,7 @@
     "level": "intermediate",
     "order": 7,
     "path": "fields/digital-image-processing/fourier-transform-for-images.md",
-    "reading_time_min": 8,
+    "reading_time_min": 10,
     "relations": {
       "prerequisites": [
         "dip-spatial-filtering"
@@ -754,7 +754,7 @@
       "filtering",
       "fourier-transform"
     ],
-    "title": "The Fourier Transform for Images",
+    "title": "Two Faces, Swapped: The Fourier Transform for Images",
     "type": "concept",
     "types": [
       "concept"
@@ -768,7 +768,7 @@
     "level": "intermediate",
     "order": 8,
     "path": "fields/digital-image-processing/frequency-filtering-and-aliasing.md",
-    "reading_time_min": 7,
+    "reading_time_min": 9,
     "relations": {
       "prerequisites": [
         "dip-fourier-transform-images"
@@ -783,7 +783,7 @@
       "fourier-transform",
       "sampling"
     ],
-    "title": "Frequency Filtering and Aliasing",
+    "title": "The Shirt That Shimmers: Frequency Filtering and Aliasing",
     "type": "concept",
     "types": [
       "concept"
@@ -798,7 +798,7 @@
     "level": "intermediate",
     "order": 2,
     "path": "fields/digital-image-processing/geometric-transforms-and-interpolation.md",
-    "reading_time_min": 7,
+    "reading_time_min": 10,
     "relations": {
       "prerequisites": [
         "dip-images-are-matrices"
@@ -810,7 +810,7 @@
     "status": "stable",
     "summary": "Moving the whole map - affine transforms in homogeneous coordinates, why you must map backwards, and nearest, bilinear and bicubic interpolation with a bilinear example worked by hand.",
     "tags": [],
-    "title": "Geometric Transforms and Interpolation",
+    "title": "The Jagged Scan: Geometric Transforms and Interpolation",
     "type": "concept",
     "types": [
       "concept"
@@ -824,7 +824,7 @@
     "level": "beginner",
     "order": 1,
     "path": "fields/digital-image-processing/images-are-just-matrices.md",
-    "reading_time_min": 6,
+    "reading_time_min": 9,
     "relations": {
       "prerequisites": [],
       "related": []
@@ -834,7 +834,7 @@
     "tags": [
       "sampling"
     ],
-    "title": "Images Are Just Matrices",
+    "title": "The Scan That Opened Black: Images Are Just Matrices",
     "type": "concept",
     "types": [
       "concept"
@@ -849,7 +849,7 @@
     "level": "beginner",
     "order": 3,
     "path": "fields/digital-image-processing/intensity-transforms-and-histograms.md",
-    "reading_time_min": 7,
+    "reading_time_min": 10,
     "relations": {
       "prerequisites": [
         "dip-images-are-matrices"
@@ -859,7 +859,7 @@
     "status": "stable",
     "summary": "Rescue a dark image with one formula - negatives, log, gamma and histogram equalization, with the CDF worked out by hand on a tiny image.",
     "tags": [],
-    "title": "Intensity Transforms and Histograms",
+    "title": "The Unreadable X-ray: Intensity Transforms and Histograms",
     "type": "concept",
     "types": [
       "concept"
@@ -873,7 +873,7 @@
     "level": "beginner",
     "order": 6,
     "path": "fields/digital-image-processing/meet-fourier.md",
-    "reading_time_min": 7,
+    "reading_time_min": 9,
     "relations": {
       "prerequisites": [],
       "related": [
@@ -885,7 +885,7 @@
     "tags": [
       "fourier-transform"
     ],
-    "title": "Meet Fourier",
+    "title": "The Prefect Who Split Heat Into Waves: Meet Fourier",
     "type": "note",
     "types": [
       "note"
@@ -900,7 +900,7 @@
     "level": "intermediate",
     "order": 9,
     "path": "fields/digital-image-processing/noise-and-restoration.md",
-    "reading_time_min": 7,
+    "reading_time_min": 9,
     "relations": {
       "prerequisites": [
         "dip-frequency-filtering-aliasing"
@@ -913,7 +913,7 @@
       "filtering",
       "noise"
     ],
-    "title": "Noise and Restoration",
+    "title": "The Photo That Turned to Static: Noise and Restoration",
     "type": "concept",
     "types": [
       "concept"
@@ -960,7 +960,7 @@
     "level": "beginner",
     "order": 4,
     "path": "fields/digital-image-processing/spatial-filtering.md",
-    "reading_time_min": 7,
+    "reading_time_min": 9,
     "relations": {
       "prerequisites": [
         "dip-intensity-transforms-histograms"
@@ -976,7 +976,7 @@
       "filtering",
       "noise"
     ],
-    "title": "Spatial Filtering",
+    "title": "One Bad Pixel: Spatial Filtering",
     "type": "concept",
     "types": [
       "concept"
@@ -990,7 +990,7 @@
     "level": "intermediate",
     "order": 10,
     "path": "fields/digital-image-processing/wavelets-and-multiresolution-processing.md",
-    "reading_time_min": 9,
+    "reading_time_min": 11,
     "relations": {
       "prerequisites": [
         "dip-fourier-transform-images"
@@ -1004,7 +1004,7 @@
     "tags": [
       "fourier-transform"
     ],
-    "title": "Wavelets and Multiresolution Processing",
+    "title": "The Scratch That Is Everywhere: Wavelets and Multiresolution Processing",
     "type": "concept",
     "types": [
       "concept"

@@ -1,6 +1,6 @@
 ---
 id: dip-edges-sharpening
-title: Edges and Sharpening
+title: "The Sharpen Button That Made Things Worse: Edges and Sharpening"
 sidebar_label: 5. Edges and sharpening
 order: 5
 summary: Derivatives as differences between neighbours - gradient, Sobel, Laplacian and unsharp masking, plus a one-line example that shows exactly where sharpening halos come from.
@@ -12,21 +12,51 @@ relations:
   prerequisites: [dip-spatial-filtering]
 ---
 
-# Edges and Sharpening
+# The Sharpen Button That Made Things Worse: Edges and Sharpening
 
-> **Part 5 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** An edge is where neighbours disagree, and calculus is the tool for measuring disagreement. By the end you'll build Sobel and Laplacian kernels from first principles and explain why sharpening draws halos and amplifies noise.
+> **Part 5 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** *Mira, Ravi and the property-listing team are invented; the maths and numbers are real.*
+
+On Friday Mira will click "sharpen" on one photo of a brick wall and love it. She will then be one overnight job away from sharpening five thousand listing photos, and from explaining to a very polite client why the sky in every one of them has sand in it.
+
+**By the end of this page you will be able to:**
+
+- Turn a derivative into a difference between neighbours.
+- Build Sobel and Laplacian kernels from first principles.
+- Read a gradient's strength and direction.
+- Explain why sharpening draws halos.
+- Explain why sharpening makes noise louder, and set the strength with that in mind.
 
 ---
 
-## The sharpen button that made things worse
+## The bricks pop, the sky crawls
 
-A photo of a brick wall looks soft. You click "sharpen". The bricks pop. But the clear blue sky now looks like it has sand in it, and every dark edge has a faint bright outline, like it was cut out with scissors.
+A property-listing site has a photo of a brick wall that looks soft. Mira clicks "sharpen". The bricks pop. But the clear blue sky now looks like it has sand in it, and every dark edge has a faint bright outline, as if it were cut out with scissors.
 
-The software did exactly what it was told. To see what that was, we need to look at how a computer measures "this changes here".
+The software did exactly what it was told. Her first reading is the obvious one: **the strength was set too high**, so a lower setting will keep the bricks and lose the sand.
 
 ---
 
-## A derivative is a difference
+## Three ways to tame it
+
+**Attempt 1: turn the strength down.** At a lower strength the sand thins out, and so does the pop in the bricks. Somewhere in the middle there is a setting she can live with, and it is not good.
+
+**Attempt 2: sharpen, then denoise.** She runs a smoothing filter over the result to clean up the sky. The sand goes, and so does most of the sharpness she had just added.
+
+**Attempt 3: apply the "high" preset to everything.** She queues the setting that looked best on the brick wall for the whole catalogue of five thousand photos. Ravi opens three at random from the preview folder: a sky, a white wall, a face. "Look at the white wall," he says. She cancels the job.
+
+So far:
+
+- A lower strength is a trade, not a cure.
+- Smoothing afterwards undoes the sharpening.
+- The setting that suited bricks did not suit skies.
+
+That leaves one question: **how does a program decide "this changes here", and what else does that rule react to?**
+
+---
+
+## A derivative is just a difference
+
+### A derivative is a difference
 
 In calculus, a derivative measures how fast something changes. In Pixel Town, the smallest step between citizens is one pixel, so the derivative becomes a plain **difference between neighbours**.
 
@@ -40,9 +70,7 @@ For a row of pixels f(x):
 
 Flat region: all three are 0. Slope: first derivative is nonzero. Corner of a slope: second derivative is nonzero. That gives us a detector for each kind of change.
 
----
-
-## Seeing it on one row
+### Seeing it on one row
 
 Take a perfect step edge, dark to bright:
 
@@ -65,9 +93,7 @@ Two things to notice:
 1. The **first derivative** is a plateau across the edge: its size says "strong edge here".
 2. The **second derivative** goes positive then negative. The edge sits at the **zero crossing** between them. It also gives a double response, which is the root of the halos we'll meet later.
 
----
-
-## The gradient: how strong, which way
+### The gradient: how strong, which way
 
 In two dimensions there's an x-direction change and a y-direction change. Together they form the **gradient**:
 
@@ -79,9 +105,7 @@ The magnitude says how strong the edge is. The angle θ says which way the brigh
 
 A common cheaper approximation is |G_x| + |G_y|, which avoids the square root.
 
----
-
-## Sobel: differentiate and smooth in one kernel
+### Sobel: differentiate and smooth in one kernel
 
 Differences are twitchy: one noisy pixel gives a huge difference. The **Sobel** kernel fixes this by averaging across the perpendicular direction while it differences:
 
@@ -93,9 +117,7 @@ $$\begin{bmatrix}1\\2\\1\end{bmatrix}\begin{bmatrix}-1&0&1\end{bmatrix}=\begin{b
 
 Each Sobel kernel sums to **0** (the tip from [page 4](/fields/digital-image-processing/spatial-filtering.md)): flat regions give zero, edges give a response. Apply G_x and G_y as two filters, then combine with the magnitude formula to get an edge map. Full edge detectors such as Canny (1986) add thinning and thresholds on top of the same gradient.
 
----
-
-## Try it before you scroll
+### Try it before you scroll
 
 ☕ You slide the Sobel G_x kernel over a perfectly **flat** patch where every pixel is 100. **What is the output?** And what if the patch is all 200?
 
@@ -103,9 +125,7 @@ Each Sobel kernel sums to **0** (the tip from [page 4](/fields/digital-image-pro
 
 **Answer:** **0** in both cases. The weights sum to 0, so any constant multiplied by the same total is 0. That's the point: a detector that stays silent when nothing changes. Replace the kernel with a box and the answer would be 100 and 200.
 
----
-
-## The Laplacian and sharpening
+### The Laplacian and sharpening
 
 The **Laplacian** adds the second derivatives in both directions into one isotropic (direction-independent) operator:
 
@@ -132,9 +152,7 @@ Apply that to our step row. Using the second-derivative values from the table:
 
 The dark side is pushed **even darker** (−30, below the original 10) and the bright side **even brighter** (90, above the original 50). The edge now looks steeper. That undershoot and overshoot is the halo you saw on the brick wall.
 
----
-
-## Unsharp masking: the sharpening everyone actually uses
+### Unsharp masking: the sharpening everyone actually uses
 
 The name sounds like the opposite of what it does. The trick: take a blurred copy, subtract it from the original to isolate the **detail**, and add some of that detail back:
 
@@ -152,6 +170,8 @@ The difference f − blur(f) keeps only what the blur removed, which is the fine
 
 ## Back to the sharpen button
 
+Mira prints the second derivative along one row of the sky and one row of the bricks. The bricks give a big positive-then-negative pair at the edge. The sky gives a tiny random wobble, and the filter multiplies it by the same amount.
+
 Now the sand in the sky makes sense. A difference between neighbours **doesn't know** whether the difference is a brick edge or a speck of noise. Sharpening magnifies both. Flat sky had only a tiny random wobble, and the filter multiplied it until your eye noticed.
 
 And the scissors halo is the overshoot from the table above: the filter makes dark sides darker and bright sides brighter so the edge looks steeper, and that outline is real data, drawn by the algorithm.
@@ -162,9 +182,39 @@ And the scissors halo is the overshoot from the table above: the filter makes da
 | Bright/dark outlines at edges | Overshoot and undershoot of the second derivative | Reduce k, use a larger blur radius |
 | Edge map full of tiny speckles | Raw differences amplify noise | Use Sobel (built-in smoothing) or blur first |
 
+She sets a lower strength, masks the flat regions, and denoises the sky before sharpening, in that order. The bricks keep most of their pop and the sky stays sky.
+
+---
+
+## Never again: sharpening with a seatbelt
+
+| Do | Because |
+|---|---|
+| Denoise or smooth first | Noise lives in the high frequencies the sharpening boosts |
+| Choose `k` deliberately: 0 none, 1 unsharp masking, above 1 high-boost | `g = f + k (f - blur(f))` boosts the detail by `k` |
+| Mask flat regions | Their tiny wobble is all noise |
+| Use a larger blur radius for a gentler halo | Overshoot and undershoot come from the second derivative |
+| Use Sobel, not raw differences, for an edge map | Sobel averages across the other direction while it differences |
+| Remember the kernel sums | Sobel sums to 0: flat regions give zero (a box would give 100 and 200 on flat 100 and 200) |
+
 **Takeaway:** derivatives are neighbour differences; they find edges, and the same operation that sharpens also amplifies noise and draws halos.
 
 **Next:** we keep saying "high frequencies". What are they, and can we filter them directly? [Part 6: The Fourier transform for images](/fields/digital-image-processing/fourier-transform-for-images.md), after an optional [interlude on the man behind it](/fields/digital-image-processing/meet-fourier.md).
+
+---
+
+## 📜 The Scroll (keep this)
+
+```text
+Symptom:  Sand in the sky, bright outlines at edges after sharpening
+Cause:    A difference of neighbours cannot tell an edge from noise;
+          the second derivative overshoots (step 10|50: 10 -> -30, 50 -> 90)
+Check:    Look at a flat region: is the wobble being multiplied?
+Do not:   One strength for every image
+Fix:      Denoise first, lower k, mask flat regions, larger blur radius
+Detect:   Sobel = [1 2 1]^T x [-1 0 1]; Laplacian centre -4
+```
+
 
 ### References
 

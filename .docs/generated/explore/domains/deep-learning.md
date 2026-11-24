@@ -14,13 +14,13 @@ Neural networks and deep architectures.
   [`distributed-training`](/.docs/generated/explore/tags/distributed-training.md) [`hpc`](/.docs/generated/explore/tags/hpc.md) [`pytorch`](/.docs/generated/explore/tags/pytorch.md) [`slurm`](/.docs/generated/explore/tags/slurm.md)
 - [NCCL](/fields/benchmarks/nccl.md) — What NCCL is, its collectives, ring and tree topologies, key environment variables and common failures, and how an all-reduce benchmark runs and is read. *(19 min · long read)*  
   [`distributed-training`](/.docs/generated/explore/tags/distributed-training.md) [`gpu`](/.docs/generated/explore/tags/gpu.md)
+- [One Bad Pixel: Spatial Filtering](/fields/digital-image-processing/spatial-filtering.md) — Kernels, correlation versus convolution, padding and separability - blurring explained as a neighbourhood vote, with the mean and median compared on one noisy pixel. *(beginner · 9 min)*  
+  [`convolution`](/.docs/generated/explore/tags/convolution.md) [`filtering`](/.docs/generated/explore/tags/filtering.md) [`noise`](/.docs/generated/explore/tags/noise.md)
 - [PyTorch 101](/fields/libraries-frameworks-containers/101-pytorch.md) — Notes for starting with PyTorch: where to learn, data type precision, GPU properties, the training loop, making predictions, and saving and loading models. *(5 min)*  
   [`pytorch`](/.docs/generated/explore/tags/pytorch.md)
 - [PyTorch DDP](/fields/libraries-frameworks-containers/102-pytorch-ddp.md) — A short pointer page on PyTorch Distributed Data Parallel: a recommended distributed training tutorial and a related read on the Python GIL. *(1 min)*  
   [`distributed-training`](/.docs/generated/explore/tags/distributed-training.md) [`pytorch`](/.docs/generated/explore/tags/pytorch.md)
 - [Sequence Models](/fields/deep-learning/concepts/sequence-models.md) — How models handle ordered data like text, from RNNs and LSTMs to transformers and LLMs. *(intermediate · 6 min)*  
   [`llm`](/.docs/generated/explore/tags/llm.md) [`rnn`](/.docs/generated/explore/tags/rnn.md) [`transformers`](/.docs/generated/explore/tags/transformers.md)
-- [Spatial Filtering](/fields/digital-image-processing/spatial-filtering.md) — Kernels, correlation versus convolution, padding and separability - blurring explained as a neighbourhood vote, with the mean and median compared on one noisy pixel. *(beginner · 7 min)*  
-  [`convolution`](/.docs/generated/explore/tags/convolution.md) [`filtering`](/.docs/generated/explore/tags/filtering.md) [`noise`](/.docs/generated/explore/tags/noise.md)
 
 [All domains](/.docs/generated/explore/domains.md)

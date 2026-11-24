@@ -4,11 +4,11 @@
 
 - [Averages and Intervals: Why Averages Behave and How Sure You Can Be](/fields/data-science/probability-statistics/inference/averages-and-intervals.md) — An average is itself random: its spread shrinks as sigma over root n and its shape tends to a bell. A confidence interval turns that wobble into a give-or-take, and bias is invisible to it. *(intermediate · 13 min · long read)*  
   [`sampling`](/.docs/generated/explore/tags/sampling.md) [`statistics`](/.docs/generated/explore/tags/statistics.md)
-- [Frequency Filtering and Aliasing](/fields/digital-image-processing/frequency-filtering-and-aliasing.md) — Low-pass, high-pass and notch filters as masks on the spectrum, why the ideal filter rings, and how sampling too coarsely creates moire - with the Nyquist rule worked on one number. *(intermediate · 7 min)*  
-  [`convolution`](/.docs/generated/explore/tags/convolution.md) [`filtering`](/.docs/generated/explore/tags/filtering.md) [`fourier-transform`](/.docs/generated/explore/tags/fourier-transform.md) [`sampling`](/.docs/generated/explore/tags/sampling.md)
-- [Images Are Just Matrices](/fields/digital-image-processing/images-are-just-matrices.md) — A pixel is a number in a grid - sampling, quantization, bit depth, coordinates and neighbours, and why 200 + 100 can equal 44. *(beginner · 6 min)*  
-  [`sampling`](/.docs/generated/explore/tags/sampling.md)
 - [Samples, Data Types and Tables: Who You Asked, What Kind of Column, How to Count It](/fields/data-science/probability-statistics/describing-data/samples-data-types-and-tables.md) — A sample speaks for a crowd only if you chose it fairly. The kind of column decides which arithmetic is allowed, and a frequency table counts it without losing the shape, if the drawers touch. *(beginner · 15 min · long read)*  
   [`sampling`](/.docs/generated/explore/tags/sampling.md) [`statistics`](/.docs/generated/explore/tags/statistics.md)
+- [The Scan That Opened Black: Images Are Just Matrices](/fields/digital-image-processing/images-are-just-matrices.md) — A pixel is a number in a grid - sampling, quantization, bit depth, coordinates and neighbours, and why 200 + 100 can equal 44. *(beginner · 9 min)*  
+  [`sampling`](/.docs/generated/explore/tags/sampling.md)
+- [The Shirt That Shimmers: Frequency Filtering and Aliasing](/fields/digital-image-processing/frequency-filtering-and-aliasing.md) — Low-pass, high-pass and notch filters as masks on the spectrum, why the ideal filter rings, and how sampling too coarsely creates moire - with the Nyquist rule worked on one number. *(intermediate · 9 min)*  
+  [`convolution`](/.docs/generated/explore/tags/convolution.md) [`filtering`](/.docs/generated/explore/tags/filtering.md) [`fourier-transform`](/.docs/generated/explore/tags/fourier-transform.md) [`sampling`](/.docs/generated/explore/tags/sampling.md)
 
 [All tags](/.docs/generated/explore/tags.md)

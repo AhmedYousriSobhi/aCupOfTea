@@ -324,7 +324,7 @@
   "fields/digital-image-processing/edges-and-sharpening": {
     "next": {
       "path": "fields/digital-image-processing/fourier-transform-for-images",
-      "title": "The Fourier Transform for Images"
+      "title": "Two Faces, Swapped: The Fourier Transform for Images"
     },
     "pos": 5,
     "total": 9
@@ -332,7 +332,7 @@
   "fields/digital-image-processing/fourier-transform-for-images": {
     "next": {
       "path": "fields/digital-image-processing/frequency-filtering-and-aliasing",
-      "title": "Frequency Filtering and Aliasing"
+      "title": "The Shirt That Shimmers: Frequency Filtering and Aliasing"
     },
     "pos": 6,
     "total": 9
@@ -340,7 +340,7 @@
   "fields/digital-image-processing/frequency-filtering-and-aliasing": {
     "next": {
       "path": "fields/digital-image-processing/noise-and-restoration",
-      "title": "Noise and Restoration"
+      "title": "The Photo That Turned to Static: Noise and Restoration"
     },
     "pos": 7,
     "total": 9
@@ -348,7 +348,7 @@
   "fields/digital-image-processing/geometric-transforms-and-interpolation": {
     "next": {
       "path": "fields/digital-image-processing/intensity-transforms-and-histograms",
-      "title": "Intensity Transforms and Histograms"
+      "title": "The Unreadable X-ray: Intensity Transforms and Histograms"
     },
     "pos": 2,
     "total": 9
@@ -356,7 +356,7 @@
   "fields/digital-image-processing/images-are-just-matrices": {
     "next": {
       "path": "fields/digital-image-processing/geometric-transforms-and-interpolation",
-      "title": "Geometric Transforms and Interpolation"
+      "title": "The Jagged Scan: Geometric Transforms and Interpolation"
     },
     "pos": 1,
     "total": 9
@@ -364,7 +364,7 @@
   "fields/digital-image-processing/intensity-transforms-and-histograms": {
     "next": {
       "path": "fields/digital-image-processing/spatial-filtering",
-      "title": "Spatial Filtering"
+      "title": "One Bad Pixel: Spatial Filtering"
     },
     "pos": 3,
     "total": 9
@@ -372,7 +372,7 @@
   "fields/digital-image-processing/noise-and-restoration": {
     "next": {
       "path": "fields/digital-image-processing/wavelets-and-multiresolution-processing",
-      "title": "Wavelets and Multiresolution Processing"
+      "title": "The Scratch That Is Everywhere: Wavelets and Multiresolution Processing"
     },
     "pos": 8,
     "total": 9
@@ -380,7 +380,7 @@
   "fields/digital-image-processing/spatial-filtering": {
     "next": {
       "path": "fields/digital-image-processing/edges-and-sharpening",
-      "title": "Edges and Sharpening"
+      "title": "The Sharpen Button That Made Things Worse: Edges and Sharpening"
     },
     "pos": 4,
     "total": 9
