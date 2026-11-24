@@ -15,3 +15,12 @@ Parts 7 to 11 of the [Probability & Statistics](/fields/data-science/probability
 | [What to Expect](/fields/data-science/probability-statistics/probability/what-to-expect.md) | Random variables, expected value and variance |
 | [Coins and Calls](/fields/data-science/probability-statistics/probability/coins-and-calls.md) | The binomial and Poisson distributions as recipes |
 | [The Bell Curve](/fields/data-science/probability-statistics/probability/the-bell-curve.md) | The normal distribution and probability as area |
+| [Technical reference](/fields/data-science/probability-statistics/probability/technical-reference.md) | Axioms, Bayes in odds form, moments, the Poisson limit and the normal approximation, with assumptions |
+| [Quick guide: probability](/fields/data-science/probability-statistics/probability/quick-guide.md) | Direct steps and checks for parts 7 to 11 |
+
+## Interactive labs
+
+| Lab | What you can do |
+|---|---|
+| [Bayes lab](/fields/data-science/probability-statistics/labs/bayes.html ':ignore') | Move base rate, sensitivity and false-positive rate and watch the posterior |
+| [Distributions lab](/fields/data-science/probability-statistics/labs/distributions.html ':ignore') | Change binomial, Poisson and normal dials, draw samples, compare with exact values |

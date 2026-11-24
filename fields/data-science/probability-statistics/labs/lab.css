@@ -1,0 +1,32 @@
+:root{--bg:#fbf8f3;--fg:#2b2622;--mut:#6b625a;--card:#fff;--line:#ddd3c6;--acc:#2f7d5b;--acc2:#c0602b;--acc3:#3b6fb0}
+@media (prefers-color-scheme:dark){:root{--bg:#171512;--fg:#ece6dd;--mut:#a39a8f;--card:#211e1a;--line:#3a352f;--acc:#5fc79a;--acc2:#e58a55;--acc3:#7aa7e0}}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:860px;margin:0 auto;padding:16px}
+h1{font-size:1.45rem;margin:.2em 0 .3em;line-height:1.25}
+h2{font-size:1.05rem;margin:1.2em 0 .4em}
+p,li{margin:.4em 0}
+a{color:var(--acc3)}
+.lead{color:var(--mut);margin-top:0}
+.nav{font-size:.9rem;margin-bottom:8px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;margin:12px 0}
+.row{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center}
+label{display:block;font-size:.9rem;color:var(--mut)}
+label b{color:var(--fg);font-variant-numeric:tabular-nums}
+input[type=range]{width:100%;min-height:32px;accent-color:var(--acc)}
+.ctl{flex:1 1 220px;min-width:0}
+select,button{font:inherit;padding:8px 12px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--fg);min-height:40px}
+button{cursor:pointer;background:var(--acc);color:#fff;border-color:var(--acc)}
+button.alt{background:var(--card);color:var(--fg);border-color:var(--line)}
+canvas{width:100%;height:auto;display:block;background:var(--card);border:1px solid var(--line);border-radius:8px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin:8px 0}
+.stat{border:1px solid var(--line);border-radius:8px;padding:6px 10px;background:var(--card)}
+.stat span{display:block;font-size:.75rem;color:var(--mut)}
+.stat strong{font-size:1.1rem;font-variant-numeric:tabular-nums}
+table{border-collapse:collapse;width:100%;font-size:.9rem;font-variant-numeric:tabular-nums}
+th,td{border:1px solid var(--line);padding:4px 8px;text-align:right}
+th:first-child,td:first-child{text-align:left}
+.note{font-size:.9rem;color:var(--mut)}
+.warn{border-left:4px solid var(--acc2);padding:4px 10px;background:var(--card)}
+@media (max-width:480px){main{padding:12px}h1{font-size:1.25rem}}

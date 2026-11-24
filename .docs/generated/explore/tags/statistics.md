@@ -14,7 +14,11 @@
   [`statistics`](/.docs/generated/explore/tags/statistics.md)
 - [Mira's Notebook: What Kind of Data Is This, and How Do You Count It?](/fields/data-science/probability-statistics/describing-data/data-types-and-frequency-tables.md) — Why you cannot average a blend name: the four kinds of data, and how to turn raw numbers into honest category, ungrouped and grouped frequency tables. *(beginner · 13 min · long read)*  
   [`statistics`](/.docs/generated/explore/tags/statistics.md)
+- [Pick and Compute the Right Probability Model](/fields/data-science/probability-statistics/probability/quick-guide.md) — Direct steps for parts 7 to 11 - count outcomes, flip a test result with a tree, compute an expected value, choose binomial or Poisson, and read a normal curve - with the check for each. *(beginner · 4 min)*  
+  [`statistics`](/.docs/generated/explore/tags/statistics.md)
 - [Probability & Statistics, One Sip at a Time](/fields/data-science/probability-statistics/README.md) — A slow-brewed series on the ideas in probability and statistics that make people say "wait, why?", each one told as a small story in a tea shop. *(beginner · 6 min)*  
+  [`statistics`](/.docs/generated/explore/tags/statistics.md)
+- [Probability, Technically: Definitions, Identities and Assumptions](/fields/data-science/probability-statistics/probability/technical-reference.md) — The formal layer under parts 7 to 11: axioms, Bayes in odds form, pmf, cdf and density, moment rules, the Poisson limit, the normal approximation and each model's assumptions. *(intermediate · 5 min)*  
   [`statistics`](/.docs/generated/explore/tags/statistics.md)
 - [Stir the Pot First: Population, Sample, and Why We Guess](/fields/data-science/probability-statistics/describing-data/stir-the-pot-population-and-sampling.md) — Why a sip judges a pot of tea only if you stir it: population versus sample, four ways to draw a sample, the poll that asked 2.4 million and still erred. *(beginner · 11 min · long read)*  
   [`sampling`](/.docs/generated/explore/tags/sampling.md) [`statistics`](/.docs/generated/explore/tags/statistics.md)

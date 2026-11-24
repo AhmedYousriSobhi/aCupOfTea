@@ -502,9 +502,19 @@
         "title": "Counting the Ways: Probability as a Share of the List"
       },
       {
+        "id": "probability-quick-guide",
+        "path": "fields/data-science/probability-statistics/probability/quick-guide.md",
+        "title": "Pick and Compute the Right Probability Model"
+      },
+      {
         "id": "probability-statistics-series",
         "path": "fields/data-science/probability-statistics/README.md",
         "title": "Probability & Statistics, One Sip at a Time"
+      },
+      {
+        "id": "probability-technical-reference",
+        "path": "fields/data-science/probability-statistics/probability/technical-reference.md",
+        "title": "Probability, Technically: Definitions, Identities and Assumptions"
       }
     ],
     "required_by": [
@@ -530,6 +540,11 @@
         "title": "Coins and Calls: Binomial and Poisson as Recipes"
       },
       {
+        "id": "probability-quick-guide",
+        "path": "fields/data-science/probability-statistics/probability/quick-guide.md",
+        "title": "Pick and Compute the Right Probability Model"
+      },
+      {
         "id": "probability-statistics-series",
         "path": "fields/data-science/probability-statistics/README.md",
         "title": "Probability & Statistics, One Sip at a Time"
@@ -540,8 +555,86 @@
         "id": "the-test-that-was-99-percent-accurate",
         "path": "fields/data-science/probability-statistics/probability/the-test-that-was-99-percent-accurate.md",
         "title": "The Test That Was 99% Accurate: Conditional Probability and Bayes' Rule"
+      },
+      {
+        "id": "probability-technical-reference",
+        "path": "fields/data-science/probability-statistics/probability/technical-reference.md",
+        "title": "Probability, Technically: Definitions, Identities and Assumptions"
       }
     ]
+  },
+  "fields/data-science/probability-statistics/probability/quick-guide.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "coins-and-calls",
+        "path": "fields/data-science/probability-statistics/probability/coins-and-calls.md",
+        "title": "Coins and Calls: Binomial and Poisson as Recipes"
+      },
+      {
+        "id": "counting-the-ways",
+        "path": "fields/data-science/probability-statistics/probability/counting-the-ways.md",
+        "title": "Counting the Ways: Probability as a Share of the List"
+      },
+      {
+        "id": "probability-technical-reference",
+        "path": "fields/data-science/probability-statistics/probability/technical-reference.md",
+        "title": "Probability, Technically: Definitions, Identities and Assumptions"
+      },
+      {
+        "id": "the-bell-curve",
+        "path": "fields/data-science/probability-statistics/probability/the-bell-curve.md",
+        "title": "The Bell Curve: Probability as Area, and One Ruler for Every Bell"
+      },
+      {
+        "id": "the-test-that-was-99-percent-accurate",
+        "path": "fields/data-science/probability-statistics/probability/the-test-that-was-99-percent-accurate.md",
+        "title": "The Test That Was 99% Accurate: Conditional Probability and Bayes' Rule"
+      },
+      {
+        "id": "what-to-expect",
+        "path": "fields/data-science/probability-statistics/probability/what-to-expect.md",
+        "title": "What to Expect: Random Variables and Expected Value"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/data-science/probability-statistics/probability/technical-reference.md": {
+    "prerequisites": [
+      {
+        "id": "counting-the-ways",
+        "path": "fields/data-science/probability-statistics/probability/counting-the-ways.md",
+        "title": "Counting the Ways: Probability as a Share of the List"
+      }
+    ],
+    "related": [
+      {
+        "id": "coins-and-calls",
+        "path": "fields/data-science/probability-statistics/probability/coins-and-calls.md",
+        "title": "Coins and Calls: Binomial and Poisson as Recipes"
+      },
+      {
+        "id": "probability-quick-guide",
+        "path": "fields/data-science/probability-statistics/probability/quick-guide.md",
+        "title": "Pick and Compute the Right Probability Model"
+      },
+      {
+        "id": "the-bell-curve",
+        "path": "fields/data-science/probability-statistics/probability/the-bell-curve.md",
+        "title": "The Bell Curve: Probability as Area, and One Ruler for Every Bell"
+      },
+      {
+        "id": "the-test-that-was-99-percent-accurate",
+        "path": "fields/data-science/probability-statistics/probability/the-test-that-was-99-percent-accurate.md",
+        "title": "The Test That Was 99% Accurate: Conditional Probability and Bayes' Rule"
+      },
+      {
+        "id": "what-to-expect",
+        "path": "fields/data-science/probability-statistics/probability/what-to-expect.md",
+        "title": "What to Expect: Random Variables and Expected Value"
+      }
+    ],
+    "required_by": []
   },
   "fields/data-science/probability-statistics/probability/the-bell-curve.md": {
     "prerequisites": [
@@ -558,9 +651,19 @@
         "title": "Draw It Before You Describe It: Three Pictures of the Same Fifty Days"
       },
       {
+        "id": "probability-quick-guide",
+        "path": "fields/data-science/probability-statistics/probability/quick-guide.md",
+        "title": "Pick and Compute the Right Probability Model"
+      },
+      {
         "id": "probability-statistics-series",
         "path": "fields/data-science/probability-statistics/README.md",
         "title": "Probability & Statistics, One Sip at a Time"
+      },
+      {
+        "id": "probability-technical-reference",
+        "path": "fields/data-science/probability-statistics/probability/technical-reference.md",
+        "title": "Probability, Technically: Definitions, Identities and Assumptions"
       },
       {
         "id": "where-do-you-stand",
@@ -586,9 +689,19 @@
     ],
     "related": [
       {
+        "id": "probability-quick-guide",
+        "path": "fields/data-science/probability-statistics/probability/quick-guide.md",
+        "title": "Pick and Compute the Right Probability Model"
+      },
+      {
         "id": "probability-statistics-series",
         "path": "fields/data-science/probability-statistics/README.md",
         "title": "Probability & Statistics, One Sip at a Time"
+      },
+      {
+        "id": "probability-technical-reference",
+        "path": "fields/data-science/probability-statistics/probability/technical-reference.md",
+        "title": "Probability, Technically: Definitions, Identities and Assumptions"
       }
     ],
     "required_by": [
@@ -614,9 +727,19 @@
         "title": "How Far From the Middle? One Question Behind Every Summary Number"
       },
       {
+        "id": "probability-quick-guide",
+        "path": "fields/data-science/probability-statistics/probability/quick-guide.md",
+        "title": "Pick and Compute the Right Probability Model"
+      },
+      {
         "id": "probability-statistics-series",
         "path": "fields/data-science/probability-statistics/README.md",
         "title": "Probability & Statistics, One Sip at a Time"
+      },
+      {
+        "id": "probability-technical-reference",
+        "path": "fields/data-science/probability-statistics/probability/technical-reference.md",
+        "title": "Probability, Technically: Definitions, Identities and Assumptions"
       },
       {
         "id": "the-number-on-the-tin",

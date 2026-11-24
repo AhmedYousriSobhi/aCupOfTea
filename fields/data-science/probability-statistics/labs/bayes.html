@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'">
+<title>Lab: Bayes and the 99% test</title>
+<link rel="stylesheet" href="lab.css">
+</head>
+<body>
+<main>
+<div class="nav"><a href="/#/fields/data-science/probability-statistics/probability/quick-guide.md">&larr; Probability quick guide</a> &middot; <a href="/#/fields/data-science/probability-statistics/probability/the-test-that-was-99-percent-accurate.md">Part 8 story</a></div>
+<h1>Lab: why a 99% accurate test is often wrong</h1>
+<p class="lead">Move the three dials and watch the crowd of 100,000 tins split. The posterior is always <code>true positives / all positives</code>.</p>
+
+<div class="card">
+  <div class="row">
+    <div class="ctl"><label for="base">Base rate P(contaminated): <b id="base-v"></b></label><input id="base" type="range" min="-4" max="-0.3" step="0.01" value="-3"></div>
+    <div class="ctl"><label for="sens">Sensitivity P(positive | contaminated): <b id="sens-v"></b></label><input id="sens" type="range" min="50" max="100" step="0.5" value="99"></div>
+    <div class="ctl"><label for="fpr">False-positive rate P(positive | clean): <b id="fpr-v"></b></label><input id="fpr" type="range" min="0" max="20" step="0.1" value="1"></div>
+  </div>
+</div>
+
+<div class="stats">
+  <div class="stat"><span>Contaminated</span><strong id="n-sick"></strong></div>
+  <div class="stat"><span>True positives</span><strong id="n-tp"></strong></div>
+  <div class="stat"><span>False positives</span><strong id="n-fp"></strong></div>
+  <div class="stat"><span>P(contaminated | positive)</span><strong id="post"></strong></div>
+  <div class="stat"><span>After a 2nd independent positive</span><strong id="post2"></strong></div>
+  <div class="stat"><span>P(contaminated | negative)</span><strong id="postneg"></strong></div>
+</div>
+
+<div class="card">
+  <canvas id="cv" width="600" height="120" aria-label="Bar showing the share of positives that are true and false"></canvas>
+  <p class="note" id="cap"></p>
+</div>
+
+<div class="card">
+  <h2>Count it out (crowd of 100,000)</h2>
+  <table>
+    <tr><th></th><th>Test positive</th><th>Test negative</th><th>Total</th></tr>
+    <tr><td>Contaminated</td><td id="t-tp"></td><td id="t-fn"></td><td id="t-sick"></td></tr>
+    <tr><td>Clean</td><td id="t-fp"></td><td id="t-tn"></td><td id="t-clean"></td></tr>
+  </table>
+</div>
+
+<div class="card">
+  <h2>Simulate it</h2>
+  <p class="note">Run 100,000 random tins with the current dials (seeded, so a run repeats). The simulated share should land near the exact one.</p>
+  <div class="row"><button id="sim">Run simulation</button><button id="reset" class="alt">Reset to the page (0.1%, 99%, 1%)</button></div>
+  <p id="simout" class="note"></p>
+</div>
+
+<div class="card warn"><b>Assumption.</b> The second positive uses independent mistakes. Repeat the same flawed reagent and the second row is too optimistic.</div>
+</main>
+<script src="lab-core.js"></script>
+<script src="bayes.js"></script>
+</body>
+</html>

@@ -3036,6 +3036,38 @@
       "concept"
     ]
   },
+  "probability-quick-guide": {
+    "domains": [
+      "statistics"
+    ],
+    "id": "probability-quick-guide",
+    "level": "beginner",
+    "order": 13,
+    "path": "fields/data-science/probability-statistics/probability/quick-guide.md",
+    "reading_time_min": 4,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "coins-and-calls",
+        "counting-the-ways",
+        "probability-technical-reference",
+        "the-bell-curve",
+        "the-test-that-was-99-percent-accurate",
+        "what-to-expect"
+      ]
+    },
+    "status": "stable",
+    "summary": "Direct steps for parts 7 to 11 - count outcomes, flip a test result with a tree, compute an expected value, choose binomial or Poisson, and read a normal curve - with the check for each.",
+    "tags": [
+      "statistics"
+    ],
+    "title": "Pick and Compute the Right Probability Model",
+    "type": "guide",
+    "types": [
+      "guide",
+      "reference"
+    ]
+  },
   "probability-statistics-series": {
     "domains": [
       "statistics"
@@ -3074,6 +3106,38 @@
     "type": "guide",
     "types": [
       "guide"
+    ]
+  },
+  "probability-technical-reference": {
+    "domains": [
+      "statistics"
+    ],
+    "id": "probability-technical-reference",
+    "level": "intermediate",
+    "order": 12,
+    "path": "fields/data-science/probability-statistics/probability/technical-reference.md",
+    "reading_time_min": 5,
+    "relations": {
+      "prerequisites": [
+        "counting-the-ways"
+      ],
+      "related": [
+        "coins-and-calls",
+        "probability-quick-guide",
+        "the-bell-curve",
+        "the-test-that-was-99-percent-accurate",
+        "what-to-expect"
+      ]
+    },
+    "status": "stable",
+    "summary": "The formal layer under parts 7 to 11: axioms, Bayes in odds form, pmf, cdf and density, moment rules, the Poisson limit, the normal approximation and each model's assumptions.",
+    "tags": [
+      "statistics"
+    ],
+    "title": "Probability, Technically: Definitions, Identities and Assumptions",
+    "type": "reference",
+    "types": [
+      "reference"
     ]
   },
   "pytorch-101": {

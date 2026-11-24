@@ -36,6 +36,8 @@
         * [What to expect](fields/data-science/probability-statistics/probability/what-to-expect.md)
         * [Coins and calls](fields/data-science/probability-statistics/probability/coins-and-calls.md)
         * [The bell curve](fields/data-science/probability-statistics/probability/the-bell-curve.md)
+        * [Technical reference](fields/data-science/probability-statistics/probability/technical-reference.md)
+        * [Quick guide: probability](fields/data-science/probability-statistics/probability/quick-guide.md)
   * [**Deep Learning**](fields/deep-learning/README.md)
     * [**Deep Learning - Concepts**](fields/deep-learning/concepts/README.md)
       * [Basics](fields/deep-learning/concepts/basics.md)

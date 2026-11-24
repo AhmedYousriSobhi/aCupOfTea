@@ -170,7 +170,9 @@
       "probability-statistics-series"
     ],
     "related_by": [
-      "probability-statistics-series"
+      "probability-quick-guide",
+      "probability-statistics-series",
+      "probability-technical-reference"
     ]
   },
   "containers-101": {
@@ -190,6 +192,7 @@
   },
   "counting-the-ways": {
     "prerequisite_of": [
+      "probability-technical-reference",
       "the-test-that-was-99-percent-accurate"
     ],
     "prerequisites": [
@@ -200,6 +203,7 @@
     ],
     "related_by": [
       "coins-and-calls",
+      "probability-quick-guide",
       "probability-statistics-series"
     ]
   },
@@ -1202,6 +1206,21 @@
     "related": [],
     "related_by": []
   },
+  "probability-quick-guide": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "coins-and-calls",
+      "counting-the-ways",
+      "probability-technical-reference",
+      "the-bell-curve",
+      "the-test-that-was-99-percent-accurate",
+      "what-to-expect"
+    ],
+    "related_by": [
+      "probability-technical-reference"
+    ]
+  },
   "probability-statistics-series": {
     "prerequisite_of": [],
     "prerequisites": [],
@@ -1240,6 +1259,22 @@
       "what-to-expect",
       "where-do-you-stand",
       "why-averages-behave"
+    ]
+  },
+  "probability-technical-reference": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "counting-the-ways"
+    ],
+    "related": [
+      "coins-and-calls",
+      "probability-quick-guide",
+      "the-bell-curve",
+      "the-test-that-was-99-percent-accurate",
+      "what-to-expect"
+    ],
+    "related_by": [
+      "probability-quick-guide"
     ]
   },
   "pytorch-101": {
@@ -2008,7 +2043,9 @@
       "where-do-you-stand"
     ],
     "related_by": [
-      "probability-statistics-series"
+      "probability-quick-guide",
+      "probability-statistics-series",
+      "probability-technical-reference"
     ]
   },
   "the-courtroom-for-numbers": {
@@ -2074,7 +2111,9 @@
       "probability-statistics-series"
     ],
     "related_by": [
-      "probability-statistics-series"
+      "probability-quick-guide",
+      "probability-statistics-series",
+      "probability-technical-reference"
     ]
   },
   "threat-model-and-first-launch": {
@@ -2209,7 +2248,9 @@
       "the-number-on-the-tin"
     ],
     "related_by": [
-      "probability-statistics-series"
+      "probability-quick-guide",
+      "probability-statistics-series",
+      "probability-technical-reference"
     ]
   },
   "where-do-you-stand": {
