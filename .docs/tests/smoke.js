@@ -379,6 +379,10 @@ async function run(browser, base, label, size, phone) {
     c('lab frames are sandboxed without same-origin access', lab.every((f) => f.sandbox === 'allow-scripts'), JSON.stringify(lab.map((f) => f.sandbox)));
     c('lab frames load only lab pages of this site', lab.every((f) => f.src.startsWith(f.origin + '/') && /\/labs\/[a-z0-9-]+\.html\?embed=1&theme=(light|dark)$/.test(f.src)), JSON.stringify(lab.map((f) => f.src)));
     c('lab frames send no referrer', lab.every((f) => f.ref === 'no-referrer'));
+    // the frames load lazily: scroll the first one into view so every engine loads it
+    await page.locator('.markdown-section iframe').first().scrollIntoViewIfNeeded();
+    await page.waitForFunction(() => Array.from(document.querySelectorAll('.markdown-section iframe')).some((f) => f.contentWindow && f.contentWindow.length !== undefined && f.src.indexOf('bayes.html') > -1), null, { timeout: 8000 }).catch(() => {});
+    await page.waitForTimeout(1500);
     const frame = page.frames().find((f) => /\/labs\/bayes\.html/.test(f.url()));
     if (frame) {
       await frame.waitForSelector('#post', { timeout: 8000 }).catch(() => {});
