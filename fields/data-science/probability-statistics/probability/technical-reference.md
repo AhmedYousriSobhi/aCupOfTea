@@ -153,6 +153,79 @@ At `n = 10, p = 0.3` the same trick gives 0.365 against the exact 0.383, and wit
 
 **Try it:** [Bayes lab](/fields/data-science/probability-statistics/labs/bayes.html ':ignore') (move the base rate and see the posterior) and [distributions lab](/fields/data-science/probability-statistics/labs/distributions.html ':ignore') (binomial, Poisson, normal, with a Poisson overlay and sampled draws). Short steps: [Probability quick guide](/fields/data-science/probability-statistics/probability/quick-guide.md).
 
+## 8. Short derivations
+
+```text
+Bayes          P(A and B) = P(A | B) P(B) = P(B | A) P(A)      divide by P(B)
+Variance       E[(X-μ)^2] = E[X^2] - 2μ E[X] + μ^2 = E[X^2] - μ^2
+Binomial       X = B1 + ... + Bn, Bi ~ Bernoulli(p) independent
+               E[Bi] = p, Var(Bi) = p - p^2 = p(1-p), so E[X] = np, Var(X) = np(1-p)
+Poisson mean   sum of k e^(-λ) λ^k / k!  =  λ * sum of e^(-λ) λ^(k-1) / (k-1)!  =  λ
+Poisson limit  C(n,k) (λ/n)^k (1-λ/n)^(n-k)
+               = (λ^k / k!) * [n(n-1)...(n-k+1) / n^k] * (1-λ/n)^n * (1-λ/n)^(-k)
+               -> (λ^k / k!) * 1 * e^(-λ) * 1          as n grows, k and λ fixed
+Standardise    E[(X-μ)/σ] = 0 and Var((X-μ)/σ) = 1 by the shift/scale rules;
+               a shifted, rescaled normal is still normal (a property of the family)
+```
+
+## 9. Run the identities
+
+Each identity above, asserted on the series' own numbers with exact fractions. If an assertion fails, Python stops; if all hold it prints the last line.
+
+```python
+import math, itertools
+from fractions import Fraction as F
+from statistics import NormalDist
+
+# 1. inclusion-exclusion on two dice
+grid = list(itertools.product(range(1, 7), repeat=2))
+A = {g for g in grid if g[0] == g[1]}; B = {g for g in grid if sum(g) == 8}
+assert F(len(A | B), 36) == F(len(A), 36) + F(len(B), 36) - F(len(A & B), 36)
+
+# 2. Bayes in odds form equals the fraction
+prior, se, fp = F(1, 1000), F(99, 100), F(1, 100)
+direct = se * prior / (se * prior + fp * (1 - prior))
+odds = prior / (1 - prior) * (se / fp)
+assert direct == odds / (1 + odds) == F(11, 122)
+
+# 3. Binomial moments equal n p and n p (1-p), exactly
+n, p = 10, F(3, 10)
+pmf = [math.comb(n, k) * p**k * (1 - p)**(n - k) for k in range(n + 1)]
+mean = sum(k * q for k, q in enumerate(pmf)); var = sum(k * k * q for k, q in enumerate(pmf)) - mean**2
+assert sum(pmf) == 1 and mean == n * p and var == n * p * (1 - p)
+
+# 4. Var(X+Y) = Var X + Var Y + 2 Cov, on the lucky tin; Cov(X,X) = Var X
+tab = {0: F(5, 10), 5: F(3, 10), 10: F(1, 10), 20: F(1, 10)}
+E_ = lambda f, d: sum(f(x) * q for x, q in d.items())
+m = E_(lambda x: x, tab); v = E_(lambda x: x * x, tab) - m * m
+joint = {(a, b): pa * pb for (a, pa), (b, pb) in itertools.product(tab.items(), repeat=2)}
+cov = sum((a - m) * (b - m) * q for (a, b), q in joint.items())
+assert cov == 0 and sum(((a + b) - 2 * m) ** 2 * q for (a, b), q in joint.items()) == 2 * v == F(149, 2)
+assert E_(lambda x: (2 * x - 2 * m) ** 2, tab) == 4 * v == 149
+
+# 4b. Poisson limit: total variation distance shrinks as n grows (lam = 4)
+def tv(n, lam=4):
+    pp = lambda k: math.exp(-lam) * lam**k / math.factorial(k)
+    pb = lambda k: math.comb(n, k) * (lam / n)**k * (1 - lam / n)**(n - k)
+    return 0.5 * sum(abs(pb(k) - pp(k)) for k in range(min(n, 150) + 1))
+d = [tv(n) for n in (10, 100, 1000)]
+assert d[0] > d[1] > d[2] and all(x <= n * (4 / n) ** 2 for x, n in zip(d, (10, 100, 1000)))
+
+# 5. Standard normal tails and continuity correction
+N = NormalDist()
+assert round(N.cdf(1) - N.cdf(-1), 4) == 0.6827 and round(N.cdf(1.96) - N.cdf(-1.96), 3) == 0.95
+exact = sum(math.comb(30, k) for k in range(13)) / 2**30
+cc = N.cdf((12.5 - 15) / math.sqrt(7.5)); nocc = N.cdf((12 - 15) / math.sqrt(7.5))
+assert abs(cc - exact) < abs(nocc - exact)
+print("all checks passed", [round(x, 4) for x in d], round(exact, 5), round(cc, 5), round(nocc, 5))
+```
+
+```text
+all checks passed [0.1253, 0.0102, 0.001] 0.1808 0.18066 0.13666
+```
+
+Run with Python 3 and the standard library only. If you use SciPy, the same objects are `scipy.stats.binom`, `poisson` and `norm` (`pmf`, `cdf`, `ppf`, `sf`); those names are not run on this page.
+
 ## References
 
 - Series pages: [Counting the Ways](/fields/data-science/probability-statistics/probability/counting-the-ways.md), [The Test That Was 99% Accurate](/fields/data-science/probability-statistics/probability/the-test-that-was-99-percent-accurate.md), [What to Expect](/fields/data-science/probability-statistics/probability/what-to-expect.md), [Coins and Calls](/fields/data-science/probability-statistics/probability/coins-and-calls.md), [The Bell Curve](/fields/data-science/probability-statistics/probability/the-bell-curve.md).

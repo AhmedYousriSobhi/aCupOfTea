@@ -108,6 +108,17 @@
   $("dist").addEventListener("change", configure);
   $("draw").addEventListener("click", draw);
   $("clear").addEventListener("click", function () { sample = null; $("msg").textContent = ""; render(); });
+  Array.prototype.forEach.call(document.querySelectorAll("button[data-x]"), function (btn) {
+    btn.addEventListener("click", function () {
+      var v = btn.getAttribute("data-x").split("|");
+      $("dist").value = v[0]; $("n").value = Math.max(1, +v[1] || 10); $("p").value = +v[2] || 0.3;
+      $("lam").value = +v[3] || 4; $("mu").value = +v[4] || 100; $("sd").value = +v[5] || 4;
+      configure();
+      $("a").value = v[6]; $("b").value = v[7] !== undefined ? v[7] : v[6];
+      $("over").checked = v[8] === "1" && v[0] === "binom";
+      draw();
+    });
+  });
   window.addEventListener("resize", render);
   configure();
 })();

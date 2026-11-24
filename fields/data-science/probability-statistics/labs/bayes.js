@@ -49,6 +49,12 @@
     $("base").value = -3; $("sens").value = 99; $("fpr").value = 1;
     ["base", "sens", "fpr"].forEach(function (id) { $(id).dispatchEvent(new Event("input")); });
   });
+  Array.prototype.forEach.call(document.querySelectorAll("button[data-b]"), function (b) {
+    b.addEventListener("click", function () {
+      $("base").value = b.getAttribute("data-b"); $("sens").value = b.getAttribute("data-s"); $("fpr").value = b.getAttribute("data-f");
+      ["base", "sens", "fpr"].forEach(function (id) { $(id).dispatchEvent(new Event("input")); });
+    });
+  });
   window.addEventListener("resize", render);
   render();
 })();

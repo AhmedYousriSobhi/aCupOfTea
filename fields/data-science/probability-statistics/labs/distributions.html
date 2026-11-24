@@ -46,6 +46,23 @@
   <div class="row"><button id="draw">Draw 5,000 values</button><button id="clear" class="alt">Clear sample</button></div>
   <p class="note" id="msg"></p>
 </div>
+<div class="card">
+  <h2>Guided experiments</h2>
+  <p class="note">Each button sets the dials and draws a sample. Predict, then compare the bars with the blue ticks.</p>
+  <div class="row">
+    <button class="alt" data-x="binom|10|0.3|0|0|0|2|4">1. Smoky orders: n = 10, p = 0.3</button>
+    <button class="alt" data-x="binom|10|0.4|0|0|0|0|10|1">2. Poisson fits badly: n = 10, p = 0.4</button>
+    <button class="alt" data-x="binom|200|0.02|0|0|0|0|10|1">3. Poisson fits well: n = 200, p = 0.02</button>
+    <button class="alt" data-x="pois|0|0|4|0|0|0|0">4. An empty 10 minutes: &lambda; = 4</button>
+    <button class="alt" data-x="norm|0|0|0|100|4|92|108">5. Bags within 2 SD</button>
+  </div>
+  <ul class="note">
+    <li>2 and 3: the black line is Poisson(np). It tracks the bars only when n is large and p small.</li>
+    <li>4: the shaded bar at 0 is e<sup>&minus;4</sup>, about 1.8%.</li>
+    <li>5: the shaded area is the 95.45% of the 68-95-99.7 rule.</li>
+    <li>Any recipe: draw several samples. The sample mean and variance wobble around the theory values.</li>
+  </ul>
+</div>
 <div class="card warn"><b>Assumptions.</b> Binomial: same p, independent tries. Poisson: constant rate, independent arrivals (variance should be near the mean). Normal: draw the histogram first; two humps or a long tail are not a bell.</div>
 </main>
 <script src="lab-core.js"></script>

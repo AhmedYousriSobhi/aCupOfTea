@@ -3044,7 +3044,7 @@
     "level": "beginner",
     "order": 13,
     "path": "fields/data-science/probability-statistics/probability/quick-guide.md",
-    "reading_time_min": 4,
+    "reading_time_min": 2,
     "relations": {
       "prerequisites": [],
       "related": [
@@ -3057,7 +3057,7 @@
       ]
     },
     "status": "stable",
-    "summary": "Direct steps for parts 7 to 11 - count outcomes, flip a test result with a tree, compute an expected value, choose binomial or Poisson, and read a normal curve - with the check for each.",
+    "summary": "A cheat sheet for parts 7 to 11 - the method, the code and the expected output for counting outcomes, flipping a test result, expected value, binomial or Poisson, and the normal curve.",
     "tags": [
       "statistics"
     ],
@@ -3116,7 +3116,7 @@
     "level": "intermediate",
     "order": 12,
     "path": "fields/data-science/probability-statistics/probability/technical-reference.md",
-    "reading_time_min": 5,
+    "reading_time_min": 6,
     "relations": {
       "prerequisites": [
         "counting-the-ways"
