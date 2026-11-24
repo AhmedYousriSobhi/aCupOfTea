@@ -257,6 +257,7 @@
   /* Copy-a-link button after h2/h3 (.docs/section-links.js) */
   .markdown-section .section-link-copy { background: transparent !important; box-shadow: none; position: relative; margin-left: 0.35em; padding: 4px; border: 0; background: transparent; color: var(--link); vertical-align: middle; cursor: pointer; opacity: 0; transition: opacity 0.15s; }
   .section-link-copy svg { display: block; }
+  .markdown-section button.load-retry { padding: 0.5em 1.2em; min-height: 44px; border: 1px solid var(--border-color); border-radius: 6px; background: transparent; color: var(--color-text); font: inherit; cursor: pointer; }
   h2:hover .section-link-copy, h3:hover .section-link-copy, .section-link-copy:focus-visible, .section-link-copy[data-note] { opacity: 0.8; }
   @media (hover: none) { .section-link-copy { opacity: 0.45; } }
   .section-link-copy[data-note]::after { content: attr(data-note); position: absolute; left: 100%; top: 50%; transform: translateY(-50%); margin-left: 6px; padding: 2px 8px; border-radius: 6px; background: var(--color-text); color: var(--color-bg); font-size: 12px; font-weight: 400; white-space: nowrap; }
