@@ -1,3 +1,6 @@
+---
+summary: "Specification of how the aCupOfTea repository is organized: purpose, design principles, categories, naming, navigation and the Docsify site wiring."
+---
 # aCupOfTea Repository Specification
 
 **Status:** Active
