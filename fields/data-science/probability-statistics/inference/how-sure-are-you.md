@@ -171,6 +171,12 @@ The two nets agree closely (3.30 against 3.296 below, 4.075 against 4.104 above)
 
 * * *
 
+> ☕ **Try it live.** Build 100 intervals: switch between z and t at n = 5, then ask only the fans and see narrow nets around the wrong value.
+
+[Sampling and intervals lab](/fields/data-science/probability-statistics/labs/sampling.html#embed ':ignore')
+
+* * *
+
 ## Small samples, and the trap of a tight wrong answer
 
 **Small samples.** The `1.96` is exact only if you knew the true SD. You do not: you estimate it from the same few values, and with a small sample that estimate is itself shaky. The fix is to use the **t distribution**, a bell curve with slightly fatter tails, whose critical value depends on the sample size (the "degrees of freedom", `n − 1`). The net gets wider to pay for the extra uncertainty. NIST's formula for the mean uses exactly this t-value, not z. I checked two values by numerically integrating the t density (stdlib only): for `n = 10` the 95% multiplier is **2.262**, and for `n = 40` it is **2.023**, against 1.96. By about `n = 40` the difference is small, which also explains part of the "93, not 95" above.

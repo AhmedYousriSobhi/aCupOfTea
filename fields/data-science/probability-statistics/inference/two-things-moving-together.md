@@ -146,6 +146,12 @@ At 40 degrees a shop sells negative tea. Is `r = -0.98` any safer?
 
 * * *
 
+> ☕ **Try it live.** Drag a point, add the festival day, or step through Anscombe's four sets and watch r and the line.
+
+[Correlation lab](/fields/data-science/probability-statistics/labs/regression.html#embed ':ignore')
+
+* * *
+
 ## Where it lies: four traps
 
 Each trap below is a case where the numbers say one thing and the truth is another.

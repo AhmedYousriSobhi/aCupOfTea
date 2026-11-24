@@ -114,6 +114,12 @@ The classical test is the same question with a shortcut. Instead of shuffling, t
 
 * * *
 
+> ☕ **Try it live.** Shuffle the labels yourself, 1,000 at a time, and compare the share of re-deals that beat the real gap with the exact p-value. Scroll down for the twenty-tries demo.
+
+[Permutation test lab](/fields/data-science/probability-statistics/labs/permutation.html#embed ':ignore')
+
+* * *
+
 ## What the p-value is, and is not
 
 A p of 0.0143 says: *if the blends were identical, we would see a gap this big about 1.4% of the time.* Luck is a poor explanation. Three misreadings, all named in the American Statistical Association's 2016 statement:

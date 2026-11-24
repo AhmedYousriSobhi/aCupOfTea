@@ -78,6 +78,16 @@ Then keep [The Map of Leaf & Kettle](/fields/data-science/probability-statistics
 
 The order is deliberate. Pages 1 to 6 are about **describing what you have**: where the data came from, what kind it is, what it looks like, where its middle is, how spread out it is, and where one value sits within it. Pages 7 to 11 build the language of **chance**: counting the ways, updating on evidence, what to expect, the common distributions and the bell curve. Pages 12 to 14 join the two: using a sample to make an honest statement about something you cannot fully see. Page 15 puts two columns side by side. Each chance page reuses an idea from the first half (the expected value is the mean again, the z-score finally meets the bell), so there is less new to memorize than the list suggests.
 
+## Where things live
+
+| Folder | Parts | Also there |
+|---|---|---|
+| [Describing data](/fields/data-science/probability-statistics/describing-data/README.md) | 1 to 6 | technical reference, quick guide, describing-data lab |
+| [Probability](/fields/data-science/probability-statistics/probability/README.md) | 7 to 11 | technical reference, quick guide, Bayes and distributions labs |
+| [Inference](/fields/data-science/probability-statistics/inference/README.md) | 12 to 15 | technical reference, quick guide, sampling, permutation and correlation labs |
+
+Each story page shows its lab inline where it helps; the labs also open full screen from the folder indexes. For a plain syllabus of the whole field, see [Statistics](/fields/statistics/README.md).
+
 ## Conventions
 
 - Characters are invented. The numbers in the stories are chosen so you can do the arithmetic yourself.

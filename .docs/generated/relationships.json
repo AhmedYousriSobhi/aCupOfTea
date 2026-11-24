@@ -241,6 +241,8 @@
       "stir-the-pot-population-and-sampling"
     ],
     "related_by": [
+      "describing-data-quick-guide",
+      "describing-data-technical-reference",
       "draw-it-before-you-describe-it",
       "probability-statistics-series",
       "stir-the-pot-population-and-sampling",
@@ -257,6 +259,39 @@
       "sequence-models"
     ],
     "related_by": []
+  },
+  "describing-data-quick-guide": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "data-types-and-frequency-tables",
+      "describing-data-technical-reference",
+      "draw-it-before-you-describe-it",
+      "how-far-from-the-middle",
+      "stir-the-pot-population-and-sampling",
+      "the-number-on-the-tin",
+      "where-do-you-stand"
+    ],
+    "related_by": [
+      "describing-data-technical-reference"
+    ]
+  },
+  "describing-data-technical-reference": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "stir-the-pot-population-and-sampling"
+    ],
+    "related": [
+      "data-types-and-frequency-tables",
+      "describing-data-quick-guide",
+      "draw-it-before-you-describe-it",
+      "how-far-from-the-middle",
+      "the-number-on-the-tin",
+      "where-do-you-stand"
+    ],
+    "related_by": [
+      "describing-data-quick-guide"
+    ]
   },
   "digital-image-processing-overview": {
     "prerequisite_of": [],
@@ -399,6 +434,8 @@
       "the-number-on-the-tin"
     ],
     "related_by": [
+      "describing-data-quick-guide",
+      "describing-data-technical-reference",
       "probability-statistics-series",
       "the-bell-curve",
       "the-map-of-leaf-and-kettle",
@@ -539,6 +576,8 @@
       "the-map-of-leaf-and-kettle"
     ],
     "related_by": [
+      "describing-data-quick-guide",
+      "describing-data-technical-reference",
       "probability-statistics-series",
       "the-map-of-leaf-and-kettle",
       "two-things-moving-together",
@@ -557,6 +596,8 @@
       "probability-statistics-series"
     ],
     "related_by": [
+      "inference-quick-guide",
+      "inference-technical-reference",
       "probability-statistics-series"
     ]
   },
@@ -574,6 +615,35 @@
     "related": [],
     "related_by": [
       "hpc-systems-overview"
+    ]
+  },
+  "inference-quick-guide": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "how-sure-are-you",
+      "inference-technical-reference",
+      "the-courtroom-for-numbers",
+      "two-things-moving-together",
+      "why-averages-behave"
+    ],
+    "related_by": [
+      "inference-technical-reference"
+    ]
+  },
+  "inference-technical-reference": {
+    "prerequisite_of": [],
+    "prerequisites": [
+      "why-averages-behave"
+    ],
+    "related": [
+      "how-sure-are-you",
+      "inference-quick-guide",
+      "the-courtroom-for-numbers",
+      "two-things-moving-together"
+    ],
+    "related_by": [
+      "inference-quick-guide"
     ]
   },
   "isolating-gpu-workloads": {
@@ -2016,7 +2086,8 @@
   },
   "stir-the-pot-population-and-sampling": {
     "prerequisite_of": [
-      "data-types-and-frequency-tables"
+      "data-types-and-frequency-tables",
+      "describing-data-technical-reference"
     ],
     "prerequisites": [],
     "related": [
@@ -2025,6 +2096,7 @@
     ],
     "related_by": [
       "data-types-and-frequency-tables",
+      "describing-data-quick-guide",
       "probability-statistics-series",
       "the-map-of-leaf-and-kettle",
       "why-averages-behave"
@@ -2060,6 +2132,8 @@
       "why-averages-behave"
     ],
     "related_by": [
+      "inference-quick-guide",
+      "inference-technical-reference",
       "probability-statistics-series"
     ]
   },
@@ -2094,6 +2168,8 @@
       "probability-statistics-series"
     ],
     "related_by": [
+      "describing-data-quick-guide",
+      "describing-data-technical-reference",
       "draw-it-before-you-describe-it",
       "probability-statistics-series",
       "the-map-of-leaf-and-kettle",
@@ -2142,6 +2218,8 @@
       "where-do-you-stand"
     ],
     "related_by": [
+      "inference-quick-guide",
+      "inference-technical-reference",
       "probability-statistics-series"
     ]
   },
@@ -2266,6 +2344,8 @@
       "the-map-of-leaf-and-kettle"
     ],
     "related_by": [
+      "describing-data-quick-guide",
+      "describing-data-technical-reference",
       "probability-statistics-series",
       "the-bell-curve",
       "the-map-of-leaf-and-kettle",
@@ -2274,7 +2354,8 @@
   },
   "why-averages-behave": {
     "prerequisite_of": [
-      "how-sure-are-you"
+      "how-sure-are-you",
+      "inference-technical-reference"
     ],
     "prerequisites": [
       "the-bell-curve"
@@ -2285,6 +2366,7 @@
       "stir-the-pot-population-and-sampling"
     ],
     "related_by": [
+      "inference-quick-guide",
       "probability-statistics-series",
       "the-courtroom-for-numbers"
     ]

@@ -136,6 +136,12 @@ So:
 
 * * *
 
+> ☕ **Try it live.** Pick Mira's scores or Kettle Street, add one wrong value, switch the divisor between n and n − 1, and watch the mean, median, SD and IQR react.
+
+[Describing data lab](/fields/data-science/probability-statistics/labs/describing.html#embed ':ignore')
+
+* * *
+
 ## The n − 1 mystery
 
 Everything so far treated the seven houses as **everyone**, so we divided by 7. In real life you almost always see a **sample**, and textbooks tell you to divide by `n − 1` instead. Nobody says why. Here is the reason, and you can verify it by hand.

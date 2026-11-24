@@ -49,6 +49,21 @@
   function poisPmf(lam, k) { return Math.exp(-lam + k * Math.log(lam) - lgam(k)); }
   function binomSample(n, p, r) { var c = 0; for (var i = 0; i < n; i++) if (r() < p) c++; return c; }
   function poisSample(lam, r) { var L = Math.exp(-lam), k = 0, p = 1; do { k++; p *= r(); } while (p > L); return k - 1; }
+  // Student t: density integrated by Simpson's rule, percentile by bisection (good to ~1e-6)
+  function tcdf(x, df) {
+    var k = Math.exp(lgamma((df + 1) / 2) - lgamma(df / 2)) / Math.sqrt(df * Math.PI);
+    var f = function (u) { return k * Math.pow(1 + u * u / df, -(df + 1) / 2); };
+    var n = 2000, h = x / n, s = f(0) + f(x), i;
+    for (i = 1; i < n; i++) s += (i % 2 ? 4 : 2) * f(i * h);
+    return 0.5 + h / 3 * s;
+  }
+  function lgamma(z) { // Lanczos
+    var g = 7, c = [0.99999999999980993, 676.5203681218851, -1259.1392167224028, 771.32342877765313, -176.61502916214059, 12.507343278686905, -0.13857109526572012, 9.9843695780195716e-6, 1.5056327351493116e-7];
+    if (z < 0.5) return Math.log(Math.PI / Math.sin(Math.PI * z)) - lgamma(1 - z);
+    z -= 1; var x = c[0], i; for (i = 1; i < g + 2; i++) x += c[i] / (z + i);
+    var t = z + g + 0.5; return 0.5 * Math.log(2 * Math.PI) + (z + 0.5) * Math.log(t) - t + Math.log(x);
+  }
+  function tInv(df, p) { var lo = 0, hi = 60, i; for (i = 0; i < 50; i++) { var m = (lo + hi) / 2; if (tcdf(m, df) < p) lo = m; else hi = m; } return (lo + hi) / 2; }
   function $(id) { return document.getElementById(id); }
   function fmt(x, d) { return Number(x).toFixed(d === undefined ? 4 : d); }
   function pct(x, d) { return (100 * x).toFixed(d === undefined ? 2 : d) + "%"; }
@@ -81,7 +96,7 @@
     var ymax = o.ymax || Math.max.apply(null, o.bars.map(function (b) { return b.y; }).concat((o.line || []).map(function (p) { return p.y; }), [1e-9])) * 1.1;
     (function () { // round the top of the axis so the four ticks fall on clean values
       var raw = ymax / 4, mag = Math.pow(10, Math.floor(Math.log10(raw))), f = raw / mag;
-      ymax = (f <= 1 ? 1 : f <= 2 ? 2 : f <= 2.5 ? 2.5 : f <= 5 ? 5 : 10) * mag * 4;
+      ymax = o.yint ? 4 * Math.max(1, Math.ceil(raw)) : (f <= 1 ? 1 : f <= 2 ? 2 : f <= 2.5 ? 2.5 : f <= 5 ? 5 : 10) * mag * 4;
     })();
     var X = function (x) { return L + (x - xmin) / (xmax - xmin) * W; };
     var Y = function (y) { return T + H - y / ymax * H; };
@@ -91,7 +106,7 @@
     for (var i = 0; i <= 4; i++) {
       var yv = ymax * i / 4, yy = Math.round(Y(yv)) + 0.5;
       c.beginPath(); c.moveTo(L, yy); c.lineTo(P.w - R, yy); c.stroke();
-      c.fillText(o.pctAxis ? (100 * yv).toFixed(100 * ymax < 10 ? 1 : 0) + "%" : yv.toFixed(3), L - 6, yy + 4);
+      c.fillText(o.pctAxis ? (100 * yv).toFixed(100 * ymax < 10 ? 1 : 0) + "%" : (o.yint ? String(Math.round(yv)) : yv.toFixed(3)), L - 6, yy + 4);
     }
     var bw = Math.max(1, W / (xmax - xmin) * (o.bw || o.barw || 0.8));
     o.bars.forEach(function (b) {
@@ -191,5 +206,5 @@
   })();
   g.Lab = { rng: rng, normal: normal, erf: erf, ncdf: ncdf, ninv: ninv, binomPmf: binomPmf, poisPmf: poisPmf,
     binomSample: binomSample, poisSample: poisSample, $: $, fmt: fmt, pct: pct, colors: colors, prep: prep,
-    barChart: barChart, slider: slider, hover: hover, paint: paint, theme: theme };
+    tcdf: tcdf, tInv: tInv, barChart: barChart, slider: slider, hover: hover, paint: paint, theme: theme };
 })(window);

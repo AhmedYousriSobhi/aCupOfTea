@@ -6,11 +6,17 @@
   [`statistics`](/.docs/generated/explore/tags/statistics.md)
 - [Counting the Ways: Probability as a Share of the List](/fields/data-science/probability-statistics/probability/counting-the-ways.md) — Probability is the share of the equally likely ways. So "or" adds, "and" multiplies, and "at least one" is 1 minus none, because of what each does to the list of ways. *(beginner · 9 min)*  
   [`statistics`](/.docs/generated/explore/tags/statistics.md)
+- [Describing Data, Technically: Definitions, Identities and Method Choices](/fields/data-science/probability-statistics/describing-data/technical-reference.md) — The formal layer under parts 1 to 6: scales of measurement, grouped-data formulas, what the mean and median minimise, n versus n-1, quartile methods, fences and sampling designs. *(intermediate · 4 min)*  
+  [`statistics`](/.docs/generated/explore/tags/statistics.md)
 - [Draw It Before You Describe It: Three Pictures of the Same Fifty Days](/fields/data-science/probability-statistics/describing-data/draw-it-before-you-describe-it.md) — Why a table of counts glazes eyes and a picture does not: the histogram, frequency polygon and ogive built from one table, and the mistakes that make them lie. *(beginner · 10 min)*  
+  [`statistics`](/.docs/generated/explore/tags/statistics.md)
+- [From a Sample to a Statement: Intervals, Tests and Lines](/fields/data-science/probability-statistics/inference/quick-guide.md) — A cheat sheet for parts 12 to 15 - the spread of averages, a confidence interval, a shuffle test and a regression line - with the check and the common trap for each. *(beginner · 3 min)*  
   [`statistics`](/.docs/generated/explore/tags/statistics.md)
 - [How Far From the Middle? One Question Behind Every Summary Number](/fields/data-science/probability-statistics/describing-data/how-far-from-the-middle.md) — Mean, median and mode are one question asked with three rulers: how much should a long walk hurt? Spread is what is left over. Variance, SD, IQR and the n-1 mystery fall out of that. *(beginner · 11 min · long read)*  
   [`statistics`](/.docs/generated/explore/tags/statistics.md)
 - [How Sure Are You? Confidence Intervals](/fields/data-science/probability-statistics/inference/how-sure-are-you.md) — A confidence interval is an honest "about this, give or take": the estimate plus or minus a margin built from the standard error. The 95% describes the method, not one interval. *(intermediate · 9 min)*  
+  [`statistics`](/.docs/generated/explore/tags/statistics.md)
+- [Inference, Technically: Sampling Distributions, Intervals, Tests and Regression](/fields/data-science/probability-statistics/inference/technical-reference.md) — The formal layer under parts 12 to 15: the sampling distribution of the mean, intervals and the t distribution, p-values and permutation tests, multiple testing, and least-squares regression. *(intermediate · 6 min)*  
   [`statistics`](/.docs/generated/explore/tags/statistics.md)
 - [Mira's Notebook: What Kind of Data Is This, and How Do You Count It?](/fields/data-science/probability-statistics/describing-data/data-types-and-frequency-tables.md) — Why you cannot average a blend name: the four kinds of data, and how to turn raw numbers into honest category, ungrouped and grouped frequency tables. *(beginner · 13 min · long read)*  
   [`statistics`](/.docs/generated/explore/tags/statistics.md)
@@ -22,6 +28,8 @@
   [`statistics`](/.docs/generated/explore/tags/statistics.md)
 - [Stir the Pot First: Population, Sample, and Why We Guess](/fields/data-science/probability-statistics/describing-data/stir-the-pot-population-and-sampling.md) — Why a sip judges a pot of tea only if you stir it: population versus sample, four ways to draw a sample, the poll that asked 2.4 million and still erred. *(beginner · 11 min · long read)*  
   [`sampling`](/.docs/generated/explore/tags/sampling.md) [`statistics`](/.docs/generated/explore/tags/statistics.md)
+- [Summarise a Data Set: Which Number, Which Picture](/fields/data-science/probability-statistics/describing-data/quick-guide.md) — A cheat sheet for parts 1 to 6 - choose a sampling method, classify the data, pick the picture, pick the middle and the spread, and place one value in its crowd. *(beginner · 3 min)*  
+  [`statistics`](/.docs/generated/explore/tags/statistics.md)
 - [The Bell Curve: Probability as Area, and One Ruler for Every Bell](/fields/data-science/probability-statistics/probability/the-bell-curve.md) — Many small nudges add up to a bell. For continuous data probability is area, and the z-score makes every bell the same bell, so one table serves all of them, until the data are not a bell. *(intermediate · 9 min)*  
   [`statistics`](/.docs/generated/explore/tags/statistics.md)
 - [The Courtroom for Numbers: Could Plain Luck Do This?](/fields/data-science/probability-statistics/inference/the-courtroom-for-numbers.md) — A hypothesis test asks one question: could plain luck have produced a difference this big? Shuffle the labels and count. What the p-value is, what it is not, and how testing twenty things fools you. *(intermediate · 9 min)*  

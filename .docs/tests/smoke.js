@@ -395,6 +395,11 @@ async function run(browser, base, label, size, phone) {
       const h = await page.evaluate(() => { const f = Array.from(document.querySelectorAll('.markdown-section iframe'))[0]; return Math.round(f.getBoundingClientRect().height); });
       c('the frame grows to the lab height', h > 520 && h <= 3000, h + ' px');
     } else c('the framed lab loads', false, 'no frame for bayes.html');
+    for (const [slug, want] of [['inference/quick-guide', 3], ['describing-data/quick-guide', 1]]) {
+      await go('fields/data-science/probability-statistics/' + slug, 2000);
+      const n = await page.evaluate(() => Array.from(document.querySelectorAll('.markdown-section iframe')).map((f) => f.getAttribute('sandbox')));
+      c('every embedded lab on ' + slug + ' is sandboxed', n.length === want && n.every((v) => v === 'allow-scripts'), JSON.stringify(n));
+    }
     const policy = await page.evaluate(() => window.__csp.filter((v) => /^frame-src/.test(v)));
     c('no frame is blocked by the policy', policy.length === 0, policy.join(' | '));
   }

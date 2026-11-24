@@ -5,7 +5,7 @@
       "title": "Draw It Before You Describe It: Three Pictures of the Same Fifty Days"
     },
     "pos": 2,
-    "total": 16
+    "total": 18
   },
   "fields/data-science/probability-statistics/describing-data/draw-it-before-you-describe-it": {
     "next": {
@@ -13,7 +13,7 @@
       "title": "The Number on the Tin: Mean, Median and Mode"
     },
     "pos": 3,
-    "total": 16
+    "total": 18
   },
   "fields/data-science/probability-statistics/describing-data/how-far-from-the-middle": {
     "next": {
@@ -21,7 +21,7 @@
       "title": "Where Do You Stand? Percentiles, Z-Scores and the Box Plot"
     },
     "pos": 5,
-    "total": 16
+    "total": 18
   },
   "fields/data-science/probability-statistics/describing-data/stir-the-pot-population-and-sampling": {
     "next": {
@@ -29,7 +29,15 @@
       "title": "Mira's Notebook: What Kind of Data Is This, and How Do You Count It?"
     },
     "pos": 1,
-    "total": 16
+    "total": 18
+  },
+  "fields/data-science/probability-statistics/describing-data/technical-reference": {
+    "next": {
+      "path": "fields/data-science/probability-statistics/probability/the-test-that-was-99-percent-accurate",
+      "title": "The Test That Was 99% Accurate: Conditional Probability and Bayes' Rule"
+    },
+    "pos": 8,
+    "total": 18
   },
   "fields/data-science/probability-statistics/describing-data/the-number-on-the-tin": {
     "next": {
@@ -37,7 +45,7 @@
       "title": "How Far From the Middle? One Question Behind Every Summary Number"
     },
     "pos": 4,
-    "total": 16
+    "total": 18
   },
   "fields/data-science/probability-statistics/describing-data/where-do-you-stand": {
     "next": {
@@ -45,84 +53,92 @@
       "title": "Counting the Ways: Probability as a Share of the List"
     },
     "pos": 6,
-    "total": 16
+    "total": 18
   },
   "fields/data-science/probability-statistics/inference/how-sure-are-you": {
     "next": {
       "path": "fields/data-science/probability-statistics/inference/the-courtroom-for-numbers",
       "title": "The Courtroom for Numbers: Could Plain Luck Do This?"
     },
-    "pos": 14,
-    "total": 16
+    "pos": 15,
+    "total": 18
+  },
+  "fields/data-science/probability-statistics/inference/technical-reference": {
+    "next": null,
+    "pos": 18,
+    "total": 18
   },
   "fields/data-science/probability-statistics/inference/the-courtroom-for-numbers": {
     "next": {
       "path": "fields/data-science/probability-statistics/inference/two-things-moving-together",
       "title": "Two Things Moving Together: Correlation and the Line"
     },
-    "pos": 15,
-    "total": 16
+    "pos": 16,
+    "total": 18
   },
   "fields/data-science/probability-statistics/inference/two-things-moving-together": {
-    "next": null,
-    "pos": 16,
-    "total": 16
+    "next": {
+      "path": "fields/data-science/probability-statistics/inference/technical-reference",
+      "title": "Inference, Technically: Sampling Distributions, Intervals, Tests and Regression"
+    },
+    "pos": 17,
+    "total": 18
   },
   "fields/data-science/probability-statistics/inference/why-averages-behave": {
     "next": {
       "path": "fields/data-science/probability-statistics/inference/how-sure-are-you",
       "title": "How Sure Are You? Confidence Intervals"
     },
-    "pos": 13,
-    "total": 16
+    "pos": 14,
+    "total": 18
   },
   "fields/data-science/probability-statistics/probability/coins-and-calls": {
     "next": {
       "path": "fields/data-science/probability-statistics/probability/the-bell-curve",
       "title": "The Bell Curve: Probability as Area, and One Ruler for Every Bell"
     },
-    "pos": 10,
-    "total": 16
+    "pos": 11,
+    "total": 18
   },
   "fields/data-science/probability-statistics/probability/counting-the-ways": {
     "next": {
-      "path": "fields/data-science/probability-statistics/probability/the-test-that-was-99-percent-accurate",
-      "title": "The Test That Was 99% Accurate: Conditional Probability and Bayes' Rule"
+      "path": "fields/data-science/probability-statistics/describing-data/technical-reference",
+      "title": "Describing Data, Technically: Definitions, Identities and Method Choices"
     },
     "pos": 7,
-    "total": 16
+    "total": 18
   },
   "fields/data-science/probability-statistics/probability/technical-reference": {
     "next": {
       "path": "fields/data-science/probability-statistics/inference/why-averages-behave",
       "title": "Why Averages Behave: The Sip You Could Take a Thousand Times"
     },
-    "pos": 12,
-    "total": 16
+    "pos": 13,
+    "total": 18
   },
   "fields/data-science/probability-statistics/probability/the-bell-curve": {
     "next": {
       "path": "fields/data-science/probability-statistics/probability/technical-reference",
       "title": "Probability, Technically: Definitions, Identities and Assumptions"
     },
-    "pos": 11,
-    "total": 16
+    "pos": 12,
+    "total": 18
   },
   "fields/data-science/probability-statistics/probability/the-test-that-was-99-percent-accurate": {
     "next": {
       "path": "fields/data-science/probability-statistics/probability/what-to-expect",
       "title": "What to Expect: Random Variables and Expected Value"
     },
-    "pos": 8,
-    "total": 16
+    "pos": 9,
+    "total": 18
   },
   "fields/data-science/probability-statistics/probability/what-to-expect": {
     "next": {
       "path": "fields/data-science/probability-statistics/probability/coins-and-calls",
       "title": "Coins and Calls: Binomial and Poisson as Recipes"
     },
-    "pos": 9,
-    "total": 16
+    "pos": 10,
+    "total": 18
   },
   "fields/deep-learning/concepts/basics": {
     "next": {

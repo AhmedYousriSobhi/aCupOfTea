@@ -164,6 +164,12 @@ Why a bell? One way to see it: averaging smooths. A single cup can be extreme. T
 
 * * *
 
+> ☕ **Try it live.** Draw 1,000 samples of any size and watch the averages pile into a bell; compare their spread with σ/√n.
+
+[Sampling and intervals lab](/fields/data-science/probability-statistics/labs/sampling.html#embed ':ignore')
+
+* * *
+
 ## What the theorem does not say
 
 These are the places people trip, so be exact:

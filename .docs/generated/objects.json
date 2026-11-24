@@ -644,6 +644,72 @@
       "concept"
     ]
   },
+  "describing-data-quick-guide": {
+    "domains": [
+      "statistics"
+    ],
+    "id": "describing-data-quick-guide",
+    "level": "beginner",
+    "order": 8,
+    "path": "fields/data-science/probability-statistics/describing-data/quick-guide.md",
+    "reading_time_min": 3,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "data-types-and-frequency-tables",
+        "describing-data-technical-reference",
+        "draw-it-before-you-describe-it",
+        "how-far-from-the-middle",
+        "stir-the-pot-population-and-sampling",
+        "the-number-on-the-tin",
+        "where-do-you-stand"
+      ]
+    },
+    "status": "stable",
+    "summary": "A cheat sheet for parts 1 to 6 - choose a sampling method, classify the data, pick the picture, pick the middle and the spread, and place one value in its crowd.",
+    "tags": [
+      "statistics"
+    ],
+    "title": "Summarise a Data Set: Which Number, Which Picture",
+    "type": "guide",
+    "types": [
+      "guide",
+      "reference"
+    ]
+  },
+  "describing-data-technical-reference": {
+    "domains": [
+      "statistics"
+    ],
+    "id": "describing-data-technical-reference",
+    "level": "intermediate",
+    "order": 7,
+    "path": "fields/data-science/probability-statistics/describing-data/technical-reference.md",
+    "reading_time_min": 4,
+    "relations": {
+      "prerequisites": [
+        "stir-the-pot-population-and-sampling"
+      ],
+      "related": [
+        "data-types-and-frequency-tables",
+        "describing-data-quick-guide",
+        "draw-it-before-you-describe-it",
+        "how-far-from-the-middle",
+        "the-number-on-the-tin",
+        "where-do-you-stand"
+      ]
+    },
+    "status": "stable",
+    "summary": "The formal layer under parts 1 to 6: scales of measurement, grouped-data formulas, what the mean and median minimise, n versus n-1, quartile methods, fences and sampling designs.",
+    "tags": [
+      "statistics"
+    ],
+    "title": "Describing Data, Technically: Definitions, Identities and Method Choices",
+    "type": "reference",
+    "types": [
+      "reference"
+    ]
+  },
   "digital-image-processing-overview": {
     "domains": [
       "image-processing"
@@ -1438,6 +1504,68 @@
     "type": "concept",
     "types": [
       "concept"
+    ]
+  },
+  "inference-quick-guide": {
+    "domains": [
+      "statistics"
+    ],
+    "id": "inference-quick-guide",
+    "level": "beginner",
+    "order": 17,
+    "path": "fields/data-science/probability-statistics/inference/quick-guide.md",
+    "reading_time_min": 3,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "how-sure-are-you",
+        "inference-technical-reference",
+        "the-courtroom-for-numbers",
+        "two-things-moving-together",
+        "why-averages-behave"
+      ]
+    },
+    "status": "stable",
+    "summary": "A cheat sheet for parts 12 to 15 - the spread of averages, a confidence interval, a shuffle test and a regression line - with the check and the common trap for each.",
+    "tags": [
+      "statistics"
+    ],
+    "title": "From a Sample to a Statement: Intervals, Tests and Lines",
+    "type": "guide",
+    "types": [
+      "guide",
+      "reference"
+    ]
+  },
+  "inference-technical-reference": {
+    "domains": [
+      "statistics"
+    ],
+    "id": "inference-technical-reference",
+    "level": "intermediate",
+    "order": 16,
+    "path": "fields/data-science/probability-statistics/inference/technical-reference.md",
+    "reading_time_min": 6,
+    "relations": {
+      "prerequisites": [
+        "why-averages-behave"
+      ],
+      "related": [
+        "how-sure-are-you",
+        "inference-quick-guide",
+        "the-courtroom-for-numbers",
+        "two-things-moving-together"
+      ]
+    },
+    "status": "stable",
+    "summary": "The formal layer under parts 12 to 15: the sampling distribution of the mean, intervals and the t distribution, p-values and permutation tests, multiple testing, and least-squares regression.",
+    "tags": [
+      "statistics"
+    ],
+    "title": "Inference, Technically: Sampling Distributions, Intervals, Tests and Regression",
+    "type": "reference",
+    "types": [
+      "reference"
     ]
   },
   "isolating-gpu-workloads": {
