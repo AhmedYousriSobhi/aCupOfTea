@@ -22,7 +22,7 @@ relations:
 
 # Two Things Moving Together: Correlation and the Line
 
-> **Part 15 of 15.** Part of the [Probability & Statistics](/fields/data-science/probability-statistics/README.md) series. It continues from [The Courtroom for Numbers](/fields/data-science/probability-statistics/the-courtroom-for-numbers.md). By the end you will measure how two columns move together, draw the line through them, and know exactly when to distrust both. There is nothing new to memorize: two ideas you already own are reused. The scenario is invented, and every figure can be checked by hand.
+> **Part 15 of 15.** Part of the [Probability & Statistics](/fields/data-science/probability-statistics/README.md) series. It continues from [The Courtroom for Numbers](/fields/data-science/probability-statistics/inference/the-courtroom-for-numbers.md). By the end you will measure how two columns move together, draw the line through them, and know exactly when to distrust both. There is nothing new to memorize: two ideas you already own are reused. The scenario is invented, and every figure can be checked by hand.
 
 * * *
 
@@ -64,7 +64,7 @@ The dots slide down as you go right. No clumps, no strays, roughly a line. This 
 
 ## Idea 1: do the z-scores rise and fall together?
 
-Temperature is in degrees, cups are in cups. Different units, different spreads. You already own the tool that makes them comparable: the **z-score** from [Where Do You Stand?](/fields/data-science/probability-statistics/where-do-you-stand.md), distance from the middle in typical distances.
+Temperature is in degrees, cups are in cups. Different units, different spreads. You already own the tool that makes them comparable: the **z-score** from [Where Do You Stand?](/fields/data-science/probability-statistics/describing-data/where-do-you-stand.md), distance from the middle in typical distances.
 
 Convert every day to two z-scores. Then ask one question: on a day when temperature is above its middle, is cups above or below *its* middle? Multiply the two z-scores of each day:
 
@@ -109,7 +109,7 @@ So `r = -0.98`. But Ravi wants to *predict*: how many cups tomorrow at 5 degrees
 
 ## Idea 2: the line is least squared walking
 
-You have met this problem in disguise. In [How Far From the Middle?](/fields/data-science/probability-statistics/how-far-from-the-middle.md), the mean was the spot that leaves the smallest total **squared** walk to the crowd. Now the crowd is eight dots and the thing we place is a **line**. The walk of each dot is the vertical gap between it and the line, called its **residual** (what is left over after the line has said its piece). The same rule applies: the line that leaves the smallest total squared residual wins. That is **least squares**, and it is the whole idea of regression.
+You have met this problem in disguise. In [How Far From the Middle?](/fields/data-science/probability-statistics/describing-data/how-far-from-the-middle.md), the mean was the spot that leaves the smallest total **squared** walk to the crowd. Now the crowd is eight dots and the thing we place is a **line**. The walk of each dot is the vertical gap between it and the line, called its **residual** (what is left over after the line has said its piece). The same rule applies: the line that leaves the smallest total squared residual wins. That is **least squares**, and it is the whole idea of regression.
 
 ```python
 fit = st.linear_regression(temp, cups)
@@ -143,6 +143,12 @@ The candidates `64 - 2.5x` and `67 - 3x` both miss by exactly 64.0, worse than 4
 At 5 degrees the line predicts **50.6 cups**. Sensible, since 5 degrees is inside the temperatures Tala wrote down. At 40 degrees it predicts **-41.9 cups**. A shop does not sell negative tea.
 
 At 40 degrees a shop sells negative tea. Is `r = -0.98` any safer?
+
+* * *
+
+> ☕ **Try it live.** Drag a point, add the festival day, or step through Anscombe's four sets and watch r and the line.
+
+[Correlation lab](/fields/data-science/probability-statistics/labs/regression.html#embed ':ignore')
 
 * * *
 
@@ -187,7 +193,7 @@ print(round(st.correlation(temp + [30], cups + [60]), 3))  # one heatwave festiv
 
 One day moved `r` from -0.982 to **-0.075**. (The same digits as the sunburn result by coincidence; it is a different data set.) Just as one far house wrecked the mean on Kettle Street, one far dot wrecks `r`, because z-scores are built from the mean and SD.
 
-All four traps share a cure, and it is the one [Part 3](/fields/data-science/probability-statistics/draw-it-before-you-describe-it.md) gave you.
+All four traps share a cure, and it is the one [Part 3](/fields/data-science/probability-statistics/describing-data/draw-it-before-you-describe-it.md) gave you.
 
 * * *
 

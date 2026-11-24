@@ -19,7 +19,7 @@ relations:
 
 # How Sure Are You? Confidence Intervals
 
-> **Part 13 of 15.** Part of the [Probability & Statistics](/fields/data-science/probability-statistics/README.md) series. It continues from [Why Averages Behave](/fields/data-science/probability-statistics/why-averages-behave.md), where you learned how much a sample average wobbles (the standard error). By the end you will turn that wobble into an honest "give or take", know what the famous "95%" really claims, and know the one way a tight interval can still be wrong. The scenario is invented, and the simulation is labelled as simulated.
+> **Part 13 of 15.** Part of the [Probability & Statistics](/fields/data-science/probability-statistics/README.md) series. It continues from [Why Averages Behave](/fields/data-science/probability-statistics/inference/why-averages-behave.md), where you learned how much a sample average wobbles (the standard error). By the end you will turn that wobble into an honest "give or take", know what the famous "95%" really claims, and know the one way a tight interval can still be wrong. The scenario is invented, and the simulation is labelled as simulated.
 
 * * *
 
@@ -171,6 +171,12 @@ The two nets agree closely (3.30 against 3.296 below, 4.075 against 4.104 above)
 
 * * *
 
+> ☕ **Try it live.** Build 100 intervals: switch between z and t at n = 5, then ask only the fans and see narrow nets around the wrong value.
+
+[Sampling and intervals lab](/fields/data-science/probability-statistics/labs/sampling.html#embed ':ignore')
+
+* * *
+
 ## Small samples, and the trap of a tight wrong answer
 
 **Small samples.** The `1.96` is exact only if you knew the true SD. You do not: you estimate it from the same few values, and with a small sample that estimate is itself shaky. The fix is to use the **t distribution**, a bell curve with slightly fatter tails, whose critical value depends on the sample size (the "degrees of freedom", `n − 1`). The net gets wider to pay for the extra uncertainty. NIST's formula for the mean uses exactly this t-value, not z. I checked two values by numerically integrating the t density (stdlib only): for `n = 10` the 95% multiplier is **2.262**, and for `n = 40` it is **2.023**, against 1.96. By about `n = 40` the difference is small, which also explains part of the "93, not 95" above.
@@ -191,7 +197,7 @@ print("fans-only: covered", inside, "of 100; last interval", f"{lo:.3f} to {hi:.
 fans-only: covered 0 of 100; last interval 4.223 to 4.527
 ```
 
-The true mean is 3.75. **None** of 100 nets caught it. Each one is also narrow, because the fans mostly agree with each other, so the standard error is small: a tight, confident, wrong answer. A confidence interval measures only the wobble from **chance**. It cannot see a flaw in **who you asked**: that was the lesson of [Stir the Pot](/fields/data-science/probability-statistics/stir-the-pot-population-and-sampling.md), and no formula repairs it.
+The true mean is 3.75. **None** of 100 nets caught it. Each one is also narrow, because the fans mostly agree with each other, so the standard error is small: a tight, confident, wrong answer. A confidence interval measures only the wobble from **chance**. It cannot see a flaw in **who you asked**: that was the lesson of [Stir the Pot](/fields/data-science/probability-statistics/describing-data/stir-the-pot-population-and-sampling.md), and no formula repairs it.
 
 > [!WARNING]
 > Narrow does not mean right. Narrow means precise. A tight net around the wrong spot is the most dangerous number on the tin, because it looks careful.
@@ -218,7 +224,7 @@ Tala looks at the width of the nets. Each is about a third of a star wide. The g
 
 **Takeaway:** a confidence interval is estimate plus or minus a margin that measures chance wobble. The 95% is about the **method**, not the single interval, four times the data halves the width, and no interval can fix a biased sample.
 
-**Challenge:** is a gap of 0.15 stars real, or just two bags that happened to differ? Telling those apart is a decision, not a measurement, and it works like a trial. Next cup: [The Courtroom for Numbers](/fields/data-science/probability-statistics/the-courtroom-for-numbers.md).
+**Challenge:** is a gap of 0.15 stars real, or just two bags that happened to differ? Telling those apart is a decision, not a measurement, and it works like a trial. Next cup: [The Courtroom for Numbers](/fields/data-science/probability-statistics/inference/the-courtroom-for-numbers.md).
 
 * * *
 

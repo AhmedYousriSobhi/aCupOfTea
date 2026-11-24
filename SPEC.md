@@ -1,3 +1,6 @@
+---
+summary: "Specification of how the aCupOfTea repository is organized: purpose, design principles, categories, naming, navigation and the Docsify site wiring."
+---
 # aCupOfTea Repository Specification
 
 **Status:** Active
@@ -116,6 +119,7 @@ index.html           — Docsify entry point: page shell and Content-Security-Po
                          lazy-images.js (images load as you scroll)
                          _404.md (page shown for a missing link)
                          page-footer.js (Edit this page, Last updated, Copy share link)
+                         lab-embed.js (shows a labs/NAME.html#embed link as a sandboxed frame, same-site labs only)
                          math.js (display formulas with KaTeX)
                          config.js (Docsify settings, window.$docsify)
                          lazy-libs.js (loads Mermaid and KaTeX only on pages that use them)

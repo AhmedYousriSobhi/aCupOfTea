@@ -21,7 +21,7 @@ relations:
 
 # The Number on the Tin: Mean, Median and Mode
 
-> **Part 4 of 15.** Part of the [Probability & Statistics](/fields/data-science/probability-statistics/README.md) series. It continues from [Draw It Before You Describe It](/fields/data-science/probability-statistics/draw-it-before-you-describe-it.md), where Ravi asked for "one number" for a typical day. The scenario is invented, and every figure can be checked by hand.
+> **Part 4 of 15.** Part of the [Probability & Statistics](/fields/data-science/probability-statistics/README.md) series. It continues from [Draw It Before You Describe It](/fields/data-science/probability-statistics/describing-data/draw-it-before-you-describe-it.md), where Ravi asked for "one number" for a typical day. The scenario is invented, and every figure can be checked by hand.
 
 * * *
 
@@ -229,7 +229,7 @@ So she changes the line. The new label says: **"Divides opinion: about half of o
 
 **Takeaway:** "typical" is three questions in a trench coat. Ask which one you mean, and draw the picture before you trust any of them.
 
-Now a loose thread. Why *these* three questions, and not a fourth? Tala suspects they are not strangers: one question hides underneath all three, and once you see it, you will also see why Mira's scores, running from 52 to 104, deserve a second number beside the first. Next cup: [How Far From the Middle?](/fields/data-science/probability-statistics/how-far-from-the-middle.md)
+Now a loose thread. Why *these* three questions, and not a fourth? Tala suspects they are not strangers: one question hides underneath all three, and once you see it, you will also see why Mira's scores, running from 52 to 104, deserve a second number beside the first. Next cup: [How Far From the Middle?](/fields/data-science/probability-statistics/describing-data/how-far-from-the-middle.md)
 
 * * *
 

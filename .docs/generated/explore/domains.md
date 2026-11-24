@@ -17,7 +17,7 @@ Pages grouped by subject. Folders stay the primary location; this is an overlay.
 - [Schedulers](/.docs/generated/explore/domains/schedulers.md) (20): Job scheduling and resource management on clusters, mostly Slurm.
 - [Security](/.docs/generated/explore/domains/security.md) (1): Access control, authentication and hardening.
 - [Software Engineering](/.docs/generated/explore/domains/software-engineering.md) (17): Engineering practice, patterns and tooling.
-- [Statistics](/.docs/generated/explore/domains/statistics.md) (26): Statistical methods and probability.
+- [Statistics](/.docs/generated/explore/domains/statistics.md) (32): Statistical methods and probability.
 - [System Administration](/.docs/generated/explore/domains/system-administration.md) (43): Running Linux hosts and clusters: memory, storage, node health, MPI and GPU failures.
 - [System Design](/.docs/generated/explore/domains/system-design.md) (6): Software System Design
 - [Systems and HPC](/.docs/generated/explore/domains/systems-and-hpc.md) (131): Benchmarks, schedulers, system administration, high-performance computing.

@@ -21,7 +21,7 @@ relations:
 
 # Draw It Before You Describe It: Three Pictures of the Same Fifty Days
 
-> **Part 3 of 15.** Part of the [Probability & Statistics](/fields/data-science/probability-statistics/README.md) series. It builds on the grouped tables from [Mira's Notebook](/fields/data-science/probability-statistics/data-types-and-frequency-tables.md). By the end you will see that the histogram, the frequency polygon and the ogive are not three graphs to memorize: they are three **questions** you can ask of one table. The shop, the people and the counts are invented, and every number can be checked by hand.
+> **Part 3 of 15.** Part of the [Probability & Statistics](/fields/data-science/probability-statistics/README.md) series. It builds on the grouped tables from [Mira's Notebook](/fields/data-science/probability-statistics/describing-data/data-types-and-frequency-tables.md). By the end you will see that the histogram, the frequency polygon and the ogive are not three graphs to memorize: they are three **questions** you can ask of one table. The shop, the people and the counts are invented, and every number can be checked by hand.
 
 ## The idea in one minute
 
@@ -199,7 +199,7 @@ Ten minutes ago Ravi could not tell if the numbers were large. Now he asks his o
 
 **Takeaway:** do not memorize three graphs. Ask the question: how much, how do two compare, how many up to here.
 
-That is a harder question than it sounds, and it is the next cup: [The Number on the Tin](/fields/data-science/probability-statistics/the-number-on-the-tin.md).
+That is a harder question than it sounds, and it is the next cup: [The Number on the Tin](/fields/data-science/probability-statistics/describing-data/the-number-on-the-tin.md).
 
 * * *
 

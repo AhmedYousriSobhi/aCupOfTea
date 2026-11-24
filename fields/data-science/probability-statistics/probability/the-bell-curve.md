@@ -21,7 +21,7 @@ relations:
 
 # The Bell Curve: Probability as Area, and One Ruler for Every Bell
 
-> **Part 11 of 15.** Part of the [Probability & Statistics](/fields/data-science/probability-statistics/README.md) series. It continues from [Coins and Calls](/fields/data-science/probability-statistics/coins-and-calls.md), where chance came as a table of counts. By the end you will know where the bell comes from, why probability on a bell is an area and not a height, how one ruler (the z-score) makes every bell the same bell, and when to refuse to use it. The scenario is invented, and every figure was recomputed with Python.
+> **Part 11 of 15.** Part of the [Probability & Statistics](/fields/data-science/probability-statistics/README.md) series. It continues from [Coins and Calls](/fields/data-science/probability-statistics/probability/coins-and-calls.md), where chance came as a table of counts. By the end you will know where the bell comes from, why probability on a bell is an area and not a height, how one ruler (the z-score) makes every bell the same bell, and when to refuse to use it. The scenario is invented, and every figure was recomputed with Python.
 
 * * *
 
@@ -86,7 +86,7 @@ With 30 flips there are 31 possible counts, and each has its own probability. A 
 
 So we stop asking about points and ask about **ranges**. Draw the hill, and let the **area under it** be the probability. The whole area is 1; the area between 98 and 106 g is the chance a bag lands there. The height of the curve is not a probability, it is a *density*: how crowded the chances are near that spot.
 
-This is the histogram from [part 3](/fields/data-science/probability-statistics/draw-it-before-you-describe-it.md) taken to its end: a bar's area was the share of the data, and with infinitely thin bars the bars become a curve. A single line has no width, so it has no area. How do we measure the area under a hill?
+This is the histogram from [part 3](/fields/data-science/probability-statistics/describing-data/draw-it-before-you-describe-it.md) taken to its end: a bar's area was the share of the data, and with infinitely thin bars the bars become a curve. A single line has no width, so it has no area. How do we measure the area under a hill?
 
 * * *
 
@@ -96,8 +96,8 @@ The curve with the nice formula is the **normal distribution**. It has exactly t
 
 | Dial | What it does | You already know it as |
 |---|---|---|
-| **Mean** (μ) | Slides the whole bell left or right | The middle, [part 4](/fields/data-science/probability-statistics/the-number-on-the-tin.md) |
-| **Standard deviation** (σ) | Stretches or squeezes it (the total area stays 1) | The spread, [part 5](/fields/data-science/probability-statistics/how-far-from-the-middle.md) |
+| **Mean** (μ) | Slides the whole bell left or right | The middle, [part 4](/fields/data-science/probability-statistics/describing-data/the-number-on-the-tin.md) |
+| **Standard deviation** (σ) | Stretches or squeezes it (the total area stays 1) | The spread, [part 5](/fields/data-science/probability-statistics/describing-data/how-far-from-the-middle.md) |
 
 NIST's handbook calls these the **location** and **scale** parameters. Give me a mean and an SD and the whole bell is fixed. That is convenient, and a very strong claim about your data. But every pair of dials is a different hill, and areas need calculus. Do we need a table for each?
 
@@ -105,7 +105,7 @@ NIST's handbook calls these the **location** and **scale** parameters. Give me a
 
 ## The one ruler
 
-No. Remember the z-score from [part 6](/fields/data-science/probability-statistics/where-do-you-stand.md): `z = (x − mean) / SD` converts any value into "how many typical distances from the middle". On a normal curve that conversion does something remarkable. Slide the bell to the middle (subtract the mean), then rescale so the SD is 1 (divide by it) and **every normal bell becomes the same bell**: the **standard normal**, mean 0, SD 1.
+No. Remember the z-score from [part 6](/fields/data-science/probability-statistics/describing-data/where-do-you-stand.md): `z = (x − mean) / SD` converts any value into "how many typical distances from the middle". On a normal curve that conversion does something remarkable. Slide the bell to the middle (subtract the mean), then rescale so the SD is 1 (divide by it) and **every normal bell becomes the same bell**: the **standard normal**, mean 0, SD 1.
 
 ```mermaid
 flowchart LR
@@ -180,6 +180,12 @@ So far the bell has behaved. What happens when the data disagree?
 
 * * *
 
+> ☕ **Try it live.** Choose the Normal tab, set a mean and an SD, and move a and b: the shaded area is the probability. Hover the curve to read a value's z-score.
+
+[Distributions lab](/fields/data-science/probability-statistics/labs/distributions.html#embed ':ignore')
+
+* * *
+
 ## When the data are not a bell
 
 Go back to Mira's 20 tasting scores, the two-clump crowd from earlier parts. Their mean is 75.2 and their SD 17.67. Treat them as normal and ask what the model *predicts* for how many scores lie within a given distance of the mean, then count:
@@ -229,7 +235,7 @@ Tala does not guess. She turns 106 into z = 1.5, says "93% of bags are lighter, 
 
 Then Mira asks the question that is now sitting on the counter: "All that works if a bag's weight is bell-shaped. But Tala, if I weigh *ten* bags and average them, what do the *averages* look like?"
 
-Nobody knows yet. But it is the sort of question that decides whether anyone can trust a survey. Next cup: [Why Averages Behave](/fields/data-science/probability-statistics/why-averages-behave.md).
+Nobody knows yet. But it is the sort of question that decides whether anyone can trust a survey. Next cup: [Why Averages Behave](/fields/data-science/probability-statistics/inference/why-averages-behave.md).
 
 **Takeaway:** a bell is many small nudges added up, probability on it is area, and the z-score is the one ruler that makes every bell the same bell, as long as the data really are one.
 

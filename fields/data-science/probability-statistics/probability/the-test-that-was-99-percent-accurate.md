@@ -19,7 +19,7 @@ relations:
 
 # The Test That Was 99% Accurate: Conditional Probability and Bayes' Rule
 
-> **Part 8 of 15.** Part of the [Probability & Statistics](/fields/data-science/probability-statistics/README.md) series. It continues from [Counting the Ways](/fields/data-science/probability-statistics/counting-the-ways.md), where probability became "count the outcomes you want, over all the outcomes". By the end you will see conditional probability as one move, shrinking the crowd, and Bayes' rule as nothing more than that move seen from the other side. The scenario is invented, and every number can be checked by hand.
+> **Part 8 of 15.** Part of the [Probability & Statistics](/fields/data-science/probability-statistics/README.md) series. It continues from [Counting the Ways](/fields/data-science/probability-statistics/probability/counting-the-ways.md), where probability became "count the outcomes you want, over all the outcomes". By the end you will see conditional probability as one move, shrinking the crowd, and Bayes' rule as nothing more than that move seen from the other side. The scenario is invented, and every number can be checked by hand.
 
 * * *
 
@@ -135,6 +135,12 @@ Same answer, as it must be: the numerator is the 99 true catches (as a share of 
 
 * * *
 
+> ☕ **Try it live.** Move the base rate, the catch rate and the false-alarm rate, and watch the 100 positive tins change colour. The starting dials are this page's numbers.
+
+[Bayes lab](/fields/data-science/probability-statistics/labs/bayes.html#embed ':ignore')
+
+* * *
+
 ## A second positive: beliefs move
 
 Ravi wanders in. "Just run it again."
@@ -187,7 +193,7 @@ They run it again. Positive. Now the tin goes in the bin with a clear conscience
 
 **Takeaway:** conditional probability is "shrink the crowd to those who match the clue, then count again"; Bayes' rule is that count read the other way, and rare things make even good tests mostly wrong when positive.
 
-Ravi has been counting tins in his head. "That is a lot of 'about'. If I run the check on all 100,000 tins, how many alarms should I **expect** altogether?" That is a question about the *average* of a chance, and it needs its own tool. Next cup: [What to Expect](/fields/data-science/probability-statistics/what-to-expect.md).
+Ravi has been counting tins in his head. "That is a lot of 'about'. If I run the check on all 100,000 tins, how many alarms should I **expect** altogether?" That is a question about the *average* of a chance, and it needs its own tool. Next cup: [What to Expect](/fields/data-science/probability-statistics/probability/what-to-expect.md).
 
 * * *
 

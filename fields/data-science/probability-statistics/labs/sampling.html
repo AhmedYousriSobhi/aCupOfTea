@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'">
+<title>Lab: sampling and intervals</title>
+<link rel="stylesheet" href="lab.css">
+</head>
+<body>
+<main>
+  <div class="top">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a class="pill" href="../../../../#/fields/data-science/probability-statistics/inference/quick-guide.md">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>Quick guide</a>
+      <a class="pill" href="../../../../#/fields/data-science/probability-statistics/inference/why-averages-behave.md">Part 12</a>
+      <a class="pill" href="../../../../#/fields/data-science/probability-statistics/inference/how-sure-are-you.md">Part 13</a>
+    </nav>
+    <button class="pill" id="theme" type="button" aria-label="Theme: auto. Press to change.">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      <span>Auto</span></button>
+  </div>
+  <header class="hero">
+    <div class="kicker">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 20h18M6 20V10M11 20V4M16 20v-8M21 20V8"/></svg>
+      Inference lab &middot; Parts 12 and 13
+    </div>
+    <h1>Draw samples, watch the averages and the nets</h1>
+    <p class="lead">A sample average is itself random. See how it wobbles, why it piles into a bell, and what a 95% interval really promises.</p>
+  </header>
+
+  <section class="card" aria-labelledby="h-pop">
+    <h2 id="h-pop"><span class="num">1</span>Pick a crowd</h2>
+    <div class="seg" role="tablist" aria-label="Population" id="seg">
+      <button type="button" role="tab" aria-selected="true" data-k="scores">Tasting scores</button>
+      <button type="button" role="tab" aria-selected="false" data-k="tins">Tin ratings</button>
+      <button type="button" role="tab" aria-selected="false" data-k="fans">Only fans asked</button>
+    </div>
+    <p class="sub mt10" id="desc"></p>
+    <div class="minis"><div class="mini"><span>True mean &mu;</span><strong id="p-mu"></strong></div><div class="mini"><span>Spread &sigma;</span><strong id="p-sd"></strong></div><div class="mini"><span>Standard error &sigma;/&radic;n</span><strong id="p-se"></strong></div></div>
+    <div class="dials"><div class="dial"><div class="dial-head"><label for="n">Sample size n</label><output id="n-v" for="n"></output></div><input id="n" type="range" min="1" max="200" step="1" value="30"><small><span>1</span><span>200</span></small></div></div>
+  </section>
+
+  <section class="card" aria-labelledby="h-avg">
+    <h2 id="h-avg"><span class="num">2</span>The averages of many samples</h2>
+    <p class="sub">Each sample gives a different average. Draw 1,000 and see where they land.</p>
+    <div class="chart-wrap"><canvas id="cv" tabindex="0" width="600" height="300" role="img" aria-label="Histogram of sample means with the normal curve from the standard error"></canvas><div class="tip" id="tip" role="status"></div></div>
+    <div class="legend"><span><i class="dot leaf"></i>sample averages</span><span><i class="dot ink"></i>bell from &mu; and &sigma;/&radic;n</span><span><i class="dot kettle"></i>true &mu;</span></div>
+    <div class="row mt12"><button class="btn" id="draw" type="button"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>Draw 1,000 samples</button><span class="sub nom" id="msg" aria-live="polite"></span></div>
+    <div class="minis"><div class="mini"><span>Mean of the averages</span><strong id="m-mean">&ndash;</strong></div><div class="mini"><span>SD of the averages</span><strong id="m-sd">&ndash;</strong></div></div>
+  </section>
+
+  <section class="card" aria-labelledby="h-ci">
+    <h2 id="h-ci"><span class="num">3</span>Intervals: how many nets catch the truth?</h2>
+    <p class="sub">100 pollsters each draw a sample and build a 95% interval. Green nets catch the true mean; orange ones miss.</p>
+    <div class="row"><div class="seg" id="mode" role="group" aria-label="Critical value"><button type="button" aria-pressed="true" data-m="z">z (1.96)</button><button type="button" aria-pressed="false" data-m="t">t (small samples)</button></div>
+      <button class="btn" id="ci" type="button">Build 100 intervals</button></div>
+    <div class="chart-wrap mt12"><canvas id="cc" width="600" height="360" role="img" aria-label="100 confidence intervals against the true mean"></canvas></div>
+    <div class="minis"><div class="mini"><span>Caught the truth</span><strong id="c-cov">&ndash;</strong></div><div class="mini"><span>Critical value used</span><strong id="c-crit"></strong></div><div class="mini"><span>Average width</span><strong id="c-w">&ndash;</strong></div></div>
+  </section>
+
+  <section class="card" aria-labelledby="h-try">
+    <h2 id="h-try"><span class="num">4</span>Guided experiments</h2>
+    <p class="sub">Each card sets the dials and runs it. Predict first.</p>
+    <div class="xcards">
+      <button class="xcard" type="button" data-x="scores|1|z"><span class="tag">Any crowd</span><b>n = 1: no bell yet</b><span>Averages of one value copy the two clumps.</span></button>
+      <button class="xcard" type="button" data-x="scores|30|z"><span class="tag">Central limit</span><b>n = 30: a bell appears</b><span>Same crowd, averages pile up in one hump.</span></button>
+      <button class="xcard" type="button" data-x="scores|120|z"><span class="tag">Standard error</span><b>4x the data, half the spread</b><span>Compare with n = 30 above.</span></button>
+      <button class="xcard" type="button" data-x="tins|5|z"><span class="tag">Small n</span><b>z misses too often</b><span>Five tins: z intervals catch less than 95%.</span></button>
+      <button class="xcard" type="button" data-x="tins|5|t"><span class="tag">Small n</span><b>t repairs it</b><span>Same data, wider nets, closer to 95.</span></button>
+      <button class="xcard" type="button" data-x="fans|40|z"><span class="tag">Bias</span><b>Tight and wrong</b><span>Only fans asked: narrow nets around the wrong value.</span></button>
+    </div>
+  </section>
+
+  <details class="assume"><summary>What this assumes</summary><div>Draws are with replacement from the crowd you pick. The "only fans" crowd keeps ratings of 4 and 5 but the true mean stays that of all tin ratings, so intervals can be narrow and wrong.</div></details>
+  <p class="foot">Part of <a href="../../../../#/fields/data-science/probability-statistics/README.md">Probability &amp; Statistics, One Sip at a Time</a>. Seeded random draws.</p>
+</main>
+<script src="lab-core.js"></script>
+<script src="sampling.js"></script>
+</body>
+</html>

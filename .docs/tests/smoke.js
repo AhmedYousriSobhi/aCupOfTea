@@ -236,6 +236,18 @@ async function run(browser, base, label, size, phone) {
   await go('this-page-does-not-exist');
   c('missing page shows the friendly 404', /This page is not here/.test(await page.locator('.markdown-section').innerText()));
 
+  // fail the page's own requests for one file (a route abort would not reach them: the service worker answers first)
+  await page.evaluate(() => {
+    const open = XMLHttpRequest.prototype.open;
+    XMLHttpRequest.prototype.open = function (m, u, ...rest) { return open.call(this, m, /tips\/markdown\.md/.test(u) ? 'http://127.0.0.1:1/x.md' : u, ...rest); };
+    const f = window.fetch;
+    window.fetch = function (u, ...rest) { return /tips\/markdown\.md/.test(String(u)) ? Promise.reject(new TypeError('Failed to fetch')) : f.call(this, u, ...rest); };
+  });
+  await go('tips/markdown', 4000);
+  const failedText = await page.locator('.markdown-section').innerText();
+  c('a page that cannot be fetched shows a message and Try again, not "0 -"',
+    /could not be loaded/.test(failedText) && /connection failed/.test(failedText) && !/^\s*0 -/.test(failedText) && (await page.locator('.markdown-section button.load-retry').count()) === 1, failedText.slice(0, 80));
+
   await go('');
   if (phone) {
     const sizes = await page.evaluate(() => ['button.sidebar-toggle', '#theme-toggle'].map((sel) => {
@@ -358,6 +370,43 @@ async function run(browser, base, label, size, phone) {
   c('previous / next page links work under the policy', (await page.evaluate(() => document.querySelectorAll('.pagination-item a').length)) >= 1);
   c('security policy blocks nothing the site needs', csp.before.length === 0, csp.before.slice(0, 5).join(' | '));
   c('security policy blocks an injected inline script', !csp.injected);
+  if (!phone) {
+    // Embedded labs (.docs/lab-embed.js): sandboxed frames from this site only, no access to the page
+    await go('fields/data-science/probability-statistics/probability/quick-guide', 2500);
+    const lab = await page.evaluate(() => Array.from(document.querySelectorAll('.markdown-section iframe')).map((f) => ({
+      sandbox: f.getAttribute('sandbox'), src: f.src, origin: location.origin, ref: f.getAttribute('referrerpolicy'), h: f.getBoundingClientRect().height })));
+    c('a lab is embedded as a frame', lab.length >= 2, String(lab.length));
+    c('lab frames are sandboxed without same-origin access', lab.every((f) => f.sandbox === 'allow-scripts'), JSON.stringify(lab.map((f) => f.sandbox)));
+    c('lab frames load only lab pages of this site', lab.every((f) => f.src.startsWith(f.origin + '/') && /\/labs\/[a-z0-9-]+\.html\?embed=1&theme=(light|dark)$/.test(f.src)), JSON.stringify(lab.map((f) => f.src)));
+    c('lab frames send no referrer', lab.every((f) => f.ref === 'no-referrer'));
+    // the frames load lazily: scroll the first one into view so every engine loads it
+    await page.locator('.markdown-section iframe').first().scrollIntoViewIfNeeded();
+    await page.waitForFunction(() => Array.from(document.querySelectorAll('.markdown-section iframe')).some((f) => f.contentWindow && f.contentWindow.length !== undefined && f.src.indexOf('bayes.html') > -1), null, { timeout: 8000 }).catch(() => {});
+    await page.waitForTimeout(1500);
+    const frame = page.frames().find((f) => /\/labs\/bayes\.html/.test(f.url()));
+    if (frame) {
+      await frame.waitForSelector('#post', { timeout: 8000 }).catch(() => {});
+      const inner = await frame.evaluate(() => {
+        let parentRead = 'allowed';
+        try { void window.parent.document.title; } catch (e) { parentRead = 'blocked'; }
+        let store = 'allowed';
+        try { void window.localStorage.length; } catch (e) { store = 'blocked'; }
+        return { origin: window.origin, parentRead, store, embed: document.documentElement.classList.contains('embed'), posterior: (document.getElementById('post') || {}).textContent };
+      });
+      c('the framed lab cannot read the page or its storage', inner.origin === 'null' && inner.parentRead === 'blocked' && inner.store === 'blocked', JSON.stringify(inner));
+      c('the framed lab runs in embed mode', inner.embed && /^9\.0%/.test(inner.posterior || ''), JSON.stringify(inner));
+      await page.waitForTimeout(500);
+      const h = await page.evaluate(() => { const f = Array.from(document.querySelectorAll('.markdown-section iframe'))[0]; return Math.round(f.getBoundingClientRect().height); });
+      c('the frame grows to the lab height', h > 520 && h <= 3000, h + ' px');
+    } else c('the framed lab loads', false, 'no frame for bayes.html');
+    for (const [slug, want] of [['inference/quick-guide', 3], ['describing-data/quick-guide', 1]]) {
+      await go('fields/data-science/probability-statistics/' + slug, 2000);
+      const n = await page.evaluate(() => Array.from(document.querySelectorAll('.markdown-section iframe')).map((f) => f.getAttribute('sandbox')));
+      c('every embedded lab on ' + slug + ' is sandboxed', n.length === want && n.every((v) => v === 'allow-scripts'), JSON.stringify(n));
+    }
+    const policy = await page.evaluate(() => window.__csp.filter((v) => /^frame-src/.test(v)));
+    c('no frame is blocked by the policy', policy.length === 0, policy.join(' | '));
+  }
   if (!phone) {
     const landed = new Set();
     for (let i = 0; i < 4; i++) {
