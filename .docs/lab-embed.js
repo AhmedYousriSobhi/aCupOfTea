@@ -1,6 +1,6 @@
 // Embedded labs: a link written as [text](/folder/labs/name.html#embed ':ignore') becomes an inline
 // frame under the text, so the reader uses the lab without leaving the page. The link stays in a
-// caption ("Open full screen"), and GitHub or a reader without scripts still sees the plain link.
+// caption naming the lab; GitHub or a reader without scripts still sees the plain link.
 //
 // Security, in layers (see the policy in index.html):
 //  - only a path of the form <folders>/labs/<name>.html is ever framed (allowlist below), resolved
@@ -40,13 +40,7 @@
     f.style.height = '520px';
     f.src = url.href + '?embed=1&theme=' + mode();
     var cap = document.createElement('figcaption');
-    var open = document.createElement('a');
-    open.href = url.href;
-    open.target = '_blank';
-    open.rel = 'noopener noreferrer';
-    open.textContent = 'Open full screen';
-    cap.appendChild(document.createTextNode(label + ' · '));
-    cap.appendChild(open);
+    cap.textContent = label + ' · interactive lab';
     fig.appendChild(f);
     fig.appendChild(cap);
     live.push(f);
