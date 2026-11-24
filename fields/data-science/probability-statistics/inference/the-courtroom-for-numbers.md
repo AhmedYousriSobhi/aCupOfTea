@@ -2,7 +2,7 @@
 id: the-courtroom-for-numbers
 title: "The Courtroom for Numbers: Could Plain Luck Do This?"
 sidebar_label: The courtroom for numbers
-order: 14
+order: 2
 summary: 'A hypothesis test asks one question: could plain luck have produced a difference this big? Shuffle the labels and count. What the p-value is, what it is not, and how testing twenty things fools you.'
 level: intermediate
 type: concept
@@ -12,19 +12,28 @@ tags:
   - statistics
 relations:
   prerequisites:
-    - how-sure-are-you
+    - averages-and-intervals
   related:
     - probability-statistics-series
-    - why-averages-behave
+    - inference-technical-reference
 ---
 
 # The Courtroom for Numbers: Could Plain Luck Do This?
 
-> **Part 14 of 15.** Part of the [Probability & Statistics](/fields/data-science/probability-statistics/README.md) series. It continues from [How Sure Are You?](/fields/data-science/probability-statistics/inference/how-sure-are-you.md), where a confidence interval put honest error bars on one number. By the end you will see every hypothesis test as one question, "could plain luck have produced a difference this big?", answer it by shuffling and counting, and know the three ways the answer gets misread. The scenario is invented, and every figure was recomputed with Python 3.14.4 (standard library only).
+> **Part 14 of 15.** Part of the [Probability & Statistics](/fields/data-science/probability-statistics/README.md) series, after [Averages and Intervals](/fields/data-science/probability-statistics/inference/averages-and-intervals.md), where a confidence interval put honest error bars on one number. The scenario is invented, and every figure was recomputed with Python 3.14.4 (standard library only).
+
+Tala will reach for the menu-board chalk after one comparison and, an hour later, after one out of twenty. The first is a finding. The second is a coin that happened to land on edge.
+
+**By the end of this page you will be able to:**
+
+- Read every hypothesis test as one question: could plain luck have produced a difference this big?
+- Answer it by shuffling labels and counting, and compare with the exact count.
+- Name the three ways a p-value is misread, and the two ways a test can be wrong.
+- Compute how testing twenty things manufactures a "discovery".
 
 * * *
 
-## Prologue: the blend that won
+## The blend that won
 
 Mira has two house blends, **A** and **B**. Ten customers taste each blind and score it from 1 to 10 (invented scores):
 
@@ -38,6 +47,16 @@ B: 6 7 5 7 6 8 6 5 7 6    mean 6.3
 "Does it?" says Mira. "Put the same tea in both cups and I would still not get two identical averages. How big a gap does *luck alone* make?"
 
 ☕ **Try it before you scroll.** Write the 20 scores on cards, deal them at random into two piles of ten. How often would the A pile still beat the B pile by 1.2 or more?
+
+* * *
+
+## Chalk, eyeballs and a spreadsheet
+
+1. **Chalk it up.** "A wins by 1.2 points." The gap is real arithmetic and says nothing about luck.
+2. **Eyeball the averages.** 7.5 against 6.3 looks decisive. Put the same tea in both cups and the averages still differ.
+3. **Try twenty splits.** Morning against evening, by age, by day, by milk: surely one of them will explain it. (This is the dangerous one; it is stopped late on this page.)
+
+The question that stops all three: how big a gap does *luck alone* make?
 
 * * *
 
@@ -67,7 +86,7 @@ If the labels A and B mean nothing, **any way of dealing the 20 scores into two 
 
 ## Shuffle the labels and count
 
-First a case small enough to do by hand. Three tasters per blend: A scored 8, 9, 7 and B scored 5, 6, 7. The gap is `8 − 6 = 2`. Under "luck only", the six scores `8 9 7 5 6 7` could have been dealt into two piles of three in 20 ways (that is `6 choose 3`, from [Counting the Ways](/fields/data-science/probability-statistics/probability/counting-the-ways.md)). Which deals give A a lead of 2 or more? The scores add to 42, so A's pile must add to 24 or more. Only two do: `8 9 7` (the real one) and the same pile with the *other* 7 swapped in. Two of twenty: **0.10**. Luck does that one time in ten.
+First a case small enough to do by hand. Three tasters per blend: A scored 8, 9, 7 and B scored 5, 6, 7. The gap is `8 − 6 = 2`. Under "luck only", the six scores `8 9 7 5 6 7` could have been dealt into two piles of three in 20 ways (that is `6 choose 3`, from [Counting and Conditioning](/fields/data-science/probability-statistics/probability/counting-and-conditioning.md)). Which deals give A a lead of 2 or more? The scores add to 42, so A's pile must add to 24 or more. Only two do: `8 9 7` (the real one) and the same pile with the *other* 7 swapped in. Two of twenty: **0.10**. Luck does that one time in ten.
 
 Now Mira's real data. Twenty scores into two piles of ten has 184,756 deals, too many for the chalkboard, so we **shuffle many times and count**:
 
@@ -106,11 +125,11 @@ print(1 - 0.95 ** 20)
 0.6415140775914581
 ```
 
-The simulated answer is **0.0143**: in about 1.4% of re-dealt piles, luck alone gave A a lead of 1.2 or more (we asked "A better by at least this much", a one-sided question). The first line matches the hand count; the second is a simulation, so another seed moves the last digits. The third line is for later.
+The simulated answer is **0.0143** (the exact count over all 184,756 deals is `1413/92378 = 0.0153`; the simulation is within its noise): in about 1.4% of re-dealt piles, luck alone gave A a lead of 1.2 or more (we asked "A better by at least this much", a one-sided question). The first line matches the hand count; the second is a simulation, so another seed moves the last digits. The third line is for later.
 
 That number is the **p-value**: *how often luck alone would produce a difference at least as extreme as the one you saw.*
 
-The classical test is the same question with a shortcut. Instead of shuffling, the t-test divides the gap by its standard error ([Why Averages Behave](/fields/data-science/probability-statistics/inference/why-averages-behave.md)) and looks it up on a bell curve ([The Bell Curve](/fields/data-science/probability-statistics/probability/the-bell-curve.md)). It is faster and assumes more; when its assumptions hold, the answers agree closely.
+The classical test is the same question with a shortcut. Instead of shuffling, the t-test divides the gap by its standard error ([Averages and Intervals](/fields/data-science/probability-statistics/inference/averages-and-intervals.md)) and looks it up on a bell curve ([The Bell Curve](/fields/data-science/probability-statistics/probability/the-bell-curve.md)). It is faster and assumes more; when its assumptions hold, the answers agree closely.
 
 * * *
 
@@ -190,7 +209,7 @@ Each test is close to its promised 5%, yet **205 of 300 studies (68%, simulated)
 
 * * *
 
-## Back to the story
+## The chalk stays up, with an asterisk
 
 Mira holds the chalk back. "Our one planned question had p = 0.0143, so A probably is better. The milk 'win' came from twenty tries, and twenty tries will always find something. Rerun it with fresh tasters before we believe it."
 
@@ -202,42 +221,46 @@ Tala writes: *"Preferred in a blind test of 10 per blend, +1.2 points."* Not "pr
 
 * * *
 
+## Never again
+
+| Mistake | Symptom | Fix |
+|---|---|---|
+| Reading p as P(null is true) | "3% chance the blends are the same" | p assumes the null to compute itself (ASA principle 2) |
+| Reading p as effect size | "p = 0.00001, so A is much better" | Report the gap and its interval; 0.03 points can be "significant" |
+| Reading p > 0.05 as "no difference" | 5 per group, "not significant" | Not shown, not absent: power was about 27.5% |
+| Testing twenty things | One p < 0.05 of 20 | `1 − 0.95^k`; say how many things you tried, rerun with fresh data |
+| Treating 0.05 as a law | Rejecting at 0.049, ignoring 0.051 | It is a convention; the cost of being wrong sets the line |
+
 ## Check yourself
 
 1. In the three-per-blend example, why is the p-value 0.10 and not something small, even though A averaged 2 points more?
-2. A study reports p = 0.03. Is there a 3% chance the null hypothesis is true?
-3. Study X (20 people, p = 0.2) and study Y (20,000 people, p = 0.0001) find the same gap. Which effect is larger?
-4. Compute the chance of at least one false alarm in 5 independent tests at the 0.05 level.
-5. A test on 5 people per group is "not significant". Does that show the two groups do not differ?
+2. A study reports p = 0.03: is there a 3% chance the null is true? Study X (20 people, p = 0.2) and study Y (20,000 people, p = 0.0001) find the same gap: which effect is larger?
+3. The chance of at least one false alarm in 5 independent tests at the 0.05 level? A test on 5 people per group is "not significant": do the groups not differ?
+
+<details>
+<summary>Answers</summary>
+
+1. Only 20 deals exist and two reach a lead of 2 (the real pile, and the one with the other 7 swapped in): 2 of 20 is 0.10. Small samples let luck make big gaps.
+2. **No**: it is the chance of data this extreme *given* the null, not the chance of the null given the data (ASA principle 2). You cannot tell which effect is larger: the gap is the same, and p reflects gap *and* sample size.
+3. `1 − 0.95^5 = 1 − 0.7738 =` **0.2262**, about 23%. **No**: with 5 per group even a true 1-SD difference was caught only about 27.5% of the time (simulated); "not significant" means "not shown".
+
+</details>
 
 * * *
 
-## Cheat sheet
+## 📜 The Scroll (keep this)
 
 ```text
-NULL            "luck only": the labels mean nothing
-p-VALUE         how often luck alone gives a result at least this extreme
-                small p = luck is a poor explanation
-                NOT effect size, NOT P(null true), NOT proof when large
-
-SHUFFLE TEST    re-deal labels many times, count matches of what you saw
-CLASSICAL TEST  same question, bell-curve shortcut
-
-ERRORS          false alarm (reject a true null)    missed effect (keep a false null)
-0.05            a convention, not a law
-MANY TESTS      P(at least one false alarm) = 1 - 0.95^k      k=20 -> 0.64
-REPORT          the effect size and interval, and how many things you tried
+Null         : "luck only", the labels mean nothing
+p-value      : how often luck alone gives a result at least this extreme; small p = luck is a
+               poor explanation. NOT effect size, NOT P(null true), NOT proof when large
+Shuffle test : re-deal labels many times, count matches of what you saw (exact: all splits)
+Classical    : the same question with a bell-curve shortcut (t-test)
+Errors       : false alarm (reject a true null); missed effect (keep a false null)
+0.05         : a convention, not a law
+Many tests   : P(at least one false alarm) = 1 - 0.95^k;  k = 20 -> 0.64
+Report       : the effect size and interval, and how many things you tried
 ```
-
-* * *
-
-## Answers
-
-1. Only 20 deals exist, and two reach a lead of 2 (the real pile, and the one with the other 7 swapped in): 2 of 20 is 0.10. Small samples let luck make big gaps.
-2. No. It is the chance of data this extreme *given* the null, not the chance of the null given the data (ASA principle 2).
-3. You cannot tell: the gap is the same, and p reflects gap *and* sample size.
-4. `1 − 0.95^5 = 1 − 0.7738 =` **0.2262**, about 23%.
-5. No. With 5 per group even a true 1-SD difference was caught only about 27.5% of the time (simulated). "Not significant" means "not shown".
 
 * * *
 

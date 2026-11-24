@@ -2,7 +2,7 @@
 id: probability-technical-reference
 title: "Probability, Technically: Definitions, Identities and Assumptions"
 sidebar_label: Technical reference
-order: 12
+order: 10
 summary: "The formal layer under parts 7 to 11: axioms, Bayes in odds form, pmf, cdf and density, moment rules, the Poisson limit, the normal approximation and each model's assumptions."
 level: intermediate
 type: reference
@@ -12,11 +12,10 @@ tags:
   - statistics
 relations:
   prerequisites:
-    - counting-the-ways
+    - counting-and-conditioning
   related:
-    - the-test-that-was-99-percent-accurate
-    - what-to-expect
-    - coins-and-calls
+    - counting-and-conditioning
+    - expectation-binomial-poisson
     - the-bell-curve
     - probability-quick-guide
 ---
@@ -35,7 +34,7 @@ P(Ω) = 1
 P(A or B) = P(A) + P(B)        when A and B cannot both happen (disjoint)
 ```
 
-Everything in [Counting the Ways](/fields/data-science/probability-statistics/probability/counting-the-ways.md) follows from these:
+Everything in [Counting and Conditioning](/fields/data-science/probability-statistics/probability/counting-and-conditioning.md) follows from these:
 
 ```text
 P(not A)      = 1 - P(A)
@@ -234,7 +233,7 @@ Run with Python 3 and the standard library only. If you use SciPy, the same obje
 
 ## References
 
-- Series pages: [Counting the Ways](/fields/data-science/probability-statistics/probability/counting-the-ways.md), [The Test That Was 99% Accurate](/fields/data-science/probability-statistics/probability/the-test-that-was-99-percent-accurate.md), [What to Expect](/fields/data-science/probability-statistics/probability/what-to-expect.md), [Coins and Calls](/fields/data-science/probability-statistics/probability/coins-and-calls.md), [The Bell Curve](/fields/data-science/probability-statistics/probability/the-bell-curve.md).
+- Series pages: [Counting and Conditioning](/fields/data-science/probability-statistics/probability/counting-and-conditioning.md), [Expectation and the Two Count Recipes](/fields/data-science/probability-statistics/probability/expectation-binomial-poisson.md), [The Bell Curve](/fields/data-science/probability-statistics/probability/the-bell-curve.md).
 - NIST/SEMATECH e-Handbook of Statistical Methods, *Binomial*, *Poisson* and *Normal Distribution* pages (mean, variance and density formulas).
 - Python `statistics.NormalDist`, `math.comb`, `math.perm`, `fractions`.
 - Le Cam's inequality for the Poisson approximation: total variation distance between a sum of independent Bernoulli(p_i) and Poisson(Σp_i) is at most Σp_i². Here only the numerical distances in the table were computed; the bound is quoted from the literature, not rederived.

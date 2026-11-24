@@ -420,10 +420,10 @@
   "sampling": {
     "label": "Sampling",
     "objects": [
+      "averages-and-intervals",
       "dip-frequency-filtering-aliasing",
       "dip-images-are-matrices",
-      "stir-the-pot-population-and-sampling",
-      "why-averages-behave"
+      "samples-data-types-and-tables"
     ]
   },
   "slurm": {
@@ -518,29 +518,23 @@
   "statistics": {
     "label": "Statistics",
     "objects": [
-      "coins-and-calls",
-      "counting-the-ways",
-      "data-types-and-frequency-tables",
+      "averages-and-intervals",
+      "counting-and-conditioning",
       "describing-data-quick-guide",
       "describing-data-technical-reference",
-      "draw-it-before-you-describe-it",
-      "how-far-from-the-middle",
-      "how-sure-are-you",
+      "expectation-binomial-poisson",
       "inference-quick-guide",
       "inference-technical-reference",
+      "pictures-and-the-middle",
       "probability-quick-guide",
       "probability-statistics-series",
       "probability-technical-reference",
-      "stir-the-pot-population-and-sampling",
+      "samples-data-types-and-tables",
+      "spread-and-position",
       "the-bell-curve",
       "the-courtroom-for-numbers",
       "the-map-of-leaf-and-kettle",
-      "the-number-on-the-tin",
-      "the-test-that-was-99-percent-accurate",
-      "two-things-moving-together",
-      "what-to-expect",
-      "where-do-you-stand",
-      "why-averages-behave"
+      "two-things-moving-together"
     ]
   },
   "storage": {

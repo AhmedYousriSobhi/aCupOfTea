@@ -2,7 +2,7 @@
 id: describing-data-quick-guide
 title: "Summarise a Data Set: Which Number, Which Picture"
 sidebar_label: "Quick guide: describing data"
-order: 8
+order: 5
 summary: A cheat sheet for parts 1 to 6 - choose a sampling method, classify the data, pick the picture, pick the middle and the spread, and place one value in its crowd.
 level: beginner
 type:
@@ -14,18 +14,15 @@ tags:
   - statistics
 relations:
   related:
-    - stir-the-pot-population-and-sampling
-    - data-types-and-frequency-tables
-    - draw-it-before-you-describe-it
-    - the-number-on-the-tin
-    - how-far-from-the-middle
-    - where-do-you-stand
+    - samples-data-types-and-tables
+    - pictures-and-the-middle
+    - spread-and-position
     - describing-data-technical-reference
 ---
 
 # Summarise a Data Set: Which Number, Which Picture
 
-> **Quick guide for** [Stir the Pot First](/fields/data-science/probability-statistics/describing-data/stir-the-pot-population-and-sampling.md), [Mira's Notebook](/fields/data-science/probability-statistics/describing-data/data-types-and-frequency-tables.md), [Draw It Before You Describe It](/fields/data-science/probability-statistics/describing-data/draw-it-before-you-describe-it.md), [The Number on the Tin](/fields/data-science/probability-statistics/describing-data/the-number-on-the-tin.md), [How Far From the Middle?](/fields/data-science/probability-statistics/describing-data/how-far-from-the-middle.md) and [Where Do You Stand?](/fields/data-science/probability-statistics/describing-data/where-do-you-stand.md).
+> **Quick guide for** [Samples, Data Types and Tables](/fields/data-science/probability-statistics/describing-data/samples-data-types-and-tables.md) (parts 1 and 2), [Pictures and the Middle](/fields/data-science/probability-statistics/describing-data/pictures-and-the-middle.md) (parts 3 and 4) and [Spread and Position](/fields/data-science/probability-statistics/describing-data/spread-and-position.md) (parts 5 and 6).
 > Python 3, standard library only. Formal statements: [technical reference](/fields/data-science/probability-statistics/describing-data/technical-reference.md).
 
 ## 1. Sample
@@ -97,6 +94,10 @@ Box plot fences: `Q1 - 1.5 * IQR` and `Q3 + 1.5 * IQR`. Say which quartile metho
 
 ## Try it
 
+[Sampling methods lab](/fields/data-science/probability-statistics/labs/sampling-methods.html#embed ':ignore')
+
+[Grouped tables lab](/fields/data-science/probability-statistics/labs/grouped-tables.html#embed ':ignore')
+
 [Describing data lab](/fields/data-science/probability-statistics/labs/describing.html#embed ':ignore')
 
-**Why it works:** the six story pages above. Next: [Probability](/fields/data-science/probability-statistics/probability/README.md).
+**Why it works:** the three story pages above (parts 1 to 6). Next: [Probability](/fields/data-science/probability-statistics/probability/README.md).

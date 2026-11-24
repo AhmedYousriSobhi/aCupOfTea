@@ -2,7 +2,7 @@
 id: probability-quick-guide
 title: "Pick and Compute the Right Probability Model"
 sidebar_label: "Quick guide: probability"
-order: 13
+order: 11
 summary: A cheat sheet for parts 7 to 11 - the method, the code and the expected output for counting outcomes, flipping a test result, expected value, binomial or Poisson, and the normal curve.
 level: beginner
 type:
@@ -14,17 +14,15 @@ tags:
   - statistics
 relations:
   related:
-    - counting-the-ways
-    - the-test-that-was-99-percent-accurate
-    - what-to-expect
-    - coins-and-calls
+    - counting-and-conditioning
+    - expectation-binomial-poisson
     - the-bell-curve
     - probability-technical-reference
 ---
 
 # Pick and Compute the Right Probability Model
 
-> **Quick guide for** [Counting the Ways](/fields/data-science/probability-statistics/probability/counting-the-ways.md), [The Test That Was 99% Accurate](/fields/data-science/probability-statistics/probability/the-test-that-was-99-percent-accurate.md), [What to Expect](/fields/data-science/probability-statistics/probability/what-to-expect.md), [Coins and Calls](/fields/data-science/probability-statistics/probability/coins-and-calls.md) and [The Bell Curve](/fields/data-science/probability-statistics/probability/the-bell-curve.md).
+> **Quick guide for** [Counting and Conditioning](/fields/data-science/probability-statistics/probability/counting-and-conditioning.md) (parts 7 and 8), [Expectation and the Two Count Recipes](/fields/data-science/probability-statistics/probability/expectation-binomial-poisson.md) (parts 9 and 10) and [The Bell Curve](/fields/data-science/probability-statistics/probability/the-bell-curve.md).
 > Python 3, standard library only. Formal statements: [technical reference](/fields/data-science/probability-statistics/probability/technical-reference.md).
 
 ## 1. Count outcomes
@@ -90,8 +88,10 @@ Histogram first. Within 1, 2, 3 SD is 68.27%, 95.45%, 99.73%.
 
 ## Try it
 
+[Expected value lab](/fields/data-science/probability-statistics/labs/expected-value.html#embed ':ignore')
+
 [Bayes lab](/fields/data-science/probability-statistics/labs/bayes.html#embed ':ignore')
 
 [Distributions lab](/fields/data-science/probability-statistics/labs/distributions.html#embed ':ignore')
 
-**Why it works:** the five story pages above. Next: [Inference](/fields/data-science/probability-statistics/inference/README.md).
+**Why it works:** the three story pages above (parts 7 to 11). Next: [Inference](/fields/data-science/probability-statistics/inference/README.md).

@@ -341,6 +341,38 @@
       "guide"
     ]
   },
+  "averages-and-intervals": {
+    "domains": [
+      "statistics"
+    ],
+    "id": "averages-and-intervals",
+    "level": "intermediate",
+    "order": 1,
+    "path": "fields/data-science/probability-statistics/inference/averages-and-intervals.md",
+    "reading_time_min": 13,
+    "relations": {
+      "prerequisites": [
+        "the-bell-curve"
+      ],
+      "related": [
+        "inference-technical-reference",
+        "probability-statistics-series",
+        "samples-data-types-and-tables",
+        "spread-and-position"
+      ]
+    },
+    "status": "stable",
+    "summary": "An average is itself random: its spread shrinks as sigma over root n and its shape tends to a bell. A confidence interval turns that wobble into a give-or-take, and bias is invisible to it.",
+    "tags": [
+      "sampling",
+      "statistics"
+    ],
+    "title": "Averages and Intervals: Why Averages Behave and How Sure You Can Be",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
   "bias-variance-trade-off": {
     "domains": [
       "machine-learning",
@@ -435,35 +467,6 @@
       "guide"
     ]
   },
-  "coins-and-calls": {
-    "domains": [
-      "statistics"
-    ],
-    "id": "coins-and-calls",
-    "level": "intermediate",
-    "order": 10,
-    "path": "fields/data-science/probability-statistics/probability/coins-and-calls.md",
-    "reading_time_min": 9,
-    "relations": {
-      "prerequisites": [
-        "what-to-expect"
-      ],
-      "related": [
-        "counting-the-ways",
-        "probability-statistics-series"
-      ]
-    },
-    "status": "stable",
-    "summary": "A named distribution is a recipe for who gets how much probability. Binomial fits \"how many yeses in n tries\", Poisson fits \"how many events in a window\". Know the question and the assumptions.",
-    "tags": [
-      "statistics"
-    ],
-    "title": "Coins and Calls: Binomial and Poisson as Recipes",
-    "type": "concept",
-    "types": [
-      "concept"
-    ]
-  },
   "containers-101": {
     "domains": [
       "software-engineering",
@@ -488,29 +491,30 @@
       "concept"
     ]
   },
-  "counting-the-ways": {
+  "counting-and-conditioning": {
     "domains": [
       "statistics"
     ],
-    "id": "counting-the-ways",
+    "id": "counting-and-conditioning",
     "level": "beginner",
     "order": 7,
-    "path": "fields/data-science/probability-statistics/probability/counting-the-ways.md",
-    "reading_time_min": 9,
+    "path": "fields/data-science/probability-statistics/probability/counting-and-conditioning.md",
+    "reading_time_min": 10,
     "relations": {
       "prerequisites": [
-        "where-do-you-stand"
+        "spread-and-position"
       ],
       "related": [
-        "probability-statistics-series"
+        "probability-statistics-series",
+        "probability-technical-reference"
       ]
     },
     "status": "stable",
-    "summary": "Probability is the share of the equally likely ways. So \"or\" adds, \"and\" multiplies, and \"at least one\" is 1 minus none, because of what each does to the list of ways.",
+    "summary": "Probability is a share of the equally likely ways, so \"or\" adds, \"and\" multiplies and \"at least one\" is 1 minus none. Conditioning shrinks the crowd, and Bayes' rule reads that count backwards.",
     "tags": [
       "statistics"
     ],
-    "title": "Counting the Ways: Probability as a Share of the List",
+    "title": "Counting and Conditioning: Why a 99% Accurate Test Is Usually Wrong",
     "type": "concept",
     "types": [
       "concept"
@@ -590,35 +594,6 @@
       "problem"
     ]
   },
-  "data-types-and-frequency-tables": {
-    "domains": [
-      "statistics"
-    ],
-    "id": "data-types-and-frequency-tables",
-    "level": "beginner",
-    "order": 2,
-    "path": "fields/data-science/probability-statistics/describing-data/data-types-and-frequency-tables.md",
-    "reading_time_min": 13,
-    "relations": {
-      "prerequisites": [
-        "stir-the-pot-population-and-sampling"
-      ],
-      "related": [
-        "probability-statistics-series",
-        "stir-the-pot-population-and-sampling"
-      ]
-    },
-    "status": "stable",
-    "summary": "Why you cannot average a blend name: the four kinds of data, and how to turn raw numbers into honest category, ungrouped and grouped frequency tables.",
-    "tags": [
-      "statistics"
-    ],
-    "title": "Mira's Notebook: What Kind of Data Is This, and How Do You Count It?",
-    "type": "concept",
-    "types": [
-      "concept"
-    ]
-  },
   "deep-learning-basics": {
     "domains": [
       "deep-learning"
@@ -650,19 +625,16 @@
     ],
     "id": "describing-data-quick-guide",
     "level": "beginner",
-    "order": 8,
+    "order": 5,
     "path": "fields/data-science/probability-statistics/describing-data/quick-guide.md",
     "reading_time_min": 3,
     "relations": {
       "prerequisites": [],
       "related": [
-        "data-types-and-frequency-tables",
         "describing-data-technical-reference",
-        "draw-it-before-you-describe-it",
-        "how-far-from-the-middle",
-        "stir-the-pot-population-and-sampling",
-        "the-number-on-the-tin",
-        "where-do-you-stand"
+        "pictures-and-the-middle",
+        "samples-data-types-and-tables",
+        "spread-and-position"
       ]
     },
     "status": "stable",
@@ -683,20 +655,18 @@
     ],
     "id": "describing-data-technical-reference",
     "level": "intermediate",
-    "order": 7,
+    "order": 4,
     "path": "fields/data-science/probability-statistics/describing-data/technical-reference.md",
     "reading_time_min": 4,
     "relations": {
       "prerequisites": [
-        "stir-the-pot-population-and-sampling"
+        "samples-data-types-and-tables"
       ],
       "related": [
-        "data-types-and-frequency-tables",
         "describing-data-quick-guide",
-        "draw-it-before-you-describe-it",
-        "how-far-from-the-middle",
-        "the-number-on-the-tin",
-        "where-do-you-stand"
+        "pictures-and-the-middle",
+        "samples-data-types-and-tables",
+        "spread-and-position"
       ]
     },
     "status": "stable",
@@ -1045,36 +1015,6 @@
       "guide"
     ]
   },
-  "draw-it-before-you-describe-it": {
-    "domains": [
-      "statistics"
-    ],
-    "id": "draw-it-before-you-describe-it",
-    "level": "beginner",
-    "order": 3,
-    "path": "fields/data-science/probability-statistics/describing-data/draw-it-before-you-describe-it.md",
-    "reading_time_min": 10,
-    "relations": {
-      "prerequisites": [
-        "data-types-and-frequency-tables"
-      ],
-      "related": [
-        "data-types-and-frequency-tables",
-        "probability-statistics-series",
-        "the-number-on-the-tin"
-      ]
-    },
-    "status": "stable",
-    "summary": "Why a table of counts glazes eyes and a picture does not: the histogram, frequency polygon and ogive built from one table, and the mistakes that make them lie.",
-    "tags": [
-      "statistics"
-    ],
-    "title": "Draw It Before You Describe It: Three Pictures of the Same Fifty Days",
-    "type": "concept",
-    "types": [
-      "concept"
-    ]
-  },
   "encoder-decoder-machine-translation": {
     "domains": [
       "deep-learning",
@@ -1098,6 +1038,35 @@
       "rnn"
     ],
     "title": "Encoder-Decoder for Machine Translation",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "expectation-binomial-poisson": {
+    "domains": [
+      "statistics"
+    ],
+    "id": "expectation-binomial-poisson",
+    "level": "intermediate",
+    "order": 8,
+    "path": "fields/data-science/probability-statistics/probability/expectation-binomial-poisson.md",
+    "reading_time_min": 12,
+    "relations": {
+      "prerequisites": [
+        "counting-and-conditioning"
+      ],
+      "related": [
+        "probability-statistics-series",
+        "probability-technical-reference"
+      ]
+    },
+    "status": "stable",
+    "summary": "Expected value is the data's seesaw with probability as the weight, not the likeliest outcome. Binomial and Poisson are recipes for a count; each is right only as far as its assumptions hold.",
+    "tags": [
+      "statistics"
+    ],
+    "title": "Expectation and the Two Count Recipes: Binomial and Poisson",
     "type": "concept",
     "types": [
       "concept"
@@ -1403,63 +1372,6 @@
       "concept"
     ]
   },
-  "how-far-from-the-middle": {
-    "domains": [
-      "statistics"
-    ],
-    "id": "how-far-from-the-middle",
-    "level": "beginner",
-    "order": 5,
-    "path": "fields/data-science/probability-statistics/describing-data/how-far-from-the-middle.md",
-    "reading_time_min": 11,
-    "relations": {
-      "prerequisites": [
-        "the-number-on-the-tin"
-      ],
-      "related": [
-        "probability-statistics-series",
-        "the-map-of-leaf-and-kettle"
-      ]
-    },
-    "status": "stable",
-    "summary": "Mean, median and mode are one question asked with three rulers: how much should a long walk hurt? Spread is what is left over. Variance, SD, IQR and the n-1 mystery fall out of that.",
-    "tags": [
-      "statistics"
-    ],
-    "title": "How Far From the Middle? One Question Behind Every Summary Number",
-    "type": "concept",
-    "types": [
-      "concept"
-    ]
-  },
-  "how-sure-are-you": {
-    "domains": [
-      "statistics"
-    ],
-    "id": "how-sure-are-you",
-    "level": "intermediate",
-    "order": 13,
-    "path": "fields/data-science/probability-statistics/inference/how-sure-are-you.md",
-    "reading_time_min": 9,
-    "relations": {
-      "prerequisites": [
-        "why-averages-behave"
-      ],
-      "related": [
-        "probability-statistics-series"
-      ]
-    },
-    "status": "stable",
-    "summary": "A confidence interval is an honest \"about this, give or take\": the estimate plus or minus a margin built from the standard error. The 95% describes the method, not one interval.",
-    "tags": [
-      "statistics"
-    ],
-    "title": "How Sure Are You? Confidence Intervals",
-    "type": "concept",
-    "types": [
-      "concept"
-    ]
-  },
   "hpc-systems-overview": {
     "domains": [
       "business",
@@ -1512,17 +1424,16 @@
     ],
     "id": "inference-quick-guide",
     "level": "beginner",
-    "order": 17,
+    "order": 5,
     "path": "fields/data-science/probability-statistics/inference/quick-guide.md",
     "reading_time_min": 3,
     "relations": {
       "prerequisites": [],
       "related": [
-        "how-sure-are-you",
+        "averages-and-intervals",
         "inference-technical-reference",
         "the-courtroom-for-numbers",
-        "two-things-moving-together",
-        "why-averages-behave"
+        "two-things-moving-together"
       ]
     },
     "status": "stable",
@@ -1543,15 +1454,15 @@
     ],
     "id": "inference-technical-reference",
     "level": "intermediate",
-    "order": 16,
+    "order": 4,
     "path": "fields/data-science/probability-statistics/inference/technical-reference.md",
     "reading_time_min": 6,
     "relations": {
       "prerequisites": [
-        "why-averages-behave"
+        "averages-and-intervals"
       ],
       "related": [
-        "how-sure-are-you",
+        "averages-and-intervals",
         "inference-quick-guide",
         "the-courtroom-for-numbers",
         "two-things-moving-together"
@@ -3111,6 +3022,35 @@
       "guide"
     ]
   },
+  "pictures-and-the-middle": {
+    "domains": [
+      "statistics"
+    ],
+    "id": "pictures-and-the-middle",
+    "level": "beginner",
+    "order": 2,
+    "path": "fields/data-science/probability-statistics/describing-data/pictures-and-the-middle.md",
+    "reading_time_min": 15,
+    "relations": {
+      "prerequisites": [
+        "samples-data-types-and-tables"
+      ],
+      "related": [
+        "describing-data-technical-reference",
+        "probability-statistics-series"
+      ]
+    },
+    "status": "stable",
+    "summary": "Draw the table before you summarise it: histogram for amount, polygon for comparison, ogive for up to here. Then \"typical\" is three questions, mean, median and mode, and none answers two clumps.",
+    "tags": [
+      "statistics"
+    ],
+    "title": "Pictures and the Middle: Histogram, Polygon, Ogive, and What 'Typical' Means",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
   "polite-api-server-monitoring": {
     "domains": [
       "devops",
@@ -3170,18 +3110,16 @@
     ],
     "id": "probability-quick-guide",
     "level": "beginner",
-    "order": 13,
+    "order": 11,
     "path": "fields/data-science/probability-statistics/probability/quick-guide.md",
     "reading_time_min": 2,
     "relations": {
       "prerequisites": [],
       "related": [
-        "coins-and-calls",
-        "counting-the-ways",
+        "counting-and-conditioning",
+        "expectation-binomial-poisson",
         "probability-technical-reference",
-        "the-bell-curve",
-        "the-test-that-was-99-percent-accurate",
-        "what-to-expect"
+        "the-bell-curve"
       ]
     },
     "status": "stable",
@@ -3207,22 +3145,16 @@
     "relations": {
       "prerequisites": [],
       "related": [
-        "coins-and-calls",
-        "counting-the-ways",
-        "data-types-and-frequency-tables",
-        "draw-it-before-you-describe-it",
-        "how-far-from-the-middle",
-        "how-sure-are-you",
-        "stir-the-pot-population-and-sampling",
+        "averages-and-intervals",
+        "counting-and-conditioning",
+        "expectation-binomial-poisson",
+        "pictures-and-the-middle",
+        "samples-data-types-and-tables",
+        "spread-and-position",
         "the-bell-curve",
         "the-courtroom-for-numbers",
         "the-map-of-leaf-and-kettle",
-        "the-number-on-the-tin",
-        "the-test-that-was-99-percent-accurate",
-        "two-things-moving-together",
-        "what-to-expect",
-        "where-do-you-stand",
-        "why-averages-behave"
+        "two-things-moving-together"
       ]
     },
     "status": "stable",
@@ -3242,19 +3174,18 @@
     ],
     "id": "probability-technical-reference",
     "level": "intermediate",
-    "order": 12,
+    "order": 10,
     "path": "fields/data-science/probability-statistics/probability/technical-reference.md",
     "reading_time_min": 6,
     "relations": {
       "prerequisites": [
-        "counting-the-ways"
+        "counting-and-conditioning"
       ],
       "related": [
-        "coins-and-calls",
+        "counting-and-conditioning",
+        "expectation-binomial-poisson",
         "probability-quick-guide",
-        "the-bell-curve",
-        "the-test-that-was-99-percent-accurate",
-        "what-to-expect"
+        "the-bell-curve"
       ]
     },
     "status": "stable",
@@ -3419,6 +3350,34 @@
     "types": [
       "concept",
       "guide"
+    ]
+  },
+  "samples-data-types-and-tables": {
+    "domains": [
+      "statistics"
+    ],
+    "id": "samples-data-types-and-tables",
+    "level": "beginner",
+    "order": 1,
+    "path": "fields/data-science/probability-statistics/describing-data/samples-data-types-and-tables.md",
+    "reading_time_min": 15,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "describing-data-technical-reference",
+        "probability-statistics-series"
+      ]
+    },
+    "status": "stable",
+    "summary": "A sample speaks for a crowd only if you chose it fairly. The kind of column decides which arithmetic is allowed, and a frequency table counts it without losing the shape, if the drawers touch.",
+    "tags": [
+      "sampling",
+      "statistics"
+    ],
+    "title": "Samples, Data Types and Tables: Who You Asked, What Kind of Column, How to Count It",
+    "type": "concept",
+    "types": [
+      "concept"
     ]
   },
   "sequence-models": {
@@ -4848,29 +4807,30 @@
       "reference"
     ]
   },
-  "stir-the-pot-population-and-sampling": {
+  "spread-and-position": {
     "domains": [
       "statistics"
     ],
-    "id": "stir-the-pot-population-and-sampling",
+    "id": "spread-and-position",
     "level": "beginner",
-    "order": 1,
-    "path": "fields/data-science/probability-statistics/describing-data/stir-the-pot-population-and-sampling.md",
-    "reading_time_min": 11,
+    "order": 3,
+    "path": "fields/data-science/probability-statistics/describing-data/spread-and-position.md",
+    "reading_time_min": 14,
     "relations": {
-      "prerequisites": [],
+      "prerequisites": [
+        "pictures-and-the-middle"
+      ],
       "related": [
-        "data-types-and-frequency-tables",
+        "describing-data-technical-reference",
         "probability-statistics-series"
       ]
     },
     "status": "stable",
-    "summary": "Why a sip judges a pot of tea only if you stir it: population versus sample, four ways to draw a sample, the poll that asked 2.4 million and still erred.",
+    "summary": "Mean, median and mode are three attitudes to how a long walk hurts; spread is the walking left over. A value then has a position only in its crowd: rank (percentile) or distance (z-score).",
     "tags": [
-      "sampling",
       "statistics"
     ],
-    "title": "Stir the Pot First: Population, Sample, and Why We Guess",
+    "title": "Spread and Position: Variance, n − 1, Percentiles, Z-Scores and the Box Plot",
     "type": "concept",
     "types": [
       "concept"
@@ -4882,17 +4842,17 @@
     ],
     "id": "the-bell-curve",
     "level": "intermediate",
-    "order": 11,
+    "order": 9,
     "path": "fields/data-science/probability-statistics/probability/the-bell-curve.md",
-    "reading_time_min": 9,
+    "reading_time_min": 8,
     "relations": {
       "prerequisites": [
-        "coins-and-calls"
+        "expectation-binomial-poisson"
       ],
       "related": [
-        "draw-it-before-you-describe-it",
+        "pictures-and-the-middle",
         "probability-statistics-series",
-        "where-do-you-stand"
+        "spread-and-position"
       ]
     },
     "status": "stable",
@@ -4912,16 +4872,16 @@
     ],
     "id": "the-courtroom-for-numbers",
     "level": "intermediate",
-    "order": 14,
+    "order": 2,
     "path": "fields/data-science/probability-statistics/inference/the-courtroom-for-numbers.md",
-    "reading_time_min": 9,
+    "reading_time_min": 11,
     "relations": {
       "prerequisites": [
-        "how-sure-are-you"
+        "averages-and-intervals"
       ],
       "related": [
-        "probability-statistics-series",
-        "why-averages-behave"
+        "inference-technical-reference",
+        "probability-statistics-series"
       ]
     },
     "status": "stable",
@@ -4947,13 +4907,10 @@
     "relations": {
       "prerequisites": [],
       "related": [
-        "data-types-and-frequency-tables",
-        "draw-it-before-you-describe-it",
-        "how-far-from-the-middle",
+        "pictures-and-the-middle",
         "probability-statistics-series",
-        "stir-the-pot-population-and-sampling",
-        "the-number-on-the-tin",
-        "where-do-you-stand"
+        "samples-data-types-and-tables",
+        "spread-and-position"
       ]
     },
     "status": "stable",
@@ -4965,64 +4922,6 @@
     "type": "guide",
     "types": [
       "guide"
-    ]
-  },
-  "the-number-on-the-tin": {
-    "domains": [
-      "statistics"
-    ],
-    "id": "the-number-on-the-tin",
-    "level": "beginner",
-    "order": 4,
-    "path": "fields/data-science/probability-statistics/describing-data/the-number-on-the-tin.md",
-    "reading_time_min": 12,
-    "relations": {
-      "prerequisites": [
-        "draw-it-before-you-describe-it"
-      ],
-      "related": [
-        "data-types-and-frequency-tables",
-        "draw-it-before-you-describe-it",
-        "probability-statistics-series"
-      ]
-    },
-    "status": "stable",
-    "summary": "Why a perfectly computed average can describe nobody: \"typical\" is ambiguous, and mean, median and mode are three honest answers to three different questions. Look at the picture first.",
-    "tags": [
-      "statistics"
-    ],
-    "title": "The Number on the Tin: Mean, Median and Mode",
-    "type": "concept",
-    "types": [
-      "concept"
-    ]
-  },
-  "the-test-that-was-99-percent-accurate": {
-    "domains": [
-      "statistics"
-    ],
-    "id": "the-test-that-was-99-percent-accurate",
-    "level": "beginner",
-    "order": 8,
-    "path": "fields/data-science/probability-statistics/probability/the-test-that-was-99-percent-accurate.md",
-    "reading_time_min": 9,
-    "relations": {
-      "prerequisites": [
-        "counting-the-ways"
-      ],
-      "related": [
-        "probability-statistics-series"
-      ]
-    },
-    "status": "stable",
-    "summary": "Conditional probability is \"shrink the crowd to those who match, then count again\". Bayes' rule is that count read the other way; a tree of whole tins shows why a 99% test is often wrong.",
-    "tags": [
-      "statistics"
-    ],
-    "title": "The Test That Was 99% Accurate: Conditional Probability and Bayes' Rule",
-    "type": "concept",
-    "types": [
-      "concept"
     ]
   },
   "threat-model-and-first-launch": {
@@ -5080,18 +4979,18 @@
     ],
     "id": "two-things-moving-together",
     "level": "intermediate",
-    "order": 15,
+    "order": 3,
     "path": "fields/data-science/probability-statistics/inference/two-things-moving-together.md",
-    "reading_time_min": 11,
+    "reading_time_min": 12,
     "relations": {
       "prerequisites": [
         "the-courtroom-for-numbers"
       ],
       "related": [
-        "draw-it-before-you-describe-it",
-        "how-far-from-the-middle",
+        "inference-technical-reference",
+        "pictures-and-the-middle",
         "probability-statistics-series",
-        "where-do-you-stand"
+        "spread-and-position"
       ]
     },
     "status": "stable",
@@ -5329,97 +5228,6 @@
       "victoriametrics"
     ],
     "title": "The Prometheus That Ate the Head Node: Why VictoriaMetrics",
-    "type": "concept",
-    "types": [
-      "concept"
-    ]
-  },
-  "what-to-expect": {
-    "domains": [
-      "statistics"
-    ],
-    "id": "what-to-expect",
-    "level": "beginner",
-    "order": 9,
-    "path": "fields/data-science/probability-statistics/probability/what-to-expect.md",
-    "reading_time_min": 9,
-    "relations": {
-      "prerequisites": [
-        "the-test-that-was-99-percent-accurate"
-      ],
-      "related": [
-        "how-far-from-the-middle",
-        "probability-statistics-series",
-        "the-number-on-the-tin"
-      ]
-    },
-    "status": "stable",
-    "summary": "A random variable is a number attached to each way things could turn out. Expected value and variance are the mean and the leftover walk of earlier parts, weighted by probability instead of frequency.",
-    "tags": [
-      "statistics"
-    ],
-    "title": "What to Expect: Random Variables and Expected Value",
-    "type": "concept",
-    "types": [
-      "concept"
-    ]
-  },
-  "where-do-you-stand": {
-    "domains": [
-      "statistics"
-    ],
-    "id": "where-do-you-stand",
-    "level": "beginner",
-    "order": 6,
-    "path": "fields/data-science/probability-statistics/describing-data/where-do-you-stand.md",
-    "reading_time_min": 10,
-    "relations": {
-      "prerequisites": [
-        "how-far-from-the-middle"
-      ],
-      "related": [
-        "draw-it-before-you-describe-it",
-        "probability-statistics-series",
-        "the-map-of-leaf-and-kettle"
-      ]
-    },
-    "status": "stable",
-    "summary": "A score means nothing without its crowd. Two rulers give it a position: rank (percentile) and distance in spreads (z-score). The box plot is just the ogive read at four landmarks.",
-    "tags": [
-      "statistics"
-    ],
-    "title": "Where Do You Stand? Percentiles, Z-Scores and the Box Plot",
-    "type": "concept",
-    "types": [
-      "concept"
-    ]
-  },
-  "why-averages-behave": {
-    "domains": [
-      "statistics"
-    ],
-    "id": "why-averages-behave",
-    "level": "intermediate",
-    "order": 12,
-    "path": "fields/data-science/probability-statistics/inference/why-averages-behave.md",
-    "reading_time_min": 10,
-    "relations": {
-      "prerequisites": [
-        "the-bell-curve"
-      ],
-      "related": [
-        "how-far-from-the-middle",
-        "probability-statistics-series",
-        "stir-the-pot-population-and-sampling"
-      ]
-    },
-    "status": "stable",
-    "summary": "An average is itself random: every sample gives a different one. Their spread shrinks as sigma over root n, and whatever the crowd looks like, sample averages pile into a bell. Bias is not cured.",
-    "tags": [
-      "sampling",
-      "statistics"
-    ],
-    "title": "Why Averages Behave: The Sip You Could Take a Thousand Times",
     "type": "concept",
     "types": [
       "concept"

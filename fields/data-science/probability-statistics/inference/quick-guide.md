@@ -2,7 +2,7 @@
 id: inference-quick-guide
 title: "From a Sample to a Statement: Intervals, Tests and Lines"
 sidebar_label: "Quick guide: inference"
-order: 17
+order: 5
 summary: A cheat sheet for parts 12 to 15 - the spread of averages, a confidence interval, a shuffle test and a regression line - with the check and the common trap for each.
 level: beginner
 type:
@@ -14,8 +14,7 @@ tags:
   - statistics
 relations:
   related:
-    - why-averages-behave
-    - how-sure-are-you
+    - averages-and-intervals
     - the-courtroom-for-numbers
     - two-things-moving-together
     - inference-technical-reference
@@ -23,7 +22,7 @@ relations:
 
 # From a Sample to a Statement: Intervals, Tests and Lines
 
-> **Quick guide for** [Why Averages Behave](/fields/data-science/probability-statistics/inference/why-averages-behave.md), [How Sure Are You?](/fields/data-science/probability-statistics/inference/how-sure-are-you.md), [The Courtroom for Numbers](/fields/data-science/probability-statistics/inference/the-courtroom-for-numbers.md) and [Two Things Moving Together](/fields/data-science/probability-statistics/inference/two-things-moving-together.md).
+> **Quick guide for** [Averages and Intervals](/fields/data-science/probability-statistics/inference/averages-and-intervals.md) (parts 12 and 13), [The Courtroom for Numbers](/fields/data-science/probability-statistics/inference/the-courtroom-for-numbers.md) and [Two Things Moving Together](/fields/data-science/probability-statistics/inference/two-things-moving-together.md).
 > Python 3, standard library only. Formal statements: [technical reference](/fields/data-science/probability-statistics/inference/technical-reference.md).
 
 ## 1. How wobbly is an average?
@@ -92,4 +91,4 @@ r = st.correlation(temp, cups)
 
 [Correlation lab](/fields/data-science/probability-statistics/labs/regression.html#embed ':ignore')
 
-**Why it works:** the four story pages above. Back to [the map of the series](/fields/data-science/probability-statistics/the-map-of-leaf-and-kettle.md).
+**Why it works:** the three story pages above (parts 12 to 15). Back to [the map of the series](/fields/data-science/probability-statistics/the-map-of-leaf-and-kettle.md).
