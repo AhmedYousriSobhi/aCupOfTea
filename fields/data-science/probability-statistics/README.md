@@ -17,10 +17,8 @@ relations:
     - the-number-on-the-tin
     - how-far-from-the-middle
     - where-do-you-stand
-    - counting-the-ways
-    - the-test-that-was-99-percent-accurate
-    - what-to-expect
-    - coins-and-calls
+    - counting-and-conditioning
+    - expectation-binomial-poisson
     - the-bell-curve
     - why-averages-behave
     - how-sure-are-you
@@ -65,10 +63,8 @@ Then keep [The Map of Leaf & Kettle](/fields/data-science/probability-statistics
 | 4 | [The Number on the Tin](/fields/data-science/probability-statistics/describing-data/the-number-on-the-tin.md) | What does "typical" mean: mean, median or mode? | Written |
 | 5 | [How Far From the Middle?](/fields/data-science/probability-statistics/describing-data/how-far-from-the-middle.md) | Why are there three middles and so many spreads? Variance, SD, IQR and the mystery of `n − 1` | Written |
 | 6 | [Where Do You Stand?](/fields/data-science/probability-statistics/describing-data/where-do-you-stand.md) | How does one value find its place in a crowd? Percentiles, z-scores and the box plot | Written |
-| 7 | [Counting the Ways](/fields/data-science/probability-statistics/probability/counting-the-ways.md) | What is a probability, and why do "or" and "and" add and multiply? | Written |
-| 8 | [The Test That Was 99% Accurate](/fields/data-science/probability-statistics/probability/the-test-that-was-99-percent-accurate.md) | Why is an accurate test so often wrong? Conditional probability and Bayes' rule | Written |
-| 9 | [What to Expect](/fields/data-science/probability-statistics/probability/what-to-expect.md) | What does "expected" mean? Random variables, expected value and variance | Written |
-| 10 | [Coins and Calls](/fields/data-science/probability-statistics/probability/coins-and-calls.md) | Which recipe fits which question? The binomial and Poisson distributions | Written |
+| 7-8 | [Counting and Conditioning](/fields/data-science/probability-statistics/probability/counting-and-conditioning.md) | What is a probability, and why is an accurate test so often wrong? "Or", "and", conditional probability and Bayes' rule | Written |
+| 9-10 | [Expectation and the Two Count Recipes](/fields/data-science/probability-statistics/probability/expectation-binomial-poisson.md) | What does "expected" mean, and which recipe fits which count? Expected value, variance, the binomial and Poisson distributions | Written |
 | 11 | [The Bell Curve](/fields/data-science/probability-statistics/probability/the-bell-curve.md) | Where does the bell come from, and what is probability as area? The normal distribution | Written |
 | 12 | [Why Averages Behave](/fields/data-science/probability-statistics/inference/why-averages-behave.md) | Why does an average wobble less than a single value? Sampling distributions and the central limit theorem | Written |
 | 13 | [How Sure Are You?](/fields/data-science/probability-statistics/inference/how-sure-are-you.md) | How do you say "about this, give or take"? Confidence intervals and the bootstrap | Written |

@@ -2,13 +2,13 @@
 
 # Statistics
 
-- [Coins and Calls: Binomial and Poisson as Recipes](/fields/data-science/probability-statistics/probability/coins-and-calls.md) — A named distribution is a recipe for who gets how much probability. Binomial fits "how many yeses in n tries", Poisson fits "how many events in a window". Know the question and the assumptions. *(intermediate · 9 min)*  
-  [`statistics`](/.docs/generated/explore/tags/statistics.md)
-- [Counting the Ways: Probability as a Share of the List](/fields/data-science/probability-statistics/probability/counting-the-ways.md) — Probability is the share of the equally likely ways. So "or" adds, "and" multiplies, and "at least one" is 1 minus none, because of what each does to the list of ways. *(beginner · 9 min)*  
+- [Counting and Conditioning: Why a 99% Accurate Test Is Usually Wrong](/fields/data-science/probability-statistics/probability/counting-and-conditioning.md) — Probability is a share of the equally likely ways, so "or" adds, "and" multiplies and "at least one" is 1 minus none. Conditioning shrinks the crowd, and Bayes' rule reads that count backwards. *(beginner · 10 min)*  
   [`statistics`](/.docs/generated/explore/tags/statistics.md)
 - [Describing Data, Technically: Definitions, Identities and Method Choices](/fields/data-science/probability-statistics/describing-data/technical-reference.md) — The formal layer under parts 1 to 6: scales of measurement, grouped-data formulas, what the mean and median minimise, n versus n-1, quartile methods, fences and sampling designs. *(intermediate · 4 min)*  
   [`statistics`](/.docs/generated/explore/tags/statistics.md)
 - [Draw It Before You Describe It: Three Pictures of the Same Fifty Days](/fields/data-science/probability-statistics/describing-data/draw-it-before-you-describe-it.md) — Why a table of counts glazes eyes and a picture does not: the histogram, frequency polygon and ogive built from one table, and the mistakes that make them lie. *(beginner · 10 min)*  
+  [`statistics`](/.docs/generated/explore/tags/statistics.md)
+- [Expectation and the Two Count Recipes: Binomial and Poisson](/fields/data-science/probability-statistics/probability/expectation-binomial-poisson.md) — Expected value is the data's seesaw with probability as the weight, not the likeliest outcome. Binomial and Poisson are recipes for a count; each is right only as far as its assumptions hold. *(intermediate · 12 min · long read)*  
   [`statistics`](/.docs/generated/explore/tags/statistics.md)
 - [From a Sample to a Statement: Intervals, Tests and Lines](/fields/data-science/probability-statistics/inference/quick-guide.md) — A cheat sheet for parts 12 to 15 - the spread of averages, a confidence interval, a shuffle test and a regression line - with the check and the common trap for each. *(beginner · 3 min)*  
   [`statistics`](/.docs/generated/explore/tags/statistics.md)
@@ -30,7 +30,7 @@
   [`sampling`](/.docs/generated/explore/tags/sampling.md) [`statistics`](/.docs/generated/explore/tags/statistics.md)
 - [Summarise a Data Set: Which Number, Which Picture](/fields/data-science/probability-statistics/describing-data/quick-guide.md) — A cheat sheet for parts 1 to 6 - choose a sampling method, classify the data, pick the picture, pick the middle and the spread, and place one value in its crowd. *(beginner · 3 min)*  
   [`statistics`](/.docs/generated/explore/tags/statistics.md)
-- [The Bell Curve: Probability as Area, and One Ruler for Every Bell](/fields/data-science/probability-statistics/probability/the-bell-curve.md) — Many small nudges add up to a bell. For continuous data probability is area, and the z-score makes every bell the same bell, so one table serves all of them, until the data are not a bell. *(intermediate · 9 min)*  
+- [The Bell Curve: Probability as Area, and One Ruler for Every Bell](/fields/data-science/probability-statistics/probability/the-bell-curve.md) — Many small nudges add up to a bell. For continuous data probability is area, and the z-score makes every bell the same bell, so one table serves all of them, until the data are not a bell. *(intermediate · 8 min)*  
   [`statistics`](/.docs/generated/explore/tags/statistics.md)
 - [The Courtroom for Numbers: Could Plain Luck Do This?](/fields/data-science/probability-statistics/inference/the-courtroom-for-numbers.md) — A hypothesis test asks one question: could plain luck have produced a difference this big? Shuffle the labels and count. What the p-value is, what it is not, and how testing twenty things fools you. *(intermediate · 9 min)*  
   [`statistics`](/.docs/generated/explore/tags/statistics.md)
@@ -38,11 +38,7 @@
   [`statistics`](/.docs/generated/explore/tags/statistics.md)
 - [The Number on the Tin: Mean, Median and Mode](/fields/data-science/probability-statistics/describing-data/the-number-on-the-tin.md) — Why a perfectly computed average can describe nobody: "typical" is ambiguous, and mean, median and mode are three honest answers to three different questions. Look at the picture first. *(beginner · 12 min · long read)*  
   [`statistics`](/.docs/generated/explore/tags/statistics.md)
-- [The Test That Was 99% Accurate: Conditional Probability and Bayes' Rule](/fields/data-science/probability-statistics/probability/the-test-that-was-99-percent-accurate.md) — Conditional probability is "shrink the crowd to those who match, then count again". Bayes' rule is that count read the other way; a tree of whole tins shows why a 99% test is often wrong. *(beginner · 9 min)*  
-  [`statistics`](/.docs/generated/explore/tags/statistics.md)
 - [Two Things Moving Together: Correlation and the Line](/fields/data-science/probability-statistics/inference/two-things-moving-together.md) — Correlation is the average product of paired z-scores, a number about straight-line togetherness only. The regression line is least squared walking applied to a line. Graph first, always. *(intermediate · 11 min · long read)*  
-  [`statistics`](/.docs/generated/explore/tags/statistics.md)
-- [What to Expect: Random Variables and Expected Value](/fields/data-science/probability-statistics/probability/what-to-expect.md) — A random variable is a number attached to each way things could turn out. Expected value and variance are the mean and the leftover walk of earlier parts, weighted by probability instead of frequency. *(beginner · 9 min)*  
   [`statistics`](/.docs/generated/explore/tags/statistics.md)
 - [Where Do You Stand? Percentiles, Z-Scores and the Box Plot](/fields/data-science/probability-statistics/describing-data/where-do-you-stand.md) — A score means nothing without its crowd. Two rulers give it a position: rank (percentile) and distance in spreads (z-score). The box plot is just the ogive read at four landmarks. *(beginner · 10 min)*  
   [`statistics`](/.docs/generated/explore/tags/statistics.md)

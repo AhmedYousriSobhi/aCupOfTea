@@ -518,12 +518,12 @@
   "statistics": {
     "label": "Statistics",
     "objects": [
-      "coins-and-calls",
-      "counting-the-ways",
+      "counting-and-conditioning",
       "data-types-and-frequency-tables",
       "describing-data-quick-guide",
       "describing-data-technical-reference",
       "draw-it-before-you-describe-it",
+      "expectation-binomial-poisson",
       "how-far-from-the-middle",
       "how-sure-are-you",
       "inference-quick-guide",
@@ -536,9 +536,7 @@
       "the-courtroom-for-numbers",
       "the-map-of-leaf-and-kettle",
       "the-number-on-the-tin",
-      "the-test-that-was-99-percent-accurate",
       "two-things-moving-together",
-      "what-to-expect",
       "where-do-you-stand",
       "why-averages-behave"
     ]

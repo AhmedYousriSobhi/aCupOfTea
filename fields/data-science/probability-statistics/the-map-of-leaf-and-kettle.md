@@ -268,10 +268,10 @@ The same walk, one floor up. Each room is one part of the series, with one objec
 
 | Room | Part | The object | The idea | The question to carry |
 |---|---|---|---|---|
-| 10 · The Lucky Roll | [7](/fields/data-science/probability-statistics/probability/counting-the-ways.md) | A **grid of 36 ways** by the till | Probability is the share of the equally likely ways. Shaded cells are an event, the overlap cell is counted once, and a rectangle means independent | Why did Ravi's 11/36 overcount? |
-| 11 · The Alarm Bell | [8](/fields/data-science/probability-statistics/probability/the-test-that-was-99-percent-accurate.md) | A **tree of 100,000 tins** | Conditional probability shrinks the crowd to the positives and counts again. "99% accurate" is P(positive given bad), not P(bad given positive) | Which crowd are you counting inside? |
-| 12 · The Lucky Tin | [9](/fields/data-science/probability-statistics/probability/what-to-expect.md) | A **card bag** with a prize table | A random variable is a number on each outcome. Expected value is the seesaw again, weighted by probability | The expected prize is 4.5 and no card says 4.5 |
-| 13 · Coins and Calls | [10](/fields/data-science/probability-statistics/probability/coins-and-calls.md) | **Ten customers** choosing, and a **phone** ringing | A distribution is a recipe for who gets how much probability. Binomial counts yeses, Poisson counts events in a window | Three is the average, not the answer |
+| 10 · The Lucky Roll | [7](/fields/data-science/probability-statistics/probability/counting-and-conditioning.md) | A **grid of 36 ways** by the till | Probability is the share of the equally likely ways. Shaded cells are an event, the overlap cell is counted once, and a rectangle means independent | Why did Ravi's 11/36 overcount? |
+| 11 · The Alarm Bell | [8](/fields/data-science/probability-statistics/probability/counting-and-conditioning.md) | A **tree of 100,000 tins** | Conditional probability shrinks the crowd to the positives and counts again. "99% accurate" is P(positive given bad), not P(bad given positive) | Which crowd are you counting inside? |
+| 12 · The Lucky Tin | [9](/fields/data-science/probability-statistics/probability/expectation-binomial-poisson.md) | A **card bag** with a prize table | A random variable is a number on each outcome. Expected value is the seesaw again, weighted by probability | The expected prize is 4.5 and no card says 4.5 |
+| 13 · Coins and Calls | [10](/fields/data-science/probability-statistics/probability/expectation-binomial-poisson.md) | **Ten customers** choosing, and a **phone** ringing | A distribution is a recipe for who gets how much probability. Binomial counts yeses, Poisson counts events in a window | Three is the average, not the answer |
 | 14 · The Bell Curve | [11](/fields/data-science/probability-statistics/probability/the-bell-curve.md) | **Bags of tea** never exactly 100 g | Many small nudges add up to a bell. Probability is area, and the z-score is one ruler for every bell | Is the average of ten bags also a bell? |
 | 15 · The Thousand Sips | [12](/fields/data-science/probability-statistics/inference/why-averages-behave.md) | A **pot** sipped again and again | An average is itself random. The pile of sips is the sampling distribution, and its spread is `σ / √n` | Which pile is narrower, 2 cups or 30? |
 | 16 · The Net | [13](/fields/data-science/probability-statistics/inference/how-sure-are-you.md) | A **net** over a fixed target | A confidence interval is the estimate plus or minus a margin. The 95% describes the method, not one net | Narrow is not the same as right |
@@ -369,18 +369,18 @@ The same walk, one floor up. Each room is one part of the series, with one objec
 
 | Term | Definition | Part |
 |---|---|---|
-| **Sample space** | The list of all possible outcomes | [7](/fields/data-science/probability-statistics/probability/counting-the-ways.md) |
+| **Sample space** | The list of all possible outcomes | [7](/fields/data-science/probability-statistics/probability/counting-and-conditioning.md) |
 | **Event** | A group of outcomes from that list | 7 |
 | **Complement** | Everything the event is not; "at least one" is 1 minus "none" | 7 |
 | **Independent** | Knowing one tells you nothing about the other | 7 |
-| **Conditional probability** | `P(A given B)`: shrink the crowd to B, count A inside it | [8](/fields/data-science/probability-statistics/probability/the-test-that-was-99-percent-accurate.md) |
+| **Conditional probability** | `P(A given B)`: shrink the crowd to B, count A inside it | [8](/fields/data-science/probability-statistics/probability/counting-and-conditioning.md) |
 | **Base rate** | How common the thing is before any clue | 8 |
 | **Natural frequencies** | Whole-number counts in a tree instead of percentages | 8 |
 | **Bayes' rule** | The flip from `P(B given A)` to `P(A given B)` | 8 |
-| **Random variable** | A number attached to each way things could turn out | [9](/fields/data-science/probability-statistics/probability/what-to-expect.md) |
+| **Random variable** | A number attached to each way things could turn out | [9](/fields/data-science/probability-statistics/probability/expectation-binomial-poisson.md) |
 | **Expected value** | The balance point of the values weighted by probability, `Σ x × p` | 9 |
 | **Probability table** | Each possible value with its probability; they sum to 1 | 9 |
-| **Distribution** | A table of how much probability each value gets | [10](/fields/data-science/probability-statistics/probability/coins-and-calls.md) |
+| **Distribution** | A table of how much probability each value gets | [10](/fields/data-science/probability-statistics/probability/expectation-binomial-poisson.md) |
 | **Binomial** | The count of yeses in `n` independent tries with the same `p` | 10 |
 | **Poisson** | The count of events in a window at a constant rate | 10 |
 | **Normal curve** | A bell set by two dials, the mean and the SD; total area 1 | [11](/fields/data-science/probability-statistics/probability/the-bell-curve.md) |

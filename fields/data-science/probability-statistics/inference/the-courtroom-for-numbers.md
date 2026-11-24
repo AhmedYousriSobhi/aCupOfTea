@@ -67,7 +67,7 @@ If the labels A and B mean nothing, **any way of dealing the 20 scores into two 
 
 ## Shuffle the labels and count
 
-First a case small enough to do by hand. Three tasters per blend: A scored 8, 9, 7 and B scored 5, 6, 7. The gap is `8 − 6 = 2`. Under "luck only", the six scores `8 9 7 5 6 7` could have been dealt into two piles of three in 20 ways (that is `6 choose 3`, from [Counting the Ways](/fields/data-science/probability-statistics/probability/counting-the-ways.md)). Which deals give A a lead of 2 or more? The scores add to 42, so A's pile must add to 24 or more. Only two do: `8 9 7` (the real one) and the same pile with the *other* 7 swapped in. Two of twenty: **0.10**. Luck does that one time in ten.
+First a case small enough to do by hand. Three tasters per blend: A scored 8, 9, 7 and B scored 5, 6, 7. The gap is `8 − 6 = 2`. Under "luck only", the six scores `8 9 7 5 6 7` could have been dealt into two piles of three in 20 ways (that is `6 choose 3`, from [Counting and Conditioning](/fields/data-science/probability-statistics/probability/counting-and-conditioning.md)). Which deals give A a lead of 2 or more? The scores add to 42, so A's pile must add to 24 or more. Only two do: `8 9 7` (the real one) and the same pile with the *other* 7 swapped in. Two of twenty: **0.10**. Luck does that one time in ten.
 
 Now Mira's real data. Twenty scores into two piles of ten has 184,756 deals, too many for the chalkboard, so we **shuffle many times and count**:
 

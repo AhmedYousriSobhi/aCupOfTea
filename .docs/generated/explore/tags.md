@@ -36,7 +36,7 @@ Pages grouped by topic tag.
 - [Slurm](/.docs/generated/explore/tags/slurm.md) (69)
 - [Software](/.docs/generated/explore/tags/software.md) (2)
 - [Software Engineering](/.docs/generated/explore/tags/software-engineering.md) (3)
-- [Statistics](/.docs/generated/explore/tags/statistics.md) (23)
+- [Statistics](/.docs/generated/explore/tags/statistics.md) (21)
 - [Storage](/.docs/generated/explore/tags/storage.md) (4)
 - [System Design](/.docs/generated/explore/tags/system-design.md) (4)
 - [Transformers](/.docs/generated/explore/tags/transformers.md) (7)

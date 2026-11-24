@@ -158,23 +158,6 @@
       "your-kubeconfig-is-a-house-key"
     ]
   },
-  "coins-and-calls": {
-    "prerequisite_of": [
-      "the-bell-curve"
-    ],
-    "prerequisites": [
-      "what-to-expect"
-    ],
-    "related": [
-      "counting-the-ways",
-      "probability-statistics-series"
-    ],
-    "related_by": [
-      "probability-quick-guide",
-      "probability-statistics-series",
-      "probability-technical-reference"
-    ]
-  },
   "containers-101": {
     "prerequisite_of": [
       "kubernetes-in-five-nouns",
@@ -190,21 +173,22 @@
       "nvidia-cluster-readiness-engine"
     ]
   },
-  "counting-the-ways": {
+  "counting-and-conditioning": {
     "prerequisite_of": [
-      "probability-technical-reference",
-      "the-test-that-was-99-percent-accurate"
+      "expectation-binomial-poisson",
+      "probability-technical-reference"
     ],
     "prerequisites": [
       "where-do-you-stand"
     ],
     "related": [
-      "probability-statistics-series"
+      "probability-statistics-series",
+      "probability-technical-reference"
     ],
     "related_by": [
-      "coins-and-calls",
       "probability-quick-guide",
-      "probability-statistics-series"
+      "probability-statistics-series",
+      "probability-technical-reference"
     ]
   },
   "cpu-affinity": {
@@ -454,6 +438,23 @@
       "sequence-models"
     ]
   },
+  "expectation-binomial-poisson": {
+    "prerequisite_of": [
+      "the-bell-curve"
+    ],
+    "prerequisites": [
+      "counting-and-conditioning"
+    ],
+    "related": [
+      "probability-statistics-series",
+      "probability-technical-reference"
+    ],
+    "related_by": [
+      "probability-quick-guide",
+      "probability-statistics-series",
+      "probability-technical-reference"
+    ]
+  },
   "fake-gpus-in-kubernetes": {
     "prerequisite_of": [
       "isolating-gpu-workloads"
@@ -581,7 +582,6 @@
       "probability-statistics-series",
       "the-map-of-leaf-and-kettle",
       "two-things-moving-together",
-      "what-to-expect",
       "why-averages-behave"
     ]
   },
@@ -1280,12 +1280,10 @@
     "prerequisite_of": [],
     "prerequisites": [],
     "related": [
-      "coins-and-calls",
-      "counting-the-ways",
+      "counting-and-conditioning",
+      "expectation-binomial-poisson",
       "probability-technical-reference",
-      "the-bell-curve",
-      "the-test-that-was-99-percent-accurate",
-      "what-to-expect"
+      "the-bell-curve"
     ],
     "related_by": [
       "probability-technical-reference"
@@ -1295,10 +1293,10 @@
     "prerequisite_of": [],
     "prerequisites": [],
     "related": [
-      "coins-and-calls",
-      "counting-the-ways",
+      "counting-and-conditioning",
       "data-types-and-frequency-tables",
       "draw-it-before-you-describe-it",
+      "expectation-binomial-poisson",
       "how-far-from-the-middle",
       "how-sure-are-you",
       "stir-the-pot-population-and-sampling",
@@ -1306,17 +1304,15 @@
       "the-courtroom-for-numbers",
       "the-map-of-leaf-and-kettle",
       "the-number-on-the-tin",
-      "the-test-that-was-99-percent-accurate",
       "two-things-moving-together",
-      "what-to-expect",
       "where-do-you-stand",
       "why-averages-behave"
     ],
     "related_by": [
-      "coins-and-calls",
-      "counting-the-ways",
+      "counting-and-conditioning",
       "data-types-and-frequency-tables",
       "draw-it-before-you-describe-it",
+      "expectation-binomial-poisson",
       "how-far-from-the-middle",
       "how-sure-are-you",
       "stir-the-pot-population-and-sampling",
@@ -1324,9 +1320,7 @@
       "the-courtroom-for-numbers",
       "the-map-of-leaf-and-kettle",
       "the-number-on-the-tin",
-      "the-test-that-was-99-percent-accurate",
       "two-things-moving-together",
-      "what-to-expect",
       "where-do-you-stand",
       "why-averages-behave"
     ]
@@ -1334,16 +1328,17 @@
   "probability-technical-reference": {
     "prerequisite_of": [],
     "prerequisites": [
-      "counting-the-ways"
+      "counting-and-conditioning"
     ],
     "related": [
-      "coins-and-calls",
+      "counting-and-conditioning",
+      "expectation-binomial-poisson",
       "probability-quick-guide",
-      "the-bell-curve",
-      "the-test-that-was-99-percent-accurate",
-      "what-to-expect"
+      "the-bell-curve"
     ],
     "related_by": [
+      "counting-and-conditioning",
+      "expectation-binomial-poisson",
       "probability-quick-guide"
     ]
   },
@@ -2107,7 +2102,7 @@
       "why-averages-behave"
     ],
     "prerequisites": [
-      "coins-and-calls"
+      "expectation-binomial-poisson"
     ],
     "related": [
       "draw-it-before-you-describe-it",
@@ -2172,24 +2167,7 @@
       "describing-data-technical-reference",
       "draw-it-before-you-describe-it",
       "probability-statistics-series",
-      "the-map-of-leaf-and-kettle",
-      "what-to-expect"
-    ]
-  },
-  "the-test-that-was-99-percent-accurate": {
-    "prerequisite_of": [
-      "what-to-expect"
-    ],
-    "prerequisites": [
-      "counting-the-ways"
-    ],
-    "related": [
-      "probability-statistics-series"
-    ],
-    "related_by": [
-      "probability-quick-guide",
-      "probability-statistics-series",
-      "probability-technical-reference"
+      "the-map-of-leaf-and-kettle"
     ]
   },
   "threat-model-and-first-launch": {
@@ -2313,27 +2291,9 @@
     ],
     "related_by": []
   },
-  "what-to-expect": {
-    "prerequisite_of": [
-      "coins-and-calls"
-    ],
-    "prerequisites": [
-      "the-test-that-was-99-percent-accurate"
-    ],
-    "related": [
-      "how-far-from-the-middle",
-      "probability-statistics-series",
-      "the-number-on-the-tin"
-    ],
-    "related_by": [
-      "probability-quick-guide",
-      "probability-statistics-series",
-      "probability-technical-reference"
-    ]
-  },
   "where-do-you-stand": {
     "prerequisite_of": [
-      "counting-the-ways"
+      "counting-and-conditioning"
     ],
     "prerequisites": [
       "how-far-from-the-middle"

@@ -435,35 +435,6 @@
       "guide"
     ]
   },
-  "coins-and-calls": {
-    "domains": [
-      "statistics"
-    ],
-    "id": "coins-and-calls",
-    "level": "intermediate",
-    "order": 10,
-    "path": "fields/data-science/probability-statistics/probability/coins-and-calls.md",
-    "reading_time_min": 9,
-    "relations": {
-      "prerequisites": [
-        "what-to-expect"
-      ],
-      "related": [
-        "counting-the-ways",
-        "probability-statistics-series"
-      ]
-    },
-    "status": "stable",
-    "summary": "A named distribution is a recipe for who gets how much probability. Binomial fits \"how many yeses in n tries\", Poisson fits \"how many events in a window\". Know the question and the assumptions.",
-    "tags": [
-      "statistics"
-    ],
-    "title": "Coins and Calls: Binomial and Poisson as Recipes",
-    "type": "concept",
-    "types": [
-      "concept"
-    ]
-  },
   "containers-101": {
     "domains": [
       "software-engineering",
@@ -488,29 +459,30 @@
       "concept"
     ]
   },
-  "counting-the-ways": {
+  "counting-and-conditioning": {
     "domains": [
       "statistics"
     ],
-    "id": "counting-the-ways",
+    "id": "counting-and-conditioning",
     "level": "beginner",
     "order": 7,
-    "path": "fields/data-science/probability-statistics/probability/counting-the-ways.md",
-    "reading_time_min": 9,
+    "path": "fields/data-science/probability-statistics/probability/counting-and-conditioning.md",
+    "reading_time_min": 10,
     "relations": {
       "prerequisites": [
         "where-do-you-stand"
       ],
       "related": [
-        "probability-statistics-series"
+        "probability-statistics-series",
+        "probability-technical-reference"
       ]
     },
     "status": "stable",
-    "summary": "Probability is the share of the equally likely ways. So \"or\" adds, \"and\" multiplies, and \"at least one\" is 1 minus none, because of what each does to the list of ways.",
+    "summary": "Probability is a share of the equally likely ways, so \"or\" adds, \"and\" multiplies and \"at least one\" is 1 minus none. Conditioning shrinks the crowd, and Bayes' rule reads that count backwards.",
     "tags": [
       "statistics"
     ],
-    "title": "Counting the Ways: Probability as a Share of the List",
+    "title": "Counting and Conditioning: Why a 99% Accurate Test Is Usually Wrong",
     "type": "concept",
     "types": [
       "concept"
@@ -1098,6 +1070,35 @@
       "rnn"
     ],
     "title": "Encoder-Decoder for Machine Translation",
+    "type": "concept",
+    "types": [
+      "concept"
+    ]
+  },
+  "expectation-binomial-poisson": {
+    "domains": [
+      "statistics"
+    ],
+    "id": "expectation-binomial-poisson",
+    "level": "intermediate",
+    "order": 8,
+    "path": "fields/data-science/probability-statistics/probability/expectation-binomial-poisson.md",
+    "reading_time_min": 12,
+    "relations": {
+      "prerequisites": [
+        "counting-and-conditioning"
+      ],
+      "related": [
+        "probability-statistics-series",
+        "probability-technical-reference"
+      ]
+    },
+    "status": "stable",
+    "summary": "Expected value is the data's seesaw with probability as the weight, not the likeliest outcome. Binomial and Poisson are recipes for a count; each is right only as far as its assumptions hold.",
+    "tags": [
+      "statistics"
+    ],
+    "title": "Expectation and the Two Count Recipes: Binomial and Poisson",
     "type": "concept",
     "types": [
       "concept"
@@ -3170,18 +3171,16 @@
     ],
     "id": "probability-quick-guide",
     "level": "beginner",
-    "order": 13,
+    "order": 11,
     "path": "fields/data-science/probability-statistics/probability/quick-guide.md",
     "reading_time_min": 2,
     "relations": {
       "prerequisites": [],
       "related": [
-        "coins-and-calls",
-        "counting-the-ways",
+        "counting-and-conditioning",
+        "expectation-binomial-poisson",
         "probability-technical-reference",
-        "the-bell-curve",
-        "the-test-that-was-99-percent-accurate",
-        "what-to-expect"
+        "the-bell-curve"
       ]
     },
     "status": "stable",
@@ -3207,10 +3206,10 @@
     "relations": {
       "prerequisites": [],
       "related": [
-        "coins-and-calls",
-        "counting-the-ways",
+        "counting-and-conditioning",
         "data-types-and-frequency-tables",
         "draw-it-before-you-describe-it",
+        "expectation-binomial-poisson",
         "how-far-from-the-middle",
         "how-sure-are-you",
         "stir-the-pot-population-and-sampling",
@@ -3218,9 +3217,7 @@
         "the-courtroom-for-numbers",
         "the-map-of-leaf-and-kettle",
         "the-number-on-the-tin",
-        "the-test-that-was-99-percent-accurate",
         "two-things-moving-together",
-        "what-to-expect",
         "where-do-you-stand",
         "why-averages-behave"
       ]
@@ -3242,19 +3239,18 @@
     ],
     "id": "probability-technical-reference",
     "level": "intermediate",
-    "order": 12,
+    "order": 10,
     "path": "fields/data-science/probability-statistics/probability/technical-reference.md",
     "reading_time_min": 6,
     "relations": {
       "prerequisites": [
-        "counting-the-ways"
+        "counting-and-conditioning"
       ],
       "related": [
-        "coins-and-calls",
+        "counting-and-conditioning",
+        "expectation-binomial-poisson",
         "probability-quick-guide",
-        "the-bell-curve",
-        "the-test-that-was-99-percent-accurate",
-        "what-to-expect"
+        "the-bell-curve"
       ]
     },
     "status": "stable",
@@ -4882,12 +4878,12 @@
     ],
     "id": "the-bell-curve",
     "level": "intermediate",
-    "order": 11,
+    "order": 9,
     "path": "fields/data-science/probability-statistics/probability/the-bell-curve.md",
-    "reading_time_min": 9,
+    "reading_time_min": 8,
     "relations": {
       "prerequisites": [
-        "coins-and-calls"
+        "expectation-binomial-poisson"
       ],
       "related": [
         "draw-it-before-you-describe-it",
@@ -4992,34 +4988,6 @@
       "statistics"
     ],
     "title": "The Number on the Tin: Mean, Median and Mode",
-    "type": "concept",
-    "types": [
-      "concept"
-    ]
-  },
-  "the-test-that-was-99-percent-accurate": {
-    "domains": [
-      "statistics"
-    ],
-    "id": "the-test-that-was-99-percent-accurate",
-    "level": "beginner",
-    "order": 8,
-    "path": "fields/data-science/probability-statistics/probability/the-test-that-was-99-percent-accurate.md",
-    "reading_time_min": 9,
-    "relations": {
-      "prerequisites": [
-        "counting-the-ways"
-      ],
-      "related": [
-        "probability-statistics-series"
-      ]
-    },
-    "status": "stable",
-    "summary": "Conditional probability is \"shrink the crowd to those who match, then count again\". Bayes' rule is that count read the other way; a tree of whole tins shows why a 99% test is often wrong.",
-    "tags": [
-      "statistics"
-    ],
-    "title": "The Test That Was 99% Accurate: Conditional Probability and Bayes' Rule",
     "type": "concept",
     "types": [
       "concept"
@@ -5329,36 +5297,6 @@
       "victoriametrics"
     ],
     "title": "The Prometheus That Ate the Head Node: Why VictoriaMetrics",
-    "type": "concept",
-    "types": [
-      "concept"
-    ]
-  },
-  "what-to-expect": {
-    "domains": [
-      "statistics"
-    ],
-    "id": "what-to-expect",
-    "level": "beginner",
-    "order": 9,
-    "path": "fields/data-science/probability-statistics/probability/what-to-expect.md",
-    "reading_time_min": 9,
-    "relations": {
-      "prerequisites": [
-        "the-test-that-was-99-percent-accurate"
-      ],
-      "related": [
-        "how-far-from-the-middle",
-        "probability-statistics-series",
-        "the-number-on-the-tin"
-      ]
-    },
-    "status": "stable",
-    "summary": "A random variable is a number attached to each way things could turn out. Expected value and variance are the mean and the leftover walk of earlier parts, weighted by probability instead of frequency.",
-    "tags": [
-      "statistics"
-    ],
-    "title": "What to Expect: Random Variables and Expected Value",
     "type": "concept",
     "types": [
       "concept"
