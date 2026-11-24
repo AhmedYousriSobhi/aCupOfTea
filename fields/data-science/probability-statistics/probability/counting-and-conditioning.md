@@ -12,7 +12,7 @@ tags:
   - statistics
 relations:
   prerequisites:
-    - where-do-you-stand
+    - spread-and-position
   related:
     - probability-statistics-series
     - probability-technical-reference

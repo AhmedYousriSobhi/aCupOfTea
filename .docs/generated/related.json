@@ -57,14 +57,14 @@
     "prerequisites": [],
     "related": [
       {
+        "id": "averages-and-intervals",
+        "path": "fields/data-science/probability-statistics/inference/averages-and-intervals.md",
+        "title": "Averages and Intervals: Why Averages Behave and How Sure You Can Be"
+      },
+      {
         "id": "counting-and-conditioning",
         "path": "fields/data-science/probability-statistics/probability/counting-and-conditioning.md",
         "title": "Counting and Conditioning: Why a 99% Accurate Test Is Usually Wrong"
-      },
-      {
-        "id": "draw-it-before-you-describe-it",
-        "path": "fields/data-science/probability-statistics/describing-data/draw-it-before-you-describe-it.md",
-        "title": "Draw It Before You Describe It: Three Pictures of the Same Fifty Days"
       },
       {
         "id": "expectation-binomial-poisson",
@@ -72,24 +72,19 @@
         "title": "Expectation and the Two Count Recipes: Binomial and Poisson"
       },
       {
-        "id": "how-far-from-the-middle",
-        "path": "fields/data-science/probability-statistics/describing-data/how-far-from-the-middle.md",
-        "title": "How Far From the Middle? One Question Behind Every Summary Number"
+        "id": "pictures-and-the-middle",
+        "path": "fields/data-science/probability-statistics/describing-data/pictures-and-the-middle.md",
+        "title": "Pictures and the Middle: Histogram, Polygon, Ogive, and What 'Typical' Means"
       },
       {
-        "id": "how-sure-are-you",
-        "path": "fields/data-science/probability-statistics/inference/how-sure-are-you.md",
-        "title": "How Sure Are You? Confidence Intervals"
+        "id": "samples-data-types-and-tables",
+        "path": "fields/data-science/probability-statistics/describing-data/samples-data-types-and-tables.md",
+        "title": "Samples, Data Types and Tables: Who You Asked, What Kind of Column, How to Count It"
       },
       {
-        "id": "data-types-and-frequency-tables",
-        "path": "fields/data-science/probability-statistics/describing-data/data-types-and-frequency-tables.md",
-        "title": "Mira's Notebook: What Kind of Data Is This, and How Do You Count It?"
-      },
-      {
-        "id": "stir-the-pot-population-and-sampling",
-        "path": "fields/data-science/probability-statistics/describing-data/stir-the-pot-population-and-sampling.md",
-        "title": "Stir the Pot First: Population, Sample, and Why We Guess"
+        "id": "spread-and-position",
+        "path": "fields/data-science/probability-statistics/describing-data/spread-and-position.md",
+        "title": "Spread and Position: Variance, n − 1, Percentiles, Z-Scores and the Box Plot"
       },
       {
         "id": "the-bell-curve",
@@ -107,77 +102,19 @@
         "title": "The Map of Leaf & Kettle: Every Idea So Far in One Walk Through the Shop"
       },
       {
-        "id": "the-number-on-the-tin",
-        "path": "fields/data-science/probability-statistics/describing-data/the-number-on-the-tin.md",
-        "title": "The Number on the Tin: Mean, Median and Mode"
-      },
-      {
         "id": "two-things-moving-together",
         "path": "fields/data-science/probability-statistics/inference/two-things-moving-together.md",
         "title": "Two Things Moving Together: Correlation and the Line"
-      },
-      {
-        "id": "where-do-you-stand",
-        "path": "fields/data-science/probability-statistics/describing-data/where-do-you-stand.md",
-        "title": "Where Do You Stand? Percentiles, Z-Scores and the Box Plot"
-      },
-      {
-        "id": "why-averages-behave",
-        "path": "fields/data-science/probability-statistics/inference/why-averages-behave.md",
-        "title": "Why Averages Behave: The Sip You Could Take a Thousand Times"
       }
     ],
     "required_by": []
   },
-  "fields/data-science/probability-statistics/describing-data/data-types-and-frequency-tables.md": {
+  "fields/data-science/probability-statistics/describing-data/pictures-and-the-middle.md": {
     "prerequisites": [
       {
-        "id": "stir-the-pot-population-and-sampling",
-        "path": "fields/data-science/probability-statistics/describing-data/stir-the-pot-population-and-sampling.md",
-        "title": "Stir the Pot First: Population, Sample, and Why We Guess"
-      }
-    ],
-    "related": [
-      {
-        "id": "describing-data-technical-reference",
-        "path": "fields/data-science/probability-statistics/describing-data/technical-reference.md",
-        "title": "Describing Data, Technically: Definitions, Identities and Method Choices"
-      },
-      {
-        "id": "probability-statistics-series",
-        "path": "fields/data-science/probability-statistics/README.md",
-        "title": "Probability & Statistics, One Sip at a Time"
-      },
-      {
-        "id": "describing-data-quick-guide",
-        "path": "fields/data-science/probability-statistics/describing-data/quick-guide.md",
-        "title": "Summarise a Data Set: Which Number, Which Picture"
-      },
-      {
-        "id": "the-map-of-leaf-and-kettle",
-        "path": "fields/data-science/probability-statistics/the-map-of-leaf-and-kettle.md",
-        "title": "The Map of Leaf & Kettle: Every Idea So Far in One Walk Through the Shop"
-      },
-      {
-        "id": "the-number-on-the-tin",
-        "path": "fields/data-science/probability-statistics/describing-data/the-number-on-the-tin.md",
-        "title": "The Number on the Tin: Mean, Median and Mode"
-      }
-    ],
-    "required_by": [
-      {
-        "id": "draw-it-before-you-describe-it",
-        "path": "fields/data-science/probability-statistics/describing-data/draw-it-before-you-describe-it.md",
-        "title": "Draw It Before You Describe It: Three Pictures of the Same Fifty Days"
-      }
-    ]
-  },
-  "fields/data-science/probability-statistics/describing-data/draw-it-before-you-describe-it.md": {
-    "prerequisites": [
-      {
-        "id": "data-types-and-frequency-tables",
-        "path": "fields/data-science/probability-statistics/describing-data/data-types-and-frequency-tables.md",
-        "title": "Mira's Notebook: What Kind of Data Is This, and How Do You Count It?"
+        "id": "samples-data-types-and-tables",
+        "path": "fields/data-science/probability-statistics/describing-data/samples-data-types-and-tables.md",
+        "title": "Samples, Data Types and Tables: Who You Asked, What Kind of Column, How to Count It"
       }
     ],
     "related": [
@@ -210,66 +147,13 @@
         "id": "two-things-moving-together",
         "path": "fields/data-science/probability-statistics/inference/two-things-moving-together.md",
         "title": "Two Things Moving Together: Correlation and the Line"
-      },
-      {
-        "id": "where-do-you-stand",
-        "path": "fields/data-science/probability-statistics/describing-data/where-do-you-stand.md",
-        "title": "Where Do You Stand? Percentiles, Z-Scores and the Box Plot"
       }
     ],
     "required_by": [
       {
-        "id": "the-number-on-the-tin",
-        "path": "fields/data-science/probability-statistics/describing-data/the-number-on-the-tin.md",
-        "title": "The Number on the Tin: Mean, Median and Mode"
-      }
-    ]
-  },
-  "fields/data-science/probability-statistics/describing-data/how-far-from-the-middle.md": {
-    "prerequisites": [
-      {
-        "id": "the-number-on-the-tin",
-        "path": "fields/data-science/probability-statistics/describing-data/the-number-on-the-tin.md",
-        "title": "The Number on the Tin: Mean, Median and Mode"
-      }
-    ],
-    "related": [
-      {
-        "id": "describing-data-technical-reference",
-        "path": "fields/data-science/probability-statistics/describing-data/technical-reference.md",
-        "title": "Describing Data, Technically: Definitions, Identities and Method Choices"
-      },
-      {
-        "id": "probability-statistics-series",
-        "path": "fields/data-science/probability-statistics/README.md",
-        "title": "Probability & Statistics, One Sip at a Time"
-      },
-      {
-        "id": "describing-data-quick-guide",
-        "path": "fields/data-science/probability-statistics/describing-data/quick-guide.md",
-        "title": "Summarise a Data Set: Which Number, Which Picture"
-      },
-      {
-        "id": "the-map-of-leaf-and-kettle",
-        "path": "fields/data-science/probability-statistics/the-map-of-leaf-and-kettle.md",
-        "title": "The Map of Leaf & Kettle: Every Idea So Far in One Walk Through the Shop"
-      },
-      {
-        "id": "two-things-moving-together",
-        "path": "fields/data-science/probability-statistics/inference/two-things-moving-together.md",
-        "title": "Two Things Moving Together: Correlation and the Line"
-      },
-      {
-        "id": "why-averages-behave",
-        "path": "fields/data-science/probability-statistics/inference/why-averages-behave.md",
-        "title": "Why Averages Behave: The Sip You Could Take a Thousand Times"
-      }
-    ],
-    "required_by": [
-      {
-        "id": "where-do-you-stand",
-        "path": "fields/data-science/probability-statistics/describing-data/where-do-you-stand.md",
-        "title": "Where Do You Stand? Percentiles, Z-Scores and the Box Plot"
+        "id": "spread-and-position",
+        "path": "fields/data-science/probability-statistics/describing-data/spread-and-position.md",
+        "title": "Spread and Position: Variance, n − 1, Percentiles, Z-Scores and the Box Plot"
       }
     ]
   },
@@ -282,135 +166,30 @@
         "title": "Describing Data, Technically: Definitions, Identities and Method Choices"
       },
       {
-        "id": "draw-it-before-you-describe-it",
-        "path": "fields/data-science/probability-statistics/describing-data/draw-it-before-you-describe-it.md",
-        "title": "Draw It Before You Describe It: Three Pictures of the Same Fifty Days"
+        "id": "pictures-and-the-middle",
+        "path": "fields/data-science/probability-statistics/describing-data/pictures-and-the-middle.md",
+        "title": "Pictures and the Middle: Histogram, Polygon, Ogive, and What 'Typical' Means"
       },
       {
-        "id": "how-far-from-the-middle",
-        "path": "fields/data-science/probability-statistics/describing-data/how-far-from-the-middle.md",
-        "title": "How Far From the Middle? One Question Behind Every Summary Number"
+        "id": "samples-data-types-and-tables",
+        "path": "fields/data-science/probability-statistics/describing-data/samples-data-types-and-tables.md",
+        "title": "Samples, Data Types and Tables: Who You Asked, What Kind of Column, How to Count It"
       },
       {
-        "id": "data-types-and-frequency-tables",
-        "path": "fields/data-science/probability-statistics/describing-data/data-types-and-frequency-tables.md",
-        "title": "Mira's Notebook: What Kind of Data Is This, and How Do You Count It?"
-      },
-      {
-        "id": "stir-the-pot-population-and-sampling",
-        "path": "fields/data-science/probability-statistics/describing-data/stir-the-pot-population-and-sampling.md",
-        "title": "Stir the Pot First: Population, Sample, and Why We Guess"
-      },
-      {
-        "id": "the-number-on-the-tin",
-        "path": "fields/data-science/probability-statistics/describing-data/the-number-on-the-tin.md",
-        "title": "The Number on the Tin: Mean, Median and Mode"
-      },
-      {
-        "id": "where-do-you-stand",
-        "path": "fields/data-science/probability-statistics/describing-data/where-do-you-stand.md",
-        "title": "Where Do You Stand? Percentiles, Z-Scores and the Box Plot"
+        "id": "spread-and-position",
+        "path": "fields/data-science/probability-statistics/describing-data/spread-and-position.md",
+        "title": "Spread and Position: Variance, n − 1, Percentiles, Z-Scores and the Box Plot"
       }
     ],
     "required_by": []
   },
-  "fields/data-science/probability-statistics/describing-data/stir-the-pot-population-and-sampling.md": {
+  "fields/data-science/probability-statistics/describing-data/samples-data-types-and-tables.md": {
     "prerequisites": [],
     "related": [
       {
-        "id": "probability-statistics-series",
-        "path": "fields/data-science/probability-statistics/README.md",
-        "title": "Probability & Statistics, One Sip at a Time"
-      },
-      {
-        "id": "describing-data-quick-guide",
-        "path": "fields/data-science/probability-statistics/describing-data/quick-guide.md",
-        "title": "Summarise a Data Set: Which Number, Which Picture"
-      },
-      {
-        "id": "the-map-of-leaf-and-kettle",
-        "path": "fields/data-science/probability-statistics/the-map-of-leaf-and-kettle.md",
-        "title": "The Map of Leaf & Kettle: Every Idea So Far in One Walk Through the Shop"
-      },
-      {
-        "id": "why-averages-behave",
-        "path": "fields/data-science/probability-statistics/inference/why-averages-behave.md",
-        "title": "Why Averages Behave: The Sip You Could Take a Thousand Times"
-      }
-    ],
-    "required_by": [
-      {
-        "id": "data-types-and-frequency-tables",
-        "path": "fields/data-science/probability-statistics/describing-data/data-types-and-frequency-tables.md",
-        "title": "Mira's Notebook: What Kind of Data Is This, and How Do You Count It?"
-      },
-      {
-        "id": "describing-data-technical-reference",
-        "path": "fields/data-science/probability-statistics/describing-data/technical-reference.md",
-        "title": "Describing Data, Technically: Definitions, Identities and Method Choices"
-      }
-    ]
-  },
-  "fields/data-science/probability-statistics/describing-data/technical-reference.md": {
-    "prerequisites": [
-      {
-        "id": "stir-the-pot-population-and-sampling",
-        "path": "fields/data-science/probability-statistics/describing-data/stir-the-pot-population-and-sampling.md",
-        "title": "Stir the Pot First: Population, Sample, and Why We Guess"
-      }
-    ],
-    "related": [
-      {
-        "id": "draw-it-before-you-describe-it",
-        "path": "fields/data-science/probability-statistics/describing-data/draw-it-before-you-describe-it.md",
-        "title": "Draw It Before You Describe It: Three Pictures of the Same Fifty Days"
-      },
-      {
-        "id": "how-far-from-the-middle",
-        "path": "fields/data-science/probability-statistics/describing-data/how-far-from-the-middle.md",
-        "title": "How Far From the Middle? One Question Behind Every Summary Number"
-      },
-      {
-        "id": "data-types-and-frequency-tables",
-        "path": "fields/data-science/probability-statistics/describing-data/data-types-and-frequency-tables.md",
-        "title": "Mira's Notebook: What Kind of Data Is This, and How Do You Count It?"
-      },
-      {
-        "id": "describing-data-quick-guide",
-        "path": "fields/data-science/probability-statistics/describing-data/quick-guide.md",
-        "title": "Summarise a Data Set: Which Number, Which Picture"
-      },
-      {
-        "id": "the-number-on-the-tin",
-        "path": "fields/data-science/probability-statistics/describing-data/the-number-on-the-tin.md",
-        "title": "The Number on the Tin: Mean, Median and Mode"
-      },
-      {
-        "id": "where-do-you-stand",
-        "path": "fields/data-science/probability-statistics/describing-data/where-do-you-stand.md",
-        "title": "Where Do You Stand? Percentiles, Z-Scores and the Box Plot"
-      }
-    ],
-    "required_by": []
-  },
-  "fields/data-science/probability-statistics/describing-data/the-number-on-the-tin.md": {
-    "prerequisites": [
-      {
-        "id": "draw-it-before-you-describe-it",
-        "path": "fields/data-science/probability-statistics/describing-data/draw-it-before-you-describe-it.md",
-        "title": "Draw It Before You Describe It: Three Pictures of the Same Fifty Days"
-      }
-    ],
-    "related": [
-      {
-        "id": "describing-data-technical-reference",
-        "path": "fields/data-science/probability-statistics/describing-data/technical-reference.md",
-        "title": "Describing Data, Technically: Definitions, Identities and Method Choices"
-      },
-      {
-        "id": "data-types-and-frequency-tables",
-        "path": "fields/data-science/probability-statistics/describing-data/data-types-and-frequency-tables.md",
-        "title": "Mira's Notebook: What Kind of Data Is This, and How Do You Count It?"
+        "id": "averages-and-intervals",
+        "path": "fields/data-science/probability-statistics/inference/averages-and-intervals.md",
+        "title": "Averages and Intervals: Why Averages Behave and How Sure You Can Be"
       },
       {
         "id": "probability-statistics-series",
@@ -430,30 +209,35 @@
     ],
     "required_by": [
       {
-        "id": "how-far-from-the-middle",
-        "path": "fields/data-science/probability-statistics/describing-data/how-far-from-the-middle.md",
-        "title": "How Far From the Middle? One Question Behind Every Summary Number"
-      }
-    ]
-  },
-  "fields/data-science/probability-statistics/describing-data/where-do-you-stand.md": {
-    "prerequisites": [
-      {
-        "id": "how-far-from-the-middle",
-        "path": "fields/data-science/probability-statistics/describing-data/how-far-from-the-middle.md",
-        "title": "How Far From the Middle? One Question Behind Every Summary Number"
-      }
-    ],
-    "related": [
+        "id": "pictures-and-the-middle",
+        "path": "fields/data-science/probability-statistics/describing-data/pictures-and-the-middle.md",
+        "title": "Pictures and the Middle: Histogram, Polygon, Ogive, and What 'Typical' Means"
+      },
       {
         "id": "describing-data-technical-reference",
         "path": "fields/data-science/probability-statistics/describing-data/technical-reference.md",
         "title": "Describing Data, Technically: Definitions, Identities and Method Choices"
+      }
+    ]
+  },
+  "fields/data-science/probability-statistics/describing-data/spread-and-position.md": {
+    "prerequisites": [
+      {
+        "id": "pictures-and-the-middle",
+        "path": "fields/data-science/probability-statistics/describing-data/pictures-and-the-middle.md",
+        "title": "Pictures and the Middle: Histogram, Polygon, Ogive, and What 'Typical' Means"
+      }
+    ],
+    "related": [
+      {
+        "id": "averages-and-intervals",
+        "path": "fields/data-science/probability-statistics/inference/averages-and-intervals.md",
+        "title": "Averages and Intervals: Why Averages Behave and How Sure You Can Be"
       },
       {
-        "id": "draw-it-before-you-describe-it",
-        "path": "fields/data-science/probability-statistics/describing-data/draw-it-before-you-describe-it.md",
-        "title": "Draw It Before You Describe It: Three Pictures of the Same Fifty Days"
+        "id": "describing-data-technical-reference",
+        "path": "fields/data-science/probability-statistics/describing-data/technical-reference.md",
+        "title": "Describing Data, Technically: Definitions, Identities and Method Choices"
       },
       {
         "id": "probability-statistics-series",
@@ -489,12 +273,39 @@
       }
     ]
   },
-  "fields/data-science/probability-statistics/inference/how-sure-are-you.md": {
+  "fields/data-science/probability-statistics/describing-data/technical-reference.md": {
     "prerequisites": [
       {
-        "id": "why-averages-behave",
-        "path": "fields/data-science/probability-statistics/inference/why-averages-behave.md",
-        "title": "Why Averages Behave: The Sip You Could Take a Thousand Times"
+        "id": "samples-data-types-and-tables",
+        "path": "fields/data-science/probability-statistics/describing-data/samples-data-types-and-tables.md",
+        "title": "Samples, Data Types and Tables: Who You Asked, What Kind of Column, How to Count It"
+      }
+    ],
+    "related": [
+      {
+        "id": "pictures-and-the-middle",
+        "path": "fields/data-science/probability-statistics/describing-data/pictures-and-the-middle.md",
+        "title": "Pictures and the Middle: Histogram, Polygon, Ogive, and What 'Typical' Means"
+      },
+      {
+        "id": "spread-and-position",
+        "path": "fields/data-science/probability-statistics/describing-data/spread-and-position.md",
+        "title": "Spread and Position: Variance, n − 1, Percentiles, Z-Scores and the Box Plot"
+      },
+      {
+        "id": "describing-data-quick-guide",
+        "path": "fields/data-science/probability-statistics/describing-data/quick-guide.md",
+        "title": "Summarise a Data Set: Which Number, Which Picture"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/data-science/probability-statistics/inference/averages-and-intervals.md": {
+    "prerequisites": [
+      {
+        "id": "the-bell-curve",
+        "path": "fields/data-science/probability-statistics/probability/the-bell-curve.md",
+        "title": "The Bell Curve: Probability as Area, and One Ruler for Every Bell"
       }
     ],
     "related": [
@@ -504,14 +315,19 @@
         "title": "From a Sample to a Statement: Intervals, Tests and Lines"
       },
       {
-        "id": "inference-technical-reference",
-        "path": "fields/data-science/probability-statistics/inference/technical-reference.md",
-        "title": "Inference, Technically: Sampling Distributions, Intervals, Tests and Regression"
-      },
-      {
         "id": "probability-statistics-series",
         "path": "fields/data-science/probability-statistics/README.md",
         "title": "Probability & Statistics, One Sip at a Time"
+      },
+      {
+        "id": "samples-data-types-and-tables",
+        "path": "fields/data-science/probability-statistics/describing-data/samples-data-types-and-tables.md",
+        "title": "Samples, Data Types and Tables: Who You Asked, What Kind of Column, How to Count It"
+      },
+      {
+        "id": "spread-and-position",
+        "path": "fields/data-science/probability-statistics/describing-data/spread-and-position.md",
+        "title": "Spread and Position: Variance, n − 1, Percentiles, Z-Scores and the Box Plot"
       }
     ],
     "required_by": [
@@ -519,6 +335,11 @@
         "id": "the-courtroom-for-numbers",
         "path": "fields/data-science/probability-statistics/inference/the-courtroom-for-numbers.md",
         "title": "The Courtroom for Numbers: Could Plain Luck Do This?"
+      },
+      {
+        "id": "inference-technical-reference",
+        "path": "fields/data-science/probability-statistics/inference/technical-reference.md",
+        "title": "Inference, Technically: Sampling Distributions, Intervals, Tests and Regression"
       }
     ]
   },
@@ -526,9 +347,9 @@
     "prerequisites": [],
     "related": [
       {
-        "id": "how-sure-are-you",
-        "path": "fields/data-science/probability-statistics/inference/how-sure-are-you.md",
-        "title": "How Sure Are You? Confidence Intervals"
+        "id": "averages-and-intervals",
+        "path": "fields/data-science/probability-statistics/inference/averages-and-intervals.md",
+        "title": "Averages and Intervals: Why Averages Behave and How Sure You Can Be"
       },
       {
         "id": "inference-technical-reference",
@@ -544,11 +365,6 @@
         "id": "two-things-moving-together",
         "path": "fields/data-science/probability-statistics/inference/two-things-moving-together.md",
         "title": "Two Things Moving Together: Correlation and the Line"
-      },
-      {
-        "id": "why-averages-behave",
-        "path": "fields/data-science/probability-statistics/inference/why-averages-behave.md",
-        "title": "Why Averages Behave: The Sip You Could Take a Thousand Times"
       }
     ],
     "required_by": []
@@ -556,9 +372,9 @@
   "fields/data-science/probability-statistics/inference/technical-reference.md": {
     "prerequisites": [
       {
-        "id": "why-averages-behave",
-        "path": "fields/data-science/probability-statistics/inference/why-averages-behave.md",
-        "title": "Why Averages Behave: The Sip You Could Take a Thousand Times"
+        "id": "averages-and-intervals",
+        "path": "fields/data-science/probability-statistics/inference/averages-and-intervals.md",
+        "title": "Averages and Intervals: Why Averages Behave and How Sure You Can Be"
       }
     ],
     "related": [
@@ -566,11 +382,6 @@
         "id": "inference-quick-guide",
         "path": "fields/data-science/probability-statistics/inference/quick-guide.md",
         "title": "From a Sample to a Statement: Intervals, Tests and Lines"
-      },
-      {
-        "id": "how-sure-are-you",
-        "path": "fields/data-science/probability-statistics/inference/how-sure-are-you.md",
-        "title": "How Sure Are You? Confidence Intervals"
       },
       {
         "id": "the-courtroom-for-numbers",
@@ -588,9 +399,9 @@
   "fields/data-science/probability-statistics/inference/the-courtroom-for-numbers.md": {
     "prerequisites": [
       {
-        "id": "how-sure-are-you",
-        "path": "fields/data-science/probability-statistics/inference/how-sure-are-you.md",
-        "title": "How Sure Are You? Confidence Intervals"
+        "id": "averages-and-intervals",
+        "path": "fields/data-science/probability-statistics/inference/averages-and-intervals.md",
+        "title": "Averages and Intervals: Why Averages Behave and How Sure You Can Be"
       }
     ],
     "related": [
@@ -608,11 +419,6 @@
         "id": "probability-statistics-series",
         "path": "fields/data-science/probability-statistics/README.md",
         "title": "Probability & Statistics, One Sip at a Time"
-      },
-      {
-        "id": "why-averages-behave",
-        "path": "fields/data-science/probability-statistics/inference/why-averages-behave.md",
-        "title": "Why Averages Behave: The Sip You Could Take a Thousand Times"
       }
     ],
     "required_by": [
@@ -633,19 +439,9 @@
     ],
     "related": [
       {
-        "id": "draw-it-before-you-describe-it",
-        "path": "fields/data-science/probability-statistics/describing-data/draw-it-before-you-describe-it.md",
-        "title": "Draw It Before You Describe It: Three Pictures of the Same Fifty Days"
-      },
-      {
         "id": "inference-quick-guide",
         "path": "fields/data-science/probability-statistics/inference/quick-guide.md",
         "title": "From a Sample to a Statement: Intervals, Tests and Lines"
-      },
-      {
-        "id": "how-far-from-the-middle",
-        "path": "fields/data-science/probability-statistics/describing-data/how-far-from-the-middle.md",
-        "title": "How Far From the Middle? One Question Behind Every Summary Number"
       },
       {
         "id": "inference-technical-reference",
@@ -653,72 +449,29 @@
         "title": "Inference, Technically: Sampling Distributions, Intervals, Tests and Regression"
       },
       {
+        "id": "pictures-and-the-middle",
+        "path": "fields/data-science/probability-statistics/describing-data/pictures-and-the-middle.md",
+        "title": "Pictures and the Middle: Histogram, Polygon, Ogive, and What 'Typical' Means"
+      },
+      {
         "id": "probability-statistics-series",
         "path": "fields/data-science/probability-statistics/README.md",
         "title": "Probability & Statistics, One Sip at a Time"
       },
       {
-        "id": "where-do-you-stand",
-        "path": "fields/data-science/probability-statistics/describing-data/where-do-you-stand.md",
-        "title": "Where Do You Stand? Percentiles, Z-Scores and the Box Plot"
+        "id": "spread-and-position",
+        "path": "fields/data-science/probability-statistics/describing-data/spread-and-position.md",
+        "title": "Spread and Position: Variance, n − 1, Percentiles, Z-Scores and the Box Plot"
       }
     ],
     "required_by": []
   },
-  "fields/data-science/probability-statistics/inference/why-averages-behave.md": {
-    "prerequisites": [
-      {
-        "id": "the-bell-curve",
-        "path": "fields/data-science/probability-statistics/probability/the-bell-curve.md",
-        "title": "The Bell Curve: Probability as Area, and One Ruler for Every Bell"
-      }
-    ],
-    "related": [
-      {
-        "id": "inference-quick-guide",
-        "path": "fields/data-science/probability-statistics/inference/quick-guide.md",
-        "title": "From a Sample to a Statement: Intervals, Tests and Lines"
-      },
-      {
-        "id": "how-far-from-the-middle",
-        "path": "fields/data-science/probability-statistics/describing-data/how-far-from-the-middle.md",
-        "title": "How Far From the Middle? One Question Behind Every Summary Number"
-      },
-      {
-        "id": "probability-statistics-series",
-        "path": "fields/data-science/probability-statistics/README.md",
-        "title": "Probability & Statistics, One Sip at a Time"
-      },
-      {
-        "id": "stir-the-pot-population-and-sampling",
-        "path": "fields/data-science/probability-statistics/describing-data/stir-the-pot-population-and-sampling.md",
-        "title": "Stir the Pot First: Population, Sample, and Why We Guess"
-      },
-      {
-        "id": "the-courtroom-for-numbers",
-        "path": "fields/data-science/probability-statistics/inference/the-courtroom-for-numbers.md",
-        "title": "The Courtroom for Numbers: Could Plain Luck Do This?"
-      }
-    ],
-    "required_by": [
-      {
-        "id": "how-sure-are-you",
-        "path": "fields/data-science/probability-statistics/inference/how-sure-are-you.md",
-        "title": "How Sure Are You? Confidence Intervals"
-      },
-      {
-        "id": "inference-technical-reference",
-        "path": "fields/data-science/probability-statistics/inference/technical-reference.md",
-        "title": "Inference, Technically: Sampling Distributions, Intervals, Tests and Regression"
-      }
-    ]
-  },
   "fields/data-science/probability-statistics/probability/counting-and-conditioning.md": {
     "prerequisites": [
       {
-        "id": "where-do-you-stand",
-        "path": "fields/data-science/probability-statistics/describing-data/where-do-you-stand.md",
-        "title": "Where Do You Stand? Percentiles, Z-Scores and the Box Plot"
+        "id": "spread-and-position",
+        "path": "fields/data-science/probability-statistics/describing-data/spread-and-position.md",
+        "title": "Spread and Position: Variance, n − 1, Percentiles, Z-Scores and the Box Plot"
       }
     ],
     "related": [
@@ -842,14 +595,14 @@
     ],
     "related": [
       {
-        "id": "draw-it-before-you-describe-it",
-        "path": "fields/data-science/probability-statistics/describing-data/draw-it-before-you-describe-it.md",
-        "title": "Draw It Before You Describe It: Three Pictures of the Same Fifty Days"
-      },
-      {
         "id": "probability-quick-guide",
         "path": "fields/data-science/probability-statistics/probability/quick-guide.md",
         "title": "Pick and Compute the Right Probability Model"
+      },
+      {
+        "id": "pictures-and-the-middle",
+        "path": "fields/data-science/probability-statistics/describing-data/pictures-and-the-middle.md",
+        "title": "Pictures and the Middle: Histogram, Polygon, Ogive, and What 'Typical' Means"
       },
       {
         "id": "probability-statistics-series",
@@ -862,16 +615,16 @@
         "title": "Probability, Technically: Definitions, Identities and Assumptions"
       },
       {
-        "id": "where-do-you-stand",
-        "path": "fields/data-science/probability-statistics/describing-data/where-do-you-stand.md",
-        "title": "Where Do You Stand? Percentiles, Z-Scores and the Box Plot"
+        "id": "spread-and-position",
+        "path": "fields/data-science/probability-statistics/describing-data/spread-and-position.md",
+        "title": "Spread and Position: Variance, n − 1, Percentiles, Z-Scores and the Box Plot"
       }
     ],
     "required_by": [
       {
-        "id": "why-averages-behave",
-        "path": "fields/data-science/probability-statistics/inference/why-averages-behave.md",
-        "title": "Why Averages Behave: The Sip You Could Take a Thousand Times"
+        "id": "averages-and-intervals",
+        "path": "fields/data-science/probability-statistics/inference/averages-and-intervals.md",
+        "title": "Averages and Intervals: Why Averages Behave and How Sure You Can Be"
       }
     ]
   },
@@ -879,19 +632,9 @@
     "prerequisites": [],
     "related": [
       {
-        "id": "draw-it-before-you-describe-it",
-        "path": "fields/data-science/probability-statistics/describing-data/draw-it-before-you-describe-it.md",
-        "title": "Draw It Before You Describe It: Three Pictures of the Same Fifty Days"
-      },
-      {
-        "id": "how-far-from-the-middle",
-        "path": "fields/data-science/probability-statistics/describing-data/how-far-from-the-middle.md",
-        "title": "How Far From the Middle? One Question Behind Every Summary Number"
-      },
-      {
-        "id": "data-types-and-frequency-tables",
-        "path": "fields/data-science/probability-statistics/describing-data/data-types-and-frequency-tables.md",
-        "title": "Mira's Notebook: What Kind of Data Is This, and How Do You Count It?"
+        "id": "pictures-and-the-middle",
+        "path": "fields/data-science/probability-statistics/describing-data/pictures-and-the-middle.md",
+        "title": "Pictures and the Middle: Histogram, Polygon, Ogive, and What 'Typical' Means"
       },
       {
         "id": "probability-statistics-series",
@@ -899,19 +642,14 @@
         "title": "Probability & Statistics, One Sip at a Time"
       },
       {
-        "id": "stir-the-pot-population-and-sampling",
-        "path": "fields/data-science/probability-statistics/describing-data/stir-the-pot-population-and-sampling.md",
-        "title": "Stir the Pot First: Population, Sample, and Why We Guess"
+        "id": "samples-data-types-and-tables",
+        "path": "fields/data-science/probability-statistics/describing-data/samples-data-types-and-tables.md",
+        "title": "Samples, Data Types and Tables: Who You Asked, What Kind of Column, How to Count It"
       },
       {
-        "id": "the-number-on-the-tin",
-        "path": "fields/data-science/probability-statistics/describing-data/the-number-on-the-tin.md",
-        "title": "The Number on the Tin: Mean, Median and Mode"
-      },
-      {
-        "id": "where-do-you-stand",
-        "path": "fields/data-science/probability-statistics/describing-data/where-do-you-stand.md",
-        "title": "Where Do You Stand? Percentiles, Z-Scores and the Box Plot"
+        "id": "spread-and-position",
+        "path": "fields/data-science/probability-statistics/describing-data/spread-and-position.md",
+        "title": "Spread and Position: Variance, n − 1, Percentiles, Z-Scores and the Box Plot"
       }
     ],
     "required_by": []

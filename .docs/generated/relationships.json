@@ -119,6 +119,26 @@
       "ansible-cheatsheet"
     ]
   },
+  "averages-and-intervals": {
+    "prerequisite_of": [
+      "inference-technical-reference",
+      "the-courtroom-for-numbers"
+    ],
+    "prerequisites": [
+      "the-bell-curve"
+    ],
+    "related": [
+      "inference-technical-reference",
+      "probability-statistics-series",
+      "samples-data-types-and-tables",
+      "spread-and-position"
+    ],
+    "related_by": [
+      "inference-quick-guide",
+      "inference-technical-reference",
+      "probability-statistics-series"
+    ]
+  },
   "bias-variance-trade-off": {
     "prerequisite_of": [],
     "prerequisites": [],
@@ -179,7 +199,7 @@
       "probability-technical-reference"
     ],
     "prerequisites": [
-      "where-do-you-stand"
+      "spread-and-position"
     ],
     "related": [
       "probability-statistics-series",
@@ -213,27 +233,6 @@
     "related": [],
     "related_by": []
   },
-  "data-types-and-frequency-tables": {
-    "prerequisite_of": [
-      "draw-it-before-you-describe-it"
-    ],
-    "prerequisites": [
-      "stir-the-pot-population-and-sampling"
-    ],
-    "related": [
-      "probability-statistics-series",
-      "stir-the-pot-population-and-sampling"
-    ],
-    "related_by": [
-      "describing-data-quick-guide",
-      "describing-data-technical-reference",
-      "draw-it-before-you-describe-it",
-      "probability-statistics-series",
-      "stir-the-pot-population-and-sampling",
-      "the-map-of-leaf-and-kettle",
-      "the-number-on-the-tin"
-    ]
-  },
   "deep-learning-basics": {
     "prerequisite_of": [
       "sequence-models"
@@ -248,13 +247,10 @@
     "prerequisite_of": [],
     "prerequisites": [],
     "related": [
-      "data-types-and-frequency-tables",
       "describing-data-technical-reference",
-      "draw-it-before-you-describe-it",
-      "how-far-from-the-middle",
-      "stir-the-pot-population-and-sampling",
-      "the-number-on-the-tin",
-      "where-do-you-stand"
+      "pictures-and-the-middle",
+      "samples-data-types-and-tables",
+      "spread-and-position"
     ],
     "related_by": [
       "describing-data-technical-reference"
@@ -263,18 +259,19 @@
   "describing-data-technical-reference": {
     "prerequisite_of": [],
     "prerequisites": [
-      "stir-the-pot-population-and-sampling"
+      "samples-data-types-and-tables"
     ],
     "related": [
-      "data-types-and-frequency-tables",
       "describing-data-quick-guide",
-      "draw-it-before-you-describe-it",
-      "how-far-from-the-middle",
-      "the-number-on-the-tin",
-      "where-do-you-stand"
+      "pictures-and-the-middle",
+      "samples-data-types-and-tables",
+      "spread-and-position"
     ],
     "related_by": [
-      "describing-data-quick-guide"
+      "describing-data-quick-guide",
+      "pictures-and-the-middle",
+      "samples-data-types-and-tables",
+      "spread-and-position"
     ]
   },
   "digital-image-processing-overview": {
@@ -403,29 +400,6 @@
     "related_by": [
       "k3s-vs-kubeadm",
       "oomkilled-with-memory-to-spare"
-    ]
-  },
-  "draw-it-before-you-describe-it": {
-    "prerequisite_of": [
-      "the-number-on-the-tin"
-    ],
-    "prerequisites": [
-      "data-types-and-frequency-tables"
-    ],
-    "related": [
-      "data-types-and-frequency-tables",
-      "probability-statistics-series",
-      "the-number-on-the-tin"
-    ],
-    "related_by": [
-      "describing-data-quick-guide",
-      "describing-data-technical-reference",
-      "probability-statistics-series",
-      "the-bell-curve",
-      "the-map-of-leaf-and-kettle",
-      "the-number-on-the-tin",
-      "two-things-moving-together",
-      "where-do-you-stand"
     ]
   },
   "encoder-decoder-machine-translation": {
@@ -565,42 +539,6 @@
     "related": [],
     "related_by": []
   },
-  "how-far-from-the-middle": {
-    "prerequisite_of": [
-      "where-do-you-stand"
-    ],
-    "prerequisites": [
-      "the-number-on-the-tin"
-    ],
-    "related": [
-      "probability-statistics-series",
-      "the-map-of-leaf-and-kettle"
-    ],
-    "related_by": [
-      "describing-data-quick-guide",
-      "describing-data-technical-reference",
-      "probability-statistics-series",
-      "the-map-of-leaf-and-kettle",
-      "two-things-moving-together",
-      "why-averages-behave"
-    ]
-  },
-  "how-sure-are-you": {
-    "prerequisite_of": [
-      "the-courtroom-for-numbers"
-    ],
-    "prerequisites": [
-      "why-averages-behave"
-    ],
-    "related": [
-      "probability-statistics-series"
-    ],
-    "related_by": [
-      "inference-quick-guide",
-      "inference-technical-reference",
-      "probability-statistics-series"
-    ]
-  },
   "hpc-systems-overview": {
     "prerequisite_of": [],
     "prerequisites": [],
@@ -621,11 +559,10 @@
     "prerequisite_of": [],
     "prerequisites": [],
     "related": [
-      "how-sure-are-you",
+      "averages-and-intervals",
       "inference-technical-reference",
       "the-courtroom-for-numbers",
-      "two-things-moving-together",
-      "why-averages-behave"
+      "two-things-moving-together"
     ],
     "related_by": [
       "inference-technical-reference"
@@ -634,16 +571,19 @@
   "inference-technical-reference": {
     "prerequisite_of": [],
     "prerequisites": [
-      "why-averages-behave"
+      "averages-and-intervals"
     ],
     "related": [
-      "how-sure-are-you",
+      "averages-and-intervals",
       "inference-quick-guide",
       "the-courtroom-for-numbers",
       "two-things-moving-together"
     ],
     "related_by": [
-      "inference-quick-guide"
+      "averages-and-intervals",
+      "inference-quick-guide",
+      "the-courtroom-for-numbers",
+      "two-things-moving-together"
     ]
   },
   "isolating-gpu-workloads": {
@@ -1257,6 +1197,26 @@
       "openmp-open-mpi-name-mixup"
     ]
   },
+  "pictures-and-the-middle": {
+    "prerequisite_of": [
+      "spread-and-position"
+    ],
+    "prerequisites": [
+      "samples-data-types-and-tables"
+    ],
+    "related": [
+      "describing-data-technical-reference",
+      "probability-statistics-series"
+    ],
+    "related_by": [
+      "describing-data-quick-guide",
+      "describing-data-technical-reference",
+      "probability-statistics-series",
+      "the-bell-curve",
+      "the-map-of-leaf-and-kettle",
+      "two-things-moving-together"
+    ]
+  },
   "polite-api-server-monitoring": {
     "prerequisite_of": [],
     "prerequisites": [
@@ -1293,36 +1253,28 @@
     "prerequisite_of": [],
     "prerequisites": [],
     "related": [
+      "averages-and-intervals",
       "counting-and-conditioning",
-      "data-types-and-frequency-tables",
-      "draw-it-before-you-describe-it",
       "expectation-binomial-poisson",
-      "how-far-from-the-middle",
-      "how-sure-are-you",
-      "stir-the-pot-population-and-sampling",
+      "pictures-and-the-middle",
+      "samples-data-types-and-tables",
+      "spread-and-position",
       "the-bell-curve",
       "the-courtroom-for-numbers",
       "the-map-of-leaf-and-kettle",
-      "the-number-on-the-tin",
-      "two-things-moving-together",
-      "where-do-you-stand",
-      "why-averages-behave"
+      "two-things-moving-together"
     ],
     "related_by": [
+      "averages-and-intervals",
       "counting-and-conditioning",
-      "data-types-and-frequency-tables",
-      "draw-it-before-you-describe-it",
       "expectation-binomial-poisson",
-      "how-far-from-the-middle",
-      "how-sure-are-you",
-      "stir-the-pot-population-and-sampling",
+      "pictures-and-the-middle",
+      "samples-data-types-and-tables",
+      "spread-and-position",
       "the-bell-curve",
       "the-courtroom-for-numbers",
       "the-map-of-leaf-and-kettle",
-      "the-number-on-the-tin",
-      "two-things-moving-together",
-      "where-do-you-stand",
-      "why-averages-behave"
+      "two-things-moving-together"
     ]
   },
   "probability-technical-reference": {
@@ -1390,6 +1342,24 @@
     "prerequisites": [],
     "related": [],
     "related_by": []
+  },
+  "samples-data-types-and-tables": {
+    "prerequisite_of": [
+      "describing-data-technical-reference",
+      "pictures-and-the-middle"
+    ],
+    "prerequisites": [],
+    "related": [
+      "describing-data-technical-reference",
+      "probability-statistics-series"
+    ],
+    "related_by": [
+      "averages-and-intervals",
+      "describing-data-quick-guide",
+      "describing-data-technical-reference",
+      "probability-statistics-series",
+      "the-map-of-leaf-and-kettle"
+    ]
   },
   "sequence-models": {
     "prerequisite_of": [
@@ -2079,35 +2049,38 @@
       "slurm-smoke-regression-suites"
     ]
   },
-  "stir-the-pot-population-and-sampling": {
+  "spread-and-position": {
     "prerequisite_of": [
-      "data-types-and-frequency-tables",
-      "describing-data-technical-reference"
+      "counting-and-conditioning"
     ],
-    "prerequisites": [],
+    "prerequisites": [
+      "pictures-and-the-middle"
+    ],
     "related": [
-      "data-types-and-frequency-tables",
+      "describing-data-technical-reference",
       "probability-statistics-series"
     ],
     "related_by": [
-      "data-types-and-frequency-tables",
+      "averages-and-intervals",
       "describing-data-quick-guide",
+      "describing-data-technical-reference",
       "probability-statistics-series",
+      "the-bell-curve",
       "the-map-of-leaf-and-kettle",
-      "why-averages-behave"
+      "two-things-moving-together"
     ]
   },
   "the-bell-curve": {
     "prerequisite_of": [
-      "why-averages-behave"
+      "averages-and-intervals"
     ],
     "prerequisites": [
       "expectation-binomial-poisson"
     ],
     "related": [
-      "draw-it-before-you-describe-it",
+      "pictures-and-the-middle",
       "probability-statistics-series",
-      "where-do-you-stand"
+      "spread-and-position"
     ],
     "related_by": [
       "probability-quick-guide",
@@ -2120,11 +2093,11 @@
       "two-things-moving-together"
     ],
     "prerequisites": [
-      "how-sure-are-you"
+      "averages-and-intervals"
     ],
     "related": [
-      "probability-statistics-series",
-      "why-averages-behave"
+      "inference-technical-reference",
+      "probability-statistics-series"
     ],
     "related_by": [
       "inference-quick-guide",
@@ -2136,38 +2109,13 @@
     "prerequisite_of": [],
     "prerequisites": [],
     "related": [
-      "data-types-and-frequency-tables",
-      "draw-it-before-you-describe-it",
-      "how-far-from-the-middle",
+      "pictures-and-the-middle",
       "probability-statistics-series",
-      "stir-the-pot-population-and-sampling",
-      "the-number-on-the-tin",
-      "where-do-you-stand"
+      "samples-data-types-and-tables",
+      "spread-and-position"
     ],
     "related_by": [
-      "how-far-from-the-middle",
-      "probability-statistics-series",
-      "where-do-you-stand"
-    ]
-  },
-  "the-number-on-the-tin": {
-    "prerequisite_of": [
-      "how-far-from-the-middle"
-    ],
-    "prerequisites": [
-      "draw-it-before-you-describe-it"
-    ],
-    "related": [
-      "data-types-and-frequency-tables",
-      "draw-it-before-you-describe-it",
       "probability-statistics-series"
-    ],
-    "related_by": [
-      "describing-data-quick-guide",
-      "describing-data-technical-reference",
-      "draw-it-before-you-describe-it",
-      "probability-statistics-series",
-      "the-map-of-leaf-and-kettle"
     ]
   },
   "threat-model-and-first-launch": {
@@ -2190,10 +2138,10 @@
       "the-courtroom-for-numbers"
     ],
     "related": [
-      "draw-it-before-you-describe-it",
-      "how-far-from-the-middle",
+      "inference-technical-reference",
+      "pictures-and-the-middle",
       "probability-statistics-series",
-      "where-do-you-stand"
+      "spread-and-position"
     ],
     "related_by": [
       "inference-quick-guide",
@@ -2290,46 +2238,6 @@
       "gpu-allocation-vs-utilization"
     ],
     "related_by": []
-  },
-  "where-do-you-stand": {
-    "prerequisite_of": [
-      "counting-and-conditioning"
-    ],
-    "prerequisites": [
-      "how-far-from-the-middle"
-    ],
-    "related": [
-      "draw-it-before-you-describe-it",
-      "probability-statistics-series",
-      "the-map-of-leaf-and-kettle"
-    ],
-    "related_by": [
-      "describing-data-quick-guide",
-      "describing-data-technical-reference",
-      "probability-statistics-series",
-      "the-bell-curve",
-      "the-map-of-leaf-and-kettle",
-      "two-things-moving-together"
-    ]
-  },
-  "why-averages-behave": {
-    "prerequisite_of": [
-      "how-sure-are-you",
-      "inference-technical-reference"
-    ],
-    "prerequisites": [
-      "the-bell-curve"
-    ],
-    "related": [
-      "how-far-from-the-middle",
-      "probability-statistics-series",
-      "stir-the-pot-population-and-sampling"
-    ],
-    "related_by": [
-      "inference-quick-guide",
-      "probability-statistics-series",
-      "the-courtroom-for-numbers"
-    ]
   },
   "your-kubeconfig-is-a-house-key": {
     "prerequisite_of": [],

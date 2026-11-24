@@ -134,7 +134,7 @@ for n in (10, 1000, 100000):
 100000 pulls: mean 4.485  share of zeros 0.502
 ```
 
-Ten pulls are a full coin off; a hundred thousand are nearly 4.5. Why the average settles, and how fast, is [Why Averages Behave](/fields/data-science/probability-statistics/inference/why-averages-behave.md).
+Ten pulls are a full coin off; a hundred thousand are nearly 4.5. Why the average settles, and how fast, is [Averages and Intervals](/fields/data-science/probability-statistics/inference/averages-and-intervals.md).
 
 ### Shifting, scaling and adding
 

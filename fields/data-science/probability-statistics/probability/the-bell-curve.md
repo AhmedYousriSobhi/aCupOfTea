@@ -15,8 +15,8 @@ relations:
     - expectation-binomial-poisson
   related:
     - probability-statistics-series
-    - draw-it-before-you-describe-it
-    - where-do-you-stand
+    - pictures-and-the-middle
+    - spread-and-position
 ---
 
 # The Bell Curve: Probability as Area, and One Ruler for Every Bell
@@ -90,7 +90,7 @@ n = 30  (one # = 0.5%)
 
 With 30 flips there are 31 possible counts, each with its own probability. A weight has **infinitely many** possible values between 99 and 101; share 100% among them and each gets nothing: `P(weight = exactly 100.000...) = 0`. So ask about **ranges**: draw the hill and let the **area under it** be the probability. The whole area is 1. The height is not a probability but a *density*: how crowded the chances are near that spot.
 
-This is the histogram of [part 3](/fields/data-science/probability-statistics/describing-data/draw-it-before-you-describe-it.md) taken to its end: a bar's area was the share of the data, and with infinitely thin bars the bars become a curve.
+This is the histogram of [part 3](/fields/data-science/probability-statistics/describing-data/pictures-and-the-middle.md) taken to its end: a bar's area was the share of the data, and with infinitely thin bars the bars become a curve.
 
 ### Two dials, one bell
 
@@ -98,14 +98,14 @@ The normal distribution has exactly two dials (NIST calls them the **location** 
 
 | Dial | What it does | You already know it as |
 |---|---|---|
-| **Mean** (μ) | Slides the whole bell left or right | The middle, [part 4](/fields/data-science/probability-statistics/describing-data/the-number-on-the-tin.md) |
-| **Standard deviation** (σ) | Stretches or squeezes it (the total area stays 1) | The spread, [part 5](/fields/data-science/probability-statistics/describing-data/how-far-from-the-middle.md) |
+| **Mean** (μ) | Slides the whole bell left or right | The middle, [part 4](/fields/data-science/probability-statistics/describing-data/pictures-and-the-middle.md) |
+| **Standard deviation** (σ) | Stretches or squeezes it (the total area stays 1) | The spread, [part 5](/fields/data-science/probability-statistics/describing-data/spread-and-position.md) |
 
 A mean and an SD fix the whole bell. That is convenient, and a very strong claim about your data.
 
 ### The one ruler: the z-score
 
-`z = (x − mean) / SD` (from [part 6](/fields/data-science/probability-statistics/describing-data/where-do-you-stand.md)) slides the bell to the middle and rescales the SD to 1, so **every normal bell becomes the same bell**: the **standard normal**, mean 0, SD 1.
+`z = (x − mean) / SD` (from [part 6](/fields/data-science/probability-statistics/describing-data/spread-and-position.md)) slides the bell to the middle and rescales the SD to 1, so **every normal bell becomes the same bell**: the **standard normal**, mean 0, SD 1.
 
 ```mermaid
 flowchart LR
@@ -201,7 +201,7 @@ Within half an SD the bell expects nearly 8 scores and there are **2**: the mean
 
 Ravi's bag weighs 106 g. Tala does not guess. She turns 106 into z = 1.5, says "93% of bags are lighter, 7% heavier", and shrugs: "About one in fourteen. Unusual, not suspicious."
 
-Mira asks the question now sitting on the counter: "All that works if a bag is bell-shaped. But if I weigh *ten* bags and average them, what do the *averages* look like?" Next cup: [Why Averages Behave](/fields/data-science/probability-statistics/inference/why-averages-behave.md).
+Mira asks the question now sitting on the counter: "All that works if a bag is bell-shaped. But if I weigh *ten* bags and average them, what do the *averages* look like?" Next cup: [Averages and Intervals](/fields/data-science/probability-statistics/inference/averages-and-intervals.md).
 
 * * *
 
