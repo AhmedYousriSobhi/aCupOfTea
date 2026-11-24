@@ -13,10 +13,13 @@ _site/
 
 .venv/
 
-# Local Claude Code skills (personal tooling, not part of the knowledge base)
-.claude/skills/
-
-.claude/
+# Claude Code: the project skills (.claude/skills/<name>/) are committed; everything else
+# under .claude/ is local (settings, agents, worktrees, launch config), and so is the
+# symlinked ui-ux-pro-max skill
+.claude/*
+!.claude/skills/
+.claude/skills/settings.json
+.claude/skills/ui-ux-pro-max
 
 # Local search index (python3 .docs/tools/build_search_index.py --local)
 .docs/index-titles.json

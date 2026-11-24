@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 240" role="img" aria-label="Four ways to keep job temp files off the disk slurmd needs, from most to least integrated: namespace tmpfs plugin, auto_tmpdir SPANK plugin, spank-private-tmp which does not clean up, and a cron cleanup.">
+<style>
+:root{--bg:#fff;--fg:#222;--box:#eef3ff;--line:#4a6cf7;--bad:#d33;--ok:#1a8f4c;--warn:#e8a200;--soft:#9aa5c4}
+@media (prefers-color-scheme:dark){:root{--bg:#1b1e24;--fg:#e8e8e8;--box:#262c3a;--line:#8aa2ff;--bad:#ff6b6b;--ok:#4cd68a;--warn:#ffc233;--soft:#6b7390}}
+rect.bg{fill:var(--bg)} text{fill:var(--fg);font-family:system-ui,sans-serif}
+.box{fill:var(--box);stroke:var(--line);stroke-width:2}
+.r1{animation:r1 9s infinite}.r2{animation:r2 9s infinite}.r3{animation:r3 9s infinite}.r4{animation:r4 9s infinite}
+@keyframes r1{0%,3%{opacity:0}10%,100%{opacity:1}}@keyframes r2{0%,22%{opacity:0}30%,100%{opacity:1}}
+@keyframes r3{0%,42%{opacity:0}50%,100%{opacity:1}}@keyframes r4{0%,62%{opacity:0}70%,100%{opacity:1}}
+@media (prefers-reduced-motion:reduce){.r1,.r2,.r3,.r4{animation:none}}
+</style>
+<rect class="bg" width="640" height="240"/>
+<text x="30" y="24" font-size="13">most integrated</text><text x="610" y="232" font-size="13" text-anchor="end">least integrated</text>
+<g class="r1"><rect class="box" x="30" y="34" width="580" height="38" rx="8"/><text x="44" y="58" font-size="14"><tspan font-weight="600">namespace/tmpfs</tspan>: private /tmp, removed when the job ends</text></g>
+<g class="r2"><rect class="box" x="60" y="80" width="550" height="38" rx="8"/><text x="74" y="104" font-size="14"><tspan font-weight="600">auto_tmpdir</tspan> (SPANK): creates and cleans, third party</text></g>
+<g class="r3"><rect class="box" x="90" y="126" width="520" height="38" rx="8"/><text x="104" y="150" font-size="14"><tspan font-weight="600">spank-private-tmp</tspan>: private, but does not clean up</text></g>
+<g class="r4"><rect class="box" x="120" y="172" width="490" height="38" rx="8"/><text x="134" y="196" font-size="14"><tspan font-weight="600">cron cleanup</tspan>: crude, works (files older than 7 days)</text></g>
+</svg>
