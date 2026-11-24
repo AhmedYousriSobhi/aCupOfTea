@@ -20,7 +20,7 @@ relations:
 
 # How Far From the Middle? One Question Behind Every Summary Number
 
-> **Part 5 of 15.** Part of the [Probability & Statistics](/fields/data-science/probability-statistics/README.md) series, and the sequel to [The Number on the Tin](/fields/data-science/probability-statistics/the-number-on-the-tin.md), where the "typical" score was a score nobody gave. By the end you will know why there are three middles and a pile of spreads, and that they are **one question** asked with different rulers. Far less to memorize than it looked.
+> **Part 5 of 15.** Part of the [Probability & Statistics](/fields/data-science/probability-statistics/README.md) series, and the sequel to [The Number on the Tin](/fields/data-science/probability-statistics/describing-data/the-number-on-the-tin.md), where the "typical" score was a score nobody gave. By the end you will know why there are three middles and a pile of spreads, and that they are **one question** asked with different rulers. Far less to memorize than it looked.
 
 * * *
 
@@ -105,7 +105,7 @@ Which raises the next question. Once the cart is parked, someone still has to wa
 Two notes:
 
 - **Why the square root?** Squaring turns blocks into *blocks²*, which nobody can picture. Taking the root brings it back to blocks. That is the whole reason standard deviation exists next to variance.
-- **What is IQR?** Q1 and Q3 are the values a quarter and three quarters of the data sit below, the edges of the middle half. [The next page](/fields/data-science/probability-statistics/where-do-you-stand.md) builds them properly. Here, take them as the edges of the crowd.
+- **What is IQR?** Q1 and Q3 are the values a quarter and three quarters of the data sit below, the edges of the middle half. [The next page](/fields/data-science/probability-statistics/describing-data/where-do-you-stand.md) builds them properly. Here, take them as the edges of the crowd.
 
 The one-line memory: **mean goes with standard deviation, median goes with IQR.** Choose the pair, and you have chosen both.
 
@@ -133,6 +133,12 @@ So:
 | Roughly symmetric, every value matters, you care about totals | Mean and standard deviation |
 | Skewed, or you cannot vouch for the extremes | Median and IQR |
 | Two clumps | Neither alone. Describe both clumps |
+
+* * *
+
+> ☕ **Try it live.** Pick Mira's scores or Kettle Street, add one wrong value, switch the divisor between n and n − 1, and watch the mean, median, SD and IQR react.
+
+[Describing data lab](/fields/data-science/probability-statistics/labs/describing.html#embed ':ignore')
 
 * * *
 
@@ -194,7 +200,7 @@ Then she goes back to the tin. The 20 tasting scores had a mean of 75.2, and the
 
 **Takeaway:** every summary is a stand-in for a crowd, the middle is the best stand-in under one rule for how distance hurts, and the spread is how badly the stand-in still misses.
 
-Now the harder question. Tala scored **84** on the brewing exam and **61** on the cupping exam. Which is the better result? "Better than what?" Each exam has its own middle and its own leftover. Next cup: [Where Do You Stand?](/fields/data-science/probability-statistics/where-do-you-stand.md)
+Now the harder question. Tala scored **84** on the brewing exam and **61** on the cupping exam. Which is the better result? "Better than what?" Each exam has its own middle and its own leftover. Next cup: [Where Do You Stand?](/fields/data-science/probability-statistics/describing-data/where-do-you-stand.md)
 
 * * *
 

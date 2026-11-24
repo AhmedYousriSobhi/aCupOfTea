@@ -20,7 +20,7 @@ relations:
 
 # The Courtroom for Numbers: Could Plain Luck Do This?
 
-> **Part 14 of 15.** Part of the [Probability & Statistics](/fields/data-science/probability-statistics/README.md) series. It continues from [How Sure Are You?](/fields/data-science/probability-statistics/how-sure-are-you.md), where a confidence interval put honest error bars on one number. By the end you will see every hypothesis test as one question, "could plain luck have produced a difference this big?", answer it by shuffling and counting, and know the three ways the answer gets misread. The scenario is invented, and every figure was recomputed with Python 3.14.4 (standard library only).
+> **Part 14 of 15.** Part of the [Probability & Statistics](/fields/data-science/probability-statistics/README.md) series. It continues from [How Sure Are You?](/fields/data-science/probability-statistics/inference/how-sure-are-you.md), where a confidence interval put honest error bars on one number. By the end you will see every hypothesis test as one question, "could plain luck have produced a difference this big?", answer it by shuffling and counting, and know the three ways the answer gets misread. The scenario is invented, and every figure was recomputed with Python 3.14.4 (standard library only).
 
 * * *
 
@@ -67,7 +67,7 @@ If the labels A and B mean nothing, **any way of dealing the 20 scores into two 
 
 ## Shuffle the labels and count
 
-First a case small enough to do by hand. Three tasters per blend: A scored 8, 9, 7 and B scored 5, 6, 7. The gap is `8 − 6 = 2`. Under "luck only", the six scores `8 9 7 5 6 7` could have been dealt into two piles of three in 20 ways (that is `6 choose 3`, from [Counting the Ways](/fields/data-science/probability-statistics/counting-the-ways.md)). Which deals give A a lead of 2 or more? The scores add to 42, so A's pile must add to 24 or more. Only two do: `8 9 7` (the real one) and the same pile with the *other* 7 swapped in. Two of twenty: **0.10**. Luck does that one time in ten.
+First a case small enough to do by hand. Three tasters per blend: A scored 8, 9, 7 and B scored 5, 6, 7. The gap is `8 − 6 = 2`. Under "luck only", the six scores `8 9 7 5 6 7` could have been dealt into two piles of three in 20 ways (that is `6 choose 3`, from [Counting the Ways](/fields/data-science/probability-statistics/probability/counting-the-ways.md)). Which deals give A a lead of 2 or more? The scores add to 42, so A's pile must add to 24 or more. Only two do: `8 9 7` (the real one) and the same pile with the *other* 7 swapped in. Two of twenty: **0.10**. Luck does that one time in ten.
 
 Now Mira's real data. Twenty scores into two piles of ten has 184,756 deals, too many for the chalkboard, so we **shuffle many times and count**:
 
@@ -110,7 +110,13 @@ The simulated answer is **0.0143**: in about 1.4% of re-dealt piles, luck alone 
 
 That number is the **p-value**: *how often luck alone would produce a difference at least as extreme as the one you saw.*
 
-The classical test is the same question with a shortcut. Instead of shuffling, the t-test divides the gap by its standard error ([Why Averages Behave](/fields/data-science/probability-statistics/why-averages-behave.md)) and looks it up on a bell curve ([The Bell Curve](/fields/data-science/probability-statistics/the-bell-curve.md)). It is faster and assumes more; when its assumptions hold, the answers agree closely.
+The classical test is the same question with a shortcut. Instead of shuffling, the t-test divides the gap by its standard error ([Why Averages Behave](/fields/data-science/probability-statistics/inference/why-averages-behave.md)) and looks it up on a bell curve ([The Bell Curve](/fields/data-science/probability-statistics/probability/the-bell-curve.md)). It is faster and assumes more; when its assumptions hold, the answers agree closely.
+
+* * *
+
+> ☕ **Try it live.** Shuffle the labels yourself, 1,000 at a time, and compare the share of re-deals that beat the real gap with the exact p-value. Scroll down for the twenty-tries demo.
+
+[Permutation test lab](/fields/data-science/probability-statistics/labs/permutation.html#embed ':ignore')
 
 * * *
 
@@ -192,7 +198,7 @@ Tala writes: *"Preferred in a blind test of 10 per blend, +1.2 points."* Not "pr
 
 **Takeaway:** a test asks whether luck alone could do this. A small p-value says luck is a poor explanation. It does not say the effect is big, the null is false with some probability, or that an unsignificant result means nothing is there.
 
-**Challenge.** Ravi counts that on days it rains, more people order tea. Rain and sales move together, but does one *cause* the other? Next cup: [Two Things Moving Together](/fields/data-science/probability-statistics/two-things-moving-together.md).
+**Challenge.** Ravi counts that on days it rains, more people order tea. Rain and sales move together, but does one *cause* the other? Next cup: [Two Things Moving Together](/fields/data-science/probability-statistics/inference/two-things-moving-together.md).
 
 * * *
 

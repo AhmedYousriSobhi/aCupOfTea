@@ -8,6 +8,8 @@ summary: Why statistics matters for machine learning, what it is, and a module-b
 
 You can call a model without knowing any statistics. You cannot tell whether to trust it. Read the intro below, then jump to the curriculum in the table of contents.
 
+See also: [Probability & Statistics, One Sip at a Time](/fields/data-science/probability-statistics/README.md), a story-driven series on the same ground with interactive labs.
+
 Many enthusiastic people who love to have a great challenge, jump to the unbounded realm of AI, and get amazed by its titles like machine learning, deep learning, architecture, and other words related to this field. But what they don't know is that, the real challenge if where all of this came from?
 
 ![Four-panel meme: statistics is a cracked wall, framed as machine learning, then as artificial intelligence](images/statistics-02.png)

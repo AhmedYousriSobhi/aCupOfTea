@@ -150,7 +150,7 @@ This time she works from the loyalty list and draws a **stratified** sample of 4
 
 **Takeaway:** a sample is a promise about a crowd, and what keeps the promise is how you chose, not how many. The difference between the two Saturdays was never the arithmetic. It was the stirring.
 
-But 55% from 40 people is still a number, and numbers come in kinds. Is "smoky: yes or no" the same sort of thing as "score out of 100" or "number of cups per week"? It is not, and the kind decides which tools are allowed. Next cup: [Data Types and Frequency Tables](/fields/data-science/probability-statistics/data-types-and-frequency-tables.md).
+But 55% from 40 people is still a number, and numbers come in kinds. Is "smoky: yes or no" the same sort of thing as "score out of 100" or "number of cups per week"? It is not, and the kind decides which tools are allowed. Next cup: [Data Types and Frequency Tables](/fields/data-science/probability-statistics/describing-data/data-types-and-frequency-tables.md).
 
 * * *
 

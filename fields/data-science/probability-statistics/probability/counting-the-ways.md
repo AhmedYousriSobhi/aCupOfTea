@@ -171,7 +171,7 @@ Mira writes the real odds on the sign: 10 in 36, a free biscuit about once in 3.
 
 **Takeaway:** probability is the share of equally likely ways. "Or" adds lists (minus the overlap), "and" multiplies when the events ignore each other, and "at least one" is easiest as 1 minus none.
 
-**Challenge for next cup.** A rare thing affects 1 person in 1000. A test catches it 99% of the time, and wrongly flags 1% of healthy people. Ravi tests positive. Grid or no grid, write the list of 100,000 people and count who is flagged. Is he 99% likely to have it? Find out in [The Test That Was 99 Percent Accurate](/fields/data-science/probability-statistics/the-test-that-was-99-percent-accurate.md).
+**Challenge for next cup.** A rare thing affects 1 person in 1000. A test catches it 99% of the time, and wrongly flags 1% of healthy people. Ravi tests positive. Grid or no grid, write the list of 100,000 people and count who is flagged. Is he 99% likely to have it? Find out in [The Test That Was 99 Percent Accurate](/fields/data-science/probability-statistics/probability/the-test-that-was-99-percent-accurate.md).
 
 * * *
 
