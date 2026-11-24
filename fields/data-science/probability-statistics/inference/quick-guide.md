@@ -91,4 +91,4 @@ r = st.correlation(temp, cups)
 
 [Correlation lab](/fields/data-science/probability-statistics/labs/regression.html#embed ':ignore')
 
-**Why it works:** the four story pages above. Back to [the map of the series](/fields/data-science/probability-statistics/the-map-of-leaf-and-kettle.md).
+**Why it works:** the three story pages above (parts 12 to 15). Back to [the map of the series](/fields/data-science/probability-statistics/the-map-of-leaf-and-kettle.md).

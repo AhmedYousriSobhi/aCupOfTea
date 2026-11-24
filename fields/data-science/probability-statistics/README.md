@@ -70,11 +70,11 @@ The order is deliberate. Pages 1 to 6 are about **describing what you have**: wh
 
 | Folder | Parts | Also there |
 |---|---|---|
-| [Describing data](/fields/data-science/probability-statistics/describing-data/README.md) | 1 to 6 | technical reference, quick guide, describing-data lab |
-| [Probability](/fields/data-science/probability-statistics/probability/README.md) | 7 to 11 | technical reference, quick guide, Bayes and distributions labs |
+| [Describing data](/fields/data-science/probability-statistics/describing-data/README.md) | 1 to 6 | technical reference, quick guide, sampling methods, grouped tables and describing-data labs |
+| [Probability](/fields/data-science/probability-statistics/probability/README.md) | 7 to 11 | technical reference, quick guide, expected value, Bayes and distributions labs |
 | [Inference](/fields/data-science/probability-statistics/inference/README.md) | 12 to 15 | technical reference, quick guide, sampling, permutation and correlation labs |
 
-Each story page shows its lab inline where it helps; the labs also open full screen from the folder indexes. For a plain syllabus of the whole field, see [Statistics](/fields/statistics/README.md).
+Each story page shows its lab inline where it helps; the folder indexes link to each quick guide, where all of that folder's labs sit under "Try it". For a plain syllabus of the whole field, see [Statistics](/fields/statistics/README.md).
 
 ## Conventions
 

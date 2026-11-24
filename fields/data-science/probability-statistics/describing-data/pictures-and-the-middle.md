@@ -125,6 +125,10 @@ The ogive plots the running total, so each point answers "how many days **up to 
 - **x to y:** "114 or fewer" reaches the boundary 114.5 and reads **28 days**, `28 / 50 = 56%`.
 - **y to x:** half of 50 is 25, on the stretch between (109.5, 10) and (114.5, 28): `x = 109.5 + (25 − 10) / 18 × 5 = 109.5 + 0.833 × 5 =` about **113.7**. Half the days had about 113.7 customers or fewer: the **median**, found by ruler. Other heights give **percentiles** (the next page). Straight lines assume values are spread evenly inside each class, so the curve is exact at the boundaries and an estimate between them.
 
+> ☕ **Try it live.** Change the class width and the first class of the 20 scores and watch the three pictures, and how far the grouped mean and median drift from the raw 75.2 and 71.
+
+[Grouped tables lab](/fields/data-science/probability-statistics/labs/grouped-tables.html#embed ':ignore')
+
 | Trap | Idea it breaks | Fix |
 |---|---|---|
 | Gaps between histogram bars | The ruler has no holes | Let bars touch, use boundaries |

@@ -103,6 +103,10 @@ In 1936 the magazine *Literary Digest* mailed about **10 million** questionnaire
 
 George Gallup polled about **50,000** people with a "scientific sample" including the right proportion from each economic group (in the spirit of stratification) and predicted Roosevelt's win. **A huge biased sample is a more confident way of being wrong.**
 
+> ☕ **Try it live.** Pick a way to choose 40 customers from 4,000 and repeat it a thousand times: the doorstep poll lands near 91% against a true 51.75%, however many you ask.
+
+[Sampling methods lab](/fields/data-science/probability-statistics/labs/sampling-methods.html#embed ':ignore')
+
 **Two jobs.** *Descriptive* statistics summarises the numbers you have. *Inferential* statistics speaks about the people you did not ask, so it carries uncertainty (a confidence interval, a hypothesis test) and is honest only if the sample was drawn fairly.
 
 ### What can you do with two values?

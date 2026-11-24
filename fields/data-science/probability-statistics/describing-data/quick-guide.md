@@ -94,6 +94,10 @@ Box plot fences: `Q1 - 1.5 * IQR` and `Q3 + 1.5 * IQR`. Say which quartile metho
 
 ## Try it
 
+[Sampling methods lab](/fields/data-science/probability-statistics/labs/sampling-methods.html#embed ':ignore')
+
+[Grouped tables lab](/fields/data-science/probability-statistics/labs/grouped-tables.html#embed ':ignore')
+
 [Describing data lab](/fields/data-science/probability-statistics/labs/describing.html#embed ':ignore')
 
-**Why it works:** the six story pages above. Next: [Probability](/fields/data-science/probability-statistics/probability/README.md).
+**Why it works:** the three story pages above (parts 1 to 6). Next: [Probability](/fields/data-science/probability-statistics/probability/README.md).

@@ -166,6 +166,10 @@ Var(X + Y) = Var X + Var Y       only if X and Y are independent
 
 Net expected value is **−1/2** and the variance stays 149/4 (a shifted walk is the same walk). The two-pull total has expected value **9 = 4.5 + 4.5**, and variance 149/2 because the card is put back, so the pulls are independent. Contrast `2X`, one pull paid out twice: variance `4 × 37.25 = 149`.
 
+> ☕ **Try it live.** Edit the cards in the bag, change the price and pull 10, 1,000 or 100,000 times: the average settles on the expected value, which is not a prize.
+
+[Expected value lab](/fields/data-science/probability-statistics/labs/expected-value.html#embed ':ignore')
+
 ### Binomial: count the ways, weigh each way
 
 For **4** customers, each smoky with probability 0.3 independently, write every queue as a yes/no string: `2^4 = 16` strings, each with `k` yeses having probability `0.3^k × 0.7^(4−k)`. Group by `k` (the counting of the previous page):
