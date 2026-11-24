@@ -53,9 +53,9 @@
   function fmt(x, d) { return Number(x).toFixed(d === undefined ? 4 : d); }
   function pct(x, d) { return (100 * x).toFixed(d === undefined ? 2 : d) + "%"; }
   function colors() {
-    var s = getComputedStyle(document.documentElement);
-    var v = function (n) { return s.getPropertyValue(n).trim(); };
-    return { fg: v("--fg"), mut: v("--mut"), line: v("--line"), card: v("--card"), acc: v("--acc"), acc2: v("--acc2"), acc3: v("--acc3") };
+    var st = getComputedStyle(document.documentElement);
+    var v = function (n) { return st.getPropertyValue(n).trim(); };
+    return { fg: v("--ink"), mut: v("--mut"), line: v("--line"), card: v("--card"), bg: v("--bg"), acc: v("--leaf"), acc2: v("--kettle"), acc3: v("--sky") };
   }
   // Prepare a canvas for crisp drawing; returns {ctx,w,h}.
   function prep(cv, ratio) {
@@ -66,51 +66,108 @@
     var c = cv.getContext("2d"); c.setTransform(d, 0, 0, d, 0, 0);
     return { ctx: c, w: w, h: h };
   }
-  // Bar chart: bars = [{x,y,color}], optional line points [{x,y}] for a model curve.
+  function roundTop(c, x, y, w, h, r) {
+    r = Math.min(r, w / 2, h);
+    c.beginPath(); c.moveTo(x, y + h); c.lineTo(x, y + r); c.quadraticCurveTo(x, y, x + r, y);
+    c.lineTo(x + w - r, y); c.quadraticCurveTo(x + w, y, x + w, y + r); c.lineTo(x + w, y + h); c.closePath(); c.fill();
+  }
+  // Bar chart on a canvas. o: bars [{x,y,shade}], line [{x,y}], xlabel, ylabel, hoverX, simBars [{x,y}] (ticks).
   function barChart(cv, o) {
     var P = prep(cv, o.ratio), c = P.ctx, col = colors();
-    var L = 44, R = 10, T = 12, B = 30, W = P.w - L - R, H = P.h - T - B;
+    var L = 50, R = 12, T = 14, B = 44, W = P.w - L - R, H = P.h - T - B;
     var xs = o.bars.map(function (b) { return b.x; });
     var xmin = o.xmin !== undefined ? o.xmin : Math.min.apply(null, xs) - 0.5;
     var xmax = o.xmax !== undefined ? o.xmax : Math.max.apply(null, xs) + 0.5;
     var ymax = o.ymax || Math.max.apply(null, o.bars.map(function (b) { return b.y; }).concat((o.line || []).map(function (p) { return p.y; }), [1e-9])) * 1.1;
+    (function () { // round the top of the axis so the four ticks fall on clean values
+      var raw = ymax / 4, mag = Math.pow(10, Math.floor(Math.log10(raw))), f = raw / mag;
+      ymax = (f <= 1 ? 1 : f <= 2 ? 2 : f <= 2.5 ? 2.5 : f <= 5 ? 5 : 10) * mag * 4;
+    })();
     var X = function (x) { return L + (x - xmin) / (xmax - xmin) * W; };
     var Y = function (y) { return T + H - y / ymax * H; };
     c.clearRect(0, 0, P.w, P.h);
-    c.font = "12px system-ui,sans-serif"; c.fillStyle = col.mut; c.strokeStyle = col.line;
+    c.font = "12px system-ui,sans-serif"; c.fillStyle = col.mut; c.strokeStyle = col.line; c.lineWidth = 1;
     c.textAlign = "right";
     for (var i = 0; i <= 4; i++) {
-      var yv = ymax * i / 4, yy = Y(yv);
+      var yv = ymax * i / 4, yy = Math.round(Y(yv)) + 0.5;
       c.beginPath(); c.moveTo(L, yy); c.lineTo(P.w - R, yy); c.stroke();
-      c.fillText((o.pctAxis ? (100 * yv).toFixed(0) + "%" : yv.toFixed(2)), L - 4, yy + 4);
+      c.fillText(o.pctAxis ? (100 * yv).toFixed(100 * ymax < 10 ? 1 : 0) + "%" : yv.toFixed(3), L - 6, yy + 4);
     }
     var bw = Math.max(1, W / (xmax - xmin) * (o.bw || o.barw || 0.8));
     o.bars.forEach(function (b) {
-      if (b.shade) c.fillStyle = col.acc2; else c.fillStyle = b.color || col.acc;
-      c.globalAlpha = o.alpha || 1;
-      c.fillRect(X(b.x) - bw / 2, Y(b.y), bw, Y(0) - Y(b.y));
+      var hot = o.hoverX !== undefined && o.hoverX !== null && Math.abs(b.x - o.hoverX) < (o.bw || 0.5) / 2 + 1e-9;
+      c.fillStyle = b.shade ? col.acc2 : col.acc;
+      c.globalAlpha = (o.alpha || 1) * (o.hoverX !== undefined && o.hoverX !== null && !hot ? 0.55 : 1);
+      roundTop(c, X(b.x) - bw / 2, Y(b.y), bw, Math.max(0, Y(0) - Y(b.y)), Math.min(5, bw / 2));
       c.globalAlpha = 1;
     });
     if (o.line) {
-      c.strokeStyle = col.fg; c.lineWidth = 2; c.beginPath();
-      o.line.forEach(function (p, i) { if (i) c.lineTo(X(p.x), Y(p.y)); else c.moveTo(X(p.x), Y(p.y)); });
+      c.strokeStyle = col.fg; c.lineWidth = 2.2; c.lineJoin = "round"; c.beginPath();
+      o.line.forEach(function (p, j) { if (j) c.lineTo(X(p.x), Y(p.y)); else c.moveTo(X(p.x), Y(p.y)); });
       c.stroke(); c.lineWidth = 1;
+    }
+    if (o.sim) {
+      c.strokeStyle = col.acc3; c.lineWidth = 3; c.lineCap = "round";
+      o.sim.forEach(function (b) { c.beginPath(); c.moveTo(X(b.x) - bw * 0.42, Y(b.y)); c.lineTo(X(b.x) + bw * 0.42, Y(b.y)); c.stroke(); });
+      c.lineWidth = 1;
     }
     c.fillStyle = col.mut; c.textAlign = "center";
     var step = Math.max(1, Math.ceil((xmax - xmin) / 10 / (o.xstep || 1)) * (o.xstep || 1));
     var start = Math.ceil(xmin / step) * step;
-    for (var xv = start; xv <= xmax; xv += step) c.fillText(String(Math.round(xv * 100) / 100), X(xv), P.h - 10);
-    return { X: X, Y: Y, ctx: c, col: col, W: P.w, H: P.h };
+    for (var xv = start; xv <= xmax; xv += step) c.fillText(String(Math.round(xv * 100) / 100), X(xv), T + H + 16);
+    if (o.xlabel) { c.font = "600 12px system-ui,sans-serif"; c.fillText(o.xlabel, L + W / 2, P.h - 6); }
+    if (o.ylabel) { c.save(); c.translate(12, T + H / 2); c.rotate(-Math.PI / 2); c.font = "600 12px system-ui,sans-serif"; c.fillText(o.ylabel, 0, 0); c.restore(); }
+    var geom = { X: X, Y: Y, ctx: c, col: col, W: P.w, H: P.h, L: L, R: R, T: T, B: B, xmin: xmin, xmax: xmax, inv: function (px) { return xmin + (px - L) / W * (xmax - xmin); } };
+    cv._geom = geom;
+    return geom;
   }
-  // Bind a range input to a label; call cb on change. Returns getter.
+  // Pointer + keyboard readout. tipFn(x) -> html string or null; redraw(x) draws with a highlighted x.
+  function hover(cv, tip, tipFn, redraw, step) {
+    var cur = null;
+    function stepNow() { return typeof step === "function" ? step() : step; }
+    function at(clientX) {
+      var r = cv.getBoundingClientRect(), g = cv._geom; if (!g) return;
+      var s = stepNow(), x = g.inv(clientX - r.left); if (s) x = Math.round(x / s) * s;
+      show(x, g.X(x));
+    }
+    function show(x, px) {
+      var g = cv._geom, t = tipFn(x);
+      if (t === null) { hide(); return; }
+      cur = x; redraw(x);
+      tip.innerHTML = t; tip.style.left = Math.min(Math.max(px, 70), cv.clientWidth - 70) + "px"; tip.style.top = Math.max(40, g.T + 26) + "px"; tip.classList.add("on");
+    }
+    function hide() { cur = null; tip.classList.remove("on"); redraw(null); }
+    cv.addEventListener("pointermove", function (e) { at(e.clientX); });
+    cv.addEventListener("pointerdown", function (e) { at(e.clientX); });
+    cv.addEventListener("pointerleave", hide);
+    cv.addEventListener("blur", hide);
+    cv.addEventListener("keydown", function (e) {
+      var g = cv._geom; if (!g) return; var s0 = stepNow(), s = s0 || (g.xmax - g.xmin) / 40, k = e.key;
+      if (k === "ArrowRight" || k === "ArrowLeft") { var x = (cur === null ? (g.xmin + g.xmax) / 2 : cur) + (k === "ArrowRight" ? s : -s); if (s0) x = Math.round(x / s0) * s0; show(x, g.X(x)); e.preventDefault(); }
+      if (k === "Escape") hide();
+    });
+  }
+  // Bind a range input to its <output>; paints the filled track; call cb on change.
+  function paint(el) { var p = (el.value - el.min) / (el.max - el.min) * 100; el.style.setProperty("--pct", p + "%"); }
   function slider(id, fmtFn, cb) {
     var el = $(id), out = $(id + "-v");
-    function upd() { out.textContent = fmtFn(+el.value); }
+    function upd() { out.textContent = fmtFn(+el.value); paint(el); }
     el.addEventListener("input", function () { upd(); cb(); });
-    upd();
+    el._upd = upd; upd();
     return function () { return +el.value; };
+  }
+  // Light / dark / auto toggle stored in localStorage (failures are ignored).
+  function theme(btn) {
+    var root = document.documentElement, key = "lab-theme";
+    function get() { try { return localStorage.getItem(key); } catch (e) { return null; } }
+    function set(v) { try { if (v) localStorage.setItem(key, v); else localStorage.removeItem(key); } catch (e) { /* ignore */ } }
+    function apply(v) { if (v) root.setAttribute("data-theme", v); else root.removeAttribute("data-theme"); btn.setAttribute("aria-label", "Theme: " + (v || "auto") + ". Press to change."); btn.querySelector("span").textContent = v ? v[0].toUpperCase() + v.slice(1) : "Auto"; }
+    var order = [null, "light", "dark"], cur = get(); if (cur !== "light" && cur !== "dark") cur = null;
+    apply(cur);
+    btn.addEventListener("click", function () { cur = order[(order.indexOf(cur) + 1) % 3]; set(cur); apply(cur); window.dispatchEvent(new Event("resize")); });
+    if (window.matchMedia) window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function () { window.dispatchEvent(new Event("resize")); });
   }
   g.Lab = { rng: rng, normal: normal, erf: erf, ncdf: ncdf, ninv: ninv, binomPmf: binomPmf, poisPmf: poisPmf,
     binomSample: binomSample, poisSample: poisSample, $: $, fmt: fmt, pct: pct, colors: colors, prep: prep,
-    barChart: barChart, slider: slider };
+    barChart: barChart, slider: slider, hover: hover, paint: paint, theme: theme };
 })(window);

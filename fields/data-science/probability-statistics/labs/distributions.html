@@ -3,67 +3,100 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'">
 <title>Lab: binomial, Poisson and normal</title>
 <link rel="stylesheet" href="lab.css">
 </head>
 <body>
 <main>
-<div class="nav"><a href="../../../../#/fields/data-science/probability-statistics/probability/quick-guide.md">&larr; Probability quick guide</a> &middot; <a href="../../../../#/fields/data-science/probability-statistics/probability/coins-and-calls.md">Part 10</a> &middot; <a href="../../../../#/fields/data-science/probability-statistics/probability/the-bell-curve.md">Part 11</a></div>
-<h1>Lab: pick the recipe, change the dials</h1>
-<p class="lead">Exact probabilities are the bars (or the curve for the normal). Draw a random sample and compare it with them.</p>
+  <div class="top">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a class="pill" href="../../../../#/fields/data-science/probability-statistics/probability/quick-guide.md">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>Quick guide</a>
+      <a class="pill" href="../../../../#/fields/data-science/probability-statistics/probability/coins-and-calls.md">Part 10</a>
+      <a class="pill" href="../../../../#/fields/data-science/probability-statistics/probability/the-bell-curve.md">Part 11</a>
+    </nav>
+    <button class="pill" id="theme" type="button" aria-label="Theme: auto. Press to change.">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      <span>Auto</span></button>
+  </div>
 
-<div class="card">
-  <div class="row">
-    <div class="ctl"><label for="dist">Recipe</label>
-      <select id="dist"><option value="binom">Binomial: yeses in n tries</option><option value="pois">Poisson: events in a window</option><option value="norm">Normal: measurements</option></select></div>
-  </div>
-  <div class="row">
-    <div class="ctl" id="g-n"><label for="n">n (tries): <b id="n-v"></b></label><input id="n" type="range" min="1" max="200" step="1" value="10"></div>
-    <div class="ctl" id="g-p"><label for="p">p (chance each): <b id="p-v"></b></label><input id="p" type="range" min="0.01" max="0.99" step="0.01" value="0.3"></div>
-    <div class="ctl" id="g-lam"><label for="lam">&lambda; (average count): <b id="lam-v"></b></label><input id="lam" type="range" min="0.2" max="30" step="0.1" value="4"></div>
-    <div class="ctl" id="g-mu"><label for="mu">mean &mu;: <b id="mu-v"></b></label><input id="mu" type="range" min="50" max="150" step="1" value="100"></div>
-    <div class="ctl" id="g-sd"><label for="sd">SD &sigma;: <b id="sd-v"></b></label><input id="sd" type="range" min="1" max="20" step="0.5" value="4"></div>
-  </div>
-  <div class="row">
-    <div class="ctl"><label for="a">from a: <b id="a-v"></b></label><input id="a" type="range" min="0" max="10" step="1" value="2"></div>
-    <div class="ctl"><label for="b">to b: <b id="b-v"></b></label><input id="b" type="range" min="0" max="10" step="1" value="4"></div>
-  </div>
-  <div class="row"><label><input type="checkbox" id="over"> Overlay Poisson(np) on the binomial</label></div>
-</div>
+  <header class="hero">
+    <div class="kicker">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 20h18M6 20V10M11 20V4M16 20v-8M21 20V8"/></svg>
+      Probability lab &middot; Parts 10 and 11
+    </div>
+    <h1>Pick the recipe, turn the dials</h1>
+    <p class="lead">Bars are the exact probabilities. Draw a random sample and see how closely real data follows them, and when it does not.</p>
+  </header>
 
-<div class="card">
-  <canvas id="cv" width="600" height="330" aria-label="Exact probabilities and a simulated sample"></canvas>
-  <p class="note" id="legend"></p>
-</div>
+  <section class="card" aria-labelledby="h-pick">
+    <h2 id="h-pick"><span class="num">1</span>What are you counting?</h2>
+    <div class="seg" role="tablist" aria-label="Recipe" id="seg">
+      <button type="button" role="tab" aria-selected="true" data-k="binom">Binomial</button>
+      <button type="button" role="tab" aria-selected="false" data-k="pois">Poisson</button>
+      <button type="button" role="tab" aria-selected="false" data-k="norm">Normal</button>
+    </div>
+    <p class="sub mt10" id="qdesc"></p>
+  </section>
 
-<div class="stats">
-  <div class="stat"><span id="l-range">P(a &le; X &le; b)</span><strong id="prange"></strong></div>
-  <div class="stat"><span>Mean: theory / sample</span><strong id="mean"></strong></div>
-  <div class="stat"><span>Variance: theory / sample</span><strong id="var"></strong></div>
-</div>
-<div class="card">
-  <div class="row"><button id="draw">Draw 5,000 values</button><button id="clear" class="alt">Clear sample</button></div>
-  <p class="note" id="msg"></p>
-</div>
-<div class="card">
-  <h2>Guided experiments</h2>
-  <p class="note">Each button sets the dials and draws a sample. Predict, then compare the bars with the blue ticks.</p>
-  <div class="row">
-    <button class="alt" data-x="binom|10|0.3|0|0|0|2|4">1. Smoky orders: n = 10, p = 0.3</button>
-    <button class="alt" data-x="binom|10|0.4|0|0|0|0|10|1">2. Poisson fits badly: n = 10, p = 0.4</button>
-    <button class="alt" data-x="binom|200|0.02|0|0|0|0|10|1">3. Poisson fits well: n = 200, p = 0.02</button>
-    <button class="alt" data-x="pois|0|0|4|0|0|0|0">4. An empty 10 minutes: &lambda; = 4</button>
-    <button class="alt" data-x="norm|0|0|0|100|4|92|108">5. Bags within 2 SD</button>
-  </div>
-  <ul class="note">
-    <li>2 and 3: the black line is Poisson(np). It tracks the bars only when n is large and p small.</li>
-    <li>4: the shaded bar at 0 is e<sup>&minus;4</sup>, about 1.8%.</li>
-    <li>5: the shaded area is the 95.45% of the 68-95-99.7 rule.</li>
-    <li>Any recipe: draw several samples. The sample mean and variance wobble around the theory values.</li>
-  </ul>
-</div>
-<div class="card warn"><b>Assumptions.</b> Binomial: same p, independent tries. Poisson: constant rate, independent arrivals (variance should be near the mean). Normal: draw the histogram first; two humps or a long tail are not a bell.</div>
+  <section class="card" aria-labelledby="h-chart">
+    <h2 id="h-chart"><span class="num">2</span>The distribution</h2>
+    <div class="chart-wrap">
+      <canvas id="cv" tabindex="0" width="600" height="330" role="img" aria-label="Chart of exact probabilities. Use left and right arrow keys to read values."></canvas>
+      <div class="tip" id="tip" role="status"></div>
+    </div>
+    <div class="legend" id="legend"></div>
+    <div class="row mt12">
+      <button class="btn" id="draw" type="button"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>Draw 5,000 values</button>
+      <button class="btn ghost" id="clear" type="button">Clear sample</button>
+      <span class="sub nom" id="msg" aria-live="polite"></span>
+    </div>
+  </section>
+
+  <section class="card" aria-labelledby="h-dials">
+    <h2 id="h-dials"><span class="num">3</span>Turn the dials</h2>
+    <div class="dials">
+      <div class="dial" id="g-n"><div class="dial-head"><label for="n">Tries (n)</label><output id="n-v" for="n"></output></div><input id="n" type="range" min="1" max="200" step="1" value="10"><small><span>1</span><span>200</span></small></div>
+      <div class="dial" id="g-p"><div class="dial-head"><label for="p">Chance each (p)</label><output id="p-v" for="p"></output></div><input id="p" type="range" min="0.01" max="0.99" step="0.01" value="0.3"><small><span>1%</span><span>99%</span></small></div>
+      <div class="dial" id="g-lam"><div class="dial-head"><label for="lam">Average count (&lambda;)</label><output id="lam-v" for="lam"></output></div><input id="lam" type="range" min="0.2" max="30" step="0.1" value="4"><small><span>0.2</span><span>30</span></small></div>
+      <div class="dial" id="g-mu"><div class="dial-head"><label for="mu">Mean (&mu;)</label><output id="mu-v" for="mu"></output></div><input id="mu" type="range" min="50" max="150" step="1" value="100"><small><span>50</span><span>150</span></small></div>
+      <div class="dial" id="g-sd"><div class="dial-head"><label for="sd">Spread (&sigma;)</label><output id="sd-v" for="sd"></output></div><input id="sd" type="range" min="1" max="20" step="0.5" value="4"><small><span>1</span><span>20</span></small></div>
+    </div>
+    <h2 class="mt14">Ask about a range</h2>
+    <p class="sub">The orange bars (or shaded area) show <code>P(a &le; X &le; b)</code>.</p>
+    <div class="dials">
+      <div class="dial"><div class="dial-head"><label for="a">From a</label><output id="a-v" for="a"></output></div><input id="a" type="range" min="0" max="10" step="1" value="2"></div>
+      <div class="dial"><div class="dial-head"><label for="b">To b</label><output id="b-v" for="b"></output></div><input id="b" type="range" min="0" max="10" step="1" value="4"></div>
+    </div>
+    <div class="row mt6" id="overrow"><label class="pill"><input type="checkbox" id="over"> Overlay Poisson(np)</label></div>
+
+    <div class="minis">
+      <div class="mini"><span id="l-range">P(a &le; X &le; b)</span><strong id="prange"></strong></div>
+      <div class="mini"><span>Mean: theory / sample</span><strong id="mean"></strong></div>
+      <div class="mini"><span>Variance: theory / sample</span><strong id="var"></strong></div>
+      <div class="mini" id="disp-card"><span>Variance &divide; mean</span><strong id="disp"></strong> <span class="badge" id="disp-b"></span></div>
+    </div>
+  </section>
+
+  <section class="card" aria-labelledby="h-try">
+    <h2 id="h-try"><span class="num">4</span>Guided experiments</h2>
+    <p class="sub">Each card sets the dials and draws a sample. Predict first.</p>
+    <div class="xcards" id="xcards">
+      <button class="xcard" type="button" data-x="binom|10|0.3|0|0|0|2|4|0"><span class="tag">Binomial</span><b>Smoky orders</b><span>n = 10, p = 0.3. Is "exactly 3" the likely answer?</span></button>
+      <button class="xcard" type="button" data-x="binom|10|0.4|0|0|0|2|6|1"><span class="tag">Poisson fits badly</span><b>Few tries, big p</b><span>The black Poisson line misses the bars.</span></button>
+      <button class="xcard" type="button" data-x="binom|200|0.02|0|0|0|2|6|1"><span class="tag">Poisson fits well</span><b>Many tries, tiny p</b><span>The line sits on the bars.</span></button>
+      <button class="xcard" type="button" data-x="pois|0|0|4|0|0|0|0|0"><span class="tag">Poisson</span><b>An empty 10 minutes</b><span>&lambda; = 4. The bar at 0 is about 1.8%.</span></button>
+      <button class="xcard" type="button" data-x="norm|0|0|0|100|4|92|108|0"><span class="tag">Normal</span><b>Bags within 2 SD</b><span>The shaded area is the 95.45% of the 68-95-99.7 rule.</span></button>
+    </div>
+  </section>
+
+  <details class="assume">
+    <summary>What each recipe assumes</summary>
+    <div><b>Binomial:</b> same p every try, independent tries. <b>Poisson:</b> constant rate, independent arrivals; variance should be near the mean. <b>Normal:</b> draw the histogram first; two humps or a long tail are not a bell.</div>
+  </details>
+  <p class="foot">Part of <a href="../../../../#/fields/data-science/probability-statistics/README.md">Probability &amp; Statistics, One Sip at a Time</a>. Seeded samples, exact probabilities.</p>
 </main>
 <script src="lab-core.js"></script>
 <script src="distributions.js"></script>
