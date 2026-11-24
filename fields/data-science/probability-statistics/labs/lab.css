@@ -211,3 +211,7 @@ details > div { padding-bottom: 12px; }
 .pill input{width:18px;height:18px;accent-color:var(--leaf)}
 
 [hidden]{display:none !important}
+
+.embed .top, .embed .hero, .embed .foot { display: none; }
+.embed body { background: var(--bg); min-height: 0; }
+.embed main { padding: 0 8px 8px; }

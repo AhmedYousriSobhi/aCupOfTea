@@ -147,11 +147,17 @@ At `n = 10, p = 0.3` the same trick gives 0.365 against the exact 0.383, and wit
 ## 7. Computing it safely
 
 - **Exact first:** `fractions.Fraction` keeps small problems free of rounding, as in the stories.
-- **Large `n`:** `comb(n, k) p^k (1-p)^(n-k)` overflows or underflows in floating point; sum the logs (`lgamma`) and exponentiate once, as the [lab](/fields/data-science/probability-statistics/labs/distributions.html ':ignore') does.
+- **Large `n`:** `comb(n, k) p^k (1-p)^(n-k)` overflows or underflows in floating point; sum the logs (`lgamma`) and exponentiate once, as the distributions lab below does.
 - **Tails:** compute `1 - cdf` carefully for tiny tails (`sf` in SciPy, if you use it); subtracting two numbers close to 1 loses digits.
 - **Simulate to check, seed to repeat:** `random.seed(9)` makes a run reproducible, and a simulation should agree with the exact answer within its own noise (about `1/sqrt(draws)` for a probability).
 
-**Try it:** [Bayes lab](/fields/data-science/probability-statistics/labs/bayes.html ':ignore') (move the base rate and see the posterior) and [distributions lab](/fields/data-science/probability-statistics/labs/distributions.html ':ignore') (binomial, Poisson, normal, with a Poisson overlay and sampled draws). Short steps: [Probability quick guide](/fields/data-science/probability-statistics/probability/quick-guide.md).
+## Try it
+
+Move the base rate and watch the posterior, then change the dials of each recipe and compare a random sample with the exact bars. Short steps: [Probability quick guide](/fields/data-science/probability-statistics/probability/quick-guide.md).
+
+[Bayes lab](/fields/data-science/probability-statistics/labs/bayes.html#embed ':ignore')
+
+[Distributions lab](/fields/data-science/probability-statistics/labs/distributions.html#embed ':ignore')
 
 ## 8. Short derivations
 

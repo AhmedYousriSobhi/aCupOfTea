@@ -416,3 +416,8 @@ html.sp-lock{overflow:hidden}
 
 /* Glossary terms (added when the site is built): a dotted underline, so they read as terms, not as loud links */
 .markdown-section a[href*="references/glossary?id="] { border-bottom: 1px dotted currentColor; text-decoration: none; }
+
+/* Embedded labs (.docs/lab-embed.js): a sandboxed frame under the text, with a caption link */
+.markdown-section figure.lab-embed { margin: 1.4em 0; }
+.markdown-section figure.lab-embed iframe { display: block; width: 100%; border: 1px solid var(--border-color); border-radius: 12px; background: var(--color-bg); }
+.markdown-section figure.lab-embed figcaption { margin-top: 6px; font-size: .85em; opacity: .8; }

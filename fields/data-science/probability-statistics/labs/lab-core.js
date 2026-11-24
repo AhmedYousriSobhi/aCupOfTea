@@ -161,12 +161,34 @@
     var root = document.documentElement, key = "lab-theme";
     function get() { try { return localStorage.getItem(key); } catch (e) { return null; } }
     function set(v) { try { if (v) localStorage.setItem(key, v); else localStorage.removeItem(key); } catch (e) { /* ignore */ } }
-    function apply(v) { if (v) root.setAttribute("data-theme", v); else root.removeAttribute("data-theme"); btn.setAttribute("aria-label", "Theme: " + (v || "auto") + ". Press to change."); btn.querySelector("span").textContent = v ? v[0].toUpperCase() + v.slice(1) : "Auto"; }
+    function apply(v) { if (root.classList.contains("embed")) return; if (v) root.setAttribute("data-theme", v); else root.removeAttribute("data-theme"); btn.setAttribute("aria-label", "Theme: " + (v || "auto") + ". Press to change."); btn.querySelector("span").textContent = v ? v[0].toUpperCase() + v.slice(1) : "Auto"; }
     var order = [null, "light", "dark"], cur = get(); if (cur !== "light" && cur !== "dark") cur = null;
     apply(cur);
     btn.addEventListener("click", function () { cur = order[(order.indexOf(cur) + 1) % 3]; set(cur); apply(cur); window.dispatchEvent(new Event("resize")); });
     if (window.matchMedia) window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function () { window.dispatchEvent(new Event("resize")); });
   }
+
+  // Embedded in a docs page (a sandboxed frame): hide the page chrome, take the site's theme and report the height.
+  // The theme and the height are the only things exchanged; both are validated, and nothing is ever put in as HTML.
+  (function embed() {
+    var q = new URLSearchParams(location.search);
+    if (q.get("embed") !== "1" || window.parent === window) return;
+    var root = document.documentElement;
+    root.classList.add("embed");
+    function setTheme(t) { if (t === "light" || t === "dark") { root.setAttribute("data-theme", t); window.dispatchEvent(new Event("resize")); } }
+    setTheme(q.get("theme"));
+    window.addEventListener("message", function (e) {
+      var d = e.data;
+      if (e.source === window.parent && d && typeof d === "object" && d.type === "lab-theme") setTheme(d.theme);
+    });
+    function send() {
+      var m = document.querySelector("main");
+      window.parent.postMessage({ type: "lab-height", h: Math.ceil((m ? m.getBoundingClientRect().height : document.body.scrollHeight) + 8) }, "*");
+    }
+    window.addEventListener("load", send);
+    window.addEventListener("resize", send);
+    if (window.ResizeObserver) new ResizeObserver(send).observe(document.body);
+  })();
   g.Lab = { rng: rng, normal: normal, erf: erf, ncdf: ncdf, ninv: ninv, binomPmf: binomPmf, poisPmf: poisPmf,
     binomSample: binomSample, poisSample: poisSample, $: $, fmt: fmt, pct: pct, colors: colors, prep: prep,
     barChart: barChart, slider: slider, hover: hover, paint: paint, theme: theme };

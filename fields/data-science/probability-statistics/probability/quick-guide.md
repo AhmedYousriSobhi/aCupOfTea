@@ -88,4 +88,10 @@ Histogram first. Within 1, 2, 3 SD is 68.27%, 95.45%, 99.73%.
 > [!WARNING]
 > Never add overlapping chances (`10 × 0.3 = 300%` is wrong; use `1 - 0.7^10 = 0.9718`). A repeated test helps only if its mistakes are independent.
 
-**Try it:** [Bayes lab](/fields/data-science/probability-statistics/labs/bayes.html ':ignore') and [distributions lab](/fields/data-science/probability-statistics/labs/distributions.html ':ignore'). **Why it works:** the five story pages above. Next: [Inference](/fields/data-science/probability-statistics/inference/README.md).
+## Try it
+
+[Bayes lab](/fields/data-science/probability-statistics/labs/bayes.html#embed ':ignore')
+
+[Distributions lab](/fields/data-science/probability-statistics/labs/distributions.html#embed ':ignore')
+
+**Why it works:** the five story pages above. Next: [Inference](/fields/data-science/probability-statistics/inference/README.md).
