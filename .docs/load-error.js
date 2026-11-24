@@ -1,6 +1,6 @@
 // When a page's Markdown cannot be fetched (a dropped connection on a phone or
 // tablet, a server hiccup), Docsify shows an empty page headed "0 -" or "503 -".
-// Replace that with a plain message and a Try again button. A page that does not
+// Replace that with a plain message and a Try again button, after one automatic retry. A page that does not
 // exist keeps its own 404 page (notFoundPage in config.js).
 (function () {
   function failed() {
@@ -22,6 +22,15 @@
     b.addEventListener('click', function () { location.reload(); });
     sec.replaceChildren(h, p, b);
     document.title = 'Page not loaded - aCupOfTea';
+    // a dropped request usually works the second time: try once by itself per page, then leave the button
+    var key = 'load-retry:' + location.hash;
+    try {
+      if (!sessionStorage.getItem(key)) {
+        sessionStorage.setItem(key, '1');
+        p.textContent = 'The connection dropped. Trying again...';
+        setTimeout(function () { location.reload(); }, 1200);
+      }
+    } catch (e) { /* no storage: the button is enough */ }
   }
 
   var cfg = window.$docsify = window.$docsify || {};
