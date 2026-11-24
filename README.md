@@ -1,3 +1,6 @@
+---
+summary: "Homepage of aCupOfTea, a personal knowledge base on AI, ML, software engineering and business: what it holds, a menu of sections and short pages to start with."
+---
 # aCupOfTea
 # AI Tea Lounge: Sipping Knowledge in AI Domains
 ![aCupOfTea logo: a yellow Pac-Man shape beside a steaming cup of tea on a saucer](https://github.com/AhmedYousriSobhi/aCupOfTea/assets/66730765/4a033ba8-5aac-475d-9b27-ec13e68746ba)
