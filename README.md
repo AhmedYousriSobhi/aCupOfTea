@@ -48,12 +48,12 @@ Not sure where to begin? Each of these takes one cup, roughly the reading time s
 
 ## 🆕 Recently added
 
-- 2026-11-23 · [Run Slurm Cluster Operations Without Losing Jobs](/fields/schedulers/slurm-cluster-operations/quick-guide.md)
-- 2026-11-23 · [Find Out Why a Slurm Job Is Pending](/fields/schedulers/slurm-pending-jobs/quick-guide.md)
-- 2026-11-23 · [Set Up QOS Preemption and Make Jobs Survive It](/fields/schedulers/slurm-preemption/quick-guide.md)
-- 2026-11-23 · [Check That Slurm Still Works After a Change](/fields/schedulers/slurm-smoke-tests/quick-guide.md)
-- 2026-11-23 · [Generate NHC from a Cluster Definition and Scope a Client Request](/fields/system-administration/node-health-check/architecture-and-case-study/quick-guide.md)
-- 2026-11-23 · [Write Checks, Fix Nodes and Troubleshoot NHC](/fields/system-administration/node-health-check/checks-and-remediation/quick-guide.md)
+- 2026-11-24 · [Summarise a Data Set: Which Number, Which Picture](/fields/data-science/probability-statistics/describing-data/quick-guide.md)
+- 2026-11-24 · [Describing Data, Technically: Definitions, Identities and Method Choices](/fields/data-science/probability-statistics/describing-data/technical-reference.md)
+- 2026-11-24 · [From a Sample to a Statement: Intervals, Tests and Lines](/fields/data-science/probability-statistics/inference/quick-guide.md)
+- 2026-11-24 · [Inference, Technically: Sampling Distributions, Intervals, Tests and Regression](/fields/data-science/probability-statistics/inference/technical-reference.md)
+- 2026-11-24 · [Pick and Compute the Right Probability Model](/fields/data-science/probability-statistics/probability/quick-guide.md)
+- 2026-11-24 · [Probability, Technically: Definitions, Identities and Assumptions](/fields/data-science/probability-statistics/probability/technical-reference.md)
 
 <!-- recent:end -->
 
