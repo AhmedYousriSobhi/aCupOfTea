@@ -21,6 +21,6 @@ Parts 12 to 15 of the [Probability & Statistics](/fields/data-science/probabilit
 
 | Lab | What you can do |
 |---|---|
-| [Sampling and intervals lab](/fields/data-science/probability-statistics/labs/sampling.html ':ignore') | Draw samples, watch the averages form a bell, build 100 intervals with z or t |
-| [Permutation test lab](/fields/data-science/probability-statistics/labs/permutation.html ':ignore') | Shuffle labels to build the luck distribution; run twenty tests on noise |
-| [Correlation lab](/fields/data-science/probability-statistics/labs/regression.html ':ignore') | Drag points, step through Anscombe's four sets, predict inside and outside the data |
+| [Sampling and intervals lab](/fields/data-science/probability-statistics/inference/quick-guide.md?id=try-it) | Draw samples, watch the averages form a bell, build 100 intervals with z or t |
+| [Permutation test lab](/fields/data-science/probability-statistics/inference/quick-guide.md?id=try-it) | Shuffle labels to build the luck distribution; run twenty tests on noise |
+| [Correlation lab](/fields/data-science/probability-statistics/inference/quick-guide.md?id=try-it) | Drag points, step through Anscombe's four sets, predict inside and outside the data |

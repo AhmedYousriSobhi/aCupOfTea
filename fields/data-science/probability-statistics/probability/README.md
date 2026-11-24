@@ -22,5 +22,5 @@ Parts 7 to 11 of the [Probability & Statistics](/fields/data-science/probability
 
 | Lab | What you can do |
 |---|---|
-| [Bayes lab](/fields/data-science/probability-statistics/labs/bayes.html ':ignore') | Move base rate, sensitivity and false-positive rate and watch the posterior |
-| [Distributions lab](/fields/data-science/probability-statistics/labs/distributions.html ':ignore') | Change binomial, Poisson and normal dials, draw samples, compare with exact values |
+| [Bayes lab](/fields/data-science/probability-statistics/probability/quick-guide.md?id=try-it) | Move base rate, sensitivity and false-positive rate and watch the posterior |
+| [Distributions lab](/fields/data-science/probability-statistics/probability/quick-guide.md?id=try-it) | Change binomial, Poisson and normal dials, draw samples, compare with exact values |

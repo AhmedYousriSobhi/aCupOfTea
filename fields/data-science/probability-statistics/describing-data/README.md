@@ -23,4 +23,4 @@ Parts 1 to 6 of the [Probability & Statistics](/fields/data-science/probability-
 
 | Lab | What you can do |
 |---|---|
-| [Describing data lab](/fields/data-science/probability-statistics/labs/describing.html ':ignore') | Change the crowd, bin width and divisor; add a wrong value; read mean, median, SD, IQR and the box plot |
+| [Describing data lab](/fields/data-science/probability-statistics/describing-data/quick-guide.md?id=try-it) | Change the crowd, bin width and divisor; add a wrong value; read mean, median, SD, IQR and the box plot |
