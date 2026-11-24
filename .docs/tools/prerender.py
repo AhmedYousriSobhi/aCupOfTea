@@ -22,8 +22,8 @@ BULLET = re.compile(r"^(\s*)([-*+]|\d+[.)])\s+(.*)$")
 TABLE_SEP = re.compile(r"^\s*\|?\s*:?-{2,}:?\s*(\|\s*:?-{2,}:?\s*)*\|?\s*$")
 INLINE = re.compile(
     r"(?P<code>`+)(?P<c>.+?)(?P=code)"
-    r"|!\[(?P<alt>[^\]]*)\]\((?P<isrc>[^)\s]+)(?:\s+\"[^\"]*\")?\)"
-    r"|\[(?P<text>[^\]]*)\]\((?P<href>[^)\s]+)(?:\s+\"[^\"]*\")?\)"
+    r"|!\[(?P<alt>[^\]]*)\]\((?P<isrc>[^)\s]+)(?:\s+(?:\"[^\"]*\"|'[^']*'))?\)"
+    r"|\[(?P<text>[^\]]*)\]\((?P<href>[^)\s]+)(?:\s+(?:\"[^\"]*\"|'[^']*'))?\)"
     r"|\*\*(?P<b>[^*]+?)\*\*|__(?P<b2>[^_]+?)__"
     r"|(?<![*\w])\*(?P<i>[^*\s][^*]*?)\*(?!\w)|(?<![_\w])_(?P<i2>[^_\s][^_]*?)_(?!\w)")
 
@@ -48,6 +48,8 @@ def make_url(url, page, depth):
     if url.startswith("#"):
         return ""  # a section of the interactive page; nothing to jump to here
     path, _, frag = url.partition("#")
+    if frag == "embed":
+        frag = ""  # "#embed" only asks the interactive page to show a lab inline (.docs/lab-embed.js)
     if not path:
         return ""
     if path.startswith("/"):

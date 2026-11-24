@@ -68,6 +68,12 @@ class Links(unittest.TestCase):
         self.assertIn('href="https://e.org/a?b=1"', r("[t](https://e.org/a?b=1)"))
         self.assertNotIn("<a ", r("[t](javascript:alert(1))"))
 
+    def test_lab_link_with_ignore_title_and_embed_marker(self):
+        out = r("[Bayes lab](/x/labs/bayes.html#embed ':ignore')")
+        self.assertIn('href="../../x/labs/bayes.html"', out)
+        self.assertNotIn("ignore", out)
+        self.assertNotIn("embed", out)
+
     def test_home_link(self):
         self.assertIn('href="../../"', r("[t](/README.md)"))
 
