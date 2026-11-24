@@ -19,7 +19,7 @@ relations:
 
 # How Sure Are You? Confidence Intervals
 
-> **Part 13 of 15.** Part of the [Probability & Statistics](/fields/data-science/probability-statistics/README.md) series. It continues from [Why Averages Behave](/fields/data-science/probability-statistics/why-averages-behave.md), where you learned how much a sample average wobbles (the standard error). By the end you will turn that wobble into an honest "give or take", know what the famous "95%" really claims, and know the one way a tight interval can still be wrong. The scenario is invented, and the simulation is labelled as simulated.
+> **Part 13 of 15.** Part of the [Probability & Statistics](/fields/data-science/probability-statistics/README.md) series. It continues from [Why Averages Behave](/fields/data-science/probability-statistics/inference/why-averages-behave.md), where you learned how much a sample average wobbles (the standard error). By the end you will turn that wobble into an honest "give or take", know what the famous "95%" really claims, and know the one way a tight interval can still be wrong. The scenario is invented, and the simulation is labelled as simulated.
 
 * * *
 
@@ -191,7 +191,7 @@ print("fans-only: covered", inside, "of 100; last interval", f"{lo:.3f} to {hi:.
 fans-only: covered 0 of 100; last interval 4.223 to 4.527
 ```
 
-The true mean is 3.75. **None** of 100 nets caught it. Each one is also narrow, because the fans mostly agree with each other, so the standard error is small: a tight, confident, wrong answer. A confidence interval measures only the wobble from **chance**. It cannot see a flaw in **who you asked**: that was the lesson of [Stir the Pot](/fields/data-science/probability-statistics/stir-the-pot-population-and-sampling.md), and no formula repairs it.
+The true mean is 3.75. **None** of 100 nets caught it. Each one is also narrow, because the fans mostly agree with each other, so the standard error is small: a tight, confident, wrong answer. A confidence interval measures only the wobble from **chance**. It cannot see a flaw in **who you asked**: that was the lesson of [Stir the Pot](/fields/data-science/probability-statistics/describing-data/stir-the-pot-population-and-sampling.md), and no formula repairs it.
 
 > [!WARNING]
 > Narrow does not mean right. Narrow means precise. A tight net around the wrong spot is the most dangerous number on the tin, because it looks careful.
@@ -218,7 +218,7 @@ Tala looks at the width of the nets. Each is about a third of a star wide. The g
 
 **Takeaway:** a confidence interval is estimate plus or minus a margin that measures chance wobble. The 95% is about the **method**, not the single interval, four times the data halves the width, and no interval can fix a biased sample.
 
-**Challenge:** is a gap of 0.15 stars real, or just two bags that happened to differ? Telling those apart is a decision, not a measurement, and it works like a trial. Next cup: [The Courtroom for Numbers](/fields/data-science/probability-statistics/the-courtroom-for-numbers.md).
+**Challenge:** is a gap of 0.15 stars real, or just two bags that happened to differ? Telling those apart is a decision, not a measurement, and it works like a trial. Next cup: [The Courtroom for Numbers](/fields/data-science/probability-statistics/inference/the-courtroom-for-numbers.md).
 
 * * *
 

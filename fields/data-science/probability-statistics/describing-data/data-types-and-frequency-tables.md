@@ -20,7 +20,7 @@ relations:
 
 # Mira's Notebook: What Kind of Data Is This, and How Do You Count It?
 
-> **Part 2 of 15.** Part of the [Probability & Statistics](/fields/data-science/probability-statistics/README.md) series. It continues from [Stir the Pot First](/fields/data-science/probability-statistics/stir-the-pot-population-and-sampling.md): Mira has a properly drawn sample and a notebook full of answers. By the end you will know what you are allowed to ask of any column before you compute, and how to count it without losing its shape. All people and numbers are invented, and every table can be checked by hand.
+> **Part 2 of 15.** Part of the [Probability & Statistics](/fields/data-science/probability-statistics/README.md) series. It continues from [Stir the Pot First](/fields/data-science/probability-statistics/describing-data/stir-the-pot-population-and-sampling.md): Mira has a properly drawn sample and a notebook full of answers. By the end you will know what you are allowed to ask of any column before you compute, and how to count it without losing its shape. All people and numbers are invented, and every table can be checked by hand.
 
 ## The idea in one minute
 

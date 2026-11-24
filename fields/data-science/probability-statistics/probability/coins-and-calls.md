@@ -20,7 +20,7 @@ relations:
 
 # Coins and Calls: Binomial and Poisson as Recipes
 
-> **Part 10 of 15.** Part of the [Probability & Statistics](/fields/data-science/probability-statistics/README.md) series. It continues from [What to Expect](/fields/data-science/probability-statistics/what-to-expect.md), where a long-run average (E[X]) and a spread became two numbers you can compute from a table of chances. Here we build two such tables from a question. The scenario numbers are invented, and every figure was recomputed with Python.
+> **Part 10 of 15.** Part of the [Probability & Statistics](/fields/data-science/probability-statistics/README.md) series. It continues from [What to Expect](/fields/data-science/probability-statistics/probability/what-to-expect.md), where a long-run average (E[X]) and a spread became two numbers you can compute from a table of chances. Here we build two such tables from a question. The scenario numbers are invented, and every figure was recomputed with Python.
 
 * * *
 
@@ -54,7 +54,7 @@ flowchart TD
 
 ## Binomial: count the ways, weigh each way
 
-Start small: **4** customers, each smoky with probability 0.3, independently. Write every possible queue as a string of yes (smoky) and no. There are `2^4 = 16` strings. Each string with `k` yeses has the same probability, `0.3^k × 0.7^(4-k)`, so group them by `k` (the counting from [Counting the Ways](/fields/data-science/probability-statistics/counting-the-ways.md)):
+Start small: **4** customers, each smoky with probability 0.3, independently. Write every possible queue as a string of yes (smoky) and no. There are `2^4 = 16` strings. Each string with `k` yeses has the same probability, `0.3^k × 0.7^(4-k)`, so group them by `k` (the counting from [Counting the Ways](/fields/data-science/probability-statistics/probability/counting-the-ways.md)):
 
 | Smoky orders `k` | Ways (strings) | Chance of each way | P(X = k) |
 |---|---|---|---|
@@ -167,7 +167,7 @@ Mira brews three cups of smoky and hovers. Tala has the table now: "Five or more
 
 "So that is two recipes for counting," says Tala. "Do the tables always look this lumpy?"
 
-Look back at the 10-customer row: it rises, peaks, falls. Make `n` huge and the lumps smooth into a curve that shows up everywhere. Next cup: [The Bell Curve](/fields/data-science/probability-statistics/the-bell-curve.md).
+Look back at the 10-customer row: it rises, peaks, falls. Make `n` huge and the lumps smooth into a curve that shows up everywhere. Next cup: [The Bell Curve](/fields/data-science/probability-statistics/probability/the-bell-curve.md).
 
 **Takeaway:** a distribution is a recipe matched to a question. Binomial counts yeses in `n` independent tries (ways times chance of each way). Poisson counts events in a window (many tiny chances). Check the assumptions before you trust the table.
 

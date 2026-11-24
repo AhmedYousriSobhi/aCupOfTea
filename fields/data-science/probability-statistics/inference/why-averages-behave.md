@@ -22,7 +22,7 @@ relations:
 
 # Why Averages Behave: The Sip You Could Take a Thousand Times
 
-> **Part 12 of 15.** Part of the [Probability & Statistics](/fields/data-science/probability-statistics/README.md) series. It joins two halves: the sip from a stirred pot in [Stir the Pot First](/fields/data-science/probability-statistics/stir-the-pot-population-and-sampling.md) and the bell from [The Bell Curve](/fields/data-science/probability-statistics/the-bell-curve.md). By the end you will see an average as a random thing with its own shape and spread, and know exactly what makes it trustworthy and what cannot. Every number below was simulated with a fixed seed.
+> **Part 12 of 15.** Part of the [Probability & Statistics](/fields/data-science/probability-statistics/README.md) series. It joins two halves: the sip from a stirred pot in [Stir the Pot First](/fields/data-science/probability-statistics/describing-data/stir-the-pot-population-and-sampling.md) and the bell from [The Bell Curve](/fields/data-science/probability-statistics/probability/the-bell-curve.md). By the end you will see an average as a random thing with its own shape and spread, and know exactly what makes it trustworthy and what cannot. Every number below was simulated with a fixed seed.
 
 * * *
 
@@ -223,7 +223,7 @@ Mira and Tala line up their 2-cup averages: 57 and 99.5. "We were never going to
 
 "So how close is close enough?" asks Tala. "If I say the true average is 75, how wrong could I be?"
 
-Mira smiles. "Now you can answer that. You know the pile of averages is a bell, centred on the truth, with spread sigma over root n. Use the bell page's tricks on it." That is the next cup: [How Sure Are You?](/fields/data-science/probability-statistics/how-sure-are-you.md)
+Mira smiles. "Now you can answer that. You know the pile of averages is a bell, centred on the truth, with spread sigma over root n. Use the bell page's tricks on it." That is the next cup: [How Sure Are You?](/fields/data-science/probability-statistics/inference/how-sure-are-you.md)
 
 **Takeaway:** an average is a random thing with its own distribution; its spread shrinks as sigma over root n, its shape tends to a bell whatever the crowd looks like, and none of that cures a biased sample.
 

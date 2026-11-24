@@ -21,7 +21,7 @@ relations:
 
 # What to Expect: Random Variables and Expected Value
 
-> **Part 9 of 15.** Part of the [Probability & Statistics](/fields/data-science/probability-statistics/README.md) series, after [The Test That Was 99 Percent Accurate](/fields/data-science/probability-statistics/the-test-that-was-99-percent-accurate.md). By the end you will know that expected value is **not a new idea**: it is the seesaw of [The Number on the Tin](/fields/data-science/probability-statistics/the-number-on-the-tin.md) and the leftover walk of [How Far From the Middle?](/fields/data-science/probability-statistics/how-far-from-the-middle.md), with probability in place of frequency.
+> **Part 9 of 15.** Part of the [Probability & Statistics](/fields/data-science/probability-statistics/README.md) series, after [The Test That Was 99 Percent Accurate](/fields/data-science/probability-statistics/probability/the-test-that-was-99-percent-accurate.md). By the end you will know that expected value is **not a new idea**: it is the seesaw of [The Number on the Tin](/fields/data-science/probability-statistics/describing-data/the-number-on-the-tin.md) and the leftover walk of [How Far From the Middle?](/fields/data-science/probability-statistics/describing-data/how-far-from-the-middle.md), with probability in place of frequency.
 
 * * *
 
@@ -58,7 +58,7 @@ Write down each possible `X` and how much probability it gets, and you have a **
 |---|---|---|---|---|
 | Probability `p` | 5/10 | 3/10 | 1/10 | 1/10 |
 
-The probabilities add to 1, because *something* must happen. This table looks exactly like the frequency table from [Part 2](/fields/data-science/probability-statistics/data-types-and-frequency-tables.md), and that is not an accident. A frequency table is what a bag *did* produce. A probability table is what a bag *would* produce, in the model. **Relative frequency in the data; probability in the model.** Everything below uses that twin.
+The probabilities add to 1, because *something* must happen. This table looks exactly like the frequency table from [Part 2](/fields/data-science/probability-statistics/describing-data/data-types-and-frequency-tables.md), and that is not an accident. A frequency table is what a bag *did* produce. A probability table is what a bag *would* produce, in the model. **Relative frequency in the data; probability in the model.** Everything below uses that twin.
 
 * * *
 
@@ -168,7 +168,7 @@ for n in (10, 1000, 100000):
 100000 pulls: mean 4.485  share of zeros 0.502
 ```
 
-Ten pulls: 3.5, a full coin off. A thousand: 4.365. A hundred thousand: 4.485, nearly the exact 4.5. Notice the share of zeros hovers around 0.5 the whole time, while the average creeps toward 4.5 without ever being a prize. Why the long-run average settles down, and how fast, is the subject of [Why Averages Behave](/fields/data-science/probability-statistics/why-averages-behave.md).
+Ten pulls: 3.5, a full coin off. A thousand: 4.365. A hundred thousand: 4.485, nearly the exact 4.5. Notice the share of zeros hovers around 0.5 the whole time, while the average creeps toward 4.5 without ever being a prize. Why the long-run average settles down, and how fast, is the subject of [Why Averages Behave](/fields/data-science/probability-statistics/inference/why-averages-behave.md).
 
 * * *
 
@@ -226,7 +226,7 @@ Mira prints the sign: "Lucky tin: 5 coins, prizes worth 4.5 on average." Ravi pu
 
 **Takeaway:** a random variable is a number for each way things could go, the expected value is the balance point of those numbers weighted by probability (the seesaw of Part 4), and the variance is the leftover walk (Part 5). It is what to *expect* on average, not what will happen on a single go.
 
-Now the challenge. Tala flips a coin 3 times and counts heads. The count is a random variable with a table of its own. What are its probabilities, and what is its expected value, with no cards in sight? Next cup: [Coins and Calls](/fields/data-science/probability-statistics/coins-and-calls.md)
+Now the challenge. Tala flips a coin 3 times and counts heads. The count is a random variable with a table of its own. What are its probabilities, and what is its expected value, with no cards in sight? Next cup: [Coins and Calls](/fields/data-science/probability-statistics/probability/coins-and-calls.md)
 
 * * *
 

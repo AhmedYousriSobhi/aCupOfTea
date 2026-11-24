@@ -442,7 +442,7 @@
     "id": "coins-and-calls",
     "level": "intermediate",
     "order": 10,
-    "path": "fields/data-science/probability-statistics/coins-and-calls.md",
+    "path": "fields/data-science/probability-statistics/probability/coins-and-calls.md",
     "reading_time_min": 9,
     "relations": {
       "prerequisites": [
@@ -495,7 +495,7 @@
     "id": "counting-the-ways",
     "level": "beginner",
     "order": 7,
-    "path": "fields/data-science/probability-statistics/counting-the-ways.md",
+    "path": "fields/data-science/probability-statistics/probability/counting-the-ways.md",
     "reading_time_min": 9,
     "relations": {
       "prerequisites": [
@@ -597,7 +597,7 @@
     "id": "data-types-and-frequency-tables",
     "level": "beginner",
     "order": 2,
-    "path": "fields/data-science/probability-statistics/data-types-and-frequency-tables.md",
+    "path": "fields/data-science/probability-statistics/describing-data/data-types-and-frequency-tables.md",
     "reading_time_min": 13,
     "relations": {
       "prerequisites": [
@@ -986,7 +986,7 @@
     "id": "draw-it-before-you-describe-it",
     "level": "beginner",
     "order": 3,
-    "path": "fields/data-science/probability-statistics/draw-it-before-you-describe-it.md",
+    "path": "fields/data-science/probability-statistics/describing-data/draw-it-before-you-describe-it.md",
     "reading_time_min": 10,
     "relations": {
       "prerequisites": [
@@ -1344,7 +1344,7 @@
     "id": "how-far-from-the-middle",
     "level": "beginner",
     "order": 5,
-    "path": "fields/data-science/probability-statistics/how-far-from-the-middle.md",
+    "path": "fields/data-science/probability-statistics/describing-data/how-far-from-the-middle.md",
     "reading_time_min": 11,
     "relations": {
       "prerequisites": [
@@ -1373,7 +1373,7 @@
     "id": "how-sure-are-you",
     "level": "intermediate",
     "order": 13,
-    "path": "fields/data-science/probability-statistics/how-sure-are-you.md",
+    "path": "fields/data-science/probability-statistics/inference/how-sure-are-you.md",
     "reading_time_min": 9,
     "relations": {
       "prerequisites": [
@@ -4663,7 +4663,7 @@
     "id": "stir-the-pot-population-and-sampling",
     "level": "beginner",
     "order": 1,
-    "path": "fields/data-science/probability-statistics/stir-the-pot-population-and-sampling.md",
+    "path": "fields/data-science/probability-statistics/describing-data/stir-the-pot-population-and-sampling.md",
     "reading_time_min": 11,
     "relations": {
       "prerequisites": [],
@@ -4691,7 +4691,7 @@
     "id": "the-bell-curve",
     "level": "intermediate",
     "order": 11,
-    "path": "fields/data-science/probability-statistics/the-bell-curve.md",
+    "path": "fields/data-science/probability-statistics/probability/the-bell-curve.md",
     "reading_time_min": 9,
     "relations": {
       "prerequisites": [
@@ -4721,7 +4721,7 @@
     "id": "the-courtroom-for-numbers",
     "level": "intermediate",
     "order": 14,
-    "path": "fields/data-science/probability-statistics/the-courtroom-for-numbers.md",
+    "path": "fields/data-science/probability-statistics/inference/the-courtroom-for-numbers.md",
     "reading_time_min": 9,
     "relations": {
       "prerequisites": [
@@ -4782,7 +4782,7 @@
     "id": "the-number-on-the-tin",
     "level": "beginner",
     "order": 4,
-    "path": "fields/data-science/probability-statistics/the-number-on-the-tin.md",
+    "path": "fields/data-science/probability-statistics/describing-data/the-number-on-the-tin.md",
     "reading_time_min": 12,
     "relations": {
       "prerequisites": [
@@ -4812,7 +4812,7 @@
     "id": "the-test-that-was-99-percent-accurate",
     "level": "beginner",
     "order": 8,
-    "path": "fields/data-science/probability-statistics/the-test-that-was-99-percent-accurate.md",
+    "path": "fields/data-science/probability-statistics/probability/the-test-that-was-99-percent-accurate.md",
     "reading_time_min": 8,
     "relations": {
       "prerequisites": [
@@ -4889,7 +4889,7 @@
     "id": "two-things-moving-together",
     "level": "intermediate",
     "order": 15,
-    "path": "fields/data-science/probability-statistics/two-things-moving-together.md",
+    "path": "fields/data-science/probability-statistics/inference/two-things-moving-together.md",
     "reading_time_min": 11,
     "relations": {
       "prerequisites": [
@@ -5149,7 +5149,7 @@
     "id": "what-to-expect",
     "level": "beginner",
     "order": 9,
-    "path": "fields/data-science/probability-statistics/what-to-expect.md",
+    "path": "fields/data-science/probability-statistics/probability/what-to-expect.md",
     "reading_time_min": 9,
     "relations": {
       "prerequisites": [
@@ -5179,7 +5179,7 @@
     "id": "where-do-you-stand",
     "level": "beginner",
     "order": 6,
-    "path": "fields/data-science/probability-statistics/where-do-you-stand.md",
+    "path": "fields/data-science/probability-statistics/describing-data/where-do-you-stand.md",
     "reading_time_min": 10,
     "relations": {
       "prerequisites": [
@@ -5209,7 +5209,7 @@
     "id": "why-averages-behave",
     "level": "intermediate",
     "order": 12,
-    "path": "fields/data-science/probability-statistics/why-averages-behave.md",
+    "path": "fields/data-science/probability-statistics/inference/why-averages-behave.md",
     "reading_time_min": 10,
     "relations": {
       "prerequisites": [
