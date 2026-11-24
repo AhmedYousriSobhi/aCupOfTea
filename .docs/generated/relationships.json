@@ -311,7 +311,8 @@
     ],
     "related": [],
     "related_by": [
-      "dip-geometric-transforms-interpolation"
+      "dip-geometric-transforms-interpolation",
+      "dip-quick-guide"
     ]
   },
   "dip-geometric-transforms-interpolation": {
@@ -341,7 +342,9 @@
       "dip-images-are-matrices"
     ],
     "related": [],
-    "related_by": []
+    "related_by": [
+      "dip-quick-guide"
+    ]
   },
   "dip-meet-fourier": {
     "prerequisite_of": [],
@@ -358,8 +361,21 @@
     ],
     "related": [],
     "related_by": [
+      "dip-quick-guide",
       "dip-wavelets-multiresolution"
     ]
+  },
+  "dip-quick-guide": {
+    "prerequisite_of": [],
+    "prerequisites": [],
+    "related": [
+      "dip-frequency-filtering-aliasing",
+      "dip-intensity-transforms-histograms",
+      "dip-noise-restoration",
+      "dip-spatial-filtering",
+      "dip-wavelets-multiresolution"
+    ],
+    "related_by": []
   },
   "dip-spatial-filtering": {
     "prerequisite_of": [
@@ -372,7 +388,9 @@
     "related": [
       "dip-fourier-transform-images"
     ],
-    "related_by": []
+    "related_by": [
+      "dip-quick-guide"
+    ]
   },
   "dip-wavelets-multiresolution": {
     "prerequisite_of": [],
@@ -382,7 +400,9 @@
     "related": [
       "dip-noise-restoration"
     ],
-    "related_by": []
+    "related_by": [
+      "dip-quick-guide"
+    ]
   },
   "draining-a-gpu-node": {
     "prerequisite_of": [],

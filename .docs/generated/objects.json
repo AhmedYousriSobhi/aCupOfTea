@@ -687,7 +687,7 @@
     "id": "digital-image-processing-overview",
     "level": "beginner",
     "path": "fields/digital-image-processing/README.md",
-    "reading_time_min": 5,
+    "reading_time_min": 6,
     "relations": {
       "prerequisites": [],
       "related": []
@@ -919,6 +919,38 @@
       "concept"
     ]
   },
+  "dip-quick-guide": {
+    "domains": [
+      "image-processing"
+    ],
+    "id": "dip-quick-guide",
+    "level": "intermediate",
+    "order": 11,
+    "path": "fields/digital-image-processing/quick-guide.md",
+    "reading_time_min": 6,
+    "relations": {
+      "prerequisites": [],
+      "related": [
+        "dip-frequency-filtering-aliasing",
+        "dip-intensity-transforms-histograms",
+        "dip-noise-restoration",
+        "dip-spatial-filtering",
+        "dip-wavelets-multiresolution"
+      ]
+    },
+    "status": "stable",
+    "summary": "A cheat sheet for parts 3, 4, 7, 8 and 9 - which transform or filter to pick, the number to check by hand, and five labs to try.",
+    "tags": [
+      "filtering",
+      "quick"
+    ],
+    "title": "Pick and Check an Image-Processing Step",
+    "type": "guide",
+    "types": [
+      "guide",
+      "reference"
+    ]
+  },
   "dip-spatial-filtering": {
     "domains": [
       "deep-learning",
@@ -928,7 +960,7 @@
     "level": "beginner",
     "order": 4,
     "path": "fields/digital-image-processing/spatial-filtering.md",
-    "reading_time_min": 6,
+    "reading_time_min": 7,
     "relations": {
       "prerequisites": [
         "dip-intensity-transforms-histograms"

@@ -100,6 +100,7 @@
       "dip-intensity-transforms-histograms",
       "dip-meet-fourier",
       "dip-noise-restoration",
+      "dip-quick-guide",
       "dip-spatial-filtering",
       "dip-wavelets-multiresolution"
     ]

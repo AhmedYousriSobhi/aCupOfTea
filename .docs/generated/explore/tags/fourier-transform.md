@@ -2,7 +2,7 @@
 
 # Fourier Transform
 
-- [Digital Image Processing - Overview](/fields/digital-image-processing/README.md) — The math of digital image processing, made friendly - a nine-part series from pixels as matrices to filters, Fourier, restoration, geometry and wavelets, for anyone coming back to the subject. *(beginner · 5 min)*  
+- [Digital Image Processing - Overview](/fields/digital-image-processing/README.md) — The math of digital image processing, made friendly - a nine-part series from pixels as matrices to filters, Fourier, restoration, geometry and wavelets, for anyone coming back to the subject. *(beginner · 6 min)*  
   [`convolution`](/.docs/generated/explore/tags/convolution.md) [`fourier-transform`](/.docs/generated/explore/tags/fourier-transform.md)
 - [Frequency Filtering and Aliasing](/fields/digital-image-processing/frequency-filtering-and-aliasing.md) — Low-pass, high-pass and notch filters as masks on the spectrum, why the ideal filter rings, and how sampling too coarsely creates moire - with the Nyquist rule worked on one number. *(intermediate · 7 min)*  
   [`convolution`](/.docs/generated/explore/tags/convolution.md) [`filtering`](/.docs/generated/explore/tags/filtering.md) [`fourier-transform`](/.docs/generated/explore/tags/fourier-transform.md) [`sampling`](/.docs/generated/explore/tags/sampling.md)

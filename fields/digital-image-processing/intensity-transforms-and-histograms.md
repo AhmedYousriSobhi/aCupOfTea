@@ -121,6 +121,10 @@ def equalize(img, levels=256):              # img: uint8 array
 
 Libraries differ in small details. Some subtract the smallest nonzero cumulative value first so the darkest level maps to exactly 0, so check your library's docs before comparing outputs.
 
+> ☕ **Try it live.** Edit the eight counts of the 8 × 8 bag and watch the table and the new histogram, then equalize a dark picture.
+
+[Intensity transforms lab](/fields/digital-image-processing/labs/intensity-transforms.html#embed ':ignore')
+
 ---
 
 ## Why a cumulative sum flattens things

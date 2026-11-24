@@ -137,6 +137,10 @@ Compare with [page 8](/fields/digital-image-processing/noise-and-restoration.md)
 
 Honest limits: thresholding too hard leaves ringing-like artifacts around edges and a patchy look, and a wavelet is chosen to suit the image type. And there's a trade-off you can't escape: you cannot know a position and a frequency both perfectly. Wavelets just pick a smarter compromise than Fourier's all-frequency, no-position extreme: short windows for fast changes, long windows for slow ones.
 
+> ☕ **Try it live.** Try the pairs [9, 7, 3, 5] and the challenge row, then threshold the detail coefficients of a noisy picture.
+
+[Wavelets lab](/fields/digital-image-processing/labs/wavelets.html#embed ':ignore')
+
 ---
 
 ## Where you meet wavelets

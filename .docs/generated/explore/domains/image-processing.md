@@ -4,7 +4,7 @@
 
 Digital images as signals - intensity, filtering, frequency domain, restoration and geometry.
 
-- [Digital Image Processing - Overview](/fields/digital-image-processing/README.md) — The math of digital image processing, made friendly - a nine-part series from pixels as matrices to filters, Fourier, restoration, geometry and wavelets, for anyone coming back to the subject. *(beginner · 5 min)*  
+- [Digital Image Processing - Overview](/fields/digital-image-processing/README.md) — The math of digital image processing, made friendly - a nine-part series from pixels as matrices to filters, Fourier, restoration, geometry and wavelets, for anyone coming back to the subject. *(beginner · 6 min)*  
   [`convolution`](/.docs/generated/explore/tags/convolution.md) [`fourier-transform`](/.docs/generated/explore/tags/fourier-transform.md)
 - [Edges and Sharpening](/fields/digital-image-processing/edges-and-sharpening.md) — Derivatives as differences between neighbours - gradient, Sobel, Laplacian and unsharp masking, plus a one-line example that shows exactly where sharpening halos come from. *(beginner · 7 min)*  
   [`filtering`](/.docs/generated/explore/tags/filtering.md) [`noise`](/.docs/generated/explore/tags/noise.md)
@@ -18,7 +18,9 @@ Digital images as signals - intensity, filtering, frequency domain, restoration 
   [`fourier-transform`](/.docs/generated/explore/tags/fourier-transform.md)
 - [Noise and Restoration](/fields/digital-image-processing/noise-and-restoration.md) — The degradation model g = h*f + n, common noise types, why inverse filtering explodes, and how the Wiener filter gives up gracefully - with PSNR to score the result. *(intermediate · 7 min)*  
   [`filtering`](/.docs/generated/explore/tags/filtering.md) [`noise`](/.docs/generated/explore/tags/noise.md)
-- [Spatial Filtering](/fields/digital-image-processing/spatial-filtering.md) — Kernels, correlation versus convolution, padding and separability - blurring explained as a neighbourhood vote, with the mean and median compared on one noisy pixel. *(beginner · 6 min)*  
+- [Pick and Check an Image-Processing Step](/fields/digital-image-processing/quick-guide.md) — A cheat sheet for parts 3, 4, 7, 8 and 9 - which transform or filter to pick, the number to check by hand, and five labs to try. *(intermediate · 6 min)*  
+  [`filtering`](/.docs/generated/explore/tags/filtering.md) [`quick`](/.docs/generated/explore/tags/quick.md)
+- [Spatial Filtering](/fields/digital-image-processing/spatial-filtering.md) — Kernels, correlation versus convolution, padding and separability - blurring explained as a neighbourhood vote, with the mean and median compared on one noisy pixel. *(beginner · 7 min)*  
   [`convolution`](/.docs/generated/explore/tags/convolution.md) [`filtering`](/.docs/generated/explore/tags/filtering.md) [`noise`](/.docs/generated/explore/tags/noise.md)
 - [The Fourier Transform for Images](/fields/digital-image-processing/fourier-transform-for-images.md) — What the 2D DFT really says - an image as a sum of waves, magnitude versus phase, a 4-point DFT done by hand, and the convolution theorem that turns sliding windows into multiplication. *(intermediate · 8 min)*  
   [`convolution`](/.docs/generated/explore/tags/convolution.md) [`filtering`](/.docs/generated/explore/tags/filtering.md) [`fourier-transform`](/.docs/generated/explore/tags/fourier-transform.md)

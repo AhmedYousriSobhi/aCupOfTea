@@ -80,6 +80,17 @@ The route follows the topic order of the course's main reference, R. C. Gonzalez
 | [frequency-filtering-and-aliasing](/fields/digital-image-processing/frequency-filtering-and-aliasing.md) | Low-pass, high-pass and notch filters; sampling and aliasing |
 | [noise-and-restoration](/fields/digital-image-processing/noise-and-restoration.md) | Noise models, inverse and Wiener filtering, PSNR |
 | [wavelets-and-multiresolution-processing](/fields/digital-image-processing/wavelets-and-multiresolution-processing.md) | Pyramids, the Haar transform, subbands, wavelet denoising |
+| [Quick guide: pick a step](/fields/digital-image-processing/quick-guide.md) | The step to pick and the number to check for parts 3, 4, 7, 8 and 9, with the five labs |
+
+## Interactive labs
+
+| Lab | What you can do |
+|---|---|
+| [Intensity transforms lab](/fields/digital-image-processing/quick-guide.md?id=try-it) | Edit the 8 × 8 bag and watch equalization build its table; rescue a dark picture with gamma, log or equalization |
+| [Spatial filters lab](/fields/digital-image-processing/quick-guide.md?id=try-it) | Edit a 3 × 3 window; add Gaussian or salt-and-pepper noise and compare the mean, the median and the border rules |
+| [Frequency filters lab](/fields/digital-image-processing/quick-guide.md?id=try-it) | Cut the spectrum with an ideal, Butterworth or Gaussian mask and measure the ringing; click the dots of stripe noise to notch them out; sample a wave too coarsely and see the alias |
+| [Restoration lab](/fields/digital-image-processing/quick-guide.md?id=try-it) | See the inverse filter multiply the noise and Wiener hold back; restore a blurred, noisy picture and score it |
+| [Wavelets lab](/fields/digital-image-processing/quick-guide.md?id=try-it) | Run the Haar transform on a row by hand, then threshold the detail coefficients of a noisy picture |
 
 ## Related reading in this repo
 

@@ -127,6 +127,10 @@ The **fix is applied before sampling**: remove the frequencies the grid can't ca
 
 Once aliasing has happened it can't be undone: the information about the true frequency is gone, and the 1 Hz you see could just as well have come from a real 1 Hz wave.
 
+> ☕ **Try it live.** Switch between the ideal, Butterworth and Gaussian masks and watch the ripples, click the dots of stripe noise to notch them out, then sample a 9 Hz wave 10 times per second.
+
+[Frequency filters lab](/fields/digital-image-processing/labs/frequency-filters.html#embed ':ignore')
+
 ---
 
 ## Wraparound: the border gotcha

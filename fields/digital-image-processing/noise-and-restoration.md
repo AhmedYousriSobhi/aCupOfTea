@@ -128,6 +128,10 @@ Use the numbers from the quiz. H = 0.01 and K = 0.01 give a gain of 0.01 / (0.00
 
 K is usually tuned by eye: too small and the noise creeps back, too big and the result stays blurry. That's the trade-off in one dial.
 
+> ☕ **Try it live.** Slide the blur strength and K to see the inverse filter explode and Wiener hold, then restore a blurred, noisy picture.
+
+[Restoration lab](/fields/digital-image-processing/labs/restoration.html#embed ':ignore')
+
 ---
 
 ## Scoring a restoration

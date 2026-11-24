@@ -91,6 +91,7 @@
     * [7. Frequency filtering, aliasing](fields/digital-image-processing/frequency-filtering-and-aliasing.md)
     * [8. Noise and restoration](fields/digital-image-processing/noise-and-restoration.md)
     * [9. Wavelets, multiresolution](fields/digital-image-processing/wavelets-and-multiresolution-processing.md)
+    * [Quick guide: pick a step](fields/digital-image-processing/quick-guide.md)
   * [**Generative AI**](fields/generative-ai/README.md)
     * [**Evaluation and Debugging**](fields/generative-ai/evaluation-and-debugging/README.md)
     * [**Langchain**](fields/generative-ai/langchain/README.md)

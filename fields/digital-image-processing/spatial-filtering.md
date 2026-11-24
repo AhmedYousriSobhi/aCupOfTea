@@ -100,6 +100,10 @@ The speck vanishes completely and nothing bleeds. A single outlier can never be 
 
 So the manager and the other engineer were both right. They were treating different noise: Pixel Town's whisper campaign versus one loudmouth. More on telling them apart on [page 8](/fields/digital-image-processing/noise-and-restoration.md).
 
+> ☕ **Try it live.** Edit the nine numbers under the window, then add noise to a picture and compare the mean, the median and the three borders.
+
+[Spatial filters lab](/fields/digital-image-processing/labs/spatial-filters.html#embed ':ignore')
+
 ---
 
 ## The edge of the map
