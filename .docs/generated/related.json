@@ -1579,7 +1579,7 @@
       {
         "id": "dip-spatial-filtering",
         "path": "fields/digital-image-processing/spatial-filtering.md",
-        "title": "Spatial Filtering"
+        "title": "One Bad Pixel: Spatial Filtering"
       }
     ],
     "related": [],
@@ -1590,26 +1590,26 @@
       {
         "id": "dip-spatial-filtering",
         "path": "fields/digital-image-processing/spatial-filtering.md",
-        "title": "Spatial Filtering"
+        "title": "One Bad Pixel: Spatial Filtering"
       }
     ],
     "related": [
       {
         "id": "dip-meet-fourier",
         "path": "fields/digital-image-processing/meet-fourier.md",
-        "title": "Meet Fourier"
+        "title": "The Prefect Who Split Heat Into Waves: Meet Fourier"
       }
     ],
     "required_by": [
       {
         "id": "dip-frequency-filtering-aliasing",
         "path": "fields/digital-image-processing/frequency-filtering-and-aliasing.md",
-        "title": "Frequency Filtering and Aliasing"
+        "title": "The Shirt That Shimmers: Frequency Filtering and Aliasing"
       },
       {
         "id": "dip-wavelets-multiresolution",
         "path": "fields/digital-image-processing/wavelets-and-multiresolution-processing.md",
-        "title": "Wavelets and Multiresolution Processing"
+        "title": "The Scratch That Is Everywhere: Wavelets and Multiresolution Processing"
       }
     ]
   },
@@ -1618,21 +1618,26 @@
       {
         "id": "dip-fourier-transform-images",
         "path": "fields/digital-image-processing/fourier-transform-for-images.md",
-        "title": "The Fourier Transform for Images"
+        "title": "Two Faces, Swapped: The Fourier Transform for Images"
       }
     ],
     "related": [
       {
+        "id": "dip-quick-guide",
+        "path": "fields/digital-image-processing/quick-guide.md",
+        "title": "Pick and Check an Image-Processing Step"
+      },
+      {
         "id": "dip-geometric-transforms-interpolation",
         "path": "fields/digital-image-processing/geometric-transforms-and-interpolation.md",
-        "title": "Geometric Transforms and Interpolation"
+        "title": "The Jagged Scan: Geometric Transforms and Interpolation"
       }
     ],
     "required_by": [
       {
         "id": "dip-noise-restoration",
         "path": "fields/digital-image-processing/noise-and-restoration.md",
-        "title": "Noise and Restoration"
+        "title": "The Photo That Turned to Static: Noise and Restoration"
       }
     ]
   },
@@ -1641,14 +1646,14 @@
       {
         "id": "dip-images-are-matrices",
         "path": "fields/digital-image-processing/images-are-just-matrices.md",
-        "title": "Images Are Just Matrices"
+        "title": "The Scan That Opened Black: Images Are Just Matrices"
       }
     ],
     "related": [
       {
         "id": "dip-frequency-filtering-aliasing",
         "path": "fields/digital-image-processing/frequency-filtering-and-aliasing.md",
-        "title": "Frequency Filtering and Aliasing"
+        "title": "The Shirt That Shimmers: Frequency Filtering and Aliasing"
       }
     ],
     "required_by": []
@@ -1660,12 +1665,12 @@
       {
         "id": "dip-geometric-transforms-interpolation",
         "path": "fields/digital-image-processing/geometric-transforms-and-interpolation.md",
-        "title": "Geometric Transforms and Interpolation"
+        "title": "The Jagged Scan: Geometric Transforms and Interpolation"
       },
       {
         "id": "dip-intensity-transforms-histograms",
         "path": "fields/digital-image-processing/intensity-transforms-and-histograms.md",
-        "title": "Intensity Transforms and Histograms"
+        "title": "The Unreadable X-ray: Intensity Transforms and Histograms"
       }
     ]
   },
@@ -1674,15 +1679,21 @@
       {
         "id": "dip-images-are-matrices",
         "path": "fields/digital-image-processing/images-are-just-matrices.md",
-        "title": "Images Are Just Matrices"
+        "title": "The Scan That Opened Black: Images Are Just Matrices"
       }
     ],
-    "related": [],
+    "related": [
+      {
+        "id": "dip-quick-guide",
+        "path": "fields/digital-image-processing/quick-guide.md",
+        "title": "Pick and Check an Image-Processing Step"
+      }
+    ],
     "required_by": [
       {
         "id": "dip-spatial-filtering",
         "path": "fields/digital-image-processing/spatial-filtering.md",
-        "title": "Spatial Filtering"
+        "title": "One Bad Pixel: Spatial Filtering"
       }
     ]
   },
@@ -1692,7 +1703,7 @@
       {
         "id": "dip-fourier-transform-images",
         "path": "fields/digital-image-processing/fourier-transform-for-images.md",
-        "title": "The Fourier Transform for Images"
+        "title": "Two Faces, Swapped: The Fourier Transform for Images"
       }
     ],
     "required_by": []
@@ -1702,14 +1713,50 @@
       {
         "id": "dip-frequency-filtering-aliasing",
         "path": "fields/digital-image-processing/frequency-filtering-and-aliasing.md",
-        "title": "Frequency Filtering and Aliasing"
+        "title": "The Shirt That Shimmers: Frequency Filtering and Aliasing"
       }
     ],
     "related": [
       {
+        "id": "dip-quick-guide",
+        "path": "fields/digital-image-processing/quick-guide.md",
+        "title": "Pick and Check an Image-Processing Step"
+      },
+      {
         "id": "dip-wavelets-multiresolution",
         "path": "fields/digital-image-processing/wavelets-and-multiresolution-processing.md",
-        "title": "Wavelets and Multiresolution Processing"
+        "title": "The Scratch That Is Everywhere: Wavelets and Multiresolution Processing"
+      }
+    ],
+    "required_by": []
+  },
+  "fields/digital-image-processing/quick-guide.md": {
+    "prerequisites": [],
+    "related": [
+      {
+        "id": "dip-spatial-filtering",
+        "path": "fields/digital-image-processing/spatial-filtering.md",
+        "title": "One Bad Pixel: Spatial Filtering"
+      },
+      {
+        "id": "dip-noise-restoration",
+        "path": "fields/digital-image-processing/noise-and-restoration.md",
+        "title": "The Photo That Turned to Static: Noise and Restoration"
+      },
+      {
+        "id": "dip-wavelets-multiresolution",
+        "path": "fields/digital-image-processing/wavelets-and-multiresolution-processing.md",
+        "title": "The Scratch That Is Everywhere: Wavelets and Multiresolution Processing"
+      },
+      {
+        "id": "dip-frequency-filtering-aliasing",
+        "path": "fields/digital-image-processing/frequency-filtering-and-aliasing.md",
+        "title": "The Shirt That Shimmers: Frequency Filtering and Aliasing"
+      },
+      {
+        "id": "dip-intensity-transforms-histograms",
+        "path": "fields/digital-image-processing/intensity-transforms-and-histograms.md",
+        "title": "The Unreadable X-ray: Intensity Transforms and Histograms"
       }
     ],
     "required_by": []
@@ -1719,20 +1766,26 @@
       {
         "id": "dip-intensity-transforms-histograms",
         "path": "fields/digital-image-processing/intensity-transforms-and-histograms.md",
-        "title": "Intensity Transforms and Histograms"
+        "title": "The Unreadable X-ray: Intensity Transforms and Histograms"
       }
     ],
-    "related": [],
+    "related": [
+      {
+        "id": "dip-quick-guide",
+        "path": "fields/digital-image-processing/quick-guide.md",
+        "title": "Pick and Check an Image-Processing Step"
+      }
+    ],
     "required_by": [
       {
         "id": "dip-edges-sharpening",
         "path": "fields/digital-image-processing/edges-and-sharpening.md",
-        "title": "Edges and Sharpening"
+        "title": "The Sharpen Button That Made Things Worse: Edges and Sharpening"
       },
       {
         "id": "dip-fourier-transform-images",
         "path": "fields/digital-image-processing/fourier-transform-for-images.md",
-        "title": "The Fourier Transform for Images"
+        "title": "Two Faces, Swapped: The Fourier Transform for Images"
       }
     ]
   },
@@ -1741,14 +1794,19 @@
       {
         "id": "dip-fourier-transform-images",
         "path": "fields/digital-image-processing/fourier-transform-for-images.md",
-        "title": "The Fourier Transform for Images"
+        "title": "Two Faces, Swapped: The Fourier Transform for Images"
       }
     ],
     "related": [
       {
+        "id": "dip-quick-guide",
+        "path": "fields/digital-image-processing/quick-guide.md",
+        "title": "Pick and Check an Image-Processing Step"
+      },
+      {
         "id": "dip-noise-restoration",
         "path": "fields/digital-image-processing/noise-and-restoration.md",
-        "title": "Noise and Restoration"
+        "title": "The Photo That Turned to Static: Noise and Restoration"
       }
     ],
     "required_by": []

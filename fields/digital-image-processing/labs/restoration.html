@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; base-uri 'none'; form-action 'none'">
+<title>Lab: dividing by the blur</title>
+<link rel="stylesheet" href="lab.css">
+</head>
+<body>
+<main>
+  <div class="top">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a class="pill" href="../../../#/fields/digital-image-processing/quick-guide.md">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>Quick guide</a>
+      <a class="pill" href="../../../#/fields/digital-image-processing/noise-and-restoration.md">Read Part 8</a>
+    </nav>
+    <button class="pill" id="theme" type="button" aria-label="Theme: auto. Press to change.">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      <span>Auto</span></button>
+  </div>
+  <header class="hero">
+    <div class="kicker">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 15l5-5 4 4 3-3 6 6"/></svg>
+      Image lab &middot; Part 8
+    </div>
+    <h1>The photo that turned to static</h1>
+    <p class="lead">Blur multiplies each frequency by H; noise is added on top. Dividing by a small H multiplies the noise too, and Wiener stops before that happens.</p>
+  </header>
+  <section class="card" aria-labelledby="h-res">
+    <h2 id="h-res">What does dividing by the blur do to the noise?</h2>
+    <p class="sub">At one frequency the blur leaves |H| of the signal, and the noise there is N. The inverse filter divides by H; Wiener divides with a safety term K.</p>
+    <div class="result">
+      <div>
+        <div class="big" id="big" aria-live="polite">100&times;<small>noise amplification of the inverse filter</small></div>
+        <p class="says" id="says"></p>
+        <div class="minis"><div class="mini"><span>Inverse gain, 1 / |H|</span><strong id="m-inv"></strong></div><div class="mini"><span>Wiener gain, |H| / (|H|&sup2; + K)</span><strong id="m-wie"></strong></div><div class="mini"><span>|H| &asymp; K<sup>1/2</sup> is where Wiener turns</span><strong id="m-turn"></strong></div></div>
+      </div>
+      <div class="chart-wrap"><canvas id="cg" role="img" aria-label="Gain applied to the noise against the blur's strength at that frequency, for the inverse and the Wiener filter"></canvas></div>
+    </div>
+    <div class="legend"><span><i class="dot kettle"></i>inverse filter 1 / |H|</span><span><i class="dot leaf"></i>Wiener</span><span><i class="dot ink"></i>your |H|</span></div>
+    <div class="dials"><div class="dial"><div class="dial-head"><label for="h">Blur strength at this frequency, log&#8321;&#8320;|H|</label><output id="h-v" for="h"></output></div><input id="h" type="range" min="-3" max="0" step="0.05" value="-2"><small><span>0.001</span><span>1</span></small><p class="hint">&minus;2 means |H| = 0.01: the blur kept one hundredth of the signal here.</p></div><div class="dial"><div class="dial-head"><label for="kw">Wiener constant, log&#8321;&#8320;K</label><output id="kw-v" for="kw"></output></div><input id="kw" type="range" min="-4" max="0" step="0.05" value="-2"><small><span>0.0001</span><span>1</span></small><p class="hint">K stands for the noise-to-signal ratio.</p></div></div>
+  </section>
+  <section class="card" aria-labelledby="h-play">
+    <h2 id="h-play"><span class="num">1</span>Restore a picture</h2>
+    <p class="sub">The picture is blurred along x by a box of length a, then noise is added. Score each result against the clean picture.</p>
+<div class="xcards"><button class="xcard" type="button" data-x="9|0|-2"><span class="tag">Page 8</span><b>No noise: the inverse is exact</b><span>Blur length 9, no noise: dividing the blur out returns the picture almost exactly: the score is above 99 dB, only rounding error.</span></button><button class="xcard" type="button" data-x="9|3|-2"><span class="tag">Page 8</span><b>A little noise: static</b><span>Noise of 3 gray levels: the blurred picture scores 17.2 dB, the inverse filter 8.4 dB (worse), Wiener 22.5 dB.</span></button><button class="xcard" type="button" data-x="9|3|-4"><span class="tag">K too small</span><b>Wiener with K = 0.0001</b><span>Barely any safety: the noise creeps back, 14.6 dB.</span></button><button class="xcard" type="button" data-x="9|3|0"><span class="tag">K too big</span><b>Wiener with K = 1</b><span>Too cautious: the result stays blurry, 12.2 dB.</span></button></div><div class="dials mt12"><div class="dial"><div class="dial-head"><label for="a">Blur length a</label><output id="a-v" for="a"></output></div><input id="a" type="range" min="1" max="31" step="1" value="9"><small><span>1</span><span>31</span></small></div><div class="dial"><div class="dial-head"><label for="sg">Noise standard deviation</label><output id="sg-v" for="sg"></output></div><input id="sg" type="range" min="0" max="25" step="0.5" value="3"><small><span>0</span><span>25</span></small></div><div class="dial"><div class="dial-head"><label for="k">Wiener K, log&#8321;&#8320;</label><output id="k-v" for="k"></output></div><input id="k" type="range" min="-5" max="0" step="0.25" value="-2"><small><span>0.00001</span><span>1</span></small></div></div>
+    <div class="imgrow"><figure><canvas id="pA" class="pix" role="img" aria-label="Original"></canvas><figcaption id="pAc">Original</figcaption></figure><figure><canvas id="pB" class="pix" role="img" aria-label="Blurred and noisy"></canvas><figcaption id="pBc">Blurred and noisy</figcaption></figure><figure><canvas id="pC" class="pix" role="img" aria-label="Inverse filter"></canvas><figcaption id="pCc">Inverse filter</figcaption></figure><figure><canvas id="pD" class="pix" role="img" aria-label="Wiener"></canvas><figcaption id="pDc">Wiener</figcaption></figure></div>
+    <p class="says" id="picsays"></p>
+  </section>
+  <section class="card" aria-labelledby="h-psn">
+    <h2 id="h-psn"><span class="num">2</span>Scoring: PSNR</h2>
+    <p class="sub">PSNR = 10 &middot; log&#8321;&#8320;(255&sup2; / MSE). Higher is closer; every 3 dB is about half the mean squared error.</p>
+<div class="dials"><div class="dial"><div class="dial-head"><label for="ms">Mean squared error, log&#8321;&#8320;</label><output id="ms-v" for="ms"></output></div><input id="ms" type="range" min="0" max="3.5" step="0.05" value="2"><small><span>1</span><span>3,162</span></small></div></div>
+    <div class="minis"><div class="mini"><span>MSE</span><strong id="mse"></strong></div><div class="mini"><span>PSNR</span><strong id="ps"></strong></div><div class="mini"><span>PSNR if the MSE were halved</span><strong id="ps2"></strong></div></div>
+  </section>
+  <details class="assume"><summary>What this assumes</summary><div>The blur is a horizontal box of length a applied circularly (the picture wraps like wallpaper) and the noise is Gaussian with the standard deviation you pick, drawn from a seeded generator, so a run repeats. The observed picture is not clipped to 0 to 255, matching the model g = h * f + &eta;. The inverse filter leaves out any frequency the blur erased exactly (|H| below 10<sup>-6</sup>). The Wiener filter uses a single constant K, tuned by you. The single-frequency calculator treats the noise there as N = 1.</div></details>
+
+  <p class="foot">Part of <a href="../../../#/fields/digital-image-processing/README.md">Digital Image Processing, Pixel Town</a>. The pictures are drawn in code, and the numbers are checked against an independent script.</p>
+</main>
+<script src="lab-core.js"></script>
+<script src="img-core.js"></script>
+<script src="restoration.js"></script>
+</body>
+</html>

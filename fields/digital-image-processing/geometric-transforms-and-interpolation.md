@@ -1,6 +1,6 @@
 ---
 id: dip-geometric-transforms-interpolation
-title: Geometric Transforms and Interpolation
+title: "The Jagged Scan: Geometric Transforms and Interpolation"
 sidebar_label: 2. Geometric transforms
 order: 2
 summary: Moving the whole map - affine transforms in homogeneous coordinates, why you must map backwards, and nearest, bilinear and bicubic interpolation with a bilinear example worked by hand.
@@ -12,21 +12,53 @@ relations:
   related: [dip-frequency-filtering-aliasing]
 ---
 
-# Geometric Transforms and Interpolation
+# The Jagged Scan: Geometric Transforms and Interpolation
 
-> **Part 2 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** Every rotation, zoom and shift moves citizens to squares that don't exist. By the end you'll write a transform as one matrix, explain why real code loops over the **output** instead of the input, and compute a bilinear interpolation on paper.
+> **Part 2 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** *Mira, Ravi and the records office are invented; the maths and numbers are real.*
+
+On Thursday afternoon Mira will rotate a scanned ledger page by 3 degrees to straighten it. The text will come out with staircase edges and the thin ruled lines will break into dashes. Nothing will be wrong with the scanner, the file or the angle, which will make the next hour harder.
+
+**By the end of this page you will be able to:**
+
+- Write a rotation, zoom or shift as one matrix, and chain several into one.
+- Explain which loop to run, over the input pixels or the output pixels, and why.
+- Compute a bilinear interpolation on paper.
+- Pick an interpolation for a photo and a different one for a class mask.
+- Say what to do before you shrink an image by a large factor.
 
 ---
 
-## The jagged scan
+## The page that came out in stairs
 
-You rotate a scanned page by 3 degrees to straighten it. The text, once clean, now has staircase edges, and thin lines look broken.
+14:10, the records office. A ledger page was scanned a little crooked, and the office wants it straight before it goes into the archive. Mira runs the team's `rotate` script with an angle of 3 degrees and opens the result.
 
-Nothing was lost to noise or blur. The problem is arithmetic: a rotated citizen almost never lands exactly on a square, and something has to decide what number to write on the squares that are left.
+The text, once clean, now has staircase edges. The thin ruled lines look broken, as if someone had drawn them with a dotted pen.
+
+Her first reading is the obvious one: **a bad scan.** The noise must have been there all along and the rotation just made it visible.
 
 ---
 
-## Moving a citizen
+## Three ways to make it worse
+
+**Attempt 1: scan it again, bigger.** Ravi has the page rescanned at a higher resolution. Mira rotates it by the same 3 degrees. The staircase is back, just made of smaller stairs.
+
+**Attempt 2: blur the stairs away.** She applies a blur to the rotated page. The stairs soften and so does the handwriting. The ruled lines are still broken, only fuzzier.
+
+**Attempt 3: rotate it in smaller steps.** If one big turn is rough, three gentle ones must be smoother. She writes a loop that turns the page 1 degree at a time, three times, and queues it for the whole archive overnight. Ravi sees the job in the queue and cancels it before it starts: "Hold on. Let's find out what a rotation does to one pixel first."
+
+So far:
+
+- The scan is fine, and a bigger scan did not help.
+- Blurring hides the damage without fixing it.
+- Three small turns were about to be run on every page.
+
+That leaves one question: **what does a rotation actually do to a single pixel?**
+
+---
+
+## Where does a rotated citizen land?
+
+### Moving a citizen
 
 Each pixel at position (x, y) goes to a new position (x', y'). The basic moves:
 
@@ -39,9 +71,7 @@ Each pixel at position (x, y) goes to a new position (x', y'). The basic moves:
 
 The first three are fine as formulas but they don't compose nicely: translation **adds** while the rest **multiply**. That's awkward when you want to chain moves.
 
----
-
-## One matrix for everything: homogeneous coordinates
+### One matrix for everything: homogeneous coordinates
 
 The trick is to give each point an extra coordinate of 1, writing (x, y) as (x, y, 1). Now every move above, translation included, is a 3 × 3 matrix multiplication:
 
@@ -58,9 +88,7 @@ flowchart LR
 
 *Chaining moves is multiplying matrices. The combined matrix then moves each pixel in a single step.*
 
----
-
-## Order matters
+### Order matters
 
 Matrix multiplication isn't commutative, so the order of the moves changes the result. With the rightmost matrix applied first:
 
@@ -74,9 +102,7 @@ To rotate an image about its **centre**, the recipe is: translate the centre to 
 > [!WARNING]
 > Image y points **down** (page 1). A rotation matrix written for the usual math plot with y pointing up turns the image the opposite way on screen. If your picture rotates the wrong direction, flip the sign of θ. OpenCV's `getRotationMatrix2D` documents its own sign convention: check it, don't guess.
 
----
-
-## Try it before you scroll
+### Try it before you scroll
 
 ☕ Rotate the point (10, 0) by 45° about the origin. **Are the new coordinates whole numbers?**
 
@@ -84,9 +110,7 @@ To rotate an image about its **centre**, the recipe is: translate the centre to 
 
 **Answer:** no. x' = 10·0.707 ≈ **7.07**, y' = 10·0.707 ≈ **7.07**. The citizen lands between squares, which is the whole problem.
 
----
-
-## Forward mapping leaves holes
+### Forward mapping leaves holes
 
 The obvious program loops over every **input** pixel, computes where it goes, and writes its value there. This is **forward mapping**, and it has two flaws:
 
@@ -99,9 +123,7 @@ $$\begin{bmatrix}x\\y\\1\end{bmatrix}=M^{-1}\begin{bmatrix}x'\\y'\\1\end{bmatrix
 
 This is **inverse (backward) mapping**. Every output square is visited exactly once, so there are no holes. The source position will usually be fractional (7.07, say), and so we need a way to read a value "between" citizens.
 
----
-
-## Interpolation: guessing between citizens
+### Interpolation: guessing between citizens
 
 **Interpolation** estimates the image value at a fractional position from the nearest real pixels.
 
@@ -113,9 +135,7 @@ This is **inverse (backward) mapping**. Every output square is visited exactly o
 
 The jagged scan came from nearest neighbour (or from careless rounding). Bilinear is the sensible default; bicubic is worth it when you scale up and care about sharpness. Nearest neighbour stays the right choice for **label images** (class masks), where blending two class ids would produce a class that doesn't exist.
 
----
-
-## Bilinear, by hand
+### Bilinear, by hand
 
 Say the source position is a fraction a to the right and b downward of a square whose four corner pixels are:
 
@@ -138,9 +158,7 @@ Take corners f00 = 10, f10 = 20, f01 = 30, f11 = 40.
 
 At a grid point the answer is the original pixel; in between it slides smoothly. The same result comes from two steps of 1-D interpolation: along the top edge, along the bottom edge, then between those two.
 
----
-
-## Beyond affine
+### Beyond affine
 
 An affine transform keeps parallel lines parallel. A **perspective (homography)** transform, a full 3 × 3 matrix with a free bottom row followed by a divide by the third coordinate, doesn't. It has **8 free numbers** (four point pairs) and models a flat surface seen from an angle: straightening a photographed document, say. The same inverse-map-and-interpolate loop applies.
 
@@ -150,13 +168,48 @@ An affine transform keeps parallel lines parallel. A **perspective (homography)*
 
 ## Back to the jagged scan
 
+Mira prints where one output pixel comes from in the input. The answer is a fraction, like 7.07 across and 7.07 down: the rotated citizen almost never lands on a square. Her script rounded it to the nearest square.
+
 Rotating by 3 degrees maps nearly every pixel to a fractional position. With nearest neighbour you pick the closest square and the edge becomes a staircase. With bilinear you blend four neighbours: the edges smooth out, and a thin line gets slightly softer, which is the price.
 
 The cleaner pipeline is inverse mapping with bilinear or bicubic, and only **one** resampling step. Rotating twice in a row compounds the blur, so combine the moves into a single matrix first.
 
+She switches the script to inverse mapping with bilinear interpolation and one combined matrix. The text comes out clean and the ruled lines stay unbroken. She also deletes the three-step loop from the overnight queue, where it had been waiting.
+
+The page was never badly scanned. It was just rotated by a program that rounded.
+
+---
+
+## Never again: how to move an image
+
+| Situation | Do |
+|---|---|
+| Rotate, scale, shift or shear | Write one 3 × 3 matrix; chain moves by multiplying, rightmost applied first |
+| Rotate about the centre | `M = T(centre) · R(θ) · T(−centre)` |
+| Writing the loop | Loop over the **output** pixels and use the inverse matrix `M^-1` |
+| Photos | Bilinear by default; bicubic when you scale up and care about sharpness |
+| Label images (class masks) | Nearest neighbour, so no class id is invented |
+| Several moves in a row | Combine them into one matrix: one resampling step, one dose of blur |
+| Shrinking by a large factor | Blur first, or use `INTER_AREA` in OpenCV |
+| Rotation goes the wrong way | y points down: flip the sign of θ, and read the library's own convention (`getRotationMatrix2D`) |
+
 **Takeaway:** one 3 × 3 matrix handles every affine move; always map output to input, and choose the interpolation to suit the data.
 
 **Next:** so far we moved the citizens. What if we only change what their cards say, to rescue an image whose numbers are squeezed into a dark corner of the range? [Part 3: Intensity transforms and histograms](/fields/digital-image-processing/intensity-transforms-and-histograms.md).
+
+---
+
+## 📜 The Scroll (keep this)
+
+```text
+Symptom:  Rotated text has stairs and dashed lines
+Cause:    A rotated pixel lands between squares; nearest neighbour picks one
+Check:    Print the source position of one output pixel: is it a fraction?
+Do not:   Map input to output (holes); rotate in several steps (blur compounds)
+Fix:      Inverse mapping, bilinear or bicubic, one combined matrix
+Mask:     Class masks keep nearest neighbour
+```
+
 
 ### References
 

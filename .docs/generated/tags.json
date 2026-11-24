@@ -92,6 +92,7 @@
       "dip-fourier-transform-images",
       "dip-frequency-filtering-aliasing",
       "dip-noise-restoration",
+      "dip-quick-guide",
       "dip-spatial-filtering"
     ]
   },
@@ -404,6 +405,7 @@
   "quick": {
     "label": "Quick guide",
     "objects": [
+      "dip-quick-guide",
       "slurm-cluster-operations-quick",
       "slurm-pending-jobs-quick",
       "slurm-preemption-quick",
