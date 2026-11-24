@@ -135,6 +135,12 @@ Same answer, as it must be: the numerator is the 99 true catches (as a share of 
 
 * * *
 
+> ☕ **Try it live.** Move the base rate, the catch rate and the false-alarm rate, and watch the 100 positive tins change colour. The starting dials are this page's numbers.
+
+[Bayes lab](/fields/data-science/probability-statistics/labs/bayes.html#embed ':ignore')
+
+* * *
+
 ## A second positive: beliefs move
 
 Ravi wanders in. "Just run it again."

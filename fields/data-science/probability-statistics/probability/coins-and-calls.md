@@ -132,6 +132,12 @@ So Poisson is a binomial with the `n` thrown away: all you need is the average r
 
 * * *
 
+> ☕ **Try it live.** Pick the binomial or the Poisson, turn the dials, draw a random sample and compare it with the exact bars. Overlay Poisson(np) on a binomial to see when the two agree.
+
+[Distributions lab](/fields/data-science/probability-statistics/labs/distributions.html#embed ':ignore')
+
+* * *
+
 ## When the recipe lies
 
 The Poisson recipe assumes a **constant rate** and **independent arrivals**. Ravi, who counts everything, has tallied arrivals in 12 ten-minute windows (invented): 8 quiet mid-morning windows, `1, 2, 2, 3, 1, 2, 1, 3`, and 4 lunchtime windows, `7, 8, 6, 9`.

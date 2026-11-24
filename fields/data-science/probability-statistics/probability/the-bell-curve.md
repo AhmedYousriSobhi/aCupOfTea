@@ -180,6 +180,12 @@ So far the bell has behaved. What happens when the data disagree?
 
 * * *
 
+> ☕ **Try it live.** Choose the Normal tab, set a mean and an SD, and move a and b: the shaded area is the probability. Hover the curve to read a value's z-score.
+
+[Distributions lab](/fields/data-science/probability-statistics/labs/distributions.html#embed ':ignore')
+
+* * *
+
 ## When the data are not a bell
 
 Go back to Mira's 20 tasting scores, the two-clump crowd from earlier parts. Their mean is 75.2 and their SD 17.67. Treat them as normal and ask what the model *predicts* for how many scores lie within a given distance of the mean, then count:

@@ -4877,7 +4877,7 @@
     "level": "beginner",
     "order": 8,
     "path": "fields/data-science/probability-statistics/probability/the-test-that-was-99-percent-accurate.md",
-    "reading_time_min": 8,
+    "reading_time_min": 9,
     "relations": {
       "prerequisites": [
         "counting-the-ways"
