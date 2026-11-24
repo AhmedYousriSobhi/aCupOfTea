@@ -236,12 +236,17 @@ async function run(browser, base, label, size, phone) {
   await go('this-page-does-not-exist');
   c('missing page shows the friendly 404', /This page is not here/.test(await page.locator('.markdown-section').innerText()));
 
-  await page.route('**/tips/markdown.md', (r) => r.abort());
-  await go('tips/markdown', 6000); 
+  // fail the page's own requests for one file (a route abort would not reach them: the service worker answers first)
+  await page.evaluate(() => {
+    const open = XMLHttpRequest.prototype.open;
+    XMLHttpRequest.prototype.open = function (m, u, ...rest) { return open.call(this, m, /tips\/markdown\.md/.test(u) ? 'http://127.0.0.1:1/x.md' : u, ...rest); };
+    const f = window.fetch;
+    window.fetch = function (u, ...rest) { return /tips\/markdown\.md/.test(String(u)) ? Promise.reject(new TypeError('Failed to fetch')) : f.call(this, u, ...rest); };
+  });
+  await go('tips/markdown', 4000);
   const failedText = await page.locator('.markdown-section').innerText();
   c('a page that cannot be fetched shows a message and Try again, not "0 -"',
     /could not be loaded/.test(failedText) && /connection failed/.test(failedText) && !/^\s*0 -/.test(failedText) && (await page.locator('.markdown-section button.load-retry').count()) === 1, failedText.slice(0, 80));
-  await page.unroute('**/tips/markdown.md');
 
   await go('');
   if (phone) {
