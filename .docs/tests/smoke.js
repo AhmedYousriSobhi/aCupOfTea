@@ -236,12 +236,12 @@ async function run(browser, base, label, size, phone) {
   await go('this-page-does-not-exist');
   c('missing page shows the friendly 404', /This page is not here/.test(await page.locator('.markdown-section').innerText()));
 
-  await page.route('**/fields/benchmarks/hpl.md', (r) => r.abort());
-  await go('fields/benchmarks/hpl', 6000); 
+  await page.route('**/tips/markdown.md', (r) => r.abort());
+  await go('tips/markdown', 6000); 
   const failedText = await page.locator('.markdown-section').innerText();
   c('a page that cannot be fetched shows a message and Try again, not "0 -"',
     /could not be loaded/.test(failedText) && /connection failed/.test(failedText) && !/^\s*0 -/.test(failedText) && (await page.locator('.markdown-section button.load-retry').count()) === 1, failedText.slice(0, 80));
-  await page.unroute('**/fields/benchmarks/hpl.md');
+  await page.unroute('**/tips/markdown.md');
 
   await go('');
   if (phone) {
