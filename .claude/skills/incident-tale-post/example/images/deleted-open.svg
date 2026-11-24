@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 230" role="img" aria-label="df says the disk is 100 percent full but du only finds a little. A deleted file still held open by a process explains the gap, and lsof plus L1 reveals it.">
+<style>
+:root{--bg:#fff;--fg:#222;--box:#eef3ff;--line:#4a6cf7;--bad:#d33;--ok:#1a8f4c;--warn:#e8a200;--soft:#9aa5c4}
+@media (prefers-color-scheme:dark){:root{--bg:#1b1e24;--fg:#e8e8e8;--box:#262c3a;--line:#8aa2ff;--bad:#ff6b6b;--ok:#4cd68a;--warn:#ffc233;--soft:#6b7390}}
+rect.bg{fill:var(--bg)} text{fill:var(--fg);font-family:system-ui,sans-serif}
+.frame{fill:none;stroke:var(--line);stroke-width:2}
+.full{fill:var(--bad);transform-origin:40px 0;animation:f 8s infinite}
+.small{fill:var(--ok);transform-origin:40px 0;animation:s 8s infinite}
+.ghost{fill:none;stroke:var(--warn);stroke-width:2.5;stroke-dasharray:7 5;animation:g 8s infinite}
+.gt{animation:g 8s infinite;font-size:14px;font-weight:600}
+.rv{animation:r 8s infinite;font-size:15px;font-weight:600}
+@keyframes f{0%{transform:scaleX(0)}25%,100%{transform:scaleX(1)}}
+@keyframes s{0%,25%{transform:scaleX(0)}45%,100%{transform:scaleX(.12)}}
+@keyframes g{0%,50%{opacity:0}62%,100%{opacity:1}}
+@keyframes r{0%,75%{opacity:0}85%,100%{opacity:1}}
+@media (prefers-reduced-motion:reduce){.full,.small,.ghost,.gt,.rv{animation:none}.small{transform:scaleX(.12)}}
+</style>
+<rect class="bg" width="640" height="230"/>
+<text x="40" y="30" font-size="14">df: how full is the disk?</text>
+<rect class="frame" x="40" y="38" width="560" height="26" rx="6"/><rect class="full" x="40" y="38" width="560" height="26" rx="6"/>
+<text x="590" y="56" font-size="13" text-anchor="end" style="fill:#fff;font-weight:600">100%</text>
+<text x="40" y="96" font-size="14">du: how much can we find?</text>
+<rect class="frame" x="40" y="104" width="560" height="26" rx="6"/><rect class="small" x="40" y="104" width="560" height="26" rx="6"/>
+<rect class="ghost" x="140" y="104" width="456" height="26" rx="6"/>
+<text class="gt" x="368" y="122" text-anchor="middle">deleted file, still held open?</text>
+<text class="rv" x="320" y="185" text-anchor="middle" style="fill:var(--ok)">lsof +L1  lists open files that were unlinked</text>
+</svg>

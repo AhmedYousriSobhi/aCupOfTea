@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 230" role="img" aria-label="One disk shared by the slurmd spool directory, the logs and /tmp. /tmp grows until the disk is full, slurmd cannot write its state and the node drains.">
+<style>
+:root{--bg:#fff;--fg:#222;--box:#eef3ff;--line:#4a6cf7;--bad:#d33;--ok:#1a8f4c;--warn:#e8a200;--soft:#9aa5c4}
+@media (prefers-color-scheme:dark){:root{--bg:#1b1e24;--fg:#e8e8e8;--box:#262c3a;--line:#8aa2ff;--bad:#ff6b6b;--ok:#4cd68a;--warn:#ffc233;--soft:#6b7390}}
+rect.bg{fill:var(--bg)} text{fill:var(--fg);font-family:system-ui,sans-serif}
+.frame{fill:none;stroke:var(--line);stroke-width:2}
+.sp{fill:var(--ok)} .lg{fill:var(--soft)}
+.tmp{fill:var(--warn);transform-origin:128px 0;animation:grow 9s infinite}
+.a{animation:a 9s infinite;font-size:15px}.b{animation:b 9s infinite;font-size:15px;font-weight:600;fill:var(--bad)}
+@keyframes grow{0%{transform:scaleX(.02)}70%,100%{transform:scaleX(1)}}
+@keyframes a{0%,68%{opacity:1}74%,100%{opacity:0}}
+@keyframes b{0%,72%{opacity:0}80%,100%{opacity:1}}
+@media (prefers-reduced-motion:reduce){.tmp,.a,.b{animation:none}.tmp{transform:scaleX(1)}.a{opacity:0}.b{opacity:1}}
+</style>
+<rect class="bg" width="640" height="230"/>
+<text x="30" y="32" font-size="14">One disk: the root filesystem</text>
+<rect class="frame" x="30" y="44" width="580" height="60" rx="8"/>
+<rect class="sp" x="36" y="50" width="8" height="48"/>
+<rect class="lg" x="48" y="50" width="76" height="48"/>
+<rect class="tmp" x="128" y="50" width="476" height="48"/>
+<text x="40" y="128" font-size="12">spool dir</text><text x="40" y="143" font-size="12">few MB</text>
+<text x="52" y="165" font-size="12">/var/log</text>
+<text x="330" y="128" font-size="13" text-anchor="middle">/tmp (jobs write here, nobody cleans up)</text>
+<text class="a" x="320" y="205" text-anchor="middle">slurmd: state written fine. The spool directory looks innocent.</text>
+<text class="b" x="320" y="205" text-anchor="middle">write cred_state.new: No space left on device  →  node DRAINED</text>
+</svg>

@@ -61,6 +61,7 @@ from webp_images import convert_tree  # noqa: E402
 MARKER = ".stage-site"
 # Pages of the local authoring tools: they only work next to the local server (new_page.py --gui),
 # so they stay out of the published site.
+# .claude holds the project's Claude Code skills: tooling for the repo, not site content
 LOCAL_ONLY = {".docs/tools/page_gui.html"}
 RELATED_MARK = "<!-- related-block -->"
 RECENT_RE = re.compile(r"<!-- recent:start -->.*?<!-- recent:end -->", re.S)
@@ -404,7 +405,7 @@ def stage(src, out, base_url=DEFAULT_BASE):
         skip = set()
         for n in names:
             rel = n if rel_dir == "." else f"{rel_dir}/{n}"
-            if n == ".git" or n == "__pycache__" or rel in subs or rel == out_rel or rel in LOCAL_ONLY:
+            if n in (".git", ".claude", "__pycache__") or rel in subs or rel == out_rel or rel in LOCAL_ONLY:
                 skip.add(n)
         return skip
 
