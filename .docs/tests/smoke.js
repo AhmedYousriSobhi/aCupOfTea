@@ -404,6 +404,12 @@ async function run(browser, base, label, size, phone) {
       const n = await page.evaluate(() => Array.from(document.querySelectorAll('.markdown-section iframe')).map((f) => f.getAttribute('sandbox')));
       c('every embedded lab on ' + slug + ' is sandboxed', n.length === want && n.every((v) => v === 'allow-scripts'), JSON.stringify(n));
     }
+    // a link to one lab (quick-guide.md?id=<lab>) must land on that lab, although the frames above it grow after the jump
+    await go('fields/digital-image-processing/README', 1500); // click the README table link, as a reader does
+    await page.locator('.markdown-section a', { hasText: 'Wavelets lab' }).first().click();
+    await page.waitForTimeout(4000);
+    const labTop = await page.evaluate(() => { const h = document.getElementById('wavelets-lab'); return h ? Math.round(h.getBoundingClientRect().top) : null; });
+    c('a link to one lab lands on that lab, not on the first', labTop !== null && labTop >= 0 && labTop < 300, String(labTop));
     const policy = await page.evaluate(() => window.__csp.filter((v) => /^frame-src/.test(v)));
     c('no frame is blocked by the policy', policy.length === 0, policy.join(' | '));
   }

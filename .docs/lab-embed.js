@@ -17,6 +17,7 @@
   var PATH = /^[a-z0-9][a-z0-9\/-]*\/labs\/[a-z0-9-]+\.html$/;
   var MIN = 240, MAX = 3000;
   var live = [];
+  var hold = null; // the heading a link jumped to: kept in view while the frames above it grow to their height
 
   function siteBase() { return location.href.split('#')[0].split('?')[0].replace(/[^/]*$/, ''); }
   function mode() { return document.documentElement.getAttribute('data-mode') === 'dark' ? 'dark' : 'light'; }
@@ -47,6 +48,21 @@
     return fig;
   }
 
+  // A link such as quick-guide.md?id=wavelets-lab lands on its heading, but frames above it then load and grow, which
+  // pushes the heading away. Until the reader scrolls (or 8 s pass) put the heading back each time a frame reports its height.
+  function holdAnchor() {
+    hold = null;
+    var m = /[?&]id=([^&#]+)/.exec(location.hash);
+    var el = m && document.getElementById(decodeURIComponent(m[1]));
+    if (!el || !document.querySelector('.markdown-section figure.lab-embed')) return;
+    hold = el;
+    var evs = ['wheel', 'touchstart', 'keydown', 'mousedown'];
+    var stop = function () { hold = null; evs.forEach(function (n) { window.removeEventListener(n, stop, true); }); };
+    evs.forEach(function (n) { window.addEventListener(n, stop, true); });
+    setTimeout(stop, 8000);
+  }
+  function keep() { if (hold && hold.isConnected) hold.scrollIntoView({ block: 'start', behavior: 'instant' }); }
+
   function scan() {
     live = live.filter(function (f) { return f.isConnected; });
     var section = document.querySelector('.markdown-section');
@@ -62,6 +78,7 @@
       if (block !== a && block.textContent.trim() === a.textContent.trim()) block.replaceWith(fig);
       else block.after(fig);
     });
+    holdAnchor();
   }
 
   // a plain link to a lab page (":ignore" keeps it root-absolute, which misses the site's folder
@@ -84,6 +101,7 @@
       var h = Number(d.h);
       if (isFinite(h)) f.style.height = Math.min(MAX, Math.max(MIN, Math.ceil(h))) + 'px';
     });
+    keep();
   });
 
   // keep the frames in step with the site's theme (the sandboxed origin "null" can only be reached with "*")

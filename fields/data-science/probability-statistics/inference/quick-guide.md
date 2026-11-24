@@ -85,9 +85,15 @@ r = st.correlation(temp, cups)
 
 ## Try it
 
+### Sampling and intervals lab
+
 [Sampling and intervals lab](/fields/data-science/probability-statistics/labs/sampling.html#embed ':ignore')
 
+### Permutation test lab
+
 [Permutation test lab](/fields/data-science/probability-statistics/labs/permutation.html#embed ':ignore')
+
+### Correlation lab
 
 [Correlation lab](/fields/data-science/probability-statistics/labs/regression.html#embed ':ignore')
 
