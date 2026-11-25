@@ -387,7 +387,12 @@ async function run(browser, base, label, size, phone) {
     await page.locator('.markdown-section iframe').first().scrollIntoViewIfNeeded();
     await page.waitForFunction(() => Array.from(document.querySelectorAll('.markdown-section iframe')).some((f) => f.contentWindow && f.contentWindow.length !== undefined && f.src.indexOf('bayes.html') > -1), null, { timeout: 8000 }).catch(() => {});
     await page.waitForTimeout(1500);
-    const frame = page.frames().find((f) => /\/labs\/bayes\.html/.test(f.url()));
+    // a loaded runner can need longer than that: look for the loaded frame for up to 20 s before calling it missing
+    let frame = null;
+    for (let i = 0; i < 40 && !frame; i++) {
+      frame = page.frames().find((f) => /\/labs\/bayes\.html/.test(f.url())) || null;
+      if (!frame) await page.waitForTimeout(500);
+    }
     if (frame) {
       await frame.waitForSelector('#post', { timeout: 8000 }).catch(() => {});
       const inner = await frame.evaluate(() => {
@@ -407,7 +412,10 @@ async function run(browser, base, label, size, phone) {
       await go('fields/' + slug, 2000);
       const nCards = await page.locator('.markdown-section figure.lab-embed').count();
       c('every lab on ' + slug + ' is a card with no frame yet', nCards === want && (await page.locator('.markdown-section iframe').count()) === 0, String(nCards));
-      for (const b of await page.locator('.markdown-section .lab-open').all()) await b.click();
+      // click in the page itself: on a slow runner a frame that has just opened grows between the position check and the click, and a real click lands on the frame above
+      for (const b of await page.locator('.markdown-section .lab-open').all()) await b.evaluate((el) => el.click());
+      // a slow runner can lag behind the clicks: wait for the frames, so a real missing frame still fails
+      await page.waitForFunction((w) => document.querySelectorAll('.markdown-section iframe').length >= w, want, { timeout: 8000 }).catch(() => {});
       const n = await page.evaluate(() => Array.from(document.querySelectorAll('.markdown-section iframe')).map((f) => f.getAttribute('sandbox')));
       c('every embedded lab on ' + slug + ' is sandboxed', n.length === want && n.every((v) => v === 'allow-scripts'), JSON.stringify(n));
     }
