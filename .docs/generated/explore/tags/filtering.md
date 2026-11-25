@@ -2,17 +2,17 @@
 
 # Filtering
 
-- [One Bad Pixel: Spatial Filtering](/fields/digital-image-processing/spatial-filtering.md) — Kernels, correlation versus convolution, padding and separability - blurring explained as a neighbourhood vote, with the mean and median compared on one noisy pixel. *(beginner · 8 min)*  
+- [One Bad Pixel: Spatial Filtering](/fields/digital-image-processing/spatial-filtering.md) — Kernels, correlation versus convolution, padding and separability - blurring explained as a neighbourhood vote, with the mean and median compared on one noisy pixel. *(beginner · 11 min · long read)*  
   [`convolution`](/.docs/generated/explore/tags/convolution.md) [`filtering`](/.docs/generated/explore/tags/filtering.md) [`noise`](/.docs/generated/explore/tags/noise.md)
 - [Pick and Check an Image-Processing Step](/fields/digital-image-processing/quick-guide.md) — A cheat sheet for parts 3, 4, 7, 8 and 9 - which transform or filter to pick, the number to check by hand, and five labs to try. *(intermediate · 6 min)*  
   [`filtering`](/.docs/generated/explore/tags/filtering.md) [`quick`](/.docs/generated/explore/tags/quick.md)
 - [The Fourier Transform for Images](/fields/digital-image-processing/fourier-transform-for-images.md) — What the 2D DFT really says - an image as a sum of waves, magnitude versus phase, a 4-point DFT done by hand, and the convolution theorem that turns sliding windows into multiplication. *(intermediate · 8 min)*  
   [`convolution`](/.docs/generated/explore/tags/convolution.md) [`filtering`](/.docs/generated/explore/tags/filtering.md) [`fourier-transform`](/.docs/generated/explore/tags/fourier-transform.md)
-- [The Photo That Turned to Static: Noise and Restoration](/fields/digital-image-processing/noise-and-restoration.md) — The degradation model g = h*f + n, common noise types, why inverse filtering explodes, and how the Wiener filter gives up gracefully - with PSNR to score the result. *(intermediate · 8 min)*  
+- [The Photo That Turned to Static: Noise and Restoration](/fields/digital-image-processing/noise-and-restoration.md) — The degradation model g = h*f + n, common noise types, why inverse filtering explodes, and how the Wiener filter gives up gracefully - with PSNR to score the result. *(intermediate · 9 min)*  
   [`filtering`](/.docs/generated/explore/tags/filtering.md) [`noise`](/.docs/generated/explore/tags/noise.md)
-- [The Sharpen Button That Made Things Worse: Edges and Sharpening](/fields/digital-image-processing/edges-and-sharpening.md) — Derivatives as differences between neighbours - gradient, Sobel, Laplacian and unsharp masking, plus a one-line example that shows exactly where sharpening halos come from. *(beginner · 9 min)*  
+- [The Sharpen Button That Made Things Worse: Edges and Sharpening](/fields/digital-image-processing/edges-and-sharpening.md) — Derivatives as differences between neighbours - gradient, Sobel, Laplacian and unsharp masking, plus a one-line example that shows exactly where sharpening halos come from. *(beginner · 10 min)*  
   [`filtering`](/.docs/generated/explore/tags/filtering.md) [`noise`](/.docs/generated/explore/tags/noise.md)
-- [The Shirt That Shimmers: Frequency Filtering and Aliasing](/fields/digital-image-processing/frequency-filtering-and-aliasing.md) — Low-pass, high-pass and notch filters as masks on the spectrum, why the ideal filter rings, and how sampling too coarsely creates moire - with the Nyquist rule worked on one number. *(intermediate · 9 min)*  
+- [The Shirt That Shimmers: Frequency Filtering and Aliasing](/fields/digital-image-processing/frequency-filtering-and-aliasing.md) — Low-pass, high-pass and notch filters as masks on the spectrum, why the ideal filter rings, and how sampling too coarsely creates moire - with the Nyquist rule worked on one number. *(intermediate · 10 min)*  
   [`convolution`](/.docs/generated/explore/tags/convolution.md) [`filtering`](/.docs/generated/explore/tags/filtering.md) [`fourier-transform`](/.docs/generated/explore/tags/fourier-transform.md) [`sampling`](/.docs/generated/explore/tags/sampling.md)
 
 [All tags](/.docs/generated/explore/tags.md)

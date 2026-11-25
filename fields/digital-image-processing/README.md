@@ -41,7 +41,7 @@ Same town, nine points of view. The math is only the language we use to describe
 | 8 | [Noise and restoration](/fields/digital-image-processing/noise-and-restoration.md) | Why does "un-blurring" a photo explode into static? |
 | 9 | [Wavelets and multiresolution processing](/fields/digital-image-processing/wavelets-and-multiresolution-processing.md) | Where in the picture is the scratch, and at what scale? |
 
-Each page opens with a small incident (Mira and Ravi, invented), explains what happened, and ends with a Scroll you can keep. It also ends with the question the next one answers. Read them in order the first time; later, jump straight to the formula you need.
+Each page opens with a small scene (the people in it are invented), tells the maths as one story told to you, in Pixel Town, and ends with a Scroll you can keep. It also ends with the question the next one answers. Read them in order the first time; later, jump straight to the formula you need.
 
 ---
 
