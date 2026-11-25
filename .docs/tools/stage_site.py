@@ -149,7 +149,7 @@ def docsify_slug(text):
     """The id Docsify gives a heading (lowercase, punctuation dropped, spaces to dashes)."""
     t = re.sub(r"<[^>]+>", "", text.strip().lower())
     t = re.sub(r"[\u2000-\u206F\u2E00-\u2E7F\\'!\"#$%&()*+,./:;<=>?@\[\]^`{|}~\u2019]", "", t)
-    return re.sub(r"-+", "-", re.sub(r"\s", "-", t))
+    return re.sub(r"\s", "-", t)
 
 
 def render_lab_line(path, body, labs):

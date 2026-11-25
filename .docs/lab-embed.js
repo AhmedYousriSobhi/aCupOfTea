@@ -155,6 +155,9 @@
     }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-mode'] });
   }
 
+  // a link on the same page (the "Interactive lab" line under the title) changes only the hash: Docsify does not render again
+  window.addEventListener('hashchange', function () { setTimeout(holdAnchor, 0); });
+
   var cfg = window.$docsify = window.$docsify || {};
   cfg.plugins = [].concat(cfg.plugins || [], function (hook) { hook.doneEach(scan); });
 })();

@@ -147,7 +147,7 @@ One trap from [page 6](/fields/digital-image-processing/fourier-transform-for-im
 
 The fix is to **pad** the image with zeros (to at least the image size plus the kernel size) before transforming, filter, and crop afterwards.
 
-### Try it: The shirt that shimmers - filter the spectrum, then sample it
+### Try it: The shirt that shimmers, filter the spectrum, then sample it
 
 > **What it shows:** Filtering in frequency is three steps: transform, multiply by a mask, transform back. Cut too sharply and it rings; sample too coarsely and it aliases.  
 > **Start with:** the preset *Gaussian low-pass* (No ringing at all: its twin in space is a Gaussian too. PSNR 21.8 dB at D₀ = 30).

@@ -148,7 +148,7 @@ A convolutional layer in a neural network is this exact loop with one change of 
 
 One naming quirk: deep learning frameworks such as PyTorch compute **cross-correlation** (no flip) and call it convolution. PyTorch's `Conv2d` documentation says so. Since the weights are learned anyway, flipping them would change nothing, so nobody bothers. See [Deep Learning - Concepts - Convolution](/fields/deep-learning/concepts/convolution.md) for the network side of the story.
 
-### Try it: One bad pixel - average it or sort it?
+### Try it: One bad pixel, average it or sort it?
 
 > **What it shows:** A spatial filter lets each pixel ask its neighbours. A kernel takes a weighted vote; the median sorts and takes the middle.  
 > **Start with:** the preset *The speck* (Eight 10s and one 90: the mean smears it to 18.9, the median erases it to 10).

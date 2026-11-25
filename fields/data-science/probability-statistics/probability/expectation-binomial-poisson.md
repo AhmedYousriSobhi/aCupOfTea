@@ -167,7 +167,7 @@ Var(X + Y) = Var X + Var Y       only if X and Y are independent
 
 Net expected value is **−1/2** and the variance stays 149/4 (a shifted walk is the same walk). The two-pull total has expected value **9 = 4.5 + 4.5**, and variance 149/2 because the card is put back, so the pulls are independent. Contrast `2X`, one pull paid out twice: variance `4 × 37.25 = 149`.
 
-### Try it: Expected is not likely - edit the bag and see
+### Try it: Expected is not likely, edit the bag and see
 
 > **What to try:** Edit the cards in the bag, change the price and pull 10, 1,000 or 100,000 times: the average settles on the expected value, which is not a prize.  
 > **Start with:** the preset *The lucky tin*.

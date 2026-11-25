@@ -154,7 +154,7 @@ If you've studied CNNs, the pattern should sound familiar: early layers see fine
 
 ---
 
-## Try it: The scratch that is everywhere - look at several scales at once
+## Try it: The scratch that is everywhere, look at several scales at once
 
 > **What it shows:** A wavelet transform keeps a coarse picture plus detail at each scale, each tied to a place. Most details are near zero, so shrinking the small ones removes noise and keeps edges.  
 > **Start with:** the preset *The quiz row* (9, 7, 3, 5 becomes 6 | 2 | 1, −1: the overall average, the left half against the right, the details inside each pair).

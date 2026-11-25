@@ -168,7 +168,7 @@ Equalization is automatic, which is both its charm and its danger.
 
 A common refinement applies equalization on small tiles with a limit on how much any bin can grow (CLAHE, "contrast-limited adaptive histogram equalization"), which tames the noise problem. It's available in OpenCV as `createCLAHE`.
 
-### Try it: Spread the numbers out - rescue the dark X-ray
+### Try it: Spread the numbers out, rescue the dark X-ray
 
 > **What it shows:** An intensity transform is a lookup table. Equalization builds it from the running total of the histogram: s = (L − 1) · cumulative share.  
 > **Start with:** the preset *The dark 8 × 8* (64 pixels, counts 24, 16, 10, 6, 4, 2, 2, 0. Level 0 goes to 3; levels 4 to 7 merge into 7).
