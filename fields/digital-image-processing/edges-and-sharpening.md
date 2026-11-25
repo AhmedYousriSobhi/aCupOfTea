@@ -13,37 +13,35 @@ relations:
 ---
 # The Sharpen Button That Made Things Worse: Edges and Sharpening
 
-> **Part 5 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** *Lena and the property-listing team are invented; the maths and numbers are real.*
+> **Part 5 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** *The property-listing team is invented; the maths and numbers are real.* By the end you can compute a gradient, a Sobel response and a Laplacian by hand, and say exactly where sharpening halos come from.
 
 How does a computer tell a brick edge from a speck of sand, when to it both are just a pixel that differs from its neighbours?
 
-Lena is about to find out the hard way, with one click on a button called "sharpen".
+You're about to find out the hard way, with one click on a button called "sharpen".
 
 ---
 
 ## The bricks pop, the sky crawls
 
-A property-listing site has a photo of a brick wall that looks soft. Lena clicks "sharpen". The bricks pop. But the clear blue sky now looks like it has sand in it, and every dark edge has a faint bright outline, as if it were cut out with scissors.
+A property-listing site has a photo of a brick wall that looks soft. You click "sharpen". The bricks pop. But the clear blue sky now looks like it has sand in it, and every dark edge has a faint bright outline, as if it were cut out with scissors.
 
-The software did exactly what it was told. Her first reading is the obvious one: **the strength was set too high**, so a lower setting will keep the bricks and lose the sand.
+The software did exactly what it was told. Your first reading is the obvious one: **the strength was set too high**, so a lower setting will keep the bricks and lose the sand.
 
 ---
 
 ## Two ways to tame it, and one look at the preview folder
 
-**Turn the strength down.** At a lower strength the sand thins out, and so does the pop in the bricks. Somewhere in the middle there is a setting she could live with, and it is not good.
+**Turn the strength down.** At a lower strength the sand thins out, and so does the pop in the bricks. Somewhere in the middle there is a setting you could live with, and it is not good.
 
-**Sharpen, then denoise.** A smoothing pass cleans up the sky. It also removes most of the sharpness she had just added.
+**Sharpen, then denoise.** A smoothing pass cleans up the sky. It also removes most of the sharpness you had just added.
 
-So she does what she should have done first: before queuing the "high" preset for the catalogue of five thousand photos, she opens three at random from the preview folder. A sky, a white wall, a face. The white wall looks worse than the brick one did. She cancels the job herself.
+So you do what you should have done first: before queuing the "high" preset for the catalogue of five thousand photos, you open three at random from the preview folder. A sky, a white wall, a face. The white wall looks worse than the brick one did. You cancel the job yourself.
 
-A lower strength is a trade, not a cure, and the setting that suited bricks does not suit skies. What does the rule "this changes here" react to, besides edges?
+A lower strength is a trade, not a cure, and the setting that suited bricks doesn't suit skies. What does the rule "this changes here" react to, besides edges? To find out, you have to ask what "changes" even means in Pixel Town.
 
 ---
 
 ## A derivative is just a difference
-
-### A derivative is a difference
 
 In calculus, a derivative measures how fast something changes. In Pixel Town, the smallest step between citizens is one pixel, so the derivative becomes a plain **difference between neighbours**.
 
@@ -57,7 +55,11 @@ For a row of pixels f(x):
 
 Flat region: all three are 0. Slope: first derivative is nonzero. Corner of a slope: second derivative is nonzero. That gives us a detector for each kind of change.
 
-### Seeing it on one row
+Let's watch them work on the simplest edge there is.
+
+---
+
+## One row, one step
 
 Take a perfect step edge, dark to bright:
 
@@ -80,7 +82,11 @@ Two things to notice:
 1. The **first derivative** is a plateau across the edge: its size says "strong edge here".
 2. The **second derivative** goes positive then negative. The edge sits at the **zero crossing** between them. It also gives a double response, which is the root of the halos we'll meet later.
 
-### The gradient: how strong, which way
+Remember that double response. It is about to cost you something. But first, a picture has two directions, not one.
+
+---
+
+## How strong, and which way
 
 In two dimensions there's an x-direction change and a y-direction change. Together they form the **gradient**:
 
@@ -92,9 +98,13 @@ The magnitude says how strong the edge is. The angle θ says which way the brigh
 
 A common cheaper approximation is |G_x| + |G_y|, which avoids the square root.
 
-### Sobel: differentiate and smooth in one kernel
+Differences are twitchy, though: one noisy pixel gives a huge difference. And your sky is full of noisy pixels. Is there a difference that doesn't panic?
 
-Differences are twitchy: one noisy pixel gives a huge difference. The **Sobel** kernel fixes this by averaging across the perpendicular direction while it differences:
+---
+
+## Sobel: differentiate and smooth at once
+
+There is. The **Sobel** kernel averages across the perpendicular direction while it differences:
 
 $$G_x = \begin{bmatrix}-1&0&1\\-2&0&2\\-1&0&1\end{bmatrix} \qquad G_y = \begin{bmatrix}-1&-2&-1\\0&0&0\\1&2&1\end{bmatrix}$$
 
@@ -104,17 +114,15 @@ $$\begin{bmatrix}1\\2\\1\end{bmatrix}\begin{bmatrix}-1&0&1\end{bmatrix}=\begin{b
 
 Each Sobel kernel sums to **0** (the tip from [page 4](/fields/digital-image-processing/spatial-filtering.md)): flat regions give zero, edges give a response. Apply G_x and G_y as two filters, then combine with the magnitude formula to get an edge map. Full edge detectors such as Canny (1986) add thinning and thresholds on top of the same gradient.
 
-### Try it before you scroll
+☕ **Try it before you scroll.** You slide the Sobel G_x kernel over a perfectly **flat** patch where every pixel is 100. **What is the output?** And what if the patch is all 200? *Hint: add the kernel weights.*
 
-☕ You slide the Sobel G_x kernel over a perfectly **flat** patch where every pixel is 100. **What is the output?** And what if the patch is all 200?
+---
 
-*Hint: add the kernel weights.*
+## The Laplacian, and where the halo comes from
 
 **Answer:** **0** in both cases. The weights sum to 0, so any constant multiplied by the same total is 0. That's the point: a detector that stays silent when nothing changes. Replace the kernel with a box and the answer would be 100 and 200.
 
-### The Laplacian and sharpening
-
-The **Laplacian** adds the second derivatives in both directions into one isotropic (direction-independent) operator:
+Sobel finds edges. To *sharpen*, you want something that reacts to a pixel disagreeing with its neighbours in every direction. The **Laplacian** adds the second derivatives in both directions into one isotropic (direction-independent) operator:
 
 $$\nabla^2 f = f(x+1,y)+f(x-1,y)+f(x,y+1)+f(x,y-1)-4f(x,y)$$
 
@@ -128,7 +136,7 @@ To sharpen with it, subtract the Laplacian from the image (we subtract because t
 
 $$g = f - \nabla^2 f$$
 
-Apply that to our step row. Using the second-derivative values from the table:
+Apply that to the step row from before, using the second-derivative values from the table:
 
 | x | f(x) | 2nd | g = f − 2nd |
 |---|---|---|---|
@@ -139,7 +147,11 @@ Apply that to our step row. Using the second-derivative values from the table:
 
 The dark side is pushed **even darker** (−30, below the original 10) and the bright side **even brighter** (90, above the original 50). The edge now looks steeper. That undershoot and overshoot is the halo you saw on the brick wall.
 
-### Unsharp masking: the sharpening everyone actually uses
+So that's the scissors outline: not a bug, just the double response doing its job. Is there a gentler way to ask for the same thing?
+
+---
+
+## Unsharp masking: the sharpening everyone actually uses
 
 The name sounds like the opposite of what it does. The trick: take a blurred copy, subtract it from the original to isolate the **detail**, and add some of that detail back:
 
@@ -153,11 +165,13 @@ $$g = f + k\,\big(f - \text{blur}(f)\big)$$
 
 The difference f − blur(f) keeps only what the blur removed, which is the fine detail and edges. In the frequency picture of [page 6](/fields/digital-image-processing/fourier-transform-for-images.md) you've just **boosted the high frequencies**. Everything that sharpens an image, Laplacian or unsharp, boosts the same thing, and noise lives in the same place.
 
+Which explains the sky.
+
 ---
 
 ## Back to the sharpen button
 
-Lena prints the second derivative along one row of the sky and one row of the bricks. The bricks give a big positive-then-negative pair at the edge. The sky gives a tiny random wobble, and the filter multiplies it by the same amount.
+You print the second derivative along one row of the sky and one row of the bricks. The bricks give a big positive-then-negative pair at the edge. The sky gives a tiny random wobble, and the filter multiplies it by the same amount.
 
 Now the sand in the sky makes sense. A difference between neighbours **doesn't know** whether the difference is a brick edge or a speck of noise. Sharpening magnifies both. Flat sky had only a tiny random wobble, and the filter multiplied it until your eye noticed.
 
@@ -169,7 +183,7 @@ And the scissors halo is the overshoot from the table above: the filter makes da
 | Bright/dark outlines at edges | Overshoot and undershoot of the second derivative | Reduce k, use a larger blur radius |
 | Edge map full of tiny speckles | Raw differences amplify noise | Use Sobel (built-in smoothing) or blur first |
 
-Lena sets a lower strength, masks the flat regions, and denoises the sky before sharpening, in that order. The bricks keep most of their pop and the sky stays sky.
+You set a lower strength, mask the flat regions, and denoise the sky before sharpening, in that order. The bricks keep most of their pop and the sky stays sky.
 
 ---
 

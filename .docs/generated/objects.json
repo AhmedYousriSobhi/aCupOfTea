@@ -712,7 +712,7 @@
     "level": "beginner",
     "order": 5,
     "path": "fields/digital-image-processing/edges-and-sharpening.md",
-    "reading_time_min": 9,
+    "reading_time_min": 10,
     "relations": {
       "prerequisites": [
         "dip-spatial-filtering"
@@ -768,7 +768,7 @@
     "level": "intermediate",
     "order": 8,
     "path": "fields/digital-image-processing/frequency-filtering-and-aliasing.md",
-    "reading_time_min": 9,
+    "reading_time_min": 10,
     "relations": {
       "prerequisites": [
         "dip-fourier-transform-images"
@@ -900,7 +900,7 @@
     "level": "intermediate",
     "order": 9,
     "path": "fields/digital-image-processing/noise-and-restoration.md",
-    "reading_time_min": 8,
+    "reading_time_min": 9,
     "relations": {
       "prerequisites": [
         "dip-frequency-filtering-aliasing"
@@ -960,7 +960,7 @@
     "level": "beginner",
     "order": 4,
     "path": "fields/digital-image-processing/spatial-filtering.md",
-    "reading_time_min": 8,
+    "reading_time_min": 11,
     "relations": {
       "prerequisites": [
         "dip-intensity-transforms-histograms"

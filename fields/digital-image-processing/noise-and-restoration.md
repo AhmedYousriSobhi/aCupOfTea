@@ -14,7 +14,7 @@ labs: [restoration]
 ---
 # The Photo That Turned to Static: Noise and Restoration
 
-> **Part 8 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** Real photos arrive blurred and noisy, and the obvious cure for the blur is also the fastest way to destroy the picture. *Sana and the traffic-camera team are invented; the maths and numbers are real.*
+> **Part 8 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** Real photos arrive blurred and noisy, and the obvious cure for the blur is also the fastest way to destroy the picture. *The traffic-camera team is invented; the maths and numbers are real.* By the end you can write the damage as an equation, match a filter to a noise, and see why dividing by a blur explodes.
 
 ```text
 $ restore plate_0412.png --method inverse
@@ -29,17 +29,15 @@ result: static
 
 A traffic camera shot a licence plate while the car was moving. The image is smeared in one direction. The team knows the blur, and a colleague said: "We know the blur. Divide it out. Easy."
 
-Sana ran the program. The smear is gone, and so is the car, the road and the plate. The whole picture has been replaced by a coarse checkerboard of static.
+You ran the program. The smear is gone, and so is the car, the road and the plate. The whole picture has been replaced by a coarse checkerboard of static.
 
-Her first reading is the obvious one: **a bug in her division code.** She tests the division on a small image with no noise, and it recovers the original exactly. The code is fine.
+Your first reading is the obvious one: **a bug in your division code.** You test the division on a small image with no noise, and it recovers the original exactly. The code is fine.
 
-A correct inverse, applied to a real photo, produced noise. What was it dividing by?
+A correct inverse, applied to a real photo, produced noise. What was it dividing by? To find out, you have to write down exactly what the camera did to the plate.
 
 ---
 
-## The damage, the noise and the safe way to divide
-
-### The damage, as an equation
+## The damage, as an equation
 
 Most restoration starts from one model. The true image f is blurred by something h (motion, defocus, atmosphere), then noise η is added:
 
@@ -61,7 +59,11 @@ flowchart LR
 
 *Going forward is easy and always loses something. Going backward is guesswork with a good model.*
 
-### A field guide to noise
+Notice the second term. Before you divide anything, what kind of noise is it?
+
+---
+
+## A field guide to noise
 
 Noise isn't one thing. Which type you have decides which tool to use.
 
@@ -74,7 +76,7 @@ Noise isn't one thing. Which type you have decides which tool to use.
 
 Each has a statistical model, which is why this page lives next to statistics: the filters below come from asking "what is the best guess given how the noise behaves?".
 
-### Matching the filter to the noise
+You've met most of the tools already. This is the matching table:
 
 | Noise | Reach for | Why |
 |---|---|---|
@@ -86,17 +88,15 @@ Each has a statistical model, which is why this page lives next to statistics: t
 > [!NOTE]
 > The √n rule needs the noise to be independent and zero-mean across frames. If the camera has a fixed pattern (the same hot pixels each time), averaging doesn't remove it.
 
-Smoothing noise also smooths edges, so the question is always how much detail you can afford to lose.
+Smoothing noise also smooths edges, so the question is always how much detail you can afford to lose. But your colleague didn't suggest smoothing. They suggested *dividing*. Try the numbers before you read on.
 
-### Try it before you scroll
+☕ **Try it before you scroll.** Your blur H has a value of 0.01 at some frequency, and the noise N is about 1 there. If you "undo the blur" by dividing the observed G by H, **how much is the noise amplified at that frequency?** *Hint: divide 1 by 0.01.*
 
-☕ Your blur H has a value of 0.01 at some frequency, and the noise N is about 1 there. If you "undo the blur" by dividing the observed G by H, **how much is the noise amplified at that frequency?**
+---
 
-*Hint: divide 1 by 0.01.*
+## Dividing by the blur
 
-**Answer:** **100 times**. Read on.
-
-### Inverse filtering: dividing by the blur
+**Answer:** **100 times**. Here's why.
 
 The naive plan: if G = H·F + N, divide by H.
 
@@ -106,9 +106,11 @@ If there was no noise, you'd get F back exactly. But there is noise, and the sec
 
 That's the static in the opening scene: the "restored" image is dominated by amplified noise at the very frequencies the blur had already destroyed. And where H is exactly zero, the division is undefined: that frequency is gone for good.
 
-The honest summary: **you can't recover what the blur erased**, and trying to makes things much worse.
+The honest summary: **you can't recover what the blur erased**, and trying to makes things much worse. So what do you do instead of giving up?
 
-### Wiener: dividing with manners
+---
+
+## Wiener: dividing with manners
 
 The **Wiener filter** also inverts the blur, but it knows when to stop. Here's the version with a constant K, which stands for the noise-to-signal power ratio:
 
@@ -127,11 +129,13 @@ Use the numbers from the quiz. H = 0.01 and K = 0.01 give a gain of 0.01 / (0.00
 | Where H is exactly 0 | Undefined | 0 (gives up) |
 | Needs to know | H | H and the noise-to-signal ratio K |
 
-K is usually tuned by eye: too small and the noise creeps back, too big and the result stays blurry. That's the trade-off in one dial.
+K is usually tuned by eye: too small and the noise creeps back, too big and the result stays blurry. That's the trade-off in one dial. And "by eye" raises the last question: how do you know a result is better?
 
-### Scoring a restoration
+---
 
-How do you know the result is better? When you have a clean reference, use the mean squared error and its logarithmic cousin, the **peak signal-to-noise ratio**:
+## Scoring a restoration
+
+When you have a clean reference, use the mean squared error and its logarithmic cousin, the **peak signal-to-noise ratio**:
 
 $$\text{MSE} = \frac{1}{MN}\sum_{x,y}\big(f(x,y)-\hat f(x,y)\big)^2 \qquad \text{PSNR} = 10\log_{10}\!\frac{\text{MAX}^2}{\text{MSE}}$$
 
@@ -139,24 +143,26 @@ MAX is the largest possible pixel value (255 for 8 bits). Example: MSE = 100 giv
 
 PSNR is easy to compute and only loosely matches how a human judges quality: a result can score well and still look smeared. Treat it as a sanity check, not a verdict.
 
+Now back to the plate.
+
+---
+
+## Back to the static
+
+You print the blur's strength at a high frequency: a tiny number. The noise there is not tiny. You divide one by the other and see what happened: you divided by a number that was nearly zero.
+
+Your colleague's plan was correct on paper and murderous in practice. The blur had pushed the high frequencies close to zero, noise was hiding there too, and dividing by H made the noise a hundred times louder than the thing you wanted.
+
+Wiener's fix is the same principle in every area of engineering: **don't trust a measurement more than it deserves**. Where the signal is strong, undo the damage. Where it's buried, stay quiet.
+
+You switch to Wiener with a K tuned by eye, and read the plate.
+
 ### Try it: The photo that turned to static
 
 > **What it shows:** Blur multiplies each frequency by H; noise is added on top. Dividing by a small H multiplies the noise too, and Wiener stops before that happens.  
 > **Start with:** the preset *No noise: the inverse is exact* (Blur length 9, no noise: dividing the blur out returns the picture almost exactly: the score is above 99 dB, only rounding error).
 
 [Restoration lab](/fields/digital-image-processing/labs/restoration.html#embed ':ignore')
-
----
-
-## Back to the static
-
-Sana prints the blur's strength at a high frequency: a tiny number. The noise there is not tiny. She divides one by the other and sees what happened: they divided by a number that was nearly zero.
-
-Your colleague's plan was correct on paper and murderous in practice. The blur had pushed the high frequencies close to zero, noise was hiding there too, and dividing by H made the noise a hundred times louder than the thing they wanted.
-
-Wiener's fix is the same principle in every area of engineering: **don't trust a measurement more than it deserves**. Where the signal is strong, undo the damage. Where it's buried, stay quiet.
-
-She switches to Wiener with a K tuned by eye, and reads the plate.
 
 ---
 
