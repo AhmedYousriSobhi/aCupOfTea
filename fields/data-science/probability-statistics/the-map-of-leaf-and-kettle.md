@@ -13,12 +13,9 @@ tags:
 relations:
   related:
     - probability-statistics-series
-    - stir-the-pot-population-and-sampling
-    - data-types-and-frequency-tables
-    - draw-it-before-you-describe-it
-    - the-number-on-the-tin
-    - how-far-from-the-middle
-    - where-do-you-stand
+    - samples-data-types-and-tables
+    - pictures-and-the-middle
+    - spread-and-position
 ---
 
 # The Map of Leaf & Kettle: Every Idea So Far in One Walk Through the Shop
@@ -268,13 +265,13 @@ The same walk, one floor up. Each room is one part of the series, with one objec
 
 | Room | Part | The object | The idea | The question to carry |
 |---|---|---|---|---|
-| 10 · The Lucky Roll | [7](/fields/data-science/probability-statistics/probability/counting-the-ways.md) | A **grid of 36 ways** by the till | Probability is the share of the equally likely ways. Shaded cells are an event, the overlap cell is counted once, and a rectangle means independent | Why did Ravi's 11/36 overcount? |
-| 11 · The Alarm Bell | [8](/fields/data-science/probability-statistics/probability/the-test-that-was-99-percent-accurate.md) | A **tree of 100,000 tins** | Conditional probability shrinks the crowd to the positives and counts again. "99% accurate" is P(positive given bad), not P(bad given positive) | Which crowd are you counting inside? |
-| 12 · The Lucky Tin | [9](/fields/data-science/probability-statistics/probability/what-to-expect.md) | A **card bag** with a prize table | A random variable is a number on each outcome. Expected value is the seesaw again, weighted by probability | The expected prize is 4.5 and no card says 4.5 |
-| 13 · Coins and Calls | [10](/fields/data-science/probability-statistics/probability/coins-and-calls.md) | **Ten customers** choosing, and a **phone** ringing | A distribution is a recipe for who gets how much probability. Binomial counts yeses, Poisson counts events in a window | Three is the average, not the answer |
+| 10 · The Lucky Roll | [7](/fields/data-science/probability-statistics/probability/counting-and-conditioning.md) | A **grid of 36 ways** by the till | Probability is the share of the equally likely ways. Shaded cells are an event, the overlap cell is counted once, and a rectangle means independent | Why did Ravi's 11/36 overcount? |
+| 11 · The Alarm Bell | [8](/fields/data-science/probability-statistics/probability/counting-and-conditioning.md) | A **tree of 100,000 tins** | Conditional probability shrinks the crowd to the positives and counts again. "99% accurate" is P(positive given bad), not P(bad given positive) | Which crowd are you counting inside? |
+| 12 · The Lucky Tin | [9](/fields/data-science/probability-statistics/probability/expectation-binomial-poisson.md) | A **card bag** with a prize table | A random variable is a number on each outcome. Expected value is the seesaw again, weighted by probability | The expected prize is 4.5 and no card says 4.5 |
+| 13 · Coins and Calls | [10](/fields/data-science/probability-statistics/probability/expectation-binomial-poisson.md) | **Ten customers** choosing, and a **phone** ringing | A distribution is a recipe for who gets how much probability. Binomial counts yeses, Poisson counts events in a window | Three is the average, not the answer |
 | 14 · The Bell Curve | [11](/fields/data-science/probability-statistics/probability/the-bell-curve.md) | **Bags of tea** never exactly 100 g | Many small nudges add up to a bell. Probability is area, and the z-score is one ruler for every bell | Is the average of ten bags also a bell? |
-| 15 · The Thousand Sips | [12](/fields/data-science/probability-statistics/inference/why-averages-behave.md) | A **pot** sipped again and again | An average is itself random. The pile of sips is the sampling distribution, and its spread is `σ / √n` | Which pile is narrower, 2 cups or 30? |
-| 16 · The Net | [13](/fields/data-science/probability-statistics/inference/how-sure-are-you.md) | A **net** over a fixed target | A confidence interval is the estimate plus or minus a margin. The 95% describes the method, not one net | Narrow is not the same as right |
+| 15 · The Thousand Sips | [12](/fields/data-science/probability-statistics/inference/averages-and-intervals.md) | A **pot** sipped again and again | An average is itself random. The pile of sips is the sampling distribution, and its spread is `σ / √n` | Which pile is narrower, 2 cups or 30? |
+| 16 · The Net | [13](/fields/data-science/probability-statistics/inference/averages-and-intervals.md) | A **net** over a fixed target | A confidence interval is the estimate plus or minus a margin. The 95% describes the method, not one net | Narrow is not the same as right |
 | 17 · The Courtroom | [14](/fields/data-science/probability-statistics/inference/the-courtroom-for-numbers.md) | A **judge** who presumes luck | The null is "luck only", and the p-value is how often luck matches the evidence | Could plain luck do this? |
 | 18 · The Scatter Plot Over the Till | [15](/fields/data-science/probability-statistics/inference/two-things-moving-together.md) | A **scatter plot** and a **line** | Correlation is paired z-scores agreeing. The regression line is least squared walking again | The number is a summary, the picture is the crowd |
 
@@ -286,7 +283,7 @@ The same walk, one floor up. Each room is one part of the series, with one objec
 
 | Term | Definition | Page |
 |---|---|---|
-| **Statistics** | The practice of collecting, organizing, summarizing and interpreting data | [1](https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/fields/data-science/probability-statistics/describing-data/stir-the-pot-population-and-sampling.md) |
+| **Statistics** | The practice of collecting, organizing, summarizing and interpreting data | [1](https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/fields/data-science/probability-statistics/describing-data/samples-data-types-and-tables.md) |
 | **Descriptive statistics** | Summarizing the data you have | 1 |
 | **Inferential statistics** | Using a sample to make a claim about a larger group | 1 |
 | **Population** (`N`) | The complete group you want to know about | 1 |
@@ -305,7 +302,7 @@ The same walk, one floor up. Each room is one part of the series, with one objec
 
 | Term | Definition | Page |
 |---|---|---|
-| **Qualitative** | Data in categories | [2](https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/fields/data-science/probability-statistics/describing-data/data-types-and-frequency-tables.md) |
+| **Qualitative** | Data in categories | [2](https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/fields/data-science/probability-statistics/describing-data/samples-data-types-and-tables.md) |
 | **Nominal** | Categories with no natural order | 2 |
 | **Ordinal** | Categories with an order, but unmeasured gaps | 2 |
 | **Quantitative** | Numbers that count or measure | 2 |
@@ -319,7 +316,7 @@ The same walk, one floor up. Each room is one part of the series, with one objec
 | **Class width** (`h`) | `Range / k`, rounded **up**; the distance between a class's boundaries | 2 |
 | **Class limits** | The smallest and largest values that can be recorded in a class | 2 |
 | **Class boundaries** | Limits ± half the measurement unit; neighboring classes share them | 2 |
-| **Midpoint** (`M`) | `(lower boundary + upper boundary) / 2` | [3](https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/fields/data-science/probability-statistics/describing-data/draw-it-before-you-describe-it.md) |
+| **Midpoint** (`M`) | `(lower boundary + upper boundary) / 2` | [3](https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/fields/data-science/probability-statistics/describing-data/pictures-and-the-middle.md) |
 
 ### Pictures
 
@@ -334,7 +331,7 @@ The same walk, one floor up. Each room is one part of the series, with one objec
 
 | Term | Definition | Page |
 |---|---|---|
-| **Mean** (`x̄`, `μ`) | The sum divided by the count; the balance point | [4](https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/fields/data-science/probability-statistics/describing-data/the-number-on-the-tin.md) |
+| **Mean** (`x̄`, `μ`) | The sum divided by the count; the balance point | [4](https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/fields/data-science/probability-statistics/describing-data/pictures-and-the-middle.md) |
 | **Deviation** | A value minus the mean; deviations sum to 0 | 4 |
 | **Weighted average** | A mean where each value counts according to its frequency | 4 |
 | **Median** | The middle value when sorted; half the data on each side | 4 |
@@ -349,7 +346,7 @@ The same walk, one floor up. Each room is one part of the series, with one objec
 
 | Term | Definition | Page |
 |---|---|---|
-| **Variance** (`σ²`, `s²`) | The average squared distance from the mean. Divide by `n` for everyone, `n − 1` for a sample | [5](/fields/data-science/probability-statistics/describing-data/how-far-from-the-middle.md) |
+| **Variance** (`σ²`, `s²`) | The average squared distance from the mean. Divide by `n` for everyone, `n − 1` for a sample | [5](/fields/data-science/probability-statistics/describing-data/spread-and-position.md) |
 | **Standard deviation** (`σ`, `s`) | The square root of the variance, back in the data's own units | 5 |
 | **Mean absolute deviation** | The average plain distance from the median | 5 |
 | **Quartiles** (`Q1`, `Q3`) | The values a quarter and three quarters of the data sit below | 5 |
@@ -360,7 +357,7 @@ The same walk, one floor up. Each room is one part of the series, with one objec
 
 | Term | Definition | Page |
 |---|---|---|
-| **Percentile rank** | `(below + 0.5 × equal) / n × 100`: the share of the crowd below a value | [6](/fields/data-science/probability-statistics/describing-data/where-do-you-stand.md) |
+| **Percentile rank** | `(below + 0.5 × equal) / n × 100`: the share of the crowd below a value | [6](/fields/data-science/probability-statistics/describing-data/spread-and-position.md) |
 | **z-score** | `(x − mean) / SD`: how many SDs a value sits above or below the mean | 6 |
 | **Box plot** | Min, Q1, median, Q3, max, with whiskers to the last point inside the fences | 6 |
 | **Fences** | `Q1 − 1.5 × IQR` and `Q3 + 1.5 × IQR`; points beyond are drawn alone | 6 |
@@ -369,18 +366,18 @@ The same walk, one floor up. Each room is one part of the series, with one objec
 
 | Term | Definition | Part |
 |---|---|---|
-| **Sample space** | The list of all possible outcomes | [7](/fields/data-science/probability-statistics/probability/counting-the-ways.md) |
+| **Sample space** | The list of all possible outcomes | [7](/fields/data-science/probability-statistics/probability/counting-and-conditioning.md) |
 | **Event** | A group of outcomes from that list | 7 |
 | **Complement** | Everything the event is not; "at least one" is 1 minus "none" | 7 |
 | **Independent** | Knowing one tells you nothing about the other | 7 |
-| **Conditional probability** | `P(A given B)`: shrink the crowd to B, count A inside it | [8](/fields/data-science/probability-statistics/probability/the-test-that-was-99-percent-accurate.md) |
+| **Conditional probability** | `P(A given B)`: shrink the crowd to B, count A inside it | [8](/fields/data-science/probability-statistics/probability/counting-and-conditioning.md) |
 | **Base rate** | How common the thing is before any clue | 8 |
 | **Natural frequencies** | Whole-number counts in a tree instead of percentages | 8 |
 | **Bayes' rule** | The flip from `P(B given A)` to `P(A given B)` | 8 |
-| **Random variable** | A number attached to each way things could turn out | [9](/fields/data-science/probability-statistics/probability/what-to-expect.md) |
+| **Random variable** | A number attached to each way things could turn out | [9](/fields/data-science/probability-statistics/probability/expectation-binomial-poisson.md) |
 | **Expected value** | The balance point of the values weighted by probability, `Σ x × p` | 9 |
 | **Probability table** | Each possible value with its probability; they sum to 1 | 9 |
-| **Distribution** | A table of how much probability each value gets | [10](/fields/data-science/probability-statistics/probability/coins-and-calls.md) |
+| **Distribution** | A table of how much probability each value gets | [10](/fields/data-science/probability-statistics/probability/expectation-binomial-poisson.md) |
 | **Binomial** | The count of yeses in `n` independent tries with the same `p` | 10 |
 | **Poisson** | The count of events in a window at a constant rate | 10 |
 | **Normal curve** | A bell set by two dials, the mean and the SD; total area 1 | [11](/fields/data-science/probability-statistics/probability/the-bell-curve.md) |
@@ -392,11 +389,11 @@ The same walk, one floor up. Each room is one part of the series, with one objec
 
 | Term | Definition | Part |
 |---|---|---|
-| **Sampling distribution** | The averages you would get from many samples of size `n` | [12](/fields/data-science/probability-statistics/inference/why-averages-behave.md) |
+| **Sampling distribution** | The averages you would get from many samples of size `n` | [12](/fields/data-science/probability-statistics/inference/averages-and-intervals.md) |
 | **Standard error** | The spread of sample averages, `σ / √n` | 12 |
 | **Law of large numbers** | Averages converge on the mean of what you draw from | 12 |
 | **Central limit theorem** | Sample averages approach a bell, whatever the crowd looks like | 12 |
-| **Confidence interval** | Estimate `± z × SE`: an honest "give or take" | [13](/fields/data-science/probability-statistics/inference/how-sure-are-you.md) |
+| **Confidence interval** | Estimate `± z × SE`: an honest "give or take" | [13](/fields/data-science/probability-statistics/inference/averages-and-intervals.md) |
 | **Confidence level (95%)** | The share of repeated nets that catch the truth: a property of the method | 13 |
 | **Bootstrap** | Resample your sample with replacement, take the middle 95% of the means | 13 |
 | **Null hypothesis** | The "luck only" assumption: the labels mean nothing | [14](/fields/data-science/probability-statistics/inference/the-courtroom-for-numbers.md) |

@@ -17,7 +17,8 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from common import (DupKeyLoader, ID_RE, RELATION_KEYS, fallback_id, list_pages,  # noqa: E402
                     read_text, split_front_matter, submodule_paths)
 
-ALLOWED_KEYS = {"id", "title", "sidebar_label", "sidebar_group", "order", "summary", "level", "type", "status", "domains", "tags", "relations"}
+REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))  # set by the run (tests use their own root)
+ALLOWED_KEYS = {"id", "title", "sidebar_label", "sidebar_group", "order", "summary", "level", "type", "status", "domains", "tags", "relations", "labs"}
 SUMMARY_MAX = 200
 LABEL_WARN = 40
 MAX_TAGS = 5
@@ -188,6 +189,28 @@ def validate_page(path, text, tax, rep):
             group = sg.strip()
             if len(group) > LABEL_WARN:
                 rep.warn(path, gl, f"sidebar_group is {len(group)} characters; keep it under {LABEL_WARN}")
+    if "labs" in data:
+        lv = data["labs"]
+        ll = lines.get(("labs",), 1)
+        if not isinstance(lv, list) or not lv or not all(isinstance(x, str) and ID_RE.match(x) for x in lv):
+            rep.error(path, ll, "labs must be a list of lab names (kebab-case, the file name without .html)")
+        else:
+            body_text = text.split("\n---", 1)[1] if text.startswith("---") and "\n---" in text else text
+            here = os.path.dirname(path)
+            for lab in lv:
+                found, d = None, here
+                while True:
+                    cand = os.path.join(d, "labs", lab + ".html")
+                    if os.path.exists(os.path.join(REPO_ROOT, cand)):
+                        found = cand
+                        break
+                    if not d:
+                        break
+                    d = os.path.dirname(d)
+                if not found:
+                    rep.error(path, ll, f"lab {lab!r} not found: no labs/{lab}.html in this folder or above")
+                elif f"/labs/{lab}.html#embed" not in body_text:
+                    rep.error(path, ll, f"lab {lab!r} is listed but the page has no link written /{found}#embed ':ignore'")
     order = None
     if "order" in data:
         ov = data["order"]
@@ -278,6 +301,8 @@ def run(root):
     if tax is None:
         return rep, 0, 0
 
+    global REPO_ROOT
+    REPO_ROOT = root
     subs = submodule_paths(root)
     pages = list_pages(root, set(subs))
 

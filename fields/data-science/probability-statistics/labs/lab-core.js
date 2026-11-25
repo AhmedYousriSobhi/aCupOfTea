@@ -183,6 +183,16 @@
     if (window.matchMedia) window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function () { window.dispatchEvent(new Event("resize")); });
   }
 
+  // Opened on its own (a search hit, a shared link): go to the docs page that shows this lab, so the reader gets the
+  // site's menu and layout. The target is the page's own first breadcrumb link (a relative link into the site's #/ route);
+  // add ?standalone=1 to look at the bare page. A framed lab never redirects.
+  (function home() {
+    if (window.top !== window || /(^|[?&])standalone=1(&|$)/.test(location.search)) return;
+    var a = document.querySelector(".crumbs a");
+    var h = a && a.getAttribute("href");
+    if (h && /^(\.\.\/)+#\/[\w\/.-]+\.md$/.test(h)) location.replace(h);
+  })();
+
   // Embedded in a docs page (a sandboxed frame): hide the page chrome, take the site's theme and report the height.
   // The theme and the height are the only things exchanged; both are validated, and nothing is ever put in as HTML.
   (function embed() {

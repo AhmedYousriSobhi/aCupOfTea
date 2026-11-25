@@ -8,6 +8,7 @@ level: intermediate
 type: concept
 domains: [image-processing]
 tags: [fourier-transform]
+labs: [wavelets]
 relations:
   prerequisites: [dip-fourier-transform-images]
   related: [dip-noise-restoration]
@@ -150,6 +151,15 @@ Honest limits: thresholding too hard leaves ringing-like artifacts around edges 
 | Feature extraction | Subband statistics as texture descriptors |
 
 If you've studied CNNs, the pattern should sound familiar: early layers see fine detail and later, downsampled layers see coarse structure. That's a learned multiresolution analysis (see [Convolution in deep learning](/fields/deep-learning/concepts/convolution.md)).
+
+---
+
+## Try it: The scratch that is everywhere, look at several scales at once
+
+> **What it shows:** A wavelet transform keeps a coarse picture plus detail at each scale, each tied to a place. Most details are near zero, so shrinking the small ones removes noise and keeps edges.  
+> **Start with:** the preset *The quiz row* (9, 7, 3, 5 becomes 6 | 2 | 1, −1: the overall average, the left half against the right, the details inside each pair).
+
+[Wavelets lab](/fields/digital-image-processing/labs/wavelets.html#embed ':ignore')
 
 ---
 

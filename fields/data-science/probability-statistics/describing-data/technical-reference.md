@@ -2,7 +2,7 @@
 id: describing-data-technical-reference
 title: "Describing Data, Technically: Definitions, Identities and Method Choices"
 sidebar_label: Technical reference
-order: 7
+order: 4
 summary: "The formal layer under parts 1 to 6: scales of measurement, grouped-data formulas, what the mean and median minimise, n versus n-1, quartile methods, fences and sampling designs."
 level: intermediate
 type: reference
@@ -12,13 +12,11 @@ tags:
   - statistics
 relations:
   prerequisites:
-    - stir-the-pot-population-and-sampling
+    - samples-data-types-and-tables
   related:
-    - data-types-and-frequency-tables
-    - draw-it-before-you-describe-it
-    - the-number-on-the-tin
-    - how-far-from-the-middle
-    - where-do-you-stand
+    - samples-data-types-and-tables
+    - pictures-and-the-middle
+    - spread-and-position
     - describing-data-quick-guide
 ---
 
@@ -186,6 +184,6 @@ Pick a data set, add or move one value and watch the mean, median, SD and IQR re
 
 ## References
 
-- Series pages: [Stir the Pot First](/fields/data-science/probability-statistics/describing-data/stir-the-pot-population-and-sampling.md), [Mira's Notebook](/fields/data-science/probability-statistics/describing-data/data-types-and-frequency-tables.md), [Draw It Before You Describe It](/fields/data-science/probability-statistics/describing-data/draw-it-before-you-describe-it.md), [The Number on the Tin](/fields/data-science/probability-statistics/describing-data/the-number-on-the-tin.md), [How Far From the Middle?](/fields/data-science/probability-statistics/describing-data/how-far-from-the-middle.md), [Where Do You Stand?](/fields/data-science/probability-statistics/describing-data/where-do-you-stand.md).
+- Series pages: [Samples, Data Types and Tables](/fields/data-science/probability-statistics/describing-data/samples-data-types-and-tables.md), [Pictures and the Middle](/fields/data-science/probability-statistics/describing-data/pictures-and-the-middle.md), [Spread and Position](/fields/data-science/probability-statistics/describing-data/spread-and-position.md).
 - Python `statistics`: `fmean`, `median`, `pvariance`, `variance`, `pstdev`, `stdev`, `quantiles`.
 - Every figure above was recomputed with Python's standard library. The stratified and grouped-data examples are this page's own small numbers, checked by the script.

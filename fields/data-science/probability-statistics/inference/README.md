@@ -10,8 +10,7 @@ Parts 12 to 15 of the [Probability & Statistics](/fields/data-science/probabilit
 
 | File | Description |
 |---|---|
-| [Why Averages Behave](/fields/data-science/probability-statistics/inference/why-averages-behave.md) | Sampling distributions and the central limit theorem |
-| [How Sure Are You?](/fields/data-science/probability-statistics/inference/how-sure-are-you.md) | Confidence intervals and the bootstrap |
+| [Averages and Intervals](/fields/data-science/probability-statistics/inference/averages-and-intervals.md) | Parts 12 and 13: sampling distributions, the central limit theorem, confidence intervals and the bootstrap |
 | [The Courtroom for Numbers](/fields/data-science/probability-statistics/inference/the-courtroom-for-numbers.md) | Hypothesis tests, p-values and their misuse |
 | [Two Things Moving Together](/fields/data-science/probability-statistics/inference/two-things-moving-together.md) | Correlation and regression |
 | [Technical reference](/fields/data-science/probability-statistics/inference/technical-reference.md) | Sampling distribution, intervals and t, p-values and exact permutation, multiple testing, least squares |
@@ -21,6 +20,6 @@ Parts 12 to 15 of the [Probability & Statistics](/fields/data-science/probabilit
 
 | Lab | What you can do |
 |---|---|
-| [Sampling and intervals lab](/fields/data-science/probability-statistics/labs/sampling.html ':ignore') | Draw samples, watch the averages form a bell, build 100 intervals with z or t |
-| [Permutation test lab](/fields/data-science/probability-statistics/labs/permutation.html ':ignore') | Shuffle labels to build the luck distribution; run twenty tests on noise |
-| [Correlation lab](/fields/data-science/probability-statistics/labs/regression.html ':ignore') | Drag points, step through Anscombe's four sets, predict inside and outside the data |
+| [Sampling and intervals lab](/fields/data-science/probability-statistics/inference/quick-guide.md?id=sampling-and-intervals-lab) | Draw samples, watch the averages form a bell, build 100 intervals with z or t |
+| [Permutation test lab](/fields/data-science/probability-statistics/inference/quick-guide.md?id=permutation-test-lab) | Shuffle labels to build the luck distribution; run twenty tests on noise |
+| [Correlation lab](/fields/data-science/probability-statistics/inference/quick-guide.md?id=correlation-lab) | Drag points, step through Anscombe's four sets, predict inside and outside the data |

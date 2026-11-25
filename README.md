@@ -48,12 +48,12 @@ Not sure where to begin? Each of these takes one cup, roughly the reading time s
 
 ## 🆕 Recently added
 
-- 2026-11-24 · [Summarise a Data Set: Which Number, Which Picture](/fields/data-science/probability-statistics/describing-data/quick-guide.md)
-- 2026-11-24 · [Describing Data, Technically: Definitions, Identities and Method Choices](/fields/data-science/probability-statistics/describing-data/technical-reference.md)
-- 2026-11-24 · [From a Sample to a Statement: Intervals, Tests and Lines](/fields/data-science/probability-statistics/inference/quick-guide.md)
-- 2026-11-24 · [Inference, Technically: Sampling Distributions, Intervals, Tests and Regression](/fields/data-science/probability-statistics/inference/technical-reference.md)
-- 2026-11-24 · [Pick and Compute the Right Probability Model](/fields/data-science/probability-statistics/probability/quick-guide.md)
-- 2026-11-24 · [Probability, Technically: Definitions, Identities and Assumptions](/fields/data-science/probability-statistics/probability/technical-reference.md)
+- 2026-11-25 · [Pick and Check an Image-Processing Step](/fields/digital-image-processing/quick-guide.md)
+- 2026-11-24 · [Pictures and the Middle: Histogram, Polygon, Ogive, and What "Typical" Means](/fields/data-science/probability-statistics/describing-data/pictures-and-the-middle.md)
+- 2026-11-24 · [Samples, Data Types and Tables: Who You Asked, What Kind of Column, How to Count It](/fields/data-science/probability-statistics/describing-data/samples-data-types-and-tables.md)
+- 2026-11-24 · [Spread and Position: Variance, n − 1, Percentiles, Z-Scores and the Box Plot](/fields/data-science/probability-statistics/describing-data/spread-and-position.md)
+- 2026-11-24 · [Averages and Intervals: Why Averages Behave and How Sure You Can Be](/fields/data-science/probability-statistics/inference/averages-and-intervals.md)
+- 2026-11-24 · [Counting and Conditioning: Why a 99% Accurate Test Is Usually Wrong](/fields/data-science/probability-statistics/probability/counting-and-conditioning.md)
 
 <!-- recent:end -->
 

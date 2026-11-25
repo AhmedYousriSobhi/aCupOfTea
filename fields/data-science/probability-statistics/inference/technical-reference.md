@@ -2,7 +2,7 @@
 id: inference-technical-reference
 title: "Inference, Technically: Sampling Distributions, Intervals, Tests and Regression"
 sidebar_label: Technical reference
-order: 16
+order: 4
 summary: "The formal layer under parts 12 to 15: the sampling distribution of the mean, intervals and the t distribution, p-values and permutation tests, multiple testing, and least-squares regression."
 level: intermediate
 type: reference
@@ -12,9 +12,9 @@ tags:
   - statistics
 relations:
   prerequisites:
-    - why-averages-behave
+    - averages-and-intervals
   related:
-    - how-sure-are-you
+    - averages-and-intervals
     - the-courtroom-for-numbers
     - two-things-moving-together
     - inference-quick-guide
@@ -181,7 +181,7 @@ Draw samples and watch the averages pile into a bell and the intervals catch the
 
 ## References
 
-- Series pages: [Why Averages Behave](/fields/data-science/probability-statistics/inference/why-averages-behave.md), [How Sure Are You?](/fields/data-science/probability-statistics/inference/how-sure-are-you.md), [The Courtroom for Numbers](/fields/data-science/probability-statistics/inference/the-courtroom-for-numbers.md), [Two Things Moving Together](/fields/data-science/probability-statistics/inference/two-things-moving-together.md).
+- Series pages: [Averages and Intervals](/fields/data-science/probability-statistics/inference/averages-and-intervals.md), [The Courtroom for Numbers](/fields/data-science/probability-statistics/inference/the-courtroom-for-numbers.md), [Two Things Moving Together](/fields/data-science/probability-statistics/inference/two-things-moving-together.md).
 - Anscombe, F. J. (1973), *Graphs in Statistical Analysis*, The American Statistician 27(1): 17-21 (the four data sets and their shared summaries; also quoted on the correlation page).
 - Python `statistics`: `fmean`, `pstdev`, `stdev`, `correlation`, `linear_regression`, `NormalDist`.
 - Every figure above was recomputed with Python's standard library; the exact permutation p-value and the t percentiles are this page's additions, produced by the script.

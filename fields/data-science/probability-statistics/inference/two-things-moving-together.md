@@ -2,7 +2,7 @@
 id: two-things-moving-together
 title: "Two Things Moving Together: Correlation and the Line"
 sidebar_label: Two things moving together
-order: 15
+order: 3
 summary: 'Correlation is the average product of paired z-scores, a number about straight-line togetherness only. The regression line is least squared walking applied to a line. Graph first, always.'
 level: intermediate
 type: concept
@@ -10,23 +10,33 @@ domains:
   - statistics
 tags:
   - statistics
+labs: [regression]
 relations:
   prerequisites:
     - the-courtroom-for-numbers
   related:
     - probability-statistics-series
-    - draw-it-before-you-describe-it
-    - how-far-from-the-middle
-    - where-do-you-stand
+    - pictures-and-the-middle
+    - spread-and-position
+    - inference-technical-reference
 ---
 
 # Two Things Moving Together: Correlation and the Line
 
-> **Part 15 of 15.** Part of the [Probability & Statistics](/fields/data-science/probability-statistics/README.md) series. It continues from [The Courtroom for Numbers](/fields/data-science/probability-statistics/inference/the-courtroom-for-numbers.md). By the end you will measure how two columns move together, draw the line through them, and know exactly when to distrust both. There is nothing new to memorize: two ideas you already own are reused. The scenario is invented, and every figure can be checked by hand.
+> **Part 15 of 15.** Part of the [Probability & Statistics](/fields/data-science/probability-statistics/README.md) series, after [The Courtroom for Numbers](/fields/data-science/probability-statistics/inference/the-courtroom-for-numbers.md). Nothing new to memorize: two ideas you already own are reused. The scenario is invented, and every figure was recomputed with Python 3.14.4.
+
+Ravi will turn a feeling into a number, `-0.98`, and use it to forecast negative tea sales. The number is right. His reading of it is the problem, and four small traps explain exactly how.
+
+**By the end of this page you will be able to:**
+
+- Compute a correlation as the average product of paired z-scores, and a line as least squared walking.
+- Read slope, intercept, residuals and `r²` in plain units.
+- Name the four traps: extrapolation, hidden third causes, curves, outliers.
+- Say why you graph first, with Anscombe's four sets as the proof.
 
 * * *
 
-## Prologue: cold days, full cups
+## Cold days, full cups
 
 Ravi has bought tea at Leaf & Kettle for months, and he has a theory. "The colder it is, the more you sell."
 
@@ -38,6 +48,16 @@ Mira shrugs. "Feels true." "Feels," says Ravi, and asks for the till book. Tala 
 | Cups sold | 58 | 50 | 52 | 42 | 40 | 30 | 28 | 20 |
 
 How do you put a number on "feels true"? And what would the number *not* tell you?
+
+* * *
+
+## Three ways to use a feeling
+
+1. **Trust the feeling.** "Feels true" is not a number, and cannot be wrong in a way anyone can check.
+2. **Trust the number.** `r = -0.98` sounds like a law of nature and says nothing about steepness, cause or curves.
+3. **Trust the line anywhere.** It will happily forecast the 40-degree day.
+
+Mira stops it at the third. The pieces are all on the page; build them in order, picture first.
 
 * * *
 
@@ -64,7 +84,7 @@ The dots slide down as you go right. No clumps, no strays, roughly a line. This 
 
 ## Idea 1: do the z-scores rise and fall together?
 
-Temperature is in degrees, cups are in cups. Different units, different spreads. You already own the tool that makes them comparable: the **z-score** from [Where Do You Stand?](/fields/data-science/probability-statistics/describing-data/where-do-you-stand.md), distance from the middle in typical distances.
+Temperature is in degrees, cups are in cups. Different units, different spreads. You already own the tool that makes them comparable: the **z-score** from [Spread and Position](/fields/data-science/probability-statistics/describing-data/spread-and-position.md), distance from the middle in typical distances.
 
 Convert every day to two z-scores. Then ask one question: on a day when temperature is above its middle, is cups above or below *its* middle? Multiply the two z-scores of each day:
 
@@ -109,7 +129,7 @@ So `r = -0.98`. But Ravi wants to *predict*: how many cups tomorrow at 5 degrees
 
 ## Idea 2: the line is least squared walking
 
-You have met this problem in disguise. In [How Far From the Middle?](/fields/data-science/probability-statistics/describing-data/how-far-from-the-middle.md), the mean was the spot that leaves the smallest total **squared** walk to the crowd. Now the crowd is eight dots and the thing we place is a **line**. The walk of each dot is the vertical gap between it and the line, called its **residual** (what is left over after the line has said its piece). The same rule applies: the line that leaves the smallest total squared residual wins. That is **least squares**, and it is the whole idea of regression.
+You have met this problem in disguise. In [Spread and Position](/fields/data-science/probability-statistics/describing-data/spread-and-position.md), the mean was the spot that leaves the smallest total **squared** walk to the crowd. Now the crowd is eight dots and the thing we place is a **line**. The walk of each dot is the vertical gap between it and the line, called its **residual** (what is left over after the line has said its piece). The same rule applies: the line that leaves the smallest total squared residual wins. That is **least squares**, and it is the whole idea of regression.
 
 ```python
 fit = st.linear_regression(temp, cups)
@@ -146,7 +166,10 @@ At 40 degrees a shop sells negative tea. Is `r = -0.98` any safer?
 
 * * *
 
-> ☕ **Try it live.** Drag a point, add the festival day, or step through Anscombe's four sets and watch r and the line.
+### Try it: Drag a point, watch the line
+
+> **What to try:** Drag a point, add the festival day, or step through Anscombe's four sets and watch r and the line.  
+> **Start with:** the preset *Predict at 40 degrees*.
 
 [Correlation lab](/fields/data-science/probability-statistics/labs/regression.html#embed ':ignore')
 
@@ -193,7 +216,7 @@ print(round(st.correlation(temp + [30], cups + [60]), 3))  # one heatwave festiv
 
 One day moved `r` from -0.982 to **-0.075**. (The same digits as the sunburn result by coincidence; it is a different data set.) Just as one far house wrecked the mean on Kettle Street, one far dot wrecks `r`, because z-scores are built from the mean and SD.
 
-All four traps share a cure, and it is the one [Part 3](/fields/data-science/probability-statistics/describing-data/draw-it-before-you-describe-it.md) gave you.
+All four traps share a cure, and it is the one [Part 3](/fields/data-science/probability-statistics/describing-data/pictures-and-the-middle.md) gave you.
 
 * * *
 
@@ -244,38 +267,13 @@ Set I is honest. II is a curve (trap 3). III is a line with one stray dot (trap 
 
 * * *
 
-## Check yourself
-
-1. Four days have z-scores for (temperature, cups) of (1, -1), (-1, 1), (0.5, -0.5), (-0.5, 0.5). What is `r`?
-2. A fitted line is `cups = 64 - 2.5 × temp`. Predict cups at 10 degrees, and say what the slope means in words.
-3. Towns with more fire engines at a fire have more fire damage (`r = 0.8`). Does sending fewer engines reduce damage? Name the hidden third thing.
-4. Why is predicting at 40 degrees from data covering 2 to 16 a bad idea, even with `r = -0.98`?
-5. Which one picture would have shown you that Anscombe's four sets differ?
-
-* * *
-
-## Back to the story
+## Cold days, in this range
 
 Ravi studies the scatter plot and the number. "So I was right. Cold days, more tea."
 
 "On these eight days, in this range," says Mira. "Not a law, not a cause, and not at 40 degrees. But I would rather act on a picture and a number than on a feeling, and on a picture rather than a number."
 
 **Takeaway:** correlation is the average product of paired z-scores, the line is least squared walking, and both describe a straight-line pattern in the range you saw, nothing more. Graph first.
-
-* * *
-
-## Cheat sheet
-
-```text
-r = average of (z of x) x (z of y)        -1 .. +1, straight-line togetherness only
-LINE = the one with the smallest total squared residual (least squares)
-slope = r x SD(y) / SD(x)       r squared = share of the squared miss the line removes
-residual = actual - line         they add up to 0
-
-NOT causation (look for a hidden third).  NOT curves (r = 0 can hide a perfect one).
-ONE OUTLIER can swing r.   NO PREDICTION beyond the range of x you saw.
-ALWAYS DRAW THE SCATTER FIRST: Anscombe's four sets share every summary.
-```
 
 * * *
 
@@ -293,13 +291,43 @@ Everything in one place: [The Map of Leaf & Kettle](/fields/data-science/probabi
 
 * * *
 
-## Answers
+## Never again
 
-1. Products: -1, -1, -0.25, -0.25. Sum -2.5, over 4 days: `r =` **-0.625**.
-2. `64 - 2.5 × 10 =` **39 cups**. Each extra degree goes with 2.5 fewer cups sold, inside the range of temperatures the line was fitted on.
-3. No. Both follow the **size of the fire**: bigger fires bring more engines and more damage. Hold the fire size still and the link largely disappears.
-4. 40 degrees is far outside 2 to 16. The line is only evidence about the range seen, and there it predicts **-41.9 cups**, which is impossible.
-5. The **scatter plot** of each set. The summary numbers are identical.
+| Mistake | Symptom | Fix |
+|---|---|---|
+| Predicting outside the data | -41.9 cups at 40 degrees | A line describes the range it has seen |
+| Reading correlation as cause | Iced tea and sunburn at 0.795 | Hold the third thing still: with the same sun it is -0.075 |
+| Trusting `r` on a curve | `y = x²` gives 0.0 | Draw the scatter first |
+| Trusting `r` with one outlier | A heatwave day moves `r` from -0.982 to -0.075 | Look for the far dot; z-scores use the mean and SD |
+| Summaries without the picture | Anscombe: four sets, one `r` | Graph first, number second |
+
+## Check yourself
+
+1. Four days have z-scores for (temperature, cups) of (1, -1), (-1, 1), (0.5, -0.5), (-0.5, 0.5): what is `r`?
+2. A fitted line is `cups = 64 - 2.5 × temp`: cups at 10 degrees, and what does the slope mean in words?
+3. Towns with more fire engines at a fire have more damage (`r = 0.8`): does sending fewer engines reduce damage, and what is the hidden third thing? Why is 40 degrees from data covering 2 to 16 a bad idea, even with `r = -0.98`? Which one picture shows that Anscombe's four sets differ?
+
+<details>
+<summary>Answers</summary>
+
+1. Products: -1, -1, -0.25, -0.25; sum -2.5, over 4 days: `r =` **-0.625**.
+2. `64 - 2.5 × 10 =` **39 cups**; each extra degree goes with 2.5 fewer cups sold, inside the range the line was fitted on.
+3. **No**: both follow the **size of the fire**; hold it still and the link largely disappears. 40 degrees is far outside 2 to 16, the line is only evidence about the range seen, and there it predicts **-41.9 cups**. The **scatter plot** of each set; the summary numbers are identical.
+
+</details>
+
+* * *
+
+## 📜 The Scroll (keep this)
+
+```text
+Correlation : r = average of (z of x) x (z of y); -1 .. +1; straight-line togetherness only
+Line        : the smallest total squared residual (least squares); residuals add to 0
+Slope       : r x SD(y) / SD(x);  r squared = share of the squared miss the line removes
+Traps       : extrapolating; a hidden third cause; curves (r = 0 hides them); one outlier
+Always      : draw the scatter first; Anscombe's four sets share every summary
+Do not      : read correlation as cause; predict beyond the range of x you saw
+```
 
 * * *
 

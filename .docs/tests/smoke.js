@@ -373,6 +373,10 @@ async function run(browser, base, label, size, phone) {
   if (!phone) {
     // Embedded labs (.docs/lab-embed.js): sandboxed frames from this site only, no access to the page
     await go('fields/data-science/probability-statistics/probability/quick-guide', 2500);
+    // a lab is a card first: no frame exists until the reader opens it
+    const cards = await page.locator('.markdown-section figure.lab-embed').count();
+    c('labs are cards, with no frame until asked', cards >= 2 && (await page.locator('.markdown-section iframe').count()) === 0, String(cards));
+    for (const b of await page.locator('.markdown-section .lab-open').all()) await b.click();
     const lab = await page.evaluate(() => Array.from(document.querySelectorAll('.markdown-section iframe')).map((f) => ({
       sandbox: f.getAttribute('sandbox'), src: f.src, origin: location.origin, ref: f.getAttribute('referrerpolicy'), h: f.getBoundingClientRect().height })));
     c('a lab is embedded as a frame', lab.length >= 2, String(lab.length));
@@ -383,7 +387,12 @@ async function run(browser, base, label, size, phone) {
     await page.locator('.markdown-section iframe').first().scrollIntoViewIfNeeded();
     await page.waitForFunction(() => Array.from(document.querySelectorAll('.markdown-section iframe')).some((f) => f.contentWindow && f.contentWindow.length !== undefined && f.src.indexOf('bayes.html') > -1), null, { timeout: 8000 }).catch(() => {});
     await page.waitForTimeout(1500);
-    const frame = page.frames().find((f) => /\/labs\/bayes\.html/.test(f.url()));
+    // a loaded runner can need longer than that: look for the loaded frame for up to 20 s before calling it missing
+    let frame = null;
+    for (let i = 0; i < 40 && !frame; i++) {
+      frame = page.frames().find((f) => /\/labs\/bayes\.html/.test(f.url())) || null;
+      if (!frame) await page.waitForTimeout(500);
+    }
     if (frame) {
       await frame.waitForSelector('#post', { timeout: 8000 }).catch(() => {});
       const inner = await frame.evaluate(() => {
@@ -399,11 +408,27 @@ async function run(browser, base, label, size, phone) {
       const h = await page.evaluate(() => { const f = Array.from(document.querySelectorAll('.markdown-section iframe'))[0]; return Math.round(f.getBoundingClientRect().height); });
       c('the frame grows to the lab height', h > 520 && h <= 3000, h + ' px');
     } else c('the framed lab loads', false, 'no frame for bayes.html');
-    for (const [slug, want] of [['inference/quick-guide', 3], ['describing-data/quick-guide', 1]]) {
-      await go('fields/data-science/probability-statistics/' + slug, 2000);
+    for (const [slug, want] of [['data-science/probability-statistics/inference/quick-guide', 3], ['data-science/probability-statistics/describing-data/quick-guide', 3], ['digital-image-processing/quick-guide', 5]]) {
+      await go('fields/' + slug, 2000);
+      const nCards = await page.locator('.markdown-section figure.lab-embed').count();
+      c('every lab on ' + slug + ' is a card with no frame yet', nCards === want && (await page.locator('.markdown-section iframe').count()) === 0, String(nCards));
+      // click in the page itself: on a slow runner a frame that has just opened grows between the position check and the click, and a real click lands on the frame above
+      for (const b of await page.locator('.markdown-section .lab-open').all()) await b.evaluate((el) => el.click());
+      // a slow runner can lag behind the clicks: wait for the frames, so a real missing frame still fails
+      await page.waitForFunction((w) => document.querySelectorAll('.markdown-section iframe').length >= w, want, { timeout: 8000 }).catch(() => {});
       const n = await page.evaluate(() => Array.from(document.querySelectorAll('.markdown-section iframe')).map((f) => f.getAttribute('sandbox')));
       c('every embedded lab on ' + slug + ' is sandboxed', n.length === want && n.every((v) => v === 'allow-scripts'), JSON.stringify(n));
     }
+    // a link to one lab (quick-guide.md?id=<lab>) must land on that lab, although the frames above it grow after the jump
+    await go('fields/digital-image-processing/README', 1500); // click the README table link, as a reader does
+    await page.locator('.markdown-section a', { hasText: 'Wavelets lab' }).first().click();
+    await page.waitForTimeout(4000);
+    const labTop = await page.evaluate(() => { const h = document.getElementById('wavelets-lab'); return h ? Math.round(h.getBoundingClientRect().top) : null; });
+    c('a link to one lab lands on that lab, not on the first', labTop !== null && labTop >= 0 && labTop < 300, String(labTop));
+    const opened = await page.evaluate(() => { let n = document.getElementById('wavelets-lab'); n = n && n.nextElementSibling; while (n && !(n.classList && n.classList.contains('lab-embed'))) n = n.nextElementSibling; return !!(n && n.querySelector('iframe')); });
+    c('the link opens the lab it points at', opened);
+    await go('fields/digital-image-processing/spatial-filtering', 2500);
+    c('a page with a lab says so under its title', (await page.locator('.lab-line a').count()) === 1, String(await page.locator('.lab-line a').count()));
     const policy = await page.evaluate(() => window.__csp.filter((v) => /^frame-src/.test(v)));
     c('no frame is blocked by the policy', policy.length === 0, policy.join(' | '));
   }
