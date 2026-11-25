@@ -412,7 +412,8 @@ async function run(browser, base, label, size, phone) {
       await go('fields/' + slug, 2000);
       const nCards = await page.locator('.markdown-section figure.lab-embed').count();
       c('every lab on ' + slug + ' is a card with no frame yet', nCards === want && (await page.locator('.markdown-section iframe').count()) === 0, String(nCards));
-      for (const b of await page.locator('.markdown-section .lab-open').all()) await b.click();
+      // click in the page itself: on a slow runner a frame that has just opened grows between the position check and the click, and a real click lands on the frame above
+      for (const b of await page.locator('.markdown-section .lab-open').all()) await b.evaluate((el) => el.click());
       // a slow runner can lag behind the clicks: wait for the frames, so a real missing frame still fails
       await page.waitForFunction((w) => document.querySelectorAll('.markdown-section iframe').length >= w, want, { timeout: 8000 }).catch(() => {});
       const n = await page.evaluate(() => Array.from(document.querySelectorAll('.markdown-section iframe')).map((f) => f.getAttribute('sandbox')));
