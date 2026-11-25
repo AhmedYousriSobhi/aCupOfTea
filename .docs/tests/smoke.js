@@ -408,6 +408,8 @@ async function run(browser, base, label, size, phone) {
       const nCards = await page.locator('.markdown-section figure.lab-embed').count();
       c('every lab on ' + slug + ' is a card with no frame yet', nCards === want && (await page.locator('.markdown-section iframe').count()) === 0, String(nCards));
       for (const b of await page.locator('.markdown-section .lab-open').all()) await b.click();
+      // a slow runner can lag behind the clicks: wait for the frames, so a real missing frame still fails
+      await page.waitForFunction((w) => document.querySelectorAll('.markdown-section iframe').length >= w, want, { timeout: 8000 }).catch(() => {});
       const n = await page.evaluate(() => Array.from(document.querySelectorAll('.markdown-section iframe')).map((f) => f.getAttribute('sandbox')));
       c('every embedded lab on ' + slug + ' is sandboxed', n.length === want && n.every((v) => v === 'allow-scripts'), JSON.stringify(n));
     }
