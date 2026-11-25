@@ -10,6 +10,7 @@ domains:
   - statistics
 tags:
   - statistics
+labs: [bayes]
 relations:
   prerequisites:
     - spread-and-position
@@ -201,7 +202,10 @@ With A = contaminated and B = positive: `P(B | A) = 0.99` (the leaflet), `P(A) =
 > [!NOTE]
 > The tree of counts is the **frequency format** studied by Gigerenzer and Hoffrage (1995). Their paper is about how people reason with it; this page uses the idea, not their results.
 
-> ☕ **Try it live.** Move the base rate, the catch rate and the false-alarm rate, and watch the 100 positive tins change colour. The starting dials are this page's numbers.
+### Try it: Why a 99% accurate test is so often wrong
+
+> **What to try:** Move the base rate, the catch rate and the false-alarm rate, and watch the 100 positive tins change colour. The starting dials are this page's numbers.  
+> **Start with:** the preset *The page: rare*.
 
 [Bayes lab](/fields/data-science/probability-statistics/labs/bayes.html#embed ':ignore')
 

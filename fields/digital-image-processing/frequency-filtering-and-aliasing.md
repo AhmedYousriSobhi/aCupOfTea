@@ -10,13 +10,17 @@ domains: [image-processing]
 tags: [fourier-transform, convolution, filtering, sampling]
 relations:
   prerequisites: [dip-fourier-transform-images]
+labs: [frequency-filters]
 ---
-
 # The Shirt That Shimmers: Frequency Filtering and Aliasing
 
-> **Part 7 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** Give the choir a volume knob for every singer, then find out what happens when the town is too small to hear the fast ones. *Mira, Ravi and the broadcast team are invented; the maths and numbers are real.*
+> **Part 7 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** Give the choir a volume knob for every singer, then find out what happens when the town is too small to hear the fast ones. *Kofi and the broadcast team are invented; the maths and numbers are real.*
 
-During a live segment, Mira will watch a news anchor's striped shirt crawl in rainbow bands that are not on the shirt. She will design a very sharp filter to remove them, and be one deploy away from putting a halo around every collar on air.
+```text
+T-40:00   segment confirmed, anchor in the striped shirt
+T-25:00   moire noticed on camera two
+T-12:00   Kofi drafts a very sharp low-pass filter
+```
 
 **By the end of this page you will be able to:**
 
@@ -32,25 +36,17 @@ During a live segment, Mira will watch a news anchor's striped shirt crawl in ra
 
 The anchor wears a fine striped shirt. On camera, the stripes crawl and shimmer in slow rainbow bands that aren't on the shirt at all. The producers have a name for it: moiré. The viewers have another name for it: "why is his shirt doing that?".
 
-Mira is on the broadcast team and the segment is live in forty minutes. Her first reading is the obvious one: **the footage has a pattern in it that should be filtered out.**
+Kofi is the broadcast engineer, and the segment is live in forty minutes. His first reading is the obvious one: **the footage has a pattern in it that should be filtered out.**
 
 ---
 
-## Three fixes for a pattern that is not there
+## One very sharp filter
 
-**Attempt 1: sharpen the picture.** If the stripes look wrong, make them crisper. The bands get brighter and crawl faster.
+Kofi builds a low-pass filter with a perfectly sharp wall to remove everything above a cutoff, and puts it on the live feed with twelve minutes to spare. Nobody reviews it.
 
-**Attempt 2: blame the compression.** She asks for a higher bitrate and a different encoder. The bands are exactly where they were.
+On the monitor, the slow bands are still there, and now there is a faint ripple around the anchor's collar and every edge on the set. The producer notices at T-00:10 and asks what happened to the picture. Kofi takes the filter out.
 
-**Attempt 3: filter it out, hard.** She builds a low-pass filter with a perfectly sharp wall, to remove everything above a cutoff, and schedules it onto the live feed. Ravi pauses on a test frame: "What are those ripples around his collar?" She pulls the filter out of the schedule.
-
-So far:
-
-- Sharpening made the problem louder.
-- The encoder was innocent.
-- The sharp filter blurred the picture, left the slow bands alone, and added its own ripples.
-
-That leaves one question: **where do the stripes come from, and why can filtering the picture afterwards not remove them?**
+The filter softened the picture, left the slow bands alone and added ripples of its own. The stripes are the problem, and filtering after the camera did nothing to them. Where do the stripes come from?
 
 ---
 
@@ -145,21 +141,24 @@ The **fix is applied before sampling**: remove the frequencies the grid can't ca
 
 Once aliasing has happened it can't be undone: the information about the true frequency is gone, and the 1 Hz you see could just as well have come from a real 1 Hz wave.
 
-> ☕ **Try it live.** Switch between the ideal, Butterworth and Gaussian masks and watch the ripples, click the dots of stripe noise to notch them out, then sample a 9 Hz wave 10 times per second.
-
-[Frequency filters lab](/fields/digital-image-processing/labs/frequency-filters.html#embed ':ignore')
-
 ### Wraparound: the border gotcha
 
 One trap from [page 6](/fields/digital-image-processing/fourier-transform-for-images.md): multiplying DFTs corresponds to **circular** convolution, as if the image repeated like wallpaper. Filter without care and the left edge's content bleeds in from the right edge.
 
 The fix is to **pad** the image with zeros (to at least the image size plus the kernel size) before transforming, filter, and crop afterwards.
 
+### Try it: The shirt that shimmers, filter the spectrum, then sample it
+
+> **What it shows:** Filtering in frequency is three steps: transform, multiply by a mask, transform back. Cut too sharply and it rings; sample too coarsely and it aliases.  
+> **Start with:** the preset *Gaussian low-pass* (No ringing at all: its twin in space is a Gaussian too. PSNR 21.8 dB at D₀ = 30).
+
+[Frequency filters lab](/fields/digital-image-processing/labs/frequency-filters.html#embed ':ignore')
+
 ---
 
 ## Back to the shirt
 
-Mira compares the stripe spacing with the camera grid. The stripes are finer than the grid can describe, so the camera reports different, coarser stripes that were never there.
+Kofi compares the stripe spacing with the camera grid. The stripes are finer than the grid can describe, so the camera reports different, coarser stripes that were never there.
 
 The anchor's shirt had stripes finer than the Nyquist limit of the camera, so they folded down into slow bands: moiré. You can't fix it after the fact. You fix it before: change the shirt, move the camera, or blur optically.
 

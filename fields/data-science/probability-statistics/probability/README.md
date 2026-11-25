@@ -20,6 +20,6 @@ Parts 7 to 11 of the [Probability & Statistics](/fields/data-science/probability
 
 | Lab | What you can do |
 |---|---|
-| [Expected value lab](/fields/data-science/probability-statistics/probability/quick-guide.md?id=try-it) | Edit the cards in a bag, see the expected value and variance, and pull 10 to 100,000 times |
-| [Bayes lab](/fields/data-science/probability-statistics/probability/quick-guide.md?id=try-it) | Move base rate, sensitivity and false-positive rate and watch the posterior |
-| [Distributions lab](/fields/data-science/probability-statistics/probability/quick-guide.md?id=try-it) | Change binomial, Poisson and normal dials, draw samples, compare with exact values |
+| [Expected value lab](/fields/data-science/probability-statistics/probability/quick-guide.md?id=expected-value-lab) | Edit the cards in a bag, see the expected value and variance, and pull 10 to 100,000 times |
+| [Bayes lab](/fields/data-science/probability-statistics/probability/quick-guide.md?id=bayes-lab) | Move base rate, sensitivity and false-positive rate and watch the posterior |
+| [Distributions lab](/fields/data-science/probability-statistics/probability/quick-guide.md?id=distributions-lab) | Change binomial, Poisson and normal dials, draw samples, compare with exact values |

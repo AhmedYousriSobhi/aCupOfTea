@@ -1,6 +1,6 @@
 ---
 id: dip-fourier-transform-images
-title: "Two Faces, Swapped: The Fourier Transform for Images"
+title: The Fourier Transform for Images
 sidebar_label: 6. The Fourier transform
 order: 7
 summary: What the 2D DFT really says - an image as a sum of waves, magnitude versus phase, a 4-point DFT done by hand, and the convolution theorem that turns sliding windows into multiplication.
@@ -12,52 +12,23 @@ relations:
   prerequisites: [dip-spatial-filtering]
 ---
 
-# Two Faces, Swapped: The Fourier Transform for Images
+# The Fourier Transform for Images
 
-> **Part 6 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** The same town, heard as a choir instead of seen as a grid (curious who started it? [Meet Fourier](/fields/digital-image-processing/meet-fourier.md)). *Mira, Ravi and the reading group are invented; the maths and numbers are real.*
-
-Mira will build a picture from the loudness of a face and the timing of a cityscape and confidently predict a face. She will be wrong, then suspect her code, and then come within one rewrite of replacing a perfectly good Fourier routine.
-
-**By the end of this page you will be able to:**
-
-- Read the DFT formula as "how much of each wave is in this image".
-- Compute a 4-point DFT by hand.
-- Read a spectrum picture: where the origin is, why it is log-scaled, what direction means.
-- Say what the magnitude carries and what the phase carries.
-- Explain why the convolution theorem makes the frequency domain worth the trouble.
+> **Part 6 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** The same town, heard as a choir instead of seen as a grid (curious who started it? [Meet Fourier](/fields/digital-image-processing/meet-fourier.md)). By the end you'll read the DFT formula as "how much of each wave is in this image", compute a small one by hand, and know why the convolution theorem makes the whole frequency domain worth the trouble.
 
 ---
 
-## The face that came out as a city
+## Two faces, swapped
 
-Mira's reading group is working through the Fourier transform. The exercise: take two photos, a face and a cityscape, compute the Fourier transform of each, and build a new image from the **magnitude of the face** and the **phase of the cityscape**.
+Take two photos: a face and a cityscape. Compute the Fourier transform of each. Now build a new image from the **magnitude of the face** and the **phase of the cityscape**. What do you see?
 
-She is sure what comes out: the face, with some odd texture from the city. She runs it. What comes out is the cityscape. Not a face with a skyline pattern on it: the skyline, buildings and all, in odd shades of gray.
+The cityscape. Not a face with a skyline pattern on it: the skyline, buildings and all, in odd colours of gray.
 
-Her first reading is the obvious one: **she mixed up the files.**
-
----
-
-## Three suspects, all innocent
-
-**Attempt 1: check the files.** The face is the face, the city is the city, and she passed them in the right order. Same result.
-
-**Attempt 2: fix the display.** Maybe the spectrum needs shifting or a log scale to look right. She tries both. The picture changes brightness and nothing else. It is still the city.
-
-**Attempt 3: rewrite the transform.** If the library is not to be trusted, she will write her own. She opens a blank file and starts typing out a double loop over every pixel. Ravi reads over her shoulder: "Is there a bug, or is that the answer?"
-
-So far:
-
-- The inputs are right, and so is the display.
-- A new transform would almost certainly give the same picture.
-
-That leaves one question: **what are the magnitude and the phase of an image, and which of the two says what is in the picture?**
+Spoiler for the end of the page: the thing that tells you *what's in the picture* is not the one you'd guess. To understand why, we need to know what these two numbers are.
 
 ---
 
-## The choir behind the picture
-
-### A town as a choir
+## A town as a choir
 
 Every image, however messy, can be written as a **sum of waves**: stripes of different thickness, direction and brightness. Thick, lazy stripes are **low frequencies** (overall shading). Thin, dense stripes are **high frequencies** (edges, texture, noise).
 
@@ -68,7 +39,9 @@ Pixel Town as a choir: each possible stripe pattern is a singer. The Fourier tra
 
 That's it. Everything below is the formula for doing this carefully.
 
-### The 1-D DFT, slowly
+---
+
+## The 1-D DFT, slowly
 
 Start with one row of N pixels f(x). The **discrete Fourier transform** (DFT) is:
 
@@ -90,7 +63,9 @@ Two facts to pin to the wall:
 - **F(0) is the sum of all pixels**, because at u = 0 the wave is just 1. Divide by N for the average brightness. This is the "DC term".
 - For a **real** image, the transform is conjugate symmetric: F(N−u) = conj(F(u)). So half the spectrum is redundant.
 
-### Try it before you scroll
+---
+
+## Try it before you scroll
 
 ☕ A row of four pixels: **1, 2, 3, 4**. What is F(0)? And what do you expect for the high-frequency terms of a steady ramp?
 
@@ -98,7 +73,9 @@ Two facts to pin to the wall:
 
 **Answer:** F(0) = 1 + 2 + 3 + 4 = **10**. The rest is next.
 
-### A 4-point DFT by hand
+---
+
+## A 4-point DFT by hand
 
 For N = 4, the spinning arrow for step n at frequency u is (−j)^(u·n), because e^(−j2π/4) = −j. The powers of −j cycle through 1, −j, −1, j.
 
@@ -122,7 +99,9 @@ print(np.fft.fft([1, 2, 3, 4]))   # expected by the hand calculation: [10.+0.j, 
 > [!NOTE]
 > Where the 1/N (or 1/MN) factor sits differs between textbooks and libraries. NumPy leaves the forward transform unscaled and divides on the inverse; some books scale the forward one. Magnitudes differ by that factor, shapes don't.
 
-### From one dimension to two
+---
+
+## From one dimension to two
 
 For an M × N image, the transform has two frequency axes, u (paired with x, running over M) and v (paired with y, running over N):
 
@@ -130,7 +109,9 @@ $$F(u,v) = \sum_{x=0}^{M-1}\sum_{y=0}^{N-1} f(x,y)\, e^{-j2\pi\left(\frac{ux}{M}
 
 Each (u, v) is a stripe pattern: u, v say how many cycles run in each direction, and so the **direction** of the stripes. The 2-D DFT is separable: do a 1-D DFT along every row, then along every column of the result. That's how it is computed fast. The **FFT** brings the cost from about (MN)² down to about MN·log(MN).
 
-### Reading a spectrum picture
+---
+
+## Reading a spectrum picture
 
 The standard picture shows |F(u,v)| as an image, and you need three tricks to read it:
 
@@ -152,7 +133,9 @@ flowchart LR
 
 *One transform, two pictures. Only one of them is the usual spectrum image.*
 
-### Magnitude tells how much, phase tells where
+---
+
+## Magnitude tells how much, phase tells where
 
 Back to the faces. The magnitude says how much energy sits at each stripe pattern: the **texture and tone budget**. The phase says how those stripes line up with each other, and that **alignment is the structure**: where edges fall, where objects sit.
 
@@ -160,7 +143,9 @@ Wipe out the phase and every singer starts at a random time: the loudness is rig
 
 Since the magnitude is the part everyone draws, most intuition about spectrum pictures is about the less important half.
 
-### The convolution theorem
+---
+
+## The convolution theorem
 
 Here is the reason to bother. Sliding a kernel over an image (page 4) is convolution. In the frequency domain it becomes **plain multiplication**:
 
@@ -177,41 +162,13 @@ One gotcha for later: the DFT treats the image as if it repeated forever, so the
 
 ## Back to the swapped faces
 
-Mira stops typing. It was never a bug: the picture on her screen is the correct answer to the question she asked.
-
 The cityscape won because the phase carries the **layout**, and layout is what we recognize. The face's magnitude only supplied the "which gray levels and textures", which is much harder to see.
 
 You now have a dictionary: spatial position becomes frequency, smooth becomes low frequency, edges and noise become high frequency, and filtering becomes multiplication. If a kernel is a vote among neighbours, a frequency filter is a **volume knob for each singer**.
 
----
-
-## Never again: reading a spectrum
-
-| Do | Because |
-|---|---|
-| Shift the origin to the centre | By default the DC term (0,0) sits in the corner |
-| Show `log(1 + \|F\|)` | The DC term is enormous compared with everything else |
-| Read direction, not position | The line from the centre points perpendicular to the stripes |
-| Remember what each half carries | Magnitude is how much (tone and texture); phase is where (layout) |
-| Check the scale convention | NumPy leaves the forward transform unscaled and divides on the inverse; magnitudes differ by that factor, shapes don't |
-| Remember wraparound | Multiplying DFTs is a circular convolution: borders wrap (page 7) |
-
 **Takeaway:** the DFT rewrites an image as waves; magnitude is how much, phase is where, and the convolution theorem turns filtering into multiplication.
 
 **Next:** if we can multiply the choir by a mask, which masks work, and what goes wrong when we sample the town too coarsely? [Part 7: Frequency filtering and aliasing](/fields/digital-image-processing/frequency-filtering-and-aliasing.md).
-
----
-
-## 📜 The Scroll (keep this)
-
-```text
-Symptom:  Magnitude of A + phase of B looks like B
-Cause:    Phase carries the layout (edges, where objects sit); magnitude only the tone budget
-Check:    F(0) = sum of the pixels; 4-point DFT of 1,2,3,4 = 10, -2+2j, -2, -2-2j
-Do not:   Rewrite a working transform; trust the spectrum picture without a shift and a log
-Use:      f * h  <->  F . H : filtering is multiplication, FFT cost ~ MN log(MN)
-```
-
 
 ### References
 

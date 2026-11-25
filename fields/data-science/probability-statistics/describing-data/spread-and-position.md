@@ -10,6 +10,7 @@ domains:
   - statistics
 tags:
   - statistics
+labs: [describing]
 relations:
   prerequisites:
     - pictures-and-the-middle
@@ -114,7 +115,10 @@ The square root brings blocks² back to blocks, which is the whole reason SD exi
 | Skewed, or you cannot vouch for the extremes | Median and IQR |
 | Two clumps | Neither alone; describe both clumps |
 
-> ☕ **Try it live.** Pick Mira's scores or Kettle Street, add one wrong value, switch the divisor between n and n − 1, and watch the mean, median, SD and IQR react.
+### Try it: One crowd, many summaries
+
+> **What to try:** Pick Mira's scores or Kettle Street, add one wrong value, switch the divisor between n and n − 1, and watch the mean, median, SD and IQR react.  
+> **Start with:** the preset *The mean in a valley*.
 
 [Describing data lab](/fields/data-science/probability-statistics/labs/describing.html#embed ':ignore')
 

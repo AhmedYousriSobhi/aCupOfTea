@@ -1,6 +1,6 @@
 ---
 id: dip-meet-fourier
-title: "The Prefect Who Split Heat Into Waves: Meet Fourier"
+title: Meet Fourier
 sidebar_label: "Interlude: Meet Fourier"
 order: 6
 summary: The story of Joseph Fourier, the prefect who drained swamps and studied heat, and why his idea that heat spreads as a sum of sine waves ended up inside every image filter.
@@ -12,18 +12,9 @@ relations:
   related: [dip-fourier-transform-images]
 ---
 
-# The Prefect Who Split Heat Into Waves: Meet Fourier
+# Meet Fourier
 
-> **Interlude of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** Read it before or after [Part 6](/fields/digital-image-processing/fourier-transform-for-images.md). *This one is history rather than an invented scenario: the people and dates are real, and where sources differ the page says so.*
-
-A governor with a drainage project and a physics hobby will try to work out how a hot iron bar cools. He will claim that any lumpy starting temperature is a sum of sine waves, a claim that was hard to swallow in his day. The method he builds to prove it will end up inside every blur filter you have ever used.
-
-**By the end of this page you will be able to:**
-
-- Say who Joseph Fourier was and place his heat work in time.
-- Explain why a sine shape keeps its shape as it cools, and why fast wiggles fade first.
-- Say why heat flow and Gaussian blur are the same thing.
-- State, in one sentence, the method that the frequency domain is built on.
+> **Interlude of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** Read it before or after [Part 6](/fields/digital-image-processing/fourier-transform-for-images.md). The man behind the transform was an administrator who studied heat in his spare time, and his one big idea explains why blur, low-pass filters and the heat on your stove are the same thing.
 
 ---
 
@@ -37,25 +28,7 @@ Why do you care in a course on images? Because his answer to "how does heat spre
 
 ---
 
-## The obvious route, and why it is hard
-
-The obvious route to the cooling bar is to take the lumpy starting temperature and solve the heat equation for it directly. The rule is easy to write down and very hard to solve for a lumpy start.
-
-The next obvious route is to give up on one general answer and solve each lumpy start as its own problem, one bar at a time.
-
-So far:
-
-- The rule for how heat spreads is simple.
-- Solving it for an arbitrary lump is not.
-- Solving every lump separately has no end.
-
-That leaves one question: **is there a shape for which the problem is easy?**
-
----
-
-## Sine shapes that keep their shape
-
-### The timeline
+## The timeline
 
 | Year | What happened |
 |---|---|
@@ -68,7 +41,9 @@ That leaves one question: **is there a shape for which the problem is easy?**
 
 Sources disagree by a year on when exactly he became prefect, so treat the table's dates as approximate where the sources differ.
 
-### The question: how does heat spread?
+---
+
+## The question: how does heat spread?
 
 Take a metal rod, heat one spot, and watch. The hot spot spreads out and flattens, and the rod ends up at an even temperature. Fourier wrote down the rule: how fast the temperature u at a point changes depends on how much that point **differs from the average of its neighbours**:
 
@@ -76,7 +51,9 @@ $$\frac{\partial u}{\partial t} = \alpha\,\frac{\partial^2 u}{\partial x^2}$$
 
 The right side is the **second derivative**. You met it on [page 5](/fields/digital-image-processing/edges-and-sharpening.md): "how much I differ from my neighbours". The constant α says how well the material conducts. A bump hotter than its neighbours cools; a dip colder than its neighbours warms. Nothing mysterious, and also very hard to solve for a lumpy starting temperature.
 
-### The trick: ask for sine shapes
+---
+
+## The trick: ask for sine shapes
 
 Fourier's insight: don't solve the lumpy case. Solve the **nicest possible shapes** first, then add them up.
 
@@ -100,7 +77,9 @@ flowchart LR
 
 That last claim, that a wildly shaped function could be a sum of smooth waves, was hard to swallow in his day, and making it precise took mathematicians a long time afterwards. For us it's the foundation: it's why page 6 can say "every image is a sum of waves".
 
-### Try it before you scroll
+---
+
+## Try it before you scroll
 
 ☕ Look at the decay rate, which grows with n². **Which dies first when the rod cools: the slow, one-hump wave (n = 1) or the fast, three-hump wave (n = 3)? And by how much?**
 
@@ -108,7 +87,9 @@ That last claim, that a wildly shaped function could be a sum of smooth waves, w
 
 **Answer:** the three-hump wave dies first, and its decay rate is 3² / 1² = **9 times faster**. Fast wiggles fade the quickest.
 
-### Heat is a blur filter
+---
+
+## Heat is a blur filter
 
 Read that answer again from Pixel Town's point of view. Heat flow makes sharp, fast-changing detail **disappear first** and leaves the smooth, slow shapes for last. That is exactly what a **low-pass filter** does ([page 7](/fields/digital-image-processing/frequency-filtering-and-aliasing.md)).
 
@@ -123,13 +104,17 @@ And it's more than an analogy. Let the "temperature" be the brightness of an ima
 
 So when you press "Gaussian blur", you are running Fourier's rod experiment on a photograph.
 
-### Why he made life "complex"
+---
+
+## Why he made life "complex"
 
 Fourier wrote his series with sines and cosines. The tidier notation of page 6 packs them into one expression with a spinning arrow, e^(−jθ) = cos θ − j sin θ, which is just Euler's formula doing book-keeping.
 
 The side effect is that the answer for each frequency is a **complex number**: a magnitude and a phase, as in the swapped-faces experiment of page 6. So yes, it's quite fair to say Fourier made your life complex. In the literal sense.
 
-### One more thing he got ahead of everyone on
+---
+
+## One more thing he got ahead of everyone on
 
 His heat equations didn't stop at rods. Fourier also asked what keeps the Earth warm, and in papers of 1824 and 1827 he argued that the atmosphere might act like an insulating cover that traps heat. That idea is widely recognized as an early proposal of what is now called the **greenhouse effect**. His numbers were off, and he wasn't necessarily the first to look at the question, but he put it into the language of heat flow.
 
@@ -146,33 +131,9 @@ A prefect in Grenoble, trying to understand a cooling bar, found that you can br
 - turns convolution into multiplication (page 6),
 - and sits inside the compression that shrinks your photos.
 
----
-
-## What to keep from Fourier
-
-| Idea | Where it shows up |
-|---|---|
-| Split the hard problem into easy waves, solve each, add them back | The DFT of Part 6, and every frequency-domain filter |
-| Fast wiggles fade first (rate grows with n²) | Low-pass filtering: heat flow is a Gaussian blur, whose variance is 2αt |
-| Each frequency's answer is a complex number | Magnitude and phase in Part 6 |
-
 **Takeaway:** Fourier's one idea, "split it into waves, handle each wave, add them back", is why the frequency domain exists.
 
 **Next:** back to the main route. [Part 6: The Fourier transform for images](/fields/digital-image-processing/fourier-transform-for-images.md) shows what that idea looks like on a grid of pixels.
-
----
-
-## 📜 The Scroll (keep this)
-
-```text
-Who:      Joseph Fourier, prefect of the Isere (Grenoble); memoir on heat 1807, book 1822
-Idea:     Split into sine shapes, let each fade at its own rate, add them back
-Rule:     du/dt = alpha * d2u/dx2; sine n fades like exp(-alpha n^2 pi^2 t / L^2)
-Check:    n = 3 fades 3^2 / 1^2 = 9 times faster than n = 1
-Images:   Heat flow = Gaussian blur; fast wiggles die first = low-pass
-Dates:    Sources differ by a year on the prefecture: treat as approximate
-```
-
 
 ### References
 

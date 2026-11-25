@@ -88,9 +88,15 @@ Histogram first. Within 1, 2, 3 SD is 68.27%, 95.45%, 99.73%.
 
 ## Try it
 
+### Expected value lab
+
 [Expected value lab](/fields/data-science/probability-statistics/labs/expected-value.html#embed ':ignore')
 
+### Bayes lab
+
 [Bayes lab](/fields/data-science/probability-statistics/labs/bayes.html#embed ':ignore')
+
+### Distributions lab
 
 [Distributions lab](/fields/data-science/probability-statistics/labs/distributions.html#embed ':ignore')
 

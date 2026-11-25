@@ -10,49 +10,30 @@ domains: [image-processing, statistics]
 tags: [noise, filtering]
 relations:
   prerequisites: [dip-frequency-filtering-aliasing]
+labs: [restoration]
 ---
-
 # The Photo That Turned to Static: Noise and Restoration
 
-> **Part 8 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** Real photos arrive blurred and noisy, and the obvious cure for the blur is also the fastest way to destroy the picture. *Mira, Ravi and the traffic-camera team are invented; the maths and numbers are real.*
+> **Part 8 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** Real photos arrive blurred and noisy, and the obvious cure for the blur is also the fastest way to destroy the picture. *Sana and the traffic-camera team are invented; the maths and numbers are real.*
 
-Mira will un-blur a licence plate with a method that is correct on paper and that will replace the whole photo with static. The mistake will be one division. It will be, mathematically, perfectly sound.
-
-**By the end of this page you will be able to:**
-
-- Write the damage to a photo as an equation.
-- Pick a filter by noise type.
-- Explain why dividing out a blur amplifies noise, with the numbers.
-- Explain how the Wiener filter gives up gracefully.
-- Score a restoration with PSNR.
+```text
+$ restore plate_0412.png --method inverse
+reading blur kernel ........ ok
+dividing ................... ok
+result: static
+```
 
 ---
 
 ## The plate that became static
 
-A traffic camera shot a licence plate while the car was moving. The image is smeared in one direction. The traffic team knows the blur, and Ravi says: "We know the blur. Divide it out. Easy."
+A traffic camera shot a licence plate while the car was moving. The image is smeared in one direction. The team knows the blur, and a colleague said: "We know the blur. Divide it out. Easy."
 
-Mira runs the program. The smear is gone, and so is the car, the road and the plate. The whole picture has been replaced by a coarse checkerboard of static.
+Sana ran the program. The smear is gone, and so is the car, the road and the plate. The whole picture has been replaced by a coarse checkerboard of static.
 
-Her first reading is the obvious one: **a bug in her division code.**
+Her first reading is the obvious one: **a bug in her division code.** She tests the division on a small image with no noise, and it recovers the original exactly. The code is fine.
 
----
-
-## Three suspects
-
-**Attempt 1: check the code.** She tests the division on a small image with no noise. It recovers the original exactly. The code is fine.
-
-**Attempt 2: re-measure the blur.** Maybe the smear length is slightly wrong. She tries the nearest few values. Static, every time.
-
-**Attempt 3: clean up the static afterwards.** She runs a median filter on the result and queues the pipeline for the whole day's captures. Ravi sees the output side by side with the originals: "The plates were readable before you started." She stops the queue.
-
-So far:
-
-- The division is correct, and the blur is about right.
-- A median on the output cannot get the plate back.
-- The pipeline made every capture worse than the original.
-
-That leaves one question: **why does a correct inverse, on a real photo, produce noise?**
+A correct inverse, applied to a real photo, produced noise. What was it dividing by?
 
 ---
 
@@ -148,10 +129,6 @@ Use the numbers from the quiz. H = 0.01 and K = 0.01 give a gain of 0.01 / (0.00
 
 K is usually tuned by eye: too small and the noise creeps back, too big and the result stays blurry. That's the trade-off in one dial.
 
-> ☕ **Try it live.** Slide the blur strength and K to see the inverse filter explode and Wiener hold, then restore a blurred, noisy picture.
-
-[Restoration lab](/fields/digital-image-processing/labs/restoration.html#embed ':ignore')
-
 ### Scoring a restoration
 
 How do you know the result is better? When you have a clean reference, use the mean squared error and its logarithmic cousin, the **peak signal-to-noise ratio**:
@@ -162,11 +139,18 @@ MAX is the largest possible pixel value (255 for 8 bits). Example: MSE = 100 giv
 
 PSNR is easy to compute and only loosely matches how a human judges quality: a result can score well and still look smeared. Treat it as a sanity check, not a verdict.
 
+### Try it: The photo that turned to static
+
+> **What it shows:** Blur multiplies each frequency by H; noise is added on top. Dividing by a small H multiplies the noise too, and Wiener stops before that happens.  
+> **Start with:** the preset *No noise: the inverse is exact* (Blur length 9, no noise: dividing the blur out returns the picture almost exactly: the score is above 99 dB, only rounding error).
+
+[Restoration lab](/fields/digital-image-processing/labs/restoration.html#embed ':ignore')
+
 ---
 
 ## Back to the static
 
-Mira prints the blur's strength at a high frequency: a tiny number. The noise there is not tiny. She divides one by the other and sees what happened: they divided by a number that was nearly zero.
+Sana prints the blur's strength at a high frequency: a tiny number. The noise there is not tiny. She divides one by the other and sees what happened: they divided by a number that was nearly zero.
 
 Your colleague's plan was correct on paper and murderous in practice. The blur had pushed the high frequencies close to zero, noise was hiding there too, and dividing by H made the noise a hundred times louder than the thing they wanted.
 

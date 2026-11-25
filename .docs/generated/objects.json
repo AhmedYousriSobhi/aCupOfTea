@@ -499,7 +499,7 @@
     "level": "beginner",
     "order": 7,
     "path": "fields/data-science/probability-statistics/probability/counting-and-conditioning.md",
-    "reading_time_min": 10,
+    "reading_time_min": 11,
     "relations": {
       "prerequisites": [
         "spread-and-position"
@@ -740,7 +740,7 @@
     "level": "intermediate",
     "order": 7,
     "path": "fields/digital-image-processing/fourier-transform-for-images.md",
-    "reading_time_min": 10,
+    "reading_time_min": 8,
     "relations": {
       "prerequisites": [
         "dip-spatial-filtering"
@@ -754,7 +754,7 @@
       "filtering",
       "fourier-transform"
     ],
-    "title": "Two Faces, Swapped: The Fourier Transform for Images",
+    "title": "The Fourier Transform for Images",
     "type": "concept",
     "types": [
       "concept"
@@ -798,7 +798,7 @@
     "level": "intermediate",
     "order": 2,
     "path": "fields/digital-image-processing/geometric-transforms-and-interpolation.md",
-    "reading_time_min": 10,
+    "reading_time_min": 9,
     "relations": {
       "prerequisites": [
         "dip-images-are-matrices"
@@ -873,7 +873,7 @@
     "level": "beginner",
     "order": 6,
     "path": "fields/digital-image-processing/meet-fourier.md",
-    "reading_time_min": 9,
+    "reading_time_min": 7,
     "relations": {
       "prerequisites": [],
       "related": [
@@ -885,7 +885,7 @@
     "tags": [
       "fourier-transform"
     ],
-    "title": "The Prefect Who Split Heat Into Waves: Meet Fourier",
+    "title": "Meet Fourier",
     "type": "note",
     "types": [
       "note"
@@ -900,7 +900,7 @@
     "level": "intermediate",
     "order": 9,
     "path": "fields/digital-image-processing/noise-and-restoration.md",
-    "reading_time_min": 9,
+    "reading_time_min": 8,
     "relations": {
       "prerequisites": [
         "dip-frequency-filtering-aliasing"
@@ -960,7 +960,7 @@
     "level": "beginner",
     "order": 4,
     "path": "fields/digital-image-processing/spatial-filtering.md",
-    "reading_time_min": 9,
+    "reading_time_min": 8,
     "relations": {
       "prerequisites": [
         "dip-intensity-transforms-histograms"
@@ -990,7 +990,7 @@
     "level": "intermediate",
     "order": 10,
     "path": "fields/digital-image-processing/wavelets-and-multiresolution-processing.md",
-    "reading_time_min": 11,
+    "reading_time_min": 9,
     "relations": {
       "prerequisites": [
         "dip-fourier-transform-images"
@@ -1004,7 +1004,7 @@
     "tags": [
       "fourier-transform"
     ],
-    "title": "The Scratch That Is Everywhere: Wavelets and Multiresolution Processing",
+    "title": "Wavelets and Multiresolution Processing",
     "type": "concept",
     "types": [
       "concept"

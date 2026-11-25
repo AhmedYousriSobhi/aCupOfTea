@@ -10,6 +10,7 @@ domains:
   - statistics
 tags:
   - statistics
+labs: [distributions]
 relations:
   prerequisites:
     - expectation-binomial-poisson
@@ -166,7 +167,10 @@ print(round(bag.inv_cdf(0.95), 2), round(std.inv_cdf(0.95), 4))
 
 The 95th percentile is at z = 1.6449, so in grams `100 + 1.6449 × 4 = 106.58`. Two directions, one ruler: value → z → area (`cdf`), or area → z → value (`inv_cdf`).
 
-> ☕ **Try it live.** Choose the Normal tab, set a mean and an SD, and move a and b: the shaded area is the probability. Hover the curve to read a value's z-score.
+### Try it: Pick the recipe, turn the dials
+
+> **What to try:** Choose the Normal tab, set a mean and an SD, and move a and b: the shaded area is the probability. Hover the curve to read a value's z-score.  
+> **Start with:** the preset *Smoky orders*.
 
 [Distributions lab](/fields/data-science/probability-statistics/labs/distributions.html#embed ':ignore')
 

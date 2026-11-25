@@ -86,11 +86,11 @@ The route follows the topic order of the course's main reference, R. C. Gonzalez
 
 | Lab | What you can do |
 |---|---|
-| [Intensity transforms lab](/fields/digital-image-processing/quick-guide.md?id=try-it) | Edit the 8 × 8 bag and watch equalization build its table; rescue a dark picture with gamma, log or equalization |
-| [Spatial filters lab](/fields/digital-image-processing/quick-guide.md?id=try-it) | Edit a 3 × 3 window; add Gaussian or salt-and-pepper noise and compare the mean, the median and the border rules |
-| [Frequency filters lab](/fields/digital-image-processing/quick-guide.md?id=try-it) | Cut the spectrum with an ideal, Butterworth or Gaussian mask and measure the ringing; click the dots of stripe noise to notch them out; sample a wave too coarsely and see the alias |
-| [Restoration lab](/fields/digital-image-processing/quick-guide.md?id=try-it) | See the inverse filter multiply the noise and Wiener hold back; restore a blurred, noisy picture and score it |
-| [Wavelets lab](/fields/digital-image-processing/quick-guide.md?id=try-it) | Run the Haar transform on a row by hand, then threshold the detail coefficients of a noisy picture |
+| [Intensity transforms lab](/fields/digital-image-processing/quick-guide.md?id=intensity-transforms-lab) | Edit the 8 × 8 bag and watch equalization build its table; rescue a dark picture with gamma, log or equalization |
+| [Spatial filters lab](/fields/digital-image-processing/quick-guide.md?id=spatial-filters-lab) | Edit a 3 × 3 window; add Gaussian or salt-and-pepper noise and compare the mean, the median and the border rules |
+| [Frequency filters lab](/fields/digital-image-processing/quick-guide.md?id=frequency-filters-lab) | Cut the spectrum with an ideal, Butterworth or Gaussian mask and measure the ringing; click the dots of stripe noise to notch them out; sample a wave too coarsely and see the alias |
+| [Restoration lab](/fields/digital-image-processing/quick-guide.md?id=restoration-lab) | See the inverse filter multiply the noise and Wiener hold back; restore a blurred, noisy picture and score it |
+| [Wavelets lab](/fields/digital-image-processing/quick-guide.md?id=wavelets-lab) | Run the Haar transform on a row by hand, then threshold the detail coefficients of a noisy picture |
 
 ## Related reading in this repo
 

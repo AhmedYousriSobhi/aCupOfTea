@@ -104,13 +104,23 @@ The orthonormal Haar transform divides by `√2` instead; the structure is the s
 
 ## Try it
 
+### Intensity transforms lab
+
 [Intensity transforms lab](/fields/digital-image-processing/labs/intensity-transforms.html#embed ':ignore')
+
+### Spatial filters lab
 
 [Spatial filters lab](/fields/digital-image-processing/labs/spatial-filters.html#embed ':ignore')
 
+### Frequency filters lab
+
 [Frequency filters lab](/fields/digital-image-processing/labs/frequency-filters.html#embed ':ignore')
 
+### Restoration lab
+
 [Restoration lab](/fields/digital-image-processing/labs/restoration.html#embed ':ignore')
+
+### Wavelets lab
 
 [Wavelets lab](/fields/digital-image-processing/labs/wavelets.html#embed ':ignore')
 

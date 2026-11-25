@@ -11,46 +11,33 @@ tags: [filtering, noise]
 relations:
   prerequisites: [dip-spatial-filtering]
 ---
-
 # The Sharpen Button That Made Things Worse: Edges and Sharpening
 
-> **Part 5 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** *Mira, Ravi and the property-listing team are invented; the maths and numbers are real.*
+> **Part 5 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** *Lena and the property-listing team are invented; the maths and numbers are real.*
 
-On Friday Mira will click "sharpen" on one photo of a brick wall and love it. She will then be one overnight job away from sharpening five thousand listing photos, and from explaining to a very polite client why the sky in every one of them has sand in it.
+How does a computer tell a brick edge from a speck of sand, when to it both are just a pixel that differs from its neighbours?
 
-**By the end of this page you will be able to:**
-
-- Turn a derivative into a difference between neighbours.
-- Build Sobel and Laplacian kernels from first principles.
-- Read a gradient's strength and direction.
-- Explain why sharpening draws halos.
-- Explain why sharpening makes noise louder, and set the strength with that in mind.
+Lena is about to find out the hard way, with one click on a button called "sharpen".
 
 ---
 
 ## The bricks pop, the sky crawls
 
-A property-listing site has a photo of a brick wall that looks soft. Mira clicks "sharpen". The bricks pop. But the clear blue sky now looks like it has sand in it, and every dark edge has a faint bright outline, as if it were cut out with scissors.
+A property-listing site has a photo of a brick wall that looks soft. Lena clicks "sharpen". The bricks pop. But the clear blue sky now looks like it has sand in it, and every dark edge has a faint bright outline, as if it were cut out with scissors.
 
 The software did exactly what it was told. Her first reading is the obvious one: **the strength was set too high**, so a lower setting will keep the bricks and lose the sand.
 
 ---
 
-## Three ways to tame it
+## Two ways to tame it, and one look at the preview folder
 
-**Attempt 1: turn the strength down.** At a lower strength the sand thins out, and so does the pop in the bricks. Somewhere in the middle there is a setting she can live with, and it is not good.
+**Turn the strength down.** At a lower strength the sand thins out, and so does the pop in the bricks. Somewhere in the middle there is a setting she could live with, and it is not good.
 
-**Attempt 2: sharpen, then denoise.** She runs a smoothing filter over the result to clean up the sky. The sand goes, and so does most of the sharpness she had just added.
+**Sharpen, then denoise.** A smoothing pass cleans up the sky. It also removes most of the sharpness she had just added.
 
-**Attempt 3: apply the "high" preset to everything.** She queues the setting that looked best on the brick wall for the whole catalogue of five thousand photos. Ravi opens three at random from the preview folder: a sky, a white wall, a face. "Look at the white wall," he says. She cancels the job.
+So she does what she should have done first: before queuing the "high" preset for the catalogue of five thousand photos, she opens three at random from the preview folder. A sky, a white wall, a face. The white wall looks worse than the brick one did. She cancels the job herself.
 
-So far:
-
-- A lower strength is a trade, not a cure.
-- Smoothing afterwards undoes the sharpening.
-- The setting that suited bricks did not suit skies.
-
-That leaves one question: **how does a program decide "this changes here", and what else does that rule react to?**
+A lower strength is a trade, not a cure, and the setting that suited bricks does not suit skies. What does the rule "this changes here" react to, besides edges?
 
 ---
 
@@ -170,7 +157,7 @@ The difference f − blur(f) keeps only what the blur removed, which is the fine
 
 ## Back to the sharpen button
 
-Mira prints the second derivative along one row of the sky and one row of the bricks. The bricks give a big positive-then-negative pair at the edge. The sky gives a tiny random wobble, and the filter multiplies it by the same amount.
+Lena prints the second derivative along one row of the sky and one row of the bricks. The bricks give a big positive-then-negative pair at the edge. The sky gives a tiny random wobble, and the filter multiplies it by the same amount.
 
 Now the sand in the sky makes sense. A difference between neighbours **doesn't know** whether the difference is a brick edge or a speck of noise. Sharpening magnifies both. Flat sky had only a tiny random wobble, and the filter multiplied it until your eye noticed.
 
@@ -182,7 +169,7 @@ And the scissors halo is the overshoot from the table above: the filter makes da
 | Bright/dark outlines at edges | Overshoot and undershoot of the second derivative | Reduce k, use a larger blur radius |
 | Edge map full of tiny speckles | Raw differences amplify noise | Use Sobel (built-in smoothing) or blur first |
 
-She sets a lower strength, masks the flat regions, and denoises the sky before sharpening, in that order. The bricks keep most of their pop and the sky stays sky.
+Lena sets a lower strength, masks the flat regions, and denoises the sky before sharpening, in that order. The bricks keep most of their pop and the sky stays sky.
 
 ---
 

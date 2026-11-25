@@ -11,6 +11,7 @@ domains:
 tags:
   - statistics
   - sampling
+labs: [sampling]
 relations:
   prerequisites:
     - the-bell-curve
@@ -160,7 +161,10 @@ n=30  (each # = 100 of 10000 sample means)
 
 With `n = 2` the pot's two clumps are smeared, with a new bump in the middle (one low cup plus one high cup averages to about 75). With `n = 30` they are **gone**: one hump near 75, a little lopsided. That is the **central limit theorem**: the average of many independent draws approaches a normal curve, whatever the crowd's shape. NIST: as the sample size becomes large, the sampling distribution of the mean becomes approximately normal regardless of the original distribution, is centred at the population mean, and has standard deviation approaching sigma over root N. Averaging smooths: thirty cups would all need to be extreme in the same direction.
 
-> ☕ **Try it live.** Draw 1,000 samples of any size and watch the averages pile into a bell; compare their spread with σ/√n. Then build 100 intervals, switch between z and t at n = 5, and ask only the fans to see narrow nets around the wrong value.
+### Try it: Draw samples, watch the averages and the nets
+
+> **What to try:** Draw 1,000 samples of any size and watch the averages pile into a bell; compare their spread with σ/√n. Then build 100 intervals, switch between z and t at n = 5, and ask only the fans to see narrow nets around the wrong value.  
+> **Start with:** the preset *n = 1: no bell yet*.
 
 [Sampling and intervals lab](/fields/data-science/probability-statistics/labs/sampling.html#embed ':ignore')
 

@@ -1597,7 +1597,7 @@
       {
         "id": "dip-meet-fourier",
         "path": "fields/digital-image-processing/meet-fourier.md",
-        "title": "The Prefect Who Split Heat Into Waves: Meet Fourier"
+        "title": "Meet Fourier"
       }
     ],
     "required_by": [
@@ -1609,7 +1609,7 @@
       {
         "id": "dip-wavelets-multiresolution",
         "path": "fields/digital-image-processing/wavelets-and-multiresolution-processing.md",
-        "title": "The Scratch That Is Everywhere: Wavelets and Multiresolution Processing"
+        "title": "Wavelets and Multiresolution Processing"
       }
     ]
   },
@@ -1618,7 +1618,7 @@
       {
         "id": "dip-fourier-transform-images",
         "path": "fields/digital-image-processing/fourier-transform-for-images.md",
-        "title": "Two Faces, Swapped: The Fourier Transform for Images"
+        "title": "The Fourier Transform for Images"
       }
     ],
     "related": [
@@ -1703,7 +1703,7 @@
       {
         "id": "dip-fourier-transform-images",
         "path": "fields/digital-image-processing/fourier-transform-for-images.md",
-        "title": "Two Faces, Swapped: The Fourier Transform for Images"
+        "title": "The Fourier Transform for Images"
       }
     ],
     "required_by": []
@@ -1725,7 +1725,7 @@
       {
         "id": "dip-wavelets-multiresolution",
         "path": "fields/digital-image-processing/wavelets-and-multiresolution-processing.md",
-        "title": "The Scratch That Is Everywhere: Wavelets and Multiresolution Processing"
+        "title": "Wavelets and Multiresolution Processing"
       }
     ],
     "required_by": []
@@ -1744,11 +1744,6 @@
         "title": "The Photo That Turned to Static: Noise and Restoration"
       },
       {
-        "id": "dip-wavelets-multiresolution",
-        "path": "fields/digital-image-processing/wavelets-and-multiresolution-processing.md",
-        "title": "The Scratch That Is Everywhere: Wavelets and Multiresolution Processing"
-      },
-      {
         "id": "dip-frequency-filtering-aliasing",
         "path": "fields/digital-image-processing/frequency-filtering-and-aliasing.md",
         "title": "The Shirt That Shimmers: Frequency Filtering and Aliasing"
@@ -1757,6 +1752,11 @@
         "id": "dip-intensity-transforms-histograms",
         "path": "fields/digital-image-processing/intensity-transforms-and-histograms.md",
         "title": "The Unreadable X-ray: Intensity Transforms and Histograms"
+      },
+      {
+        "id": "dip-wavelets-multiresolution",
+        "path": "fields/digital-image-processing/wavelets-and-multiresolution-processing.md",
+        "title": "Wavelets and Multiresolution Processing"
       }
     ],
     "required_by": []
@@ -1785,7 +1785,7 @@
       {
         "id": "dip-fourier-transform-images",
         "path": "fields/digital-image-processing/fourier-transform-for-images.md",
-        "title": "Two Faces, Swapped: The Fourier Transform for Images"
+        "title": "The Fourier Transform for Images"
       }
     ]
   },
@@ -1794,7 +1794,7 @@
       {
         "id": "dip-fourier-transform-images",
         "path": "fields/digital-image-processing/fourier-transform-for-images.md",
-        "title": "Two Faces, Swapped: The Fourier Transform for Images"
+        "title": "The Fourier Transform for Images"
       }
     ],
     "related": [

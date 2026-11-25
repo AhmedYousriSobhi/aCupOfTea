@@ -20,6 +20,6 @@ Parts 1 to 6 of the [Probability & Statistics](/fields/data-science/probability-
 
 | Lab | What you can do |
 |---|---|
-| [Sampling methods lab](/fields/data-science/probability-statistics/describing-data/quick-guide.md?id=try-it) | Pick doorstep, random, systematic, stratified or cluster sampling and see which find the truth, which are noisy, which are confidently wrong |
-| [Grouped tables lab](/fields/data-science/probability-statistics/describing-data/quick-guide.md?id=try-it) | Change the class width and first class, switch between histogram, polygon and ogive, and see the grouped mean and median against the raw ones |
-| [Describing data lab](/fields/data-science/probability-statistics/describing-data/quick-guide.md?id=try-it) | Change the crowd, bin width and divisor; add a wrong value; read mean, median, SD, IQR and the box plot |
+| [Sampling methods lab](/fields/data-science/probability-statistics/describing-data/quick-guide.md?id=sampling-methods-lab) | Pick doorstep, random, systematic, stratified or cluster sampling and see which find the truth, which are noisy, which are confidently wrong |
+| [Grouped tables lab](/fields/data-science/probability-statistics/describing-data/quick-guide.md?id=grouped-tables-lab) | Change the class width and first class, switch between histogram, polygon and ogive, and see the grouped mean and median against the raw ones |
+| [Describing data lab](/fields/data-science/probability-statistics/describing-data/quick-guide.md?id=describing-data-lab) | Change the crowd, bin width and divisor; add a wrong value; read mean, median, SD, IQR and the box plot |

@@ -41,6 +41,13 @@ fields:
       never edited. Must be unique among sidebar_labels in the same folder.
       Quote it if it contains ": ". A page with only sidebar_label has no id and
       no domains, so it is not indexed and no domain is inferred for it.
+  labs:
+    type: list
+    required: false
+    note: >
+      Names of the interactive labs (labs/<name>.html, in this folder or above) that the page embeds with a
+      link written /folder/labs/<name>.html#embed ':ignore'. The deployed page then shows 'Interactive lab: ...'
+      under its title, linking to the heading above the lab card. validate.py checks the file and the link.
   sidebar_group:
     type: string
     required: false

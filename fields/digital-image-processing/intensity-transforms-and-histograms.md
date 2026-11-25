@@ -9,13 +9,19 @@ type: concept
 domains: [image-processing, statistics]
 relations:
   prerequisites: [dip-images-are-matrices]
+labs: [intensity-transforms]
 ---
-
 # The Unreadable X-ray: Intensity Transforms and Histograms
 
-> **Part 3 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** *Mira, Ravi and the radiology team are invented; the maths and numbers are real.*
+> **Part 3 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** *Priya, Ravi and the radiology team are invented; the maths and numbers are real.*
 
-On Monday morning Mira will be asked to make a dark X-ray readable. She will find a fix that looks right on the first scan and will be one keystroke from applying it to every scan the hospital owns. Her fix will be reasonable. It will also be a guess.
+```text
+Pull request #212   Apply gamma 0.4 to every scan on load
+Author: priya       Status: review requested
+Comment (ravi):     Which scans did you look at?
+```
+
+Priya wrote that title in good faith, with one scan in front of her. The page below is about what she should have looked at first.
 
 **By the end of this page you will be able to:**
 
@@ -29,31 +35,23 @@ On Monday morning Mira will be asked to make a dark X-ray readable. She will fin
 
 ## The X-ray nobody can read
 
-Dr. Okafor sends Mira the kind of scan from [page 1](/fields/digital-image-processing/images-are-just-matrices.md). Technically it is fine, but every value sits between 0 and about 60 out of 255. The bones are in there, one shade apart, and nobody can see the difference.
+Dr. Haddad, a radiologist, sends Priya the kind of scan from [page 1](/fields/digital-image-processing/images-are-just-matrices.md). Technically it is fine, but every value sits between 0 and about 60 out of 255. The bones are in there, one shade apart, and nobody can see the difference.
 
-The radiologist's request is short: "Can you make this readable?"
+The request is short: "Can you make this readable?"
 
-Mira's first reading is the obvious one: the picture needs **more light**. In Pixel Town terms, every citizen is whispering.
+Priya's first reading is the obvious one: the picture needs **more light**. In Pixel Town terms, every citizen is whispering.
 
 ---
 
-## Three ways to turn up the volume
+## Two things that looked like progress
 
-**Attempt 1: flip it.** A negative turns dark into bright. Mira applies one. The bones are now white-ish on a dark-ish background and still one shade apart. It looks different. It is no easier to read.
+**A negative.** Dark becomes bright. The bones are now white-ish on a dark-ish background and still one shade apart. It looks different; it is no easier to read.
 
-**Attempt 2: try a curve and eyeball it.** She tries a power law with a gamma below 1, then another, then a log. Each one lifts the picture a little. She settles on the one that looks best on this scan and moves on.
+**A curve, picked by eye.** She tries a power law with a gamma below 1, then another, then a log. Each lifts the picture a little. She keeps the one that looks best on this scan and puts it in the viewer's loading step. That is pull request #212.
 
-**Attempt 3: put it in the pipeline.** She hard-codes that gamma into the viewer's loading step, so that every scan the hospital sends gets "fixed" automatically. She has the pull request open. Ravi reads it and asks one question: "Did you look at what the other scans look like?"
+Ravi's review comment is the only thing between that change and every scan the hospital owns. She had opened exactly one scan.
 
-She had not. This was the only one she had opened.
-
-So far:
-
-- Flipping and curve-fitting by eye made the scan look different, not clearly better.
-- The chosen curve was tuned to a single image.
-- It was about to run on every scan, dark ones and well-exposed ones alike.
-
-That leaves one question: **which transform, and how much?** You would be guessing. There is a method that measures the image first.
+Flipping and eyeballing both worked on a sample of one. Which transform, and how much, when one scan is not evidence? There is a way to measure first.
 
 ---
 
@@ -147,10 +145,6 @@ def equalize(img, levels=256):              # img: uint8 array
 
 Libraries differ in small details. Some subtract the smallest nonzero cumulative value first so the darkest level maps to exactly 0, so check your library's docs before comparing outputs.
 
-> ☕ **Try it live.** Edit the eight counts of the 8 × 8 bag and watch the table and the new histogram, then equalize a dark picture.
-
-[Intensity transforms lab](/fields/digital-image-processing/labs/intensity-transforms.html#embed ':ignore')
-
 ### Why a cumulative sum flattens things
 
 Here's the idea behind the formula. Treat gray levels as a continuous random variable r with density p(r). Define:
@@ -174,17 +168,24 @@ Equalization is automatic, which is both its charm and its danger.
 
 A common refinement applies equalization on small tiles with a limit on how much any bin can grow (CLAHE, "contrast-limited adaptive histogram equalization"), which tames the noise problem. It's available in OpenCV as `createCLAHE`.
 
+### Try it: Spread the numbers out, rescue the dark X-ray
+
+> **What it shows:** An intensity transform is a lookup table. Equalization builds it from the running total of the histogram: s = (L − 1) · cumulative share.  
+> **Start with:** the preset *The dark 8 × 8* (64 pixels, counts 24, 16, 10, 6, 4, 2, 2, 0. Level 0 goes to 3; levels 4 to 7 merge into 7).
+
+[Intensity transforms lab](/fields/digital-image-processing/labs/intensity-transforms.html#embed ':ignore')
+
 ---
 
 ## Back to the X-ray
 
-Mira plots the histogram of the scan. It is a heap of bars squeezed against the left wall, which is what 0 to about 60 out of 255 looks like. She plots the histogram of another scan, and it spreads across the whole range. One gamma would have rescued the first and bleached the second.
+Priya plots the histogram of the scan. It is a heap of bars squeezed against the left wall, which is what 0 to about 60 out of 255 looks like. She plots another scan, and it spreads across the whole range. One gamma would have rescued the first and bleached the second.
 
 The scan never needed a smarter algorithm, or more light. It needed the numbers **spread out**: tell every citizen to speak up, and to speak up in the right proportions.
 
 Your scan lived between 0 and about 60. A gamma below 1 would lift it, and equalization would spread it automatically by sending "darkest 25% of citizens" to "lowest quarter of the range". Neither adds information. They only make the information that was already there **visible**.
 
-She closes the pull request, and builds the lookup table from the scan's own cumulative sum instead. The bones separate. She tells Dr. Okafor it took a measurement and a running total.
+She closes the pull request and replies to Ravi's comment with the answer to his question: one. Then she builds the lookup table from each scan's own cumulative sum, and the bones separate.
 
 That's the limit of one-citizen-at-a-time tools: they never look at neighbours. A noisy speck stays a noisy speck, only brighter. To deal with the speck we need citizens who talk to each other.
 
