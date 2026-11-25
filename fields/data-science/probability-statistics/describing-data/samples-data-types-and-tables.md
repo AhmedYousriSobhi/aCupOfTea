@@ -11,6 +11,7 @@ domains:
 tags:
   - statistics
   - sampling
+labs: [sampling-methods]
 relations:
   related:
     - probability-statistics-series
@@ -103,7 +104,10 @@ In 1936 the magazine *Literary Digest* mailed about **10 million** questionnaire
 
 George Gallup polled about **50,000** people with a "scientific sample" including the right proportion from each economic group (in the spirit of stratification) and predicted Roosevelt's win. **A huge biased sample is a more confident way of being wrong.**
 
-> ☕ **Try it live.** Pick a way to choose 40 customers from 4,000 and repeat it a thousand times: the doorstep poll lands near 91% against a true 51.75%, however many you ask.
+### Try it: Who you ask matters more than how many
+
+> **What to try:** Pick a way to choose 40 customers from 4,000 and repeat it a thousand times: the doorstep poll lands near 91% against a true 51.75%, however many you ask.  
+> **Start with:** the preset *The doorstep poll*.
 
 [Sampling methods lab](/fields/data-science/probability-statistics/labs/sampling-methods.html#embed ':ignore')
 

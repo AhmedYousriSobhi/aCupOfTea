@@ -9,7 +9,6 @@ type: concept
 domains: [image-processing]
 tags: [sampling]
 ---
-
 # The Scan That Opened Black: Images Are Just Matrices
 
 > **Part 1 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** *Mira, Ravi and the radiology team are invented; the maths and numbers are real.*
@@ -42,21 +41,15 @@ It is not. The file is correct, and so is the viewer. They just disagree about w
 
 ## Three fixes that sounded reasonable
 
-**Attempt 1: download it again.** Mira fetches the file a second time. The checksum matches. Same black rectangle.
+| Tried | Saw |
+|---|---|
+| Download the file again | The checksum matches. Same black rectangle. |
+| Convert it to 8 bits "so every viewer agrees" (Ravi's idea) | Every viewer now agrees: the same black rectangle, in fewer bits. |
+| Batch-convert every scan to 8 bits and save over the originals, "so nobody else ever hits this" | Mira types the command and lets her finger hover over Enter. Ravi, walking past with a coffee, reads the screen and says one word: "Originals." She does not press Enter. |
 
-**Attempt 2: try another viewer.** Ravi, the senior engineer, suggests she convert it to 8 bits "so every viewer agrees". She does. It agrees: every viewer now shows the same black rectangle, in fewer bits.
+The file is not corrupt and the viewer is not broken. Converting did not help, and overwriting the archive would have been a one-way trip.
 
-**Attempt 3: fix the archive.** Mira writes a small batch script that converts every scan to 8 bits and saves the result over the original, so nobody else ever hits this. She types the command and lets her finger hover over Enter. Ravi, walking past with a coffee, reads the screen and says one word: "Originals."
-
-She does not press Enter.
-
-So far:
-
-- The file is not corrupt, and the viewer is not broken.
-- Converting it did not help.
-- Overwriting the originals would have been a one-way trip.
-
-That leaves one question: **if the file, the viewer and the pixels are all fine, what exactly are they disagreeing about?** To answer it we need to know what a pixel is.
+Three clean checks, and still a black rectangle. If nothing is broken, what exactly is the viewer being asked to show?
 
 ---
 

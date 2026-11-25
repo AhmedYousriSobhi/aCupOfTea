@@ -10,6 +10,7 @@ domains:
   - statistics
 tags:
   - statistics
+labs: [permutation]
 relations:
   prerequisites:
     - averages-and-intervals
@@ -133,7 +134,10 @@ The classical test is the same question with a shortcut. Instead of shuffling, t
 
 * * *
 
-> ☕ **Try it live.** Shuffle the labels yourself, 1,000 at a time, and compare the share of re-deals that beat the real gap with the exact p-value. Scroll down for the twenty-tries demo.
+### Try it: Shuffle the labels, count the luck
+
+> **What to try:** Shuffle the labels yourself, 1,000 at a time, and compare the share of re-deals that beat the real gap with the exact p-value. Scroll down for the twenty-tries demo.  
+> **Start with:** the preset *A p near 1.4%*.
 
 [Permutation test lab](/fields/data-science/probability-statistics/labs/permutation.html#embed ':ignore')
 

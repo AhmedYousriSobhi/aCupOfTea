@@ -324,7 +324,7 @@
   "fields/digital-image-processing/edges-and-sharpening": {
     "next": {
       "path": "fields/digital-image-processing/fourier-transform-for-images",
-      "title": "Two Faces, Swapped: The Fourier Transform for Images"
+      "title": "The Fourier Transform for Images"
     },
     "pos": 5,
     "total": 9
@@ -372,7 +372,7 @@
   "fields/digital-image-processing/noise-and-restoration": {
     "next": {
       "path": "fields/digital-image-processing/wavelets-and-multiresolution-processing",
-      "title": "The Scratch That Is Everywhere: Wavelets and Multiresolution Processing"
+      "title": "Wavelets and Multiresolution Processing"
     },
     "pos": 8,
     "total": 9

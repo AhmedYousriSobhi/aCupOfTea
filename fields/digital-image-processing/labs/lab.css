@@ -232,3 +232,8 @@ details > div { padding-bottom: 12px; }
 pre.out { margin: 10px 0 0; padding: 10px 12px; border-radius: 12px; background: var(--bg); border: 1px solid var(--line); font: .84rem/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; white-space: pre-wrap; overflow-wrap: anywhere; }
 select { min-height: 44px; padding: 4px 10px; border: 1.5px solid var(--line); border-radius: 10px; background: var(--card); color: var(--ink); font: 600 .95rem var(--font); }
 .field { display: inline-flex; align-items: center; gap: 8px; font-size: .92rem; font-weight: 600; }
+
+/* Scope line: shown only when the lab sits inside a page, where the hero (its question) is hidden */
+.scope { display: none; }
+.embed .scope { display: block; margin: 8px 0 4px; padding: 8px 12px; border-left: 4px solid var(--leaf); border-radius: 8px; background: var(--leaf-t); color: var(--mut); font-size: .88rem; }
+.embed .scope b { color: var(--ink); }

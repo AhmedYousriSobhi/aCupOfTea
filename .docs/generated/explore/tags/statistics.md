@@ -4,7 +4,7 @@
 
 - [Averages and Intervals: Why Averages Behave and How Sure You Can Be](/fields/data-science/probability-statistics/inference/averages-and-intervals.md) — An average is itself random: its spread shrinks as sigma over root n and its shape tends to a bell. A confidence interval turns that wobble into a give-or-take, and bias is invisible to it. *(intermediate · 13 min · long read)*  
   [`sampling`](/.docs/generated/explore/tags/sampling.md) [`statistics`](/.docs/generated/explore/tags/statistics.md)
-- [Counting and Conditioning: Why a 99% Accurate Test Is Usually Wrong](/fields/data-science/probability-statistics/probability/counting-and-conditioning.md) — Probability is a share of the equally likely ways, so "or" adds, "and" multiplies and "at least one" is 1 minus none. Conditioning shrinks the crowd, and Bayes' rule reads that count backwards. *(beginner · 10 min)*  
+- [Counting and Conditioning: Why a 99% Accurate Test Is Usually Wrong](/fields/data-science/probability-statistics/probability/counting-and-conditioning.md) — Probability is a share of the equally likely ways, so "or" adds, "and" multiplies and "at least one" is 1 minus none. Conditioning shrinks the crowd, and Bayes' rule reads that count backwards. *(beginner · 11 min · long read)*  
   [`statistics`](/.docs/generated/explore/tags/statistics.md)
 - [Describing Data, Technically: Definitions, Identities and Method Choices](/fields/data-science/probability-statistics/describing-data/technical-reference.md) — The formal layer under parts 1 to 6: scales of measurement, grouped-data formulas, what the mean and median minimise, n versus n-1, quartile methods, fences and sampling designs. *(intermediate · 4 min)*  
   [`statistics`](/.docs/generated/explore/tags/statistics.md)

@@ -1,6 +1,6 @@
-// Embedded labs: a link written as [text](/folder/labs/name.html#embed ':ignore') becomes an inline
-// frame under the text, so the reader uses the lab without leaving the page. The link stays in a
-// caption naming the lab; GitHub or a reader without scripts still sees the plain link.
+// Embedded labs: a link written as [text](/folder/labs/name.html#embed ':ignore') becomes a small card under the
+// text: the lab's name, a button that opens the lab in a frame right there (nothing loads before that) and a link to
+// open it full screen. GitHub or a reader without scripts still sees the plain link.
 //
 // Security, in layers (see the policy in index.html):
 //  - only a path of the form <folders>/labs/<name>.html is ever framed (allowlist below), resolved
@@ -30,9 +30,10 @@
     return u.origin === location.origin ? u : null;
   }
 
-  function build(url, label) {
-    var fig = document.createElement('figure');
-    fig.className = 'lab-embed';
+  // The card: a short bar with the lab's name and three controls. No frame exists until the reader asks for it, so a
+  // page stays a short read and a lab loads only when wanted. The frame is built with the same sandbox as before.
+  var seq = 0;
+  function frameFor(url, label) {
     var f = document.createElement('iframe');
     f.setAttribute('sandbox', 'allow-scripts'); // before src, so the frame is never loaded unsandboxed
     f.setAttribute('referrerpolicy', 'no-referrer');
@@ -40,11 +41,51 @@
     f.setAttribute('title', label + ' (interactive lab)');
     f.style.height = '520px';
     f.src = url.href + '?embed=1&theme=' + mode();
-    var cap = document.createElement('figcaption');
-    cap.textContent = label + ' · interactive lab';
-    fig.appendChild(f);
-    fig.appendChild(cap);
     live.push(f);
+    return f;
+  }
+  function build(url, label) {
+    var fig = document.createElement('figure');
+    fig.className = 'lab-embed';
+    var id = 'lab-frame-' + (++seq);
+    var bar = document.createElement('div');
+    bar.className = 'lab-bar';
+    var name = document.createElement('span');
+    name.className = 'lab-name';
+    name.textContent = label + ' \u00b7 interactive lab';
+    var open = document.createElement('button');
+    open.type = 'button';
+    open.className = 'lab-open';
+    open.textContent = 'Open the lab here';
+    open.setAttribute('aria-expanded', 'false');
+    open.setAttribute('aria-controls', id);
+    var full = document.createElement('a');
+    full.className = 'lab-full';
+    full.href = url.href + '?standalone=1';
+    full.target = '_blank';
+    full.rel = 'noopener noreferrer';
+    full.textContent = 'Open full screen';
+    var box = document.createElement('div');
+    box.id = id;
+    box.hidden = true;
+    open.addEventListener('click', function () {
+      if (box.hidden) {
+        if (!box.firstChild) box.appendChild(frameFor(url, label));
+        box.hidden = false;
+        open.textContent = 'Hide the lab';
+        open.setAttribute('aria-expanded', 'true');
+      } else {
+        box.hidden = true;
+        open.textContent = 'Open the lab here';
+        open.setAttribute('aria-expanded', 'false');
+      }
+    });
+    bar.appendChild(name);
+    bar.appendChild(open);
+    bar.appendChild(full);
+    fig.appendChild(bar);
+    fig.appendChild(box);
+    fig.openLab = function () { if (box.hidden) open.click(); };
     return fig;
   }
 
@@ -56,6 +97,9 @@
     var el = m && document.getElementById(decodeURIComponent(m[1]));
     if (!el || !document.querySelector('.markdown-section figure.lab-embed')) return;
     hold = el;
+    for (var n = el.nextElementSibling; n && !/^H[1-6]$/.test(n.tagName); n = n.nextElementSibling) {
+      if (n.classList && n.classList.contains('lab-embed')) { n.openLab(); break; }
+    }
     var evs = ['wheel', 'touchstart', 'keydown', 'mousedown'];
     var stop = function () { hold = null; evs.forEach(function (n) { window.removeEventListener(n, stop, true); }); };
     evs.forEach(function (n) { window.addEventListener(n, stop, true); });

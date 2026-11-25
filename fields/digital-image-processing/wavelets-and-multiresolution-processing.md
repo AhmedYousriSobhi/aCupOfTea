@@ -1,6 +1,6 @@
 ---
 id: dip-wavelets-multiresolution
-title: "The Scratch That Is Everywhere: Wavelets and Multiresolution Processing"
+title: Wavelets and Multiresolution Processing
 sidebar_label: 9. Wavelets, multiresolution
 order: 10
 summary: Seeing an image at several scales at once - pyramids, a Haar wavelet transform by hand, the four 2D subbands, and why mostly-zero detail makes denoising and compression work.
@@ -8,68 +8,35 @@ level: intermediate
 type: concept
 domains: [image-processing]
 tags: [fourier-transform]
+labs: [wavelets]
 relations:
   prerequisites: [dip-fourier-transform-images]
   related: [dip-noise-restoration]
 ---
 
-# The Scratch That Is Everywhere: Wavelets and Multiresolution Processing
+# Wavelets and Multiresolution Processing
 
-> **Part 9 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** Fourier tells you which waves are in the town but not where they sing. Wavelets fix that by looking at the town at several zoom levels at once. *Mira, Ravi and the film archive are invented; the maths and numbers are real.*
-
-Mira will go looking for a thin scratch in the spectrum of a scanned film frame and find it everywhere, which will be the correct answer and no use at all. She will be a few clicks from blurring a whole reel to hide it.
-
-**By the end of this page you will be able to:**
-
-- Say why the Fourier transform cannot place a scratch.
-- Build a pyramid and say what it costs.
-- Run a Haar transform on a row by hand, and undo it.
-- Read the four subbands of a 2-D transform.
-- Explain why mostly-zero detail makes denoising and compression work.
+> **Part 9 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** Fourier tells you which waves are in the town but not where they sing. Wavelets fix that by looking at the town at several zoom levels at once. By the end you'll build a Haar transform by hand, read the four subbands of a 2-D transform, and see why throwing away tiny coefficients is the secret of both denoising and JPEG 2000.
 
 ---
 
 ## The scratch that is everywhere
 
-The film archive is digitising old reels. One frame has a single thin vertical scratch, and Mira has been asked to find and remove it. She computes the Fourier transform of the frame and expects a tidy little feature in the spectrum.
-
-Instead, the scratch has smeared itself across **every frequency**, and nothing in the spectrum says where in the picture it was.
-
-Her first reading is the obvious one: **she must be looking at the wrong part of the spectrum.**
-
----
-
-## Three ways to look for it
-
-**Attempt 1: search the spectrum.** She scans the spectrum for a spike that belongs to the scratch. There is no single spike: the scratch contributes a little everywhere.
-
-**Attempt 2: mask the suspicious frequencies.** She zeroes out the band that looks most affected. The scratch fades slightly and fine detail disappears from the whole frame, not just where the scratch was.
-
-**Attempt 3: blur the whole reel.** If the scratch is thin, a blur will hide it. She queues the blur over the entire reel. Ravi checks a clean frame from the same reel: "You've just softened every face in it." She stops the job.
-
-So far:
-
-- The spectrum has no single feature to catch the scratch with.
-- Masking frequencies hurts the whole picture.
-- Blurring hides the scratch by damaging everything else.
-
-That leaves one question: **how do you represent an image so that "what" and "where" are both visible?**
-
----
-
-## Zoom levels for the town
-
-### Fourier's blind spot
+You compute the Fourier transform of a photo with one thin vertical scratch. You expect a tidy little feature in the spectrum. Instead, the scratch has smeared itself across **every frequency**, and nothing in the spectrum says where in the picture it was.
 
 That's Fourier's blind spot. Each wave in [page 6](/fields/digital-image-processing/fourier-transform-for-images.md) stretches over the whole image, so the transform knows **how much** of each pattern there is and almost nothing about **where**. A scratch, a sharp edge or a blob of texture is local; the tool is global.
 
-### A map with zoom levels
+---
+
+## A map with zoom levels
 
 Think of Pixel Town as a **map app**. At the lowest zoom you see the whole country in a few blurry tiles. Zoom in and finer tiles appear, adding only the detail that the previous level couldn't show. A good map doesn't store the whole country at full detail; it stores the **rough picture**, plus **the extra detail at each level**.
 
 That is the idea of **multiresolution processing**: represent the image as a coarse version and a stack of detail layers, each living at its own scale and each tied to a place. Two classic structures do it. We start with the easy one.
 
-### Image pyramids
+---
+
+## Image pyramids
 
 A **Gaussian pyramid** repeatedly blurs the image (page 4) and halves its width and height. Each level is a smaller, blurrier version of the one below.
 
@@ -92,7 +59,9 @@ Rebuilding is the reverse: scale the coarse image up, add the detail layer, repe
 
 Pyramids are the tool behind blending two photos without a visible seam (blend each level separately), and behind looking for an object at several sizes (shrink, search, shrink again).
 
-### Try it before you scroll
+---
+
+## Try it before you scroll
 
 ☕ Take four pixels: **9, 7, 3, 5**. Replace each pair with its **average** and its **half-difference**. What do you get, and can you get the four numbers back?
 
@@ -100,7 +69,9 @@ Pyramids are the tool behind blending two photos without a visible seam (blend e
 
 **Answer:** coming up, and yes.
 
-### The Haar wavelet by hand
+---
+
+## The Haar wavelet by hand
 
 The simplest wavelet transform is exactly the quiz. Take pairs, keep the average (the coarse picture) and the half-difference (the detail):
 
@@ -130,7 +101,9 @@ The same four numbers, rearranged by **scale**. The first is the average level o
 
 For a wavelet that's longer and smoother than Haar, the pairs become longer overlapping windows with carefully designed weights, but the recipe, a low-pass half and a high-pass half at each level, doesn't change.
 
-### From one row to a whole image
+---
+
+## From one row to a whole image
 
 For an image, do the one-level step along every **row**, then along every **column** of the result. The image splits into four quarter-size pieces called **subbands**:
 
@@ -145,7 +118,9 @@ The names (LH, HL and so on) are used in opposite ways by different books and li
 
 Then repeat on the LL piece: **the same trick again** at half the size. Three levels give you one tiny approximation plus three sets of details at three scales. It's the pyramid idea again, but with details that take no extra space: a four-piece split holds exactly as many numbers as the original image.
 
-### Why mostly-zero is a gift
+---
+
+## Why mostly-zero is a gift
 
 Real images are mostly smooth, with edges here and there. In a wavelet transform:
 
@@ -163,11 +138,9 @@ Compare with [page 8](/fields/digital-image-processing/noise-and-restoration.md)
 
 Honest limits: thresholding too hard leaves ringing-like artifacts around edges and a patchy look, and a wavelet is chosen to suit the image type. And there's a trade-off you can't escape: you cannot know a position and a frequency both perfectly. Wavelets just pick a smarter compromise than Fourier's all-frequency, no-position extreme: short windows for fast changes, long windows for slow ones.
 
-> ☕ **Try it live.** Try the pairs [9, 7, 3, 5] and the challenge row, then threshold the detail coefficients of a noisy picture.
+---
 
-[Wavelets lab](/fields/digital-image-processing/labs/wavelets.html#embed ':ignore')
-
-### Where you meet wavelets
+## Where you meet wavelets
 
 | Where | Role |
 |---|---|
@@ -181,46 +154,24 @@ If you've studied CNNs, the pattern should sound familiar: early layers see fine
 
 ---
 
-## Back to the scratch
+## Try it: The scratch that is everywhere - look at several scales at once
 
-Mira runs a wavelet transform on the frame. The scratch shows up as a few large detail coefficients at its own position and at the fine scales, and the rest of the detail is near zero.
+> **What it shows:** A wavelet transform keeps a coarse picture plus detail at each scale, each tied to a place. Most details are near zero, so shrinking the small ones removes noise and keeps edges.  
+> **Start with:** the preset *The quiz row* (9, 7, 3, 5 becomes 6 | 2 | 1, −1: the overall average, the left half against the right, the details inside each pair).
+
+[Wavelets lab](/fields/digital-image-processing/labs/wavelets.html#embed ':ignore')
+
+---
+
+## Back to the scratch
 
 Fourier couldn't place the scratch because every one of its waves lives everywhere. In a wavelet transform the scratch shows up as a few large detail coefficients **at its own position and at the fine scales**, and nowhere else. That's the whole advantage: the transform answers "what" and "where" at once.
 
 You've now gone from a grid of numbers to the frequency domain, to restoring and moving images, to seeing them at every scale. That's the whole starter map of the subject.
 
----
-
-## Never again: working at several scales
-
-| Do | Because |
-|---|---|
-| Use a pyramid for blending and multi-size search | Blend each level separately; shrink, search, shrink again; the whole pyramid costs `4/3` of the image |
-| Keep a coarse picture plus detail at each scale | The Haar step: average and half-difference; rebuild with first = average + detail, second = average − detail |
-| Check the subband naming of your tool | Books and libraries name the subbands differently (PyWavelets: approximation, then horizontal, vertical, diagonal detail) |
-| Denoise by thresholding the detail coefficients | Noise spreads thinly over every coefficient; edges sit in a few large ones |
-| Do not threshold too hard | It leaves ringing-like artifacts around edges and a patchy look |
-| Choose the wavelet to suit the image type | There is no position-and-frequency both perfectly: wavelets pick a smarter compromise than Fourier |
-
 **Takeaway:** multiresolution keeps a coarse picture plus localized detail at each scale; the detail is mostly near-zero, which is why denoising and compression work.
 
 **Challenge:** take the row [10, 10, 10, 50, 50, 50, 50, 50] and run one level of the average and half-difference transform by hand. Which detail coefficient is the only nonzero one, and what does its position tell you? (Check: the details should be [0, −20, 0, 0].) Then go back to Gonzalez and Woods, which should now read like a conversation instead of a wall.
-
-**Next:** that is the whole starter map. The same coarse-to-fine idea runs through the networks side of the story: [Convolution in deep learning](/fields/deep-learning/concepts/convolution.md).
-
----
-
-## 📜 The Scroll (keep this)
-
-```text
-Symptom:  A local defect (a scratch) smeared over every frequency
-Cause:    Fourier waves live over the whole image: "how much", almost never "where"
-Check:    [9,7,3,5] -> [6 | 2 | 1,-1]; [10,10,10,50,50,50,50,50] -> details [0,-20,0,0]
-Do not:   Blur the whole image to hide a local flaw
-Fix:      Wavelet transform: coarse picture + localized detail; threshold small details
-Pay-off:  Sparse detail makes denoising and compression (JPEG 2000) work
-```
-
 
 ### References
 

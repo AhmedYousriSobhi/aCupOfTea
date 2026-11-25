@@ -142,6 +142,33 @@ def render_breadcrumb(path, root):
     return f'{RELATED_MARK}\n<nav class="crumbs" aria-label="Breadcrumb">{" / ".join(crumbs)}</nav>\n'
 
 
+LAB_LINK_RE = re.compile(r"\[[^\]]*\]\([^)]*/labs/[a-z0-9-]+\.html#embed[^)]*\)")
+
+
+def docsify_slug(text):
+    """The id Docsify gives a heading (lowercase, punctuation dropped, spaces to dashes)."""
+    t = re.sub(r"<[^>]+>", "", text.strip().lower())
+    t = re.sub(r"[\u2000-\u206F\u2E00-\u2E7F\\'!\"#$%&()*+,./:;<=>?@\[\]^`{|}~\u2019]", "", t)
+    return re.sub(r"-+", "-", re.sub(r"\s", "-", t))
+
+
+def render_lab_line(path, body, labs):
+    """For a page whose front matter lists `labs`: 'Interactive lab: <heading>' under the title, linking to the
+    heading that sits above the page's first lab card ('' when there is none)."""
+    if not labs:
+        return ""
+    m = LAB_LINK_RE.search(body)
+    if not m:
+        return ""
+    heads = [h for h in re.finditer(r"^#{2,4} +(.+?)\s*#*\s*$", body[:m.start()], re.M)]
+    if not heads:
+        return ""
+    title = heads[-1].group(1).strip()
+    shown = re.sub(r"^Try it:\s*", "", title)
+    href = "#/" + path[:-3] + "?id=" + docsify_slug(title)
+    return f'{RELATED_MARK}\n<div class="lab-line">Interactive lab: <a href="{esc_html(href)}">{esc_html(shown)}</a></div>\n'
+
+
 def render_meta(path, body, meta, updated):
     """Under the title: 'Intermediate · Guide · 7 min read · Updated 13 Nov 2026' and tag chips;
     '' for the root docs and folder indexes."""
@@ -454,6 +481,9 @@ def stage(src, out, base_url=DEFAULT_BASE):
             new = text[split[1]:]
             stripped += 1
         under_title = render_meta(path, new, meta.get(path, {}), dates.get(path))
+        if under_title and split is not None:
+            fm_labs = re.search(r"^labs:\s*\[(.*?)\]\s*$", text[:split[1]], re.M)
+            under_title += render_lab_line(path, new, [x for x in re.split(r"[,\s]+", fm_labs.group(1)) if x] if fm_labs else [])
         timed += bool(under_title)
         crumbs = render_breadcrumb(path, out) if under_title else ""
         at_end = ""

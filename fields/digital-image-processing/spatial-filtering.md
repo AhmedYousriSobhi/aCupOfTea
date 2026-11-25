@@ -11,49 +11,29 @@ tags: [convolution, filtering, noise]
 relations:
   prerequisites: [dip-intensity-transforms-histograms]
   related: [dip-fourier-transform-images]
+labs: [spatial-filters]
 ---
-
 # One Bad Pixel: Spatial Filtering
 
-> **Part 4 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** *Mira, Ravi and the facilities team are invented; the maths and numbers are real.*
+> **Part 4 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** *Omar, Hana, Ines and the facilities team are invented; the maths and numbers are real.*
 
-On Wednesday Mira will be asked to clean a single white speck off a photo of a gray wall. She will remove it three different ways and each will be the right answer for something. One of them will have been about to erase the thin lines of 200 floor plans.
+```text
+10  10  10
+10  90  10
+10  10  10
+```
 
-**By the end of this page you will be able to:**
-
-- Compute a filtered pixel by hand.
-- Explain why convolution flips the kernel, and why CNN libraries quietly don't.
-- Pick the mean or the median by the kind of noise.
-- Choose what to put outside the picture at the border.
-- Explain why a big Gaussian blur costs far less than it looks.
+Eight neighbours say 10. One citizen shouts 90. It is a single speck of scanner noise on a photo of a gray wall, and by lunchtime two people will have told Omar exactly how to remove it.
 
 ---
 
 ## One citizen shouts
 
-The facilities team photographs a wall for a survey, and the scanner leaves a single white speck in the middle of a gray patch. Every neighbour says 10. One citizen shouts 90.
+The facilities team photographs a wall for a survey, and the scanner leaves that one white speck in the middle of a gray patch. The manager, Hana, wants it gone before the report goes out. She says: "Average it with the neighbours. Done."
 
-The team lead wants it gone before the report goes out. Ravi says: "Average it with the neighbours. Done." Mira has a nagging feeling that someone once told her to take the middle value instead.
+Ines, the other engineer, shakes her head: "No, take the middle value. Done."
 
-Her first reading is the obvious one: it is one bad pixel, so **any smoothing will fix it**.
-
----
-
-## Three ways to quiet a loud pixel
-
-**Attempt 1: average it.** She applies a 3 × 3 box filter. The speck is much fainter, and it has left a smudge where it used to be.
-
-**Attempt 2: average over a bigger window.** If a small window leaves a smudge, a bigger one will dilute it more. The smudge gets wider and fainter, and the wall's real edges start going soft with it.
-
-**Attempt 3: take the middle value, everywhere.** She remembers the median, and it removes the speck completely. Pleased, she queues the median filter over the facilities team's whole folder, which includes 200 scanned floor plans. Ravi stops the job and holds one up: the thin walls have vanished from half the drawings.
-
-So far:
-
-- Averaging leaves a smudge, and a bigger window only spreads it.
-- The median removed the speck cleanly.
-- The same median erased thin lines it should have kept.
-
-That leaves one question: **what does each filter actually compute from nine numbers, and when is each one right?**
+Omar has to pick, and his first reading is the obvious one: it is one bad pixel, so **any smoothing will fix it.** What does each of them actually compute from nine numbers?
 
 ---
 
@@ -126,10 +106,6 @@ The speck vanishes completely and nothing bleeds. A single outlier can never be 
 
 So the manager and the other engineer were both right. They were treating different noise: Pixel Town's whisper campaign versus one loudmouth. More on telling them apart on [page 8](/fields/digital-image-processing/noise-and-restoration.md).
 
-> ☕ **Try it live.** Edit the nine numbers under the window, then add noise to a picture and compare the mean, the median and the three borders.
-
-[Spatial filters lab](/fields/digital-image-processing/labs/spatial-filters.html#embed ':ignore')
-
 ### The edge of the map
 
 At the border, a 3 × 3 window hangs off the image. Something has to fill the missing neighbours. Common choices:
@@ -172,17 +148,24 @@ A convolutional layer in a neural network is this exact loop with one change of 
 
 One naming quirk: deep learning frameworks such as PyTorch compute **cross-correlation** (no flip) and call it convolution. PyTorch's `Conv2d` documentation says so. Since the weights are learned anyway, flipping them would change nothing, so nobody bothers. See [Deep Learning - Concepts - Convolution](/fields/deep-learning/concepts/convolution.md) for the network side of the story.
 
+### Try it: One bad pixel - average it or sort it?
+
+> **What it shows:** A spatial filter lets each pixel ask its neighbours. A kernel takes a weighted vote; the median sorts and takes the middle.  
+> **Start with:** the preset *The speck* (Eight 10s and one 90: the mean smears it to 18.9, the median erases it to 10).
+
+[Spatial filters lab](/fields/digital-image-processing/labs/spatial-filters.html#embed ':ignore')
+
 ---
 
 ## Back to the bad pixel
 
-Mira lays the nine numbers side by side. The box filter's answer for the middle is 18.9; the median's is 10. They are different questions: a vote lets the loud citizen speak a little, a sort lets the crowd outvote it.
+Omar works both answers out on the nine numbers. The box filter's value for the middle is 18.9; the median's is 10. They are different questions: a vote lets the loud citizen speak a little, a sort lets the crowd outvote it.
 
 The mean turned a loud speck into a quiet smudge. The median erased it. Neither knew what the speck *was*; each just applied a rule to nine numbers.
 
 Notice also what both did to a real edge between a dark wall and a bright door: the mean blurred it, the median mostly kept it. A kernel that **averages** removes differences. What if we built a kernel that does the opposite and **celebrates** differences?
 
-For the wall photo she uses the median. For the floor plans she leaves the pixels alone, because a thin line can look to a median like a pixel that disagrees with its neighbours. The manager and Ravi were both right: they were just treating different noise.
+For the wall photo he uses the median. Meanwhile Hana, impressed, had already run the median over the facilities folder, which includes 200 scanned floor plans. A thin line can look to a median like a pixel that disagrees with its neighbours, and half of the plans had lost walls. Omar restores them from the archive copy. The manager and the other engineer were both right: they were just treating different noise.
 
 ---
 
@@ -197,6 +180,8 @@ For the wall photo she uses the median. For the floor plans she leaves the pixel
 | Responding only where things change | Weights that sum to 0 (edge detectors, next page) |
 | The border | Zero (dark halo), replicate (smeary), reflect (the usual default; OpenCV `filter2D` uses `BORDER_REFLECT_101`) |
 | A big blur | A separable kernel: two 1-D passes (9, 25, 121 multiplies become 6, 10, 22) |
+
+Keep the originals: a filter you run on a folder is a filter you may need to undo.
 
 **Takeaway:** a filter is a sliding weighted vote; linear ones are kernels, the median is the nonlinear exception, and separable kernels make big blurs cheap.
 

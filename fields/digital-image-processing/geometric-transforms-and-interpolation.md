@@ -11,48 +11,31 @@ relations:
   prerequisites: [dip-images-are-matrices]
   related: [dip-frequency-filtering-aliasing]
 ---
-
 # The Jagged Scan: Geometric Transforms and Interpolation
 
-> **Part 2 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** *Mira, Ravi and the records office are invented; the maths and numbers are real.*
+> **Part 2 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).** *Jun and the records office are invented; the maths and numbers are real.*
 
-On Thursday afternoon Mira will rotate a scanned ledger page by 3 degrees to straighten it. The text will come out with staircase edges and the thin ruled lines will break into dashes. Nothing will be wrong with the scanner, the file or the angle, which will make the next hour harder.
-
-**By the end of this page you will be able to:**
-
-- Write a rotation, zoom or shift as one matrix, and chain several into one.
-- Explain which loop to run, over the input pixels or the output pixels, and why.
-- Compute a bilinear interpolation on paper.
-- Pick an interpolation for a photo and a different one for a class mask.
-- Say what to do before you shrink an image by a large factor.
+Three degrees. That is how crooked a ledger page sat on the scanner glass, and it is what Jun will spend an afternoon paying for.
 
 ---
 
 ## The page that came out in stairs
 
-14:10, the records office. A ledger page was scanned a little crooked, and the office wants it straight before it goes into the archive. Mira runs the team's `rotate` script with an angle of 3 degrees and opens the result.
+14:10, the records office. The page has to be straight before it goes into the archive. Jun runs the team's `rotate` script with an angle of 3 degrees and opens the result.
 
 The text, once clean, now has staircase edges. The thin ruled lines look broken, as if someone had drawn them with a dotted pen.
 
-Her first reading is the obvious one: **a bad scan.** The noise must have been there all along and the rotation just made it visible.
+Jun's first reading is the obvious one: **a bad scan.** The noise must have been there all along, and the rotation just made it visible.
 
 ---
 
-## Three ways to make it worse
+## One gentle idea, and a worse page
 
-**Attempt 1: scan it again, bigger.** Ravi has the page rescanned at a higher resolution. Mira rotates it by the same 3 degrees. The staircase is back, just made of smaller stairs.
+If one 3-degree turn is rough, three 1-degree turns should be gentler. Jun changes the script to turn the page in three small steps and compares the two results side by side.
 
-**Attempt 2: blur the stairs away.** She applies a blur to the rotated page. The stairs soften and so does the handwriting. The ruled lines are still broken, only fuzzier.
+The three-step page is worse. The stairs are still there and the text is softer on top of them. Nobody stops the experiment; the comparison is the whole cost.
 
-**Attempt 3: rotate it in smaller steps.** If one big turn is rough, three gentle ones must be smoother. She writes a loop that turns the page 1 degree at a time, three times, and queues it for the whole archive overnight. Ravi sees the job in the queue and cancels it before it starts: "Hold on. Let's find out what a rotation does to one pixel first."
-
-So far:
-
-- The scan is fine, and a bigger scan did not help.
-- Blurring hides the damage without fixing it.
-- Three small turns were about to be run on every page.
-
-That leaves one question: **what does a rotation actually do to a single pixel?**
+Each step is gentler than the single turn, and the total is harsher than the single turn. What is each step actually doing to a pixel?
 
 ---
 
@@ -168,13 +151,13 @@ An affine transform keeps parallel lines parallel. A **perspective (homography)*
 
 ## Back to the jagged scan
 
-Mira prints where one output pixel comes from in the input. The answer is a fraction, like 7.07 across and 7.07 down: the rotated citizen almost never lands on a square. Her script rounded it to the nearest square.
+Jun prints where one output pixel comes from in the input. The answer is a fraction, like 7.07 across and 7.07 down: the rotated citizen almost never lands on a square. The script rounded it to the nearest square, every time.
 
 Rotating by 3 degrees maps nearly every pixel to a fractional position. With nearest neighbour you pick the closest square and the edge becomes a staircase. With bilinear you blend four neighbours: the edges smooth out, and a thin line gets slightly softer, which is the price.
 
 The cleaner pipeline is inverse mapping with bilinear or bicubic, and only **one** resampling step. Rotating twice in a row compounds the blur, so combine the moves into a single matrix first.
 
-She switches the script to inverse mapping with bilinear interpolation and one combined matrix. The text comes out clean and the ruled lines stay unbroken. She also deletes the three-step loop from the overnight queue, where it had been waiting.
+That also explains the three-step experiment: three rounding-and-blending passes, three doses of blur. Jun switches the script to inverse mapping with bilinear interpolation and one combined matrix. The text comes out clean and the ruled lines stay unbroken.
 
 The page was never badly scanned. It was just rotated by a program that rounded.
 

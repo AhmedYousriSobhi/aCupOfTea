@@ -417,7 +417,11 @@ html.sp-lock{overflow:hidden}
 /* Glossary terms (added when the site is built): a dotted underline, so they read as terms, not as loud links */
 .markdown-section a[href*="references/glossary?id="] { border-bottom: 1px dotted currentColor; text-decoration: none; }
 
-/* Embedded labs (.docs/lab-embed.js): a sandboxed frame under the text, with a caption link */
+/* Embedded labs (.docs/lab-embed.js): a card with the lab's name and two controls; the sandboxed frame appears on demand */
 .markdown-section figure.lab-embed { margin: 1.4em 0; }
-.markdown-section figure.lab-embed iframe { display: block; width: 100%; border: 1px solid var(--border-color); border-radius: 12px; background: var(--color-bg); }
-.markdown-section figure.lab-embed figcaption { margin-top: 6px; font-size: .85em; opacity: .8; }
+.markdown-section figure.lab-embed .lab-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 10px 12px; border: 1px solid var(--border-color); border-radius: 12px; background: var(--color-bg); }
+.markdown-section figure.lab-embed .lab-name { flex: 1 1 12em; font-weight: 600; }
+.markdown-section figure.lab-embed .lab-open { min-height: 44px; padding: 8px 16px; border: 1.5px solid var(--theme-color); border-radius: 10px; background: var(--theme-color); color: var(--color-bg); font: inherit; font-weight: 600; cursor: pointer; }
+.markdown-section figure.lab-embed .lab-full { display: inline-flex; align-items: center; min-height: 44px; padding: 0 4px; }
+.markdown-section figure.lab-embed iframe { display: block; width: 100%; margin-top: 8px; border: 1px solid var(--border-color); border-radius: 12px; background: var(--color-bg); }
+@media (max-width: 480px) { .markdown-section figure.lab-embed .lab-open { flex: 1 1 100%; } }

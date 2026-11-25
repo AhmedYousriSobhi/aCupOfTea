@@ -10,6 +10,7 @@ domains:
   - statistics
 tags:
   - statistics
+labs: [regression]
 relations:
   prerequisites:
     - the-courtroom-for-numbers
@@ -165,7 +166,10 @@ At 40 degrees a shop sells negative tea. Is `r = -0.98` any safer?
 
 * * *
 
-> ☕ **Try it live.** Drag a point, add the festival day, or step through Anscombe's four sets and watch r and the line.
+### Try it: Drag a point, watch the line
+
+> **What to try:** Drag a point, add the festival day, or step through Anscombe's four sets and watch r and the line.  
+> **Start with:** the preset *Predict at 40 degrees*.
 
 [Correlation lab](/fields/data-science/probability-statistics/labs/regression.html#embed ':ignore')
 

@@ -10,6 +10,7 @@ domains:
   - statistics
 tags:
   - statistics
+labs: [expected-value, distributions]
 relations:
   prerequisites:
     - counting-and-conditioning
@@ -166,7 +167,10 @@ Var(X + Y) = Var X + Var Y       only if X and Y are independent
 
 Net expected value is **−1/2** and the variance stays 149/4 (a shifted walk is the same walk). The two-pull total has expected value **9 = 4.5 + 4.5**, and variance 149/2 because the card is put back, so the pulls are independent. Contrast `2X`, one pull paid out twice: variance `4 × 37.25 = 149`.
 
-> ☕ **Try it live.** Edit the cards in the bag, change the price and pull 10, 1,000 or 100,000 times: the average settles on the expected value, which is not a prize.
+### Try it: Expected is not likely - edit the bag and see
+
+> **What to try:** Edit the cards in the bag, change the price and pull 10, 1,000 or 100,000 times: the average settles on the expected value, which is not a prize.  
+> **Start with:** the preset *The lucky tin*.
 
 [Expected value lab](/fields/data-science/probability-statistics/labs/expected-value.html#embed ':ignore')
 
@@ -225,7 +229,10 @@ P(X = k) = e^(−λ) × λ^k / k!        mean = λ,  variance = λ
 
 NIST gives this formula and its mean and variance; the "many tiny chances" link is shown by the numbers above, not proved. Poisson is a binomial with the `n` thrown away: all you need is the rate, and its signature is **variance equals mean**. At rate 4 an empty 10 minutes happens `e^(−4) =` 1.8% of the time, and ten or more customers 0.8%.
 
-> ☕ **Try it live.** Pick the binomial or the Poisson, turn the dials, draw a random sample and compare it with the exact bars. Overlay Poisson(np) on a binomial to see when the two agree.
+### Try it: Pick the recipe, turn the dials
+
+> **What to try:** Pick the binomial or the Poisson, turn the dials, draw a random sample and compare it with the exact bars. Overlay Poisson(np) on a binomial to see when the two agree.  
+> **Start with:** the preset *Smoky orders*.
 
 [Distributions lab](/fields/data-science/probability-statistics/labs/distributions.html#embed ':ignore')
 
