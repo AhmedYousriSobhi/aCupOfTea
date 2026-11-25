@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SlurmdSpoolDir Is Full: The Drain That Is Not About the Spool Directory</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-cluster-operations/slurm-spool-dir-full/">
+<meta name="description" content="Why slurmd drains node with reason &quot;SlurmdSpoolDir is full&quot;, why culprit is filesystem underneath, what slurmd keeps in spool directory, a triage runbook, how to stop jobs from filling the disk.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="SlurmdSpoolDir Is Full: The Drain That Is Not About the Spool Directory">
+<meta property="og:description" content="Why slurmd drains node with reason &quot;SlurmdSpoolDir is full&quot;, why culprit is filesystem underneath, what slurmd keeps in spool directory, a triage runbook, how to stop jobs from filling the disk.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-cluster-operations/slurm-spool-dir-full/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-cluster-operations/slurm-spool-dir-full/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/schedulers/slurm-cluster-operations/slurm-spool-dir-full"></script>
+<main>
+<h1>SlurmdSpoolDir Is Full: The Drain That Is Not About the Spool Directory</h1>
+<p><em>Why slurmd drains node with reason &quot;SlurmdSpoolDir is full&quot;, why culprit is filesystem underneath, what slurmd keeps in spool directory, a triage runbook, how to stop jobs from filling the disk.</em></p>
+<blockquote><p><strong>Part of the [schedulers](/fields/schedulers/slurm-intro.md) directory.</strong> The reason string, the recovery steps and the contents of the directory come from site documentation, mailing-list threads, a vendor support article and the <code>slurmd</code> man page. Nothing was run on a live cluster for this page, and the invented scenario is just that.</p></blockquote>
+<ul><li>* *</li></ul>
+<h2>The drain with the wrong name</h2>
+<p>Picture a GPU node that has been training for six days. Nothing in the job fails. Then <code>sinfo -R</code> shows a node drained with this reason:</p>
+<pre><code>SlurmdSpoolDir is full</code></pre>
+<p>The reaction is natural: go look at <code>/var/spool/slurmd</code>. It holds a few megabytes. Everyone&#x27;s spool directory holds a few megabytes. The name of the error is a little misleading, and the rest of this page is about why.</p>
+<p>The behavior itself is old. A commit from the early days of the project, by Moe Jette, carries a one-line message: &quot;Slurmd will drain a compute node when the SlurmdSpoolDir is full.&quot; A vendor guide for GPU clouds describes it as a safety measure: when the filesystem holding the spool directory runs out of space, <code>slurmd</code> can no longer write its own state, so it drains the node.</p>
+<ul><li>* *</li></ul>
+<h2>The directory is innocent, the filesystem is not</h2>
+<p>A user on the slurm-users list reported the error on a few nodes of a 242-node run, even though the spool directory had roughly 38 GB of free space and nothing was intentionally written there. Three replies explain the pattern:</p>
+<ul><li><strong>&quot;It is the partition that is full, not the directory itself.&quot;</strong> The cause could be log files in <code>/var/log</code> just as easily as anything in <code>/var/spool</code>, because <code>/var</code> or <code>/var/spool</code> may sit on a partition shared with other things.</li><li><strong>&quot;This is basically always somebody filling up `/tmp`,&quot;</strong> when <code>/tmp</code> resides on the same filesystem as the spool directory. The reply is blunt, and it matches the vendor guide&#x27;s own example: a node running long training jobs accumulates over a hundred gigabytes of temporary files in <code>/tmp</code> over several days and fills its root disk entirely.</li><li><strong>One site&#x27;s troubleshooting notes</strong> list the symptom from the user&#x27;s side: no <code>slurm-*.out</code> files appear, or jobs fail, when <code>/tmp</code>, <code>/var/tmp</code> or <code>/var/spool</code> fills, and they point out that <code>/var/spool</code> and <code>/var/tmp</code> typically share the same underlying storage, so filling one affects the other.</li></ul>
+<p>So the diagnosis is rarely &quot;something wrote a lot into the spool directory&quot;. It is &quot;something wrote a lot onto the same disk, and <code>slurmd</code> was the first thing polite enough to notice&quot;.</p>
+<ul><li>* *</li></ul>
+<h2>What slurmd actually keeps in there</h2>
+<p>The administrator documentation is thin on this, and the person who started the 2023 thread said so. The answers from the list and from site documentation add up to this inventory:</p>
+<table><thead><tr><th>Item</th><th>What it is</th><th>Where I saw it</th></tr></thead><tbody><tr><td><code>jobNNNNN/slurm_script</code></td><td>The batch script of each job on this node. One reply on the list describes finding &quot;job scripts and various cached data&quot; and typically a few megabytes in total</td><td>A permissions-error thread quoting <code>.../job00136/slurm_script</code>; the 2023 thread</td></tr><tr><td><code>cred_state</code> (and <code>.old</code>, <code>.new</code>)</td><td>Credential state that <code>slurmd</code> rewrites; a <code>cred_state.new</code> write is the file in the failure message below</td><td>A permissions thread listing the directory; a site troubleshooting page</td></tr><tr><td><code>hwloc_topo_whole.xml</code></td><td>A cached topology file</td><td>The same permissions thread</td></tr><tr><td><code>conf-cache/</code></td><td>Configuration files fetched by <code>slurmd</code> in configless mode, with <code>/run/slurm/conf</code> pointing at it</td><td>Niflheim site documentation</td></tr><tr><td><code>&lt;nodename&gt;_&lt;jobid&gt;.&lt;stepid&gt;</code></td><td>Unix sockets for running steps, described on the <a href="../../../../fields/schedulers/slurm-inside-a-job/slurm-slurmstepd/">slurmstepd page</a></td><td>Slurm source</td></tr><tr><td>A core file, if <code>slurmd</code> crashes</td><td>The man page says a core file goes to <code>SlurmdSpoolDir</code>, or <code>/var/tmp/</code> as a last resort, unless <code>slurmd</code> runs with <code>-D</code></td><td><code>slurmd</code> man page</td></tr></tbody></table>
+<p>Batch scripts are bounded: <code>max_script_size</code> in <code>SchedulerParameters</code> defaults to 4 MB. To fill a disk with scripts you would need an extraordinary number of jobs, which is why the list&#x27;s first reaction was &quot;can your job scripts contain large amounts of data?&quot; and its second was &quot;is the spool directory on shared storage?&quot;.</p>
+<p>That second question matters. The Slurm configuration tool says the directory for <code>slurmd</code> state <strong>must be unique on each compute server, on local disk</strong>. A spool directory on shared storage is a different problem with a different smell.</p>
+<p>Site documentation adds one more rule: the directory is not created by the RPM packages. You create it and set the owner yourself.</p>
+<p>The failure itself, when it happens, looks like this in the logs (this exact message was posted by a site that hit it):</p>
+<pre><code>error: write /var/spool/slurmd/cred_state.new error No space left on device</code></pre>
+<ul><li>* *</li></ul>
+<h2>The evidence that leaves the scene</h2>
+<p>The 2023 thread contains a detail that every admin who has chased a full disk will recognize. When the author finally looked, <code>df -h</code> showed about 38 GB free. Large files that existed during the failure had been removed by the time anyone checked. The disk had been full, and then it was not, and the node was still drained.</p>
+<p>There are two common ways for the evidence to disappear:</p>
+<ul><li>A job ended and its temporary files were cleaned up (or the user deleted them) after <code>slurmd</code> had already drained the node.</li><li>A process holds a <strong>deleted file open</strong>. Space is not returned while the file is still open, so <code>df</code> shows the disk full while <code>du</code> finds nothing to explain it. The vendor guide&#x27;s answer is <code>lsof +L1</code>, which lists open files that have been unlinked.</li></ul>
+<p>Either way, look for the explanation in the logs from the time of the event as well as in the current state of the disk. The reason timestamp from <code>scontrol show node</code> tells you where to start.</p>
+<ul><li>* *</li></ul>
+<h2>A triage runbook</h2>
+<pre><code class="language-bash"># 1. Confirm the reason and when it happened
+sinfo -R
+scontrol show node &lt;node&gt; | grep -iE &#x27;reason|state&#x27;
+
+# 2. Which filesystem holds the spool directory, and how full is it?
+scontrol show config | grep -i SlurmdSpoolDir
+df -h /var/spool/slurmd /tmp /var/tmp /var/log
+df -i /var/spool/slurmd          # out of inodes also says &quot;No space left on device&quot;
+
+# 3. Find the culprit one directory at a time
+#    (du over everything can hang on a disk that is completely full)
+du -sh /tmp /var/tmp /var/log /home 2&gt;/dev/null
+
+# 4. Space that du cannot see: deleted files still held open
+lsof +L1
+
+# 5. Who is using it? (job IDs often appear in the path)
+ls -lt /tmp | head</code></pre>
+<p>Notes on reading the results:</p>
+<table><thead><tr><th>Finding</th><th>What it suggests</th></tr></thead><tbody><tr><td><code>/tmp</code> is huge and on the root filesystem</td><td>Jobs writing scratch data to the default temp location</td></tr><tr><td><code>/var/log</code> is huge</td><td>Logs not rotated, or debug logging left on</td></tr><tr><td><code>df</code> is full, <code>du</code> finds little</td><td>A deleted-but-open file, so check <code>lsof +L1</code></td></tr><tr><td><code>df -h</code> fine, <code>df -i</code> full</td><td>Inode exhaustion from millions of small files</td></tr><tr><td>A core file in the spool directory</td><td>A <code>slurmd</code> crash. Check the logs before restarting anything</td></tr></tbody></table>
+<blockquote><p>[!WARNING] Be careful with <code>rm</code> inside <code>SlurmdSpoolDir</code> itself. It holds the batch scripts and step sockets of jobs that may still be running, and an older SchedMD ticket describes the directory as part of how job state is restored. Clean up the <em>temporary files</em> that filled the disk, not the spool directory&#x27;s own contents, unless you have drained the node and confirmed nothing is running on it. That advice is my reading of the design, so verify it on a test node.</p></blockquote>
+<ul><li>* *</li></ul>
+<h2>Bringing the node back</h2>
+<p>Once there is real free space, tell Slurm the node may take jobs again:</p>
+<pre><code class="language-bash">df -h /var/spool/slurmd          # confirm the headroom first
+scontrol update NodeName=&lt;node&gt; State=RESUME
+sinfo -n &lt;node&gt;</code></pre>
+<p>The drain does not clear itself when the disk recovers, so this step is manual. A good sign afterward is a job that starts and finishes cleanly, which proves <code>slurmd</code> can write its state again. If the node drains again within the hour, something is still filling the disk, and the cleanup treated a symptom.</p>
+<ul><li>* *</li></ul>
+<h2>Prevention: give temp files somewhere else to live</h2>
+<p>The documentation point that explains the whole story is in Niflheim&#x27;s notes: jobs store temporary files in <code>/tmp</code>, <code>/scratch</code> and <code>/dev/shm</code>, and <strong>no cleanup is done after the job exits</strong>. Add a large, shared, default temp directory and a long-running job, and the full disk becomes a matter of time.</p>
+<p><strong>Options, from most to least integrated:</strong></p>
+<table><thead><tr><th>Approach</th><th>How it works</th><th>Notes</th></tr></thead><tbody><tr><td>Namespace/tmpfs plugin</td><td>Gives each job private <code>/tmp</code>, <code>/var/tmp</code> and <code>/dev/shm</code> mounts backed by a base path, removed when the job ends</td><td>Needs <code>PrologFlags=Contain</code> and a <code>job_container.conf</code>. Renamed in 25.11 from <code>job_container/tmpfs</code> to <code>namespace/tmpfs</code>, configured with <code>NamespaceType=</code> instead of <code>JobContainerType=</code></td></tr><tr><td><code>auto_tmpdir</code> (SPANK plugin)</td><td>Creates and cleans a per-job temp directory</td><td>Third-party. A new Slurm major version needs a rebuild on a test node</td></tr><tr><td><code>spank-private-tmp</code></td><td>Private temp dirs</td><td>Does not clean up, so you must add cleanup</td></tr><tr><td>Cron cleanup</td><td>Removes old files from scratch</td><td>Crude, but it works. The site example removes files older than seven days under <code>/scratch</code></td></tr></tbody></table>
+<p>A configuration sketch from the Niflheim documentation:</p>
+<pre><code># slurm.conf
+NamespaceType=namespace/tmpfs        # before 25.11: JobContainerType=job_container/tmpfs
+PrologFlags=Contain
+
+# job_container.conf
+AutoBasePath=true
+BasePath=/scratch Dirs=/tmp,/var/tmp,/dev/shm Shared=true</code></pre>
+<p>The <code>Shared=true</code> option, from Slurm 23.02, is the one they flag as important when home directories are automounted, because older versions had trouble with NFS automounts under the tmpfs plugin. One suggestion of my own, not from the documentation: choose a <code>BasePath</code> on a filesystem <strong>other than</strong> the one holding <code>SlurmdSpoolDir</code> and the OS logs, so that a runaway job fills its own scratch space rather than the disk <code>slurmd</code> depends on.</p>
+<p><strong>Other habits that pay off:</strong></p>
+<ul><li><strong>Separate filesystems.</strong> Put <code>/tmp</code>, <code>/scratch</code> and <code>/var/log</code> on different filesystems from the spool directory and the root disk, or at least apply quotas.</li><li><strong>Know your `TmpFS`.</strong> <code>TmpDisk</code> for a node is defined as the size of its <code>TmpFS</code> filesystem (default <code>/tmp</code>), and jobs can request space with <code>--tmp</code>. Set <code>TmpFS=/scratch</code> if that is where jobs really write.</li><li><strong>Alert early.</strong> A node health check that looks at free space on local filesystems (Niflheim&#x27;s NHC notes show <code>DF_FLAGS</code> set to list only local filesystems) turns a surprise drain into a warning, and it can run on a schedule through <code>HealthCheckProgram</code>.</li><li><strong>Rotate logs and keep debug off.</strong> The <code>slurmd</code> log is on the same disk, and <code>SlurmdDebug=debug2</code> is not a long-term setting.</li></ul>
+<ul><li>* *</li></ul>
+<h2>Two spool directories, two different jobs</h2>
+<p>It is common to mix up the two directories that Slurm needs. They live on different machines and fail in different ways.</p>
+<table><thead><tr><th>Setting</th><th>Lives on</th><th>Holds</th><th>Remember</th></tr></thead><tbody><tr><td><code>SlurmdSpoolDir</code></td><td>Every compute node, local disk</td><td>Per-node job scripts, credential state, config cache, step sockets</td><td>Fills up with the node&#x27;s disk. Full means the node drains</td></tr><tr><td><code>StateSaveLocation</code></td><td>The controller (and shared for HA)</td><td>The controller&#x27;s state: jobs, nodes, reservations</td><td>Back it up before upgrades, as in the <a href="../../../../fields/schedulers/slurm-cluster-operations/slurm-upgrade-order/">upgrade page</a></td></tr></tbody></table>
+<p>An old SchedMD reply sums up the division in one line: the controller keeps its state in <code>StateSaveLocation</code> and the job information in <code>SlurmdSpoolDir</code>, so with both directories intact you have what you need to restore state after a restart.</p>
+<ul><li>* *</li></ul>
+<h2>📜 The Scroll (keep this)</h2>
+<pre><code class="language-text">Reason &quot;SlurmdSpoolDir is full&quot; = slurmd cannot write its own state (cred_state.new ... ENOSPC)
+Usual cause:   the FILESYSTEM is full, not the directory (often /tmp or /var/log on the same disk)
+Check:         df -h, df -i, du per directory, lsof +L1 (deleted-but-open files)
+Do not:        rm inside the spool dir while jobs may be running
+Recover:       free space, then  scontrol update NodeName=&lt;node&gt; State=RESUME
+Prevent:       private per-job temp dirs (namespace/tmpfs), separate filesystems, health checks</code></pre>
+<p>A node that drains itself over disk space is not being dramatic. It is the one daemon on the box that refuses to run jobs it cannot keep track of.</p>
+<ul><li>* *</li></ul>
+<h2>References</h2>
+<ul><li><a href="https://lists.schedmd.com/pipermail/slurm-users/2023-December/010748.html">slurm-users: SlurmdSpoolDir full (December 2023)</a>, with replies <a href="https://lists.schedmd.com/pipermail/slurm-users/2023-December/010751.html">here</a> and <a href="https://lists.schedmd.com/pipermail/slurm-users/2023-December/010754.html">here</a></li><li><a href="https://support.crusoecloud.com/hc/en-us/articles/52235931715611-How-To-Recover-a-Slurm-Node-Drained-Due-to-Full-Root-Disk">Crusoe: How to recover a Slurm node drained due to full root disk</a></li><li><a href="https://earth.bsc.es/gitlab/mgimenez/ces_slurm_simulator/-/commit/c233f9dd2232287cda00da3679b961450273129c">Slurm source history: &quot;Slurmd will drain a compute node when the SlurmdSpoolDir is full&quot;</a></li><li><a href="https://docs-7e7aab.pages.pasteur.fr/troubleshooting/">Pasteur troubleshooting notes: full /tmp or /var/tmp</a></li><li><a href="https://lists.schedmd.com/pipermail/slurm-users/2022-August/009058.html">slurm-users: SlurmdSpoolDir permissions and directory contents (2022)</a></li><li><a href="https://niflheim-system.readthedocs.io/en/latest/Slurm_configuration.html">Niflheim: Slurm configuration (spool directories, temporary job directories, configless cache)</a></li><li><a href="https://slurm.schedmd.com/configurator.easy.html">Slurm: configuration tool (easy version)</a></li><li><a href="https://manpages.opensuse.org/Leap-15.6/slurm-node/slurmd.8.en.html">Slurm: slurmd man page (core file location)</a></li><li><a href="https://support.schedmd.com/show_bug.cgi?id=689">SchedMD ticket 689: advice for running in production</a></li></ul>
+<p><a href="../../../../#/fields/schedulers/slurm-cluster-operations/slurm-spool-dir-full">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

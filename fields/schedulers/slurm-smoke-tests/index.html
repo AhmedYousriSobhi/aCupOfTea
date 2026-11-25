@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Slurm Smoke Tests: Does It Still Work?</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-smoke-tests/">
+<meta name="description" content="A six-part series on smoke-testing Slurm - a two-minute control-plane check, config changes, upgrades, policy and preemption, node readiness, and where SchedMD&#x27;s test suite and ReFrame fit.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Slurm Smoke Tests: Does It Still Work?">
+<meta property="og:description" content="A six-part series on smoke-testing Slurm - a two-minute control-plane check, config changes, upgrades, policy and preemption, node readiness, and where SchedMD&#x27;s test suite and ReFrame fit.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-smoke-tests/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-smoke-tests/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../.docs/prerender-redirect.js" data-target="../../../#/fields/schedulers/slurm-smoke-tests/"></script>
+<main>
+<h1>Slurm Smoke Tests: Does It Still Work?</h1>
+<p><em>A six-part series on smoke-testing Slurm - a two-minute control-plane check, config changes, upgrades, policy and preemption, node readiness, and where SchedMD&#x27;s test suite and ReFrame fit.</em></p>
+<p>A cluster can pass every glance and still be broken: <code>sinfo</code> shows a tidy table while the accounting daemon is down, a rule refuses every monitoring job, or a node reports <code>idle</code> with half its cores. A smoke test is the short list of things that must all work, run every time something changes.</p>
+<p>Each page opens with a failure, then builds the check that would have caught it. Every script was run on a two-node test cluster (Slurm 23.11.4), against failures injected on purpose. SchedMD does not define a &quot;smoke test&quot;, so the series synthesises what its admin, troubleshooting and upgrade guides say to verify, and adds what the tests turned up.</p>
+<p>The pages stand alone. Read part 1 first if you are new to this; the rest each name what they build on.</p>
+<hr>
+<h2>Contents</h2>
+<table><thead><tr><th>File</th><th>Description</th></tr></thead><tbody><tr><td><a href="../../../fields/schedulers/slurm-smoke-tests/slurm-smoke-control-plane/">1. The Cluster That Worked Perfectly and Remembered Nothing</a></td><td>A six-check, two-minute smoke test (MUNGE, controller, nodes, <code>srun</code>, <code>sbatch</code>, <code>sacct</code>) as one script with three outcomes, tested against four failures</td></tr><tr><td><a href="../../../fields/schedulers/slurm-smoke-tests/slurm-smoke-config-change/">2. Measure Twice, Reconfigure Once</a></td><td>What a bad <code>slurm.conf</code> does, and the dry runs that catch it: a snapshot diff, <code>sbatch --test-only</code>, a canary partition</td></tr><tr><td><a href="../../../fields/schedulers/slurm-smoke-tests/slurm-smoke-after-upgrade/">3. The Morning After the Upgrade</a></td><td>A backup you have restored, versions on every node, a snapshot comparison, and why you cannot undo an upgrade</td></tr><tr><td><a href="../../../fields/schedulers/slurm-smoke-tests/slurm-smoke-policy/">4. Does the Rulebook Still Work?</a></td><td>A two-stage policy test: routing and refusals with no resources, then a real preemption drill</td></tr><tr><td><a href="../../../fields/schedulers/slurm-smoke-tests/slurm-smoke-node-readiness/">5. Back From the Repair Shop</a></td><td>Why <code>idle</code> proves little, a hardware-versus-config check, and a reservation fence for a probe job</td></tr><tr><td><a href="../../../fields/schedulers/slurm-smoke-tests/slurm-smoke-regression-suites/">6. When Smoke Becomes a Fire Drill</a></td><td>SchedMD&#x27;s test suite and ReFrame, and the baseline rule</td></tr><tr><td><a href="../../../fields/schedulers/slurm-smoke-tests/quick-guide/">Quick guide: Check That Slurm Still Works After a Change</a></td><td>Which check to run after a change, upgrade, policy edit or repair, with the output that means pass</td></tr></tbody></table>
+<hr>
+<h2>Which check, when</h2>
+<table><thead><tr><th>What just happened</th><th>Run</th></tr></thead><tbody><tr><td>Any change at all</td><td><a href="../../../fields/schedulers/slurm-smoke-tests/slurm-smoke-control-plane/">Part 1</a>: the control-plane script, as an ordinary user</td></tr><tr><td>Editing <code>slurm.conf</code></td><td><a href="../../../fields/schedulers/slurm-smoke-tests/slurm-smoke-config-change/">Part 2</a>: snapshot before and after, <code>--test-only</code>, canary partition</td></tr><tr><td>An upgrade</td><td><a href="../../../fields/schedulers/slurm-smoke-tests/slurm-smoke-after-upgrade/">Part 3</a>: proven backup first, then versions, part 1, snapshot diff</td></tr><tr><td>A change to QOS, limits, the submit script or preemption</td><td><a href="../../../fields/schedulers/slurm-smoke-tests/slurm-smoke-policy/">Part 4</a>: stage 1 always, stage 2 for preemption changes</td></tr><tr><td>A node returning from repair or reboot</td><td><a href="../../../fields/schedulers/slurm-smoke-tests/slurm-smoke-node-readiness/">Part 5</a>: hardware comparison, then a probe job inside a fence</td></tr><tr><td>A big change on a test cluster</td><td><a href="../../../fields/schedulers/slurm-smoke-tests/slurm-smoke-regression-suites/">Part 6</a>: a regression suite, compared with a baseline</td></tr></tbody></table>
+<hr>
+<h2>What the tests turned up</h2>
+<p>The surprises are the reason the checks look the way they do:</p>
+<ul><li>A dead <code>slurmd</code> is invisible to <code>sinfo</code> for a while, so only launching a task on every node finds it quickly.</li><li>With <code>slurmdbd</code> stopped, jobs run perfectly and nothing is recorded.</li><li>A drained node and a full cluster give <code>srun</code> the same &quot;busy&quot; message, and a dead node can look like a full cluster to <code>sbatch</code>, so a smoke test needs a third outcome: inconclusive.</li><li>A typo in <code>slurm.conf</code> is caught by <code>scontrol</code> before the controller sees it, but a partition naming a missing node survives a reconfigure and stops the next restart from working.</li><li>A submit rule that requires <code>--time</code> broke the first draft of the smoke test, and, most probably, 18 failures in SchedMD&#x27;s suite.</li><li>With <code>config_overrides</code>, a node with half its configured CPUs shows <code>idle</code>. Without it, Slurm marks the node <code>inval</code>.</li><li>A drained node cannot run a job even inside a reservation, so a probe needs the reservation first and the resume second.</li></ul>
+<hr>
+<h2>What was not tested</h2>
+<p>No GPU commands were run (the test cluster has none). No upgrade between versions was performed. SchedMD&#x27;s unit and expect suites were not run. NHC was not installed. Each page says so where it matters.</p>
+<hr>
+<h2>Related pages</h2>
+<ul><li><a href="../../../fields/schedulers/slurm-pending-jobs/">Why is my job still pending?</a>: the reason codes behind a smoke test&#x27;s <code>WAIT</code>.</li><li><a href="../../../fields/schedulers/slurm-sacct-job-forensics/">Autopsy of a job: <code>sacct</code></a>: reading what the accounting check recorded.</li><li><a href="../../../fields/schedulers/slurm-preemption/">Dying Politely: preemption and signals</a>: the policy that part 4 tests.</li><li><a href="../../../fields/schedulers/slurm-cluster-operations/">Cluster operations</a>: upgrade order, reboots and reservations around parts 3 and 5.</li><li><a href="../../../fields/schedulers/slurm-ai-clusters/gpu-health-checks/">When a GPU falls off the bus</a>: the health-check program that part 5 points to.</li></ul>
+<p><a href="../../../#/fields/schedulers/slurm-smoke-tests/">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Inside a Slurm Job</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-inside-a-job/">
+<meta name="description" content="A four-part series that follows one Slurm job from the submitted script to the daemon that runs it, the cgroup limits around it and the GPU topology under it.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Inside a Slurm Job">
+<meta property="og:description" content="A four-part series that follows one Slurm job from the submitted script to the daemon that runs it, the cgroup limits around it and the GPU topology under it.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-inside-a-job/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-inside-a-job/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../.docs/prerender-redirect.js" data-target="../../../#/fields/schedulers/slurm-inside-a-job/"></script>
+<main>
+<h1>Inside a Slurm Job</h1>
+<p><em>A four-part series that follows one Slurm job from the submitted script to the daemon that runs it, the cgroup limits around it and the GPU topology under it.</em></p>
+<p>You type <code>sbatch job.sh</code> and walk away. This series follows what happens next on the node: what Slurm froze from your script, which small daemon starts your processes, what actually fences them in, and how they land on the hardware.</p>
+<p>Read the parts in order. Each one answers a question the one before it leaves open.</p>
+<hr>
+<h2>Contents</h2>
+<table><thead><tr><th>File</th><th>Description</th></tr></thead><tbody><tr><td><a href="../../../fields/schedulers/slurm-inside-a-job/slurm-job-script-tale/">1. The Tale of a Job Script</a></td><td>Why editing a script after <code>sbatch</code> changes nothing, where the frozen copy lives, and what stays live</td></tr><tr><td><a href="../../../fields/schedulers/slurm-inside-a-job/slurm-slurmstepd/">2. slurmstepd</a></td><td>The small daemon that actually runs your job, and why jobs survive <code>slurmd</code> restarts</td></tr><tr><td><a href="../../../fields/schedulers/slurm-inside-a-job/slurm-cgroups-in-practice/">3. cgroups in Practice</a></td><td>What <code>cgroup.conf</code> really constrains, v1 vs v2, and why <code>sacct</code> memory numbers are samples</td></tr><tr><td><a href="../../../fields/schedulers/slurm-inside-a-job/slurm-gpu-affinity-socket-lie/">4. GPU Affinity vs Socket Affinity</a></td><td>GPU core affinity vs Slurm socket affinity, and how to fix the topology</td></tr></tbody></table>
+<hr>
+<h2>Related pages</h2>
+<ul><li><a href="../../../fields/schedulers/slurm-intro/">Schedulers: the traffic controller</a>: read first if Slurm is new to you.</li><li><a href="../../../fields/schedulers/slurm-cluster-operations/">Cluster operations</a>: what to do when a job on a node refuses to die or a spool directory fills.</li><li><a href="../../../fields/schedulers/slurm-preemption/">Dying politely: preemption and signals</a>: what Slurm sends to the processes this series describes.</li><li><a href="../../../fields/schedulers/slurm-ai-clusters/">Slurm for AI clusters</a>: topology-aware placement and distributed training on top of these ideas.</li></ul>
+<p><a href="../../../#/fields/schedulers/slurm-inside-a-job/">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

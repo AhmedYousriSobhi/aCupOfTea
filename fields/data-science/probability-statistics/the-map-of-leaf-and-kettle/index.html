@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The Map of Leaf &amp; Kettle: Every Idea So Far in One Walk Through the Shop</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/the-map-of-leaf-and-kettle/">
+<meta name="description" content="A concept map, decision chart and definitions sheet for the whole series, as a memory palace in one tea shop: nine rooms for describing data, an upstairs for chance.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="The Map of Leaf &amp; Kettle: Every Idea So Far in One Walk Through the Shop">
+<meta property="og:description" content="A concept map, decision chart and definitions sheet for the whole series, as a memory palace in one tea shop: nine rooms for describing data, an upstairs for chance.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/the-map-of-leaf-and-kettle/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/the-map-of-leaf-and-kettle/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/data-science/probability-statistics/the-map-of-leaf-and-kettle"></script>
+<main>
+<h1>The Map of Leaf &amp; Kettle: Every Idea So Far in One Walk Through the Shop</h1>
+<p><em>A concept map, decision chart and definitions sheet for the whole series, as a memory palace in one tea shop: nine rooms for describing data, an upstairs for chance.</em></p>
+<blockquote><p><strong>Part of the [Probability &amp; Statistics](https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/fields/data-science/probability-statistics/README.md) series.</strong> This is the reference page: no new ideas, only the old ones laid out so you can find and remember them. Each row says which page to go back to for the full story. It grows as the series does.</p></blockquote>
+<ul><li>* *</li></ul>
+<h2>Prologue: the apprentice&#x27;s first morning</h2>
+<p>Mira has hired an apprentice, Tala, who starts on a Monday. By ten o&#x27;clock Tala has filled half a page with terms she has overheard: <em>stratified, ordinal, ogive, class boundary, median class, cumulative, bimodal.</em> She looks at the list and then at Mira.</p>
+<p>&quot;Do I have to memorize all of this?&quot;</p>
+<p>&quot;No,&quot; says Mira. &quot;You have to be able to <strong>walk through the shop</strong>. Every one of those words lives in a particular room. If you remember the room, the word comes with it.&quot;</p>
+<p>She hands Tala a map.</p>
+<ul><li>* *</li></ul>
+<h2>The whole picture on one page</h2>
+<p>Everything so far hangs from one trunk, and the branches follow the order of the series.</p>
+<pre><code class="language-mermaid">mindmap
+  root((Statistics))
+    Where data comes from
+      Population and sample
+      Parameter and statistic
+      Sampling frame and bias
+      Simple random
+      Systematic
+      Stratified
+      Cluster
+    What kind of data
+      Qualitative
+        Nominal
+        Ordinal
+      Quantitative
+        Discrete
+        Continuous
+    Counting it
+      Category table
+      Ungrouped table
+        Relative frequency
+        Cumulative frequency
+        Stem and leaf
+      Grouped table
+        Range and class width
+        Limits and boundaries
+        Midpoint
+    Drawing it
+      Histogram
+      Frequency polygon
+      Ogive
+    Its middle
+      Mean
+      Median
+      Mode
+    Its spread
+      Variance and SD
+      IQR
+    Its position
+      Percentile
+      z-score
+      Box plot
+    Chance
+      Counting the ways
+      Conditional and Bayes
+      Expected value
+      Binomial and Poisson
+      Normal curve
+    From sample to claim
+      Sampling distribution
+      Confidence interval
+      Hypothesis test
+    Two columns
+      Correlation
+      Regression</code></pre>
+<p>And the two jobs that all of it serves:</p>
+<table><thead><tr><th></th><th>Descriptive statistics</th><th>Inferential statistics</th></tr></thead><tbody><tr><td>Question</td><td>What does the data I <strong>have</strong> look like?</td><td>What can I say about the <strong>whole</strong> group?</td></tr><tr><td>Tools</td><td>Tables, pictures, mean, median, mode, spread, position</td><td>Confidence intervals, hypothesis tests</td></tr><tr><td>Depends on</td><td>Honest counting</td><td>An honest <strong>sample</strong></td></tr></tbody></table>
+<ul><li>* *</li></ul>
+<h2>Which tool for which question</h2>
+<p>Start at the top and follow your data down.</p>
+<pre><code class="language-mermaid">flowchart TD
+    A[&quot;You have a column of data&quot;] --&gt; B{&quot;Categories or numbers?&quot;}
+    B --&gt;|Categories| C[&quot;Category table. Mode.&lt;br/&gt;If ordered, also median&quot;]
+    B --&gt;|Numbers| D{&quot;Few distinct values?&quot;}
+    D --&gt;|Yes| E[&quot;Ungrouped table&lt;br/&gt;or stem and leaf&quot;]
+    D --&gt;|No| F[&quot;Grouped table:&lt;br/&gt;range, width h rounded UP,&lt;br/&gt;boundaries&quot;]
+    E --&gt; G[&quot;Draw it:&lt;br/&gt;histogram, polygon, ogive&quot;]
+    F --&gt; G
+    G --&gt; H{&quot;What shape?&quot;}
+    H --&gt;|Roughly symmetric| I[&quot;Mean&quot;]
+    H --&gt;|Skewed or outliers| J[&quot;Median&quot;]
+    H --&gt;|Two clumps| K[&quot;Describe both clumps.&lt;br/&gt;No single middle&quot;]</code></pre>
+<p>And the picture question, separately:</p>
+<table><thead><tr><th>You want to know</th><th>Use</th></tr></thead><tbody><tr><td>The shape, where the bulk is, whether there is a tail</td><td><strong>Histogram</strong></td></tr><tr><td>How two data sets compare</td><td><strong>Frequency polygon</strong>, overlaid</td></tr><tr><td>How many are at or below a value, or the median or a percentile</td><td><strong>Ogive</strong></td></tr></tbody></table>
+<ul><li>* *</li></ul>
+<h2>The memory palace: downstairs and upstairs</h2>
+<p>The oldest memory trick there is: put each idea on a vivid object in a place you know, then walk the same route every time. The shop is the place. Walk it in this order, and <strong>never more than three or four things per room</strong>.</p>
+<h3>Room 1: The doorstep</h3>
+<p>A <strong>big wooden spoon</strong> leans against the door, and a sign above it says <em>STIR FIRST</em>.</p>
+<table><thead><tr><th>Object</th><th>Idea</th></tr></thead><tbody><tr><td>The pot of tea on the step</td><td><strong>Population</strong>: everyone you care about</td></tr><tr><td>The sip in the spoon</td><td><strong>Sample</strong>: the part you actually taste</td></tr><tr><td>The unstirred top of the pot</td><td><strong>Bias</strong>: a sample that cannot speak for the whole</td></tr><tr><td>Stirring</td><td><strong>Random</strong> selection</td></tr></tbody></table>
+<p><em>Hook:</em> a sip only speaks for the pot if you stirred it. <strong>How you choose matters more than how many you choose.</strong></p>
+<h3>Room 2: The loyalty-card cabinet</h3>
+<p>A tall cabinet with 4,000 cards. The drawer labels are the list you draw from: the <strong>sampling frame</strong>.</p>
+<table><thead><tr><th>Object</th><th>Idea</th></tr></thead><tbody><tr><td>A <strong>hat</strong> full of numbered cards</td><td><strong>Simple random</strong>: everyone has an equal chance</td></tr><tr><td>A <strong>red clip</strong> on every 100th card</td><td><strong>Systematic</strong>: <code>k = N / n</code>, random start, then every k-th</td></tr><tr><td><strong>Three colored boxes</strong> (students, office, retirees)</td><td><strong>Stratified</strong>: <em>every group, some people</em></td></tr><tr><td>A <strong>map with pins</strong> on four neighborhoods</td><td><strong>Cluster</strong>: <em>some groups, every person</em></td></tr></tbody></table>
+<p><em>Hook:</em> boxes are <em>every group, some people</em>, and the pins are <em>some groups, every person</em>.</p>
+<h3>Room 3: The notebook on the counter</h3>
+<p>A notebook with five columns, each tied with a different colored ribbon.</p>
+<table><thead><tr><th>Object</th><th>Idea</th></tr></thead><tbody><tr><td>A <strong>name tag</strong> column (blend name)</td><td><strong>Nominal</strong>: categories, no order</td></tr><tr><td>A <strong>ladder</strong> (mild, medium, strong)</td><td><strong>Ordinal</strong>: ordered, gaps not measured</td></tr><tr><td>A <strong>tally counter</strong> (cups per week)</td><td><strong>Discrete</strong>: counted, whole numbers</td></tr><tr><td>A <strong>thermometer</strong> (brewing temperature)</td><td><strong>Continuous</strong>: measured, recorded rounded</td></tr><tr><td>A <strong>loyalty-card number</strong> pinned on the cover</td><td>A <strong>label in digits</strong>, not a quantity</td></tr></tbody></table>
+<p><em>Hook:</em> if you cannot sensibly add two of them, it is a label, however many digits it has.</p>
+<h3>Room 4: The chalkboard tally wall</h3>
+<p>Three chalkboards side by side.</p>
+<table><thead><tr><th>Board</th><th>Idea</th></tr></thead><tbody><tr><td>Board 1, words with tally marks</td><td><strong>Category table</strong>: <code>f</code>, percentage; <code>Σf = n</code></td></tr><tr><td>Board 2, every score on its own line</td><td><strong>Ungrouped table</strong>: <code>f</code>, <code>RF = f/n</code>, <code>CF</code> running total; <strong>stem and leaf</strong></td></tr><tr><td>Board 3, scores in drawers of equal width</td><td><strong>Grouped table</strong>: <code>Range</code>, <code>h</code> rounded <strong>up</strong>, <strong>boundaries</strong></td></tr></tbody></table>
+<p>Two props stand by Board 3. A <strong>halo</strong> of half a unit around every class limit, which gives the <strong>boundaries</strong> (±0.5, or ±0.05 for one decimal). And a <strong>lift that only goes up</strong>, which is the reminder to round <code>h</code> <strong>up</strong>.</p>
+<p><em>Hook:</em> a class from 52 to 62 is <strong>eleven</strong> wide, because width is measured between boundaries, not limits.</p>
+<h3>Room 5: The window with three drawings</h3>
+<p>Three drawings taped to the glass.</p>
+<table><thead><tr><th>Object</th><th>Idea</th></tr></thead><tbody><tr><td><strong>Window panes</strong> that touch</td><td><strong>Histogram</strong>: bars on boundaries, touching, height = <code>f</code></td></tr><tr><td><strong>String</strong> between pegs at the pane centers</td><td><strong>Frequency polygon</strong>: dots at midpoints, closed at the ends; good for overlays</td></tr><tr><td>A <strong>staircase that never goes down</strong></td><td><strong>Ogive</strong>: points at <strong>upper</strong> boundaries, <code>CF</code>, ends at <code>n</code>; read for medians and percentiles</td></tr></tbody></table>
+<p><em>Hook:</em> the staircase counts only once you reach the <strong>top</strong> of a step, so use the upper boundary.</p>
+<h3>Room 6: The scale by the till</h3>
+<p>A seesaw, a shelf of sorted tins, and one tin with a dented lid.</p>
+<table><thead><tr><th>Object</th><th>Idea</th></tr></thead><tbody><tr><td>The <strong>seesaw</strong></td><td><strong>Mean</strong>: the balance point; deviations add to 0; a heavy far-away weight drags it</td></tr><tr><td>The <strong>middle tin</strong> on the sorted shelf</td><td><strong>Median</strong>: half the values on each side; unmoved by extremes</td></tr><tr><td>The <strong>dented tin</strong>, handled the most</td><td><strong>Mode</strong>: the most frequent value; may be several, or none</td></tr></tbody></table>
+<p><em>Hook:</em> mean above median means a tail on the <strong>right</strong>. The seesaw tips toward the heavy weight.</p>
+<h3>Room 7: The label shelf</h3>
+<p>A shelf of tins, each with a printed label, and one label crossed out.</p>
+<table><thead><tr><th>Object</th><th>Idea</th></tr></thead><tbody><tr><td>The <strong>crossed-out &quot;Typical score: 75&quot;</strong></td><td>One number can describe <strong>nobody</strong> when the data have two clumps</td></tr><tr><td>A tin that says <strong>&quot;Divides opinion&quot;</strong></td><td>When there is no single middle, <strong>describe the clumps</strong></td></tr></tbody></table>
+<p><em>Hook:</em> before you print a number, look at the picture.</p>
+<h3>Room 8: The pavement outside</h3>
+<p>A handcart parked on Kettle Street, with a ball of string running from the cart to each customer&#x27;s door.</p>
+<table><thead><tr><th>Object</th><th>Idea</th></tr></thead><tbody><tr><td>The <strong>cart</strong></td><td>The one stand-in for the whole crowd: the middle</td></tr><tr><td>String that counts <strong>only who is at the door</strong></td><td><strong>Mode</strong></td></tr><tr><td>String where <strong>a block is a block</strong></td><td><strong>Median</strong>: least total walking, half the heads each side</td></tr><tr><td>String where <strong>long walks hurt far more</strong></td><td><strong>Mean</strong>: least squared walking, the balance point</td></tr><tr><td>The <strong>leftover string</strong> coiled on the cart</td><td><strong>Spread</strong>: variance and SD with the mean, IQR with the median</td></tr><tr><td>One house with a <strong>very long string</strong></td><td>Why the mean and SD <strong>shout</strong> at one far value</td></tr><tr><td>Two cartloads, <strong>n</strong> and <strong>n − 1</strong></td><td>Everyone: divide by <code>n</code>. A sample: divide by <code>n − 1</code></td></tr></tbody></table>
+<p><em>Hook:</em> mean, median and mode are not three formulas. They are one question: <strong>how much should a long walk hurt?</strong></p>
+<h3>Room 9: The scoreboard by the till</h3>
+<p>Two exam results taped to the till, and two rulers hanging beside them.</p>
+<table><thead><tr><th>Object</th><th>Idea</th></tr></thead><tbody><tr><td>A <strong>queue</strong> at the door</td><td><strong>Percentile rank</strong>: the share of the crowd below you</td></tr><tr><td>A <strong>tape measure marked in SD steps</strong></td><td><strong>z-score</strong>: <code>(x − mean) / SD</code>, distance in units of spread</td></tr><tr><td>A <strong>box with a line and two whiskers</strong></td><td><strong>Box plot</strong>: Q1, median, Q3, and the fences at 1.5 × IQR</td></tr><tr><td>The <strong>staircase</strong> from Room 5, with four marks</td><td>The box plot <strong>is</strong> the ogive, kept at its landmarks</td></tr></tbody></table>
+<p><em>Hook:</em> a score has no position without its crowd. <strong>Histogram first, to look. Box plot second, to compare.</strong></p>
+<h3>Upstairs: the chance wing (Rooms 10 to 18)</h3>
+<p>The same walk, one floor up. Each room is one part of the series, with one object to remember and one question to carry in.</p>
+<table><thead><tr><th>Room</th><th>Part</th><th>The object</th><th>The idea</th><th>The question to carry</th></tr></thead><tbody><tr><td>10 · The Lucky Roll</td><td><a href="../../../../fields/data-science/probability-statistics/probability/counting-and-conditioning/">7</a></td><td>A <strong>grid of 36 ways</strong> by the till</td><td>Probability is the share of the equally likely ways. Shaded cells are an event, the overlap cell is counted once, and a rectangle means independent</td><td>Why did Ravi&#x27;s 11/36 overcount?</td></tr><tr><td>11 · The Alarm Bell</td><td><a href="../../../../fields/data-science/probability-statistics/probability/counting-and-conditioning/">8</a></td><td>A <strong>tree of 100,000 tins</strong></td><td>Conditional probability shrinks the crowd to the positives and counts again. &quot;99% accurate&quot; is P(positive given bad), not P(bad given positive)</td><td>Which crowd are you counting inside?</td></tr><tr><td>12 · The Lucky Tin</td><td><a href="../../../../fields/data-science/probability-statistics/probability/expectation-binomial-poisson/">9</a></td><td>A <strong>card bag</strong> with a prize table</td><td>A random variable is a number on each outcome. Expected value is the seesaw again, weighted by probability</td><td>The expected prize is 4.5 and no card says 4.5</td></tr><tr><td>13 · Coins and Calls</td><td><a href="../../../../fields/data-science/probability-statistics/probability/expectation-binomial-poisson/">10</a></td><td><strong>Ten customers</strong> choosing, and a <strong>phone</strong> ringing</td><td>A distribution is a recipe for who gets how much probability. Binomial counts yeses, Poisson counts events in a window</td><td>Three is the average, not the answer</td></tr><tr><td>14 · The Bell Curve</td><td><a href="../../../../fields/data-science/probability-statistics/probability/the-bell-curve/">11</a></td><td><strong>Bags of tea</strong> never exactly 100 g</td><td>Many small nudges add up to a bell. Probability is area, and the z-score is one ruler for every bell</td><td>Is the average of ten bags also a bell?</td></tr><tr><td>15 · The Thousand Sips</td><td><a href="../../../../fields/data-science/probability-statistics/inference/averages-and-intervals/">12</a></td><td>A <strong>pot</strong> sipped again and again</td><td>An average is itself random. The pile of sips is the sampling distribution, and its spread is <code>σ / √n</code></td><td>Which pile is narrower, 2 cups or 30?</td></tr><tr><td>16 · The Net</td><td><a href="../../../../fields/data-science/probability-statistics/inference/averages-and-intervals/">13</a></td><td>A <strong>net</strong> over a fixed target</td><td>A confidence interval is the estimate plus or minus a margin. The 95% describes the method, not one net</td><td>Narrow is not the same as right</td></tr><tr><td>17 · The Courtroom</td><td><a href="../../../../fields/data-science/probability-statistics/inference/the-courtroom-for-numbers/">14</a></td><td>A <strong>judge</strong> who presumes luck</td><td>The null is &quot;luck only&quot;, and the p-value is how often luck matches the evidence</td><td>Could plain luck do this?</td></tr><tr><td>18 · The Scatter Plot Over the Till</td><td><a href="../../../../fields/data-science/probability-statistics/inference/two-things-moving-together/">15</a></td><td>A <strong>scatter plot</strong> and a <strong>line</strong></td><td>Correlation is paired z-scores agreeing. The regression line is least squared walking again</td><td>The number is a summary, the picture is the crowd</td></tr></tbody></table>
+<ul><li>* *</li></ul>
+<h2>Definitions at a glance</h2>
+<h3>Where data comes from</h3>
+<table><thead><tr><th>Term</th><th>Definition</th><th>Page</th></tr></thead><tbody><tr><td><strong>Statistics</strong></td><td>The practice of collecting, organizing, summarizing and interpreting data</td><td><a href="https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/fields/data-science/probability-statistics/describing-data/samples-data-types-and-tables.md">1</a></td></tr><tr><td><strong>Descriptive statistics</strong></td><td>Summarizing the data you have</td><td>1</td></tr><tr><td><strong>Inferential statistics</strong></td><td>Using a sample to make a claim about a larger group</td><td>1</td></tr><tr><td><strong>Population</strong> (<code>N</code>)</td><td>The complete group you want to know about</td><td>1</td></tr><tr><td><strong>Sample</strong> (<code>n</code>)</td><td>The part of the population you actually observe</td><td>1</td></tr><tr><td><strong>Parameter</strong> (e.g. <code>μ</code>)</td><td>A true value for the whole population</td><td>1</td></tr><tr><td><strong>Statistic</strong> (e.g. <code>x̄</code>)</td><td>A value computed from a sample</td><td>1</td></tr><tr><td><strong>Sampling frame</strong></td><td>The actual list you draw from</td><td>1</td></tr><tr><td><strong>Census</strong></td><td>Measuring the entire population</td><td>1</td></tr><tr><td><strong>Bias</strong></td><td>A systematic tilt in who ends up in the sample, which does not shrink with sample size</td><td>1</td></tr><tr><td><strong>Simple random sample</strong></td><td>Every member has an equal chance of selection</td><td>1</td></tr><tr><td><strong>Systematic sample</strong></td><td>Step <code>k = N / n</code>, random start, then every k-th member</td><td>1</td></tr><tr><td><strong>Stratified sample</strong></td><td>Divide into different groups (strata), sample from <strong>every</strong> group</td><td>1</td></tr><tr><td><strong>Cluster sample</strong></td><td>Divide into similar groups (clusters), pick <strong>some</strong> and survey everyone in them</td><td>1</td></tr></tbody></table>
+<h3>Kinds of data and how to count them</h3>
+<table><thead><tr><th>Term</th><th>Definition</th><th>Page</th></tr></thead><tbody><tr><td><strong>Qualitative</strong></td><td>Data in categories</td><td><a href="https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/fields/data-science/probability-statistics/describing-data/samples-data-types-and-tables.md">2</a></td></tr><tr><td><strong>Nominal</strong></td><td>Categories with no natural order</td><td>2</td></tr><tr><td><strong>Ordinal</strong></td><td>Categories with an order, but unmeasured gaps</td><td>2</td></tr><tr><td><strong>Quantitative</strong></td><td>Numbers that count or measure</td><td>2</td></tr><tr><td><strong>Discrete</strong></td><td>Counted values (whole numbers)</td><td>2</td></tr><tr><td><strong>Continuous</strong></td><td>Measured values; any value in a range is possible, recorded rounded</td><td>2</td></tr><tr><td><strong>Frequency</strong> (<code>f</code>)</td><td>How many times a value, or a value in a class, occurs</td><td>2</td></tr><tr><td><strong>Relative frequency</strong></td><td><code>f / n</code>, the fraction of the data</td><td>2</td></tr><tr><td><strong>Cumulative frequency</strong> (<code>CF</code>)</td><td>A running total: how many values are at or below this one</td><td>2</td></tr><tr><td><strong>Stem and leaf</strong></td><td>A table that keeps every value: the leading digits are the stem, the last digit is the leaf</td><td>2</td></tr><tr><td><strong>Range</strong></td><td>Largest value minus smallest</td><td>2</td></tr><tr><td><strong>Class width</strong> (<code>h</code>)</td><td><code>Range / k</code>, rounded <strong>up</strong>; the distance between a class&#x27;s boundaries</td><td>2</td></tr><tr><td><strong>Class limits</strong></td><td>The smallest and largest values that can be recorded in a class</td><td>2</td></tr><tr><td><strong>Class boundaries</strong></td><td>Limits ± half the measurement unit; neighboring classes share them</td><td>2</td></tr><tr><td><strong>Midpoint</strong> (<code>M</code>)</td><td><code>(lower boundary + upper boundary) / 2</code></td><td><a href="https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/fields/data-science/probability-statistics/describing-data/pictures-and-the-middle.md">3</a></td></tr></tbody></table>
+<h3>Pictures</h3>
+<table><thead><tr><th>Term</th><th>Definition</th><th>Page</th></tr></thead><tbody><tr><td><strong>Histogram</strong></td><td>Touching bars on class boundaries; height is frequency</td><td>3</td></tr><tr><td><strong>Frequency polygon</strong></td><td>Dots at (midpoint, frequency), joined and closed at the ends</td><td>3</td></tr><tr><td><strong>Ogive</strong> (cumulative frequency curve)</td><td>Points at (upper boundary, cumulative frequency), never decreasing, ending at <code>n</code></td><td>3</td></tr><tr><td><strong>Frequency density</strong></td><td>Frequency divided by class width; needed when class widths differ</td><td>3</td></tr></tbody></table>
+<h3>The middle</h3>
+<table><thead><tr><th>Term</th><th>Definition</th><th>Page</th></tr></thead><tbody><tr><td><strong>Mean</strong> (<code>x̄</code>, <code>μ</code>)</td><td>The sum divided by the count; the balance point</td><td><a href="https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/fields/data-science/probability-statistics/describing-data/pictures-and-the-middle.md">4</a></td></tr><tr><td><strong>Deviation</strong></td><td>A value minus the mean; deviations sum to 0</td><td>4</td></tr><tr><td><strong>Weighted average</strong></td><td>A mean where each value counts according to its frequency</td><td>4</td></tr><tr><td><strong>Median</strong></td><td>The middle value when sorted; half the data on each side</td><td>4</td></tr><tr><td><strong>Resistant</strong></td><td>Not moved much by extreme values (the median is, the mean is not)</td><td>4</td></tr><tr><td><strong>Mode</strong></td><td>The most frequent value; there may be several, or none</td><td>4</td></tr><tr><td><strong>Modal class</strong></td><td>The class with the highest frequency in a grouped table</td><td>4</td></tr><tr><td><strong>Bimodal / multimodal</strong></td><td>Two / more than two modes</td><td>4</td></tr><tr><td><strong>Right tail</strong> (right-skewed)</td><td>A few large values stretch the data to the right; typically mean &gt; median</td><td>4</td></tr><tr><td><strong>Left tail</strong> (left-skewed)</td><td>A few small values stretch it to the left; typically mean &lt; median</td><td>4</td></tr></tbody></table>
+<h3>The spread</h3>
+<table><thead><tr><th>Term</th><th>Definition</th><th>Page</th></tr></thead><tbody><tr><td><strong>Variance</strong> (<code>σ²</code>, <code>s²</code>)</td><td>The average squared distance from the mean. Divide by <code>n</code> for everyone, <code>n − 1</code> for a sample</td><td><a href="../../../../fields/data-science/probability-statistics/describing-data/spread-and-position/">5</a></td></tr><tr><td><strong>Standard deviation</strong> (<code>σ</code>, <code>s</code>)</td><td>The square root of the variance, back in the data&#x27;s own units</td><td>5</td></tr><tr><td><strong>Mean absolute deviation</strong></td><td>The average plain distance from the median</td><td>5</td></tr><tr><td><strong>Quartiles</strong> (<code>Q1</code>, <code>Q3</code>)</td><td>The values a quarter and three quarters of the data sit below</td><td>5</td></tr><tr><td><strong>IQR</strong></td><td><code>Q3 − Q1</code>, the width of the middle half</td><td>5</td></tr><tr><td><strong>Range</strong></td><td>Largest minus smallest: set by the two most extreme values</td><td>5</td></tr></tbody></table>
+<h3>Position</h3>
+<table><thead><tr><th>Term</th><th>Definition</th><th>Page</th></tr></thead><tbody><tr><td><strong>Percentile rank</strong></td><td><code>(below + 0.5 × equal) / n × 100</code>: the share of the crowd below a value</td><td><a href="../../../../fields/data-science/probability-statistics/describing-data/spread-and-position/">6</a></td></tr><tr><td><strong>z-score</strong></td><td><code>(x − mean) / SD</code>: how many SDs a value sits above or below the mean</td><td>6</td></tr><tr><td><strong>Box plot</strong></td><td>Min, Q1, median, Q3, max, with whiskers to the last point inside the fences</td><td>6</td></tr><tr><td><strong>Fences</strong></td><td><code>Q1 − 1.5 × IQR</code> and <code>Q3 + 1.5 × IQR</code>; points beyond are drawn alone</td><td>6</td></tr></tbody></table>
+<h3>Chance (parts 7 to 11)</h3>
+<table><thead><tr><th>Term</th><th>Definition</th><th>Part</th></tr></thead><tbody><tr><td><strong>Sample space</strong></td><td>The list of all possible outcomes</td><td><a href="../../../../fields/data-science/probability-statistics/probability/counting-and-conditioning/">7</a></td></tr><tr><td><strong>Event</strong></td><td>A group of outcomes from that list</td><td>7</td></tr><tr><td><strong>Complement</strong></td><td>Everything the event is not; &quot;at least one&quot; is 1 minus &quot;none&quot;</td><td>7</td></tr><tr><td><strong>Independent</strong></td><td>Knowing one tells you nothing about the other</td><td>7</td></tr><tr><td><strong>Conditional probability</strong></td><td><code>P(A given B)</code>: shrink the crowd to B, count A inside it</td><td><a href="../../../../fields/data-science/probability-statistics/probability/counting-and-conditioning/">8</a></td></tr><tr><td><strong>Base rate</strong></td><td>How common the thing is before any clue</td><td>8</td></tr><tr><td><strong>Natural frequencies</strong></td><td>Whole-number counts in a tree instead of percentages</td><td>8</td></tr><tr><td><strong>Bayes&#x27; rule</strong></td><td>The flip from <code>P(B given A)</code> to <code>P(A given B)</code></td><td>8</td></tr><tr><td><strong>Random variable</strong></td><td>A number attached to each way things could turn out</td><td><a href="../../../../fields/data-science/probability-statistics/probability/expectation-binomial-poisson/">9</a></td></tr><tr><td><strong>Expected value</strong></td><td>The balance point of the values weighted by probability, <code>Σ x × p</code></td><td>9</td></tr><tr><td><strong>Probability table</strong></td><td>Each possible value with its probability; they sum to 1</td><td>9</td></tr><tr><td><strong>Distribution</strong></td><td>A table of how much probability each value gets</td><td><a href="../../../../fields/data-science/probability-statistics/probability/expectation-binomial-poisson/">10</a></td></tr><tr><td><strong>Binomial</strong></td><td>The count of yeses in <code>n</code> independent tries with the same <code>p</code></td><td>10</td></tr><tr><td><strong>Poisson</strong></td><td>The count of events in a window at a constant rate</td><td>10</td></tr><tr><td><strong>Normal curve</strong></td><td>A bell set by two dials, the mean and the SD; total area 1</td><td><a href="../../../../fields/data-science/probability-statistics/probability/the-bell-curve/">11</a></td></tr><tr><td><strong>Density</strong></td><td>The height of the curve, not a probability; probability is area</td><td>11</td></tr><tr><td><strong>Standard normal</strong></td><td>The bell with mean 0 and SD 1; every normal becomes it through z</td><td>11</td></tr><tr><td><strong>68-95-99.7 rule</strong></td><td>The share within 1, 2 and 3 SD: 68.27%, 95.45%, 99.73%</td><td>11</td></tr></tbody></table>
+<h3>From a sample to a claim (parts 12 to 14)</h3>
+<table><thead><tr><th>Term</th><th>Definition</th><th>Part</th></tr></thead><tbody><tr><td><strong>Sampling distribution</strong></td><td>The averages you would get from many samples of size <code>n</code></td><td><a href="../../../../fields/data-science/probability-statistics/inference/averages-and-intervals/">12</a></td></tr><tr><td><strong>Standard error</strong></td><td>The spread of sample averages, <code>σ / √n</code></td><td>12</td></tr><tr><td><strong>Law of large numbers</strong></td><td>Averages converge on the mean of what you draw from</td><td>12</td></tr><tr><td><strong>Central limit theorem</strong></td><td>Sample averages approach a bell, whatever the crowd looks like</td><td>12</td></tr><tr><td><strong>Confidence interval</strong></td><td>Estimate <code>± z × SE</code>: an honest &quot;give or take&quot;</td><td><a href="../../../../fields/data-science/probability-statistics/inference/averages-and-intervals/">13</a></td></tr><tr><td><strong>Confidence level (95%)</strong></td><td>The share of repeated nets that catch the truth: a property of the method</td><td>13</td></tr><tr><td><strong>Bootstrap</strong></td><td>Resample your sample with replacement, take the middle 95% of the means</td><td>13</td></tr><tr><td><strong>Null hypothesis</strong></td><td>The &quot;luck only&quot; assumption: the labels mean nothing</td><td><a href="../../../../fields/data-science/probability-statistics/inference/the-courtroom-for-numbers/">14</a></td></tr><tr><td><strong>p-value</strong></td><td>How often luck alone gives a result at least this extreme</td><td>14</td></tr><tr><td><strong>False alarm / missed effect</strong></td><td>Rejecting a true null / keeping a false one</td><td>14</td></tr><tr><td><strong>p-hacking</strong></td><td>Testing many things and reporting the one that &quot;worked&quot;</td><td>14</td></tr></tbody></table>
+<h3>Two columns (part 15)</h3>
+<table><thead><tr><th>Term</th><th>Definition</th><th>Part</th></tr></thead><tbody><tr><td><strong>Scatter plot</strong></td><td>One dot per pair; draw it before computing <code>r</code></td><td><a href="../../../../fields/data-science/probability-statistics/inference/two-things-moving-together/">15</a></td></tr><tr><td><strong>Correlation</strong> (<code>r</code>)</td><td>The average product of paired z-scores, from −1 to +1; straight-line togetherness only</td><td>15</td></tr><tr><td><strong>Residual</strong></td><td>Actual minus the line: the leftover</td><td>15</td></tr><tr><td><strong>Regression line</strong></td><td>The line with the smallest total squared residual</td><td>15</td></tr></tbody></table>
+<ul><li>* *</li></ul>
+<h2>The formula sheet</h2>
+<pre><code>SAMPLING     systematic step: k = N / n          stratified: n_h = n × N_h / N
+
+FREQUENCIES  RF = f / n         percentage = RF × 100        CF_k = f_1 + ... + f_k
+             checks:  Σf = n     ΣRF = 1     last CF = n
+
+CLASSES      Range = largest − smallest         h = Range / k   (round UP)
+             boundary = limit ± half the measurement unit  (0.5, 0.05, 0.005, ...)
+             class width = upper boundary − lower boundary = h
+             midpoint M = (lower boundary + upper boundary) / 2
+             number of classes (one rule of thumb, Sturges): k ≈ 1 + 3.322 × log10(n)
+
+MEAN         ungrouped:  x̄ = Σx / n
+             grouped:    x̄ = Σ(f × M) / Σf          (an estimate)
+
+MEDIAN       sort first.  n odd: value at position (n + 1) / 2
+                          n even: average of positions n/2 and n/2 + 1
+             grouped:  median class = first class with CF ≥ N/2
+                       median = L + ((N/2 − cf) / f) × h
+                       L = lower boundary of median class, cf = CF of class before it,
+                       f = its frequency, h = class width
+
+MODE         most frequent value; for grouped data, the modal class
+
+SHAPE        mean &gt; median → right tail     mean &lt; median → left tail     similar → roughly symmetric
+
+SPREAD       variance = Σ(x − mean)² / n   (everyone)   or   / (n − 1)   (a sample)
+             SD = √variance          IQR = Q3 − Q1          range = max − min
+             mean goes with SD, median goes with IQR
+
+POSITION     percentile rank = (below + 0.5 × equal) / n × 100
+             z = (x − mean) / SD
+             fences: Q1 − 1.5 × IQR   and   Q3 + 1.5 × IQR
+             quartile methods differ between tools: pick one, say which
+
+CHANCE       P(event) = ways / all ways (equally likely only)
+             P(A or B) = P(A) + P(B) − P(A and B)      P(A and B) = P(A) × P(B) if independent
+             P(A given B) = count(A and B) / count(B)
+             P(A given B) = P(B given A) × P(A) / P(B)
+             E[X] = Σ x × p       E[aX + b] = a E[X] + b       E[X + Y] = E[X] + E[Y]
+             binomial: P(k) = C(n,k) p^k (1−p)^(n−k)    mean np    variance np(1−p)
+             Poisson:  P(k) = e^−λ λ^k / k!             mean = variance = λ
+             normal:   z = (x − mean) / SD     probability = area
+
+FROM SAMPLE  SE = σ / √n   (4× the data halves it)      CI = estimate ± z × SE   (z = 1.96 for 95%)
+TO CLAIM     small samples use t instead of z           p small = luck is a poor explanation
+             P(at least one false alarm in k tests) = 1 − 0.95^k
+
+TWO COLUMNS  r = mean of (z_x × z_y)      slope = r × SD(y) / SD(x)      r² = share of squared miss removed</code></pre>
+<ul><li>* *</li></ul>
+<h2>The mistakes that cost the most</h2>
+<table><thead><tr><th>Mistake</th><th>Where it lives</th><th>The fix</th></tr></thead><tbody><tr><td>Averaging a nominal column or a column of labels</td><td>Room 3</td><td>Ask what the column <em>means</em> before computing</td></tr><tr><td>Mixing up stratified and cluster</td><td>Room 2</td><td>Every group, some people / some groups, every person</td></tr><tr><td>Trusting a huge sample that was not chosen fairly</td><td>Room 1</td><td>Size cannot cure bias</td></tr><tr><td>Frequencies that do not add to <code>n</code></td><td>Room 4</td><td>Recount</td></tr><tr><td>Computing class width from limits</td><td>Room 4</td><td>Use <strong>boundaries</strong></td></tr><tr><td>Rounding <code>h</code> down</td><td>Room 4</td><td>Round <strong>up</strong></td></tr><tr><td>Plotting an ogive at midpoints or lower boundaries</td><td>Room 5</td><td>Use <strong>upper boundaries</strong></td></tr><tr><td>Leaving gaps between histogram bars for continuous data</td><td>Room 5</td><td>Let them touch</td></tr><tr><td>Treating a grouped mean or median as exact</td><td>Room 6</td><td>They are estimates</td></tr><tr><td>Giving one middle for data with two clumps</td><td>Room 7</td><td>Look at the picture, describe the clumps</td></tr><tr><td>Dividing by <code>n</code> for a sample, or <code>n − 1</code> for everyone</td><td>Room 8</td><td>Everyone: <code>n</code>. A sample: <code>n − 1</code></td></tr><tr><td>Quoting SD for data with one wild value</td><td>Room 8</td><td>Use the median and IQR, or fix the value</td></tr><tr><td>Comparing raw scores from different crowds</td><td>Room 9</td><td>Convert to z-scores or percentile ranks</td></tr><tr><td>Trusting a box plot to show two clumps</td><td>Room 9</td><td>Draw the histogram first</td></tr><tr><td>Adding probabilities of overlapping events</td><td>Room 10</td><td>Subtract the overlap</td></tr><tr><td>Treating <code>P(positive given sick)</code> as <code>P(sick given positive)</code></td><td>Room 11</td><td>Rebuild the tree, count only the positives</td></tr><tr><td>&quot;Expected&quot; means &quot;most likely&quot;</td><td>Room 12</td><td>It is the balance point; no outcome need equal it</td></tr><tr><td>Trusting Poisson without checking variance ≈ mean</td><td>Room 13</td><td>Compare the variance with the mean</td></tr><tr><td>Using the bell on a two-clump crowd</td><td>Room 14</td><td>Draw the histogram first</td></tr><tr><td>&quot;A bigger sample fixes bias&quot;</td><td>Room 15</td><td>It shrinks chance wobble, never bias</td></tr><tr><td>&quot;95% chance the truth is in this interval&quot;</td><td>Room 16</td><td>The 95% describes the method, not one interval</td></tr><tr><td>&quot;p = 0.03 means a 3% chance the null is true&quot;</td><td>Room 17</td><td><code>p</code> assumes the null: it is data given the null</td></tr><tr><td>&quot;Correlated, so one causes the other&quot;</td><td>Room 18</td><td>Look for a hidden third thing, and draw it</td></tr></tbody></table>
+<ul><li>* *</li></ul>
+<h2>Walk the shop with your eyes closed</h2>
+<p>Close the page and answer. Each answer is in one room.</p>
+<ol><li>Which object tells you that <em>stratified</em> means &quot;every group, some people&quot;?</li><li>What is the half-unit halo for data recorded to one decimal place?</li><li>Why does the staircase use the <strong>upper</strong> boundary?</li><li>Mean above median: which way is the tail, and which tool tips toward it?</li><li>A column of digits that you cannot sensibly add: what is it, and what hangs on the notebook cover?</li><li>Two clumps and one printed number: which room, and what does the new label say?</li><li>Which string makes the mean, and which makes the median?</li><li>84 on an easy exam or 61 on a brutal one: which ruler hangs by the till, and which score wins?</li></ol>
+<p><strong>Answers.</strong> 1. The three colored boxes in the cabinet. 2. 0.05, so a limit of 12.4 gets a boundary of 12.35 or 12.45. 3. The count at a step only becomes true at the top of the class, so a cumulative count belongs at the upper boundary. 4. To the right, the seesaw. 5. A nominal label, the loyalty-card number. 6. Room 7: &quot;Divides opinion&quot;, with the clumps described. 7. The string where long walks hurt far more is the mean, and the string where a block is a block is the median (Room 8). 8. The tape measure marked in SD steps (Room 9): <code>z = 2.00</code> for the 84 and <code>z = 2.75</code> for the 61, so the 61 wins.</p>
+<ul><li>* *</li></ul>
+<h2>Back to the story</h2>
+<p>On Tuesday morning Ravi leans over the counter. He has a column of numbers on his phone, and he wants to know what the typical value is.</p>
+<p>Tala does not reach for the Average button. She walks the shop in her head, quickly, from the doorstep to the label shelf. <em>Who was asked? How was the list drawn? What kind of column is this? What does the picture look like? Is there a tail? Are there two clumps?</em></p>
+<p>&quot;Send me the numbers,&quot; she says. &quot;I want to see the shape before I give you a number.&quot;</p>
+<p>Mira, wiping a cup behind the counter, does not say anything. She does not have to. The first week of anyone&#x27;s training is learning the words. The second is learning which room each one lives in, and the third is learning to ask the room&#x27;s question before reaching for the formula.</p>
+<p>The shop has an upstairs now: the rooms for chance, from the grid of ways to the scatter plot over the till. It is built from the same bricks as downstairs: the expected value is the seesaw again, the z-score finally meets the bell, and the regression line is the least squared walking of Room 8.</p>
+<p><a href="../../../../#/fields/data-science/probability-statistics/the-map-of-leaf-and-kettle">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/kubernetes/kubernetes-in-five-nouns/">
+<meta name="description" content="The five Kubernetes nouns (node, pod, namespace, event, API server) explained through HPC analogies, for someone who just inherited a cluster.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster">
+<meta property="og:description" content="The five Kubernetes nouns (node, pod, namespace, event, API server) explained through HPC analogies, for someone who just inherited a cluster.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/kubernetes/kubernetes-in-five-nouns/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/kubernetes/kubernetes-in-five-nouns/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/devops/kubernetes/kubernetes-in-five-nouns"></script>
+<main>
+<h1>Kubernetes in Five Nouns, Explained Like You Just Inherited the Cluster</h1>
+<p><em>The five Kubernetes nouns (node, pod, namespace, event, API server) explained through HPC analogies, for someone who just inherited a cluster.</em></p>
+<p>Every Kubernetes story starts the same way. Someone says &quot;just check the pods in the right namespace,&quot; and you nod confidently, like a person who knows what a pod is and which namespace is the right one. This page exists so that the nodding becomes honest.</p>
+<p>You need exactly five nouns. Learn them and most <code>kubectl</code> output stops looking like a ransom note.</p>
+<hr>
+<h2>The one-sentence version</h2>
+<p><strong>Kubernetes is a system where you declare what you want, and a crowd of small control loops keeps nagging the machines until reality matches.</strong></p>
+<p>You don&#x27;t say &quot;start this container on that server.&quot; You say &quot;I want two copies of this web server running,&quot; and Kubernetes figures out where, starts them, and replaces them when they die. Think of it as a landlord with opinions: you hand over the lease, and from then on it&#x27;s the landlord&#x27;s problem to keep the lights on in every flat.</p>
+<p>The official docs say the same thing less colourfully. Controllers create Pods from a template and manage them on your behalf, which is where the auto-healing comes from.</p>
+<hr>
+<h2>The five nouns at a glance</h2>
+<table><thead><tr><th>Noun</th><th>What it really is</th><th>Where you&#x27;ll see it</th></tr></thead><tbody><tr><td><strong>Node</strong></td><td>A machine (VM or bare metal) that runs your containers</td><td><code>kubectl get nodes</code></td></tr><tr><td><strong>Pod</strong></td><td>The smallest thing Kubernetes schedules: one or more containers that live and die together</td><td><code>kubectl get pods</code></td></tr><tr><td><strong>Namespace</strong></td><td>A folder for resources, so teams don&#x27;t trip over each other&#x27;s names</td><td><code>kubectl get ns</code></td></tr><tr><td><strong>Event</strong></td><td>A sticky note the cluster leaves when something happens</td><td><code>kubectl get events</code></td></tr><tr><td><strong>API server</strong></td><td>The front desk. Every request goes through it</td><td><code>kubectl</code> itself</td></tr></tbody></table>
+<p>Now the long version of each, with the parts the cheat sheets skip.</p>
+<hr>
+<h2>1. Node: the machine that does the actual work</h2>
+<p>A node is a worker machine. It has CPU, memory and, if you&#x27;re lucky, GPUs. Each node runs a <strong>kubelet</strong>, an agent that talks to the control plane and keeps the assigned containers running.</p>
+<p>Two details that save you an afternoon:</p>
+<ul><li><strong>Nodes are not inside any namespace.</strong> They belong to the whole cluster. If you run <code>kubectl get nodes -n team-a</code> and wonder why the flag did nothing, this is why. You can confirm which resource types are namespaced with <code>kubectl api-resources --namespaced=false</code>.</li><li><strong>The kubelet only manages containers that Kubernetes created.</strong> If you start a container by hand with another tool on a node, the kubelet will ignore it. It&#x27;s a landlord, not a bouncer.</li></ul>
+<pre><code class="language-bash">kubectl get nodes -o wide
+kubectl describe node &lt;node-name&gt;      # read Conditions and Events at the bottom</code></pre>
+<hr>
+<h2>2. Pod: the smallest unit, and not what you&#x27;d guess</h2>
+<p>A Pod is the smallest deployable unit you can create and manage in Kubernetes. Most of the time it wraps a single container, so &quot;pod&quot; and &quot;container&quot; get used as if they were the same word. They aren&#x27;t. A Pod can hold several tightly coupled containers that are scheduled together, and the cluster manages the Pod, not the individual container.</p>
+<p>The part beginners miss: <strong>you will rarely create Pods directly.</strong> The docs say so outright. You create a workload resource (a Deployment, a Job and so on), and its controller creates the Pods for you and replaces them when they die. Pods are disposable by design. If one disappears at 2 AM, that isn&#x27;t an incident, that&#x27;s the system doing its job.</p>
+<pre><code class="language-bash">kubectl get pods -A                    # every pod, every namespace
+kubectl describe pod &lt;pod&gt; -n &lt;ns&gt;     # the Events at the bottom explain most mysteries
+kubectl logs &lt;pod&gt; -n &lt;ns&gt; --previous  # why did the last attempt die?</code></pre>
+<hr>
+<h2>3. Namespace: a folder, not a fortress</h2>
+<p>A namespace is a mechanism for isolating groups of resources within a single cluster. Names only have to be unique inside a namespace, so <code>team-a/web</code> and <code>team-b/web</code> can coexist happily.</p>
+<p>What the documentation is careful to say, and what blog posts often aren&#x27;t:</p>
+<ul><li>Namespaces <strong>cannot be nested</strong>, and each resource lives in exactly one.</li><li>They are a scope for names and a unit for <strong>access rules and quotas</strong>. On their own they are a soft boundary, not a security wall. Real separation comes from RBAC, ResourceQuota and network policy layered on top.</li><li>A fresh cluster starts with a few namespaces, including <code>default</code> and <code>kube-system</code>. For production, the docs suggest not using <code>default</code>.</li><li>The prefix <code>kube-</code> is reserved for Kubernetes system namespaces. Don&#x27;t name yours <code>kube-anything</code>.</li></ul>
+<pre><code class="language-bash">kubectl get ns
+kubectl get pods -n kube-system        # the cluster&#x27;s own machinery</code></pre>
+<hr>
+<h2>4. Event: the sticky notes (with a short memory)</h2>
+<p>When something happens, such as an image failing to pull, a pod failing to schedule or a container getting killed for using too much memory, the cluster leaves an <strong>Event</strong>. Events come in two types, <code>Normal</code> and <code>Warning</code>, and the warnings are where you start looking when something is wrong.</p>
+<p>The catch is that events are short-lived. The API server keeps them for <strong>one hour by default</strong> (the <code>--event-ttl</code> flag on <code>kube-apiserver</code>, which an administrator can change). Come back after lunch and the explanation may be gone.</p>
+<pre><code class="language-bash">kubectl get events -A --field-selector type=Warning
+kubectl get events -n &lt;ns&gt; --sort-by=.lastTimestamp</code></pre>
+<p>Practical rule: if something broke, read the events <strong>first</strong>, before you restart anything. A restart can erase the clue.</p>
+<hr>
+<h2>5. API server: the front desk</h2>
+<p>Everything in a cluster goes through the <strong>kube-apiserver</strong>. It exposes the Kubernetes API and acts as the front end of the control plane. Every <code>kubectl</code> command is, underneath, an HTTP request to it. The scheduler, the controllers and the kubelets all talk to the cluster through the same front desk.</p>
+<p>You can watch it happen. Raise kubectl&#x27;s verbosity and it prints the requests:</p>
+<pre><code class="language-bash">kubectl get pods -n kube-system -v=6
+# I... GET https://&lt;server&gt;:6443/api/v1/namespaces/kube-system/pods?limit=500 200 OK</code></pre>
+<p>The API server is designed to scale horizontally: you can run several instances and balance traffic between them. That detail matters later, when you point monitoring tools at a big cluster and find out the front desk has a queue.</p>
+<hr>
+<h2>Two more words you&#x27;ll meet within the hour</h2>
+<ul><li><strong>kubeconfig</strong> is a YAML file that says which API server to talk to and who you are. Treat it like a house key. A kubeconfig can even tell <code>kubectl</code> to run a helper program to fetch credentials, so only use files from sources you trust.</li><li><strong>RBAC</strong> is the bouncer. It decides whether you may list nodes, or only list pods in <code>team-a</code>. &quot;Forbidden&quot; in <code>kubectl</code> output usually means RBAC said no, not that the cluster is broken. Check with <code>kubectl auth can-i list nodes</code>.</li></ul>
+<hr>
+<h2>The HPC translation table</h2>
+<p>If you come from Slurm, here is the rough mapping. It is a thinking aid, not a one-to-one match:</p>
+<table><thead><tr><th>Kubernetes</th><th>Closest Slurm-world idea</th><th>Where the analogy breaks</th></tr></thead><tbody><tr><td>Node</td><td>Compute node</td><td>Nodes can be added and drained constantly, and Kubernetes expects them to fail</td></tr><tr><td>kubelet</td><td><code>slurmd</code></td><td>The kubelet also manages container lifecycle, not just job launch</td></tr><tr><td>kube-scheduler</td><td>The scheduling half of <code>slurmctld</code></td><td>Default Kubernetes scheduling places each Pod individually, with no fair-share or backfill</td></tr><tr><td>API server</td><td>The RPC front end of <code>slurmctld</code></td><td>It is a REST API that every component and every tool uses</td></tr><tr><td>Pod</td><td>A job&#x27;s tasks, roughly</td><td>A Pod is not a batch job. Workload resources like Jobs sit above it</td></tr><tr><td>Namespace</td><td>An account or project</td><td>A namespace has no fair-share on its own. Quotas are separate objects</td></tr></tbody></table>
+<p>That scheduling row is why HPC sites add queueing systems on top of Kubernetes. The later pages on scale cover that.</p>
+<hr>
+<h2>Try it in two minutes</h2>
+<p>Any cluster works, including a throwaway one:</p>
+<pre><code class="language-bash">kubectl get nodes -o wide          # who is in the cluster?
+kubectl get ns                     # what folders exist?
+kubectl get pods -A                # what is running, everywhere?
+kubectl get events -A --field-selector type=Warning
+kubectl get pods -n kube-system -v=6   # watch the front desk work</code></pre>
+<p>If those five commands make sense to you, you can already read most of the output people paste into incident channels.</p>
+<hr>
+<h2>The one-paragraph takeaway</h2>
+<p>Kubernetes is a landlord: you describe the flat you want, and a set of control loops keeps it that way. <strong>Nodes</strong> are the buildings, <strong>Pods</strong> are the disposable tenants, <strong>Namespaces</strong> are the floors with their own rules and quotas, <strong>Events</strong> are the notes pinned to the door (taken down after about an hour), and the <strong>API server</strong> is the front desk everyone must go through, including the landlord. Know those five and you can follow almost any cluster conversation without nodding politely.</p>
+<hr>
+<h2>References</h2>
+<p>Checked against the official documentation:</p>
+<ul><li><a href="https://kubernetes.io/docs/concepts/overview/components/">Kubernetes Components</a>: control plane, kube-apiserver as the front end, kubelet scope, scale-out of the API server</li><li><a href="https://kubernetes.io/docs/concepts/workloads/pods/">Pods</a>: smallest deployable unit, rarely created directly, workload controllers</li><li><a href="https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/">Namespaces</a>: scope for names, no nesting, reserved <code>kube-</code> prefix, namespaced vs cluster-scoped resources</li><li><a href="https://kubernetes.io/docs/reference/command-line-tools-reference/kube-apiserver/">kube-apiserver reference</a>: <code>--event-ttl</code>, default <code>1h0m0s</code></li><li><a href="https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/">Organizing cluster access using kubeconfig files</a>: kubeconfig structure and the trusted-source warning</li></ul>
+<p>The Slurm comparison table is the author&#x27;s own analogy, not an official mapping.</p>
+<p><a href="../../../../#/fields/devops/kubernetes/kubernetes-in-five-nouns">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

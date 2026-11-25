@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Kill Task Failed: A Murder Mystery With No Body (and One Drained Node)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-cluster-operations/slurm-kill-task-failed/">
+<meta name="description" content="Slurm job death (SIGTERM, KillWait, SIGKILL) fails on uninterruptible sleep, draining nodes. Raising timeouts rarely helps. Debug these with UnkillableStepProgram.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Kill Task Failed: A Murder Mystery With No Body (and One Drained Node)">
+<meta property="og:description" content="Slurm job death (SIGTERM, KillWait, SIGKILL) fails on uninterruptible sleep, draining nodes. Raising timeouts rarely helps. Debug these with UnkillableStepProgram.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-cluster-operations/slurm-kill-task-failed/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-cluster-operations/slurm-kill-task-failed/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/schedulers/slurm-cluster-operations/slurm-kill-task-failed"></script>
+<main>
+<h1>Kill Task Failed: A Murder Mystery With No Body (and One Drained Node)</h1>
+<p><em>Slurm job death (SIGTERM, KillWait, SIGKILL) fails on uninterruptible sleep, draining nodes. Raising timeouts rarely helps. Debug these with UnkillableStepProgram.</em></p>
+<blockquote><p><strong>Part of the [schedulers](/fields/schedulers/slurm-intro.md) directory.</strong> Option names and the kill sequence come from the Slurm documentation and from support tickets and mailing-list threads where SchedMD staff and site admins describe the behavior. Nothing here was run on a live cluster for this page. Scenarios are invented for illustration.</p></blockquote>
+<ul><li>* *</li></ul>
+<h2>The call comes in at 3 a.m.</h2>
+<p>You run <code>sinfo -R</code> and find a node that has been quietly drained overnight:</p>
+<pre><code>REASON               USER      TIMESTAMP           NODELIST
+Kill task failed     root      2026-11-04T03:12:09 gpu-node-17</code></pre>
+<p>The job is gone. The queue moved on. <code>slurmctld</code> has nothing to say, because from its point of view nothing went wrong in the controller. The node has simply declared that it can no longer be trusted, and Slurm took it at its word.</p>
+<p>Where did the job go? That is the mystery. The honest answer is that it may not have gone anywhere. One of its processes might still be on that node, alive, deaf and dangerous.</p>
+<ul><li>* *</li></ul>
+<h2>How a job is supposed to die</h2>
+<p>Cancelling a job, hitting a time limit, or being preempted all end in the same sequence. SchedMD staff describe it in a support ticket, and the pieces line up like this:</p>
+<pre><code class="language-mermaid">flowchart LR
+    A[&quot;Cancel, time limit&lt;br/&gt;or preemption&quot;] --&gt; B[&quot;SIGCONT + SIGTERM&lt;br/&gt;&#x27;please wrap up&#x27;&quot;]
+    B --&gt; C{&quot;Wait KillWait&lt;br/&gt;(30 s on the sites I read)&quot;}
+    C --&gt; D[&quot;SIGKILL&lt;br/&gt;&#x27;no, really&#x27;&quot;]
+    D --&gt; E{&quot;Wait UnkillableStepTimeout&quot;}
+    E --&gt;|processes gone| F[&quot;Job ends, node carries on&quot;]
+    E --&gt;|something survived| G[&quot;Step terminated:&lt;br/&gt;node set to DRAIN&lt;br/&gt;&#x27;Kill task failed&#x27;&quot;]</code></pre>
+<p>Two timers, two different questions:</p>
+<table><thead><tr><th>Timer</th><th>Question it answers</th><th>Seen in practice</th></tr></thead><tbody><tr><td><code>KillWait</code></td><td>How long do we wait between the polite request and <code>SIGKILL</code>?</td><td>30 seconds on the clusters in the threads I read</td></tr><tr><td><code>UnkillableStepTimeout</code></td><td>After <code>SIGKILL</code>, how long before we decide a process is unkillable?</td><td>60 seconds in older threads; one site on 25.05 shows 300</td></tr></tbody></table>
+<p>Defaults have moved between versions and many sites change them, so ask your own cluster:</p>
+<pre><code class="language-bash">scontrol show config | grep -Ei &#x27;killwait|unkillable&#x27;</code></pre>
+<p>The <code>slurmstepd</code> log line you are looking for says the step was terminated &quot;due to job not ending with signals&quot;. That is the node reporting, in a slightly Victorian tone, that it sent the signals and nothing happened.</p>
+<ul><li>* *</li></ul>
+<h2>Suspect 1: the process that cannot hear you</h2>
+<p><code>SIGKILL</code> cannot be caught, blocked or ignored. It can, however, be <em>postponed</em>. A process in uninterruptible sleep (state <code>D</code> in <code>ps</code>) is waiting for the kernel to finish something, usually I/O, and the kernel will not deliver a fatal signal until that wait ends.</p>
+<p>The usual accomplice is a network or parallel filesystem having a bad night. Admins in the mailing-list threads blame laggy storage again and again, and one thread adds a useful detail: the I/O may complete <em>after</em> Slurm drained the node, leaving a perfectly clean machine wearing a drain flag.</p>
+<p>One support ticket even includes the kernel&#x27;s own confession in the node log, a line saying a task had been blocked for more than 362 seconds. That kind of message in <code>dmesg</code> or the journal is your best evidence that the suspect was stuck in a system call.</p>
+<p>A few things this implies:</p>
+<ul><li><strong>It is rarely the job&#x27;s fault.</strong> A user cancelling a healthy job on a sick filesystem is enough.</li><li><strong>Mass cancels amplify it.</strong> One thread describes a workflow tool that stops a run by cancelling many jobs at once, and nodes drain in batches, presumably because they all hit the same stalled mount at the same moment.</li><li><strong>Not every case is storage.</strong> One admin in the threads reports the same drain on a site with no Lustre at all. Treat &quot;storage&quot; as the leading suspect, not the only one.</li></ul>
+<blockquote><p>[!NOTE] Slurm&#x27;s own reasoning, as one list reply puts it, is a heuristic: if a process could not be killed, something is wrong with the node, so keep new jobs away until a human looks.</p></blockquote>
+<ul><li>* *</li></ul>
+<h2>Suspect 2: the epilog with a temper</h2>
+<p>There is a second way to get a drained node after a job ends, and it looks similar from the outside. Slurm&#x27;s Prolog and Epilog guide says that if the <strong>Epilog exits with a non-zero code, the node is set to DRAIN</strong>. A site epilog that checks for leftover GPU processes, full scratch space or stale mounts will drain a node the moment its check fails, which is its job.</p>
+<p>So when you see a drained node after a job, check which story it is:</p>
+<table><thead><tr><th>Clue</th><th>Likely cause</th></tr></thead><tbody><tr><td>Reason says &quot;Kill task failed&quot;</td><td>A step process survived <code>SIGKILL</code> for <code>UnkillableStepTimeout</code> seconds</td></tr><tr><td><code>slurmd</code> log shows the epilog finishing with an error</td><td>Your epilog returned non-zero</td></tr><tr><td><code>dmesg</code> shows hung-task warnings</td><td>The kernel was already unhappy before Slurm noticed</td></tr></tbody></table>
+<p>The epilog also runs <strong>outside</strong> the job&#x27;s cgroup, which matters if your check looks at device numbers. <a href="../../../../fields/schedulers/slurm-inside-a-job/slurm-cgroups-in-practice/">The cgroups page</a> and the <a href="../../../../fields/schedulers/slurm-inside-a-job/slurm-gpu-affinity-socket-lie/">GPU affinity page</a> explain how the same GPU can have different numbers inside and outside.</p>
+<ul><li>* *</li></ul>
+<h2>Why raising the timeout is mostly a delay</h2>
+<p>The obvious fix is to raise <code>UnkillableStepTimeout</code>. SchedMD&#x27;s own troubleshooting guide suggests it for nodes stuck in COMPLETING, so it is a legitimate tool. But admins report the limits of it:</p>
+<ul><li>One admin who tried it says it mostly prolonged the time before the failure.</li><li>A site with the timeout at 180 seconds still reports drains several times a day.</li><li>Another thread has a user cancelling a job at 120 seconds and still getting a drained node.</li></ul>
+<p>The reasoning is simple. If the storage is down for ten minutes, a three-minute timeout drains the node and a nine-minute timeout does too, just later. A longer timeout helps only when the stall is shorter than the new value.</p>
+<p>Also, the drained node does not undrain itself. A list reply is explicit that even when the job finally terminates, the node is <strong>not</strong> resumed. Somebody has to do that.</p>
+<ul><li>* *</li></ul>
+<h2>The detective kit</h2>
+<p><code>UnkillableStepProgram</code> runs a script of your choosing when a step is unkillable. Admins in the threads recommend it as a debugging tool, and it is the best thing you can do for your future self, because it captures the scene while the body is still warm.</p>
+<p>A sketch of what such a script might gather. This is a suggestion, not a Slurm-provided script, so test it before relying on it:</p>
+<pre><code class="language-bash">#!/bin/bash
+# UnkillableStepProgram sketch: record evidence, change nothing.
+OUT=/var/log/slurm/unkillable.$(hostname).$(date +%s)
+{
+  echo &quot;== job info ==&quot;; env | grep -E &#x27;^SLURM_&#x27; | sort
+  echo &quot;== processes in D state ==&quot;
+  ps -eo pid,ppid,user,stat,wchan:32,etime,cmd | awk &#x27;$4 ~ /^D/&#x27;
+  echo &quot;== kernel hung-task messages ==&quot;
+  dmesg -T | grep -i &#x27;blocked for more than&#x27; | tail -20
+  echo &quot;== mounts that might be unhappy ==&quot;
+  mount | grep -E &#x27;nfs|lustre|beegfs|gpfs&#x27;
+} &gt; &quot;$OUT&quot; 2&gt;&amp;1</code></pre>
+<p>Set it in <code>slurm.conf</code>:</p>
+<pre><code>UnkillableStepProgram=/etc/slurm/unkillable.sh</code></pre>
+<p>Two more habits from the threads: check core-file locations around the timestamp in the reason, and keep a cron job that emails you the <code>Reason</code> of every newly drained node, so the 3 a.m. discovery becomes a 9 a.m. one.</p>
+<ul><li>* *</li></ul>
+<h2>Releasing the node</h2>
+<p>First make sure the culprit is really gone. If it is, return the node to service:</p>
+<pre><code class="language-bash"># is anything still in D state?
+ps -eo pid,user,stat,wchan:32,cmd | awk &#x27;$3 ~ /^D/&#x27;
+
+# the node looks clean; put it back
+scontrol update NodeName=gpu-node-17 State=RESUME</code></pre>
+<p>If processes are still stuck, resuming just feeds the next job to the same problem. At that point the options are fixing the filesystem path, rebooting the node (see the <a href="../../../../fields/schedulers/slurm-cluster-operations/slurm-reboot-order/">reboot order page</a>), or both.</p>
+<ul><li>* *</li></ul>
+<h2>📜 The Scroll (keep this)</h2>
+<pre><code class="language-text">cancel -&gt; SIGTERM -&gt; [KillWait] -&gt; SIGKILL -&gt; [UnkillableStepTimeout] -&gt; DRAIN
+                                      ^
+            a process in D state cannot receive it until the kernel lets go
+
+Longer timeouts delay the verdict. They do not fix the storage.
+UnkillableStepProgram is how you find out who the victim was.
+A drained node stays drained until a human says otherwise.</code></pre>
+<p>The culprit is nearly always not the job, not Slurm, but a kernel call waiting on something that is not answering.</p>
+<ul><li>* *</li></ul>
+<h2>References</h2>
+<ul><li><a href="https://support.schedmd.com/show_bug.cgi?id=14265">SchedMD ticket 14265: job not ending with signals (KillWait and UnkillableStepTimeout)</a></li><li><a href="https://support.schedmd.com/show_bug.cgi?id=11103">SchedMD ticket 11103: unkillable step and the hung-task kernel message</a></li><li><a href="https://support.schedmd.com/show_bug.cgi?id=22425">SchedMD ticket 22425: how to update UnkillableStepTimeout</a></li><li><a href="https://lists.schedmd.com/pipermail/slurm-users/2020-July/005820.html">slurm-users: nodes going into drain because of &quot;Kill task failed&quot; (2020)</a></li><li><a href="https://lists.schedmd.com/pipermail/slurm-users/2020-November/006433.html">slurm-users: Kill task failed, UnkillableStepTimeout=120 (2020)</a></li><li><a href="https://lists.schedmd.com/mailman3/hyperkitty/list/slurm-users@lists.schedmd.com/message/34FZZN2LUJL26TMZR5PJDB3LWFICP56G/">slurm-users: the I/O may complete after the drain (2025)</a></li><li><a href="https://slurm.schedmd.com/prolog_epilog.html">Slurm: Prolog and Epilog Guide</a> (epilog failure drains the node, as quoted in the 2020 thread)</li></ul>
+<p><a href="../../../../#/fields/schedulers/slurm-cluster-operations/slurm-kill-task-failed">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Cooks and Kitchens: Threads, Ranks and the One Mental Model</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/openmp-and-open-mpi/threads-and-ranks/">
+<meta name="description" content="Run one tiny program of each kind and watch the difference - OpenMP threads sharing one memory (and a data race), MPI ranks with separate memory (and a reduction) - on a real 4-core machine.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Cooks and Kitchens: Threads, Ranks and the One Mental Model">
+<meta property="og:description" content="Run one tiny program of each kind and watch the difference - OpenMP threads sharing one memory (and a data race), MPI ranks with separate memory (and a reduction) - on a real 4-core machine.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/openmp-and-open-mpi/threads-and-ranks/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/openmp-and-open-mpi/threads-and-ranks/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/system-administration/openmp-and-open-mpi/threads-and-ranks"></script>
+<main>
+<h1>Cooks and Kitchens: Threads, Ranks and the One Mental Model</h1>
+<p><em>Run one tiny program of each kind and watch the difference - OpenMP threads sharing one memory (and a data race), MPI ranks with separate memory (and a reduction) - on a real 4-core machine.</em></p>
+<blockquote><p><strong>Part 3 of 8.</strong> By the end you&#x27;ll know what a <strong>thread</strong> and a <strong>rank</strong> are, you&#x27;ll have seen both run, and you&#x27;ll understand the one bug each style invites.</p></blockquote>
+<p>The case file: I asked four threads to count to 100 million. Two out of three times they proudly reported <strong>75 million</strong>. Nobody lied. Nobody crashed. Twenty-five million counts simply vanished, without a single error message. This page is about how that happens.</p>
+<h2>Contents</h2>
+<hr>
+<h2>The mental model in two sentences</h2>
+<p>An OpenMP program is <strong>one process</strong> that, at marked spots, splits into a team of <strong>threads</strong> which all see the same memory, then joins back into one. An MPI program is <strong>a team of separate processes</strong>, called <strong>ranks</strong>, started together, each with its own private memory, which cooperate only by sending messages.</p>
+<p>Everything else in both worlds is detail on top of that. Here are the two shapes:</p>
+<pre><code class="language-mermaid">flowchart LR
+    S[&quot;main thread&lt;br/&gt;(just one)&quot;] --&gt;|&quot;fork&quot;| T
+    subgraph T[&quot;the team: every thread sees the SAME memory&quot;]
+        direction TB
+        T0[&quot;thread 0&quot;]
+        T1[&quot;thread 1&quot;]
+        T2[&quot;thread 2&quot;]
+        T3[&quot;thread 3&quot;]
+    end
+    T --&gt;|&quot;join&quot;| J[&quot;main thread&lt;br/&gt;again&quot;]</code></pre>
+<p><em>OpenMP: the process forks into a team, the team shares memory, the team joins.</em></p>
+<pre><code class="language-mermaid">sequenceDiagram
+    participant R1 as rank 1
+    participant R2 as rank 2
+    participant R3 as rank 3
+    participant R0 as rank 0
+    R1-&gt;&gt;R0: my number: 1
+    R2-&gt;&gt;R0: my number: 2
+    R3-&gt;&gt;R0: my number: 3
+    Note over R3,R0: MPI_Reduce adds 0 + 1 + 2 + 3 = 6</code></pre>
+<p><em>MPI: separate processes, each with its own number, combined only because they sent it.</em></p>
+<blockquote><p>[!NOTE] Written against Ubuntu 26.04.1 (Linux 7.0), gcc 15.2.0 and Open MPI 5.0.10, run in a throwaway 4-CPU VM. Output order and exact numbers will differ on your machine. That is the point of parallel code: nothing promises the order.</p></blockquote>
+<hr>
+<h2>OpenMP: one process, many threads</h2>
+<pre><code class="language-c">#include &lt;omp.h&gt;
+#include &lt;stdio.h&gt;
+int main(void) {
+    #pragma omp parallel                  /* FORK: the block below runs once per thread */
+    {
+        #pragma omp critical              /* one thread at a time, so lines don&#x27;t interleave */
+        printf(&quot;hello from thread %d of %d\n&quot;,
+               omp_get_thread_num(),      /* &quot;which thread am I?&quot;  0, 1, 2, ... */
+               omp_get_num_threads());    /* &quot;how many of us?&quot;     the team size */
+    }                                     /* JOIN: back to a single thread */
+    return 0;
+}</code></pre>
+<p><code>#pragma omp parallel</code> is the whole trick: the next block runs once <strong>per thread</strong>. <code>critical</code> lets only one thread print at a time so lines don&#x27;t get mixed up.</p>
+<pre><code class="language-bash">gcc -O2 -Wall -fopenmp omp_hello.c -o omp_hello
+OMP_NUM_THREADS=4 ./omp_hello</code></pre>
+<pre><code class="language-text">hello from thread 0 of 4
+hello from thread 2 of 4
+hello from thread 3 of 4
+hello from thread 1 of 4</code></pre>
+<p>Two knobs to remember:</p>
+<ul><li><strong>`-fopenmp`</strong> tells gcc to honour the pragmas. Other compilers have their own spelling.</li><li><strong>`OMP_NUM_THREADS`</strong> sets the team size. Unset, it printed 4 lines on this 4-CPU VM, but the standard leaves the default to the implementation, so set it yourself.</li></ul>
+<blockquote><p>[!WARNING] Forget <code>-fopenmp</code> and the pragmas are <strong>silently ignored</strong>. A program with only pragmas builds clean (gcc warns only with <code>-Wall</code>) and runs on one thread. I tested a four-thread <code>printf</code> region: with the flag it printed 4 lines, without it, 1. If your OpenMP program is mysteriously slow, check the flag first.</p></blockquote>
+<p>That&#x27;s the happy path. Now let&#x27;s give four threads a job they can get wrong.</p>
+<hr>
+<h2>Try it before you scroll</h2>
+<p>☕ Ten seconds. Four threads share one variable, <code>racy</code>, and each one runs <code>racy += 1</code> twenty-five million times. What is <code>racy</code> at the end?</p>
+<p>Hint: <code>+=</code> is not one step for a CPU. It is three: read the old value, add one, write the new value back. What happens if two threads do the reading before either does the writing?</p>
+<hr>
+<h2>The bug OpenMP invites: a data race</h2>
+<p>Threads share memory, so two threads can touch the same variable at once. Count to 100 million with four threads, the wrong way and the right way:</p>
+<pre><code class="language-c">long racy = 0, safe = 0;
+#pragma omp parallel for
+for (long i = 0; i &lt; N; i++) racy += 1;           /* all threads write one variable */
+#pragma omp parallel for reduction(+:safe)
+for (long i = 0; i &lt; N; i++) safe += 1;           /* each thread keeps its own copy, summed at the end */</code></pre>
+<p>Three runs, four threads, expected 100000000 every time (the program prints the three lines <code>expected</code>, <code>racy</code>, <code>reduction</code>; condensed here):</p>
+<pre><code class="language-text">racy      75000000      reduction 100000000
+racy     100000000      reduction 100000000
+racy      75000000      reduction 100000000</code></pre>
+<p>The racy total was wrong in two runs out of three, and right in the third by luck. That is the nasty part: the program that is wrong sometimes will happily pass the one test you ran before shipping it. I did not dig into why it landed on those exact numbers. The lesson stands: <strong>a race gives wrong answers that change from run to run</strong>, so a pass proves nothing. <code>reduction(+:var)</code> is the standard fix for &quot;everyone adds to one total&quot;.</p>
+<p>That&#x27;s the threads&#x27; signature bug. The other kitchens have their own way to go wrong, but first they need to run at all.</p>
+<hr>
+<h2>MPI: many processes, many ranks</h2>
+<pre><code class="language-c">#include &lt;mpi.h&gt;
+#include &lt;stdio.h&gt;
+int main(int argc, char **argv) {
+    MPI_Init(&amp;argc, &amp;argv);                       /* every MPI program starts here... */
+    int rank, size, len; char host[MPI_MAX_PROCESSOR_NAME];
+    MPI_Comm_rank(MPI_COMM_WORLD, &amp;rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &amp;size);
+    MPI_Get_processor_name(host, &amp;len);
+    int sum = 0;
+    MPI_Reduce(&amp;rank, &amp;sum, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+                                                  /* everyone sends `rank`; rank 0 receives the sum */
+    printf(&quot;rank %d of %d on %s\n&quot;, rank, size, host);
+    if (rank == 0) printf(&quot;sum of ranks = %d\n&quot;, sum);
+    MPI_Finalize();                               /* ...and ends here */
+    return 0;
+}</code></pre>
+<p>Everything between <code>Init</code> and <code>Finalize</code> runs in <strong>every</strong> rank at once. That is why the one printed <code>sum of ranks</code> line is wrapped in <code>if (rank == 0)</code>: without it, all four ranks would print it.</p>
+<ul><li><code>MPI_COMM_WORLD</code> is &quot;everyone who was started together&quot;.</li><li><code>MPI_Get_processor_name</code> just reports which machine the rank runs on (here the VM is called <code>twins</code>).</li><li><code>rank</code> is your number in that group (0 to size-1); <code>size</code> is how many there are.</li><li><code>MPI_Reduce</code> is a <strong>collective</strong>: every rank calls it, and rank 0 receives the sum of everyone&#x27;s value.</li></ul>
+<pre><code class="language-bash">mpicc -O2 -Wall mpi_hello.c -o mpi_hello
+mpirun -np 4 ./mpi_hello</code></pre>
+<pre><code class="language-text">rank 3 of 4 on twins
+rank 2 of 4 on twins
+rank 1 of 4 on twins
+rank 0 of 4 on twins
+sum of ranks = 6</code></pre>
+<p>0 + 1 + 2 + 3 = 6. Four separate processes each held one number in private memory, and the library carried the numbers together, like four kitchens each handing a single note through the window to rank 0. No rank could simply read another&#x27;s <code>rank</code> variable. That is the &quot;separate kitchens&quot; rule.</p>
+<p>Both programs run. So what is the first thing that goes wrong when you ask for more kitchens than the building has?</p>
+<hr>
+<h2>The bug MPI invites: not enough slots, and waiting forever</h2>
+<p>Ask for more ranks than the machine has slots and Open MPI refuses to start (exit code 1):</p>
+<pre><code class="language-bash">mpirun -np 8 ./mpi_hello     # on a 4-CPU VM: refused
+mpirun --oversubscribe -np 8 ./mpi_hello    # allowed, exit 0</code></pre>
+<p><code>--oversubscribe</code> means &quot;yes, I know there are only 4 slots, and I would like to seat eight guests anyway&quot;. Use it for testing, not for speed.</p>
+<blockquote><p>[!WARNING] On this Ubuntu 26.04 install, the refusal message is hidden behind <code>Sorry!  You were supposed to get help about: prte-rmaps-base:alloc-error</code> plus &quot;couldn&#x27;t open the help file&quot;. The packages looked for the help text under <code>/usr/lib/x86_64-linux-gnu/prrte3/share/prte/</code>, and I found one such file only under <code>/usr/share/doc/libprrte-dev/</code>. On such a system, <code>alloc-error</code> means &quot;not enough slots&quot;. The same missing file also breaks <code>mpirun --version</code>; <code>ompi_info --version</code> works.</p></blockquote>
+<p>The other classic MPI bug I did not run here, because it hangs by design: a <strong>deadlock</strong>, where two ranks each wait for a message the other has not sent. It is the mirror of the data race: instead of a wrong answer, you get no answer. Think of two people at a door, each insisting &quot;after you&quot;, forever.</p>
+<hr>
+<h2>Side by side</h2>
+<table><thead><tr><th></th><th>OpenMP threads</th><th>MPI ranks</th></tr></thead><tbody><tr><td>What runs in parallel</td><td>Threads inside one process</td><td>Separate processes</td></tr><tr><td>Memory</td><td>Shared</td><td>Private to each rank</td></tr><tr><td>How they cooperate</td><td>By reading and writing shared variables</td><td>By calling library functions to send and receive</td></tr><tr><td>How you start it</td><td><code>./prog</code> (set <code>OMP_NUM_THREADS</code>)</td><td><code>mpirun -np N ./prog</code></td></tr><tr><td>How you build it</td><td><code>gcc -fopenmp</code></td><td><code>mpicc</code> (a gcc wrapper)</td></tr><tr><td>Reach</td><td>One machine</td><td>One machine or many</td></tr><tr><td>Signature bug</td><td>Data race: wrong, changing answers</td><td>Deadlock or too few slots: no answer</td></tr></tbody></table>
+<p><strong>Takeaway:</strong> a thread shares memory and needs care about who writes what; a rank owns its memory and needs messages to cooperate.</p>
+<p>You&#x27;ve now seen both models run and both models break. The next skill is the one you&#x27;ll use every week: someone hands you a repo or a job script, and in thirty seconds you have to say which kitchen you&#x27;re standing in. That&#x27;s <a href="../../../../fields/system-administration/openmp-and-open-mpi/spotting-openmp-and-mpi-code/">part 4</a>.</p>
+<hr>
+<h2>References</h2>
+<ul><li><a href="https://www.openmp.org/specifications/">OpenMP API specification: parallel construct, reduction clause, OMP_NUM_THREADS</a></li><li><a href="https://www.mpi-forum.org/docs/">MPI standard (MPI Forum): MPI_Init, communicators, MPI_Reduce</a></li><li><a href="https://docs.open-mpi.org/en/v5.0.x/man-openmpi/man1/mpirun.1.html">Open MPI mpirun manual (v5.0.x)</a>: slots and <code>--oversubscribe</code></li><li>Every output block on this page: run on Ubuntu 26.04.1, Linux 7.0, gcc 15.2.0, Open MPI 5.0.10, 4 vCPUs.</li></ul>
+<p><a href="../../../../#/fields/system-administration/openmp-and-open-mpi/threads-and-ranks">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

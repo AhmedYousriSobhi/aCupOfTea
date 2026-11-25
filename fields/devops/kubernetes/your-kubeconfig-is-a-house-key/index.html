@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Your kubeconfig Is a House Key</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/kubernetes/your-kubeconfig-is-a-house-key/">
+<meta name="description" content="What a kubeconfig holds, how kubectl picks one, why a leaked certificate can&#x27;t be revoked, and how to issue each person a short-lived key instead of sharing yours.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Your kubeconfig Is a House Key">
+<meta property="og:description" content="What a kubeconfig holds, how kubectl picks one, why a leaked certificate can&#x27;t be revoked, and how to issue each person a short-lived key instead of sharing yours.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/kubernetes/your-kubeconfig-is-a-house-key/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/kubernetes/your-kubeconfig-is-a-house-key/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/devops/kubernetes/your-kubeconfig-is-a-house-key"></script>
+<main>
+<h1>Your kubeconfig Is a House Key</h1>
+<p><em>What a kubeconfig holds, how kubectl picks one, why a leaked certificate can&#x27;t be revoked, and how to issue each person a short-lived key instead of sharing yours.</em></p>
+<blockquote><p><strong>Part 12 of the Kubernetes series.</strong> A file called <code>config</code> sits in your home directory and opens the whole cluster. By the end you&#x27;ll know what&#x27;s inside it, how <code>kubectl</code> picks which one to use, and how to hand out a smaller key.</p></blockquote>
+<hr>
+<h2>The ticket</h2>
+<p>A contractor, Mateo, is stuck. His pods won&#x27;t schedule and he&#x27;s blocked. To help, a well-meaning teammate attaches her <code>~/.kube/config</code> to the ticket: &quot;just use mine, it works.&quot;</p>
+<p>It does work. It also lets Mateo delete the production namespace, read every Secret, and run a pod on any node. The ticket system keeps attachments forever, and so does everyone with search access to it.</p>
+<p>The file looked like boring config. It was the master key.</p>
+<p>Why is that file so powerful?</p>
+<hr>
+<h2>What&#x27;s on the key ring</h2>
+<p>A kubeconfig is a small YAML file that &quot;organizes information about clusters, users, namespaces, and authentication mechanisms.&quot; Back to the series&#x27; landlord picture: it&#x27;s your key ring, with three kinds of entries.</p>
+<table><thead><tr><th>Entry</th><th>In the picture</th><th>What&#x27;s inside</th></tr></thead><tbody><tr><td><code>clusters</code></td><td>Which building</td><td>The API server address and the CA certificate used to trust it</td></tr><tr><td><code>users</code></td><td>Which key</td><td>A client certificate and private key, a token, or a credential plugin</td></tr><tr><td><code>contexts</code></td><td>A key for a building, plus a room</td><td>A triple: cluster, user and namespace</td></tr></tbody></table>
+<p>The docs give the example: a <code>dev-frontend</code> context says &quot;use the credentials of the <code>developer</code> user to access the <code>frontend</code> namespace of the <code>development</code> cluster.&quot;</p>
+<pre><code class="language-mermaid">flowchart LR
+    C[&quot;context&lt;br/&gt;dev-frontend&quot;] --&gt; CL[&quot;cluster&lt;br/&gt;development&quot;]
+    C --&gt; U[&quot;user&lt;br/&gt;developer&quot;]
+    C --&gt; N[&quot;namespace&lt;br/&gt;frontend&quot;]
+    CL --&gt; S[&quot;API server address&lt;br/&gt;+ CA&quot;]
+    U --&gt; K[&quot;certificate + key&lt;br/&gt;or token&quot;]</code></pre>
+<p><em>A context is only a label that ties three things together. The user entry holds the part that opens the door.</em></p>
+<p>Certificate and key can be a file path or the data inline: add the <code>-data</code> suffix, for example <code>client-key-data</code>. The inline form is what makes one file copyable, and one file leakable.</p>
+<blockquote><p>[!CAUTION] The Kubernetes docs say storing passwords in client config is risky and suggest a credential plugin that keeps them elsewhere.</p></blockquote>
+<p>☕ <strong>Try it before you scroll.</strong> You have a config for the lab and one for production. You run <code>kubectl delete namespace test</code>. Which cluster loses it? Hint: it isn&#x27;t the one you were thinking about.</p>
+<hr>
+<h2>Which key does kubectl pick?</h2>
+<p>The answer is the <strong>current context</strong>, and <code>kubectl</code> decides it in this order:</p>
+<ol><li>If you pass <code>--kubeconfig</code>, it uses only that file and does not merge.</li><li>Otherwise it reads the <code>KUBECONFIG</code> environment variable, a colon-separated list on Linux and Mac, and merges the files.</li><li>If that variable isn&#x27;t set, it uses <code>$HOME/.kube/config</code>.</li></ol>
+<p>Merging has simple rules: the first file to set a value wins, and a later file never overrides it. Within the result, the <code>--context</code> flag beats <code>current-context</code>.</p>
+<p>The commands you&#x27;ll use daily:</p>
+<pre><code class="language-bash">kubectl config get-contexts           # list the keys on the ring
+kubectl config current-context        # which one is active right now
+kubectl config use-context lab        # switch
+kubectl --context lab get nodes       # one-off, without switching</code></pre>
+<p>I haven&#x27;t run these here; the <code>use-context</code> behaviour is from the docs. My recommendation: never leave production as your current context. Prefer <code>--context</code> for one-off commands on a cluster that matters, so a command run from muscle memory goes to the lab, not production.</p>
+<p>There&#x27;s one more trap in the same docs. A kubeconfig can make <code>kubectl</code> run code and read files, so &quot;only use kubeconfig files from trusted sources&quot;. Treat a file someone sends you like a shell script: read it before you use it.</p>
+<p>So a copied key works, and you can&#x27;t easily make it stop. Why not?</p>
+<hr>
+<h2>The key you can&#x27;t take back</h2>
+<p>Kubernetes has no user objects. The authentication docs say &quot;Kubernetes does not have objects which represent normal user accounts,&quot; so a user is whatever name a valid credential carries. For a client certificate, the username comes from the certificate&#x27;s common name, and groups come from its organization fields. The docs&#x27; example: <code>/CN=alovelace/O=app1/O=app2</code> is the user <code>alovelace</code> in groups <code>app1</code> and <code>app2</code>.</p>
+<p>Now the sentence that should change your habits. The docs for Kubernetes 1.37 say: &quot;Kubernetes 1.37 does not support certificate <em>revocation</em>. Any certificate that is issued remains valid until it expires.&quot;</p>
+<p>So a leaked certificate-based kubeconfig can&#x27;t be cancelled. You wait for expiry, or you rotate the CA, which is a very bad afternoon. That&#x27;s why the lifetime of a key matters more than anyone tells you when you create it.</p>
+<table><thead><tr><th>If the key leaks...</th><th>What actually helps</th></tr></thead><tbody><tr><td>A certificate with a long life</td><td>Nothing quick. It stays valid until it expires</td></tr><tr><td>A certificate with a short life</td><td>It dies on its own, soon</td></tr><tr><td>A permission set that&#x27;s narrow</td><td>The thief can do little, even while the key works</td></tr></tbody></table>
+<p>Which is why the next question is where yours came from.</p>
+<hr>
+<h2>Where the master key comes from</h2>
+<p>Every cluster has to hand someone the first, all-powerful key. The tools you met in <a href="../../../../fields/devops/kubernetes/k3s-vs-kubeadm/">part 11</a> do it differently.</p>
+<table><thead><tr><th></th><th>Admin kubeconfig</th><th>Notes from the docs</th></tr></thead><tbody><tr><td>k3s</td><td><code>/etc/rancher/k3s/k3s.yaml</code></td><td>Copy it to <code>~/.kube/config</code> on your machine and change <code>server</code> to your K3s server&#x27;s address. K3s refreshes the certificates in it each time it starts, so an old copy can expire</td></tr><tr><td>kubeadm</td><td><code>/etc/kubernetes/admin.conf</code></td><td><code>kubeadm init</code> tells you to copy it to <code>$HOME/.kube/config</code>. Client certificates kubeadm generates expire after 1 year by default</td></tr></tbody></table>
+<p>kubeadm also writes a <code>super-admin.conf</code>, and the docs for an external CA say to delete or move it to a safe place. If you read that and thought &quot;nobody has said that to me before&quot;, you&#x27;re not alone.</p>
+<blockquote><p>[!WARNING] Copying the admin file to a laptop turns the laptop into a cluster-admin. Do it on purpose, for your own machine, and then stop handing the file around. Treat <code>chmod 600</code> and an encrypted disk as the minimum.</p></blockquote>
+<p>The way out is not hiding the master key better. It&#x27;s cutting smaller ones.</p>
+<hr>
+<h2>Cutting a smaller key</h2>
+<p>For a person who needs temporary access, the Kubernetes certificate API can issue a client certificate with a lifetime you choose. A <code>CertificateSigningRequest</code> carries a required <code>signerName</code>, and since Kubernetes v1.22 an optional <code>expirationSeconds</code>, whose minimum is 600 (ten minutes). Someone with approval rights must approve the request, with <code>kubectl certificate approve</code>.</p>
+<p>The flow, in order:</p>
+<ol><li>The person generates a private key and a CSR with the name and groups they need.</li><li>You submit it as a <code>CertificateSigningRequest</code> with a short <code>expirationSeconds</code>.</li><li>An approver approves it.</li><li>You hand back the signed certificate, never the private key.</li><li>They add it to their own kubeconfig with <code>kubectl config set-credentials</code> and <code>set-context</code>.</li></ol>
+<blockquote><p>[!IMPORTANT] I did not run this flow, and the CSR page I fetched was cut off before the user-certificate example. Use the &quot;Kubernetes signers&quot; section of that page for the exact manifest, and test it on the <a href="../../../../fields/devops/kubernetes/build-a-two-node-k3s-lab/">k3s lab</a> before relying on it.</p></blockquote>
+<p>Two things the new key can&#x27;t do by itself: it doesn&#x27;t say what its owner is allowed to do. A freshly issued certificate for <code>mateo</code> proves who he is and nothing more. What he may do is a separate question, answered by roles and bindings. That is the next page.</p>
+<hr>
+<h2>Back to the ticket</h2>
+<p>The teammate deletes the attachment, which doesn&#x27;t recall it. Her certificate remains valid until it expires, because Kubernetes can&#x27;t revoke it, and she&#x27;s told that rotating it means asking for a new one. Mateo gets a certificate of his own with a short life, and a narrow role that fits his namespace.</p>
+<p>The cost of the shortcut was a week of cleanup. The cost of the right way was fifteen minutes and an approval.</p>
+<p><strong>Takeaway:</strong> a kubeconfig is a key, not a setting; Kubernetes can&#x27;t revoke a certificate, so give each person their own short-lived key instead of sharing yours.</p>
+<p><strong>Challenge:</strong> your certificate for <code>mateo</code> is signed and valid for an hour. Before RBAC grants it anything, what can he do on the cluster? The next page, on RBAC and the limited viewer, answers that.</p>
+<hr>
+<h2>References</h2>
+<ul><li><a href="https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/">Organizing cluster access using kubeconfig files</a>: contents, <code>KUBECONFIG</code>, merge rules, the trusted-source warning.</li><li><a href="https://kubernetes.io/docs/tasks/access-application-cluster/configure-access-multiple-clusters/">Configure access to multiple clusters</a>: <code>set-cluster</code>, <code>set-credentials</code>, <code>set-context</code>, <code>use-context</code>, inline <code>-data</code> fields.</li><li><a href="https://kubernetes.io/docs/reference/access-authn-authz/authentication/">Authenticating</a>: no user objects, certificate username and groups, no revocation.</li><li><a href="https://kubernetes.io/docs/reference/access-authn-authz/certificate-signing-requests/">Certificates and Certificate Signing Requests</a>: <code>signerName</code>, <code>expirationSeconds</code>, approval.</li><li><a href="https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/">Creating a cluster with kubeadm</a>: copying <code>admin.conf</code> to <code>$HOME/.kube/config</code>.</li><li><a href="https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-certs/">Certificate management with kubeadm</a>: the one-year client certificate default.</li><li><a href="https://kubernetes.io/docs/setup/best-practices/certificates/">PKI certificates and requirements</a>: where kubeadm keeps user account certificates.</li><li><a href="https://docs.k3s.io/cluster-access">K3s cluster access</a>: <code>/etc/rancher/k3s/k3s.yaml</code>, copying it off the server, certificate refresh on start.</li></ul>
+<p><a href="../../../../#/fields/devops/kubernetes/your-kubeconfig-is-a-house-key">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

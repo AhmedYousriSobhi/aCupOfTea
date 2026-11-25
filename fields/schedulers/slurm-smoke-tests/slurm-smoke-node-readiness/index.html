@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Back From the Repair Shop: Is This Node Fit to Return to Service?</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-smoke-tests/slurm-smoke-node-readiness/">
+<meta name="description" content="Why idle does not mean a node is healthy, what Slurm does when hardware and slurm.conf disagree (and how configoverrides hides it), and a reservation fence for a probe job.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Back From the Repair Shop: Is This Node Fit to Return to Service?">
+<meta property="og:description" content="Why idle does not mean a node is healthy, what Slurm does when hardware and slurm.conf disagree (and how configoverrides hides it), and a reservation fence for a probe job.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-smoke-tests/slurm-smoke-node-readiness/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-smoke-tests/slurm-smoke-node-readiness/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/schedulers/slurm-smoke-tests/slurm-smoke-node-readiness"></script>
+<main>
+<h1>Back From the Repair Shop: Is This Node Fit to Return to Service?</h1>
+<p><em>Why idle does not mean a node is healthy, what Slurm does when hardware and slurm.conf disagree (and how configoverrides hides it), and a reservation fence for a probe job.</em></p>
+<blockquote><p><strong>Part 5 of [Slurm Smoke Tests](/fields/schedulers/slurm-smoke-tests/README.md).</strong> The commands and outputs below were run on a two-node test cluster (Slurm 23.11.4, accounting on, both <code>slurmd</code> daemons on one Ubuntu 24.04 machine, which has 2 CPUs and about 8 GB of memory). <strong>The test cluster has no GPUs</strong>, so nothing here was run against one, and the GPU section says so. The names and the story are invented. For the health-check program that drains a node by itself, read <a href="../../../../fields/schedulers/slurm-ai-clusters/gpu-health-checks/">When a GPU Falls Off the Bus</a>, which this page does not repeat.</p></blockquote>
+<hr>
+<h2>Node 17 is idle</h2>
+<p>Node 17 spends a week at the repair shop and comes back with a new motherboard. The technician resets the BIOS to defaults on the way, which turns off half the cores. Nobody remarks on this, because nobody looked.</p>
+<p>The admin plugs it in. The cluster&#x27;s <code>slurm.conf</code> was copied from a cloud template and sets <code>config_overrides</code>, a setting that makes the controller believe the file and not the hardware. <code>slurmd</code> starts, registers with the controller, and <code>sinfo</code> prints <code>idle</code>. The admin is relieved and resumes the node. For the next two days a handful of jobs that asked for 64 CPUs on node 17 run half as fast as their siblings, and one time out. The users blame the filesystem. The admin blames the users. The node is exactly as broken as it was on arrival, and Slurm has been calling it idle the whole time.</p>
+<p>The word <code>idle</code> means that <code>slurmd</code> is running and has registered. It says nothing about whether the machine behind it is the machine the configuration describes.</p>
+<hr>
+<h2>What <code>idle</code> does and does not prove</h2>
+<table><thead><tr><th>What you see</th><th>What it proves</th><th>What it does not</th></tr></thead><tbody><tr><td><code>idle</code> in <code>sinfo</code></td><td><code>slurmd</code> is up and the controller heard from it</td><td>That the CPUs, memory or devices are what <code>slurm.conf</code> says</td></tr><tr><td>A passing job on the node</td><td>One task ran</td><td>That the node is <em>healthy</em>; the job may have been tiny</td></tr><tr><td><code>scontrol show node</code> numbers</td><td>What the controller was <strong>told</strong></td><td>What the node <strong>has</strong>, if <code>config_overrides</code> is on</td></tr></tbody></table>
+<p>The third row is the sneaky one, and it is worth seeing happen.</p>
+<hr>
+<h2>What Slurm does by default</h2>
+<p>On the test cluster, <code>slurm.conf</code> says each node has <code>CPUs=4</code>. The machine really has 2. With the site&#x27;s usual setting, <code>SlurmdParameters=config_overrides</code>, the controller believes the file and the nodes show <code>idle</code>. Then that line was removed, the daemons restarted, and the same file with the same nodes gave:</p>
+<pre><code class="language-text">NODELIST STATE
+node1 inval
+node2 inval
+
+NODELIST REASON
+node[1-2] Low socket*core*thread count, Low CPUs</code></pre>
+<p>By default, Slurm compares what <code>slurmd</code> finds with what the file claims, and refuses to let a node with fewer resources than promised take jobs. That is exactly the protection node 17 would have had. <code>config_overrides</code> (&quot;use the configuration file, ignore the hardware&quot;) is a legitimate setting, common in containers, test clusters and some cloud setups, and it turns the protection off. With it on, you do the comparison yourself.</p>
+<p>After the file was fixed to say <code>CPUs=2</code> and the daemons were restarted, the nodes came back as <code>idle</code> and the comparison below passed.</p>
+<hr>
+<h2>Compare the hardware with the promise</h2>
+<p><code>slurmd -C</code> prints what the daemon detects on the machine it runs on, in the format of a <code>NodeName=</code> line. The controller&#x27;s view is in <code>scontrol show node</code>. This script, run on the node itself, compares the two and checks the state:</p>
+<p>The script is <a href="../../../../fields/schedulers/slurm-smoke-tests/smoke-scripts/node-fit.sh"><code>node-fit.sh</code></a>, a plain file you can read on this site, <a href="https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/fields/schedulers/slurm-smoke-tests/smoke-scripts/node-fit.sh">open on GitHub</a> or fetch with its <a href="https://raw.githubusercontent.com/AhmedYousriSobhi/aCupOfTea/main/fields/schedulers/slurm-smoke-tests/smoke-scripts/node-fit.sh">raw link</a>.</p>
+<p>With <code>config_overrides</code> on and the file saying <code>CPUs=4</code>, on a machine with two:</p>
+<pre><code class="language-text">FAIL  cpus    hardware 2, configured 4
+PASS  memory  hardware 8022 MB, configured 1000 MB
+PASS  state   IDLE</code></pre>
+<p><code>sinfo</code> said <code>idle</code> for this node at the same moment. The <code>PASS</code> on state is the whole problem in one line. With the file corrected:</p>
+<pre><code class="language-text">PASS  cpus    hardware 2, configured 2
+PASS  memory  hardware 8022 MB, configured 1000 MB
+PASS  state   IDLE</code></pre>
+<p>Memory is checked in one direction only: configured must not exceed what the node has. A node configured for less than it has is wasteful but safe, and sites often leave headroom for the operating system on purpose. The script covers CPUs and memory. Sockets, cores, threads, GPUs and other generic resources need their own lines, in the same shape.</p>
+<hr>
+<h2>Run a probe before the users do</h2>
+<p>Even a correct configuration does not prove a returning node can run a job: it may have a dead network card or an unmounted filesystem. The safest way to find out is to run a probe job on the node before anyone else can. The obvious plan fails:</p>
+<pre><code class="language-text">JobId  State    Reason
+116    PENDING  ReqNodeNotAvail, UnavailableNodes:node2        (node2 drained, no reservation)
+117    PENDING  ReqNodeNotAvail, UnavailableNodes:node2        (node2 drained, job inside a MAINT reservation)</code></pre>
+<p>A drained node accepts no new jobs, not even those inside a reservation. So the order matters: <strong>fence the node first, then let it out</strong>. A reservation that only you can use goes up while the node is still drained, and only then is the node resumed:</p>
+<pre><code class="language-bash">scontrol update NodeName=node2 State=DRAIN Reason=&quot;returning from repair&quot;
+scontrol create reservation ReservationName=probe StartTime=now Duration=10 \
+    Nodes=node2 Users=tester Flags=MAINT
+scontrol update NodeName=node2 State=RESUME</code></pre>
+<p>The node was idle, and yet an ordinary user&#x27;s job asking for it waited:</p>
+<pre><code class="language-text">job 118: PENDING ReqNodeNotAvail, May be reserved for other job</code></pre>
+<p>A job in the reservation ran:</p>
+<pre><code class="language-bash">sbatch -w node2 --reservation=probe -t 1 --wrap=&#x27;hostname; echo SLURMD_NODENAME=$SLURMD_NODENAME&#x27;</code></pre>
+<pre><code class="language-text">vm
+SLURMD_NODENAME=node2</code></pre>
+<p><code>sacct</code> recorded it as <code>COMPLETED</code>. The last step is to release the fence, and the waiting job started on the node as soon as it went:</p>
+<pre><code class="language-bash">scontrol delete ReservationName=probe</code></pre>
+<p>The <code>Duration=10</code> is a safety net: if you forget the last step, the fence expires on its own after ten minutes. Make the probe job honest. A one-line <code>hostname</code> proves the node accepts jobs; a real probe should exercise what the node is for: write a file to the shared filesystem, load the software stack, run a short GPU kernel, a network ping to another node. The <a href="../../../../fields/schedulers/slurm-cluster-operations/slurm-reservations-and-maintenance/">reservations page</a> explains what else a reservation does, including that it never kills jobs already running.</p>
+<hr>
+<h2>Let a health check do the routine part</h2>
+<p>A probe is for the moment a node comes back. For everything after that, Slurm can run a program on every node on a timer and drain the ones that fail. The setting is <code>HealthCheckProgram</code> together with <code>HealthCheckInterval</code>, and the <a href="../../../../fields/schedulers/slurm-ai-clusters/gpu-health-checks/">GPU health-check page</a> builds and tests one, including a bug where it overwrote the administrator&#x27;s drain reason. A ready-made option is LBNL&#x27;s Node Health Check (NHC). Its documentation shows it wired in with two lines:</p>
+<pre><code class="language-text">HealthCheckProgram=/usr/sbin/nhc
+HealthCheckInterval=300</code></pre>
+<p>It is configured in <code>/etc/nhc/nhc.conf</code> with one check per line, for example <code>check_fs_mount_rw /</code>, <code>check_hw_cpuinfo 2 8 8</code> and <code>check_hw_physmem 1k 1TB</code>, which cover much of what <code>node-fit.sh</code> does by hand. NHC was not installed on the test cluster, so none of this was run. The <code>slurm.conf</code> it needs must match across the whole cluster, as its documentation notes.</p>
+<hr>
+<h2>And the GPUs?</h2>
+<p>The test cluster has none, so this part is a plan and not a result. A node-fit check for a GPU node should compare the number of GPUs the machine reports (<code>nvidia-smi -L</code>) with the number configured for the node (the <code>Gres</code> line in <code>scontrol show node</code>), and the probe job should run something on each GPU, not only list them. A GPU that has &quot;fallen off the bus&quot; still has an entry in the configuration. The GPU health-check page has a tested version of the idea for a missing device.</p>
+<hr>
+<h2>Version notes</h2>
+<p>Run on 23.11.4. The GPU health-check page notes that a per-GPU drain, draining one GPU instead of the whole node, comes in 26.11. The hardware comparison and the reservation fence were not run on any other version. Whether the default <code>inval</code> behaviour is the same on newer releases was not checked.</p>
+<hr>
+<h2>Back to node 17</h2>
+<p>Replay the afternoon with the checks. The admin plugs node 17 in and runs <code>node-fit.sh</code> on it before resuming anything:</p>
+<pre><code class="language-text">FAIL  cpus    hardware 32, configured 64
+PASS  memory  hardware 512000 MB, configured 500000 MB
+FAIL  state   DRAIN</code></pre>
+<p>(Node 17&#x27;s numbers are invented. The shape is the output above. The <code>state</code> line fails because the node is still drained, which is expected before it is resumed. The <code>cpus</code> line is the one that matters.) The failure takes seconds to find and a trip into the BIOS to fix. Then the fence goes up, the node is resumed, a probe job runs from the reservation and writes to the shared filesystem, and the fence comes down. Two days later nobody has any theories about the filesystem.</p>
+<p><strong>Takeaway:</strong> <code>idle</code> only means the daemon registered, so before a node returns to service compare what <code>slurmd -C</code> finds with what the controller was told (especially with <code>config_overrides</code>, which hides the difference), then fence the node with a reservation and run a real probe job before users can.</p>
+<p><strong>Next:</strong> <a href="../../../../fields/schedulers/slurm-smoke-tests/slurm-smoke-regression-suites/">When Smoke Becomes a Fire Drill</a> covers the heavier tools, SchedMD&#x27;s own test suite and ReFrame, and where to stop.</p>
+<hr>
+<h2>References</h2>
+<ul><li><a href="https://slurm.schedmd.com/slurm.conf.html">Slurm: slurm.conf</a> (<code>SlurmdParameters=config_overrides</code>, <code>HealthCheckProgram</code>)</li><li><a href="https://slurm.schedmd.com/slurmd.html">Slurm: slurmd</a> (<code>-C</code>)</li><li><a href="https://slurm.schedmd.com/reservations.html">Slurm: Advanced Resource Reservation Guide</a></li><li><a href="https://lbnl-node-health-check.readthedocs.io/en/sphinx-docs/user_guide.html">LBNL Node Health Check user guide</a></li></ul>
+<p><a href="../../../../#/fields/schedulers/slurm-smoke-tests/slurm-smoke-node-readiness">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

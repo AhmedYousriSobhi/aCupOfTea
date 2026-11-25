@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The Jagged Scan: Geometric Transforms and Interpolation</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/digital-image-processing/geometric-transforms-and-interpolation/">
+<meta name="description" content="Moving the whole map - affine transforms in homogeneous coordinates, why you must map backwards, and nearest, bilinear and bicubic interpolation with a bilinear example worked by hand.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="The Jagged Scan: Geometric Transforms and Interpolation">
+<meta property="og:description" content="Moving the whole map - affine transforms in homogeneous coordinates, why you must map backwards, and nearest, bilinear and bicubic interpolation with a bilinear example worked by hand.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/digital-image-processing/geometric-transforms-and-interpolation/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/digital-image-processing/geometric-transforms-and-interpolation/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../.docs/prerender-redirect.js" data-target="../../../#/fields/digital-image-processing/geometric-transforms-and-interpolation"></script>
+<main>
+<h1>The Jagged Scan: Geometric Transforms and Interpolation</h1>
+<p><em>Moving the whole map - affine transforms in homogeneous coordinates, why you must map backwards, and nearest, bilinear and bicubic interpolation with a bilinear example worked by hand.</em></p>
+<blockquote><p><strong>Part 2 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).</strong> <em>The records office is invented; the maths and numbers are real.</em> By the end you can write one matrix for any rotate-scale-shift, loop the right way round, and pick the interpolation that suits your data.</p></blockquote>
+<p>Three degrees. That&#x27;s how crooked a ledger page sat on the scanner glass, and it&#x27;s what you&#x27;ll spend an afternoon paying for.</p>
+<hr>
+<h2>The page that came out in stairs</h2>
+<p>14:10, the records office. The page has to be straight before it goes into the archive. You run the team&#x27;s <code>rotate</code> script with an angle of 3 degrees and open the result.</p>
+<p>The text, once clean, now has staircase edges. The thin ruled lines look broken, as if someone had drawn them with a dotted pen.</p>
+<p>Your first reading is the obvious one: <strong>a bad scan.</strong> The noise must have been there all along, and the rotation just made it visible.</p>
+<hr>
+<h2>One gentle idea, and a worse page</h2>
+<p>If one 3-degree turn is rough, three 1-degree turns should be gentler. So you change the script to turn the page in three small steps and compare the two results side by side.</p>
+<p>The three-step page is worse. The stairs are still there and the text is softer on top of them. Nobody stops the experiment; the comparison is the whole cost.</p>
+<p>Each step is gentler than the single turn, and the total is harsher than the single turn. What is each step actually doing to a pixel? To answer that, you have to follow one citizen of Pixel Town as it moves.</p>
+<hr>
+<h2>Moving a citizen</h2>
+<p>Each pixel at position (x, y) goes to a new position (x&#x27;, y&#x27;). The basic moves:</p>
+<table><thead><tr><th>Transform</th><th>Formula</th><th>What it does</th></tr></thead><tbody><tr><td>Translation</td><td>x&#x27; = x + tₓ, y&#x27; = y + t_y</td><td>Slides the image</td></tr><tr><td>Scaling</td><td>x&#x27; = sₓ·x, y&#x27; = s_y·y</td><td>Zooms in or out</td></tr><tr><td>Rotation by θ</td><td>x&#x27; = x·cos θ − y·sin θ, y&#x27; = x·sin θ + y·cos θ</td><td>Spins around the origin</td></tr><tr><td>Shear</td><td>x&#x27; = x + k·y</td><td>Slants, like italics</td></tr></tbody></table>
+<p>The first three are fine as formulas but they don&#x27;t compose nicely: translation <strong>adds</strong> while the rest <strong>multiply</strong>. That&#x27;s awkward when you want to chain moves, and you will, because your page needs more than one. Is there a way to make them all the same kind of operation?</p>
+<hr>
+<h2>One matrix for everything</h2>
+<p>There is, and the trick is small. Give each point an extra coordinate of 1, writing (x, y) as (x, y, 1). Now every move above, translation included, is a 3 × 3 matrix multiplication:</p>
+<p>The 2 × 2 block (a, b, c, d) does rotation, scale and shear; the last column (tₓ, t_y) does translation. Together they are an <strong>affine transform</strong>: lines stay lines and parallel lines stay parallel. It has <strong>6 free numbers</strong>, so three matching point pairs pin it down.</p>
+<pre><code class="language-mermaid">flowchart LR
+    A[&quot;Rotate&lt;br/&gt;R&quot;] --&gt; B[&quot;Scale&lt;br/&gt;S&quot;]
+    B --&gt; C[&quot;Translate&lt;br/&gt;T&quot;]
+    C --&gt; D[&quot;One combined matrix&lt;br/&gt;M = T · S · R&quot;]</code></pre>
+<p><em>Chaining moves is multiplying matrices. The combined matrix then moves each pixel in a single step.</em></p>
+<p>Matrix multiplication isn&#x27;t commutative, though, so the order of the moves changes the result. With the rightmost matrix applied first:</p>
+<table><thead><tr><th>Order</th><th>What happens</th></tr></thead><tbody><tr><td>Rotate, then translate</td><td>The image spins about its own origin corner, then slides away</td></tr><tr><td>Translate, then rotate</td><td>The image slides first, then the whole thing swings around the origin like a pendulum, ending somewhere else</td></tr></tbody></table>
+<p>To rotate an image about its <strong>centre</strong>, the recipe is: translate the centre to the origin, rotate, then translate back. In matrix form M = T(centre) · R(θ) · T(−centre).</p>
+<blockquote><p>[!WARNING] Image y points <strong>down</strong> (page 1). A rotation matrix written for the usual math plot with y pointing up turns the image the opposite way on screen. If your picture rotates the wrong direction, flip the sign of θ. OpenCV&#x27;s <code>getRotationMatrix2D</code> documents its own sign convention: check it, don&#x27;t guess.</p></blockquote>
+<p>Now try one citizen yourself.</p>
+<p>☕ <strong>Try it before you scroll.</strong> Rotate the point (10, 0) by 45° about the origin. <strong>Are the new coordinates whole numbers?</strong> <em>Hint: cos 45° ≈ 0.707.</em></p>
+<hr>
+<h2>The citizen who landed between squares</h2>
+<p><strong>Answer:</strong> no. x&#x27; = 10·0.707 ≈ <strong>7.07</strong>, y&#x27; = 10·0.707 ≈ <strong>7.07</strong>. The citizen lands between squares, which is the whole problem.</p>
+<p>The obvious program loops over every <strong>input</strong> pixel, computes where it goes, and writes its value there. This is <strong>forward mapping</strong>, and it has two flaws:</p>
+<ul><li>Several input pixels may land on one output square (it gets overwritten).</li><li>Some output squares get no one at all, leaving <strong>holes</strong>. Scale up by 2 and three out of four output squares are empty.</li></ul>
+<p>The fix is to run the machine backwards. For each <strong>output</strong> pixel, use the <strong>inverse</strong> matrix to find where it came from in the input, and read the value there:</p>
+<p>This is <strong>inverse (backward) mapping</strong>. Every output square is visited exactly once, so there are no holes. The source position will usually be fractional (7.07, say). So what do you write down when the citizen you need lives between two squares?</p>
+<hr>
+<h2>Guessing between citizens</h2>
+<p><strong>Interpolation</strong> estimates the image value at a fractional position from the nearest real pixels.</p>
+<table><thead><tr><th>Method</th><th>Uses</th><th>Result</th><th>Cost</th></tr></thead><tbody><tr><td>Nearest neighbour</td><td>The 1 closest pixel</td><td>Blocky, jagged edges, but keeps original values exactly</td><td>Cheapest</td></tr><tr><td>Bilinear</td><td>The 4 surrounding pixels, weighted by distance</td><td>Smooth, slightly soft</td><td>Moderate</td></tr><tr><td>Bicubic</td><td>The 16 surrounding pixels (4 × 4), cubic weights</td><td>Sharper than bilinear, mild overshoot possible</td><td>Higher</td></tr></tbody></table>
+<p>The jagged scan came from nearest neighbour (or from careless rounding). Bilinear is the sensible default; bicubic is worth it when you scale up and care about sharpness. Nearest neighbour stays the right choice for <strong>label images</strong> (class masks), where blending two class ids would produce a class that doesn&#x27;t exist.</p>
+<p>Let&#x27;s do bilinear by hand, because it is only four weights. Say the source position is a fraction a to the right and b downward of a square whose four corner pixels are:</p>
+<pre><code class="language-text">f00 (top-left)      f10 (top-right)
+f01 (bottom-left)   f11 (bottom-right)</code></pre>
+<p>The bilinear formula weights each corner by how close you are to it:</p>
+<p>Take corners f00 = 10, f10 = 20, f01 = 30, f11 = 40.</p>
+<table><thead><tr><th>Position (a, b)</th><th>Working</th><th>Result</th></tr></thead><tbody><tr><td>(0.5, 0.5)</td><td>average of the four: (10 + 20 + 30 + 40) / 4</td><td><strong>25</strong></td></tr><tr><td>(0.25, 0.5)</td><td>0.375·10 + 0.125·20 + 0.375·30 + 0.125·40 = 3.75 + 2.5 + 11.25 + 5</td><td><strong>22.5</strong></td></tr><tr><td>(0, 0)</td><td>all weight on f00</td><td><strong>10</strong></td></tr></tbody></table>
+<p>At a grid point the answer is the original pixel; in between it slides smoothly. The same result comes from two steps of 1-D interpolation: along the top edge, along the bottom edge, then between those two.</p>
+<p>Two things you&#x27;ll meet next. An affine transform keeps parallel lines parallel. A <strong>perspective (homography)</strong> transform, a full 3 × 3 matrix with a free bottom row followed by a divide by the third coordinate, doesn&#x27;t. It has <strong>8 free numbers</strong> (four point pairs) and models a flat surface seen from an angle: straightening a photographed document, say. The same inverse-map-and-interpolate loop applies.</p>
+<p>And <strong>shrinking</strong> needs one more care, which <a href="../../../fields/digital-image-processing/frequency-filtering-and-aliasing/">page 7</a> explains in full: reduce the image by a large factor without blurring first and the result aliases. OpenCV&#x27;s docs recommend <code>INTER_AREA</code> when shrinking.</p>
+<p>Now you know enough to go back and look at the staircase.</p>
+<hr>
+<h2>Back to the jagged scan</h2>
+<p>You print where one output pixel comes from in the input. The answer is a fraction, like 7.07 across and 7.07 down: the rotated citizen almost never lands on a square. The script rounded it to the nearest square, every time.</p>
+<p>Rotating by 3 degrees maps nearly every pixel to a fractional position. With nearest neighbour you pick the closest square and the edge becomes a staircase. With bilinear you blend four neighbours: the edges smooth out, and a thin line gets slightly softer, which is the price.</p>
+<p>The cleaner pipeline is inverse mapping with bilinear or bicubic, and only <strong>one</strong> resampling step. Rotating twice in a row compounds the blur, so combine the moves into a single matrix first.</p>
+<p>That also explains your three-step experiment: three rounding-and-blending passes, three doses of blur. You switch the script to inverse mapping with bilinear interpolation and one combined matrix. The text comes out clean and the ruled lines stay unbroken.</p>
+<p>The page was never badly scanned. It was just rotated by a program that rounded.</p>
+<hr>
+<h2>Never again: how to move an image</h2>
+<table><thead><tr><th>Situation</th><th>Do</th></tr></thead><tbody><tr><td>Rotate, scale, shift or shear</td><td>Write one 3 × 3 matrix; chain moves by multiplying, rightmost applied first</td></tr><tr><td>Rotate about the centre</td><td><code>M = T(centre) · R(θ) · T(−centre)</code></td></tr><tr><td>Writing the loop</td><td>Loop over the <strong>output</strong> pixels and use the inverse matrix <code>M^-1</code></td></tr><tr><td>Photos</td><td>Bilinear by default; bicubic when you scale up and care about sharpness</td></tr><tr><td>Label images (class masks)</td><td>Nearest neighbour, so no class id is invented</td></tr><tr><td>Several moves in a row</td><td>Combine them into one matrix: one resampling step, one dose of blur</td></tr><tr><td>Shrinking by a large factor</td><td>Blur first, or use <code>INTER_AREA</code> in OpenCV</td></tr><tr><td>Rotation goes the wrong way</td><td>y points down: flip the sign of θ, and read the library&#x27;s own convention (<code>getRotationMatrix2D</code>)</td></tr></tbody></table>
+<p><strong>Takeaway:</strong> one 3 × 3 matrix handles every affine move; always map output to input, and choose the interpolation to suit the data.</p>
+<p><strong>Next:</strong> so far we moved the citizens. What if we only change what their cards say, to rescue an image whose numbers are squeezed into a dark corner of the range? <a href="../../../fields/digital-image-processing/intensity-transforms-and-histograms/">Part 3: Intensity transforms and histograms</a>.</p>
+<hr>
+<h2>📜 The Scroll (keep this)</h2>
+<pre><code class="language-text">Symptom:  Rotated text has stairs and dashed lines
+Cause:    A rotated pixel lands between squares; nearest neighbour picks one
+Check:    Print the source position of one output pixel: is it a fraction?
+Do not:   Map input to output (holes); rotate in several steps (blur compounds)
+Fix:      Inverse mapping, bilinear or bicubic, one combined matrix
+Mask:     Class masks keep nearest neighbour</code></pre>
+<h3>References</h3>
+<ul><li>R. C. Gonzalez and R. E. Woods, <em>Digital Image Processing</em>, 4th ed., Pearson, 2018: chapter 2 (geometric transformations, interpolation, homogeneous coordinates).</li><li>OpenCV documentation, <a href="https://docs.opencv.org/4.x/da/d54/group__imgproc__transform.html">Geometric Image Transformations</a>: <code>warpAffine</code>, <code>warpPerspective</code>, <code>getRotationMatrix2D</code>, <code>resize</code> and interpolation flags.</li></ul>
+<p><a href="../../../#/fields/digital-image-processing/geometric-transforms-and-interpolation">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Reviewing the Design: Where Would You Push Back?</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/programming/local-app-accounts/reviewing-the-design/">
+<meta name="description" content="Six review questions the design leaves open, a table of mistakes it avoids, the Designing Data-Intensive Applications chapters that explain why, and six exercises.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Reviewing the Design: Where Would You Push Back?">
+<meta property="og:description" content="Six review questions the design leaves open, a table of mistakes it avoids, the Designing Data-Intensive Applications chapters that explain why, and six exercises.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/programming/local-app-accounts/reviewing-the-design/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/programming/local-app-accounts/reviewing-the-design/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../.docs/prerender-redirect.js" data-target="../../../#/programming/local-app-accounts/reviewing-the-design"></script>
+<main>
+<h1>Reviewing the Design: Where Would You Push Back?</h1>
+<p><em>Six review questions the design leaves open, a table of mistakes it avoids, the Designing Data-Intensive Applications chapters that explain why, and six exercises.</em></p>
+<p><em>Local App Accounts, tea talk 6 of 6. Previous: [Lock, Recovery and Going Online](/programming/local-app-accounts/lock-recovery-and-going-online.md).</em></p>
+<p>A good design is not one with no open questions. It is one where the open questions are written down. This last talk puts the design on the review table: six questions it leaves open, the common mistakes it avoids, the book chapters that explain <em>why</em> it works, and a few exercises so the ideas stick.</p>
+<hr>
+<h2>The one-sentence version</h2>
+<p><strong>Every design makes implicit promises, and reviewing is the skill of spotting them and deciding which ones you&#x27;d write down.</strong></p>
+<hr>
+<h2>Six questions to push back on</h2>
+<p>Think about each before reading on. There are no single right answers.</p>
+<ol><li><strong>Remember-me on a shared login.</strong> The token is sealed by a keychain that belongs to the <em>computer</em> user. So when Abdelrahman opens the app from the same computer login, whose account does he land in? Should the checkbox say so?</li><li><strong>Claiming old data.</strong> If any account can claim any unowned profile, could a second account created during the migration window take the first person&#x27;s data without ever seeing the names? Who should be allowed to claim?</li><li><strong>The locked state.</strong> The screen is covered, but does the engine also <em>refuse</em> requests while locked? A covered page and a refusing engine are different guarantees.</li><li><strong>Shared settings that leak.</strong> If the known-SSH-hosts list is shared between accounts, can it reveal hostnames that the pre-claim hiding was meant to protect?</li><li><strong>The backup copy.</strong> The claim flow writes a safety copy of the very data you&#x27;re protecting. Where does it live, with what file permissions, and when is it deleted?</li><li><strong>Hash cost.</strong> Given the stated trade-off, what would you raise the scrypt settings to, and what would it do to sign-in time on a slow laptop?</li></ol>
+<hr>
+<h2>Mistakes this design avoids</h2>
+<table><thead><tr><th>Common mistake</th><th>What the design does instead</th></tr></thead><tbody><tr><td>Overpromising (&quot;secure accounts!&quot;)</td><td>States the threat model, including what it doesn&#x27;t do</td></tr><tr><td>Different errors for &quot;no such user&quot; and &quot;wrong password&quot;</td><td>One message, one look, same timing via a decoy</td></tr><tr><td>Storing a &quot;remember me&quot; password or a raw token</td><td>Stores a fingerprint of a random token</td></tr><tr><td>Authorization only in the UI</td><td>Checks at the door <em>and</em> at the data</td></tr><tr><td>Forgetting to guard a new endpoint</td><td>The build fails until it&#x27;s on the list</td></tr><tr><td>Background tasks outliving the session</td><td>Stops them all, then clears their cached readings</td></tr><tr><td>Silent data migration</td><td>Explicit consent, backup, atomic change</td></tr><tr><td>Treating lock like sign-out</td><td>Two separate states with different effects</td></tr><tr><td>Recovery that leaks secrets</td><td>Recovery wipes them</td></tr></tbody></table>
+<hr>
+<h2>Go deeper: <em>Designing Data-Intensive Applications</em></h2>
+<p>Martin Kleppmann&#x27;s <em>Designing Data-Intensive Applications</em> (O&#x27;Reilly, 2017) is about data systems at scale, but several of its chapters explain why the small decisions in this series are right. The mapping below is my own reading of how the book&#x27;s ideas apply, not claims the book makes about this design. Chapter numbers refer to the first edition; if you have a newer edition, check its table of contents, because the numbering may differ.</p>
+<table><thead><tr><th>Idea in this series</th><th>Where to read more</th><th>What it teaches</th></tr></thead><tbody><tr><td>The self-describing password record, upgraded at the next sign-in</td><td><strong>Ch. 4, Encoding and Evolution</strong></td><td>Backward and forward compatibility: new code must read old records, and formats need room to change</td></tr><tr><td>The all-or-nothing claim, and &quot;what if someone claimed one in between?&quot;</td><td><strong>Ch. 7, Transactions</strong></td><td>Atomicity, isolation, and preventing lost updates when two writers collide</td></tr><tr><td>Cached &quot;last readings&quot; going stale, and the change announcement</td><td><strong>Ch. 11, Stream Processing</strong>, and the book&#x27;s <strong>derived data</strong> theme</td><td>Keeping caches and other derived data in step with their source</td></tr><tr><td>The build check that stops a forgotten guard</td><td><strong>Ch. 1, Reliable, Scalable, and Maintainable Applications</strong></td><td>Human error is a major cause of failures, so design to make mistakes hard</td></tr><tr><td>What changes when the app goes online</td><td><strong>Chs. 5, 6, 8 and 9</strong> (replication, partitioning, distributed-systems trouble, consistency and consensus)</td><td>Everything in this series assumed <em>one computer</em>. A shared server brings these problems in</td></tr></tbody></table>
+<hr>
+<h2>Try it yourself</h2>
+<ol><li><strong>Threat model in five lines.</strong> Pick an app you use. Write what accounts would protect against and what they wouldn&#x27;t, then compare with <a href="../../../programming/local-app-accounts/threat-model-and-first-launch/">talk 1</a>.</li><li><strong>Self-describing hash.</strong> Implement the record format from <a href="../../../programming/local-app-accounts/sign-in-hygiene/">talk 2</a> in your language, with a function that verifies a password and says whether the record needs upgrading.</li><li><strong>Make it identical.</strong> Write a sign-in whose response is the same text, and takes about the same time, for an unknown user and a wrong password. Then measure both.</li><li><strong>Break the door guard.</strong> Add an endpoint that takes a resource id, forget the ownership check, and write the test or build step that catches it (<a href="../../../programming/local-app-accounts/sessions-and-two-walls/">talk 3</a>).</li><li><strong>Late arrival.</strong> Build a tiny &quot;start all monitors on sign-in&quot; loop, register one monitor <em>after</em> sign-in, watch it never start, then fix it (<a href="../../../programming/local-app-accounts/old-data-and-background-work/">talk 4</a>).</li><li><strong>Review the review.</strong> Pick two of the six questions above, decide your answers, and write the one sentence each would add to the threat model.</li></ol>
+<hr>
+<h2>Cheat sheet</h2>
+<ul><li><strong>Who&#x27;s signed in?</strong> One note in the engine&#x27;s memory.</li><li><strong>What may they see?</strong> Profiles they own, and everything under them.</li><li><strong>Where is it enforced?</strong> At the door (Bouncer) and again in the database (Cartographer).</li><li><strong>A new request names a resource?</strong> The build fails until it&#x27;s on the Bouncer&#x27;s list.</li><li><strong>What stops on sign-out?</strong> Sessions, tunnels, pop-outs and every monitor, plus their cached readings.</li><li><strong>What does the lock do?</strong> Covers the window; changes nothing underneath.</li><li><strong>Forgot the password?</strong> A terminal command resets it and wipes the saved secrets.</li><li><strong>Going online?</strong> Add a second Clerk.</li></ul>
+<hr>
+<h2>The one-paragraph takeaway</h2>
+<p>Adding accounts to a local app is mostly honesty plus plumbing. Be honest about what the feature protects, then do the plumbing so the promise holds everywhere: identical failures at sign-in, two independent walls around data, background work that follows the signed-in person, migrations that never surprise, and a lock that isn&#x27;t a sign-out. Where the design leaves questions open, write them down.</p>
+<hr>
+<h2>References</h2>
+<ul><li>Martin Kleppmann, <em>Designing Data-Intensive Applications</em>, O&#x27;Reilly, 2017: chapters on encoding and evolution, transactions, stream processing and derived data</li><li>OWASP Cheat Sheet Series, <a href="https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html">Password Storage Cheat Sheet</a></li><li>OWASP Cheat Sheet Series, <a href="https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html">Authentication Cheat Sheet</a></li><li>OWASP Cheat Sheet Series, <a href="https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html">Authorization Cheat Sheet</a></li><li><a href="https://devguide.owasp.org/en/04-design/02-web-app-checklist/07-access-controls/">OWASP Developer Guide, Enforce Access Controls checklist</a></li><li><a href="https://owasp.org/Top10/2025/A01_2025-Broken_Access_Control/">OWASP Top 10, A01 Broken Access Control</a></li></ul>
+<p>The &quot;Where would you push back?&quot; questions, the DDIA mapping and the lessons are reviewer commentary, not part of the original design.</p>
+<p><a href="../../../#/programming/local-app-accounts/reviewing-the-design">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

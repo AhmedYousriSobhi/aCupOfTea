@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Design Pattern - Feature Cross</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/design-patterns/feature-cross/">
+<meta name="description" content="The Feature Cross pattern: join categorical features into one combined feature so a model can learn their interaction faster, even a simple linear one.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Design Pattern - Feature Cross">
+<meta property="og:description" content="The Feature Cross pattern: join categorical features into one combined feature so a model can learn their interaction faster, even a simple linear one.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/design-patterns/feature-cross/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/design-patterns/feature-cross/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../.docs/prerender-redirect.js" data-target="../../../#/fields/design-patterns/feature-cross/"></script>
+<main>
+<h1>Design Pattern - Feature Cross</h1>
+<p><em>The Feature Cross pattern: join categorical features into one combined feature so a model can learn their interaction faster, even a simple linear one.</em></p>
+<blockquote><p>One idea: instead of hoping the model finds how two features interact, hand it that combination as a feature of its own.</p></blockquote>
+<h2>Abstract</h2>
+<p>In Machine Learning, Feature engineering is the process of using domain knowledge to create new features that aid the machine learning process and increase the predictive power of our model. One commonly used feature engineering technique is creating a feature cross.</p>
+<p>The Feature Cross design pattern helps the models learn relationships between inputs faster by explicitly making each combination of input values a separate feature.</p>
+<h2>Definition</h2>
+<p>A feature cross is a synthetic feature formed by concatenating two or more categorical features in order to capture the interaction between them.</p>
+<h2>Important</h2>
+<p>By joining two features in this way, it is possible to encode nonlinearity into the model, which can allow for predictive abilities beyond what each of the features would have been able to provide individually.</p>
+<p>Feature Crosses provide a way to have the ML model learn relationships between the features faster. While in complex models like neural networks and trees can learn feature crosses on their own, using feature crosses explicitly can allow us to get away with training just a linear model. Consequently, feature crosses can speed up model training (less expensive) and reduce model complexity (less data is needed).</p>
+<h2>Credits</h2>
+<ul><li>This Previous illustration is summarized from chapter-2, design pattern #3 in book: <strong>Machine Learning Design Patterns - Solutions to Common challenges in Data Preparation, Model Building, and MLOps</strong></li></ul>
+<p><a href="../../../#/fields/design-patterns/feature-cross/">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

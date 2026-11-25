@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <!-- Content-Security-Policy: scripts only from this site and the pinned CDN (no inline scripts),
+       no plugins, and frames only from this site (the sandboxed lab pages, see .docs/lab-embed.js). GitHub Pages cannot send headers, so it is set here. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; font-src 'self' data: https://cdn.jsdelivr.net; img-src 'self' data: https:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; frame-src 'self'; base-uri 'self'; form-action 'none'">
+  <title>aCupOfTea: knowledge in short sips</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="description" content="Notes on AI, machine learning, software engineering and the business around them, short enough to read on a coffee break.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="aCupOfTea: knowledge in short sips">
+  <meta property="og:description" content="Notes on AI, machine learning, software engineering and the business around them, short enough to read on a coffee break.">
+  <meta name="twitter:card" content="summary">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="./.docs/icons/favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="./.docs/icons/favicon-32.png">
+  <link rel="apple-touch-icon" href="./.docs/icons/apple-touch-icon.png">
+  <link rel="manifest" href="./.docs/icons/site.webmanifest">
+  <link rel="alternate" type="application/atom+xml" title="aCupOfTea: newest pages" href="./feed.xml">
+  <meta name="theme-color" content="#1f7a52">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify@5.0.0/dist/themes/core.min.css" integrity="sha384-u1ltA0BWEetQbGokjUjglT9sN702RQwy8JESh3Ha4GNlyzMU57usk6duY0/BOTMj" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify@5.0.0/dist/themes/addons/vue.min.css" integrity="sha384-Juf4pwILpOysilbsFQxO8a3Ct3yDvSPolGmartfG+QQRLj6m7c1mYWV38WDI1N93" crossorigin="anonymous">
+  <link rel="stylesheet" id="dark-css" href="https://cdn.jsdelivr.net/npm/docsify@5.0.0/dist/themes/addons/core-dark.min.css" integrity="sha384-g9crfHW8IcGuSHfca3iTqOPPx2uRbodq5uKkC9CiXVqnNVszeNEYKIs5nYc8wUXY" crossorigin="anonymous">
+  <script src="./.docs/theme-toggle.js"></script>
+  <link rel="stylesheet" href="./.docs/site.css">
+
+</head>
+
+<body>
+  <div id="app"></div>
+  <noscript>
+    <div style="max-width:640px;margin:15vh auto;padding:0 16px;font:17px/1.6 sans-serif;color:#34495e">
+      <h1 style="font-size:1.6em">aCupOfTea</h1>
+      <p>This site needs JavaScript to show its pages. Every page can also be read as plain markdown in the
+      <a href="https://github.com/AhmedYousriSobhi/aCupOfTea">repository on GitHub</a>.</p>
+    </div>
+  </noscript>
+  <!-- Docsify settings (window.$docsify) -->
+  <script src="./.docs/site.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify@5.0.0/dist/docsify.min.js" integrity="sha384-w6yZXzkazsxmservgGooUY9zjEHzIFHubRNZMLJ3enj/JD+Z8BvAGBqdrjfnLNhu" crossorigin="anonymous"></script>
+  <!-- Code colours for the languages the pages use (Docsify bundles Prism with web languages only) -->
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-bash.min.js" integrity="sha384-9WmlN8ABpoFSSHvBGGjhvB3E/D8UkNB9HpLJjBQFC2VSQsM1odiQDv4NbEo+7l15" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-python.min.js" integrity="sha384-WJdEkJKrbsqw0evQ4GB6mlsKe5cGTxBOw4KAEIa52ZLB7DDpliGkwdme/HMa5n1m" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-powershell.min.js" integrity="sha384-xbI9krqyYp4npK9Cn94XyNoSR+TYZKddrk0NUVZ44zZ+OVpKz/LL0U1PB0MjR7Vx" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-yaml.min.js" integrity="sha384-AKAiycghK0jDCjD+aavMHzDkLzRR7Yzcwh3+xL/295cvyVMe+cxQfyQC8xxGGcI8" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-c.min.js" integrity="sha384-gaD4ncierlmWk42Z3BmTp37/z+Dqt8V4Wf74UjTvFeo+M+SgnEI6Ysd98pWhksQv" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-ini.min.js" integrity="sha384-IzgZExoq7muPnVEjP/MVubbALJ4d+D++YULBQxvKKWLSoXut91gFAg36n+5WAFf6" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-sql.min.js" integrity="sha384-/MKWdycCDliku23mP5sYXbZNuXrzgmQO/jsVxwPFn99dVOaXRyKsqDjarqpueGAp" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify@5.0.0/dist/plugins/zoom-image.min.js" integrity="sha384-fEfrGm33VrJRIHLahu6V+6z/ko0yy5DuXngjAfwUDYN9jlYLwxTySLCReKmEh6vo" crossorigin="anonymous"></script>
+  <!-- On phones, tapping a picture opens it full size to pan and pinch -->
+  <script src="./.docs/image-viewer.js"></script>
+  <!-- Hides YAML front matter (title, summary, tags) from the rendered page -->
+  <script src="https://cdn.jsdelivr.net/npm/docsify@5.0.0/dist/plugins/front-matter.min.js" integrity="sha384-q8Wjf/FHh26HTvmdZvJLHedWqYyJqQIEiUUQgGuIM8Efquoyrs3G5lxd619gLhvl" crossorigin="anonymous"></script>
+  <script src="./.docs/copy-code.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify-tabs@1.6.3/dist/docsify-tabs.min.js" integrity="sha384-QA3IVKzXq6xcKR8yQJHgDbI1FcJiQ137Cuetl1VWzUxJ6BQ7ew0MMq5fg2HbFK1o" crossorigin="anonymous"></script>
+  <script src="./.docs/sidebar-groups.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify-pagination@2.10.1/dist/docsify-pagination.min.js" integrity="sha384-uFEp18/1vv2dYlO64J2lOcnbhirAQZPtruqAZZ7PZYoXenm5c+tIs3AqSMjVMRe8" crossorigin="anonymous"></script>
+
+</body>
+</html>

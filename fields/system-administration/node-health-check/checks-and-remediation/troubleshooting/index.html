@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>NHC Troubleshooting: Symptom First</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/node-health-check/checks-and-remediation/troubleshooting/">
+<meta name="description" content="Symptom-first fixes for false drains, nodes that never resume, slurmd that won&#x27;t register, timeouts, hanging df, and checks that pass by hand but fail under Slurm.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="NHC Troubleshooting: Symptom First">
+<meta property="og:description" content="Symptom-first fixes for false drains, nodes that never resume, slurmd that won&#x27;t register, timeouts, hanging df, and checks that pass by hand but fail under Slurm.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/node-health-check/checks-and-remediation/troubleshooting/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/node-health-check/checks-and-remediation/troubleshooting/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../../.docs/prerender-redirect.js" data-target="../../../../../#/fields/system-administration/node-health-check/checks-and-remediation/troubleshooting"></script>
+<main>
+<h1>NHC Troubleshooting: Symptom First</h1>
+<p><em>Symptom-first fixes for false drains, nodes that never resume, slurmd that won&#x27;t register, timeouts, hanging df, and checks that pass by hand but fail under Slurm.</em></p>
+<blockquote><p><strong>Part 8 of the [Node Health Check series](/fields/system-administration/node-health-check/README.md).</strong> Find your symptom, follow the steps. Bookmark this one; future you at 2 AM will be grateful.</p></blockquote>
+<hr>
+<h2>The debugging toolkit</h2>
+<p>Memorize these five; they solve most problems.</p>
+<pre><code class="language-bash"># What did NHC say, and when?
+sinfo -R                                  # drain reasons across the cluster
+tail -50 /var/log/nhc.log                 # on the node
+
+# Rerun like slurmd would, but see everything and drain nothing (as root on the node)
+nhc -a -v -l- MARK_OFFLINE=0
+
+# Test a single check line in isolation
+nhc -l- -e &#x27;check_fs_mount_rw -f /scratch&#x27; MARK_OFFLINE=0
+
+# Full bash trace into a file you can read (or attach to a GitHub issue)
+BASH_XTRACEFD=33 33&gt;/tmp/nhc-trace.out nhc -xdavl- MARK_OFFLINE=0
+
+# Which files and paths is this NHC actually using? (1.5)
+nhc -V -V -V</code></pre>
+<hr>
+<h2>1. A healthy node keeps getting drained</h2>
+<p><strong>Look at the reason first.</strong> <code>sinfo -R -n &lt;node&gt;</code> usually names the check. Then rerun with <code>-a -v -l- MARK_OFFLINE=0</code> on the node.</p>
+<table><thead><tr><th>Likely cause</th><th>Tell-tale</th><th>Fix</th></tr></thead><tbody><tr><td>Expectation is wrong for this hardware class</td><td>Same failure on all nodes of a class</td><td>Fix the config line or its target (<a href="../../../../../fields/system-administration/node-health-check/getting-started/writing-nhc-conf/">part 3</a>)</td></tr><tr><td>Memory check without fudge factor</td><td><code>check_hw_physmem</code> complaining by a few hundred MB</td><td>Add a fudge: <code>check_hw_physmem 512GB 512GB 3%</code></td></tr><tr><td>Threshold checks during busy hours</td><td><code>check_ps_loadavg</code>, <code>check_fs_free</code> fail only by day</td><td>Raise thresholds, or move them to a non-draining context</td></tr><tr><td>Flaky network check</td><td><code>check_net_ping</code> fails randomly</td><td>More packets and a longer wait (<code>-c 3 -W 3</code>); check the target isn&#x27;t overloaded</td></tr><tr><td>Target matches more hosts than intended</td><td>Login nodes failing compute checks</td><td>Test with <code>nhc -m login01 -a -v -l- MARK_OFFLINE=0</code> (1.5) to see which lines apply</td></tr><tr><td>Hostname format mismatch</td><td>Checks for <code>cn*</code> not running, or running for the wrong nodes</td><td>Compare <code>cat /proc/sys/kernel/hostname</code> with your targets (FQDN vs short name)</td></tr></tbody></table>
+<hr>
+<h2>2. The problem is fixed but the node never comes back</h2>
+<p>NHC resumes a node only when <strong>all</strong> of these are true. Walk the list:</p>
+<ol><li><strong>The reason still starts with `NHC:`.</strong> If someone (or a script) edited it, NHC no longer owns the node. <code>sinfo -R -n &lt;node&gt;</code>. Fix: resume it yourself, or set the reason back to an <code>NHC:</code> one.</li><li><strong>NHC actually runs on drained nodes.</strong> <code>HealthCheckNodeState=NONDRAINED_IDLE</code> never checks drained nodes, so they never get resumed. <code>scontrol show config | grep -i healthcheck</code>.</li><li><strong>The node isn&#x27;t in `MAINT`.</strong> NHC 1.5 doesn&#x27;t resume nodes in maintenance state; Slurm rejects that transition anyway.</li><li><strong>It wasn&#x27;t a permanent failure.</strong> A <code>(perm)</code> tag in the reason means NHC ran with <code>-p</code>. Humans only.</li><li><strong>`MARK_OFFLINE` isn&#x27;t 0.</strong> Left over from a canary or a dry run? It disables onlining too. <code>grep -r MARK_OFFLINE /etc/nhc /etc/sysconfig/nhc /etc/default/nhc 2&gt;/dev/null</code>.</li><li><strong>All checks pass now</strong>, not just the one you fixed. With default settings NHC stops at the first failure, so a second, hidden problem keeps it drained. Run with <code>-a</code>.</li><li><strong>The online helper can talk to Slurm.</strong> Look in <code>nhc.log</code> for helper output; <code>scontrol</code> must work from the node as root.</li></ol>
+<hr>
+<h2>3. Node is drained, but not by NHC</h2>
+<p>If the reason doesn&#x27;t start with <code>NHC:</code>, NHC didn&#x27;t do it, and NHC won&#x27;t undo it. Common culprits:</p>
+<table><thead><tr><th>Reason</th><th>Who did it</th></tr></thead><tbody><tr><td><code>Kill task failed</code></td><td><code>slurmd</code> couldn&#x27;t kill a job step (often processes stuck in D state on a dead filesystem)</td></tr><tr><td><code>Epilog error</code> / <code>Prolog error</code></td><td>Your prolog/epilog exited non-zero</td></tr><tr><td><code>Not responding</code> / <code>NO NETWORK ADDRESS</code></td><td>Controller lost contact with <code>slurmd</code></td></tr><tr><td><code>Low RealMemory</code> / <code>Low socket*core*thread count</code></td><td>Node registered with less hardware than <code>slurm.conf</code> says</td></tr><tr><td><code>Reboot ASAP</code></td><td>Someone ran <code>scontrol reboot ASAP</code></td></tr><tr><td>Empty</td><td>A human, being mysterious</td></tr></tbody></table>
+<p>Fun fact: <code>Kill task failed</code> and an NHC <code>check_fs_mount</code> failure often show up together. Same root cause (dead storage), two different detectors.</p>
+<hr>
+<h2>4. After boot, the node never registers with Slurm</h2>
+<p><code>slurmd</code> runs the health check <strong>at startup, before registering</strong>. If NHC fails, the node stays out of the pool.</p>
+<pre><code class="language-bash"># on the node
+systemctl status slurmd
+journalctl -u slurmd -b | grep -i health
+nhc -a -v -l- MARK_OFFLINE=0          # what&#x27;s actually failing at boot?</code></pre>
+<p>Typical boot-time-only failures:</p>
+<ul><li><strong>Mounts not ready yet.</strong> NFS/Lustre mount after <code>slurmd</code> starts. Order your units (<code>After=remote-fs.target</code> in a <code>slurmd</code> drop-in) instead of loosening the check.</li><li><strong>GPU driver not initialized.</strong> Persistence daemon or fabric manager not started yet. Same fix: unit ordering.</li><li><strong>Image drift.</strong> The node booted an image whose hardware or software differs from what the config expects.</li></ul>
+<blockquote><p>[!TIP] Need the node up <em>now</em> while you fix the config? Temporarily run with a known-good config, <code>nhc -c /etc/nhc/nhc.conf.minimal</code>, via the <code>HealthCheckProgram</code> wrapper, rather than removing health checks cluster-wide.</p></blockquote>
+<hr>
+<h2>5. NHC times out, or gets killed silently</h2>
+<p>Two clocks again (<a href="../../../../../fields/system-administration/node-health-check/getting-started/slurm-integration/">part 4</a>):</p>
+<ul><li><strong>NHC&#x27;s watchdog fired</strong> (default 30 s): you&#x27;ll see a timeout failure in <code>nhc.log</code> and a drain reason saying so. Something in your checks was slow.</li><li><strong>Slurm killed NHC</strong> (60 s, or <code>HealthCheckTimeout</code>): no NHC message at all, just a truncated log. Your <code>TIMEOUT</code> is higher than Slurm&#x27;s. Lower it.</li></ul>
+<p>Find the slow check:</p>
+<pre><code class="language-bash">time nhc -a -v -l- -t 0 MARK_OFFLINE=0     # -t 0 disables the watchdog; -v shows progress</code></pre>
+<p>The usual suspect: <strong>`df` hanging on a dead NFS or Lustre mount</strong> inside <code>check_fs_free</code>/<code>check_fs_used</code>/<code>check_fs_inodes</code>. Fixes, in order of preference:</p>
+<ol><li><code>* || DF_FLAGS=&quot;-Tkal&quot;</code> and <code>* || DFI_FLAGS=&quot;-Tial&quot;</code> so <code>df</code> skips network filesystems when you only check local ones.</li><li>Check network filesystems with <code>check_fs_mount*</code> (reads <code>/proc/mounts</code>, doesn&#x27;t touch the server) instead of space checks.</li><li><code>DETACHED_MODE=1</code> so <code>slurmd</code> never blocks (accepting that failures are reported one run late).</li></ol>
+<p>Other slow spots: <code>nvidia-smi</code> on a wedged GPU (wrap it in <code>timeout</code>), <code>dmidecode</code> on some BMCs, DNS lookups in <code>check_net_ping</code> (use IPs or <code>/etc/hosts</code>).</p>
+<p><strong>Two NHCs at once?</strong> NHC 1.5 keeps a per-context PID file, so a second run won&#x27;t pile on top of a hung one. On older versions, overlapping runs are possible when checks run longer than the interval.</p>
+<hr>
+<h2>6. Works when I run it, fails under slurmd</h2>
+<p>Your shell and <code>slurmd</code>&#x27;s environment are not the same:</p>
+<table><thead><tr><th>Difference</th><th>Symptom</th><th>Fix</th></tr></thead><tbody><tr><td><code>PATH</code> (NHC sets <code>/sbin:/usr/sbin:/bin:/usr/bin</code>)</td><td>&quot;command not found&quot;, exit 127</td><td>Full paths in checks, or <code>* || export PATH=&quot;$PATH:/opt/x/bin&quot;</code> at the top of the config</td></tr><tr><td>Environment modules / <code>LD_LIBRARY_PATH</code></td><td>Vendor tools fail to load libraries</td><td>Call tools through a wrapper script that sets their environment</td></tr><tr><td>Ran as a user vs root</td><td>Permission errors on <code>dmesg</code>, <code>/dev/*</code></td><td><code>slurmd</code> runs it as root; test as root too</td></tr><tr><td><code>sudo</code> closing file descriptors</td><td>Your trace redirect (<code>33&gt;</code>) is empty</td><td>Use a real root shell for tracing</td></tr></tbody></table>
+<hr>
+<h2>7. My config change does nothing</h2>
+<ul><li><strong>Wrong file for the context.</strong> <code>nhc -n foo</code> reads <code>/etc/nhc/foo.conf</code>, not <code>nhc.conf</code>. Check what&#x27;s loaded with <code>nhc -V -V -V</code> (1.5) and <code>-v</code> output.</li><li><strong>Early-only variable set in the config.</strong> <code>TIMEOUT</code>, <code>DETACHED_MODE</code>, <code>LOGFILE</code>, <code>CONFFILE</code>, <code>NAME</code>... go in the sysconfig file or on the command line (<a href="../../../../../fields/system-administration/node-health-check/getting-started/writing-nhc-conf/">part 3</a>).</li><li><strong>Config beats command line.</strong> <code>nhc FOO=1</code> loses to <code>FOO=0</code> in the config.</li><li><strong>Custom module not loading.</strong> It must end in <code>.nhc</code> and live in <code>/etc/nhc/scripts/</code> (or <code>$INCDIR</code>). <code>bash -n</code> it for syntax errors.</li><li><strong>Variable set after it&#x27;s used.</strong> Lines execute in order; assignments must come before the checks that need them.</li><li><strong>Old copy on the node.</strong> Your config management didn&#x27;t run. <code>md5sum /etc/nhc/nhc.conf</code> across the fleet with <code>clush -b</code>.</li></ul>
+<hr>
+<h2>8. Weird errors: 126, 127, &quot;no checks&quot;, &quot;Unsupported RM&quot;</h2>
+<table><thead><tr><th>Message / code</th><th>Meaning</th><th>Fix</th></tr></thead><tbody><tr><td>Exit <strong>127</strong></td><td>Command not found</td><td>Full path or <code>PATH</code> (see #6). 1.5 explicitly points this out</td></tr><tr><td>Exit <strong>126</strong></td><td>Found but not executable</td><td><code>chmod +x</code>, check <code>noexec</code> mounts</td></tr><tr><td>Warning: check list is <strong>empty</strong> (1.5)</td><td>No line&#x27;s target matched this hostname</td><td>Compare targets with the real hostname; test with <code>-m</code></td></tr><tr><td><code>Unsupported RM detected</code> from a helper</td><td>NHC couldn&#x27;t tell which resource manager to talk to</td><td>Set <code>NHC_RM=slurm</code> in <code>/etc/sysconfig/nhc</code></td></tr><tr><td><code>check_file_stat</code> options behave differently after upgrade</td><td>1.5 breaking change: <code>-M</code>/<code>-m</code> now test the file <em>type</em>; permission bits moved to <code>-P</code>/<code>-p</code></td><td>Update those lines when moving to 1.5</td></tr></tbody></table>
+<hr>
+<h2>9. Build and install problems</h2>
+<ul><li><strong>`./configure: No such file or directory`</strong>: you downloaded GitHub&#x27;s auto-generated &quot;Source code&quot; archive. Use the <code>lbnl-nhc-&lt;ver&gt;.tar.xz</code> release asset, or run <code>./autogen.sh</code> first (<a href="../../../../../fields/system-administration/node-health-check/getting-started/build-and-install/">part 2</a>).</li><li><strong>`make test` fails</strong>: something about your platform breaks an assumption (bash version, <code>/proc</code> layout). That&#x27;s a real bug report: post the output.</li><li><strong>Helpers not found</strong>: the <code>--libexecdir</code> you built with doesn&#x27;t match where NHC looks. Compare <code>nhc -V -V -V</code> with the files on disk, or set <code>HELPERDIR</code> in the sysconfig file.</li></ul>
+<hr>
+<h2>Still stuck?</h2>
+<ul><li>Search and open issues at <a href="https://github.com/mej/nhc/issues">github.com/mej/nhc/issues</a>. Attach the <code>-x</code> trace file from the toolkit above, your NHC version, distro, and the relevant config lines.</li><li>The NHC users&#x27; mailing list (<code>nhc@lbl.gov</code>) and the Slurm users&#x27; list both have years of searchable answers.</li></ul>
+<blockquote><p><strong>Takeaway:</strong> read the reason, rerun with <code>-a -v -l- MARK_OFFLINE=0</code>, trace with <code>-x</code> when lost. Most problems are one of: wrong expectation, ownership (<code>NHC:</code> prefix), timeouts, <code>df</code> on dead NFS, or environment differences under <code>slurmd</code>.</p></blockquote>
+<h3>References</h3>
+<ul><li><a href="https://github.com/mej/nhc#testing">NHC README: Testing, Command-Line Invocation, Configuration Variables</a></li><li><a href="https://github.com/mej/nhc/releases/tag/1.5">NHC 1.5 release notes: exit codes 126/127, empty check list warning, PID file, <code>check_file_stat</code> change</a></li><li><a href="https://slurm.schedmd.com/slurm.conf.html#OPT_HealthCheckProgram"><code>slurm.conf</code>: HealthCheckProgram behavior at slurmd startup</a></li></ul>
+<p><a href="../../../../../#/fields/system-administration/node-health-check/checks-and-remediation/troubleshooting">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

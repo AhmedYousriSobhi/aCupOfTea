@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The Receptionist Who Rewrites Your Badge: jobsubmit.lua</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-preemption/slurm-job-submit-lua/">
+<meta name="description" content="What the Lua jobsubmit plugin is, where its script lives, what it can read and return, four tested recipes (QOS routing, time limits, requeue, exclusive), and how it fails.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="The Receptionist Who Rewrites Your Badge: jobsubmit.lua">
+<meta property="og:description" content="What the Lua jobsubmit plugin is, where its script lives, what it can read and return, four tested recipes (QOS routing, time limits, requeue, exclusive), and how it fails.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-preemption/slurm-job-submit-lua/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-preemption/slurm-job-submit-lua/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/schedulers/slurm-preemption/slurm-job-submit-lua"></script>
+<main>
+<h1>The Receptionist Who Rewrites Your Badge: jobsubmit.lua</h1>
+<p><em>What the Lua jobsubmit plugin is, where its script lives, what it can read and return, four tested recipes (QOS routing, time limits, requeue, exclusive), and how it fails.</em></p>
+<blockquote><p><strong>Part of the [schedulers](/fields/schedulers/slurm-intro.md) directory.</strong> Everything here was run on a two-node test cluster (Slurm 23.11.4, accounting on, both <code>slurmd</code> daemons on one Ubuntu 24.04 machine), including the failures. Names and stories are invented. Field names and return codes can differ between Slurm versions, so print what your version gives you (the probe in What the script can see) before you build on it.</p></blockquote>
+<hr>
+<h2>The seven-day job nobody meant</h2>
+<p>On Monday morning the admin opens the queue and finds forty pending jobs, each one claiming a time limit of seven days. Nobody asked for seven days. The partition&#x27;s <code>MaxTime</code> is seven days, and a job that does not say <code>--time</code> quietly inherits it.</p>
+<p>To the scheduler, every one of those jobs is a boulder. The <a href="../../../../fields/schedulers/slurm-backfill-tuning/">backfill page</a> explains the consequence: backfill plans from time limits, so a queue full of week-long boulders leaves no gaps for the short jobs that could have run in minutes. The admin could send an email that says &quot;please always set <code>--time</code>&quot;. Nobody reads that email. What the cluster needs is a doorman who checks the badge on the way in.</p>
+<p>Slurm has one. It is called the job submit plugin, and the version most people end up using is written in Lua.</p>
+<hr>
+<h2>What the plugin is</h2>
+<p>The <code>job_submit/lua</code> plugin runs a script of yours <strong>inside `slurmctld`, every time a job is submitted or modified</strong>. The script receives the job as a table, <code>job_desc</code>, and may change it, accept it, or refuse it, all before the scheduler has seen the job.</p>
+<pre><code class="language-mermaid">flowchart LR
+    A[&quot;sbatch / srun / scontrol update&quot;] --&gt; B[&quot;slurmctld&quot;]
+    B --&gt; C{&quot;job_submit.lua&quot;}
+    C --&gt;|&quot;edit fields,&lt;br/&gt;return SUCCESS&quot;| D[&quot;Job enters the queue&quot;]
+    C --&gt;|&quot;return an error&lt;br/&gt;+ message&quot;| E[&quot;User sees the error,&lt;br/&gt;no job is created&quot;]</code></pre>
+<p>Two functions make a script. Slurm calls them by name:</p>
+<table><thead><tr><th>Function</th><th>Called when</th><th>Typical use</th></tr></thead><tbody><tr><td><code>slurm_job_submit(job_desc, part_list, submit_uid)</code></td><td>A job is submitted</td><td>Defaults, routing, rejecting</td></tr><tr><td><code>slurm_job_modify(job_desc, job_rec, part_list, modify_uid)</code></td><td>A job is changed with <code>scontrol update</code></td><td>Applying the same rules, so nobody bypasses them</td></tr></tbody></table>
+<p>This is the receptionist from the title. She sees every visitor, can write a different name on the badge, and can turn people away at the door. She does not decide who gets a seat (that is the scheduler), and she knows nothing about <a href="../../../../fields/schedulers/slurm-preemption/slurm-qos-preemption-setup/">preemption</a>. She only decides what the badge says.</p>
+<hr>
+<h2>Turning it on</h2>
+<p>Two things, in this order:</p>
+<ol><li><strong>Put `job_submit.lua` in the same directory as the `slurm.conf` the controller runs with.</strong> That is <code>/etc/slurm</code> on many sites and somewhere else on others. On the test cluster the controller was started with <code>SLURM_CONF=/opt/.../slurm.conf</code> and the script sat next to that file, with no copy in <code>/etc/slurm</code>. It loaded.</li><li><strong>Then add `JobSubmitPlugins=lua` to `slurm.conf`</strong> and run <code>scontrol reconfigure</code>.</li></ol>
+<blockquote><p>[!WARNING] The order matters. With <code>JobSubmitPlugins=lua</code> set and the file missing, <code>slurmctld</code> refuses to start: the log says it is unable to stat <code>.../job_submit.lua</code>, and users see &quot;Unable to contact slurm controller&quot;. Put the file there first, and check it with <code>luac -p job_submit.lua</code> if you have <code>luac</code>.</p></blockquote>
+<p>Confirm it loaded:</p>
+<pre><code class="language-bash">scontrol show config | grep JobSubmitPlugins
+grep job_submit /var/log/slurm/slurmctld.log | tail -3</code></pre>
+<pre><code class="language-text">JobSubmitPlugins        = lua
+[2026-11-12T11:31:23.435] lua: job_submit.lua loaded</code></pre>
+<hr>
+<h2>What the script can see</h2>
+<p>The <code>job_desc</code> table holds what the user asked for. A field the user did not set is <code>nil</code>, or a &quot;not set&quot; number. To see what your version gives you, put a probe in the script and submit a few jobs:</p>
+<pre><code class="language-lua">function slurm_job_submit(job_desc, part_list, submit_uid)
+    slurm.log_info(&quot;PROBE account=%s default_account=%s qos=%s time_limit=%s shared=%s&quot;,
+        tostring(job_desc.account), tostring(job_desc.default_account),
+        tostring(job_desc.qos), tostring(job_desc.time_limit), tostring(job_desc.shared))
+    return slurm.SUCCESS
+end
+function slurm_job_modify(job_desc, job_rec, part_list, modify_uid)
+    return slurm.SUCCESS
+end</code></pre>
+<p>What the log showed for a plain <code>sbatch --hold</code> by a user whose default account is <code>physics</code>:</p>
+<table><thead><tr><th>Field</th><th>Value seen</th><th>What it means</th></tr></thead><tbody><tr><td><code>job_desc.account</code></td><td><code>nil</code></td><td>The user did not pass <code>-A</code>. <strong>Not</strong> &quot;the user has no account&quot;</td></tr><tr><td><code>job_desc.default_account</code></td><td><code>physics</code></td><td>The user&#x27;s default account. <code>nil</code> for a user with no account at all</td></tr><tr><td><code>job_desc.qos</code></td><td><code>nil</code></td><td>No <code>--qos</code> typed</td></tr><tr><td><code>job_desc.time_limit</code></td><td><code>4294967294</code> (<code>slurm.NO_VAL</code>)</td><td>No <code>--time</code> typed</td></tr><tr><td><code>job_desc.shared</code></td><td><code>65534</code></td><td>Unset. <code>0</code> for <code>--exclusive</code>, <code>1</code> for <code>--oversubscribe</code>, <code>2</code> for <code>--exclusive=user</code></td></tr></tbody></table>
+<p>So &quot;which account will this be charged to&quot; is two lookups, <code>account</code> first and <code>default_account</code> as the fallback. Forgetting the fallback makes the script reject every user who relies on a default account.</p>
+<hr>
+<h2>What the script can say back</h2>
+<p>The return value decides the fate of the job:</p>
+<table><thead><tr><th>Return</th><th>Effect</th></tr></thead><tbody><tr><td><code>slurm.SUCCESS</code></td><td>Accept (with whatever edits the script made)</td></tr><tr><td><code>slurm.ERROR</code></td><td>Refuse with the generic &quot;Unspecified error&quot;</td></tr><tr><td><code>slurm.ESLURM_INVALID_TIME_LIMIT</code>, <code>slurm.ESLURM_INVALID_QOS</code>, <code>slurm.ESLURM_INVALID_ACCOUNT</code>, <code>slurm.ESLURM_ACCESS_DENIED</code>, ...</td><td>Refuse with the standard Slurm message for that error</td></tr></tbody></table>
+<p>And two logging calls, which go to different places:</p>
+<table><thead><tr><th>Call</th><th>Goes to</th></tr></thead><tbody><tr><td><code>slurm.log_info(fmt, ...)</code></td><td><code>slurmctld.log</code>, with a <code>lua:</code> prefix. For the admin</td></tr><tr><td><code>slurm.log_user(text)</code></td><td>The user&#x27;s terminal, as <code>sbatch: error: &lt;text&gt;</code>. For the human at the door</td></tr></tbody></table>
+<p>Together, a refusal that explains itself looks like this:</p>
+<pre><code class="language-text">$ sbatch --wrap=&#x27;sleep 1&#x27;
+sbatch: error: Please set --time, jobs without one are not accepted
+sbatch: error: Batch job submission failed: Requested time limit is invalid (missing or exceeds some limit)</code></pre>
+<p>The first line is <code>log_user</code>; the second is the standard text for the error code the script returned. Without <code>log_user</code> the user would get only the second line and write to you.</p>
+<hr>
+<h2>Recipe 1: default the QOS and route &quot;high&quot;</h2>
+<p>The most common job for the receptionist, and the reason this page exists next to the <a href="../../../../fields/schedulers/slurm-preemption/slurm-qos-preemption-setup/">QOS preemption setup</a>. A job with no QOS goes to <code>low</code>. A job that asks for plain <code>high</code> is renamed to the account&#x27;s own tier, <code>high_&lt;account&gt;</code>.</p>
+<pre><code class="language-lua">if job_desc.qos == nil or job_desc.qos == &quot;&quot; then
+    job_desc.qos = &quot;low&quot;
+elseif job_desc.qos == &quot;high&quot; then
+    job_desc.qos = &quot;high_&quot; .. acct      -- acct from account, else default_account
+end</code></pre>
+<p>Users type one simple word. Behind it, every account has its own QOS, which means its own limits. I know of no plain-configuration way to map one typed name to a different QOS per account, which is why this is a script&#x27;s job.</p>
+<blockquote><p>[!NOTE] If you only need the <em>default</em>, no script is required: <code>sacctmgr modify user alice set DefaultQOS=low</code> made a job with no <code>--qos</code> come out as <code>low</code> in the test. Lua is for <strong>rewriting</strong> what the user typed.</p></blockquote>
+<hr>
+<h2>Recipe 2: demand a time limit</h2>
+<p>The cure for the opening story. A missing <code>--time</code> shows up as <code>slurm.NO_VAL</code>:</p>
+<pre><code class="language-lua">if job_desc.time_limit == slurm.NO_VAL then
+    slurm.log_user(&quot;Please set --time, jobs without one are not accepted&quot;)
+    return slurm.ESLURM_INVALID_TIME_LIMIT
+end</code></pre>
+<p>The error text is the one shown earlier. If you would rather not be strict, the alternative is a <code>DefaultTime</code> on the partition, which is gentler but is also a guess about what each user meant.</p>
+<hr>
+<h2>Recipe 3: make the victims requeueable</h2>
+<p>A job evicted under <code>PreemptMode=REQUEUE</code> is only requeued if it is requeueable. With <code>JobRequeue=0</code> on the cluster and no <code>--requeue</code> from the user, the test victim ended as <code>PREEMPTED</code> and was gone from the queue. When the script set <code>job_desc.requeue = 1</code>, <code>scontrol show job</code> showed <code>Requeue=1</code> and the same eviction ended with a second run waiting in the queue:</p>
+<pre><code class="language-lua">if job_desc.qos == &quot;low&quot; then
+    job_desc.requeue = 1
+end</code></pre>
+<pre><code class="language-text">without it:   37|low|PREEMPTED                 (and no second run)
+with it:      37|low|PREEMPTED
+              37|low|PENDING                   (requeued)</code></pre>
+<p>If your cluster has <code>JobRequeue=1</code> (a common default), this recipe changes nothing and you can leave it out.</p>
+<hr>
+<h2>Recipe 4: defuse user-exclusive jobs</h2>
+<p>The <a href="../../../../fields/schedulers/slurm-preemption/slurm-preemption-requeue-signals/">preemption page</a> notes that <code>--exclusive=user</code> and <code>--exclusive=mcs</code> stop a job from preempting or being preempted by other users&#x27; jobs, and suggests a submit plugin to disable them where you rely on preemption. In <code>job_desc.shared</code>, <code>--exclusive=user</code> is <code>2</code> and plain <code>--exclusive</code> is <code>0</code>:</p>
+<pre><code class="language-lua">if job_desc.shared == 2 then
+    job_desc.shared = 0
+    slurm.log_user(&quot;--exclusive=user changed to --exclusive&quot;)
+end</code></pre>
+<p>Checking with <code>scontrol show job</code>: a held <code>--exclusive=user</code> job showed <code>OverSubscribe=USER</code> with a do-nothing script and <code>OverSubscribe=NO</code> with this rule.</p>
+<blockquote><p>[!CAUTION] This silently changes what a user asked for. It is the right call only if your cluster depends on cross-user preemption, and the <code>log_user</code> line should say so, or you will receive a very confused email.</p></blockquote>
+<hr>
+<h2>The whole script</h2>
+<p>All four rules together, as run on the test cluster. Every branch was checked against a real controller: no <code>--time</code> is refused, no QOS becomes <code>low</code>, <code>--qos=high</code> becomes <code>high_physics</code> (also through the default account), <code>--exclusive=user</code> becomes <code>--exclusive</code>, a user with no account asking for <code>high</code> gets the message, <code>scontrol update QOS=high</code> is routed the same way, and any other QOS passes through.</p>
+<pre><code class="language-lua">-- job_submit.lua: lives next to slurm.conf and runs inside slurmctld
+
+local EXCLUSIVE_USER = 2    -- value of job_desc.shared for --exclusive=user
+
+-- &quot;high&quot; becomes &quot;high_&lt;account&gt;&quot;; false means we cannot tell the account
+local function route_high(job_desc, acct)
+    if acct == nil or acct == &quot;&quot; then
+        return false
+    end
+    job_desc.qos = &quot;high_&quot; .. acct
+    return true
+end
+
+function slurm_job_submit(job_desc, part_list, submit_uid)
+    -- 1. Every job must say how long it needs (see the backfill page)
+    if job_desc.time_limit == slurm.NO_VAL then
+        slurm.log_user(&quot;Please set --time, jobs without one are not accepted&quot;)
+        return slurm.ESLURM_INVALID_TIME_LIMIT
+    end
+
+    -- 2. Which account will this job be charged to?
+    local acct = job_desc.account
+    if acct == nil or acct == &quot;&quot; then
+        acct = job_desc.default_account
+    end
+
+    -- 3. No QOS typed: the preemptible tier, and make it requeueable
+    if job_desc.qos == nil or job_desc.qos == &quot;&quot; then
+        job_desc.qos = &quot;low&quot;
+        job_desc.requeue = 1
+    elseif job_desc.qos == &quot;high&quot; then
+        if not route_high(job_desc, acct) then
+            slurm.log_user(&quot;--qos=high needs an account; add --account=&lt;name&gt;&quot;)
+            return slurm.ESLURM_INVALID_ACCOUNT
+        end
+        slurm.log_info(&quot;job_submit.lua: uid=%u account=%s qos high -&gt; %s&quot;,
+                       submit_uid, acct, job_desc.qos)
+    end
+
+    -- 4. --exclusive=user blocks preemption; plain --exclusive does not
+    if job_desc.shared == EXCLUSIVE_USER then
+        job_desc.shared = 0
+        slurm.log_user(&quot;--exclusive=user changed to --exclusive (user-exclusive blocks preemption here)&quot;)
+    end
+
+    return slurm.SUCCESS
+end
+
+function slurm_job_modify(job_desc, job_rec, part_list, modify_uid)
+    local acct = job_desc.account or job_rec.account
+    if job_desc.qos == &quot;high&quot; then
+        if not route_high(job_desc, acct) then
+            slurm.log_user(&quot;--qos=high needs an account&quot;)
+            return slurm.ESLURM_INVALID_ACCOUNT
+        end
+    end
+    return slurm.SUCCESS
+end
+
+slurm.log_info(&quot;job_submit.lua loaded&quot;)</code></pre>
+<hr>
+<h2>Breaking it on purpose</h2>
+<p>A script runs inside the controller, so a mistake in it is a mistake in the most important daemon you have. These are the failures the test cluster produced:</p>
+<table><thead><tr><th>What you do</th><th>What happens</th></tr></thead><tbody><tr><td>Edit the script while <code>slurmctld</code> runs</td><td>The next submission picks it up and logs <code>job_submit.lua loaded</code> again. No reconfigure needed</td></tr><tr><td>Save a script with a <strong>syntax error</strong>, controller running</td><td>The log says <code>error: job_submit/lua: ... using previous script</code>. The controller keeps running on the last good version</td></tr><tr><td><strong>Restart</strong> <code>slurmctld</code> with a broken script</td><td><code>fatal: failed to initialize job_submit plugin</code>. The controller does not start, users see &quot;Unable to contact slurm controller&quot;</td></tr><tr><td><code>scontrol reconfigure</code> with a broken script</td><td><code>slurm_reconfigure error: Unspecified error</code> and the same <code>fatal</code> line in the log. In the test the controller stayed up and kept accepting jobs, but I did not check which script it was running</td></tr><tr><td><code>JobSubmitPlugins=lua</code> and <strong>no file</strong></td><td><code>slurmctld</code> refuses to start (see Turning it on)</td></tr></tbody></table>
+<p>The pattern is that a running controller forgives a bad edit, and a starting controller does not. That gives the rules:</p>
+<ul><li>Edit in place, never restart the controller to &quot;apply&quot; a change.</li><li>Run <code>luac -p</code> before saving, and keep the previous version next to it.</li><li>Test with a throwaway account and a held job (<code>sbatch --hold</code>) before you announce anything.</li><li>One small footnote: an edit saved in the same second as the previous load was not picked up on my first try. A pause of a couple of seconds fixed it, which matters only if you test by script.</li></ul>
+<hr>
+<h2>Things the script is not</h2>
+<ul><li><strong>It is not free.</strong> It runs on every submission, in the controller. Keep it short, with no file reads, no network calls and no waiting.</li><li><strong>It does not see jobs already in the queue.</strong> Existing jobs keep what they had until someone modifies them, and then <code>slurm_job_modify</code> applies.</li><li><strong>It is not one call per job for heterogeneous jobs.</strong> Slurm&#x27;s documentation notes that it runs separately for each component; see <a href="../../../../fields/schedulers/slurm-mixed-gpus/where-hetjobs-shine/">where hetjobs shine</a>.</li><li><strong>It does not do preemption.</strong> It labels jobs. The <a href="../../../../fields/schedulers/slurm-preemption/slurm-qos-preemption-setup/">QOS setup</a> decides what the labels mean.</li></ul>
+<hr>
+<h2>Version notes</h2>
+<p>The script on this page was tested on Slurm 23.11.4. Later versions add: <code>curr_dependency</code> (24.05.2); <code>assoc_qos</code> and <code>slurm.get_qos_priority()</code> (24.11); a crash fix when reading <code>assoc_qos</code> for an association that does not exist (25.05.3); and, in 26.05, a stack trace in the log on runtime errors plus <code>core_spec</code> and <code>thread_spec</code> in <code>job_desc</code>. 26.05 also replaces <code>ExclusiveUser</code> and <code>ExclusiveTopo</code> in partition definitions with <code>Exclusive=[NO|NODE|USER|TOPO]</code>, which is worth knowing for Recipe 4. None of these were tested here. <a href="../../../../fields/schedulers/slurm-cluster-operations/slurm-version-changes/">Version changes 23.11 to 26.05</a> has the details.</p>
+<hr>
+<h2>Back to the seven-day job</h2>
+<p>Replay Monday. A researcher submits without <code>--time</code>. In under a second she gets a line in her terminal: <em>Please set --time, jobs without one are not accepted</em>. She adds <code>--time=4:00:00</code>, submits again, and the job lands in the queue as a four-hour job, small enough for backfill to slot into a gap.</p>
+<p>By the following Monday there are no boulders. Nobody was shamed in an email. The doorman just checks the badge, and the badge now says how long you intend to stay.</p>
+<p><strong>Takeaway:</strong> the Lua submit script is a receptionist inside <code>slurmctld</code>: it can read, rewrite or refuse every job at the door, a running controller forgives a broken edit but a restarting one does not, so put the file in place first and check its syntax before you save.</p>
+<p><strong>Next:</strong> <a href="../../../../fields/schedulers/slurm-preemption/slurm-signals-cheatsheet/">Who Gets Told What</a> covers every signal Slurm sends to a job, and who actually receives it.</p>
+<hr>
+<h2>References</h2>
+<ul><li><a href="https://slurm.schedmd.com/job_submit_plugins.html">Slurm: Job Submit Plugins</a></li><li><a href="https://slurm.schedmd.com/slurm.conf.html">Slurm: slurm.conf</a> (<code>JobSubmitPlugins</code>, <code>JobRequeue</code>, <code>DefaultTime</code>)</li><li><a href="https://slurm.schedmd.com/qos.html">Slurm: Quality of Service (QOS)</a></li></ul>
+<p><a href="../../../../#/fields/schedulers/slurm-preemption/slurm-job-submit-lua">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Broken Pods: A Rogues&#x27; Gallery (and the One Command That Catches Them All)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/kubernetes/broken-pods-rogues-gallery/">
+<meta name="description" content="How to recognise CrashLoop, OOMKilled, ImagePull and Pending pods by reading status, events and previous logs.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Broken Pods: A Rogues&#x27; Gallery (and the One Command That Catches Them All)">
+<meta property="og:description" content="How to recognise CrashLoop, OOMKilled, ImagePull and Pending pods by reading status, events and previous logs.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/kubernetes/broken-pods-rogues-gallery/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/kubernetes/broken-pods-rogues-gallery/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/devops/kubernetes/broken-pods-rogues-gallery"></script>
+<main>
+<h1>Broken Pods: A Rogues&#x27; Gallery (and the One Command That Catches Them All)</h1>
+<p><em>How to recognise CrashLoop, OOMKilled, ImagePull and Pending pods by reading status, events and previous logs.</em></p>
+<p>Healthy pods are boring. They run, they get no attention, and nobody writes a blog post about them. The interesting ones are the delinquents: the pod that restarts every few minutes like a bad habit, the one that was killed for eating too much, the one that can&#x27;t find its own image, and the one waiting for a GPU that doesn&#x27;t exist.</p>
+<p>This page introduces four of them. They come from the <a href="../../../../fields/devops/kubernetes/build-a-two-node-k3s-lab/">two-node lab</a> and the <a href="../../../../fields/devops/kubernetes/fake-gpus-in-kubernetes/">fake GPU trick</a>, where you can create each one on purpose and learn to recognise it on sight.</p>
+<hr>
+<h2>The one-sentence version</h2>
+<p><strong>Every broken pod leaves clues in the same three places: its status, its events, and its previous logs, and you should read them in that order before you touch anything.</strong></p>
+<hr>
+<h2>The detective&#x27;s routine</h2>
+<p>Whatever the symptom, start here:</p>
+<pre><code class="language-bash">kubectl get pods -A                                 # the status column is clue #1
+kubectl describe pod &lt;pod&gt; -n &lt;ns&gt;                  # the Events at the bottom are clue #2
+kubectl logs &lt;pod&gt; -n &lt;ns&gt; --previous               # what the last attempt said before dying
+kubectl get events -n &lt;ns&gt; --sort-by=.lastTimestamp # the namespace&#x27;s recent story</code></pre>
+<p>Read the events <strong>before</strong> you restart anything. Events are short-lived (the API server keeps them for one hour by default, as covered in <a href="../../../../fields/devops/kubernetes/kubernetes-in-five-nouns/">Kubernetes in Five Nouns</a>), and a restart can add noise on top of the evidence.</p>
+<p>One vocabulary point that trips people up: a pod has a <strong>phase</strong> (<code>Pending</code>, <code>Running</code>, <code>Succeeded</code>, <code>Failed</code>), and its containers have <strong>status reasons</strong> (<code>CrashLoopBackOff</code>, <code>ImagePullBackOff</code>, <code>OOMKilled</code>). <code>CrashLoopBackOff</code> is a container status reason, not a pod phase, which is why a pod can show it while the pod itself is technically still going.</p>
+<hr>
+<h2>The gallery</h2>
+<table><thead><tr><th>Rogue</th><th>What it does</th><th>What you&#x27;ll see</th></tr></thead><tbody><tr><td><code>crashloop</code></td><td>Starts, exits with an error, repeats forever</td><td><code>CrashLoopBackOff</code>, climbing restart count</td></tr><tr><td><code>oom</code></td><td>Uses more memory than its limit allows</td><td><code>OOMKilled</code> as the last termination reason</td></tr><tr><td><code>badimage</code></td><td>Points at an image that can&#x27;t be pulled</td><td><code>ErrImagePull</code>, then <code>ImagePullBackOff</code></td></tr><tr><td><code>gpu-waiting</code></td><td>Asks for more GPUs than any node has</td><td>Stuck in <code>Pending</code>, with a scheduling event</td></tr></tbody></table>
+<h3>1. The crash looper</h3>
+<pre><code class="language-bash">kubectl create ns team-b
+kubectl -n team-b run crashloop --image=rancher/mirrored-library-busybox:1.36.1 \
+  -- sh -c &#x27;echo failing; exit 1&#x27;</code></pre>
+<p>The container prints a line and exits with status 1. By default the pod&#x27;s restart policy brings it back, so the kubelet restarts it, and it fails again. To keep a broken container from restarting in a frantic loop, the kubelet waits longer after each failure: the delay is exponential (10s, 20s, 40s, and so on) and capped at five minutes. If the container then runs for ten minutes without trouble, the kubelet resets the delay.</p>
+<p>That behaviour explains two things people find puzzling:</p>
+<ul><li>A pod in <code>CrashLoopBackOff</code> is not hung. It&#x27;s <strong>between attempts</strong>, and the status shows while the kubelet waits out the delay.</li><li>Once the delay hits its cap, the pod only retries about once every five minutes, so a slow crash loop can look like an intermittent outage instead of a hard failure.</li></ul>
+<p>How to investigate:</p>
+<pre><code class="language-bash">kubectl logs crashloop -n team-b --previous   # the failing run&#x27;s output
+kubectl describe pod crashloop -n team-b      # look for &quot;Back-off restarting failed container&quot;</code></pre>
+<p><code>--previous</code> is the part beginners miss. The current container may have just started and have nothing to say; the interesting output belongs to the one that died.</p>
+<h3>2. The one that ate too much</h3>
+<p>This one is created by giving a pod a deliberately tiny memory limit and a workload that allocates more than that. When a container exceeds its memory limit, the kernel kills it, and Kubernetes records the reason. Ask for it directly:</p>
+<pre><code class="language-bash">kubectl get pod oom -n team-b \
+  -o jsonpath=&#x27;{.status.containerStatuses[0].lastState.terminated.reason}&#x27;
+# OOMKilled</code></pre>
+<p>If the restart policy brings it back, you&#x27;ll see the same restart-and-back-off pattern as the crash looper, and the distinguishing clue is the <code>lastState</code> reason, which is why you ask for it by name. The usual fixes are raising the limit, or fixing the leak. Raising limits without understanding the leak just moves the cliff.</p>
+<h3>3. The one that can&#x27;t find its image</h3>
+<pre><code class="language-bash">kubectl -n team-b run badimage --image=example.invalid/none:1</code></pre>
+<p>The <code>.invalid</code> top-level domain is reserved so that it can never resolve, which makes it a perfect stand-in for &quot;this registry does not exist.&quot; The pod first reports <code>ErrImagePull</code>, and after failed attempts it settles into <code>ImagePullBackOff</code>, another back-off pattern, this time for pulling. In real life the causes are usually a typo in the image name or tag, a private registry without credentials, or a registry the node can&#x27;t reach. <code>kubectl describe pod</code> shows the exact pull error in its events, which tells you which of those it is.</p>
+<h3>4. The one waiting for a GPU</h3>
+<pre><code class="language-bash">kubectl -n team-b run gpu-waiting --image=rancher/mirrored-pause:3.6 \
+  --overrides=&#x27;{&quot;spec&quot;:{&quot;containers&quot;:[{&quot;name&quot;:&quot;c&quot;,&quot;image&quot;:&quot;rancher/mirrored-pause:3.6&quot;,&quot;resources&quot;:{&quot;limits&quot;:{&quot;nvidia.com/gpu&quot;:&quot;8&quot;}}}]}}&#x27;</code></pre>
+<p>The lab&#x27;s only GPU node advertises four GPUs, so no node can ever host this pod. It stays <code>Pending</code>, and the clue is in the events:</p>
+<pre><code class="language-bash">kubectl describe pod gpu-waiting -n team-b
+# Warning  FailedScheduling ... Insufficient nvidia.com/gpu</code></pre>
+<p>A <code>Pending</code> pod isn&#x27;t running, so it isn&#x27;t consuming anything. It&#x27;s a request that nobody can grant. That&#x27;s different from the first three rogues, whose containers actually started and failed. The fix is on the cluster side (more capacity, a smaller request, or waiting for another job to finish), not in the container.</p>
+<hr>
+<h2>A quick triage table</h2>
+<table><thead><tr><th>Pod status</th><th>Container started?</th><th>First place to look</th></tr></thead><tbody><tr><td><code>Pending</code></td><td>No (not scheduled yet)</td><td><code>describe</code> events: scheduling failures</td></tr><tr><td><code>ErrImagePull</code> / <code>ImagePullBackOff</code></td><td>No (image can&#x27;t be fetched)</td><td><code>describe</code> events: the pull error</td></tr><tr><td><code>CrashLoopBackOff</code></td><td>Yes, and it exits</td><td><code>logs --previous</code> and the exit code</td></tr><tr><td>Restarting with <code>OOMKilled</code></td><td>Yes, and it&#x27;s killed</td><td><code>lastState.terminated.reason</code>, then memory limits</td></tr><tr><td><code>Running</code> but not ready</td><td>Yes, but probes fail</td><td><code>describe</code> events, then readiness probe config</td></tr></tbody></table>
+<hr>
+<h2>Why this matters on HPC clusters</h2>
+<p>On a batch system you&#x27;re used to a job that fails once and stays failed. Kubernetes&#x27; default instinct is the opposite: keep trying. That&#x27;s great for web servers and surprising for GPU jobs, where a crash-looping pod that holds GPUs between attempts is a quiet way to waste an expensive resource, and a <code>Pending</code> pod can hide a quota or capacity problem for hours. A good monitor treats these four states as first-class signals, which is exactly what the later pages on monitoring build on.</p>
+<hr>
+<h2>The one-paragraph takeaway</h2>
+<p>Broken pods are not mysterious; they&#x27;re just chatty in three specific places. Read the status, read the events, read the previous logs, in that order, and you can usually name the culprit in under a minute: crash looping (look at <code>--previous</code>), OOM killed (check <code>lastState</code>), image pull failing (read the pull error), or Pending with a scheduling event (the cluster can&#x27;t grant the request). Don&#x27;t restart first. The evidence is fragile.</p>
+<hr>
+<h2>References</h2>
+<ul><li>Kubernetes restart back-off behaviour (10s, 20s, 40s, capped at five minutes, reset after ten minutes without trouble): described in <a href="https://www.kubernetes.dev/resources/keps/4603/">KEP-4603, Tune Crashloop Backoff</a> in the Kubernetes enhancement proposals. The defaults can change in newer releases, so check the current Pod lifecycle documentation for your version.</li><li><a href="https://kubernetes.io/docs/concepts/workloads/pods/">Pods</a>: controllers and restart behaviour</li><li><a href="https://kubernetes.io/docs/reference/command-line-tools-reference/kube-apiserver/">kube-apiserver reference</a>: <code>--event-ttl</code>, default one hour</li><li><a href="https://kubernetes.io/docs/tasks/manage-gpus/scheduling-gpus/">Schedule GPUs</a>: GPUs requested under <code>limits</code></li></ul>
+<p>The four fixtures, the lab commands and the triage table are the author&#x27;s own. The <code>FailedScheduling</code> event text and the exact status strings shown are typical <code>kubectl</code> output; yours may differ slightly by version, so check what your cluster prints.</p>
+<p><a href="../../../../#/fields/devops/kubernetes/broken-pods-rogues-gallery">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Empty Memory Fill with Zeros ?!</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/programming/operating-system/memory-empty-zero-filling/">
+<meta name="description" content="Why an operating system fills new free memory with values, and why that value is zero.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Empty Memory Fill with Zeros ?!">
+<meta property="og:description" content="Why an operating system fills new free memory with values, and why that value is zero.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/programming/operating-system/memory-empty-zero-filling/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/programming/operating-system/memory-empty-zero-filling/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../.docs/prerender-redirect.js" data-target="../../../#/programming/operating-system/memory-empty-zero-filling"></script>
+<main>
+<h1>Empty Memory Fill with Zeros ?!</h1>
+<p><em>Why an operating system fills new free memory with values, and why that value is zero.</em></p>
+<p>The title of this blog is a question, but actually they are two separate questions!</p>
+<ul><li>Why to set values to new free/empty memory? </li><li>Why to use Zero as a filling value?</li></ul>
+<p>You can say, it&#x27;s for the purpose to <em>know this is a new empty memory</em>, but why so?</p>
+<p>In multi-user systems, where multiple users shares the same memory, but each one has a dedicated memory dedicated to, allocated/defined by the operating system. When a user ask the memory management controller to allocate new RAM memory, so it could take free-disk space that was belonging to other users who no longer uses them. in this case the user who asks for new memory, could simply go through the contents of the memory that no longer used by their users, which could contain important information. This is the need for filling the empty unused memory with some certain defined value (which will be zero).</p>
+<ul><li>Note, without asking for new memory to allocate, any user could simply read (not write) any memory block in the system, that no longer belongs to certain users for now, so the user could simply know its last contents.</li></ul>
+<p>Why filling with zeros? Not very important questions, as it was the defined value in OS to set any free memory to zeros.</p>
+<p>So over the years, the developers of OS in memory management section, they developed new techniques to how fill unused/free memory to zeros, they are interesting to search and take a look to the magnificent strategies they used.</p>
+<h1>References</h1>
+<ul><li>The Insane Hackers Guild, Python sub-branch. Why your fresh new memory pages are zero-filled. Jan 2010. <a href="https://utcc.utoronto.ca/~cks/space/blog/tech/WhyZeroMemoryPages?showcomments#comments">https://utcc.utoronto.ca/~cks/space/blog/tech/WhyZeroMemoryPages?showcomments#comments</a></li><li>Microsoft Learn. PDC10: Mysteries of Windows Memory Management Revealed: Part Two. 2010. <a href="https://learn.microsoft.com/en-us/archive/blogs/tims/pdc10-mysteries-of-windows-memory-management-revealed-part-two">https://learn.microsoft.com/en-us/archive/blogs/tims/pdc10-mysteries-of-windows-memory-management-revealed-part-two</a></li></ul>
+<p><a href="../../../#/programming/operating-system/memory-empty-zero-filling">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The Courtroom for Numbers: Could Plain Luck Do This?</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/inference/the-courtroom-for-numbers/">
+<meta name="description" content="A hypothesis test asks one question: could plain luck have produced a difference this big? Shuffle the labels and count. What the p-value is, what it is not, and how testing twenty things fools you.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="The Courtroom for Numbers: Could Plain Luck Do This?">
+<meta property="og:description" content="A hypothesis test asks one question: could plain luck have produced a difference this big? Shuffle the labels and count. What the p-value is, what it is not, and how testing twenty things fools you.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/inference/the-courtroom-for-numbers/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/inference/the-courtroom-for-numbers/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../../.docs/prerender-redirect.js" data-target="../../../../../#/fields/data-science/probability-statistics/inference/the-courtroom-for-numbers"></script>
+<main>
+<h1>The Courtroom for Numbers: Could Plain Luck Do This?</h1>
+<p><em>A hypothesis test asks one question: could plain luck have produced a difference this big? Shuffle the labels and count. What the p-value is, what it is not, and how testing twenty things fools you.</em></p>
+<blockquote><p><strong>Part 14 of 15.</strong> Part of the <a href="../../../../../fields/data-science/probability-statistics/">Probability &amp; Statistics</a> series, after <a href="../../../../../fields/data-science/probability-statistics/inference/averages-and-intervals/">Averages and Intervals</a>, where a confidence interval put honest error bars on one number. The scenario is invented, and every figure was recomputed with Python 3.14.4 (standard library only).</p></blockquote>
+<p>Tala will reach for the menu-board chalk after one comparison and, an hour later, after one out of twenty. The first is a finding. The second is a coin that happened to land on edge.</p>
+<p><strong>By the end of this page you will be able to:</strong></p>
+<ul><li>Read every hypothesis test as one question: could plain luck have produced a difference this big?</li><li>Answer it by shuffling labels and counting, and compare with the exact count.</li><li>Name the three ways a p-value is misread, and the two ways a test can be wrong.</li><li>Compute how testing twenty things manufactures a &quot;discovery&quot;.</li></ul>
+<ul><li>* *</li></ul>
+<h2>The blend that won</h2>
+<p>Mira has two house blends, <strong>A</strong> and <strong>B</strong>. Ten customers taste each blind and score it from 1 to 10 (invented scores):</p>
+<pre><code class="language-text">A: 7 8 6 9 7 8 9 7 8 6    mean 7.5
+B: 6 7 5 7 6 8 6 5 7 6    mean 6.3</code></pre>
+<p>&quot;A wins by 1.2 points,&quot; says Tala, reaching for the menu-board chalk.</p>
+<p>&quot;Does it?&quot; says Mira. &quot;Put the same tea in both cups and I would still not get two identical averages. How big a gap does <em>luck alone</em> make?&quot;</p>
+<p>☕ <strong>Try it before you scroll.</strong> Write the 20 scores on cards, deal them at random into two piles of ten. How often would the A pile still beat the B pile by 1.2 or more?</p>
+<ul><li>* *</li></ul>
+<h2>Chalk, eyeballs and a spreadsheet</h2>
+<ol><li><strong>Chalk it up.</strong> &quot;A wins by 1.2 points.&quot; The gap is real arithmetic and says nothing about luck.</li><li><strong>Eyeball the averages.</strong> 7.5 against 6.3 looks decisive. Put the same tea in both cups and the averages still differ.</li><li><strong>Try twenty splits.</strong> Morning against evening, by age, by day, by milk: surely one of them will explain it. (This is the dangerous one; it is stopped late on this page.)</li></ol>
+<p>The question that stops all three: how big a gap does <em>luck alone</em> make?</p>
+<ul><li>* *</li></ul>
+<h2>The presumption of innocence</h2>
+<p>A hypothesis test works like a courtroom.</p>
+<table><thead><tr><th>Courtroom</th><th>The test</th></tr></thead><tbody><tr><td>The defendant is presumed innocent</td><td>The <strong>null hypothesis</strong>: the blends are the same, the gap is luck only</td></tr><tr><td>The evidence</td><td>The gap you actually saw: +1.2</td></tr><tr><td>&quot;Could an innocent person look this guilty by coincidence?&quot;</td><td>&quot;Could luck alone make a gap this big?&quot;</td></tr><tr><td>Convict only if coincidence is a poor explanation</td><td>Reject the null only if luck is a poor explanation</td></tr></tbody></table>
+<pre><code class="language-mermaid">flowchart LR
+    S[&quot;Assume luck only&lt;br/&gt;labels mean nothing&quot;] --&gt; R[&quot;Re-deal the labels&lt;br/&gt;many times&quot;]
+    R --&gt; C[&quot;Count how often luck&lt;br/&gt;matches or beats the gap&quot;]
+    C --&gt; P[&quot;That share is the p-value&quot;]</code></pre>
+<p><em>The whole method in four boxes. Everything else is bookkeeping.</em></p>
+<p>If the labels A and B mean nothing, <strong>any way of dealing the 20 scores into two piles was equally likely</strong>. That is a world you can build yourself, with cards.</p>
+<ul><li>* *</li></ul>
+<h2>Shuffle the labels and count</h2>
+<p>First a case small enough to do by hand. Three tasters per blend: A scored 8, 9, 7 and B scored 5, 6, 7. The gap is <code>8 − 6 = 2</code>. Under &quot;luck only&quot;, the six scores <code>8 9 7 5 6 7</code> could have been dealt into two piles of three in 20 ways (that is <code>6 choose 3</code>, from <a href="../../../../../fields/data-science/probability-statistics/probability/counting-and-conditioning/">Counting and Conditioning</a>). Which deals give A a lead of 2 or more? The scores add to 42, so A&#x27;s pile must add to 24 or more. Only two do: <code>8 9 7</code> (the real one) and the same pile with the <em>other</em> 7 swapped in. Two of twenty: <strong>0.10</strong>. Luck does that one time in ten.</p>
+<p>Now Mira&#x27;s real data. Twenty scores into two piles of ten has 184,756 deals, too many for the chalkboard, so we <strong>shuffle many times and count</strong>:</p>
+<pre><code class="language-python">import itertools, random
+from statistics import mean
+
+# --- Small case: 3 scores per blend, every possible split counted (exact)
+a, b = [8, 9, 7], [5, 6, 7]
+pool, seen = a + b, mean(a) - mean(b)          # seen = 2.0
+splits = list(itertools.combinations(range(6), 3))
+hits = 0
+for idx in splits:                              # idx = who &quot;gets&quot; label A
+    ga = [pool[i] for i in idx]
+    gb = [pool[i] for i in range(6) if i not in idx]
+    if mean(ga) - mean(gb) &gt;= seen - 1e-9:      # as good as, or better than, what we saw
+        hits += 1
+print(hits, &quot;of&quot;, len(splits), &quot;splits:&quot;, hits / len(splits))
+
+# --- Mira&#x27;s real data: 10 scores per blend, shuffle the labels 10,000 times
+random.seed(14)
+A = [7, 8, 6, 9, 7, 8, 9, 7, 8, 6]
+B = [6, 7, 5, 7, 6, 8, 6, 5, 7, 6]
+seen, pool, count = mean(A) - mean(B), A + B, 0
+for _ in range(10_000):
+    random.shuffle(pool)                        # luck only: labels mean nothing
+    if mean(pool[:10]) - mean(pool[10:]) &gt;= seen - 1e-9:
+        count += 1
+print(round(mean(A), 1), round(mean(B), 1), round(seen, 1), count / 10_000)
+print(1 - 0.95 ** 20)</code></pre>
+<pre><code class="language-text">2 of 20 splits: 0.1
+7.5 6.3 1.2 0.0143
+0.6415140775914581</code></pre>
+<p>The simulated answer is <strong>0.0143</strong> (the exact count over all 184,756 deals is <code>1413/92378 = 0.0153</code>; the simulation is within its noise): in about 1.4% of re-dealt piles, luck alone gave A a lead of 1.2 or more (we asked &quot;A better by at least this much&quot;, a one-sided question). The first line matches the hand count; the second is a simulation, so another seed moves the last digits. The third line is for later.</p>
+<p>That number is the <strong>p-value</strong>: <em>how often luck alone would produce a difference at least as extreme as the one you saw.</em></p>
+<p>The classical test is the same question with a shortcut. Instead of shuffling, the t-test divides the gap by its standard error (<a href="../../../../../fields/data-science/probability-statistics/inference/averages-and-intervals/">Averages and Intervals</a>) and looks it up on a bell curve (<a href="../../../../../fields/data-science/probability-statistics/probability/the-bell-curve/">The Bell Curve</a>). It is faster and assumes more; when its assumptions hold, the answers agree closely.</p>
+<ul><li>* *</li></ul>
+<h3>Try it: Shuffle the labels, count the luck</h3>
+<blockquote><p><strong>What to try:</strong> Shuffle the labels yourself, 1,000 at a time, and compare the share of re-deals that beat the real gap with the exact p-value. Scroll down for the twenty-tries demo. <strong>Start with:</strong> the preset <em>A p near 1.4%</em>.</p></blockquote>
+<p><a href="../../../../../fields/data-science/probability-statistics/labs/permutation.html">Permutation test lab</a></p>
+<ul><li>* *</li></ul>
+<h2>What the p-value is, and is not</h2>
+<p>A p of 0.0143 says: <em>if the blends were identical, we would see a gap this big about 1.4% of the time.</em> Luck is a poor explanation. Three misreadings, all named in the American Statistical Association&#x27;s 2016 statement:</p>
+<table><thead><tr><th>The tempting reading</th><th>Why it is wrong</th></tr></thead><tbody><tr><td>&quot;There is a 1.4% chance the blends are the same&quot;</td><td>The p-value assumes the null <em>to compute itself</em>. It is not the probability the null is true</td></tr><tr><td>&quot;A is much better&quot;</td><td>p says how surprising the gap is, not how big it is. The ASA: it &quot;does not measure the size of an effect or the importance of a result&quot;</td></tr><tr><td>&quot;p above 0.05 means no difference&quot;</td><td>It means luck is not a poor enough explanation yet. Absence of proof, not proof of absence</td></tr></tbody></table>
+<p><strong>Effect size versus significance.</strong> They come apart. With 50,000 tasters per blend and a true gap of 0.03 points, a simulation gave an observed gap of 0.0277 and p about 0.00001: wildly &quot;significant&quot;, practically nothing.</p>
+<p><strong>The link to part 13.</strong> A confidence interval is the same story in points instead of surprise. If the 95% interval for &quot;A minus B&quot; sits entirely above 0, &quot;no difference&quot; is not a comfortable value: the same message as a small p. The interval is the better report, since it also says <em>how big</em>.</p>
+<ul><li>* *</li></ul>
+<h2>Two ways to be wrong</h2>
+<p>A court can convict the innocent or free the guilty. So can a test.</p>
+<table><thead><tr><th></th><th>Luck only (truth)</th><th>A real difference (truth)</th></tr></thead><tbody><tr><td><strong>Test says &quot;luck is a poor explanation&quot;</strong></td><td><strong>False alarm</strong> (Type I): convicted the innocent</td><td>Right</td></tr><tr><td><strong>Test says &quot;luck could explain it&quot;</strong></td><td>Right</td><td><strong>Missed effect</strong> (Type II): freed the guilty</td></tr></tbody></table>
+<p>The significance level, often 0.05, is the false-alarm rate you accept. NIST&#x27;s handbook puts it as &quot;A value of α = 0.05 implies that the null hypothesis is rejected 5 % of the time when it is in fact true&quot;. The handbook lists 0.1, 0.05 and 0.01 as common choices and calls the choice somewhat arbitrary. <strong>0.05 is a convention, not a law</strong>: a different cost of being wrong would justify a different line.</p>
+<p>The missed effect is the one people forget. We simulated 400 experiments where B is truly a full standard deviation worse than A, with only 5 tasters per blend. The test caught the difference in <strong>110 of 400, about 27.5%</strong>. Seven times in ten, a real, large effect was waved through. That is why &quot;not significant&quot; cannot mean &quot;no effect&quot;. Only more data lowers both errors.</p>
+<ul><li>* *</li></ul>
+<h2>Twenty tries</h2>
+<p>Tala has an idea: &quot;Let me also split by morning vs evening, by age, by day, by milk or none...&quot; Twenty comparisons later, one has p below 0.05. She wants it on the board.</p>
+<p>Each comparison has a 5% chance of a false alarm when nothing is going on. The chance of <strong>no</strong> false alarm in twenty independent tries is <code>0.95^20</code>, so at least one is <code>1 − 0.95^20 = 0.6415</code>: about <strong>64%</strong>. A &quot;discovery&quot; is more likely than not, even if everything is identical. Simulate it: 300 imaginary studies, each with 20 comparisons between two groups of ten drawn from the <em>same</em> distribution, each tested by shuffling:</p>
+<pre><code class="language-python">import random
+from statistics import mean
+random.seed(20)
+
+def one_test(m=10, reps=200):                  # two groups from the SAME distribution
+    x = [random.gauss(0, 1) for _ in range(m)]
+    y = [random.gauss(0, 1) for _ in range(m)]
+    obs, pool, c = abs(mean(x) - mean(y)), x + y, 0
+    for _ in range(reps):
+        random.shuffle(pool)
+        if abs(mean(pool[:m]) - mean(pool[m:])) &gt;= obs:
+            c += 1
+    return c / reps
+
+singles = hit = 0
+for s in range(300):                           # 300 studies of 20 tests each
+    ps = [one_test() for _ in range(20)]
+    singles += sum(p &lt;= 0.05 for p in ps)
+    hit += any(p &lt;= 0.05 for p in ps)
+print(&quot;single-test false alarm rate&quot;, singles / 6000)
+print(&quot;studies with &gt;=1 hit of 20:&quot;, hit, &quot;/ 300 =&quot;, hit / 300)</code></pre>
+<pre><code class="language-text">single-test false alarm rate 0.05616666666666666
+studies with &gt;=1 hit of 20: 205 / 300 = 0.6833333333333333</code></pre>
+<p>Each test is close to its promised 5%, yet <strong>205 of 300 studies (68%, simulated) found a &quot;significant&quot; difference</strong> that was nothing but luck, against 64% calculated. The gap to 64% is the noise of only 300 studies. This is <strong>p-hacking</strong>: try enough things, report the one that &quot;worked&quot;. The cure is the ASA&#x27;s fourth principle: &quot;Proper inference requires full reporting and transparency.&quot; Say how many things you tried.</p>
+<ul><li>* *</li></ul>
+<h2>The chalk stays up, with an asterisk</h2>
+<p>Mira holds the chalk back. &quot;Our one planned question had p = 0.0143, so A probably is better. The milk &#x27;win&#x27; came from twenty tries, and twenty tries will always find something. Rerun it with fresh tasters before we believe it.&quot;</p>
+<p>Tala writes: <em>&quot;Preferred in a blind test of 10 per blend, +1.2 points.&quot;</em> Not &quot;proven&quot;.</p>
+<p><strong>Takeaway:</strong> a test asks whether luck alone could do this. A small p-value says luck is a poor explanation. It does not say the effect is big, the null is false with some probability, or that an unsignificant result means nothing is there.</p>
+<p><strong>Challenge.</strong> Ravi counts that on days it rains, more people order tea. Rain and sales move together, but does one <em>cause</em> the other? Next cup: <a href="../../../../../fields/data-science/probability-statistics/inference/two-things-moving-together/">Two Things Moving Together</a>.</p>
+<ul><li>* *</li></ul>
+<h2>Never again</h2>
+<table><thead><tr><th>Mistake</th><th>Symptom</th><th>Fix</th></tr></thead><tbody><tr><td>Reading p as P(null is true)</td><td>&quot;3% chance the blends are the same&quot;</td><td>p assumes the null to compute itself (ASA principle 2)</td></tr><tr><td>Reading p as effect size</td><td>&quot;p = 0.00001, so A is much better&quot;</td><td>Report the gap and its interval; 0.03 points can be &quot;significant&quot;</td></tr><tr><td>Reading p &gt; 0.05 as &quot;no difference&quot;</td><td>5 per group, &quot;not significant&quot;</td><td>Not shown, not absent: power was about 27.5%</td></tr><tr><td>Testing twenty things</td><td>One p &lt; 0.05 of 20</td><td><code>1 − 0.95^k</code>; say how many things you tried, rerun with fresh data</td></tr><tr><td>Treating 0.05 as a law</td><td>Rejecting at 0.049, ignoring 0.051</td><td>It is a convention; the cost of being wrong sets the line</td></tr></tbody></table>
+<h2>Check yourself</h2>
+<ol><li>In the three-per-blend example, why is the p-value 0.10 and not something small, even though A averaged 2 points more?</li><li>A study reports p = 0.03: is there a 3% chance the null is true? Study X (20 people, p = 0.2) and study Y (20,000 people, p = 0.0001) find the same gap: which effect is larger?</li><li>The chance of at least one false alarm in 5 independent tests at the 0.05 level? A test on 5 people per group is &quot;not significant&quot;: do the groups not differ?</li></ol>
+<ol><li>Only 20 deals exist and two reach a lead of 2 (the real pile, and the one with the other 7 swapped in): 2 of 20 is 0.10. Small samples let luck make big gaps.</li><li><strong>No</strong>: it is the chance of data this extreme <em>given</em> the null, not the chance of the null given the data (ASA principle 2). You cannot tell which effect is larger: the gap is the same, and p reflects gap <em>and</em> sample size.</li><li><code>1 − 0.95^5 = 1 − 0.7738 =</code> <strong>0.2262</strong>, about 23%. <strong>No</strong>: with 5 per group even a true 1-SD difference was caught only about 27.5% of the time (simulated); &quot;not significant&quot; means &quot;not shown&quot;.</li></ol>
+<ul><li>* *</li></ul>
+<h2>📜 The Scroll (keep this)</h2>
+<pre><code class="language-text">Null         : &quot;luck only&quot;, the labels mean nothing
+p-value      : how often luck alone gives a result at least this extreme; small p = luck is a
+               poor explanation. NOT effect size, NOT P(null true), NOT proof when large
+Shuffle test : re-deal labels many times, count matches of what you saw (exact: all splits)
+Classical    : the same question with a bell-curve shortcut (t-test)
+Errors       : false alarm (reject a true null); missed effect (keep a false null)
+0.05         : a convention, not a law
+Many tests   : P(at least one false alarm) = 1 - 0.95^k;  k = 20 -&gt; 0.64
+Report       : the effect size and interval, and how many things you tried</code></pre>
+<ul><li>* *</li></ul>
+<h2>References</h2>
+<ul><li>Wasserstein, R. L. and Lazar, N. A. (2016), <em>The ASA&#x27;s Statement on p-Values: Context, Process, and Purpose</em>, The American Statistician 70(2):129-133. &lt;https://doi.org/10.1080/00031305.2016.1154108&gt;. The journal page returned HTTP 403, so the paper itself was not read. The six principles quoted above come from the ASA&#x27;s own press release of the statement, which was retrieved: &lt;https://www.amstat.org/asa/files/pdfs/p-valuestatement.pdf&gt;.</li><li>NIST/SEMATECH e-Handbook of Statistical Methods, <em>7.1.3. What are statistical tests?</em> (null and alternative hypotheses, the risk of the first and second kind) &lt;https://www.itl.nist.gov/div898/handbook/prc/section1/prc13.htm&gt;, and <em>7.1.3.1. Critical values and p values</em> (the α = 0.05 sentence and the arbitrariness of the choice) &lt;https://www.itl.nist.gov/div898/handbook/prc/section1/prc131.htm&gt;.</li><li>Every number was recomputed with Python 3.14.4 (<code>python3 -I</code>, standard library, fixed seeds). The 50,000-per-blend and 400-experiment simulations are described, but their code is not shown.</li></ul>
+<p><a href="../../../../../#/fields/data-science/probability-statistics/inference/the-courtroom-for-numbers">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

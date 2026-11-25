@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>One Bad Pixel: Spatial Filtering</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/digital-image-processing/spatial-filtering/">
+<meta name="description" content="Kernels, correlation versus convolution, padding and separability - blurring explained as a neighbourhood vote, with the mean and median compared on one noisy pixel.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="One Bad Pixel: Spatial Filtering">
+<meta property="og:description" content="Kernels, correlation versus convolution, padding and separability - blurring explained as a neighbourhood vote, with the mean and median compared on one noisy pixel.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/digital-image-processing/spatial-filtering/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/digital-image-processing/spatial-filtering/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../.docs/prerender-redirect.js" data-target="../../../#/fields/digital-image-processing/spatial-filtering"></script>
+<main>
+<h1>One Bad Pixel: Spatial Filtering</h1>
+<p><em>Kernels, correlation versus convolution, padding and separability - blurring explained as a neighbourhood vote, with the mean and median compared on one noisy pixel.</em></p>
+<blockquote><p><strong>Part 4 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).</strong> <em>Hana, Ines and the facilities team are invented; the maths and numbers are real.</em> One speck, two bosses and a folder of floor plans: by the end you can compute a filter by hand and pick the one that fits your noise.</p></blockquote>
+<p>Look at these nine numbers for a second.</p>
+<pre><code class="language-text">10  10  10
+10  90  10
+10  10  10</code></pre>
+<p>Eight neighbours say 10. One citizen shouts 90.</p>
+<p>That is one speck of scanner noise on a photo of a gray wall, and it&#x27;s your problem now. By lunchtime two people will tell you exactly how to remove it, and one of them is about to cost you half a folder. Let&#x27;s find out which.</p>
+<hr>
+<h2>One citizen shouts</h2>
+<p>Picture your Monday. You&#x27;ve just inherited the facilities survey, and the report goes out on Friday. The wall photo is perfect except for one white speck in the middle of a gray patch.</p>
+<p>You remember <a href="../../../fields/digital-image-processing/images-are-just-matrices/">Pixel Town</a>? Every pixel is a citizen holding one number. This street has nine houses, and eight of them hold a 10. The ninth is shouting.</p>
+<p>Hana, the manager, doesn&#x27;t look up: &quot;Average it with the neighbours. Done.&quot;</p>
+<p>Ines, the other engineer, shakes her head: &quot;No. Take the middle value. Done.&quot;</p>
+<p>You nod at both, which is what you do on day two. Then you ask yourself the question neither of them answered: what does each of those actually <em>compute</em>? And before that: what is &quot;the neighbours&quot; to a computer?</p>
+<hr>
+<h2>How a street takes a vote</h2>
+<p>A <strong>spatial filter</strong> computes each output pixel from a small window of input pixels around it. Think of it as a street poll: a citizen asks the houses next door what the number should be. The window of weights is called a <strong>kernel</strong> (or mask, or filter). It is usually 3 × 3, 5 × 5, or another odd size, so it has a house in the centre.</p>
+<pre><code class="language-mermaid">flowchart LR
+    A[&quot;Place kernel&lt;br/&gt;on a pixel&quot;] --&gt; B[&quot;Multiply each weight&lt;br/&gt;by the pixel under it&quot;]
+    B --&gt; C[&quot;Add everything up&quot;]
+    C --&gt; D[&quot;Write the sum to&lt;br/&gt;the output pixel&quot;]
+    D --&gt; E[&quot;Slide one step&lt;br/&gt;and repeat&quot;]</code></pre>
+<p><em>The whole algorithm. Every &quot;filter&quot; in the next three pages is a different kernel in this loop.</em></p>
+<p>With a kernel w of size (2a+1) × (2b+1), the poll result is:</p>
+<p>That is a weighted vote: each neighbour gets a weight, and the sum is the result. Hana&#x27;s way is the <strong>box</strong> (mean) filter. Every weight is 1/9 in a 3 × 3 window, so the citizen becomes the plain average of itself and its eight neighbours. Everyone gets one equal vote, including the loudmouth.</p>
+<blockquote><p>[!TIP] Weights that sum to <strong>1</strong> keep overall brightness. Weights that sum to <strong>0</strong> (edge detectors, page 5) give zero on flat regions and a response only where things change.</p></blockquote>
+<p>Now you try Hana&#x27;s poll on the nine numbers at the top.</p>
+<p>☕ <strong>Try it before you scroll.</strong> A 3 × 3 box filter (all weights 1/9) runs over that street. <strong>What does the centre pixel become?</strong> <em>Hint: eight 10s and one 90.</em></p>
+<hr>
+<h2>The smudge that moved in next door</h2>
+<p><strong>Answer:</strong> (8 × 10 + 90) / 9 = 170 / 9 ≈ <strong>18.9</strong>.</p>
+<p>The speck dropped from 90 to 19, but it didn&#x27;t disappear. It also <strong>bled</strong> into all eight neighbours: each of them now gets a share of that 90 in its own average. The wall has a smudge where the speck used to be.</p>
+<p>Hana shrugs: &quot;Smudge is fine. Nobody zooms into a wall.&quot;</p>
+<p>Ines answers with one sentence: &quot;A mean can&#x27;t ignore anybody. That&#x27;s what a mean <em>is</em>.&quot; So what does a vote look like when it is allowed to ignore the loudest voice?</p>
+<hr>
+<h2>Ines votes with a sort</h2>
+<p>The median filter takes the same nine values, sorts them, and picks the middle one:</p>
+<pre><code class="language-text">sorted: 10 10 10 10 10 10 10 10 90   -&gt;   median = 10</code></pre>
+<p>The speck vanishes completely and nothing bleeds. A single outlier can never be the median of nine numbers unless five others agree with it. A loudmouth needs a conspiracy.</p>
+<table><thead><tr><th></th><th>Mean (box)</th><th>Median</th></tr></thead><tbody><tr><td>Is it a kernel (weighted sum)?</td><td>Yes, linear</td><td>No, it sorts, so it is <strong>nonlinear</strong></td></tr><tr><td>Good against</td><td>Gaussian-like noise spread over every pixel</td><td>Salt-and-pepper (isolated extreme pixels)</td></tr><tr><td>Side effect</td><td>Blurs edges</td><td>Preserves edges better, can erase thin lines</td></tr></tbody></table>
+<p>So the manager and the other engineer are both right. They are treating different noise: Pixel Town&#x27;s whisper campaign versus one loudmouth. More on telling them apart on <a href="../../../fields/digital-image-processing/noise-and-restoration/">page 8</a>.</p>
+<p>Read the last cell of that table twice. <em>Can erase thin lines.</em> You file it under &quot;later&quot; and apply the median to the wall photo. The speck is gone. The wall is a wall again.</p>
+<p>But the report has a strip along the photo&#x27;s border that looks off. What is a window supposed to vote with when there are no houses on one side?</p>
+<hr>
+<h2>The edge of the map</h2>
+<p>At the border, a 3 × 3 window hangs off the image. Something has to fill the missing neighbours. Common choices:</p>
+<table><thead><tr><th>Padding</th><th>Fills the outside with</th><th>Effect</th></tr></thead><tbody><tr><td>Zero</td><td>0</td><td>Dark halo around the border</td></tr><tr><td>Replicate</td><td>The nearest edge pixel, repeated</td><td>Neutral, a bit smeary</td></tr><tr><td>Reflect</td><td>The image mirrored across the border</td><td>Smooth, the usual default</td></tr></tbody></table>
+<p>Zero padding is the empty seat that always votes &quot;black&quot;. That&#x27;s your dark strip. Reflect pretends the street continues as a mirror image of itself.</p>
+<p>With p pixels of padding on every side the output keeps the input size (&quot;same&quot;). With no padding (&quot;valid&quot;) a k × k kernel shrinks an N-wide image to N − k + 1. OpenCV&#x27;s <code>filter2D</code> uses a reflected border by default (<code>BORDER_REFLECT_101</code>).</p>
+<p>You switch to reflect and the strip disappears. Then Hana asks for something bigger: a softer blur on the cover image. Easy, you think. Then the preview starts to crawl. Why?</p>
+<hr>
+<h2>Letting the close neighbours shout louder</h2>
+<p>Hana wants the cover image softer, so the title text sits on a calm background. You enlarge the box to 11 × 11. The preview, which used to be instant, starts to crawl. A bigger window means more houses to ask per citizen, and every house still gets the same vote. It is also a crude blur: a citizen eleven doors away counts as much as the one next door.</p>
+<p>Ines looks over: &quot;Why would the far end of the street matter as much as the neighbour? Let the close ones shout louder.&quot;</p>
+<p>That is a <strong>Gaussian</strong>: a box that gives close neighbours more say.</p>
+<p>The parameter σ sets how far the influence reaches. A bigger σ means a bigger, softer blur, and a bigger window to compute it. So the crawl is still there. What fixes it is a property of this particular kernel.</p>
+<p>The 2-D Gaussian is the <strong>product of two 1-D Gaussians</strong>, one in x and one in y. Any kernel that factors this way is <strong>separable</strong>. Instead of one k × k pass you do two passes:</p>
+<ul><li><strong>Row pass:</strong> every citizen asks only the neighbours left and right.</li><li><strong>Column pass:</strong> then only the neighbours up and down.</li></ul>
+<p>Try it on the smallest example, the binomial kernel, which approximates a Gaussian:</p>
+<p>A column times a row gives the whole 3 × 3. The poll shrinks from nine questions per citizen to six. Now count the saving per output pixel for the sizes you&#x27;ve been fighting with:</p>
+<table><thead><tr><th>Kernel size k</th><th>2-D multiplies (k²)</th><th>Separable (2k)</th></tr></thead><tbody><tr><td>3</td><td>9</td><td>6</td></tr><tr><td>5</td><td>25</td><td>10</td></tr><tr><td>11</td><td>121</td><td>22</td></tr></tbody></table>
+<p>At 11 × 11 the cost goes from 121 to 22. The bigger the kernel, the bigger the win, and that&#x27;s why libraries blur with two 1-D passes. The preview is instant again. You get to say &quot;separable&quot; in a meeting and, for once, nobody argues.</p>
+<p>Then Ines asks a question that sounds like a trick: &quot;Did your library flip the kernel?&quot;</p>
+<hr>
+<h2>Did anybody flip the street plan?</h2>
+<p>You have no idea. You pull the first formula back up, the one you&#x27;ve been using all day, and Ines says it out loud: that is technically <strong>correlation</strong>. True <strong>convolution</strong> flips the kernel by 180° (both axes) before sliding it:</p>
+<p>Only the sign inside f changed, and that sign decides whether you read the kernel forwards or backwards. Draw your box on paper, turn the page upside down, and you get the same box. The Gaussian too. Nothing to flip.</p>
+<p>If the kernel is symmetric (box, Gaussian, Laplacian), flipping changes nothing and the two are the same. They differ only for asymmetric kernels such as a Sobel edge detector, where the flip reverses the direction of the response. That&#x27;s the day the question stops being a trick. Page 5 uses those kernels.</p>
+<p>&quot;So why does the flip exist at all?&quot; you ask. Because convolution has clean algebra: it is commutative and associative, and, as <a href="../../../fields/digital-image-processing/fourier-transform-for-images/">page 6</a> shows, it turns into plain multiplication in the frequency domain. Correlation is the &quot;what matches this pattern?&quot; operation and is what you reach for when you slide a template over a picture. Two jobs, one loop, two names.</p>
+<p>Ines adds the part that makes this page matter beyond one wall photo. The machine-learning team across the hall use the same loop all day. A convolutional layer in a neural network is this exact loop with one change of attitude: <strong>the kernel values are learned instead of designed</strong>. Box, Gaussian and Sobel are hand-picked weights; a CNN lets training find its own.</p>
+<p>And they have the same naming quirk. Deep learning frameworks such as PyTorch compute <strong>cross-correlation</strong> (no flip) and call it convolution. PyTorch&#x27;s <code>Conv2d</code> documentation says so. Since the weights are learned anyway, flipping them would change nothing, so nobody bothers. See <a href="../../../fields/deep-learning/concepts/convolution/">Deep Learning - Concepts - Convolution</a> for the network side of the story.</p>
+<p>You close the laptop. The street votes are done, the border is mirrored, the blur is cheap and the naming is settled. It is Friday, 16:40, and the report is ready. What about the folder?</p>
+<hr>
+<h2>Back to the bad pixel</h2>
+<p>Hana, impressed with the median, had already run it over the whole facilities folder. It includes 200 scanned floor plans.</p>
+<p>A thin line can look to a median like a pixel that disagrees with its neighbours. Half of the plans have lost walls.</p>
+<p>You restore them from the archive copy. You never touched the originals, which is the only reason this is a ten-minute story. The wall photo keeps its median. The floor plans keep their walls.</p>
+<p>The manager and the other engineer were both right. They were just treating different noise.</p>
+<h3>Try it: One bad pixel, average it or sort it?</h3>
+<blockquote><p><strong>What it shows:</strong> A spatial filter lets each pixel ask its neighbours. A kernel takes a weighted vote; the median sorts and takes the middle. <strong>Start with:</strong> the preset <em>The speck</em>: eight 10s and one 90, the mean smears it to 18.9 and the median erases it to 10.</p></blockquote>
+<p><a href="../../../fields/digital-image-processing/labs/spatial-filters.html">Spatial filters lab</a></p>
+<hr>
+<h2>Never again: which filter, which border</h2>
+<table><thead><tr><th>Situation</th><th>Reach for</th></tr></thead><tbody><tr><td>Gaussian-like noise on every pixel</td><td>A mean, or a Gaussian blur (it blurs edges)</td></tr><tr><td>Isolated extreme pixels (salt-and-pepper)</td><td>The median, which is nonlinear and keeps edges better</td></tr><tr><td>Thin lines you must keep</td><td>Not the median: it can erase them</td></tr><tr><td>A blur that must not change brightness</td><td>Weights that sum to 1 (a box is all <code>1/9</code> in 3 × 3)</td></tr><tr><td>Responding only where things change</td><td>Weights that sum to 0 (edge detectors, next page)</td></tr><tr><td>The border</td><td>Zero (dark halo), replicate (smeary), reflect (the usual default; OpenCV <code>filter2D</code> uses <code>BORDER_REFLECT_101</code>)</td></tr><tr><td>A big blur</td><td>A separable kernel: two 1-D passes (9, 25, 121 multiplies become 6, 10, 22)</td></tr></tbody></table>
+<p>Keep the originals: a filter you run on a folder is a filter you may need to undo.</p>
+<p><strong>Takeaway:</strong> a filter is a sliding weighted vote; linear ones are kernels, the median is the nonlinear exception, and separable kernels make big blurs cheap.</p>
+<p><strong>Next:</strong> how do you find an edge by asking neighbours to disagree? <a href="../../../fields/digital-image-processing/edges-and-sharpening/">Part 5: Edges and sharpening</a>.</p>
+<hr>
+<h2>📜 The Scroll (keep this)</h2>
+<pre><code class="language-text">Symptom:  One loud pixel (90 among 10s)
+Mean:     (8 x 10 + 90) / 9 = 18.9: smudge, and it bleeds into neighbours
+Median:   sorted 10 10 10 10 10 10 10 10 90 -&gt; 10: gone, nothing bleeds
+Pick:     mean/Gaussian for Gaussian-like noise; median for salt-and-pepper
+Do not:   median thin lines; forget the border rule
+Cost:     separable kernels: k = 3, 5, 11 -&gt; 6, 10, 22 multiplies</code></pre>
+<h3>References</h3>
+<ul><li>R. C. Gonzalez and R. E. Woods, <em>Digital Image Processing</em>, 4th ed., Pearson, 2018: chapter 3 (spatial filtering, correlation and convolution, smoothing, order-statistic filters).</li><li>OpenCV documentation, <a href="https://docs.opencv.org/4.x/d4/d86/group__imgproc__filter.html">Image Filtering</a>: <code>filter2D</code>, <code>GaussianBlur</code>, <code>medianBlur</code> and border types.</li><li>PyTorch documentation, <a href="https://pytorch.org/docs/stable/generated/torch.nn.Conv2d.html">torch.nn.Conv2d</a>: the operation is cross-correlation.</li></ul>
+<p><a href="../../../#/fields/digital-image-processing/spatial-filtering">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Two People, One Laptop: What Accounts Should (and Shouldn&#x27;t) Promise</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/programming/local-app-accounts/threat-model-and-first-launch/">
+<meta name="description" content="Before writing any account code, state what accounts will and will not protect, then handle the very first sign-up gracefully.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Two People, One Laptop: What Accounts Should (and Shouldn&#x27;t) Promise">
+<meta property="og:description" content="Before writing any account code, state what accounts will and will not protect, then handle the very first sign-up gracefully.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/programming/local-app-accounts/threat-model-and-first-launch/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/programming/local-app-accounts/threat-model-and-first-launch/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../.docs/prerender-redirect.js" data-target="../../../#/programming/local-app-accounts/threat-model-and-first-launch"></script>
+<main>
+<h1>Two People, One Laptop: What Accounts Should (and Shouldn&#x27;t) Promise</h1>
+<p><em>Before writing any account code, state what accounts will and will not protect, then handle the very first sign-up gracefully.</em></p>
+<p><em>Local App Accounts, tea talk 1 of 6. Next: [Sign-In Hygiene](/programming/local-app-accounts/sign-in-hygiene.md).</em></p>
+<p>Picture a shared workstation in a lab. <strong>Ahmed</strong> runs training jobs. <strong>Abdelrahman</strong> babysits the storage. Both use the same desktop app, and before accounts existed they opened the same window and saw the same clusters, the same notes and the same saved passwords. Comfortable, right up to the moment Abdelrahman&#x27;s reminder to <em>&quot;delete the scratch data&quot;</em> pops up on Ahmed&#x27;s screen while he is sharing it in a meeting.</p>
+<p>This series follows what happens when that app learns to tell the two of them apart. This first talk is about the part that comes <em>before</em> any code: deciding what the feature is for.</p>
+<hr>
+<h2>The one-sentence version</h2>
+<p><strong>Accounts in a local app are a gate and a separator, not a vault: they keep each person&#x27;s workspace out of the other person&#x27;s view, and give you a lock for when you step away.</strong></p>
+<hr>
+<h2>Words you&#x27;ll meet</h2>
+<table><thead><tr><th>Term</th><th>Plain meaning</th></tr></thead><tbody><tr><td><strong>Threat model</strong></td><td>A short answer to &quot;who am I defending against, and who am I not?&quot;</td></tr><tr><td><strong>Authentication</strong></td><td>Proving who you are (&quot;it&#x27;s really Ahmed&quot;)</td></tr><tr><td><strong>Authorization</strong></td><td>Deciding what that person may do (&quot;Ahmed may edit <em>his</em> clusters&quot;)</td></tr></tbody></table>
+<hr>
+<h2>The honest disclaimer</h2>
+<p>The most useful sentence in the whole design is a <em>negative</em> one. Accounts here:</p>
+<ul><li><strong>Do</strong> keep Ahmed&#x27;s workspace out of Abdelrahman&#x27;s view and out of his way.</li><li><strong>Do not</strong> stop anyone who can read your files <em>as you</em> on the operating system. Saved secrets are sealed by the computer&#x27;s keychain, and the keychain belongs to the computer user, not the app user.</li></ul>
+<p>So the app protects <strong>who sees what inside the app</strong>, plus <strong>a lock for the moment you step away</strong>. That is the whole contract. The threat model is &quot;the other person using this app&quot;, not &quot;an attacker with full control of the computer.&quot;</p>
+<blockquote><p><strong>Lesson.</strong> Write the threat model before the feature. A modest, honest promise is much easier to keep than an ambitious, vague one, and every later decision gets judged against it.</p></blockquote>
+<hr>
+<h2>The cast</h2>
+<p>Every responsibility gets a character, which makes the design easy to hold in your head. They&#x27;ll keep turning up in the next five talks:</p>
+<table><thead><tr><th>Character</th><th>Their job</th><th>Appears in</th></tr></thead><tbody><tr><td>The Doorman</td><td>Decides which screen you get: sign-up, sign-in, claim, or the app</td><td>This talk</td></tr><tr><td>The Clerk</td><td>Checks who you say you are</td><td>Talk 2</td></tr><tr><td>The Slow Clerk</td><td>Makes password guessing expensive</td><td>Talk 2</td></tr><tr><td>The Memory</td><td>Knows who&#x27;s signed in, in memory only</td><td>Talk 3</td></tr><tr><td>The Bouncer</td><td>Inspects every request and asks &quot;is that yours?&quot;</td><td>Talk 3</td></tr><tr><td>The Cartographer</td><td>Draws the map of what you may see, down in the database</td><td>Talk 3</td></tr><tr><td>The Night Watch</td><td>Runs background monitors, but only while somebody is home</td><td>Talk 4</td></tr><tr><td>The Curtain</td><td>The lock screen</td><td>Talk 5</td></tr><tr><td>The Locksmith</td><td>Gets you back in when you forget your password</td><td>Talk 5</td></tr></tbody></table>
+<hr>
+<h2>The very first launch</h2>
+<p><strong>Scene.</strong> Fresh install, no accounts. The Doorman sees an empty list of people, so the first thing you get is <strong>Create your account</strong>.</p>
+<p>Two small decisions are worth a second look.</p>
+<p><strong>The password is optional.</strong> Plenty of single-user laptops don&#x27;t want one. An account without a password simply opens with an empty one. The login is a gate for people who <em>chose</em> to have one, not a requirement the app imposes on everyone.</p>
+<p><strong>The first account adopts the empty profile.</strong> A fresh install already has one empty profile the app made for itself. Asking a brand-new user to &quot;claim&quot; an empty profile would be silly, so the first account just takes it.</p>
+<p>The rules stay tiny: a username is 3 to 32 characters (letters, digits, dot, underscore, dash, starting and ending with a letter or digit), and a password, if you set one, is 8 to 256 characters. The rules live behind an info icon so the form stays calm.</p>
+<blockquote><p><strong>Lesson.</strong> Don&#x27;t make the common case (one person, one laptop) pay for a feature built for the uncommon one.</p></blockquote>
+<hr>
+<h2>Recap</h2>
+<ul><li>State the threat model first, including what you are <em>not</em> protecting.</li><li>Keep the first-run path frictionless: optional password, and the first account adopts the empty profile.</li></ul>
+<p><strong>Next tea talk:</strong> <a href="../../../programming/local-app-accounts/sign-in-hygiene/">Sign-In Hygiene</a>, where the Clerk learns to say &quot;no&quot; without giving anything away.</p>
+<p><a href="../../../#/programming/local-app-accounts/threat-model-and-first-launch">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

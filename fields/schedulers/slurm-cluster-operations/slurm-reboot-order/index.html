@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Rebooting a Slurm Cluster Without Losing Your Job (Or Anyone Else&#x27;s)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-cluster-operations/slurm-reboot-order/">
+<meta name="description" content="The step-by-step order for rebooting a Slurm cluster: drain, lock access, control plane first, then front-end and compute nodes, and reopen in a controlled way.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Rebooting a Slurm Cluster Without Losing Your Job (Or Anyone Else&#x27;s)">
+<meta property="og:description" content="The step-by-step order for rebooting a Slurm cluster: drain, lock access, control plane first, then front-end and compute nodes, and reopen in a controlled way.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-cluster-operations/slurm-reboot-order/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-cluster-operations/slurm-reboot-order/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/schedulers/slurm-cluster-operations/slurm-reboot-order"></script>
+<main>
+<h1>Rebooting a Slurm Cluster Without Losing Your Job (Or Anyone Else&#x27;s)</h1>
+<p><em>The step-by-step order for rebooting a Slurm cluster: drain, lock access, control plane first, then front-end and compute nodes, and reopen in a controlled way.</em></p>
+<blockquote><p><strong>Part of the `schedulers/` series.</strong> Sourced and expanded from a <a href="https://www.reddit.com/r/HPC/comments/ipij91/slurm_reboot_order/">classic r/HPC thread</a> that every cluster admin eventually rediscovers the hard way. The full-outage sequence is for when the control plane needs rebooting too; if only compute nodes do, Slurm can do it for you without an outage.</p></blockquote>
+<hr>
+<h2>The question every new admin eventually asks</h2>
+<blockquote><p><em>&quot;What&#x27;s the actual order for restarting the nodes? At what point do I drain the compute nodes? Should `slurmdbd`, `slurmd`, and `slurmctld` stay auto-enabled across a reboot? Do I just `shutdown -r now` a node, or stop the daemons first with `scontrol shutdown`? And where does a maintenance reservation fit into all of this?&quot;</em></p></blockquote>
+<p>This is a rite of passage — everyone runs into it the first time they need to patch a Slurm cluster without a) losing queued jobs, b) corrupting the accounting database, or c) getting paged at 2 AM because a node came back up in a weird state and started eating jobs it shouldn&#x27;t have. Below is the order that actually works, assuming <strong>you are not upgrading Slurm itself</strong> — just patching/rebooting the underlying OS.</p>
+<hr>
+<h2>Before you touch anything: five things to have ready</h2>
+<p>Skipping this section is how a 2-hour maintenance window turns into a 14-hour incident.</p>
+<ul><li>[ ] <strong>Estimate the work and the time it&#x27;ll take.</strong> Vague estimates turn into angry Slack threads from users mid-maintenance.</li><li>[ ] <strong>Prepare a small test job.</strong> A tiny <code>xhpl</code> instance is perfect — cheap to run, and immediately tells you if compute nodes are actually healthy post-reboot.</li><li>[ ] <strong>Create a hidden Slurm partition reserved for you (root only).</strong> You want somewhere to test job submission <em>before</em> opening the floodgates back to real users.</li><li>[ ] <strong>Have a node-health-check mechanism ready</strong> — <a href="https://github.com/mej/nhc">NHC (Node Health Check)</a> or equivalent, so bad nodes get flagged automatically instead of silently eating jobs.</li><li>[ ] <strong>Confirm you have root credentials and OOB/BMC/IPMI console access to every server.</strong> Losing thousands of core-hours because a node hung at GRUB and you couldn&#x27;t remember how to reach its console is a genuinely common, genuinely avoidable failure mode.</li></ul>
+<blockquote><p>[!TIP] If you have a test/lab system, dry-run the entire upgrade path there before day D. There is no substitute for having already seen the failure once.</p></blockquote>
+<hr>
+<h2>The full reboot sequence</h2>
+<h3>Phase 0 — Scheduling</h3>
+<ol><li><strong>Estimate when currently running jobs will finish</strong>, and schedule your maintenance start time safely after that. Pick your weekday carefully: &gt; [!WARNING] &gt; <strong>Avoid Thursdays and Fridays.</strong> Users can&#x27;t submit new jobs during the blackout, the system sits under-utilized over the weekend, and if something breaks Friday night, nobody&#x27;s around to help you fix it.</li><li><strong>Create a reservation with the `MAINT` flag</strong>, starting at your chosen time — with a safe overlap buffer built in, because maintenance windows always run long.</li><li><strong>Wait for day D, time T.</strong> If you have a test/lab system, use the waiting period to dry-run the upgrade path there.</li></ol>
+<h3>Phase 1 — Locking down access</h3>
+<ol><li><strong>Place `/etc/nologin` on the front-end/login nodes</strong> to block non-root users from doing anything unexpected while you work. <em>(Make sure your own root login still works before you do this.)</em></li><li><strong>Confirm `State=DOWN` is set on partitions in `slurm.conf`</strong> — this is your safety net against a badly-restarted <code>slurmd</code>/node grabbing and executing jobs before you&#x27;re ready.</li></ol>
+<h3>Phase 2 — Control plane first</h3>
+<ol><li><strong>Stop and disable `slurmctld`, then `slurmdbd`</strong> — controller before database daemon, in that order.</li><li><strong>Take a consistent backup of the Slurm SQL database.</strong> This is your one clean window to do it — everything is quiesced, nothing is writing to it mid-backup. Future-you will be extremely grateful you didn&#x27;t skip this step.</li><li><strong>Stop and disable MariaDB/MySQL.</strong></li><li><strong>Reboot the Slurm and DB servers</strong> and perform whatever underlying OS maintenance you actually came here to do.</li><li><strong>Bring services back up in order: DB → `slurmdbd` → `slurmctld`.</strong> Check the logs carefully — confirm services started cleanly <em>and</em> that partitions are genuinely showing <code>DOWN</code> (not silently back up and accepting work).</li></ol>
+<h3>Phase 3 — Front-end nodes</h3>
+<ol><li><strong>Reboot the front-end/login servers now</strong> that the control plane is confirmed healthy. Re-apply <code>/etc/nologin</code> here too — it gets wiped during the boot process, so it won&#x27;t persist automatically.</li><li><strong>Verify InfiniBand, filesystem mounts, and Slurm client connectivity</strong> on the front-ends. Kernel version changes are a classic way to break third-party kernel modules (IB drivers especially) — don&#x27;t assume &quot;it booted&quot; means &quot;it works.&quot; Once confirmed healthy, remove <code>/etc/nologin</code> and let users back onto the front-ends. Partitions are still <code>DOWN</code>, so they can queue jobs — nothing will actually execute yet.</li></ol>
+<h3>Phase 4 — Compute nodes</h3>
+<ol><li><strong>Reboot the compute nodes.</strong> If they&#x27;re already empty (which they should be, per your Phase 0 scheduling), there&#x27;s no real need to fuss with drain state first.</li><li><strong>Clear the &quot;unexpectedly rebooted&quot; flag</strong> by setting node state to <code>idle</code>, and let your node health check mechanism (NHC or equivalent) do its job of flagging anything unhealthy.</li></ol>
+<h3>Phase 5 — Controlled reopening</h3>
+<ol><li><strong>Flip your hidden root-only partition to `UP`</strong> and submit your test job (that small <code>xhpl</code> instance from your prep checklist) there first.</li><li><strong>If the test job runs clean — open the real partitions.</strong> <code>State=UP</code>, and you&#x27;re done.</li></ol>
+<hr>
+<h2>The order, visualized</h2>
+<pre><code> Phase 0: Schedule           Phase 1: Lock down          Phase 2: Control plane
+ ┌───────────────────┐      ┌─────────────────────┐     ┌──────────────────────┐
+ │ Estimate end time  │      │ /etc/nologin on      │     │ Stop slurmctld        │
+ │ of running jobs    │─────►│ front-ends            │────►│ Stop slurmdbd         │
+ │ Create MAINT        │      │ Set State=DOWN on     │     │ Backup SQL DB ★       │
+ │ reservation         │      │ partitions            │     │ Stop MariaDB/MySQL    │
+ └───────────────────┘      └─────────────────────┘     │ Reboot Slurm/DB hosts │
+                                                          │ Start: DB→slurmdbd→   │
+                                                          │        slurmctld      │
+                                                          └──────────────────────┘
+                                                                     │
+          ┌──────────────────────────────────────────────────────────┘
+          ▼
+ Phase 3: Front-ends              Phase 4: Compute nodes         Phase 5: Reopen
+ ┌────────────────────────┐      ┌───────────────────────┐     ┌───────────────────┐
+ │ Reboot front-ends        │      │ Reboot compute nodes   │     │ Hidden partition→UP │
+ │ Re-apply /etc/nologin     │─────►│ Set state=idle          │────►│ Run test job         │
+ │ Verify IB / FS / Slurm    │      │ Let NHC flag bad nodes  │     │ If clean: partitions │
+ │ Remove /etc/nologin        │      │                         │     │ → UP. Done.           │
+ └────────────────────────┘      └───────────────────────┘     └───────────────────┘</code></pre>
+<p>★ = the one irreversible step in the whole sequence — get your DB backup <em>before</em> touching MariaDB/MySQL, not after.</p>
+<hr>
+<h2>Why this order and not another</h2>
+<p>The sequence isn&#x27;t arbitrary — it follows a simple dependency chain:</p>
+<pre><code>Database  →  slurmdbd  →  slurmctld  →  front-ends  →  compute nodes
+(source of  (needs DB   (needs        (need a        (need a
+ truth)      to start)   slurmdbd)     controller      controller
+                                        to talk to)     accepting
+                                                         work — but
+                                                         kept DOWN
+                                                         until you
+                                                         say so)</code></pre>
+<p>Bring anything up out of order — say, compute nodes before the controller is confirmed healthy — and you risk exactly the failure mode this whole checklist exists to prevent: a node rejoining the pool in a bad state and silently swallowing jobs before you&#x27;ve verified anything.</p>
+<hr>
+<h2>When only the compute nodes need a reboot</h2>
+<p>Most reboots aren&#x27;t whole-cluster events. A kernel or driver update on the compute nodes doesn&#x27;t need the controller, the database or the login nodes to go anywhere. For that, Slurm has a rolling reboot built in:</p>
+<pre><code class="language-bash">scontrol reboot ASAP nextstate=RESUME reason=&quot;kernel CHG-2001&quot; cn[001-400]</code></pre>
+<table><thead><tr><th>Piece</th><th>What it does</th></tr></thead><tbody><tr><td><code>reboot</code></td><td>Runs <code>RebootProgram</code> from <code>slurm.conf</code> on each node when it&#x27;s idle. Nothing happens without <code>RebootProgram</code> set</td></tr><tr><td><code>ASAP</code></td><td>Drains each node right away, so no new jobs land there; running jobs finish normally first</td></tr><tr><td><code>nextstate=RESUME</code></td><td>Clears the drain and the reason once the node has rebooted and slurmd registered again. <code>nextstate=DOWN</code> leaves it down for you to check. With <code>ASAP</code> and no <code>nextstate</code>, newer man pages (26.11) say it defaults to <code>UNDRAIN</code>; the 23.11 page doesn&#x27;t say, so set it explicitly</td></tr><tr><td><code>reason=</code></td><td>What <code>sinfo -R</code> shows while it&#x27;s out. Put the ticket there</td></tr></tbody></table>
+<p>We ran it on two lab nodes (Slurm 23.11.4, <code>RebootProgram=/usr/sbin/reboot</code>): cn001 was idle, cn002 had a 40-second job.</p>
+<pre><code class="language-text">NODELIST STATE    REASON
+cn001    reboot^  kernel CHG-2001 : reboot issued
+cn002    draining@ kernel CHG-2001</code></pre>
+<p>cn001 went straight to reboot (<code>^</code> = reboot issued). cn002 drained (<code>@</code> = reboot pending) and waited; its job finished <code>COMPLETED 0:0</code>, and only then did the node reboot. No job was killed, and nobody ran a loop.</p>
+<p>The last step didn&#x27;t complete in our lab, and the reason is worth knowing. Both containers did reboot, but stayed in <code>reboot^</code> until we resumed them by hand. The controller only accepts a reboot once the node reports a <strong>boot time later than the reboot request</strong> (<code>waiting_for_node_boot()</code> in <code>node_mgr.c</code>), and containers report their host&#x27;s boot time, so it never moves. On real hardware the boot time changes and the node returns on its own. The same check is what catches a node that <em>didn&#x27;t</em> reboot: after <code>ResumeTimeout</code> it&#x27;s marked <code>DOWN</code> instead of quietly resuming.</p>
+<p>When to use which:</p>
+<table><thead><tr><th>Situation</th><th>Use</th></tr></thead><tbody><tr><td>Compute nodes only: kernel, driver, firmware</td><td><code>scontrol reboot ASAP nextstate=RESUME</code>, maybe a few racks at a time</td></tr><tr><td>You need a canary and a health check before resume</td><td>A rolling playbook, like <a href="../../../../fields/devops/ansible/rolling-maintenance/">Rolling maintenance</a> in the Ansible series</td></tr><tr><td>Controller, database or login nodes too</td><td>The full sequence on this page</td></tr></tbody></table>
+<p><code>nextstate=RESUME</code> puts the node back as soon as slurmd registers, but not blindly: the man page says slurmd runs <code>HealthCheckProgram</code> once after the reboot, <em>before</em> it registers. If that&#x27;s <a href="../../../../fields/system-administration/node-health-check/">NHC</a>, a node that comes back without its mounts or GPUs is drained instead of resumed.</p>
+<hr>
+<h2>The honest caveat</h2>
+<p>This exact sequence scales down cleanly to a handful of nodes and a weekend maintenance window. On genuinely large systems, expect the process to stretch, and expect pressure from whoever&#x27;s paying the bills — <strong>every hour of downtime on a large cluster can cost thousands of euros</strong>, and that pressure is real regardless of how careful you&#x27;re being. Two things help more than anything else at that scale: a longer prep list than you think you need, and enough colleagues in the loop that the to-do list isn&#x27;t resting on one person&#x27;s memory at 3 AM.</p>
+<p><strong>Takeaway:</strong> for a whole-cluster outage, go database → slurmdbd → slurmctld → front-ends → compute with partitions held <code>DOWN</code>; for compute-only reboots, let <code>scontrol reboot ASAP nextstate=RESUME</code> drain and return each node for you.</p>
+<hr>
+<h2>References</h2>
+<ul><li><a href="https://slurm.schedmd.com/scontrol.html#OPT_reboot">scontrol(1): reboot</a>: <code>ASAP</code>, <code>nextstate</code>, <code>reason</code>.</li><li><a href="https://slurm.schedmd.com/slurm.conf.html#OPT_RebootProgram">slurm.conf(5): RebootProgram</a>, <a href="https://slurm.schedmd.com/slurm.conf.html#OPT_ResumeTimeout">ResumeTimeout</a>, <a href="https://slurm.schedmd.com/slurm.conf.html#OPT_ReturnToService">ReturnToService</a>.</li><li><a href="https://slurm.schedmd.com/sinfo.html#SECTION_NODE-STATE-CODES">sinfo(1): node state codes</a>: <code>@</code> reboot pending, <code>^</code> reboot issued.</li><li><a href="https://slurm.schedmd.com/reservations.html">Slurm reservations</a>: the <code>MAINT</code> flag.</li><li><a href="https://github.com/SchedMD/slurm/blob/slurm-23-11-4-1/src/slurmctld/node_mgr.c">Slurm source, <code>node_mgr.c</code></a>: <code>waiting_for_node_boot()</code>, the boot-time check.</li><li><a href="https://www.reddit.com/r/HPC/comments/ipij91/slurm_reboot_order/">r/HPC: Slurm reboot order</a>: the thread this page grew from.</li></ul>
+<p><a href="../../../../#/fields/schedulers/slurm-cluster-operations/slurm-reboot-order">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

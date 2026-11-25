@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Booked Is Not Busy: GPU Allocation vs Utilization</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/kubernetes/gpu-allocation-vs-utilization/">
+<meta name="description" content="The scheduler knows who has booked the GPUs, not whether they’re busy, so use kubectl for the first question and DCGM-style telemetry for the second.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Booked Is Not Busy: GPU Allocation vs Utilization">
+<meta property="og:description" content="The scheduler knows who has booked the GPUs, not whether they’re busy, so use kubectl for the first question and DCGM-style telemetry for the second.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/kubernetes/gpu-allocation-vs-utilization/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/kubernetes/gpu-allocation-vs-utilization/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/devops/kubernetes/gpu-allocation-vs-utilization"></script>
+<main>
+<h1>Booked Is Not Busy: GPU Allocation vs Utilization</h1>
+<p><em>The scheduler knows who has booked the GPUs, not whether they’re busy, so use kubectl for the first question and DCGM-style telemetry for the second.</em></p>
+<p>Picture a restaurant with four tables. Four parties have reservations. Three of them haven&#x27;t shown up, and one has ordered a glass of water and is now reading a book. The dashboard at the door says <strong>100% booked</strong>. The kitchen says <strong>it&#x27;s the quietest night of the year</strong>. Both are telling the truth, and if you only look at one of them you&#x27;ll make the wrong decision.</p>
+<p>That&#x27;s the difference between GPU <strong>allocation</strong> and GPU <strong>utilization</strong>, and mixing them up is one of the most expensive misunderstandings on a shared cluster.</p>
+<hr>
+<h2>The one-sentence version</h2>
+<p><strong>Allocation is how many GPUs the scheduler has promised to pods; utilization is how hard the hardware is actually working, and Kubernetes natively tracks only the first.</strong></p>
+<hr>
+<h2>Allocation: what the scheduler has promised</h2>
+<p>A pod that wants GPUs asks for them under <code>limits</code>, as the <a href="../../../../fields/devops/kubernetes/fake-gpus-in-kubernetes/">fake GPU page</a> covered. The scheduler counts those requests against what each node advertises as allocatable. By default, a GPU is handed out whole, so a pod that asks for four GPUs holds four GPUs from the moment it&#x27;s placed until it finishes, whether or not it ever touches them.</p>
+<p>That makes allocation the right answer to the question every user asks first:</p>
+<blockquote><p>&quot;Why won&#x27;t my job start?&quot;</p></blockquote>
+<p>Because somebody else is <em>holding</em> the GPUs, whether or not they&#x27;re using them. A pod that requests four GPUs and then sleeps blocks four GPUs from everyone else.</p>
+<p>You can see allocation without installing anything:</p>
+<pre><code class="language-bash">kubectl describe node &lt;gpu-node&gt;        # &quot;Allocated resources&quot; table at the bottom
+kubectl get pods -A -o custom-columns=NS:.metadata.namespace,POD:.metadata.name,NODE:.spec.nodeName,GPU:.spec.containers[*].resources.limits.nvidia\.com/gpu</code></pre>
+<p>The second command lists every pod with the GPU count it asked for and the node it landed on. Add those up per node and compare with the node&#x27;s allocatable figure, and you have the allocation picture.</p>
+<hr>
+<h2>Utilization: what the hardware is doing</h2>
+<p>Utilization asks a different question:</p>
+<blockquote><p>&quot;Is anyone actually using the GPUs they&#x27;re holding?&quot;</p></blockquote>
+<p>Kubernetes has no idea. Its scheduler deals in whole-number counters; it never looks at what the silicon is doing. The answer comes from the device itself: utilization, memory use, power, temperature and error counters. On a single machine that&#x27;s <code>nvidia-smi</code>. Across a cluster, the usual stack is NVIDIA&#x27;s <strong>DCGM Exporter</strong> (per-GPU hardware metrics, run as a DaemonSet on the GPU nodes), <strong>kube-state-metrics</strong> (the state of Kubernetes objects), <strong>Prometheus</strong> to store the numbers, and <strong>Grafana</strong> to draw them. NVIDIA publishes guidance on assembling exactly that for GPU usage visibility across clusters.</p>
+<p>This is why the two views are complementary instead of redundant:</p>
+<table><thead><tr><th></th><th>Allocation</th><th>Utilization</th></tr></thead><tbody><tr><td>Question</td><td>&quot;Who is holding the GPUs?&quot;</td><td>&quot;Who is actually using them?&quot;</td></tr><tr><td>Source</td><td>The scheduler and the Kubernetes API</td><td>The hardware, via DCGM and friends</td></tr><tr><td>Needs extra tooling?</td><td>No, plain <code>kubectl</code></td><td>Yes, an exporter plus a metrics stack</td></tr><tr><td>Good for</td><td>Debugging a pending job, capacity planning</td><td>Finding waste, justifying hardware, spotting a slow GPU</td></tr><tr><td>Blind spot</td><td>A held GPU may be idle</td><td>A GPU can look idle to a metric but still be reserved</td></tr></tbody></table>
+<hr>
+<h2>Four situations, and which view answers them</h2>
+<table><thead><tr><th>What&#x27;s happening</th><th>Allocation says</th><th>Utilization says</th><th>Reading</th></tr></thead><tbody><tr><td>Job won&#x27;t start, cluster looks &quot;full&quot;</td><td>8/8 allocated</td><td>Maybe 10% busy</td><td>Hoarding. Someone holds GPUs they aren&#x27;t using</td></tr><tr><td>Job won&#x27;t start, but GPUs are free in total</td><td>6/8 allocated</td><td>Low</td><td>Fragmentation. Free GPUs are spread across nodes, none with enough for a 4-GPU job</td></tr><tr><td>Everything&#x27;s allocated and busy</td><td>8/8 allocated</td><td>~95%</td><td>Healthy, and a good reason to buy more</td></tr><tr><td>Training is slow, nothing looks wrong</td><td>Allocated as expected</td><td>One GPU behind its peers</td><td>Utilization (or an active test) is the only view that can see it</td></tr></tbody></table>
+<p>The last row is the story from the <a href="../../../../fields/devops/kubernetes/nvidia-cluster-readiness-engine/">Cluster Readiness Engine page</a>: a quietly slow GPU doesn&#x27;t show up in allocation, and passive telemetry may not flag it either. The point of putting all three views side by side is that each one catches what the others miss.</p>
+<hr>
+<h2>Why GPUs make this worse than CPUs</h2>
+<p>Two reasons.</p>
+<p><strong>GPUs are coarse.</strong> CPU capacity is divided into small, fungible slices (millicores). A GPU, by default, is allocated as a whole unit. That&#x27;s why fragmentation is a real thing: two nodes with two free GPUs each can&#x27;t run a four-GPU job that needs them together on one node. Sharing a GPU is possible, through hardware partitioning (MIG) or time-slicing set up in NVIDIA&#x27;s software, but it&#x27;s an explicit configuration with trade-offs, not a free default.</p>
+<p><strong>Distributed jobs need everyone at once.</strong> A 512-GPU training job isn&#x27;t useful with 400 GPUs. Without gang scheduling, a half-placed job can hold GPUs while it waits for the rest, which is the single biggest waste on shared clusters: lots of allocation, zero useful work. The <a href="../../../../fields/devops/kubernetes/nvidia-cluster-readiness-engine/">Cluster Readiness Engine page</a> covers gang scheduling and why it exists.</p>
+<hr>
+<h2>For Slurm people</h2>
+<p>You already know both views, under different names. <code>squeue</code> and <code>scontrol show node</code> tell you what&#x27;s allocated; <code>nvidia-smi</code> and your accounting data tell you what was used. A job that requested 8 GPUs and used 1 is a familiar sight. The Kubernetes version differs in one habit: because pods are meant to be disposable and the scheduler never looks at hardware activity, nothing in the default setup nudges anyone to release an idle allocation. Reclaiming them is a policy choice (quotas, queues, timeouts), not something Kubernetes does for you.</p>
+<hr>
+<h2>What to do with this</h2>
+<ul><li><strong>Debugging a pending job:</strong> look at allocation first. It&#x27;s free and answers &quot;who&#x27;s holding them?&quot; in one command.</li><li><strong>Judging efficiency:</strong> look at utilization over time, in Grafana, not a one-time snapshot.</li><li><strong>Never present one as the other.</strong> &quot;The cluster is 100% utilized&quot; and &quot;the cluster is 100% allocated&quot; are different sentences, and a team that conflates them will either buy hardware it doesn&#x27;t need or leave real waste untouched.</li><li><strong>Label your dashboards.</strong> Say &quot;allocated&quot; or &quot;utilized&quot; on the chart itself. It prevents the argument before it starts.</li></ul>
+<hr>
+<h2>The one-paragraph takeaway</h2>
+<p>Allocation is the reservation book; utilization is the kitchen. Kubernetes keeps the reservation book, so <code>kubectl</code> can tell you who is holding which GPUs and why your job is <code>Pending</code>. It does not watch the kitchen, so finding idle or underperforming GPUs needs DCGM-style telemetry and a metrics stack. Use allocation to unblock people today, utilization to fix waste over time, and an active test when neither explains why the job is slow.</p>
+<hr>
+<h2>References</h2>
+<ul><li><a href="https://kubernetes.io/docs/tasks/manage-gpus/scheduling-gpus/">Schedule GPUs</a>: GPUs are specified under <code>limits</code>, and the request/limit rules</li><li>NVIDIA Technical Blog, <a href="https://developer.nvidia.com/blog/get-real-time-visibility-into-gpu-usage-across-kubernetes-clusters/">Get Real-Time Visibility into GPU Usage Across Kubernetes Clusters</a>: the DCGM Exporter, kube-state-metrics, Prometheus and Grafana stack. I listed this link as a related article from NVIDIA&#x27;s cluster-readiness post and have not read its full text for this page, so check it for current setup details.</li><li>NVIDIA Technical Blog, <a href="https://developer.nvidia.com/blog/validate-gpu-cluster-readiness-before-ai-workloads-land/">Validate GPU Cluster Readiness Before AI Workloads Land</a>: active vs passive validation and gang scheduling</li></ul>
+<p>The restaurant analogy, the four-situations table and the Slurm comparison are the author&#x27;s own framing, not official terminology. The statements about MIG and time-slicing summarize NVIDIA&#x27;s documentation, not the Kubernetes pages above.</p>
+<p><a href="../../../../#/fields/devops/kubernetes/gpu-allocation-vs-utilization">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

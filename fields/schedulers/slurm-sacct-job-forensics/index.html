@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Autopsy of a Job: Reading sacct Like a Coroner</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-sacct-job-forensics/">
+<meta name="description" content="How to find out what happened to a job that has gone, with sacct states, exit codes (exit:signal), requeued runs, useful fields, and the neighbors scontrol, sstat and sreport.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Autopsy of a Job: Reading sacct Like a Coroner">
+<meta property="og:description" content="How to find out what happened to a job that has gone, with sacct states, exit codes (exit:signal), requeued runs, useful fields, and the neighbors scontrol, sstat and sreport.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-sacct-job-forensics/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-sacct-job-forensics/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../.docs/prerender-redirect.js" data-target="../../../#/fields/schedulers/slurm-sacct-job-forensics"></script>
+<main>
+<h1>Autopsy of a Job: Reading sacct Like a Coroner</h1>
+<p><em>How to find out what happened to a job that has gone, with sacct states, exit codes (exit:signal), requeued runs, useful fields, and the neighbors scontrol, sstat and sreport.</em></p>
+<blockquote><p><strong>Part of the [schedulers](/fields/schedulers/slurm-intro.md) directory.</strong> The outputs below were produced on a two-node test cluster (Slurm 23.11.4, accounting on, both <code>slurmd</code> daemons on one Ubuntu 24.04 machine), with jobs created to die in each way. Job numbers and users are invented. <code>sacct</code> needs the accounting database, so on a cluster without <code>slurmdbd</code> it has nothing to read.</p></blockquote>
+<hr>
+<h2>The job that vanished</h2>
+<p>A student writes to the admin: &quot;my job disappeared&quot;. It is not in <code>squeue</code>. The output file is half written. There is no error message anywhere. The student is not sure it ever finished, never mind how it ended.</p>
+<p>The admin could grep logs on three machines. Or run one command, because Slurm keeps a record of every job&#x27;s life and death, and the coroner&#x27;s tool for reading it is <code>sacct</code>. It answers four questions: did the job finish, was it killed, who did it, and was it even the job&#x27;s fault?</p>
+<hr>
+<h2>First, find the body</h2>
+<pre><code class="language-bash">sacct -j 44,45,46,47</code></pre>
+<pre><code class="language-text">JobID           JobName  Partition    Account  AllocCPUS      State ExitCode
+------------ ---------- ---------- ---------- ---------- ---------- --------
+44                 wrap        gpu    physics          1  COMPLETED      0:0
+44.batch          batch               physics          1  COMPLETED      0:0
+45                 wrap        gpu    physics          1     FAILED      3:0
+45.batch          batch               physics          1     FAILED      3:0
+46                 wrap        gpu    physics          1     FAILED      0:9
+46.batch          batch               physics          1  CANCELLED      0:9
+47                 wrap        gpu    physics          1 CANCELLED+      0:0
+47.batch          batch               physics          1  CANCELLED     0:15</code></pre>
+<p>Each job has a main line, and below it a line per <strong>step</strong>: <code>.batch</code> is your script, <code>.0</code>, <code>.1</code> are the <code>srun</code> steps. The main line is the verdict. The step lines are the evidence.</p>
+<p>Four options do most of the work:</p>
+<table><thead><tr><th>Option</th><th>What it does</th></tr></thead><tbody><tr><td><code>-j &lt;ids&gt;</code></td><td>Pick the jobs</td></tr><tr><td><code>-X</code></td><td>Show only the main line per job, with no step lines</td></tr><tr><td><code>-o JobID,State,ExitCode,...</code></td><td>Choose the columns</td></tr><tr><td><code>-P</code></td><td>Plain pipe-separated output, with nothing truncated, which is what you want for pasting</td></tr></tbody></table>
+<p>By default <code>sacct</code> looks at jobs from today. For an older job, give a start date with <code>-S 2026-11-01</code>. Without it, an older job simply does not appear, which is a good way to convince yourself a job never existed.</p>
+<hr>
+<h2>Reading the verdict</h2>
+<p>The <code>State</code> says how the job ended. <code>ExitCode</code> is two numbers, <strong>exit code : signal</strong>. The first is what the script returned. The second is the signal that stopped it, if any.</p>
+<pre><code class="language-bash">sacct -X -j 44,45,46,47 -o JobID,State,ExitCode,Elapsed -P</code></pre>
+<pre><code class="language-text">JobID|State|ExitCode|Elapsed
+44|COMPLETED|0:0|00:00:02
+45|FAILED|3:0|00:00:00
+46|FAILED|0:9|00:00:00
+47|CANCELLED by 30033|0:0|00:00:11</code></pre>
+<table><thead><tr><th>Job</th><th>What the test did</th><th>Verdict</th><th>How to read it</th></tr></thead><tbody><tr><td>44</td><td><code>sleep 2</code></td><td><code>COMPLETED 0:0</code></td><td>The ordinary, happy ending</td></tr><tr><td>45</td><td><code>exit 3</code></td><td><code>FAILED 3:0</code></td><td>The script itself returned 3. The bug is in the script</td></tr><tr><td>46</td><td><code>kill -9 $$</code></td><td><code>FAILED 0:9</code></td><td>Exit code 0, <strong>signal 9</strong>: something killed it with <code>SIGKILL</code>. The out-of-memory killer and an admin&#x27;s <code>kill -9</code> look the same here</td></tr><tr><td>47</td><td><code>scancel</code> by a user</td><td><code>CANCELLED by 30033</code></td><td>A person, and <code>30033</code> is their user ID. Not the job&#x27;s fault</td></tr></tbody></table>
+<p>The signal half is the coroner&#x27;s best friend. <code>0:9</code> is <code>SIGKILL</code> and <code>0:15</code> is <code>SIGTERM</code>. Notice job 47&#x27;s step line in the earlier table: <code>.batch</code> shows <code>0:15</code>, because <code>scancel</code> sends <code>SIGTERM</code> first, and the job line shows <code>0:0</code> because nothing failed. Different lines of the same record tell different parts of the story.</p>
+<p>(In the narrow default table the state is cut to <code>CANCELLED+</code>. The <code>+</code> means &quot;there is more&quot;: widen it with <code>-o State%20</code>, or use <code>-P</code>, and the &quot;by 30033&quot; appears.)</p>
+<hr>
+<h2>Dying of old age</h2>
+<p>A job that runs into its time limit is killed by Slurm, and the record says so:</p>
+<pre><code class="language-text">JobID|State|Timelimit|Elapsed|ExitCode
+23|TIMEOUT|00:02:00|00:02:26|0:9</code></pre>
+<p><code>TIMEOUT</code> is unambiguous. The <code>Elapsed</code> is longer than the <code>Timelimit</code> here, by 26 seconds, because Slurm checks limits on a periodic tick and then waits <code>KillWait</code> for the job to exit after <code>SIGTERM</code>. The <a href="../../../fields/schedulers/slurm-preemption/slurm-signals-cheatsheet/">signals cheat sheet</a> has the timings. In that test the job ignored <code>SIGTERM</code> on purpose, which is why the signal in <code>ExitCode</code> is <code>9</code>.</p>
+<hr>
+<h2>The job that was evicted</h2>
+<p>Under <a href="../../../fields/schedulers/slurm-preemption/slurm-qos-preemption-setup/">QOS preemption</a>, the verdict is <code>PREEMPTED</code>. What happens next depends on whether the job could be requeued, and <code>sacct</code> shows both endings.</p>
+<p>A victim that could <strong>not</strong> be requeued is simply gone:</p>
+<pre><code class="language-text">JobID|QOS|State
+35|low|PREEMPTED
+36|high_physics|COMPLETED</code></pre>
+<p>A victim that was requeued has two lives. A plain <code>sacct</code> shows only the latest one. Add <strong>`-D`</strong> (<code>--duplicates</code>) to see every run:</p>
+<pre><code class="language-bash">sacct -X -D -j 55,56 -o JobID,QOS%12,State%12 -P</code></pre>
+<pre><code class="language-text">JobID|QOS|State
+55|low|PREEMPTED
+56|high_physics|COMPLETED
+55|low|RUNNING</code></pre>
+<p>Job 55 appears twice: first run <code>PREEMPTED</code>, second run <code>RUNNING</code>. Without <code>-D</code>, a requeued job showed only its latest run in the test (checked on a similar job, where the plain line read <code>CANCELLED</code> and <code>-D</code> revealed the earlier <code>PREEMPTED</code>). While the job is still alive, <code>scontrol show job 55 | grep Restarts</code> gives the count (<code>Restarts=1</code>).</p>
+<p>So &quot;my job restarted from the beginning and I lost a day&quot; is answered by <code>-D</code>: yes, it was evicted at that time by that QOS. That is a question for the <a href="../../../fields/schedulers/slurm-preemption/slurm-preemption-requeue-signals/">preemption page</a>, not for the filesystem.</p>
+<hr>
+<h2>The fields worth knowing</h2>
+<p><code>sacct --helpformat</code> lists the columns. A few that earn their place:</p>
+<table><thead><tr><th>Column</th><th>Tells you</th></tr></thead><tbody><tr><td><code>Submit</code>, <code>Eligible</code>, <code>Start</code>, <code>End</code>, <code>Elapsed</code></td><td>The timeline: how long it waited, how long it ran</td></tr><tr><td><code>Timelimit</code> and <code>Elapsed</code></td><td>Whether it died of old age, and how close it came</td></tr><tr><td><code>QOS</code>, <code>Partition</code>, <code>Account</code></td><td>Under which policy and charge it ran</td></tr><tr><td><code>NodeList</code></td><td>Where it ran, which matters when a node turns out to be sick</td></tr><tr><td><code>Reason</code></td><td>Why a job that was not running was waiting</td></tr><tr><td><code>Reservation</code></td><td>Which reservation it used, if any</td></tr><tr><td><code>SubmitLine</code>, <code>WorkDir</code>, <code>Comment</code></td><td>What was typed, and from where</td></tr><tr><td><code>ReqTRES</code>, <code>AllocTRES</code></td><td>What was asked for, and what was given</td></tr><tr><td><code>MaxRSS</code></td><td>Peak memory of the steps. <strong>Empty unless the cluster gathers it</strong> (<code>JobAcctGatherType</code>); the <a href="../../../fields/schedulers/slurm-inside-a-job/slurm-cgroups-in-practice/">cgroups page</a> explains why those numbers are samples</td></tr></tbody></table>
+<p>(<code>Restart</code> is not a column. The test cluster refused it. Use <code>-D</code> and <code>scontrol show job</code>.)</p>
+<hr>
+<h2>The neighbors on the shelf</h2>
+<table><thead><tr><th>Tool</th><th>For</th><th>Remember</th></tr></thead><tbody><tr><td><code>scontrol show job &lt;id&gt;</code></td><td>Details of a job that is queued, running, or finished only moments ago</td><td>Slurm forgets finished jobs from memory after a while. After that, only <code>sacct</code> remembers</td></tr><tr><td><code>sacct</code></td><td>The record of any job, after the fact</td><td>Needs <code>slurmdbd</code>; defaults to today</td></tr><tr><td><code>sstat -j &lt;id&gt;</code></td><td>A <strong>running</strong> job&#x27;s live usage</td><td>Needs a usage-gathering plugin</td></tr><tr><td><code>sreport</code></td><td>Totals per account or user over time</td><td>A summary, not one job</td></tr><tr><td><code>seff &lt;id&gt;</code></td><td>A one-line efficiency summary</td><td>A contributed script, not part of every install: it was not on the test cluster</td></tr></tbody></table>
+<hr>
+<h2>Four questions for the coroner</h2>
+<p>When a job is missing, ask in this order:</p>
+<ol><li><strong>Was it a person?</strong> <code>CANCELLED by &lt;uid&gt;</code>. Not a bug, maybe a misunderstanding.</li><li><strong>Was it the clock?</strong> <code>TIMEOUT</code>, and <code>Elapsed</code> at the <code>Timelimit</code>. Ask for more time or save checkpoints.</li><li><strong>Was it the code?</strong> <code>FAILED</code> with a non-zero exit code, or a signal in the second number. Read the script&#x27;s own output.</li><li><strong>Was it the cluster?</strong> <code>PREEMPTED</code>, and also other states you will meet such as <code>NODE_FAIL</code> and <code>OUT_OF_MEMORY</code>, which this page did not reproduce. Then it is not the job&#x27;s fault, and the admin should look at the node or the QOS.</li></ol>
+<hr>
+<h2>Version notes</h2>
+<p>Outputs are from 23.11.4. Later versions add the job&#x27;s output, error and input paths to accounting (24.05), <code>ReqReservation</code> and step <code>TimeLimit</code> columns (25.05), and in 26.05 <code>sluid</code> and step <code>submit_line</code> in <code>--json</code> and <code>--yaml</code>, with a 26.05.4 fix for corrupted earlier requeue records. The notes for the development 26.11 say the name, not the UID, of whoever cancelled a job is recorded, so the <code>CANCELLED by 30033</code> form above may change. <a href="../../../fields/schedulers/slurm-cluster-operations/slurm-version-changes/">Version changes 23.11 to 26.05</a> has the list.</p>
+<hr>
+<h2>Back to the vanished job</h2>
+<p>Replay the student&#x27;s email. The admin runs <code>sacct -X -D -j &lt;id&gt; -o JobID,State,ExitCode,Elapsed,Timelimit,NodeList -P</code>, and reads one line: <code>TIMEOUT</code>, <code>Elapsed</code> equal to the <code>Timelimit</code>, on the third node of the rack. Nothing disappeared. The job was allowed twelve hours, used twelve hours, and was ended on time.</p>
+<p>The reply takes one minute: &quot;your job hit its time limit; it needed longer, or it needed to save progress&quot;. No logs on three machines, no theory about the filesystem. The record had been in the database all along.</p>
+<p><strong>Takeaway:</strong> <code>sacct</code> keeps the cause of death for every job, so read <code>State</code> and the two-part <code>ExitCode</code> (exit code : signal), add <code>-D</code> to see every life of a requeued job, and ask four questions: a person, the clock, the code, or the cluster.</p>
+<p><strong>Next:</strong> the opposite problem, a job that has not started yet, is covered by <a href="../../../fields/schedulers/slurm-pending-jobs/">Why Is My Job Still Pending?</a>.</p>
+<hr>
+<h2>References</h2>
+<ul><li><a href="https://slurm.schedmd.com/sacct.html">Slurm: sacct</a> (job states, <code>--duplicates</code>, format fields)</li><li><a href="https://slurm.schedmd.com/sstat.html">Slurm: sstat</a></li><li><a href="https://slurm.schedmd.com/sreport.html">Slurm: sreport</a></li><li><a href="https://slurm.schedmd.com/scontrol.html">Slurm: scontrol</a> (<code>show job</code>)</li></ul>
+<p><a href="../../../#/fields/schedulers/slurm-sacct-job-forensics">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>aCupOfTea Repository Specification</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/SPEC/">
+<meta name="description" content="Specification of how the aCupOfTea repository is organized: purpose, design principles, categories, naming, navigation and the Docsify site wiring.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="aCupOfTea Repository Specification">
+<meta property="og:description" content="Specification of how the aCupOfTea repository is organized: purpose, design principles, categories, naming, navigation and the Docsify site wiring.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/SPEC/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/SPEC/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../.docs/prerender-redirect.js" data-target="../#/SPEC"></script>
+<main>
+<h1>aCupOfTea Repository Specification</h1>
+<p><em>Specification of how the aCupOfTea repository is organized: purpose, design principles, categories, naming, navigation and the Docsify site wiring.</em></p>
+<p><strong>Status:</strong> Active <strong>Scope:</strong> Repository organization and information architecture <strong>Content modification:</strong> Out of scope unless explicitly requested <strong>Related infra:</strong> Docsify site deployed from <code>main</code> via <code>.github/workflows/deploy-docs.yml</code> — see §13, §16, §26, §27</p>
+<h2>1. Purpose</h2>
+<p><code>aCupOfTea</code> is a personal knowledge repository covering AI, machine learning, software engineering, programming, business context, and applied projects.</p>
+<p>It is intended to function as a <strong>long-term, searchable knowledge system</strong> — increasingly served as a browsable <strong>Docsify site</strong>, not just a folder tree read on GitHub.</p>
+<p>Two goals guide every structural decision:</p>
+<ol><li><strong>Share knowledge.</strong> Pages are written from real experience and read like a short blog: a reader (first of all the author, coming back to recall something) should find a page, finish it in a coffee break, and find the next related page. The rendered site, including on a phone, is the primary reading surface.</li><li><strong>Make adding knowledge easy.</strong> A new page should take one command or one markdown file, with navigation, indexes and search updating without hand-editing (§27).</li></ol>
+<p>When a proposal does not serve one of these goals, prefer not doing it (§25).</p>
+<p>This spec defines how information is <em>organized</em>. It does not define the technical correctness of any individual document&#x27;s content.</p>
+<h2>2. Design Principles</h2>
+<p>The repository MUST prioritize, in no particular order: clear information architecture, discoverability, consistent naming, low directory complexity, separation of concerns, a single source of truth per artifact, project isolation, long-term scalability, Git-friendly changes, human-and-AI maintainability, and a coherent Docsify navigation experience.</p>
+<h2>3. Primary Content Types</h2>
+<table><thead><tr><th>Type</th><th>Purpose</th></tr></thead><tbody><tr><td>Concept</td><td>Explains an idea, theory, principle, or technique</td></tr><tr><td>Technology</td><td>Describes a tool, framework, library, or platform</td></tr><tr><td>Engineering</td><td>Software/system engineering practice</td></tr><tr><td>Problem</td><td>A reusable problem formulation</td></tr><tr><td>Project</td><td>A concrete implementation addressing a defined problem</td></tr><tr><td>Experiment</td><td>Exploratory or temporary investigation</td></tr><tr><td>Business</td><td>Business-domain or product knowledge</td></tr><tr><td>Reference</td><td>Lookup-oriented material</td></tr><tr><td>Decision</td><td>A recorded decision and its rationale</td></tr></tbody></table>
+<p>Every substantive artifact SHOULD have exactly one canonical location, classified by its <strong>primary purpose</strong>.</p>
+<h2>4. Conceptual Repository Model</h2>
+<pre><code>aCupOfTea/
+│
+├── knowledge/
+│   ├── foundations/
+│   ├── machine-learning/
+│   ├── deep-learning/
+│   ├── generative-ai/
+│   └── reinforcement-learning/
+│
+├── engineering/
+│   ├── programming/
+│   ├── clean-code/
+│   ├── design-patterns/
+│   ├── architecture/
+│   ├── testing/
+│   └── performance/
+│
+├── technologies/
+├── problems/
+├── projects/
+├── experiments/
+├── business/
+├── references/
+└── decisions/</code></pre>
+<p>This is the <strong>target</strong> conceptual architecture, not a mandate to migrate everything immediately. Migration is incremental and evidence-based (§19).</p>
+<p><strong>Current top-level layout</strong> (the implementation today):</p>
+<table><thead><tr><th>Folder</th><th>Holds</th><th>Target equivalent</th></tr></thead><tbody><tr><td><code>fields/</code></td><td>subject knowledge, plus some technology notes (<code>libraries-frameworks-containers/</code>) and infra topics (<code>benchmarks/</code>, <code>schedulers/</code>, <code>system-administration/</code>)</td><td><code>knowledge/</code>, <code>technologies/</code></td></tr><tr><td><code>programming/</code></td><td>programming and software-engineering practice</td><td><code>engineering/</code></td></tr><tr><td><code>problems/</code></td><td>reusable problem formulations and interview problems</td><td><code>problems/</code></td></tr><tr><td><code>projects/</code></td><td>projects (mostly git submodules)</td><td><code>projects/</code></td></tr><tr><td><code>experiments/</code></td><td>exploratory notebooks/codebases</td><td><code>experiments/</code></td></tr><tr><td><code>business/</code></td><td>business-domain knowledge</td><td><code>business/</code></td></tr><tr><td><code>tips/</code></td><td>quick tips and lookups</td><td><code>references/</code></td></tr><tr><td><code>journal/</code></td><td>dated notes</td><td>—</td></tr></tbody></table>
+<h2>5–13 Content Type Rules</h2>
+<p><strong>Knowledge</strong> — organized by subject, not by the project it was originally learned from. <strong>Engineering</strong> — reusable practices; don&#x27;t bury generally-useful engineering knowledge inside one project. <strong>Technologies</strong> — organized around a specific tool/library. NOT a dumping ground for every file that happens to import it; primary subject still determines placement. <strong>Problems</strong> — reusable problem formulations independent of any single implementation. <strong>Projects</strong> — first-class artifacts with their own objective, implementation, dependencies, results, and docs. Never relocated into a technology folder just because it uses that technology. <strong>Experiments</strong> — lightweight, exploratory; promotable to <code>projects/</code> once they mature. <strong>Business</strong> — business models, KPIs, stakeholders, AI opportunities, domain constraints — separated from implementation detail. <strong>References</strong> — cheat sheets, terminology, external links; never a substitute for organizing real knowledge. <strong>Decisions</strong> — durable architecture/methodology calls: context, decision, reason, alternatives considered, consequences.</p>
+<h2>13. Repository Root &amp; Docsify Infrastructure</h2>
+<p>The root SHOULD contain only genuinely repository-wide files:</p>
+<pre><code>README.md          — repo overview AND Docsify homepage
+SPEC.md
+CLAUDE.md
+LICENSE             — CC BY 4.0, for writing and diagrams
+LICENSE-CODE        — MIT, for code (scripts, notebooks, .docs/ tooling)
+.gitignore
+index.html           — Docsify entry point: page shell and Content-Security-Policy; styles in .docs/site.css, settings in .docs/config.js
+.docs/               — site infrastructure:
+                         _sidebar.md / _navbar.md (generated) + gen_sidebar.sh / gen_navbar.sh
+                         search.js (site search)
+                         image-viewer.js (phone image viewer)
+                         phone-tables.js (phone table cards)
+                         lazy-images.js (images load as you scroll)
+                         _404.md (page shown for a missing link)
+                         page-footer.js (Edit this page, Last updated, Copy share link)
+                         lab-embed.js (shows a labs/NAME.html#embed link as a sandboxed frame, same-site labs only)
+                         math.js (display formulas with KaTeX)
+                         config.js (Docsify settings, window.$docsify)
+                         lazy-libs.js (loads Mermaid and KaTeX only on pages that use them)
+                         reading-progress.js (progress bar, back-to-top button)
+                         surprise-me.js (random page link in the menu)
+                         reading-history.js (pages read get a check in the menu, Continue link, Save for later and the Saved list)
+                         section-links.js (copy a link to an h2/h3 section)
+                         offline.js + sw-template.js (read offline; stage_site.py writes sw.js into the published copy)
+                         theme-toggle.js (theme list: light, sepia, dark, midnight, black)
+                         sidebar-groups.js (open/close menu folders)
+                         page-outline.js (On this page list, wide screens)
+                         icons/ (favicon.svg, PNG sizes, site.webmanifest)
+                         tests/smoke.js (browser smoke test of the staged site, run in Chromium and WebKit)
+                         metadata/ (schema.yaml, taxonomy.yaml)
+                         tools/ (cupctl (one `cupctl &lt;verb&gt; &lt;action&gt;` entry point to all of these), check_all, pagemodel (one page parser), gen_sidebar and gen_navbar (the menu generators behind gen_sidebar.sh / gen_navbar.sh), validate, generate_index, stage_site, code_pages, build_search_index, optimize_images, share_pages, check_links, update_recent, check_pins, new_page, page_doctor, page_gui (+ page_gui.html), and the test_*.py files that CI runs)
+                         generated/ (indexes and Explore pages, generated)
+                         hooks/pre-commit (regenerates sidebar, navbar and indexes on commit; opt in with core.hooksPath)
+.github/             — workflows (validate metadata, smoke test, pin check; deploy a staged copy to gh-pages), dependabot.yml (action updates) and CONTRIBUTING.md
+.gitmodules          — project/knowledge submodules</code></pre>
+<p><code>.nojekyll</code> is not committed: the deploy workflow creates it in the published copy.</p>
+<p>Do not treat the Docsify infra files as clutter to be moved — they are load-bearing for the hosted site. Do not place temporary notes, experiments, or project-specific docs at the root.</p>
+<h2>14. Naming Convention</h2>
+<p>New directories and <code>.md</code> pages SHOULD use <code>lowercase-kebab-case</code> (<code>deep-learning</code>, <code>used-car-price-estimation</code>). Code, notebook, and data files keep their own conventions (Python modules can&#x27;t be kebab-case; scripts and notebooks reference data by filename), and <code>README.md</code> keeps its name. Avoid <code>camelCase</code>, <code>PascalCase</code>, mixed naming, misspellings, unexplained abbreviations. Existing names are only renamed when the benefit clearly outweighs migration cost and link breakage.</p>
+<h2>15. Directory Depth</h2>
+<p>Hierarchy MUST communicate meaningful distinctions. Avoid nesting like <code>knowledge/machine-learning/algorithms/supervised/classification/concepts/...</code> when each level holds almost nothing. Prefer a shallow structure plus a <code>README.md</code> index once a folder needs one — the generated sidebar picks it up automatically (§16).</p>
+<h2>16. Index Files &amp; Docsify Navigation</h2>
+<p>Two navigation layers exist and both must stay accurate:</p>
+<ol><li><strong>`README.md` indexes</strong> inside a folder — description, subcategories, links, related projects/technologies. Should not duplicate large amounts of underlying content.</li><li><strong>`.docs/_sidebar.md`</strong> — the navigation tree for the rendered Docsify site. It is <strong>generated</strong> from the file tree by <code>.docs/gen_sidebar.sh</code>, and CI regenerates it on every push to <code>main</code>. It MUST NOT be hand-edited; regenerate and commit it in the same change as any move/rename/new section so the repo matches what&#x27;s published.<ul><li>Inside a folder the README comes first, then pages with an <code>order</code> (front matter, §26) by that number, then the rest alphabetically; Previous/Next follow the sidebar.</li><li>A page&#x27;s label is the text after the last hyphen of its <code># H1</code> (the whole H1 if it has none). A <code>sidebar_label</code> in front matter overrides it without editing the heading.</li><li>A folder&#x27;s group name is the text before the last hyphen of its <code>README.md</code> H1, and the group heading links to that README (the README is not repeated as a child entry; the chevron folds the group). A <code>sidebar_group</code> in that README overrides it; use it when sibling folders would share a name.</li><li>An additive <strong>Explore</strong> section (Start here, Domains, Tags) comes from the metadata layer (§26); the folder tree below it is untouched.</li></ul></li></ol>
+<p>Folder <code>README.md</code> indexes SHOULD list their pages in a <code>| File | Description |</code> table under <code>## Contents</code>, the format <code>new_page.py</code> updates automatically (§27). Converging the remaining list-style indexes is tracked in issue #77.</p>
+<p><strong>Search</strong> (<code>.docs/search.js</code>) is an overlay that indexes the pages listed in the generated sidebar, so any page reachable from the sidebar is searchable with no extra step. On the deployed site the data comes from two prebuilt files that <code>stage_site.py</code> writes into the published copy (never committed): <code>.docs/index-titles.json</code> (one small entry per page, with type, level, domains and tags for the filters) and <code>.docs/index-body.json</code> (section text and fenced code, loaded on the first search for text). A local preview builds them once with <code>python3 .docs/tools/build_search_index.py --local</code> (git-ignored); without them the search says the index is not built.</p>
+<p>The sidebar governs what&#x27;s reachable on the site; the folder <code>README.md</code> governs what&#x27;s understandable when browsing the raw repo. Keep README indexes in sync with the folder contents.</p>
+<p><strong>Link style:</strong> internal links MUST be root-absolute (<code>/fields/benchmarks/hpl.md</code>), which resolve on both GitHub and Docsify (<code>relativePath: false</code>). Relative <code>./</code>/<code>../</code> links break on the site.</p>
+<h2>17. Canonical Location &amp; Duplicate Prevention</h2>
+<p>Every substantive artifact has one canonical location. If it&#x27;s relevant from multiple angles, prefer <strong>canonical document + cross-reference</strong> over copies. Never duplicate knowledge into multiple categories just to make it independently discoverable — link to it from the relevant README indexes.</p>
+<h2>18. Projects vs. Knowledge</h2>
+<table><thead><tr><th></th><th>Answers</th></tr></thead><tbody><tr><td>Knowledge</td><td>&quot;What is this?&quot;</td></tr><tr><td>Problem</td><td>&quot;What are we solving?&quot;</td></tr><tr><td>Technology</td><td>&quot;What tool implements it?&quot;</td></tr><tr><td>Project</td><td>&quot;What did we build?&quot;</td></tr><tr><td>Experiment</td><td>&quot;What did we investigate?&quot;</td></tr><tr><td>Decision</td><td>&quot;Why this approach?&quot;</td></tr></tbody></table>
+<p>This distinction MUST guide all future placement decisions.</p>
+<h2>19. Migration Rules</h2>
+<p>Structural migrations MUST: preserve file content · prefer <code>git mv</code> · preserve project boundaries · update internal references (including absolute self-repo GitHub URLs) AND regenerate the sidebar/navbar · check for broken links · avoid unnecessary renames · avoid deleting substantive material · stay reviewable · be incremental rather than one giant restructure.</p>
+<p>Changes flow <code>feature branch → dev → main</code>: each feature is developed on its own branch cut from <code>dev</code> and merged into <code>dev</code> by PR. <code>main</code> MUST only be updated by a <code>dev → main</code> PR, because every push to <code>main</code> redeploys the published site.</p>
+<h2>20. Ambiguous Content</h2>
+<p>If classification is unclear: <strong>do not silently guess.</strong> Record the ambiguity, list the plausible classifications, and let a human decide.</p>
+<h2>21. Content Preservation</h2>
+<p>During organization-only work: <strong>content = immutable, structure = mutable.</strong> Agents may reorganize; agents must not rewrite substantive content unless explicitly instructed.</p>
+<h2>22. Validation Requirements</h2>
+<p>Before considering a structural change complete, verify:</p>
+<pre><code>[ ] No accidental content modification or deletion
+[ ] No broken internal links
+[ ] Sidebar/navbar regenerated; no broken entries
+[ ] No duplicate canonical locations
+[ ] Naming conventions respected
+[ ] Project boundaries preserved
+[ ] Directory depth reasonable
+[ ] Root directory still clean (incl. Docsify infra intact)
+[ ] README.md indexes / generated sidebar reflect current structure
+[ ] .docs/tools/validate.py reports 0 errors; .docs/generated is regenerated and committed
+[ ] SPEC.md and CLAUDE.md remain accurate
+[ ] Git history preserved where practical</code></pre>
+<h2>23. Scalability Rule</h2>
+<p>The taxonomy MUST remain usable if the repository grows by an order of magnitude. Don&#x27;t create categories solely for today&#x27;s contents; prefer stable conceptual categories over highly specific one-off folders.</p>
+<h2>24. Source of Truth</h2>
+<p>When architectural ambiguity exists, priority is:</p>
+<pre><code>SPEC.md → CLAUDE.md → repository structure (and its generated navigation) → existing content</code></pre>
+<p><code>SPEC.md</code> defines the intended architecture. <code>CLAUDE.md</code> defines operational behavior for AI agents. The repository (including its Docsify navigation) is the implementation of both.</p>
+<h2>25. Change Philosophy</h2>
+<p>The goal is not a &quot;perfect&quot; directory tree — it&#x27;s a structure that is understandable, predictable, searchable, maintainable, scalable, and renders correctly as a Docsify site. Structural simplicity beats theoretical purity.</p>
+<h2>26. Metadata Layer</h2>
+<p>Content type, location and navigation are unchanged; metadata is an <strong>overlay</strong> that lets one page be discovered under several domains/tags and linked to related pages. Markdown + YAML front matter is the only source of truth; there is no database or service.</p>
+<ul><li><strong>Optional:</strong> pages without front matter remain valid and keep working; coverage grows incrementally (§19, §23).</li><li><strong>Identity:</strong> a page that participates in relations needs an explicit, repo-unique, kebab-case <code>id</code>. Ids are independent of the path, so moving a file does not break relations. The path-derived fallback id is read-only and is never a relation target. Any id collision (explicit vs explicit, or explicit vs fallback) is an error.</li><li><strong>Reader aids:</strong> optional <code>summary</code> (one line, max 200 chars) and <code>level</code> (beginner, intermediate, advanced) are authored; reading time is computed. They drive the Explore lists and a generated <strong>Start here</strong> page (learning paths from prerequisite chains, quick reads, beginner picks). Prerequisites must be acyclic.</li><li><strong>Vocabulary:</strong> <code>type</code> (one value, or a list of at most two with the main one first) ∈ the kinds defined in <code>taxonomy.yaml</code> (concept, guide, reference, note, problem, project, experiment to start with; a new kind is added there with a one-line definition); <code>status</code> ∈ draft, stable, deprecated; relation types are exactly <code>related</code> and <code>prerequisites</code>; domains and tags are defined in <code>.docs/metadata/taxonomy.yaml</code>. A tag needs 2+ pages or must name a concrete technology, and a page carries at most 5 tags. Domain overlap rules (deep-learning vs machine-learning, generative-ai with natural-language-processing) are in <code>CLAUDE.md</code> §21.</li><li><strong>Location:</strong> schema, taxonomy, tools and generated data live under <code>.docs/</code> (served by GitHub Pages), so the root allowlist (§13) is unchanged.</li><li><strong>Generated, deterministic:</strong> <code>.docs/generated/</code> holds <code>objects.json</code>, <code>domains.json</code>, <code>tags.json</code>, <code>relationships.json</code> (with reverse links), <code>paths.json</code> (place of each page in its learning path), <code>related.json</code> and the Explore pages. The sidebar gains an additive <strong>Explore</strong> section (Start here, Domains, Tags); the folder tree is untouched.</li><li><strong>Submodules</strong> are never written into and are skipped by the tools; relations may not target their content.</li><li><strong>Link previews:</strong> the staged copy also holds a share page per content page at its folder address (title and summary as Open Graph tags, then the page&#x27;s text as static HTML for crawlers and readers without scripts, and a script-file redirect to the <code>#/</code> page), so a shared link previews that page; <code>summary</code> in front matter feeds the description, else the first paragraph is used.</li><li><strong>Deployment:</strong> the published site is a staging copy with front matter stripped and a page header (breadcrumb, meta line, tag chips, a &quot;Read first / Read next&quot; strip) and &quot;See also&quot; at the end; repository sources are never rewritten.</li><li><strong>Reading order:</strong> optional <code>order</code> (whole number from 1 up, unique within a folder) is a page&#x27;s position in its folder: it drives the generated sidebar, the Previous/Next buttons, the &quot;Read next&quot; strip and Start here paths. A prerequisite in the same folder should have a smaller number.</li><li><strong>Partial front matter, `sidebar_label` and `sidebar_group`:</strong> every field is optional (defaults: title = first H1, type = note, status = stable); <code>id</code> only for pages in relations. <code>sidebar_label</code> overrides a page&#x27;s sidebar label without editing its heading; <code>sidebar_group</code> (folder <code>README.md</code> only) overrides the folder&#x27;s group name. Labels must be unique within a folder and groups among sibling folders. A page with only these fields is not indexed and gets no domain.</li></ul>
+<p>See <code>CLAUDE.md</code> §21 for the contributor how-to.</p>
+<h2>27. Adding New Knowledge</h2>
+<p><strong>Finishing any change:</strong> <code>python3 .docs/tools/check_all.py --fix</code> runs the validation suite (front matter, links, tests) and regenerates the indexes, sidebar and navbar; CI runs the same script without <code>--fix</code> on every PR to <code>dev</code>/<code>main</code> and push to <code>dev</code>, so a stale generated file or a broken rule blocks the merge.</p>
+<p>Adding a page MUST stay a small, repeatable step for a solo author or an outside contributor:</p>
+<ul><li><strong>Entry point:</strong> <code>cupctl &lt;verb&gt; &lt;action&gt;</code> (<code>.docs/tools/cupctl.py</code>, run <code>cupctl</code> alone to list the commands) wraps every script below; it adds no rules of its own.</li><li><strong>Preferred:</strong> <code>python3 .docs/tools/new_page.py</code> (<code>cupctl page new</code>). It asks for a title, optional summary, folder, type, domains (suggested from the folder), tags, level, prerequisites and related pages, then creates the kebab-case file with front matter and a short outline, adds the page to the folder&#x27;s <code>README.md</code> table, and regenerates the sidebar and navbar. It suggests the closest existing folders, warns about similar existing pages (§17), never overwrites a file, and never creates a folder without confirmation (§15). New tags are added to <code>taxonomy.yaml</code> only after confirmation (§26). Reading time is never entered: the site computes it from the text, and <code>new_page.py --check PAGE</code> shows it together with what is still missing.</li><li><strong>In the browser:</strong> <code>new_page.py --gui</code> serves the same questions, the hand-written-page flow and the <code>page_doctor.py</code> list (similar problems grouped under one heading) as a form on 127.0.0.1 only (<code>page_gui.py</code>, <code>page_gui.html</code>); it runs <code>new_page.py</code> with options, so the rules are the same.</li><li><strong>Changing metadata later:</strong> <code>new_page.py --update PAGE</code> changes the summary, kind, subjects, tags, level or relations of a page that has front matter, keeping every other field and the page text.</li><li><strong>A page written by hand:</strong> <code>python3 .docs/tools/new_page.py --adopt PAGE</code> adds the front matter and index link to an existing page without changing its text, and, for a page with partial front matter, keeps it and adds only the missing fields.</li><li><strong>Without the script:</strong> create a kebab-case <code>.md</code> file with one <code># H1</code>, add it to the folder&#x27;s <code>README.md</code> index, and regenerate the sidebar. Front matter stays optional.</li><li><strong>Code files and notebooks</strong> (<code>.py</code>, <code>.ipynb</code>, ...) linked from a page open as readable pages on the site: <code>stage_site.py</code> writes <code>name.py.md</code> / <code>name.ipynb.md</code> in the published copy (<code>code_pages.py</code>), so link them root-absolute like pages and nothing else is needed.</li><li><strong>Images</strong> for new pages SHOULD be committed next to the page (for example <code>images/</code> in the same folder) rather than linked from other sites, which can disappear. Moving existing linked images into the repo is tracked in issue #82.</li><li><strong>Contributor steps</strong> live in <code>.github/CONTRIBUTING.md</code>; changes go through a feature branch and a PR into <code>dev</code> (CLAUDE.md §11).</li></ul>
+<p><a href="../#/SPEC">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

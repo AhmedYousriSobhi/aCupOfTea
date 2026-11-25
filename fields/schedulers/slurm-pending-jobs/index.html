@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Why Is My Job Still Pending?</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-pending-jobs/">
+<meta name="description" content="A three-part series on the question users ask most - why is my Slurm job still pending - covering reason codes, how priority is computed, and limits that make jobs wait forever.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Why Is My Job Still Pending?">
+<meta property="og:description" content="A three-part series on the question users ask most - why is my Slurm job still pending - covering reason codes, how priority is computed, and limits that make jobs wait forever.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-pending-jobs/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-pending-jobs/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../.docs/prerender-redirect.js" data-target="../../../#/fields/schedulers/slurm-pending-jobs/"></script>
+<main>
+<h1>Why Is My Job Still Pending?</h1>
+<p><em>A three-part series on the question users ask most - why is my Slurm job still pending - covering reason codes, how priority is computed, and limits that make jobs wait forever.</em></p>
+<p>The question every cluster admin answers ten times a week, and every user asks the moment their job doesn&#x27;t start. This series answers it properly, for both sides of the ticket: what the reason column means, how Slurm decides who goes first, and which limits make a job wait forever without telling anyone.</p>
+<p>Tested on Slurm <strong>23.11.4</strong> (Ubuntu 24.04 packages) with slurmdbd and MariaDB, and checked against the Slurm 26.11 documentation for anything that changed since.</p>
+<hr>
+<h2>Contents</h2>
+<table><thead><tr><th>File</th><th>Description</th></tr></thead><tbody><tr><td><a href="../../../fields/schedulers/slurm-pending-jobs/why-is-my-job-pending/">1. Reading the Reason Column</a></td><td>What each common pending reason means, which ones fix themselves, which never will, and a small triage script</td></tr><tr><td><a href="../../../fields/schedulers/slurm-pending-jobs/who-goes-first/">2. Who Goes First</a></td><td>The multifactor priority formula, fairshare, age and QOS weights, reading <code>sprio</code> and <code>sshare</code>, and the all-zero default</td></tr><tr><td><a href="../../../fields/schedulers/slurm-pending-jobs/limits-that-wait-forever/">3. Limits That Wait Forever</a></td><td>QOS and account limits in practice, the second QOS that bypasses your cap, partition QOS, and <code>DenyOnLimit</code></td></tr><tr><td><a href="../../../fields/schedulers/slurm-pending-jobs/quick-guide/">Quick guide: Find Out Why a Slurm Job Is Pending</a></td><td>Read the reason column, tell waiting from never-starting, and roll out a limit safely</td></tr></tbody></table>
+<hr>
+<h2>How the pages were tested</h2>
+<ul><li><strong>Lab:</strong> a controller (<code>head01</code>) running slurmctld, slurmdbd and MariaDB 10.11, four CPU nodes (<code>cn001</code>–<code>cn004</code>, 2 CPUs each) and one GPU node (<code>gpu001</code>) with four GPUs, all Ubuntu 24.04 containers.</li><li><strong>The GPUs were fake:</strong> four device files, enough for Slurm to schedule and count them, not to run CUDA. Every GPU result on these pages is about scheduling, which is all these pages claim.</li><li><strong>Every reason on these pages was produced on purpose</strong> and its output copied from the terminal. The triage script was run against each reason, and had a bug that the pages show.</li></ul>
+<h2>Related pages</h2>
+<ul><li><a href="../../../fields/schedulers/slurm-accounting-multi-tenancy/">Slurm multi-tenancy</a>: who stores the limits and who enforces them. Read it first if <code>sacctmgr</code> is new to you.</li><li><a href="../../../fields/schedulers/slurm-backfill-tuning/">Backfill tuning</a>: why <code>squeue --start</code> estimates drift, and how the backfill scheduler finds gaps.</li><li><a href="../../../fields/schedulers/slurm-ai-clusters/lab-build-cheatsheet/">Lab build cheatsheet</a>: every step used to build this lab, as copy-paste commands.</li><li><a href="../../../fields/schedulers/slurm-ai-clusters/">Slurm for AI Clusters</a>: the next series, on the same lab.</li></ul>
+<p><a href="../../../#/fields/schedulers/slurm-pending-jobs/">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

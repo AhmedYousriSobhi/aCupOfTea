@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Does the Rulebook Still Work? Smoke-Testing QOS, Submit Rules and Preemption</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-smoke-tests/slurm-smoke-policy/">
+<meta name="description" content="A two-stage smoke test for QOS, submit rules and preemption: routing and refusals with no resources, then a real eviction and requeue, with a full script and its output.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Does the Rulebook Still Work? Smoke-Testing QOS, Submit Rules and Preemption">
+<meta property="og:description" content="A two-stage smoke test for QOS, submit rules and preemption: routing and refusals with no resources, then a real eviction and requeue, with a full script and its output.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-smoke-tests/slurm-smoke-policy/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-smoke-tests/slurm-smoke-policy/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/schedulers/slurm-smoke-tests/slurm-smoke-policy"></script>
+<main>
+<h1>Does the Rulebook Still Work? Smoke-Testing QOS, Submit Rules and Preemption</h1>
+<p><em>A two-stage smoke test for QOS, submit rules and preemption: routing and refusals with no resources, then a real eviction and requeue, with a full script and its output.</em></p>
+<blockquote><p><strong>Part 4 of [Slurm Smoke Tests](/fields/schedulers/slurm-smoke-tests/README.md).</strong> The script and every output below were run on a two-node test cluster (Slurm 23.11.4, accounting on, QOS preemption with requeue, a <code>job_submit.lua</code> that routes and refuses jobs, both <code>slurmd</code> daemons on one Ubuntu 24.04 machine). The accounts, users and the story are invented. The policy under test is the one built in <a href="../../../../fields/schedulers/slurm-preemption/slurm-qos-preemption-setup/">The Guest List</a> and <a href="../../../../fields/schedulers/slurm-preemption/slurm-job-submit-lua/">The Receptionist Who Rewrites Your Badge</a>. Read the <a href="../../../../fields/schedulers/slurm-smoke-tests/slurm-smoke-control-plane/">control-plane smoke test</a> first.</p></blockquote>
+<hr>
+<h2>The monitor that was refused</h2>
+<p>On Wednesday, Omar adds a rule to the submit script: every job must say how long it will run. It is a good rule. The backfill scheduler works better with honest time limits, and the nodes stop filling with week-long jobs nobody meant.</p>
+<p>For two days nothing seems different. Then a researcher asks why the cluster&#x27;s &quot;is it up?&quot; page has shown green since Wednesday morning. The page is fed by a cron job that submits a one-minute test job every five minutes. Since Wednesday, every one of those submissions has been refused with &quot;Please set --time&quot;. The cron script printed the error into a mail spool nobody reads, and the last good result stayed on the page.</p>
+<p>The monitor was the first casualty of the new rule, and nothing noticed, because the monitor was the thing that was supposed to notice. A smoke test for policy has two jobs: check that the rules do what they should, and be a user who is subject to them.</p>
+<hr>
+<h2>Why policy needs its own test</h2>
+<p>QOS tiers, account limits, a Lua submit script and preemption settings are all rules, and rules change quietly. Someone edits a QOS on Tuesday. A Lua file is replaced on Wednesday. An upgrade changes a default. None of that touches the control plane, so <a href="../../../../fields/schedulers/slurm-smoke-tests/slurm-smoke-control-plane/">the six-check smoke test</a> stays green while the policy is wrong.</p>
+<p>The test has two stages. The first uses no resources at all: held jobs and a dry run. The second stages a real eviction, because &quot;the rule says high beats low&quot; and &quot;a high job really evicted a low one and the low one came back&quot; are different statements.</p>
+<hr>
+<h2>The script</h2>
+<p>It runs as an ordinary user who belongs to the test account and may use the low QOS and the high QOS for that account. It picks an idle node on its own, cancels everything it submitted on exit, and exits non-zero on any failure.</p>
+<p>The script is <a href="../../../../fields/schedulers/slurm-smoke-tests/smoke-scripts/slurm-policy-smoke.sh"><code>slurm-policy-smoke.sh</code></a>, a plain file you can read on this site, <a href="https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/fields/schedulers/slurm-smoke-tests/smoke-scripts/slurm-policy-smoke.sh">open on GitHub</a> or fetch with its <a href="https://raw.githubusercontent.com/AhmedYousriSobhi/aCupOfTea/main/fields/schedulers/slurm-smoke-tests/smoke-scripts/slurm-policy-smoke.sh">raw link</a>.</p>
+<p>Its result on the test cluster:</p>
+<pre><code class="language-text">== Stage 1: routing and rules (no resources used)
+  PASS  no --qos becomes low
+  PASS  --qos=high becomes high_physics
+  PASS  a job without --time is refused
+== Stage 2: a high job evicts a low job on node node1
+  PASS  low job 114 running (qos low)
+  PASS  high job 115 got the node (qos high_physics)
+  PASS  low job was requeued (Restarts=1)
+  PASS  low job restarted once the high job finished
+  log:
+    START restart=0 08:09:43
+    slurmstepd-node1: error: *** JOB 114 ON node1 CANCELLED AT 2026-11-13T08:10:37 DUE TO PREEMPTION ***
+    START restart=1 08:13:08
+== 7 passed, 0 failed</code></pre>
+<p>The whole run took three minutes and twenty-six seconds, nearly all of it in stage 2. The log tells the story in three lines: the low job started, was cancelled &quot;due to preemption&quot; about 50 seconds after the high job arrived (<code>GraceTime</code> was 30 seconds, plus the controller&#x27;s own tick), and started again with <code>restart=1</code>. The same job had been put back in the queue.</p>
+<hr>
+<h2>What each check proves</h2>
+<table><thead><tr><th>Check</th><th>If it fails, then</th></tr></thead><tbody><tr><td><code>no --qos becomes low</code></td><td>The submit script is not loaded, is broken, or the default routing changed. Users are now landing in the wrong tier</td></tr><tr><td><code>--qos=high becomes high_&lt;account&gt;</code></td><td>Routing for the preemptor broke. High jobs will be refused, or will run without preempting anything</td></tr><tr><td><code>a job without --time is refused</code></td><td>The time-limit rule is off. (The test passes when the job is <em>refused</em>)</td></tr><tr><td><code>high job got the node</code></td><td>The preemptor never started: <code>PreemptType</code>, <code>PreemptMode</code> or the QOS <code>Preempt=</code> list is wrong</td></tr><tr><td><code>low job was requeued</code></td><td>The victim was cancelled, not requeued: the QOS victim mode, <code>JobRequeue</code> or <code>--requeue</code> is wrong</td></tr><tr><td><code>low job restarted</code></td><td>The requeued job never came back: it is stuck pending, or held</td></tr></tbody></table>
+<p>Two more things the script cannot see. It does not look at the <em>signals</em> the victim received, because that depends on whether the job is a batch shell or an <code>srun</code> step, and the timings are the subject of the <a href="../../../../fields/schedulers/slurm-preemption/slurm-signals-cheatsheet/">signals cheat sheet</a>. And it does not test that a real job&#x27;s checkpoint is valid: it can prove a job was evicted and restarted, not that it resumed correctly. That needs a drill with your own workload.</p>
+<hr>
+<h2>Things the drill showed</h2>
+<ul><li><strong>The victim restarted late.</strong> The preempted job was put back in the queue at once, but it did not start again until 08:13:08, about two and a half minutes after it was cancelled, long after the high job&#x27;s 15 seconds were done. The cause was not investigated, and the script&#x27;s <code>WAIT</code> of 150 seconds was only just enough. If you test with a tight limit, a correct policy can look like a failure.</li><li><strong>A test job without `--time` is refused.</strong> That is Omar&#x27;s story, and it happened on the test cluster: the first version of the <a href="../../../../fields/schedulers/slurm-smoke-tests/slurm-smoke-control-plane/">part 1 script</a> failed with <code>Please set --time, jobs without one are not accepted</code> until it was given <code>-t</code>. An earlier version of this drill, read against the same rule, would be refused the same way (it was not rerun). The version above passes <code>-t</code> everywhere.</li><li><strong>Where the eviction lands.</strong> The script pins both jobs to one idle node with <code>--exclusive</code>, so the high job should only evict the low job the script itself started a moment earlier. It would still be better to run it on a canary partition (see <a href="../../../../fields/schedulers/slurm-smoke-tests/slurm-smoke-config-change/">part 2</a>), where a real user&#x27;s low job can never be the victim.</li><li><strong>A user with no account was not tested here.</strong> The routing check should also be run by hand for a user with no default account: asking for <code>--qos=high</code> should produce a clear refusal.</li></ul>
+<hr>
+<h2>When to run it</h2>
+<p>Run stage 1 whenever anything near the rules changes: a QOS edit, a new Lua file, a reconfigure, an upgrade. It costs nothing. Run stage 2 after any change to <code>PreemptType</code>, <code>PreemptMode</code>, QOS preemption lists or the submit script&#x27;s routing, and after an upgrade. It evicts a real job, so do not put stage 2 on a schedule against production nodes.</p>
+<hr>
+<h2>Version notes</h2>
+<p>Run on 23.11.4. For the preemption settings this page exercises, the changelogs read for the <a href="../../../../fields/schedulers/slurm-cluster-operations/slurm-version-changes/">version changes page</a> record: 24.05 treats a job signalled during <code>GraceTime</code> as preempted under <code>CANCEL</code> and <code>REQUEUE</code>; 25.05 adds a <code>PRIORITY</code> preemption option; 26.05 applies <code>PreemptExemptTime</code> to <code>suspend,gang</code> under <code>preempt/partition_prio</code>. None of those were tried. Run the drill after an upgrade before trusting any of them.</p>
+<hr>
+<h2>Back to the monitor that was refused</h2>
+<p>Replay Wednesday with the drill. Omar edits the submit script, and before he leaves he runs stage 1:</p>
+<pre><code class="language-text">  PASS  no --qos becomes low
+  PASS  --qos=high becomes high_physics
+  PASS  a job without --time is refused</code></pre>
+<p>The third line passes, which is what he wanted. Then the cron monitor, which is itself a user, runs the <a href="../../../../fields/schedulers/slurm-smoke-tests/slurm-smoke-control-plane/">control-plane test</a> and the script prints <code>FAIL sbatch submit refused: Please set --time</code>, in red, on the status page. Omar changes the monitor to pass <code>-t 2</code> and the page goes green within five minutes. The researcher never asks why the page has been green since Wednesday.</p>
+<p><strong>Takeaway:</strong> policy is code that changes quietly, so test it as a user in two stages (routing and refusals with no resources, then a real eviction and requeue), make your own monitoring subject to the same rules, and run the drill after any change to QOS, preemption settings, the submit script or the version.</p>
+<p><strong>Next:</strong> <a href="../../../../fields/schedulers/slurm-smoke-tests/slurm-smoke-node-readiness/">Back From the Repair Shop</a> moves from the rules to the hardware: how to tell that a node is really fit to go back into service.</p>
+<hr>
+<h2>References</h2>
+<ul><li><a href="https://slurm.schedmd.com/preempt.html">Slurm: Preemption</a></li><li><a href="https://slurm.schedmd.com/qos.html">Slurm: Quality of Service (QOS)</a></li><li><a href="https://slurm.schedmd.com/job_submit_plugins.html">Slurm: job_submit plugin</a></li><li><a href="https://slurm.schedmd.com/sbatch.html">Slurm: sbatch</a> (<code>--test-only</code>, <code>--requeue</code>, <code>--hold</code>)</li></ul>
+<p><a href="../../../../#/fields/schedulers/slurm-smoke-tests/slurm-smoke-policy">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

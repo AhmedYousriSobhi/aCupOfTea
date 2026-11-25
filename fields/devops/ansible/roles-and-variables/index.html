@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The GPU Node That Thought It Had 1000 MB: Roles and Variables</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/ansible/roles-and-variables/">
+<meta name="description" content="Turn a playbook into a role, load OS-specific variables with firstfound, put site values in defaults not vars, use hostvars for per-node values in templates, and check every node got the same config.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="The GPU Node That Thought It Had 1000 MB: Roles and Variables">
+<meta property="og:description" content="Turn a playbook into a role, load OS-specific variables with firstfound, put site values in defaults not vars, use hostvars for per-node values in templates, and check every node got the same config.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/ansible/roles-and-variables/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/ansible/roles-and-variables/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/devops/ansible/roles-and-variables"></script>
+<main>
+<h1>The GPU Node That Thought It Had 1000 MB: Roles and Variables</h1>
+<p><em>Turn a playbook into a role, load OS-specific variables with firstfound, put site values in defaults not vars, use hostvars for per-node values in templates, and check every node got the same config.</em></p>
+<blockquote><p><strong>Part 4 of the [Ansible series](/fields/devops/ansible/README.md).</strong> <a href="../../../../fields/devops/ansible/idempotence-and-handlers/">Part 3</a> built a playbook that deploys <code>slurm.conf</code> safely. This page turns it into a <strong>role</strong> that works on Ubuntu and Rocky, takes per-group values from the inventory, and proves every node ended up with the same file.</p></blockquote>
+<hr>
+<h2>Big jobs that never start</h2>
+<p>A new GPU node arrives with far more memory than the compute nodes. The admin does it by the book from part 2: one line in <code>group_vars/gpu.yml</code> with the bigger memory size, run the Slurm playbook, all green.</p>
+<p>A week later, users complain that jobs asking for lots of memory sit in the queue forever. The scheduler is sure the GPU node is a small one. <code>slurm.conf</code> on gpu001 says the big number. <code>slurm.conf</code> on the controller says the small one. And the controller&#x27;s log has been saying it for a week:</p>
+<pre><code class="language-text">error: Node gpu001 appears to have a different slurm.conf than the slurmctld.  This could cause issues with communication and functionality.</code></pre>
+<p>Nothing failed, and every task was green. The template did exactly what it was told. This page is about telling it the right thing.</p>
+<blockquote><p>[!NOTE] Lab: ansible-core <strong>2.22.0</strong>, Ubuntu 24.04 nodes, Slurm 23.11.4. The memory numbers are lab-sized (1000 and 4000 MB). The Rocky/RHEL variables file wasn&#x27;t run; there was no Rocky image in the sandbox.</p></blockquote>
+<hr>
+<h2>What a role is</h2>
+<p>A <strong>role</strong> is a folder with a fixed layout that bundles tasks, handlers, templates and variables, so a playbook can say &quot;this host gets Slurm&quot; in one line. Ansible finds each piece by its folder name:</p>
+<table><thead><tr><th>Folder</th><th>Holds</th><th>Loaded</th></tr></thead><tbody><tr><td><code>tasks/main.yml</code></td><td>The steps</td><td>Always</td></tr><tr><td><code>handlers/main.yml</code></td><td>Restarts and reloads</td><td>When notified</td></tr><tr><td><code>templates/</code></td><td><code>.j2</code> files for the <code>template</code> module</td><td>By name, no path needed</td></tr><tr><td><code>defaults/main.yml</code></td><td>Settings a site may change</td><td>Always, <strong>lowest</strong> precedence</td></tr><tr><td><code>vars/</code></td><td>Facts about the OS or the software, not choices</td><td><code>vars/main.yml</code> always, <strong>high</strong> precedence; other files when you load them</td></tr><tr><td><code>meta/main.yml</code></td><td>Author, supported platforms, dependencies</td><td>By tools and Galaxy</td></tr></tbody></table>
+<p>With part 1&#x27;s <code>roles_path = roles</code> in <code>ansible.cfg</code>, the role lives in <code>roles/slurm/</code>, and the playbook shrinks to this (<code>playbooks/slurm.yml</code>):</p>
+<pre><code class="language-yaml">- name: Slurm controller and nodes
+  hosts: head:nodes
+  become: true
+  force_handlers: true
+  roles:
+    - slurm</code></pre>
+<hr>
+<h2>The OS-family maze, done right</h2>
+<p>Ubuntu and Rocky package Slurm under different names. An earlier version of the <a href="../../../../fields/devops/ansible/getting-started/">Ansible page</a> tried to pick OS-specific <em>task files</em> by building a path from a fact, and hit this. We reproduced it on 2.22:</p>
+<pre><code class="language-yaml">- name: Include OS-specific tasks
+  ansible.builtin.import_tasks: &quot;../{{ ansible_os_family | lower }}/tasks/main.yml&quot;</code></pre>
+<pre><code class="language-text">[ERROR]: Error when evaluating variable in import path &#x27;../{{ ansible_os_family | lower }}/tasks/main.yml&#x27;: &#x27;ansible_os_family&#x27; is undefined</code></pre>
+<p><code>import_tasks</code> is <strong>static</strong>: Ansible reads it when it loads the playbook, before it has talked to any host, so no facts exist yet. <code>include_tasks</code> is <strong>dynamic</strong>: it&#x27;s resolved when the task runs, after facts are gathered. Switching to <code>include_tasks</code> fixed it, and the relative path worked as is. The earlier advice to make the path absolute isn&#x27;t needed on 2.22.</p>
+<p>But usually you don&#x27;t need different <em>tasks</em>, only different <em>names</em>. Same steps, different package names. So keep one set of tasks and load the OS-specific values:</p>
+<pre><code class="language-yaml">- name: Load the variables for this OS
+  ansible.builtin.include_vars: &quot;{{ lookup(&#x27;ansible.builtin.first_found&#x27;, params) }}&quot;
+  vars:
+    params:
+      files:
+        - &quot;{{ ansible_facts[&#x27;distribution&#x27;] }}-{{ ansible_facts[&#x27;distribution_major_version&#x27;] }}.yml&quot;
+        - &quot;{{ ansible_facts[&#x27;os_family&#x27;] }}.yml&quot;
+      paths:
+        - vars</code></pre>
+<p><strong>`first_found`</strong> takes the first file that exists: <code>Ubuntu-24.yml</code> if you ever need one for a specific release, otherwise <code>Debian.yml</code> (Ubuntu&#x27;s OS family) or <code>RedHat.yml</code> (Rocky&#x27;s). <code>roles/slurm/vars/Debian.yml</code>:</p>
+<pre><code class="language-yaml"># Facts about the OS packaging, not site choices. Tested on Ubuntu 24.04.
+slurm_controller_packages: [slurmctld]
+slurm_node_packages: [slurmd]
+slurm_config_dir: /etc/slurm</code></pre>
+<p><code>roles/slurm/vars/RedHat.yml</code>, with the EPEL package names:</p>
+<pre><code class="language-yaml"># EPEL package names. Not tested in the lab (no Rocky image available).
+slurm_controller_packages: [slurm-slurmctld]
+slurm_node_packages: [slurm-slurmd]
+slurm_config_dir: /etc/slurm</code></pre>
+<p>And the failure path. We hid <code>Debian.yml</code> to stand in for an OS the role doesn&#x27;t support. The run stopped at the first task, before touching anything, with exit 2:</p>
+<pre><code class="language-text">The lookup plugin &#x27;ansible.builtin.first_found&#x27; failed: No file was found when using first_found.</code></pre>
+<p>That&#x27;s what you want from an unsupported OS: a clear stop, not a half-configured node.</p>
+<hr>
+<h2>defaults or vars? The precedence trap</h2>
+<p>Ansible has more than twenty places a variable can come from, and an order that decides which wins. You need two facts from that list:</p>
+<table><thead><tr><th>Where</th><th>Beats inventory <code>group_vars</code>?</th></tr></thead><tbody><tr><td>Role <code>defaults/main.yml</code></td><td>No. It&#x27;s the lowest of all</td></tr><tr><td>Inventory <code>group_vars</code> and <code>host_vars</code></td><td>n/a</td></tr><tr><td>Role <code>vars/main.yml</code>, and <code>include_vars</code> files</td><td><strong>Yes</strong></td></tr></tbody></table>
+<p>So a value in the role&#x27;s <code>vars/</code> silently beats your inventory. We tested it: the inventory says <code>slurm_cluster_name: acot</code>. We put <code>slurm_cluster_name: cluster</code> in <code>roles/slurm/vars/main.yml</code> and dry-ran:</p>
+<pre><code class="language-text">-ClusterName=acot
++ClusterName=cluster</code></pre>
+<p>The inventory lost, with no warning. Moved to <code>defaults/main.yml</code>, the inventory won again and the dry run showed no change.</p>
+<p>Rule of thumb: <strong>`defaults/` is for choices, `vars/` is for facts.</strong> Cluster name, memory sizes, the controller&#x27;s name: choices, so <code>defaults/</code>. Package names on Ubuntu: facts, so <code>vars/Debian.yml</code>. <code>roles/slurm/defaults/main.yml</code>:</p>
+<pre><code class="language-yaml"># Anything a site may want to change lives here: lowest precedence, so inventory wins.
+slurm_cluster_name: cluster
+slurm_controller: &quot;{{ groups[&#x27;head&#x27;] | first }}&quot;
+slurm_partition: batch
+slurm_node_cpus: 1
+slurm_node_memory_mb: 1000</code></pre>
+<hr>
+<h2>Whose value is it?</h2>
+<p>Now the bug from the story. Part 3&#x27;s template had this loop:</p>
+<pre><code class="language-jinja">{% for node in groups[&#x27;nodes&#x27;] | sort %}
+NodeName={{ node }} CPUs={{ slurm_node_cpus }} RealMemory={{ slurm_node_memory_mb }} State=UNKNOWN
+{% endfor %}</code></pre>
+<p>A template is rendered <strong>once per host, with that host&#x27;s variables.</strong> Inside the loop, <code>slurm_node_memory_mb</code> isn&#x27;t the memory of <code>node</code>; it&#x27;s the memory of the host the file is being written for. We gave the GPU group its own size:</p>
+<pre><code class="language-yaml"># inventory/group_vars/gpu.yml
+nofile_limit: 16384
+slurm_node_memory_mb: 4000</code></pre>
+<p>and looked at two nodes&#x27; copies of the file:</p>
+<pre><code class="language-text">--- slurm.conf on cn001:
+NodeName=cn001 CPUs=1 RealMemory=1000 State=UNKNOWN
+NodeName=gpu001 CPUs=1 RealMemory=1000 State=UNKNOWN
+--- slurm.conf on gpu001:
+NodeName=cn001 CPUs=1 RealMemory=4000 State=UNKNOWN
+NodeName=gpu001 CPUs=1 RealMemory=4000 State=UNKNOWN</code></pre>
+<p>Every node wrote every line with <em>its own</em> number. The controller (not a GPU node) believes gpu001 is small, so big jobs never go there. Slurm noticed the mismatch and logged the error from the story.</p>
+<p>The fix: inside a loop over other hosts, read <strong>their</strong> variables through <code>hostvars[node]</code>:</p>
+<pre><code class="language-jinja">NodeName={{ node }} CPUs={{ hostvars[node][&#x27;slurm_node_cpus&#x27;] | default(slurm_node_cpus) }} RealMemory={{ hostvars[node][&#x27;slurm_node_memory_mb&#x27;] | default(slurm_node_memory_mb) }} State=UNKNOWN</code></pre>
+<p>Why the <code>| default(...)</code>? <code>hostvars</code> holds inventory variables and facts, <strong>not</strong> role defaults. When we removed <code>slurm_node_cpus</code> from the inventory to rely on the role&#x27;s default, the plain <code>hostvars[node][&#x27;slurm_node_cpus&#x27;]</code> failed:</p>
+<pre><code class="language-text">[ERROR]: Task failed: object of type &#x27;HostVarsVars&#x27; has no attribute &#x27;slurm_node_cpus&#x27;</code></pre>
+<p>The <code>default()</code> falls back to the role default when the inventory doesn&#x27;t set one. After the fix, every copy agreed: <code>NodeName=gpu001 CPUs=1 RealMemory=4000</code> on both cn001 and gpu001.</p>
+<p>A side effect worth knowing: because <code>hostvars</code> doesn&#x27;t see role variables at all, the precedence trap above can&#x27;t reach values read this way. It still reaches every plain <code>{{ variable }}</code>, like <code>ClusterName</code>.</p>
+<hr>
+<h2>Prove every node got the same file</h2>
+<p><code>slurm.conf</code> must be identical everywhere. Slurm warns when it isn&#x27;t, but only in a log. So make the role check it and fail the run instead. These two tasks go at the end of <code>tasks/main.yml</code>:</p>
+<pre><code class="language-yaml">- name: Read the checksum of slurm.conf
+  ansible.builtin.stat:
+    path: &quot;{{ slurm_config_dir }}/slurm.conf&quot;
+    checksum_algorithm: sha256
+  register: slurm_conf_stat
+
+- name: Fail unless every host has the same slurm.conf
+  ansible.builtin.assert:
+    that: &gt;-
+      ansible_play_hosts
+      | map(&#x27;extract&#x27;, hostvars, [&#x27;slurm_conf_stat&#x27;, &#x27;stat&#x27;, &#x27;checksum&#x27;])
+      | unique | length == 1
+    fail_msg: &quot;slurm.conf differs between hosts. Check that per-node values use hostvars[node].&quot;
+    quiet: true
+  run_once: true</code></pre>
+<p>Each host records its file&#x27;s checksum; one host (<code>run_once</code>) collects all of them and asserts there&#x27;s exactly one distinct value. We proved it fails when it should: with the buggy template and the GPU override, the run stopped with exit 2 at this task. With the fixed template it passed, exit 0.</p>
+<blockquote><p>[!TIP] Run the role with <code>--limit</code> and this check compares only the hosts in that run. It catches a bad template, not an old file on a host you left out.</p></blockquote>
+<hr>
+<h2>The finished role</h2>
+<pre><code class="language-text">roles/slurm/
+├── defaults/main.yml      choices (shown above)
+├── handlers/main.yml      the two restart handlers from part 3
+├── meta/main.yml          platforms and minimum Ansible version
+├── tasks/main.yml         below
+├── templates/slurm.conf.j2  part 3&#x27;s template, with the hostvars fix
+└── vars/
+    ├── Debian.yml         facts for Ubuntu (tested)
+    └── RedHat.yml         facts for Rocky/RHEL (not tested)</code></pre>
+<p><code>roles/slurm/tasks/main.yml</code>, between the <code>include_vars</code> task at the top and the two check tasks at the bottom (both shown above):</p>
+<pre><code class="language-yaml">- name: Install the controller packages
+  ansible.builtin.package:
+    name: &quot;{{ slurm_controller_packages }}&quot;
+    state: present
+  when: inventory_hostname in groups[&#x27;head&#x27;]
+
+- name: Install the node packages
+  ansible.builtin.package:
+    name: &quot;{{ slurm_node_packages }}&quot;
+    state: present
+  when: inventory_hostname in groups[&#x27;nodes&#x27;]
+
+- name: Make sure Slurm&#x27;s directories exist
+  ansible.builtin.file:
+    path: &quot;{{ item }}&quot;
+    state: directory
+    owner: slurm
+    group: slurm
+    mode: &quot;0755&quot;
+  loop:
+    - /var/lib/slurm
+    - /var/log/slurm
+
+- name: Install slurm.conf
+  ansible.builtin.template:
+    src: slurm.conf.j2
+    dest: &quot;{{ slurm_config_dir }}/slurm.conf&quot;
+    owner: root
+    group: root
+    mode: &quot;0644&quot;
+  notify:
+    - Restart slurmctld
+    - Restart slurmd
+
+- name: Restart now if the config changed, before the start tasks below
+  ansible.builtin.meta: flush_handlers
+
+- name: Run slurmctld on the controller
+  ansible.builtin.systemd_service:
+    name: slurmctld
+    state: started
+    enabled: true
+  when: inventory_hostname in groups[&#x27;head&#x27;]
+
+- name: Run slurmd on compute and GPU nodes
+  ansible.builtin.systemd_service:
+    name: slurmd
+    state: started
+    enabled: true
+  when: inventory_hostname in groups[&#x27;nodes&#x27;]</code></pre>
+<p><code>handlers/main.yml</code> holds part 3&#x27;s two handlers unchanged, and <code>templates/slurm.conf.j2</code> is part 3&#x27;s template with two edits: the header says <code>(role slurm)</code>, and the <code>NodeName</code> line is the <code>hostvars</code> version above. <code>PartitionName</code> uses <code>{{ slurm_partition }}</code> instead of a fixed <code>batch</code>.</p>
+<pre><code class="language-bash">ansible-playbook playbooks/slurm.yml --check --diff   # see what the role would change
+ansible-playbook playbooks/slurm.yml
+ansible-playbook playbooks/slurm.yml                  # again: changed=0 everywhere
+ansible-lint roles/slurm playbooks/slurm.yml</code></pre>
+<p>On the lab cluster, the role&#x27;s first dry run against part 3&#x27;s deployment showed one difference: the header comment. The real run, the rerun with <code>changed=0</code> on all six hosts, and <code>ansible-lint</code> on the <code>production</code> profile all passed.</p>
+<hr>
+<h2>Back to the big jobs</h2>
+<p>Run the story again with the finished role. The GPU node&#x27;s size goes into <code>group_vars/gpu.yml</code> exactly as before. This time the controller renders gpu001&#x27;s line from gpu001&#x27;s own variables. Every copy of <code>slurm.conf</code> says the GPU node is the big one, the checksum check passes on every host, and big jobs land on the GPU node the moment it&#x27;s idle.</p>
+<p>Had the template still been wrong, the run would have stopped red at &quot;Fail unless every host has the same slurm.conf&quot; the first day, instead of a week of green runs and a log nobody read. And when the Rocky nodes join, they need one tested <code>vars/RedHat.yml</code>, not a second playbook.</p>
+<p><strong>Takeaway:</strong> in a role, put choices in <code>defaults/</code> and facts in <code>vars/</code>, read other hosts&#x27; values through <code>hostvars[node]</code> with a default, and make the role prove every node got the same config.</p>
+<p><strong>Next:</strong> <a href="../../../../fields/devops/ansible/rolling-maintenance/">Part 5, The Reboot That Killed a Week of Jobs</a>, changes nodes that are busy running jobs.</p>
+<hr>
+<h2>References</h2>
+<ul><li><a href="https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_reuse_roles.html">Roles</a>: role layout, <code>defaults</code> vs <code>vars</code>, <code>roles_path</code>, <code>meta/main.yml</code>.</li><li><a href="https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_reuse.html">Re-using Ansible artifacts</a>: <code>import_tasks</code> (static) vs <code>include_tasks</code> (dynamic).</li><li><a href="https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_variables.html#understanding-variable-precedence">Using variables: variable precedence</a>: the full precedence list.</li><li><a href="https://docs.ansible.com/projects/ansible/latest/reference_appendices/special_variables.html">Special variables</a>: <code>hostvars</code>, <code>groups</code>, <code>ansible_play_hosts</code>.</li><li><a href="https://docs.ansible.com/projects/ansible/latest/collections/ansible/builtin/first_found_lookup.html">ansible.builtin.first_found lookup</a> and <a href="https://docs.ansible.com/projects/ansible/latest/collections/ansible/builtin/include_vars_module.html">ansible.builtin.include_vars</a>: loading OS-specific variables.</li><li><a href="https://docs.ansible.com/projects/ansible/latest/collections/ansible/builtin/stat_module.html">ansible.builtin.stat</a>, <a href="https://docs.ansible.com/projects/ansible/latest/collections/ansible/builtin/assert_module.html">ansible.builtin.assert</a>, <a href="https://docs.ansible.com/projects/ansible/latest/collections/ansible/builtin/package_module.html">ansible.builtin.package</a>: modules used.</li><li><a href="https://packages.fedoraproject.org/pkgs/slurm/slurm-slurmctld">Fedora/EPEL: slurm-slurmctld</a> and <a href="https://packages.fedoraproject.org/pkgs/slurm/slurm-slurmd">slurm-slurmd</a>: package names for Rocky/RHEL.</li><li><a href="https://packages.ubuntu.com/noble/slurmctld">Ubuntu noble: slurmctld</a>: Ubuntu&#x27;s package names.</li><li><a href="https://slurm.schedmd.com/slurm.conf.html">slurm.conf(5)</a>: every node and the controller must share the same file.</li></ul>
+<p><a href="../../../../#/fields/devops/ansible/roles-and-variables">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

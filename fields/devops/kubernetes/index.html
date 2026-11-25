@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Kubernetes, for People Who Have Other Things to Do</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/kubernetes/">
+<meta name="description" content="A fifteen-page Kubernetes series for HPC people, from core concepts and a two-node lab to GPU scheduling and a job&#x27;s journey, with a list of planned pages.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Kubernetes, for People Who Have Other Things to Do">
+<meta property="og:description" content="A fifteen-page Kubernetes series for HPC people, from core concepts and a two-node lab to GPU scheduling and a job&#x27;s journey, with a list of planned pages.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/kubernetes/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/kubernetes/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../.docs/prerender-redirect.js" data-target="../../../#/fields/devops/kubernetes/"></script>
+<main>
+<h1>Kubernetes, for People Who Have Other Things to Do</h1>
+<p><em>A fifteen-page Kubernetes series for HPC people, from core concepts and a two-node lab to GPU scheduling and a job&#x27;s journey, with a list of planned pages.</em></p>
+<p>A short series on Kubernetes, written by someone who runs GPU clusters for a living and needed a landlord-with-opinions explanation before the YAML made sense. Start at page 1 and work down. Each page stands on its own, and later pages link back to earlier ones when they lean on them.</p>
+<hr>
+<h2>Pages</h2>
+<table><thead><tr><th>#</th><th>Page</th><th>What it covers</th><th>Time</th></tr></thead><tbody><tr><td>1</td><td><a href="../../../fields/devops/kubernetes/kubernetes-in-five-nouns/">Kubernetes in Five Nouns</a></td><td>Node, Pod, Namespace, Event and API server, with an HPC translation table</td><td>5 min</td></tr><tr><td>2</td><td><a href="../../../fields/devops/kubernetes/build-a-two-node-k3s-lab/">Build a Two-Node k3s Lab</a></td><td>Vagrant, libvirt and k3s on a laptop, plus the DNS and network potholes</td><td>10 min</td></tr><tr><td>3</td><td><a href="../../../fields/devops/kubernetes/fake-gpus-in-kubernetes/">Fake GPUs in Kubernetes</a></td><td>Extended resources: learn GPU scheduling without owning a GPU</td><td>5 min</td></tr><tr><td>4</td><td><a href="../../../fields/devops/kubernetes/broken-pods-rogues-gallery/">Broken Pods, the Rogues&#x27; Gallery</a></td><td>CrashLoop, OOMKilled, ImagePull and Pending pods, and how to read each one</td><td>7 min</td></tr><tr><td>5</td><td><a href="../../../fields/devops/kubernetes/gpu-allocation-vs-utilization/">GPU Allocation vs Utilization</a></td><td>Booked is not busy: what the scheduler knows and what it doesn&#x27;t</td><td>6 min</td></tr><tr><td>6</td><td><a href="../../../fields/devops/kubernetes/nvidia-cluster-readiness-engine/">NVIDIA Cluster Readiness Engine</a></td><td>Proving a GPU cluster is ready by running real workloads on it</td><td>8 min</td></tr><tr><td>7</td><td><a href="../../../fields/devops/kubernetes/isolating-gpu-workloads/">Isolating GPU Workloads</a></td><td>Device plugins, taints vs labels, the toleration trap, and gang scheduling</td><td>9 min</td></tr><tr><td>8</td><td><a href="../../../fields/devops/kubernetes/job-execution-journey/">The Job Execution Journey</a></td><td>From <code>kubectl apply</code> to the first NCCL all-reduce: six stops, in the right order</td><td>12 min</td></tr><tr><td>9</td><td><a href="../../../fields/devops/kubernetes/draining-a-gpu-node/">Draining a GPU Node With a Three-Day Run on It</a></td><td>Cordon vs drain, the SIGTERM-to-SIGKILL clock, PodDisruptionBudgets and a runbook that keeps the checkpoint</td><td>10 min</td></tr><tr><td>10</td><td><a href="../../../fields/devops/kubernetes/oomkilled-with-memory-to-spare/">The Pod Killed With Memory to Spare</a></td><td>OOMKilled on a node with free RAM: cgroup limits, working set, /dev/shm, QoS and spikes dashboards miss</td><td>11 min</td></tr><tr><td>11</td><td><a href="../../../fields/devops/kubernetes/k3s-vs-kubeadm/">k3s vs kubeadm: Furnished Flat or Empty Unit?</a></td><td>What each installs, how upgrades and HA differ, and which to pick for a lab or a GPU cluster</td><td>9 min</td></tr><tr><td>12</td><td><a href="../../../fields/devops/kubernetes/your-kubeconfig-is-a-house-key/">Your kubeconfig Is a House Key</a></td><td>What a kubeconfig holds, how kubectl picks one, why certificates cannot be revoked, and short-lived keys</td><td>7 min</td></tr><tr><td>13</td><td><a href="../../../fields/devops/kubernetes/rbac-and-the-limited-viewer/">RBAC: The Error Message Writes the Rule for You</a></td><td>Reading a Forbidden error as a rule, a read-only user in two commands, RBAC guardrails, and revoking at the binding</td><td>8 min</td></tr><tr><td>14</td><td><a href="../../../fields/devops/kubernetes/polite-api-server-monitoring/">Polite API Server Monitoring: Leave Your Number</a></td><td>Polling vs watching measured on a lab, what a list costs, the shared priority lane, and five habits</td><td>10 min</td></tr><tr><td>15</td><td><a href="../../../fields/devops/kubernetes/kubernetes-at-hpc-scale/">Kubernetes at HPC Scale: The Front Desk Meets a 100,000-Task Array</a></td><td>The published limits, where pressure lands first, and a job array as one Indexed Job</td><td>10 min</td></tr></tbody></table>
+<h2>Also on the shelf</h2>
+<ul><li><a href="../../../fields/devops/kubernetes/cheatsheet/">kubectl troubleshooting cheat sheet</a>: five questions, in order, for a pod or Job that won&#x27;t work</li></ul>
+<p><a href="../../../#/fields/devops/kubernetes/">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

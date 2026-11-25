@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>k3s vs kubeadm: Furnished Flat or Empty Unit?</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/kubernetes/k3s-vs-kubeadm/">
+<meta name="description" content="k3s and kubeadm deliver the same conformant Kubernetes; what each installs, how upgrades and HA differ, and how to choose for a lab, edge box or GPU cluster.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="k3s vs kubeadm: Furnished Flat or Empty Unit?">
+<meta property="og:description" content="k3s and kubeadm deliver the same conformant Kubernetes; what each installs, how upgrades and HA differ, and how to choose for a lab, edge box or GPU cluster.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/kubernetes/k3s-vs-kubeadm/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/kubernetes/k3s-vs-kubeadm/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/devops/kubernetes/k3s-vs-kubeadm"></script>
+<main>
+<h1>k3s vs kubeadm: Furnished Flat or Empty Unit?</h1>
+<p><em>k3s and kubeadm deliver the same conformant Kubernetes; what each installs, how upgrades and HA differ, and how to choose for a lab, edge box or GPU cluster.</em></p>
+<blockquote><p><strong>Part 11 of the Kubernetes series.</strong> Two colleagues, two confident answers, one cluster to stand up. By the end you&#x27;ll know what each tool actually installs, what each leaves for you, and which one to pick for a lab, an edge box and a GPU cluster.</p></blockquote>
+<hr>
+<h2>The Friday request</h2>
+<p>Priya runs the batch cluster at a small research site. On Monday she is told to &quot;stand up Kubernetes&quot; for the new GPU nodes. She built a lab on her laptop with k3s (<a href="../../../../fields/devops/kubernetes/build-a-two-node-k3s-lab/">part 2</a>), and it took twenty minutes.</p>
+<p>On Tuesday two colleagues review her plan. Dmitri says: &quot;k3s is a toy. Production means kubeadm.&quot; Aiko says: &quot;kubeadm is a month of yak shaving. k3s is the same Kubernetes in one binary.&quot;</p>
+<p>Both sound sure. Both can&#x27;t be right. Priya does what any sensible engineer does and opens a spreadsheet, and the spreadsheet is wrong in the first row, because the first row is &quot;which one is real Kubernetes?&quot;</p>
+<p><strong>Both are.</strong> Start there.</p>
+<hr>
+<h2>Same landlord, different keys</h2>
+<p>The series has used one picture since <a href="../../../../fields/devops/kubernetes/kubernetes-in-five-nouns/">part 1</a>: Kubernetes is the landlord with opinions. A <strong>distribution</strong> is how the building gets delivered to you.</p>
+<ul><li><strong>k3s</strong> is a furnished flat. Bed, kettle and a lease come with the keys. You can move in tonight and replace the sofa later.</li><li><strong>kubeadm</strong> is an empty unit with a very good checklist. The walls are sound and the plumbing is certified, but you choose and install the furniture, and you bring your own movers for the heavy parts.</li></ul>
+<p>The landlord is the same in both. The docs for each say so in their own words:</p>
+<table><thead><tr><th>Tool</th><th>What its docs claim</th></tr></thead><tbody><tr><td>k3s</td><td>&quot;a fully compliant Kubernetes distribution&quot;, shipped as a single binary of less than 100 MB</td></tr><tr><td>kubeadm</td><td>creates a cluster that &quot;conforms to best practices&quot; and can pass the Kubernetes Conformance tests</td></tr></tbody></table>
+<p><code>kubectl</code>, your manifests, your Deployments and your <code>nvidia.com/gpu</code> requests behave the same on both. What differs is who assembles the building and who maintains it afterwards.</p>
+<blockquote><p>[!NOTE] Neither is a toy and neither is &quot;the production one&quot;. The question is how much assembly you want to own, and that is a cost question, not a quality one.</p></blockquote>
+<p>So what exactly arrives with the keys?</p>
+<hr>
+<h2>What you get on day one</h2>
+<p>☕ <strong>Try it before you scroll.</strong> On a bare Ubuntu host you run <code>kubeadm init</code> and it succeeds. Is the node ready to run your first pod? Hint: look at what the output asks you to do next.</p>
+<p>The answer is no, and the tool tells you so. After <code>kubeadm init</code> finishes, its output says: &quot;You should now deploy a Pod network to the cluster.&quot; The Kubernetes docs add a caution: you must deploy a CNI-based Pod network add-on so pods can talk to each other, and CoreDNS will not start before a network is installed. Before that, you also had to install a container runtime and <code>kubeadm</code> on every host yourself.</p>
+<p>k3s makes those choices for you and ships them together:</p>
+<table><thead><tr><th>Piece</th><th>k3s</th><th>kubeadm</th></tr></thead><tbody><tr><td>Container runtime</td><td>containerd, bundled</td><td>You install one first</td></tr><tr><td>Pod network (CNI)</td><td>Flannel, bundled</td><td>You pick and apply one</td></tr><tr><td>Cluster DNS</td><td>CoreDNS, packaged</td><td>Added with the cluster, but idle until a CNI exists</td></tr><tr><td>Ingress</td><td>Traefik, packaged</td><td>Not included</td></tr><tr><td>LoadBalancer for Services</td><td>ServiceLB, embedded</td><td>Not included</td></tr><tr><td>Datastore</td><td>SQLite by default for one server</td><td>etcd</td></tr><tr><td>Install</td><td><code>curl -sfL https://get.k3s.io | sh -</code></td><td>Packages on every host, then <code>kubeadm init</code> and <code>kubeadm join</code></td></tr></tbody></table>
+<p>The k3s extras are optional. You switch a packaged component off with <code>--disable=traefik</code> (comma-separate several, or repeat the flag), and k3s removes it from the cluster. An empty <code>traefik.yaml.skip</code> file does the same before the first start, but creating it afterwards removes nothing.</p>
+<pre><code class="language-mermaid">flowchart LR
+    subgraph K[&quot;k3s: one install&quot;]
+        direction TB
+        K1[&quot;binary&quot;] --&gt; K2[&quot;containerd + Flannel&lt;br/&gt;CoreDNS + Traefik&quot;]
+    end
+    subgraph B[&quot;kubeadm: you assemble&quot;]
+        direction TB
+        B1[&quot;runtime&quot;] --&gt; B2[&quot;kubeadm + kubelet&quot;] --&gt; B3[&quot;init + CNI add-on&quot;]
+    end
+    K --&gt; R[&quot;Ready node&quot;]
+    B --&gt; R</code></pre>
+<p><em>Both paths end at a Ready node. One has more steps you choose, the other has more steps already chosen.</em></p>
+<p>Priya notices something else in that table. Every empty cell on the kubeadm side is a decision, and every decision is a future conversation with a security team. That can be a feature. For an HPC site with strict network rules, picking your own CNI might be the entire point.</p>
+<p>But the first day is the easy day. What about the day you have to upgrade?</p>
+<hr>
+<h2>The part nobody asks about: day two</h2>
+<p>Installing is a story you tell once. Upgrading is a story you tell every quarter.</p>
+<table><thead><tr><th></th><th>k3s</th><th>kubeadm</th></tr></thead><tbody><tr><td>Upgrade order</td><td>Servers first, one at a time, then agents</td><td>First control-plane node, other control-plane nodes, then workers</td></tr><tr><td>How</td><td>Re-run the install script with <code>INSTALL_K3S_VERSION</code> pinned, repeating your original config, or use the system-upgrade-controller</td><td>Upgrade the <code>kubeadm</code> package, run <code>kubeadm upgrade</code>, then upgrade <code>kubelet</code> and <code>kubectl</code> on each node</td></tr><tr><td>Draining</td><td>Your choice</td><td>Required before a minor-version kubelet upgrade</td></tr><tr><td>Skipping minor versions</td><td>Don&#x27;t</td><td>Unsupported</td></tr></tbody></table>
+<p>Two lessons hide in that table.</p>
+<ol><li><strong>Neither lets you skip a minor version.</strong> If you stood the cluster up and left it for a year, you&#x27;ll upgrade in steps, in both worlds.</li><li><strong>kubeadm makes you drain a node for a minor kubelet upgrade.</strong> On a GPU node with a long run on it, that is exactly <a href="../../../../fields/devops/kubernetes/draining-a-gpu-node/">part 9&#x27;s problem</a>. The upgrade calendar needs to know when the training windows are.</li></ol>
+<p>The k3s docs don&#x27;t make draining a rule for upgrades, but upgrading a node under a long run is still your call to plan around.</p>
+<blockquote><p>[!WARNING] With the k3s install script, re-run it with the same configuration you used originally. The docs warn that settings you leave out are lost.</p></blockquote>
+<p>Next question: what if one control-plane box dying must not take the cluster with it?</p>
+<hr>
+<h2>High availability, honestly</h2>
+<p>Both tools can run several control planes. The shapes differ.</p>
+<table><thead><tr><th></th><th>k3s</th><th>kubeadm</th></tr></thead><tbody><tr><td>Default</td><td>One server, embedded SQLite</td><td>One control-plane node</td></tr><tr><td>HA with built-in storage</td><td>Three or more servers with embedded etcd</td><td>Stacked etcd: three or more control-plane nodes, etcd on the same machines</td></tr><tr><td>HA with separate storage</td><td>Two or more servers with an external SQL database or etcd</td><td>External etcd: three or more control-plane nodes plus three or more etcd machines</td></tr><tr><td>In front of the API</td><td>Agents use a local load balancer to reach servers</td><td>You provide a load balancer whose address matches <code>ControlPlaneEndpoint</code></td></tr></tbody></table>
+<p>The k3s docs describe this honestly: SQLite is for a single server, and embedded etcd needs three servers. Moving from the first to the second is a project, not a flag, so decide before the cluster has users.</p>
+<p>kubeadm is more explicit and more work. You build the load balancer, health-check TCP port 6443 on each control-plane node, and keep its address in step with kubeadm&#x27;s configuration. In return you decide every part of the topology.</p>
+<hr>
+<h2>Picking one</h2>
+<pre><code class="language-mermaid">flowchart TD
+    A[&quot;Need a cluster&quot;] --&gt; B{&quot;Throwaway lab&lt;br/&gt;or edge box?&quot;}
+    B --&gt;|yes| K[&quot;k3s&quot;]
+    B --&gt;|no| C{&quot;Must you choose&lt;br/&gt;CNI, runtime, ingress?&quot;}
+    C --&gt;|yes| D[&quot;kubeadm&quot;]
+    C --&gt;|no| E{&quot;Small team, few&lt;br/&gt;control-plane hands?&quot;}
+    E --&gt;|yes| K
+    E --&gt;|no| D</code></pre>
+<p><em>A rule of thumb, not a law: the more of the stack your site already has opinions about, the closer you are to kubeadm.</em></p>
+<p>My recommendation, with the trade-off named:</p>
+<ul><li><strong>Lab, CI, edge, a three-node proof of concept:</strong> k3s. You&#x27;ll learn Kubernetes instead of installers, which is why <a href="../../../../fields/devops/kubernetes/build-a-two-node-k3s-lab/">part 2</a> uses it.</li><li><strong>A GPU cluster with a site CNI, a security review and a platform team:</strong> kubeadm. The extra assembly buys you a stack you chose rather than one you inherited.</li><li><strong>Everything in between:</strong> start with k3s, and keep the manifests plain. Your Deployments don&#x27;t care which distribution runs them, so moving later costs you the cluster rebuild and not an application rewrite.</li></ul>
+<blockquote><p>[!IMPORTANT] Nothing on this page was run on a test cluster. Every statement comes from the k3s and Kubernetes documentation read on 8 November 2026. Check the version-specific pages (upgrades especially, which are written against a specific minor release) before you plan a real change.</p></blockquote>
+<hr>
+<h2>Back to Priya</h2>
+<p>She writes one line in the spreadsheet&#x27;s first row: &quot;Both are conformant Kubernetes.&quot; Then she answers Dmitri and Aiko in the same email. For the lab, k3s stays. For the GPU cluster, her site&#x27;s network team wants its own CNI and a written upgrade policy, so it&#x27;s kubeadm, with one rule borrowed from the k3s world: keep the manifests plain.</p>
+<p>Dmitri was right about the cluster and wrong about the lab. Aiko was right about the lab and wrong about the cluster. Nobody got a trophy.</p>
+<p><strong>Takeaway:</strong> k3s and kubeadm deliver the same Kubernetes, so choose by how much of the stack you want to own, and plan the upgrade day before the install day.</p>
+<p><strong>Challenge:</strong> your GPU cluster uses kubeadm and a three-day training run sits on a node that needs a minor kubelet upgrade. Using <a href="../../../../fields/devops/kubernetes/draining-a-gpu-node/">part 9</a>, what do you do first, and what does the run need to survive it?</p>
+<hr>
+<h2>References</h2>
+<ul><li><a href="https://docs.k3s.io/">K3s documentation</a>: what K3s is, the single binary, and the bundled components.</li><li><a href="https://docs.k3s.io/architecture">K3s architecture</a>: server and agent roles, SQLite and embedded etcd datastores.</li><li><a href="https://docs.k3s.io/installation/requirements">K3s requirements</a>: minimum hardware and ports.</li><li><a href="https://docs.k3s.io/installation/packaged-components">K3s packaged components</a>: AddOns, <code>--disable</code> and <code>.skip</code> files.</li><li><a href="https://docs.k3s.io/upgrades/manual">K3s manual upgrades</a>: the install script, upgrade order and minor-version rule.</li><li><a href="https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/">Creating a cluster with kubeadm</a>: <code>kubeadm init</code>, the Pod network add-on and join tokens.</li><li><a href="https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/">Installing kubeadm</a>: requirements and swap.</li><li><a href="https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-upgrade/">Upgrading kubeadm clusters</a>: upgrade order, draining and skipped minor versions.</li><li><a href="https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/high-availability/">Creating Highly Available clusters with kubeadm</a>: stacked and external etcd, and the load balancer.</li></ul>
+<p><a href="../../../../#/fields/devops/kubernetes/k3s-vs-kubeadm">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

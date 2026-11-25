@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Two Tribes, One Problem: Where OpenMP and MPI Came From</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/openmp-and-open-mpi/where-they-came-from/">
+<meta name="description" content="The 1990s story - shared-memory vendors each had their own directives, distributed-memory users each had their own message libraries, and two committees fixed it from opposite sides.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Two Tribes, One Problem: Where OpenMP and MPI Came From">
+<meta property="og:description" content="The 1990s story - shared-memory vendors each had their own directives, distributed-memory users each had their own message libraries, and two committees fixed it from opposite sides.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/openmp-and-open-mpi/where-they-came-from/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/openmp-and-open-mpi/where-they-came-from/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/system-administration/openmp-and-open-mpi/where-they-came-from"></script>
+<main>
+<h1>Two Tribes, One Problem: Where OpenMP and MPI Came From</h1>
+<p><em>The 1990s story - shared-memory vendors each had their own directives, distributed-memory users each had their own message libraries, and two committees fixed it from opposite sides.</em></p>
+<blockquote><p><strong>Part 2 of 8.</strong> Two committees, one headache, and a standard that nearly died on the way in. By the end of this page you&#x27;ll know why two parallel standards exist, who wrote each, and where Open MPI fits in the family tree.</p></blockquote>
+<h2>Contents</h2>
+<hr>
+<h2>The problem: every vendor spoke its own dialect</h2>
+<p>Picture the early 1990s. You spent a year writing a clever parallel program for one vendor&#x27;s supercomputer. Then the machine was retired, and the replacement came from another vendor. Your year of work did not move. It had to be rewritten, because every vendor had invented its own way to say &quot;split this work up&quot;. It was like a hotel chain where every hotel makes you learn a different way to switch on the light.</p>
+<p>There were two kinds of machines, and so two kinds of dialect:</p>
+<table><thead><tr><th>Machine</th><th>How the processors see memory</th><th>How you program it</th></tr></thead><tbody><tr><td><strong>Shared-memory</strong></td><td>All processors see one memory</td><td>Mark loops for parallel execution; the compiler splits them</td></tr><tr><td><strong>Distributed-memory</strong></td><td>Each processor has its own memory</td><td>Send messages between processors</td></tr></tbody></table>
+<p>Both tribes arrived at the same cure: stop inventing light switches, write the dialects down once as a standard, and let every vendor build to it. Then they went off and did it separately, which is the whole reason you are reading two stories.</p>
+<p>Who went first, and who went at all?</p>
+<hr>
+<h2>Tribe 1: the message passers (MPI)</h2>
+<p>The distributed-memory tribe moved first, and in the open. The <a href="https://www.mpi-forum.org/docs/mpi-1.1/mpi-11-html/node2.html">MPI-1.1 standard</a> tells the story itself:</p>
+<ul><li><strong>April 29-30, 1992:</strong> a workshop on standards for message passing in a distributed-memory environment is held in Williamsburg, Virginia. It agrees that a standard is worth writing and sets up a working group.</li><li><strong>November 1992:</strong> Dongarra, Hempel, Hey and Walker put forward a first draft called MPI1, then a revised one in February 1993. The same month, in Minneapolis, the group decides to run itself by the procedures of the High Performance Fortran Forum. That group becomes the <strong>MPI Forum</strong>.</li><li><strong>1993:</strong> the Forum meets every six weeks for two days and shows its draft at Supercomputing 93 in November.</li><li><strong>Who:</strong> about 60 people from 40 organizations, spread over vendors, universities, government labs and industry.</li></ul>
+<p>MPI-1.0 was published in 1994 (per the <a href="https://www.open-mpi.org/faq/?category=general">Open MPI FAQ</a>); MPI-1.1 followed on June 12, 1995.</p>
+<p>Notice what MPI is: a <strong>document</strong>, finished by a committee of about 60 people who still managed to agree. The Forum writes the rules and, then, anyone may build software that follows them. That is the whole reason there is more than one MPI program (part 1).</p>
+<p>Meanwhile, the shared-memory tribe tried the same trick in 1994, three years before OpenMP. It did not go well.</p>
+<hr>
+<h2>Try it before you scroll</h2>
+<p>☕ Ten seconds. In 1994 a committee drafted a standard for shared-memory directives (it was called <strong>ANSI X3H5</strong>), and then <strong>nobody adopted it</strong>. Why do you think it was abandoned?</p>
+<p>Hint: what was happening, at that exact moment, to the other kind of machine?</p>
+<hr>
+<h2>Tribe 2: the shared-memory crowd (OpenMP)</h2>
+<p>The answer is in the sources. The shared-memory tribe had a false start. Per the <a href="https://hpc-tutorials.llnl.gov/openmp/introduction/">LLNL OpenMP tutorial</a>, makers of shared-memory machines had each offered &quot;comparable Fortran extensions based on compiler directives&quot;, where you mark a loop and the compiler spreads it over the processors. In 1994 a draft from <strong>ANSI X3H5</strong> tried to standardize them. It was &quot;never adopted, largely due to waning interest as distributed memory machines became popular&quot;.</p>
+<p>Read that again: the rise of MPI-style machines is part of why the first shared-memory standard stalled. In short, the message-passing tribe accidentally knocked over the shared-memory tribe&#x27;s first standard on the way in, and the shared-memory tribe came back three years later with a better plan.</p>
+<p>It came back in <strong>spring 1997</strong>, when work on the OpenMP standard began, &quot;continuing where X3H5 left off&quot;, led by the OpenMP Architecture Review Board (ARB). The first spec, <strong>OpenMP Fortran 1.0, came out in October 1997</strong>. The C/C++ version followed in October 1998 (<a href="https://www.openmp.org/specifications/">OpenMP specifications list</a>).</p>
+<table><thead><tr><th></th><th>MPI</th><th>OpenMP</th></tr></thead><tbody><tr><td>Written by</td><td>The MPI Forum: vendors, universities, labs</td><td>The OpenMP ARB: a board of vendors and research bodies</td></tr><tr><td>First finished</td><td>MPI-1.0, 1994</td><td>Fortran 1.0, October 1997</td></tr><tr><td>Language it lives in</td><td>A library you call (C, Fortran)</td><td>Directives your compiler understands (C, C++, Fortran)</td></tr><tr><td>Failed predecessor</td><td>None needed: it started from a workshop</td><td>ANSI X3H5 (1994 draft, never adopted)</td></tr></tbody></table>
+<blockquote><p>[!NOTE] The sources say the ARB led the 1997 work. They do not give an exact date for the board&#x27;s founding, so this page doesn&#x27;t either.</p></blockquote>
+<hr>
+<h2>Where Open MPI was born</h2>
+<p>MPI was a document, so implementations followed. By the <a href="https://www.open-mpi.org/faq/?category=general">Open MPI FAQ</a>, Open MPI &quot;began as a merger&quot; of three existing MPI implementations, with ideas from a fourth:</p>
+<table><thead><tr><th>Ancestor</th><th>From</th></tr></thead><tbody><tr><td>FT-MPI</td><td>University of Tennessee</td></tr><tr><td>LA-MPI</td><td>Los Alamos National Laboratory</td></tr><tr><td>LAM/MPI</td><td>Indiana University</td></tr><tr><td>PACX-MPI (contributed)</td><td>University of Stuttgart</td></tr></tbody></table>
+<p>The project&#x27;s copyright notice starts in 2004. Open MPI is therefore a <strong>descendant of MPI implementations</strong>, not of OpenMP. The name is &quot;Open&quot; because it is open source, the same way a hundred other projects are.</p>
+<p>Open MPI is not alone. MPICH is another implementation, and vendors ship their own. Which is why, in part 1, installing &quot;Open MPI&quot; and &quot;MPI&quot; was never the same sentence.</p>
+<hr>
+<h2>The whole timeline on one screen</h2>
+<table><thead><tr><th>Year</th><th>Shared memory (OpenMP)</th><th>Message passing (MPI)</th></tr></thead><tbody><tr><td>1992</td><td></td><td>Williamsburg workshop (April); first draft (November)</td></tr><tr><td>1994</td><td>ANSI X3H5 draft, never adopted</td><td>MPI-1.0 published</td></tr><tr><td>1995</td><td></td><td>MPI-1.1 (June 12)</td></tr><tr><td>1997</td><td>Fortran 1.0 (October)</td><td>MPI-2.0 (July 18)</td></tr><tr><td>1998</td><td>C/C++ 1.0 (October)</td><td></td></tr><tr><td>2004</td><td></td><td>Open MPI project&#x27;s copyright begins</td></tr></tbody></table>
+<p><strong>Takeaway:</strong> MPI and OpenMP are two answers from two tribes to the same 1990s headache, and Open MPI is a later, separate program that implements MPI.</p>
+<p>You now know the cast and the history. Time to stop reading about them and run them: in <a href="../../../../fields/system-administration/openmp-and-open-mpi/threads-and-ranks/">part 3</a> four threads count to 100 million, and two out of three times they get it wrong.</p>
+<hr>
+<h2>References</h2>
+<ul><li><a href="https://www.mpi-forum.org/docs/mpi-1.1/mpi-11-html/node2.html">MPI-1.1 standard, introduction: history of the MPI effort</a></li><li><a href="https://www.mpi-forum.org/docs/">MPI Forum: standards and release dates</a></li><li><a href="https://www.open-mpi.org/faq/?category=general">Open MPI FAQ: MPI release history and Open MPI&#x27;s ancestors</a></li><li><a href="https://hpc-tutorials.llnl.gov/openmp/introduction/">LLNL OpenMP tutorial: history of OpenMP</a></li><li><a href="https://www.openmp.org/specifications/">OpenMP specifications: release dates</a></li></ul>
+<p><a href="../../../../#/fields/system-administration/openmp-and-open-mpi/where-they-came-from">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

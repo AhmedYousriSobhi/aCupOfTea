@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Is the Prediction Any Good?</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/gpu-failure-prediction/scoring-and-backtesting/">
+<meta name="description" content="How to judge GPU failure predictions - base rates, precision, recall, lead time, horizons, label quality, leakage and drift - and when a learned model is worth it.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Is the Prediction Any Good?">
+<meta property="og:description" content="How to judge GPU failure predictions - base rates, precision, recall, lead time, horizons, label quality, leakage and drift - and when a learned model is worth it.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/gpu-failure-prediction/scoring-and-backtesting/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/gpu-failure-prediction/scoring-and-backtesting/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/system-administration/gpu-failure-prediction/scoring-and-backtesting"></script>
+<main>
+<h1>Is the Prediction Any Good?</h1>
+<p><em>How to judge GPU failure predictions - base rates, precision, recall, lead time, horizons, label quality, leakage and drift - and when a learned model is worth it.</em></p>
+<blockquote><p><strong>Part 5 of the [Predicting GPU Node Failures series](/fields/system-administration/gpu-failure-prediction/README.md), the last one.</strong> A prediction you never checked is a superstition. This page gives you the ideas to check one: why rare events fool intuition, the three numbers that describe a predictor, the mistakes that make those numbers lie, and when a machine-learning model is actually worth it. By the end you&#x27;ll be able to defend (or demolish) any &quot;we predict GPU failures&quot; claim.</p></blockquote>
+<hr>
+<h2>Concept 1: the base-rate trap</h2>
+<p><a href="../../../../fields/system-administration/gpu-failure-prediction/what-fails-and-what-warns/">Part 1</a> quoted two facts from Google&#x27;s DRAM study that sound contradictory:</p>
+<ul><li>A correctable error made an uncorrectable error in the same month between 9 and 400 times more likely.</li><li>Even so, the chance of an uncorrectable error after a correctable one was only 0.1 to 2.3% per month.</li></ul>
+<p>Both are true because uncorrectable errors are <strong>rare to begin with</strong>. Multiply a tiny number by 400 and you can still get a small number. This is the <strong>base-rate trap</strong>: a signal can be enormously <em>informative</em> and still be <em>wrong most of the time</em> when it fires.</p>
+<p>Work it through with the study&#x27;s own upper figure. If you replaced every part that showed a correctable error, at most 2.3% of those parts would have had an uncorrectable error that month. At least 97.7% of the replacements would, that month, have been unnecessary. That&#x27;s why the authors said early replacement only makes sense where downtime is very costly.</p>
+<p>Two lessons follow:</p>
+<ul><li><strong>&quot;X makes failure N times more likely&quot; is not a reason to act.</strong> Ask how likely failure is <em>after</em> X, in absolute terms.</li><li><strong>Cheap actions tolerate weak signals; expensive actions don&#x27;t.</strong> Flagging a GPU on a dashboard can follow a signal that&#x27;s usually wrong. Draining a node, or worse, pulling a GPU, needs one that&#x27;s usually right.</li></ul>
+<hr>
+<h2>Concept 2: four outcomes, three numbers</h2>
+<p>Every time a rule could have fired, one of four things happened:</p>
+<table><thead><tr><th></th><th>GPU failed soon after</th><th>GPU didn&#x27;t fail</th></tr></thead><tbody><tr><td><strong>Rule fired</strong></td><td>True positive: a real warning</td><td>False positive: a false alarm</td></tr><tr><td><strong>Rule stayed quiet</strong></td><td>False negative: a missed failure</td><td>True negative: correctly quiet</td></tr></tbody></table>
+<p>From that table come the three numbers that describe any predictor:</p>
+<table><thead><tr><th>Number</th><th>Question</th><th>Plain meaning</th></tr></thead><tbody><tr><td><strong>Precision</strong></td><td>When it fires, how often is it right?</td><td>&quot;Should I trust this alert?&quot;</td></tr><tr><td><strong>Recall</strong></td><td>Of all real failures, how many did it warn about?</td><td>&quot;How much does it catch?&quot;</td></tr><tr><td><strong>Lead time</strong></td><td>How much warning did the right alerts give?</td><td>&quot;Is the warning early enough to use?&quot;</td></tr></tbody></table>
+<p>Precision and recall pull against each other. Make a rule more sensitive and it catches more failures (recall up) but raises more false alarms (precision down). Neither number alone means anything: a rule that fires on every GPU every day has perfect recall, and a rule that never fires has no false alarms.</p>
+<p>Different action tiers from <a href="../../../../fields/system-administration/gpu-failure-prediction/rules-that-predict/">part 3</a> need different balances:</p>
+<table><thead><tr><th>Tier</th><th>Needs</th><th>Because</th></tr></thead><tbody><tr><td>Drain now</td><td>Very high precision</td><td>Every false alarm costs a node</td></tr><tr><td>Drain and reset</td><td>High precision, useful lead time</td><td>Gentle, but still capacity</td></tr><tr><td>Early warning</td><td>Recall and long lead time; precision can be low</td><td>A wrong warning costs a glance</td></tr></tbody></table>
+<p>The rule of thumb: <strong>a rule earns its action with its precision.</strong> A warning rule gets promoted to a draining rule only when its measured precision says so.</p>
+<hr>
+<h2>Concept 3: the horizon</h2>
+<p>&quot;Did the GPU fail <em>after</em> the alert?&quot; needs a time limit, or every alert is eventually right: everything fails someday. That limit is the <strong>horizon</strong>.</p>
+<p>The horizon isn&#x27;t a statistical choice; it&#x27;s an operational one. It should be the window in which a warning is still <em>useful</em>, which ties back to <a href="../../../../fields/system-administration/gpu-failure-prediction/from-alert-to-drain/">part 4</a>: long enough to drain and checkpoint, short enough that the warning is about this failure and not some later one.</p>
+<p>The same alerts can look excellent or useless depending on the horizon. In a small hand-made test of a backtest, alerts that came 13 to 36 hours before failures scored well with a 72-hour horizon and scored zero with a 12-hour one. Nothing about the alerts changed; only the question did. <strong>Always state the horizon next to any precision or recall number.</strong></p>
+<hr>
+<h2>Concept 4: what counts as a failure</h2>
+<p>Every number above depends on the list of failures you compare against: your <strong>labels</strong>. Bad labels make every score meaningless, and they&#x27;re the hardest part of the whole project.</p>
+<p>Good sources, roughly from most to least trustworthy:</p>
+<ol><li>RMA records with the GPU identified.</li><li>Drain reasons written by humans or node health checks.</li><li>Fatal Xids in the kernel log (64, 79, 95).</li><li>Job failures that users blamed on a GPU.</li></ol>
+<p>Common label problems:</p>
+<table><thead><tr><th>Problem</th><th>Effect</th></tr></thead><tbody><tr><td>Software crashes counted as GPU failures</td><td>The predictor gets blamed for missing failures no hardware signal could see</td></tr><tr><td>The GPU your automation drained &quot;didn&#x27;t fail&quot;</td><td>The early drain <em>prevented</em> the failure, so a good prediction scores as a false alarm</td></tr><tr><td>GPUs that haven&#x27;t failed <em>yet</em> treated as healthy forever</td><td>Recent warnings look wrong just because there&#x27;s been no time to be proven right</td></tr></tbody></table>
+<p>The last two have names in statistics. Acting on a prediction changes the outcome you&#x27;re trying to measure (an <strong>intervention</strong> problem). And a GPU that hasn&#x27;t failed by the end of your data isn&#x27;t &quot;healthy,&quot; it&#x27;s <strong>censored</strong>: you just don&#x27;t know yet. Keep a list of drained GPUs and what happened to them after the reset, and leave the newest warnings out of the score until their horizon has passed.</p>
+<blockquote><p>[!TIP] Start collecting labels on day one, before you trust any rule. The dry-run log from part 4 plus a spreadsheet of RMAs is already a usable label set.</p></blockquote>
+<hr>
+<h2>Concept 5: backtesting, and how it lies</h2>
+<p><strong>Backtesting</strong> means replaying history: take the alerts your rules <em>would have</em> fired, take the failures that <em>actually</em> happened, and compute precision, recall and lead time. It&#x27;s the only way to tune the knobs from part 3 on evidence instead of taste.</p>
+<p>Three ways a backtest flatters you:</p>
+<ul><li><strong>Tuning and grading on the same data.</strong> If you adjust the threshold until last quarter&#x27;s failures are all caught, of course they&#x27;re caught. Tune on older months, then grade on newer months you held back. This is a <strong>time-based split</strong>, and with time-ordered data it&#x27;s the only honest one.</li><li><strong>Leakage.</strong> A feature that is really the failure itself, such as &quot;an Xid 79 happened,&quot; makes a predictor look perfect at predicting Xid 79. Ask of every input: &quot;could I have known this <em>before</em> the failure?&quot;</li><li><strong>Drift.</strong> A driver or firmware update can change how often counters tick or how flags behave. A rule tuned before the update may be wrong after it. Re-run the backtest after every driver or exporter change, and compare.</li></ul>
+<blockquote><p>[!WARNING] A backtest score with no stated horizon, no time split and no description of the labels is not a score. Ask for all three whenever someone shows you one, including yourself.</p></blockquote>
+<hr>
+<h2>Rules or a model?</h2>
+<p>&quot;AIOps&quot; often means a learned model that combines many weak signals into one risk score per GPU. In principle it can beat rules: a GPU with a slowly rising error rate, one bank low on spares and some PCIe retries might be risky even when no single rule fires.</p>
+<p>Two pieces of evidence argue for patience:</p>
+<ul><li><strong>You probably don&#x27;t have enough failures yet.</strong> For logistic regression, the simplest common model, Peduzzi et al. (1996) found that with fewer than about 10 outcome events per predictor variable, the estimates became biased and confidence intervals unreliable. A model with six inputs wants on the order of 60 real, labeled GPU failures. Many clusters don&#x27;t have that many.</li><li><strong>Simple signals are hard to beat.</strong> In Google&#x27;s DRAM study, a classification-tree model using correctable-error counts and memory attributes did not predict uncorrectable errors significantly better than the simple correctable-error signal. That was host memory, not GPU HBM, but it&#x27;s a reason to expect modest gains, not magic.</li></ul>
+<p>The recommended path, and what each step costs:</p>
+<table><thead><tr><th>Step</th><th>Gain</th><th>Cost</th></tr></thead><tbody><tr><td>Rules from NVIDIA&#x27;s documented states and events</td><td>Confident, explainable, available today</td><td>Can&#x27;t combine weak signals</td></tr><tr><td>Trend rules with personal baselines</td><td>Early warning</td><td>Knobs to tune; lower precision</td></tr><tr><td>Logistic regression on per-GPU-day features</td><td>Combines signals; each weight is readable</td><td>Needs dozens of labeled failures</td></tr><tr><td>Gradient-boosted trees or similar</td><td>Captures interactions</td><td>Hard to explain; easy to overfit</td></tr></tbody></table>
+<p>Every step up buys recall and costs explainability. At 3 AM, &quot;drained because spare rows ran out&quot; is an answer. &quot;Drained because the risk score was 0.83&quot; is a question.</p>
+<p>Whatever you build, judge it exactly like the rules: same labels, same horizon, same time split, same three numbers. If it doesn&#x27;t beat the best rule on held-out months, keep the rule.</p>
+<hr>
+<h2>What a model must never do</h2>
+<ul><li><strong>Skip the tiers.</strong> A model&#x27;s score starts as a warning and earns the right to drain through backtests, exactly like a rule.</li><li><strong>Decide an RMA.</strong> NVIDIA&#x27;s field diagnostic decides that; the model only points at which GPU to test.</li><li><strong>Overrule a documented flag.</strong> Remap failure and fatal Xids stay as rules. A model that disagrees with them is the one that&#x27;s wrong.</li><li><strong>Treat missing data as safe.</strong> No telemetry means &quot;unknown,&quot; never &quot;low risk.&quot;</li></ul>
+<hr>
+<h2>The interview answer, revisited</h2>
+<p>You can now answer the original question with reasons, not buzzwords:</p>
+<blockquote><p>&quot;I define operational excellence in two halves: performance and survival. For survival I watch the GPU memory error ladder: corrected errors, row remaps, spare-row budget, pending remaps, and fatal Xids. I react immediately to the states NVIDIA defines as failures, drain gracefully on damage, and treat trends against each GPU&#x27;s own baseline as early warnings. My automation only drains, never more, behind a budget and a staged rollout. And I measure every rule by precision, recall and lead time on held-out history, because failures are rare and rare events fool intuition. I&#x27;d only move to a learned model once I had enough labeled failures to prove it beats the rules.&quot;</p></blockquote>
+<p><strong>Takeaway:</strong> a GPU failure prediction is only as good as its measured precision, recall and lead time on honest, held-out history, so respect base rates, state your horizon, guard your labels, and let evidence decide when rules give way to a model.</p>
+<p>That&#x27;s the end of the concepts. To deploy all of it, continue to the <a href="../../../../fields/system-administration/gpu-failure-prediction/runbook/">runbook</a>, the deep-technical companion with every config, test and script. Or go back to the <a href="../../../../fields/system-administration/gpu-failure-prediction/">overview</a>, or the reactive side in the <a href="../../../../fields/system-administration/node-health-check/">Node Health Check series</a>.</p>
+<h3>References</h3>
+<ul><li><a href="https://www.cs.toronto.edu/~bianca/papers/sigmetrics09.pdf">Schroeder, Pinheiro, Weber, &quot;DRAM Errors in the Wild: A Large-Scale Field Study&quot;, SIGMETRICS 2009</a></li><li><a href="https://pubmed.ncbi.nlm.nih.gov/8970487/">Peduzzi et al., &quot;A simulation study of the number of events per variable in logistic regression analysis&quot;, J Clin Epidemiol 1996</a></li><li><a href="https://arxiv.org/abs/2503.11901">Cui et al., &quot;Characterizing GPU Resilience and Impact on AI/HPC Systems&quot;, arXiv:2503.11901</a></li><li><a href="https://arxiv.org/abs/2407.21783">Grattafiori et al., &quot;The Llama 3 Herd of Models&quot;, arXiv:2407.21783</a></li><li><a href="https://docs.nvidia.com/deploy/a100-gpu-mem-error-mgmt/rma-policy-thresholds-for-row-remapping.html">NVIDIA GPU Memory Error Management: RMA Policy</a></li><li><a href="https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/">Prometheus: alerting rules and the <code>ALERTS</code> series (alert history for backtests)</a></li></ul>
+<p><a href="../../../../#/fields/system-administration/gpu-failure-prediction/scoring-and-backtesting">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

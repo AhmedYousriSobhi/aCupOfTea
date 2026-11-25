@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Install, Configure and Roll Out NHC</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/node-health-check/getting-started/quick-guide/">
+<meta name="description" content="Quick guide: install NHC, draft and test its config, wire it into Slurm with a safe timeout, and roll it out with a dry run, a canary and a circuit breaker.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Install, Configure and Roll Out NHC">
+<meta property="og:description" content="Quick guide: install NHC, draft and test its config, wire it into Slurm with a safe timeout, and roll it out with a dry run, a canary and a circuit breaker.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/node-health-check/getting-started/quick-guide/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/node-health-check/getting-started/quick-guide/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../../.docs/prerender-redirect.js" data-target="../../../../../#/fields/system-administration/node-health-check/getting-started/quick-guide"></script>
+<main>
+<h1>Install, Configure and Roll Out NHC</h1>
+<p><em>Quick guide: install NHC, draft and test its config, wire it into Slurm with a safe timeout, and roll it out with a dry run, a canary and a circuit breaker.</em></p>
+<blockquote><p><strong>Quick guide for</strong> parts 2 to 5: <a href="../../../../../fields/system-administration/node-health-check/getting-started/build-and-install/">Build and install</a>, <a href="../../../../../fields/system-administration/node-health-check/getting-started/writing-nhc-conf/">Writing nhc.conf</a>, <a href="../../../../../fields/system-administration/node-health-check/getting-started/slurm-integration/">Slurm integration</a> and <a href="../../../../../fields/system-administration/node-health-check/getting-started/rollout-at-scale/">Rolling out to a fleet</a>. Work through the four parts in order. You will end with NHC installed, configured, wired into Slurm, and rolled out behind a canary and a circuit breaker.</p></blockquote>
+<h2>Before you start</h2>
+<ul><li>Root on a test node, and <code>slurm.conf</code> access.</li><li><code>bash</code> 4.3 or newer, the usual coreutils and <code>make</code>.</li><li><code>clush</code> (ClusterShell) for the fleet steps.</li></ul>
+<h2>Part 1: install (part 2)</h2>
+<ol><li>On RHEL-family nodes, install the release RPM.</li></ol>
+<pre><code class="language-bash">   dnf install -y https://github.com/mej/nhc/releases/download/&lt;version&gt;/lbnl-nhc-&lt;version&gt;-&lt;release&gt;.el9.noarch.rpm
+   rpm -q lbnl-nhc
+   nhc -V</code></pre>
+<p><strong>Expect:</strong> <code>rpm -q</code> prints the package and <code>nhc -V</code> the version. <strong>If not:</strong> no RPM for your EL version? <code>rpmbuild --rebuild lbnl-nhc-&lt;version&gt;-&lt;release&gt;.src.rpm</code>.</p>
+<ol><li>On any other distro, use the release tarball.</li></ol>
+<pre><code class="language-bash">   VER=1.5
+   curl -LO https://github.com/mej/nhc/releases/download/${VER}/lbnl-nhc-${VER}.tar.xz
+   tar xf lbnl-nhc-${VER}.tar.xz
+   cd lbnl-nhc-${VER}
+   ./configure --prefix=/usr --sysconfdir=/etc --libexecdir=/usr/libexec
+   make test
+   sudo make install</code></pre>
+<p><strong>Expect:</strong> every module reports <code>ok N/N</code>, ending with an &quot;All N tests passed&quot; line. <strong>If not:</strong> <code>bash: ./configure: No such file or directory</code> means you downloaded GitHub&#x27;s auto-archive. Get the <code>lbnl-nhc-&lt;version&gt;.tar.xz</code> asset, or use a Git checkout and run <code>./autogen.sh</code> first.</p>
+<ol><li>Smoke test, without touching the scheduler.</li></ol>
+<pre><code class="language-bash">   sudo nhc -e &#x27;check_fs_mount_rw -f /&#x27; &amp;&amp; echo &quot;root fs is rw, NHC works&quot;
+   sudo nhc -d -v -t 0 -l- MARK_OFFLINE=0</code></pre>
+<p><strong>Expect:</strong> the first prints the message. The second may complain, because the stock config is generic. <strong>If not:</strong> put options first and <code>VAR=value</code> pairs last.</p>
+<h2>Part 2: configure (part 3)</h2>
+<ol><li>Generate a draft on a known-good node.</li></ol>
+<pre><code class="language-bash">   sudo nhc-genconf</code></pre>
+<p><strong>Expect:</strong> <code>/etc/nhc/nhc.conf.auto</code> with this host&#x27;s name as the target. <strong>If not:</strong> on a heterogeneous cluster run <code>clush -bw @compute &quot;/usr/sbin/nhc-genconf -H &#x27;*&#x27; -c -&quot;</code> and read each identical block as one hardware class.</p>
+<ol><li>Write each line as <code>target || check</code>, cheapest and highest-signal checks first.</li></ol>
+<pre><code class="language-bash">   * || check_fs_mount_rw -f /
+   {gpu[01-32]} || check_hw_cpuinfo 2 96 192
+   !login* || check_ps_userproc_lineage log syslog</code></pre>
+<p><strong>Expect:</strong> a glob, <code>/regex/</code>, <code>{node[range]}</code> or <code>!negated</code> target on every line. <strong>If not:</strong> only one bracketed range per name, no commas inside brackets: write <code>{cn[001-010],cn015}</code>.</p>
+<ol><li>Put early settings in <code>/etc/sysconfig/nhc</code> (or <code>/etc/default/nhc</code>), not in the config.</li></ol>
+<pre><code class="language-bash">   NHC_RM=slurm
+   TIMEOUT=50</code></pre>
+<p><strong>Expect:</strong> both values take effect. <strong>If not:</strong> <code>TIMEOUT</code>, <code>CONFFILE</code>, <code>DETACHED_MODE</code>, <code>LOGFILE</code>, <code>NAME</code> and <code>HOSTNAME</code> don&#x27;t work from the config file.</p>
+<ol><li>Iterate until silent.</li></ol>
+<pre><code class="language-bash">   sudo nhc -a -v -l- MARK_OFFLINE=0
+   echo $?</code></pre>
+<p><strong>Expect:</strong> no output and exit 0. <strong>If not:</strong> each failure is a config bug (fix the line) or a node bug (fix the node).</p>
+<h2>Part 3: wire it into Slurm (part 4)</h2>
+<ol><li>Add three lines to <code>slurm.conf</code> on every node and the controller.</li></ol>
+<pre><code class="language-ini">   HealthCheckProgram=/usr/sbin/nhc
+   HealthCheckInterval=300
+   HealthCheckNodeState=ANY,CYCLE</code></pre>
+<p><strong>Expect:</strong> after <code>scontrol reconfigure</code>, <code>scontrol show config | grep -i healthcheck</code> shows all three. <strong>If not:</strong> the default <code>HealthCheckInterval</code> is 0, which means never.</p>
+<ol><li>Keep NHC&#x27;s timeout under Slurm&#x27;s. NHC&#x27;s <code>TIMEOUT</code> defaults to 30 s and Slurm kills the program at 60 s.</li></ol>
+<p><strong>Expect:</strong> a clean &quot;timed out&quot; failure and a drain with a reason. <strong>If not:</strong> NHC dies silently and nothing drains. Move minute-long checks to a deep context, or use <code>DETACHED_MODE=1</code>.</p>
+<ol><li>Prove the loop on a test node.</li></ol>
+<pre><code class="language-bash">   umount -l /scratch
+   sinfo -R -n cn042
+   mount /scratch</code></pre>
+<p><strong>Expect:</strong> a reason starting with <code>NHC:</code> while broken, and a resume at the next clean run. <strong>If not:</strong> check <code>/var/log/nhc.log</code>.</p>
+<ol><li>Drain by hand only with your own reason.</li></ol>
+<pre><code class="language-bash">   scontrol update nodename=cn042 state=drain reason=&quot;ahmed: BIOS update, ticket 4711&quot;</code></pre>
+<p><strong>Expect:</strong> NHC never resumes it. <strong>If not:</strong> a drain without a reason is not touched by NHC either, and nobody remembers why.</p>
+<h2>Part 4: roll out (part 5)</h2>
+<ol><li>Inventory the hardware classes.</li></ol>
+<pre><code class="language-bash">   clush -bw @compute &quot;/usr/sbin/nhc-genconf -H &#x27;*&#x27; -c -&quot;</code></pre>
+<p><strong>Expect:</strong> one block per class.</p>
+<ol><li>Dry run fleet-wide, twice, at different times of day.</li></ol>
+<pre><code class="language-bash">   clush -bw @compute &quot;/usr/sbin/nhc -a -l- MARK_OFFLINE=0&quot; 2&gt;&amp;1 | tee nhc-dryrun.txt</code></pre>
+<p><strong>Expect:</strong> healthy nodes print nothing, failures group by message. <strong>If not:</strong> a failure on most nodes of a class is a config bug, on a handful a node bug, on random nodes a flaky check.</p>
+<ol><li>Canary inside <code>nhc.conf</code>, then widen to <code>{cn[001-128]}</code>, then delete both lines.</li></ol>
+<pre><code class="language-bash">                    * || export MARK_OFFLINE=0
+         {cn[001-016]} || export MARK_OFFLINE=1</code></pre>
+<p><strong>Expect:</strong> only <code>cn001-016</code> can drain.</p>
+<ol><li>Add a circuit breaker on the controller, run every few minutes (<code>/usr/local/sbin/nhc-circuit-breaker</code>, <code>MAX_PCT=5</code>).</li></ol>
+<p><strong>Expect:</strong> an alert when NHC has drained <code>MAX_PCT</code> percent of nodes or more. <strong>If not:</strong> as a kill switch, push <code>* || export MARK_OFFLINE=0</code> to the top of <code>nhc.conf</code>.</p>
+<ol><li>Dry run every later change on the fleet before installing it.</li></ol>
+<pre><code class="language-bash">   clush -bw @compute &quot;/usr/sbin/nhc -a -l- -c /tmp/candidate.conf MARK_OFFLINE=0&quot;</code></pre>
+<p><strong>Expect:</strong> the same quiet output as step 2.</p>
+<h2>If it fails</h2>
+<table><thead><tr><th>What you see</th><th>Likely cause</th><th>Fix</th></tr></thead><tbody><tr><td><code>bash: ./configure: No such file or directory</code></td><td>GitHub auto-archive</td><td>Use the <code>.tar.xz</code> asset or <code>./autogen.sh</code></td></tr><tr><td>A healthy node drains after a variable line</td><td><code>[[ ... ]] &amp;&amp; ...</code> returned non-zero and counted as a failed check</td><td>Use <code>if ... fi</code></td></tr><tr><td>A command-line override is ignored</td><td>The config file beats the command line</td><td>Apply your value only while the variable holds NHC&#x27;s default</td></tr><tr><td>NHC dies silently, nothing drains</td><td>Slurm&#x27;s timeout fired first</td><td>Make NHC&#x27;s <code>TIMEOUT</code> shorter</td></tr><tr><td>Every node drains after a push</td><td>e.g. <code>check_hw_physmem 512GB 512GB</code> with no fudge factor</td><td>Add a fudge such as <code>3%</code>, push the kill switch</td></tr><tr><td>Drained nodes never resume</td><td><code>HealthCheckNodeState=NONDRAINED_IDLE</code></td><td>Choose it on purpose, or use another state</td></tr></tbody></table>
+<h2>Roll back</h2>
+<ul><li>Set <code>MARK_OFFLINE=0</code> in <code>nhc.conf</code> so NHC keeps logging and stops draining.</li><li>Keep <code>nhc.conf</code> and custom <code>.nhc</code> modules in Git, so <code>git log -p nhc.conf</code> shows which change did it.</li></ul>
+<p><strong>Don&#x27;t:</strong> use GitHub&#x27;s &quot;Source code&quot; archives, drain without a reason, or let the circuit breaker auto-resume nodes.</p>
+<p><strong>Why it works:</strong> <a href="../../../../../fields/system-administration/node-health-check/getting-started/build-and-install/">Build and install</a>, <a href="../../../../../fields/system-administration/node-health-check/getting-started/writing-nhc-conf/">Writing nhc.conf</a>, <a href="../../../../../fields/system-administration/node-health-check/getting-started/slurm-integration/">Slurm integration</a> and <a href="../../../../../fields/system-administration/node-health-check/getting-started/rollout-at-scale/">Rolling out to a fleet</a>.</p>
+<p><a href="../../../../../#/fields/system-administration/node-health-check/getting-started/quick-guide">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

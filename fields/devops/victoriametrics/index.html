@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>VictoriaMetrics, for People Whose Prometheus Keeps Running Out of Room</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/victoriametrics/">
+<meta name="description" content="A five-page VictoriaMetrics series plus a cheatsheet - why it exists, a locked-down single node, vmagent buffering, retention and backups, and alerts tested before they page anyone.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="VictoriaMetrics, for People Whose Prometheus Keeps Running Out of Room">
+<meta property="og:description" content="A five-page VictoriaMetrics series plus a cheatsheet - why it exists, a locked-down single node, vmagent buffering, retention and backups, and alerts tested before they page anyone.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/victoriametrics/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/victoriametrics/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../.docs/prerender-redirect.js" data-target="../../../#/fields/devops/victoriametrics/"></script>
+<main>
+<h1>VictoriaMetrics, for People Whose Prometheus Keeps Running Out of Room</h1>
+<p><em>A five-page VictoriaMetrics series plus a cheatsheet - why it exists, a locked-down single node, vmagent buffering, retention and backups, and alerts tested before they page anyone.</em></p>
+<p>A short series on VictoriaMetrics, the Prometheus-compatible metrics database, written for people who run clusters and are comfortable with a root shell. Start at page 1 and work down. Every command was run on a throwaway lab, and each page says what the docs say, what the lab showed, and what we recommend, separately.</p>
+<p>Written against <strong>VictoriaMetrics v1.156.0</strong> (released 2026-11-09), with Prometheus 3.16.0 and node_exporter 1.12.1 for comparison.</p>
+<hr>
+<h2>Contents</h2>
+<table><thead><tr><th>File</th><th>Description</th></tr></thead><tbody><tr><td><a href="../../../fields/devops/victoriametrics/why-victoriametrics/">1. The Prometheus That Ate the Head Node</a></td><td>What VictoriaMetrics is, its components, single-node vs cluster, what&#x27;s free and what isn&#x27;t, and what it&#x27;s not for</td></tr><tr><td><a href="../../../fields/devops/victoriametrics/single-node-in-ten-minutes/">2. A Single Node You Can Trust</a></td><td>Verified install, systemd unit, scrape config, safe reloads, and the delete endpoint that is open by default</td></tr><tr><td><a href="../../../fields/devops/victoriametrics/vmagent-and-the-network-blip/">3. vmagent and the Network Blip</a></td><td>Buffering through an outage, the URL edit that silently deletes the buffer, and how to size the queue</td></tr><tr><td><a href="../../../fields/devops/victoriametrics/retention-disk-and-backups/">4. Retention, Full Disks and Backups</a></td><td>What retention really deletes and when, read-only mode that <code>/health</code> won&#x27;t report, and backups proven by a restore</td></tr><tr><td><a href="../../../fields/devops/victoriametrics/metricsql-and-vmalert/">5. MetricsQL Surprises and Alerts You Can Test</a></td><td>Why <code>increase()</code> disagrees with Prometheus, rules with unit tests that fail when they should, and alerting from outside</td></tr><tr><td><a href="../../../fields/devops/victoriametrics/cheatsheet/">6. Cheatsheet</a></td><td>Every step from the series in order, as copy-paste commands, with a quick-reference table</td></tr></tbody></table>
+<hr>
+<h2>How the pages were tested</h2>
+<ul><li><strong>Where:</strong> a throwaway Ubuntu 24.04.5 sandbox (Linux 6.18, systemd 255), destroyed afterwards. It was a container, not a VM, so systemd wasn&#x27;t running: unit files were linted with <code>systemd-analyze verify</code> but never started. Each page marks what wasn&#x27;t run.</li><li><strong>Binaries:</strong> official release tarballs, checked against the published SHA-256 sums before use.</li><li><strong>Failure paths too:</strong> every check on these pages was also run against a broken input to prove it fails. Two of our own tests passed when they shouldn&#x27;t have, and page 5 shows how we caught it.</li></ul>
+<h2>Related pages</h2>
+<ul><li><a href="../../../fields/devops/kubernetes/gpu-allocation-vs-utilization/">GPU Allocation vs Utilization</a>: what the numbers you store actually mean.</li><li><a href="../../../fields/system-administration/gpu-failure-prediction/">Predicting GPU node failures</a>: a use for the metrics once you keep them long enough.</li></ul>
+<p><a href="../../../#/fields/devops/victoriametrics/">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

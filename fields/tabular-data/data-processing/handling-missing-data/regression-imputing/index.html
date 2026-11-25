@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Regression Imputing</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/tabular-data/data-processing/handling-missing-data/regression-imputing/">
+<meta name="description" content="How to fill missing values by predicting them with a regression model built on the other features.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Regression Imputing">
+<meta property="og:description" content="How to fill missing values by predicting them with a regression model built on the other features.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/tabular-data/data-processing/handling-missing-data/regression-imputing/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/tabular-data/data-processing/handling-missing-data/regression-imputing/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../../.docs/prerender-redirect.js" data-target="../../../../../#/fields/tabular-data/data-processing/handling-missing-data/regression-imputing"></script>
+<main>
+<h1>Regression Imputing</h1>
+<p><em>How to fill missing values by predicting them with a regression model built on the other features.</em></p>
+<p>It is recommened to read <strong>determineMissingValues</strong> before starting.</p>
+<h2>Methods for Handling Missing Values: <strong>Regression Imputing</strong></h2>
+<p>From <a href="https://www.kaggle.com/code/shashankasubrahmanya/missing-data-imputation-using-regression">kaggle notebook</a>, the author tried to explain how to use the regression imputing method for missing values.</p>
+<p>The Reason for not just imputing the missing values by the <strong>Measure of centeral tendency</strong>, as this would lead to over(under)estimate, which means we add some bias in our estimation.</p>
+<p>For example, a person who earns just enough to meet his daily needs might not be comfortable in mentioning his salary, and thus the value for the variable salary would be missing for such a person. However, if we impute it with the mean value of the variable, we are overestimating that person&#x27;s salary and thus introducing bias in our analysis.</p>
+<p>So an interesting method to use is <strong>Regression Imputing</strong> which we estimate the missing values by Regression using other variables as parameters.</p>
+<p>Continuting the <strong>determineMissingValues</strong> markdown file, we saw that, there were around 5 features with missing values in the diabetes dataset, so we can&#x27;t just directly use Regression Imputation to impute one of them as the predictors contain missing data themselves.</p>
+<p>This is called <strong>Catch-22</strong> a problematic situation for which the only solution is denied by a circumstance inherent in the problem or by a rule. It was taken from the show-business catch-22 &quot;no work unless you have an agent, no agent unless you&#x27;ve worked Mary Murphy. also : the circumstance or rule that denies a solution.&quot;</p>
+<pre><code class="language-python">missing_columns = [&quot;Glucose&quot;, &quot;BloodPressure&quot;, &quot;SkinThickness&quot;, &quot;Insulin&quot;, &quot;BMI&quot;]</code></pre>
+<p>We can avoid this Catch-22 situation by initially imputing all the variables with missing values using some trivial methods like Simple Random Imputation (we impute the missing data with random observed values of the variable) which is later followed by Regression Imputation of each of the variables iteratively.</p>
+<pre><code class="language-python">def random_imputation(df, feature):
+
+    number_missing = df[feature].isnull().sum()
+    
+    observed_values = df.loc[df[feature].notnull(), feature]
+    
+    df.loc[df[feature].isnull(), feature + &#x27;_imp&#x27;] = np.random.choice(observed_values, number_missing, replace = True)
+    
+    return df</code></pre>
+<p>Then we apply this function on each of column of the columns which contains missing values.</p>
+<pre><code class="language-python">for feature in missing_columns:
+    df[feature + &#x27;_imp&#x27;] = df[feature]
+    df = random_imputation(df, feature)</code></pre>
+<p>Now we have none missing columns, which will help us use the regression imputing on each target missing column, based on other features.</p>
+<pre><code class="language-python">deter_data = pd.DataFrame(columns = [&quot;Det&quot; + name for name in missing_columns])
+
+for feature in missing_columns:
+        
+    deter_data[&quot;Det&quot; + feature] = df[feature + &quot;_imp&quot;]
+    
+    parameters = list(set(df.columns) - set(missing_columns) - {feature + &#x27;_imp&#x27;})
+    
+    #Create a Linear Regression model to estimate the missing data
+    model = linear_model.LinearRegression()
+   
+    model.fit(X = df[parameters], y = df[feature + &#x27;_imp&#x27;])
+    
+    #observe that I preserve the index of the missing data from the original dataframe
+    deter_data.loc[df[feature].isnull(), &quot;Det&quot; + feature] = model.predict(df[parameters])[df[feature].isnull()]
+
+    mno.matrix(deter_data, figsize = (20,5))</code></pre>
+<h3>Disadvantage</h3>
+<p>A major disadvantage in this method is that we reduce the inherent variability in the imputed variable. In other words, since we substitute the missing data with regression outputs, the predicted values lie along the regression hyperplane where the variable would have actually contained some noise/bias.</p>
+<p>Another point:</p>
+<p>When we compare both complete data with the incomplete data:</p>
+<ul><li>the complete data has a lesser standard deviation (thus lesser variability) than the incomplete data.</li></ul>
+<pre><code class="language-python">pd.concat([df[[&quot;Insulin&quot;, &quot;SkinThickness&quot;]], deter_data[[&quot;DetInsulin&quot;, &quot;DetSkinThickness&quot;]]], axis = 1).describe().T</code></pre>
+<h3>Conclusion</h3>
+<p>Regression Imputation might not serve as the best method when a variable is missing majority of it&#x27;s data, as in case of insulin. In these cases we have to use more powerful approaches as <strong>Maximum Likelihood Imputation</strong> and <strong>Multple Imputaton</strong>.</p>
+<p><a href="../../../../../#/fields/tabular-data/data-processing/handling-missing-data/regression-imputing">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

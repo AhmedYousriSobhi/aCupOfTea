@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Ansible Cheatsheet: Every Step from the Series</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/ansible/cheatsheet/">
+<meta name="description" content="The Ansible series as direct steps - pinned install, ansible.cfg, inventory and host keys, ad-hoc commands, idempotent playbooks with handlers, a role, rolling maintenance, vault.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Ansible Cheatsheet: Every Step from the Series">
+<meta property="og:description" content="The Ansible series as direct steps - pinned install, ansible.cfg, inventory and host keys, ad-hoc commands, idempotent playbooks with handlers, a role, rolling maintenance, vault.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/ansible/cheatsheet/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/ansible/cheatsheet/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/devops/ansible/cheatsheet"></script>
+<main>
+<h1>Ansible Cheatsheet: Every Step from the Series</h1>
+<p><em>The Ansible series as direct steps - pinned install, ansible.cfg, inventory and host keys, ad-hoc commands, idempotent playbooks with handlers, a role, rolling maintenance, vault.</em></p>
+<blockquote><p><strong>Part 7 of [Ansible](/fields/devops/ansible/README.md)</strong> The series as one list of commands, in the order you&#x27;d build the <code>cluster-ansible</code> project. Each step links to the page that explains it, shows its output, and shows how it fails.</p></blockquote>
+<hr>
+<h2>Before you start</h2>
+<blockquote><p>[!NOTE] Every command here appears on one of the series pages, where it was run with <strong>ansible-core 2.22.0</strong> on Python 3.13 against six Ubuntu 24.04 nodes (<code>head01</code>, <code>cn001</code>–<code>cn004</code>, <code>gpu001</code>) running Slurm 23.11.4. Rocky/RHEL lines weren&#x27;t run and are marked. This sheet collects the commands; it wasn&#x27;t re-run from top to bottom as one script.</p></blockquote>
+<p>The nodes need: names that resolve, an <code>admin</code> user with your SSH key, passwordless <code>sudo</code>, and Python 3.9 or newer.</p>
+<hr>
+<h2>1. A pinned install</h2>
+<p><a href="../../../../fields/devops/ansible/getting-started/">Part 1, step 1</a>. ansible-core 2.22 needs Python 3.13 on the controller; uv downloads it.</p>
+<pre><code class="language-bash">pip install uv
+mkdir -p ~/cluster-ansible/inventory/{group_vars,host_vars} ~/cluster-ansible/{playbooks,roles,tools}
+cd ~/cluster-ansible
+cat &gt; requirements.txt &lt;&lt;&#x27;EOF&#x27;
+ansible-core==2.22.0
+ansible-lint==26.11.0
+EOF
+uv python install 3.13
+uv venv --python 3.13 .venv
+uv pip install --python .venv/bin/python -r requirements.txt
+source .venv/bin/activate
+ansible --version | head -2
+ansible-lint --version
+echo &quot;.venv/&quot; &gt;&gt; .gitignore</code></pre>
+<p>Expected: <code>ansible [core 2.22.0]</code> and <code>config file = .../cluster-ansible/ansible.cfg</code> (after step 2). Always <code>source .venv/bin/activate</code> first.</p>
+<hr>
+<h2>2. ansible.cfg</h2>
+<p><a href="../../../../fields/devops/ansible/getting-started/">Part 1, step 2</a>. In the project folder:</p>
+<pre><code class="language-ini">[defaults]
+inventory = inventory/hosts.yml
+remote_user = admin
+roles_path = roles
+collections_path = collections
+interpreter_python = auto_silent
+forks = 20
+vault_password_file = ~/.config/cluster-ansible/vault-pass
+
+[ssh_connection]
+pipelining = True</code></pre>
+<p>(<code>vault_password_file</code> comes from step 9; leave it out until then.) Ansible <strong>ignores</strong> <code>ansible.cfg</code> in a world-writable directory and then runs against nothing. <code>ansible --version</code> must show your file on the <code>config file =</code> line.</p>
+<hr>
+<h2>3. Inventory and host keys</h2>
+<p><a href="../../../../fields/devops/ansible/getting-started/">Part 1, steps 3 and 4</a>. <code>inventory/hosts.yml</code>:</p>
+<pre><code class="language-yaml">all:
+  children:
+    head:
+      hosts:
+        head01:
+    compute:
+      hosts:
+        cn[001:004]:
+    gpu:
+      hosts:
+        gpu001:
+    nodes:
+      children:
+        compute:
+        gpu:</code></pre>
+<p>Trust host keys after comparing fingerprints, never with <code>host_key_checking = False</code>:</p>
+<pre><code class="language-bash">for n in head01 cn001 cn002 cn003 cn004 gpu001; do ssh-keyscan -t ed25519 $n 2&gt;/dev/null; done &gt; /tmp/scanned
+ssh-keygen -lf /tmp/scanned          # compare with ssh-keygen -lf /etc/ssh/ssh_host_ed25519_key.pub on each node
+cat /tmp/scanned &gt;&gt; ~/.ssh/known_hosts
+ansible all -m ansible.builtin.ping; echo &quot;exit=$?&quot;</code></pre>
+<p>Expected: <code>pong</code> from every node, <code>exit=0</code>. Any unreachable node: exit <strong>4</strong>.</p>
+<p>After you <strong>know</strong> a node was reinstalled:</p>
+<pre><code class="language-bash">ssh-keygen -R cn004
+ssh-keyscan -t ed25519 cn004 2&gt;/dev/null | tee -a ~/.ssh/known_hosts | ssh-keygen -lf -
+ansible cn004 -m ansible.builtin.ping</code></pre>
+<p>A node with Python older than 3.9 fails with <code>Ansible requires Python 3.9 or newer on the target</code>. Fix the node, not Ansible. On Rocky/RHEL 8 (not run): <code>dnf install -y python3.12</code>, then <code>ansible_python_interpreter: /usr/bin/python3.12</code> in that group&#x27;s <code>group_vars</code>.</p>
+<hr>
+<h2>4. Variables and patterns</h2>
+<p><a href="../../../../fields/devops/ansible/inventory-and-ad-hoc/">Part 2</a>.</p>
+<pre><code class="language-bash">echo &quot;nofile_limit: 8192&quot; &gt; inventory/group_vars/nodes.yml
+echo &quot;nofile_limit: 16384&quot; &gt; inventory/group_vars/gpu.yml
+ansible-inventory --host gpu001      # the child group wins: 16384
+ansible &#x27;nodes:!cn003&#x27; --list-hosts  # aim before you fire</code></pre>
+<table><thead><tr><th>Pattern</th><th>Means</th></tr></thead><tbody><tr><td><code>nodes</code></td><td>The group</td></tr><tr><td><code>nodes:!cn003</code></td><td>The group minus a host</td></tr><tr><td><code>compute:gpu</code></td><td>Either group</td></tr><tr><td><code>nodes:&amp;gpu</code></td><td>In both</td></tr><tr><td><code>cn001,cn002</code></td><td>A list</td></tr></tbody></table>
+<p>A typo in an <strong>ad-hoc</strong> pattern warns and exits <strong>0</strong> (<code>No hosts matched</code>). In <code>ansible-playbook --limit</code> it exits 1. Check the host list in scripts.</p>
+<hr>
+<h2>5. Ad-hoc change, and a check that logs in fresh</h2>
+<p><a href="../../../../fields/devops/ansible/inventory-and-ad-hoc/">Part 2</a>.</p>
+<pre><code class="language-bash">ansible nodes -b -m ansible.builtin.copy \
+  -a &#x27;dest=/etc/security/limits.d/90-nofile.conf content=&quot;* soft nofile {{ nofile_limit }}\n* hard nofile {{ nofile_limit }}\n&quot; owner=root group=root mode=0644&#x27;</code></pre>
+<p>Checking login limits through Ansible right away shows the <strong>old</strong> value: it reuses each SSH connection for 60 s. <code>playbooks/check-nofile.yml</code> resets the connection first:</p>
+<pre><code class="language-yaml">- name: Check the open-files limit in a fresh login
+  hosts: nodes
+  gather_facts: false
+  tasks:
+    - name: Drop the reused SSH connection so the next task logs in again
+      ansible.builtin.meta: reset_connection
+
+    - name: Read the soft limit
+      ansible.builtin.command: sh -c &#x27;ulimit -n&#x27;
+      register: nofile
+      changed_when: false
+
+    - name: Fail if it isn&#x27;t what the inventory says
+      ansible.builtin.assert:
+        that: nofile.stdout | int == nofile_limit | int
+        fail_msg: &quot;{{ inventory_hostname }} has {{ nofile.stdout }}, expected {{ nofile_limit }}&quot;
+        quiet: true</code></pre>
+<pre><code class="language-bash">ansible-playbook playbooks/check-nofile.yml; echo &quot;exit=$?&quot;</code></pre>
+<p>Expected: <code>changed=0 failed=0</code> on every node, <code>exit=0</code>. A node that missed the change fails with <code>has 1024, expected 8192</code>. Rerun the <code>copy</code> on just that node; on all nodes again it should say <code>SUCCESS</code>, not <code>CHANGED</code>.</p>
+<hr>
+<h2>6. An idempotent playbook with handlers</h2>
+<p><a href="../../../../fields/devops/ansible/idempotence-and-handlers/">Part 3</a>. The template, the variables and the full <code>playbooks/slurm-config.yml</code> are on that page. The parts that matter:</p>
+<table><thead><tr><th>Piece</th><th>Why</th></tr></thead><tbody><tr><td><code>ansible.builtin.template</code> instead of <code>shell</code></td><td>Writes only when the content differs, so <code>changed</code> means changed</td></tr><tr><td>Handlers notified by the template</td><td>Restart only when the config changed</td></tr><tr><td><code>force_handlers: true</code> on the play</td><td>A host that fails later still gets its restart; otherwise it runs the old config forever</td></tr><tr><td><code>meta: flush_handlers</code> before the &quot;started&quot; tasks</td><td>A new config restarts (or first-starts) the daemon once, not start-then-restart</td></tr><tr><td><code>changed_when: false</code> on read-only commands</td><td>Reading isn&#x27;t a change</td></tr></tbody></table>
+<pre><code class="language-bash">ansible-playbook playbooks/slurm-config.yml --check --diff -l cn001   # dry run with line diffs
+ansible-playbook playbooks/slurm-config.yml
+ansible-playbook playbooks/slurm-config.yml                           # again: changed=0 everywhere</code></pre>
+<p>Check mode for package tasks on Ubuntu needs <code>python3-apt</code> on the node.</p>
+<hr>
+<h2>7. The slurm role</h2>
+<p><a href="../../../../fields/devops/ansible/roles-and-variables/">Part 4</a>.</p>
+<pre><code class="language-text">roles/slurm/
+├── defaults/main.yml        choices: cluster name, controller, sizes (lowest precedence)
+├── vars/Debian.yml          facts: Ubuntu package names (tested)
+├── vars/RedHat.yml          facts: EPEL package names (not tested)
+├── tasks/main.yml
+├── handlers/main.yml
+├── templates/slurm.conf.j2
+└── meta/main.yml</code></pre>
+<p>Rules from that page:</p>
+<ul><li><strong>`defaults/` for choices, `vars/` for facts.</strong> A value in <code>vars/</code> silently beats your inventory.</li><li>Load per-OS facts with <code>include_vars</code> + <code>first_found</code> (<code>&lt;distribution&gt;-&lt;major&gt;.yml</code>, then <code>&lt;os_family&gt;.yml</code>). An unsupported OS stops at the first task.</li><li>Facts don&#x27;t exist at <code>import_tasks</code> time; use <code>include_tasks</code> for paths built from facts.</li><li>In a template loop over other hosts, read <strong>their</strong> values: <code>hostvars[node][&#x27;slurm_node_memory_mb&#x27;] | default(slurm_node_memory_mb)</code>. <code>hostvars</code> doesn&#x27;t include role defaults, hence the <code>default()</code>.</li><li>End the role with a <code>run_once</code> assert that every host&#x27;s <code>slurm.conf</code> has the same checksum.</li></ul>
+<p><code>playbooks/slurm.yml</code>:</p>
+<pre><code class="language-yaml">- name: Slurm controller and nodes
+  hosts: head:nodes
+  become: true
+  force_handlers: true
+  roles:
+    - slurm</code></pre>
+<pre><code class="language-bash">ansible-playbook playbooks/slurm.yml --check --diff
+ansible-playbook playbooks/slurm.yml
+ansible-playbook playbooks/slurm.yml        # again: changed=0
+ansible-lint roles/slurm playbooks/slurm.yml</code></pre>
+<hr>
+<h2>8. Rolling maintenance</h2>
+<p><a href="../../../../fields/devops/ansible/rolling-maintenance/">Part 5</a>. The full <code>playbooks/rolling-maintenance.yml</code> is on that page: drain through Slurm, wait for <code>drained</code>, run <code>tasks/maintenance.yml</code>, reboot, check slurmd is active <strong>and</strong> has re-registered since the reboot (<code>SlurmdStartTime</code> changed), then resume.</p>
+<table><thead><tr><th>Play setting</th><th>Why</th></tr></thead><tbody><tr><td><code>serial: [1, &quot;25%&quot;]</code></td><td>One canary, then a quarter at a time</td></tr><tr><td><code>order: sorted</code></td><td>A stable canary</td></tr><tr><td><code>max_fail_percentage: 0</code></td><td>Any failure stops the run</td></tr><tr><td><code>when: not ansible_check_mode</code> on wait loops</td><td>Otherwise the dry run retries forever</td></tr></tbody></table>
+<pre><code class="language-bash">ansible-playbook playbooks/rolling-maintenance.yml -e maint_ticket=CHG-1047 --check --diff -l cn001   # dry run
+ansible-playbook playbooks/rolling-maintenance.yml -e maint_ticket=CHG-1047                           # real run
+sinfo -R                                                                                              # on the controller</code></pre>
+<p>If the canary fails, it stays drained with the ticket as the reason, and nothing else is touched. Roll back:</p>
+<pre><code class="language-bash">ansible cn001 -b -m ansible.builtin.systemd_service -a &#x27;name=slurmd masked=false state=started&#x27;   # or revert the change
+ansible head01 -b -m ansible.builtin.command -a &#x27;scontrol update nodename=cn001 state=resume&#x27;
+ansible-playbook playbooks/rolling-maintenance.yml -e maint_ticket=CHG-1047 --limit &#x27;nodes:!cn001&#x27;  # the rest, if the change is good</code></pre>
+<p>This playbook isn&#x27;t idempotent by design: rerunning it without <code>--limit</code> reboots every node again.</p>
+<hr>
+<h2>9. Secrets with vault</h2>
+<p><a href="../../../../fields/devops/ansible/secrets-and-vault/">Part 6</a>.</p>
+<pre><code class="language-bash">mkdir -p ~/.config/cluster-ansible
+openssl rand -base64 32 &gt; ~/.config/cluster-ansible/vault-pass
+chmod 600 ~/.config/cluster-ansible/vault-pass
+# add vault_password_file to ansible.cfg (step 2)
+
+mkdir -p inventory/group_vars/head
+printf &#x27;slurmdbd_storage_pass: &quot;Tr0ub4dor&amp;3-not-real&quot;\n&#x27; &gt; inventory/group_vars/head/vault.yml
+ansible-vault encrypt inventory/group_vars/head/vault.yml
+ansible-vault view inventory/group_vars/head/vault.yml       # edit with: ansible-vault edit
+
+# A new munge key, encrypted before it is ever committed
+dd if=/dev/urandom of=roles/munge/files/munge.key bs=1024 count=1
+ansible-vault encrypt roles/munge/files/munge.key
+ansible-playbook playbooks/munge.yml                         # every host at once, never with serial</code></pre>
+<ul><li>A leaked secret stays in Git history: encrypting it now doesn&#x27;t help. Make a <strong>new</strong> one.</li><li>Rotate the munge key on all hosts in one run. Half-rotated, hosts reject each other&#x27;s credentials (<code>unmunge: Error: Invalid credential</code>).</li><li>2.22 masks known secret values as <code>$REDACTED$</code> in output, but not values <strong>derived</strong> from them (<code>| b64encode</code>). Keep <code>no_log: true</code> on tasks that handle secrets.</li></ul>
+<p>The commit guard <code>tools/check-secrets.sh</code> is printed on <a href="../../../../fields/devops/ansible/secrets-and-vault/">that page</a>. Install it as a hook, and run it in CI too:</p>
+<pre><code class="language-bash">chmod +x tools/check-secrets.sh
+ln -sf ../../tools/check-secrets.sh .git/hooks/pre-commit
+tools/check-secrets.sh</code></pre>
+<p>Expected: <code>secrets check: ok</code>. A plain <code>*.key</code> or <code>vault.yml</code> prints <code>NOT ENCRYPTED: &lt;file&gt;</code> and blocks the commit.</p>
+<hr>
+<h2>Quick reference</h2>
+<table><thead><tr><th>Task</th><th>Command</th></tr></thead><tbody><tr><td>Who would a pattern hit?</td><td><code>ansible &#x27;&lt;pattern&gt;&#x27; --list-hosts</code></td></tr><tr><td>A host&#x27;s merged variables</td><td><code>ansible-inventory --host &lt;host&gt;</code></td></tr><tr><td>Ping everything</td><td><code>ansible all -m ansible.builtin.ping</code></td></tr><tr><td>Run as root</td><td>add <code>-b</code></td></tr><tr><td>Dry run with diffs</td><td><code>ansible-playbook &lt;play&gt; --check --diff</code></td></tr><tr><td>Limit a run</td><td><code>--limit &#x27;nodes:!cn003&#x27;</code></td></tr><tr><td>Override a variable</td><td><code>-e name=value</code></td></tr><tr><td>Run handlers even on failure (one run)</td><td><code>--force-handlers</code></td></tr><tr><td>Lint</td><td><code>ansible-lint</code></td></tr><tr><td>Exit codes</td><td><code>0</code> ok, <code>2</code> a task failed, <code>4</code> a host unreachable</td></tr></tbody></table>
+<p><strong>Takeaway:</strong> pin the version per project, check <code>ansible.cfg</code> is the one in use, trust host keys deliberately, keep numbers in <code>group_vars</code>, write tasks that say what not how, restart only through handlers with <code>force_handlers</code>, roll through the cluster with a canary, and never commit a secret in plain text.</p>
+<p><strong>Series index:</strong> <a href="../../../../fields/devops/ansible/">Ansible</a>. The same Slurm lab is built step by step in the <a href="../../../../fields/schedulers/slurm-ai-clusters/lab-build-cheatsheet/">Slurm lab cheatsheet</a>.</p>
+<hr>
+<h2>References</h2>
+<ul><li><a href="https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html">ansible-core installation</a> and <a href="https://docs.ansible.com/ansible/latest/reference_appendices/release_and_maintenance.html">support matrix</a>: Python versions.</li><li><a href="https://docs.ansible.com/ansible/latest/reference_appendices/config.html">Ansible configuration settings</a>: config file order, world-writable directories.</li><li><a href="https://docs.ansible.com/ansible/latest/inventory_guide/intro_patterns.html">Patterns</a> and <a href="https://docs.ansible.com/ansible/latest/inventory_guide/intro_inventory.html">inventory</a>.</li><li><a href="https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_handlers.html">Handlers</a> and <a href="https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_variables.html#understanding-variable-precedence">variable precedence</a>.</li><li><a href="https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_strategies.html">Controlling playbook execution</a>: <code>serial</code>, <code>max_fail_percentage</code>, <code>order</code>.</li><li><a href="https://docs.ansible.com/ansible/latest/vault_guide/index.html">Ansible Vault</a>.</li></ul>
+<p><a href="../../../../#/fields/devops/ansible/cheatsheet">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

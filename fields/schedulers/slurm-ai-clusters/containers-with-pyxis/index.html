@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Containers on Slurm with Pyxis and Enroot</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-ai-clusters/containers-with-pyxis/">
+<meta name="description" content="Running Slurm job steps in containers with Pyxis and Enroot - the node that silently ran outside the container, read-only images, mounts, node-local paths, named containers, and the PyTorch env hook.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Containers on Slurm with Pyxis and Enroot">
+<meta property="og:description" content="Running Slurm job steps in containers with Pyxis and Enroot - the node that silently ran outside the container, read-only images, mounts, node-local paths, named containers, and the PyTorch env hook.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-ai-clusters/containers-with-pyxis/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-ai-clusters/containers-with-pyxis/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/schedulers/slurm-ai-clusters/containers-with-pyxis"></script>
+<main>
+<h1>Containers on Slurm with Pyxis and Enroot</h1>
+<p><em>Running Slurm job steps in containers with Pyxis and Enroot - the node that silently ran outside the container, read-only images, mounts, node-local paths, named containers, and the PyTorch env hook.</em></p>
+<blockquote><p><strong>Part 3 of [Slurm for AI Clusters](/fields/schedulers/slurm-ai-clusters/README.md)</strong> <a href="../../../../fields/schedulers/slurm-ai-clusters/launching-distributed-training/">Part 2</a> started the ranks. Now they run inside a container image, so every node has the same CUDA, the same PyTorch, the same everything. By the end you&#x27;ll run a multi-node step in a container with one <code>srun</code> flag, and you&#x27;ll know the settings that make it work for every user, not just the admin who tested it.</p></blockquote>
+<hr>
+<h2>Two ranks from a different universe</h2>
+<p>A 4-node job in a container crashes with a mismatch nobody can explain: ranks 0–5 report one PyTorch version, ranks 6 and 7 another. Same <code>srun</code>, same <code>--container-image</code>. The two odd ranks were on a node added to the cluster last week, and their &quot;container&quot; was the node&#x27;s own operating system. The new node was built without the Pyxis plugin, and <code>srun</code> didn&#x27;t complain.</p>
+<p>We reproduced it. <code>cn003</code> has no Pyxis; the image&#x27;s <code>/etc/os-release</code> says <code>acot lab image 1.0</code>:</p>
+<pre><code class="language-bash">srun -p cpu -w cn003 --container-image=/srv/labimg.sqsh grep PRETTY /etc/os-release</code></pre>
+<pre><code class="language-text">PRETTY_NAME=&quot;Ubuntu 24.04 LTS&quot;
+exit=0</code></pre>
+<p>Exit 0, and it ran on the host. <code>srun</code> on the login node knew the <code>--container-image</code> option because Pyxis was loaded <em>there</em>. The node that ran the task had never heard of it.</p>
+<blockquote><p>[!NOTE] Lab: Slurm <strong>23.11.4</strong>. Enroot built from the <strong>v4.2.1</strong> tag (it reports <code>4.2.0</code>), Pyxis <strong>v0.24.0</strong>, both from source. <code>head01</code>, <code>cn001</code> and <code>cn002</code> have them; <code>cn003</code> doesn&#x27;t, on purpose. The lab can&#x27;t reach a container registry, so the images are small squashfs files we built (busybox plus an <code>os-release</code>). Pulling from a registry is docs-only below.</p></blockquote>
+<hr>
+<h2>What Pyxis and Enroot are</h2>
+<table><thead><tr><th>Piece</th><th>What it is</th><th>Runs where</th></tr></thead><tbody><tr><td><strong>Enroot</strong></td><td>NVIDIA&#x27;s tool that turns a container image into an unprivileged sandbox: a root filesystem plus user namespaces, no daemon</td><td>Every compute node</td></tr><tr><td><strong>Pyxis</strong></td><td>A Slurm <strong>SPANK</strong> plugin that adds <code>--container-*</code> options to <code>srun</code> and calls Enroot for each job step</td><td>Every node that runs <code>srun</code>, and every compute node</td></tr></tbody></table>
+<p>SPANK plugins are listed in <code>plugstack.conf</code> and loaded by <code>srun</code>, <code>salloc</code>, <code>sbatch</code> and <code>slurmstepd</code>. That&#x27;s the trap from the story: the option is parsed where you type it, and acted on (or not) where the task runs.</p>
+<hr>
+<h2>Installing, and the dependencies nobody lists</h2>
+<p>Both build from their GitHub repositories. Enroot needs its git submodules, one of which (musl) is fetched from <code>git.musl-libc.org</code>; Pyxis needs the Slurm headers (<code>libslurm-dev</code> on Ubuntu, matching your Slurm version). The full commands are in the <a href="../../../../fields/schedulers/slurm-ai-clusters/lab-build-cheatsheet/">lab cheatsheet</a>.</p>
+<p>Enroot is mostly shell scripts, and it fails at run time, not install time, when a tool is missing. Each of these produced an error inside a Slurm job in our lab:</p>
+<table><thead><tr><th>Missing</th><th>When it showed up</th><th>Error in the job output</th></tr></thead><tbody><tr><td><code>curl</code></td><td>Importing from a registry</td><td><code>[ERROR] Command not found: curl</code></td></tr><tr><td><code>column</code> (<code>bsdextrautils</code> on Ubuntu)</td><td>Any <strong>named</strong> container</td><td><code>[ERROR] Command not found: column</code> / <code>couldn&#x27;t get list of existing container filesystems</code></td></tr><tr><td><code>unsquashfs</code> (<code>squashfs-tools</code>)</td><td>Creating a container from a <code>.sqsh</code> file</td><td>(installed before testing)</td></tr></tbody></table>
+<p><code>enroot check</code> lists what the kernel and host need. Run it on one node of each hardware type before rolling out.</p>
+<p>One more from our own build: we built with the default <code>sysconfdir</code>, then installed with <code>sysconfdir=/etc</code>. The <code>enroot</code> script kept looking in <code>/usr/local/etc/enroot</code>, so none of the hooks in <code>/etc/enroot/hooks.d</code> ran. If the hooks seem to do nothing, check:</p>
+<pre><code class="language-bash">grep ENROOT_SYSCONF_PATH &quot;$(command -v enroot)&quot;</code></pre>
+<p>Then on every node, <code>/etc/slurm/plugstack.conf</code>:</p>
+<pre><code class="language-text">required /usr/local/lib/slurm/spank_pyxis.so</code></pre>
+<p>and restart <code>slurmd</code>. <code>required</code> means a node that can&#x27;t load the plugin fails the step, instead of running it without.</p>
+<hr>
+<h2>The first container step</h2>
+<pre><code class="language-bash">srun -p cpu -N2 --container-image=/srv/labimg.sqsh sh -c &quot;hostname; grep PRETTY /etc/os-release&quot;</code></pre>
+<pre><code class="language-text">cn002
+cn001
+PRETTY_NAME=&quot;acot lab image 1.0&quot;
+PRETTY_NAME=&quot;acot lab image 1.0&quot;</code></pre>
+<p>A path to a squashfs file is the simplest image source: no registry, no import, the same file on every node. In production it lives on a shared filesystem; in the lab we copied it to each node.</p>
+<p>Slurm&#x27;s per-task variables reach the container unchanged:</p>
+<pre><code class="language-text">0 0 cn001 acot lab image
+1 1 cn001 acot lab image
+2 0 cn002 acot lab image
+3 1 cn002 acot lab image</code></pre>
+<p>(<code>SLURM_PROCID</code>, <code>SLURM_LOCALID</code>, hostname, image name, from <code>srun -n4 ... sh -c &#x27;echo $SLURM_PROCID $SLURM_LOCALID ...&#x27;</code>.) So both launch styles from <a href="../../../../fields/schedulers/slurm-ai-clusters/launching-distributed-training/">part 2</a> work unchanged inside a container.</p>
+<hr>
+<h2>It works as admin, fails as a user</h2>
+<p>The first multi-node test as user alice worked on <code>cn001</code> and failed on <code>cn002</code>:</p>
+<pre><code class="language-text">slurmstepd-cn002: error: pyxis: failed to create container filesystem for image: /srv/labimg.sqsh
+slurmstepd-cn002: error: pyxis: printing enroot log file:
+slurmstepd-cn002: error: pyxis:     mkdir: cannot create directory &#x27;/run/user/2001&#x27;: Permission denied</code></pre>
+<p>Enroot&#x27;s defaults put its runtime, cache and data under the XDG directories, like <code>${XDG_RUNTIME_DIR}/enroot</code>. <code>/run/user/2001</code> only exists while alice has a login session on that node. She&#x27;d logged into <code>cn001</code> earlier; she&#x27;d never logged into <code>cn002</code>. Batch jobs don&#x27;t create a login session.</p>
+<p>Set node-local paths for everyone, in <code>/etc/enroot/enroot.conf.d/10-paths.conf</code> on every node:</p>
+<pre><code class="language-text">ENROOT_RUNTIME_PATH /run/enroot/user-$(id -u)
+ENROOT_CACHE_PATH   /var/lib/enroot/cache/user-$(id -u)
+ENROOT_DATA_PATH    /var/lib/enroot/data/user-$(id -u)</code></pre>
+<pre><code class="language-bash">mkdir -p /run/enroot /var/lib/enroot/cache /var/lib/enroot/data
+chmod 1777 /run/enroot /var/lib/enroot/cache /var/lib/enroot/data
+echo &quot;d /run/enroot 1777 root root -&quot; &gt; /etc/tmpfiles.d/enroot.conf   # /run is a tmpfs: recreate at boot</code></pre>
+<p>After that, the same step worked on both nodes for alice. <code>ENROOT_DATA_PATH</code> holds unpacked container filesystems, so put it on a local disk with room for them.</p>
+<hr>
+<h2>Read-only by default, and mounts</h2>
+<table><thead><tr><th>Test</th><th>Result</th></tr></thead><tbody><tr><td><code>touch /x</code> in the container</td><td><code>touch: /x: Read-only file system</code></td></tr><tr><td>Same, with <code>--container-writable</code></td><td><code>wrote</code></td></tr><tr><td><code>--container-mounts=/srv:/data:ro</code>, then <code>ls /data</code></td><td><code>labimg.sqsh</code></td></tr><tr><td><code>touch /data/y</code> on that mount</td><td><code>Read-only file system</code></td></tr><tr><td><code>--container-remap-root</code>, then <code>id</code></td><td><code>uid=0 gid=0 groups=0</code> (Pyxis&#x27;s help: &quot;Does not grant elevated system permissions, despite appearances&quot;)</td></tr></tbody></table>
+<p>Read-only is the right default: a training job shouldn&#x27;t write into its image. Datasets and checkpoints come in through <code>--container-mounts</code>; give each mount <code>:ro</code> unless the job writes to it. In our lab the user&#x27;s home directory was mounted by Enroot&#x27;s home hook without asking; whether that happens on your cluster depends on <code>ENROOT_MOUNT_HOME</code> and the hooks installed, so check before users rely on it.</p>
+<hr>
+<h2>Named containers outlive the job</h2>
+<p>Unpacking a big image takes time. <code>--container-name</code> keeps the unpacked filesystem so the next step skips it:</p>
+<pre><code class="language-bash">#!/bin/bash
+#SBATCH -p cpu -w cn001 -t 5
+srun --container-image=/srv/labimg.sqsh --container-name=work --container-writable sh -c &quot;echo step1 &gt; /marker&quot;
+srun --container-name=work cat /marker
+srun --container-image=/srv/labimg.sqsh sh -c &quot;cat /marker 2&gt;&amp;1&quot;</code></pre>
+<pre><code class="language-text">step1
+cat: can&#x27;t open &#x27;/marker&#x27;: No such file or directory</code></pre>
+<p>The second step reused the named container and found the file; the third, unnamed, got a fresh one. Then, after the job ended:</p>
+<table><thead><tr><th>Plugstack setting</th><th><code>enroot list</code> on <code>cn001</code> after the job</th></tr></thead><tbody><tr><td>Default (<code>container_scope=global</code>, per Pyxis&#x27;s <code>config.c</code>)</td><td><code>pyxis_work</code></td></tr><tr><td><code>container_scope=job</code></td><td>(empty)</td></tr></tbody></table>
+<p>With the default, every named container stays on the node&#x27;s disk until someone removes it. That&#x27;s a feature for a user who runs the same image all week, and a disk-full drain waiting to happen on a shared cluster. To clean up at the end of each job:</p>
+<pre><code class="language-text">required /usr/local/lib/slurm/spank_pyxis.so container_scope=job</code></pre>
+<hr>
+<h2>The PyTorch hook</h2>
+<p>Enroot ships optional hooks in <code>/usr/local/share/enroot/hooks.d/</code>. One, <code>50-slurm-pytorch.sh</code>, sets PyTorch&#x27;s variables from Slurm&#x27;s. It only acts when the image&#x27;s environment defines <code>PYTORCH_VERSION</code>, which NVIDIA&#x27;s PyTorch images do. We enabled it on the nodes and built a test image with that variable:</p>
+<pre><code class="language-bash">cp /usr/local/share/enroot/hooks.d/50-slurm-pytorch.sh /etc/enroot/hooks.d/
+srun -p cpu -w cn[001-002] -n4 --container-image=/srv/ptimg.sqsh \
+  sh -c &#x27;echo $(hostname) RANK=$RANK LOCAL_RANK=$LOCAL_RANK WORLD_SIZE=$WORLD_SIZE MASTER_ADDR=$MASTER_ADDR MASTER_PORT=$MASTER_PORT OMP_NUM_THREADS=$OMP_NUM_THREADS&#x27;</code></pre>
+<pre><code class="language-text">cn001 RANK=0 LOCAL_RANK=0 WORLD_SIZE=4 MASTER_ADDR=cn001 MASTER_PORT=61128 OMP_NUM_THREADS=1
+cn001 RANK=1 LOCAL_RANK=1 WORLD_SIZE=4 MASTER_ADDR=cn001 MASTER_PORT=61128 OMP_NUM_THREADS=1
+cn002 RANK=2 LOCAL_RANK=0 WORLD_SIZE=4 MASTER_ADDR=cn001 MASTER_PORT=61128 OMP_NUM_THREADS=1
+cn002 RANK=3 LOCAL_RANK=1 WORLD_SIZE=4 MASTER_ADDR=cn001 MASTER_PORT=61128 OMP_NUM_THREADS=1</code></pre>
+<p>Everything Way 1 of <a href="../../../../fields/schedulers/slurm-ai-clusters/launching-distributed-training/">part 2</a> needed a wrapper for. The port is <code>SLURM_JOB_ID % 4536 + 61000</code> (job 128 here), so two jobs sharing a node don&#x27;t collide. The same <code>srun</code> with the plain image left <code>RANK</code> empty. The hook doesn&#x27;t overwrite a variable the image already sets.</p>
+<hr>
+<h2>Images from a registry</h2>
+<p>Docs-only: the lab couldn&#x27;t reach a registry. Pyxis also accepts registry images, as Enroot URIs:</p>
+<pre><code class="language-bash">srun --container-image=nvcr.io#nvidia/pytorch:&lt;tag&gt; python train.py</code></pre>
+<p>Pyxis imports a registry image on each node where the step runs (its README shows the <code>pyxis: importing docker image</code> line per step), so a 64-node job pulls from the registry 64 times at once. Our recommendation, not tested here: import once to a squashfs file on shared storage with <code>enroot import -o</code>, then point jobs at the file:</p>
+<pre><code class="language-bash">enroot import -o /shared/images/pytorch.sqsh docker://nvcr.io#nvidia/pytorch:&lt;tag&gt;
+srun --container-image=/shared/images/pytorch.sqsh python train.py</code></pre>
+<p>Registry credentials go in <code>$ENROOT_CONFIG_PATH/.credentials</code>, in netrc format, per Enroot&#x27;s <code>import</code> docs. Without <code>curl</code> on the node, the import fails as shown in the dependency table.</p>
+<hr>
+<h2>Back to the two odd ranks</h2>
+<p>The new node gets <code>/etc/slurm/plugstack.conf</code> from the same Ansible role as the others, with <code>required</code>, so a node without Pyxis now fails container steps loudly instead of running them on the host. Enroot&#x27;s paths point at node-local directories, so it works for users who never logged in. <code>container_scope=job</code> keeps named containers from filling the disks. And for a quick check that a node is ready, the <a href="../../../../fields/schedulers/slurm-ai-clusters/gpu-health-checks/">GPU health check in part 4</a> can test for the plugin file too:</p>
+<pre><code class="language-bash">[ -e /usr/local/lib/slurm/spank_pyxis.so ] || scontrol update nodename=&quot;$(hostname -s)&quot; state=drain reason=&quot;pyxis missing&quot;</code></pre>
+<p>The odd ranks weren&#x27;t a PyTorch bug. They ran outside the container, because nothing on that node knew there was one.</p>
+<p><strong>Takeaway:</strong> Pyxis must be loaded on every compute node, not just where you type <code>srun</code>, so mark it <code>required</code>; set node-local Enroot paths, mount data read-only into read-only images, and scope named containers to the job.</p>
+<p><strong>Next:</strong> <a href="../../../../fields/schedulers/slurm-ai-clusters/gpu-health-checks/">Part 4, GPU Health Checks</a>, keeps jobs off nodes whose GPUs aren&#x27;t all there.</p>
+<hr>
+<h2>References</h2>
+<ul><li><a href="https://github.com/NVIDIA/pyxis">Pyxis README</a> and <a href="https://github.com/NVIDIA/pyxis/wiki/Setup">wiki: Setup</a>: <code>--container-*</code> options, plugstack arguments such as <code>container_scope</code>, installation.</li><li><a href="https://github.com/NVIDIA/enroot/tree/master/doc">Enroot documentation</a>: <code>enroot.conf</code> paths, <code>import</code>/<code>create</code>/<code>start</code>, hooks, <code>.credentials</code>.</li><li><a href="https://github.com/NVIDIA/enroot/blob/master/conf/hooks/extra/50-slurm-pytorch.sh">Enroot <code>50-slurm-pytorch.sh</code> hook</a>: the variables it sets and when.</li><li><a href="https://slurm.schedmd.com/spank.html">Slurm: SPANK</a>: <code>plugstack.conf</code>, <code>required</code> vs <code>optional</code>, where plugins are loaded.</li><li><a href="https://slurm.schedmd.com/containers.html">Slurm: Containers Guide</a>: Slurm&#x27;s own OCI container support, the alternative to Pyxis.</li></ul>
+<p><a href="../../../../#/fields/schedulers/slurm-ai-clusters/containers-with-pyxis">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

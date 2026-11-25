@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Slurm for AI Clusters</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-ai-clusters/">
+<meta name="description" content="A six-part series on running AI training on Slurm - topology-aware placement, launching distributed PyTorch, containers with Pyxis and Enroot, GPU health checks, metrics, and a lab cheatsheet.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Slurm for AI Clusters">
+<meta property="og:description" content="A six-part series on running AI training on Slurm - topology-aware placement, launching distributed PyTorch, containers with Pyxis and Enroot, GPU health checks, metrics, and a lab cheatsheet.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-ai-clusters/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-ai-clusters/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../.docs/prerender-redirect.js" data-target="../../../#/fields/schedulers/slurm-ai-clusters/"></script>
+<main>
+<h1>Slurm for AI Clusters</h1>
+<p><em>A six-part series on running AI training on Slurm - topology-aware placement, launching distributed PyTorch, containers with Pyxis and Enroot, GPU health checks, metrics, and a lab cheatsheet.</em></p>
+<p>A GPU cluster is a Slurm cluster with expensive opinions. A training job wants its nodes close together on the network, every rank started with the right environment, the same container on every node, GPUs that are actually there, and someone watching the numbers. Slurm can do all of that, but very little of it is on by default.</p>
+<p>Each page opens with a failure we reproduced in a lab, then fixes it.</p>
+<hr>
+<h2>Contents</h2>
+<table><thead><tr><th>File</th><th>Description</th></tr></thead><tbody><tr><td><a href="../../../fields/schedulers/slurm-ai-clusters/topology-aware-placement/">1. Keep the Job on One Switch</a></td><td><code>topology/tree</code> and <code>topology/block</code>, <code>--switches</code>, the 25.05 <code>topology.yaml</code>, and what each does to a 2-node job</td></tr><tr><td><a href="../../../fields/schedulers/slurm-ai-clusters/launching-distributed-training/">2. Launching Distributed Training</a></td><td>The batch script runs on one node; <code>srun</code> with rank variables vs <code>torchrun</code>, and the double-launch trap</td></tr><tr><td><a href="../../../fields/schedulers/slurm-ai-clusters/containers-with-pyxis/">3. Containers with Pyxis and Enroot</a></td><td><code>--container-image</code> on <code>srun</code>, read-only images, mounts, named containers, and the node that silently ran outside the container</td></tr><tr><td><a href="../../../fields/schedulers/slurm-ai-clusters/gpu-health-checks/">4. GPU Health Checks</a></td><td>Draining a node when a GPU disappears, without overwriting the admin&#x27;s reason, and the 26.11 per-GPU drain</td></tr><tr><td><a href="../../../fields/schedulers/slurm-ai-clusters/metrics-openmetrics/">5. Metrics into VictoriaMetrics</a></td><td>The 25.11+ OpenMetrics endpoints, the idle CPUs nobody could use, units that change in 26.11, and a tested alert</td></tr><tr><td><a href="../../../fields/schedulers/slurm-ai-clusters/lab-build-cheatsheet/">6. Lab Build Cheatsheet</a></td><td>Every step used to build the lab for both Slurm series, in order, as copy-paste commands</td></tr></tbody></table>
+<hr>
+<h2>How the pages were tested</h2>
+<ul><li><strong>Main lab:</strong> Slurm <strong>23.11.4</strong> from the Ubuntu 24.04 packages, with slurmdbd and MariaDB 10.11. A controller (<code>head01</code>), four CPU nodes (<code>cn001</code>–<code>cn004</code>, 2 CPUs each) and one GPU node (<code>gpu001</code>), all systemd containers on one Docker network.</li><li><strong>Newer Slurm:</strong> <strong>26.05.6</strong> built from source on three more containers (<code>s26a</code>–<code>s26c</code>), for <code>topology.yaml</code> and the OpenMetrics endpoints, which 23.11 doesn&#x27;t have. Slurm <strong>26.11</strong> was at rc1 when this was written; its features are documented from the 26.11 source tree&#x27;s man pages and release notes, not tested.</li><li><strong>No real GPUs.</strong> <code>gpu001</code> has four fake device files, enough for Slurm to schedule, count and health-check them, not to run CUDA. Distributed training was tested with PyTorch <strong>2.15.0</strong> on CPUs with the Gloo backend; the launch mechanics are the same for NCCL on GPUs, the performance is not.</li><li><strong>Containers:</strong> Enroot built from the <strong>v4.2.1</strong> tag and Pyxis <strong>v0.24.0</strong>, from source. The lab could not reach a container registry, so images were squashfs files built locally.</li><li><strong>Metrics:</strong> VictoriaMetrics <strong>v1.156.0</strong>, from the <a href="../../../fields/devops/victoriametrics/">VictoriaMetrics series</a>.</li></ul>
+<h2>Related pages</h2>
+<ul><li><a href="../../../fields/schedulers/slurm-pending-jobs/">Why Is My Job Still Pending?</a>: reason codes, priority and limits, on the same lab.</li><li><a href="../../../fields/schedulers/slurm-inside-a-job/slurm-gpu-affinity-socket-lie/">GPU affinity and the socket lie</a>: which CPUs a GPU job gets.</li><li><a href="../../../fields/schedulers/slurm-mixed-gpus/">Mixed GPUs</a>: H100s and A100s in one job.</li><li><a href="../../../fields/schedulers/slurm-preemption/slurm-preemption-requeue-signals/">Preemption, requeue and signals</a>: keeping a long training run alive.</li></ul>
+<p><a href="../../../#/fields/schedulers/slurm-ai-clusters/">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

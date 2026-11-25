@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>System Administration - Network</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/network/">
+<meta name="description" content="Short notes on IP addresses and masks, how to work out an address range, and what a switch, a router and a VLAN do.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="System Administration - Network">
+<meta property="og:description" content="Short notes on IP addresses and masks, how to work out an address range, and what a switch, a router and a VLAN do.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/network/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/network/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../.docs/prerender-redirect.js" data-target="../../../#/fields/system-administration/network"></script>
+<main>
+<h1>System Administration - Network</h1>
+<p><em>Short notes on IP addresses and masks, how to work out an address range, and what a switch, a router and a VLAN do.</em></p>
+<h2>What is what?</h2>
+<ul><li><strong>IP</strong> ? <ul><li>Each NIC card is defined by it&#x27;s <code>IP</code>. There are two defined IPs; Private and Public.</li><li>IP is consist of 4 <code>octet</code> [<code>octet.octet.octet.octet</code>]</li><li>Private IP: {<code>10.0.0.0/8</code>, <code>192.168.0.0/16</code>, <code>172.16.0.0 : 172.32.0.0</code>}.</li></ul></li><li><strong>Mask</strong> ? /8, /16, or /32 <ul><li>It&#x27;s the ip&#x27;s mask.</li><li>The mask define the range of ips.</li></ul></li><li>How to calculate the IPs range?<ul><li><strong>Mask</strong> defines the fixed <code>octet</code> in the IP. </li><li>e.g., <code>/8</code> means 8 bits = (255.0.0.0) Decimal = (11111111.00000000.00000000.00000000) Binary.</li><li>e.g., <code>/16</code> means 16 bits = (255.255.0.0) Decimal = (11111111.11111111.00000000.00000000)</li><li>You can consider that the mask is bitwise add (logically operation) with the IP.<ul><li><strong>Subnet</strong> is a range of IP addresses: (Network Address + Mask) e.g., (<code>192.168.1.0/24</code>)<ul><li>Accordingly, for example:<ul><li>Each IP <code>10.x.x.x (/8)</code> means that the Network address for this IP range all have a 1 fixed octet; all start with 10.x.x.x, starting from <code>10.0.0.0</code> till <code>10.255.255.255</code>.</li><li>Each IP <code>192.168.x.x (/16)</code> means that the Network address for this IP range all have a 2 fixed octet; all start with 192.168.x.x, starting from <code>192.168.0.0</code> till <code>192.168.255.255</code>.</li></ul></li></ul></li></ul></li></ul></li></ul>
+<pre><code>  IP: 192.168.1.130
+  Mask: 255.255.255.0   (/24)
+  
+  IP:    11000000.10101000.00000001.10000010
+  Mask:  11111111.11111111.11111111.00000000
+  -----------------------------------------
+  AND:   11000000.10101000.00000001.00000000
+
+  Result: 192.168.1.0   ← network address</code></pre>
+<blockquote><p>Note:</p>
+<ol><li>Octet means 8 bits. Each 8 bits can represent values from 0 to 255. We can&#x27;t name it digit; A digit is a single symbol from (0 to 9)</li><li>The reason AND works (logical necessity, not convention); as mask bits {<code>1</code> -&gt; keep the IP bit, <code>0</code>-&gt; Zero it out}. This guarantees that All hosts in the same subnet produce the same network address, and Hosts in different subnets do not.</li><li>Mask <code>/32</code> means 4 Octet, so there is only one 1 IP assigned in the range.</li></ol></blockquote>
+<h2>Switch</h2>
+<pre><code class="language-mermaid">graph TD
+    SW[Switch]
+
+    SW --&gt; D1[&quot;NIC eth0&quot;]
+    SW --&gt; D2[&quot;NIC eth1&quot;]
+    SW --&gt; D3[&quot;NIC eth2&quot;]</code></pre>
+<ul><li>Each device connected to the a <code>switch</code> through <code>port</code>, can reach neighboring devices in the same <code>switch</code>; They share the same subnet. </li></ul>
+<blockquote><p>Recall:</p>
+<ol><li>layers: Physical Layer -&gt; Data Link Layer -&gt; Network Layer -&gt; Transport Layer ....</li><li>Data Link Layer deals with MAC addresses only, it is responsible for setting [Source: Device MAC address, Destination: Device MAC address].</li><li>How in Data Link Layer we know the destination MAC address? using ARP &quot;Address Resolution Protocol&quot;; It check the target IP, the source checks its ARB cache for that target IP, if found, then it returns the associated MAC address, it not, then ARB request broadcast; it asks the switch to scan all related ports for that IP in order to learn target [IP:MAC address].</li></ol></blockquote>
+<h2>Router</h2>
+<pre><code class="language-mermaid">graph TD
+    R[Router]
+
+    R --&gt; SW1[Switch 1]
+    R --&gt; SW2[Switch 2]
+
+    SW1 --&gt; D1[&quot;NIC eth0&quot;]
+    SW1 --&gt; D2[&quot;NIC eth1&quot;]
+
+    SW2 --&gt; D3[&quot;NIC eth0&quot;]
+    SW2 --&gt; D4[&quot;NIC eth1&quot;]</code></pre>
+<ul><li>In order to access a device that is not on the same <code>switch</code>, it has to reach out to the <code>router</code>, that connects to other <code>switch</code>.</li></ul>
+<h2>VLAN</h2>
+<pre><code class="language-mermaid">graph TD
+    SW[Switch]
+
+    subgraph VLAN_A
+        A1[NIC eth0]
+        A2[NIC eth1]
+    end
+
+    subgraph VLAN_B
+        B1[NIC eth0]
+    end
+
+    SW --&gt; A1
+    SW --&gt; A2
+    SW --&gt; B1</code></pre>
+<ul><li>The idea here is to separate NIC/devices from each other, so they can&#x27;t reach each other directly.</li></ul>
+<p><a href="../../../#/fields/system-administration/network">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

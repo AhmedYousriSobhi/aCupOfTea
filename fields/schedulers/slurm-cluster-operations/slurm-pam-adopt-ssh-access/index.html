@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>pamslurmadopt: Closing the Slurm SSH Backdoor</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-cluster-operations/slurm-pam-adopt-ssh-access/">
+<meta name="description" content="Why users can SSH into a node and escape their job&#x27;s limits, and how pamslurmadopt closes the backdoor by admitting only users with a job there and adopting the session into its cgroup.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="pamslurmadopt: Closing the Slurm SSH Backdoor">
+<meta property="og:description" content="Why users can SSH into a node and escape their job&#x27;s limits, and how pamslurmadopt closes the backdoor by admitting only users with a job there and adopting the session into its cgroup.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-cluster-operations/slurm-pam-adopt-ssh-access/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-cluster-operations/slurm-pam-adopt-ssh-access/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/schedulers/slurm-cluster-operations/slurm-pam-adopt-ssh-access"></script>
+<main>
+<h1>pamslurmadopt: Closing the Slurm SSH Backdoor</h1>
+<p><em>Why users can SSH into a node and escape their job&#x27;s limits, and how pamslurmadopt closes the backdoor by admitting only users with a job there and adopting the session into its cgroup.</em></p>
+<blockquote><p><strong>Part of the `schedulers/` series.</strong> By the end you&#x27;ll have SSH on compute nodes limited to users with a job there, their sessions inside the job&#x27;s limits, and your admins still able to log in.</p>
+<p>Tested with Slurm <strong>23.11.4</strong> and <code>libpam-slurm-adopt</code> on Ubuntu 24.04 nodes (cgroup v1), against the pam_slurm_adopt documentation for Slurm 26.11.</p></blockquote>
+<hr>
+<h2>The problem nobody notices until it bites</h2>
+<p>Here&#x27;s a scenario that plays out on unprotected clusters constantly:</p>
+<p>A user submits a job through <code>sbatch</code>. Slurm dutifully allocates a slice of a compute node, wraps it in a cgroup, and enforces the CPU/memory limits that job asked for. So far, so good — the scheduler is doing its job.</p>
+<p>Then the same user, out of habit or curiosity, does this:</p>
+<pre><code class="language-bash">ssh compute-node-042</code></pre>
+<p>And... it just works. No job context, no cgroup, no resource accounting. That SSH session lands on the node completely outside Slurm&#x27;s supervision. From there, a user (or a stray leftover process) can:</p>
+<ul><li>🔓 <strong>Consume resources that aren&#x27;t counted under any job&#x27;s cgroup</strong></li><li>🔓 <strong>Escape the job&#x27;s CPU/memory limits entirely</strong></li><li>🔓 <strong>Keep running long after the job that &quot;owned&quot; the node has ended</strong></li></ul>
+<p>None of this requires malicious intent — it&#x27;s usually just someone debugging or checking on a running job the easy way. But the effect is the same: your scheduler&#x27;s accounting is now a polite fiction.</p>
+<h2>Enter <code>pam_slurm_adopt</code></h2>
+<p>This is a PAM (Pluggable Authentication Module) module that ships <em>with</em> Slurm, and its job is refreshingly narrow:</p>
+<blockquote><p><strong>Every login or process on a compute node must belong to a Slurm job — no exceptions.</strong></p></blockquote>
+<blockquote><p>[!NOTE] Official reference: <a href="https://slurm.schedmd.com/pam_slurm_adopt.html">Slurm documentation — pam_slurm_adopt</a></p></blockquote>
+<h2>How it actually decides who gets in</h2>
+<p>When a user tries to SSH into a compute node, here&#x27;s the decision Slurm makes on their behalf:</p>
+<pre><code>User attempts SSH into compute node
+              │
+              ▼
+   Does this user have an active
+   Slurm job running on THIS node?
+              │
+      ┌───────┴───────┐
+     YES               NO
+      │                 │
+      ▼                 ▼
+ Session is &quot;adopted&quot;   Login denied
+ into that job&#x27;s cgroup (unless configured
+      │                 otherwise)
+      ▼
+ Same CPU/memory limits
+ as the job apply to the
+ SSH session too</code></pre>
+<p>The practical upshot:</p>
+<ul><li>✅ Only users with a <strong>currently running job</strong> on that specific node can log in.</li><li>✅ Whatever they do once they&#x27;re in — spawn processes, run a quick <code>htop</code>, debug something — stays <strong>inside the job&#x27;s resource allocation.</strong> No more phantom, unaccounted-for work.</li></ul>
+<hr>
+<h2>Installing it</h2>
+<p>Nothing exotic here — follow Slurm&#x27;s own <a href="https://slurm.schedmd.com/pam_slurm_adopt.html#INSTALLATION">installation guide</a>. It typically ships alongside your Slurm build/package, so if you&#x27;re already building Slurm from source with the standard contribs enabled, you likely already have the module available.</p>
+<hr>
+<h2>Configuring it — three places, three changes</h2>
+<p>Per the <a href="https://slurm.schedmd.com/pam_slurm_adopt.html#SLURM_CONFIG">official documentation</a>, the module itself needs three configuration surfaces. Skip any one of them and it either won&#x27;t function or won&#x27;t have anything to &quot;adopt&quot; into. Steps 4 and 5 are the ones people skip: without them, it <em>looks</em> like it works.</p>
+<h3>1. Slurm side</h3>
+<ul><li>[ ] <strong>Enable the `task/cgroup` plugin</strong> in <code>slurm.conf</code>. This is a hard prerequisite — <code>pam_slurm_adopt</code> has nothing to adopt sessions <em>into</em> without cgroup containment already active. Walk through the <a href="https://slurm.schedmd.com/cgroups.html">Slurm cgroups guide</a> if you haven&#x27;t set this up yet.</li></ul>
+<ul><li>[ ] <strong>Set `PrologFlags=contain`</strong> in <code>slurm.conf</code>. This is the flag that actually creates the &quot;extern&quot; step — the container that SSH-launched processes get folded into.</li></ul>
+<blockquote><p>[!WARNING] **Jobs launched <em>without</em> <code>PrologFlags=contain</code> don&#x27;t get an extern step at all** — which means <code>pam_slurm_adopt</code> has no valid target to adopt an SSH session into for those jobs, regardless of how correctly everything else is configured.</p></blockquote>
+<blockquote><p>[!TIP] <code>UsePAM</code> in <code>slurm.conf</code> is a <strong>completely different setting</strong> and has nothing to do with <code>pam_slurm_adopt</code>. Don&#x27;t confuse the two while troubleshooting — chasing <code>UsePAM</code> when the real issue is <code>PrologFlags</code> is a common dead end.</p></blockquote>
+<h3>2. SSH side</h3>
+<ul><li>[ ] In <code>/etc/ssh/sshd_config</code>, confirm:</li></ul>
+<pre><code>UsePAM yes</code></pre>
+<p>This is typically the default already — but confirm it explicitly rather than assuming, especially on hardened or custom-imaged nodes.</p>
+<h3>3. PAM side</h3>
+<ul><li>[ ] In your <code>/etc/pam.d</code> config (typically the <code>sshd</code> service file), add:</li></ul>
+<pre><code>account    required      pam_slurm_adopt.so</code></pre>
+<blockquote><p>[!NOTE] You can use either <code>required</code> or <code>sufficient</code> as the PAM control flag, depending on how strict you want the enforcement stacked against other <code>account</code> rules already in that file.</p></blockquote>
+<p>Also check that nothing earlier in the account stack short-circuits it. The docs call out <code>account sufficient pam_localuser.so</code> in some distributions&#x27; included files: it succeeds for every local user before <code>pam_slurm_adopt</code> is ever asked.</p>
+<h3>4. Turn off pam_systemd</h3>
+<p>This is the trap that makes everything above look fine while doing nothing. We tested it on a node with only steps 1–3 done. Alice had a job on the node with a 500 MB memory limit, so her SSH login was allowed. Then we looked at where her shell landed:</p>
+<pre><code class="language-text">4:memory:/docker/.../user.slice/user-2001.slice/session-15.scope</code></pre>
+<p>Systemd&#x27;s user session, not the job. <code>pam_systemd</code>, which runs later in the session phase on most distributions, moved the process into its own <code>user.slice</code> after <code>pam_slurm_adopt</code> had adopted it. Admitted, but unconfined.</p>
+<p>The docs say it plainly: <code>pam_systemd</code> conflicts with <code>pam_slurm_adopt</code> and must be disabled in every file included by sshd (<code>common-session</code> on Debian and Ubuntu, <code>password-auth</code> and <code>system-auth</code> on RHEL). On Ubuntu:</p>
+<pre><code class="language-bash">sed -i &#x27;s/^session\toptional\tpam_systemd.so/#&amp;/&#x27; /etc/pam.d/common-session</code></pre>
+<p>Same login, same job, afterwards:</p>
+<pre><code class="language-text">4:memory:/slurm_cn001/uid_2001/job_2/step_extern/task_0</code></pre>
+<p>Inside the job&#x27;s <code>extern</code> step, under its 500 MB limit (<code>memory.limit_in_bytes</code> read <code>524288000</code>).</p>
+<p>The price: no systemd user session on compute nodes. <code>/run/user/$UID</code> isn&#x27;t created and <code>XDG_RUNTIME_DIR</code> is unset (we saw <code>unset</code> in that same login). Software that needs a user D-Bus won&#x27;t work there. The docs offer a partial workaround, a <code>TaskProlog</code> that points <code>XDG_RUNTIME_DIR</code> at a per-user directory in <code>/dev/shm</code>.</p>
+<h3>5. Keep the admins in, and fail closed</h3>
+<p><code>pam_slurm_adopt</code> lets <strong>root</strong> in always. Everyone else needs a job, and that includes your admins. With only the line from step 3, our Ansible account was locked out of the node the same way as a user with no job:</p>
+<pre><code class="language-text">pam_slurm_adopt[423]: send_user_msg: Access denied by pam_slurm_adopt: you have no active jobs on this node</code></pre>
+<p>That&#x27;s every playbook in the <a href="../../../../fields/devops/ansible/">Ansible series</a> failing with <code>UNREACHABLE!</code> on that node. The docs&#x27; fix is to stack <code>pam_access</code> in front of it, for an admin group:</p>
+<pre><code class="language-bash">groupadd -f hpcadmins
+usermod -aG hpcadmins admin
+printf &#x27;+:(hpcadmins):ALL\n-:ALL:ALL\n&#x27; &gt;&gt; /etc/security/access.conf</code></pre>
+<p>and in <code>/etc/pam.d/sshd</code>, replacing the line from step 3:</p>
+<pre><code class="language-text">account    sufficient    pam_access.so
+account    required      pam_slurm_adopt.so action_adopt_failure=deny action_generic_failure=deny</code></pre>
+<p><code>pam_access</code> as <code>sufficient</code> lets the admin group straight through; for everyone else it fails, and the decision falls to <code>pam_slurm_adopt</code>.</p>
+<p>The two <code>action_..._failure=deny</code> options matter just as much. By default, if adoption itself fails, or the module hits an error, the login is <strong>allowed</strong>: the default is chosen so you don&#x27;t lock yourself out while testing. In production that means a plugin problem quietly lets users in unconfined. The docs recommend setting both to <code>deny</code> once it works. (We didn&#x27;t simulate a module failure in the lab; this is from the documentation.)</p>
+<blockquote><p>[!CAUTION] Test from a second session that&#x27;s already open as root before you log out. A PAM mistake on sshd locks out everyone but root, and only if root SSH login is allowed.</p></blockquote>
+<hr>
+<h2>Proving it on a node</h2>
+<p>With all five steps on one node, we ran the whole matrix:</p>
+<table><thead><tr><th>Who</th><th>Situation</th><th>Result</th></tr></thead><tbody><tr><td>admin (in <code>hpcadmins</code>)</td><td>No job</td><td>Logged in</td></tr><tr><td>alice</td><td>Job running on the node</td><td>Logged in, inside <code>job_2/step_extern</code></td></tr><tr><td>alice</td><td>Same job, just cancelled</td><td>Denied</td></tr><tr><td>bob</td><td>Never had a job</td><td>Denied</td></tr><tr><td>Ansible (<code>admin</code>)</td><td><code>ansible cn001 -m ping</code></td><td><code>SUCCESS</code></td></tr></tbody></table>
+<p>Roll it out like any risky change: one node first, this matrix, then the rest, with a root session open the whole time.</p>
+<hr>
+<h2>📜 The Scroll (keep this)</h2>
+<pre><code class="language-text">Without pam_slurm_adopt:
+  Job resource limits  ═══╗
+                           ╠══► enforced only for srun/sbatch-launched processes
+  SSH sessions ───────────╝     (everything else runs free)
+
+With pam_slurm_adopt:
+  Job resource limits  ═══╗
+                           ╠══► enforced for EVERYTHING on the node
+  SSH sessions ───────────╝     tied to that user&#x27;s active job</code></pre>
+<p>One module, <code>PrologFlags=contain</code>, <code>pam_systemd</code> out of the way, and a door for admins: the gap between &quot;what Slurm thinks is running&quot; and &quot;what&#x27;s actually running&quot; closes. Skip the <code>pam_systemd</code> step and you get the worst of both: users believe they&#x27;re contained, and they aren&#x27;t.</p>
+<p><strong>Takeaway:</strong> <code>pam_slurm_adopt</code> only confines SSH sessions if <code>pam_systemd</code> is off and adoption failures are set to deny; check where a real login lands with <code>/proc/self/cgroup</code> before you trust it.</p>
+<hr>
+<h2>References</h2>
+<ul><li><a href="https://slurm.schedmd.com/pam_slurm_adopt.html">pam_slurm_adopt</a>: installation, <code>PrologFlags=contain</code>, the <code>pam_systemd</code> conflict and XDG workaround, <code>pam_access</code> stacking for admins, and the <code>action_*</code> options.</li><li><a href="https://slurm.schedmd.com/slurm.conf.html#OPT_PrologFlags">slurm.conf: PrologFlags</a>: <code>Contain</code> and the extern step.</li><li><a href="https://slurm.schedmd.com/cgroups.html">Slurm cgroups guide</a>: <code>task/cgroup</code> and <code>proctrack/cgroup</code>.</li><li><a href="https://man7.org/linux/man-pages/man8/pam_access.8.html">pam_access(8)</a> and <a href="https://man7.org/linux/man-pages/man5/access.conf.5.html">access.conf(5)</a>: the admin group rule.</li><li><a href="https://www.freedesktop.org/software/systemd/man/latest/pam_systemd.html">pam_systemd(8)</a>: what it does to a login session.</li></ul>
+<p><a href="../../../../#/fields/schedulers/slurm-cluster-operations/slurm-pam-adopt-ssh-access">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

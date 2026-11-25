@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Auto-Remediation: From Detected to Fixed, Safely</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/node-health-check/checks-and-remediation/auto-remediation/">
+<meta name="description" content="Turn NHC drains into automatic fixes with an escalation ladder, built-in fix actions, a node-doctor loop on the controller, and guard rails against reboot storms.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Auto-Remediation: From Detected to Fixed, Safely">
+<meta property="og:description" content="Turn NHC drains into automatic fixes with an escalation ladder, built-in fix actions, a node-doctor loop on the controller, and guard rails against reboot storms.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/node-health-check/checks-and-remediation/auto-remediation/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/node-health-check/checks-and-remediation/auto-remediation/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../../.docs/prerender-redirect.js" data-target="../../../../../#/fields/system-administration/node-health-check/checks-and-remediation/auto-remediation"></script>
+<main>
+<h1>Auto-Remediation: From Detected to Fixed, Safely</h1>
+<p><em>Turn NHC drains into automatic fixes with an escalation ladder, built-in fix actions, a node-doctor loop on the controller, and guard rails against reboot storms.</em></p>
+<blockquote><p><strong>Part 7 of the [Node Health Check series](/fields/system-administration/node-health-check/README.md).</strong> Draining a sick node is defense. This page is offense: fixing the boring 80% of failures without a human, while making sure automation never turns one bad node into a hundred.</p></blockquote>
+<hr>
+<h2>The loop</h2>
+<p>Every good remediation system, from a 50-node lab cluster to a hyperscaler&#x27;s GPU fleet, runs the same loop:</p>
+<pre><code class="language-mermaid">stateDiagram-v2
+    [*] --&gt; Healthy
+    Healthy --&gt; Drained: NHC check fails&lt;br/&gt;reason &quot;NHC: ...&quot;
+    Drained --&gt; Fixing: fix action (in place or by node doctor)
+    Fixing --&gt; Verifying: next NHC run&lt;br/&gt;(or deep context)
+    Verifying --&gt; Healthy: all checks pass&lt;br/&gt;NHC resumes node
+    Verifying --&gt; Fixing: still failing,&lt;br/&gt;retry budget left
+    Verifying --&gt; Escalated: retry budget spent
+    Escalated --&gt; Healthy: human / vendor fixes,&lt;br/&gt;human resumes</code></pre>
+<p>The key insight: <strong>NHC already does half of this.</strong> It detects, it drains with a reason, and it re-verifies and resumes on its next run. All you need to add is the &quot;fix&quot; step, plus rules about when to stop trying.</p>
+<hr>
+<h2>The escalation ladder</h2>
+<p>Not every failure deserves the same response. Climb one rung at a time:</p>
+<table><thead><tr><th>Rung</th><th>Action</th><th>Example failures</th><th>Who acts</th></tr></thead><tbody><tr><td><strong>0. Fix in place</strong></td><td>Restart a daemon, remount a filesystem</td><td><code>munged</code> died, NFS mount dropped</td><td>NHC itself, during the check</td></tr><tr><td><strong>1. Clean reboot</strong></td><td>Drain, wait for jobs to finish, reboot</td><td>GPU Xid 79, leaked memory, stuck D-state processes</td><td>Node doctor</td></tr><tr><td><strong>2. Deep verify</strong></td><td>After reboot, run slow diagnostics before resuming</td><td>ECC errors, flaky IB link</td><td>Node doctor + deep context</td></tr><tr><td><strong>3. Human / RMA</strong></td><td>Ticket, keep drained with a non-NHC reason</td><td>Same failure after reboot, DIMM missing, hardware inventory changed</td><td>People</td></tr></tbody></table>
+<p>The rule of thumb: <strong>automate what&#x27;s cheap to get wrong.</strong> Restarting <code>munged</code> on a healthy node costs nothing. Rebooting a node with a running 3-day job costs a lot.</p>
+<hr>
+<h2>Rung 0: fix in place with NHC&#x27;s own flags</h2>
+<p>Several built-in checks take a fix action. The pattern is always the same: <strong>the check still fails this run</strong> (so the node drains), the fix runs in the background, and the <strong>next run passes and resumes</strong> the node.</p>
+<pre><code class="language-bash"># Start sshd / munge if they&#x27;re not running
+   * || check_ps_service -u root -S sshd
+   * || check_ps_service -u munge -d munged -S munge
+
+# Same idea, with your own start command instead of /sbin/service
+   * || check_ps_service -u chrony -d chronyd -e &#x27;systemctl start chronyd&#x27; chronyd
+
+# Remount a missing NFS home (best effort, in the background)
+   * || check_fs_mount -r -t nfs -s &#x27;nas01:/export/home&#x27; -o &#x27;*hard*&#x27; -f /home
+
+# Run anything when a mount is missing (here: restart the Lustre client service)
+   * || check_fs_mount_rw -t lustre -s &#x27;*@o2ib*:/scratch&#x27; -e &#x27;/usr/local/sbin/lustre-remount&#x27; -f /scratch</code></pre>
+<p>The useful flags:</p>
+<table><thead><tr><th>Check</th><th>Flag</th><th>Effect</th></tr></thead><tbody><tr><td><code>check_ps_service</code></td><td><code>-S</code> / <code>-r</code> / <code>-c</code></td><td>start / restart / stop-then-start the service if not running</td></tr><tr><td></td><td><code>-e cmd</code> / <code>-E cmd</code></td><td>run <code>cmd</code> if the process is missing / present</td></tr><tr><td></td><td><code>-s</code> / <code>-k</code></td><td>stop / kill a service that <strong>shouldn&#x27;t</strong> be running</td></tr><tr><td><code>check_fs_mount*</code></td><td><code>-r</code></td><td><code>mount -o remount_options</code> in the background</td></tr><tr><td></td><td><code>-e cmd</code> / <code>-E cmd</code></td><td>run <code>cmd</code> if missing / found</td></tr><tr><td><code>check_ps_cpu</code>, <code>check_ps_mem</code>, <code>check_ps_time</code></td><td><code>-r N</code> / <code>-k</code> / <code>-K</code></td><td>renice / kill the process / kill its parent</td></tr><tr><td><code>check_net_socket</code></td><td><code>-e cmd</code></td><td>run <code>cmd</code> if the expected socket isn&#x27;t there</td></tr><tr><td>Most checks</td><td><code>-0</code></td><td><strong>non-fatal</strong>: log the problem, don&#x27;t drain</td></tr></tbody></table>
+<blockquote><p>[!TIP] The fix runs <strong>as root, from NHC, under `slurmd`</strong>. Make fix scripts idempotent, quick and quiet, and give them full paths. If your fix needs more than a few seconds, it&#x27;s not a rung-0 fix; hand it to the node doctor.</p></blockquote>
+<hr>
+<h2>What you must never auto-fix</h2>
+<p>Automation that hides problems is worse than no automation. Keep your hands off:</p>
+<ul><li><strong>Anything that kills user processes on a node running jobs.</strong> With <code>HealthCheckNodeState=ANY</code>, <code>check_ps_unauth_users kill</code> or <code>check_ps_mem -k</code> can terminate a legitimate job if your &quot;authorized&quot; logic has a gap. Log first (<code>log syslog</code>), watch for weeks, then decide.</li><li><strong>Resetting error counters</strong> (GPU ECC, IB port counters, <code>mcelog</code>) to make a check pass. You just erased the evidence the vendor will ask for.</li><li><strong>Recurring failures.</strong> A node that needed a reboot three times this week is broken hardware wearing a fake moustache. That&#x27;s rung 3.</li><li><strong>Anything during a cluster-wide event.</strong> If 20% of nodes fail the same check at once, the problem is shared (fabric, filesystem, a bad config push). Rebooting 400 nodes makes it worse. That&#x27;s the circuit breaker&#x27;s job (<a href="../../../../../fields/system-administration/node-health-check/getting-started/rollout-at-scale/">part 5</a>).</li></ul>
+<hr>
+<h2>Rungs 1-2: the node doctor</h2>
+<p>Rebooting and deep diagnostics don&#x27;t belong inside NHC: they&#x27;re slow, and a node can&#x27;t reliably reboot itself in the middle of its own health check. Run a small <strong>node doctor</strong> on the controller (or wherever you run cluster automation). It reads NHC&#x27;s drain reasons, matches them against rules, and acts.</p>
+<p>Prerequisites: <code>RebootProgram</code> set in <code>slurm.conf</code> (so <code>scontrol reboot</code> works), and <strong>NHC 1.5</strong> on the nodes so post-reboot drain handling is correct (<a href="../../../../../fields/system-administration/node-health-check/getting-started/slurm-integration/">part 4</a>).</p>
+<pre><code class="language-bash">#!/bin/bash
+# /usr/local/sbin/nhc-node-doctor -- run from cron every 10 minutes on the controller.
+# Reads NHC drain reasons and reboots nodes whose failure is on the &quot;safe to reboot&quot; list.
+set -uo pipefail
+
+STATE_DIR=/var/lib/nhc-doctor          # per-node attempt history: &quot;&lt;epoch&gt; &lt;reason&gt;&quot; lines
+MAX_ATTEMPTS=2                         # reboots per node per window
+WINDOW_SECS=$(( 24 * 3600 ))
+MAX_CONCURRENT=4                       # max doctor reboots started in the last 30 minutes
+DRY_RUN=${DRY_RUN:-1}                  # start in dry-run. Seriously.
+
+# Failure messages (regex) where a reboot is a reasonable first fix
+REBOOTABLE=&#x27;Xid|fallen off the bus|D-state|not mounted|nvidia-smi failed&#x27;
+
+mkdir -p &quot;$STATE_DIR&quot;
+now=$(date +%s)
+log() { logger -t nhc-doctor &quot;$*&quot;; echo &quot;$*&quot;; }
+
+# How many reboots did we start recently? (concurrency guard)
+in_flight=$(cat &quot;$STATE_DIR&quot;/* 2&gt;/dev/null | awk -v cut=$(( now - 1800 )) &#x27;$1 &gt; cut&#x27; | wc -l)
+
+while IFS=&#x27;|&#x27; read -r node reason; do
+    [[ &quot;$reason&quot; == NHC:* ]] || continue                # only NHC-owned drains
+    [[ &quot;$reason&quot; =~ $REBOOTABLE ]] || continue          # only known-rebootable failures
+
+    hist=&quot;$STATE_DIR/$node&quot;
+    attempts=$(awk -v cut=$(( now - WINDOW_SECS )) &#x27;$1 &gt; cut&#x27; &quot;$hist&quot; 2&gt;/dev/null | wc -l)
+    recent=$(awk -v cut=$(( now - 1800 )) &#x27;$1 &gt; cut&#x27; &quot;$hist&quot; 2&gt;/dev/null | wc -l)
+    (( recent == 0 )) || continue                       # reboot already requested, give it time
+
+    if (( attempts &gt;= MAX_ATTEMPTS )); then
+        log &quot;$node: $attempts reboots in window, escalating: $reason&quot;
+        # Rewrite the reason WITHOUT the NHC: prefix, so NHC never auto-resumes it
+        (( DRY_RUN )) || scontrol update nodename=&quot;$node&quot; reason=&quot;ESCALATED: ${reason#NHC: } (doctor gave up)&quot;
+        # TODO: open a ticket here (webhook, email, ITSM API)
+        continue
+    fi
+    if (( in_flight &gt;= MAX_CONCURRENT )); then
+        log &quot;concurrency limit reached ($MAX_CONCURRENT), skipping $node this round&quot;
+        continue
+    fi
+
+    log &quot;$node: rebooting (attempt $(( attempts + 1 ))/$MAX_ATTEMPTS): $reason&quot;
+    if (( ! DRY_RUN )); then
+        echo &quot;$now $reason&quot; &gt;&gt; &quot;$hist&quot;
+        # Plain reboot: the node is already drained by NHC, so no new jobs land.
+        # It reboots once running jobs finish, and the NHC: reason is kept.
+        scontrol reboot &quot;$node&quot;
+    fi
+    in_flight=$(( in_flight + 1 ))
+done &lt; &lt;(sinfo -h -N -R -o &#x27;%N|%E&#x27; | sort -u)</code></pre>
+<blockquote><p>[!WARNING] <strong>No `ASAP`, no `nextstate=` here.</strong> Per the <code>scontrol</code> docs, Slurm clears the node&#x27;s DRAIN flag after an <code>ASAP</code> reboot or one with <code>nextstate=resume</code>/<code>down</code>. The node would rejoin the pool as soon as <code>slurmd</code> registers, without waiting for your verification. Since NHC has already drained the node, a plain <code>scontrol reboot</code> is all you need.</p></blockquote>
+<p>How the loop closes:</p>
+<ol><li>NHC drains <code>gpu07</code> with <code>NHC: ... Xid ... 79 ...</code>.</li><li>The doctor matches the Xid, records the attempt, and runs <code>scontrol reboot gpu07</code>. Running jobs finish first; the drain keeps new ones away.</li><li><code>gpu07</code> reboots. <code>slurmd</code> runs NHC at startup, and NHC 1.5 keeps a freshly rebooted node drained until NHC itself onlines it.</li><li>Checks pass; the reason still starts with <code>NHC:</code>, so NHC resumes the node. Nobody woke up.</li><li>If it happens again within 24 hours, the doctor tries one more reboot. The third time, it <strong>rewrites the reason</strong> without the <code>NHC:</code> prefix. Thanks to the handshake, NHC will now never auto-resume it: it&#x27;s a human&#x27;s node.</li></ol>
+<p><strong>Adding rung 2 (deep verify).</strong> For failures like ECC errors, a clean boot isn&#x27;t proof enough. Before rebooting, the doctor <em>claims</em> the node with its own reason, so NHC won&#x27;t resume it after the reboot:</p>
+<pre><code class="language-bash">scontrol update nodename=&quot;$node&quot; reason=&quot;nhc-doctor: deep verify pending&quot;
+scontrol reboot &quot;$node&quot;</code></pre>
+<p>On a later round, once the node is back up, it runs the deep context and hands ownership back:</p>
+<pre><code class="language-bash">if ssh &quot;$node&quot; &#x27;/usr/sbin/nhc -n nhc-deep -l-&#x27;; then
+    # NHC: prefix again -&gt; NHC resumes it on its next clean periodic run
+    scontrol update nodename=&quot;$node&quot; reason=&quot;NHC: deep verify passed, awaiting periodic check&quot;
+else
+    scontrol update nodename=&quot;$node&quot; reason=&quot;ESCALATED: deep check failed after reboot&quot;
+fi</code></pre>
+<p>Handing a node back with an <code>NHC:</code> reason is the neat trick here: you never call <code>scontrol update state=resume</code> from automation; NHC does it, only after its own checks pass.</p>
+<blockquote><p>[!NOTE] This is deliberately a ~60-line script, not a platform. It&#x27;s enough for most clusters. Big GPU fleets often grow this into a proper service (a state machine with a database, vendor ticket integration, dashboards); the rules and guard rails stay the same.</p></blockquote>
+<hr>
+<h2>Guard rails, or how not to reboot the whole cluster</h2>
+<p>The script above already has the four that matter most. Don&#x27;t remove them:</p>
+<table><thead><tr><th>Guard rail</th><th>Prevents</th></tr></thead><tbody><tr><td><strong>Dry-run default</strong></td><td>Learning how your regex behaves on production data the hard way</td></tr><tr><td><strong>Retry budget per node</strong> (<code>MAX_ATTEMPTS</code> in <code>WINDOW_SECS</code>)</td><td>Infinite reboot loops on genuinely broken hardware</td></tr><tr><td><strong>Concurrency limit</strong> (<code>MAX_CONCURRENT</code>)</td><td>A shared failure turning into a mass reboot</td></tr><tr><td><strong>Allowlist of failure types</strong> (<code>REBOOTABLE</code>)</td><td>Rebooting for problems a reboot can&#x27;t fix (wrong RAM size, missing DIMM)</td></tr></tbody></table>
+<p>Plus two operational ones:</p>
+<ul><li><strong>Every action is logged</strong> with node, reason and attempt number. When someone asks &quot;why did gpu07 reboot at 03:12?&quot;, the answer is in syslog.</li><li><strong>Pair it with the circuit breaker.</strong> If the breaker trips, the doctor stops. A shared outage is a human&#x27;s problem.</li></ul>
+<hr>
+<h2>Rung 3: hand off to humans and vendors</h2>
+<p>When automation gives up, make the handoff useful:</p>
+<ul><li><strong>A reason that tells the story</strong>: <code>ESCALATED: Xid 79 on GPU 3 after 2 reboots (doctor gave up)</code> beats <code>bad</code>.</li><li><strong>Evidence collected before anyone touches it</strong>: <code>dmesg</code>, <code>nvidia-smi -q</code>, <code>ipmitool sel list</code>, the last <code>nhc.log</code> lines, a <code>nvidia-bug-report.sh</code> for GPUs. Vendors ask for these first; collect them automatically into the ticket.</li><li><strong>NHC&#x27;s permanent mode</strong> for hardware classes where any failure means RMA: run those nodes&#x27; NHC with <code>-p</code> (1.5) and failures are tagged <code>(perm)</code>, never auto-resumed.</li></ul>
+<hr>
+<h2>Notifications without the spam</h2>
+<p>Nobody reads the 400th identical e-mail. Two NHC-native tools help:</p>
+<ul><li><strong>`nhc-wrapper`</strong> for cron-driven contexts: it compares each run with the previous one and only reports <strong>changes</strong>, plus a reminder every <code>-X</code> interval while a problem persists:</li></ul>
+<pre><code class="language-bash">  */10 * * * * root /usr/sbin/nhc-wrapper -M ops@example.org -X 12h -n nhc-oob</code></pre>
+<ul><li><strong>JSON syslog</strong> (<code>-j</code>, 1.5) into your log pipeline, with alerting rules on <em>rates</em> (&quot;more than 5 new NHC drains in 15 minutes&quot;) rather than individual events.</li></ul>
+<p>Page humans for <strong>escalations and breaker trips</strong>. Everything else is a dashboard.</p>
+<p>Next, when things don&#x27;t behave: <a href="../../../../../fields/system-administration/node-health-check/checks-and-remediation/troubleshooting/">part 8, troubleshooting</a>.</p>
+<blockquote><p><strong>Takeaway:</strong> NHC already detects, drains, re-verifies and resumes. Add fixes in place with <code>-S</code>, <code>-r</code>, <code>-e</code>, and a small node doctor for reboots, guarded by dry-run, retry budgets, concurrency limits and an allowlist. When automation gives up, drop the <code>NHC:</code> prefix so a human owns the node.</p></blockquote>
+<h3>References</h3>
+<ul><li><a href="https://github.com/mej/nhc#built-in-checks">NHC README: <code>check_ps_service</code>, <code>check_fs_mount</code>, resource checks</a></li><li><a href="https://slurm.schedmd.com/scontrol.html#OPT_reboot"><code>scontrol reboot</code> (ASAP, nextstate, reason)</a></li><li><a href="https://github.com/mej/nhc/releases/tag/1.5">NHC 1.5 release notes: <code>-p</code> permanent offline, JSON syslog</a></li><li><a href="https://docs.nvidia.com/datacenter/dcgm/latest/user-guide/dcgm-diagnostics.html">NVIDIA DCGM diagnostics: which level to use when</a></li></ul>
+<p><a href="../../../../../#/fields/system-administration/node-health-check/checks-and-remediation/auto-remediation">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

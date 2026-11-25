@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Expectation and the Two Count Recipes: Binomial and Poisson</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/probability/expectation-binomial-poisson/">
+<meta name="description" content="Expected value is the data&#x27;s seesaw with probability as the weight, not the likeliest outcome. Binomial and Poisson are recipes for a count; each is right only as far as its assumptions hold.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Expectation and the Two Count Recipes: Binomial and Poisson">
+<meta property="og:description" content="Expected value is the data&#x27;s seesaw with probability as the weight, not the likeliest outcome. Binomial and Poisson are recipes for a count; each is right only as far as its assumptions hold.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/probability/expectation-binomial-poisson/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/probability/expectation-binomial-poisson/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../../.docs/prerender-redirect.js" data-target="../../../../../#/fields/data-science/probability-statistics/probability/expectation-binomial-poisson"></script>
+<main>
+<h1>Expectation and the Two Count Recipes: Binomial and Poisson</h1>
+<p><em>Expected value is the data&#x27;s seesaw with probability as the weight, not the likeliest outcome. Binomial and Poisson are recipes for a count; each is right only as far as its assumptions hold.</em></p>
+<blockquote><p><strong>Parts 9 and 10 of 15.</strong> Part of the <a href="../../../../../fields/data-science/probability-statistics/">Probability &amp; Statistics</a> series, after <a href="../../../../../fields/data-science/probability-statistics/probability/counting-and-conditioning/">Counting and Conditioning</a>. The scenario numbers are invented; every figure was recomputed with Python 3.14.4 (exact fractions, enumeration, and one seeded simulation).</p></blockquote>
+<p>Before lunch on Saturday, Tala will give Mira three forecasts for the market stall. Each will be the most sensible number in the room. Each will be wrong in a way that costs money, and not one of them will be a calculation error.</p>
+<p><strong>By the end of this page you will be able to:</strong></p>
+<ul><li>Compute an expected value and a variance from a probability table, and say why the expected value is not the likeliest outcome.</li><li>Apply the shift, scale and sum rules, and know when variances add.</li><li>Pick binomial or Poisson from the shape of the question and write its table.</li><li>Spot when a recipe&#x27;s assumptions fail, from the variance.</li></ul>
+<ul><li>* *</li></ul>
+<h2>Three forecasts before lunch</h2>
+<p>Mira runs a stall with three things going on.</p>
+<ul><li><strong>The lucky tin.</strong> A customer pays 5 coins, pulls one card from a bag of ten and wins the prize printed on it: 5 cards say 0 (a sticker), 3 say 5 (a sachet), 1 says 10 and 1 says 20.</li><li><strong>The smoky blend.</strong> About 3 customers in 10 pick it. Ten are in the queue.</li><li><strong>The walk-ins.</strong> About 4 customers arrive every 10 minutes.</li></ul>
+<p>Tala forecasts. &quot;Lucky tin: expect a sticker. Smoky: three of the ten. Walk-ins: about four per ten minutes, all day.&quot;</p>
+<p>Ravi pulls once and wins the big tin. &quot;Rigged,&quot; he says, in our favour.</p>
+<ul><li>* *</li></ul>
+<h2>Where each forecast breaks</h2>
+<ol><li><strong>&quot;Expect a sticker.&quot;</strong> The most likely single pull is the sticker (probability 0.5), but that is not what the stall pays out on average.</li><li><strong>&quot;Three smoky.&quot;</strong> She is right that three is the most likely count. It will still be wrong most of the time.</li><li><strong>&quot;Four per ten minutes, all day.&quot;</strong> Ravi tallies the lunch rush and mutters that a single average hides two shops. The stall is short-staffed at 12:30.</li></ol>
+<p>Each forecast answered &quot;what is typical?&quot; with a point. The stall needs the whole table of chances. Build it.</p>
+<ul><li>* *</li></ul>
+<h2>From a table of chances to two recipes</h2>
+<h3>Random variables and the probability table</h3>
+<p>A <strong>random variable</strong> is a number attached to each way things could turn out. The card is the chance; the prize <code>X</code> printed on it is the random variable. List each value with its probability:</p>
+<table><thead><tr><th>Prize <code>x</code></th><th>0</th><th>5</th><th>10</th><th>20</th></tr></thead><tbody><tr><td>Probability <code>p</code></td><td>5/10</td><td>3/10</td><td>1/10</td><td>1/10</td></tr></tbody></table>
+<p>The probabilities add to 1. This is the frequency table of part 2 with one change: a frequency table is what a bag <em>did</em> produce, a probability table is what it <em>would</em> produce, in the model. <strong>Relative frequency in the data; probability in the model.</strong></p>
+<h3>Expected value is the seesaw</h3>
+<p>The mean was the balance point of values weighted by frequency. Weight by probability and it becomes the <strong>expected value</strong>:</p>
+<pre><code class="language-python">from fractions import Fraction as F
+import statistics as st
+
+table = {0: F(5, 10), 5: F(3, 10), 10: F(1, 10), 20: F(1, 10)}
+print(sum(x * p for x, p in table.items()))              # E[X], exact
+
+tray = [0] * 5 + [5] * 3 + [10] + [20]                   # the ten cards as data
+print(st.fmean(tray), st.fmean(list(table), weights=[0.5, 0.3, 0.1, 0.1]))</code></pre>
+<pre><code class="language-text">9/2
+4.5 4.5</code></pre>
+<p><code>0*0.5 + 5*0.3 + 10*0.1 + 20*0.1 = 4.5</code> coins per pull, against a 5-coin price: the customer is half a coin behind per pull. With a pile of cards you take the mean; with a table you weight. Same seesaw.</p>
+<table><thead><tr><th>Question</th><th>Answer</th></tr></thead><tbody><tr><td>Most likely prize (the <strong>mode</strong>)</td><td>0, with probability 0.5</td></tr><tr><td>Expected value (the <strong>balance point</strong>)</td><td>4.5</td></tr><tr><td>Chance a pull pays exactly the expected value</td><td>0</td></tr></tbody></table>
+<p><strong>Expected does not mean likely, it means balanced.</strong> The 20-coin card is rare, but it sits far out on the seesaw and drags the balance point up. A fair die has expected value 3.5, and no face says that.</p>
+<h3>Variance is the leftover walk</h3>
+<p>The variance is the probability-weighted average of <code>(x − 4.5)²</code>; a shortcut gives the same answer, <code>E[X²] − (E[X])²</code>:</p>
+<pre><code class="language-python">EX = sum(x * p for x, p in table.items())
+EX2 = sum(x * x * p for x, p in table.items())
+var = EX2 - EX**2
+print(EX2, var, float(var), float(var) ** 0.5, st.pvariance(tray))</code></pre>
+<pre><code class="language-text">115/2 149/4 37.25 6.103277807866851 37.25</code></pre>
+<p>Variance 37.25 coins², SD about <strong>6.1 coins</strong>: a typical pull misses 4.5 by more than 4.5, a lumpy game. <code>pvariance</code> agrees because the ten cards are the whole bag, so it divides by <code>n</code>.</p>
+<h3>Expect, don&#x27;t predict</h3>
+<p>The expected value is a <strong>long-run average</strong>. Simulated pulls (<code>random.seed(9)</code>):</p>
+<pre><code class="language-python">import random
+random.seed(9)
+for n in (10, 1000, 100000):
+    xs = random.choices(list(table), weights=[0.5, 0.3, 0.1, 0.1], k=n)
+    print(n, &quot;pulls: mean&quot;, round(st.fmean(xs), 3), &quot; share of zeros&quot;, round(xs.count(0) / n, 3))</code></pre>
+<pre><code class="language-text">10 pulls: mean 3.5  share of zeros 0.5
+1000 pulls: mean 4.365  share of zeros 0.512
+100000 pulls: mean 4.485  share of zeros 0.502</code></pre>
+<p>Ten pulls are a full coin off; a hundred thousand are nearly 4.5. Why the average settles, and how fast, is <a href="../../../../../fields/data-science/probability-statistics/inference/averages-and-intervals/">Averages and Intervals</a>.</p>
+<h3>Shifting, scaling and adding</h3>
+<p>Every customer pays 5, so the net is <code>X − 5</code>; two customers&#x27; pulls added are <code>X + Y</code> (all 16 card pairs listed):</p>
+<pre><code class="language-python">from itertools import product
+def moments(d):
+    m = sum(x * p for x, p in d.items())
+    return m, sum(x * x * p for x, p in d.items()) - m * m
+
+print(moments({x - 5: p for x, p in table.items()}))
+two = {}
+for (a, pa), (b, pb) in product(table.items(), repeat=2):
+    two[a + b] = two.get(a + b, 0) + pa * pb
+print(moments(two))</code></pre>
+<pre><code class="language-text">(Fraction(-1, 2), Fraction(149, 4))
+(Fraction(9, 1), Fraction(149, 2))</code></pre>
+<pre><code class="language-text">E[aX + b]  = a E[X] + b          Var(aX + b) = a^2 Var(X)
+E[X + Y]   = E[X] + E[Y]         always
+Var(X + Y) = Var X + Var Y       only if X and Y are independent</code></pre>
+<p>Net expected value is <strong>−1/2</strong> and the variance stays 149/4 (a shifted walk is the same walk). The two-pull total has expected value <strong>9 = 4.5 + 4.5</strong>, and variance 149/2 because the card is put back, so the pulls are independent. Contrast <code>2X</code>, one pull paid out twice: variance <code>4 × 37.25 = 149</code>.</p>
+<h3>Try it: Expected is not likely, edit the bag and see</h3>
+<blockquote><p><strong>What to try:</strong> Edit the cards in the bag, change the price and pull 10, 1,000 or 100,000 times: the average settles on the expected value, which is not a prize. <strong>Start with:</strong> the preset <em>The lucky tin</em>.</p></blockquote>
+<p><a href="../../../../../fields/data-science/probability-statistics/labs/expected-value.html">Expected value lab</a></p>
+<h3>Binomial: count the ways, weigh each way</h3>
+<p>For <strong>4</strong> customers, each smoky with probability 0.3 independently, write every queue as a yes/no string: <code>2^4 = 16</code> strings, each with <code>k</code> yeses having probability <code>0.3^k × 0.7^(4−k)</code>. Group by <code>k</code> (the counting of the previous page):</p>
+<table><thead><tr><th>Smoky orders <code>k</code></th><th>Ways (strings)</th><th>Chance of each way</th><th>P(X = k)</th></tr></thead><tbody><tr><td>0</td><td>1</td><td>0.7^4</td><td>0.2401</td></tr><tr><td>1</td><td>4</td><td>0.3 × 0.7^3</td><td>0.4116</td></tr><tr><td>2</td><td>6</td><td>0.3^2 × 0.7^2</td><td>0.2646</td></tr><tr><td>3</td><td>4</td><td>0.3^3 × 0.7</td><td>0.0756</td></tr><tr><td>4</td><td>1</td><td>0.3^4</td><td>0.0081</td></tr></tbody></table>
+<p>The whole recipe: <strong>probability of `k` = (ways to place `k` yeses) × (probability of one such way)</strong>. The ways column is a row of Pascal&#x27;s triangle. For 10 customers there are 1024 strings; the shorthand <code>comb(10, k) × 0.3^k × 0.7^(10−k)</code> gave a table identical to the brute-force enumeration:</p>
+<pre><code class="language-python">import math
+p, n = F(3, 10), 10
+pmf = {k: math.comb(n, k) * p**k * (1 - p)**(n - k) for k in range(n + 1)}
+print(sum(pmf.values()))                 # 1</code></pre>
+<table><thead><tr><th><code>k</code></th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th></tr></thead><tbody><tr><td>Ways</td><td>1</td><td>10</td><td>45</td><td>120</td><td>210</td><td>252</td><td>210</td><td>120</td><td>45</td></tr><tr><td>P(X = k)</td><td>0.0282</td><td>0.1211</td><td>0.2335</td><td>0.2668</td><td>0.2001</td><td>0.1029</td><td>0.0368</td><td>0.0090</td><td>0.0014</td></tr></tbody></table>
+<p>(<code>k</code> = 9 and 10 are 0.0001 and below.) &quot;Exactly 3&quot; happens only <strong>26.7%</strong> of the time: Tala&#x27;s three is the most likely count and still wrong nearly three times in four. Applying the two tools above:</p>
+<pre><code class="language-text">mean     = 3      = n × p
+variance = 21/10  = n × p × (1 − p) = 10 × 0.3 × 0.7 = 2.1   (SD about 1.45)</code></pre>
+<p>Each customer is worth 0.3 of a smoky order on average and averages add; one customer&#x27;s spread is biggest at p = 0.5 and independent spreads add. NIST gives both results and the catch: <strong>`p` is fixed for all trials.</strong> At least one smoky order is <strong>not</strong> <code>10 × 0.3 = 300%</code>: use the complement, <code>1 − 0.7^10 = 0.9718</code>. Assumptions: two outcomes, the same <code>p</code> every time, customers who do not influence one another.</p>
+<h3>Poisson: many tiny chances</h3>
+<p>Customers arrive at an average of <strong>4 per 10 minutes</strong>. Cut the 10 minutes into <code>n</code> slices so thin that at most one person fits in each, chance <code>4/n</code> per slice: a binomial with <code>np = 4</code> fixed. As the slices thin the table settles:</p>
+<table><thead><tr><th><code>k</code></th><th>n = 10</th><th>n = 100</th><th>n = 1000</th><th>Poisson, rate 4</th></tr></thead><tbody><tr><td>0</td><td>0.0060</td><td>0.0169</td><td>0.0182</td><td>0.0183</td></tr><tr><td>1</td><td>0.0403</td><td>0.0703</td><td>0.0730</td><td>0.0733</td></tr><tr><td>2</td><td>0.1209</td><td>0.1450</td><td>0.1464</td><td>0.1465</td></tr><tr><td>3</td><td>0.2150</td><td>0.1973</td><td>0.1956</td><td>0.1954</td></tr><tr><td>4</td><td>0.2508</td><td>0.1994</td><td>0.1958</td><td>0.1954</td></tr><tr><td>5</td><td>0.2007</td><td>0.1595</td><td>0.1566</td><td>0.1563</td></tr><tr><td>6</td><td>0.1115</td><td>0.1052</td><td>0.1043</td><td>0.1042</td></tr></tbody></table>
+<pre><code class="language-text">P(X = k) = e^(−λ) × λ^k / k!        mean = λ,  variance = λ</code></pre>
+<p>NIST gives this formula and its mean and variance; the &quot;many tiny chances&quot; link is shown by the numbers above, not proved. Poisson is a binomial with the <code>n</code> thrown away: all you need is the rate, and its signature is <strong>variance equals mean</strong>. At rate 4 an empty 10 minutes happens <code>e^(−4) =</code> 1.8% of the time, and ten or more customers 0.8%.</p>
+<h3>Try it: Pick the recipe, turn the dials</h3>
+<blockquote><p><strong>What to try:</strong> Pick the binomial or the Poisson, turn the dials, draw a random sample and compare it with the exact bars. Overlay Poisson(np) on a binomial to see when the two agree. <strong>Start with:</strong> the preset <em>Smoky orders</em>.</p></blockquote>
+<p><a href="../../../../../fields/data-science/probability-statistics/labs/distributions.html">Distributions lab</a></p>
+<h3>When a recipe lies</h3>
+<p>Poisson assumes a <strong>constant rate</strong> and <strong>independent arrivals</strong>. Ravi&#x27;s tally of 12 ten-minute windows: 8 quiet mid-morning windows <code>1, 2, 2, 3, 1, 2, 1, 3</code> and 4 lunchtime windows <code>7, 8, 6, 9</code>.</p>
+<pre><code class="language-text">mean over 12 windows        = 3.75
+variance over 12 windows    = 7.85      (a true Poisson would give about 3.75)
+windows with 7 or more      : observed 3, Poisson(3.75) predicts 12 × 0.0863 = 1.04</code></pre>
+<p>Variance twice the mean is the alarm: the rate was two rates (about 1.9 and 7.5) averaged into a number nobody lived at. The fix is one Poisson per period, not a cleverer formula.</p>
+<p>The binomial breaks through dependence. If customers arrive as 5 couples who always order the same, the mean is still 3 but the variance jumps from 2.1 to 4.2, and &quot;exactly 3 smoky&quot; becomes <strong>impossible</strong> because counts come in twos. The formula would still print 26.7%.</p>
+<blockquote><p>[!NOTE] A formula never checks its own assumptions. A distribution fits the world exactly as far as the story fits: independent, same <code>p</code>, same rate.</p></blockquote>
+<ul><li>* *</li></ul>
+<h2>The stall, with tables</h2>
+<p>Tala brings Mira the tables instead of three points.</p>
+<ul><li><strong>Lucky tin:</strong> 4.5 coins per pull on average against a 5-coin price, an SD of 6.1 per pull. Half a coin of margin per customer, earned the lumpy way. Ravi&#x27;s big tin is one pull, not evidence.</li><li><strong>Smoky:</strong> exactly three is 26.7%; five or more is 15%, so to be safe 85% of the time brew five.</li><li><strong>Walk-ins:</strong> one Poisson for the quiet hours and one for lunch, because a single average hid two shops.</li></ul>
+<p>&quot;Do the tables always look this lumpy?&quot; asks Mira. Look back at the 10-customer row: it rises, peaks, falls. Make <code>n</code> huge and the lumps smooth into a curve. Next cup: <a href="../../../../../fields/data-science/probability-statistics/probability/the-bell-curve/">The Bell Curve</a>.</p>
+<ul><li>* *</li></ul>
+<h2>Never again</h2>
+<table><thead><tr><th>Mistake</th><th>Symptom</th><th>Fix</th></tr></thead><tbody><tr><td>Forecasting the mode or the mean as the answer</td><td>&quot;A sticker&quot;, &quot;exactly three&quot;</td><td>State the table, or the mean <strong>and</strong> the spread</td></tr><tr><td>Treating E[X] as a possible value</td><td>A 4.5-coin prize that no card pays</td><td>It is the balance point; it need not be an outcome</td></tr><tr><td>Adding variances of dependent pulls</td><td><code>Var(2X)</code> taken as 2 Var(X)</td><td>Variances add only for independent pulls</td></tr><tr><td>Adding overlapping chances</td><td>&quot;10 × 0.3 = 300%&quot;</td><td><code>1 − (1 − p)^n</code></td></tr><tr><td>One Poisson over two rates</td><td>Variance far above the mean</td><td>One Poisson per period</td></tr><tr><td>Binomial on clumped customers</td><td>Variance far from <code>np(1 − p)</code></td><td>Model the clumps (couples) as the unit</td></tr></tbody></table>
+<p><strong>Challenge:</strong> ten customers at p = 0.3 give a lopsided table. Using <code>np</code> and <code>np(1 − p)</code>, guess its shape when <code>n</code> is 1000.</p>
+<ul><li>* *</li></ul>
+<h2>Check yourself</h2>
+<ol><li>A fair die: write the probability table and the expected value. Is it a possible roll?</li><li>The lucky tin charges 6 instead of 5. What are the customer&#x27;s expected net and the new variance?</li><li>In 1,000 pulls, roughly how many coins of prizes are handed out, and how many pulls pay nothing?</li><li>Which recipe fits: (a) defective bulbs in a box of 12, (b) emails per hour, (c) heads in 8 flips?</li><li>What are the mean and variance for 20 customers at p = 0.1? A counter&#x27;s counts have mean 5 and variance 14: does Poisson fit?</li></ol>
+<ol><li>Faces 1 to 6, each 1/6, <code>E = 3.5</code>, not a possible roll.</li><li><code>4.5 − 6 =</code> <strong>−1.5</strong>; the variance stays 37.25 because shifting does not change spread.</li><li>About <code>1000 × 4.5 =</code> <strong>4,500 coins</strong>, and about <strong>500</strong> pulls pay nothing (the simulation gave 512).</li><li>(a) binomial (12 tries), (b) Poisson (events in a window), (c) binomial (8 flips).</li><li>Mean <code>20 × 0.1 = 2</code>, variance <code>20 × 0.1 × 0.9 = 1.8</code>. No: Poisson needs variance close to the mean (5) and 14 is nearly three times that; look for mixed rates or clumped arrivals.</li></ol>
+<ul><li>* *</li></ul>
+<h2>📜 The Scroll (keep this)</h2>
+<pre><code class="language-text">Random variable : a number for each way things could turn out; p&#x27;s add to 1
+E[X]            : sum of x * p (the seesaw); NOT the likeliest value
+Var(X)          : sum of (x - E[X])^2 * p = E[X^2] - E[X]^2;  SD = sqrt(Var)
+Rules           : E[aX+b] = aE+b; Var(aX+b) = a^2 Var; E adds always; Var adds if independent
+Binomial        : n tries, same p, independent. P(k) = comb(n,k) p^k (1-p)^(n-k); np, np(1-p)
+Poisson         : events in a window, constant rate. P(k) = e^-lam lam^k / k!; mean = var = lam
+Alarm           : variance far from the model&#x27;s -&gt; mixed rates or clumped, dependent counts
+Do not          : add overlapping chances; trust a formula that never checked its assumptions</code></pre>
+<ul><li>* *</li></ul>
+<h2>References</h2>
+<ul><li>OpenStax, <em>Introductory Statistics 2e</em>, section 4.2 &quot;Mean or Expected Value and Standard Deviation&quot;: the expected value as the long-term average, <code>mu = sum of x * P(x)</code>. &lt;https://openstax.org/books/introductory-statistics-2e/pages/4-2-mean-or-expected-value-and-standard-deviation&gt;</li><li>NIST/SEMATECH e-Handbook of Statistical Methods, <em>Binomial Distribution</em> (pmf, mean <code>np</code>, standard deviation <code>sqrt(np(1 − p))</code>, <code>p</code> fixed across trials) and <em>Poisson Distribution</em> (pmf, mean and variance <code>λ</code>). &lt;https://www.itl.nist.gov/div898/handbook/eda/section3/eda366i.htm&gt;, &lt;https://www.itl.nist.gov/div898/handbook/eda/section3/eda366j.htm&gt;</li><li>Python <code>fractions</code> (<code>Fraction</code> does rational arithmetic exactly), <code>statistics</code> (<code>fmean</code> with <code>weights</code>, <code>pvariance</code>) and <code>math</code> (<code>comb</code>, <code>exp</code>). &lt;https://docs.python.org/3/library/fractions.html&gt;, &lt;https://docs.python.org/3/library/statistics.html&gt;, &lt;https://docs.python.org/3/library/math.html&gt;</li><li>Every number was recomputed with Python 3.14.4 (exact fractions, brute-force enumeration of all 16 and 1024 strings, a seeded simulation with <code>random.seed(9)</code>); the linearity claims were checked by enumeration for one table, not proved in general.</li></ul>
+<p><a href="../../../../../#/fields/data-science/probability-statistics/probability/expectation-binomial-poisson">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

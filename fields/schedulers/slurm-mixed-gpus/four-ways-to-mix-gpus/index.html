@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Four Ways to Ask Slurm for Mixed GPUs</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-mixed-gpus/four-ways-to-mix-gpus/">
+<meta name="description" content="Typed GRES, constraint operators, heterogeneous jobs and heterogeneous steps - what each one actually allocates, and the one-character constraint that mixes GPU types by accident.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Four Ways to Ask Slurm for Mixed GPUs">
+<meta property="og:description" content="Typed GRES, constraint operators, heterogeneous jobs and heterogeneous steps - what each one actually allocates, and the one-character constraint that mixes GPU types by accident.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-mixed-gpus/four-ways-to-mix-gpus/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-mixed-gpus/four-ways-to-mix-gpus/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/schedulers/slurm-mixed-gpus/four-ways-to-mix-gpus"></script>
+<main>
+<h1>Four Ways to Ask Slurm for Mixed GPUs</h1>
+<p><em>Typed GRES, constraint operators, heterogeneous jobs and heterogeneous steps - what each one actually allocates, and the one-character constraint that mixes GPU types by accident.</em></p>
+<blockquote><p><strong>Part 1 of the [Mixing GPU Types in Slurm series](/fields/schedulers/slurm-mixed-gpus/README.md).</strong> Slurm doesn&#x27;t have one way to give a job different GPUs. It has four, and they behave very differently. By the end of this page you&#x27;ll know what each one allocates, which one to reach for, and why a single <code>|</code> in a constraint has quietly mixed GPU types on more clusters than any heterogeneous job ever has.</p></blockquote>
+<hr>
+<h2>The job that started fast and ran slow</h2>
+<p>A researcher needs 16 GPUs for a training run. The H100 partition has a two-day queue. The A100 nodes are busy too. So she gets clever and writes:</p>
+<pre><code class="language-bash">#SBATCH --nodes=4
+#SBATCH --gres=gpu:4
+#SBATCH --constraint=&quot;h100|a100&quot;</code></pre>
+<p>&quot;Either kind is fine,&quot; she thinks. The job starts in twenty minutes. She goes for lunch feeling smart.</p>
+<p>When she comes back, the loss curve is crawling. <code>squeue</code> shows the job is running on two H100 nodes and two A100 nodes. Slurm did exactly what she asked: give me nodes that have H100s <em>or</em> A100s. It never promised they&#x27;d all be the same.</p>
+<p>She didn&#x27;t submit a &quot;heterogeneous job.&quot; She doesn&#x27;t know the term. She mixed GPU types with one character.</p>
+<p>That&#x27;s the first lesson of this series: <strong>mixed allocations happen by accident far more often than on purpose.</strong> To see why, start with how Slurm tells GPUs apart at all.</p>
+<hr>
+<h2>First, how Slurm knows a GPU&#x27;s type</h2>
+<p>Slurm describes GPUs as <strong>GRES</strong> (generic resources). An admin can give each GPU a <strong>type</strong>, either in <code>gres.conf</code> or by letting Slurm detect it through NVML. With autodetection, Slurm matches the type you configure against the GPU&#x27;s reported name, and any substring works: the GRES docs show a GPU detected as <code>geforce_rtx_2060</code> that can be typed as <code>geforce</code>, <code>rtx</code> or <code>2060</code>.</p>
+<p>Admins can also tag nodes with <strong>features</strong>, free-form labels like <code>h100</code> or <code>a100</code> that jobs match with <code>--constraint</code>.</p>
+<p>So there are two separate labeling systems:</p>
+<table><thead><tr><th>Label</th><th>Lives on</th><th>Requested with</th><th>Answers</th></tr></thead><tbody><tr><td>GRES type</td><td>Each GPU</td><td><code>--gres=gpu:h100:4</code>, <code>--gpus=h100:8</code></td><td>&quot;Which GPUs inside the node?&quot;</td></tr><tr><td>Feature</td><td>Each node</td><td><code>--constraint=h100</code></td><td>&quot;Which nodes?&quot;</td></tr></tbody></table>
+<p>Every way of mixing GPUs uses one or both. Here they are, from the most common to the most deliberate.</p>
+<hr>
+<h2>Way 1: typed GRES, one kind per request</h2>
+<p>The everyday request names a type and a count:</p>
+<pre><code class="language-bash">#SBATCH --gres=gpu:h100:4     # 4 H100s on every node of the job</code></pre>
+<p>The GRES docs define the form as <code>name[:type:count]</code> for <code>--gres</code> and <code>[type]:count</code> for the <code>--gpu*</code> options. One detail matters a lot here: <strong>`--gres` is per node.</strong> It asks for the same thing on every node in the job.</p>
+<p>That gives one legitimate way to get two types: a node that physically contains both. The GRES docs&#x27; own example configures nodes with <code>Gres=gpu:tesla:2,gpu:kepler:2</code>, two kinds of GPU in one chassis. On nodes like that, a job can ask for some of each. Data-center GPU servers are rarely built that way, so for A100-plus-H100 this is mostly a curiosity.</p>
+<p>Another rule from the same docs: <strong>typed and untyped requests must be consistent within a job.</strong> If the allocation asked for <code>--gres=gpu:2</code>, a step can&#x27;t then ask for <code>--gres=gpu:tesla:2</code>, and vice versa.</p>
+<p>So a single, uniform per-node request can&#x27;t say &quot;H100s on these nodes, A100s on those.&quot; For that you need different nodes to be treated differently, which is where constraints come in.</p>
+<hr>
+<h2>Way 2: constraints, and the trap in the bar</h2>
+<p><code>--constraint</code> filters nodes by feature. The <code>sbatch</code> man page lists several operators, and the difference between two of them is the whole story of the researcher&#x27;s lost afternoon.</p>
+<table><thead><tr><th>Operator</th><th>Example</th><th>Means</th></tr></thead><tbody><tr><td>AND</td><td><code>--constraint=&quot;intel&amp;gpu&quot;</code></td><td>Every node has both features</td></tr><tr><td><strong>OR</strong></td><td><code>--constraint=&quot;h100|a100&quot;</code></td><td>Every node has <strong>at least one</strong> of them. Different nodes can have different ones</td></tr><tr><td><strong>Matching OR</strong></td><td><code>--constraint=&quot;[h100|a100]&quot;</code></td><td><strong>All</strong> nodes have the <strong>same</strong> one, but either is fine</td></tr><tr><td>Multiple counts</td><td><code>--constraint=&quot;[h100*2&amp;a100*2]&quot;</code></td><td>Exactly 2 nodes with <code>h100</code> and 2 with <code>a100</code></td></tr></tbody></table>
+<p>Read the second and third rows twice. They differ by a pair of square brackets.</p>
+<ul><li><strong>Plain OR</strong> is an <em>accidental mixer</em>. In a multi-node job it can hand you a blend. That&#x27;s what happened to the researcher.</li><li><strong>Matching OR</strong> is what she meant: &quot;give me whichever kind starts first, but don&#x27;t mix.&quot; The man page&#x27;s own example is <code>[rack1|rack2|rack3|rack4]</code>: all nodes on one rack, any rack.</li><li><strong>Multiple counts</strong> is a <em>deliberate mixer</em>. You say exactly how many nodes of each feature you want. Combined with an untyped GPU request like <code>--gres=gpu:4</code>, every node gets 4 GPUs, of whatever kind that node has.</li></ul>
+<p>A SchedMD engineer, discussing the feature-parsing code, described square-bracket counts as &quot;essentially the same as a heterogeneous job.&quot; That&#x27;s a good way to think of it: a lightweight version, where every node still gets the same per-node request.</p>
+<blockquote><p>[!WARNING] <strong>Audit your users&#x27; constraints.</strong> On any cluster with more than one GPU generation, search job scripts for <code>--constraint</code> with a bare <code>|</code> and no brackets. Every multi-node job using it can land on mixed hardware, and the user probably doesn&#x27;t know.</p></blockquote>
+<hr>
+<h2>Try it before you scroll</h2>
+<p>☕ Three requests. For each, could the job end up with both H100 and A100 nodes?</p>
+<ol><li><code>--nodes=4 --gres=gpu:4 --constraint=&quot;[h100|a100]&quot;</code></li><li><code>--nodes=4 --gres=gpu:h100:4</code></li><li><code>--nodes=4 --gres=gpu:4 --constraint=&quot;h100|a100&quot;</code></li></ol>
+<p>Answers: (1) no, matching OR keeps all nodes the same; (2) no, every node must have 4 H100s; (3) yes, plain OR allows a mix. If you got all three, you already understand constraints better than most job scripts on most clusters.</p>
+<p>Now for the feature that was actually built for mixing.</p>
+<hr>
+<h2>Way 3: heterogeneous jobs, the real thing</h2>
+<p>A <strong>heterogeneous job</strong> is a job made of several <strong>components</strong>, each with its own full set of options. Slurm&#x27;s docs say each component has &quot;virtually all job options available including partition, account and QOS.&quot; You separate components with <code>:</code> on the command line, or with <code>#SBATCH hetjob</code> lines in a script:</p>
+<pre><code class="language-bash">#!/bin/bash
+#SBATCH --nodes=2 --gres=gpu:h100:8 --partition=h100
+#SBATCH hetjob
+#SBATCH --nodes=2 --gres=gpu:a100:8 --partition=a100
+
+srun --het-group=0 ./trainer &amp;
+srun --het-group=1 ./rollout_worker &amp;
+wait</code></pre>
+<p>Here&#x27;s what you get, all from the heterogeneous-jobs documentation:</p>
+<ul><li><strong>Separate job IDs, one family.</strong> Each component gets its own <code>job_id</code>; they share a <code>het_job_id</code> equal to the first component&#x27;s ID. <code>squeue</code> shows them as <code>123+0</code>, <code>123+1</code>.</li><li><strong>Started together.</strong> Components are scheduled at the same time or not at all.</li><li><strong>The script runs once,</strong> on the first node of component 0.</li><li><strong>`srun` launches on component 0 by default.</strong> <code>--het-group</code> chooses others.</li><li><strong>Per-component environment.</strong> Variables get a <code>_HET_GROUP_&lt;n&gt;</code> suffix, like <code>SLURM_JOB_NODELIST_HET_GROUP_1</code>.</li><li><strong>One MPI world, if you want it.</strong> <code>srun prog0 : prog1</code> puts both components in a single <code>MPI_COMM_WORLD</code> with non-overlapping ranks. Separate <code>srun</code> calls give separate worlds.</li></ul>
+<p>The docs add two warnings about that last point, in capitals: running one application across components <strong>doesn&#x27;t work with all MPI implementations or Slurm MPI plugins</strong>, and <code>mpirun</code> &quot;would require substantial modification&quot; to support it, with no such work known to SchedMD. Admins can switch cross-component steps off entirely with <code>SchedulerParameters=disable_hetjob_steps</code>.</p>
+<p>So heterogeneous jobs really do allocate H100s and A100s to one job, cleanly, with each part sized independently. &quot;Can&#x27;t&quot; is wrong. But notice the shape of the example: the H100s and A100s run <strong>different programs</strong>. Keep that in mind; it&#x27;s the key to part 3.</p>
+<hr>
+<h2>Way 4: heterogeneous steps, mixing inside one allocation</h2>
+<p>Since <strong>Slurm 20.11</strong>, you can also do the reverse: get one ordinary allocation, then launch a single step with different layouts on different nodes, using the same <code>:</code> syntax with <code>srun</code>. The docs&#x27; example takes two exclusive nodes with 10 GPUs and gives one step 4 tasks with 4 GPUs on one node and 1 task with 6 GPUs on the other.</p>
+<p>Two limits from the docs: the step components <strong>must run on unique nodes</strong>, and you <strong>can&#x27;t request heterogeneous steps from within a heterogeneous job</strong>.</p>
+<p>Useful when the allocation is uniform but the work isn&#x27;t, for example one process that wants a whole node&#x27;s GPUs and several that want one each.</p>
+<hr>
+<h2>The four ways side by side</h2>
+<table><thead><tr><th>Way</th><th>Syntax</th><th>Mixes types?</th><th>On purpose?</th><th>Best for</th></tr></thead><tbody><tr><td>Typed GRES</td><td><code>--gres=gpu:h100:4</code></td><td>Only on nodes that contain both</td><td>Yes</td><td>Asking for one specific kind</td></tr><tr><td>Constraint, plain OR</td><td><code>-C &quot;h100|a100&quot;</code></td><td><strong>Yes, possibly</strong></td><td>Usually <strong>not</strong></td><td>Single-node jobs only</td></tr><tr><td>Constraint, matching OR</td><td><code>-C &quot;[h100|a100]&quot;</code></td><td>No</td><td>Yes</td><td>&quot;Either kind, whichever starts first&quot;</td></tr><tr><td>Constraint, counts</td><td><code>-C &quot;[h100*2&amp;a100*2]&quot;</code></td><td>Yes, exact node counts</td><td>Yes</td><td>Simple splits with the same per-node request</td></tr><tr><td>Heterogeneous job</td><td><code>... : ...</code> / <code>#SBATCH hetjob</code></td><td>Yes, fully independent parts</td><td>Yes</td><td>Different programs on different hardware</td></tr><tr><td>Heterogeneous step</td><td><code>srun ... : ...</code> in one allocation</td><td>Layout only (same allocation)</td><td>Yes</td><td>Uneven work inside a uniform allocation</td></tr></tbody></table>
+<p><strong>Takeaway:</strong> Slurm can absolutely give one job H100s and A100s, deliberately with heterogeneous jobs or constraint counts, and accidentally with a bare <code>|</code>, so learn the brackets and audit for the bar.</p>
+<p>So it works. Then why does everyone who tries to <em>train</em> across H100s and A100s come back disappointed? That&#x27;s <a href="../../../../fields/schedulers/slurm-mixed-gpus/why-mixed-training-disappoints/">part 2</a>.</p>
+<hr>
+<h2>References</h2>
+<ul><li><a href="https://slurm.schedmd.com/heterogeneous_jobs.html">Slurm: Heterogeneous Job Support</a></li><li><a href="https://slurm.schedmd.com/gres.html">Slurm: Generic Resource (GRES) Scheduling</a></li><li><a href="https://manpages.org/sbatch">Slurm <code>sbatch</code> man page, <code>--constraint</code> operators (mirror of the official man page)</a></li><li><a href="https://support.schedmd.com/show_bug.cgi?id=12286">SchedMD ticket 12286: constraint operators and square-bracket counts</a></li></ul>
+<p><a href="../../../../#/fields/schedulers/slurm-mixed-gpus/four-ways-to-mix-gpus">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

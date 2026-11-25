@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The Munge Key in Git: Secrets, Vault and Rotation</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/ansible/secrets-and-vault/">
+<meta name="description" content="Keep secrets in an Ansible repo with vault, rotate a leaked munge key on every host at once, what 2.22&#x27;s secret masking hides and misses, nolog, and a commit guard.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="The Munge Key in Git: Secrets, Vault and Rotation">
+<meta property="og:description" content="Keep secrets in an Ansible repo with vault, rotate a leaked munge key on every host at once, what 2.22&#x27;s secret masking hides and misses, nolog, and a commit guard.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/ansible/secrets-and-vault/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/ansible/secrets-and-vault/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/devops/ansible/secrets-and-vault"></script>
+<main>
+<h1>The Munge Key in Git: Secrets, Vault and Rotation</h1>
+<p><em>Keep secrets in an Ansible repo with vault, rotate a leaked munge key on every host at once, what 2.22&#x27;s secret masking hides and misses, nolog, and a commit guard.</em></p>
+<blockquote><p><strong>Part 6 of the [Ansible series](/fields/devops/ansible/README.md).</strong> <a href="../../../../fields/devops/ansible/rolling-maintenance/">Part 5</a> changed busy nodes safely. This last page handles the secrets those playbooks need: encrypt them in the repo, replace one that leaked, roll the new one out without breaking the cluster, and keep secrets out of logs.</p></blockquote>
+<hr>
+<h2>Found in a fork</h2>
+<p>Two years ago someone added the <code>munge</code> role to the playbook repo. The key went in where every other file goes: <code>roles/munge/files/munge.key</code>, in plain bytes. Since then the repo has been cloned by four admins, a contractor, and a CI runner, and mirrored to a second Git server &quot;for backup&quot;.</p>
+<p>Today a security review finds it. Somebody says &quot;let&#x27;s just encrypt it with vault&quot;, runs one command, commits, and calls it done.</p>
+<p>It isn&#x27;t done. Every clone, every mirror, and every old commit still has the original key. This page does the whole job.</p>
+<blockquote><p>[!NOTE] Lab: ansible-core <strong>2.22.0</strong> (and 2.21.6 for one comparison), munge <strong>0.5.15</strong>, Slurm 23.11.4 on six Ubuntu 24.04 nodes. The passwords on this page are fakes made for the lab.</p></blockquote>
+<hr>
+<h2>Why this key matters</h2>
+<p><strong>munge</strong> is how Slurm daemons and commands prove who they are to each other. Every host has the same key; a credential made with it says &quot;this is uid 1000 on head01&quot;, and anyone with the key is believed. With the cluster&#x27;s munge key you can mint credentials that the cluster accepts. The <code>mungekey</code> man page puts it simply: every munged in a security realm must use the same key, created on one host and copied securely to the others.</p>
+<p>So a leaked munge key means two jobs: stop storing secrets in plain text, <strong>and</strong> replace the key that leaked.</p>
+<hr>
+<h2>Vault in five minutes</h2>
+<p><strong>ansible-vault</strong> encrypts files (or single values) with a password, using AES-256. Ansible decrypts them in memory when a playbook needs them, so the repo only ever holds ciphertext.</p>
+<ol><li>Keep the vault password <strong>outside</strong> the repo, readable only by you:</li></ol>
+<pre><code class="language-bash">mkdir -p ~/.config/cluster-ansible
+openssl rand -base64 32 &gt; ~/.config/cluster-ansible/vault-pass
+chmod 600 ~/.config/cluster-ansible/vault-pass</code></pre>
+<p>Share it with the other admins the way you share any admin password (a password manager), never through the repo.</p>
+<ol><li>Tell Ansible where it is, in <code>ansible.cfg</code> under <code>[defaults]</code>:</li></ol>
+<pre><code class="language-ini">vault_password_file = ~/.config/cluster-ansible/vault-pass</code></pre>
+<ol><li>Put secret variables in their own <strong>fully encrypted</strong> file. Here, the password the Slurm accounting daemon would use, for the <code>head</code> group. A <code>group_vars</code> entry can be a folder instead of a file, so plain and secret variables sit side by side:</li></ol>
+<pre><code class="language-bash">mkdir -p inventory/group_vars/head
+printf &#x27;slurmdbd_storage_pass: &quot;Tr0ub4dor&amp;3-not-real&quot;\n&#x27; &gt; inventory/group_vars/head/vault.yml
+ansible-vault encrypt inventory/group_vars/head/vault.yml
+head -1 inventory/group_vars/head/vault.yml</code></pre>
+<pre><code class="language-text">$ANSIBLE_VAULT;1.1;AES256</code></pre>
+<p>Day to day you use <code>ansible-vault view</code> and <code>ansible-vault edit</code> on that file, and never decrypt it to disk.</p>
+<blockquote><p>[!TIP] You can also encrypt single values inside a plain YAML file (<code>ansible-vault encrypt_string</code>). It works, but then a file named <code>vault.yml</code> is half plain text, and a simple &quot;is this file encrypted?&quot; check can&#x27;t tell. We use whole-file encryption so the guard at the end stays simple. Our guard flagged the inline style the first time we ran it.</p></blockquote>
+<hr>
+<h2>Encrypting isn&#x27;t enough: history</h2>
+<p>Back to the key. Encrypting the file in place hides the <em>current</em> version. Git keeps every old one. In the lab we committed a plain key, then later replaced it with an encrypted file, then asked Git for the old commit:</p>
+<pre><code class="language-bash">git show 0508587:roles/munge/files/munge.key | md5sum</code></pre>
+<pre><code class="language-text">b628443e71788bad8853dad92a8caa0b  -</code></pre>
+<p>Byte for byte, the leaked key. Rewriting history doesn&#x27;t fix it either: the clones and the mirror still have it.</p>
+<p>So the only real fix is a <strong>new key</strong>, made fresh, never committed in plain text:</p>
+<pre><code class="language-bash">dd if=/dev/urandom of=roles/munge/files/munge.key bs=1024 count=1
+ansible-vault encrypt roles/munge/files/munge.key</code></pre>
+<p>That&#x27;s 1024 random bytes, 8192 bits, the top of the 256–8192-bit range <code>mungekey(8)</code> accepts. <code>mungekey</code> itself can create the key too, but it writes to the munge directory on the host you run it on; for a repo, <code>dd</code> is simpler.</p>
+<p>The <code>copy</code> module decrypts a vault-encrypted <code>src</code> file automatically when it deploys it. The role (<code>roles/munge/tasks/main.yml</code>) doesn&#x27;t mention vault at all:</p>
+<pre><code class="language-yaml">- name: Install the cluster&#x27;s munge key
+  ansible.builtin.copy:
+    src: munge.key
+    dest: /etc/munge/munge.key
+    owner: munge
+    group: munge
+    mode: &quot;0400&quot;
+  notify: Restart munge</code></pre>
+<p>and <code>roles/munge/handlers/main.yml</code>:</p>
+<pre><code class="language-yaml">- name: Restart munge
+  ansible.builtin.systemd_service:
+    name: munge
+    state: restarted</code></pre>
+<hr>
+<h2>Rotating without splitting the cluster</h2>
+<p>Here&#x27;s the trap. Every host must have the <strong>same</strong> key at the same time. Part 5 taught you to change nodes a few at a time; do that here and you split the cluster in two.</p>
+<p>We showed it in the lab by deploying the new key to cn001 only. A credential made on head01 (old key) was rejected by cn001 and accepted by cn002:</p>
+<pre><code class="language-bash">docker exec head01 munge -n &gt; /tmp/cred     # in the lab; on a real cluster: ssh head01 munge -n</code></pre>
+<pre><code class="language-text">cn001: unmunge: Error: Invalid credential
+cn002: STATUS:          Success (0)</code></pre>
+<p>A minute later the controller had marked cn001 as not responding (<code>idle*</code> in <code>sinfo</code>), and logged <code>Zero Bytes were transmitted or received</code> talking to it.</p>
+<p>So the playbook (<code>playbooks/munge.yml</code>) targets every host in one go, with no <code>serial</code>:</p>
+<pre><code class="language-yaml">- name: One munge key for the whole cluster, all hosts at once
+  hosts: head:nodes
+  become: true
+  force_handlers: true
+  roles:
+    - munge</code></pre>
+<pre><code class="language-bash">ansible-playbook playbooks/munge.yml</code></pre>
+<p>Every host that didn&#x27;t have the new key yet reported <code>changed=2</code> (the file and the restart); cn001, which already had it, reported <code>changed=0</code>. Then:</p>
+<table><thead><tr><th>Check</th><th>Result in the lab</th></tr></thead><tbody><tr><td>A credential from head01, decoded on cn001, cn004, gpu001</td><td><code>Success (0)</code> on all three</td></tr><tr><td>cn001 in <code>sinfo</code></td><td>Back to <code>idle</code> on its own, about 75 seconds later (the controller&#x27;s next check)</td></tr><tr><td>A batch job sent to cn001</td><td><code>Started JobId=6 in batch on cn001</code>, exit status 0</td></tr><tr><td>Run the playbook again</td><td><code>changed=0</code> on all six hosts</td></tr></tbody></table>
+<p>Restarting munged was enough. We didn&#x27;t restart slurmd or slurmctld; the Slurm daemons ask munged for every credential.</p>
+<blockquote><p>[!CAUTION] We rotated with no jobs running. While hosts disagree about the key (between the first and last host&#x27;s restart), any Slurm traffic between them fails, including job launches. Do it in a quiet window, or drain the partition first and resume it afterwards. Never with <code>serial</code>.</p></blockquote>
+<hr>
+<h2>What ansible-core 2.22 hides, and what it doesn&#x27;t</h2>
+<p>The classic second leak: you run with <code>--diff</code> or <code>-v</code> to see what changed, and the secret is right there in the output, in your terminal and in your CI logs. <strong>ansible-core 2.22 changed this.</strong> Its changelog: Ansible now automatically redacts known secret values from its output, including the plaintext of vault-encrypted values and every value in a vault-encrypted variables file, replacing them with <code>$REDACTED$</code>. Masking only affects output; tasks still get the real value.</p>
+<p>We tested where it holds and where it stops, with the same vault and the same play on 2.22.0 and 2.21.6:</p>
+<table><thead><tr><th>What&#x27;s printed</th><th>ansible-core 2.21.6</th><th>ansible-core 2.22.0</th></tr></thead><tbody><tr><td>The secret itself (<code>debug</code>)</td><td><code>Tr0ub4dor&amp;3-not-real</code></td><td><code>$REDACTED$</code></td></tr><tr><td>The secret inside command output (<code>grep StoragePass</code> on the deployed file)</td><td><code>StoragePass=Tr0ub4dor&amp;3-not-real</code></td><td><code>StoragePass=$REDACTED$</code></td></tr><tr><td><code>--diff</code> of a file containing the secret</td><td><code>+StoragePass=Tr0ub4dor&amp;3-not-real</code></td><td><code>+StoragePass=$REDACTED$</code></td></tr><tr><td>A value <strong>derived</strong> from the secret (<code>| b64encode</code>)</td><td><code>VHIwdWI0ZG9yJjMtbm90LXJlYWw=</code></td><td><code>VHIwdWI0ZG9yJjMtbm90LXJlYWw=</code></td></tr></tbody></table>
+<p>That last row is the gap: masking matches the exact secret strings it knows about. Transform the secret (encode it, hash it, build a connection string from parts), and the result isn&#x27;t recognized. Decode that base64 and you have the password. The deployed file itself still has the real password, of course; masking is about output only.</p>
+<p>So for any task that handles a secret in a way you&#x27;re not sure masking catches, and for anyone still on 2.21 or older, keep the old defence:</p>
+<pre><code class="language-yaml">    - name: A value derived from the secret, hidden
+      ansible.builtin.debug:
+        msg: &quot;b64={{ slurmdbd_storage_pass | b64encode }}&quot;
+      no_log: true</code></pre>
+<p>With <code>no_log: true</code>, the task&#x27;s output was hidden completely on 2.22. Add <code>diff: false</code> to template or copy tasks that write secrets, so <code>--diff</code> doesn&#x27;t show their content on older versions.</p>
+<p>Rule of thumb: <strong>masking is a seatbelt, not a reason to drive faster.</strong> Keep <code>no_log</code> on tasks that touch secrets.</p>
+<hr>
+<h2>When the password is missing or wrong</h2>
+<p>Both failures are clear and stop the run before anything changes. We ran the munge playbook with a config that had no <code>vault_password_file</code>:</p>
+<pre><code class="language-text">[ERROR]: Task failed: A vault password or secret must be specified to decrypt /root/cluster-ansible/roles/munge/files/munge.key</code></pre>
+<p>And with only a wrong password:</p>
+<pre><code class="language-text">[ERROR]: Task failed: Decryption failed (no vault secrets were found that could decrypt).</code></pre>
+<p>Both exited 2. One thing that surprised us while testing: passing <code>--vault-password-file</code> with a wrong password <em>as well as</em> the right one in <code>ansible.cfg</code> worked fine. Ansible tries every password it has, so to test &quot;wrong password&quot;, remove the right one.</p>
+<hr>
+<h2>A guard that stops the next one</h2>
+<p>The leak happened because nothing stopped a plain key from being committed. This script fails if any file that should be secret isn&#x27;t vault-encrypted. Save as <code>tools/check-secrets.sh</code>:</p>
+<pre><code class="language-bash">#!/usr/bin/env bash
+# Fail if any file that should hold a secret is not vault-encrypted.
+# Secret files: anything named *.key or vault.yml under roles/ or inventory/.
+set -uo pipefail
+fail=0
+while IFS= read -r -d &#x27;&#x27; f; do
+  if ! head -c 14 &quot;$f&quot; | grep -q &#x27;^\$ANSIBLE_VAULT&#x27;; then
+    echo &quot;NOT ENCRYPTED: $f&quot;; fail=1
+  fi
+done &lt; &lt;(find roles inventory -type f \( -name &#x27;*.key&#x27; -o -name &#x27;vault.yml&#x27; \) -print0)
+[ $fail -eq 0 ] &amp;&amp; echo &quot;secrets check: ok&quot;
+exit $fail</code></pre>
+<p>Run against the repo before the fix, it caught both problems and exited 1:</p>
+<pre><code class="language-text">NOT ENCRYPTED: roles/munge/files/munge.key
+NOT ENCRYPTED: inventory/group_vars/head/vault.yml</code></pre>
+<p>(The second was the inline <code>encrypt_string</code> style from the tip above.) After the fix: <code>secrets check: ok</code>, exit 0.</p>
+<p>Make Git run it before every commit:</p>
+<pre><code class="language-bash">chmod +x tools/check-secrets.sh
+ln -sf ../../tools/check-secrets.sh .git/hooks/pre-commit</code></pre>
+<p>We tested it by adding a plain <code>test.key</code>: <code>git commit</code> printed <code>NOT ENCRYPTED: roles/munge/files/test.key</code>, exited 1, and no commit was made. A Git hook lives in each clone and isn&#x27;t shared, so also run the script in CI, where nobody can skip it.</p>
+<hr>
+<h2>Back to the fork</h2>
+<p>The security review finds the key, and this time the team does the whole job. They generate a new key and encrypt it before it&#x27;s ever committed. The playbook rolls it to every host in one go during a quiet hour, credentials verify everywhere, and the one node that briefly showed <code>idle*</code> comes back by itself. The old key, still sitting in every clone and in the mirror, now opens nothing.</p>
+<p>The slurmdbd password moves into an encrypted <code>vault.yml</code>. The pipeline that prints <code>--diff</code> shows <code>$REDACTED$</code> on 2.22, and the tasks that transform secrets carry <code>no_log</code>. And the next person who drops a plain key into <code>roles/</code> gets a red <code>NOT ENCRYPTED</code> from their own commit and from CI, before it ever reaches a fork.</p>
+<p><strong>Takeaway:</strong> encrypt secrets with vault before the first commit, rotate anything that was ever committed in plain text, roll shared keys to every host at once, and keep <code>no_log</code> even though 2.22 masks most secrets.</p>
+<p><strong>Next:</strong> <a href="../../../../fields/devops/ansible/cheatsheet/">Part 7, the cheatsheet</a>, has every step from the series as copy-paste commands.</p>
+<p><strong>Back to:</strong> <a href="../../../../fields/devops/ansible/">the Ansible series index</a>. From here, the <a href="../../../../fields/system-administration/node-health-check/">Node Health Check</a> pages are a natural thing to deploy and run with these roles.</p>
+<hr>
+<h2>References</h2>
+<ul><li><a href="https://docs.ansible.com/projects/ansible/latest/vault_guide/index.html">Protecting sensitive data with Ansible vault</a>: encrypting files and variables, password files, <code>view</code> and <code>edit</code>.</li><li><a href="https://docs.ansible.com/projects/ansible/latest/vault_guide/vault_managing_passwords.html">Ansible vault: managing passwords</a>: <code>vault_password_file</code> and multiple vault passwords.</li><li><a href="https://github.com/ansible/ansible/blob/stable-2.22/changelogs/CHANGELOG-v2.22.rst">ansible-core 2.22 changelog</a>: secret masking, what is registered as a secret, and <code>$REDACTED$</code>.</li><li><a href="https://docs.ansible.com/projects/ansible/latest/reference_appendices/logging.html">Logging Ansible output</a>: <code>no_log</code> and what reaches logs.</li><li><a href="https://docs.ansible.com/projects/ansible/latest/collections/ansible/builtin/copy_module.html">ansible.builtin.copy</a>: <code>decrypt</code> (default true) for vault-encrypted <code>src</code> files.</li><li><a href="https://manpages.ubuntu.com/manpages/noble/man8/mungekey.8.html">mungekey(8) (Ubuntu 24.04)</a>: every munged in a realm uses the same key, key size range.</li><li><a href="https://slurm.schedmd.com/authentication.html">Slurm: Authentication plugins</a>: how Slurm uses munge.</li><li><a href="https://git-scm.com/docs/githooks#_pre_commit">githooks(5)</a>: the <code>pre-commit</code> hook.</li></ul>
+<p><a href="../../../../#/fields/devops/ansible/secrets-and-vault">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

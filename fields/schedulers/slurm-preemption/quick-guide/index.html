@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Set Up QOS Preemption and Make Jobs Survive It</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-preemption/quick-guide/">
+<meta name="description" content="Steps to switch on QOS preemption, prove it with a drill, add a submit rule, and make a training job catch its warning and requeue.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Set Up QOS Preemption and Make Jobs Survive It">
+<meta property="og:description" content="Steps to switch on QOS preemption, prove it with a drill, add a submit rule, and make a training job catch its warning and requeue.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-preemption/quick-guide/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-preemption/quick-guide/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/schedulers/slurm-preemption/quick-guide"></script>
+<main>
+<h1>Set Up QOS Preemption and Make Jobs Survive It</h1>
+<p><em>Steps to switch on QOS preemption, prove it with a drill, add a submit rule, and make a training job catch its warning and requeue.</em></p>
+<blockquote><p><strong>Quick guide for</strong> the <a href="../../../../fields/schedulers/slurm-preemption/">Preemption and signals series</a>. Use it when a high-priority tier must evict a low one, or a long job must survive being evicted. You end with a proven eviction and a job that requeues.</p></blockquote>
+<h2>Before you start</h2>
+<ul><li>Accounting is on (<code>sacctmgr</code> works) and you can restart <code>slurmctld</code> in a quiet moment.</li><li>One idle node for the drill.</li><li>Roll out in this order: create QOSs, edit <code>slurm.conf</code>, run the drill, then tell users.</li></ul>
+<hr>
+<h2>Part 1: Switch preemption on</h2>
+<ol><li>Create the tiers.</li></ol>
+<pre><code class="language-bash">   sacctmgr -i add qos low Priority=10
+   sacctmgr -i modify qos low set PreemptMode=requeue GraceTime=120 PreemptExemptTime=00:30:00
+   sacctmgr -i add qos high_bio Priority=1000
+   sacctmgr -i modify qos high_bio set Preempt=low</code></pre>
+<p><strong>Expect:</strong> <code>sacctmgr show qos format=Name%14,Priority,Preempt%14,PreemptMode,GraceTime,PreemptExemptTime</code> lists <code>low</code> with <code>requeue</code> and <code>high_bio</code> with <code>Preempt</code> <code>low</code>. <strong>If not:</strong> <code>Preempt=</code> goes on the preemptor, <code>GraceTime</code> on the victim.</p>
+<ol><li>Let the account use them.</li></ol>
+<pre><code class="language-bash">   sacctmgr -i modify account name=&quot;bio&quot; set qos+=low,&quot;high_bio&quot;</code></pre>
+<p><strong>Expect:</strong> <code>sacctmgr show assoc format=Account%12,User%12,DefaultQOS,QOS%30</code> lists both. <strong>If not:</strong> a submit fails with <code>Invalid qos specification</code>.</p>
+<ol><li>Set <code>slurm.conf</code>, restart <code>slurmctld</code> if <code>PreemptType</code> changed.</li></ol>
+<pre><code class="language-text">   PreemptType=preempt/qos
+   PreemptMode=REQUEUE
+   AccountingStorageEnforce=associations,qos
+   PreemptParameters=send_user_signal</code></pre>
+<p><strong>Expect:</strong> <code>scontrol show config | grep -E &#x27;^Preempt|^AccountingStorageEnforce|^JobRequeue|^KillWait&#x27;</code> shows them. <strong>If not:</strong> read the log.</p>
+<ol><li>Run the drill on one node.</li></ol>
+<pre><code class="language-bash">   L=$(sbatch --parsable -A physics --qos=low -w node1 --exclusive --requeue \
+         --open-mode=append -o low.out --wrap=&#x27;sleep 600&#x27;)
+   H=$(sbatch --parsable -A physics --qos=high_physics -w node1 --exclusive --wrap=&#x27;sleep 5&#x27;)
+   sacct -X -D -j $L,$H -o JobID,QOS%12,State%12 -P
+   scontrol show job $L | grep -oE &#x27;Requeue=[0-9]+ Restarts=[0-9]+&#x27;</code></pre>
+<p><strong>Expect:</strong> low <code>PREEMPTED</code> then <code>RUNNING</code> again, high <code>COMPLETED</code>, and <code>Requeue=1 Restarts=1</code>. <strong>If not:</strong> see the table below.</p>
+<p><strong>Don&#x27;t:</strong> announce the <code>low</code> tier before the drill passes. <strong>Roll back:</strong> <code>sacctmgr -i modify qos low set GraceTime=30 PreemptExemptTime=00:00:00</code> shortens the grace period.</p>
+<hr>
+<h2>Part 2: Route jobs with a submit rule</h2>
+<ol><li>Put <code>job_submit.lua</code> next to the <code>slurm.conf</code> the controller uses.</li><li>Add <code>JobSubmitPlugins=lua</code> to <code>slurm.conf</code> and run <code>scontrol reconfigure</code>.</li></ol>
+<pre><code class="language-bash">   scontrol show config | grep JobSubmitPlugins
+   grep job_submit /var/log/slurm/slurmctld.log | tail -3</code></pre>
+<p><strong>Expect:</strong> <code>JobSubmitPlugins = lua</code> and <code>job_submit.lua loaded</code>. <strong>If not:</strong> with the plugin on and no file, <code>slurmctld</code> refuses to start.</p>
+<ol><li>The rules the page gives:<ul><li>No <code>--time</code>: refuse with <code>slurm.ESLURM_INVALID_TIME_LIMIT</code>.</li><li>No <code>--qos</code>: set <code>low</code> and <code>job_desc.requeue = 1</code>.</li><li><code>--qos=high</code>: set <code>high_&lt;account&gt;</code>.</li><li><code>--exclusive=user</code> (<code>job_desc.shared == 2</code>): change to <code>0</code>.</li></ul></li></ol>
+<p><strong>Expect:</strong> <code>sbatch --wrap=&#x27;sleep 1&#x27;</code> prints <code>Please set --time, jobs without one are not accepted</code>. <strong>If not:</strong> the script is not loaded.</p>
+<p><strong>Don&#x27;t:</strong> restart <code>slurmctld</code> with a broken script. It fails with <code>fatal: failed to initialize job_submit plugin</code>.</p>
+<hr>
+<h2>Part 3: Make a training job survive eviction</h2>
+<pre><code class="language-bash">#SBATCH --requeue
+#SBATCH --open-mode=append
+#SBATCH --signal=B:USR1@300</code></pre>
+<ol><li>Run the trainer in the background and <code>wait</code> for it, so the <code>trap</code> can run:</li></ol>
+<pre><code class="language-bash">   trap on_usr1 USR1
+   python train.py --resume-latest &amp;
+   child=$!
+   wait &quot;$child&quot;</code></pre>
+<p><strong>Expect:</strong> on <code>USR1</code> the handler asks the trainer to checkpoint, then runs <code>scontrol requeue &quot;$SLURM_JOB_ID&quot;</code>. <strong>If not:</strong> the trap never fires when the trainer runs in the foreground.</p>
+<ol><li>Cap restarts with <code>SLURM_RESTART_COUNT</code> and require a minimum runtime before requeueing.</li><li>Prefer <code>srun python train.py</code>. The trainer is then a step and hears the early <code>SIGTERM</code> itself.</li></ol>
+<p><strong>Don&#x27;t:</strong> save a checkpoint inside the handler. Set a flag and save at a safe boundary. The handler must be idempotent.</p>
+<hr>
+<h2>Who hears what</h2>
+<table><thead><tr><th>Event</th><th>Batch shell</th><th><code>srun</code> steps</th></tr></thead><tbody><tr><td>Preemption, <code>GraceTime</code> &gt; 0</td><td>No</td><td>Yes, about 1 s later</td></tr><tr><td>End of grace, time limit, <code>scancel</code></td><td>Yes</td><td>Yes</td></tr><tr><td><code>--signal=B:USR1@N</code></td><td>Yes</td><td>No</td></tr><tr><td><code>scancel -s USR1 &lt;job&gt;</code></td><td>No</td><td>Yes (<code>--batch</code> for the shell)</td></tr></tbody></table>
+<p>Timings are ticks, not stopwatches: the end of grace was noticed 3 to 25 s late on 23.11.4.</p>
+<h2>Tips and tricks</h2>
+<ul><li>Use a user-defined signal such as <code>USR1</code>. <code>srun</code> passes it through.</li><li>Measure your own timings with <code>probe.sh</code> and your <code>GraceTime</code>. Do not guess.</li><li><code>PreemptExemptTime</code> gives a job a minimum runtime before it can be preempted.</li><li><code>--open-mode=append</code> keeps the first run&#x27;s log when a requeue starts the second.</li><li>Changing <code>PriorityTier</code> or <code>OverSubscribe</code> needs only <code>scontrol reconfig</code>. Changing preemption plugin settings needs a full restart.</li><li><code>GraceTime</code> is not used with <code>SUSPEND</code>. There is a separate <code>suspend_grace_time</code>.</li></ul>
+<h2>Warnings</h2>
+<blockquote><p>[!WARNING] A broken <code>job_submit.lua</code> stops a restarting <code>slurmctld</code>: users then see &quot;Unable to contact slurm controller&quot;.</p></blockquote>
+<ul><li>A bash <code>trap</code> runs only after the foreground command ends, so background the trainer and <code>wait</code>.</li><li>A job that exits early still counts as preempted, whatever the reason.</li><li>One preemptor can evict more than it needed: backfill reserves whole nodes.</li><li>Suspend does not free licenses. Use <code>REQUEUE</code> or <code>CANCEL</code> with <code>PreemptParameters=reclaim_licenses</code>.</li><li>Requeue starts the script again. It does not resume it.</li></ul>
+<h2>If it fails</h2>
+<table><thead><tr><th>What you see</th><th>Likely cause</th><th>Fix</th></tr></thead><tbody><tr><td>The victim is gone, no second run</td><td>No <code>--requeue</code> and <code>JobRequeue=0</code></td><td><code>JobRequeue=1</code>, or the submit rule</td></tr><tr><td>Nothing is evicted</td><td><code>Preempt=</code> missing, or on the wrong QOS</td><td><code>sacctmgr show qos format=Name,Preempt</code></td></tr><tr><td>Nothing is evicted for 30 minutes</td><td><code>PreemptExemptTime</code></td><td>Lower it on the victim QOS</td></tr><tr><td>A high job waits behind a low one</td><td><code>--exclusive=user</code> or <code>--exclusive=mcs</code></td><td>Rewrite them in the submit rule</td></tr><tr><td>The batch shell hears nothing early</td><td>No <code>send_user_signal</code></td><td>Set <code>PreemptParameters=send_user_signal</code></td></tr></tbody></table>
+<p><strong>Why it works:</strong> <a href="../../../../fields/schedulers/slurm-preemption/slurm-preemption-requeue-signals/">preemption and signals</a>, <a href="../../../../fields/schedulers/slurm-preemption/slurm-qos-preemption-setup/">QOS setup</a>, <a href="../../../../fields/schedulers/slurm-preemption/slurm-job-submit-lua/">submit plugin</a>, <a href="../../../../fields/schedulers/slurm-preemption/slurm-signals-cheatsheet/">signals cheat sheet</a>. Next: <a href="../../../../fields/schedulers/slurm-pending-jobs/">pending jobs</a>.</p>
+<p><a href="../../../../#/fields/schedulers/slurm-preemption/quick-guide">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

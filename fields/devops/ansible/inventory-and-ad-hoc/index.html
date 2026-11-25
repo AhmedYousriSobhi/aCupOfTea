@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Four Nodes Said &quot;Too Many Open Files&quot;: Inventories and Ad-Hoc Commands</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/ansible/inventory-and-ad-hoc/">
+<meta name="description" content="Inventory groups and ranges, groupvars with overrides, targeting patterns, ad-hoc commands across the cluster, the node that was down, and checking a change in a fresh login.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Four Nodes Said &quot;Too Many Open Files&quot;: Inventories and Ad-Hoc Commands">
+<meta property="og:description" content="Inventory groups and ranges, groupvars with overrides, targeting patterns, ad-hoc commands across the cluster, the node that was down, and checking a change in a fresh login.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/ansible/inventory-and-ad-hoc/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/ansible/inventory-and-ad-hoc/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/devops/ansible/inventory-and-ad-hoc"></script>
+<main>
+<h1>Four Nodes Said &quot;Too Many Open Files&quot;: Inventories and Ad-Hoc Commands</h1>
+<p><em>Inventory groups and ranges, groupvars with overrides, targeting patterns, ad-hoc commands across the cluster, the node that was down, and checking a change in a fresh login.</em></p>
+<blockquote><p><strong>Part 2 of the [Ansible series](/fields/devops/ansible/README.md).</strong> <a href="../../../../fields/devops/ansible/getting-started/">Part 1</a> got a pinned Ansible talking to every node. By the end of this page you&#x27;ll describe the cluster in an inventory, change one setting on exactly the right nodes, catch the one that missed it, and prove the change in a fresh login.</p></blockquote>
+<hr>
+<h2>The loop that skipped a node</h2>
+<p>A user&#x27;s data-loading job dies with <code>OSError: [Errno 24] Too many open files</code>. The fix is well known: raise the open-files limit on the compute nodes. Someone does it the quick way:</p>
+<pre><code class="language-bash">for n in $(seq -w 1 400); do ssh cn$n &#x27;echo &quot;* soft nofile 8192&quot; | sudo tee -a /etc/security/limits.d/90-nofile.conf&#x27;; done</code></pre>
+<p>It scrolls past, mostly fine. Three weeks later the same error comes back, but only for jobs that land on four particular nodes. Those nodes were down for repair that afternoon. The loop printed <code>ssh: connect to host ... No route to host</code> four times among four hundred lines, and nobody read them. Two other nodes now have the line twice, from when someone reran the loop &quot;to be safe&quot;.</p>
+<p>This page does the same change so that a missed node can&#x27;t hide.</p>
+<blockquote><p>[!NOTE] Lab: ansible-core <strong>2.22.0</strong>, Ubuntu 24.04 nodes with the usual default soft limit of 1024 open files. The lab container capped the hard limit at 20000, so we used values below that. The per-limit numbers here are examples, not recommendations.</p></blockquote>
+<hr>
+<h2>An inventory is a map with groups</h2>
+<p>An <strong>inventory</strong> lists your machines and puts them in <strong>groups</strong>. You&#x27;ll use the groups everywhere: to choose where a task runs, and to attach settings. This is the lab&#x27;s <code>inventory/hosts.yml</code>:</p>
+<pre><code class="language-yaml">all:
+  children:
+    head:
+      hosts:
+        head01:
+    compute:
+      hosts:
+        cn[001:004]:
+    gpu:
+      hosts:
+        gpu001:
+    nodes:
+      children:
+        compute:
+        gpu:</code></pre>
+<p>Three things to notice:</p>
+<ul><li><code>cn[001:004]</code> is a <strong>range</strong>: cn001 to cn004. A real cluster writes <code>cn[001:400]</code> and gets 400 hosts.</li><li><code>nodes</code> has no hosts of its own. Its <strong>children</strong> are other groups, so <code>nodes</code> means &quot;every machine that runs jobs&quot;.</li><li>Groups describe roles, not hardware racks. Add <code>rack07</code> if you need it; a host can be in many groups.</li></ul>
+<p>See what Ansible understood:</p>
+<pre><code class="language-bash">ansible-inventory --graph</code></pre>
+<pre><code class="language-text">@all:
+  |--@ungrouped:
+  |--@head:
+  |  |--head01
+  |--@compute:
+  |  |--cn001
+  ...
+  |--@nodes:
+  |  |--@compute:
+  |  |  |--cn001
+  ...
+  |  |--@gpu:
+  |  |  |--gpu001</code></pre>
+<blockquote><p>[!WARNING] Ranges don&#x27;t guess your padding. <code>cn[1:4]</code> expands to <code>cn1 cn2 cn3 cn4</code>, not <code>cn001</code>. We checked: <code>ansible -i unpadded.yml all --list-hosts</code> printed <code>cn1 cn2 cn3 cn4</code>. If your names have leading zeros, so does the range.</p></blockquote>
+<hr>
+<h2>Variables live next to the groups</h2>
+<p>Values that differ between groups go in <code>inventory/group_vars/&lt;group&gt;.yml</code>. Ansible loads them automatically for every host in that group.</p>
+<pre><code class="language-bash">echo &quot;nofile_limit: 8192&quot; &gt; inventory/group_vars/nodes.yml
+echo &quot;nofile_limit: 16384&quot; &gt; inventory/group_vars/gpu.yml</code></pre>
+<p>gpu001 is in both <code>nodes</code> and <code>gpu</code>. The more specific group wins: a child group overrides its parent. Check before you rely on it:</p>
+<pre><code class="language-bash">ansible-inventory --host gpu001
+ansible-inventory --host cn001</code></pre>
+<pre><code class="language-text">{
+    &quot;nofile_limit&quot;: 16384
+}
+{
+    &quot;nofile_limit&quot;: 8192
+}</code></pre>
+<p>Rule of thumb: <strong>if you&#x27;re about to type a number into a command, it probably belongs in `group_vars`.</strong></p>
+<hr>
+<h2>Aim before you fire</h2>
+<p>A <strong>pattern</strong> picks hosts. Before any change, ask Ansible who it would touch with <code>--list-hosts</code>:</p>
+<table><thead><tr><th>Pattern</th><th>Means</th><th>In the lab</th></tr></thead><tbody><tr><td><code>nodes</code></td><td>The group</td><td>cn001–cn004, gpu001</td></tr><tr><td><code>nodes:!cn003</code></td><td>The group, minus a host</td><td>cn001, cn002, cn004, gpu001</td></tr><tr><td><code>compute:gpu</code></td><td>Either group</td><td>cn001–cn004, gpu001</td></tr><tr><td><code>nodes:&amp;gpu</code></td><td>In both groups</td><td>gpu001</td></tr><tr><td><code>cn001,cn002</code></td><td>A list</td><td>cn001, cn002</td></tr></tbody></table>
+<pre><code class="language-bash">ansible &#x27;nodes:!cn003&#x27; --list-hosts</code></pre>
+<pre><code class="language-text">  hosts (4):
+    cn001
+    cn002
+    cn004
+    gpu001</code></pre>
+<p>Now the trap. Mistype a group name in an <strong>ad-hoc</strong> command and Ansible warns, does nothing, and <strong>exits 0</strong>:</p>
+<pre><code class="language-bash">ansible compte -m ansible.builtin.ping; echo &quot;exit=$?&quot;</code></pre>
+<pre><code class="language-text">[WARNING]: Could not match supplied host pattern, ignoring: compte
+[WARNING]: No hosts matched, nothing to do
+exit=0</code></pre>
+<p>A wrapper script would call that a success. The same typo in a <strong>playbook&#x27;s</strong> <code>--limit</code> is treated properly: <code>--limit cn0003</code> failed with <code>no hosts to target</code> and exit 1. When you script ad-hoc commands, check the host list first.</p>
+<hr>
+<h2>The change, as one command</h2>
+<p>An <strong>ad-hoc command</strong> runs one module on a set of hosts from the command line. No playbook file. Here&#x27;s the whole change:</p>
+<pre><code class="language-bash">ansible nodes -b -m ansible.builtin.copy \
+  -a &#x27;dest=/etc/security/limits.d/90-nofile.conf content=&quot;* soft nofile {{ nofile_limit }}\n* hard nofile {{ nofile_limit }}\n&quot; owner=root group=root mode=0644&#x27;</code></pre>
+<table><thead><tr><th>Piece</th><th>Meaning</th></tr></thead><tbody><tr><td><code>nodes</code></td><td>The pattern: where</td></tr><tr><td><code>-b</code></td><td><strong>Become</strong> root with sudo on the node</td></tr><tr><td><code>-m ansible.builtin.copy</code></td><td>The module: write a file with exactly this content</td></tr><tr><td><code>{{ nofile_limit }}</code></td><td>Filled in per host from <code>group_vars</code>: 8192 on compute, 16384 on gpu001</td></tr></tbody></table>
+<p>Two differences from the <code>for</code> loop already. <code>copy</code> <em>sets</em> the file&#x27;s content instead of appending to it, so running it twice gives the same file, not two lines. And Ansible reports every host. In the lab we ran it with cn003 switched off:</p>
+<pre><code class="language-text">cn001 | CHANGED =&gt; {
+cn002 | CHANGED =&gt; {
+cn003 | UNREACHABLE! =&gt; {
+cn004 | CHANGED =&gt; {
+gpu001 | CHANGED =&gt; {</code></pre>
+<p>Exit code 4. cn003 can&#x27;t hide among the others.</p>
+<hr>
+<h2>The trap: checking through a reused connection</h2>
+<p>You want to see the new limit, so you ask the nodes straight away:</p>
+<pre><code class="language-bash">ansible nodes -m ansible.builtin.command -a &#x27;sh -c &quot;ulimit -n&quot;&#x27;</code></pre>
+<p>Every node said <code>1024</code>, the <strong>old</strong> value. At the same moment, a plain new SSH login to cn001 already showed the new one. We waited 65 seconds and asked through Ansible again: now every node showed its new value too.</p>
+<p>Here&#x27;s why. The limit is applied by PAM when you <strong>log in</strong>, and Ansible doesn&#x27;t log in for every command. By default it keeps each SSH connection open for 60 seconds (<code>ControlPersist=60s</code> in its default <code>ssh_args</code>) and reuses it. Within that minute you&#x27;re asking an old session.</p>
+<p>So the change worked; the check was lying. This one cost us a confused ten minutes in the lab, and it&#x27;ll do the same to anyone verifying limits, group memberships or anything else that&#x27;s set at login.</p>
+<hr>
+<h2>A check you can rerun</h2>
+<p>Turn the check into a small playbook that resets the connection, so it always reads a fresh login, and that compares the result with the inventory instead of with your eyes. Save it as <code>playbooks/check-nofile.yml</code>:</p>
+<pre><code class="language-yaml">- name: Check the open-files limit in a fresh login
+  hosts: nodes
+  gather_facts: false
+  tasks:
+    - name: Drop the reused SSH connection so the next task logs in again
+      ansible.builtin.meta: reset_connection
+
+    - name: Read the soft limit
+      ansible.builtin.command: sh -c &#x27;ulimit -n&#x27;
+      register: nofile
+      changed_when: false
+
+    - name: Fail if it isn&#x27;t what the inventory says
+      ansible.builtin.assert:
+        that: nofile.stdout | int == nofile_limit | int
+        fail_msg: &quot;{{ inventory_hostname }} has {{ nofile.stdout }}, expected {{ nofile_limit }}&quot;
+        quiet: true</code></pre>
+<p><code>changed_when: false</code> tells Ansible that reading a value changes nothing, so it doesn&#x27;t report a change. Part 3 is about why that matters.</p>
+<pre><code class="language-bash">ansible-playbook playbooks/check-nofile.yml; echo &quot;exit=$?&quot;</code></pre>
+<p>With cn003 back up but still missing the change, the check named it and exited 2:</p>
+<pre><code class="language-text">fatal: [cn003]: FAILED! =&gt; {... &quot;msg&quot;: &quot;cn003 has 1024, expected 8192&quot;}
+cn001 : ok=2    changed=0    unreachable=0    failed=0
+cn003 : ok=1    changed=0    unreachable=0    failed=1</code></pre>
+<p>Before we lowered the GPU value under the lab&#x27;s cap, the same check also caught gpu001 holding a value the inventory didn&#x27;t expect. It fails when it should. It passes <code>ansible-lint</code> on the <code>production</code> profile.</p>
+<hr>
+<h2>Catching up the node that was down</h2>
+<p>Run the same change on just the node that missed it:</p>
+<pre><code class="language-bash">ansible cn003 -b -m ansible.builtin.copy \
+  -a &#x27;dest=/etc/security/limits.d/90-nofile.conf content=&quot;* soft nofile {{ nofile_limit }}\n* hard nofile {{ nofile_limit }}\n&quot; owner=root group=root mode=0644&#x27;</code></pre>
+<p><code>cn003 | CHANGED</code>. Then the important test: run it on <strong>all</strong> nodes again. Every host answered <code>SUCCESS</code>, not <code>CHANGED</code>. Nothing to do, so nothing done. And the check:</p>
+<pre><code class="language-text">cn001 : ok=2    changed=0    unreachable=0    failed=0
+cn002 : ok=2    changed=0    unreachable=0    failed=0
+cn003 : ok=2    changed=0    unreachable=0    failed=0
+cn004 : ok=2    changed=0    unreachable=0    failed=0
+gpu001 : ok=2    changed=0    unreachable=0    failed=0
+exit=0</code></pre>
+<blockquote><p>[!IMPORTANT] A login limit doesn&#x27;t reach processes that are already running, and Slurm jobs don&#x27;t log in through PAM on the node. By default Slurm copies the limits from where the job was <strong>submitted</strong> (<code>PropagateResourceLimits</code> in <code>slurm.conf</code>), and slurmd&#x27;s own limit caps what a job can have. So set the limit on the login nodes too, and restart slurmd after raising its limit. See the Slurm documentation in the references; we didn&#x27;t test the Slurm side in this lab.</p></blockquote>
+<hr>
+<h2>What ad-hoc commands are not for</h2>
+<p>Ad-hoc is for questions and one-off fixes: &quot;what&#x27;s the kernel version everywhere?&quot;, &quot;restart this daemon on these three nodes&quot;. It&#x27;s not for changes you want to keep. Nobody can review a command in your shell history, and nobody will rerun it on the node you add next month. Once a change matters, it goes into a playbook in Git. That&#x27;s part 3.</p>
+<hr>
+<h2>Back to the loop</h2>
+<p>Same request, same 400 nodes, this inventory. The change is one command with the value in <code>group_vars</code>, so GPU nodes get theirs without a second loop. Four nodes are down; the output says <code>UNREACHABLE!</code> four times, the run exits 4, and that&#x27;s impossible to scroll past in a script. Nobody reruns anything &quot;to be safe&quot;, because rerunning changes nothing.</p>
+<p>When the four nodes come back, <code>check-nofile.yml</code> names them. One <code>--limit</code> run catches them up, and the check passes on all 400. Three weeks later there&#x27;s no mystery error, because the check would have failed first. It&#x27;s a five-second job to put it in the node health checks.</p>
+<p><strong>Takeaway:</strong> describe the cluster once in an inventory, keep values in <code>group_vars</code>, aim with <code>--list-hosts</code>, and verify with a check that logs in fresh and compares against the inventory.</p>
+<p><strong>Next:</strong> <a href="../../../../fields/devops/ansible/idempotence-and-handlers/">Part 3, The Playbook That Restarted slurmd Every Night</a>, turns one-off commands into playbooks you can trust to rerun.</p>
+<hr>
+<h2>References</h2>
+<ul><li><a href="https://docs.ansible.com/projects/ansible/latest/inventory_guide/intro_inventory.html">How to build your inventory</a>: YAML inventories, ranges, child groups, <code>group_vars</code> and how group variables merge.</li><li><a href="https://docs.ansible.com/projects/ansible/latest/inventory_guide/intro_patterns.html">Patterns: targeting hosts and groups</a>: <code>:</code>, <code>!</code>, <code>&amp;</code> and <code>--limit</code>.</li><li><a href="https://docs.ansible.com/projects/ansible/latest/command_guide/intro_adhoc.html">Introduction to ad hoc commands</a>: running modules from the command line, <code>-b</code>.</li><li><a href="https://docs.ansible.com/projects/ansible/latest/collections/ansible/builtin/copy_module.html">ansible.builtin.copy</a>, <a href="https://docs.ansible.com/projects/ansible/latest/collections/ansible/builtin/assert_module.html">ansible.builtin.assert</a>, <a href="https://docs.ansible.com/projects/ansible/latest/collections/ansible/builtin/meta_module.html">ansible.builtin.meta</a>: the modules used here, including <code>reset_connection</code>.</li><li><a href="https://docs.ansible.com/projects/ansible/latest/collections/ansible/builtin/ssh_connection.html">ansible.builtin.ssh connection</a>: the default <code>ssh_args</code> with <code>ControlPersist=60s</code>.</li><li><a href="https://man7.org/linux/man-pages/man5/limits.conf.5.html">limits.conf(5)</a> and <a href="https://man7.org/linux/man-pages/man8/pam_limits.8.html">pam_limits(8)</a>: when login limits apply.</li><li><a href="https://slurm.schedmd.com/slurm.conf.html#OPT_PropagateResourceLimits">slurm.conf: PropagateResourceLimits</a>: how Slurm passes limits from the submit host to jobs.</li></ul>
+<p><a href="../../../../#/fields/devops/ansible/inventory-and-ad-hoc">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

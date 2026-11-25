@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Retention, Full Disks and Backups: Looking After the Data Once It Lands</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/victoriametrics/retention-disk-and-backups/">
+<meta name="description" content="What -retentionPeriod really deletes and when, how to size the disk from a real test run, the read-only mode that /health doesn&#x27;t report, and an hourly backup job proven by restoring it.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Retention, Full Disks and Backups: Looking After the Data Once It Lands">
+<meta property="og:description" content="What -retentionPeriod really deletes and when, how to size the disk from a real test run, the read-only mode that /health doesn&#x27;t report, and an hourly backup job proven by restoring it.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/victoriametrics/retention-disk-and-backups/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/victoriametrics/retention-disk-and-backups/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/devops/victoriametrics/retention-disk-and-backups"></script>
+<main>
+<h1>Retention, Full Disks and Backups: Looking After the Data Once It Lands</h1>
+<p><em>What -retentionPeriod really deletes and when, how to size the disk from a real test run, the read-only mode that /health doesn&#x27;t report, and an hourly backup job proven by restoring it.</em></p>
+<blockquote><p><strong>Part 4 of the [VictoriaMetrics series](/fields/devops/victoriametrics/README.md).</strong> <a href="../../../../fields/devops/victoriametrics/vmagent-and-the-network-blip/">Part 3</a> got every sample to the database. This page keeps them there: how much disk you really need, what happens when it runs out, and a backup you&#x27;ve actually restored.</p></blockquote>
+<hr>
+<h2>Healthy, according to the health check</h2>
+<p>The metrics disk fills up on a Saturday. Your uptime checker polls <code>/health</code> every minute, gets <code>OK</code>, and stays green all weekend. On Monday the dashboards end at Saturday 03:00. The database was up the whole time. It just wasn&#x27;t storing anything.</p>
+<p>We reproduced that exact situation in the lab. It&#x27;s the most important thing on this page, and it&#x27;s in When the disk fills up. First, how the disk gets used.</p>
+<blockquote><p>[!NOTE] Lab: VictoriaMetrics <strong>v1.156.0</strong> on a throwaway Ubuntu 24.04.5 sandbox, scraping node_exporter 1.12.1. The backup job ran as the <code>victoriametrics</code> user against the layout from <a href="../../../../fields/devops/victoriametrics/single-node-in-ten-minutes/">part 2</a>, with <code>127.0.0.1</code> in place of <code>10.0.0.5</code>. systemd wasn&#x27;t running, so the timer was linted but not started.</p></blockquote>
+<hr>
+<h2>What retention really deletes, and when</h2>
+<p><code>-retentionPeriod</code> takes a number and a unit: <code>h</code>, <code>d</code>, <code>w</code>, <code>M</code> (months) or <code>y</code>. With no unit it means months. The default is <code>1M</code>, which is 31 days, and the minimum is <code>1d</code>.</p>
+<blockquote><p>[!WARNING] Lowercase <code>m</code> is minutes, and for retention it&#x27;s refused outright. <code>-retentionPeriod=3m</code> exited 2 in the lab: &quot;duration in months must be set with capital <code>M</code> suffix, lower case <code>m</code> means minutes and not allowed&quot;. Good: one character can&#x27;t quietly turn three months into three minutes.</p></blockquote>
+<p>Data is stored in <strong>monthly partitions</strong> (folders like <code>2026_11</code>) made of <strong>parts</strong>. That shapes deletion:</p>
+<ul><li>A whole partition outside retention is deleted <strong>on the first day of the next month</strong>.</li><li>A part outside retention is deleted <strong>eventually</strong>, during a background merge, and only once the part is entirely outside retention.</li></ul>
+<p>So the docs&#x27; rule is that disk usage peaks at <strong>retention plus one month</strong>. With <code>-retentionPeriod=1</code>, January&#x27;s data is deleted on March 1st. Plan the disk for the peak, not for the setting.</p>
+<table><thead><tr><th><code>-retentionPeriod</code></th><th>Plan disk for about</th></tr></thead><tbody><tr><td><code>31d</code> (the default)</td><td>2 months of data</td></tr><tr><td><code>90d</code></td><td>4 months of data</td></tr><tr><td><code>1y</code></td><td>13 months of data</td></tr></tbody></table>
+<hr>
+<h2>Sizing the disk from a real test</h2>
+<p>The docs&#x27; method: run a test instance on the real workload for <strong>a day</strong>, measure the data directory, and multiply. Ten gigabytes after one day means at least 1 TB for 100 days.</p>
+<p>Why a full day and not ten minutes? Our lab shows the trap. After a short run, here&#x27;s what the database reported about itself:</p>
+<pre><code class="language-bash">curl -s http://127.0.0.1:8431/metrics | grep -E &#x27;^vm_data_size_bytes\{type=&quot;(storage/small|indexdb/file)&quot;|^vm_rows\{type=&quot;storage/small&quot;&#x27;</code></pre>
+<pre><code class="language-text">vm_data_size_bytes{type=&quot;storage/small&quot;} 53867
+vm_data_size_bytes{type=&quot;indexdb/file&quot;} 79398
+vm_rows{type=&quot;storage/small&quot;} 39990</code></pre>
+<p>That&#x27;s 1.35 bytes per sample for the data, and an index bigger than the data itself. After forcing the background merge that normally happens over time (<code>/internal/force_merge</code>), the same 39,990 samples took 27,127 bytes: 0.68 bytes per sample. Halved, just from merging.</p>
+<p>A short test over-counts the data, because it hasn&#x27;t been merged yet, and over-weights the index, because every series is new. A day-long test catches both, plus your daily churn.</p>
+<p>Then leave room on top of the peak. The docs recommend:</p>
+<table><thead><tr><th>Resource</th><th>Keep free</th><th>Why</th></tr></thead><tbody><tr><td>Disk at <code>-storageDataPath</code></td><td>At least 20%</td><td>Merges need room. Without it, parts pile up and queries slow down</td></tr><tr><td>RAM</td><td>50%</td><td>Less chance of OOM; going past it causes cache evictions and slowdowns</td></tr><tr><td>CPU</td><td>50%</td><td>Headroom for spikes</td></tr></tbody></table>
+<p>Rule of thumb: <strong>disk = (one test day) × (retention days + 31) ÷ 0.8.</strong></p>
+<hr>
+<h2>When the disk fills up</h2>
+<p>When free space at <code>-storageDataPath</code> drops below <code>-storage.minFreeDiskSpaceBytes</code> (default 100 MB in v1.156.0), the database switches to <strong>read-only mode</strong>: queries still work, new data is refused.</p>
+<p>We forced it without filling a disk, by setting the threshold to 100 TB on a disk with 30 GB free:</p>
+<pre><code class="language-bash">victoria-metrics-prod -storageDataPath=./data -httpListenAddr=127.0.0.1:8428 \
+  -storage.minFreeDiskSpaceBytes=100TB</code></pre>
+<p>Writes were refused with HTTP 503, and the mode clears by itself once space is freed (tested further down):</p>
+<pre><code class="language-text">cannot store metrics: the storage is in read-only mode; check -storage.minFreeDiskSpaceBytes command-line flag value</code></pre>
+<p>And here&#x27;s the trap:</p>
+<pre><code class="language-bash">curl -s -w &#x27; http=%{http_code}\n&#x27; http://127.0.0.1:8428/health</code></pre>
+<pre><code class="language-text">OK http=200</code></pre>
+<p><strong>`/health` says OK while every write is being rejected.</strong> It tells you the process is up, not that it&#x27;s storing anything. The signal is a metric:</p>
+<pre><code class="language-text">vm_storage_is_read_only{path=&quot;.../data&quot;} 1</code></pre>
+<p>Now the second trap. We turned on self-scraping (<code>-selfScrapeInterval=5s</code>) on the read-only instance and waited 45 seconds. Querying <code>vm_storage_is_read_only</code> on that same instance returned <strong>nothing</strong>. Of course: it&#x27;s read-only, so it can&#x27;t store its own metrics either. A database that monitors only itself goes blind in exactly the failure you care about.</p>
+<blockquote><p>[!IMPORTANT] Scrape every VictoriaMetrics from <strong>somewhere else</strong>, a second small instance or a vmagent writing to one, and alert on <code>vm_storage_is_read_only == 1</code> there. In the lab, vmalert on a separate monitoring instance fired <code>VMStorageReadOnly</code> for the read-only one within two minutes. Part 5 has the rule and its tests.</p></blockquote>
+<p>Data sent through a buffer survives read-only mode. We pointed a vmagent at a read-only instance. In the first run, after 30 seconds it had twenty <code>503</code>s, 46 KB queued and nothing dropped. In a second, timed run of 63 seconds, it delivered every sample for the read-only window once the threshold was lifted: 12 of 12. Targets scraped by the read-only node itself have no buffer, so those samples are simply lost. One more reason for the vmagent in <a href="../../../../fields/devops/victoriametrics/vmagent-and-the-network-blip/">part 3</a>.</p>
+<hr>
+<h2>Backups: snapshot, copy, restore</h2>
+<p>A <strong>snapshot</strong> is an instant, read-only view of the data directory, made with hard links, so it&#x27;s free to create. <strong>vmbackup</strong> asks the database for a snapshot, copies it to the destination (<code>s3://</code>, <code>gs://</code>, <code>azblob://</code> or <code>fs://</code>), and deletes the snapshot. If the destination already holds a backup, only the changed files are uploaded. <strong>vmrestore</strong> copies a backup back into a stopped database&#x27;s data directory.</p>
+<p>Every failure path we tried was refused cleanly:</p>
+<table><thead><tr><th>What we tried</th><th>What happened</th></tr></thead><tbody><tr><td>Backup without the snapshot key</td><td><code>401</code> from <code>/snapshot/create</code>, exit 255</td></tr><tr><td>Backup into the data directory itself</td><td>Refused: <code>-dst ... can not point to the directory with VictoriaMetrics data</code>, exit 255</td></tr><tr><td>Restore while the database was running on that directory</td><td>Panic: <code>cannot acquire lock on file &quot;.../flock.lock&quot;</code>, exit 2, nothing touched</td></tr><tr><td>Restore into a fresh directory, then start on it</td><td>645 series, same as the source</td></tr><tr><td>Second backup to the same destination</td><td>Incremental: 97 bytes uploaded</td></tr></tbody></table>
+<p>Two traps worth knowing before you automate it:</p>
+<p><strong>The key ends up in the log.</strong> You can keep the key out of <code>ps</code> with <code>%{ENV_VAR}</code> in the flag value: VictoriaMetrics expands it itself, and in the lab a running process&#x27;s command line showed the literal <code>%{K}</code>, not the key. But vmbackup then logs the expanded URL, key included. Both on success:</p>
+<pre><code class="language-text">info ... Snapshot create url http://127.0.0.1:8429/snapshot/create?authKey=k3y</code></pre>
+<p>and on failure. That&#x27;s why <a href="../../../../fields/devops/victoriametrics/single-node-in-ten-minutes/">part 2</a> uses a separate snapshot key that can&#x27;t delete anything.</p>
+<p><strong>An interrupted backup leaves a snapshot behind.</strong> We throttled a backup with <code>-maxBytesPerSecond=2000</code> and killed it after 3 seconds. <code>vm_snapshots</code> went from 0 to 1, and stayed at 1 after a successful rerun. Old snapshots hold on to parts that merges would otherwise free, so they slowly eat disk. Since <strong>v1.122.0</strong>, <code>-snapshotsMaxAge</code> defaults to <code>3d</code>, and in the lab a 60-second setting deleted the orphan on schedule. On older versions the default is to keep snapshots forever, so set it yourself, longer than your slowest backup.</p>
+<hr>
+<h2>An hourly job you can leave running</h2>
+<p>This follows the docs&#x27; &quot;smart backups&quot; pattern: an hourly incremental into <code>latest/</code>, and once a day a server-side copy of <code>latest/</code> into a dated folder. The docs say the two shouldn&#x27;t overlap, so one script does both, in order. <code>set -e</code> means the daily copy only happens after a successful hourly run.</p>
+<ol><li>Install vmbackup and vmrestore from the <code>vmutils</code> tarball (verify it like in part 2), and make the backup folder:</li></ol>
+<pre><code class="language-bash">install -m 0755 vmbackup-prod vmrestore-prod /usr/local/bin/
+install -d -o victoriametrics -g victoriametrics -m 0750 /backup/victoriametrics</code></pre>
+<ol><li>The script:</li></ol>
+<pre><code class="language-bash">cat &gt; /usr/local/sbin/vm-backup &lt;&lt;&#x27;EOF&#x27;
+#!/usr/bin/env bash
+# Hourly: incremental backup into latest/. Once a day: server-side copy of latest/ into YYYYMMDD/.
+# Run as the victoriametrics user. Exits non-zero on any failure.
+set -euo pipefail
+
+VM_URL=http://10.0.0.5:8428
+DATA=/var/lib/victoriametrics
+DST=/backup/victoriametrics
+DAILY_HOUR=00
+KEEP_DAYS=14
+
+VM_SNAPSHOT_KEY=$(cat /etc/victoriametrics/snapshot.key)
+export VM_SNAPSHOT_KEY
+
+/usr/local/bin/vmbackup-prod -loggerLevel=ERROR \
+  -storageDataPath=&quot;$DATA&quot; \
+  -snapshot.createURL=&quot;$VM_URL/snapshot/create?authKey=%{VM_SNAPSHOT_KEY}&quot; \
+  -dst=&quot;fs://$DST/latest&quot;
+
+if [ &quot;$(date +%H)&quot; = &quot;$DAILY_HOUR&quot; ]; then
+  /usr/local/bin/vmbackup-prod -loggerLevel=ERROR \
+    -origin=&quot;fs://$DST/latest&quot; -dst=&quot;fs://$DST/$(date +%Y%m%d)&quot;
+  cutoff=$(date -d &quot;$KEEP_DAYS days ago&quot; +%Y%m%d)
+  for d in &quot;$DST&quot;/[0-9]*; do
+    name=$(basename &quot;$d&quot;)
+    if [[ $name =~ ^[0-9]{8}$ ]] &amp;&amp; [ &quot;$name&quot; -lt &quot;$cutoff&quot; ]; then
+      rm -rf -- &quot;$d&quot;
+    fi
+  done
+fi
+echo &quot;vm-backup: ok&quot;
+EOF
+chmod 0755 /usr/local/sbin/vm-backup</code></pre>
+<p>The pruning loop uses <code>if</code>, not <code>[[ ]] &amp;&amp; [ ] &amp;&amp; rm</code>, on purpose: with <code>set -e</code>, a <code>&amp;&amp;</code> chain that&#x27;s false on the last folder makes the whole script exit non-zero after a perfectly good backup.</p>
+<ol><li>Run it once by hand and check:</li></ol>
+<pre><code class="language-bash">runuser -u victoriametrics -- /usr/local/sbin/vm-backup; echo &quot;exit=$?&quot;</code></pre>
+<pre><code class="language-text">vm-backup: ok
+exit=0</code></pre>
+<p>In the lab we also ran it with <code>DAILY_HOUR</code> set to the current hour. It made the dated copy, deleted a planted <code>20200101</code> folder, and kept a 3-day-old one and a folder called <code>notes</code>. With a wrong key, and with the database stopped, it exited 255.</p>
+<ol><li>The timer:</li></ol>
+<pre><code class="language-bash">cat &gt; /etc/systemd/system/vm-backup.service &lt;&lt;&#x27;EOF&#x27;
+[Unit]
+Description=VictoriaMetrics backup (hourly incremental, daily copy)
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=victoriametrics
+Group=victoriametrics
+ExecStart=/usr/local/sbin/vm-backup
+EOF
+
+cat &gt; /etc/systemd/system/vm-backup.timer &lt;&lt;&#x27;EOF&#x27;
+[Unit]
+Description=Run vm-backup every hour
+
+[Timer]
+OnCalendar=*-*-* *:05:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+EOF
+
+systemctl daemon-reload
+systemctl enable --now vm-backup.timer</code></pre>
+<p>Success: <code>systemctl list-timers vm-backup.timer</code> shows the next run at five past the hour. Both units passed the output-based lint from part 2, but weren&#x27;t started in the lab.</p>
+<blockquote><p>[!CAUTION] <code>fs://</code> on a local disk protects you from mistakes, not from losing the machine. Point <code>DST</code> at an NFS mount on another host, or switch to <code>s3://</code> with <code>-credsFilePath</code>, before you call this a backup. vmbackup is the same tool either way.</p></blockquote>
+<hr>
+<h2>Proving the backup</h2>
+<p><strong>A backup you haven&#x27;t restored is a rumour.</strong> Once a month, restore the latest dated backup somewhere harmless and compare it to the live database:</p>
+<pre><code class="language-bash">vmrestore-prod -src=fs:///backup/victoriametrics/$(date +%Y%m%d) \
+  -storageDataPath=/srv/restore-test -loggerLevel=ERROR
+victoria-metrics-prod -storageDataPath=/srv/restore-test -httpListenAddr=127.0.0.1:8435 &amp;
+curl -s http://127.0.0.1:8435/api/v1/query \
+  --data-urlencode &#x27;query=count(count_over_time({job=&quot;node&quot;}[2h]))&#x27;</code></pre>
+<p>In the lab, the restored copy and the live database both answered <code>645</code>. Remember the restore target must not be in use: vmrestore makes the folder match the backup exactly, deleting anything extra, like <code>rsync --delete</code>. That&#x27;s what the lock file protects you from.</p>
+<hr>
+<h2>Changing retention safely</h2>
+<p>Raising <code>-retentionPeriod</code> is safe. Lowering it deletes data, eventually, with no undo. Treat it like any risky change:</p>
+<ol><li><strong>Dry run:</strong> work out what goes. Everything older than the new retention, at the next merge or month boundary.</li><li><strong>Backup:</strong> run <code>vm-backup</code> by hand and confirm <code>exit=0</code>.</li><li><strong>Canary:</strong> if you run two identical nodes behind vmagent (part 3), change one first and watch <code>vm_data_size_bytes</code> for a day.</li><li><strong>Enforce:</strong> change the other.</li><li><strong>Rollback:</strong> there&#x27;s no un-deleting. Rollback means <code>vmrestore</code> from step 2 into a stopped node.</li></ol>
+<hr>
+<h2>Back to the weekend</h2>
+<p>The same Saturday, with this page in place.</p>
+<p>The disk was sized for retention plus a month, with 20% to spare, so on its own it doesn&#x27;t fill. Say it fills anyway, because someone parked a core dump on the same filesystem. At 03:00 the database switches to read-only. <code>/health</code> still says <code>OK</code>, but the monitoring instance is scraping it from outside, sees <code>vm_storage_is_read_only 1</code>, and <code>VMStorageReadOnly</code> pages after a minute. In the lab it fired in under two.</p>
+<p>Nothing sent through vmagent is lost while that page waits for a human: the queue absorbs the <code>503</code>s, just as it delivered 12 of 12 samples in the lab.</p>
+<p>The on-call admin deletes the core dump. That&#x27;s it. No restart. The database re-checks free space about once a second and switches itself back. We tested that on a real full disk: a 300 MB tmpfs with a 150 MB threshold. Writing a 200 MB file turned writes from <code>204</code> into <code>503</code>; deleting it turned them back into <code>204</code> within seconds, and the log said so both ways:</p>
+<pre><code class="language-text">warn ... switching the storage at /mnt/vmtiny/data to read-only mode, since it has less than -storage.minFreeDiskSpaceBytes=150000000 of free space ...
+warn ... switching the storage at /mnt/vmtiny/data to read-write mode, since it has more than -storage.minFreeDiskSpaceBytes=150000000 of free space ...</code></pre>
+<p>vmagent drains its queue, and Monday&#x27;s dashboards have Saturday in them. If it had been worse and the disk had died, the hourly backup caps the loss at the hour since the last run, and you already know the restore works because you tested it last month.</p>
+<p><strong>Takeaway:</strong> plan disk for retention plus a month, alert on <code>vm_storage_is_read_only</code> from outside the database, and keep a backup job whose restore you&#x27;ve actually tested.</p>
+<p><strong>Next:</strong> <a href="../../../../fields/devops/victoriametrics/metricsql-and-vmalert/">Part 5, MetricsQL Surprises and Alerts You Can Test</a>, writes the alerts this page keeps promising.</p>
+<hr>
+<h2>References</h2>
+<ul><li><a href="https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/">VictoriaMetrics single-node docs</a>: retention, storage (partitions, parts, merges, 20% free disk), capacity planning, snapshots and snapshot troubleshooting, environment variables and <code>%{ENV_VAR}</code>, self-scraping.</li><li><a href="https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/#list-of-command-line-flags">Common command-line flags</a>: <code>-retentionPeriod</code>, <code>-storage.minFreeDiskSpaceBytes</code> (default 100000000), <code>-snapshotsMaxAge</code>, <code>-selfScrapeInterval</code>.</li><li><a href="https://docs.victoriametrics.com/victoriametrics/vmbackup/">vmbackup</a>: storage types, incremental and smart backups, server-side copy, how it works, troubleshooting.</li><li><a href="https://docs.victoriametrics.com/victoriametrics/vmrestore/">vmrestore</a>: the database must be stopped; restore syncs like <code>rsync --delete</code>.</li><li><a href="https://docs.victoriametrics.com/victoriametrics/changelog/changelog_2025/">VictoriaMetrics changelog 2025</a>: v1.122.0 changed the <code>-snapshotsMaxAge</code> default to <code>3d</code>.</li><li><a href="https://www.freedesktop.org/software/systemd/man/latest/systemd.timer.html">systemd.timer(5)</a>: <code>OnCalendar</code> and <code>Persistent</code>.</li></ul>
+<p><a href="../../../../#/fields/devops/victoriametrics/retention-disk-and-backups">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

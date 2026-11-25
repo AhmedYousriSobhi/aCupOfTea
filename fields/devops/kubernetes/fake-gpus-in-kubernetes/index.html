@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Fake GPUs in Kubernetes: Learn GPU Scheduling Without Owning a GPU</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/kubernetes/fake-gpus-in-kubernetes/">
+<meta name="description" content="Patch a node with a fake nvidia.com/gpu counter to learn GPU scheduling without owning a GPU.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Fake GPUs in Kubernetes: Learn GPU Scheduling Without Owning a GPU">
+<meta property="og:description" content="Patch a node with a fake nvidia.com/gpu counter to learn GPU scheduling without owning a GPU.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/kubernetes/fake-gpus-in-kubernetes/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/kubernetes/fake-gpus-in-kubernetes/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/devops/kubernetes/fake-gpus-in-kubernetes"></script>
+<main>
+<h1>Fake GPUs in Kubernetes: Learn GPU Scheduling Without Owning a GPU</h1>
+<p><em>Patch a node with a fake nvidia.com/gpu counter to learn GPU scheduling without owning a GPU.</em></p>
+<p>Real GPUs are expensive, shared, and always booked by someone else. Fake GPUs are free, always available, and will never melt a rack. If what you want to learn is how Kubernetes <em>schedules</em> GPU workloads (who gets them, who waits, who sits <code>Pending</code> forever), you don&#x27;t need hardware. You need one command and a slightly dishonest node.</p>
+<p>This page builds on the <a href="../../../../fields/devops/kubernetes/build-a-two-node-k3s-lab/">two-node lab</a>. The trick it teaches is also the cleanest way to understand what a real GPU device plugin actually does.</p>
+<hr>
+<h2>The one-sentence version</h2>
+<p><strong>Kubernetes doesn&#x27;t know what a GPU is; it only knows named counters on nodes called extended resources, so you can add a counter called `nvidia.com/gpu` to a node by hand and the scheduler will treat it exactly like the real thing.</strong></p>
+<p>That&#x27;s not a hack around the system. It&#x27;s the documented mechanism. The official docs say extended resources let cluster administrators advertise node-level resources that Kubernetes would otherwise not know about, and that they&#x27;re opaque to Kubernetes: it knows only that a node has a certain number of them.</p>
+<hr>
+<h2>How the real thing works (so the fake makes sense)</h2>
+<p>On a real cluster, a <strong>device plugin</strong> runs on each GPU node. It discovers the hardware and advertises it, so the cluster exposes a schedulable resource such as <code>nvidia.com/gpu</code> or <code>amd.com/gpu</code>. Kubernetes has stable support for managing AMD and NVIDIA GPUs this way.</p>
+<p>Your pod then asks for GPUs in its container spec. The rules from the official GPU scheduling docs:</p>
+<ul><li>GPUs are only supposed to be specified in the <strong>`limits`</strong> section.</li><li>You can give a GPU limit with no request, because Kubernetes uses the limit as the request.</li><li>If you give both, they must be equal.</li><li>You cannot give a GPU request without a limit.</li></ul>
+<p>By default, a GPU is handed out whole. Two pods don&#x27;t quietly split one device. (Sharing exists, through NVIDIA&#x27;s MIG partitioning and time-slicing, but you configure it deliberately. It is not the default.)</p>
+<p>So there are two halves: someone has to <strong>advertise</strong> the counter, and someone has to <strong>request</strong> it. The device plugin does the first on real hardware. In the lab, you do it with a patch.</p>
+<hr>
+<h2>Step 1: advertise four GPUs that don&#x27;t exist</h2>
+<pre><code class="language-bash">kubectl patch node k8s-worker --subresource=status --type=json -p &#x27;[
+  {&quot;op&quot;:&quot;add&quot;,&quot;path&quot;:&quot;/status/capacity/nvidia.com~1gpu&quot;,&quot;value&quot;:&quot;4&quot;},
+  {&quot;op&quot;:&quot;add&quot;,&quot;path&quot;:&quot;/status/allocatable/nvidia.com~1gpu&quot;,&quot;value&quot;:&quot;4&quot;}]&#x27;</code></pre>
+<p>Unpacking the parts:</p>
+<table><thead><tr><th>Piece</th><th>Why it&#x27;s there</th></tr></thead><tbody><tr><td><code>--subresource=status</code></td><td>Extended resources live in the node&#x27;s <strong>status</strong>, so the patch has to target the status subresource, the same <code>/status</code> endpoint the official docs use</td></tr><tr><td><code>/status/capacity/...</code></td><td>What the node says it physically has</td></tr><tr><td><code>/status/allocatable/...</code></td><td>What&#x27;s left over for pods to use. The scheduler places pods against this figure, so the lab sets it too</td></tr><tr><td><code>nvidia.com~1gpu</code></td><td>The resource name <code>nvidia.com/gpu</code>, with the slash escaped as <code>~1</code>, which is how JSON Patch spells a slash inside a path segment. Yes, really</td></tr><tr><td><code>&quot;4&quot;</code></td><td>Extended resources must be whole numbers. No half GPUs</td></tr></tbody></table>
+<p>Resource names should carry a domain prefix you control or that matches the real convention. The <code>kubernetes.io</code> prefix is reserved, which is why the fake uses the same <code>nvidia.com/gpu</code> name the real device plugin would.</p>
+<p>Check that it took:</p>
+<pre><code class="language-bash">kubectl describe node k8s-worker | grep -A8 -E &#x27;Capacity|Allocatable&#x27;
+kubectl get node k8s-worker -o jsonpath=&#x27;{.status.allocatable}&#x27;</code></pre>
+<p>You should see <code>nvidia.com/gpu: 4</code> alongside CPU and memory.</p>
+<hr>
+<h2>Step 2: request them</h2>
+<p>Here&#x27;s a pod that wants two GPUs. The container is a do-nothing <code>pause</code> image, because the GPU is imaginary and we only care about the accounting:</p>
+<pre><code class="language-bash">kubectl create ns team-a
+kubectl -n team-a run gpu-train --image=rancher/mirrored-pause:3.6 \
+  --overrides=&#x27;{&quot;spec&quot;:{&quot;containers&quot;:[{&quot;name&quot;:&quot;c&quot;,&quot;image&quot;:&quot;rancher/mirrored-pause:3.6&quot;,&quot;resources&quot;:{&quot;limits&quot;:{&quot;nvidia.com/gpu&quot;:&quot;2&quot;}}}]}}&#x27;</code></pre>
+<p>It schedules and runs, and the node now has two GPUs spoken for. Now ask for more than exist:</p>
+<pre><code class="language-bash">kubectl create ns team-b
+kubectl -n team-b run gpu-waiting --image=rancher/mirrored-pause:3.6 \
+  --overrides=&#x27;{&quot;spec&quot;:{&quot;containers&quot;:[{&quot;name&quot;:&quot;c&quot;,&quot;image&quot;:&quot;rancher/mirrored-pause:3.6&quot;,&quot;resources&quot;:{&quot;limits&quot;:{&quot;nvidia.com/gpu&quot;:&quot;8&quot;}}}]}}&#x27;</code></pre>
+<p>That pod can never fit: the only node with GPUs has four. It will sit in <code>Pending</code>, and <code>kubectl describe pod gpu-waiting -n team-b</code> will show a scheduling event explaining that no node has enough of the resource. That event is the single most useful thing to learn to read on a GPU cluster, and the <a href="../../../../fields/devops/kubernetes/broken-pods-rogues-gallery/">rogues&#x27; gallery page</a> goes deeper.</p>
+<hr>
+<h2>What&#x27;s real, and what isn&#x27;t</h2>
+<table><thead><tr><th>Real</th><th>Fake</th></tr></thead><tbody><tr><td>The scheduler&#x27;s arithmetic: capacity, allocatable, who requested what</td><td>There is no device. <code>nvidia-smi</code> won&#x27;t exist</td></tr><tr><td><code>Pending</code> pods that can&#x27;t fit, and the events that say why</td><td>No driver, no CUDA, no device plugin</td></tr><tr><td>Quotas, namespaces and monitoring tools that read these fields</td><td>No isolation between &quot;GPU users&quot;, because there&#x27;s nothing to isolate</td></tr></tbody></table>
+<p>That second column is the point of the exercise and its limit. The fake teaches <strong>allocation</strong> (what the cluster has promised to whom), which is half the story. The other half is <strong>utilization</strong> (what the hardware is actually doing), and for that you need real GPUs and real telemetry. The <a href="../../../../fields/devops/kubernetes/gpu-allocation-vs-utilization/">next-but-one page</a> is about exactly that gap.</p>
+<hr>
+<h2>Cleaning up</h2>
+<p>The patch is removable the same way the official docs show: a JSON Patch <code>remove</code> on the same path.</p>
+<pre><code class="language-bash">kubectl patch node k8s-worker --subresource=status --type=json -p &#x27;[
+  {&quot;op&quot;:&quot;remove&quot;,&quot;path&quot;:&quot;/status/capacity/nvidia.com~1gpu&quot;}]&#x27;</code></pre>
+<p>Delete the fake pods first if you want a tidy cluster. And if the node object is ever deleted and re-created (for example, you destroy and re-join the worker), the counters go with it, so patch again.</p>
+<hr>
+<h2>A warning about mixing fake and real</h2>
+<p>Don&#x27;t run this trick on a cluster that also has a real device plugin advertising the same resource name. The two would disagree about reality, and the scheduler would believe whichever spoke last. The lab is isolated on purpose. Tools that expect real GPUs, such as NVIDIA&#x27;s <a href="../../../../fields/devops/kubernetes/nvidia-cluster-readiness-engine/">Cluster Readiness Engine</a>, launch real NCCL workloads and need actual hardware; a fake counter will pass the scheduler and then fail when a container tries to use a device that isn&#x27;t there.</p>
+<hr>
+<h2>The one-paragraph takeaway</h2>
+<p>A GPU, to the Kubernetes scheduler, is a whole-number counter on a node that pods ask for under <code>limits</code>. A device plugin maintains that counter on real hardware, and a single <code>kubectl patch</code> can maintain it in a lab, which makes the scheduler&#x27;s behaviour completely observable for free: pods that fit, pods that wait, and the events that explain which is which. Just remember what the fake can&#x27;t do. It can promise a GPU, but it can&#x27;t run anything on one.</p>
+<hr>
+<h2>References</h2>
+<ul><li><a href="https://kubernetes.io/docs/tasks/administer-cluster/extended-resource-node/">Advertise Extended Resources for a Node</a>: patching <code>/status</code>, JSON Patch <code>~1</code> escaping, integer amounts, opaque resources, removal</li><li><a href="https://kubernetes.io/docs/tasks/manage-gpus/scheduling-gpus/">Schedule GPUs</a>: device plugins, GPUs specified under <code>limits</code>, request and limit rules, node labels for mixed GPU types</li></ul>
+<p>The lab fixtures (<code>gpu-train</code>, <code>gpu-waiting</code>) come from the author&#x27;s own lab. The remark about sharing through MIG and time-slicing summarizes NVIDIA&#x27;s documentation and isn&#x27;t covered by the Kubernetes pages above.</p>
+<p><a href="../../../../#/fields/devops/kubernetes/fake-gpus-in-kubernetes">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

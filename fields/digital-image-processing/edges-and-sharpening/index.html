@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The Sharpen Button That Made Things Worse: Edges and Sharpening</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/digital-image-processing/edges-and-sharpening/">
+<meta name="description" content="Derivatives as differences between neighbours - gradient, Sobel, Laplacian and unsharp masking, plus a one-line example that shows exactly where sharpening halos come from.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="The Sharpen Button That Made Things Worse: Edges and Sharpening">
+<meta property="og:description" content="Derivatives as differences between neighbours - gradient, Sobel, Laplacian and unsharp masking, plus a one-line example that shows exactly where sharpening halos come from.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/digital-image-processing/edges-and-sharpening/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/digital-image-processing/edges-and-sharpening/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../.docs/prerender-redirect.js" data-target="../../../#/fields/digital-image-processing/edges-and-sharpening"></script>
+<main>
+<h1>The Sharpen Button That Made Things Worse: Edges and Sharpening</h1>
+<p><em>Derivatives as differences between neighbours - gradient, Sobel, Laplacian and unsharp masking, plus a one-line example that shows exactly where sharpening halos come from.</em></p>
+<blockquote><p><strong>Part 5 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).</strong> <em>The property-listing team is invented; the maths and numbers are real.</em> By the end you can compute a gradient, a Sobel response and a Laplacian by hand, and say exactly where sharpening halos come from.</p></blockquote>
+<p>How does a computer tell a brick edge from a speck of sand, when to it both are just a pixel that differs from its neighbours?</p>
+<p>You&#x27;re about to find out the hard way, with one click on a button called &quot;sharpen&quot;.</p>
+<hr>
+<h2>The bricks pop, the sky crawls</h2>
+<p>A property-listing site has a photo of a brick wall that looks soft. You click &quot;sharpen&quot;. The bricks pop. But the clear blue sky now looks like it has sand in it, and every dark edge has a faint bright outline, as if it were cut out with scissors.</p>
+<p>The software did exactly what it was told. Your first reading is the obvious one: <strong>the strength was set too high</strong>, so a lower setting will keep the bricks and lose the sand.</p>
+<hr>
+<h2>Two ways to tame it, and one look at the preview folder</h2>
+<p><strong>Turn the strength down.</strong> At a lower strength the sand thins out, and so does the pop in the bricks. Somewhere in the middle there is a setting you could live with, and it is not good.</p>
+<p><strong>Sharpen, then denoise.</strong> A smoothing pass cleans up the sky. It also removes most of the sharpness you had just added.</p>
+<p>So you do what you should have done first: before queuing the &quot;high&quot; preset for the catalogue of five thousand photos, you open three at random from the preview folder. A sky, a white wall, a face. The white wall looks worse than the brick one did. You cancel the job yourself.</p>
+<p>A lower strength is a trade, not a cure, and the setting that suited bricks doesn&#x27;t suit skies. What does the rule &quot;this changes here&quot; react to, besides edges? To find out, you have to ask what &quot;changes&quot; even means in Pixel Town.</p>
+<hr>
+<h2>A derivative is just a difference</h2>
+<p>In calculus, a derivative measures how fast something changes. In Pixel Town, the smallest step between citizens is one pixel, so the derivative becomes a plain <strong>difference between neighbours</strong>.</p>
+<p>For a row of pixels f(x):</p>
+<table><thead><tr><th>Quantity</th><th>Formula (discrete)</th><th>In words</th></tr></thead><tbody><tr><td>First derivative (forward)</td><td>f(x+1) − f(x)</td><td>Next minus this</td></tr><tr><td>First derivative (central)</td><td>(f(x+1) − f(x−1)) / 2</td><td>Right neighbour minus left, halved</td></tr><tr><td>Second derivative</td><td>f(x+1) + f(x−1) − 2f(x)</td><td>How much I differ from the average of my neighbours, times two</td></tr></tbody></table>
+<p>Flat region: all three are 0. Slope: first derivative is nonzero. Corner of a slope: second derivative is nonzero. That gives us a detector for each kind of change.</p>
+<p>Let&#x27;s watch them work on the simplest edge there is.</p>
+<hr>
+<h2>One row, one step</h2>
+<p>Take a perfect step edge, dark to bright:</p>
+<pre><code class="language-text">x:        0   1   2   3   4   5
+f(x):    10  10  10  50  50  50</code></pre>
+<p>Compute the interior values (the border needs padding, so we skip it):</p>
+<table><thead><tr><th>x</th><th>1st (central)</th><th>2nd</th></tr></thead><tbody><tr><td>1</td><td>0</td><td>0</td></tr><tr><td>2</td><td>(50 − 10)/2 = <strong>20</strong></td><td>50 + 10 − 20 = <strong>+40</strong></td></tr><tr><td>3</td><td>(50 − 10)/2 = <strong>20</strong></td><td>50 + 10 − 100 = <strong>−40</strong></td></tr><tr><td>4</td><td>0</td><td>0</td></tr></tbody></table>
+<p>Two things to notice:</p>
+<ol><li>The <strong>first derivative</strong> is a plateau across the edge: its size says &quot;strong edge here&quot;.</li><li>The <strong>second derivative</strong> goes positive then negative. The edge sits at the <strong>zero crossing</strong> between them. It also gives a double response, which is the root of the halos we&#x27;ll meet later.</li></ol>
+<p>Remember that double response. It is about to cost you something. But first, a picture has two directions, not one.</p>
+<hr>
+<h2>How strong, and which way</h2>
+<p>In two dimensions there&#x27;s an x-direction change and a y-direction change. Together they form the <strong>gradient</strong>:</p>
+<p>The magnitude says how strong the edge is. The angle θ says which way the brightness climbs the fastest, which is <strong>perpendicular to the edge line</strong>.</p>
+<p>A common cheaper approximation is |G_x| + |G_y|, which avoids the square root.</p>
+<p>Differences are twitchy, though: one noisy pixel gives a huge difference. And your sky is full of noisy pixels. Is there a difference that doesn&#x27;t panic?</p>
+<hr>
+<h2>Sobel: differentiate and smooth at once</h2>
+<p>There is. The <strong>Sobel</strong> kernel averages across the perpendicular direction while it differences:</p>
+<p>Look at G_x: the columns are [−1, 0, 1], which is a central difference, and the rows are weighted [1, 2, 1], which is a mild smoothing. It&#x27;s a separable product:</p>
+<p>Each Sobel kernel sums to <strong>0</strong> (the tip from <a href="../../../fields/digital-image-processing/spatial-filtering/">page 4</a>): flat regions give zero, edges give a response. Apply G_x and G_y as two filters, then combine with the magnitude formula to get an edge map. Full edge detectors such as Canny (1986) add thinning and thresholds on top of the same gradient.</p>
+<p>☕ <strong>Try it before you scroll.</strong> You slide the Sobel G_x kernel over a perfectly <strong>flat</strong> patch where every pixel is 100. <strong>What is the output?</strong> And what if the patch is all 200? <em>Hint: add the kernel weights.</em></p>
+<hr>
+<h2>The Laplacian, and where the halo comes from</h2>
+<p><strong>Answer:</strong> <strong>0</strong> in both cases. The weights sum to 0, so any constant multiplied by the same total is 0. That&#x27;s the point: a detector that stays silent when nothing changes. Replace the kernel with a box and the answer would be 100 and 200.</p>
+<p>Sobel finds edges. To <em>sharpen</em>, you want something that reacts to a pixel disagreeing with its neighbours in every direction. The <strong>Laplacian</strong> adds the second derivatives in both directions into one isotropic (direction-independent) operator:</p>
+<p>As a kernel:</p>
+<p>It responds to <strong>neighbours disagreeing with me</strong>: zero in flat regions, big at points and line ends, and positive-then-negative across edges, just like the 1-D example.</p>
+<p>To sharpen with it, subtract the Laplacian from the image (we subtract because the centre weight is negative):</p>
+<p>Apply that to the step row from before, using the second-derivative values from the table:</p>
+<table><thead><tr><th>x</th><th>f(x)</th><th>2nd</th><th>g = f − 2nd</th></tr></thead><tbody><tr><td>1</td><td>10</td><td>0</td><td>10</td></tr><tr><td>2</td><td>10</td><td>+40</td><td><strong>−30</strong></td></tr><tr><td>3</td><td>50</td><td>−40</td><td><strong>90</strong></td></tr><tr><td>4</td><td>50</td><td>0</td><td>50</td></tr></tbody></table>
+<p>The dark side is pushed <strong>even darker</strong> (−30, below the original 10) and the bright side <strong>even brighter</strong> (90, above the original 50). The edge now looks steeper. That undershoot and overshoot is the halo you saw on the brick wall.</p>
+<p>So that&#x27;s the scissors outline: not a bug, just the double response doing its job. Is there a gentler way to ask for the same thing?</p>
+<hr>
+<h2>Unsharp masking: the sharpening everyone actually uses</h2>
+<p>The name sounds like the opposite of what it does. The trick: take a blurred copy, subtract it from the original to isolate the <strong>detail</strong>, and add some of that detail back:</p>
+<table><thead><tr><th>k</th><th>Name</th><th>Effect</th></tr></thead><tbody><tr><td>0</td><td>none</td><td>Original image</td></tr><tr><td>1</td><td>Unsharp masking</td><td>Adds the detail once</td></tr><tr><td>greater than 1</td><td>High-boost</td><td>Exaggerates the detail</td></tr></tbody></table>
+<p>The difference f − blur(f) keeps only what the blur removed, which is the fine detail and edges. In the frequency picture of <a href="../../../fields/digital-image-processing/fourier-transform-for-images/">page 6</a> you&#x27;ve just <strong>boosted the high frequencies</strong>. Everything that sharpens an image, Laplacian or unsharp, boosts the same thing, and noise lives in the same place.</p>
+<p>Which explains the sky.</p>
+<hr>
+<h2>Back to the sharpen button</h2>
+<p>You print the second derivative along one row of the sky and one row of the bricks. The bricks give a big positive-then-negative pair at the edge. The sky gives a tiny random wobble, and the filter multiplies it by the same amount.</p>
+<p>Now the sand in the sky makes sense. A difference between neighbours <strong>doesn&#x27;t know</strong> whether the difference is a brick edge or a speck of noise. Sharpening magnifies both. Flat sky had only a tiny random wobble, and the filter multiplied it until your eye noticed.</p>
+<p>And the scissors halo is the overshoot from the table above: the filter makes dark sides darker and bright sides brighter so the edge looks steeper, and that outline is real data, drawn by the algorithm.</p>
+<table><thead><tr><th>Symptom</th><th>Cause</th><th>Fix</th></tr></thead><tbody><tr><td>Grainy sky after sharpening</td><td>Noise lives in the high frequencies being boosted</td><td>Denoise or smooth first, lower k, mask flat regions</td></tr><tr><td>Bright/dark outlines at edges</td><td>Overshoot and undershoot of the second derivative</td><td>Reduce k, use a larger blur radius</td></tr><tr><td>Edge map full of tiny speckles</td><td>Raw differences amplify noise</td><td>Use Sobel (built-in smoothing) or blur first</td></tr></tbody></table>
+<p>You set a lower strength, mask the flat regions, and denoise the sky before sharpening, in that order. The bricks keep most of their pop and the sky stays sky.</p>
+<hr>
+<h2>Never again: sharpening with a seatbelt</h2>
+<table><thead><tr><th>Do</th><th>Because</th></tr></thead><tbody><tr><td>Denoise or smooth first</td><td>Noise lives in the high frequencies the sharpening boosts</td></tr><tr><td>Choose <code>k</code> deliberately: 0 none, 1 unsharp masking, above 1 high-boost</td><td><code>g = f + k (f - blur(f))</code> boosts the detail by <code>k</code></td></tr><tr><td>Mask flat regions</td><td>Their tiny wobble is all noise</td></tr><tr><td>Use a larger blur radius for a gentler halo</td><td>Overshoot and undershoot come from the second derivative</td></tr><tr><td>Use Sobel, not raw differences, for an edge map</td><td>Sobel averages across the other direction while it differences</td></tr><tr><td>Remember the kernel sums</td><td>Sobel sums to 0: flat regions give zero (a box would give 100 and 200 on flat 100 and 200)</td></tr></tbody></table>
+<p><strong>Takeaway:</strong> derivatives are neighbour differences; they find edges, and the same operation that sharpens also amplifies noise and draws halos.</p>
+<p><strong>Next:</strong> we keep saying &quot;high frequencies&quot;. What are they, and can we filter them directly? <a href="../../../fields/digital-image-processing/fourier-transform-for-images/">Part 6: The Fourier transform for images</a>, after an optional <a href="../../../fields/digital-image-processing/meet-fourier/">interlude on the man behind it</a>.</p>
+<hr>
+<h2>📜 The Scroll (keep this)</h2>
+<pre><code class="language-text">Symptom:  Sand in the sky, bright outlines at edges after sharpening
+Cause:    A difference of neighbours cannot tell an edge from noise;
+          the second derivative overshoots (step 10|50: 10 -&gt; -30, 50 -&gt; 90)
+Check:    Look at a flat region: is the wobble being multiplied?
+Do not:   One strength for every image
+Fix:      Denoise first, lower k, mask flat regions, larger blur radius
+Detect:   Sobel = [1 2 1]^T x [-1 0 1]; Laplacian centre -4</code></pre>
+<h3>References</h3>
+<ul><li>R. C. Gonzalez and R. E. Woods, <em>Digital Image Processing</em>, 4th ed., Pearson, 2018: chapter 3 (sharpening spatial filters, Laplacian, unsharp masking, high-boost) and chapter 10 (edge detection).</li><li>OpenCV documentation, <a href="https://docs.opencv.org/4.x/d5/d0f/tutorial_py_gradients.html">Image Gradients</a>: <code>Sobel</code>, <code>Laplacian</code>.</li><li>J. Canny, &quot;A Computational Approach to Edge Detection&quot;, <em>IEEE Transactions on Pattern Analysis and Machine Intelligence</em>, 8(6), 679-698, 1986.</li></ul>
+<p><a href="../../../#/fields/digital-image-processing/edges-and-sharpening">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

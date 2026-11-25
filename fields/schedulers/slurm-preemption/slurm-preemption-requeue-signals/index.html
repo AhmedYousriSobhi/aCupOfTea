@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Dying Politely: Preemption, Requeue and the Signals Your Training Job Ignores</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-preemption/slurm-preemption-requeue-signals/">
+<meta name="description" content="How Slurm preemption modes differ, what GraceTime and --signal send and to whom, why a bash trap never fires while the trainer runs, and a requeue-safe checkpoint wrapper that cannot loop.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Dying Politely: Preemption, Requeue and the Signals Your Training Job Ignores">
+<meta property="og:description" content="How Slurm preemption modes differ, what GraceTime and --signal send and to whom, why a bash trap never fires while the trainer runs, and a requeue-safe checkpoint wrapper that cannot loop.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-preemption/slurm-preemption-requeue-signals/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-preemption/slurm-preemption-requeue-signals/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/schedulers/slurm-preemption/slurm-preemption-requeue-signals"></script>
+<main>
+<h1>Dying Politely: Preemption, Requeue and the Signals Your Training Job Ignores</h1>
+<p><em>How Slurm preemption modes differ, what GraceTime and --signal send and to whom, why a bash trap never fires while the trainer runs, and a requeue-safe checkpoint wrapper that cannot loop.</em></p>
+<blockquote><p><strong>Part of the [schedulers](/fields/schedulers/slurm-intro.md) directory.</strong> Preemption behavior comes from SchedMD&#x27;s Preemption guide for Slurm 26.05. Signal details come from site documentation and the <code>sbatch</code> options as described there. Where a paragraph says <strong>Tested</strong>, the behavior was measured on a two-node test cluster running Slurm 23.11.4, so it can differ from the 26.05 guide and from your version. The wrapper script is still a sketch and was not run as a whole, so test it with a short job before trusting a week-long run to it. The <a href="../../../../fields/schedulers/slurm-preemption/slurm-signals-cheatsheet/">signals cheat sheet</a> holds the measured timelines.</p></blockquote>
+<ul><li>* *</li></ul>
+<h2>The week-long run that wasn&#x27;t</h2>
+<p>A researcher submits a training job to a low-priority partition on Friday. It runs happily until Sunday, when someone from a better-funded group submits a job that needs those nodes. Slurm requeues the researcher&#x27;s job. The training script, which saves a checkpoint every six hours, restarts from the beginning of the script. The latest checkpoint is five hours old, and the script never looks for it.</p>
+<p>Nobody did anything wrong in the dramatic sense. Everybody just assumed that &quot;requeue&quot; meant &quot;resume&quot;. It means &quot;start the script again&quot;. What happens next is up to your script.</p>
+<ul><li>* *</li></ul>
+<h2>Four ways to be evicted</h2>
+<p><code>PreemptMode</code> decides what happens to a job that gets pushed off its resources. The Preemption guide lists the modes:</p>
+<table><thead><tr><th>Mode</th><th>What happens to the victim</th><th>Fine print</th></tr></thead><tbody><tr><td><code>CANCEL</code></td><td>Cancelled</td><td>Simple and final</td></tr><tr><td><code>REQUEUE</code></td><td>Requeued, or cancelled if it cannot be</td><td>The job needs <code>--requeue</code>, or the cluster-wide <code>JobRequeue=1</code>. Without either, it is <strong>cancelled</strong></td></tr><tr><td><code>SUSPEND</code></td><td>Paused in memory, resumed later by the gang scheduler</td><td>Always needs the <code>GANG</code> option. Memory stays occupied</td></tr><tr><td><code>OFF</code></td><td>Nothing, preemption is disabled</td><td>The default</td></tr></tbody></table>
+<p><code>PreemptType</code> decides <em>who</em> may preempt whom: <code>preempt/partition_prio</code> compares partition <code>PriorityTier</code> values, and <code>preempt/qos</code> uses rules stored in the accounting database. <code>PreemptMode</code> can then be set per partition or per QOS, so one cluster can requeue one queue and suspend another.</p>
+<p><strong>Tested:</strong> a victim with <code>JobRequeue=0</code> and no <code>--requeue</code> ended as <code>PREEMPTED</code> and vanished from the queue; the same eviction with the job requeueable left a second run waiting. Two more details from the same tests: <code>PreemptType=preempt/none</code> is the off switch, but it must be paired with <code>PreemptMode=OFF</code>, because <code>preempt/none</code> with <code>PreemptMode=REQUEUE</code> is refused and the controller will not start. And <code>PreemptMode</code> accepted a <code>WITHIN</code> modifier (shown as <code>WITHIN,REQUEUE</code>), though what it does was not tested. The commands to set all of this up are in <a href="../../../../fields/schedulers/slurm-preemption/slurm-qos-preemption-setup/">the QOS preemption setup page</a>.</p>
+<blockquote><p>[!WARNING] Suspend and GPUs make an awkward couple. The GRES guide says that when a job is suspended, its generic resources <strong>do not become available to other jobs</strong>. A suspended job keeps its GPUs allocated, so suspending is a poor way to free GPUs for a preemptor. Requeue or cancel is the way to actually release them.</p></blockquote>
+<ul><li>* *</li></ul>
+<h2>GraceTime: the polite notice (and its twist)</h2>
+<p><code>GraceTime</code> (per partition or QOS) gives a victim some time to react. Defaults and semantics, per the guide:</p>
+<ul><li>The default is <strong>0</strong>, meaning no delay.</li><li>When a job is selected for preemption, its end time becomes now plus <code>GraceTime</code>, or stays as it was if that is already sooner. A job whose time limit would expire first gets only what is left of it.</li><li>The job is <strong>immediately</strong> sent <code>SIGCONT</code> and <code>SIGTERM</code>.</li><li>When the new end time arrives, it gets the sequence again: <code>SIGCONT</code>, <code>SIGTERM</code>, then <code>SIGKILL</code>.</li></ul>
+<p>Read that again: the job receives <code>SIGTERM</code> <strong>twice</strong>. Once when preemption starts, and once when the grace period ends. A handler that checkpoints and then exits will be fine. A handler that does something irreversible on every <code>SIGTERM</code> will do it twice, so make yours idempotent.</p>
+<blockquote><p>[!WARNING] <strong>Tested: &quot;the job&quot; here means the job&#x27;s `srun` steps.</strong> With <code>GraceTime=30</code>, a step started with <code>srun</code> got <code>SIGTERM</code> and <code>SIGCONT</code> about a second after the preemptor was submitted. The <strong>batch shell</strong> heard nothing at that moment, and was told only when the grace period ended. A command in your script that is not behind <code>srun</code> is a child of the batch shell, so it misses the early warning too. Section A requeue-safe wrapper runs the trainer exactly that way, so read its note before relying on <code>SIGTERM</code>.</p></blockquote>
+<p>A few more things worth knowing:</p>
+<ul><li><strong>The end of the window is noticed late.</strong> On the test cluster a 30-second grace period was noticed at about 33, 41 and 55 seconds, and a 60-second one at 64 and 83. A job that ignores <code>SIGTERM</code> then gets <code>KillWait</code> (30 seconds there) before <code>SIGKILL</code>, and only after that does the preemptor start. Budget the checkpoint accordingly.</li></ul>
+<ul><li><strong>A job that exits early still counts as preempted.</strong> If the job leaves before <code>GraceTime</code> runs out, Slurm handles it according to <code>PreemptMode</code>, regardless of <em>why</em> it exited. It cannot tell a clean checkpoint exit from an unrelated crash that happened to land in the window.</li><li><strong>`GraceTime` is not used with `SUSPEND`.</strong> There is a separate <code>suspend_grace_time</code> for that.</li></ul>
+<ul><li>* *</li></ul>
+<h2>--signal: the other notice</h2>
+<p><code>GraceTime</code> is set by the admin and only matters when a job is preempted. <code>--signal</code> is set by the user and fires when the job is within N seconds of its <strong>end time</strong>. Because preemption moves the end time to &quot;now plus <code>GraceTime</code>&quot;, you might expect it to fire at preemption too, if <code>GraceTime</code> is shorter than the lead time you asked for. One university guide describes it that way.</p>
+<p><strong>Tested: it does not, unless the admin asks for it.</strong> With <code>GraceTime=60</code> and <code>--signal=B:USR1@300</code>, the batch shell received no <code>USR1</code> at preemption and heard only the final <code>SIGTERM</code>. With <code>PreemptParameters=send_user_signal</code> set in <code>slurm.conf</code>, the same job received <code>USR1</code> about a second after the preemptor was submitted. That parameter is what turns <code>--signal</code> into a real preemption warning, and it is an admin setting. Format:</p>
+<pre><code class="language-bash">#SBATCH --signal=B:USR1@300</code></pre>
+<table><thead><tr><th>Part</th><th>Meaning</th></tr></thead><tbody><tr><td><code>B:</code></td><td>Send only to the batch shell (the script itself). Without it, the signal goes to the job steps instead, not to the batch script</td></tr><tr><td><code>USR1</code></td><td>The signal. A user-defined one is a good choice, because <code>srun</code> passes it through</td></tr><tr><td><code>@300</code></td><td>Send it 300 seconds before the limit. With no number, the default is 60</td></tr></tbody></table>
+<p>The important footnote: because of how Slurm handles events, the signal can arrive <strong>up to 60 seconds earlier</strong> than requested. Treat the lead time as a minimum, not an appointment. <strong>Tested:</strong> on a 2-minute job, <code>--signal=B:USR1@90</code> arrived at 68 seconds, 52 seconds before the end instead of 90, and the time limit itself was enforced about 26 seconds late. The controller works on a periodic tick, so the lead time is approximate in both directions, and the safe plan is a checkpoint that fits the smaller window.</p>
+<p>How this fits with the other clock, <code>KillWait</code>: on a cancel or a time limit, the sequence is <code>SIGTERM</code>, then a <code>KillWait</code> pause (30 seconds on the sites I read), then <code>SIGKILL</code>. If your checkpoint takes longer than that, <code>--signal</code> is how you buy more time. Site documentation puts it well: a checkpoint plus final sync has to fit inside whichever window you actually have.</p>
+<ul><li>* *</li></ul>
+<h2>Why your trap never fires</h2>
+<p>Here is the bug that eats weekends. You write:</p>
+<pre><code class="language-bash">#SBATCH --signal=B:USR1@300
+trap &#x27;echo caught it; ./save_checkpoint.sh&#x27; USR1
+python train.py        # runs for 11 hours</code></pre>
+<p>and the trap does not run until <code>train.py</code> finishes. That is how bash works: a trap handler runs after the current foreground command completes. If the foreground command is the thing that runs for hours, the signal sits waiting while <code>SIGKILL</code> approaches.</p>
+<p>The cure is to run the long command in the background and <code>wait</code> for it. <code>wait</code> is interruptible by trapped signals, so the handler can run at once. This is also the structure that university cluster guides use in their checkpoint wrappers.</p>
+<p>The trainer must cooperate too. A signal handler in Python should set a flag, not write a 20 GB checkpoint from inside the handler. The training loop checks the flag at a safe step boundary, saves, and exits.</p>
+<ul><li>* *</li></ul>
+<h2>A requeue-safe wrapper</h2>
+<p>A sketch that combines everything above. It asks the trainer to checkpoint on <code>USR1</code>, waits for it, then requeues the job itself.</p>
+<pre><code class="language-bash">#!/bin/bash
+#SBATCH --job-name=trainer
+#SBATCH --gres=gpu:1
+#SBATCH --time=12:00:00
+#SBATCH --requeue                 # allow requeue after preemption or failure
+#SBATCH --open-mode=append        # default is truncate: requeue would erase old logs
+#SBATCH --signal=B:USR1@300       # warn the batch shell ~5+ min before the limit
+
+MAX_RESTARTS=10
+child=&quot;&quot;
+
+on_usr1() {
+    echo &quot;[$(date)] USR1: asking trainer to checkpoint and exit&quot;
+    kill -USR1 &quot;$child&quot; 2&gt;/dev/null
+    wait &quot;$child&quot;                  # let it finish writing
+    if [ &quot;${SLURM_RESTART_COUNT:-0}&quot; -lt &quot;$MAX_RESTARTS&quot; ]; then
+        echo &quot;[$(date)] requeueing (restart #${SLURM_RESTART_COUNT:-0})&quot;
+        scontrol requeue &quot;$SLURM_JOB_ID&quot;
+    else
+        echo &quot;[$(date)] restart limit reached, not requeueing&quot;
+    fi
+    exit 0
+}
+trap on_usr1 USR1
+
+# the trainer itself must resume from the newest checkpoint if one exists
+python train.py --resume-latest &amp;
+child=$!
+wait &quot;$child&quot;
+exit $?</code></pre>
+<p>What each piece is for:</p>
+<table><thead><tr><th>Piece</th><th>Why</th></tr></thead><tbody><tr><td><code>--requeue</code></td><td>Without it, a <code>REQUEUE</code> preemption becomes a cancel</td></tr><tr><td><code>--open-mode=append</code></td><td>Slurm&#x27;s default is <code>truncate</code>, so a requeued run erases the log of the earlier run</td></tr><tr><td><code>&amp;</code> plus <code>wait</code></td><td>Lets the trap run immediately</td></tr><tr><td><code>SLURM_RESTART_COUNT</code></td><td>Slurm sets it whenever a job restarts, and it is unset on the first run. Use it to cap restarts and to tell a fresh start from a resume</td></tr><tr><td><code>--resume-latest</code></td><td>The part that makes a requeue a resume. Slurm will not do this for you</td></tr></tbody></table>
+<blockquote><p>[!NOTE] The wrapper handles <code>USR1</code>. A preemption with <code>GraceTime</code> delivers <code>SIGTERM</code> to the job instead, and you may want a second trap for it that calls the same function. Remember the double <code>SIGTERM</code> described earlier.</p></blockquote>
+<blockquote><p>[!WARNING] <strong>Tested: this wrapper does not receive the early `SIGTERM`.</strong> It starts the trainer with <code>python train.py &amp;</code>, which is a child of the batch shell and not a step, and the early <code>GraceTime</code> signal went only to <code>srun</code> steps. Two ways to close the gap: start the trainer with <code>srun python train.py &amp;</code> so it hears the early <code>SIGTERM</code> itself, or have the admin set <code>PreemptParameters=send_user_signal</code> so the <code>USR1</code> from <code>--signal</code> reaches the batch shell at preemption. In both cases the final <code>SIGTERM</code> at the end of the grace period still arrives, so keep the trap for it. The <a href="../../../../fields/schedulers/slurm-preemption/slurm-signals-cheatsheet/">signals cheat sheet</a> lays out the choice.</p></blockquote>
+<ul><li>* *</li></ul>
+<h2>Requeue without the infinite loop</h2>
+<p>Self-requeueing scripts have an old failure mode: a job that crashes in ten seconds requeues itself, crashes again, and keeps going until an administrator notices. Site documentation recommends two guards, which the wrapper above only partly implements:</p>
+<ul><li><strong>Cap the restarts</strong> with <code>SLURM_RESTART_COUNT</code>, as shown.</li><li><strong>Require a minimum runtime</strong> before a requeue is allowed. If the job has been alive for less than, say, a minute, it died of something that a restart will not fix, so do not requeue.</li></ul>
+<p><code>SLURM_JOB_START_TIME</code> is available for the second check. Also note that a requeued job goes back to pending and may show a short begin-time hold before it starts again; one site&#x27;s guide describes that as Slurm avoiding thrash.</p>
+<ul><li>* *</li></ul>
+<h2>Preemption fine print</h2>
+<p>For the administrators, a handful of details from the guide that are easy to miss:</p>
+<ul><li><strong>Backfill reserves whole nodes.</strong> If a job preempts during a backfill pass, the whole nodes of the preempted jobs are reserved for the preemptor, even when it asked for less. One preemptor can therefore evict more than it needed to.</li><li><strong>`PreemptExemptTime`</strong> sets a minimum runtime before a job may be preempted, honored for <code>REQUEUE</code> and <code>CANCEL</code>.</li><li><strong>Exclusivity blocks preemption.</strong> <code>--exclusive=user</code> and <code>--exclusive=mcs</code> stop a job from preempting or being preempted by other users&#x27; jobs. The guide suggests using a job-submit plugin to disable those options if you rely on preemption. <strong>Tested:</strong> a <a href="../../../../fields/schedulers/slurm-preemption/slurm-job-submit-lua/">Lua submit script</a> can do exactly that, by turning <code>--exclusive=user</code> (<code>job_desc.shared == 2</code>) into plain <code>--exclusive</code>. Plain <code>--exclusive</code> did not block preemption in the tests.</li><li><strong>Heterogeneous jobs</strong> are preempted only if all components are eligible, and one component&#x27;s mode (<code>SUSPEND</code> beats <code>REQUEUE</code> beats <code>CANCEL</code>) sets the mode for all.</li><li><strong>Licenses are not freed by suspend.</strong> Reclaiming them needs <code>REQUEUE</code> or <code>CANCEL</code> plus <code>PreemptParameters=reclaim_licenses</code>.</li><li><strong>Plugin changes need a restart.</strong> Changing <code>PriorityTier</code> or <code>OverSubscribe</code> only needs <code>scontrol reconfig</code>; changing preemption plugin settings needs a full restart of the daemons.</li></ul>
+<ul><li>* *</li></ul>
+<h2>Setting it up</h2>
+<p>Everything above assumes preemption is switched on, and it is off by default. The short version for QOS-based requeue (the full walkthrough, with a drill that proves it works, is on <a href="../../../../fields/schedulers/slurm-preemption/slurm-qos-preemption-setup/">its own page</a>):</p>
+<pre><code class="language-text"># slurm.conf
+PreemptType=preempt/qos
+PreemptMode=REQUEUE
+AccountingStorageEnforce=associations,qos
+PreemptParameters=send_user_signal      # optional: makes --signal fire at preemption</code></pre>
+<pre><code class="language-bash">sacctmgr -i add qos low
+sacctmgr -i modify qos low set PreemptMode=requeue GraceTime=120 PreemptExemptTime=00:30:00
+sacctmgr -i add qos high_bio
+sacctmgr -i modify qos high_bio set Preempt=low</code></pre>
+<p><code>Preempt=</code> goes on the preemptor and <code>PreemptMode</code>, <code>GraceTime</code> and <code>PreemptExemptTime</code> go on the victim. Changing <code>PreemptType</code> needs a <code>slurmctld</code> restart. If you want jobs to land in <code>low</code> or <code>high_&lt;account&gt;</code> without users typing the full name, a <a href="../../../../fields/schedulers/slurm-preemption/slurm-job-submit-lua/">Lua submit script</a> does the routing.</p>
+<ul><li>* *</li></ul>
+<h2>Version notes</h2>
+<p>The signal measurements on this page were taken on 23.11.4. Between 23.11 and 26.05 the changelogs record these preemption changes:</p>
+<ul><li><strong>24.05:</strong> a job signalled during <code>GraceTime</code> is assumed to have been preempted, for <code>PreemptMode=CANCEL</code> and <code>REQUEUE</code>.</li><li><strong>25.05:</strong> a new <code>PRIORITY</code> preemption option, and deleting a QOS removes it from other QOSes&#x27; preempt lists.</li><li><strong>26.05:</strong> <code>PreemptExemptTime</code> also applies to <code>suspend,gang</code> under <code>preempt/partition_prio</code>.</li></ul>
+<p>No changelog entry mentions the <code>GraceTime</code> signal targets or <code>send_user_signal</code>, so rerun the probe on your version. The full list is on <a href="../../../../fields/schedulers/slurm-cluster-operations/slurm-version-changes/">Version changes 23.11 to 26.05</a>.</p>
+<ul><li>* *</li></ul>
+<h2>Back to the week-long run</h2>
+<p>Replay the Friday submission with this page open. The researcher&#x27;s job runs under a preemptible QOS, and the admin has switched on <code>send_user_signal</code>. Her wrapper starts the trainer with <code>srun</code>, so it hears <code>SIGTERM</code> itself, and <code>--signal=B:USR1@300</code> warns the batch shell as well. Both handlers do the same small thing: set a flag, save at the next step boundary, exit.</p>
+<p>On Sunday the better-funded group&#x27;s job arrives. A second later the trainer is told to wrap up, and within a minute it has written a checkpoint and left. Slurm, seeing the job exit inside the grace period, treats it as preempted and puts it back in the queue (the changelog says that rule was added in 24.05 for <code>CANCEL</code> and <code>REQUEUE</code>, and a clean exit inside the window was not tested on 23.11). When a node frees up, the script runs again, finds the checkpoint, and carries on. The latest checkpoint is a minute old, not five hours.</p>
+<p>Nobody was dramatic. &quot;Requeue&quot; still meant &quot;start the script again&quot;, but this time the script knew where it had stopped.</p>
+<p><strong>Takeaway:</strong> requeue means &quot;start the script again&quot;, so the job must catch its warning (steps hear <code>GraceTime</code>&#x27;s <code>SIGTERM</code>, the batch shell hears <code>--signal=B:</code> only with <code>send_user_signal</code>), save at a safe boundary, and find its own checkpoint on restart.</p>
+<p><strong>Next:</strong> <a href="../../../../fields/schedulers/slurm-preemption/slurm-qos-preemption-setup/">The Guest List</a> shows how to switch preemption on and prove it works with a drill.</p>
+<ul><li>* *</li></ul>
+<h2>📜 The Scroll (keep this)</h2>
+<pre><code class="language-text">Preempt, then:    CANCEL (dead) | REQUEUE (needs --requeue) | SUSPEND (GPUs stay held)
+GraceTime:        SIGCONT+SIGTERM now, SIGCONT+SIGTERM+SIGKILL at the new end time
+                  -&gt; two SIGTERMs; make the handler idempotent
+                  -&gt; tested (23.11.4): the early signal reaches srun STEPS, not the batch shell
+                  -&gt; tested: the end of the window is noticed 3 to 25 s late, then KillWait
+--signal=B:USR1@N:  to the batch shell only, N seconds before the limit, up to 60 s early
+                  -&gt; at preemption only with PreemptParameters=send_user_signal (tested)
+bash trap:        runs only after the foreground command ends -&gt; background it and `wait`
+Requeue =         start the script again, not resume. Your script must find the checkpoint
+Logs:             --open-mode=append, or the second run erases the first
+Loops:            cap with SLURM_RESTART_COUNT, require a minimum runtime</code></pre>
+<p>Preemption is not a failure of the cluster. It is a contract, and the job&#x27;s side of it is a script that can be killed at any moment and still make progress.</p>
+<ul><li>* *</li></ul>
+<h2>References</h2>
+<ul><li><a href="https://slurm.schedmd.com/preempt.html">Slurm: Preemption</a></li><li><a href="https://slurm.schedmd.com/gres.html">Slurm: Generic Resource (GRES) Scheduling</a> (suspended jobs keep their GRES)</li><li><a href="https://slurm.schedmd.com/sbatch.html">Slurm: sbatch</a> (<code>--signal</code>, <code>--requeue</code>, <code>--open-mode</code>)</li><li><a href="https://docs.coreweave.com/products/sunk/run_workloads/handle-slurm-signals.md">CoreWeave SUNK: handling Slurm signals</a></li><li><a href="https://docs.coreweave.com/products/sunk/run_workloads/checkpoint-and-restart.md">CoreWeave SUNK: checkpoint and restart</a></li><li><a href="https://doku.lrz.de/spaces/UniARZHPCKB/pages/392035505/Handling+Jobs+running+into+TIMEOUT">LRZ: handling jobs running into TIMEOUT</a></li><li><a href="https://cluster-policy.ds.uchicago.edu/using-the-cluster/batch-jobs/">University of Chicago DSI: batch jobs and the checkpoint contract</a></li></ul>
+<p><a href="../../../../#/fields/schedulers/slurm-preemption/slurm-preemption-requeue-signals">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

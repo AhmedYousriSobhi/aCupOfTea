@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Glossary</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/references/glossary/">
+<meta name="description" content="Short definitions of the acronyms used across the pages (GPU, MPI, NUMA, RDMA, QoS and more), each with a pointer to the page that explains it properly.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Glossary">
+<meta property="og:description" content="Short definitions of the acronyms used across the pages (GPU, MPI, NUMA, RDMA, QoS and more), each with a pointer to the page that explains it properly.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/references/glossary/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/references/glossary/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../.docs/prerender-redirect.js" data-target="../../#/references/glossary"></script>
+<main>
+<h1>Glossary</h1>
+<p><em>Short definitions of the acronyms used across the pages (GPU, MPI, NUMA, RDMA, QoS and more), each with a pointer to the page that explains it properly.</em></p>
+<p>The acronyms that come up again and again in these pages, in one sentence each. On the site, the first use of each term on a page links here, and hovering it shows its meaning. Where a page explains the term properly, the entry points to it.</p>
+<h2>CPU</h2>
+<p><strong>Central Processing Unit.</strong> The general-purpose processor that runs the operating system and hands work to accelerators such as a GPU.</p>
+<h2>CUDA</h2>
+<p><strong>Compute Unified Device Architecture.</strong> NVIDIA&#x27;s platform and programming model for running general-purpose code on its GPUs. Read more: <a href="../../fields/libraries-frameworks-containers/101-cuda/">CUDA 101</a>.</p>
+<h2>DCGM</h2>
+<p><strong>Data Center GPU Manager.</strong> NVIDIA&#x27;s tooling to monitor and diagnose GPUs in a data centre. Read more: <a href="../../fields/system-administration/node-health-check/checks-and-remediation/custom-checks/">Custom checks for NHC</a>.</p>
+<h2>ECC</h2>
+<p><strong>Error-Correcting Code</strong> memory. Memory that detects and corrects flipped bits; GPUs report corrected and uncorrected error counts, which health checks watch. Read more: <a href="../../fields/system-administration/gpu-failure-prediction/runbook/">GPU failure prediction runbook</a>.</p>
+<h2>GPU</h2>
+<p><strong>Graphics Processing Unit.</strong> A processor built to run thousands of small calculations at once, which is why it trains neural networks and runs HPC codes.</p>
+<h2>GRES</h2>
+<p><strong>Generic RESource.</strong> Slurm&#x27;s way of describing things other than CPUs and memory, such as GPUs, that a job can ask for. Read more: <a href="../../fields/schedulers/slurm-mixed-gpus/four-ways-to-mix-gpus/">Four ways to mix GPUs</a>.</p>
+<h2>HBM</h2>
+<p><strong>High Bandwidth Memory.</strong> Stacked memory placed right next to a GPU, giving far more bandwidth than ordinary server memory. Read more: <a href="../../fields/generative-ai/llm-inference-performance/compute-bound-vs-memory-bound/">Compute-bound vs memory-bound</a>.</p>
+<h2>HPC</h2>
+<p><strong>High-Performance Computing.</strong> Using many machines together, usually through a scheduler such as Slurm, to solve problems one computer cannot. Read more: <a href="../../business/hpc-industry/101-hpc/">HPC 101</a>.</p>
+<h2>MIG</h2>
+<p><strong>Multi-Instance GPU.</strong> An NVIDIA feature that splits one GPU into several isolated slices. Read more: <a href="../../fields/schedulers/slurm-inside-a-job/slurm-gpu-affinity-socket-lie/">The socket lie in GPU affinity</a>.</p>
+<h2>MPI</h2>
+<p><strong>Message Passing Interface.</strong> The standard way for processes (ranks), on one machine or many, to exchange messages; Open MPI is a common implementation. Read more: <a href="../../fields/system-administration/openmp-and-open-mpi/">OpenMP and Open MPI</a>.</p>
+<h2>NCCL</h2>
+<p><strong>NVIDIA Collective Communications Library</strong>, said &quot;nickel&quot;. The library GPUs use for collective operations such as all-reduce. Read more: <a href="../../fields/benchmarks/nccl/">NCCL</a>.</p>
+<h2>NHC</h2>
+<p><strong>Node Health Check.</strong> A script that runs on a cluster node, tests it, and tells the scheduler to take the node out of service when a check fails. Read more: <a href="../../fields/system-administration/node-health-check/">Node Health Check</a>.</p>
+<h2>NUMA</h2>
+<p><strong>Non-Uniform Memory Access.</strong> A design where memory is attached to particular CPU sockets, so reaching near memory is faster than reaching far memory. Read more: <a href="../../fields/benchmarks/parallel-execution-affinity-master-guide/">Parallel execution and affinity</a>.</p>
+<h2>OOM</h2>
+<p><strong>Out Of Memory.</strong> The moment a machine or container has no memory left; Linux then kills a process, the OOM killer. Read more: <a href="../../fields/system-administration/linux-memory-pressure/the-oom-killer/">The OOM killer</a>.</p>
+<h2>QoS</h2>
+<p><strong>Quality of Service.</strong> In Slurm, a named set of limits and priorities attached to jobs (<a href="../../fields/schedulers/slurm-pending-jobs/limits-that-wait-forever/">Limits that wait forever</a>). In Kubernetes, a pod&#x27;s class (Guaranteed, Burstable or BestEffort), which decides who is killed first when memory runs out (<a href="../../fields/devops/kubernetes/oomkilled-with-memory-to-spare/">OOMKilled with memory to spare</a>).</p>
+<h2>RDMA</h2>
+<p><strong>Remote Direct Memory Access.</strong> Lets one machine&#x27;s network card read or write another machine&#x27;s memory directly, without involving its CPU. Read more: <a href="../../fields/system-administration/ai-storage-and-fabric/rdma-infiniband-gpudirect/">RDMA, InfiniBand and GPUDirect</a>.</p>
+<h2>SSH</h2>
+<p><strong>Secure Shell.</strong> The encrypted protocol for logging in to a remote machine and running commands on it.</p>
+<h2>VM</h2>
+<p><strong>Virtual Machine.</strong> A computer emulated in software, running its own operating system on top of a host.</p>
+<p><a href="../../#/references/glossary">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

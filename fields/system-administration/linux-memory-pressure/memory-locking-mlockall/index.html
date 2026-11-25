@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Memory Locking: Keeping a Rescuer in RAM with mlockall</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/linux-memory-pressure/memory-locking-mlockall/">
+<meta name="description" content="Why a program that rescues a machine under memory pressure must pin its own pages in RAM, what mlockall does, why the 8 MiB limit exists, and why root gets the real lock - explained with a tow truck.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Memory Locking: Keeping a Rescuer in RAM with mlockall">
+<meta property="og:description" content="Why a program that rescues a machine under memory pressure must pin its own pages in RAM, what mlockall does, why the 8 MiB limit exists, and why root gets the real lock - explained with a tow truck.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/linux-memory-pressure/memory-locking-mlockall/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/linux-memory-pressure/memory-locking-mlockall/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/system-administration/linux-memory-pressure/memory-locking-mlockall"></script>
+<main>
+<h1>Memory Locking: Keeping a Rescuer in RAM with mlockall</h1>
+<p><em>Why a program that rescues a machine under memory pressure must pin its own pages in RAM, what mlockall does, why the 8 MiB limit exists, and why root gets the real lock - explained with a tow truck.</em></p>
+<blockquote><p><strong>Part 5 of the [Linux Memory Pressure series](/fields/system-administration/linux-memory-pressure/README.md).</strong> Some programs exist to act when the machine is out of memory: a watchdog that kills a runaway job, a daemon that pauses containers. Those programs have a trap waiting for them, and <code>mlockall</code> is the fix. By the end you&#x27;ll know what the trap is, what the fix pins, what it costs, and why an ordinary user can only get half of it.</p></blockquote>
+<hr>
+<h2>The tow truck that got towed</h2>
+<p>A city&#x27;s parking lot is full. The council employs a tow truck whose whole job is to clear the lot when it gets too crowded. To make room, the rule is simple: the least recently used cars get towed to a faraway yard, and fetched back when their owner shows up.</p>
+<p>One busy afternoon the lot overflows. The tow truck driver walks out to start the clearing, and finds that <strong>her own car has been towed</strong>. It was parked there all day doing nothing, so it was the least recently used car in the lot. Now she has to wait for it to come back from the far yard, and the yard is busy hauling everyone else&#x27;s cars. The lot stays jammed. The one person who could fix the jam is stuck waiting for transport.</p>
+<p>The fix is not a faster tow truck. The fix is a <strong>reserved parking spot</strong> that the towing rule is forbidden to touch, plus keys that are <strong>already in her hand</strong>.</p>
+<table><thead><tr><th>City</th><th>Linux machine</th></tr></thead><tbody><tr><td>The parking lot</td><td>RAM</td></tr><tr><td>The far yard</td><td>Swap (a disk, or compressed RAM like zram)</td></tr><tr><td>The towing rule</td><td>The kernel&#x27;s page reclaim, least recently used first</td></tr><tr><td>The tow truck</td><td>Your rescuer program (watchdog, governor, OOM helper)</td></tr><tr><td>The reserved spot</td><td><code>mlockall</code></td></tr><tr><td>Keys already in hand</td><td>Resources opened and allocated before trouble</td></tr></tbody></table>
+<p>The rest of this page is that table, one row at a time.</p>
+<hr>
+<h2>Step 1: what swapping really is</h2>
+<p>Programs don&#x27;t touch RAM directly. They see <strong>virtual memory</strong>: the kernel hands each process a big imaginary address space and chops it into <strong>pages</strong> (usually 4 KiB). Each page is either in RAM right now, or it isn&#x27;t.</p>
+<p>When RAM gets short, the kernel needs free pages. It looks for pages nobody has used lately and <strong>evicts</strong> them:</p>
+<ul><li>A page backed by a file (a library, the program&#x27;s own code) can simply be dropped, because it can be read from the file again.</li><li>A page that only exists in memory (heap, stack) has nowhere to go, so it is written to <strong>swap</strong>.</li></ul>
+<p>Later, if the program touches an evicted page, the CPU raises a <strong>page fault</strong>, the kernel reads the page back in, and the program continues. The program never notices, except that the access took far longer.</p>
+<p>How much longer? A RAM access is around a hundred nanoseconds. Reading a page back from an SSD is around a hundred microseconds, a thousand times slower. From a spinning disk it is milliseconds. And when the machine is thrashing, the disk queue is full of everybody else&#x27;s evictions, so your page waits in line.</p>
+<p>This is a fine trade for a text editor you left open overnight. It is a terrible one for the program whose job is to act <em>right now</em>.</p>
+<hr>
+<h2>Step 2: the trap</h2>
+<p>Put the two facts together:</p>
+<ol><li>Memory pressure is exactly when the kernel evicts pages.</li><li>A rescuer is exactly the program that sits idle until memory pressure arrives.</li></ol>
+<p>An idle program is a perfect eviction candidate: its pages haven&#x27;t been touched in hours. So by the time pressure hits, the rescuer&#x27;s code and data have probably been pushed out to swap. The moment it wakes up to act, it page-faults on its <strong>own instructions</strong>, and each fault waits on a disk that is busy with the crisis it was supposed to stop.</p>
+<pre><code class="language-mermaid">flowchart LR
+    A[&quot;Memory pressure&lt;br/&gt;RAM almost full&quot;] --&gt; B[&quot;Kernel evicts&lt;br/&gt;least recently used pages&quot;]
+    B --&gt; C[&quot;Idle rescuer&#x27;s pages&lt;br/&gt;are the oldest: evicted&quot;]
+    C --&gt; D[&quot;Rescuer wakes up,&lt;br/&gt;page-faults on its own code&quot;]
+    D --&gt; E[&quot;Waits on a busy disk&lt;br/&gt;while the machine stalls&quot;]</code></pre>
+<p>Nothing is broken here. The kernel is doing exactly what it should. The design is what&#x27;s wrong: the program that handles emergencies is treated as just another idle program.</p>
+<hr>
+<h2>Try it before you scroll</h2>
+<p>☕ Grab a pen. Which of these should pin its memory in RAM?</p>
+<ol><li>A text editor with ten open files.</li><li>A watchdog that pauses containers when free memory drops below 5%.</li><li>A database buffer pool of 200 GiB.</li></ol>
+<p>Got your answer? Scroll on.</p>
+<p>Answer: <strong>2</strong>. The editor can afford a slow page fault. The 200 GiB pool is far too big to pin (and the database has its own tools). The watchdog is tiny, idle most of the time, and needed at the worst possible moment: the textbook candidate.</p>
+<hr>
+<h2>Step 3: the fix, mlockall</h2>
+<p>Linux lets a program say &quot;never evict these pages&quot;. The call is <code>mlockall</code>:</p>
+<pre><code class="language-python">import ctypes, os
+
+MCL_CURRENT, MCL_FUTURE = 1, 2           # values from &lt;sys/mman.h&gt;
+libc = ctypes.CDLL(None, use_errno=True)
+
+if libc.mlockall(MCL_CURRENT | MCL_FUTURE) != 0:
+    err = ctypes.get_errno()
+    raise OSError(err, os.strerror(err))</code></pre>
+<p>The two flags are the whole trick:</p>
+<table><thead><tr><th>Flag</th><th>Pins</th><th>Why you need it</th></tr></thead><tbody><tr><td><code>MCL_CURRENT</code></td><td>Every page the process has mapped <strong>right now</strong>: its code, libraries, heap, stack</td><td>The rescuer&#x27;s existing instructions and data can no longer be swapped out</td></tr><tr><td><code>MCL_FUTURE</code></td><td>Every page the process maps <strong>from now on</strong></td><td>Memory it grows into later is born locked, not evictable</td></tr></tbody></table>
+<p>After the call, the process is the tow truck with the reserved spot. The kernel&#x27;s reclaim loop skips its pages, no matter how long they sit idle.</p>
+<p>A sibling call, <code>mlock(addr, len)</code>, pins just one range. <code>mlockall</code> is the blunt tool: &quot;everything I have, and everything I&#x27;ll get&quot;. For a small daemon that&#x27;s what you want.</p>
+<hr>
+<h2>Step 4: the second half of the fix, pre-allocation</h2>
+<p>A locked car is no use if the driver has to hunt for her keys. The same holds here, and it is the subtler half.</p>
+<p>When the rescuer finally acts, it has to <em>do</em> something: open a file, write to a control file, start a helper. Each of those can need <strong>new memory</strong>: a fresh buffer, a new file handle, a new kernel structure. And asking for new memory under pressure means asking the kernel for a free page when there are none. The kernel has to reclaim one first (this is <em>direct reclaim</em>), and the caller waits while it happens.</p>
+<p>Locking doesn&#x27;t help with that. It protects pages you already have, not pages you&#x27;re about to ask for.</p>
+<p>So the second half is: <strong>do all the asking before the crisis.</strong></p>
+<ul><li>Open the files and sockets the rescue will write to, and keep the handles.</li><li>Allocate the buffers it will need, and <strong>touch</strong> them (write to them once) so the kernel really backs them with RAM instead of promising it for later.</li><li>Do this <em>before</em> calling <code>mlockall</code>, so those pages are included in the lock.</li></ul>
+<pre><code class="language-python">buf = bytearray(64 * 1024)
+buf[:] = b&quot;\0&quot; * len(buf)        # touch every page now
+fd = os.open(&quot;/sys/fs/cgroup/job/cgroup.freeze&quot;, os.O_WRONLY)   # open now
+# ... later, during the crisis, only: os.pwrite(fd, b&quot;1&quot;, 0)</code></pre>
+<p>When the crisis comes, the rescuer&#x27;s work is a single <code>write</code> to a handle it already holds, using memory it already owns. No allocation, no waiting on reclaim.</p>
+<table><thead><tr><th>Without pre-allocation</th><th>With pre-allocation</th></tr></thead><tbody><tr><td>Opens the control file at the moment of need</td><td>Handle was opened at startup</td></tr><tr><td>Allocates a buffer under pressure</td><td>Buffer was allocated and touched at startup</td></tr><tr><td>May stall in reclaim</td><td>Nothing left to wait for</td></tr></tbody></table>
+<p>Two honest limits. If the rescue involves <strong>starting a new process</strong> (for example running a <code>docker stop</code> command), the kernel has to allocate for that process, and no pre-allocation inside your program can prevent it. Only plain writes to already-open handles avoid new allocations in your own code.</p>
+<p>And the examples on this page are Python, which allocates small objects on almost every call, even <code>os.pwrite</code>. A Python rescuer can shrink that (build the bytes to write once at startup and reuse them) but can&#x27;t get to zero. If the rescuer has to be strict about it, write it in C, Go or Rust, and treat the Python here as the readable version of the idea.</p>
+<hr>
+<h2>Step 5: the cost, and where 8 MiB comes from</h2>
+<p>A locked page is a page the kernel can <strong>never</strong> reclaim. If every program did it, the kernel would run out of pages it&#x27;s allowed to take back, and the whole machine would fall over. Locking is a privilege that has to be rationed.</p>
+<p>Linux rations it with a per-process limit, <code>RLIMIT_MEMLOCK</code>:</p>
+<ul><li>It caps how many bytes one <strong>unprivileged</strong> process may lock.</li><li>Since Linux 5.16 the default is <strong>8 MiB</strong>. (Before that it was 64 KiB.)</li><li>It has a <strong>soft</strong> limit (the one enforced) and a <strong>hard</strong> limit (the ceiling the soft one can be raised to).</li><li>An ordinary user can raise the soft limit up to the hard limit, but <strong>cannot raise the hard limit</strong>.</li></ul>
+<p>Now the catch. <code>mlockall(MCL_CURRENT | MCL_FUTURE)</code> locks <em>everything mapped</em>, not just the program&#x27;s own few kilobytes. A Python interpreter with its libraries is easily tens of MiB. So against an 8 MiB limit, the call fails with <code>ENOMEM</code>, even though the program is tiny by any other measure.</p>
+<hr>
+<h2>Root versus ordinary user</h2>
+<p>This is why a rescuer often comes in two modes.</p>
+<p>| | Ordinary user | Root service | |-|---------------|--------------| | Memory-lock limit | 8 MiB default, hard limit can&#x27;t be raised | Not limited (<code>CAP_IPC_LOCK</code>), or <code>LimitMEMLOCK=infinity</code> in the service file | | <code>mlockall</code> | Often fails with <code>ENOMEM</code> | Succeeds | | Result | <strong>Best effort</strong>: it still runs, but its pages may be swapped out | The <strong>real guarantee</strong> | | Other powers | Only what the user can do, e.g. talking to Docker | Can also write cgroup control files: throttle a group, force reclaim |</p>
+<p>So the lock isn&#x27;t just a flag you switch on. It is tied to privilege: the same program gives a weaker guarantee when started as a normal user. That&#x27;s a design tradeoff, not a bug. The unprivileged mode is easy to start and useful, and the privileged service is the upgrade you install when you need the full promise.</p>
+<p>A good program in the unprivileged mode <strong>tries the lock, logs that it failed, and carries on</strong>, rather than refusing to start. It also pairs well with <code>OOMScoreAdjust=-900</code> in a systemd unit, which tells the kernel&#x27;s OOM killer to prefer almost any other victim first (more on that below).</p>
+<hr>
+<h2>Check it on your own machine</h2>
+<pre><code class="language-bash">ulimit -l                          # soft memlock limit in KiB (8192 = 8 MiB)
+prlimit --memlock                  # soft and hard, for the current shell
+grep VmLck /proc/&lt;pid&gt;/status      # how much that process has locked, in kB
+grep Mlocked /proc/meminfo         # total locked across the machine</code></pre>
+<p>For a systemd service, the limit comes from the unit file, not your shell:</p>
+<pre><code class="language-ini">[Service]
+LimitMEMLOCK=infinity
+OOMScoreAdjust=-900</code></pre>
+<p>To see the failure for yourself, run the Python snippet from Step 3 as a normal user with an 8 MiB limit (<code>ulimit -l 8192</code> first). Expect <code>OSError: [Errno 12] Cannot allocate memory</code>. I confirmed that on Ubuntu 22.04 (Linux 5.15). The limit varies by distribution and systemd version: on that same VM <code>ulimit -l</code> was 251360 KiB out of the box, and the call <strong>succeeded</strong> for an ordinary user (<code>VmLck: 17564 kB</code>). On a clean Ubuntu 26.04 VM (Linux 7.0) <code>ulimit -l</code> was <code>8192</code> and the same call failed for an ordinary user with <code>ENOMEM</code>, so that is the default to expect on newer systems. Check <code>ulimit -l</code> before you assume you&#x27;re limited to 8 MiB. Run it as root and it returns normally, and <code>VmLck</code> in <code>/proc/self/status</code> jumps from <code>0 kB</code> to the size of the process.</p>
+<hr>
+<h2>What locking does not do</h2>
+<p>Pinning pages fixes one stall. It is not armor.</p>
+<ul><li><strong>It doesn&#x27;t stop the OOM killer.</strong> A locked process can still be chosen and killed when the machine truly runs out of memory. That&#x27;s what <code>OOMScoreAdjust</code> is for, and it&#x27;s a separate setting.</li><li><strong>It doesn&#x27;t give you CPU.</strong> If the machine is so loaded that your process isn&#x27;t scheduled, being in RAM doesn&#x27;t help. Real-time scheduling priority is another tool.</li><li><strong>It doesn&#x27;t make allocation free.</strong> Only memory you got <em>before</em> the lock is guaranteed. That&#x27;s why Step 4 exists.</li><li><strong>It isn&#x27;t free for the machine.</strong> Locked pages are lost to everyone else. Keep the rescuer small, and never lock a big cache &quot;just in case&quot;.</li><li><strong>It counts inside cgroup limits.</strong> In a container with a memory cap, locked pages count against it and can&#x27;t be reclaimed to get back under it.</li></ul>
+<p>Slurm does this for its own node daemon: <code>slurmd -M</code> locks it into memory, as described in <a href="../../../../fields/schedulers/slurm-inside-a-job/slurm-slurmstepd/">slurmstepd</a>.</p>
+<p>The same call has a second, unrelated use: programs that hold secrets (keys, passwords) lock that memory so it never reaches a swap file on disk.</p>
+<p><strong>Takeaway:</strong> a program meant to act under memory pressure is the first thing the kernel would evict, so it pins its own pages with <code>mlockall</code> and does its allocating before trouble starts; Linux rations that power, which is why the full guarantee needs root and an unprivileged run is best effort.</p>
+<p>The lock is one piece of survival. CPU priority, the OOM shield and a watchdog complete it in <a href="../../../../fields/system-administration/linux-memory-pressure/rescuer-checklist/">part 6</a>.</p>
+<h2>References</h2>
+<ul><li><a href="https://man7.org/linux/man-pages/man2/mlock.2.html">mlock(2), mlockall(2): Linux manual pages</a></li><li><a href="https://man7.org/linux/man-pages/man2/getrlimit.2.html">getrlimit(2): RLIMIT_MEMLOCK</a></li><li><a href="https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html">systemd.exec: LimitMEMLOCK, OOMScoreAdjust</a></li><li><a href="https://www.kernel.org/doc/html/latest/admin-guide/mm/concepts.html">Linux kernel docs: Concepts overview (virtual memory, swapping)</a></li></ul>
+<p><a href="../../../../#/fields/system-administration/linux-memory-pressure/memory-locking-mlockall">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

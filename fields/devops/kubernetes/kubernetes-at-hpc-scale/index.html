@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Kubernetes at HPC Scale: The Front Desk Meets a 100,000-Task Array</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/kubernetes/kubernetes-at-hpc-scale/">
+<meta name="description" content="What changes when a cluster gets big and the work looks like an HPC job array: the published limits, where the pressure lands, and how to turn an array into one Indexed Job.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Kubernetes at HPC Scale: The Front Desk Meets a 100,000-Task Array">
+<meta property="og:description" content="What changes when a cluster gets big and the work looks like an HPC job array: the published limits, where the pressure lands, and how to turn an array into one Indexed Job.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/kubernetes/kubernetes-at-hpc-scale/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/kubernetes/kubernetes-at-hpc-scale/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/devops/kubernetes/kubernetes-at-hpc-scale"></script>
+<main>
+<h1>Kubernetes at HPC Scale: The Front Desk Meets a 100,000-Task Array</h1>
+<p><em>What changes when a cluster gets big and the work looks like an HPC job array: the published limits, where the pressure lands, and how to turn an array into one Indexed Job.</em></p>
+<blockquote><p><strong>Part 15 of the Kubernetes series.</strong> A Slurm habit that costs nothing on Slurm can bury a Kubernetes cluster. By the end you&#x27;ll know the limits the project publishes, where the pressure lands first, and how to turn a job array into one object that the cluster can carry.</p></blockquote>
+<hr>
+<h2>The array</h2>
+<p>Noor has run Slurm for years. A researcher asks her to move a parameter sweep to the new Kubernetes cluster. On Slurm it was one line, <code>sbatch --array=0-99999</code>, and the scheduler barely noticed.</p>
+<p>Noor does the obvious translation. A small script loops from 0 to 99,999 and runs <code>kubectl create job</code> for each task. It starts well. Then the commands slow down, the dashboards from <a href="../../../../fields/devops/kubernetes/polite-api-server-monitoring/">part 14</a> crawl, and an hour later the finished pods are still sitting there, because nobody told the cluster to clean up.</p>
+<p>Nothing is broken. Noor sent 100,000 separate letters to the front desk, and each one was filed forever.</p>
+<p>So how big is the building, really?</p>
+<hr>
+<h2>What the project promises</h2>
+<p>The series&#x27; landlord has had a front desk since <a href="../../../../fields/devops/kubernetes/kubernetes-in-five-nouns/">part 1</a>: the API server, with etcd as the filing cabinet behind it. Every object, whether a Job, a pod or an Event, is a file in that cabinet.</p>
+<p>The Kubernetes docs for v1.37 say the project &quot;supports clusters with up to 5,000 nodes&quot;, and that it is designed for configurations that meet <strong>all</strong> of these criteria at once:</p>
+<table><thead><tr><th>Limit</th><th>Value</th></tr></thead><tbody><tr><td>Pods per node</td><td>No more than 110</td></tr><tr><td>Nodes</td><td>No more than 5,000</td></tr><tr><td>Pods in total</td><td>No more than 150,000</td></tr><tr><td>Containers in total</td><td>No more than 300,000</td></tr></tbody></table>
+<p>Two things to notice. These are design targets for the whole cluster, not per-feature promises. And the pod limit is a <strong>count of objects</strong>, not of running work: a finished pod you didn&#x27;t delete is still a file in the cabinet.</p>
+<p>☕ <strong>Try it before you scroll.</strong> Noor&#x27;s 100,000 tasks are all done and nothing was cleaned up. Is she under the 150,000-pod figure? Hint: what else lives in the cluster already?</p>
+<p>She&#x27;s under it on paper, and she has used two thirds of the budget for one sweep. Every other team now shares what&#x27;s left. The next question is which part complains first.</p>
+<hr>
+<h2>Where the pressure lands</h2>
+<pre><code class="language-mermaid">flowchart LR
+    S[&quot;Submitters&lt;br/&gt;kubectl, scripts, operators&quot;] --&gt; A[&quot;API server&quot;]
+    A --&gt; E[(&quot;etcd&lt;br/&gt;every object&quot;)]
+    A --&gt; SC[&quot;Scheduler&quot;]
+    A --&gt; K[&quot;Kubelets&lt;br/&gt;and add-ons&quot;]</code></pre>
+<p><em>Everything goes through the API server. Load that grows with the number of objects or nodes lands on the same four places.</em></p>
+<p>The Kubernetes docs name these ones. For each, I add what it means for an HPC site.</p>
+<table><thead><tr><th>Part</th><th>What the docs say</th><th>What it means for you</th></tr></thead><tbody><tr><td>Control plane</td><td>A large cluster &quot;needs a control plane with sufficient compute and other resources.&quot; Typically one or two instances per failure zone, &quot;scaling those instances vertically first&quot;. The page gives no sizing numbers</td><td>Size it before the cluster is busy, and watch it, politely, with the <a href="../../../../fields/devops/kubernetes/polite-api-server-monitoring/">page 14</a> habits</td></tr><tr><td>etcd</td><td>You can store Event objects in a separate dedicated etcd instance. etcd&#x27;s default request limit is 1.5 MiB, its default storage limit is 2 GiB, and 8 GiB is &quot;a suggested maximum size for normal environments&quot;</td><td>Events are noisy when thousands of pods start and fail. Keeping them out of the main cabinet is a project, so plan it early</td></tr><tr><td>Scheduler</td><td>See below</td><td>See below</td></tr><tr><td>Add-ons</td><td>Their default limits &quot;are typically based on data collected from experience running each addon on small or medium Kubernetes clusters&quot;, and on large clusters they &quot;may continuously get killed because they keep hitting the memory limit&quot;</td><td>This is <a href="../../../../fields/devops/kubernetes/oomkilled-with-memory-to-spare/">part 10</a> for the platform itself. Raise limits as you grow, and give CoreDNS and metrics-server a system PriorityClass</td></tr><tr><td>Cloud quotas</td><td>Request increases ahead of time, and bring up new nodes in batches with a pause between them</td><td>Matters if you burst onto rented nodes</td></tr></tbody></table>
+<p>The scheduler is the interesting one. By default it doesn&#x27;t score every node. If you don&#x27;t set <code>percentageOfNodesToScore</code>, Kubernetes computes it with a linear formula that &quot;yields 50% for a 100-node cluster and yields 10% for a 5000-node cluster&quot;, with a lower bound of 5%. There is also a hardcoded minimum of 100 nodes. So on a 5,000-node cluster, it stops searching once it has found enough feasible nodes, which is about 500 by the docs&#x27; 10%.</p>
+<p>The docs warn: don&#x27;t set it below 10% &quot;unless the scheduler&#x27;s throughput is critical for your application and the score of nodes is not important.&quot;</p>
+<p>That sentence is the HPC catch. On a web cluster, any decent node is a good node. On a GPU cluster, node choice can mean the right NVLink domain or the wrong one. My recommendation: leave the default alone, and when placement quality matters, ask for it explicitly with the topology tools from <a href="../../../../fields/devops/kubernetes/isolating-gpu-workloads/">part 7</a>, not by hoping the scheduler looked at enough nodes. I haven&#x27;t measured scheduler behaviour here.</p>
+<blockquote><p>[!NOTE] Nothing on this page was run on a test cluster. A two-VM lab can&#x27;t show the effect of 5,000 nodes, and I won&#x27;t present numbers I didn&#x27;t measure. Every figure comes from the documentation read on 8 November 2026 (Kubernetes v1.37 pages).</p></blockquote>
+<p>So the cabinet and the desk have limits. How does Noor send the work without paying for 100,000 files?</p>
+<hr>
+<h2>Your array, as one Job</h2>
+<p>The Kubernetes Job docs describe the trade-off in one sentence: &quot;One Job per work item creates some overhead for the user and for the system to manage large numbers of Job objects. A single Job for all work items is better for large numbers of items.&quot;</p>
+<p>The Slurm array has a Kubernetes sibling: the <strong>Indexed Job</strong>, stable since v1.24. Its pods get a completion index from 0 to <code>completions - 1</code>, exposed to the container as the <code>JOB_COMPLETION_INDEX</code> environment variable. It plays the role of the array task index in a Slurm script.</p>
+<table><thead><tr><th>Slurm array</th><th>Indexed Job</th></tr></thead><tbody><tr><td><code>--array=0-99999</code></td><td><code>completions: 100000</code>, <code>completionMode: Indexed</code></td></tr><tr><td><code>--array=0-99999%50</code></td><td><code>parallelism: 50</code></td></tr><tr><td>The task index in the script</td><td><code>JOB_COMPLETION_INDEX</code></td></tr><tr><td>A failed task is requeued by hand, or by the site&#x27;s policy</td><td><code>backoffLimitPerIndex</code> and <code>maxFailedIndexes</code></td></tr><tr><td>Old jobs age out of the accounting database</td><td><code>ttlSecondsAfterFinished</code></td></tr></tbody></table>
+<p>The <code>%</code> in Slurm&#x27;s <code>--array=0-15%4</code> &quot;specifies a maximum number of simultaneously running tasks&quot;, which is what <code>parallelism</code> does here.</p>
+<p>Here is Noor&#x27;s sweep as one object. It is built from the field examples in the Job docs. I haven&#x27;t applied it to a cluster.</p>
+<pre><code class="language-yaml">apiVersion: batch/v1
+kind: Job
+metadata:
+  name: sweep
+spec:
+  completionMode: Indexed       # each pod gets an index, like an array task
+  completions: 100000           # the whole array
+  parallelism: 50               # at most 50 running at once (the % in Slurm)
+  backoffLimitPerIndex: 1       # one retry per index, independently
+  maxFailedIndexes: 500         # stop the Job if this many indexes fail
+  ttlSecondsAfterFinished: 3600 # delete the Job and its pods an hour after it ends
+  template:
+    spec:
+      restartPolicy: Never      # required for per-index backoff
+      containers:
+      - name: task
+        image: registry.example.org/sweep:1   # a placeholder image
+        command: [&quot;/bin/sh&quot;, &quot;-c&quot;, &quot;run-task --index $JOB_COMPLETION_INDEX&quot;]</code></pre>
+<p>Three lines matter most.</p>
+<ul><li><strong>`parallelism: 50`.</strong> <code>parallelism</code> is the number of pods the Job runs at once, so the Job doesn&#x27;t need 100,000 pods to exist together. That&#x27;s the difference between one big Job and a loop of small ones.</li><li><strong>`backoffLimitPerIndex`.</strong> With it, &quot;a failing index does not interrupt execution of other indexes.&quot; Failed ones land in <code>.status.failedIndexes</code>, and <code>maxFailedIndexes</code> stops a broken sweep before it burns the whole allocation. One catch from the docs: if any index fails, the Job ends up marked Failed, &quot;even if some, potentially nearly all, of the indexes were processed successfully.&quot;</li><li><strong>`ttlSecondsAfterFinished`.</strong> This is the habit Noor skipped. The docs recommend it because Jobs you create directly have a default deletion policy of <code>orphanDependents</code>, which leaves their pods around after the Job is deleted. Set the TTL, and the TTL controller deletes the Job together with its pods.</li></ul>
+<blockquote><p>[!WARNING] <code>restartPolicy: Never</code> is also required if you add a <code>podFailurePolicy</code>, which lets you stop retrying on an exit code that means &quot;this will never work&quot; (<code>FailJob</code>) and ignore failures caused by a node drain (<code>Ignore</code> on the <code>DisruptionTarget</code> condition). The drain part ties back to <a href="../../../../fields/devops/kubernetes/draining-a-gpu-node/">part 9</a>.</p></blockquote>
+<blockquote><p>[!TIP] Many tiny tasks are better as fewer, longer ones. The Job docs say &quot;having each Pod process multiple work items is better for large numbers of items.&quot; If a task takes seconds, make each index a chunk of tasks. I haven&#x27;t measured it, but a pod is a heavier object than a Slurm task, so fewer, longer ones are the safer default.</p></blockquote>
+<p>An array is many independent tasks. What about the other HPC shape, one job that needs a hundred GPUs at the same moment?</p>
+<hr>
+<h2>What gang scheduling changes at this size</h2>
+<p><a href="../../../../fields/devops/kubernetes/isolating-gpu-workloads/">Page 7</a> explained why a big training job needs all-or-nothing placement, and <a href="../../../../fields/devops/kubernetes/job-execution-journey/">page 8</a> showed Kueue holding the job back until quota fits. This is what the current docs add:</p>
+<table><thead><tr><th>Fact from the docs</th><th>Version</th><th>What it means</th></tr></thead><tbody><tr><td>The <code>gang</code> policy places a group of pods &quot;on an &#x27;all-or-nothing&#x27; basis&quot;, and if the group can&#x27;t fit, none are bound</td><td>Beta since v1.37, behind the <code>GenericWorkload</code> feature gate, disabled by default</td><td>Native gang scheduling exists, but you have to turn it on</td></tr><tr><td>The Job controller can create the Workload and PodGroup for a Job from <code>.spec.scheduling</code></td><td>Alpha since v1.36, behind <code>WorkloadWithJob</code>, disabled by default</td><td>Not something to build a production plan on yet</td></tr><tr><td><code>CompositePodGroup</code> groups child groups, for example for gangs of gangs</td><td>Alpha since v1.37, disabled by default</td><td>Interesting for multi-slice jobs, and still experimental</td></tr></tbody></table>
+<p>One more sentence is worth reading twice. The scheduler never admits fewer than <code>minCount</code> pods at first, but &quot;the actual runtime count of scheduled Pods can drop below this threshold if running Pods are later deleted or evicted.&quot; A gang is guaranteed at the start, not for life. For a three-day run, checkpoints still matter more than any scheduler feature.</p>
+<p>And Kueue&#x27;s own page says it &quot;works alongside kube-scheduler, cluster-autoscaler and your job controllers instead of replacing them&quot;. Which means that at scale you run both, and you need to know which one is saying no.</p>
+<hr>
+<h2>Back to the array</h2>
+<p>Noor deletes the loop and writes one Indexed Job. It runs 50 pods at a time, retries each failed index once, stops itself if 500 indexes fail, and cleans up an hour after it ends. The cabinet holds 50 pods at a time instead of 100,000. The other teams don&#x27;t notice anything.</p>
+<p>On Slurm that would have been a one-liner. On Kubernetes it&#x27;s twenty lines, and the twenty lines are the price of a general-purpose building.</p>
+<p><strong>Takeaway:</strong> the cluster&#x27;s limits are counts of objects, so send an array as one Indexed Job with a parallelism cap and a TTL, and leave the scheduler&#x27;s defaults alone until you&#x27;ve measured a reason.</p>
+<p><strong>Challenge:</strong> index 417 of Noor&#x27;s Job failed twice and shows up in <code>.status.failedIndexes</code>. In one command, how do you find that pod&#x27;s log, and which three commands would you run first if the pod is already gone? The <a href="../../../../fields/devops/kubernetes/cheatsheet/">kubectl troubleshooting cheat sheet</a> answers it.</p>
+<hr>
+<h2>References</h2>
+<ul><li><a href="https://kubernetes.io/docs/setup/best-practices/cluster-large/">Considerations for large clusters</a>: the 110, 5,000, 150,000 and 300,000 figures, control plane sizing advice, separate etcd for Events, add-on limits.</li><li><a href="https://kubernetes.io/docs/concepts/scheduling-eviction/scheduler-perf-tuning/">Scheduler performance tuning</a>: <code>percentageOfNodesToScore</code>, the 50% to 10% formula, the 5% floor, the 100-node minimum.</li><li><a href="https://etcd.io/docs/v3.5/dev-guide/limit/">etcd limits</a>: the request size and storage limits.</li><li><a href="https://kubernetes.io/docs/concepts/workloads/controllers/job/">Jobs</a>: Indexed completion mode, <code>backoffLimitPerIndex</code>, <code>maxFailedIndexes</code>, pod failure policy, <code>ttlSecondsAfterFinished</code>, job patterns, and the alpha Job-level gang scheduling.</li><li><a href="https://kubernetes.io/docs/concepts/scheduling-eviction/gang-scheduling/">Gang scheduling</a>: the <code>gang</code> policy, feature gates, stages, and the <code>minCount</code> caveat.</li><li><a href="https://github.com/kubernetes-sigs/kueue">Kueue</a>: what it decides and how it works alongside kube-scheduler.</li><li><a href="https://slurm.schedmd.com/sbatch.html">sbatch</a>: <code>--array</code> ranges and the <code>%</code> limit.</li><li><a href="../../../../fields/devops/kubernetes/polite-api-server-monitoring/">Polite API server monitoring</a> and <a href="../../../../fields/devops/kubernetes/isolating-gpu-workloads/">Isolating GPU workloads</a>: the pages this one builds on.</li></ul>
+<p><a href="../../../../#/fields/devops/kubernetes/kubernetes-at-hpc-scale">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Slurm Metrics Without an Exporter: OpenMetrics into VictoriaMetrics</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-ai-clusters/metrics-openmetrics/">
+<meta name="description" content="Slurm 25.11+ serves OpenMetrics from slurmctld - scraping it into VictoriaMetrics, idle CPUs fixed by DefMemPerCPU, MiB in bytes metrics until 26.11, open access, and a tested alert.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Slurm Metrics Without an Exporter: OpenMetrics into VictoriaMetrics">
+<meta property="og:description" content="Slurm 25.11+ serves OpenMetrics from slurmctld - scraping it into VictoriaMetrics, idle CPUs fixed by DefMemPerCPU, MiB in bytes metrics until 26.11, open access, and a tested alert.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-ai-clusters/metrics-openmetrics/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-ai-clusters/metrics-openmetrics/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/schedulers/slurm-ai-clusters/metrics-openmetrics"></script>
+<main>
+<h1>Slurm Metrics Without an Exporter: OpenMetrics into VictoriaMetrics</h1>
+<p><em>Slurm 25.11+ serves OpenMetrics from slurmctld - scraping it into VictoriaMetrics, idle CPUs fixed by DefMemPerCPU, MiB in bytes metrics until 26.11, open access, and a tested alert.</em></p>
+<blockquote><p><strong>Part 5 of [Slurm for AI Clusters](/fields/schedulers/slurm-ai-clusters/README.md)</strong> Since 25.11, <code>slurmctld</code> can serve its own metrics over HTTP. By the end you&#x27;ll scrape them into VictoriaMetrics, read the two numbers that explained a half-empty cluster, and have a unit-tested alert that survives the metric change in 26.11.</p></blockquote>
+<hr>
+<h2>Idle CPUs, pending jobs</h2>
+<p>The cluster dashboard shows a third of the CPUs idle. The queue has jobs pending with reason <code>Resources</code>. Users send screenshots of both side by side: &quot;the cluster is half empty and my 1-CPU job can&#x27;t start&quot;. The admin checks <code>sinfo</code>: every node is <code>mix</code>, nothing is down or drained. The scheduler isn&#x27;t broken. Something else is full.</p>
+<blockquote><p>[!NOTE] Lab: Slurm <strong>26.05.6</strong> built from source on <code>s26a</code>–<code>s26c</code> (2 CPUs and <code>RealMemory=1000</code> each). VictoriaMetrics <strong>v1.156.0</strong> single-node, and <code>vmalert-tool</code> from the same release, as set up in the <a href="../../../../fields/devops/victoriametrics/">VictoriaMetrics series</a>. 23.11 doesn&#x27;t have these endpoints; for older Slurm you need an external exporter.</p></blockquote>
+<hr>
+<h2>Turning it on</h2>
+<p>One line in <code>slurm.conf</code>, then restart <code>slurmctld</code>:</p>
+<pre><code class="language-text">MetricsType=metrics/openmetrics</code></pre>
+<p>The metrics are served by <code>slurmctld</code> itself, on its normal port (default 6817). No exporter process, no extra port:</p>
+<pre><code class="language-text">$ curl -s http://s26a:6817/metrics
+slurmctld index of metrics endpoints:
+  &#x27;/metrics/jobs&#x27;: get job metrics
+  &#x27;/metrics/nodes&#x27;: get node metrics
+  &#x27;/metrics/partitions&#x27;: get partition metrics
+  &#x27;/metrics/jobs-users-accts&#x27;: get user and account jobs metrics
+  &#x27;/metrics/scheduler&#x27;: get scheduler metrics</code></pre>
+<p>A sample from each:</p>
+<pre><code class="language-text">slurm_jobs_pending 1
+slurm_node_cpus_idle{node=&quot;s26a&quot;} 1
+slurm_nodes_drain 0
+slurm_partition_jobs{partition=&quot;all&quot;} 0
+slurm_bf_cycle_cnt 0</code></pre>
+<hr>
+<h2>Scraping it</h2>
+<p><code>metrics_path</code> is one per scrape job, so one job per endpoint, all pointing at the controller:</p>
+<pre><code class="language-yaml"># scrape.yml for victoria-metrics -promscrape.config=scrape.yml
+scrape_configs:
+  - job_name: slurm-jobs
+    metrics_path: /metrics/jobs
+    static_configs:
+      - targets: [&#x27;s26a:6817&#x27;]
+  - job_name: slurm-nodes
+    metrics_path: /metrics/nodes
+    static_configs:
+      - targets: [&#x27;s26a:6817&#x27;]
+  - job_name: slurm-scheduler
+    metrics_path: /metrics/scheduler
+    static_configs:
+      - targets: [&#x27;s26a:6817&#x27;]</code></pre>
+<pre><code class="language-text">up{job=&quot;slurm-jobs&quot;} 1
+up{job=&quot;slurm-nodes&quot;} 1
+up{job=&quot;slurm-scheduler&quot;} 1
+count({__name__=~&quot;slurm_.*&quot;}) 146</code></pre>
+<p>146 series for three nodes. We left out <code>/metrics/jobs-users-accts</code> on purpose: the Slurm docs warn that per-user and per-account endpoints are &quot;unbounded entities&quot; that can &quot;dramatically increase the amount of data stored&quot;. Add it only with a plan for its cardinality. The same docs note that every scrape takes locks inside <code>slurmctld</code>, so don&#x27;t scrape it every second; the default 30 s or slower is fine.</p>
+<hr>
+<h2>The two numbers that explained it</h2>
+<p>We reproduced the dashboard: a 2-node job (1 CPU per node) and a 1-CPU job, then one more 1-CPU job. The last one pended with <code>Resources</code> while <code>slurm_node_cpus_idle</code> said each node had a free CPU. The node metrics, side by side:</p>
+<pre><code class="language-text">slurm_node_cpus_idle{node=&quot;s26a&quot;} 1
+slurm_node_cpus_idle{node=&quot;s26b&quot;} 1
+slurm_node_cpus_idle{node=&quot;s26c&quot;} 1
+slurm_node_memory_alloc_bytes{node=&quot;s26a&quot;} 1000
+slurm_node_memory_alloc_bytes{node=&quot;s26b&quot;} 1000
+slurm_node_memory_alloc_bytes{node=&quot;s26c&quot;} 1000
+slurm_node_memory_bytes{node=&quot;s26a&quot;} 1000</code></pre>
+<p>CPUs free, memory <strong>fully allocated</strong>. Each 1-CPU job had been given all of its node&#x27;s memory. That&#x27;s the default: with memory as a consumable resource (<code>CR_Core_Memory</code>) and no <code>DefMemPerCPU</code>, <code>DefMemPerGPU</code> or <code>DefMemPerNode</code>, a job that doesn&#x27;t ask for memory gets the whole node&#x27;s. <code>slurm.conf(5)</code> says <code>DefMemPerNode</code>&#x27;s default is <code>0 (unlimited)</code>, and the lab showed it:</p>
+<pre><code class="language-text">$ scontrol show config | grep DefMemPer
+DefMemPerNode           = UNLIMITED</code></pre>
+<p>The fix is a default per CPU:</p>
+<pre><code class="language-text">DefMemPerCPU=400</code></pre>
+<p>After <code>scontrol reconfigure</code>, resubmitting the same three jobs (jobs already running keep their old allocation):</p>
+<pre><code class="language-text">JOBID CPUS MIN_MEMORY STATE NODELIST(REASON)
+12 2 400M RUNNING s26a,s26b
+13 1 400M RUNNING s26a
+14 1 400M RUNNING s26b
+slurm_node_cpus_idle{node=&quot;s26a&quot;} 0
+slurm_node_memory_alloc_bytes{node=&quot;s26a&quot;} 800</code></pre>
+<p>All three running, <code>s26c</code> left completely free for a bigger job. Pick the value from your nodes: <code>RealMemory</code> divided by CPUs (or by GPUs, for <code>DefMemPerGPU</code> on GPU partitions), minus some room for the OS.</p>
+<hr>
+<h2>_bytes that are MiB</h2>
+<p>Look at that sample again: <code>slurm_node_memory_bytes 1000</code>, on a node configured with <code>RealMemory=1000</code>, which is in MiB. In 26.05 the node memory metrics carry a <code>_bytes</code> name and a MiB value. <code>slurm_node_memory_free_bytes</code> read <code>4911</code>, the container host&#x27;s free memory in MiB.</p>
+<p>The 26.11 release notes fix it: &quot;Report node memory metrics in bytes in the openmetrics endpoint. They were in MiB.&quot; So on the upgrade from 26.05 to 26.11, every node memory series jumps by a factor of 1,048,576. A dashboard that shows them as &quot;GB&quot; by dividing by 1024 is wrong before the upgrade and wrong in a different way after. An alert like <code>slurm_node_memory_free_bytes &lt; 1024</code> (meant as &quot;less than 1 GiB free&quot;) fires on every node before 26.11 and never after.</p>
+<p>Rule of thumb: <strong>write rules as ratios of two memory metrics.</strong> A ratio has no unit, so it&#x27;s right on both versions. The alert below does that.</p>
+<hr>
+<h2>An alert, and the bug its test caught</h2>
+<p>The pattern from the story, as a rule: idle CPUs on a node whose memory is fully allocated.</p>
+<pre><code class="language-yaml"># slurm-rules.yml
+groups:
+  - name: slurm-capacity
+    rules:
+      - alert: SlurmStrandedCPUs
+        # Left side sets $value: idle CPUs on a node whose memory is fully allocated.
+        expr: (slurm_node_cpus_idle &gt; 0) and (slurm_node_memory_alloc_bytes &gt;= slurm_node_memory_bytes)
+        for: 15m
+        labels: {severity: warning}
+        annotations:
+          summary: &quot;{{ $labels.node }}: {{ $value }} CPUs idle, memory fully allocated&quot;</code></pre>
+<p>And a unit test for <code>vmalert-tool</code>, with one node in the trap and one fixed:</p>
+<pre><code class="language-yaml"># slurm-rules.test.yml
+rule_files: [slurm-rules.yml]
+evaluation_interval: 1m
+tests:
+  - interval: 1m
+    input_series:
+      - series: &#x27;slurm_node_memory_bytes{node=&quot;s26a&quot;}&#x27;
+        values: &#x27;1000x30&#x27;
+      - series: &#x27;slurm_node_memory_alloc_bytes{node=&quot;s26a&quot;}&#x27;
+        values: &#x27;1000x30&#x27;
+      - series: &#x27;slurm_node_cpus_idle{node=&quot;s26a&quot;}&#x27;
+        values: &#x27;1x30&#x27;
+      - series: &#x27;slurm_node_memory_bytes{node=&quot;s26b&quot;}&#x27;
+        values: &#x27;1000x30&#x27;
+      - series: &#x27;slurm_node_memory_alloc_bytes{node=&quot;s26b&quot;}&#x27;
+        values: &#x27;800x30&#x27;
+      - series: &#x27;slurm_node_cpus_idle{node=&quot;s26b&quot;}&#x27;
+        values: &#x27;0x30&#x27;
+    alert_rule_test:
+      - eval_time: 10m
+        groupname: slurm-capacity
+        alertname: SlurmStrandedCPUs
+        exp_alerts: []
+      - eval_time: 20m
+        groupname: slurm-capacity
+        alertname: SlurmStrandedCPUs
+        exp_alerts:
+          - exp_labels: {node: s26a, severity: warning}
+            exp_annotations: {summary: &quot;s26a: 1 CPUs idle, memory fully allocated&quot;}</code></pre>
+<pre><code class="language-bash">vmalert-tool unittest --files slurm-rules.test.yml</code></pre>
+<pre><code class="language-text">Unit Testing:  slurm-rules.test.yml
+SUCCESS</code></pre>
+<p>That&#x27;s the second version of the rule. The first had the two sides of <code>and</code> the other way round, and the test failed:</p>
+<pre><code class="language-text">Annotations:{summary=&quot;s26a: 1000 CPUs idle, memory fully allocated&quot;}</code></pre>
+<p><code>and</code> returns the <strong>left</strong> side&#x27;s samples, so <code>$value</code> was the memory, not the CPU count. Swapping the sides fixed it. To check the test can fail, we changed <code>for: 15m</code> to <code>for: 25m</code>: <code>got:[]</code> at 20 minutes, <code>FAILED</code>.</p>
+<p>On the live data, the expression returned all three nodes at the minute of the trap, and nothing after the fix.</p>
+<hr>
+<h2>Who can read it</h2>
+<p>In our lab, <code>curl</code> with no credentials got HTTP 200 from every endpoint. That&#x27;s the default. From the Slurm metrics guide: &quot;By default, metrics endpoints do not require authentication. They are either accessible to everyone or to no one (with the exceptions of SlurmUser and root), depending on whether PrivateData is set.&quot;</p>
+<table><thead><tr><th>Setting</th><th>Effect</th></tr></thead><tbody><tr><td>Nothing</td><td>Open to anyone who can reach port 6817</td></tr><tr><td><code>PrivateData</code> set</td><td>Closed except to SlurmUser and root, unless <code>MetricsParameters=ignore_private_data</code></td></tr><tr><td><code>MetricsAuthUsers=&lt;users&gt;</code></td><td>Only those users (plus SlurmUser and root), with a JWT; overrides the other two</td></tr></tbody></table>
+<p>The guide also points out that the metrics reveal job patterns and user activity. Port 6817 has to be reachable by every node and every client anyway, so a firewall rule doesn&#x27;t fix it; decide who may read the metrics, and set <code>MetricsAuthUsers</code> for the scraper&#x27;s user if the answer isn&#x27;t &quot;everyone&quot;.</p>
+<hr>
+<h2>Back to the half-empty cluster</h2>
+<p>With <code>slurm_node_cpus_idle</code> and <code>slurm_node_memory_alloc_bytes</code> on the same graph, the answer to the screenshots takes one look: the CPUs were free, the memory wasn&#x27;t, because every job without <code>--mem</code> got a whole node&#x27;s worth. <code>DefMemPerCPU</code> fixed the default, the queue drained, and the <code>SlurmStrandedCPUs</code> alert now catches the next time it happens, for example a partition someone adds without a memory default.</p>
+<p>The cluster wasn&#x27;t half empty. It was full of memory nobody was using.</p>
+<p><strong>Takeaway:</strong> Slurm 25.11+ serves its own OpenMetrics from <code>slurmctld</code>, open by default; scrape one job per endpoint, look at idle CPUs and allocated memory together, write memory rules as ratios because the units change in 26.11, and unit-test the rules.</p>
+<p><strong>Next:</strong> <a href="../../../../fields/schedulers/slurm-ai-clusters/lab-build-cheatsheet/">Part 6, Lab Build Cheatsheet</a>, has every command used to build the lab behind this series.</p>
+<hr>
+<h2>References</h2>
+<ul><li><a href="https://slurm.schedmd.com/metrics.html">Slurm Metrics Guide</a>: endpoints, <code>MetricsType</code>, <code>MetricsAuthUsers</code>, <code>MetricsParameters</code>, security and performance notes.</li><li><a href="https://slurm.schedmd.com/slurm.conf.html#OPT_DefMemPerCPU">slurm.conf(5)</a>: <code>DefMemPerCPU</code>, <code>DefMemPerNode</code> (default unlimited), <code>SelectTypeParameters</code>.</li><li><a href="https://github.com/SchedMD/slurm/blob/master/RELEASE_NOTES.md">Slurm 26.11 release notes</a>: node memory metrics change from MiB to bytes.</li><li><a href="https://docs.victoriametrics.com/victoriametrics/sd_configs/">VictoriaMetrics: scrape configuration</a>: <code>scrape_configs</code>, <code>metrics_path</code>.</li><li><a href="https://docs.victoriametrics.com/victoriametrics/vmalert-tool/">vmalert-tool</a>: <code>unittest</code> file format.</li><li><a href="../../../../fields/devops/victoriametrics/metricsql-and-vmalert/">MetricsQL and vmalert</a>: the rule-testing workflow used here.</li></ul>
+<p><a href="../../../../#/fields/schedulers/slurm-ai-clusters/metrics-openmetrics">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

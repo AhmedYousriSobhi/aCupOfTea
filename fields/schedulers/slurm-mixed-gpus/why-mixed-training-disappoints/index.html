@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Why Mixed-GPU Training Disappoints</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-mixed-gpus/why-mixed-training-disappoints/">
+<meta name="description" content="Why 8 H100s plus 8 A100s train like 16 A100s, which H100 features the A100s switch off, and what co-scheduling a heterogeneous job costs you in the queue.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Why Mixed-GPU Training Disappoints">
+<meta property="og:description" content="Why 8 H100s plus 8 A100s train like 16 A100s, which H100 features the A100s switch off, and what co-scheduling a heterogeneous job costs you in the queue.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-mixed-gpus/why-mixed-training-disappoints/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-mixed-gpus/why-mixed-training-disappoints/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/schedulers/slurm-mixed-gpus/why-mixed-training-disappoints"></script>
+<main>
+<h1>Why Mixed-GPU Training Disappoints</h1>
+<p><em>Why 8 H100s plus 8 A100s train like 16 A100s, which H100 features the A100s switch off, and what co-scheduling a heterogeneous job costs you in the queue.</em></p>
+<blockquote><p><strong>Part 2 of the [Mixing GPU Types in Slurm series](/fields/schedulers/slurm-mixed-gpus/README.md).</strong> <a href="../../../../fields/schedulers/slurm-mixed-gpus/four-ways-to-mix-gpus/">Part 1</a> showed that Slurm can allocate H100s and A100s to one job. This page is about what happens next. By the end you&#x27;ll be able to explain, with datasheet numbers, why a mixed training run is slower than it looks, and list the scheduling costs heterogeneous jobs carry even when the workload is perfect.</p></blockquote>
+<hr>
+<h2>Doing it properly this time</h2>
+<p>After the accidental mix in part 1, our researcher reads the docs. She learns about heterogeneous jobs and does it properly: component 0 is two nodes of 4 H100s, component 1 is two nodes of 4 A100s. One <code>srun</code> across both groups, one distributed training run over 16 GPUs.</p>
+<p>It schedules. It launches. It trains.</p>
+<p>And it runs at almost exactly the speed it would have on 16 A100s. Her eight H100s, the most expensive hardware in the building, spend most of every training step doing nothing.</p>
+<p>Nothing is broken. Slurm delivered precisely the allocation she asked for. The problem is the shape of the workload, and it has a name.</p>
+<hr>
+<h2>The rowing boat rule</h2>
+<p>Picture a rowing boat with eight rowers. Four are Olympic athletes. Four are enthusiastic amateurs. The boat moves as one: every stroke starts together, and the next stroke can&#x27;t start until everyone has finished this one.</p>
+<p>How fast does the boat go? The athletes finish each stroke early, then sit with oars raised, waiting. The boat moves at the <strong>amateurs&#x27; pace</strong>. The athletes add almost nothing.</p>
+<p>Standard <strong>data-parallel training</strong> is that boat. Every GPU processes its share of the batch, then all GPUs exchange gradients (an <strong>all-reduce</strong>, on NVIDIA GPUs usually performed by the NCCL library) before anyone can take the next step. That exchange is a meeting point: nobody leaves until everybody arrives.</p>
+<p>So the rule is:</p>
+<blockquote><p><strong>A synchronous job runs at the speed of its slowest participant.</strong></p></blockquote>
+<p>Every faster GPU in the job finishes early and waits at the all-reduce. The waiting doesn&#x27;t show up as an error. It shows up as a GPU that&#x27;s &quot;allocated&quot; and &quot;busy&quot; on your dashboards while doing no useful work.</p>
+<hr>
+<h2>The numbers: how much the fast GPUs wait</h2>
+<p>Here&#x27;s how far apart the two generations are, from NVIDIA&#x27;s datasheets (80 GB SXM versions):</p>
+<table><thead><tr><th></th><th>A100</th><th>H100</th><th>H100 ÷ A100</th></tr></thead><tbody><tr><td>Dense BF16 Tensor Core</td><td>312 TFLOPS</td><td>989 TFLOPS</td><td>~3.2×</td></tr><tr><td>HBM bandwidth</td><td>2,039 GB/s</td><td>3.35 TB/s</td><td>~1.6×</td></tr><tr><td>NVLink per GPU</td><td>600 GB/s</td><td>900 GB/s</td><td>1.5×</td></tr><tr><td>Memory</td><td>80 GB</td><td>80 GB</td><td>1×</td></tr></tbody></table>
+<p>Take the simplest case: each GPU gets the same share of the batch, and the step is limited by math, as large training steps usually are. An H100 finishes its share in about 1/3.2 of the time an A100 takes. Then it waits.</p>
+<p>Roughly <strong>two-thirds of every H100&#x27;s time is spent waiting</strong> for the A100s. Throughput is set by 16 GPUs moving at A100 pace: you&#x27;ve built a 16-A100 job that happens to cost H100 hours.</p>
+<p>If the step is limited by memory bandwidth instead, the gap is smaller (about 1.6×) and the H100s wait about 40% of the time. Either way, the fast GPUs pay for the slow ones.</p>
+<blockquote><p>[!NOTE] These are ceiling-based ratios from datasheets, not measurements. Real training steps mix math, memory and communication, so the exact waiting share will differ. The direction never does: in a synchronous job, the faster GPUs always wait.</p></blockquote>
+<hr>
+<h2>Try it before you scroll</h2>
+<p>☕ A team has 8 H100s free and 8 A100s free. Option A: one 16-GPU mixed job. Option B: run on the 8 H100s alone. For a compute-bound training run with perfect scaling, which finishes sooner?</p>
+<p>Work it out in &quot;A100-equivalents.&quot; Option A: 16 GPUs at A100 pace = <strong>16</strong> A100-equivalents. Option B: 8 H100s at about 3.2× each = about <strong>25</strong> A100-equivalents.</p>
+<p><strong>The 8 H100s alone beat all 16 GPUs together</strong>, on these ceiling numbers. Adding the A100s didn&#x27;t just fail to help; it made the job slower. And it tied up eight A100s that another team could have used for their own job.</p>
+<p>That&#x27;s the counterintuitive heart of this page: <strong>adding slower GPUs to a synchronous job can reduce its speed.</strong></p>
+<hr>
+<h2>The features the A100s switch off</h2>
+<p>Speed isn&#x27;t the only mismatch. The two generations don&#x27;t support the same things.</p>
+<p><strong>FP8.</strong> The H100 datasheet lists FP8 Tensor Core performance (1,979 TFLOPS dense). The A100 datasheet has no FP8 row at all; its lowest floating-point Tensor Core formats are BF16 and FP16. Training recipes that use FP8 on Hopper can&#x27;t use it on Ampere. A single run spanning both has to drop to a format both support, giving up the H100&#x27;s biggest speed lever.</p>
+<p><strong>Interconnect inside the node.</strong> A100 systems use NVLink at 600 GB/s per GPU, H100 systems 900 GB/s. Collective operations that span both kinds of node run at the pace of the slower links, plus whatever network connects the two groups.</p>
+<p><strong>Memory size, if the models differ.</strong> Both GPUs in the table have 80 GB, so that pairing is fine. Mix an 80 GB H100 with a 40 GB A100 and the smaller memory caps the per-GPU batch for everyone, or crashes the ranks that run out first.</p>
+<p><strong>Software paths.</strong> Kernels, libraries and container images are often built and tuned per architecture. A mixed job needs one software stack that runs correctly, and ideally fast, on both. That&#x27;s more testing for every upgrade, forever.</p>
+<hr>
+<h2>Can you rebalance the work?</h2>
+<p>The obvious fix: give the H100s more of the batch, about 3× as many samples per step, so everyone finishes together.</p>
+<p>It&#x27;s possible. It&#x27;s also your problem to build and maintain:</p>
+<ul><li>The data loading has to hand out uneven shares and keep them balanced as speeds drift.</li><li>Gradients from uneven shares must be weighted correctly, or the training math changes.</li><li>The right ratio depends on the model, sequence length and precision, so it has to be measured, not guessed.</li><li>Memory limits still apply: a larger share on the H100s must still fit in 80 GB.</li></ul>
+<p>Teams that try this usually discover that the engineering time costs more than the A100s were worth to the job. Rebalancing is a research project, not a scheduler setting.</p>
+<hr>
+<h2>The queue tax: what co-scheduling costs</h2>
+<p>Even with a perfect workload, heterogeneous jobs pay a price in the queue. Every item below is from Slurm&#x27;s heterogeneous-jobs documentation.</p>
+<p><strong>All components start together, or none do.</strong> Each component might be able to start at a different time on its own. A heterogeneous job waits until <strong>every</strong> component can start at once. The more components, and the busier each partition, the longer that wait.</p>
+<p><strong>Only the backfill scheduler can start them.</strong> The docs say the more frequently executed main scheduling logic works first-in, first-out and can&#x27;t schedule all components together, so heterogeneous jobs are left entirely to the backfill scheduler. Their pending reason isn&#x27;t even set until a backfill pass has looked at them.</p>
+<p><strong>Backfill makes simplifying assumptions.</strong> It typically needs to be able to place each component on a different node to begin the allocation, even if components could actually share a node.</p>
+<p><strong>You can starve yourself.</strong> With overlapping partitions, an early component can grab nodes that a later component needed. The docs give an example: partition <code>p1</code> has 10 nodes and <code>p2</code> uses 5 of the same nodes. Ask for 5 nodes in each, and the scheduler may hand some <code>p2</code> nodes to the first component, leaving a job that can never start.</p>
+<p><strong>Limits count every component.</strong> Each component counts as a &quot;job&quot; for resource limits. The docs&#x27; example: a user limited to 2 running jobs submits a 3-component heterogeneous job, which &quot;will have an adverse effect upon scheduling other jobs.&quot;</p>
+<p><strong>Some features don&#x27;t come along.</strong> From the limitations list:</p>
+<table><thead><tr><th>Not available</th><th>Detail</th></tr></thead><tbody><tr><td>Job arrays</td><td>Arrays of heterogeneous jobs aren&#x27;t supported</td></tr><tr><td>Licenses on later components</td><td>License requests only on the first component</td></tr><tr><td>Gang scheduling</td><td>Not supported</td></tr><tr><td>Moving between federated clusters</td><td>The whole job runs on the submitting cluster</td></tr><tr><td>Magnetic reservations</td><td>Won&#x27;t attract a heterogeneous job unless it names the reservation</td></tr><tr><td>Cancelling one pending component</td><td>Only the whole job can be cancelled while pending</td></tr><tr><td>Requeue, suspend, resume per component</td><td>Leader only, applies to all</td></tr></tbody></table>
+<p>None of this means the feature is broken. It means co-scheduling is a hard problem, and Slurm makes you pay for it in queue time and flexibility.</p>
+<hr>
+<h2>So is it &quot;not functional&quot;?</h2>
+<p>Here&#x27;s the honest scorecard:</p>
+<table><thead><tr><th>Claim</th><th>Verdict</th></tr></thead><tbody><tr><td>&quot;Slurm can&#x27;t allocate H100s and A100s to one job.&quot;</td><td><strong>False.</strong> Heterogeneous jobs, constraint counts, and even a stray <code>|</code> all do it</td></tr><tr><td>&quot;The heterogeneous-jobs feature doesn&#x27;t work.&quot;</td><td><strong>False.</strong> It schedules and launches as documented, with documented limits</td></tr><tr><td>&quot;One synchronous training run across H100s and A100s is a bad deal.&quot;</td><td><strong>True, usually.</strong> It runs at A100 pace and loses H100-only features</td></tr><tr><td>&quot;Heterogeneous jobs cost extra queue time and flexibility.&quot;</td><td><strong>True.</strong> Co-scheduling, backfill only, no arrays, limits per component</td></tr></tbody></table>
+<p>So the precise way to say it: <strong>Slurm&#x27;s mixed allocation is functional; tightly coupled training on mixed GPUs usually isn&#x27;t worth it.</strong> The feature works. The rowing boat doesn&#x27;t.</p>
+<p><strong>Takeaway:</strong> in a synchronous job every GPU waits for the slowest one, so 8 H100s plus 8 A100s train like 16 A100s, often slower than the 8 H100s alone, and co-scheduling adds a queue tax on top.</p>
+<p>So if mixing H100s and A100s in one training run is usually a bad idea, why did SchedMD build heterogeneous jobs at all? Because the boat was never the point. <a href="../../../../fields/schedulers/slurm-mixed-gpus/where-hetjobs-shine/">Part 3</a> shows the workloads where different hardware for different parts is exactly right.</p>
+<hr>
+<h2>References</h2>
+<ul><li><a href="https://slurm.schedmd.com/heterogeneous_jobs.html">Slurm: Heterogeneous Job Support (limitations, scheduling, system administrator information)</a></li><li><a href="https://www.nvidia.com/en-us/data-center/h100/">NVIDIA H100 Tensor Core GPU datasheet</a></li><li><a href="https://www.nvidia.com/en-us/data-center/a100/">NVIDIA A100 Tensor Core GPU datasheet</a></li></ul>
+<p><a href="../../../../#/fields/schedulers/slurm-mixed-gpus/why-mixed-training-disappoints">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

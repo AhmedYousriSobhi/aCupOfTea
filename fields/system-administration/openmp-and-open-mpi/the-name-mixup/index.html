@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Not Twins, Not Even Cousins: OpenMP, MPI and Open MPI</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/openmp-and-open-mpi/the-name-mixup/">
+<meta name="description" content="OpenMP and Open MPI differ by one space and share almost nothing. Three names, three jobs - an API for threads, a standard for messages, and one program that implements the second.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Not Twins, Not Even Cousins: OpenMP, MPI and Open MPI">
+<meta property="og:description" content="OpenMP and Open MPI differ by one space and share almost nothing. Three names, three jobs - an API for threads, a standard for messages, and one program that implements the second.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/openmp-and-open-mpi/the-name-mixup/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/openmp-and-open-mpi/the-name-mixup/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/system-administration/openmp-and-open-mpi/the-name-mixup"></script>
+<main>
+<h1>Not Twins, Not Even Cousins: OpenMP, MPI and Open MPI</h1>
+<p><em>OpenMP and Open MPI differ by one space and share almost nothing. Three names, three jobs - an API for threads, a standard for messages, and one program that implements the second.</em></p>
+<blockquote><p><strong>Part 1 of 8.</strong> Two names that differ by one space, and one that is not even a program. By the end of this page you&#x27;ll be able to say, without hesitation, what each of the three is, and you&#x27;ll know which one to blame when the ticket comes back.</p></blockquote>
+<h2>Contents</h2>
+<hr>
+<h2>The ticket that came back</h2>
+<p>Monday, a ticket lands in the cluster team&#x27;s queue:</p>
+<p><strong>Ticket 1:</strong> <em>&quot;Please install Open MPI so my OpenMP code runs on more nodes.&quot;</em></p>
+<p>A junior engineer types <code>apt install openmpi-bin</code>, writes &quot;done&quot;, and closes it.</p>
+<p>Friday, the same user is back:</p>
+<p><strong>Ticket 2:</strong> <em>&quot;Still one node. Still slow. Did the install even work?&quot;</em></p>
+<p>The install worked perfectly. It also did nothing for this user, because the ticket asked for the wrong thing in a way that sounds exactly right. To see why, you need to pull apart three names.</p>
+<p>The names are the problem. <code>OpenMP</code> and <code>Open MPI</code> differ by one space. Say them aloud and they differ by nothing, like &quot;affect&quot; and &quot;effect&quot;, except with a job queue attached. Pull them apart and the confusion goes away, because they are not related the way the names suggest.</p>
+<p>If they were on a family-DNA website, the result would read: <em>&quot;Relationship: none. Both parents are called Open, which is probably how this started.&quot;</em></p>
+<hr>
+<h2>Three names, three jobs</h2>
+<table><thead><tr><th>Name</th><th>What it is</th><th>Kind of thing</th><th>Where your program&#x27;s pieces live</th></tr></thead><tbody><tr><td><strong>OpenMP</strong></td><td>An API (an agreed set of directives, functions and variables) for sharing work between <strong>threads</strong></td><td>A specification, built into compilers</td><td>One process, one shared memory</td></tr><tr><td><strong>MPI</strong></td><td>The <strong>M</strong>essage <strong>P</strong>assing <strong>I</strong>nterface: an agreed set of functions for <strong>processes</strong> to send each other messages</td><td>A specification (a document)</td><td>Many processes, each with its own memory, possibly on many machines</td></tr><tr><td><strong>Open MPI</strong></td><td>One program that implements the MPI specification</td><td>Software you install</td><td>Same as MPI: it is MPI</td></tr></tbody></table>
+<p>Read that table twice. The only name that is software you install is <strong>Open MPI</strong>. The other two are rulebooks. Ticket 1 asked for the one name that is software, to fix a problem in the rulebook that isn&#x27;t.</p>
+<ul><li>OpenMP describes itself as an API that &quot;supports multi-platform shared-memory parallel programming in C/C++ and Fortran&quot; (<a href="https://www.openmp.org/about/openmp-faq/">OpenMP FAQ</a>).</li><li>The Open MPI project calls itself &quot;an open source, freely available implementation of the MPI specifications&quot; (<a href="https://www.open-mpi.org/faq/?category=general">Open MPI FAQ</a>).</li></ul>
+<p>So: <strong>Open MPI is to MPI what a browser is to the HTML spec.</strong> Nobody says &quot;I installed HTML to open this page&quot;, and nobody should say &quot;I installed OpenMP so my cluster can talk&quot;.</p>
+<p>Chrome and Firefox both implement HTML. Open MPI and MPICH both implement MPI. OpenMP is a different rulebook altogether.</p>
+<p>That is the theory. The kitchen version is easier to remember.</p>
+<blockquote><p>[!NOTE] &quot;Open&quot; in both names is a coincidence of branding, not a family tie. The two projects have different authors, different goals and different release schedules. The next part tells where each one came from.</p></blockquote>
+<hr>
+<h2>The kitchen analogy</h2>
+<p>Keep one picture and every later page gets easier.</p>
+<table><thead><tr><th></th><th>OpenMP</th><th>MPI</th></tr></thead><tbody><tr><td>Picture</td><td><strong>One kitchen</strong>, several cooks sharing one counter</td><td><strong>Several kitchens</strong>, one cook each, passing notes through a delivery window</td></tr><tr><td>Sharing</td><td>Everyone sees the same ingredients. Fast, and easy to trip over each other</td><td>Nobody sees anyone else&#x27;s ingredients. You must send them</td></tr><tr><td>Scale</td><td>As many cooks as the kitchen has stove burners (the cores of one machine)</td><td>As many kitchens as you can build, in one building or across a city</td></tr><tr><td>Classic mistake</td><td>Two cooks grab the same egg (a data race)</td><td>A cook waits for a note that never comes (a deadlock)</td></tr></tbody></table>
+<pre><code class="language-mermaid">flowchart TB
+    subgraph A[&quot;OpenMP: one kitchen, shared counter&quot;]
+        direction LR
+        c1[&quot;chef 1&quot;] --- m[(&quot;one shared&lt;br/&gt;counter&quot;)]
+        c2[&quot;chef 2&quot;] --- m
+        c3[&quot;chef 3&quot;] --- m
+    end
+    subgraph B[&quot;MPI: separate kitchens, notes only&quot;]
+        direction LR
+        k0[&quot;rank 0&lt;br/&gt;own memory&quot;] &lt;--&gt;|&quot;messages&quot;| k1[&quot;rank 1&lt;br/&gt;own memory&quot;]
+        k1 &lt;--&gt;|&quot;messages&quot;| k2[&quot;rank 2&lt;br/&gt;own memory&quot;]
+    end</code></pre>
+<p>OpenMP stops at the kitchen wall: the chefs can shout at each other all day, but they cannot shout across town. MPI is what lets kitchens cooperate, with all the paperwork that implies. Big jobs use both: several kitchens (MPI), each with several cooks (OpenMP). That is part 5.</p>
+<p>So where do those chefs and kitchens come from in software? Hold that thought for one pause.</p>
+<hr>
+<h2>Try it before you scroll</h2>
+<p>☕ Ten seconds. A colleague installs Open MPI on a fresh machine, then compiles an OpenMP program with <code>mpicc</code> and runs it. Will it run with threads?</p>
+<p>Hint: what did <code>mpicc</code> get installed to do, and who turns on OpenMP?</p>
+<hr>
+<h2>Proof that Open MPI is not OpenMP</h2>
+<p>The answer is no, and here is the evidence, from a throwaway Ubuntu 26.04 VM with Open MPI 5.0.10 installed from the distribution&#x27;s packages (<code>openmpi-bin</code>, <code>libopenmpi-dev</code>) and gcc 15.2.</p>
+<p><strong>1. `mpicc` is just gcc with extra flags.</strong> It adds the MPI headers and library and nothing about threads:</p>
+<pre><code class="language-bash">mpicc --showme</code></pre>
+<pre><code class="language-text">gcc -I/usr/lib/x86_64-linux-gnu/openmpi/include -I/usr/lib/x86_64-linux-gnu/openmpi/include/openmpi -L/usr/lib/x86_64-linux-gnu/openmpi/lib -lmpi</code></pre>
+<p><strong>2. OpenMP comes from a different place.</strong> Thread support is turned on by your compiler&#x27;s own flag, <code>-fopenmp</code> in gcc, and its runtime is the compiler&#x27;s library (<code>libgomp</code> for gcc). Compile an OpenMP program through <code>mpicc</code> without that flag and the OpenMP functions are not found:</p>
+<pre><code class="language-text">omp_hello.c:(.text.startup+0x6): undefined reference to `omp_get_num_threads&#x27;
+omp_hello.c:(.text.startup+0xd): undefined reference to `omp_get_thread_num&#x27;
+collect2: error: ld returned 1 exit status</code></pre>
+<p>Installing Open MPI gave that program no OpenMP at all. The two are installed, switched on and versioned separately. That is Ticket 1: the install had nothing to do with the user&#x27;s real problem (threads can&#x27;t leave one machine), so the user was still on one node on Friday.</p>
+<p><strong>3. An MPI program does not even need a cluster.</strong> Started without <code>mpirun</code>, an MPI program just runs as a team of one:</p>
+<pre><code class="language-text">rank 0 of 1 on twins
+sum of ranks = 0</code></pre>
+<hr>
+<h2>The cheat table</h2>
+<table><thead><tr><th>If you hear...</th><th>Think...</th><th>You need...</th></tr></thead><tbody><tr><td>&quot;OpenMP&quot;</td><td>Threads inside one machine</td><td>A compiler with OpenMP support (<code>gcc -fopenmp</code>)</td></tr><tr><td>&quot;MPI&quot;</td><td>Messages between processes, maybe across machines</td><td>An MPI implementation: Open MPI, MPICH or a vendor one</td></tr><tr><td>&quot;Open MPI&quot;</td><td>One implementation of MPI</td><td>The <code>openmpi-bin</code> / <code>libopenmpi-dev</code> packages, or a module on your cluster</td></tr><tr><td>&quot;Hybrid MPI+OpenMP&quot;</td><td>Both, at once</td><td>Both. Part 5</td></tr></tbody></table>
+<p><strong>Takeaway:</strong> OpenMP shares work between threads, MPI passes messages between processes, and Open MPI is merely one program that implements MPI.</p>
+<p>So here&#x27;s the question this raises: if both rulebooks solve &quot;make a program parallel&quot;, why did anyone write two? The answer is in <a href="../../../../fields/system-administration/openmp-and-open-mpi/where-they-came-from/">part 2: where they came from</a>, and it starts in the early 1990s with a very annoying hotel.</p>
+<hr>
+<h2>References</h2>
+<ul><li><a href="https://www.openmp.org/about/openmp-faq/">OpenMP FAQ (openmp.org): what OpenMP is</a></li><li><a href="https://www.open-mpi.org/faq/?category=general">Open MPI FAQ, general category: what MPI and Open MPI are</a></li><li><a href="https://www.open-mpi.org/about/">About Open MPI (open-mpi.org)</a></li><li>Evidence on this page: run on Ubuntu 26.04.1, Linux 7.0, gcc 15.2.0, Open MPI 5.0.10, in a throwaway VM.</li></ul>
+<p><a href="../../../../#/fields/system-administration/openmp-and-open-mpi/the-name-mixup">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

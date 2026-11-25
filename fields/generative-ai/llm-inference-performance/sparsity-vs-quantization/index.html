@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sparsity vs Quantization: Who Pays, and Who Wins</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/generative-ai/llm-inference-performance/sparsity-vs-quantization/">
+<meta name="description" content="What it costs to prune an LLM to 2:4, how much accuracy goes with it, how it compares with FP8 and 4-bit quantization, and why the usual order is quantize first, sparsify second.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Sparsity vs Quantization: Who Pays, and Who Wins">
+<meta property="og:description" content="What it costs to prune an LLM to 2:4, how much accuracy goes with it, how it compares with FP8 and 4-bit quantization, and why the usual order is quantize first, sparsify second.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/generative-ai/llm-inference-performance/sparsity-vs-quantization/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/generative-ai/llm-inference-performance/sparsity-vs-quantization/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/generative-ai/llm-inference-performance/sparsity-vs-quantization"></script>
+<main>
+<h1>Sparsity vs Quantization: Who Pays, and Who Wins</h1>
+<p><em>What it costs to prune an LLM to 2:4, how much accuracy goes with it, how it compares with FP8 and 4-bit quantization, and why the usual order is quantize first, sparsify second.</em></p>
+<blockquote><p><strong>Part 6 of the [LLM Inference Performance series](/fields/generative-ai/llm-inference-performance/README.md), the last one.</strong> <a href="../../../../fields/generative-ai/llm-inference-performance/structured-sparsity/">Part 5</a> showed what 2:4 sparsity does once a model is pruned. This page is about getting there: what pruning costs, what it does to accuracy, and how it stacks up against the cheaper-looking alternative, quantization. By the end you&#x27;ll know which lever to pull first, and how to split the work between the research team and the infrastructure team.</p></blockquote>
+<hr>
+<h2>&quot;Can&#x27;t you just turn it on?&quot;</h2>
+<p>The infrastructure lead has just read part 5. She walks over to the research team, excited. &quot;The H100s have 2× sparse math. We&#x27;re leaving half the chip on the table. Can you just turn on sparsity?&quot;</p>
+<p>The research lead puts down her coffee. &quot;Sure. Which half of the model would you like me to delete?&quot;</p>
+<p>That&#x27;s the conversation in one line. 2:4 sparsity isn&#x27;t a switch on the GPU. It&#x27;s a change to the <strong>model</strong>: half of every weight matrix becomes zero. Somebody has to choose which half, make sure the model still works afterwards, and prove it. That somebody is rarely the person who wanted the speedup.</p>
+<hr>
+<h2>Two ways to prune</h2>
+<h3>The original recipe: prune, then retrain</h3>
+<p>NVIDIA&#x27;s paper describes a simple workflow: take a trained dense model, zero out the two smallest-magnitude weights in each group of four, then <strong>retrain</strong> with the same settings as the original training. The authors report that it eliminated accuracy loss across many standard networks in vision, translation and language. PyTorch&#x27;s 2:4 tutorial summarizes the same finding: prune once, retrain, and accuracy ends up nearly identical.</p>
+<p>For a vision model or a BERT, that retraining is affordable. For a 70B LLM, &quot;repeat the original training&quot; can mean a large slice of the original compute budget. That&#x27;s the catch.</p>
+<h3>The LLM shortcut: one-shot pruning</h3>
+<p>Researchers built methods that prune large language models <strong>without retraining</strong>:</p>
+<ul><li><strong>SparseGPT</strong> (Frantar and Alistarh, ICML 2023) prunes layer by layer, adjusting the remaining weights so each layer&#x27;s outputs stay close to the original. It was the first accurate one-shot method for 10-100+ billion parameter models, and it supports the 2:4 and 4:8 patterns. The authors ran it on 175B-parameter models in under 4.5 hours.</li><li><strong>Wanda</strong> (Sun et al., 2023) is even simpler: it scores each weight by its size times the size of the activations flowing into it, and prunes the lowest scores, again with no retraining.</li></ul>
+<p>One-shot pruning turns a training project into a post-processing step. But &quot;no retraining&quot; also means &quot;no chance to win back what was lost.&quot; Which raises the real question.</p>
+<hr>
+<h2>What it does to accuracy</h2>
+<p>SparseGPT&#x27;s results on OPT-175B, one of the largest open models at the time, make the trade visible. Accuracy on the ARC-Challenge benchmark:</p>
+<table><thead><tr><th>Model</th><th>ARC-Challenge accuracy</th></tr></thead><tbody><tr><td>Dense</td><td>43.94</td></tr><tr><td>50% sparse, <strong>unstructured</strong> (SparseGPT)</td><td>41.30</td></tr><tr><td>50% sparse, <strong>2:4</strong> (SparseGPT)</td><td>38.99</td></tr><tr><td>50% sparse, naive magnitude pruning</td><td>25.60</td></tr></tbody></table>
+<p>Three lessons in four rows:</p>
+<ul><li><strong>Pruning method matters enormously.</strong> Naive magnitude pruning at 50% wrecked the model. A careful method kept most of the accuracy.</li><li><strong>The 2:4 rule costs extra.</strong> Same 50% of weights removed, but forcing the hardware-friendly pattern lost more than letting the pruner choose freely. That&#x27;s the price of a pattern the silicon can read.</li><li><strong>Size helps.</strong> The SparseGPT paper&#x27;s broader finding is that larger models are more compressible: they lose less accuracy at a given sparsity.</li></ul>
+<p>The authors also showed that sparsity stacks with quantization: 50% sparsity combined with 4-bit weights gave a negligible increase in perplexity on OPT-175B.</p>
+<blockquote><p>[!WARNING] Benchmarks like these are averages over public test sets. Your model, your tasks and your users can lose more, or less. Every pruned model needs to pass the same evaluation gate as any other model change before it serves traffic.</p></blockquote>
+<hr>
+<h2>Two diets for the same model</h2>
+<p>Sparsity and quantization both put the model on a diet. Different diets:</p>
+<ul><li><strong>Quantization</strong> keeps every weight, but stores each with fewer bits. Like keeping every page of a book but printing it in smaller type.</li><li><strong>2:4 sparsity</strong> keeps half the weights at full width, and adds a tag saying where each one sat. Like tearing out half the words on every line, and adding a tiny marker so you know where the gaps were.</li></ul>
+<p>Here&#x27;s how they compare against a 16-bit dense baseline, on an H100:</p>
+<table><thead><tr><th>Lever</th><th>Weight bytes saved</th><th>Peak matmul math</th><th>Changes model structure?</th><th>Typical preparation</th></tr></thead><tbody><tr><td><strong>FP8</strong> (weights and activations)</td><td>50%</td><td>2× (989 → 1,979 TFLOPS dense)</td><td>No</td><td>Post-training calibration, sometimes fine-tuning</td></tr><tr><td><strong>4-bit weights</strong> (GPTQ, AWQ)</td><td>About 75%, minus scale factors</td><td>No gain: weights are unpacked for 16-bit math</td><td>No</td><td>One-shot post-training, calibration data</td></tr><tr><td><strong>2:4 sparsity, 16-bit</strong></td><td>~44%</td><td>2× for sparse matmuls</td><td><strong>Yes</strong>: half the weights are zero</td><td>Pruning, ideally plus fine-tuning</td></tr><tr><td><strong>FP8 + 2:4</strong></td><td>~69%</td><td>4× (up to 3,958 TFLOPS)</td><td>Yes</td><td>Both of the above</td></tr></tbody></table>
+<p>(GPTQ and AWQ are both one-shot weight-only quantization methods for LLMs, from Frantar et al. 2022 and Lin et al. 2023.)</p>
+<p>Now map that onto the roofline from <a href="../../../../fields/generative-ai/llm-inference-performance/compute-bound-vs-memory-bound/">part 1</a>:</p>
+<ul><li><strong>Decode</strong> (bandwidth-bound) wants <strong>fewer bytes</strong>. 4-bit weights win, FP8 next, 2:4 at 16-bit last.</li><li><strong>Prefill</strong> (compute-bound) wants <strong>more math</strong>. FP8 and 2:4 both double it; together they quadruple the peak. 4-bit weight-only doesn&#x27;t help here.</li></ul>
+<hr>
+<h2>Try it before you scroll</h2>
+<p>☕ Three workloads. Which lever would you reach for first?</p>
+<ol><li>A chatbot where users complain the answers stream slowly.</li><li>A batch job that scores millions of long documents with a model, producing one short label each.</li><li>A team that&#x27;s already on FP8 and has a research budget for fine-tuning.</li></ol>
+<p>Answers: (1) quantization, ideally 4-bit weights or FP8: decode wants bytes; (2) FP8, then consider 2:4: it&#x27;s almost all prefill, which wants math, and both levers double it; (3) 2:4 on top of FP8: they stack, and the team can afford the pruning and fine-tuning to protect accuracy.</p>
+<hr>
+<h2>Quantize first, sparsify second</h2>
+<p>The recommendation, with the reasoning behind it:</p>
+<blockquote><p><strong>Quantize first. Add 2:4 sparsity when quantization is done and the workload or the budget justifies the model surgery.</strong></p></blockquote>
+<p>Why quantization first:</p>
+<ul><li><strong>More bytes saved for decode.</strong> FP8 saves 50% of weight bytes and 4-bit about 75%, against 2:4&#x27;s 44%. Decode is usually what users feel.</li><li><strong>No structural change.</strong> Every weight stays. Quality risk is easier to reason about and usually easier to recover.</li><li><strong>Cheaper to prepare.</strong> Post-training quantization is typically a calibration pass, not a pruning-plus-retraining project.</li></ul>
+<p>When 2:4 earns its place:</p>
+<ul><li><strong>Prefill-heavy workloads</strong>: long prompts, retrieval-augmented generation with big contexts, batch scoring, embedding generation. That&#x27;s where doubled math shows up.</li><li><strong>Stacking</strong>: once you&#x27;re on FP8, 2:4 is the next ~38% of bytes and the next 2× of math, the only path to the datasheet&#x27;s 3,958.</li><li><strong>Large models</strong>: they tolerate pruning better, per SparseGPT&#x27;s findings.</li><li><strong>A research team with budget</strong> to prune carefully and fine-tune.</li></ul>
+<p>The trade-off, stated plainly: 2:4 is the only lever that raises the <strong>compute</strong> ceiling without a lower-precision number format, but it&#x27;s also the only one that changes what the model <em>is</em>. That&#x27;s a research decision with infrastructure benefits, not the other way round.</p>
+<hr>
+<h2>Who owns what</h2>
+<table><thead><tr><th>Task</th><th>Research team</th><th>Infrastructure team</th></tr></thead><tbody><tr><td>Choose the pruning method (retrain, SparseGPT, Wanda)</td><td>Owns</td><td>Advises on budget</td></tr><tr><td>Decide which layers stay dense</td><td>Owns</td><td>Reports which layers dominate runtime</td></tr><tr><td>Fine-tune to recover accuracy</td><td>Owns</td><td>Provides the compute</td></tr><tr><td>Evaluation gate before serving</td><td>Co-owns</td><td>Co-owns: blocks deploys that fail it</td></tr><tr><td>Hardware support (Ampere or later; 2:4 needs Sparse Tensor Cores, compute capability 8.0+)</td><td>Informed</td><td>Owns</td></tr><tr><td>Engine support: does your serving stack have fast 2:4 kernels for your precision and batch sizes?</td><td>Informed</td><td>Owns</td></tr><tr><td>Benchmark <strong>prefill and decode separately</strong>, dense vs sparse</td><td>Informed</td><td>Owns</td></tr><tr><td>Keep the dense model as a fallback</td><td>Agrees</td><td>Owns the rollout and rollback</td></tr></tbody></table>
+<p>The infrastructure lead from the opening story should leave the conversation with this split, not with &quot;please turn it on.&quot;</p>
+<hr>
+<h2>The interview answer</h2>
+<blockquote><p><em>&quot;How does 2:4 structured sparsity help with serving large models, and how does it compare with quantization?&quot;</em></p></blockquote>
+<blockquote><p>&quot;2:4 sparsity means at least two of every four adjacent weights are zero. The model is compressed ahead of time to the non-zero values plus a 2-bit position index each, and Ampere and Hopper Sparse Tensor Cores skip the zeros, doubling peak matmul throughput.</p>
+<p>On the roofline it gives two different things. Doubled math helps prefill, which is compute-bound. Decode is bandwidth-bound, so it only feels the byte savings, and because of the metadata that&#x27;s about 44% at 16-bit, not 50%. End-to-end gains are smaller than 2× because attention and other non-matmul work don&#x27;t speed up.</p>
+<p>The real cost is on the research side: someone has to prune the model and recover accuracy, either by retraining or with one-shot methods like SparseGPT. The 2:4 pattern loses more accuracy than unstructured pruning, though large models tolerate it better.</p>
+<p>So I&#x27;d quantize first: FP8 or 4-bit weights save more bytes for decode without changing the model&#x27;s structure. Then I&#x27;d add 2:4 on top for prefill-heavy workloads or to stack with FP8, which is the only way to reach the H100&#x27;s 3,958 TFLOPS sparse FP8 figure, gated on our evals and benchmarked separately for prefill and decode.&quot;</p></blockquote>
+<p><strong>Takeaway:</strong> quantization shrinks every weight and 2:4 sparsity deletes half of them; for decode, fewer bytes wins, so quantize first and add sparsity when prefill speed or stacking justifies the pruning and the accuracy work.</p>
+<p>That&#x27;s the series. You started with a 3× faster chip that gave 1.6×, and you&#x27;re finishing with the asterisk on its datasheet explained. Back to the <a href="../../../../fields/generative-ai/llm-inference-performance/">overview</a>.</p>
+<h3>References</h3>
+<ul><li><a href="https://arxiv.org/abs/2104.08378">Mishra et al., &quot;Accelerating Sparse Deep Neural Networks&quot;, arXiv:2104.08378 (NVIDIA)</a></li><li><a href="https://proceedings.mlr.press/v202/frantar23a.html">Frantar and Alistarh, &quot;SparseGPT: Massive Language Models Can Be Accurately Pruned in One-Shot&quot;, ICML 2023</a></li><li><a href="https://arxiv.org/abs/2306.11695">Sun et al., &quot;A Simple and Effective Pruning Approach for Large Language Models&quot; (Wanda), arXiv:2306.11695</a></li><li><a href="https://arxiv.org/abs/2210.17323">Frantar et al., &quot;GPTQ: Accurate Post-Training Quantization for Generative Pre-trained Transformers&quot;, arXiv:2210.17323</a></li><li><a href="https://arxiv.org/abs/2306.00978">Lin et al., &quot;AWQ: Activation-aware Weight Quantization for LLM Compression and Acceleration&quot;, arXiv:2306.00978</a></li><li><a href="https://pytorch.org/tutorials/prototype/semi_structured_sparse.html">PyTorch tutorial: Accelerating BERT with semi-structured (2:4) sparsity</a></li><li><a href="https://www.nvidia.com/en-us/data-center/h100/">NVIDIA H100 Tensor Core GPU datasheet</a></li></ul>
+<p><a href="../../../../#/fields/generative-ai/llm-inference-performance/sparsity-vs-quantization">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

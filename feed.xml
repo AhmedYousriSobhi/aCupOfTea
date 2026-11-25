@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>aCupOfTea</title>
+  <subtitle>Knowledge, served in short sips.</subtitle>
+  <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/"/>
+  <link rel="self" href="https://ahmedyousrisobhi.github.io/aCupOfTea/feed.xml"/>
+  <id>https://ahmedyousrisobhi.github.io/aCupOfTea/</id>
+  <updated>2026-11-25T00:00:00Z</updated>
+  <entry>
+    <title>Pick and Check an Image-Processing Step</title>
+    <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/digital-image-processing/quick-guide/"/>
+    <id>https://ahmedyousrisobhi.github.io/aCupOfTea/fields/digital-image-processing/quick-guide/</id>
+    <updated>2026-11-25T00:00:00Z</updated>
+    <summary>A cheat sheet for parts 3, 4, 7, 8 and 9 - which transform or filter to pick, the number to check by hand, and five labs to try.</summary>
+  </entry>
+  <entry>
+    <title>Pictures and the Middle: Histogram, Polygon, Ogive, and What &#x27;Typical&#x27; Means</title>
+    <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/describing-data/pictures-and-the-middle/"/>
+    <id>https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/describing-data/pictures-and-the-middle/</id>
+    <updated>2026-11-24T00:00:00Z</updated>
+    <summary>Draw the table before you summarise it: histogram for amount, polygon for comparison, ogive for up to here. Then &quot;typical&quot; is three questions, mean, median and mode, and none answers two clumps.</summary>
+  </entry>
+  <entry>
+    <title>Samples, Data Types and Tables: Who You Asked, What Kind of Column, How to Count It</title>
+    <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/describing-data/samples-data-types-and-tables/"/>
+    <id>https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/describing-data/samples-data-types-and-tables/</id>
+    <updated>2026-11-24T00:00:00Z</updated>
+    <summary>A sample speaks for a crowd only if you chose it fairly. The kind of column decides which arithmetic is allowed, and a frequency table counts it without losing the shape, if the drawers touch.</summary>
+  </entry>
+  <entry>
+    <title>Spread and Position: Variance, n − 1, Percentiles, Z-Scores and the Box Plot</title>
+    <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/describing-data/spread-and-position/"/>
+    <id>https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/describing-data/spread-and-position/</id>
+    <updated>2026-11-24T00:00:00Z</updated>
+    <summary>Mean, median and mode are three attitudes to how a long walk hurts; spread is the walking left over. A value then has a position only in its crowd: rank (percentile) or distance (z-score).</summary>
+  </entry>
+  <entry>
+    <title>Averages and Intervals: Why Averages Behave and How Sure You Can Be</title>
+    <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/inference/averages-and-intervals/"/>
+    <id>https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/inference/averages-and-intervals/</id>
+    <updated>2026-11-24T00:00:00Z</updated>
+    <summary>An average is itself random: its spread shrinks as sigma over root n and its shape tends to a bell. A confidence interval turns that wobble into a give-or-take, and bias is invisible to it.</summary>
+  </entry>
+  <entry>
+    <title>Counting and Conditioning: Why a 99% Accurate Test Is Usually Wrong</title>
+    <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/probability/counting-and-conditioning/"/>
+    <id>https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/probability/counting-and-conditioning/</id>
+    <updated>2026-11-24T00:00:00Z</updated>
+    <summary>Probability is a share of the equally likely ways, so &quot;or&quot; adds, &quot;and&quot; multiplies and &quot;at least one&quot; is 1 minus none. Conditioning shrinks the crowd, and Bayes&#x27; rule reads that count backwards.</summary>
+  </entry>
+  <entry>
+    <title>Expectation and the Two Count Recipes: Binomial and Poisson</title>
+    <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/probability/expectation-binomial-poisson/"/>
+    <id>https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/probability/expectation-binomial-poisson/</id>
+    <updated>2026-11-24T00:00:00Z</updated>
+    <summary>Expected value is the data&#x27;s seesaw with probability as the weight, not the likeliest outcome. Binomial and Poisson are recipes for a count; each is right only as far as its assumptions hold.</summary>
+  </entry>
+  <entry>
+    <title>Summarise a Data Set: Which Number, Which Picture</title>
+    <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/describing-data/quick-guide/"/>
+    <id>https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/describing-data/quick-guide/</id>
+    <updated>2026-11-24T00:00:00Z</updated>
+    <summary>A cheat sheet for parts 1 to 6 - choose a sampling method, classify the data, pick the picture, pick the middle and the spread, and place one value in its crowd.</summary>
+  </entry>
+  <entry>
+    <title>Describing Data, Technically: Definitions, Identities and Method Choices</title>
+    <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/describing-data/technical-reference/"/>
+    <id>https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/describing-data/technical-reference/</id>
+    <updated>2026-11-24T00:00:00Z</updated>
+    <summary>The formal layer under parts 1 to 6: scales of measurement, grouped-data formulas, what the mean and median minimise, n versus n-1, quartile methods, fences and sampling designs.</summary>
+  </entry>
+  <entry>
+    <title>From a Sample to a Statement: Intervals, Tests and Lines</title>
+    <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/inference/quick-guide/"/>
+    <id>https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/inference/quick-guide/</id>
+    <updated>2026-11-24T00:00:00Z</updated>
+    <summary>A cheat sheet for parts 12 to 15 - the spread of averages, a confidence interval, a shuffle test and a regression line - with the check and the common trap for each.</summary>
+  </entry>
+  <entry>
+    <title>Inference, Technically: Sampling Distributions, Intervals, Tests and Regression</title>
+    <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/inference/technical-reference/"/>
+    <id>https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/inference/technical-reference/</id>
+    <updated>2026-11-24T00:00:00Z</updated>
+    <summary>The formal layer under parts 12 to 15: the sampling distribution of the mean, intervals and the t distribution, p-values and permutation tests, multiple testing, and least-squares regression.</summary>
+  </entry>
+  <entry>
+    <title>Pick and Compute the Right Probability Model</title>
+    <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/probability/quick-guide/"/>
+    <id>https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/probability/quick-guide/</id>
+    <updated>2026-11-24T00:00:00Z</updated>
+    <summary>A cheat sheet for parts 7 to 11 - the method, the code and the expected output for counting outcomes, flipping a test result, expected value, binomial or Poisson, and the normal curve.</summary>
+  </entry>
+  <entry>
+    <title>Probability, Technically: Definitions, Identities and Assumptions</title>
+    <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/probability/technical-reference/"/>
+    <id>https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/probability/technical-reference/</id>
+    <updated>2026-11-24T00:00:00Z</updated>
+    <summary>The formal layer under parts 7 to 11: axioms, Bayes in odds form, pmf, cdf and density, moment rules, the Poisson limit, the normal approximation and each model&#x27;s assumptions.</summary>
+  </entry>
+  <entry>
+    <title>Run Slurm Cluster Operations Without Losing Jobs</title>
+    <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-cluster-operations/quick-guide/"/>
+    <id>https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-cluster-operations/quick-guide/</id>
+    <updated>2026-11-23T00:00:00Z</updated>
+    <summary>Copy-paste steps for a drained node, a maintenance reservation, a reboot, an upgrade and SSH access, each with the expected output.</summary>
+  </entry>
+  <entry>
+    <title>Find Out Why a Slurm Job Is Pending</title>
+    <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-pending-jobs/quick-guide/"/>
+    <id>https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-pending-jobs/quick-guide/</id>
+    <updated>2026-11-23T00:00:00Z</updated>
+    <summary>Read the reason column, tell waiting from never-starting, see the priority breakdown and roll out a QOS limit safely.</summary>
+  </entry>
+  <entry>
+    <title>Set Up QOS Preemption and Make Jobs Survive It</title>
+    <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-preemption/quick-guide/"/>
+    <id>https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-preemption/quick-guide/</id>
+    <updated>2026-11-23T00:00:00Z</updated>
+    <summary>Steps to switch on QOS preemption, prove it with a drill, add a submit rule, and make a training job catch its warning and requeue.</summary>
+  </entry>
+  <entry>
+    <title>Check That Slurm Still Works After a Change</title>
+    <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-smoke-tests/quick-guide/"/>
+    <id>https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-smoke-tests/quick-guide/</id>
+    <updated>2026-11-23T00:00:00Z</updated>
+    <summary>Which check to run after a change, an upgrade, a policy edit or a repair, with the command and the output that means pass.</summary>
+  </entry>
+  <entry>
+    <title>Generate NHC from a Cluster Definition and Scope a Client Request</title>
+    <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/node-health-check/architecture-and-case-study/quick-guide/"/>
+    <id>https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/node-health-check/architecture-and-case-study/quick-guide/</id>
+    <updated>2026-11-23T00:00:00Z</updated>
+    <summary>Quick guide: generate NHC configs from one cluster definition, test them with real NHC in CI, and run the discovery and validation checklist for a client request.</summary>
+  </entry>
+  <entry>
+    <title>Write Checks, Fix Nodes and Troubleshoot NHC</title>
+    <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/node-health-check/checks-and-remediation/quick-guide/"/>
+    <id>https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/node-health-check/checks-and-remediation/quick-guide/</id>
+    <updated>2026-11-23T00:00:00Z</updated>
+    <summary>Quick guide: add a custom NHC check, automate safe fixes with a guarded node doctor, and troubleshoot drains, timeouts and silent config changes.</summary>
+  </entry>
+  <entry>
+    <title>Install, Configure and Roll Out NHC</title>
+    <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/node-health-check/getting-started/quick-guide/"/>
+    <id>https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/node-health-check/getting-started/quick-guide/</id>
+    <updated>2026-11-23T00:00:00Z</updated>
+    <summary>Quick guide: install NHC, draft and test its config, wire it into Slurm with a safe timeout, and roll it out with a dry run, a canary and a circuit breaker.</summary>
+  </entry>
+  <entry>
+    <title>GPU Temperature in a Health Check: The Ceiling Rule</title>
+    <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/node-health-check/gpu-temperature/gpu-temperature-ceiling/"/>
+    <id>https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/node-health-check/gpu-temperature/gpu-temperature-ceiling/</id>
+    <updated>2026-11-23T00:00:00Z</updated>
+    <summary>Add a GPU over-temperature ceiling to a health-check script: read temperature with one dcgmi call, drain without killing jobs, fail safe when the sensor can&#x27;t be read, and pick the number.</summary>
+  </entry>
+  <entry>
+    <title>GPU Temperature in a Health Check: The Idle Timer</title>
+    <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/node-health-check/gpu-temperature/gpu-temperature-idle-timer/"/>
+    <id>https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/node-health-check/gpu-temperature/gpu-temperature-idle-timer/</id>
+    <updated>2026-11-23T00:00:00Z</updated>
+    <summary>Catch GPUs that run warm while doing nothing: a warn-then-drain timer, why 0% utilization alone is not idle, using the Slurm node state, and a read-only fleet scan before you enforce.</summary>
+  </entry>
+  <entry>
+    <title>Add GPU Temperature Rules to a Health Check</title>
+    <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/node-health-check/gpu-temperature/quick-guide/"/>
+    <id>https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/node-health-check/gpu-temperature/quick-guide/</id>
+    <updated>2026-11-23T00:00:00Z</updated>
+    <summary>Quick guide: a ceiling rule that drains above a limit, then an idle timer that warns before it drains, with a read-only fleet scan first.</summary>
+  </entry>
+  <entry>
+    <title>Glossary</title>
+    <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/references/glossary/"/>
+    <id>https://ahmedyousrisobhi.github.io/aCupOfTea/references/glossary/</id>
+    <updated>2026-11-17T00:00:00Z</updated>
+    <summary>Short definitions of the acronyms used across the pages (GPU, MPI, NUMA, RDMA, QoS and more), each with a pointer to the page that explains it properly.</summary>
+  </entry>
+  <entry>
+    <title>The Morning After the Upgrade: Smoke Tests for the Change You Cannot Undo</title>
+    <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-smoke-tests/slurm-smoke-after-upgrade/"/>
+    <id>https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-smoke-tests/slurm-smoke-after-upgrade/</id>
+    <updated>2026-11-13T00:00:00Z</updated>
+    <summary>What to check around a Slurm upgrade: a backup proven by restoring it, versions on every node, a before/after snapshot, the control-plane smoke test, and why downgrading is not supported.</summary>
+  </entry>
+  <entry>
+    <title>Measure Twice, Reconfigure Once: Smoke-Testing a slurm.conf Change</title>
+    <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-smoke-tests/slurm-smoke-config-change/"/>
+    <id>https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-smoke-tests/slurm-smoke-config-change/</id>
+    <updated>2026-11-13T00:00:00Z</updated>
+    <summary>What a bad slurm.conf does (typo, partition naming a missing node) and the dry runs that catch it first: a snapshot diff, sbatch --test-only and a canary partition.</summary>
+  </entry>
+  <entry>
+    <title>The Cluster That Worked Perfectly and Remembered Nothing: a Two-Minute Slurm Smoke Test</title>
+    <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-smoke-tests/slurm-smoke-control-plane/"/>
+    <id>https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-smoke-tests/slurm-smoke-control-plane/</id>
+    <updated>2026-11-13T00:00:00Z</updated>
+    <summary>A six-check, two-minute Slurm smoke test (MUNGE, controller, nodes, srun, sbatch, sacct) as one script with three outcomes, tested against four injected failures and a busy cluster.</summary>
+  </entry>
+  <entry>
+    <title>Back From the Repair Shop: Is This Node Fit to Return to Service?</title>
+    <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-smoke-tests/slurm-smoke-node-readiness/"/>
+    <id>https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-smoke-tests/slurm-smoke-node-readiness/</id>
+    <updated>2026-11-13T00:00:00Z</updated>
+    <summary>Why idle does not mean a node is healthy, what Slurm does when hardware and slurm.conf disagree (and how configoverrides hides it), and a reservation fence for a probe job.</summary>
+  </entry>
+  <entry>
+    <title>Does the Rulebook Still Work? Smoke-Testing QOS, Submit Rules and Preemption</title>
+    <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-smoke-tests/slurm-smoke-policy/"/>
+    <id>https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-smoke-tests/slurm-smoke-policy/</id>
+    <updated>2026-11-13T00:00:00Z</updated>
+    <summary>A two-stage smoke test for QOS, submit rules and preemption: routing and refusals with no resources, then a real eviction and requeue, with a full script and its output.</summary>
+  </entry>
+  <entry>
+    <title>When Smoke Becomes a Fire Drill: SchedMD&#x27;s Test Suite, ReFrame and the Baseline Rule</title>
+    <link href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-smoke-tests/slurm-smoke-regression-suites/"/>
+    <id>https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-smoke-tests/slurm-smoke-regression-suites/</id>
+    <updated>2026-11-13T00:00:00Z</updated>
+    <summary>What SchedMD&#x27;s test suite and ReFrame do, how both were run against a live test cluster, and why results only mean something against a baseline taken before the change.</summary>
+  </entry>
+</feed>

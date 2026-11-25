@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Write Checks, Fix Nodes and Troubleshoot NHC</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/node-health-check/checks-and-remediation/quick-guide/">
+<meta name="description" content="Quick guide: add a custom NHC check, automate safe fixes with a guarded node doctor, and troubleshoot drains, timeouts and silent config changes.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Write Checks, Fix Nodes and Troubleshoot NHC">
+<meta property="og:description" content="Quick guide: add a custom NHC check, automate safe fixes with a guarded node doctor, and troubleshoot drains, timeouts and silent config changes.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/node-health-check/checks-and-remediation/quick-guide/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/node-health-check/checks-and-remediation/quick-guide/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../../.docs/prerender-redirect.js" data-target="../../../../../#/fields/system-administration/node-health-check/checks-and-remediation/quick-guide"></script>
+<main>
+<h1>Write Checks, Fix Nodes and Troubleshoot NHC</h1>
+<p><em>Quick guide: add a custom NHC check, automate safe fixes with a guarded node doctor, and troubleshoot drains, timeouts and silent config changes.</em></p>
+<blockquote><p><strong>Quick guide for</strong> parts 6 to 8: <a href="../../../../../fields/system-administration/node-health-check/checks-and-remediation/custom-checks/">Custom checks</a>, <a href="../../../../../fields/system-administration/node-health-check/checks-and-remediation/auto-remediation/">Auto-remediation</a> and <a href="../../../../../fields/system-administration/node-health-check/checks-and-remediation/troubleshooting/">Troubleshooting</a>. Use Part 1 to add a check, Part 2 to fix what it finds, Part 3 when a node misbehaves.</p></blockquote>
+<h2>Before you start</h2>
+<ul><li>Root on a test node. Every test below runs with <code>MARK_OFFLINE=0</code>, so nothing drains.</li><li>NHC 1.5 on the nodes if you reboot from automation, and <code>RebootProgram</code> set in <code>slurm.conf</code>.</li><li>The <code>ACME</code> and <code>acme_</code> names are examples: use your own site id.</li></ul>
+<h2>Part 1: add a check (part 6)</h2>
+<ol><li>Try a check with no code first.</li></ol>
+<pre><code class="language-bash">   * || check_cmd_status -t 3 -r 0 /usr/bin/nc -z lic01 27000
+   * || check_file_contents /sys/kernel/mm/transparent_hugepage/enabled &#x27;/\[madvise\]/&#x27;</code></pre>
+<p><strong>Expect:</strong> the line passes silently. <strong>If not:</strong> write a module only when you need loops, per-device thresholds or cached data.</p>
+<ol><li>Write a module as <code>/etc/nhc/scripts/acme_gpu.nhc</code>.</li></ol>
+<ul><li>The <code>.nhc</code> extension is required.</li><li>Name functions <code>check_&lt;class&gt;_&lt;purpose&gt;</code> and namespace globals (<code>ACME_GPU_...</code>).</li><li>Fail with <code>die 1 &quot;clear message&quot;</code> then <code>return 1</code>. Pass with <code>return 0</code>.</li><li>Gather once, cache in a global, bound every command with <code>timeout</code>, use full paths.</li></ul>
+<p><strong>Expect:</strong> the failure message becomes the <code>NHC:</code> reason in <code>sinfo -R</code>.</p>
+<ol><li>Add the lines to <code>nhc.conf</code>.</li></ol>
+<pre><code class="language-bash">   {gpu[01-32]} || check_acme_gpu_count 8
+   {gpu[01-32]} || check_acme_gpu_ecc 0</code></pre>
+<p><strong>Expect:</strong> the check runs only on the matching nodes.</p>
+<ol><li>Test the pass and the failure.</li></ol>
+<pre><code class="language-bash">   bash -n /etc/nhc/scripts/acme_gpu.nhc
+   nhc -l- -e &#x27;check_acme_gpu_count 8&#x27; MARK_OFFLINE=0; echo &quot;rc=$?&quot;
+   nhc -l- -e &#x27;check_acme_gpu_count 9&#x27; MARK_OFFLINE=0; echo &quot;rc=$?&quot;</code></pre>
+<p><strong>Expect:</strong> rc=0 for 8, non-zero for 9 on an 8-GPU node. <strong>If not:</strong> point the command variable at a stub, for example <code>ACME_NVSMI=/tmp/fake-nvidia-smi</code>.</p>
+<ol><li>Keep slow DCGM diagnostics out of the periodic run.</li></ol>
+<pre><code class="language-bash">   {gpu[01-32]} || check_acme_dcgm_diag 2 300</code></pre>
+<p><strong>Expect:</strong> this line lives in <code>/etc/nhc/nhc-deep.conf</code>, with <code>TIMEOUT=900</code> in <code>/etc/sysconfig/nhc-deep</code>. <strong>If not:</strong> run <code>dcgmi diag -r 1</code> on a known-bad and a known-good node and adjust the match.</p>
+<h2>Part 2: fix nodes safely (part 7)</h2>
+<ol><li>Fix in place with a check&#x27;s own flag.</li></ol>
+<pre><code class="language-bash">   * || check_ps_service -u root -S sshd
+   * || check_ps_service -u munge -d munged -S munge</code></pre>
+<p><strong>Expect:</strong> this run fails and drains, the fix runs in the background, and the next run passes and resumes the node. <strong>If not:</strong> a fix that needs more than a few seconds belongs to the node doctor.</p>
+<ol><li>Run the node doctor from cron on the controller, every 10 minutes, as <code>/usr/local/sbin/nhc-node-doctor</code>.</li></ol>
+<p><strong>Expect:</strong> it starts in dry run (<code>DRY_RUN=1</code>) and only logs what it would do. <strong>If not:</strong> keep <code>MAX_ATTEMPTS=2</code>, <code>MAX_CONCURRENT=4</code> and the <code>REBOOTABLE</code> allowlist. Don&#x27;t remove them.</p>
+<ol><li>Reboot with a plain <code>scontrol reboot &quot;$node&quot;</code>.</li></ol>
+<p><strong>Expect:</strong> the node reboots after its jobs finish, and the <code>NHC:</code> reason is kept. <strong>If not:</strong> with <code>ASAP</code> or <code>nextstate=</code>, Slurm clears the DRAIN flag and the node rejoins before verification.</p>
+<ol><li>After the retry budget is spent, drop the prefix so NHC never auto-resumes the node.</li></ol>
+<pre><code class="language-bash">   scontrol update nodename=&quot;$node&quot; reason=&quot;ESCALATED: ${reason#NHC: } (doctor gave up)&quot;</code></pre>
+<p><strong>Expect:</strong> the node stays drained until a human resumes it.</p>
+<ol><li>For a deep verify after a reboot, claim the node first, then hand it back.</li></ol>
+<pre><code class="language-bash">   scontrol update nodename=&quot;$node&quot; reason=&quot;nhc-doctor: deep verify pending&quot;
+   scontrol reboot &quot;$node&quot;
+   ssh &quot;$node&quot; &#x27;/usr/sbin/nhc -n nhc-deep -l-&#x27;
+   scontrol update nodename=&quot;$node&quot; reason=&quot;NHC: deep verify passed, awaiting periodic check&quot;</code></pre>
+<p><strong>Expect:</strong> NHC resumes the node on its next clean periodic run. <strong>If not:</strong> on a failed deep check, set <code>ESCALATED: deep check failed after reboot</code>.</p>
+<ol><li>Send de-duplicated notifications for cron-driven contexts.</li></ol>
+<pre><code class="language-bash">   */10 * * * * root /usr/sbin/nhc-wrapper -M ops@example.org -X 12h -n nhc-oob</code></pre>
+<p><strong>Expect:</strong> mail on a change, and a reminder every 12 hours while it persists.</p>
+<h2>Part 3: troubleshoot (part 8)</h2>
+<ol><li>Read the reason, rerun without draining, and trace when lost.</li></ol>
+<pre><code class="language-bash">   sinfo -R
+   tail -50 /var/log/nhc.log
+   nhc -a -v -l- MARK_OFFLINE=0
+   nhc -l- -e &#x27;check_fs_mount_rw -f /scratch&#x27; MARK_OFFLINE=0
+   BASH_XTRACEFD=33 33&gt;/tmp/nhc-trace.out nhc -xdavl- MARK_OFFLINE=0
+   nhc -V -V -V</code></pre>
+<p><strong>Expect:</strong> the failing check and the files NHC is using. <strong>If not:</strong> open an issue with the <code>-x</code> trace, your NHC version, distro and config lines.</p>
+<ol><li>Find a slow check.</li></ol>
+<pre><code class="language-bash">   time nhc -a -v -l- -t 0 MARK_OFFLINE=0</code></pre>
+<p><strong>Expect:</strong> the slow check shows in the <code>-v</code> progress. <strong>If not:</strong> <code>df</code> on a dead NFS or Lustre mount is the usual suspect: set <code>DF_FLAGS=&quot;-Tkal&quot;</code> and <code>DFI_FLAGS=&quot;-Tial&quot;</code>.</p>
+<ol><li>When a node never comes back, walk this list.</li></ol>
+<ul><li>The reason still starts with <code>NHC:</code>.</li><li><code>HealthCheckNodeState</code> is not <code>NONDRAINED_IDLE</code>.</li><li>The node is not in <code>MAINT</code>, and the reason has no <code>(perm)</code> tag.</li><li><code>grep -r MARK_OFFLINE /etc/nhc /etc/sysconfig/nhc /etc/default/nhc 2&gt;/dev/null</code> shows no leftover <code>MARK_OFFLINE=0</code>.</li><li>All checks pass, so run with <code>-a</code>.</li></ul>
+<h2>If it fails</h2>
+<table><thead><tr><th>What you see</th><th>Likely cause</th><th>Fix</th></tr></thead><tbody><tr><td>A healthy node keeps draining</td><td>Wrong expectation for its class, or a memory check without a fudge</td><td>Fix the line, use <code>check_hw_physmem 512GB 512GB 3%</code></td></tr><tr><td>Drained, reason not starting with <code>NHC:</code></td><td>Not NHC&#x27;s drain</td><td>Slurm, a prolog or epilog, or a human did it</td></tr><tr><td>Node never registers after boot</td><td>NHC fails at <code>slurmd</code> start</td><td><code>journalctl -u slurmd -b | grep -i health</code>, order the mount and GPU units</td></tr><tr><td>No NHC message, truncated log</td><td>Slurm killed NHC first</td><td>Lower NHC&#x27;s <code>TIMEOUT</code></td></tr><tr><td>Works by hand, fails under <code>slurmd</code></td><td>A different <code>PATH</code></td><td>Use full paths, test as root</td></tr><tr><td>Config change does nothing</td><td>Wrong context file, early-only variable, or a module without <code>.nhc</code></td><td>Check <code>nhc -V -V -V</code>, move the variable to the sysconfig file</td></tr><tr><td>Exit 127 or 126</td><td>Command not found, or not executable</td><td>Full path or <code>PATH</code>, <code>chmod +x</code></td></tr><tr><td><code>Unsupported RM detected</code></td><td>NHC can&#x27;t tell the resource manager</td><td>Set <code>NHC_RM=slurm</code> in <code>/etc/sysconfig/nhc</code></td></tr></tbody></table>
+<h2>Roll back</h2>
+<ul><li>Keep <code>DRY_RUN=1</code> on the node doctor until its log looks right.</li><li>Set <code>MARK_OFFLINE=0</code> to stop NHC draining while you investigate.</li></ul>
+<p><strong>Don&#x27;t:</strong> reset error counters to make a check pass, kill user processes on nodes running jobs, or reboot during a cluster-wide event.</p>
+<p><strong>Why it works:</strong> <a href="../../../../../fields/system-administration/node-health-check/checks-and-remediation/custom-checks/">Custom checks</a>, <a href="../../../../../fields/system-administration/node-health-check/checks-and-remediation/auto-remediation/">Auto-remediation</a> and <a href="../../../../../fields/system-administration/node-health-check/checks-and-remediation/troubleshooting/">Troubleshooting</a>.</p>
+<p><a href="../../../../../#/fields/system-administration/node-health-check/checks-and-remediation/quick-guide">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Deep Learning Basics</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/deep-learning/concepts/basics/">
+<meta name="description" content="Neurons, loss and cost, and the common activation functions, explained from first principles.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Deep Learning Basics">
+<meta property="og:description" content="Neurons, loss and cost, and the common activation functions, explained from first principles.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/deep-learning/concepts/basics/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/deep-learning/concepts/basics/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/deep-learning/concepts/basics"></script>
+<main>
+<h1>Deep Learning Basics</h1>
+<p><em>Neurons, loss and cost, and the common activation functions, explained from first principles.</em></p>
+<p><img src="../../../../fields/deep-learning/concepts/images/basics-01.png" alt="Title slide with the words DEEP DEEP DEEP LEARNING in shrinking sizes under the heading Artificial Intelligence" loading="lazy"></p>
+<p>In this article, we&#x27;ll start explaining the important basics in deep learning</p>
+<p>A neural network tries to represent a given output based on its inputs by learning the appropaite parameters that could map the input to the target output.</p>
+<p>In real life the relation between output and input are not a linear relation, but a non-linear complex one. This force us to choose methods that introduce this non-linearity, these methods are called activation functions.</p>
+<h1>Table of Content</h1>
+<h1>Neural Network</h1>
+<p>A neural network is a machine learning model that is inspired by the human brain. It is made up of interconnected nodes, called neurons, that are arranged in layers.</p>
+<p>The first layer is called the input layer, and it receives the data that the network will process. The last layer is called the output layer, and it produces the network&#x27;s output. The layers in between are called hidden layers.</p>
+<p>The neurons in each layer are connected to the neurons in the next layer. The connections between neurons are called synapses. The strength of each synapse is determined by a weight.</p>
+<p>The network learns by adjusting the weights of the synapses. This is done through a process called backpropagation. Backpropagation is an algorithm that calculates the error of the network&#x27;s output and then adjusts the weights to reduce the error.</p>
+<p>The more the network is trained, the better it will become at predicting the output for a given input.</p>
+<p>So Let&#x27;s define a deep network to be :</p>
+<pre><code>DEEP Networks are gigantic Non-Linear or implicit sophisticated look-up table.</code></pre>
+<p><img src="../../../../fields/deep-learning/concepts/images/basics-02.png" alt="Slide showing a neuron as input times weights, summed with an intercept, passed through activation function g, then minimized" loading="lazy"></p>
+<p>Here are some of the key features of a neural network:</p>
+<ul><li><strong>Non-linearity:</strong> Neural networks are able to learn non-linear relationships between the input and output data. This is because the activation functions used in neural networks are non-linear.</li><li><strong>Parallel processing:</strong> Neural networks can process data in parallel. This means that the network can learn from multiple data points at the same time.</li><li><strong>Adaptability:</strong> Neural networks are able to adapt to new data. This is because the weights of the synapses can be adjusted to improve the network&#x27;s performance.</li><li><strong>Generalization:</strong> Neural networks are able to generalize to new data. This means that the network can learn from a limited amount of data and then apply the knowledge to new data that it has not seen before.</li></ul>
+<p>Neural networks are a powerful tool that can be used for a variety of tasks, including:</p>
+<ul><li><strong>Classification:</strong> Neural networks can be used to classify data into different categories. For example, a neural network can be used to classify images into different objects or to classify text into different categories.</li><li><strong>Regression:</strong> Neural networks can be used to predict a continuous value, such as the price of a stock or the number of sales.</li><li><strong>Natural language processing:</strong> Neural networks can be used to process natural language, such as text and speech. For example, a neural network can be used to translate text from one language to another or to generate text.</li><li><strong>Computer vision:</strong> Neural networks can be used to process images and videos. For example, a neural network can be used to identify objects in an image or to track the movement of people in a video.</li></ul>
+<p>Neural networks are a rapidly growing field of machine learning. As the technology continues to develop, neural networks will be able to solve even more complex problems.</p>
+<p>Note: Number of layers = number of hidden layers + 1</p>
+<h2>Loss functions Vs Cost function</h2>
+<p>The loss function computes the error for a single training example; The Cost function is the average of the loss functions of the entire training set.</p>
+<h2>Removing INTERCEPT?</h2>
+<p>Let&#x27;s reacall a real linear regression line: y = a + b*x + Error, where</p>
+<ul><li>a: INTERCEPT.</li><li>Error: they are the residuals which are normally distributed.</li></ul>
+<p>Assume removing the intercept, then the line will go through the origin wherein the dependent variable and the independent variable is equal to zero.</p>
+<h1>Activation Function</h1>
+<p>An activation function is a function that is applied to the output of a neuron in a neural network. It is used to introduce non-linearity into the network, which is essential for learning complex patterns.</p>
+<h2>Linear Function</h2>
+<p><img src="../../../../fields/deep-learning/concepts/images/basics-03.png" alt="Slide on the linear activation g of x equals x, with a straight line through the origin on axes" loading="lazy"></p>
+<p>The linear activation function is not commonly used in neural networks. It is a simple function that outputs the input value unchanged. This means that the output of each neuron is simply a linear combination of the inputs. As a result, the network cannot learn any non-linear relationships between the inputs and the outputs.</p>
+<p>The linear activation function can be used in some cases, such as when the input data is already in a linear relationship with the output data. However, it is not generally recommended for most neural network applications.</p>
+<p>Here are some of the problems with using the linear activation function:</p>
+<ul><li>It cannot learn any non-linear relationships between the inputs and the outputs.</li><li>It is not computationally efficient, as the gradients of the function must be calculated for each update.</li><li>It can lead to the vanishing gradient problem, which can make it difficult for the network to learn.</li></ul>
+<p>Overall, the linear activation function is not a good choice for most neural network applications. It is better to use a different activation function, such as the ReLU function, which is more powerful and efficient.</p>
+<h2>Most Common Activation Functions</h2>
+<h3>Relu</h3>
+<p>The ReLU function is a non-linear function that outputs the input value if it is positive, and zero otherwise. That&#x27;s mean if the input is negative, then the output of the neuron will always be zero.</p>
+<p>It is computationally efficient and does not suffer from the vanishing gradient problem, but it can lead to the dying ReLU problem.</p>
+<p><img src="../../../../fields/deep-learning/concepts/images/basics-04.png" alt="ReLU activation slide with max of 0 and z formula and a plot flat at zero for negative inputs, annotated dying ReLU problem" loading="lazy"></p>
+<h4>What is Dying Relu Problem?</h4>
+<ul><li>It can occur when the weights of neural network are initialized in a way that causes many of the neurons to output zero. This can happen if the weights are initialized to be too small or if the data is not well-scalled.</li><li>When a neuron outputs zero, it will not contribute to the learning process. This can cause the network to become stuck in a local minimum, where it is unable to learn the desired function.</li><li>The dying ReLU problem is more likely to occur in deep neural networks. This is because the ReLU function is applied many times in a deep neural network.</li></ul>
+<h4>How to Prevent the Dying Relu Problem?</h4>
+<ul><li>The dying ReLU problem is a common problem that can occur in neural networks. However, there are a number of ways to prevent it. By following these techniques, you can help to ensure that your neural networks are able to learn effectively.</li><li>Here are some additional things to keep in mind about the dying ReLU problem:<ul><li>There are a number of ways to prevent the dying ReLU problem. One way is to initialize the weights of the network carefully. Another way is to use a variant of the ReLU function that outputs a small positive value for negative input values. This is called the leaky ReLU function.</li><li>The dying ReLU problem can be mitigated by using a learning rate that is not too large. A large learning rate can cause the weights of the network to be updated too quickly, which can lead to the dying ReLU problem.</li><li>The dying ReLU problem can also be mitigated by using a regularization technique, such as L2 regularization. L2 regularization helps to prevent the weights of the network from becoming too large, which can help to prevent the dying ReLU problem.</li></ul></li></ul>
+<h3>Leaky Relu</h3>
+<p>The Leaky ReLU function is a variant of the ReLU function that outputs a small positive value for negative input values.</p>
+<p>This prevents the dying ReLU problem.</p>
+<p><img src="../../../../fields/deep-learning/concepts/images/basics-05.png" alt="Leaky ReLU slide with plot having a small slope for negative z and formula max of a times z and z" loading="lazy"></p>
+<h3>Sigmoid</h3>
+<p>The sigmoid function is a special activation function because it has a few properties that make it useful for neural networks.</p>
+<ul><li>S-shaped curve: The sigmoid function is a S-shaped curve that outputs a value between 0 and 1. This makes it a good choice for binary classification problems, where the output of the network should be a probability.</li><li>Smooth and continuous: The sigmoid function is smooth and continuous, which makes it easy to differentiate. This is important for the backpropagation algorithm, which is used to update the weights of the network during training.</li><li>Interpretable: The sigmoid function is relatively easy to interpret, which can be helpful for debugging and understanding the behavior of the network.</li></ul>
+<p><img src="../../../../fields/deep-learning/concepts/images/basics-06.png" alt="sigmoid" loading="lazy"></p>
+<p>However, the sigmoid function also has some limitations.</p>
+<ul><li>Vanishing gradient problem: The sigmoid function has a derivative that approaches zero as the input approaches 0 or 1. This can make it difficult for the network to learn, as the updates to the weights become very small.</li><li>Sensitive to outliers: The sigmoid function is sensitive to outliers, which can cause the network to make incorrect predictions.</li></ul>
+<h3>Tanh</h3>
+<p>The hyperbolic tangent (tanh) function is an activation function that is similar to the sigmoid function, but it has a range of -1 to 1. This makes it a good choice for regression problems, where the output of the network should be a continuous value.</p>
+<p>The tanh function is also less sensitive to outliers than the sigmoid function, which makes it a good choice for problems where the data may contain outliers.</p>
+<p>Here are some of the reasons why the tanh function is preferred over the sigmoid function:</p>
+<ul><li>Range: The tanh function has a range of -1 to 1, which is suitable for regression problems where the output should be a continuous value. The sigmoid function has a range of 0 to 1, which can be restrictive in some cases.</li><li>Sensitivity to outliers: The tanh function is less sensitive to outliers than the sigmoid function. This is because the tanh function is symmetric around 0, while the sigmoid function is not.</li><li>Smoothness: The tanh function is a smooth function, which makes it easier to train neural networks. The sigmoid function is not as smooth, which can make it more difficult to train neural networks.</li></ul>
+<p><img src="../../../../fields/deep-learning/concepts/images/basics-07.png" alt="Tanh activation slide with S-shaped curve between minus 1 and 1 on z axis, noting it keeps the sign of the input" loading="lazy"></p>
+<p>Here are some cases where the tanh function is preferred over the sigmoid function:</p>
+<ul><li>Regression problems: The tanh function is a good choice for regression problems where the output should be a continuous value.</li><li>Problems with outliers: The tanh function is less sensitive to outliers than the sigmoid function, so it is a good choice for problems where the data may contain outliers.</li><li>Problems where smoothness is important: The tanh function is a smooth function, which makes it easier to train neural networks. This is important for problems where the output of the network should be smooth, such as image classification.</li></ul>
+<p>However, the tanh function also has some limitations.</p>
+<ul><li>Vanishing gradient problem: The tanh function has a derivative that approaches zero as the input approaches 0 or 1. This can make it difficult for the network to learn, as the updates to the weights become very small.</li><li>Not interpretable: The tanh function is not as interpretable as the sigmoid function. This can make it more difficult to debug and understand the behavior of the network.</li></ul>
+<h3>SoftMax</h3>
+<p>The softmax function is a special activation function because it is used in classification problems with multiple output classes. The softmax function takes a vector of real numbers as input and outputs a vector of probabilities, where each probability represents the likelihood of the input belonging to a particular class.</p>
+<p>The softmax function is a versatile and useful activation function. It is a good choice for classification problems with multiple output classes.</p>
+<p><img src="../../../../fields/deep-learning/concepts/images/basics-08.png" alt="Softmax slide: output layer values 1.3, 5.1, 2.2, 0.7, 1.1 passed through softmax formula into probabilities summing to 1" loading="lazy"></p>
+<p>Here are some of the reasons why the softmax function is special:</p>
+<ul><li>Normalization: The softmax function is a normalization function, which means that the sum of the outputs is always equal to 1. This is important for classification problems, where the output should represent the probability of the input belonging to a particular class.</li><li>Non-linearity: The softmax function is a non-linear function, which means that it can learn complex relationships between the input and output data. This is important for classification problems, where the data may not be linearly separable.</li><li>Differentiability: The softmax function is differentiable, which means that it can be used with backpropagation to train neural networks. Backpropagation is an algorithm that is used to update the weights of a neural network based on the error of the network&#x27;s predictions.</li></ul>
+<p>Here are some cases where the softmax function is used:</p>
+<ul><li>Classification problems: The softmax function is used in classification problems with multiple output classes. For example, the softmax function can be used to classify images into different categories, such as cats and dogs.</li><li>Ranking problems: The softmax function can also be used in ranking problems, where the goal is to rank a set of items in order of their importance. For example, the softmax function can be used to rank search results or to rank products on an e-commerce website.</li></ul>
+<p>However, the softmax function also has some limitations.</p>
+<ul><li>Vanishing gradient problem: The softmax function can suffer from the vanishing gradient problem, which can make it difficult for the network to learn.</li><li>Not interpretable: The softmax function is not as interpretable as some other activation functions, such as the sigmoid function. This can make it more difficult to debug and understand the behavior of the network.</li></ul>
+<h4>Why not to use MAX function instead?</h4>
+<p>Max function is not differentiable!!, that&#x27;s why they introduced a function represent &#x27;probability and outputs from 0 to 1&#x27;.</p>
+<h3>Absolute</h3>
+<p>The absolute activation function is a non-linear function that outputs the absolute value of its input. It is defined as follows:</p>
+<pre><code>abs(x) = |x|</code></pre>
+<p>where x is the input to the function.</p>
+<p>The absolute activation function is a simple function, but it can be useful in some cases. For example, it can be used to make neural networks more robust to outliers. Outliers are data points that are very different from the rest of the data. When a neural network is trained on data that contains outliers, the absolute activation function can help to prevent the network from being affected by these outliers.</p>
+<p>The absolute activation function is also less sensitive to the vanishing gradient problem than some other activation functions, such as the sigmoid function. <strong>The vanishing gradient problem is a problem that can occur when the derivatives of the activation function approach zero</strong>. This can make it difficult for the network to learn, as the updates to the weights become very small.</p>
+<p><img src="../../../../fields/deep-learning/concepts/images/basics-09.png" alt="Absolute value activation slide with plot of y equals abs of x, a V shape with its vertex at the origin" loading="lazy"></p>
+<p>However, the absolute activation function also has some limitations. It is not as interpretable as some other activation functions, such as the sigmoid function. This can make it more difficult to debug and understand the behavior of the network.</p>
+<p>Here are some cases where the absolute activation function is used:</p>
+<ul><li>Outlier detection: The absolute activation function can be used to make neural networks more robust to outliers.</li><li>Robust regression: The absolute activation function can be used to improve the robustness of regression models to outliers.</li><li>Image processing: The absolute activation function can be used to remove noise from images.</li></ul>
+<h4>Can ABS() be used as activation function?</h4>
+<p><img src="../../../../fields/deep-learning/concepts/images/basics-10.png" alt="Quora answer by Prasoon Goyal saying abs of x can be used as an activation but is non-monotonic and harder to train" loading="lazy"></p>
+<p><img src="../../../../fields/deep-learning/concepts/images/basics-11.png" alt="Quora answer by Michael Naunton saying abs of x being non-differentiable at zero is not a concern for gradient descent" loading="lazy"></p>
+<p>To conclude: If you will use abs(x), adjust your calculation such that, when a zero input is used, add some small fraction to zero to make it differentiable.</p>
+<h3>Comparison between Activation Functions</h3>
+<table><thead><tr><th>Activation Function</th><th>Full Name</th><th>Working Principle</th><th>Equation</th><th>Derivative</th><th>Advantages</th><th>Disadvantages</th><th>Where is commoly uses</th></tr></thead><tbody><tr><td>Sigmoid</td><td>Sigmoid function</td><td>S-shaped curve that outputs a value between 0 and 1.</td><td>sigmoid(x) = 1 / (1 + exp(-x))</td><td>sigmoid&#x27;(x) = sigmoid(x) * (1 - sigmoid(x))</td><td>Smooth and easy to interpret</td><td>Sensitive to outliers. &lt;/br&gt; Slow convergence</td><td>Binary classification problems</td></tr><tr><td>Tanh</td><td>Tanh function</td><td>Similar to the sigmoid function, but has a range of -1 to 1.</td><td>tanh(x) = (exp(x) - exp(-x)) / (exp(x) + exp(-x))</td><td>tanh&#x27;(x) = 1 - tanh^2(x)</td><td>More symmetrical than the sigmoid function.</td><td>Sensitive to outliers. &lt;/br&gt; Slow convergence</td><td>Binary classification problems</td></tr><tr><td>ReLU</td><td>Rectified Linear Unit (ReLU)</td><td>Outputs the input value if it is positive, and zero otherwise.</td><td>ReLU(x) = max(0, x)</td><td>ReLU&#x27;(x) = 1 if x &gt; 0 else 0</td><td>Computationally efficient and does not suffer from the vanishing gradient problem.</td><td>Can lead to the dying ReLU problem.</td><td>Regression problems, image classification, natural language processing</td></tr><tr><td>Leaky ReLU</td><td>Leaky Rectified Linear Unit (Leaky ReLU)</td><td>Variant of the ReLU function that outputs a small positive value for negative input values.</td><td>LeakyReLU(x) = max(0.01x, x)</td><td>LeakyReLU&#x27;(x) = 0.01 if x &lt; 0 else 1</td><td>Prevents the dying ReLU problem.</td><td>Gradients can still vanish for very large negative values.</td><td>Regression problems, image classification, natural language processing</td></tr><tr><td>ELU</td><td>Exponential Linear Unit (ELU)</td><td>Variant of the ReLU function that outputs a negative exponential value for negative input values.</td><td>ELU(x) = x * (1 - exp(-x))</td><td>ELU&#x27;(x) = 1 - exp(-x) if x &gt;= 0 else x * exp(-x)</td><td>Improves the performance of the network in certain cases.</td><td>Gradients can still vanish for very large negative values. &lt;/br&gt; Not suitable for regression problems</td><td>Image classification, natural language processing</td></tr><tr><td>Softmax</td><td>Softmax function</td><td>Normalization function that outputs a vector of probabilities.</td><td>Softmax(x) = exp(x) / sum(exp(x))</td><td>Softmax&#x27;(x) = Softmax(x) * (1 - Softmax(x))</td><td>Used in classification problems with multiple output classes.</td><td>Not suitable for regression problems. &lt;/br&gt; Not suitable for regression problems</td><td>Classification problems with multiple output classes</td></tr></tbody></table>
+<h3>Activation Function must be differentiable ?</h3>
+<p>As we used chain rule, so during calculating the G.D to minimize the error, an differentiation is required, which mean we will need to differentiate the Activation function as well.</p>
+<h3>Which Activation Function should we use?</h3>
+<p>For Output Laysers: Depends on the task whether it is classification or regression.</p>
+<ul><li>Regression:<ul><li>Linear: no limits on the output.</li><li>Relu: Output is positive.</li><li>Sigmoid: Output between 0 &amp; 1.</li><li>Tanh: Output between -1 &amp; 1. </li></ul></li><li>Classification: (Probability of class)<ul><li>Binary Classifier: Sigmoid.</li><li>Multi-Class Classifier: SoftMax.</li></ul></li></ul>
+<h1>The PERCEPTRION ERROR</h1>
+<p><img src="../../../../fields/deep-learning/concepts/images/basics-12.png" alt="Title slide reading Neural Networks, The Perceptron Error" loading="lazy"></p>
+<h1>Gradient in Neural Network</h1>
+<h2>1- What is a Gradient?</h2>
+<p>A gradient is the direction of greatest change in a function. It is a vector that points in the direction of the steepest ascent of the function. The gradient can be calculated using calculus, and it is used in many machine learning algorithms, such as gradient descent.</p>
+<p>In machine learning, the gradient is used to update the weights of a neural network. The gradient of the loss function with respect to the weights is calculated, and the weights are updated in the direction of the negative gradient. This means that the weights are updated in the direction that minimizes the loss function.</p>
+<p>The gradient can also be used to visualize the shape of a function. By plotting the gradient of a function, we can see the direction of greatest change in the function. This can be helpful for understanding the behavior of the function.</p>
+<p>Here are some of the applications of gradients:</p>
+<ul><li>Gradient descent: Gradient descent is an optimization algorithm that uses the gradient of a function to update the parameters of the function.</li><li>Neural networks: Gradients are used to update the weights of a neural network.</li><li>Machine learning: Gradients are used in many machine learning algorithms, such as support vector machines and logistic regression.</li></ul>
+<p>-Natural language processing: Gradients are used in natural language processing tasks, such as sentiment analysis and machine translation. -Computer vision: Gradients are used in computer vision tasks, such as object detection and image classification.</p>
+<h2>3- What is Gradient Descend?</h2>
+<p>Gradient descent is an optimization algorithm used in machine learning to find the minimum of a function. It works by iteratively moving in the direction of the negative gradient of the function, which is the direction of steepest descent.</p>
+<p>The gradient of a function is a vector that points in the direction of the greatest increase of the function. The negative gradient points in the direction of the greatest decrease of the function.</p>
+<p>Gradient descent is a simple algorithm, but it can be very effective in finding the minimum of a function. It is often used in neural networks to train the weights of the network.</p>
+<h3>3.1- How does it works?</h3>
+<p>Here is an example of how gradient descent works:</p>
+<p>Let&#x27;s say we have a function f(x) that we want to minimize. We can start with an initial guess for the value of x, and then use gradient descent to update our guess.</p>
+<p>The first step is to calculate the gradient of f(x) at our current guess. The gradient tells us the direction of steepest descent, so we can update our guess by moving in the opposite direction of the gradient.</p>
+<p>We can then repeat this process, updating our guess each time in the direction of the negative gradient. This process will eventually converge to the minimum of the function.</p>
+<p>Gradient descent is a powerful algorithm, but it can be slow to converge. There are a number of variations of gradient descent that can be used to speed up convergence.</p>
+<h3>3.2- Common types of Gradient Descent</h3>
+<p>Here are some of the most common variations of gradient descent:</p>
+<ul><li>Stochastic gradient descent: Stochastic gradient descent uses a single data point to update the weights of the network at each iteration. This can be more efficient than batch gradient descent, but it can also be less accurate.</li><li>Mini-batch gradient descent: Mini-batch gradient descent uses a small batch of data points to update the weights of the network at each iteration. This can be more efficient than stochastic gradient descent, but it can also be more accurate.</li><li>Momentum: Momentum is a technique that can be used to accelerate the convergence of gradient descent. It works by adding a weighted average of the previous gradients to the current gradient.</li><li>Adagrad: Adagrad is a technique that can be used to prevent the gradients from becoming too small. It works by adjusting the learning rate based on the magnitude of the gradients.</li><li>RMSprop: RMSprop is a technique that is similar to Adagrad, but it is more efficient. It works by averaging the squared gradients over time.</li></ul>
+<h1>Vanishing/Exploding Gradient</h1>
+<p><img src="../../../../fields/deep-learning/concepts/images/basics-13.png" alt="Title slide reading Neural Networks, Vanishing/Exploding Gradient" loading="lazy"></p>
+<p>The vanishing gradient and exploding gradient problems are two common problems that can occur in neural networks. The vanishing gradient problem occurs when the gradients of the activation function become very small as the network learns. This can make it difficult for the network to learn, as the updates to the weights become very small.</p>
+<p>The exploding gradient problem occurs when the gradients of the activation function become very large as the network learns. This can cause the network to become unstable, and the weights can become very large or very small.</p>
+<h2>1.1.1- Vanishing Gradient Problem</h2>
+<p>The vanishing gradient problem occurs when the derivative of the activation function approaches zero as the input approaches a certain value. This can happen with activation functions that have a narrow range of output values, such as the sigmoid function.</p>
+<p>The vanishing gradient problem can make it difficult for the network to learn because the updates to the weights become very small. This is because the gradients are used to determine how much the weights should be updated, and if the gradients are very small, the updates will be very small as well. This can make it difficult for the network to make significant changes to its predictions, and it can prevent the network from learning.</p>
+<p>The vanishing gradient problem is most likely to occur in deep neural networks with many layers. This is because the gradients are multiplied by the derivative of the activation function at each layer, and if the derivative of the activation function approaches zero, the gradients will become very small very quickly.</p>
+<h2>1.1.2- Solutions to Vanishing Gradient Problem</h2>
+<p>There are a number of solutions to the vanishing gradient problem.</p>
+<ol><li>Using different activation function such as the ReLU function. The ReLU function has a non-zero derivative for all positive values, so it does not suffer from the vanishing gradient problem.</li><li>Weights Initialization: The weights should be initialized in a way that ensures that the gradients do not become too small.</li><li>Decreasing the learning rate: The learning rate is the step size that is used to update the weights of the network. If the learning rate is too large, the gradients can become too small.</li></ol>
+<h2>1.2.1- Exploding Gradient Problem</h2>
+<p>The exploding gradient problem occurs when the derivative of the activation function approaches infinity as the input approaches a certain value. This can happen with activation functions that have a wide range of output values, such as the ReLU function.</p>
+<p>The exploding gradient problem can make the network unstable because the updates to the weights can become very large. This is because the gradients are used to determine how much the weights should be updated, and if the gradients are very large, the updates will be very large as well. This can cause the network to make sudden and unpredictable changes to its predictions, and it can prevent the network from learning.</p>
+<p>The exploding gradient problem is most likely to occur in deep neural networks with many layers. This is because the gradients are multiplied by the derivative of the activation function at each layer, and if the derivative of the activation function approaches infinity, the gradients will become very large very quickly.</p>
+<h2>1.2.2- Solutions to Exploding Gradient Problem</h2>
+<p>There are a number of solutions to the exploding gradient problem.</p>
+<ol><li>Using a different activation function: Such as the tanh function. The tanh function has a derivative that is bounded between -1 and 1, so it does not suffer from the exploding gradient problem.</li><li><strong>Gradient Clipping</strong>: Clipping the gradients means that the gradients are limited to a certain range. This can help to prevent the gradients from becoming too large.</li><li>Decreasing the learning rate: The learning rate is the step size that is used to update the weights of the network. If the learning rate is too small, the gradients will not become too large.</li></ol>
+<h2>1.3- Common Solution for Both [Vanishing/Exploding] Gradient</h2>
+<ol><li>Batch Normalization: It occurs after the activation function. <img src="../../../../fields/deep-learning/concepts/images/basics-14.png" alt="Slide on batch normalization at training time: per mini-batch mean and variance, then normalize to mean 0 and variance 1" loading="lazy"> <img src="../../../../fields/deep-learning/concepts/images/basics-15.png" alt="Slide on batch normalization at test time: use average mean and variance computed across training mini-batches" loading="lazy"><ul><li>Note: We can&#x27;t use normalizer paramters of the test set, and instead we use the parameters of the training set, As if we use the test set normalizer parameters, there will be <strong>Data Leakage</strong>.</li></ul></li><li>Weight Initialization:  <img src="../../../../fields/deep-learning/concepts/images/basics-16.png" alt="Slide on weight initialization: He initialization for ReLU and Xavier Glorot initialization for tanh, with variance formulas" loading="lazy"></li></ol>
+<h2>1.4- Summary</h2>
+<p>Here is a table that summarizes the key differences between the two problems:</p>
+<table><thead><tr><th>Problem</th><th>Description</th></tr></thead><tbody><tr><td>Vanishing Gradient Problem</td><td>The gradients of the activation function become very small as the network learns.</td></tr><tr><td>Exploding Gradient Problem</td><td>The gradients of the activation function become very large as the network learns.</td></tr><tr><td>Direction of Gradients</td><td>Gradients become smaller and smaller.</td></tr><tr><td>Effect on Learning</td><td>Makes it difficult for the network to learn.</td></tr></tbody></table>
+<h2>2- Vanishing/Exploding Gradient in NN</h2>
+<p><img src="../../../../fields/deep-learning/concepts/images/basics-17.png" alt="Handwritten diagram of a deep network of many layers with inputs x1, x2, showing weights compounding to explode or vanish" loading="lazy"></p>
+<p>If we start with weights so large, so y-pred will have total of large value due to weight multiplication. Same if we start with weights so small. This will lead us to Exploding and vanishing of gradient respectively .</p>
+<h1>Weights Initialization In NN</h1>
+<h2>Notes</h2>
+<p>Initialize the weights and biases to be zero:</p>
+<ul><li>Each neuron in the first hidden layer will perform the same computation. So even after multiple iterations of gradient descent each neuron in the layer will be computing the same thing as other neurons.</li><li>Can&#x27;t break the similarity.</li></ul>
+<p>[True/False] Logistic regression weights w should be initialized randomly rather than to all zeros, because if you initialize to all zeros, then logistic regression will fail to learn a useful decision boundary because it will fail to “break symmetry”.</p>
+<ul><li>False!!! As: Logistic Regression doesn&#x27;t have a hidden layer. If you initialize the weights to zeros, the first example x fed in the logistic regression will output zero but the derivatives of the Logistic Regression depend on the input x (because there&#x27;s no hidden layer) which is not zero. So at the second iteration, the weights values follow x&#x27;s distribution and are different from each other if x is not a constant vector.</li></ul>
+<p>[What will happen?] You have built a network using the tanh activation for all the hidden units. You initialize the weights to relative large values, using np.random.randn(..,..)*1000.</p>
+<ul><li>This will cause the inputs of the tanh to also be very large, thus causing gradients to be close to zero. The optimization algorithm will thus become slow.</li></ul>
+<h1>Regularization</h1>
+<p><img src="../../../../fields/deep-learning/concepts/images/basics-18.png" alt="Title slide reading Neural Networks, Regularization" loading="lazy"></p>
+<h1>Normalization</h1>
+<p><img src="../../../../fields/deep-learning/concepts/images/basics-19.png" alt="Title slide reading Neural Networks, Normalization" loading="lazy"></p>
+<h1>Parameters Initialization</h1>
+<p><img src="../../../../fields/deep-learning/concepts/images/basics-20.png" alt="Title slide reading Neural Networks, Parameters Initialization" loading="lazy"></p>
+<h1>Gradient Checking</h1>
+<p><img src="../../../../fields/deep-learning/concepts/images/basics-21.png" alt="Title slide reading Neural Networks, Gradient Checking" loading="lazy"></p>
+<h1>Optimizers</h1>
+<p><img src="../../../../fields/deep-learning/concepts/images/basics-22.png" alt="Title slide reading Neural Networks, Optimizers" loading="lazy"></p>
+<h2>Mini-Batch</h2>
+<p><img src="../../../../fields/deep-learning/concepts/images/basics-23.png" alt="Title slide reading Neural Networks, Optimizers, Mini-Batch" loading="lazy"></p>
+<h2>Exponential Weighted Average</h2>
+<p><img src="../../../../fields/deep-learning/concepts/images/basics-24.png" alt="Title slide reading Neural Networks, Optimizers, Exponentially Weighted Average" loading="lazy"></p>
+<h2>Momentum GD</h2>
+<p><img src="../../../../fields/deep-learning/concepts/images/basics-25.png" alt="Title slide reading Neural Networks, Optimizers, Momentum GD" loading="lazy"></p>
+<h2>RMSPROP GD</h2>
+<p><img src="../../../../fields/deep-learning/concepts/images/basics-26.png" alt="Title slide reading Neural Networks, Optimizers, RMSprop GD" loading="lazy"></p>
+<h2>ADAM</h2>
+<p><img src="../../../../fields/deep-learning/concepts/images/basics-27.png" alt="Title slide reading Neural Networks, Optimizers, Adam" loading="lazy"></p>
+<h2>Learning Rate</h2>
+<p><img src="../../../../fields/deep-learning/concepts/images/basics-28.png" alt="Title slide reading Neural Networks, Optimizers, Learning Rate" loading="lazy"></p>
+<h2>ADAGRAD</h2>
+<p><img src="../../../../fields/deep-learning/concepts/images/basics-29.png" alt="Title slide reading Neural Networks, Optimizers, Adagrad" loading="lazy"></p>
+<h2>Local Minima</h2>
+<p><img src="../../../../fields/deep-learning/concepts/images/basics-30.png" alt="Title slide reading Neural Networks, Optimizers, Local Minima" loading="lazy"></p>
+<h2>Transfer Learning</h2>
+<p><img src="../../../../fields/deep-learning/concepts/images/basics-31.png" alt="Title slide reading Neural Networks, Optimizers, Transfer Learning" loading="lazy"></p>
+<h1>Hyper-Parameters Tuning</h1>
+<p><img src="../../../../fields/deep-learning/concepts/images/basics-32.png" alt="Title slide reading Neural Networks, Hyperparameters Tuning" loading="lazy"></p>
+<h1>Batch Normalization</h1>
+<p><img src="../../../../fields/deep-learning/concepts/images/basics-33.png" alt="Title slide reading Neural Networks, Batch Normalization" loading="lazy"></p>
+<h1>Multi-Class Classification</h1>
+<p><img src="../../../../fields/deep-learning/concepts/images/basics-34.png" alt="Title slide reading Neural Networks, Multi-Class Classification" loading="lazy"></p>
+<h1>BIAS - Variance</h1>
+<p><img src="../../../../fields/deep-learning/concepts/images/basics-35.png" alt="Title slide reading Neural Networks, Bias-Variance" loading="lazy"></p>
+<h1>Single Number Evaluation Metric</h1>
+<p><img src="../../../../fields/deep-learning/concepts/images/basics-36.png" alt="Title slide reading Neural Networks, Single Number Evaluation Metric" loading="lazy"></p>
+<h1>Avoidable Bias</h1>
+<p><img src="../../../../fields/deep-learning/concepts/images/basics-37.png" alt="Title slide reading Neural Networks, Avoidable Bias" loading="lazy"></p>
+<h1>Error Analysis</h1>
+<p><img src="../../../../fields/deep-learning/concepts/images/basics-38.png" alt="Title slide reading Neural Networks, Error Analysis" loading="lazy"></p>
+<p>Tip: Build your system quickly then iterate.</p>
+<h1>Mismatched Training &amp; Dev/Test Sets</h1>
+<p><img src="../../../../fields/deep-learning/concepts/images/basics-39.png" alt="Title slide reading Neural Networks, Mismatched Training and Dev/Test Set" loading="lazy"></p>
+<h1>Learning From Multiple Tasks</h1>
+<p><img src="../../../../fields/deep-learning/concepts/images/basics-40.png" alt="Title slide reading Neural Networks, Learning From Multiple Tasks" loading="lazy"></p>
+<h1>End-To-End Deep Learning</h1>
+<p><img src="../../../../fields/deep-learning/concepts/images/basics-41.png" alt="Title slide reading Neural Networks, End-to-End Deep Learning" loading="lazy"></p>
+<p>End-to_end deep leanring is a techinque where a single neural network trained to perform a task directly from the input data, without any manual feature extraction. This is in contrast to traditional machine learning approaches , which typically involve manually extraction features from the input data and then training a seperate machine learning model on those features.</p>
+<p>Compared to a multiple stage approach, where there are more than one stage, and each stage takes an input and result to an output which is the input to the next stage. This is similir to mappping and input X to a final output Y.</p>
+<p>Briefly, there have been some data processing systems, or learning systems that require multiple stages of processing. And what end-to-end deep learning does, is it can take all those multiple stages, and replace it usually with just a single neural network.</p>
+<p>End-to-end deep learning has been used to achieve state-of-art results on wide range of tasks, including image recognition, natural language processing, and speech recognition.</p>
+<h2>Face Recognition as end-to-end approach</h2>
+<p>We could create a single neaural network to be able to detect the input image and output the identity of the people in the images, which is called a signle stage approach.</p>
+<p>Alternatively, We could uses a two stage approach, where the first stage is face detection for the input image, and extract that face, then pass this output face detected into a second stage which is face recognition, where the detected face is comapred with a predefined database of labeld faces vectores and measure the similarity between these two faces.</p>
+<p><img src="../../../../fields/deep-learning/concepts/images/basics-42.png" alt="Face recognition slide comparing a single-stage image to identity network with a two-stage detect face then identify pipeline" loading="lazy"></p>
+<p>Two reasons for why two stages NN is better than one stage NN to determine Identity of employee:</p>
+<ul><li>Each of two problem you’re solving is much simpler (one to detect faces, second to determine  employee).</li><li>You have a lot of data compared for each stage bigger than one stage.</li></ul>
+<p>A Question Here: Do you have the sufficient data to learn a function of the complexity needed to map x to y?</p>
+<h1>Credits</h1>
+<ul><li>Deep Learning Specialization By Andrew NG in Coursera</li></ul>
+<p><a href="../../../../#/fields/deep-learning/concepts/basics">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

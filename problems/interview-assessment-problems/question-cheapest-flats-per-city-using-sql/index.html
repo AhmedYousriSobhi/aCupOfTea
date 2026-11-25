@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Question - Cheapest Flats per city using SQL</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/problems/interview-assessment-problems/question-cheapest-flats-per-city-using-sql/">
+<meta name="description" content="An interview SQL problem where you pick the three cheapest flats in each city from a flats table, using an OVER clause.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Question - Cheapest Flats per city using SQL">
+<meta property="og:description" content="An interview SQL problem where you pick the three cheapest flats in each city from a flats table, using an OVER clause.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/problems/interview-assessment-problems/question-cheapest-flats-per-city-using-sql/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/problems/interview-assessment-problems/question-cheapest-flats-per-city-using-sql/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../.docs/prerender-redirect.js" data-target="../../../#/problems/interview-assessment-problems/question-cheapest-flats-per-city-using-sql/"></script>
+<main>
+<h1>Question - Cheapest Flats per city using SQL</h1>
+<p><em>An interview SQL problem where you pick the three cheapest flats in each city from a flats table, using an OVER clause.</em></p>
+<blockquote><p>An interview SQL problem: pick the three cheapest flats in each city, using an OVER clause.</p></blockquote>
+<h2>Question - Cheapest Flats per city using SQL</h2>
+<p>You are given a table of flats with the following structure: &lt;/br&gt; create table flats(&lt;/br&gt; id integer primary key,&lt;/br&gt; city varchar(40) not null,&lt;/br&gt; price integer not null&lt;/br&gt; )&lt;/br&gt; Each row of table flats represents a flat located in a city available for sale for a given price.</p>
+<p>Write a SQL query that, for each city finds the three cheapest flats located in that city. In case of a tie, the query may return any three flats with the cheapest prices.</p>
+<p>The result table should contain three columns: id, city, and price and should be sorted by id column. If the city has less than three flats for sale, the result table should contain all of them.</p>
+<p>Please use an OVER clause to simplify your solution.</p>
+<p>Example:&lt;/br&gt; 1.Given:&lt;/br&gt;</p>
+<table><thead><tr><th>id</th><th>city</th><th>price</th></tr></thead><tbody><tr><td>25</td><td>London</td><td>200000</td></tr><tr><td>5</td><td>Cairo</td><td>90000</td></tr><tr><td>7</td><td>London</td><td>200000</td></tr><tr><td>18</td><td>Warsaw</td><td>150000</td></tr><tr><td>2</td><td>London</td><td>170000</td></tr><tr><td>3</td><td>Cairo</td><td>300000</td></tr><tr><td>21</td><td>London</td><td>500000</td></tr><tr><td>9</td><td>London</td><td>200000</td></tr></tbody></table>
+<p>One of the possible outputs is:&lt;/br&gt;</p>
+<table><thead><tr><th>id</th><th>city</th><th>price</th></tr></thead><tbody><tr><td>2</td><td>London</td><td>170000</td></tr><tr><td>3</td><td>Cairo</td><td>300000</td></tr><tr><td>5</td><td>Cairo</td><td>90000</td></tr><tr><td>7</td><td>London</td><td>200000</td></tr><tr><td>9</td><td>London</td><td>200000</td></tr><tr><td>18</td><td>Warsaw</td><td>150000</td></tr></tbody></table>
+<p>There are only two flats available in Cairo and one in Warsaw, so they are all selected. The cheapest flat in London has ID 2, then there are three flats with the same price (with IDs: 7, 9, 25). Any two of them may be selected.</p>
+<p>Assume that:</p>
+<ul><li>The flast table has at most 100 rows.</li><li>Price column can only contains from 1000 to 100000000 inclusive.</li></ul>
+<p><a href="../../../#/problems/interview-assessment-problems/question-cheapest-flats-per-city-using-sql/">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

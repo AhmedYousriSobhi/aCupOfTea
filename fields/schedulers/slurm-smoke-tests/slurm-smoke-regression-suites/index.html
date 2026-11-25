@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>When Smoke Becomes a Fire Drill: SchedMD&#x27;s Test Suite, ReFrame and the Baseline Rule</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-smoke-tests/slurm-smoke-regression-suites/">
+<meta name="description" content="What SchedMD&#x27;s test suite and ReFrame do, how both were run against a live test cluster, and why results only mean something against a baseline taken before the change.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="When Smoke Becomes a Fire Drill: SchedMD&#x27;s Test Suite, ReFrame and the Baseline Rule">
+<meta property="og:description" content="What SchedMD&#x27;s test suite and ReFrame do, how both were run against a live test cluster, and why results only mean something against a baseline taken before the change.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-smoke-tests/slurm-smoke-regression-suites/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-smoke-tests/slurm-smoke-regression-suites/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/schedulers/slurm-smoke-tests/slurm-smoke-regression-suites"></script>
+<main>
+<h1>When Smoke Becomes a Fire Drill: SchedMD&#x27;s Test Suite, ReFrame and the Baseline Rule</h1>
+<p><em>What SchedMD&#x27;s test suite and ReFrame do, how both were run against a live test cluster, and why results only mean something against a baseline taken before the change.</em></p>
+<blockquote><p><strong>Part 6 of [Slurm Smoke Tests](/fields/schedulers/slurm-smoke-tests/README.md).</strong> The runs below were done on a two-node test cluster (Slurm 23.11.4 from the Ubuntu package, accounting on, a Lua submit script that requires <code>--time</code>, both <code>slurmd</code> daemons on one Ubuntu 24.04 machine with 2 CPUs). Both tools were run as an ordinary user. Each run is one run, on a deliberately small and unusual machine, so the pass and fail counts describe <em>this</em> cluster, not Slurm. The names and the story are invented. <strong>Do not run either suite against a production cluster without reading its documentation first.</strong> SchedMD&#x27;s own README says its automatic-configuration mode &quot;is not supported for use with local installations&quot;.</p></blockquote>
+<hr>
+<h2>The night before</h2>
+<p>Priya has an upgrade on Saturday. On Friday evening she remembers that SchedMD ships a test suite, runs it against the cluster, and goes to get dinner. When she comes back the summary says 32 failures and 7 errors.</p>
+<p>She does what anyone would do. She opens a ticket with her manager, drafts a message asking to postpone the upgrade, and starts reading the first failure. It says <code>Please set --time, jobs without one are not accepted</code>. That is not a Slurm problem. That is her own submit rule, from a Wednesday two months ago, refusing a test that did not know it existed.</p>
+<p>A test suite is a very loud instrument. It only helps if you know what it sounded like before you changed anything.</p>
+<hr>
+<h2>Smoke test or regression suite</h2>
+<table><thead><tr><th></th><th>Smoke test</th><th>Regression suite</th></tr></thead><tbody><tr><td>Question</td><td>Is it basically working?</td><td>Did anything that used to work stop working?</td></tr><tr><td>Size</td><td>6 to 10 checks</td><td>Hundreds of tests</td></tr><tr><td>Time</td><td>Seconds to minutes</td><td>Minutes to hours</td></tr><tr><td>Runs</td><td>After every change</td><td>Before and after the big ones: an upgrade, a new plugin</td></tr><tr><td>Where</td><td>Production, as a user</td><td>A test cluster, or production only with a lot of care</td></tr><tr><td>Failures mean</td><td>Something important is down</td><td>Something <em>differs</em>. Often your own policy</td></tr><tr><td>Examples</td><td>The <a href="../../../../fields/schedulers/slurm-smoke-tests/slurm-smoke-control-plane/">control-plane script</a></td><td>SchedMD&#x27;s suite, ReFrame</td></tr></tbody></table>
+<hr>
+<h2>SchedMD&#x27;s own suite</h2>
+<p>The Slurm source tree has a <code>testsuite</code> directory. Its README describes three suites run through one command, <code>run-tests</code>: a <strong>unit</strong> suite, an <strong>expect</strong> suite of shell-style tests grouped by area, and a <strong>python</strong> suite run under pytest. The python suite has two modes:</p>
+<ul><li><strong>Local-config mode</strong> is for an existing installation. It aims to avoid changing &quot;your Slurm configuration, accounting database configuration and system environment&quot;, and tests that need a different configuration are skipped.</li><li><strong>Auto-config mode</strong> reconfigures Slurm for each test, and is &quot;intended to be used primarily within automated systems&quot; such as containers.</li></ul>
+<p>Local-config is the only sensible mode for a real cluster, and the testsuite README notes that several tests say to use a throwaway database. Only the python suite was run here.</p>
+<h3>How it was run</h3>
+<p>The source of the version in use was cloned (the tag for 23.11.4, so the tests match the daemons), given a four-line config, and run as an ordinary user:</p>
+<pre><code class="language-bash">git clone --depth 1 --branch slurm-23-11-4-1 https://github.com/SchedMD/slurm.git
+cd slurm/testsuite
+cat &gt; testsuite.conf &lt;&lt;&#x27;EOF&#x27;
+SlurmSourceDir=/path/to/slurm
+SlurmBuildDir=/path/to/slurm
+SlurmInstallDir=/usr
+SlurmConfigDir=/etc/slurm
+EOF
+cd python
+./run-tests-python -q</code></pre>
+<p>Two things were not in the README&#x27;s steps. The wrapper starts <code>pytest-3</code>, which this machine did not have, so a symlink named <code>pytest-3</code> pointing at <code>pytest</code> had to be put on the <code>PATH</code>. And the tests need the <code>pexpect</code> Python package. The README has you copy <code>testsuite.conf.sample</code>, which the build generates. The source was not built here, so the four keys were written by hand. The README also says that if the test user is the <code>SlurmUser</code>, you should name an unprivileged user in <code>SlurmTestUser</code>. Running as a normal user avoided that.</p>
+<h3>A first try</h3>
+<p>Three tests, chosen at random, ran in 0.11 seconds:</p>
+<pre><code class="language-text">tests/test_101_1.py::test_help SKIPPED (This test requires the test ...)
+tests/test_102_2.py::test_usage PASSED
+tests/test_103_1.py::test_usage PASSED
+======================== 2 passed, 1 skipped in 0.11s =========================</code></pre>
+<h3>The whole python suite, twice</h3>
+<p>The python suite has 127 test files. The full run, as an ordinary user, with the site&#x27;s Lua rule switched off and then on:</p>
+<table><thead><tr><th>Run</th><th>Passed</th><th>Failed</th><th>Errors</th><th>Skipped</th><th>Time</th></tr></thead><tbody><tr><td>Lua submit script <strong>off</strong></td><td>54</td><td>9</td><td>5</td><td>361</td><td>2 min 42 s</td></tr><tr><td>Lua submit script <strong>on</strong> (requires <code>--time</code>)</td><td>37</td><td>25</td><td>7</td><td>360</td><td>1 min 6 s</td></tr></tbody></table>
+<p>The huge skip count is the local-config mode doing what the README says: most tests need a configuration this cluster does not have, so they are skipped, not failed. The second run&#x27;s log has 46 lines containing <code>Please set --time</code>. The first has none.</p>
+<p>The failing tests were saved to a file for each run, sorted, and compared:</p>
+<pre><code class="language-bash">grep -E &#x27;^(FAILED|ERROR) tests/&#x27; run.log | sed -E &#x27;s/ - .*//&#x27; | sort &gt; run.fails
+comm -13 baseline.fails after.fails      # the failures that are new</code></pre>
+<p>The result: 14 failures in the baseline, 32 with the policy on, <strong>18 present only with the policy on, and none present only in the baseline</strong>. Those 18 included <code>test_116_22.py::test_chdir</code>, <code>test_116_41.py::test_job_name</code> and <code>test_122_1.py::test_submit_and_cancel</code>. Only some of the messages were read, and the one for <code>test_122_1</code> quoted <code>sbatch --wrap &quot;sleep 60&quot;</code> being refused for lacking a time limit. The 46 mentions of the rule in the log make it the likely cause of the rest, but each was not checked. The suite did not find 18 broken things. It most probably found one rule, many times.</p>
+<p>The 14 that remained with the policy off were not investigated. Their names suggest causes specific to this setup: four <code>test_version</code> tests, a failing <code>sgather --usage</code>, and tests that need more CPUs than a 2-CPU machine has. That is a guess from the test names, not a finding. It is the point of a baseline: those 14 are noise on this cluster, and they stay noise until something changes.</p>
+<hr>
+<h2>ReFrame</h2>
+<p><a href="https://reframe-hpc.readthedocs.io/">ReFrame</a> is a framework for writing regression tests for HPC systems. A test is a Python class that says what to run and what a correct answer looks like; ReFrame generates the job script, submits it to the scheduler, waits, and checks the output. Its documentation says it does not assume a run succeeded: the test carries its own validation.</p>
+<p>Installed into a virtualenv with <code>pip install reframe-hpc</code> (version 4.11.0 here), it needs two files. A settings file tells it how to reach Slurm:</p>
+<pre><code class="language-python">site_configuration = {
+    &#x27;systems&#x27;: [{
+        &#x27;name&#x27;: &#x27;smoke&#x27;, &#x27;descr&#x27;: &#x27;two-node test cluster&#x27;, &#x27;hostnames&#x27;: [&#x27;.*&#x27;],
+        &#x27;partitions&#x27;: [{
+            &#x27;name&#x27;: &#x27;gpu&#x27;, &#x27;scheduler&#x27;: &#x27;slurm&#x27;, &#x27;launcher&#x27;: &#x27;srun&#x27;,
+            &#x27;access&#x27;: [&#x27;-p gpu&#x27;], &#x27;environs&#x27;: [&#x27;builtin&#x27;], &#x27;max_jobs&#x27;: 4,
+        }],
+    }],
+    &#x27;environments&#x27;: [{&#x27;name&#x27;: &#x27;builtin&#x27;, &#x27;cc&#x27;: &#x27;cc&#x27;, &#x27;cxx&#x27;: &#x27;&#x27;, &#x27;ftn&#x27;: &#x27;&#x27;}],
+    &#x27;logging&#x27;: [{&#x27;handlers&#x27;: [{&#x27;type&#x27;: &#x27;stream&#x27;, &#x27;name&#x27;: &#x27;stdout&#x27;, &#x27;level&#x27;: &#x27;info&#x27;, &#x27;format&#x27;: &#x27;%(message)s&#x27;}]}],
+}</code></pre>
+<p>And a test file holds the checks. One passes on purpose and one fails on purpose:</p>
+<pre><code class="language-python">import reframe as rfm
+import reframe.utility.sanity as sn
+from reframe.core.builtins import sanity_function
+
+
+@rfm.simple_test
+class OneTaskPerNode(rfm.RunOnlyRegressionTest):
+    &quot;&quot;&quot;A task starts on both nodes and reports its Slurm node name.&quot;&quot;&quot;
+    valid_systems = [&#x27;*&#x27;]
+    valid_prog_environs = [&#x27;*&#x27;]
+    num_tasks = 2
+    num_tasks_per_node = 1
+    time_limit = &#x27;2m&#x27;
+    executable = &#x27;bash&#x27;
+    executable_opts = [&#x27;-c&#x27;, &quot;&#x27;echo node=$SLURMD_NODENAME&#x27;&quot;]
+
+    @sanity_function
+    def two_nodes_answered(self):
+        # one task per node, two tasks: two matching lines mean two nodes answered
+        return sn.assert_eq(sn.count(sn.extractall(r&#x27;node=(\S+)&#x27;, self.stdout, 1)), 2)
+
+
+@rfm.simple_test
+class ThisOneShouldFail(rfm.RunOnlyRegressionTest):
+    &quot;&quot;&quot;Deliberately wrong expectation, to see what a failure looks like.&quot;&quot;&quot;
+    valid_systems = [&#x27;*&#x27;]
+    valid_prog_environs = [&#x27;*&#x27;]
+    time_limit = &#x27;1m&#x27;
+    executable = &#x27;echo&#x27;
+    executable_opts = [&#x27;hello&#x27;]
+
+    @sanity_function
+    def never(self):
+        return sn.assert_found(r&#x27;goodbye&#x27;, self.stdout)</code></pre>
+<pre><code class="language-bash">reframe -C settings.py -c smoke_checks.py -r --prefix /shared/path/rf</code></pre>
+<pre><code class="language-text">[ RUN     ] OneTaskPerNode /b83630ca @smoke:gpu+builtin
+[ RUN     ] ThisOneShouldFail /5558de74 @smoke:gpu+builtin
+[       OK ] (1/2) OneTaskPerNode /b83630ca @smoke:gpu+builtin
+[     FAIL ] (2/2) ThisOneShouldFail /5558de74 @smoke:gpu+builtin
+...
+  * Failing phase: sanity
+  * Reason: sanity error: pattern &#x27;goodbye&#x27; not found in &#x27;rfm_job.out&#x27;</code></pre>
+<p>Behind the scenes it wrote this job script and submitted it with <code>sbatch</code>:</p>
+<pre><code class="language-bash">#!/bin/bash
+#SBATCH --job-name=&quot;rfm_OneTaskPerNode&quot;
+#SBATCH --ntasks=2
+#SBATCH --ntasks-per-node=1
+#SBATCH --output=rfm_job.out
+#SBATCH --error=rfm_job.err
+#SBATCH --time=0:2:0
+#SBATCH -p gpu
+srun bash -c &#x27;echo node=$SLURMD_NODENAME&#x27;</code></pre>
+<p>Note the <code>--time</code> line: ReFrame set it from <code>time_limit</code>, which is why it worked on a cluster that refuses jobs without one. Note also what <code>sacct</code> said about the failing test&#x27;s job: <code>COMPLETED</code>. The job ran perfectly. The <em>answer</em> was wrong, and only the framework that knew what the right answer was could tell. A smoke test that only looks at job states would have passed it.</p>
+<p>Two practical points come from the ReFrame documentation and were not tested on a second setup. Its stage and output directories must live on storage shared with the compute nodes, so pass <code>--prefix</code> pointing there. And its Slurm backend gets job state from <code>sacct</code>, so it needs accounting enabled; with accounting off, its <code>squeue</code>-based backend is the alternative.</p>
+<hr>
+<h2>Which tool for which question</h2>
+<table><thead><tr><th>Question</th><th>Tool</th></tr></thead><tbody><tr><td>&quot;Did my change break the basics?&quot;</td><td>The <a href="../../../../fields/schedulers/slurm-smoke-tests/slurm-smoke-control-plane/">control-plane smoke test</a>, every time</td></tr><tr><td>&quot;Do my rules still do what I mean?&quot;</td><td>The <a href="../../../../fields/schedulers/slurm-smoke-tests/slurm-smoke-policy/">policy smoke test</a></td></tr><tr><td>&quot;Did the upgrade change behaviour I did not know I relied on?&quot;</td><td>SchedMD&#x27;s suite, on a test cluster, before and after, with a baseline</td></tr><tr><td>&quot;Does <em>my site&#x27;s</em> software, filesystem and network still work for <em>my</em> users?&quot;</td><td>ReFrame (or similar) tests written for your own workloads, so they can also check performance</td></tr></tbody></table>
+<p>SchedMD&#x27;s suite tests Slurm. It knows nothing about your filesystem, your container runtime or your GPU drivers. ReFrame tests what you teach it. Neither replaces the smoke test, and the smoke test replaces neither.</p>
+<hr>
+<h2>Version notes</h2>
+<p>The suite was run on 23.11.4 only, with that version&#x27;s tests. Newer source trees have more tests, and the layout of <code>testsuite</code> may change, so read the README of the version you run. The unit and expect suites were not run at all. One thing worth knowing: the suite found the Lua policy in one run, and the <a href="../../../../fields/schedulers/slurm-cluster-operations/slurm-version-changes/">changelog</a> lists 26.05 as logging a stack trace for runtime errors in a submit script, which makes a policy failure inside a test easier to read.</p>
+<hr>
+<h2>Back to the night before</h2>
+<p>Replay Friday with the baseline rule. Last month, on a quiet evening, Priya ran the suite once and saved the list of failures: 14 of them, all things she could explain or at least recognise. She wrote the file into the cluster&#x27;s runbook with the date and the Slurm version.</p>
+<p>On Friday she runs it again, as the first step of the upgrade rehearsal on the test cluster, and compares. <code>comm -13</code> prints 18 names, and she reads the first one: <code>Please set --time</code>. She switches the time-limit rule off on the test cluster for the run, reruns, and the 18 disappear. The Saturday upgrade goes ahead. After it, she runs the suite one more time and compares with the same file. Nothing is new.</p>
+<p><strong>Takeaway:</strong> a regression suite finds <em>differences</em>, not faults, so run it on a test cluster, save the list of failures as a baseline before the change, and compare after (new failures are your findings, old ones are noise), and use ReFrame when the question is whether your own site&#x27;s workloads still work, because it can check the answer and not only the job state.</p>
+<p><strong>Next:</strong> back to the <a href="../../../../fields/schedulers/slurm-smoke-tests/">series overview</a>, which has a one-page checklist that ties the six together.</p>
+<hr>
+<h2>References</h2>
+<ul><li><a href="https://third-party-mirror.googlesource.com/SchedMD/slurm/+/refs/heads/master/testsuite/README">SchedMD Slurm testsuite README</a> (<code>run-tests</code>, the unit, expect and python suites, <code>testsuite.conf</code>)</li><li><a href="https://third-party-mirror.googlesource.com/SchedMD/slurm/+/refs/heads/master/testsuite/python/README">SchedMD Slurm python testsuite README</a> (local-config and auto-config modes)</li><li><a href="https://reframe-hpc.readthedocs.io/en/stable/tutorial.html">ReFrame tutorial</a> (tests as Python classes, the <code>slurm</code> scheduler backend)</li><li><a href="https://slurm.schedmd.com/upgrades.html">Slurm: Upgrade Guide</a> (&quot;Test key functionality&quot;)</li></ul>
+<p><a href="../../../../#/fields/schedulers/slurm-smoke-tests/slurm-smoke-regression-suites">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

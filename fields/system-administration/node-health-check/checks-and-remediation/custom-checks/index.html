@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Writing Your Own NHC Checks</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/node-health-check/checks-and-remediation/custom-checks/">
+<meta name="description" content="Build a site .nhc module the way upstream does, with cached data, clear failure messages, fast bash, and practical GPU checks.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Writing Your Own NHC Checks">
+<meta property="og:description" content="Build a site .nhc module the way upstream does, with cached data, clear failure messages, fast bash, and practical GPU checks.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/node-health-check/checks-and-remediation/custom-checks/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/node-health-check/checks-and-remediation/custom-checks/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../../.docs/prerender-redirect.js" data-target="../../../../../#/fields/system-administration/node-health-check/checks-and-remediation/custom-checks"></script>
+<main>
+<h1>Writing Your Own NHC Checks</h1>
+<p><em>Build a site .nhc module the way upstream does, with cached data, clear failure messages, fast bash, and practical GPU checks.</em></p>
+<blockquote><p><strong>Part 6 of the [Node Health Check series](/fields/system-administration/node-health-check/README.md).</strong> The built-in checks cover the classics. Your cluster has its own weirdness: a licence daemon, a GPU generation with its own failure modes, a burst buffer. Time to teach the bouncer some new rules.</p></blockquote>
+<hr>
+<h2>First, do you even need a module?</h2>
+<p>Often no. <code>check_cmd_output</code>, <code>check_cmd_status</code> and <code>check_file_contents</code> turn almost any command or file into a check with no code at all:</p>
+<pre><code class="language-bash"># A licence server port must answer
+   * || check_cmd_status -t 3 -r 0 /usr/bin/nc -z lic01 27000
+
+# SELinux must be off on compute (selinuxenabled returns 1 when disabled)
+   * || check_cmd_status -t 1 -r 1 selinuxenabled
+
+# Transparent hugepages must be &quot;madvise&quot;
+   * || check_file_contents /sys/kernel/mm/transparent_hugepage/enabled &#x27;/\[madvise\]/&#x27;
+
+# CPU governor must be performance, with a human-friendly failure message
+   * || check_cmd_output -t 5 -m &#x27;!/powersave/&#x27; -M &#x27;CPU governor is not performance&#x27; -e &#x27;cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor&#x27;</code></pre>
+<p><code>check_cmd_output</code> passes when every positive <code>-m</code> match is found and no negated one is. Each <code>-M</code> gives the matching <code>-m</code> a readable failure message, and <code>-C name</code> makes the failure show up under a name of your choice. In 1.5 it also gained conditionals (<code>-c</code>), so you can compare numbers from the output, not just match text.</p>
+<p>Write a module when you need <strong>logic</strong>: loops over devices, thresholds per device, cached data shared between several checks.</p>
+<hr>
+<h2>The rules of the house</h2>
+<p>From upstream&#x27;s guidelines, plus what bites people in practice:</p>
+<ol><li><strong>File:</strong> <code>/etc/nhc/scripts/&lt;siteid&gt;_&lt;class&gt;.nhc</code>, for example <code>acme_gpu.nhc</code>. The <strong>`.nhc` extension is required</strong>; other files are ignored (so <code>*.rpmnew</code> leftovers don&#x27;t get loaded).</li><li><strong>Function names:</strong> <code>check_&lt;class&gt;_&lt;purpose&gt;</code>, like <code>check_gpu_count</code>. Helpers: <code>nhc_&lt;class&gt;_gather_data</code>.</li><li><strong>Namespace your globals:</strong> <code>ACME_GPU_...</code>, never <code>DATA</code> or <code>COUNT</code>. Every module shares one bash process.</li><li><strong>Fail with `die`:</strong> <code>die 1 &quot;clear message&quot;</code> then <code>return 1</code>. The message becomes the <code>NHC:</code> reason in <code>sinfo -R</code>, so make it say <em>what</em> and <em>where</em>: <code>&quot;GPU 3 (0000:3b:00.0): 12 uncorrected ECC errors&quot;</code> beats <code>&quot;gpu bad&quot;</code>.</li><li><strong>Pass with `return 0`.</strong> Silence is success.</li><li><strong>Cache expensive data</strong> in a gather function, so three checks don&#x27;t run <code>nvidia-smi</code> three times.</li><li><strong>Bound every external command</strong> with a timeout. A wedged GPU can hang <code>nvidia-smi</code> forever; NHC&#x27;s watchdog will eventually kill the <em>whole run</em>, with a much less useful message than yours.</li><li><strong>Use full paths or extend `PATH`.</strong> NHC runs with <code>PATH=/sbin:/usr/sbin:/bin:/usr/bin</code>, not your login shell&#x27;s.</li></ol>
+<hr>
+<h2>Skeleton: a module in five parts</h2>
+<pre><code class="language-bash"># NHC -- ACME checks for &lt;thing&gt;
+#
+# Your Name &lt;you@example.org&gt;, 2026-10-28
+# License: BSD-3 (same as NHC) unless stated otherwise
+
+# 1. Globals with safe defaults (namespaced!)
+declare -a ACME_THING_DATA=( )
+declare    ACME_THING_GATHERED=0
+
+# 2. Gather once, cache in globals
+function nhc_acme_thing_gather_data() {
+    local IFS=$&#x27;\n&#x27;
+    ACME_THING_DATA=( $(timeout 10 /usr/bin/thing-status 2&gt;/dev/null) )
+    ACME_THING_GATHERED=1
+}
+
+# 3. The check
+function check_acme_thing_ok() {
+    (( ACME_THING_GATHERED )) || nhc_acme_thing_gather_data
+
+    if (( ${#ACME_THING_DATA[@]} == 0 )); then
+        die 1 &quot;${FUNCNAME[0]}:  thing-status returned no data&quot;
+        return 1
+    fi
+    return 0
+}</code></pre>
+<p>Parts 4 and 5 live elsewhere: the line in <code>nhc.conf</code> (<code>* || check_acme_thing_ok</code>) and a test run (below).</p>
+<hr>
+<h2>Real example: GPU count and ECC errors</h2>
+<p>The most common GPU failure modes in production are boringly physical: a GPU <strong>falls off the bus</strong> (count drops from 8 to 7) or <strong>memory errors</strong> pile up. Here&#x27;s a module that catches both from one <code>nvidia-smi</code> call.</p>
+<pre><code class="language-bash"># /etc/nhc/scripts/acme_gpu.nhc
+# NHC -- ACME GPU checks (count, uncorrected ECC)
+
+declare -a ACME_GPU_ROWS=( )
+declare    ACME_GPU_GATHERED=0
+declare    ACME_GPU_RC=0
+declare    ACME_NVSMI=&quot;${ACME_NVSMI:-/usr/bin/nvidia-smi}&quot;
+
+function nhc_acme_gpu_gather_data() {
+    local IFS=$&#x27;\n&#x27;
+    ACME_GPU_ROWS=( $(timeout 20 &quot;$ACME_NVSMI&quot; \
+        --query-gpu=index,pci.bus_id,ecc.errors.uncorrected.volatile.total \
+        --format=csv,noheader,nounits 2&gt;/dev/null) )
+    ACME_GPU_RC=$?          # status of the command substitution
+    ACME_GPU_GATHERED=1
+}
+
+# check_acme_gpu_count &lt;expected&gt;
+function check_acme_gpu_count() {
+    local EXPECTED=&quot;$1&quot;
+    (( ACME_GPU_GATHERED )) || nhc_acme_gpu_gather_data
+
+    if (( ACME_GPU_RC != 0 )); then
+        die 1 &quot;${FUNCNAME[0]}:  nvidia-smi failed or timed out (rc=$ACME_GPU_RC)&quot;
+        return 1
+    fi
+    if (( ${#ACME_GPU_ROWS[@]} != EXPECTED )); then
+        die 1 &quot;${FUNCNAME[0]}:  found ${#ACME_GPU_ROWS[@]} GPUs, expected $EXPECTED&quot;
+        return 1
+    fi
+    return 0
+}
+
+# check_acme_gpu_ecc [max_uncorrected]   (default 0)
+function check_acme_gpu_ecc() {
+    local MAX=&quot;${1:-0}&quot; ROW IDX BUS ECC
+    (( ACME_GPU_GATHERED )) || nhc_acme_gpu_gather_data
+
+    for ROW in &quot;${ACME_GPU_ROWS[@]}&quot;; do
+        IFS=&#x27;,&#x27; read -r IDX BUS ECC &lt;&lt;&lt; &quot;$ROW&quot;
+        IDX=&quot;${IDX// /}&quot; BUS=&quot;${BUS// /}&quot; ECC=&quot;${ECC// /}&quot;
+        [[ &quot;$ECC&quot; == *N/A* || -z &quot;$ECC&quot; ]] &amp;&amp; continue      # ECC disabled/unsupported
+        if (( ECC &gt; MAX )); then
+            die 1 &quot;${FUNCNAME[0]}:  GPU $IDX ($BUS) has $ECC uncorrected ECC errors (max $MAX)&quot;
+            return 1
+        fi
+    done
+    return 0
+}</code></pre>
+<p>And in <code>nhc.conf</code>:</p>
+<pre><code class="language-bash">   {gpu[01-32]} || check_acme_gpu_count 8
+   {gpu[01-32]} || check_acme_gpu_ecc 0</code></pre>
+<p>Design notes:</p>
+<ul><li><strong>One gather, two checks.</strong> The second check reuses the cached rows.</li><li><strong>Fails loudly when `nvidia-smi` itself fails.</strong> A driver that can&#x27;t talk to the GPUs is a failure, not &quot;zero GPUs, zero errors, all good&quot;.</li><li><strong>Volatile vs aggregate counters.</strong> Volatile counters reset with the driver; aggregate ones persist. Which one to alert on, and at what threshold, depends on your GPU generation&#x27;s error-recovery features (row remapping and friends). Read NVIDIA&#x27;s guidance for your hardware and adjust the field name.</li><li><strong>Field names change between driver versions.</strong> Check <code>nvidia-smi --help-query-gpu</code> on your nodes before trusting this verbatim.</li></ul>
+<p>Pair it with the <code>dmesg</code> Xid one-liner from <a href="../../../../../fields/system-administration/node-health-check/getting-started/writing-nhc-conf/">part 3</a>, and you have count, memory errors and kernel-reported faults covered in milliseconds.</p>
+<hr>
+<h2>Real example: wrapping DCGM</h2>
+<p>NVIDIA&#x27;s <strong>DCGM</strong> offers two very different kinds of checks, and they belong in different places:</p>
+<table><thead><tr><th>DCGM feature</th><th>Cost</th><th>Where it belongs</th></tr></thead><tbody><tr><td><strong>Background health</strong> (<code>dcgmi health -c</code> after watches are set with <code>dcgmi health -s</code>)</td><td>Cheap, non-invasive</td><td>Periodic NHC run</td></tr><tr><td><strong>Active diagnostics</strong> (<code>dcgmi diag -r 1/2/3/4</code>)</td><td>Level 1 takes seconds, level 2 about two minutes, level 3 about fifteen, level 4 longer; levels 2+ <strong>load the GPUs</strong></td><td>Never periodic. Deep context, after a drain, or burn-in</td></tr></tbody></table>
+<p>NVIDIA&#x27;s own guidance maps the levels to jobs: level 1 as a readiness check, level 2 after failures, levels 3-4 for administrators doing a post-mortem.</p>
+<p>A check that runs the quick diagnostic and fails on any failing test:</p>
+<pre><code class="language-bash"># acme_dcgm.nhc
+function check_acme_dcgm_diag() {
+    local LEVEL=&quot;${1:-1}&quot; TMO=&quot;${2:-60}&quot;
+    check_cmd_output -C &quot;${FUNCNAME[0]}&quot; -t &quot;$TMO&quot; -r 0 \
+        -m &#x27;!/Fail/&#x27; -M &quot;dcgmi diag -r $LEVEL reported a failing test&quot; \
+        -e &quot;dcgmi diag -r $LEVEL&quot;
+}</code></pre>
+<p>Because it reuses <code>check_cmd_output</code>, it inherits the timeout, the exit-code check and the matching for free. Wire it into the deep context, not the periodic one:</p>
+<pre><code class="language-bash"># /etc/nhc/nhc-deep.conf
+   {gpu[01-32]} || check_acme_dcgm_diag 2 300</code></pre>
+<p>The deep context needs a watchdog longer than its slowest check, so give it its own early settings, for example <code>TIMEOUT=900</code> in <code>/etc/sysconfig/nhc-deep</code>. The periodic context keeps its short timeout.</p>
+<blockquote><p>[!IMPORTANT] DCGM&#x27;s output format and exit codes evolve between releases, and newer releases can emit JSON (<code>-j</code>). Run <code>dcgmi diag -r 1</code> on a known-bad and a known-good node, confirm what &quot;fail&quot; looks like on your version, and adjust the match. NHC 1.5 also ships GPU checks of its own (<code>lanl_nvgpu.nhc</code> for nvidia-smi, <code>csc_nvidia_smi.nhc</code>), so read those first; they may already do what you need.</p></blockquote>
+<hr>
+<h2>Testing your check</h2>
+<pre><code class="language-bash"># as root on a test node. MARK_OFFLINE=0 everywhere: testing must never drain.
+
+# 1. Syntax: does the module even parse?
+bash -n /etc/nhc/scripts/acme_gpu.nhc
+
+# 2. Run just this check, no config file involved
+nhc -l- -e &#x27;check_acme_gpu_count 8&#x27; MARK_OFFLINE=0; echo &quot;rc=$?&quot;
+
+# 3. Same, with debug output, and the bash trace in a separate file
+BASH_XTRACEFD=33 33&gt;/tmp/nhc-trace.out nhc -d -v -x -l- -e &#x27;check_acme_gpu_ecc 0&#x27; MARK_OFFLINE=0
+
+# 4. Prove it FAILS when it should: expect 9 GPUs on an 8-GPU node
+nhc -l- -e &#x27;check_acme_gpu_count 9&#x27; MARK_OFFLINE=0; echo &quot;rc=$?&quot;   # should be non-zero</code></pre>
+<p>Remember the ordering rule from <a href="../../../../../fields/system-administration/node-health-check/getting-started/build-and-install/">part 2</a>: flags first, <code>VAR=value</code> pairs last. Also run these as a real root shell rather than through <code>sudo</code>, which closes extra file descriptors like the <code>33</code> used for the trace.</p>
+<p>Step 4 is the one people skip. A check that has never failed in testing is a check you don&#x27;t know works.</p>
+<blockquote><p>[!TIP] To fake a failure without breaking hardware, point the command variable at a stub: <code>ACME_NVSMI=/tmp/fake-nvidia-smi</code> (a script that prints 7 rows or a non-zero ECC count). This is why the module reads <code>ACME_NVSMI</code> instead of hardcoding the path.</p></blockquote>
+<hr>
+<h2>Writing bash like NHC does</h2>
+<p>NHC is fast because it avoids forking subprocesses. Your checks run on every node every few minutes, so the same habits pay off:</p>
+<table><thead><tr><th>Instead of</th><th>Write</th><th>Why</th></tr></thead><tbody><tr><td><code>X=$(cat /proc/loadavg)</code></td><td><code>read -a X &lt; /proc/loadavg</code></td><td><code>read</code> is a builtin: no fork</td></tr><tr><td><code>HOST=$(hostname)</code></td><td><code>read HOST &lt; /proc/sys/kernel/hostname</code></td><td>Same, and NHC already sets <code>$HOSTNAME</code></td></tr><tr><td><code>cmd | grep foo</code></td><td><code>[[ &quot;$LINE&quot; == *foo* ]]</code> or <code>[[ &quot;$LINE&quot; =~ regex ]]</code></td><td>Matching in-process</td></tr><tr><td><code>echo &quot;$S&quot; | sed &#x27;s/^ *//&#x27;</code></td><td><code>${S#&quot;${S%%[! ]*}&quot;}</code></td><td>Parameter expansion</td></tr><tr><td><code>awk -F: &#x27;{print $1}&#x27; /etc/passwd</code></td><td><code>while IFS=: read -r U _; do ...; done &lt; /etc/passwd</code></td><td>One process instead of two</td></tr><tr><td>Three checks each calling the tool</td><td>One gather function + cached array</td><td>The tool runs once</td></tr></tbody></table>
+<p>For matching, call NHC&#x27;s own <code>mcheck &quot;$string&quot; &quot;$match_string&quot;</code> so your check accepts globs, <code>/regex/</code>, <code>{ranges}</code> and <code>!negation</code> just like the built-ins.</p>
+<hr>
+<h2>Sharing upstream</h2>
+<p>Wrote something others would want (a check for a common NIC, filesystem or GPU)? Upstream welcomes pull requests. Include the header comment, keep the naming convention, and add unit tests under <code>test/</code> like the existing modules. Several of the GPU and Kubernetes checks in 1.5 started life as exactly that kind of site module (LANL, CSC).</p>
+<p>Next: turning &quot;detected&quot; into &quot;fixed&quot; without turning your cluster into a reboot loop, in <a href="../../../../../fields/system-administration/node-health-check/checks-and-remediation/auto-remediation/">part 7</a>.</p>
+<blockquote><p><strong>Takeaway:</strong> try <code>check_cmd_output</code> first; write a module when you need logic. Namespace globals, cache expensive data, bound every command with a timeout, write failure messages a human can act on, and prove each check fails when it should.</p></blockquote>
+<h3>References</h3>
+<ul><li><a href="https://github.com/mej/nhc#customization">NHC README: Customization, Writing Checks, Tips and Best Practices</a></li><li><a href="https://github.com/mej/nhc#check_cmd_output">NHC <code>check_cmd_output</code> documentation</a></li><li><a href="https://docs.nvidia.com/datacenter/dcgm/latest/user-guide/dcgm-diagnostics.html">NVIDIA DCGM diagnostics: run levels</a></li><li><a href="https://docs.nvidia.com/datacenter/dcgm/latest/reference/command-line-reference/dcgmi/dcgmi-diag.html"><code>dcgmi diag</code> command reference</a></li></ul>
+<p><a href="../../../../../#/fields/system-administration/node-health-check/checks-and-remediation/custom-checks">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

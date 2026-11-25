@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>System Administration - Memory</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/memory/">
+<meta name="description" content="The common memory bugs in Linux programs (segfaults, leaks, buffer overflows, use after free) and the static analysis tools that help find them.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="System Administration - Memory">
+<meta property="og:description" content="The common memory bugs in Linux programs (segfaults, leaks, buffer overflows, use after free) and the static analysis tools that help find them.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/memory/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/memory/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../.docs/prerender-redirect.js" data-target="../../../#/fields/system-administration/memory"></script>
+<main>
+<h1>System Administration - Memory</h1>
+<p><em>The common memory bugs in Linux programs (segfaults, leaks, buffer overflows, use after free) and the static analysis tools that help find them.</em></p>
+<h2>1- Memory Issues in Linux Application</h2>
+<ul><li>Common memory issue:<ol><li>Segmentation faults (segfaults).</li><li>Memory leaks.</li><li>Buffer overflow.</li><li>Use after free (dangling pointer dereference).</li></ol></li></ul>
+<h3>1.1- Segmentation Faults (segfaults)</h3>
+<ul><li>Causes Can happen when a program tries to access : <ul><li>A non-existing virtual memory segment.</li><li>An existing virtual memory segment in a different way as defined by its attribute.</li><li>Execute data in non-executable segment.</li><li>Write data in read only segment.</li></ul></li></ul>
+<ul><li>As a consequence; the kernel delivers the <em>SIGSEGV</em> signal to the offending process, and it usually results in the termination of the process.</li><li>Code example: <code>`</code>c int *example_ptr = NULL;</li></ul>
+<p>*example_ptr = 5; // Trying to store 5 in invalid memory location.</p>
+<pre><code>
+### 1.2- Memory Leaks
+- Memory leaks is a condition that occurs when a program fails to release memory that is no longer needed.
+- memory leaks gradually consume available memory resources over time causing performance degradation and eventual program crashes.
+- Common causes:
+    - Not deallocating dynamically allocated memory.
+    - Losing references to memory blocks.
+    - Failing to release resources properly.
+- Code example:</code></pre>
+<p>int main() { // Allocate memory for an integer array int <em>arr = (int </em>)malloc(5 * sizeof(int)); // Initialize the array for (int i = 0; i&lt;5; i++){ arr[i] = i; } // No explicit free() call to deallocate the memory. return 0; }</p>
+<pre><code>
+### 1.3- Buffer Overflow
+- Buffer overflow is a type of software vulnerability that occurs when a program writes more data to a buffer (a temporary storage area) than it can hold, causing the excess data to overflow into adjacent memory locations.
+- Two common types of buffer overflows are [*Stack-based*, *heap-based*], depending on where the buffer is located in memory.
+- It can lead to memory corruption, program crashes, or unauthorized access to a system, making it a significant security risk.
+
+- Code Example:</code></pre>
+<p>// Create an integer array with a size of 5 elements int buffer[5];</p>
+<p>// Writing to the 6th location of buffer will result in a buffer overflow. buffer[5] = 15;</p>
+<p>// Print the content of buffer[5] print(&quot;Buffer[%d]: %d\n&quot;, 5, buffer[5])</p>
+<pre><code>
+## 2- Memory Debugging Tools
+### 2.1- What is Static Analysis?
+- Static analysis is a method of debugging by examining source code before a program is run. 
+- This is especially useful in system-level programming (like C/C++ under Linux) where memory management is manual and prone to errors.
+
+### 2.2- Static Analysis Tools (Clang Analyzer)
+- A tool built into the Clang/LLVM compiler suite.
+- It analyzes C, C++, and Objective-C programs.
+- It focuses on finding bugs without running the code, which makes it very helpful in early development and CI/CD pipelines.</code></pre>
+<p><a href="../../../#/fields/system-administration/memory">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

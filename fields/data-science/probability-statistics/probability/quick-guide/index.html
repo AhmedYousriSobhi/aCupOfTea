@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Pick and Compute the Right Probability Model</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/probability/quick-guide/">
+<meta name="description" content="A cheat sheet for parts 7 to 11 - the method, the code and the expected output for counting outcomes, flipping a test result, expected value, binomial or Poisson, and the normal curve.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Pick and Compute the Right Probability Model">
+<meta property="og:description" content="A cheat sheet for parts 7 to 11 - the method, the code and the expected output for counting outcomes, flipping a test result, expected value, binomial or Poisson, and the normal curve.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/probability/quick-guide/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/probability/quick-guide/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../../.docs/prerender-redirect.js" data-target="../../../../../#/fields/data-science/probability-statistics/probability/quick-guide"></script>
+<main>
+<h1>Pick and Compute the Right Probability Model</h1>
+<p><em>A cheat sheet for parts 7 to 11 - the method, the code and the expected output for counting outcomes, flipping a test result, expected value, binomial or Poisson, and the normal curve.</em></p>
+<blockquote><p><strong>Quick guide for</strong> <a href="../../../../../fields/data-science/probability-statistics/probability/counting-and-conditioning/">Counting and Conditioning</a> (parts 7 and 8), <a href="../../../../../fields/data-science/probability-statistics/probability/expectation-binomial-poisson/">Expectation and the Two Count Recipes</a> (parts 9 and 10) and <a href="../../../../../fields/data-science/probability-statistics/probability/the-bell-curve/">The Bell Curve</a>. Python 3, standard library only. Formal statements: <a href="../../../../../fields/data-science/probability-statistics/probability/technical-reference/">technical reference</a>.</p></blockquote>
+<h2>1. Count outcomes</h2>
+<pre><code class="language-python">import itertools
+grid = list(itertools.product(range(1, 7), repeat=2))
+double = {g for g in grid if g[0] == g[1]}
+eight  = {g for g in grid if sum(g) == 8}
+print(len(double | eight))        # 10  -&gt;  P = 10/36</code></pre>
+<p><code>P(A or B) = P(A) + P(B) - P(A and B)</code>. &quot;At least one&quot; is <code>1 - P(none)</code>: at least one six in two rolls is <code>1 - 25/36 = 11/36</code>.</p>
+<h2>2. Flip a test result</h2>
+<pre><code class="language-python">from fractions import Fraction as F
+sick = 100_000 * F(1, 1000); clean = 100_000 - sick
+tp = sick * F(99, 100); fp = clean * F(1, 100)
+print(tp, fp, tp / (tp + fp))     # 99 999 11/122  -&gt;  about 9%</code></pre>
+<p>Count inside the positives. A second independent positive uses 11/122 as the new base rate: <code>363/400 = 90.75%</code>.</p>
+<h2>3. Expected value</h2>
+<p><code>E[X] = sum of x * p</code>, <code>Var = E[X^2] - E[X]^2</code>. The lucky tin: <code>9/2</code>, variance <code>149/4</code>, SD about 6.1. <code>E[X + Y]</code> always adds; variances add only for independent pulls.</p>
+<h2>4. Binomial or Poisson</h2>
+<table><thead><tr><th>The question counts</th><th>Recipe</th><th>Mean, variance</th></tr></thead><tbody><tr><td>Yeses in <code>n</code> independent tries, same <code>p</code></td><td>Binomial</td><td><code>np</code>, <code>np(1-p)</code></td></tr><tr><td>Events in a window, constant rate</td><td>Poisson</td><td><code>λ</code>, <code>λ</code></td></tr></tbody></table>
+<pre><code class="language-python">import math
+print(math.comb(10, 3) * 0.3**3 * 0.7**7)   # about 0.2668</code></pre>
+<h2>5. Normal curve</h2>
+<pre><code class="language-python">from statistics import NormalDist
+bag = NormalDist(100, 4)
+print(bag.zscore(106), round(bag.cdf(106), 4), round(bag.inv_cdf(0.95), 2))   # 1.5 0.9332 106.58</code></pre>
+<p>Histogram first. Within 1, 2, 3 SD is 68.27%, 95.45%, 99.73%.</p>
+<h2>Symptoms</h2>
+<table><thead><tr><th>What you see</th><th>Likely cause</th><th>Fix</th></tr></thead><tbody><tr><td>&quot;or&quot; answer too big</td><td>Shared outcome counted twice</td><td>Subtract the overlap</td></tr><tr><td>99% for a rare thing</td><td>Flipped condition</td><td>Count inside the positives</td></tr><tr><td>Poisson variance far above mean</td><td>Two rates averaged</td><td>One Poisson per period</td></tr><tr><td>Bell gives wrong shares</td><td>Not one hump</td><td>Use percentiles</td></tr></tbody></table>
+<blockquote><p>[!WARNING] Never add overlapping chances (<code>10 × 0.3 = 300%</code> is wrong; use <code>1 - 0.7^10 = 0.9718</code>). A repeated test helps only if its mistakes are independent.</p></blockquote>
+<h2>Try it</h2>
+<h3>Expected value lab</h3>
+<p><a href="../../../../../fields/data-science/probability-statistics/labs/expected-value.html">Expected value lab</a></p>
+<h3>Bayes lab</h3>
+<p><a href="../../../../../fields/data-science/probability-statistics/labs/bayes.html">Bayes lab</a></p>
+<h3>Distributions lab</h3>
+<p><a href="../../../../../fields/data-science/probability-statistics/labs/distributions.html">Distributions lab</a></p>
+<p><strong>Why it works:</strong> the three story pages above (parts 7 to 11). Next: <a href="../../../../../fields/data-science/probability-statistics/inference/">Inference</a>.</p>
+<p><a href="../../../../../#/fields/data-science/probability-statistics/probability/quick-guide">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

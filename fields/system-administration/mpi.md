@@ -1,0 +1,32 @@
+<!-- related-block -->
+<nav class="crumbs" aria-label="Breadcrumb"><a href="#/fields/">Fields</a> / <a href="#/fields/system-administration/">System Administration</a></nav>
+
+# System Administration - Linux - MPI
+
+<!-- related-block -->
+<div class="reading-time">1 min read · Updated 23 Nov 2026</div>
+
+
+## Table of Contents
+- [System Administration - Linux - MPI](#system-administration---linux---mpi)
+  - [Table of Contents](#table-of-contents)
+
+
+Verify that it creates 4 ranks and bind each rank to a specific core:
+```bash
+mpirun \
+  --report-bindings \
+  -np 4 \
+  --bind-to core \
+  --map-by ppr:1:numa \
+  hostname
+```
+
+Expected output:
+```bash
+Rank 0 bound to core 0
+Rank 1 bound to core 24
+Rank 2 bound to core 48
+Rank 3 bound to core 72
+```
+

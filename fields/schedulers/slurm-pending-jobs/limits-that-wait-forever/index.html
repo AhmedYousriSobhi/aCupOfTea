@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Limits That Wait Forever: QOS and Account Limits in Practice</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-pending-jobs/limits-that-wait-forever/">
+<meta name="description" content="How Slurm QOS and account GPU limits behave on a real queue - the job that never runs, the second QOS that slips past a cap, partition QOS, DenyOnLimit, and live usage via assocmgr.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Limits That Wait Forever: QOS and Account Limits in Practice">
+<meta property="og:description" content="How Slurm QOS and account GPU limits behave on a real queue - the job that never runs, the second QOS that slips past a cap, partition QOS, DenyOnLimit, and live usage via assocmgr.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-pending-jobs/limits-that-wait-forever/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-pending-jobs/limits-that-wait-forever/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/schedulers/slurm-pending-jobs/limits-that-wait-forever"></script>
+<main>
+<h1>Limits That Wait Forever: QOS and Account Limits in Practice</h1>
+<p><em>How Slurm QOS and account GPU limits behave on a real queue - the job that never runs, the second QOS that slips past a cap, partition QOS, DenyOnLimit, and live usage via assocmgr.</em></p>
+<blockquote><p><strong>Part 3 of [Why Is My Job Still Pending?](/fields/schedulers/slurm-pending-jobs/README.md)</strong> <a href="../../../../fields/schedulers/slurm-pending-jobs/who-goes-first/">Part 2</a> decided the order of the queue. Limits decide whether a job may start at all, whatever its priority. By the end you&#x27;ll set a per-user GPU cap that actually holds, reject jobs that could never run, and read how close anyone is to a limit.</p></blockquote>
+<hr>
+<h2>The cap that didn&#x27;t hold</h2>
+<p>The GPU partition keeps filling up with one group&#x27;s jobs. The admins agree on a rule: at most two GPUs per user at a time. One <code>sacctmgr</code> command puts the cap on the GPU QOS, and the announcement goes out.</p>
+<p>Two things happen in the next week. A new user submits a 4-GPU job, which shows <code>QOSMaxGRESPerUser</code> and sits in the queue for six days before anyone notices it can never start. And the same heavy user from before is somehow running three GPUs. Nobody broke anything. Both are exactly how the limit was written.</p>
+<blockquote><p>[!NOTE] Lab: Slurm <strong>23.11.4</strong>, slurmdbd, <code>AccountingStorageEnforce=associations,limits,qos,safe</code>. One GPU node with four GPUs (fake device files, enough for scheduling). If limits seem to do nothing on your cluster at all, check <code>AccountingStorageEnforce</code> first: <a href="../../../../fields/schedulers/slurm-accounting-multi-tenancy/">Slurm multi-tenancy</a> covers that trap.</p></blockquote>
+<hr>
+<h2>Two places a limit can live</h2>
+<table><thead><tr><th>Where</th><th>Set with</th><th>Applies to</th><th>Reason names start with</th></tr></thead><tbody><tr><td>An <strong>association</strong> (an account, or a user in an account)</td><td><code>sacctmgr modify account/user ... set ...</code></td><td>Every job charged to that account or user</td><td><code>Assoc</code></td></tr><tr><td>A <strong>QOS</strong></td><td><code>sacctmgr modify qos ... set ...</code></td><td>Only jobs <strong>running under that QOS</strong></td><td><code>QOS</code></td></tr></tbody></table>
+<p>And each limit is one of two kinds:</p>
+<table><thead><tr><th>Kind</th><th>Example</th><th>Means</th></tr></thead><tbody><tr><td><code>Grp...</code></td><td><code>GrpTRES=gres/gpu=3</code></td><td>Shared total for everyone under it</td></tr><tr><td><code>Max...</code></td><td><code>MaxTRESPerUser=gres/gpu=2</code></td><td>Per user (or per job), each on their own</td></tr></tbody></table>
+<p>The second row of the first table is the one that bites: a QOS limit only applies to jobs in that QOS.</p>
+<hr>
+<h2>The lab&#x27;s limits</h2>
+<pre><code class="language-bash">sacctmgr -i add qos gpu-normal MaxTRESPerUser=gres/gpu=2
+sacctmgr -i modify user alice,bob,carol,admin set qos+=gpu-normal
+sacctmgr -i modify account physics set GrpTRES=gres/gpu=3</code></pre>
+<p>So: each user may hold two GPUs under <code>gpu-normal</code>, and the <code>physics</code> account (alice, bob, admin) may hold three in total. Every user can also still use the default <code>normal</code> QOS. That&#x27;s the usual setup, and it&#x27;s the source of the hole below.</p>
+<hr>
+<h2>A limit that clears by itself</h2>
+<p>Alice runs a 2-GPU job, then asks for one more GPU:</p>
+<pre><code class="language-text">JOBID   USER     NAME        QOS TRES_PER_NOD    STATE                 REASON
+   23  alice  a-1more gpu-normal   gres/gpu:1  PENDING      QOSMaxGRESPerUser
+   22  alice   a-2gpu gpu-normal   gres/gpu:2  RUNNING                   None</code></pre>
+<p>That&#x27;s the cap doing its job. When job 22 ends, job 23 starts. This kind of <code>QOS...</code> or <code>Assoc...</code> reason clears by itself: the job is fine on its own, it just has to wait for the user&#x27;s (or account&#x27;s) other jobs.</p>
+<hr>
+<h2>A job that can never run</h2>
+<p>Carol asks for four GPUs at once, under a QOS that allows two per user:</p>
+<pre><code class="language-text">JOBID   USER     NAME        QOS TRES_PER_NOD    STATE                 REASON
+   25  carol   c-4gpu gpu-normal   gres/gpu:4  PENDING      QOSMaxGRESPerUser</code></pre>
+<p>Same reason as alice&#x27;s job, but a completely different situation: even with the whole cluster empty, this job breaks the limit by itself. It will wait forever, and by default Slurm accepts it and lets it.</p>
+<p>The QOS flag <strong>`DenyOnLimit`</strong> makes Slurm reject such jobs at submission instead:</p>
+<pre><code class="language-bash">sacctmgr -i modify qos gpu-normal set flags=DenyOnLimit</code></pre>
+<p>Carol&#x27;s same submission, after:</p>
+<pre><code class="language-text">sbatch: error: QOSMaxGRESPerUser
+sbatch: error: Batch job submission failed: Job violates accounting/QOS policy (job submit limit, user&#x27;s size and/or time limits)</code></pre>
+<p>Immediate and specific. <code>DenyOnLimit</code> judges each job <strong>on its own</strong>: a job that only goes over the limit because of the user&#x27;s <em>other</em> running jobs is still accepted and waits, as alice&#x27;s did above. The QOS documentation spells this out. So it removes the waiting-forever case without turning every busy moment into an error.</p>
+<hr>
+<h2>The second QOS</h2>
+<p>Now the hole. With alice&#x27;s two GPUs running, bob submitted a 1-GPU job without asking for any QOS, so it ran under <code>normal</code>:</p>
+<pre><code class="language-text">JOBID   USER     NAME        QOS TRES_PER_NOD    STATE                 REASON
+   24    bob   b-2gpu gpu-normal   gres/gpu:2  PENDING           AssocGrpGRES
+   26    bob  b-noqos     normal   gres/gpu:1  RUNNING                   None
+   22  alice   a-2gpu gpu-normal   gres/gpu:2  RUNNING                   None</code></pre>
+<p>Job 26 <strong>ran</strong>. The per-user cap lives on <code>gpu-normal</code>, and job 26 isn&#x27;t in <code>gpu-normal</code>. The only thing that stopped bob from taking even more was the account limit: physics was now at 3 GPUs, so his next job waited on <code>AssocGrpGRES</code>. A user in an account without a <code>GrpTRES</code> limit could have filled the node through <code>normal</code>.</p>
+<p>This is the week-one surprise from the story: the heavy user&#x27;s third GPU came in through a different QOS.</p>
+<hr>
+<h2>Closing it with a partition QOS</h2>
+<p>A QOS can be attached to a <strong>partition</strong>. Then its limits apply to every job in that partition, whatever QOS the job asked for. In <code>slurm.conf</code>:</p>
+<pre><code class="language-text">PartitionName=gpu Nodes=gpu001 MaxTime=2-00:00:00 QOS=gpu-normal State=UP</code></pre>
+<p>After <code>scontrol reconfigure</code> (we redeployed and restarted), <code>scontrol show partition gpu</code> showed <code>QoS=gpu-normal</code>. Then bob ran a 2-GPU job and tried to sneak one more in under <code>normal</code>:</p>
+<pre><code class="language-text">JOBID   USER     NAME      QOS TRES_PER_NOD    STATE                 REASON
+   32    bob  b-sneak   normal   gres/gpu:1  PENDING      QOSMaxGRESPerUser
+   31    bob      b-2   normal   gres/gpu:2  RUNNING                   None</code></pre>
+<p>Both jobs are under <code>normal</code>, and the cap held anyway: the partition QOS counted them. The docs say the partition QOS overrides the job&#x27;s QOS. The exception is a job QOS with the <code>OverPartQOS</code> flag, which reverses the order. Give that flag only to a QOS you&#x27;d let skip the partition&#x27;s rules.</p>
+<p>Rule of thumb: <strong>a limit on a resource belongs on the partition that has the resource.</strong> A QOS that users choose is for priority and special cases, not for the main cap.</p>
+<hr>
+<h2>Who is using what, right now</h2>
+<p><code>sacctmgr</code> shows limits. To see a limit next to current usage, ask the controller:</p>
+<pre><code class="language-bash">scontrol show assoc_mgr flags=qos qos=gpu-normal
+scontrol show assoc_mgr flags=assoc accounts=physics</code></pre>
+<p>Trimmed, with alice running two GPUs:</p>
+<pre><code class="language-text">QOS=gpu-normal(3)
+    User Limits
+      alice(2001)
+        MaxTRESPU=cpu=N(1),mem=N(200),...,gres/gpu=2(2)
+      bob(2002)
+        MaxTRESPU=cpu=N(0),mem=N(0),...,gres/gpu=2(0)
+...
+    GrpTRES=cpu=N(1),mem=N(200),node=N(1),billing=N(1),gres/gpu=3(2),</code></pre>
+<p>Each value reads <strong>limit(in use)</strong>: <code>gres/gpu=2(2)</code> means a limit of 2 with 2 in use, so alice&#x27;s next GPU job waits. <code>N</code> means no limit. The <code>GrpTRES</code> line is the physics account: 2 of its 3 GPUs in use. This is the command to run when a user asks &quot;which limit is holding me?&quot;.</p>
+<hr>
+<h2>Rolling out a new limit</h2>
+<p>A new limit changes what runs tomorrow, so treat it as a change, not a command:</p>
+<ol><li><strong>Dry run:</strong> count who would be over it today. <code>scontrol show assoc_mgr</code> with the new values in mind, or <code>squeue -o &quot;%u %b&quot; -t R</code> for current GPU use per user.</li><li><strong>Announce</strong> the limit and the date, with the <code>whypending</code> script from <a href="../../../../fields/schedulers/slurm-pending-jobs/why-is-my-job-pending/">part 1</a> so users can see why they&#x27;re waiting.</li><li><strong>Enforce</strong> on the partition QOS, with <code>DenyOnLimit</code>. Running jobs aren&#x27;t killed when a limit is added; with the <code>safe</code> enforcement option, the docs say a running job isn&#x27;t killed even if limits change under it.</li><li><strong>Rollback</strong> is one <code>sacctmgr modify ... set MaxTRESPerUser=gres/gpu=-1</code> (<code>-1</code> clears a limit), and takes effect for the next scheduling pass.</li></ol>
+<hr>
+<h2>Back to the cap</h2>
+<p>Same rule, written properly this time. The 2-GPU cap goes on a QOS attached to the GPU partition, with <code>DenyOnLimit</code>. The new user&#x27;s 4-GPU job is rejected the moment they submit it, with a message that names the limit, so they resubmit as two 2-GPU jobs or ask for an exception. The heavy user&#x27;s third GPU waits on <code>QOSMaxGRESPerUser</code> whichever QOS they pick. And when someone asks why they&#x27;re waiting, <code>scontrol show assoc_mgr</code> shows the limit and the usage side by side.</p>
+<p>Nothing in the queue can wait forever any more. Every pending job is either first in line, behind someone with a better claim, or waiting for its own user&#x27;s jobs to finish.</p>
+<p><strong>Takeaway:</strong> a QOS limit only binds jobs in that QOS, so put caps on a partition QOS; add <code>DenyOnLimit</code> so jobs that could never run are rejected, and read live usage with <code>scontrol show assoc_mgr</code>.</p>
+<p><strong>Series index:</strong> <a href="../../../../fields/schedulers/slurm-pending-jobs/">Why Is My Job Still Pending?</a>. For the scheduler that fits small jobs into gaps around all of this, see <a href="../../../../fields/schedulers/slurm-backfill-tuning/">backfill tuning</a>.</p>
+<hr>
+<h2>References</h2>
+<ul><li><a href="https://slurm.schedmd.com/qos.html">Slurm QOS</a>: QOS limits, partition QOS, <code>OverPartQOS</code>, <code>DenyOnLimit</code>.</li><li><a href="https://slurm.schedmd.com/resource_limits.html">Slurm: Resource Limits</a>: association limits, <code>Grp</code> vs <code>Max</code>, <code>AccountingStorageEnforce</code> options including <code>safe</code>.</li><li><a href="https://slurm.schedmd.com/sacctmgr.html">sacctmgr(1)</a>: setting and clearing limits (<code>-1</code>).</li><li><a href="https://slurm.schedmd.com/scontrol.html#OPT_assoc_mgr">scontrol(1): show assoc_mgr</a>: live limits and usage.</li><li><a href="https://slurm.schedmd.com/squeue.html#SECTION_JOB-REASON-CODES">squeue(1): JOB REASON CODES</a>: <code>QOSMaxGRESPerUser</code>, <code>AssocGrpGRES</code> and the rest.</li><li><a href="../../../../fields/schedulers/slurm-accounting-multi-tenancy/">Slurm multi-tenancy</a>: associations, enforcement, and the limit that silently does nothing.</li></ul>
+<p><a href="../../../../#/fields/schedulers/slurm-pending-jobs/limits-that-wait-forever">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

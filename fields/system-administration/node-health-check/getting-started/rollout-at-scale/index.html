@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Rolling NHC Out to a Fleet Without Draining Everything</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/node-health-check/getting-started/rollout-at-scale/">
+<meta name="description" content="A dry-run, canary, enforce plan for deploying NHC or a new nhc.conf to hundreds of nodes, with a circuit breaker for bad pushes.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Rolling NHC Out to a Fleet Without Draining Everything">
+<meta property="og:description" content="A dry-run, canary, enforce plan for deploying NHC or a new nhc.conf to hundreds of nodes, with a circuit breaker for bad pushes.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/node-health-check/getting-started/rollout-at-scale/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/node-health-check/getting-started/rollout-at-scale/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../../.docs/prerender-redirect.js" data-target="../../../../../#/fields/system-administration/node-health-check/getting-started/rollout-at-scale"></script>
+<main>
+<h1>Rolling NHC Out to a Fleet Without Draining Everything</h1>
+<p><em>A dry-run, canary, enforce plan for deploying NHC or a new nhc.conf to hundreds of nodes, with a circuit breaker for bad pushes.</em></p>
+<blockquote><p><strong>Part 5 of the [Node Health Check series](/fields/system-administration/node-health-check/README.md).</strong> A config typo in <code>nhc.conf</code> is the fastest way to take a 2,000-node cluster to zero. Here&#x27;s how to make that impossible, or at least boring.</p></blockquote>
+<hr>
+<h2>The failure mode we&#x27;re designing against</h2>
+<p>You push a config with <code>check_hw_physmem 512GB 512GB</code> and no fudge factor. The kernel on every node reports 503 GB. Within five minutes, every node in the partition is <code>drain</code> with <code>NHC: check_hw_physmem: ...</code>. Running jobs finish; nothing new starts. Your queue grows; your phone rings.</p>
+<p>Health checks are a <strong>fleet-wide kill switch</strong> you hand to a config file. Treat changes to that file like production deployments, because they are.</p>
+<p>The plan below works for the first NHC rollout and for every config change after it.</p>
+<hr>
+<h2>Phase 0: inventory</h2>
+<p>Know your hardware classes before writing expectations about them:</p>
+<pre><code class="language-bash">clush -bw @compute &quot;/usr/sbin/nhc-genconf -H &#x27;*&#x27; -c -&quot;</code></pre>
+<p><code>clush -b</code> folds identical output together, so each block is one hardware class with its node list. Three blocks where you expected one? You just found the nodes with a missing DIMM or a BIOS that disabled hyperthreading. Write the config from the <em>majority</em> of each class (<a href="../../../../../fields/system-administration/node-health-check/getting-started/writing-nhc-conf/">part 3</a>).</p>
+<hr>
+<h2>Phase 1: dry run, fleet-wide</h2>
+<p>Install the package and config everywhere, but <strong>don&#x27;t</strong> set <code>HealthCheckProgram</code> yet. Run NHC by hand, in check-all mode, with draining disabled:</p>
+<pre><code class="language-bash">clush -bw @compute &quot;/usr/sbin/nhc -a -l- MARK_OFFLINE=0&quot; 2&gt;&amp;1 | tee nhc-dryrun.txt</code></pre>
+<ul><li><code>-a</code> reports <strong>every</strong> failure, not just the first.</li><li><code>-l-</code> prints to stdout so <code>clush</code> can collect it.</li><li><code>MARK_OFFLINE=0</code> guarantees nothing gets drained.</li></ul>
+<p>Healthy nodes print nothing. With <code>-b</code>, failing nodes collapse into groups by identical message, so 2,000 nodes of output become a dozen readable blocks.</p>
+<blockquote><p>[!TIP] Run the dry run <strong>twice</strong>, at different times of day. Checks like <code>check_ps_loadavg</code> and <code>check_fs_free</code> behave very differently at 3 AM and during the 10 AM job storm.</p></blockquote>
+<hr>
+<h2>Phase 2: triage, config bug or node bug?</h2>
+<p>For each block of failures, ask one question:</p>
+<table><thead><tr><th>If the failure is on...</th><th>It&#x27;s probably...</th><th>Do this</th></tr></thead><tbody><tr><td>All (or most) nodes of a class</td><td>A <strong>config bug</strong>: your expectation is wrong</td><td>Fix the line: add a fudge factor, correct the count, fix the target</td></tr><tr><td>A handful of nodes</td><td>A <strong>node bug</strong>: those nodes really are different</td><td>Fix the nodes, or drain them yourself <em>with a human reason</em></td></tr><tr><td>Random nodes, changing each run</td><td>A <strong>flaky check</strong></td><td>Make it more robust (retries, tolerance) or drop it</td></tr></tbody></table>
+<p>Iterate until the dry run is quiet except for nodes that are <em>really</em> broken and that you&#x27;ve consciously drained.</p>
+<hr>
+<h2>Phase 3: canary, enforcing on a few nodes</h2>
+<p><code>slurm.conf</code> must be identical on all nodes, so you can&#x27;t enable <code>HealthCheckProgram</code> on just 16 of them. Instead, enable it everywhere and do the canary <strong>inside `nhc.conf`</strong>, since lines run in order and later assignments win:</p>
+<pre><code class="language-bash"># top of /etc/nhc/nhc.conf during the canary
+                 * || export MARK_OFFLINE=0
+      {cn[001-016]} || export MARK_OFFLINE=1</code></pre>
+<p>Now every node runs every check and logs failures, but only <code>cn001-016</code> can actually drain. Leave it a few days. Watch <code>/var/log/nhc.log</code> across the fleet and <code>sinfo -R</code> on the canaries.</p>
+<p>Then widen: <code>{cn[001-128]}</code>, then delete both lines.</p>
+<hr>
+<h2>Phase 4: enforce everywhere, with a circuit breaker</h2>
+<p>Even with a perfect rollout, a future change will eventually go wrong. Add a <strong>circuit breaker</strong>: something outside NHC that notices when &quot;too many&quot; nodes are NHC-drained, and screams.</p>
+<pre><code class="language-bash">#!/bin/bash
+# /usr/local/sbin/nhc-circuit-breaker  -- run every few minutes on the controller
+# Alerts if more than MAX_PCT of nodes are drained by NHC.
+MAX_PCT=${MAX_PCT:-5}
+
+total=$(sinfo -h -N -o &#x27;%N&#x27; | sort -u | wc -l)
+nhc_drained=$(sinfo -h -N -R -o &#x27;%N|%E&#x27; | awk -F&#x27;|&#x27; &#x27;$2 ~ /^NHC/ {print $1}&#x27; | sort -u | wc -l)
+(( total &gt; 0 )) || exit 0
+pct=$(( 100 * nhc_drained / total ))
+
+if (( pct &gt;= MAX_PCT )); then
+    msg=&quot;NHC drained ${nhc_drained}/${total} nodes (${pct}%). Possible bad nhc.conf push.&quot;
+    logger -t nhc-circuit-breaker -p user.crit &quot;$msg&quot;
+    # page a human: replace with your webhook / Alertmanager / mail
+    echo &quot;$msg&quot; | mail -s &quot;[CRIT] NHC circuit breaker&quot; ops@example.org
+fi</code></pre>
+<p>What should happen when it trips? At minimum, a page. Bolder sites also flip a kill switch: push <code>* || export MARK_OFFLINE=0</code> to the top of <code>nhc.conf</code> cluster-wide, so NHC keeps logging but stops draining until a human looks.</p>
+<blockquote><p>[!WARNING] Don&#x27;t make the breaker auto-resume nodes. If 30% of your nodes really did lose Lustre, resuming them recreates 600 black holes at once. Stop <em>new</em> drains; let a human decide about existing ones.</p></blockquote>
+<hr>
+<h2>Day two: logs, metrics and config changes</h2>
+<p><strong>Config lives in Git.</strong> Every change gets a pull request and a one-line &quot;why&quot;. When a node drains on Tuesday, <code>git log -p nhc.conf</code> tells you whether Monday&#x27;s change did it.</p>
+<p><strong>Every config change replays phases 1 to 3 in miniature:</strong> dry run the new file on the fleet without installing it (process substitution works for <code>-c</code> in 1.5), then canary.</p>
+<pre><code class="language-bash"># copy candidate.conf to the nodes first (clush --copy), then:
+clush -bw @compute &quot;/usr/sbin/nhc -a -l- -c /tmp/candidate.conf MARK_OFFLINE=0&quot;</code></pre>
+<p><strong>Logs.</strong> <code>/var/log/nhc.log</code> on each node (logrotate snippet included), failures also to syslog. NHC 1.5 can format syslog messages as <strong>JSON</strong> (<code>-j</code>, or <code>NHC_FMT_JSON=1</code>), which your log pipeline (Loki, Elastic, Splunk) will parse without regex sorcery.</p>
+<p><strong>Metrics worth graphing:</strong></p>
+<ul><li>Count of nodes with an <code>NHC:</code> reason, over time (the circuit breaker&#x27;s number).</li><li>Top 10 NHC failure messages this week. The top one is your next hardware conversation or config fix.</li><li>Time from NHC drain to resume. Long tails mean manual work you could automate (<a href="../../../../../fields/system-administration/node-health-check/checks-and-remediation/auto-remediation/">part 7</a>).</li></ul>
+<p>A crude exporter is ten lines: <code>sinfo -h -N -R -o &#x27;%E&#x27;</code> piped into a textfile for node_exporter&#x27;s textfile collector.</p>
+<hr>
+<h2>Jitter: the &quot;NHC slowed my job&quot; conversation</h2>
+<p>Sooner or later, someone running a tightly coupled MPI code will ask whether NHC is stealing their cycles. Upstream designed NHC to keep &quot;OS jitter&quot; minimal (bash builtins, few forks) and reports no significant jitter in practice, including on very sensitive systems. If it <em>is</em> a concern on your cluster, upstream&#x27;s own suggestions:</p>
+<ol><li>Raise <code>HealthCheckInterval</code> from 300 to 3600 seconds.</li><li>Use <code>HealthCheckNodeState=IDLE</code> (or <code>NONDRAINED_IDLE</code>, knowing <a href="../../../../../fields/system-administration/node-health-check/getting-started/slurm-integration/">the trade-off</a>) so busy nodes aren&#x27;t checked.</li><li>Have heavier checks skip or slim down when a job is running on the node, and rely on the epilog to cover job boundaries.</li></ol>
+<p>Measure before and after with the user&#x27;s actual code. Feelings are not a benchmark.</p>
+<blockquote><p><strong>Takeaway:</strong> dry run with <code>-a -l- MARK_OFFLINE=0</code> across the fleet, triage config bugs vs node bugs, canary with <code>MARK_OFFLINE</code> inside <code>nhc.conf</code>, then enforce behind a circuit breaker. Every config change after that repeats the cycle.</p></blockquote>
+<h3>References</h3>
+<ul><li><a href="https://github.com/mej/nhc#testing">NHC README: Testing, Periodic Execution and the jitter note</a></li><li><a href="https://github.com/mej/nhc/releases/tag/1.5">NHC 1.5 release notes (JSON syslog, PID file, config from pipes)</a></li><li><a href="https://clustershell.readthedocs.io/">ClusterShell documentation</a></li></ul>
+<p><a href="../../../../../#/fields/system-administration/node-health-check/getting-started/rollout-at-scale">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Active Directory — The Senior Engineer&#x27;s Reference Card</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/active-directory/">
+<meta name="description" content="Why LDAP and Active Directory look the way they do, how AD works inside, a PAM and NSS primer, building a domain, and joining Linux or HPC nodes to it.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Active Directory — The Senior Engineer&#x27;s Reference Card">
+<meta property="og:description" content="Why LDAP and Active Directory look the way they do, how AD works inside, a PAM and NSS primer, building a domain, and joining Linux or HPC nodes to it.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/active-directory/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/active-directory/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../.docs/prerender-redirect.js" data-target="../../../#/fields/system-administration/active-directory"></script>
+<main>
+<h1>Active Directory — The Senior Engineer&#x27;s Reference Card</h1>
+<p><em>Why LDAP and Active Directory look the way they do, how AD works inside, a PAM and NSS primer, building a domain, and joining Linux or HPC nodes to it.</em></p>
+<blockquote><p>Scope: history &amp; motivation → internals → PAM/NSS primer → build → Linux/HPC integration → debugging Assumes: zero prior PAM/NSS knowledge, solid Linux sysadmin background</p></blockquote>
+<hr>
+<h2>0. Brief History — Why Any of This Exists</h2>
+<p>Understanding <em>why</em> LDAP and AD look the way they do is worth more than memorizing their syntax. Every weird design choice below is a scar tissue from a real problem.</p>
+<p>Picture the 1980s: a technological landscape where telecom gaints and international standards bodies dreamed of a unified, global digital telephone book for every human, server, and toaster on planet Earth.</p>
+<h3>0.1 The X.500 disaster (1980s)</h3>
+<ul><li>The ITU/ISO designed <strong>X.500</strong>: a grand, formally-specified global directory standard — think &quot;DNS for <em>everything about every person and object on Earth</em>.&quot;</li><li>Access protocol was <strong>DAP</strong> (Directory Access Protocol) — riding on the full OSI network stack, not TCP/IP.</li><li>It was enormous, over-engineered, and required heavyweight OSI infrastructure almost nobody actually ran. It mostly died in production.</li><li>In practice, running the OSI stack required specialized, enterprise-grade gear and networking wizardry that ordinary organizations simply didn&#x27;t have or want. X.500 was too heavy to fly, too expensive to maintain, and it mostly crashed and burned in real-world production. It was a glorious disaster.</li></ul>
+<h3>0.2 LDAP — the &quot;lightweight&quot; escape hatch (1993, University of Michigan)</h3>
+<ul><li><strong>LDAP = Lightweight Directory Access Protocol.</strong> The word &quot;lightweight&quot; is not marketing — it specifically means <em>&quot;X.500&#x27;s data model, but spoken over plain TCP/IP instead of OSI, with a simplified encoding.&quot;</em></li><li>It kept X.500&#x27;s tree-shaped data model (the DN/<code>CN=</code>/<code>OU=</code>/<code>DC=</code> hierarchy you see today) but threw out the transport baggage.</li><li>LDAP itself is <strong>only a protocol</strong> — a wire format and a set of operations (<code>bind</code>, <code>search</code>, <code>add</code>, <code>modify</code>, <code>delete</code>, <code>compare</code>). It does not mandate <em>how</em> the server stores data, <em>how</em> it replicates, or <em>how</em> it authenticates beyond simple bind/SASL. This matters a lot in §0.4.</li></ul>
+<h3>0.3 What was missing before AD, on both sides of the fence</h3>
+<table><thead><tr><th>Problem (pre-1999)</th><th>Unix world&#x27;s answer</th><th>Windows world&#x27;s answer</th></tr></thead><tbody><tr><td>Central user database across many machines</td><td><strong>NIS</strong> (&quot;Yellow Pages&quot;) — flat maps of <code>/etc/passwd</code>, broadcast over the LAN</td><td><strong>NT Domains</strong> — single PDC + BDC replicas, flat namespace</td></tr><tr><td>Security of that database</td><td>NIS sent password hashes essentially in the clear, no real access control, trivially spoofable</td><td>NTLM — password-equivalent hash auth, no ticket expiry model, vulnerable to relay/pass-the-hash</td></tr><tr><td>Scaling to thousands of objects, sites, org units</td><td>NIS had no hierarchy — one flat map per domain</td><td>NT4 domain size was capped in practice (~40,000 objects) and had no OU concept, one write-master (PDC)</td></tr><tr><td>Delegated administration</td><td>Essentially none</td><td>Essentially none</td></tr></tbody></table>
+<p>Both ecosystems hit a wall around the same time: <strong>flat, single-master, weakly-secured directories don&#x27;t scale to a multinational company or a large campus.</strong></p>
+<h3>0.4 Microsoft&#x27;s answer: build a product on top of <em>other people&#x27;s</em> protocols</h3>
+<p>This is the crux of the confusion most people have, so say it plainly:</p>
+<blockquote><p>**Active Directory is not a protocol. It is Microsoft&#x27;s directory <em>server product</em>, and LDAP is merely the interface it exposes for reading/writing objects.** AD bolts LDAP together with Kerberos (borrowed from MIT, not invented by Microsoft), DNS (as the service locator), and a proprietary multi-master replication engine (DRS/RPC) that LDAP itself has no opinion about.</p></blockquote>
+<p>Released with Windows 2000 Server, AD&#x27;s actual motivation was:</p>
+<ol><li>Replace NT4&#x27;s flat, single-master domain model with a <strong>hierarchical, multi-master</strong> one (any DC can accept writes).</li><li>Replace NTLM with <strong>Kerberos</strong> as the primary auth protocol — real ticket expiry, mutual authentication, no password-equivalent secrets crossing the wire.</li><li>Use <strong>DNS</strong> — an open standard already being deployed everywhere in the DNS/Internet boom of the late 90s — as the mechanism clients use to <em>find</em> a domain controller, instead of NetBIOS broadcast/WINS.</li><li>Expose it all over <strong>LDAP</strong> so that non-Windows tools/scripts could still query it without needing Microsoft-proprietary APIs.</li></ol>
+<p>So: <strong>LDAP is the &quot;SQL&quot; of directories — a query language/protocol implemented by many products (OpenLDAP, 389 Directory Server, AD, Oracle Internet Directory...). AD is one specific, commercial, Windows-native implementation that happens to speak LDAP as one of its four faces.</strong></p>
+<h3>0.5 The direct explicit comparison</h3>
+<table><thead><tr><th></th><th><strong>LDAP (the protocol)</strong></th><th><strong>Active Directory (the product)</strong></th></tr></thead><tbody><tr><td>What it is</td><td>An open protocol spec (RFC 4511 etc.)</td><td>A Microsoft server product</td></tr><tr><td>Who &quot;owns&quot; it</td><td>IETF, open standard</td><td>Microsoft</td></tr><tr><td>Implementations</td><td>OpenLDAP, 389DS, ApacheDS, AD, Oracle Unified Directory...</td><td>Windows Server AD DS specifically</td></tr><tr><td>Authentication</td><td>LDAP simple bind (plaintext-ish, or SASL) only</td><td>Kerberos primarily; LDAP simple bind supported too</td></tr><tr><td>Replication</td><td><strong>Not defined by LDAP at all</strong> — up to the implementer</td><td>Proprietary multi-master DRS/RPC replication</td></tr><tr><td>Schema</td><td>Extensible, implementation-specific</td><td>Extensible, but changes are forest-wide and largely irreversible</td></tr><tr><td>Client discovery</td><td>You must be told the server address</td><td>Self-discovering via <strong>DNS SRV records</strong></td></tr><tr><td>Group Policy, SYSVOL, computer objects</td><td>Doesn&#x27;t exist — not an LDAP concept at all</td><td>Core AD feature</td></tr><tr><td>Can you run AD without LDAP?</td><td>N/A</td><td>No — LDAP is how almost everything reads/writes AD objects</td></tr><tr><td>Can you use LDAP without AD?</td><td>Yes — that&#x27;s the majority of LDAP deployments (OpenLDAP on Linux, etc.)</td><td>N/A</td></tr></tbody></table>
+<p><strong>One-line summary:</strong> <em>querying AD with `ldapsearch` works because AD speaks LDAP, not because AD &quot;is&quot; LDAP — the same way you can `curl` a REST API on almost any web server without that server &quot;being&quot; HTTP.</em></p>
+<hr>
+<h2>1. What AD Actually <em>Is</em> Under the Hood</h2>
+<p>Active Directory is four protocols/services wearing a trench coat:</p>
+<table><thead><tr><th>Layer</th><th>Protocol/Port</th><th>Job</th></tr></thead><tbody><tr><td>Directory store</td><td>LDAP (389/636)</td><td>Object read/write — users, groups, computers, GPOs</td></tr><tr><td>Authentication</td><td>Kerberos (88)</td><td>Ticket-based auth, mutual, no password over wire</td></tr><tr><td>Locator service</td><td>DNS (53) — <strong>SRV records</strong></td><td>How clients <em>find</em> a DC in the first place</td></tr><tr><td>Replication</td><td>RPC/DRS (135 + dynamic, or 445 SMB)</td><td>Multi-master sync between Domain Controllers</td></tr><tr><td>File replication</td><td>SYSVOL via DFS-R</td><td>GPOs and login scripts replicated to every DC</td></tr></tbody></table>
+<ul><li>Backing store: <code>NTDS.dit</code> — an ESE (Jet Blue) database, same engine family as Exchange.</li><li>Every object gets a <strong>GUID</strong> (never changes) and a <strong>DN</strong> (Distinguished Name, changes if moved/renamed).</li><li>Schema is itself stored as objects in the <code>CN=Schema,CN=Configuration,...</code> partition — this is why extending AD schema (e.g. for RFC2307 <code>uidNumber</code>/<code>gidNumber</code>) is a <em>replicated, forest-wide, irreversible</em> operation.</li><li>Three NDS partitions per DC: <strong>Schema</strong>, <strong>Configuration</strong> (forest-wide topology), <strong>Domain</strong> (the actual objects) — plus optional <strong>Application partitions</strong> (used by DNS).</li></ul>
+<h3>1.1 Kerberos flow (the part that actually breaks in practice)</h3>
+<p>Named after Cerberus, the three-headed dog guarding the underworld — three parties involved in every exchange: client, KDC, service. Invented at MIT in the 1980s for Project Athena, long before AD existed; Microsoft adopted it wholesale (with proprietary extensions like PAC for authorization data) rather than inventing a new auth protocol.</p>
+<pre><code> Client                     KDC (=DC)                    Service (e.g. sshd)
+   |--- AS-REQ (I&#x27;m ahmed) -----&gt;|
+   |&lt;-- AS-REP (TGT, encrypted) -|      Step 1: prove identity, get TGT
+   |
+   |--- TGS-REQ (TGT + SPN) ----&gt;|
+   |&lt;-- TGS-REP (service ticket)-|      Step 2: exchange TGT for a service ticket
+   |
+   |--- AP-REQ (service ticket) --------------------------&gt;|
+   |&lt;-------------------------- AP-REP (mutual auth) ------|</code></pre>
+<ul><li><strong>AS</strong> = Authentication Service (proves who you are, issues a TGT — Ticket Granting Ticket)</li><li><strong>TGS</strong> = Ticket Granting Service (exchanges a TGT for a ticket to a <em>specific</em> service, identified by an <strong>SPN</strong> — Service Principal Name, e.g. <code>host/gpu209-06.hpc.internal</code>)</li><li><strong>Why this is better than NTLM/passwords-over-wire:</strong> the password itself never crosses the network, even encrypted. It&#x27;s used locally to derive a key that decrypts the TGT — if you don&#x27;t have the right password, decryption produces garbage and you silently fail, no secret is ever transmitted to attack.</li></ul>
+<blockquote><p>⚠️ <strong>Everything here is time-stamped and encrypted with symmetric keys derived from passwords.</strong> Kerberos has a hard <strong>5-minute clock skew tolerance</strong> by default (this exists specifically to make replay attacks with a stolen ticket harder). This single fact causes more AD outages than every other cause combined — remember it, it comes back in §6.</p></blockquote>
+<h3>1.2 FSMO roles — AD is multi-master, <em>except</em> for 5 operations</h3>
+<p>AD&#x27;s multi-master design (any DC accepts writes) is efficient but creates a problem: some operations are fundamentally <em>not</em> safe to do from two places at once (e.g. two DCs independently handing out the same unique ID). Rather than lock the whole directory, Microsoft carved out exactly five narrow operations that get a single-master (&quot;Flexible Single Master Operation&quot;) owner:</p>
+<table><thead><tr><th>Role</th><th>Scope</th><th>Why it can&#x27;t be multi-master</th></tr></thead><tbody><tr><td>Schema Master</td><td>Forest</td><td>Schema changes must be serialized — two DCs adding conflicting attribute definitions simultaneously would corrupt the schema</td></tr><tr><td>Domain Naming Master</td><td>Forest</td><td>Adding/removing domains — prevents two DCs creating domains with colliding names</td></tr><tr><td>RID Master</td><td>Domain</td><td>Hands out blocks of RIDs (Relative IDs, the tail end of a SID) so no two DCs ever mint the same SID for different users</td></tr><tr><td>PDC Emulator</td><td>Domain</td><td>Time sync root for the whole domain, password-change authority, legacy NT4 compatibility target</td></tr><tr><td>Infrastructure Master</td><td>Domain</td><td>Fixes stale cross-domain group references (matters only in multi-domain forests)</td></tr></tbody></table>
+<pre><code class="language-powershell"># Verify which DC holds which role
+netdom query fsmo</code></pre>
+<hr>
+<h2>2. PAM &amp; NSS — Ground-Up Primer (Linux side, required before §5)</h2>
+<p>Everything downstream depends on these two subsystems, so build the mental model properly before touching SSSD.</p>
+<h3>2.1 The problem they each solve</h3>
+<p>Before PAM/NSS existed, every Linux/Unix program that needed to check a password (<code>login</code>, <code>su</code>, <code>sshd</code>, <code>passwd</code>...) had its own hardcoded logic for reading <code>/etc/passwd</code> and <code>/etc/shadow</code>. If you wanted to add a new auth source — say, a fingerprint reader, or a remote directory — you had to <strong>recompile every single program</strong> that did authentication. That&#x27;s obviously untenable.</p>
+<p><strong>PAM and NSS split &quot;identity&quot; into two separate, independent questions</strong>, each solved by a pluggable framework:</p>
+<table><thead><tr><th>Question</th><th>Subsystem</th><th>Example</th></tr></thead><tbody><tr><td>&quot;<strong>Who</strong> is <code>ahmed</code>, and what&#x27;s his UID/GID/home dir/shell?&quot;</td><td><strong>NSS</strong> (Name Service Switch)</td><td><code>getent passwd ahmed</code></td></tr><tr><td>&quot;<strong>Is</strong> this really <code>ahmed</code> — does the password/ticket/fingerprint check out, and is he <em>allowed</em> to log in here right now?&quot;</td><td><strong>PAM</strong> (Pluggable Authentication Modules)</td><td><code>sshd</code> calling into PAM during login</td></tr></tbody></table>
+<p>These are genuinely orthogonal. You can have NSS resolve a user&#x27;s identity from AD while PAM authenticates them against a totally different source (or vice versa) — in practice SSSD provides both, but the separation is why the config lives in two different files.</p>
+<h3>2.2 NSS — Name Service Switch</h3>
+<p>Glibc, at its core, offers C library calls like <code>getpwnam()</code>, <code>getgrnam()</code>, <code>gethostbyname()</code>. NSS is the mechanism that lets glibc decide, <strong>at runtime, without recompiling anything</strong>, <em>where</em> to look up the answer to those calls.</p>
+<p><code>/etc/nsswitch.conf</code>:</p>
+<pre><code>passwd:     files sss
+group:      files sss
+shadow:     files sss
+hosts:      files dns</code></pre>
+<p>Read left to right: for <code>passwd</code> lookups, check local <code>/etc/passwd</code> (<strong>files</strong>) first, then fall through to <strong>sss</strong> (SSSD, which in turn asks AD over LDAP). This is why a <em>local</em> Linux account with the same username as an AD account can silently &quot;win&quot; and mask the AD identity — a classic gotcha.</p>
+<p>Each backend (<code>files</code>, <code>sss</code>, <code>dns</code>, <code>nis</code>...) is a shared library (<code>libnss_sss.so.2</code> etc.) — that&#x27;s the &quot;plugin&quot; in &quot;Name Service Switch.&quot; NSS itself does zero networking; it&#x27;s a dispatcher.</p>
+<pre><code class="language-bash"># See exactly which NSS module answered, and how long it took
+getent passwd ahmed
+# Confirm the shared library actually exists and is loaded
+ldd $(which getent) | grep nss   # (illustrative — real check is via nsswitch, not getent&#x27;s own linking)</code></pre>
+<h3>2.3 PAM — Pluggable Authentication Modules</h3>
+<p>PAM sits <em>underneath</em> login-capable programs (<code>login</code>, <code>sshd</code>, <code>sudo</code>, <code>su</code>, <code>gdm</code>...) and is configured per-service in <code>/etc/pam.d/&lt;service&gt;</code>, e.g. <code>/etc/pam.d/sshd</code>.</p>
+<p>Each line has a <strong>type</strong>, a <strong>control flag</strong>, and a <strong>module</strong>:</p>
+<pre><code>auth     required     pam_sss.so
+account  required     pam_sss.so
+password sufficient   pam_sss.so
+session  optional     pam_sss.so</code></pre>
+<table><thead><tr><th>Type</th><th>Question it answers</th></tr></thead><tbody><tr><td><code>auth</code></td><td>Is the credential (password/ticket) valid?</td></tr><tr><td><code>account</code></td><td>Is the account allowed to log in <em>right now</em>? (expired, locked, outside allowed hours, group-restricted...)</td></tr><tr><td><code>password</code></td><td>Handles password <em>changes</em></td></tr><tr><td><code>session</code></td><td>Runs setup/teardown around the session (mounting home dirs, writing login records, setting up Kerberos credential cache...)</td></tr></tbody></table>
+<table><thead><tr><th>Control flag</th><th>Behavior on failure</th></tr></thead><tbody><tr><td><code>required</code></td><td>Must succeed; continues evaluating the rest of the stack anyway, but the overall result is failure — used so an attacker can&#x27;t tell <em>which</em> module in the stack rejected them</td></tr><tr><td><code>requisite</code></td><td>Must succeed; fails immediately, stack stops right there</td></tr><tr><td><code>sufficient</code></td><td>If it succeeds, stop immediately and grant — skips remaining modules</td></tr><tr><td><code>optional</code></td><td>Result mostly ignored unless it&#x27;s the only module in the stack</td></tr></tbody></table>
+<p><strong>This is why `id ahmed` can work (NSS is happy) while `ssh ahmed@host` still fails (PAM&#x27;s `account` phase is rejecting him, or GSSAPI isn&#x27;t even reaching PAM)</strong> — they&#x27;re genuinely different subsystems being asked genuinely different questions, and diagnosing &quot;AD login doesn&#x27;t work&quot; always means figuring out <em>which</em> of the two is at fault first.</p>
+<h3>2.4 Where SSSD fits</h3>
+<p>SSSD (System Security Services Daemon) is a <strong>single background daemon that implements both an NSS module and a PAM module</strong>, and internally does the actual Kerberos/LDAP network chatter with AD, plus caching so logins survive a brief DC outage. Before SSSD existed, people ran <code>pam_krb5</code> + <code>pam_ldap</code> + <code>nss_ldap</code> as three separate, uncoordinated pieces — SSSD unifies them and adds an offline cache, which is why it&#x27;s now the standard.</p>
+<pre><code> login/sshd
+     │
+   PAM  ──────────────►  pam_sss.so   (authentication — &quot;auth&quot; and &quot;account&quot; phases)
+     │
+   NSS  ──────────────►  nss_sss.so   (getpwnam/getgrnam resolution)
+     │
+   SSSD daemon ─────────► caches, talks Kerberos + LDAP to the DC, handles offline mode</code></pre>
+<hr>
+<h2>3. Building AD From Scratch</h2>
+<h3>3.1 Prerequisites checklist</h3>
+<ul><li>[ ] Static IP on the future DC</li><li>[ ] DNS pointed <strong>at itself first</strong> (not upstream) — chicken/egg, this is intentional: a DC&#x27;s own DNS server <em>is</em> the thing that will host the SRV records clients need, so the DC must trust itself as authoritative before anyone else can be told where to look</li><li>[ ] NTP source reachable (PDC Emulator will become authoritative time source for the domain — see §1.2)</li><li>[ ] Server OS ≥ Windows Server 2016 for modern functional levels</li><li>[ ] Decide <strong>forest/domain functional level</strong> up front — raising it later is one-way (it gates which Kerberos encryption types, replication features, and trust capabilities are available)</li></ul>
+<h3>3.2 Install &amp; promote</h3>
+<pre><code class="language-powershell"># 1. Install the role
+Install-WindowsFeature AD-Domain-Services -IncludeManagementTools
+
+# 2. Promote to first DC in a new forest
+Install-ADDSForest `
+  -DomainName &quot;hpc.internal&quot; `
+  -DomainNetbiosName &quot;HPC&quot; `
+  -InstallDns:$true `
+  -ForestMode &quot;WinThreshold&quot; `
+  -DomainMode &quot;WinThreshold&quot; `
+  -SafeModeAdministratorPassword (ConvertTo-SecureString &quot;DSRM-P@ss&quot; -AsPlainText -Force)</code></pre>
+<blockquote><p>💡 <strong>DSRM password</strong> is separate from the domain admin password — it&#x27;s the <em>local</em> recovery-mode credential for that one DC, used to boot into Directory Services Restore Mode if the NTDS.dit database itself is corrupted. Write it down; it&#x27;s not stored anywhere retrievable.</p></blockquote>
+<h3>3.3 What just happened internally</h3>
+<ol><li>NTDS.dit created at <code>%SystemRoot%\NTDS</code></li><li>SYSVOL share created, seeded with default GPOs (<code>Default Domain Policy</code>, <code>Default Domain Controllers Policy</code>)</li><li>DNS zone <code>hpc.internal</code> created, auto-populated with <strong>SRV records</strong> — this is the part Linux clients will query:</li></ol>
+<pre><code class="language-bash"># Verify SRV records exist — this is how any client (Linux or Windows) discovers a DC
+dig SRV _ldap._tcp.hpc.internal
+dig SRV _kerberos._tcp.hpc.internal</code></pre>
+<p>If those return nothing, <strong>nothing downstream will ever work</strong> — fix DNS before touching a single Linux box.</p>
+<h3>3.4 Verification pass (do this before declaring victory)</h3>
+<pre><code class="language-powershell">dcdiag /v                     # full DC health check
+repadmin /replsummary         # replication health (matters once you add DC #2)
+Get-ADDomainController -Filter *   # confirm DC is registered</code></pre>
+<pre><code class="language-bash"># From any machine, confirm Kerberos realm is answering
+nc -zv dc01.hpc.internal 88
+nc -zv dc01.hpc.internal 389</code></pre>
+<hr>
+<h2>4. Integrating Linux / HPC Nodes</h2>
+<p>This is the part most guides get wrong by using <code>winbind</code> (NTLM-era, built for Samba file-server interop, deprecated for pure Kerberos joins) or raw <code>pam_ldap</code> + <code>nss_ldap</code> (works, but reinvents caching, TTL, and offline auth badly — see §2.4). <strong>Use SSSD.</strong> It&#x27;s the modern standard and is what <code>realmd</code> configures for you automatically.</p>
+<h3>4.1 Join a compute node to the domain</h3>
+<pre><code class="language-bash"># 1. Discover the domain (validates DNS + Kerberos reachability — same SRV records as §3.4)
+realm discover hpc.internal
+
+# 2. Join (creates a computer object + keytab automatically)
+realm join --user=ahmed hpc.internal
+
+# 3. Confirm
+realm list</code></pre>
+<p><code>realm join</code> under the hood:</p>
+<ol><li><code>kinit</code> as <code>ahmed</code> to get a TGT (this is why you need a <em>human</em> AD account with join permission — the join itself is authenticated Kerberos, not anonymous)</li><li>Creates a <strong>computer object</strong> in AD (<code>CN=gpu209-06,CN=Computers,DC=hpc,DC=internal</code>) — the machine itself becomes a first-class Kerberos principal, e.g. <code>gpu209-06$@HPC.INTERNAL</code></li><li>Generates a <strong>machine keytab</strong> at <code>/etc/krb5.keytab</code> — a file containing the node&#x27;s <em>own</em> long-term Kerberos key, used so the node itself can authenticate services (like <code>sshd</code> with GSSAPI, or NFS with Kerberos sec) without a human typing a password</li><li>Writes <code>/etc/sssd/sssd.conf</code>, wiring NSS and PAM to point at SSSD as covered in §2.4</li></ol>
+<h3>4.2 Minimal <code>sssd.conf</code> for an HPC compute node (RFC2307 / POSIX attributes)</h3>
+<pre><code class="language-ini">[sssd]
+domains = hpc.internal
+services = nss, pam
+
+[domain/hpc.internal]
+id_provider = ad
+auth_provider = ad
+access_provider = ad
+
+# Critical for HPC: consistent numeric UID/GID across every node.
+# Without this, SSSD auto-generates UIDs per-node → NFS/Weka permission chaos.
+ldap_id_mapping = False
+ldap_user_uid_number = uidNumber
+ldap_user_gid_number = gidNumber
+
+cache_credentials = True        # offline login survives a DC outage
+enumerate = False               # don&#x27;t bulk-cache every domain user — scale killer at HPC size</code></pre>
+<blockquote><p>⚠️ <strong>`ldap_id_mapping = False` requires the AD schema to actually carry `uidNumber`/`gidNumber` (RFC2307).</strong> This is a legacy extension originally called &quot;Identity Management for Unix,&quot; an add-on Microsoft shipped specifically so AD could interoperate with Unix/Linux NSS — it is <em>not</em> present by default in a fresh AD forest and must be deliberately schema-extended and populated per user. If your forest was never extended this way, set <code>ldap_id_mapping = True</code> and let SSSD algorithmically derive UIDs from the object&#x27;s SID — but then <strong>every node must use the same SSSD ID-mapping algorithm/range</strong>, or a user gets a <em>different</em> UID on different nodes → broken shared-filesystem ownership. This is the #1 cause of &quot;my job&#x27;s output files are owned by nobody&quot; on AD-joined clusters.</p></blockquote>
+<h3>4.3 Slurm-specific note</h3>
+<p>Slurm itself doesn&#x27;t authenticate users — PAM/NSS does, before Slurm ever sees the job (§2 covers exactly how). What Slurm <em>does</em> care about:</p>
+<ul><li><code>slurmd</code> calls the equivalent of <code>getpwnam()</code> under the hood → must resolve identically on every node (→ back to §4.2&#x27;s UID consistency requirement)</li><li><code>MungeAuth</code> is independent of AD entirely — don&#x27;t conflate the two. AD/SSSD gives you <em>who the user is</em> (identity + login authorization); Munge gives you <em>inter-node trust for Slurm&#x27;s own RPC traffic between daemons</em>. They solve completely different problems and neither depends on the other.</li><li>If you gate cluster access via AD group membership, use <code>access_provider = simple</code> in SSSD with <code>simple_allow_groups = hpc-users</code>, not a Slurm-side ACL — keep the trust boundary at the OS layer, so <code>ssh</code> itself already refuses non-members before Slurm is ever involved.</li></ul>
+<h3>4.4 Verification pass</h3>
+<pre><code class="language-bash">realm list                              # confirms join + config source
+getent passwd ahmed                     # NSS resolution working? (§2.2)
+id ahmed                                # UID/GID as expected, matches other nodes?
+kinit ahmed &amp;&amp; klist                    # can this node get a TGT? (§1.1)
+sudo systemctl status sssd              # daemon healthy?
+sssctl user-checks ahmed                # SSSD&#x27;s own built-in diagnostic — very underused</code></pre>
+<hr>
+<h2>5. Knowledge Prerequisites (the stuff that isn&#x27;t optional)</h2>
+<table><thead><tr><th>Concept</th><th>Why you can&#x27;t skip it</th></tr></thead><tbody><tr><td><strong>DNS SRV records</strong></td><td>AD <em>is</em> a DNS-based service locator (§0.4). No SRV records = no domain discovery, full stop.</td></tr><tr><td><strong>NTP / time sync</strong></td><td>Kerberos tickets are timestamped; &gt;5 min skew = silent auth failures with misleading errors (§1.1).</td></tr><tr><td><strong>LDAP DN syntax</strong></td><td><code>CN=</code>, <code>OU=</code>, <code>DC=</code> — every object address, every filter, every ACL references this; inherited straight from X.500 (§0.1–0.2).</td></tr><tr><td><strong>RFC2307 schema</strong></td><td>The bridge between Windows SIDs and POSIX uid/gid — decide your ID-mapping strategy <em>before</em> joining 200 nodes, not after (§4.2).</td></tr><tr><td><strong>PAM vs. NSS separation</strong></td><td>&quot;Login doesn&#x27;t work&quot; is meaningless until you know whether identity resolution or authentication is failing (§2).</td></tr><tr><td><strong>Kerberos realms vs. NetBIOS domains</strong></td><td>Realm names are UPPERCASE by convention (<code>HPC.INTERNAL</code>), domain names are not — mixing these up breaks keytabs silently.</td></tr><tr><td><strong>Site &amp; Subnet topology</strong></td><td>Tells clients which DC is &quot;local&quot; — matters a lot once you have DCs in &gt;1 datacenter/region; a misconfigured site makes every login round-trip to a far-away DC.</td></tr></tbody></table>
+<hr>
+<h2>6. Common Failures &amp; Debug Playbook</h2>
+<h3>6.1 Symptom → Cause → Command matrix</h3>
+<table><thead><tr><th>Symptom</th><th>Likely Cause</th><th>Diagnose With</th></tr></thead><tbody><tr><td><code>kinit: Clock skew too great</code></td><td>NTP drift between node and DC</td><td><code>chronyc tracking</code> / <code>ntpdate -q dc01.hpc.internal</code></td></tr><tr><td><code>realm discover</code> returns nothing</td><td>DNS not pointing at a DC, or SRV records missing</td><td><code>dig SRV _kerberos._tcp.&lt;realm&gt;</code></td></tr><tr><td><code>id user</code> → <code>no such user</code></td><td>SSSD not caching, or <code>access_provider</code> denying, or a <em>local</em> <code>files</code> entry shadowing it (§2.2)</td><td><code>sudo sssctl user-checks &lt;user&gt;</code>, check <code>/var/log/sssd/sssd_&lt;domain&gt;.log</code>, check <code>/etc/passwd</code> for a colliding local entry</td></tr><tr><td>Login works, but wrong UID on this node vs. another</td><td>Inconsistent ID-mapping config across nodes</td><td>Diff <code>sssd.conf</code> across nodes; check <code>ldap_id_mapping</code> setting matches (§4.2)</td></tr><tr><td><code>kinit</code> works, <code>ssh</code> still fails</td><td>NSS is fine but PAM&#x27;s <code>auth</code>/<code>account</code> stack is misordered, or GSSAPI not enabled in sshd (§2.3)</td><td><code>sshd -T | grep -i gssapi</code>; check <code>/etc/pam.d/sshd</code> includes <code>pam_sss.so</code> in the right position</td></tr><tr><td>Node joined, then falls off domain after weeks</td><td>Machine account password rotation missed (default 30-day AD computer password change, tied to the machine&#x27;s own Kerberos principal from §4.1)</td><td><code>sudo net ads testjoin</code> (or <code>realm list</code> for staleness); check <code>adcli</code>/SSSD renewal timer/cron</td></tr><tr><td>DC replication errors</td><td>Network partition, or lingering objects after a DC was force-demoted</td><td><code>repadmin /replsummary</code>, <code>repadmin /showrepl</code> on the DC</td></tr><tr><td>Group membership not applying</td><td><strong>Token bloat / nested-group depth</strong>, or Kerberos ticket cached before group change</td><td>User must <code>kdestroy &amp;&amp; kinit</code> — group membership is baked into the ticket at issue time (§1.1), not re-checked live</td></tr></tbody></table>
+<h3>6.2 The &quot;it&#x27;s always DNS&quot; corollary</h3>
+<p>If nothing else in this doc helps: 90% of AD-Linux integration failures trace back to one of:</p>
+<ol><li>Node&#x27;s <code>/etc/resolv.conf</code> not pointing at an AD-integrated DNS server</li><li>Reverse DNS (PTR record) missing for the node — Kerberos SPN validation can depend on it</li><li>Time not synced</li></ol>
+<p>Check all three <strong>before</strong> diving into SSSD log verbosity.</p>
+<h3>6.3 Turning up log verbosity when stuck</h3>
+<pre><code class="language-ini"># /etc/sssd/sssd.conf
+[domain/hpc.internal]
+debug_level = 9</code></pre>
+<pre><code class="language-bash">sudo systemctl restart sssd
+sudo tail -f /var/log/sssd/sssd_hpc.internal.log</code></pre>
+<p>On the DC side:</p>
+<pre><code class="language-powershell"># Enable Kerberos event logging for the failing auth attempt
+Set-ItemProperty -Path &quot;HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\Kerberos\Parameters&quot; -Name LogLevel -Value 1
+# Then check Event Viewer → System log, source &quot;Kerberos&quot;</code></pre>
+<hr>
+<h2>7. Verification Summary (run this whole block after any change)</h2>
+<pre><code class="language-bash"># --- DNS / discovery (§0.4, §3.3) ---
+dig SRV _ldap._tcp.hpc.internal +short
+dig SRV _kerberos._tcp.hpc.internal +short
+
+# --- Time (§1.1) ---
+chronyc tracking | grep &quot;System time&quot;
+
+# --- Kerberos (§1.1) ---
+kinit ahmed &amp;&amp; klist
+
+# --- NSS/PAM/SSSD (§2, §4) ---
+getent passwd ahmed
+id ahmed
+sssctl user-checks ahmed
+systemctl is-active sssd
+
+# --- Cross-node consistency (run on 2+ nodes, diff output) ---
+id ahmed</code></pre>
+<pre><code class="language-powershell"># --- DC health ---
+dcdiag /v
+repadmin /replsummary
+netdom query fsmo</code></pre>
+<blockquote><p>✅ If every command above returns clean output and UIDs match across nodes, the integration is sound end-to-end: DNS discovery → Kerberos ticket → NSS resolution → PAM authorization → consistent POSIX identity.</p></blockquote>
+<p><a href="../../../#/fields/system-administration/active-directory">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Who&#x27;s Home, and What May They Touch? Sessions and Two Walls</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/programming/local-app-accounts/sessions-and-two-walls/">
+<meta name="description" content="How an app remembers who is signed in, why remember-me stores a fingerprint instead of a token, and why authorization needs one check at the door and another at the data.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Who&#x27;s Home, and What May They Touch? Sessions and Two Walls">
+<meta property="og:description" content="How an app remembers who is signed in, why remember-me stores a fingerprint instead of a token, and why authorization needs one check at the door and another at the data.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/programming/local-app-accounts/sessions-and-two-walls/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/programming/local-app-accounts/sessions-and-two-walls/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../.docs/prerender-redirect.js" data-target="../../../#/programming/local-app-accounts/sessions-and-two-walls"></script>
+<main>
+<h1>Who&#x27;s Home, and What May They Touch? Sessions and Two Walls</h1>
+<p><em>How an app remembers who is signed in, why remember-me stores a fingerprint instead of a token, and why authorization needs one check at the door and another at the data.</em></p>
+<p><em>Local App Accounts, tea talk 3 of 6. Previous: [Sign-In Hygiene](/programming/local-app-accounts/sign-in-hygiene.md). Next: [Old Data and Background Work](/programming/local-app-accounts/old-data-and-background-work.md).</em></p>
+<p>The password was right, and the app now knows Ahmed is home. This talk covers what &quot;home&quot; means in memory, how the app can remember him tomorrow without storing his password, and the part that actually keeps Abdelrahman out of Ahmed&#x27;s clusters.</p>
+<hr>
+<h2>The one-sentence version</h2>
+<p><strong>Authorize at the door and again at the data, and make the build fail when someone forgets the door.</strong></p>
+<hr>
+<h2>Words you&#x27;ll meet</h2>
+<table><thead><tr><th>Term</th><th>Plain meaning</th></tr></thead><tbody><tr><td><strong>Session</strong></td><td>The app&#x27;s memory of &quot;this person is signed in right now&quot;</td></tr><tr><td><strong>Token</strong></td><td>A random secret that stands in for a password after sign-in</td></tr><tr><td><strong>Fingerprint</strong></td><td>A hash of the token, stored instead of the token itself</td></tr><tr><td><strong>Keychain</strong></td><td>The operating system&#x27;s protected store for secrets, tied to the <em>computer</em> user</td></tr><tr><td><strong>Main process / UI process</strong></td><td>In many desktop apps: the part that does privileged work, and the part that draws the window. The UI process is treated as less trusted</td></tr><tr><td><strong>IDOR</strong></td><td><em>Insecure direct object reference</em>: a request names a resource (&quot;cluster 42&quot;) and the app serves it without checking that the asker owns it</td></tr><tr><td><strong>Deny by default</strong></td><td>If no rule explicitly allows a request, it is refused</td></tr></tbody></table>
+<hr>
+<h2>The Memory</h2>
+<p>Once the password is right, the main process notes that Ahmed is home. That note lives in memory in the app&#x27;s main process. Not a cookie, not a file. The screen is told his name and nothing else.</p>
+<p>The note can <strong>announce changes</strong>, and three things listen:</p>
+<ol><li>The Cartographer, who redraws the map of what&#x27;s visible</li><li>The Curtain, which lifts (a new sign-in never starts locked)</li><li>The app itself, which starts or stops all its background work (talk 4)</li></ol>
+<h3>&quot;Keep me signed in on this computer&quot;</h3>
+<p>If Ahmed ticks the box, the app does <em>not</em> remember his password. It makes a <strong>random token</strong>, seals it with the computer&#x27;s keychain, and stores only a <strong>fingerprint</strong> of that token beside his account. On the next launch it unseals the token, fingerprints it and compares. If anything is off (keychain unavailable, token revoked, account gone), you simply get the sign-in screen.</p>
+<ul><li><strong>One slot per computer.</strong> Remembering Abdelrahman replaces Ahmed.</li><li><strong>Sign-out or reset deletes the fingerprint</strong>, revoking the token at once.</li><li><strong>Changing the password revokes the old token</strong>, and if the box was ticked, a fresh one is sealed so Ahmed stays signed in.</li><li><strong>No keychain, no promise.</strong> Where there isn&#x27;t a usable keychain, the box is switched off and says why, instead of promising something it can&#x27;t deliver.</li></ul>
+<p>Why a fingerprint? If someone copies the database, a stored fingerprint can verify a token but can&#x27;t be turned back into one. Storing the token itself would hand over a working key.</p>
+<hr>
+<h2>Wall one: the Bouncer</h2>
+<p>Everything the screen asks of the engine goes past the Bouncer, who asks two questions:</p>
+<ol><li><em>Did this come from the app&#x27;s own page?</em></li><li><em>Is this person allowed to ask this?</em> With nobody signed in, refuse everything except a short list of public doors (the sign-in screens and the window&#x27;s own buttons).</li></ol>
+<p>He also carries a list of what each request is <strong>about</strong>. If a request says &quot;edit cluster 42,&quot; he checks that cluster 42 belongs to a profile the signed-in person owns. Abdelrahman asking for Ahmed&#x27;s cluster gets <em>exactly</em> the same answer as asking for one that doesn&#x27;t exist.</p>
+<p>And here&#x27;s the detail worth stealing: the build has a check that <strong>fails</strong> if anyone adds a request that names a cluster, profile, note or rule and forgets to put it on the Bouncer&#x27;s list. The easiest mistake in this design is also the one the tooling refuses to let through.</p>
+<hr>
+<h2>Wall two: the Cartographer</h2>
+<p>Checking at the door is good; checking at the shelves is better. Every question the app asks the database about profiles, clusters, notifications, reminders or watches passes through one ownership rule. A feature that forgets to filter <em>cannot</em>, because the filter is part of how the database answers.</p>
+<p>The map, short enough to memorise:</p>
+<table><thead><tr><th>Situation</th><th>What you see</th></tr></thead><tbody><tr><td>No accounts exist yet</td><td>Everything, as it always was (so upgrades behave)</td></tr><tr><td>Accounts exist, nobody signed in</td><td>Nothing</td></tr><tr><td>Signed in as Ahmed</td><td>Ahmed&#x27;s profiles, and through them his clusters, notes and so on</td></tr><tr><td>A profile nobody owns</td><td>Nothing, for anybody, and nothing runs for it</td></tr></tbody></table>
+<p>Ownership is a single label, the <strong>owner</strong>, on each profile. Clusters, notes and the rest belong to a profile or a cluster, so they inherit it. Anything new that gets stored must say how it reaches an owner.</p>
+<h3>One click, both walls</h3>
+<p>Abdelrahman clicks <em>Edit</em> on a cluster. The Bouncer checks the request is from the app&#x27;s page and that this cluster is one of <em>his</em>. If not, it&#x27;s refused like &quot;no such cluster.&quot; If it passes, the database applies the ownership rule <em>again</em>. A mistake in one wall isn&#x27;t an open door.</p>
+<hr>
+<h2>What the references recommend</h2>
+<p>IDOR sits under OWASP&#x27;s top-ranked web risk, Broken Access Control. OWASP&#x27;s Authorization Cheat Sheet says to <strong>deny by default</strong>, to <strong>validate permissions on every request</strong> (checking most of them is not enough), and to write tests proving the permissions work. Its Developer Guide checklist adds: send all requests through access checks unless they&#x27;re public, and use a <strong>single component</strong> to make authorization decisions. The Bouncer is that single component, and the build check is the test.</p>
+<blockquote><p><strong>Lesson.</strong> Authorize at the door and again at the data. Make &quot;no access&quot; and &quot;doesn&#x27;t exist&quot; the same answer, so refusals don&#x27;t leak what exists. Store a fingerprint of the token, never the token.</p></blockquote>
+<hr>
+<h2>Recap</h2>
+<ul><li>The session lives in the main process&#x27;s memory, and announces changes to whoever cares.</li><li>&quot;Keep me signed in&quot; stores a fingerprint of a random, keychain-sealed token, with one slot per computer.</li><li>Two walls: a request-level check with a build guard, and an ownership rule inside the database.</li></ul>
+<p><strong>Next tea talk:</strong> <a href="../../../programming/local-app-accounts/old-data-and-background-work/">Old Data and Background Work</a>, where a year of pre-account data finds its owner and two nasty bugs teach a lesson.</p>
+<hr>
+<h2>References</h2>
+<ul><li>OWASP Cheat Sheet Series, <a href="https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html">Authorization Cheat Sheet</a>: deny by default, validate permissions on every request, test the permissions</li><li><a href="https://devguide.owasp.org/en/04-design/02-web-app-checklist/07-access-controls/">OWASP Developer Guide, Enforce Access Controls checklist</a>: route requests through access checks, use a single component for authorization decisions</li><li><a href="https://owasp.org/Top10/2025/A01_2025-Broken_Access_Control/">OWASP Top 10, A01 Broken Access Control</a>: where IDOR sits</li></ul>
+<p><a href="../../../#/programming/local-app-accounts/sessions-and-two-walls">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

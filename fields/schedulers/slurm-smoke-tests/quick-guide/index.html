@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Check That Slurm Still Works After a Change</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-smoke-tests/quick-guide/">
+<meta name="description" content="Which check to run after a change, an upgrade, a policy edit or a repair, with the command and the output that means pass.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Check That Slurm Still Works After a Change">
+<meta property="og:description" content="Which check to run after a change, an upgrade, a policy edit or a repair, with the command and the output that means pass.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-smoke-tests/quick-guide/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-smoke-tests/quick-guide/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/schedulers/slurm-smoke-tests/quick-guide"></script>
+<main>
+<h1>Check That Slurm Still Works After a Change</h1>
+<p><em>Which check to run after a change, an upgrade, a policy edit or a repair, with the command and the output that means pass.</em></p>
+<blockquote><p><strong>Quick guide for</strong> the <a href="../../../../fields/schedulers/slurm-smoke-tests/">Slurm smoke tests</a>. Use it right after a config change, an upgrade, a rule edit or a node repair. You end with a pass, a fail, or a clear &quot;inconclusive&quot;.</p></blockquote>
+<h2>Before you start</h2>
+<ul><li>Run the checks as an ordinary user who may submit jobs, not as root.</li><li>Get the scripts from <a href="../../../../fields/schedulers/slurm-smoke-tests/smoke-scripts/slurm-smoke.sh"><code>smoke-scripts/</code></a>: <code>slurm-smoke.sh</code>, <code>slurm-snapshot.sh</code>, <code>slurm-policy-smoke.sh</code>, <code>node-fit.sh</code>, <code>slurm-db-backup-check.sh</code>.</li><li>If a submit rule requires <code>--time</code>, the test jobs need one too (<code>SMOKE_TIME</code>).</li></ul>
+<hr>
+<h2>Part 1: After any change, a two-minute control-plane check</h2>
+<pre><code class="language-bash">SMOKE_PARTITION=gpu ./slurm-smoke.sh</code></pre>
+<p><strong>Expect:</strong> six <code>PASS</code> lines (munge, ping, nodes, srun, sbatch, sacct) and <code>ALL PASS</code>, exit status <code>0</code>. <strong>If not:</strong> exit <code>1</code> is a failure, so read the <code>FAIL</code> line. Exit <code>2</code> is <code>INCONCLUSIVE</code>: the cluster was busy, so run it again.</p>
+<hr>
+<h2>Part 2: Before and after a <code>slurm.conf</code> change</h2>
+<ol><li>Save the state before.</li></ol>
+<pre><code class="language-bash">   ./slurm-snapshot.sh /tmp/before</code></pre>
+<p><strong>Expect:</strong> a snapshot folder. <strong>If not:</strong> do not change anything yet.</p>
+<ol><li>Dry-run a job against the new rules.</li></ol>
+<pre><code class="language-bash">   sbatch --test-only job.sh</code></pre>
+<p><strong>Expect:</strong> <code>sbatch: Job 103 to start at ... in partition gpu</code>. <strong>If not:</strong> the error names the rule, such as <code>Please set --time</code> or <code>invalid partition specified</code>.</p>
+<ol><li>Try the change on a hidden canary partition first.</li></ol>
+<pre><code class="language-bash">   SMOKE_PARTITION=canary ./slurm-smoke.sh</code></pre>
+<p><strong>Expect:</strong> <code>ALL PASS</code> on one node. <strong>If not:</strong> fix the partition before you touch the real ones.</p>
+<ol><li>Reconfigure, then check.</li></ol>
+<pre><code class="language-bash">   scontrol reconfigure
+   ./slurm-snapshot.sh /tmp/after
+   diff -ru /tmp/before /tmp/after</code></pre>
+<p><strong>Expect:</strong> only the differences you intended, and <code>ALL PASS</code> from the smoke test. <strong>If not:</strong> any error from <code>scontrol reconfigure</code> is a failure, so look at the controller log for <code>error:</code> lines.</p>
+<p><strong>Don&#x27;t:</strong> trust a failed reconfigure. A partition naming a missing node survives it and stops the next restart.</p>
+<hr>
+<h2>Part 3: After an upgrade</h2>
+<ol><li>Restore the backup into a scratch database before the upgrade. <strong>Expect:</strong> <code>BACKUP RESTORES</code> from <code>slurm-db-backup-check.sh</code>. <strong>If not:</strong> you do not have a backup yet.</li><li>Take <code>./slurm-snapshot.sh /root/before-upgrade</code>.</li><li>After the daemons are back, check every version.</li></ol>
+<pre><code class="language-bash">   slurmctld -V; slurmdbd -V; slurmd -V; sinfo -V
+   scontrol show node -o | grep -o &#x27;NodeName=[^ ]*\|Version=[^ ]*&#x27; | paste - -</code></pre>
+<p><strong>Expect:</strong> the target version on every line. <strong>If not:</strong> a node still runs old software.</p>
+<ol><li>Run <code>./slurm-smoke.sh</code>, then <code>sacct</code> for an old job. <strong>Expect:</strong> <code>ALL PASS</code>, and the old job is still readable.</li></ol>
+<p><strong>Don&#x27;t:</strong> expect to roll back once a daemon has started. Also use <code>sacctmgr ping</code> only on 24.11 and newer.</p>
+<hr>
+<h2>Part 4: After a rule, QOS or preemption change</h2>
+<pre><code class="language-bash">slurm-policy-smoke.sh</code></pre>
+<p><strong>Expect:</strong> <code>7 passed, 0 failed</code>: no <code>--qos</code> becomes <code>low</code>, <code>--qos=high</code> becomes <code>high_physics</code>, a job without <code>--time</code> is refused, then a high job evicts a low one and the low job restarts. <strong>If not:</strong> the failing line says which layer broke.</p>
+<table><thead><tr><th>Failing check</th><th>Look at</th></tr></thead><tbody><tr><td><code>no --qos becomes low</code></td><td>The submit script is not loaded or the default routing changed</td></tr><tr><td><code>high job got the node</code></td><td><code>PreemptType</code>, <code>PreemptMode</code> or the QOS <code>Preempt=</code> list</td></tr><tr><td><code>low job was requeued</code></td><td>The victim mode, <code>JobRequeue</code> or <code>--requeue</code></td></tr></tbody></table>
+<p><strong>Run:</strong> stage 1 after any QOS edit or reconfigure, stage 2 after changing <code>PreemptType</code>.</p>
+<hr>
+<h2>Part 5: A node back from repair</h2>
+<ol><li>Compare the hardware with the promise.</li></ol>
+<pre><code class="language-bash">   slurmd -C
+   node-fit.sh</code></pre>
+<p><strong>Expect:</strong> <code>PASS cpus</code>, <code>PASS memory</code> and <code>PASS state</code>. <strong>If not:</strong> <code>FAIL cpus hardware 2, configured 4</code> means the node is not what <code>slurm.conf</code> says.</p>
+<ol><li>Fence the node and probe it.</li></ol>
+<pre><code class="language-bash">   scontrol update NodeName=node2 State=DRAIN Reason=&quot;returning from repair&quot;
+   scontrol create reservation ReservationName=probe StartTime=now Duration=10 \
+       Nodes=node2 Users=tester Flags=MAINT
+   scontrol update NodeName=node2 State=RESUME
+   sbatch -w node2 --reservation=probe -t 1 --wrap=&#x27;hostname; echo SLURMD_NODENAME=$SLURMD_NODENAME&#x27;</code></pre>
+<p><strong>Expect:</strong> the job prints <code>SLURMD_NODENAME=node2</code>. <strong>If not:</strong> the job pends with <code>ReqNodeNotAvail</code>, so check the reservation.</p>
+<ol><li>Remove the fence.</li></ol>
+<pre><code class="language-bash">   scontrol delete ReservationName=probe</code></pre>
+<p><strong>Don&#x27;t:</strong> trust <code>idle</code>. It only means <code>slurmd</code> registered. With <code>config_overrides</code> on, the controller believes the file, not the hardware.</p>
+<hr>
+<h2>Part 6: Before and after a big change, a regression suite</h2>
+<pre><code class="language-bash">grep -E &#x27;^(FAILED|ERROR) tests/&#x27; run.log | sed -E &#x27;s/ - .*//&#x27; | sort &gt; run.fails
+comm -13 baseline.fails after.fails</code></pre>
+<p><strong>Expect:</strong> no output, meaning no new failures. <strong>If not:</strong> every line is a new finding. Old failures are noise.</p>
+<p><strong>Run it:</strong> on a test cluster, with a baseline saved before the change.</p>
+<hr>
+<h2>Tips and tricks</h2>
+<ul><li>Keep every snapshot. When something misbehaves on Thursday, &quot;what changed since Monday&quot; is a <code>diff</code>.</li><li>A canary partition also hosts the scheduled smoke test.</li><li>Give the probe reservation <code>Duration=10</code>. If you forget the last step, the fence expires on its own.</li><li>Let a health check do the routine part: <code>HealthCheckProgram=/usr/sbin/nhc</code> with <code>HealthCheckInterval=300</code>.</li><li>Wait several seconds after a daemon restart before running the smoke test. A run two seconds after reported busy nodes, and one six seconds after did not.</li><li>Give the test job <code>-t</code>, or set <code>SMOKE_TIME</code>, if a submit rule requires <code>--time</code>.</li></ul>
+<h2>Warnings</h2>
+<blockquote><p>[!WARNING] No Slurm upgrade was performed while writing these pages. The upgrade checks are untested end to end.</p></blockquote>
+<ul><li>With <code>slurmdbd</code> stopped, jobs run perfectly and nothing is recorded. Only <code>sacct</code> shows it.</li><li>A dead <code>slurmd</code> is invisible to <code>sinfo</code> for a while. Only launching a task on every node finds it quickly.</li><li>A drained node cannot run a job even inside a reservation, so create the reservation first and resume second.</li><li>With <code>config_overrides</code>, a node with half its configured CPUs shows <code>idle</code>.</li><li>A failed <code>scontrol reconfigure</code> is a warning with a delay on it.</li></ul>
+<h2>If it fails</h2>
+<table><thead><tr><th>What you see</th><th>Likely cause</th><th>Fix</th></tr></thead><tbody><tr><td><code>FAIL srun</code>, but <code>nodes</code> passed</td><td>A dead <code>slurmd</code> the controller has not noticed</td><td>Restart <code>slurmd</code>, run again</td></tr><tr><td><code>FAIL sacct</code>, jobs still run</td><td><code>slurmdbd</code> is down</td><td>Start it</td></tr><tr><td><code>WAIT</code> and <code>INCONCLUSIVE</code></td><td>The cluster is busy</td><td>Run again later</td></tr><tr><td><code>Please set --time, jobs without one are not accepted</code></td><td>A submit rule needs a time limit</td><td>Set <code>SMOKE_TIME</code> or <code>-t</code></td></tr><tr><td><code>ExitCode 0:53</code>, <code>Slurmd could not connect IO</code></td><td>The directory is not writable</td><td>Run from a writable directory</td></tr></tbody></table>
+<p><strong>Why it works:</strong> <a href="../../../../fields/schedulers/slurm-smoke-tests/slurm-smoke-control-plane/">control plane</a>, <a href="../../../../fields/schedulers/slurm-smoke-tests/slurm-smoke-config-change/">config change</a>, <a href="../../../../fields/schedulers/slurm-smoke-tests/slurm-smoke-after-upgrade/">after an upgrade</a>, <a href="../../../../fields/schedulers/slurm-smoke-tests/slurm-smoke-policy/">policy</a>, <a href="../../../../fields/schedulers/slurm-smoke-tests/slurm-smoke-node-readiness/">node readiness</a>, <a href="../../../../fields/schedulers/slurm-smoke-tests/slurm-smoke-regression-suites/">regression suites</a>. Next: <a href="../../../../fields/schedulers/slurm-preemption/">preemption</a>.</p>
+<p><a href="../../../../#/fields/schedulers/slurm-smoke-tests/quick-guide">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

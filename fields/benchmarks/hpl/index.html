@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>HPL: The Benchmark That Built the TOP500 (and Why Your GFLOPS Number Lies a Little)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/benchmarks/hpl/">
+<meta name="description" content="A deep dive into HPL: what it measures, how to calculate theoretical peak, why GFLOPS fall short of it, and how HPL-GPU differs.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="HPL: The Benchmark That Built the TOP500 (and Why Your GFLOPS Number Lies a Little)">
+<meta property="og:description" content="A deep dive into HPL: what it measures, how to calculate theoretical peak, why GFLOPS fall short of it, and how HPL-GPU differs.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/benchmarks/hpl/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/benchmarks/hpl/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../.docs/prerender-redirect.js" data-target="../../../#/fields/benchmarks/hpl"></script>
+<main>
+<h1>HPL: The Benchmark That Built the TOP500 (and Why Your GFLOPS Number Lies a Little)</h1>
+<p><em>A deep dive into HPL: what it measures, how to calculate theoretical peak, why GFLOPS fall short of it, and how HPL-GPU differs.</em></p>
+<blockquote><p>HPL is the benchmark everyone&#x27;s heard of and almost nobody fully understands. This is the deep dive — from &quot;what is DGEMM&quot; to &quot;why is my node only getting 80% of theoretical peak&quot; — written the way I actually think about it when a job finishes and the number on screen doesn&#x27;t match what I expected.</p></blockquote>
+<hr>
+<h2>Part 1 — What HPL Actually Measures</h2>
+<p><strong>HPL (High-Performance Linpack)</strong> measures raw floating-point throughput by solving a dense system of linear equations — the same workload that&#x27;s produced the TOP500 list for three decades. Two numbers you&#x27;ll always see:</p>
+<table><thead><tr><th>Metric</th><th>Meaning</th></tr></thead><tbody><tr><td><strong>Rpeak</strong></td><td>Theoretical peak performance — what the silicon <em>could</em> do on paper</td></tr><tr><td><strong>Rmax</strong></td><td>What HPL actually measured — what the silicon <em>did</em> do</td></tr></tbody></table>
+<p>Everything below is really just an exercise in explaining the gap between those two numbers.</p>
+<h3>The core kernel: DGEMM</h3>
+<p><code>DGEMM</code> = <strong>D</strong>ouble-precision <strong>GE</strong>neral <strong>M</strong>atrix <strong>M</strong>ultiply:</p>
+<p>This one operation eats <strong>95–99% of HPL&#x27;s total runtime</strong>. Everything else — MPI, orchestration, I/O — is rounding error by comparison. When people say &quot;MKL DGEMM,&quot; they mean Intel&#x27;s hand-optimized implementation from oneAPI MKL, handling:</p>
+<ul><li>Multithreaded matrix multiplication</li><li>Cache blocking</li><li>SIMD vectorization (AVX2/AVX-512, depending on CPU)</li><li>Partial NUMA-aware memory access</li></ul>
+<p>The mental model that actually matters:</p>
+<pre><code>HPL performance  ≈  MPI decomposition efficiency  ×  MKL DGEMM efficiency</code></pre>
+<p>MPI slices and distributes the matrix. MKL does the heavy lifting inside each rank. Get either one wrong and your GFLOPS number suffers — which is exactly why P×Q and rank placement (next two sections) matter so much.</p>
+<h3>P × Q: the grid shape that decides your fate</h3>
+<p>HPL arranges your MPI processes (or GPUs) into a 2D grid: <strong>P rows × Q columns</strong>. The matrix is chopped into <code>NB</code>-sized blocks and distributed block-cyclically across that grid. Two phases alternate, and P vs Q governs which bottleneck you hit:</p>
+<table><thead><tr><th>Phase</th><th>Governed by</th><th>What happens</th><th>Sensitivity</th></tr></thead><tbody><tr><td><strong>Column ops</strong> (factorization)</td><td><code>P</code></td><td>LU factorization on a vertical matrix slice — needs synchronous communication among <em>all</em> ranks in that column</td><td>High latency sensitivity — small, frequent messages</td></tr><tr><td><strong>Row ops</strong> (broadcast + update)</td><td><code>Q</code></td><td>Factorized column broadcasts horizontally; other ranks update their portion via GEMM</td><td>Bandwidth/compute bound, largely hidden by look-ahead pipelining</td></tr></tbody></table>
+<blockquote><p>[!TIP] <strong>Rule of thumb: keep P ≤ Q, and keep P as small as practically possible.</strong></p>
+<ul><li><code>P=4, Q=2</code> → too many ranks stall waiting on column-factorization handshakes → GPUs/CPUs idle, GFLOPS drop.</li><li><code>P=2, Q=4</code> → minimal column-sync overhead, and the wider row dimension gives the look-ahead pipeline more parallel breadth to hide broadcast time behind computation.</li></ul>
+<p>For an 8-GPU run, <code>P=2, Q=4</code> isn&#x27;t just <em>a</em> valid choice — it&#x27;s close to mathematically optimal.</p></blockquote>
+<h3>MPI rank placement: the mistake almost everyone makes</h3>
+<p>Most HPL guides say &quot;1 MPI rank per NUMA domain&quot; — but that advice <strong>silently assumes `OMP_NUM_THREADS &gt; 1`</strong>. Get the flags wrong and you can burn a node down to single-digit core utilization without a single error message.</p>
+<pre><code class="language-bash">#SBATCH --cpus-per-task=23
+#SBATCH --ntasks=4
+export OMP_NUM_THREADS=1
+
+mpirun --report-bindings \
+  -np 4 \
+  --bind-to core \
+  --map-by ppr:1:numa \
+  ./xhpl</code></pre>
+<p>This allocates 23 cores × 4 tasks = 92 cores to the job — but with <code>OMP_NUM_THREADS=1</code> and each rank pinned to a single core, <strong>only 4 out of 92 allocated cores ever do work.</strong> That&#x27;s ~4% utilization, and it will silently produce a low GFLOPS number with zero errors.</p>
+<pre><code class="language-bash">mpirun \
+  -np 4 \
+  --map-by ppr:1:numa:PE=23 \
+  --bind-to core \
+  ./xhpl</code></pre>
+<p><code>PE=23</code> tells OpenMPI each rank owns <strong>23 Processing Elements</strong>, so all 92 cores are actually claimed by the 4 ranks.</p>
+<h3>Debugging checklist</h3>
+<p>Run these <em>before</em> you trust a GFLOPS number:</p>
+<pre><code class="language-bash"># 1. Is the job even alive? (thread-level visibility)
+ps -eLo pid,tid,psr,comm | grep xhpl
+
+# 2. What binding did MPI actually apply?
+mpirun --report-bindings -np 4 --bind-to core --map-by ppr:1:numa hostname
+
+# 3. Is Slurm doing what you think it&#x27;s doing?
+srun -n 4 --cpu-bind=verbose bash -c &#x27;echo Rank=$SLURM_PROCID; taskset -cp $$&#x27;</code></pre>
+<p>Expected shape of output for step 3 (masks will differ per node/topology):</p>
+<pre><code class="language-text">cpu-bind=MASK - gpu209-06, task  0  0 [3585787]: mask 0x1fffff9 set
+cpu-bind=MASK - gpu209-06, task  1  1 [3585788]: mask 0x33ffffe000000 set
+...
+pid 3585787&#x27;s current affinity list: 0,3-24
+pid 3585788&#x27;s current affinity list: 25-45,48,49</code></pre>
+<pre><code class="language-text">3521137 3521137   0 xhpl      ← main rank thread, core 0
+3521137 3521163  95 xhpl      ← worker thread pinned to core 95
+3521137 3521164  94 xhpl      ← worker thread pinned to core 94
+...
+(dozens more lines, one per OS thread, each pinned to a distinct core)
+...
+3521140 3521540   0 xhpl      ← last thread of last rank</code></pre>
+<p>The pattern to look for: each rank should spread its worker threads across a <em>distinct, non-overlapping</em> block of cores. If you see multiple ranks&#x27; threads piling onto the same core numbers, your binding is broken.</p>
+<p><strong>One more question worth asking every time:</strong> <em>which BLAS is actually linked into this binary?</em> Some vendor HPL builds spawn internally-threaded MKL DGEMM kernels even when <code>OMP_NUM_THREADS=1</code> — silently using far more cores than your environment variables suggest.</p>
+<pre><code class="language-bash">ldd ./xhpl | egrep &quot;mkl|openblas|blis&quot;</code></pre>
+<hr>
+<h2>Part 2 — Calculating Theoretical Peak (HPL-CPU)</h2>
+<p>Worked example: <strong>Intel Xeon Platinum 8568Y+ (Emerald Rapids)</strong>, 2 sockets × 48 cores = 96 total cores, 4 NUMA nodes, max frequency 2.301 GHz, AVX-512 capable.</p>
+<table><thead><tr><th>NUMA Node</th><th>CPUs</th></tr></thead><tbody><tr><td>0</td><td>0–23</td></tr><tr><td>1</td><td>24–47</td></tr><tr><td>2</td><td>48–71</td></tr><tr><td>3</td><td>72–95</td></tr></tbody></table>
+<h3>The building blocks: SIMD, AVX-512, FMA</h3>
+<p><strong>SIMD</strong> (Single Instruction, Multiple Data) means one instruction operates on many numbers at once instead of one:</p>
+<pre><code class="language-text">Without SIMD:   a1 + b1
+With SIMD:      [a1 a2 a3 a4 a5 a6 a7 a8] + [b1 b2 b3 b4 b5 b6 b7 b8]   ← one instruction</code></pre>
+<p><strong>AVX-512</strong> means a 512-bit register. Since FP64 = 64 bits:</p>
+<p><strong>FMA (Fused Multiply-Add)</strong> collapses <code>c = a*b; d = c+e</code> into a single instruction: <code>d = a*b + e</code>. Mathematically that&#x27;s <strong>1 multiply + 1 add = 2 FLOPs</strong>, done in one shot.</p>
+<h3>Doing the math</h3>
+<p><strong>Step 1 — FLOPs per FMA instruction:</strong></p>
+<p><strong>Step 2 — Why multiply by 2 again:</strong> the 8568Y+ core has <strong>2 independent AVX-512 FMA execution units</strong> (this comes from Intel&#x27;s Emerald Rapids microarchitecture docs, not from <code>lscpu</code>):</p>
+<p><strong>Step 3 — Theoretical peak formula:</strong></p>
+<p>Plugging in numbers:</p>
+<pre><code class="language-text">96 cores × 32 FLOPs/cycle          = 3,072 FLOPs/cycle
+3,072 × 2.301 × 10⁹ cycles/sec     = 7.068672 × 10¹² FLOPs/sec
+                                    = 7.07 TFLOPS  (Rpeak, full 96-core node)</code></pre>
+<p><strong>Step 4 — Adjust for what Slurm actually gave you.</strong> If the job only saw 94 cores (2 reserved elsewhere, e.g. for Weka FS):</p>
+<p><strong>Step 5 — Compare to what you actually measured.</strong> Say HPL reported <code>5,590.64 GFLOPS = 5.59 TFLOPS</code>:</p>
+<p>That gap (≈20%) isn&#x27;t a red flag by itself — it&#x27;s expected. Real systems lose ground to memory stalls, instruction scheduling overhead, AVX frequency throttling, OS jitter, and MPI/OpenMP overhead. <code>Rmax &lt; Rpeak</code> is the rule, not the exception.</p>
+<h3>The AVX frequency trap</h3>
+<p>The formula above assumed the CPU sustains its <strong>maximum advertised frequency (2.301 GHz)</strong> — but sustained AVX-512 workloads routinely throttle lower under real thermal/power conditions:</p>
+<table><thead><tr><th>Sustained AVX Frequency</th><th>Theoretical Peak</th></tr></thead><tbody><tr><td>2.30 GHz</td><td>7.07 TFLOPS</td></tr><tr><td>2.20 GHz</td><td>6.76 TFLOPS</td></tr><tr><td>2.10 GHz</td><td>6.45 TFLOPS</td></tr><tr><td>2.00 GHz</td><td>6.14 TFLOPS</td></tr><tr><td>1.90 GHz</td><td>5.84 TFLOPS</td></tr></tbody></table>
+<blockquote><p>[!IMPORTANT] This is why &quot;efficiency&quot; numbers can be misleading in either direction. If this CPU actually sustained ~1.9–2.0 GHz under AVX-512 load (which is common), that same 5.59 TFLOPS result reflects <strong>91–96% efficiency</strong>, not 79–81%. Always know which denominator you&#x27;re using before declaring a run &quot;bad.&quot;</p></blockquote>
+<h3>Quick reference</h3>
+<table><thead><tr><th>Item</th><th>Value</th></tr></thead><tbody><tr><td>CPU</td><td>Intel Xeon Platinum 8568Y+</td></tr><tr><td>Total Cores</td><td>96</td></tr><tr><td>SIMD Width</td><td>512-bit</td></tr><tr><td>FP64 per vector</td><td>8</td></tr><tr><td>FLOPs per FMA</td><td>16</td></tr><tr><td>FMA units/core</td><td>2</td></tr><tr><td>FLOPs/cycle/core</td><td>32</td></tr><tr><td>Frequency used</td><td>2.301 GHz</td></tr><tr><td>Rpeak (96 cores)</td><td>7.07 TFLOPS</td></tr><tr><td>Rpeak (94 cores)</td><td>6.92 TFLOPS</td></tr><tr><td>Measured HPL</td><td>5.59 TFLOPS</td></tr><tr><td>Efficiency (96c)</td><td>79.1%</td></tr><tr><td>Efficiency (94c)</td><td>80.8%</td></tr></tbody></table>
+<p><strong>Key takeaways:</strong></p>
+<ol><li>Peak depends on core count × SIMD width × FMA units × sustained frequency — nothing else.</li><li>AVX-512 processes 8 FP64 values per instruction.</li><li>FMA doubles throughput by fusing multiply + add.</li><li>This CPU&#x27;s ceiling: 32 FP64 FLOPs/cycle/core.</li><li>5.59 TFLOPS on this node is a solid, well-tuned CPU-only result — context (sustained frequency) determines whether it&#x27;s &quot;good&quot; or &quot;great.&quot;</li></ol>
+<hr>
+<h2>Part 3 — HPL-GPU: A Completely Different Animal</h2>
+<p>Everything above was CPU-bound HPL. <strong>HPL-GPU flips the script entirely</strong> — the GPU now does &gt;95% of the DGEMM trailing-matrix-update FLOPs, and the CPU&#x27;s job shrinks down to three supporting roles:</p>
+<ol><li><strong>Panel factorization</strong> — the LU decomposition of the <em>current</em> panel runs on the host CPU (threaded BLAS) while the GPU chews on the <em>previous</em> panel&#x27;s trailing update. NVIDIA&#x27;s <code>hpl.sh</code> pipelines this via look-ahead, so it&#x27;s overlapped, not serial.</li><li><strong>Data staging</strong> — packing/unpacking buffers before handing them to the GPU across PCIe/NVLink.</li><li><strong>MPI communication</strong> — broadcasting panels between ranks.</li></ol>
+<p>Because of that overlap, HPL-GPU is <strong>far less core-hungry</strong> than CPU-only HPL. Core count matters, but in a threshold way, not a linear way:</p>
+<pre><code>Too few cores    →  panel factorization can&#x27;t keep pace with GPU trailing update
+                 →  GPU stalls waiting on the CPU  →  shows up as low GPU utilization,
+                     not a clean linear slowdown
+
+Enough cores     →  factorization comfortably finishes inside the look-ahead window
+                 →  GPU stays fed  →  adding *more* cores past this point gives
+                     diminishing-to-zero returns, because the GPU is now the bound resource</code></pre>
+<p>Where exactly that &quot;enough&quot; threshold sits isn&#x27;t fixed — it depends on problem size (<code>N</code>) and block size (<code>NB</code>). A bigger <code>N</code> per rank means a bigger panel to factor at each step, which needs more host threads to hide the work under the same GPU compute window.</p>
+<p><strong>The practical implication:</strong> don&#x27;t blindly throw more CPU cores at an HPL-GPU job expecting linear gains the way you would with HPL-CPU. Find the threshold where the GPU stops stalling, and stop there — anything beyond is wasted allocation you could give to another job.</p>
+<p><a href="../../../#/fields/benchmarks/hpl">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

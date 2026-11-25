@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Who Gets Told What: Every Signal Slurm Sends, and Who Actually Hears It</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-preemption/slurm-signals-cheatsheet/">
+<meta name="description" content="Which signals Slurm sends at preemption, GraceTime, --signal, time limits and scancel, whether the batch shell or the srun steps receive them, and how late they really arrive.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Who Gets Told What: Every Signal Slurm Sends, and Who Actually Hears It">
+<meta property="og:description" content="Which signals Slurm sends at preemption, GraceTime, --signal, time limits and scancel, whether the batch shell or the srun steps receive them, and how late they really arrive.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-preemption/slurm-signals-cheatsheet/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-preemption/slurm-signals-cheatsheet/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/schedulers/slurm-preemption/slurm-signals-cheatsheet"></script>
+<main>
+<h1>Who Gets Told What: Every Signal Slurm Sends, and Who Actually Hears It</h1>
+<p><em>Which signals Slurm sends at preemption, GraceTime, --signal, time limits and scancel, whether the batch shell or the srun steps receive them, and how late they really arrive.</em></p>
+<blockquote><p><strong>Part of the [schedulers](/fields/schedulers/slurm-intro.md) directory.</strong> The timings below were measured on a two-node test cluster (Slurm 23.11.4, <code>KillWait=30</code>, accounting on, both <code>slurmd</code> daemons on one Ubuntu 24.04 machine), with a probe script that logged every signal it received and ignored <code>SIGTERM</code> on purpose, so the kill deadline could be seen. Each number is one run, so read them as a shape and not as a specification. Another Slurm version may behave differently, and the <a href="../../../../fields/schedulers/slurm-preemption/slurm-preemption-requeue-signals/">preemption page</a> quotes the newer 26.05 guide. Run the probe in Measure it yourself on your own cluster.</p></blockquote>
+<hr>
+<h2>The message that went to the wrong address</h2>
+<p>Ana has done everything the <a href="../../../../fields/schedulers/slurm-preemption/slurm-preemption-requeue-signals/">preemption page</a> asked. Her batch script traps <code>SIGTERM</code>, runs the trainer in the background, and waits. Her admin has set a two-minute <code>GraceTime</code> on the cluster. On Saturday night her job is preempted, and she reads the log on Sunday expecting a calm &quot;caught signal, checkpoint saved&quot;.</p>
+<p>The log says nothing at all until the very last second, when everything dies at once. The checkpoint is a day old.</p>
+<p>The signal was sent. It simply went to a different address. A Slurm job has two kinds of listeners, and the early warning was addressed to the one Ana was not.</p>
+<hr>
+<h2>Two kinds of listeners</h2>
+<table><thead><tr><th>Listener</th><th>What it is</th><th>Example</th></tr></thead><tbody><tr><td><strong>The batch shell</strong></td><td>The <code>bash</code> process running your <code>sbatch</code> script</td><td>The wrapper with the <code>trap</code></td></tr><tr><td><strong>The steps</strong></td><td>Anything launched with <code>srun</code> inside the job</td><td><code>srun python train.py</code></td></tr></tbody></table>
+<p>The difference is easy to miss, because a command in your script that is <em>not</em> behind <code>srun</code> is not a step at all. It is a child of the batch shell:</p>
+<pre><code class="language-bash">python train.py          # child of the batch shell: not a step
+srun python train.py     # a job step: a different listener</code></pre>
+<p>Almost every signal in this page is addressed to one listener or the other. That is the whole mystery.</p>
+<hr>
+<h2>Who sends what, and to whom</h2>
+<table><thead><tr><th>Event</th><th>Signal</th><th>Batch shell</th><th>srun steps</th></tr></thead><tbody><tr><td>Preemption begins, <code>GraceTime</code> &gt; 0</td><td><code>SIGCONT</code> + <code>SIGTERM</code></td><td><strong>No</strong> (measured)</td><td>Yes, about 1 s later</td></tr><tr><td>Preemption begins, <code>GraceTime</code> = 0</td><td><code>SIGCONT</code> + <code>SIGTERM</code></td><td>Yes</td><td>Yes</td></tr><tr><td>End of grace, time limit, or <code>scancel</code> of the job</td><td><code>SIGCONT</code> + <code>SIGTERM</code>, then after <code>KillWait</code>, <code>SIGKILL</code></td><td>Yes</td><td>Yes</td></tr><tr><td><code>--signal=B:USR1@N</code> near the time limit</td><td><code>USR1</code></td><td>Yes</td><td>No</td></tr><tr><td><code>--signal=USR1@N</code> (no <code>B:</code>) near the time limit</td><td><code>USR1</code></td><td>No</td><td>Yes</td></tr><tr><td>Preemption begins with <code>PreemptParameters=send_user_signal</code> and a <code>--signal</code></td><td>The <code>--signal</code> signal, at once</td><td>Yes if <code>B:</code></td><td>Yes if no <code>B:</code></td></tr><tr><td><code>scancel -s USR1 &lt;job&gt;</code></td><td><code>USR1</code></td><td>No</td><td>Yes</td></tr><tr><td><code>scancel -s USR1 --batch &lt;job&gt;</code></td><td><code>USR1</code></td><td>Yes</td><td>No</td></tr></tbody></table>
+<p>Measured on the test cluster: the preemption rows, the kill sequence, <code>--signal=B:</code> (both near the time limit and with <code>send_user_signal</code>) and the two <code>scancel</code> rows. Not measured: the <code>--signal</code> row without <code>B:</code> and the step half of the <code>send_user_signal</code> row, which follow the <code>sbatch</code> documentation, where a signal without <code>B:</code> goes to the job steps rather than the batch script. <code>scancel --full</code> is described in its man page as signalling the batch script and its children. In one test, a <code>SIGCONT</code> sent with it was reported only by the batch shell, so test it before relying on it.</p>
+<hr>
+<h2>The timelines</h2>
+<p>Each timeline starts when the preempting job is submitted (<code>t = 0</code>). The victim&#x27;s probe logged the signals, and ignored <code>SIGTERM</code>, so it had to be killed.</p>
+<p><strong>GraceTime = 0.</strong> There is no grace period, but a job that ignores <code>SIGTERM</code> still gets <code>KillWait</code> before <code>SIGKILL</code>:</p>
+<pre><code class="language-text">t =  0.6 s   batch shell:  SIGCONT, SIGTERM
+t =  0.6 s   srun step:    SIGTERM (twice), SIGCONT
+t = 33.7 s   preemptor starts (the victim had to be killed: ignored SIGTERM + KillWait 30 s)</code></pre>
+<p><strong>GraceTime = 30, trainer under `srun`.</strong> The step is warned at the start, everybody is told at the end:</p>
+<pre><code class="language-text">t =  0.9 s   srun step:    SIGTERM, SIGCONT            &lt;- the early warning
+t = 54.9 s   batch shell:  SIGCONT, SIGTERM            &lt;- end of grace, noticed late
+t = 54.9 s   srun step:    SIGTERM (twice more), SIGCONT
+t = 87.5 s   preemptor starts (ignored SIGTERM + KillWait)</code></pre>
+<p><strong>GraceTime = 30, trainer in the batch shell only.</strong> No early warning exists for it:</p>
+<pre><code class="language-text">t =  0      (nothing)
+t = 41.3 s   batch shell:  SIGCONT, SIGTERM            &lt;- the only message
+t = 71.2 s   preemptor starts</code></pre>
+<p><strong>GraceTime = 60 with `--signal=B:USR1@300`, without and with `PreemptParameters=send_user_signal`:</strong></p>
+<pre><code class="language-text">without:  t =  0      (nothing)
+          t = 64.0 s   batch shell: SIGCONT, SIGTERM
+with:     t =  1.0 s   batch shell: USR1, SIGCONT     &lt;- prompt warning
+          t = 83.0 s   batch shell: SIGCONT, SIGTERM</code></pre>
+<p>Without <code>send_user_signal</code>, the <code>USR1</code> never fired at preemption, even though the grace period (60 s) was shorter than the 300 s lead time asked for. The idea that <code>--signal</code> might fire at preemption anyway, because preemption moves the job&#x27;s end time closer, did not hold in this version.</p>
+<hr>
+<h2>Everything arrives late (and sometimes early)</h2>
+<p>Slurm checks time limits and grace windows on a periodic tick in the controller, not on a stopwatch:</p>
+<table><thead><tr><th>What</th><th>Asked for</th><th>Observed</th></tr></thead><tbody><tr><td>End of a 30 s grace window</td><td>30 s</td><td>noticed at 41 s and at 55 s (two runs); at about 33 s in an earlier run</td></tr><tr><td>End of a 60 s grace window</td><td>60 s</td><td>noticed at 64 s and at 83 s (two runs)</td></tr><tr><td><code>--signal=B:USR1@90</code> on a 120 s job</td><td>90 s before the end</td><td>arrived at 68 s: <strong>52 s</strong> before the end</td></tr><tr><td>The 120 s time limit itself</td><td>120 s</td><td><code>TERM</code> at 146 s; <code>sacct</code> showed <code>TIMEOUT</code> and <code>Elapsed 00:02:26</code></td></tr><tr><td><code>SIGKILL</code> after <code>SIGTERM</code></td><td><code>KillWait</code> = 30 s</td><td>the preemptor started 30 s after the second <code>SIGTERM</code></td></tr></tbody></table>
+<p>Two lessons. The lead time in <code>--signal</code> is a target, not a promise: the <code>sbatch</code> documentation says the signal can come up to 60 seconds early, and in this test it came about 38 seconds late. And the grace window is <code>GraceTime</code> plus a few to 25 extra seconds on this cluster, so size your checkpoint with room on both sides.</p>
+<p>A job that exits quickly on the first <code>SIGTERM</code> makes all of this moot: the preemptor starts as soon as the victim is gone.</p>
+<hr>
+<h2>Which design to choose</h2>
+<table><thead><tr><th>Where does the trainer run?</th><th>Early warning you get</th><th>What to do</th></tr></thead><tbody><tr><td><code>srun python train.py</code> (a step)</td><td><code>SIGTERM</code> + <code>SIGCONT</code> about 1 s after preemption begins, if <code>GraceTime</code> &gt; 0</td><td>Let the trainer handle <code>SIGTERM</code>: set a flag, checkpoint at a safe boundary, exit</td></tr><tr><td><code>python train.py &amp;</code> in the batch script</td><td>None from <code>GraceTime</code></td><td>Set <code>PreemptParameters=send_user_signal</code> and <code>#SBATCH --signal=B:USR1@N</code>, and trap <code>USR1</code> in the script. Otherwise you hear only at the end of the window</td></tr><tr><td>Anywhere</td><td>Always the final <code>SIGTERM</code></td><td>Trap <code>TERM</code> too. It arrives more than once for steps, so make the handler idempotent</td></tr></tbody></table>
+<p>Whichever you pick, do not write the checkpoint inside the signal handler. Set a flag, return, and let the training loop save at a step boundary.</p>
+<hr>
+<h2>Measure it yourself</h2>
+<p>Because versions differ, thirty minutes with a probe beats a week of guessing. A job script that logs every signal with a timestamp:</p>
+<pre><code class="language-bash">#!/bin/bash
+# probe.sh: logs the signals it receives, then carries on
+for s in TERM CONT USR1 USR2; do
+    trap &quot;echo \&quot;BATCH_GOT_$s \$(date +%s.%N)\&quot;&quot; $s
+done
+echo &quot;BATCH_START $(date +%s.%N)&quot;
+while true; do sleep 1; done</code></pre>
+<p>Submit it as the victim (<code>--exclusive</code>, requeueable, on a node you can spare), land a preemptor on the same node, and subtract the preemptor&#x27;s submit time from each logged time. For the step case, put the same traps in a second script and start it with <code>srun script.sh &amp;</code> followed by <code>wait</code>. Repeat with <code>GraceTime</code> at 0 and at 30, with and without <code>--signal</code> and <code>send_user_signal</code>. The same probe tells you what your version does.</p>
+<hr>
+<h2>Version notes</h2>
+<p>Every timing above is from 23.11.4. The changelogs add: a default <code>UnkillableStepTimeout</code> of 60 s (24.05); <code>SIGKILL</code> through the <code>cgroup.kill</code> interface (25.05); and in 26.05 &quot;KillWait will be honored when the task does not end with the TERM signal&quot;, <code>srun --ignore-signals</code>, and no delay in cancelling a job while <code>slurmstepd</code> is launching a task. The <code>KillWait</code> line concerns exactly the case measured here, so rerun the probe first. <a href="../../../../fields/schedulers/slurm-cluster-operations/slurm-version-changes/">Version changes 23.11 to 26.05</a> has the list.</p>
+<hr>
+<h2>Back to Ana&#x27;s Saturday night</h2>
+<p>With this page in hand, Ana changes one line: the wrapper starts the trainer with <code>srun</code>, so the trainer is a step and receives the early <code>SIGTERM</code> itself. Her admin also sets <code>PreemptParameters=send_user_signal</code>, and she adds <code>--signal=B:USR1@120</code>, so the batch shell is warned too. Both handlers do the same thing: set a flag, checkpoint at the next step boundary, exit.</p>
+<p>Next Saturday the job is preempted again. This time the log has a calm line about a caught signal, a checkpoint that is two minutes old, and a requeue. The message had not been lost on the way to her; it had just been addressed to a step.</p>
+<p><strong>Takeaway:</strong> a job has two listeners, the batch shell and the <code>srun</code> steps; the early <code>GraceTime</code> warning goes to the steps, the <code>--signal=B:</code> warning goes to the shell (and only at preemption with <code>send_user_signal</code>), and every timing is a tick, so budget for lateness.</p>
+<p><strong>Next:</strong> back to <a href="../../../../fields/schedulers/slurm-preemption/slurm-preemption-requeue-signals/">Dying Politely</a> for the checkpoint-and-requeue wrapper that these signals feed.</p>
+<hr>
+<h2>📜 The Scroll (keep this)</h2>
+<pre><code class="language-text">Two listeners:    batch shell (your script)   vs   steps (things behind srun)
+Early SIGTERM:    GraceTime &gt; 0 -&gt; to srun STEPS at once, NOT to the batch shell (23.11.4)
+End of grace:     SIGCONT+SIGTERM to everyone; then KillWait -&gt; SIGKILL
+Batch shell warn: --signal=B:USR1@N  +  PreemptParameters=send_user_signal (else only at the end)
+Timing:           ticks, not stopwatches; grace +3..+25 s, --signal can be late (52 s, not 90 s)
+scancel -s SIG:   steps by default; --batch for the shell
+Handler rules:    set a flag, never save inside the handler, make it idempotent
+Don&#x27;t guess:      run probe.sh with your GraceTime and your version</code></pre>
+<p>Signals are letters with an address on them. Half of the debugging is checking whether the address was the shell or the step.</p>
+<hr>
+<h2>References</h2>
+<ul><li><a href="https://slurm.schedmd.com/preempt.html">Slurm: Preemption</a> (<code>GraceTime</code>, signals at preemption)</li><li><a href="https://slurm.schedmd.com/sbatch.html">Slurm: sbatch</a> (<code>--signal</code>, <code>B:</code>)</li><li><a href="https://slurm.schedmd.com/scancel.html">Slurm: scancel</a> (<code>--signal</code>, <code>--batch</code>, <code>--full</code>)</li><li><a href="https://slurm.schedmd.com/slurm.conf.html">Slurm: slurm.conf</a> (<code>KillWait</code>, <code>PreemptParameters</code>)</li></ul>
+<p><a href="../../../../#/fields/schedulers/slurm-preemption/slurm-signals-cheatsheet">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

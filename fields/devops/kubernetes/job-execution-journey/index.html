@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The Job Execution Journey: From kubectl apply to the First All-Reduce</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/kubernetes/job-execution-journey/">
+<meta name="description" content="From kubectl apply to the first NCCL all-reduce of an 8-GPU job, via the API server, Kueue, operators, scheduler, device plugin, runtime and Multus.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="The Job Execution Journey: From kubectl apply to the First All-Reduce">
+<meta property="og:description" content="From kubectl apply to the first NCCL all-reduce of an 8-GPU job, via the API server, Kueue, operators, scheduler, device plugin, runtime and Multus.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/kubernetes/job-execution-journey/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/kubernetes/job-execution-journey/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/devops/kubernetes/job-execution-journey"></script>
+<main>
+<h1>The Job Execution Journey: From kubectl apply to the First All-Reduce</h1>
+<p><em>From kubectl apply to the first NCCL all-reduce of an 8-GPU job, via the API server, Kueue, operators, scheduler, device plugin, runtime and Multus.</em></p>
+<blockquote><p><strong>Page 8 of the [Kubernetes series](/fields/devops/kubernetes/README.md).</strong> A distributed training job passes through about a dozen components before its first gradient crosses the network. This page follows one 8-GPU job through all of them, in the order they actually run, and fact-checks a popular description of that journey along the way. By the end you&#x27;ll know which component to blame when a job is stuck, and you&#x27;ll be able to narrate the whole path in an interview without the three mistakes most descriptions make.</p></blockquote>
+<hr>
+<h2>Where is my job?</h2>
+<p>A researcher runs <code>kubectl apply -f training-job.yaml</code> for an 8-GPU run: two nodes, four GPUs each. The command returns instantly: <code>trainjob.trainer.kubeflow.org/llama-ft created</code>.</p>
+<p>Then nothing. No pods. <code>kubectl get pods</code> shows an empty list for ten minutes.</p>
+<p>She messages the platform team: &quot;Kubernetes lost my job.&quot; It didn&#x27;t. Her job is sitting, on purpose, at stop 2 of a six-stop journey, exactly where the cluster was designed to park it. The platform engineer who knows the stops finds it in thirty seconds. The one who doesn&#x27;t starts restarting things.</p>
+<p>Let&#x27;s learn the stops.</p>
+<hr>
+<h2>The popular version, fact-checked</h2>
+<p>A widely shared description of this journey has five steps. It&#x27;s a good skeleton with three real errors, and they matter because they send you to the wrong component when something breaks.</p>
+<table><thead><tr><th>Step in the popular version</th><th>Verdict</th><th>What&#x27;s actually true</th></tr></thead><tbody><tr><td>1. API server authenticates, validates the custom resource, stores it in etcd</td><td><strong>Mostly right</strong></td><td>It also <strong>authorizes</strong> the request and runs <strong>admission control</strong>, which can change or reject it, before validation and storage</td></tr><tr><td>2. The PyTorch Operator watches for <code>PyTorchJob</code>s and creates a launcher pod, worker pods and headless Services</td><td><strong>Outdated, and out of order</strong></td><td>Kubeflow Trainer v2&#x27;s <code>TrainJob</code> replaces framework-specific CRDs like <code>PyTorchJob</code>. &quot;Launcher&quot; is an MPI concept; <code>PyTorchJob</code> used master and worker. And with Kueue, the operator creates no pods until the job is admitted</td></tr><tr><td>3. Kueue intercepts unscheduled pods, gang-schedules them and binds them to nodes</td><td><strong>Wrong about what Kueue is</strong></td><td>Kueue is a job <strong>queueing and admission</strong> controller. It holds whole jobs suspended until quota allows, then lets them start; <strong>kube-scheduler</strong> places and binds the pods</td></tr><tr><td>4. The kubelet asks the device plugin over gRPC; the plugin finds free GPU PCIe addresses and has the runtime mount drivers and CUDA libraries</td><td><strong>Partly right</strong></td><td>The kubelet&#x27;s device manager tracks and assigns device IDs; the plugin&#x27;s <code>Allocate</code> tells the kubelet how to expose them; the <strong>NVIDIA Container Toolkit</strong> injects the driver libraries. The CUDA toolkit libraries come from the container image</td></tr><tr><td>5. The runtime pulls images and boots containers; Multus adds RDMA interfaces via SR-IOV; NCCL uses them</td><td><strong>Right, but the order is reversed</strong></td><td>The pod&#x27;s network, including Multus&#x27;s extra interfaces, is set up when the pod sandbox is created, <strong>before</strong> the training containers start</td></tr></tbody></table>
+<p>Now the stops, in the order they really happen.</p>
+<hr>
+<h2>Stop 1: the API server&#x27;s four gates</h2>
+<p>Every request to Kubernetes goes through <code>kube-apiserver</code>, and the official docs describe it as a series of gates:</p>
+<ol><li><strong>Authentication</strong>: who are you? Client certificate, token, or an identity provider. Fail: HTTP 401.</li><li><strong>Authorization</strong>: are you allowed to create this, in this namespace? Usually RBAC. Fail: HTTP 403.</li><li><strong>Admission control</strong>: modules that can <strong>modify or reject</strong> the object. The docs stress the difference: if any admission controller rejects, the request is rejected immediately, and admission controllers can also set defaults.</li><li><strong>Validation and storage</strong>: the object is checked against its schema (for a custom resource, the schema its CRD defines) and written to <strong>etcd</strong>.</li></ol>
+<p>Gate 3 is the one people forget, and it&#x27;s where our job&#x27;s fate gets decided. Kueue installs an admission webhook. When the <code>TrainJob</code> arrives in a namespace that uses a Kueue queue, the webhook marks the job <strong>suspended</strong> before it&#x27;s even stored. That&#x27;s why the researcher&#x27;s pods never appeared.</p>
+<hr>
+<h2>Stop 2: Kueue says &quot;not yet&quot;</h2>
+<p>Kueue&#x27;s own README describes it precisely: a job-level manager that decides <strong>when a job should be admitted to start</strong> (as in, pods can be created) and <strong>when it should stop</strong>. The original Kueue announcement on the Kubernetes blog explains the design choice: rather than replacing kube-scheduler, Kueue uses the job&#x27;s <strong>suspend</strong> field to say &quot;start&quot; or &quot;wait,&quot; and <strong>delegates the actual pod-to-node scheduling to kube-scheduler</strong>.</p>
+<p>So Kueue never touches a pod. It works one level up:</p>
+<ol><li>The suspended job joins a <strong>queue</strong>.</li><li>When it reaches the head of its ClusterQueue, Kueue checks whether <strong>all</strong> of the job&#x27;s resource requests fit the available <strong>quota</strong>. By default it never admits part of a job.</li><li>If they fit, Kueue un-suspends the job, optionally adding node selectors for the right kind of nodes.</li></ol>
+<p>That&#x27;s Kueue&#x27;s main defense for <strong>all-or-nothing</strong> behavior, and its docs are honest about the limits. Quota alone is <strong>blind to node layout</strong>: eight GPUs of quota doesn&#x27;t guarantee two nodes with four free GPUs each. Two more mechanisms close the gap:</p>
+<table><thead><tr><th>Mechanism</th><th>What it adds</th></tr></thead><tbody><tr><td><strong>Topology Aware Scheduling (TAS)</strong></td><td>Kueue only admits the job if all its pods fit into the requested topology domains, checking real placement before committing</td></tr><tr><td><strong>`waitForPodsReady`</strong></td><td>A timeout-based safety net: if an admitted job&#x27;s pods aren&#x27;t all running in time, Kueue suspends it again and requeues it</td></tr></tbody></table>
+<p>Our researcher&#x27;s job is here: queued behind two other teams&#x27; jobs, waiting for quota. Nothing is lost. It&#x27;s in line.</p>
+<blockquote><p>[!NOTE] Kueue isn&#x27;t the only option. Volcano is a separate batch <strong>scheduler</strong> that does place pods itself, and recent Kubernetes releases have been adding native gang scheduling to kube-scheduler (<a href="../../../../fields/devops/kubernetes/isolating-gpu-workloads/">page 7</a>). Know which one your cluster runs before you debug.</p></blockquote>
+<hr>
+<h2>Stop 3: the operator builds the job</h2>
+<p>Once admitted, the training operator turns one high-level object into the pieces a distributed job needs.</p>
+<p>The current Kubeflow project, <strong>Kubeflow Trainer v2</strong>, replaces the old per-framework CRDs (<code>PyTorchJob</code>, <code>TFJob</code>, <code>MPIJob</code>) with a single <strong>`TrainJob`</strong>, which points at a reusable <strong>training runtime</strong> such as <code>torch-distributed</code>. Under the hood, Trainer v2 translates each <code>TrainJob</code> into a <strong>JobSet</strong>, a Kubernetes API for running a group of Jobs as one unit, which creates:</p>
+<ul><li>the <strong>pods</strong> for each training node,</li><li>a <strong>headless Service</strong>, so pods can find each other by stable DNS names, which is how <code>torchrun</code>&#x27;s nodes locate their rendezvous point,</li><li>and the environment <code>torchrun</code> needs (node count, ranks, master address), filled in by the runtime.</li></ul>
+<p>If your cluster still runs the older Training Operator v1, a <code>PyTorchJob</code> produces a <strong>master</strong> pod and <strong>worker</strong> pods with Services. The &quot;launcher&quot; pod in the popular description belongs to <strong>MPIJob</strong>, where a launcher starts <code>mpirun</code> across workers.</p>
+<hr>
+<h2>Stop 4: kube-scheduler picks nodes</h2>
+<p>Now there are pods, and each one is <strong>unscheduled</strong>. kube-scheduler takes them one by one (or as a group, with native gang scheduling) through two phases:</p>
+<ul><li><strong>Filter</strong>: drop nodes that can&#x27;t run the pod. Not enough free <code>nvidia.com/gpu</code>? Out. A taint the pod doesn&#x27;t tolerate? Out. Doesn&#x27;t match the node selector Kueue added? Out.</li><li><strong>Score</strong>: rank the survivors and pick the best.</li></ul>
+<p>Then it <strong>binds</strong> the pod: it records the chosen node name on the pod object through the API server. That&#x27;s all &quot;scheduling&quot; means in Kubernetes. Nothing has started running yet.</p>
+<p>This is also where <a href="../../../../fields/devops/kubernetes/isolating-gpu-workloads/">page 7&#x27;s</a> taints, tolerations and affinity do their work, here in kube-scheduler, not in Kueue.</p>
+<hr>
+<h2>Try it before you scroll</h2>
+<p>☕ Three stuck jobs. At which stop is each one waiting?</p>
+<ol><li>The <code>TrainJob</code> exists, but <code>kubectl get pods</code> shows nothing for that job.</li><li>The pods exist, all <code>Pending</code>, with an event saying <code>0/12 nodes are available: insufficient nvidia.com/gpu</code>.</li><li>The pods are assigned to nodes, but stuck in <code>ContainerCreating</code>.</li></ol>
+<p>Answers: (1) <strong>stop 2</strong>: Kueue hasn&#x27;t admitted it, so check the workload&#x27;s status and the queue; (2) <strong>stop 4</strong>: kube-scheduler can&#x27;t find room, often because Kueue&#x27;s quota said yes but no node has enough free GPUs, exactly the gap TAS closes; (3) <strong>stop 5 or 6</strong>: on the node, so check device allocation, image pulls and network attachment.</p>
+<hr>
+<h2>Stop 5: the kubelet and the device plugin</h2>
+<p>On each chosen node, the <strong>kubelet</strong> notices a pod bound to it and starts making it real. For the GPUs, three components cooperate, and the popular description blurs them together.</p>
+<p><strong>The kubelet&#x27;s device manager does the bookkeeping.</strong> The NVIDIA device plugin, running as a DaemonSet, registered with the kubelet over gRPC on a Unix socket under <code>/var/lib/kubelet/device-plugins/</code> and has been streaming its list of healthy GPUs ever since (<code>ListAndWatch</code>). The kubelet only reports the <strong>count</strong> to the API server; it keeps the device IDs itself and decides which ones this pod gets. A plugin can suggest a preferred set (<code>GetPreferredAllocation</code>), useful for picking GPUs that share an NVLink or PCIe switch.</p>
+<p><strong>The device plugin says how to expose them.</strong> The official docs say <code>Allocate</code> is called <strong>during container creation</strong> so the plugin can run device-specific steps and instruct the kubelet how to make the devices available: environment variables, device nodes, mounts, or, since the kubelet gained support for it (GA in Kubernetes 1.31), fully qualified <strong>CDI</strong> device names.</p>
+<p><strong>The NVIDIA Container Toolkit does the injection.</strong> When the container runtime creates the container, NVIDIA&#x27;s toolkit, either as a runtime hook or through a CDI specification generated with <code>nvidia-ctk cdi generate</code>, injects the selected GPUs&#x27; device nodes and the host&#x27;s <strong>driver</strong> libraries into the container.</p>
+<p>What&#x27;s <em>not</em> injected: the <strong>CUDA toolkit</strong>. NVIDIA&#x27;s toolkit docs note that you don&#x27;t need the CUDA toolkit on the host at all, only the driver. CUDA libraries like cuBLAS and NCCL come from the container image. That&#x27;s why one node can run containers built for different CUDA versions, as long as the host driver is new enough for all of them.</p>
+<blockquote><p>[!TIP] There&#x27;s a newer path. <strong>Dynamic Resource Allocation (DRA)</strong>, GA since Kubernetes 1.34, lets a workload describe the devices it needs and leaves it to the scheduler to allocate actual devices. Device plugins still dominate GPU clusters today, but DRA is where Kubernetes device management is heading.</p></blockquote>
+<hr>
+<h2>Stop 6: network first, then containers</h2>
+<p>Before any of your containers start, the kubelet asks the container runtime (containerd or CRI-O) to create the pod&#x27;s <strong>sandbox</strong>, and that&#x27;s when networking is set up, by calling the cluster&#x27;s CNI plugins. Only then are images pulled and the training containers created.</p>
+<p>The default pod network is an <strong>overlay</strong>, fine for web traffic and far too slow for all-reduces. So GPU clusters add a second network:</p>
+<ul><li><strong>Multus</strong> is a <strong>meta-plugin</strong>: it doesn&#x27;t implement networking itself, it calls other CNI plugins, so a pod can have its normal interface <strong>plus</strong> extra ones described by <code>NetworkAttachmentDefinition</code> resources.</li><li>The <strong>SR-IOV device plugin</strong> advertises a NIC&#x27;s <strong>virtual functions</strong> (slices of one physical card that look like separate PCIe devices) as schedulable resources, and the <strong>SR-IOV CNI</strong> plugs one into the pod. Alternatively, an <strong>RDMA shared device plugin</strong> exposes RDMA devices to pods without slicing.</li><li><strong>NVIDIA&#x27;s Network Operator</strong> installs these pieces, along with the networking driver and the peer-memory support that GPUDirect RDMA needs.</li></ul>
+<p>Then the containers start, <code>torchrun</code> finds its peers through the headless Service, and NCCL&#x27;s first all-reduce goes over the RDMA interface, ideally GPU memory to network card to GPU memory, with no CPU in the way (<a href="../../../../fields/system-administration/ai-storage-and-fabric/rdma-infiniband-gpudirect/">RDMA and GPUDirect</a>).</p>
+<p>The first gradient has crossed the network. Six stops, about a dozen components.</p>
+<hr>
+<h2>The whole journey on one page</h2>
+<pre><code class="language-mermaid">sequenceDiagram
+    participant U as Researcher
+    participant A as kube-apiserver
+    participant K as Kueue
+    participant O as Trainer / JobSet
+    participant S as kube-scheduler
+    participant L as kubelet + device plugin
+    participant R as runtime + CNI/Multus
+    U-&gt;&gt;A: kubectl apply TrainJob
+    A-&gt;&gt;A: authn, authz, admission (Kueue webhook suspends), validate, etcd
+    K-&gt;&gt;A: quota fits: un-suspend job
+    O-&gt;&gt;A: create pods + headless Service
+    S-&gt;&gt;A: filter, score, bind each pod to a node
+    L-&gt;&gt;L: assign GPU IDs, Allocate (env, devices, CDI)
+    L-&gt;&gt;R: create sandbox: pod network + RDMA interface
+    R-&gt;&gt;R: pull image, create container, inject driver libs
+    R--&gt;&gt;U: torchrun starts, NCCL all-reduce over RDMA</code></pre>
+<table><thead><tr><th>Stop</th><th>Component</th><th>Decides</th><th>Common mix-up</th></tr></thead><tbody><tr><td>1</td><td>kube-apiserver (+ etcd)</td><td>Whether the request is allowed and well-formed</td><td>Forgetting authorization and admission</td></tr><tr><td>2</td><td>Kueue</td><td><strong>When</strong> the whole job may start</td><td>Thinking it schedules or binds pods</td></tr><tr><td>3</td><td>Training operator / JobSet</td><td><strong>What</strong> pods and Services exist</td><td><code>PyTorchJob</code> &quot;launcher&quot; pods</td></tr><tr><td>4</td><td>kube-scheduler</td><td><strong>Where</strong> each pod runs</td><td>Crediting Kueue with placement</td></tr><tr><td>5</td><td>kubelet, device plugin, NVIDIA Container Toolkit</td><td><strong>Which</strong> GPUs, and how they appear in the container</td><td>Thinking CUDA libraries come from the host</td></tr><tr><td>6</td><td>Container runtime, CNI, Multus</td><td>The pod&#x27;s networks, then its containers</td><td>Network set up after containers start</td></tr></tbody></table>
+<hr>
+<h2>When it gets stuck: which stop to check</h2>
+<table><thead><tr><th>Symptom</th><th>Stop</th><th>First command</th></tr></thead><tbody><tr><td><code>kubectl apply</code> fails with 401 or 403</td><td>1</td><td>Check your kubeconfig credentials and RBAC (<code>kubectl auth can-i create trainjobs</code>)</td></tr><tr><td><code>apply</code> rejected with a webhook error</td><td>1</td><td>Read the message: an admission webhook (often Kueue or a policy engine) refused it</td></tr><tr><td>Job exists, no pods</td><td>2</td><td><code>kubectl get workloads -n &lt;ns&gt;</code> and the ClusterQueue&#x27;s status</td></tr><tr><td>Pods <code>Pending</code>, <code>insufficient nvidia.com/gpu</code></td><td>4</td><td><code>kubectl describe pod</code>: quota admitted it but no node fits; consider TAS</td></tr><tr><td>Pods <code>Pending</code>, <code>untolerated taint</code></td><td>4</td><td>Tolerations and selectors (<a href="../../../../fields/devops/kubernetes/isolating-gpu-workloads/">page 7</a>)</td></tr><tr><td><code>ContainerCreating</code> for a long time</td><td>5-6</td><td><code>kubectl describe pod</code> events: image pull, device allocation, or network attachment errors</td></tr><tr><td>Containers run, NCCL is slow or falls back to TCP</td><td>6</td><td>Check the pod has its RDMA interface and NCCL sees it (<a href="../../../../fields/benchmarks/nccl/">NCCL benchmark guide</a>)</td></tr><tr><td>Admitted job requeued after a timeout</td><td>2</td><td><code>waitForPodsReady</code> fired: some pods never became ready</td></tr></tbody></table>
+<p><strong>Takeaway:</strong> the API server admits the request, Kueue decides when the whole job may start, the operator decides what pods exist, kube-scheduler decides where they run, the kubelet and device plugin decide which GPUs they get, and the network is plumbed before the containers start, so when a job is stuck, find the stop before you touch anything.</p>
+<p>Back to the <a href="../../../../fields/devops/kubernetes/">series README</a>.</p>
+<h3>References</h3>
+<ul><li><a href="https://kubernetes.io/docs/reference/access-authn-authz/controlling-access/">Kubernetes: Controlling Access to the Kubernetes API (authentication, authorization, admission, storage)</a></li><li><a href="https://kubernetes.io/blog/2022/10/04/introducing-kueue">Kubernetes blog: Introducing Kueue (suspend, delegation to kube-scheduler)</a></li><li><a href="https://kueue.sigs.k8s.io/docs/concepts/all_or_nothing/">Kueue: All-or-nothing scheduling (quota admission, TAS, waitForPodsReady)</a></li><li><a href="https://github.com/kubernetes-sigs/kueue">Kueue repository README</a></li><li><a href="https://kubeflow.org/docs/components/trainer/operator-guides/migration">Kubeflow Trainer: Migrating to Trainer v2 (TrainJob replaces PyTorchJob)</a></li><li><a href="https://blog.kubeflow.org/trainer/intro/">Kubeflow blog: Introducing Kubeflow Trainer V2</a></li><li><a href="https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/device-plugins/">Kubernetes: Device Plugins (registration, ListAndWatch, Allocate, CDI)</a></li><li><a href="https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/arch-overview.html">NVIDIA Container Toolkit: Architecture Overview</a></li><li><a href="https://kubernetes.io/blog/2025/09/01/kubernetes-v1-34-dra-updates/">Kubernetes blog: Kubernetes v1.34, DRA has graduated to GA</a></li><li><a href="https://developer.nvidia.com/blog/?p=34099">NVIDIA developer blog: NVIDIA Network Operator (Multus, SR-IOV, RDMA shared device plugin)</a></li><li><a href="https://www.redhat.com/en/blog/demystifying-multus">Red Hat: Demystifying Multus</a></li></ul>
+<p><a href="../../../../#/fields/devops/kubernetes/job-execution-journey">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

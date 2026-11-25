@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Generative AI - Evaluation and Debugging Using Weights &amp; Biases Tools</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/generative-ai/evaluation-and-debugging/">
+<meta name="description" content="How to track and compare model training runs with Weights &amp; Biases, including adding it to a Python script and reading its run overview.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Generative AI - Evaluation and Debugging Using Weights &amp; Biases Tools">
+<meta property="og:description" content="How to track and compare model training runs with Weights &amp; Biases, including adding it to a Python script and reading its run overview.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/generative-ai/evaluation-and-debugging/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/generative-ai/evaluation-and-debugging/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../.docs/prerender-redirect.js" data-target="../../../#/fields/generative-ai/evaluation-and-debugging/"></script>
+<main>
+<h1>Generative AI - Evaluation and Debugging Using Weights &amp; Biases Tools</h1>
+<p><em>How to track and compare model training runs with Weights &amp; Biases, including adding it to a Python script and reading its run overview.</em></p>
+<h2>Table of Content</h2>
+<h2>Motivation</h2>
+<p>We all have that case, when we train a model, tune the architecture, changing in the training dataset, then iterating more and more, then we decide to go back to last week model which had better performance, but what were the tuning parameters used, and even what was the dataset used for that training, did I saved them?</p>
+<p>Many teams have a large difficulty to manage these process during training a model, and more complexity in bigger teams.</p>
+<p>So In this article, we will cover tools and best practices to solve these problems.</p>
+<p>Also all experimental projects are saved in our <a href="https://wandb.ai/acupoftea/projects">https://wandb.ai/acupoftea/projects</a> page for public usage.</p>
+<h2>Topic Covered</h2>
+<ul><li>Instrument W&amp;B in an ML training pipeline.</li><li>Training diffusion models.</li><li>Evaluating diffusion models.</li><li>Evaluating LLMs.</li><li>Fine-Tuning LLMs.</li></ul>
+<p>Availalbe wide range of tools: <img src="../../../fields/generative-ai/evaluation-and-debugging/images/evaluation-and-debugging-01.png" alt="Weights and Biases MLOps portfolio slide listing Models, Prompts, Monitoring and Platform tools" loading="lazy"></p>
+<p>These tools could work with wide range of ML frameworks: <img src="../../../fields/generative-ai/evaluation-and-debugging/images/evaluation-and-debugging-02.png" alt="Slide showing frameworks and cloud providers the Weights and Biases platform integrates with" loading="lazy"></p>
+<h2>Instrument W&amp;B</h2>
+<h3>Why use Weights &amp; Biases?</h3>
+<ul><li>Integrate quickly, track &amp; version automatically.</li><li>Visualize your data &amp; uncover critical insights.</li><li>Improve performance so you can evaluate and deploy with confidence.</li></ul>
+<h3>Integrate with any Python script</h3>
+<pre><code class="language-python"># pip install wandb
+import wandb
+
+# 1. Organize your hyperparameters
+config = {&#x27;learning_rate&#x27;: 0.001}
+
+# 2. Start wandb run
+wandb.init(project=&#x27;gpt5&#x27;, config=config)
+
+# Model Training here.
+
+# 3. Log metrics over time to visualize performance
+wandb.log({&#x27;loss&#x27;:loss})
+
+# 4. When working in notebook, finish
+wandb.finish()</code></pre>
+<p>In some step, you will need an account for W&amp;B to store the results of your experiments and use advanced W&amp;B features. You can also continue to learn in anonymous mode.</p>
+<pre><code class="language-python">wandb.login(anonymous=&#x27;allow&#x27;)</code></pre>
+<p>Note: you can find your API key in your browser throught: <a href="https://wandb.ai.authorize">https://wandb.ai.authorize</a></p>
+<h3>Overview</h3>
+<p><a href="https://wandb.ai/acupoftea/projects">Experimental Projects</a></p>
+<p>The idea during using this tool, is to just update the configuration for the model, then simply run again the training model process, the W&amp;B tool will create a new run, save it, and compare it with other previous runs.</p>
+<h3>Overview - pick a run</h3>
+<p><img src="../../../fields/generative-ai/evaluation-and-debugging/images/evaluation-and-debugging-03.png" alt="Weights and Biases run overview page with run name, state, hostname and hardware details" loading="lazy"> <img src="../../../fields/generative-ai/evaluation-and-debugging/images/evaluation-and-debugging-04.png" alt="Weights and Biases run config parameters and summary metrics with confusion matrices" loading="lazy"></p>
+<p>You can see that W&amp;B catches the Git repository that you are in, and commits your works, so you can easily pull back to this stage where this run was made.</p>
+<p><img src="../../../fields/generative-ai/evaluation-and-debugging/images/evaluation-and-debugging-05.png" alt="Weights and Biases run Files tab listing config, requirements and metadata files" loading="lazy"> Even it saves the commit diff of files changes, also all the parameters and configuration used.</p>
+<h2>Credits</h2>
+<ul><li><a href="https://www.deeplearning.ai/short-courses/evaluating-debugging-generative-ai/">DeepLearning.AI - Evaluating and Debugging Generative AI course</a></li></ul>
+<p><a href="../../../#/fields/generative-ai/evaluation-and-debugging/">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

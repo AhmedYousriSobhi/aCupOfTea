@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Tips - Version Control - Git</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/tips/version-control-git/">
+<meta name="description" content="Git tips, including how to remove a commit from a repo and a ready-made .gitignore for Python, virtual environments, Conda and Jupyter.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Tips - Version Control - Git">
+<meta property="og:description" content="Git tips, including how to remove a commit from a repo and a ready-made .gitignore for Python, virtual environments, Conda and Jupyter.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/tips/version-control-git/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/tips/version-control-git/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../.docs/prerender-redirect.js" data-target="../../#/tips/version-control-git"></script>
+<main>
+<h1>Tips - Version Control - Git</h1>
+<p><em>Git tips, including how to remove a commit from a repo and a ready-made .gitignore for Python, virtual environments, Conda and Jupyter.</em></p>
+<h2>Table of Contents</h2>
+<ul><li>Tips - Version Control - Git<ul><li>Table of Contents</li><li>Remove Commit from a Repo</li><li>.gitignore</li></ul></li></ul>
+<h2>Remove Commit from a Repo</h2>
+<ul><li>Our case is that, we want to remove an old commit from the repo, but to keep the main commit persists.</li><li>Get the git log using: <code>`</code>bash git log --oneline</li></ul>
+<p># Output Example: abc1234 (HEAD -&gt; main)   Your latest commit def5678                   Commit you want to delete</p>
+<pre><code>2. Use an interactive rebase to edit history. You want to rebase to two commits back (to edit the one before the latest):</code></pre>
+<p>git rebase -i HEAD~2</p>
+<pre><code>3. In the interactive editor, it should be something like:</code></pre>
+<p>pick def5678 Commit to delete pick abc1234 Your latest commit</p>
+<pre><code>    - Change it to:</code></pre>
+<p>drop def5678 Commit to delete pick abc1234 Your latest commit</p>
+<pre><code>4. Force-push the new history to GitHub</code></pre>
+<p>git push origin main --force</p>
+<pre><code>- Optional Backup Before Starting:</code></pre>
+<p>git checkout -b backup-before-rebase git push origin backup-before-rebase</p>
+<pre><code>
+## .gitignore
+A .gitignore should usually ignore:
+- generated artifacts,
+- caches,
+- secrets,
+- large binaries,
+- environment-specific files.
+
+An example for `.gitignore` file content:&lt;/br&gt;</code></pre>
+<h1>=========================</h1>
+<h1>Python cache / bytecode</h1>
+<h1>=========================</h1>
+<p><strong>pycache</strong>/ <em>.py[cod] </em>$py.class</p>
+<h1>=========================</h1>
+<h1>Virtual environments</h1>
+<h1>=========================</h1>
+<p>.env .venv venv/ ENV/ env/</p>
+<h1>=========================</h1>
+<h1>Conda / Mamba environments</h1>
+<h1>=========================</h1>
+<p>conda-meta/ <em>.conda </em>.tar.bz2</p>
+<h1>=========================</h1>
+<h1>Jupyter Notebook</h1>
+<h1>=========================</h1>
+<p>.ipynb_checkpoints/</p>
+<h1>=========================</h1>
+<h1>Logs</h1>
+<h1>=========================</h1>
+<p>*.log logs/</p>
+<h1>=========================</h1>
+<h1>Build / distribution</h1>
+<h1>=========================</h1>
+<p>build/ dist/ *.egg-info/ .eggs/</p>
+<h1>=========================</h1>
+<h1>PyTorch model artifacts</h1>
+<h1>=========================</h1>
+<p><em>.pth </em>.pt *.ckpt checkpoints/ weights/</p>
+<h1>=========================</h1>
+<h1>Dataset / generated data</h1>
+<h1>=========================</h1>
+<p>data/ datasets/ outputs/ results/ predictions/</p>
+<h1>=========================</h1>
+<h1>IDE / Editor</h1>
+<h1>=========================</h1>
+<p>.vscode/ .idea/ <em>.swp </em>.swo</p>
+<h1>=========================</h1>
+<h1>OS files</h1>
+<h1>=========================</h1>
+<p>.DS_Store Thumbs.db</p>
+<h1>=========================</h1>
+<h1>Testing / coverage</h1>
+<h1>=========================</h1>
+<p>.pytest_cache/ .coverage htmlcov/</p>
+<h1>=========================</h1>
+<h1>Temporary files</h1>
+<h1>=========================</h1>
+<p>tmp/ temp/ *.tmp</p>
+<h1>=========================</h1>
+<h1>Environment variables</h1>
+<h1>=========================</h1>
+<p>.env.* !.env.example</p>
+<h1>=========================</h1>
+<h1>FastAPI / Uvicorn</h1>
+<h1>=========================</h1>
+<p>*.pid</p>
+<h1>=========================</h1>
+<h1>Mypy / Ruff / Pyright</h1>
+<h1>=========================</h1>
+<p>.mypy_cache/ .ruff_cache/ .pyright/</p>
+<h1>=========================</h1>
+<h1>Ignore local secrets</h1>
+<h1>=========================</h1>
+<p>secrets/ credentials/ <em>.pem </em>.key</p>
+<pre><code></code></pre>
+<p><a href="../../#/tips/version-control-git">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

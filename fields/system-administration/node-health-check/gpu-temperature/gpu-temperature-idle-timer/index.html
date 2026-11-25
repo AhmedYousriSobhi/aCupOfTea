@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>GPU Temperature in a Health Check: The Idle Timer</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/node-health-check/gpu-temperature/gpu-temperature-idle-timer/">
+<meta name="description" content="Catch GPUs that run warm while doing nothing: a warn-then-drain timer, why 0% utilization alone is not idle, using the Slurm node state, and a read-only fleet scan before you enforce.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="GPU Temperature in a Health Check: The Idle Timer">
+<meta property="og:description" content="Catch GPUs that run warm while doing nothing: a warn-then-drain timer, why 0% utilization alone is not idle, using the Slurm node state, and a read-only fleet scan before you enforce.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/node-health-check/gpu-temperature/gpu-temperature-idle-timer/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/node-health-check/gpu-temperature/gpu-temperature-idle-timer/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../../.docs/prerender-redirect.js" data-target="../../../../../#/fields/system-administration/node-health-check/gpu-temperature/gpu-temperature-idle-timer"></script>
+<main>
+<h1>GPU Temperature in a Health Check: The Idle Timer</h1>
+<p><em>Catch GPUs that run warm while doing nothing: a warn-then-drain timer, why 0% utilization alone is not idle, using the Slurm node state, and a read-only fleet scan before you enforce.</em></p>
+<blockquote><p><strong>Part 13 of the [Node Health Check series](/fields/system-administration/node-health-check/README.md).</strong> Dana, Sam, the fleet and every node are invented, and 45 °C, 10 minutes and 1,024 MiB are example values. Commands come from NVIDIA&#x27;s DCGM and Slurm documentation. The author tested this code and it works; the output samples on the page are synthetic.</p></blockquote>
+<p>Around 03:00, the health check will accuse a GPU of loafing while it is training. Dana will almost agree with it. What stops her is a line in <code>nvidia-smi</code>, and the thing she nearly does is a drain.</p>
+<p><strong>By the end of this page you will be able to:</strong></p>
+<ul><li>Write an idle-GPU temperature rule that warns first and drains only if the heat persists.</li><li>Explain why utilization alone cannot define &quot;idle&quot;, and what to check instead.</li><li>Use the Slurm node state as the gate, and know what that gate costs.</li><li>Scan a fleet read-only before the rule is allowed to drain anything.</li></ul>
+<hr>
+<h2>A scan, a table, and one suspicious row</h2>
+<p>The ceiling from <a href="../../../../../fields/system-administration/node-health-check/gpu-temperature/gpu-temperature-ceiling/">part 12</a> catches a GPU that is dangerously hot. Dana wants a second rule for a GPU that is warm and has nothing to do, because that is usually a sign of airflow or a cooling fault that the ceiling will not see for hours.</p>
+<p>Before enforcing anything, she runs the read-only scan across a synthetic fleet and gets a table. One row stands out:</p>
+<pre><code class="language-text">NODE          SLURM STATE  GPU  TEMP  UTIL  MEM MiB  GPU STATUS  WOULD TRIGGER
+gpu-node-31   MIXED        0    47C   0%    ...      IDLE        IDLE_HIGH</code></pre>
+<p>An idle GPU at 47 °C, above the 45 °C limit. The tidy move is to drain the node and let Sam look.</p>
+<hr>
+<h2>Three definitions of idle, one of them dangerous</h2>
+<p><strong>Attempt 1: idle means 0% utilization.</strong> The row says 0%. Done.</p>
+<p><strong>Attempt 2: idle means no GPU in the node&#x27;s Slurm allocation.</strong> Dana reads which GPUs Slurm has handed out and treats the rest as free.</p>
+<p><strong>Attempt 3: drain it.</strong> Her cursor is on the command when Sam asks one question:</p>
+<blockquote><p><strong>Sam:</strong> Did you look at what <code>nvidia-smi</code> says about GPU 0?</p></blockquote>
+<p>It shows about 90 GB of memory in use and a training process. The job is alive.</p>
+<p>Three attempts, and two of them believed a single instant. What is &quot;idle&quot;, if not &quot;0% right now&quot;?</p>
+<hr>
+<h2>Why 0% right now lies</h2>
+<p>Utilization is a snapshot. A busy GPU can read 0% for a moment between kernels, during a data-loading pause or a checkpoint. A sample taken in that dip says &quot;idle&quot; about a GPU with a workload attached.</p>
+<p><img src="../../../../../fields/system-administration/node-health-check/gpu-temperature/images/util-snapshot.svg" alt="Utilization of a busy GPU dips to zero for a moment. A single sample in the dip says idle, but memory in use stays high the whole time." loading="lazy"></p>
+<p><em>One sample at 0% says idle. The memory bar says a workload is attached.</em></p>
+<p>Dana&#x27;s second attempt failed for a different reason. Slurm&#x27;s way of reporting which GPUs a node has allocated differs between nodes in the author&#x27;s fleet:</p>
+<ul><li>Some nodes report <code>GresUsed=gpu:8</code> with no per-GPU list.</li><li>Others report something like <code>gpu:h200:4(IDX:0-3)</code>.</li><li>A parser that reads only the <code>IDX</code> part sees no allocated GPUs on the first kind, and so treats a running job as idle.</li></ul>
+<p>That is the author&#x27;s observation, not a documented guarantee, and it is why the final rule does not parse allocation at all.</p>
+<hr>
+<h2>The two gates an idle GPU has to pass</h2>
+<p>The rule applies only to a node that Slurm calls <strong>idle</strong>, and then only to a GPU that is idle on two independent readings.</p>
+<p><strong>Gate 1: the node state.</strong> <code>scontrol show node</code> prints a <code>State=</code>.</p>
+<pre><code class="language-bash">scontrol show node $(hostname -s) | grep -E &#x27;State=|GresUsed|AllocTRES&#x27;</code></pre>
+<ul><li>The idle rule runs only when <code>State=</code> starts with <code>IDLE</code>. That includes <code>IDLE+DRAIN</code>.</li><li>It does not run when the state contains <code>COMPLETING</code>.</li><li>A node that is <code>MIXED</code> or <code>ALLOCATED</code> gets the ceiling rule only.</li></ul>
+<p><strong>Gate 2: the GPU itself.</strong> On an idle node, a GPU counts as idle only if both hold:</p>
+<ul><li>utilization is 0%, and</li><li>memory in use is at most <code>GPU_IDLE_MEM_MAX_MIB</code> (1,024 in this page).</li></ul>
+<p>Anything else (utilization above 0%, or memory in use) is &quot;busy without a job&quot;, for example a sysadmin test. It is not idle, and its timer is cleared.</p>
+<hr>
+<h2>Warn first, drain later</h2>
+<p>A GPU that has just finished a job is warm and needs time to cool. So the rule gives it a window, and it keeps the window on disk.</p>
+<pre><code class="language-mermaid">flowchart LR
+    B{Node state IDLE?} --&gt;|no| F[Clear idle timers]
+    B --&gt;|yes| G{&quot;GPU idle?&lt;br/&gt;0 percent util, memory at most 1024 MiB&quot;}
+    G --&gt;|no| H[Clear its timer]
+    G --&gt;|yes| I{Above idle limit?}
+    I --&gt;|no| H
+    I --&gt;|yes| J{Timer recorded?}
+    J --&gt;|no| K[Record time, warn only]
+    J --&gt;|under window| L[Warn, keep waiting]
+    J --&gt;|window passed| M[Drain: GPU_TEMP_IDLE_HIGH]</code></pre>
+<p><em>The idle rule runs every cycle, after the ceiling rule from part 12. A ceiling drain does not skip it, and an unreadable `dcgmi` skips both.</em></p>
+<p>The mechanics, in order:</p>
+<ul><li><strong>First sighting:</strong> an idle GPU above <code>GPU_IDLE_TEMP_MAX</code> (45 in this page) only raises a warning. The time is written to a small file, one per GPU, under <code>GPU_TEMP_STATE_DIR</code> (<code>/var/tmp/nhc_gpu_temp/gpu&lt;N&gt;.hot_since</code>).</li><li><strong>A later run:</strong> if the same GPU is still idle and still above the limit, and <code>GPU_IDLE_WINDOW_MIN</code> minutes (10 in this page) have passed since the recorded time, the node drains with <code>GPU_TEMP_IDLE_HIGH</code>.</li><li><strong>The timer is discarded</strong> if the node leaves IDLE, utilization rises above 0%, memory is in use, or the GPU cools to the limit or below.</li><li><strong>A recorded time from before the last boot, or in the future, is discarded</strong> and restarted, so a reboot or a clock jump can&#x27;t create a false drain.</li><li><strong>An unreadable utilization (`N/A`) counts as not idle.</strong></li><li><strong>If `dcgmi` or the Slurm state can&#x27;t be read</strong>, the rule warns and skips that run. It never drains on its own.</li></ul>
+<pre><code class="language-bash">if (( hot_min &lt; GPU_IDLE_WINDOW_MIN )); then
+    echo &quot;  WARNING: GPU-$idx idle at ${temp}C for ${hot_min}m (window ${GPU_IDLE_WINDOW_MIN}m) - not drained yet.&quot;
+else
+    msg=&quot;GPU_TEMP_IDLE_HIGH: GPU-$idx idle above ${GPU_IDLE_TEMP_MAX}C for ${hot_min}m (now ${temp}C)&quot;
+    flag_gpu_temp &quot;GPU_TEMP_IDLE_HIGH&quot; &quot;warning&quot; &quot;$msg&quot;
+    record_error &quot;15_check_gpu_temp_idle&quot; &quot;$msg&quot;       # drains at the end of the run
+fi</code></pre>
+<p>The five variables sit at the top of the temperature block:</p>
+<table><thead><tr><th>Variable</th><th>Example value</th><th>Meaning</th></tr></thead><tbody><tr><td><code>GPU_TEMP_CEILING</code></td><td>87</td><td>Any GPU above this drains the node (part 12)</td></tr><tr><td><code>GPU_IDLE_TEMP_MAX</code></td><td>45</td><td>An idle GPU above this starts the timer</td></tr><tr><td><code>GPU_IDLE_WINDOW_MIN</code></td><td>10</td><td>Minutes it must stay idle and hot before the drain</td></tr><tr><td><code>GPU_IDLE_MEM_MAX_MIB</code></td><td>1024</td><td>Memory in use above this means a workload is attached</td></tr><tr><td><code>GPU_TEMP_STATE_DIR</code></td><td><code>/var/tmp/nhc_gpu_temp</code></td><td>One &quot;hot since&quot; file per GPU</td></tr></tbody></table>
+<hr>
+<h2>The trade-off nobody likes to write down</h2>
+<p>Gating on the node state fixed the false positive, and it costs something.</p>
+<ul><li><strong>A MIXED node with free, hot GPUs is no longer checked by the idle rule.</strong> Only the ceiling covers it.</li><li><strong>The 45 °C limit is a fleet choice</strong>, not a physics constant. The author took it from a quick look at what idle GPUs in the fleet actually read. Yours will differ.</li><li><strong>The window is a guess about cooling.</strong> A GPU coming off a heavy job may take longer than 10 minutes to cool, so check how long yours takes on real nodes.</li><li><strong>The window and the run interval interact.</strong> If the health check runs less often than every few minutes, short jobs between runs are missed. Compare the window with your check&#x27;s interval (the author&#x27;s interval is still unknown).</li></ul>
+<hr>
+<h2>Scan before you let it drain anything</h2>
+<p>The scan script applies the same rules read-only and never drains. It connects to each node over ssh, reads the same <code>dcgmi dmon</code> fields and the node&#x27;s <code>scontrol show node</code>, and prints what the check would do. Load the key once, then run it:</p>
+<pre><code class="language-bash">eval &quot;$(ssh-agent -s)&quot;; ssh-add
+./gpu_temp_scan.sh nodelist.yml</code></pre>
+<p>The node list is a small YAML file, one node per line:</p>
+<pre><code class="language-yaml">nodes:
+  - gpu-node-01
+  - gpu-node-02   # a trailing comment is fine</code></pre>
+<p>The script is <a href="../../../../../fields/system-administration/node-health-check/gpu-temperature/gpu_temp_scan.sh"><code>gpu_temp_scan.sh</code></a>: 20 nodes in parallel by default, with <code>CEILING</code>, <code>IDLE_MAX</code>, <code>IDLE_MEM_MAX</code>, <code>WINDOW</code> and <code>PARALLEL</code> as environment variables. It writes counts, a table of flagged GPUs, a per-node summary and two CSV files (<code>all_gpus.csv</code>, <code>flagged.csv</code>).</p>
+<p>On a synthetic fleet of 200 nodes the summary line looks like:</p>
+<pre><code class="language-text">Nodes in list: 200   scanned OK: 190   unreachable: 6   no dcgmi data: 4
+Nodes flagged: 3   (CEILING: 0, IDLE_HIGH: 3)</code></pre>
+<p>Reading it:</p>
+<ul><li><strong>Unreachable and no-data nodes are unknown, not fine.</strong> Hot GPUs there are invisible to the scan.</li><li><strong>A flagged `IDLE_HIGH` row is a snapshot.</strong> The real check drains only if the GPU is still idle and hot after the window.</li><li><strong>Every flagged row should be on an `IDLE` or `IDLE+DRAIN` node</strong>, because the idle rule never applies to the others.</li></ul>
+<p>Handy one-liners on the scan folder:</p>
+<pre><code class="language-bash">sort -t, -k4 -nr gpu_temp_scan_*/all_gpus.csv | head -10          # hottest GPUs
+for f in /var/tmp/nhc_gpu_temp/*; do echo &quot;$f: $(( ( $(date +%s) - $(cat $f) ) / 60 )) min since recorded&quot;; done   # on a node</code></pre>
+<blockquote><p>[!NOTE] Rollback is simple: restore the previous script and remove <code>/var/tmp/nhc_gpu_temp/</code>.</p></blockquote>
+<hr>
+<h2>The false positive, solved</h2>
+<p>Back at 03:00, Dana runs the corrected scan. The row for <code>gpu-node-31</code> now reads <code>ALLOCATED</code>: the node is <code>MIXED</code>, so the idle rule is not applied, and only the ceiling is. The three rows that remain are <code>IDLE_HIGH</code> on <code>IDLE+DRAIN</code> nodes, empty and already out of service, with 0 MiB in use.</p>
+<p>Sam looks at those three instead of draining a node with a live job. Dana adds one line to the series&#x27; notes:</p>
+<blockquote><p><strong>Dana:</strong> utilization is a snapshot. State and memory are the evidence.</p></blockquote>
+<p><strong>Next:</strong> what do you do with a drained node once the heat is gone? Resume is manual, and the pattern for automating it safely is in <a href="../../../../../fields/system-administration/node-health-check/checks-and-remediation/auto-remediation/">auto-remediation</a>. <strong>Just the steps:</strong> <a href="../../../../../fields/system-administration/node-health-check/gpu-temperature/quick-guide/">quick guide</a>.</p>
+<hr>
+<h2>📜 The Scroll (keep this)</h2>
+<pre><code class="language-text">Gate 1:     idle rule only when Slurm State= starts with IDLE and not COMPLETING (MIXED/ALLOCATED: ceiling only)
+Gate 2:     GPU idle = 0% utilization AND memory in use &lt;= GPU_IDLE_MEM_MAX_MIB
+Timer:      first sighting above GPU_IDLE_TEMP_MAX -&gt; record time, warn only
+Drain:      still idle and hot after GPU_IDLE_WINDOW_MIN minutes -&gt; GPU_TEMP_IDLE_HIGH
+Discard:    node leaves IDLE, util &gt; 0, memory in use, cooled, time before boot or in the future
+Fail safe:  dcgmi or Slurm state unreadable -&gt; warn, skip, never drain
+Do not:     define idle by utilization alone; trust Slurm allocation parsing across nodes</code></pre>
+<h2>References</h2>
+<ul><li><a href="https://docs.nvidia.com/datacenter/dcgm/latest/reference/command-line-reference/dcgmi/dcgmi-dmon.html">NVIDIA DCGM: <code>dcgmi dmon</code> reference</a></li><li><a href="https://docs.nvidia.com/datacenter/dcgm/latest/reference/field-identifiers.html">NVIDIA DCGM: field identifiers</a></li><li><a href="https://slurm.schedmd.com/scontrol.html">Slurm: <code>scontrol</code> (show node, State, GresUsed)</a></li><li><a href="https://slurm.schedmd.com/sinfo.html">Slurm: <code>sinfo</code> (node states)</a></li><li><a href="https://docs.coreweave.com/docs/products/sunk/manage_sunk/slurm-node-states">CoreWeave: Slurm node states (IDLE, MIXED, ALLOCATED, COMPLETING)</a></li><li><a href="https://github.com/mej/nhc">Upstream NHC (LBNL)</a></li></ul>
+<p><a href="../../../../../#/fields/system-administration/node-health-check/gpu-temperature/gpu-temperature-idle-timer">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

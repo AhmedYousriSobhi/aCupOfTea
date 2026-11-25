@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Upgrading Slurm: The Order, the Window, and the Parts That Bite</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-cluster-operations/slurm-upgrade-order/">
+<meta name="description" content="Order Slurm daemons must be upgraded in, how far apart two versions can be, what to back up, why slurmdbd needs a hand-started first run, and why a cluster is not upgraded until last old job finishes.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Upgrading Slurm: The Order, the Window, and the Parts That Bite">
+<meta property="og:description" content="Order Slurm daemons must be upgraded in, how far apart two versions can be, what to back up, why slurmdbd needs a hand-started first run, and why a cluster is not upgraded until last old job finishes.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-cluster-operations/slurm-upgrade-order/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-cluster-operations/slurm-upgrade-order/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/schedulers/slurm-cluster-operations/slurm-upgrade-order"></script>
+<main>
+<h1>Upgrading Slurm: The Order, the Window, and the Parts That Bite</h1>
+<p><em>Order Slurm daemons must be upgraded in, how far apart two versions can be, what to back up, why slurmdbd needs a hand-started first run, and why a cluster is not upgraded until last old job finishes.</em></p>
+<blockquote><p><strong>Part of the [schedulers](/fields/schedulers/slurm-intro.md) directory.</strong> The <a href="../../../../fields/schedulers/slurm-cluster-operations/slurm-reboot-order/">reboot-order page</a> covers patching the OS underneath Slurm and says plainly that it assumes you are <em>not</em> upgrading Slurm itself. This is the other half. Everything here comes from SchedMD&#x27;s Upgrade Guide and is not tested on a live cluster; read the guide for your exact target version before a real maintenance window. For what changed in the versions between 23.11 and 26.05, see <a href="../../../../fields/schedulers/slurm-cluster-operations/slurm-version-changes/">Version changes</a>.</p></blockquote>
+<ul><li>* *</li></ul>
+<h2>The upgrade that fails on startup</h2>
+<p>Imagine a cluster that has run happily on Slurm 22.05 for years. Someone decides to jump straight to 25.05 over a long weekend, installs the new packages everywhere and starts the daemons.</p>
+<p>The daemons refuse. SchedMD&#x27;s guide is blunt about this: upgrades from incompatible versions fail immediately on startup. It adds a harsher sentence for the careless case. The compatibility requirements apply to running jobs too, so going outside the window kills them and loses their accounting.</p>
+<p>That is the good outcome, the one where the software stops you. The rest of this page is about the ways to get hurt even inside the rules.</p>
+<ul><li>* *</li></ul>
+<h2>The compatibility window</h2>
+<p>Slurm releases twice a year now. The version number is the release month: 25.05 is May 2025 and 25.11 is November 2025. Releases moved to this six-month cycle with 24.05, and each one gets roughly 18 months of support.</p>
+<p>How far back an upgrade may reach has changed, and plenty of older write-ups still carry the old rule:</p>
+<ul><li><strong>Up to 24.05:</strong> you could upgrade from the previous <strong>two</strong> major releases.</li><li><strong>From 24.11 on:</strong> you can upgrade from the previous <strong>three</strong>, to keep a similar support duration with the faster cycle.</li></ul>
+<p>The guide&#x27;s table of compatible prior versions:</p>
+<table><thead><tr><th>Release</th><th>Can be upgraded from</th></tr></thead><tbody><tr><td>23.02</td><td>22.05, 21.08</td></tr><tr><td>23.11</td><td>23.02, 22.05</td></tr><tr><td>24.05</td><td>23.11, 23.02</td></tr><tr><td>24.11</td><td>24.05, 23.11, 23.02</td></tr><tr><td>25.05</td><td>24.11, 24.05, 23.11</td></tr><tr><td>25.11</td><td>25.05, 24.11, 24.05</td></tr></tbody></table>
+<p>The copy of the guide I read stops at 25.11. The rest of this repo cites the 26.05 docs, so check the live table for your target before planning.</p>
+<p>When your starting point is outside the window, you go in steps, and each step must land on a version compatible with where you are. A worked example using the table above, from 22.05 to 25.05:</p>
+<pre><code>22.05  -&gt;  23.11   (23.11 accepts 23.02 and 22.05: allowed)
+23.11  -&gt;  25.05   (25.05 accepts 24.11, 24.05, 23.11: allowed)</code></pre>
+<p>Two hops, with a real validation between them. SchedMD recommends exactly this: upgrade everything to the intermediate version, verify it works, then continue. Skipping the verification defeats the purpose, since each hop is only supported if it starts from a healthy cluster.</p>
+<ul><li>* *</li></ul>
+<h2>The order, and why it is the order</h2>
+<pre><code class="language-mermaid">flowchart LR
+    P[&quot;Prepare&lt;br/&gt;release notes, config, downtime&quot;] --&gt; B[&quot;Back up&lt;br/&gt;state dir, config dir, DB&quot;]
+    B --&gt; D[&quot;slurmdbd&quot;]
+    D --&gt; C[&quot;slurmctld&quot;]
+    C --&gt; S[&quot;slurmd&lt;br/&gt;(preferably with slurmctld)&quot;]
+    S --&gt; L[&quot;Login nodes&lt;br/&gt;and client commands&quot;]
+    L --&gt; X[&quot;Custom plugins&lt;br/&gt;recompile&quot;]
+    X --&gt; T[&quot;Test key functionality&quot;]
+    T --&gt; A[&quot;Archive backups&quot;]</code></pre>
+<p>The rule underneath it: <strong>`slurmdbd` must be at the same or a higher major release than `slurmctld`</strong>, and close enough to be within the window. That forces the database daemon to go first. If you run a backup <code>slurmdbd</code> host, upgrade it at the same time as the primary.</p>
+<p>Everything below the database follows the same dependency logic as the <a href="../../../../fields/schedulers/slurm-cluster-operations/slurm-reboot-order/">reboot order</a>: the thing others talk to goes first, the things that talk to it follow.</p>
+<ul><li>* *</li></ul>
+<h2>Backups: three things, not one</h2>
+<p>The reboot page backs up the SQL database, and that is the right instinct for a reboot. An upgrade needs more, because the daemons rewrite their own state files on first start. SchedMD&#x27;s minimum:</p>
+<table><thead><tr><th>What</th><th>How to find it</th><th>Why</th></tr></thead><tbody><tr><td><code>StateSaveLocation</code></td><td><code>scontrol show config | grep StateSaveLocation</code></td><td>Controller state: jobs, nodes, reservations</td></tr><tr><td>The Slurm config directory</td><td>Usually <code>/etc/slurm/</code></td><td>Every <code>.conf</code> file, including <code>gres.conf</code> and <code>cgroup.conf</code></td></tr><tr><td>The accounting database</td><td><code>mysqldump --databases slurm_acct_db &gt; backup.sql</code></td><td>Associations, limits, QOS, job history</td></tr></tbody></table>
+<p>A note on the dump. The guide prefers taking it after <code>slurmdbd</code> is shut down, when nothing is writing. You can use <code>--single-transaction</code> to dump a live database, but the guide lists the catches: it can slow the database, the restore only has the state from when the dump began, and the dump may be incorrect or fail if certain operations overlap, such as upgrading the database, adding or removing a cluster, or archiving and purging accounting data.</p>
+<blockquote><p>[!TIP] If you are about to upgrade, purge accounting records you no longer need first. SchedMD notes that a large database means a longer dump and a long, unresponsive schema update, so trimming it before the window can shorten the outage noticeably.</p></blockquote>
+<ul><li>* *</li></ul>
+<h2>Stage 1: slurmdbd, the slow one</h2>
+<p><code>slurmdbd</code> is the stage most likely to turn a short window into a long one. On a big accounting database, the upgraded daemon can be unresponsive for tens of minutes while it converts the schema.</p>
+<p>The guide&#x27;s procedure, condensed:</p>
+<ol><li>Stop <code>slurmdbd</code> gracefully (<code>sacctmgr shutdown</code> or <code>systemctl stop slurmdbd</code>) and <strong>wait until it is fully down</strong>. Stopping too early risks losing data that was not yet saved.</li><li>Back up the database.</li><li>Check that <code>innodb_buffer_pool_size</code> in <code>my.cnf</code> is larger than the default (the accounting page in the Slurm docs has the recommendation).</li><li>Upgrade the packages <strong>on the slurmdbd host only</strong>.</li><li>Start it, and here is the part that surprises people: <strong>the first start after an upgrade should be run by hand as the Slurm user</strong>, not through systemd.</li></ol>
+<pre><code class="language-bash">sudo -u slurm slurmdbd -D     # foreground; Ctrl+C when it finishes converting</code></pre>
+<p>The reason is a timeout. If you start the daemon with systemd and the conversion outlasts the unit&#x27;s start timeout, systemd kills the daemon halfway through a database update, which can cause data loss. After the foreground run completes, exit and start it normally.</p>
+<ol><li>Start the backup <code>slurmdbd</code> if you have one.</li><li>Check that <code>sacct</code> and <code>sacctmgr</code> return data.</li></ol>
+<p><strong>What the rest of the cluster does meanwhile.</strong> Scheduling continues. <code>slurmctld</code> queues accounting messages in its DBD Agent queue. While <code>slurmdbd</code> is down, <code>sacct</code>, <code>sacctmgr</code> and any <code>slurmrestd</code> paths containing <code>slurmdb</code> fail. Watch <code>slurmctld</code> memory and the agent queue size in <code>sdiag</code>, because the guide says the queue must not exceed the configured <code>MaxDBDMsgs</code>, and a long outage puts accounting records at risk. This is the same cache-while-down behavior described in the <a href="../../../../fields/schedulers/slurm-accounting-multi-tenancy/">multi-tenancy page</a>, now with a deadline attached.</p>
+<blockquote><p>[!NOTE] If you are also moving the accounting database to MariaDB 10.2.1 or later from an older MariaDB or from MySQL, the guide says to be on <code>slurmdbd</code> 22.05.7 or newer first, because those versions handle the changed MariaDB defaults.</p></blockquote>
+<ul><li>* *</li></ul>
+<h2>Stage 2: slurmctld, with the timeouts raised</h2>
+<p>The controller goes down briefly. Job submissions are refused, queued jobs are not scheduled, and information about completing jobs waits. All of it resumes when the new controller starts.</p>
+<p>SchedMD prefers upgrading <code>slurmctld</code>, <code>slurmd</code> and the client commands together, because the effects of downtime on controller and node daemons are largely the same, so doing them together minimizes the total duration. Rolling upgrades are possible if the controller goes first.</p>
+<p>The step that people skip is the first one:</p>
+<ol><li><strong>Raise `SlurmdTimeout` and `SlurmctldTimeout`</strong>, then run <code>scontrol reconfig</code>. Make the new values long enough to cover your whole upgrade method. If the timeout is reached while daemons are down, nodes may be marked DOWN and their jobs killed.</li><li>Stop <code>slurmctld</code> (all of them, if you run more than one).</li><li>Optionally stop <code>slurmd</code> on the compute nodes too.</li><li><strong>Back up `StateSaveLocation`.</strong></li><li>Upgrade the packages.</li><li>Start <code>slurmd</code> again if you stopped it, then start <code>slurmctld</code>.</li><li>Check node communication and that a job can start and finish.</li><li><strong>Put the timeouts back</strong> and run <code>scontrol reconfig</code> again.</li></ol>
+<p>Step 8 is the one that gets forgotten. A cluster left with a very long <code>SlurmdTimeout</code> will take far longer than intended to notice a node that has genuinely died.</p>
+<ul><li>* *</li></ul>
+<h2>Stage 3: slurmd, and the old stepds</h2>
+<p>Running jobs survive a <code>slurmd</code> upgrade as long as <code>SlurmdTimeout</code> is not reached. While a node&#x27;s <code>slurmd</code> is down, new jobs do not start on it, and finishing jobs wait to report back until it returns. SchedMD recommends upgrading all nodes with the controller, but a rolling upgrade in groups is allowed, and the guidance is to keep the time spent running mixed versions short.</p>
+<p>The point most guides skip is easy to state: <strong>a job started before a node was upgraded keeps running with the old `slurmstepd`.</strong> The upgrade guide says to wait for all jobs that were already running to finish before you consider the upgrade complete, because starting another upgrade, or relying on a new feature, while old stepds are still alive may cause problems.</p>
+<p>On a cluster with multi-day training jobs, that means &quot;upgraded&quot; is a state that arrives gradually. The practical consequences:</p>
+<ul><li>Do not schedule the <em>next</em> hop of a multi-step upgrade until the old jobs have drained.</li><li>Do not announce a new feature to users the moment the daemons restart.</li><li>This is one more reason to use the <a href="../../../../fields/schedulers/slurm-cluster-operations/slurm-reboot-order/"><code>MAINT</code> reservation approach</a> from the reboot page: an empty cluster has no old stepds.</li></ul>
+<ul><li>* *</li></ul>
+<h2>Stage 4: everything that links against Slurm</h2>
+<p><strong>Client commands and login nodes</strong> need no special handling except where the release notes say so. Upgrade them after the core daemons.</p>
+<p><strong>JSON and YAML output.</strong> If you or your tools use <code>--json</code> or <code>--yaml</code> with Slurm commands, or run <code>slurmrestd</code>, the output format is produced by versioned <code>data_parser</code> plugins, and the default is the newest one, which may not match the previous format. Old plugins are removed on a schedule (the guide lists each release and the one that drops it). Pin the version in anything that parses the output:</p>
+<pre><code class="language-bash">sinfo --json=v0.0.41 | my_site_script       # explicit data_parser
+sinfo --json=v0.0.41+spec_only &gt; /tmp/v41.json   # compare formats before upgrading</code></pre>
+<p><code>slurmrestd</code> clients show the plugin in the URL path, for example <code>/slurm/v0.0.40/jobs</code>, and that path keeps working until the plugin is removed. Regenerate and retest any generated OpenAPI clients before the upgrade.</p>
+<p><strong>Locally built plugins and applications.</strong> <code>libslurm.so</code> gets a new version number with every major release, so anything linked against it must be recompiled, and locally written plugins usually need code changes as well. A quick check:</p>
+<pre><code class="language-bash">ldd /path/to/binary | grep slurm     # a versioned libslurm.so.x.y.z means: recompile</code></pre>
+<p>MPI stacks are mostly spared, because OpenMPI and MVAPICH2 link against Slurm&#x27;s PMI-1 and PMI-2 libraries, which are meant to stay fixed. The documented exception is MPICH built with Slurm support and the Hydra process manager, which uses the Slurm API and needs a rebuild.</p>
+<ul><li>* *</li></ul>
+<h2>Packaging traps</h2>
+<p>Three that have nothing to do with Slurm itself:</p>
+<ul><li><strong>EPEL.</strong> A Slurm package exists in EPEL that SchedMD does not provide or support, and a routine system update can pull it in and change your version outside a maintenance window. The guide recommends adding <code>exclude=slurm*</code> to the <code>[epel]</code> section of the repo file.</li><li><strong>Daemons sharing a host.</strong> Slurm daemons on one machine may have to be upgraded together because of their dependencies on the common <code>slurm</code> package. Start them in the usual order afterwards. SchedMD says outright that this layout is not recommended for production and advises one core daemon per system.</li><li><strong>Distribution packages.</strong> Some distro packaging couples <code>slurmdbd</code> and <code>slurmctld</code> so tightly that you cannot upgrade them one at a time the way the guide describes. If that is your situation, plan around it before the window opens, not during it.</li></ul>
+<p>For sites that build their own Slurm, the guide describes &quot;seamless upgrades&quot;: install each version into its own directory and point a symlink in <code>PATH</code> at the active one. That lets you stage the new version ahead of the window and switch back with one command, and it avoids library conflicts from mixing versions in one directory.</p>
+<ul><li>* *</li></ul>
+<h2>There is no undo</h2>
+<p>Reverting an upgrade is <strong>not supported</strong> once any Slurm daemon has been started. On first start the daemons rewrite their state files and databases into the new format. An older daemon will not recognize them, which can mean lost or corrupted state and accounting, and the old daemon will likely refuse to start.</p>
+<p>The only way back is restoring from backups: <code>StateSaveLocation</code> and the accounting database, plus the config directory. That brings back the old state and also erases everything that happened after the backup was taken, including jobs submitted and finished in between.</p>
+<p>Two softer notes from the guide:</p>
+<ul><li><strong>Minor releases</strong> (the <code>.4</code> in 23.11.4) follow the same procedure, but it is faster and more forgiving of mixed versions and in-place downgrades. Keep current backups anyway.</li><li><strong>Pre-release versions</strong> (release candidates, the master branch) can crash, change behavior and lose state. Run them on test machines, not production.</li></ul>
+<ul><li>* *</li></ul>
+<h2>Pre-flight checklist</h2>
+<ul><li>[ ] Read <code>RELEASE_NOTES</code> for the target and every release in between; look for removed or changed options.</li><li>[ ] Prepare and test config changes on a test system first.</li><li>[ ] Confirm the hop is inside the compatibility window, or plan the intermediate step.</li><li>[ ] Check <code>--json</code>/<code>--yaml</code> users and <code>slurmrestd</code> clients; pin <code>data_parser</code> versions.</li><li>[ ] Plan for recompiling <code>libslurm</code>-linked software and any custom plugins.</li><li>[ ] Purge old accounting records if the database is large.</li><li>[ ] Back up <code>StateSaveLocation</code>, the config directory and the database.</li><li>[ ] Verify <code>innodb_buffer_pool_size</code> is above the default.</li><li>[ ] Raise <code>SlurmdTimeout</code> and <code>SlurmctldTimeout</code> and plan to restore them.</li><li>[ ] Tell users the expected downtime; avoid scheduling it outside vendor support hours.</li><li>[ ] Have a hidden test partition and a small test job ready, as in the reboot checklist.</li><li>[ ] Upgrade in order: <code>slurmdbd</code> (hand-started first run), <code>slurmctld</code>, <code>slurmd</code>, clients, plugins.</li><li>[ ] Do not call it finished until pre-upgrade jobs have drained.</li></ul>
+<ul><li>* *</li></ul>
+<h2>References</h2>
+<ul><li><a href="https://slurm.schedmd.com/upgrades.html">Slurm: Upgrade Guide</a></li><li><a href="https://slurm.schedmd.com/accounting.html">Slurm: Accounting and Resource Limits</a> (the <code>innodb_buffer_pool_size</code> recommendation)</li><li><a href="https://lists.schedmd.com/mailman3/hyperkitty/list/slurm-users@lists.schedmd.com/message/OIAK6PNQHSQJRVLIBTUSVYVUDWTYPLC5/">slurm-users: upgrading slurmdbd and daemon packaging, March 2025</a></li></ul>
+<p><a href="../../../../#/fields/schedulers/slurm-cluster-operations/slurm-upgrade-order">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

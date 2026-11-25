@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Know It on Sight: Reading OpenMP and MPI Code, Builds and Job Scripts</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/openmp-and-open-mpi/spotting-openmp-and-mpi-code/">
+<meta name="description" content="A field guide to recognizing OpenMP, MPI or both in 30 seconds - the include lines, the pragmas, the function prefixes, the compile commands, the launch lines and the environment variables.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Know It on Sight: Reading OpenMP and MPI Code, Builds and Job Scripts">
+<meta property="og:description" content="A field guide to recognizing OpenMP, MPI or both in 30 seconds - the include lines, the pragmas, the function prefixes, the compile commands, the launch lines and the environment variables.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/openmp-and-open-mpi/spotting-openmp-and-mpi-code/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/openmp-and-open-mpi/spotting-openmp-and-mpi-code/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/system-administration/openmp-and-open-mpi/spotting-openmp-and-mpi-code"></script>
+<main>
+<h1>Know It on Sight: Reading OpenMP and MPI Code, Builds and Job Scripts</h1>
+<p><em>A field guide to recognizing OpenMP, MPI or both in 30 seconds - the include lines, the pragmas, the function prefixes, the compile commands, the launch lines and the environment variables.</em></p>
+<blockquote><p><strong>Part 4 of 8.</strong> By the end, you&#x27;ll be able to open an unfamiliar source tree, Makefile or job script and say &quot;this uses OpenMP&quot;, &quot;this uses MPI&quot; or &quot;this uses both&quot;, and know what each line is asking of the machine.</p></blockquote>
+<p>Think of this page as a detective&#x27;s pocket guide. Every suspect leaves fingerprints: an include line here, a function prefix there, a launch command at the scene. Learn the five fingerprints and you can name the culprit before you&#x27;ve finished your tea.</p>
+<h2>Contents</h2>
+<hr>
+<h2>The 30-second triage</h2>
+<p>Someone hands you a project. Before reading a line of logic, run three searches:</p>
+<pre><code class="language-bash">grep -rlE &#x27;omp\.h|#pragma omp|!\$omp&#x27; src/    # files that use OpenMP
+grep -rlE &#x27;mpi\.h|MPI_Init&#x27;            src/    # files that use MPI
+grep -rlE &#x27;omp\.h|#pragma omp&#x27; src/ | xargs grep -lE &#x27;mpi\.h&#x27;   # files that use both</code></pre>
+<p>Then follow the trail:</p>
+<pre><code class="language-mermaid">flowchart TD
+    S[&quot;Open the source&lt;br/&gt;or the job script&quot;] --&gt; Q1{&quot;MPI_ calls, mpi.h&lt;br/&gt;or mpirun?&quot;}
+    Q1 -- no --&gt; Q2{&quot;omp pragmas, omp.h&lt;br/&gt;or -fopenmp?&quot;}
+    Q1 -- yes --&gt; Q3{&quot;Also omp pragmas&lt;br/&gt;or OMP_NUM_THREADS?&quot;}
+    Q2 -- yes --&gt; O[&quot;OpenMP only:&lt;br/&gt;threads in one process&quot;]
+    Q2 -- no --&gt; N[&quot;Serial, or another model&lt;br/&gt;(GPU, pthreads, ...)&quot;]
+    Q3 -- no --&gt; P[&quot;MPI only:&lt;br/&gt;separate ranks&quot;]
+    Q3 -- yes --&gt; H[&quot;Hybrid:&lt;br/&gt;ranks that each run threads&quot;]</code></pre>
+<p>I ran the three searches on the test programs from part 3: the first listed the five OpenMP files, the second listed the three MPI ones, the third listed the two files that use both. (<code>!$omp</code> is how OpenMP is written in Fortran; I did not run Fortran here.)</p>
+<p>Got a hit? Then it&#x27;s time to read the fingerprints.</p>
+<hr>
+<h2>Spotting OpenMP</h2>
+<p>OpenMP is <strong>hints written into ordinary code</strong>. Strip the hints and what remains is a normal serial program, which is by design.</p>
+<table><thead><tr><th>You see</th><th>It means</th></tr></thead><tbody><tr><td><code>#include &lt;omp.h&gt;</code></td><td>The program calls OpenMP functions</td></tr><tr><td><code>#pragma omp parallel</code> (C/C++) or <code>!$omp parallel</code> (Fortran)</td><td>&quot;Run this block on a team of threads&quot;</td></tr><tr><td><code>#pragma omp parallel for</code></td><td>&quot;Split this loop&#x27;s iterations among the threads&quot;</td></tr><tr><td><code>reduction(+:total)</code></td><td>Each thread keeps a private <code>total</code>; they are added at the end</td></tr><tr><td><code>private(x)</code> / <code>shared(y)</code></td><td>Which variables each thread copies, and which all threads share</td></tr><tr><td><code>critical</code>, <code>atomic</code></td><td>Only one thread at a time may run this (or update this)</td></tr><tr><td><code>barrier</code></td><td>Everyone waits here until all have arrived</td></tr><tr><td><code>omp_get_thread_num()</code>, <code>omp_get_num_threads()</code></td><td>&quot;Which thread am I?&quot; and &quot;how many are there?&quot;</td></tr><tr><td><code>-fopenmp</code> in a Makefile or build log</td><td>The compiler is told to honour all of the above</td></tr><tr><td><code>OMP_NUM_THREADS=8</code> in a script</td><td>Team size</td></tr><tr><td><code>OMP_PLACES</code>, <code>OMP_PROC_BIND</code></td><td>Where threads may run: part of the thread-affinity controls added in OpenMP 4.0</td></tr><tr><td><code>#pragma omp target</code></td><td>Offload this region to an accelerator such as a GPU (device support arrived in OpenMP 4.0)</td></tr></tbody></table>
+<p>The marker for &quot;OpenMP and nothing else&quot;: no <code>MPI_</code> anywhere, started as a plain <code>./prog</code>. A chef with no delivery window.</p>
+<blockquote><p>[!WARNING] Pragmas are only comments to a compiler that doesn&#x27;t know them. No <code>-fopenmp</code>, no error, no speed-up (part 3).</p></blockquote>
+<hr>
+<h2>Spotting MPI</h2>
+<p>MPI is <strong>a library you call</strong>. Everything is a function whose name starts with <code>MPI_</code>. Strip them out and the program stops working, because the communication is the program.</p>
+<table><thead><tr><th>You see</th><th>It means</th></tr></thead><tbody><tr><td><code>#include &lt;mpi.h&gt;</code></td><td>The program calls MPI</td></tr><tr><td><code>MPI_Init</code> / <code>MPI_Init_thread</code>, <code>MPI_Finalize</code></td><td>The brackets around every MPI program</td></tr><tr><td><code>MPI_Comm_rank</code>, <code>MPI_Comm_size</code>, <code>MPI_COMM_WORLD</code></td><td>&quot;Who am I?&quot;, &quot;how many of us?&quot;, &quot;everyone started together&quot;</td></tr><tr><td><code>if (rank == 0) { ... }</code></td><td>One rank does a special job, usually reading input or printing</td></tr><tr><td><code>MPI_Send</code>, <code>MPI_Recv</code></td><td>One rank sends a message to another (point to point)</td></tr><tr><td><code>MPI_Isend</code>, <code>MPI_Irecv</code>, <code>MPI_Wait</code></td><td>The same, but non-blocking: start now, finish later</td></tr><tr><td><code>MPI_Bcast</code>, <code>MPI_Scatter</code>, <code>MPI_Gather</code></td><td>One rank hands out, or collects, data from all</td></tr><tr><td><code>MPI_Reduce</code>, <code>MPI_Allreduce</code></td><td>Combine one value from every rank (sum, max, ...); <code>Allreduce</code> gives everyone the result</td></tr><tr><td><code>MPI_Barrier</code></td><td>Everyone waits here</td></tr><tr><td><code>mpicc</code>, <code>mpicxx</code>, <code>mpifort</code></td><td>Compiler wrappers that add the MPI headers and libraries (<code>mpicc --showme</code> prints what they add)</td></tr><tr><td><code>mpirun -np 16 ./prog</code> or <code>mpiexec ...</code></td><td>Start 16 ranks</td></tr><tr><td><code>srun ./prog</code> inside a Slurm job</td><td>Slurm starts the ranks instead of <code>mpirun</code></td></tr></tbody></table>
+<p>Two reading habits pay off, and they have saved me from more than one afternoon of staring:</p>
+<ol><li><strong>Everything between `MPI_Init` and `MPI_Finalize` runs in every rank</strong>, unless an <code>if (rank == ...)</code> fences it off.</li><li><strong>A collective call must be made by every rank in the communicator.</strong> If a collective sits inside an <code>if</code> that only some ranks enter, the others wait forever: a deadlock.</li></ol>
+<hr>
+<h2>Spotting both: the hybrid fingerprint</h2>
+<p>The rarest sighting, and the one that makes people hold their coffee more tightly.</p>
+<p>A hybrid program has <strong>both</strong> includes, usually <code>MPI_Init_thread</code> instead of <code>MPI_Init</code>, and pragmas inside functions that also call <code>MPI_</code>. The ask for thread support is a one-line fingerprint:</p>
+<pre><code class="language-c">MPI_Init_thread(&amp;argc, &amp;argv, MPI_THREAD_FUNNELED, &amp;provided);</code></pre>
+<p>The MPI standard defines four levels you may request: <code>SINGLE</code>, <code>FUNNELED</code> (only the main thread calls MPI), <code>SERIALIZED</code> (any thread, one at a time) and <code>MULTIPLE</code> (any thread, any time). The library tells you what it will actually give in <code>provided</code>. On my Open MPI 5.0.10 install, asking for <code>FUNNELED</code> returned <code>provided=1</code>, which is the value <code>MPI_THREAD_FUNNELED</code> has there (the program printed both to compare).</p>
+<blockquote><p>[!TIP] <code>FUNNELED</code> is the common choice: OpenMP threads compute, the main thread talks. If you see <code>MPI_THREAD_MULTIPLE</code>, the code lets many threads call MPI at once, which is harder to get right.</p></blockquote>
+<hr>
+<h2>Reading a job script</h2>
+<p>A Slurm script tells you the shape of the job. Pattern, <strong>not run here</strong>, so check it against your site&#x27;s Slurm settings:</p>
+<pre><code class="language-bash">#!/bin/bash
+#SBATCH --nodes=2
+#SBATCH --ntasks-per-node=4        # 4 MPI ranks per node
+#SBATCH --cpus-per-task=8          # 8 cores reserved for each rank
+export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK   # each rank runs 8 OpenMP threads
+srun ./prog</code></pre>
+<p>Decode it: <strong>ntasks = ranks</strong>, <strong>cpus-per-task = threads per rank</strong>. Here that is 2 × 4 = 8 ranks, each with 8 threads, 64 cores in total. Slurm&#x27;s manual says <code>SLURM_CPUS_PER_TASK</code> is &quot;only set if either the --cpus-per-task option or the --tres-per-task=cpu=# option is specified&quot;, so a script that uses it without the option exports an empty value. If <code>--cpus-per-task</code> is missing but <code>OMP_NUM_THREADS</code> is large, every thread competes for one core. Part 5 shows that trap on a real machine, and <a href="../../../../fields/system-administration/openmp-and-open-mpi/mpi-and-openmp-under-slurm/">part 7</a> explains what Slurm does with these lines.</p>
+<table><thead><tr><th>Script says</th><th>Reading</th></tr></thead><tbody><tr><td>Only <code>--ntasks=N</code>, no <code>OMP_NUM_THREADS</code></td><td>Pure MPI</td></tr><tr><td><code>--ntasks=1 --cpus-per-task=N</code> plus <code>OMP_NUM_THREADS</code></td><td>Pure OpenMP</td></tr><tr><td><code>--ntasks=N --cpus-per-task=M</code> plus <code>OMP_NUM_THREADS</code></td><td>Hybrid</td></tr></tbody></table>
+<hr>
+<h2>Try it before you scroll</h2>
+<p>☕ Three scripts land in your inbox. For each, say OpenMP, MPI or hybrid before you read the answers.</p>
+<pre><code class="language-bash"># A
+mpirun -np 8 ./sim
+
+# B
+export OMP_NUM_THREADS=16
+./sim
+
+# C
+#SBATCH --ntasks=4
+#SBATCH --cpus-per-task=8
+export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
+srun ./sim</code></pre>
+<p>Hint: look for who starts the processes, and for who sets a thread count.</p>
+<p><strong>Answers.</strong> A is <strong>MPI only</strong>: eight ranks, no thread setting. B is <strong>OpenMP only</strong>: one plain process with 16 threads, no launcher. C is <strong>hybrid</strong>: 4 ranks, each with 8 threads, 32 cores in all. If you got C right, you can already read most real-world job scripts.</p>
+<hr>
+<h2>Three look-alikes that fool people</h2>
+<table><thead><tr><th>Looks like</th><th>Actually</th></tr></thead><tbody><tr><td><code>OpenMP</code> and <code>Open MPI</code></td><td>Different things (part 1). <code>openmpi-bin</code> installs MPI, not OpenMP</td></tr><tr><td><code>libgomp</code></td><td>gcc&#x27;s OpenMP runtime. A binary that loads it uses OpenMP, with or without MPI</td></tr><tr><td><code>mpicc</code></td><td>gcc with extra flags, not a different compiler. It does not add <code>-fopenmp</code></td></tr></tbody></table>
+<p><strong>Takeaway:</strong> <code>#pragma omp</code> and <code>OMP_</code> mean threads in one process; <code>MPI_</code> and <code>mpirun</code> mean separate ranks; <code>MPI_Init_thread</code> plus pragmas means both.</p>
+<p>Script C above is the interesting one. It runs both models at once, and it is the one that quietly goes slow without telling you why. <a href="../../../../fields/system-administration/openmp-and-open-mpi/hybrid-and-the-binding-trap/">Part 5</a> catches it on camera.</p>
+<hr>
+<h2>References</h2>
+<ul><li><a href="https://www.openmp.org/specifications/">OpenMP API specifications (directives, clauses, environment variables)</a></li><li><a href="https://www.openmp.org/press-release/openmp-4-0-api-released/">OpenMP 4.0 press release: devices, SIMD, task dependencies, thread affinity</a></li><li><a href="https://www.mpi-forum.org/docs/">MPI standard (function names, thread levels)</a></li><li><a href="https://slurm.schedmd.com/sbatch.html">Slurm sbatch manual: --ntasks, --cpus-per-task</a></li><li>Tested on this page: the three <code>grep</code> commands and the <code>provided</code> value, on Ubuntu 26.04.1 with Open MPI 5.0.10. The Slurm script is a pattern, not run.</li></ul>
+<p><a href="../../../../#/fields/system-administration/openmp-and-open-mpi/spotting-openmp-and-mpi-code">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

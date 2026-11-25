@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Lab Build Cheatsheet: A Slurm AI Cluster in Containers</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-ai-clusters/lab-build-cheatsheet/">
+<meta name="description" content="Every step used to build the Slurm lab behind the pending-jobs and AI-cluster series - node image, Slurm 23.11 with accounting, topology, PyTorch, Enroot and Pyxis, health check, Slurm 26.05, metrics.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Lab Build Cheatsheet: A Slurm AI Cluster in Containers">
+<meta property="og:description" content="Every step used to build the Slurm lab behind the pending-jobs and AI-cluster series - node image, Slurm 23.11 with accounting, topology, PyTorch, Enroot and Pyxis, health check, Slurm 26.05, metrics.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-ai-clusters/lab-build-cheatsheet/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-ai-clusters/lab-build-cheatsheet/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/schedulers/slurm-ai-clusters/lab-build-cheatsheet"></script>
+<main>
+<h1>Lab Build Cheatsheet: A Slurm AI Cluster in Containers</h1>
+<p><em>Every step used to build the Slurm lab behind the pending-jobs and AI-cluster series - node image, Slurm 23.11 with accounting, topology, PyTorch, Enroot and Pyxis, health check, Slurm 26.05, metrics.</em></p>
+<blockquote><p><strong>Part 6 of [Slurm for AI Clusters](/fields/schedulers/slurm-ai-clusters/README.md)</strong>, and the lab behind <a href="../../../../fields/schedulers/slurm-pending-jobs/">Why Is My Job Still Pending?</a> too. Direct steps, in order, to build the same cluster on one Linux machine: one controller, four CPU nodes, one node with four fake GPUs, and a second small cluster on Slurm 26.05.</p></blockquote>
+<blockquote><p>[!NOTE] Every command here was run while building the lab for these pages, on an Ubuntu 24.04 host. They&#x27;re collected from several sessions into one order; the whole sequence was <strong>not</strong> re-run from an empty machine in one go. Lab-only shortcuts (privileged containers, a password in a config file, world-writable directories) are marked. Don&#x27;t copy them into production.</p></blockquote>
+<hr>
+<h2>What you get</h2>
+<table><thead><tr><th>Host</th><th>IP</th><th>Role</th></tr></thead><tbody><tr><td><code>head01</code></td><td>10.10.0.10</td><td>slurmctld, slurmdbd, MariaDB, login node</td></tr><tr><td><code>cn001</code>–<code>cn004</code></td><td>10.10.0.11–14</td><td>CPU nodes, partition <code>cpu</code>, 2 CPUs each</td></tr><tr><td><code>gpu001</code></td><td>10.10.0.21</td><td>partition <code>gpu</code>, four fake GPUs (<code>/dev/nvidia0</code>–<code>3</code>)</td></tr><tr><td><code>s26a</code>–<code>s26c</code></td><td>10.10.0.31–33</td><td>Slurm 26.05.6 from source; <code>s26a</code> also runs slurmctld</td></tr></tbody></table>
+<p>Versions: Slurm 23.11.4 (Ubuntu packages) and 26.05.6, MariaDB 10.11, PyTorch 2.15.0, Enroot v4.2.1 tag, Pyxis v0.24.0, VictoriaMetrics v1.156.0.</p>
+<hr>
+<h2>0. The host</h2>
+<p>You need Docker, <code>debootstrap</code>, about 20 GB of free disk (PyTorch alone is 5.3 GB), and cgroup access for systemd in containers. Our host was cgroup v1 (hybrid); the nodes&#x27; <code>cgroup.conf</code> uses <code>CgroupPlugin=autodetect</code>.</p>
+<pre><code class="language-bash">apt-get install -y docker.io debootstrap
+docker network create --subnet 10.10.0.0/24 cluster</code></pre>
+<hr>
+<h2>1. The node image</h2>
+<p>One Ubuntu 24.04 root filesystem with everything any node needs, imported as a Docker image that boots systemd:</p>
+<pre><code class="language-bash">debootstrap noble /srv/rootfs http://archive.ubuntu.com/ubuntu
+mount --bind /proc /srv/rootfs/proc; mount --bind /dev /srv/rootfs/dev
+chroot /srv/rootfs bash -c &#x27;
+  echo &quot;deb http://archive.ubuntu.com/ubuntu noble main universe
+deb http://archive.ubuntu.com/ubuntu noble-updates main universe&quot; &gt; /etc/apt/sources.list
+  apt-get update
+  DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+    systemd systemd-sysv dbus openssh-server sudo iproute2 python3 python3-venv python3-pip \
+    munge slurm-wlm slurmdbd mariadb-server libpam-slurm-adopt libpam-systemd \
+    libslurm-dev build-essential curl jq ca-certificates \
+    squashfs-tools squashfuse fuse-overlayfs parallel pigz zstd bsdextrautils busybox-static
+  useradd -m -s /bin/bash -u 1000 admin
+  echo &quot;admin ALL=(ALL) NOPASSWD:ALL&quot; &gt; /etc/sudoers.d/admin
+  systemctl enable ssh munge&#x27;
+install -d -m 700 /srv/rootfs/home/admin/.ssh
+cp ~/.ssh/id_ed25519.pub /srv/rootfs/home/admin/.ssh/authorized_keys     # Ansible logs in as admin
+chroot /srv/rootfs chown -R admin:admin /home/admin/.ssh
+umount /srv/rootfs/dev /srv/rootfs/proc
+
+tar -C /srv/rootfs -c . | docker import -c &#x27;CMD [&quot;/sbin/init&quot;]&#x27; -c &#x27;ENV container=docker&#x27; - acot/node:noble-systemd</code></pre>
+<p><code>bsdextrautils</code> is in the list because Enroot needs <code>column</code> for named containers; leaving it out cost us a failed test (<a href="../../../../fields/schedulers/slurm-ai-clusters/containers-with-pyxis/">part 3</a>).</p>
+<hr>
+<h2>2. Start the containers</h2>
+<p><code>~/alab/lab.sh</code>, which starts, stops or rebuilds the six main nodes:</p>
+<pre><code class="language-bash">#!/bin/bash
+# lab.sh up | down | reinstall &lt;node&gt;   -- fake cluster: head01, cn001-cn004, gpu001
+declare -A IP=([head01]=10.10.0.10 [cn001]=10.10.0.11 [cn002]=10.10.0.12 [cn003]=10.10.0.13 [cn004]=10.10.0.14 [gpu001]=10.10.0.21)
+start(){ docker run -d --restart unless-stopped --privileged --ulimit nofile=1024:20000 --name $1 --hostname $1 --network cluster --ip ${IP[$1]} \
+  --cgroupns=host -v /sys/fs/cgroup:/sys/fs/cgroup:rw --tmpfs /run --tmpfs /run/lock acot/node:noble-systemd &gt;/dev/null; }
+case $1 in
+  up) for n in &quot;${!IP[@]}&quot;; do start $n; done; sleep 8
+      for n in &quot;${!IP[@]}&quot;; do printf &quot;%s %s\n&quot; $n &quot;$(docker exec $n systemctl is-system-running)&quot;; done | sort ;;
+  down) docker rm -f &quot;${!IP[@]}&quot; &gt;/dev/null 2&gt;&amp;1 ;;
+  reinstall) docker rm -f $2 &gt;/dev/null; start $2; sleep 8; echo &quot;$2 reinstalled (new host keys)&quot; ;;
+esac</code></pre>
+<pre><code class="language-bash">~/alab/lab.sh up</code></pre>
+<p><code>--privileged</code> is a lab shortcut: systemd, cgroups and <code>mknod</code> for the fake GPUs need it.</p>
+<hr>
+<h2>3. Munge, names and users</h2>
+<pre><code class="language-bash"># One munge key for every node (and later the 26.05 nodes)
+dd if=/dev/urandom bs=1 count=1024 of=/tmp/munge.key 2&gt;/dev/null
+for n in head01 cn001 cn002 cn003 cn004 gpu001; do
+  docker cp /tmp/munge.key $n:/etc/munge/munge.key
+  docker exec $n bash -c &#x27;chown munge:munge /etc/munge/munge.key; chmod 400 /etc/munge/munge.key; systemctl restart munge&#x27;
+done
+
+# The host resolves the nodes by name (Ansible connects over SSH)
+cat &gt;&gt; /etc/hosts &lt;&lt;&#x27;EOF&#x27;
+10.10.0.10 head01
+10.10.0.11 cn001
+10.10.0.12 cn002
+10.10.0.13 cn003
+10.10.0.14 cn004
+10.10.0.21 gpu001
+EOF
+
+# Test users, same UIDs on every node
+for n in head01 cn001 cn002 cn003 cn004 gpu001; do
+  docker exec $n bash -c &#x27;useradd -m -u 2001 alice; useradd -m -u 2002 bob; useradd -m -u 2003 carol&#x27;
+done</code></pre>
+<p>We distributed the key with the <code>munge</code> role from the <a href="../../../../fields/devops/ansible/">Ansible series</a>; <code>docker cp</code> does the same in a lab.</p>
+<hr>
+<h2>4. Slurm 23.11 with accounting</h2>
+<p>The configuration is an Ansible project, <code>~/slurmlab</code>, with the inventory groups <code>head</code> (head01) and <code>nodes</code> (cn001–cn004, gpu001):</p>
+<pre><code class="language-text">~/slurmlab/
+├── ansible.cfg          # inventory, remote_user = admin
+├── site.yml
+└── templates/
+    ├── slurm.conf.j2
+    ├── slurmdbd.conf.j2
+    ├── cgroup.conf.j2
+    └── gres.conf.j2</code></pre>
+<p><code>templates/slurm.conf.j2</code>:</p>
+<pre><code class="language-text">ClusterName=lab
+SlurmctldHost=head01
+SlurmUser=slurm
+AuthType=auth/munge
+MpiDefault=none
+ProctrackType=proctrack/cgroup
+TaskPlugin=task/cgroup
+PrologFlags=contain
+JobAcctGatherType=jobacct_gather/cgroup
+SelectType=select/cons_tres
+SelectTypeParameters=CR_Core_Memory
+ReturnToService=2
+StateSaveLocation=/var/lib/slurm/slurmctld
+SlurmdSpoolDir=/var/lib/slurm/slurmd
+SlurmctldLogFile=/var/log/slurm/slurmctld.log
+SlurmdLogFile=/var/log/slurm/slurmd.log
+GresTypes=gpu
+AccountingStorageType=accounting_storage/slurmdbd
+AccountingStorageHost=head01
+AccountingStorageEnforce=associations,limits,qos,safe
+AccountingStorageTRES=gres/gpu
+JobCompType=jobcomp/none
+SchedulerType=sched/backfill
+SchedulerParameters=bf_interval=10
+PriorityType=priority/multifactor
+PriorityWeightAge={{ prio_age | default(1000) }}
+PriorityWeightFairshare={{ prio_fairshare | default(10000) }}
+PriorityWeightJobSize={{ prio_jobsize | default(0) }}
+PriorityWeightPartition={{ prio_partition | default(0) }}
+PriorityWeightQOS={{ prio_qos | default(5000) }}
+PriorityMaxAge={{ prio_maxage | default(&quot;1-0&quot;) }}
+PriorityDecayHalfLife=7-0
+{{ extra_slurm_conf | default(&#x27;&#x27;) }}
+
+NodeName=cn[001-004] CPUs=2 RealMemory=3000 State=UNKNOWN
+NodeName=gpu001 CPUs=2 RealMemory=3000 Gres=gpu:h100:4 State=UNKNOWN
+PartitionName=cpu Nodes=cn[001-004] Default=YES MaxTime=2-00:00:00 State=UP
+PartitionName=gpu Nodes=gpu001 MaxTime=2-00:00:00 QOS=gpu-normal State=UP</code></pre>
+<p>The <code>QOS=gpu-normal</code> on the <code>gpu</code> partition comes from <a href="../../../../fields/schedulers/slurm-pending-jobs/limits-that-wait-forever/">part 3 of the pending series</a>. The QOS doesn&#x27;t exist yet on the first run: leave <code>QOS=gpu-normal</code> out until step 5 has created it, then add it back and run the playbook again. Note there&#x27;s no <code>DefMemPerCPU</code>: this lab shows the default that <a href="../../../../fields/schedulers/slurm-ai-clusters/metrics-openmetrics/">part 5</a> fixes.</p>
+<p><code>templates/slurmdbd.conf.j2</code> (installed mode 0600, owner slurm):</p>
+<pre><code class="language-text">AuthType=auth/munge
+DbdHost=head01
+SlurmUser=slurm
+StorageType=accounting_storage/mysql
+StorageHost=localhost
+StorageUser=slurm
+StoragePass=labonly
+StorageLoc=slurm_acct_db
+LogFile=/var/log/slurm/slurmdbd.log
+PidFile=/run/slurmdbd/slurmdbd.pid</code></pre>
+<p><code>templates/cgroup.conf.j2</code> and <code>templates/gres.conf.j2</code>:</p>
+<pre><code class="language-text">CgroupPlugin=autodetect
+ConstrainCores=yes
+ConstrainRAMSpace=yes
+ConstrainDevices=yes</code></pre>
+<pre><code class="language-text">NodeName=gpu001 Name=gpu Type=h100 File=/dev/nvidia[0-3]</code></pre>
+<p><code>site.yml</code> does, in order: start MariaDB and create the <code>slurm_acct_db</code> database and <code>slurm</code> user; install <code>slurmdbd.conf</code> and start <code>slurmdbd</code>, waiting for port 6819; on every host, create the fake GPU device files on <code>gpu001</code> (<code>mknod -m 666 /dev/nvidia$i c 195 $i</code> for 0–3), create <code>/var/lib/slurm</code> and <code>/var/log/slurm</code>, template the three config files, install <code>topology.conf</code> only when the <code>topology_conf</code> variable is set (and remove it otherwise), restart what changed, then start <code>slurmctld</code> on the head and <code>slurmd</code> on the nodes.</p>
+<pre><code class="language-bash">cd ~/slurmlab
+ANSIBLE_CONFIG=$PWD/ansible.cfg ansible-playbook site.yml \
+  -e &#x27;{&quot;extra_slurm_conf&quot;: &quot;RebootProgram=/usr/sbin/reboot\nPriorityCalcPeriod=1&quot;}&#x27;
+docker exec head01 sinfo</code></pre>
+<p>Expected: partitions <code>cpu*</code> (4 nodes) and <code>gpu</code> (1 node), all <code>idle</code>.</p>
+<hr>
+<h2>5. Accounts, QOS and limits</h2>
+<p>On <code>head01</code>:</p>
+<pre><code class="language-bash">sacctmgr -i add account physics,chem
+sacctmgr -i add user alice,bob,admin account=physics
+sacctmgr -i add user carol account=chem
+sacctmgr -i add qos gpu-normal MaxTRESPerUser=gres/gpu=2
+sacctmgr -i modify qos gpu-normal set flags=DenyOnLimit
+sacctmgr -i add qos urgent Priority=100
+sacctmgr -i modify user alice,bob,carol,admin set qos+=gpu-normal
+sacctmgr -i modify user carol set qos+=urgent
+sacctmgr -i modify account physics set GrpTRES=gres/gpu=3
+sacctmgr -n -P show assoc format=account,user,qos,grptres</code></pre>
+<pre><code class="language-text">root||normal|
+root|root|normal|
+chem||normal|
+chem|carol|gpu-normal,normal,urgent|
+physics||normal|gres/gpu=3|
+physics|admin|gpu-normal,normal|
+physics|alice|gpu-normal,normal|
+physics|bob|gpu-normal,normal|</code></pre>
+<p>The pending series&#x27; <code>whypending</code> script goes to <code>/usr/local/bin/whypending</code> on <code>head01</code>; it&#x27;s printed in full in <a href="../../../../fields/schedulers/slurm-pending-jobs/why-is-my-job-pending/">part 1</a>.</p>
+<hr>
+<h2>5b. Preemption drill (optional)</h2>
+<p>Want to see an urgent job evict a running one on this lab? This reuses the <code>urgent</code> QOS from step 5 as the preemptor and adds a requeueable <code>scavenger</code> victim. The same sequence was run, with <code>low</code> and <code>high_physics</code> as the names, on a separate two-node test cluster (Slurm 23.11.4) and is explained step by step in <a href="../../../../fields/schedulers/slurm-preemption/slurm-qos-preemption-setup/">The Guest List</a>. It was <strong>not</strong> re-run on this container lab, so treat the names below as an adaptation.</p>
+<p>Add to the <code>slurm.conf</code> template (through <code>extra_slurm_conf</code>), then restart <code>slurmctld</code>, because <code>PreemptType</code> is not picked up by a plain reconfigure:</p>
+<pre><code class="language-text">PreemptType=preempt/qos
+PreemptMode=REQUEUE</code></pre>
+<p>Then, on <code>head01</code>:</p>
+<pre><code class="language-bash">sacctmgr -i add qos scavenger
+sacctmgr -i modify qos scavenger set PreemptMode=requeue GraceTime=60
+sacctmgr -i modify qos urgent set Preempt=scavenger
+sacctmgr -i modify user alice,bob,carol,admin set qos+=scavenger</code></pre>
+<p>The drill: fill the <code>cpu</code> partition with <code>scavenger</code> jobs submitted with <code>--requeue</code>, then submit one <code>urgent</code> job from <code>carol</code>. The scavenger job should show <code>PREEMPTED</code> and then run again; <code>sacct -X -D</code> shows both lives (see <a href="../../../../fields/schedulers/slurm-sacct-job-forensics/">Autopsy of a Job</a>). If nothing happens, check that the victim has <code>--requeue</code> and that the <code>urgent</code> job really asked for the same nodes.</p>
+<hr>
+<h2>6. Topology variants</h2>
+<p>Two variable files for <code>site.yml</code>. Tree (<code>/tmp/tree.yml</code>):</p>
+<pre><code class="language-yaml">topology_conf: |
+  SwitchName=leaf1 Nodes=cn[001-002]
+  SwitchName=leaf2 Nodes=cn[003-004]
+  SwitchName=leaf3 Nodes=gpu001
+  SwitchName=spine Switches=leaf[1-3]
+extra_slurm_conf: |
+  RebootProgram=/usr/sbin/reboot
+  PriorityCalcPeriod=1
+  TopologyPlugin=topology/tree</code></pre>
+<p>Block (<code>/tmp/block.yml</code>): every block the same size, and <code>gpu001</code> left out (a 1-node block next to 2-node blocks is fatal to <code>slurmctld</code>):</p>
+<pre><code class="language-yaml">topology_conf: |
+  BlockName=nvl1 Nodes=cn[001-002]
+  BlockName=nvl2 Nodes=cn[003-004]
+extra_slurm_conf: |
+  RebootProgram=/usr/sbin/reboot
+  PriorityCalcPeriod=1
+  TopologyPlugin=topology/block</code></pre>
+<pre><code class="language-bash">ANSIBLE_CONFIG=$PWD/ansible.cfg ansible-playbook site.yml -e @/tmp/tree.yml
+docker exec head01 scontrol show topology</code></pre>
+<p>Run <code>site.yml</code> without <code>-e @...</code> to go back to no topology. <code>extra_slurm_conf</code> replaces the whole block, so repeat any line you still want, such as the health check from step 9.</p>
+<hr>
+<h2>7. PyTorch</h2>
+<p>On the host, into the image&#x27;s root filesystem (the shell there needs the proxy and CA settings if your network has them):</p>
+<pre><code class="language-bash">mount --bind /proc /srv/rootfs/proc; mount --bind /dev /srv/rootfs/dev
+chroot /srv/rootfs bash -c &#x27;python3 -m venv /opt/torchenv &amp;&amp; /opt/torchenv/bin/pip install --no-cache-dir torch==2.15.0&#x27;
+chroot /srv/rootfs /opt/torchenv/bin/python -c &quot;import torch, torch.distributed as d; print(torch.__version__, d.is_gloo_available())&quot;
+umount /srv/rootfs/dev /srv/rootfs/proc</code></pre>
+<pre><code class="language-text">2.15.0+cu132 True</code></pre>
+<p>The PyPI wheel pulls about 3 GB of NVIDIA libraries even for CPU use; <code>import torch</code> fails without them (<code>libcudart.so.13: cannot open shared object file</code>), so don&#x27;t install with <code>--no-deps</code>. We added the venv to already-running containers; starting fresh, do this before the <code>docker import</code> in step 1, so <code>/opt/torchenv</code> is in the image.</p>
+<p>Then put the test program from <a href="../../../../fields/schedulers/slurm-ai-clusters/launching-distributed-training/">part 2</a> on the CPU nodes:</p>
+<pre><code class="language-bash">for n in cn001 cn002 cn003 cn004; do docker cp allreduce.py $n:/usr/local/share/allreduce.py; done</code></pre>
+<hr>
+<h2>8. Containers: Enroot and Pyxis</h2>
+<p>Build in the image root (which has <code>libslurm-dev</code> 23.11.4 for Pyxis), then copy the results to the nodes that should have them. Enroot&#x27;s musl submodule points at <code>git.musl-libc.org</code>; if your network can&#x27;t reach it, point it at a mirror of the same commit.</p>
+<pre><code class="language-bash">mkdir -p /srv/rootfs/srv/build/ct &amp;&amp; cd /srv/rootfs/srv/build/ct
+git clone --depth 1 -b v4.2.1 --recurse-submodules https://github.com/NVIDIA/enroot
+git clone --depth 1 -b v0.24.0 https://github.com/NVIDIA/pyxis
+mount --bind /proc /srv/rootfs/proc; mount --bind /dev /srv/rootfs/dev
+chroot /srv/rootfs bash -c &#x27;
+  cd /srv/build/ct/enroot &amp;&amp; make prefix=/usr/local sysconfdir=/etc -j4 &amp;&amp;
+    make install prefix=/usr/local sysconfdir=/etc DESTDIR=/srv/stage
+  cd /srv/build/ct/pyxis &amp;&amp; make -j4&#x27;
+umount /srv/rootfs/dev /srv/rootfs/proc</code></pre>
+<p>Pass the same <code>sysconfdir</code> to the build <strong>and</strong> the install. We built without it, and Enroot looked for its hooks in <code>/usr/local/etc/enroot</code> instead of <code>/etc/enroot</code> (<a href="../../../../fields/schedulers/slurm-ai-clusters/containers-with-pyxis/">part 3</a>); the lab fixed it with <code>ln -s /etc/enroot /usr/local/etc/enroot</code> on each node. The build line above is the corrected form, not re-run.</p>
+<p>On <code>head01</code>, <code>cn001</code> and <code>cn002</code> (leave <code>cn003</code> without, to reproduce part 3&#x27;s story):</p>
+<pre><code class="language-bash">R=/srv/rootfs/srv
+for n in head01 cn001 cn002; do
+  docker cp $R/stage/. $n:/
+  docker exec $n mkdir -p /usr/local/lib/slurm
+  docker cp $R/build/ct/pyxis/spank_pyxis.so $n:/usr/local/lib/slurm/spank_pyxis.so
+  docker exec $n bash -c &#x27;
+    echo &quot;required /usr/local/lib/slurm/spank_pyxis.so container_scope=job&quot; &gt; /etc/slurm/plugstack.conf
+    cat &gt; /etc/enroot/enroot.conf.d/10-paths.conf &lt;&lt;&quot;EOF&quot;
+ENROOT_RUNTIME_PATH /run/enroot/user-$(id -u)
+ENROOT_CACHE_PATH   /var/lib/enroot/cache/user-$(id -u)
+ENROOT_DATA_PATH    /var/lib/enroot/data/user-$(id -u)
+EOF
+    mkdir -p /run/enroot /var/lib/enroot/cache /var/lib/enroot/data
+    chmod 1777 /run/enroot /var/lib/enroot/cache /var/lib/enroot/data      # lab shortcut
+    echo &quot;d /run/enroot 1777 root root -&quot; &gt; /etc/tmpfiles.d/enroot.conf
+    cp /usr/local/share/enroot/hooks.d/50-slurm-pytorch.sh /etc/enroot/hooks.d/
+    systemctl restart slurmd 2&gt;/dev/null; enroot version&#x27;
+done
+docker exec head01 bash -c &#x27;srun --help | grep -c container&#x27;    # &gt; 0: Pyxis is loaded</code></pre>
+<p>The test images, a busybox root with an <code>os-release</code>, one with <code>PYTORCH_VERSION</code> set for the hook:</p>
+<pre><code class="language-bash">chroot /srv/rootfs bash -c &#x27;
+  mkdir -p /srv/img/{bin,etc,tmp,proc,sys,dev,home,run,root,data} &amp;&amp; chmod 1777 /srv/img/tmp
+  cp /bin/busybox /srv/img/bin/
+  for c in sh ls cat hostname id grep env echo nproc df; do ln -sf busybox /srv/img/bin/$c; done
+  echo &quot;PRETTY_NAME=\&quot;acot lab image 1.0\&quot;&quot; &gt; /srv/img/etc/os-release
+  mksquashfs /srv/img /srv/labimg.sqsh -noappend -quiet
+  cp -a /srv/img /srv/img2 &amp;&amp; echo &quot;PYTORCH_VERSION=2.15.0&quot; &gt; /srv/img2/etc/environment
+  mksquashfs /srv/img2 /srv/ptimg.sqsh -noappend -quiet&#x27;
+for n in head01 cn001 cn002 cn003; do
+  docker cp /srv/rootfs/srv/labimg.sqsh $n:/srv/labimg.sqsh
+  docker cp /srv/rootfs/srv/ptimg.sqsh $n:/srv/ptimg.sqsh
+done
+docker exec head01 su alice -c &#x27;cd /tmp; srun -p cpu -N2 --container-image=/srv/labimg.sqsh grep PRETTY /etc/os-release&#x27;</code></pre>
+<p>Expected: <code>PRETTY_NAME=&quot;acot lab image 1.0&quot;</code> twice.</p>
+<hr>
+<h2>9. GPU health check</h2>
+<p>The script is in <a href="../../../../fields/schedulers/slurm-ai-clusters/gpu-health-checks/">part 4</a>. Copy it to every node, then add it to <code>slurm.conf</code>:</p>
+<pre><code class="language-bash">for n in cn001 cn002 cn003 cn004 gpu001; do docker cp gpu-health $n:/usr/local/sbin/gpu-health; done
+ANSIBLE_CONFIG=$PWD/ansible.cfg ansible-playbook site.yml -e &#x27;{&quot;extra_slurm_conf&quot;:
+  &quot;RebootProgram=/usr/sbin/reboot\nPriorityCalcPeriod=1\nHealthCheckProgram=/usr/local/sbin/gpu-health\nHealthCheckInterval=30&quot;}&#x27;</code></pre>
+<p>Test: <code>docker exec gpu001 rm /dev/nvidia2</code>, wait 30 s, <code>sinfo -R</code>. Put it back with <code>docker exec gpu001 mknod -m 666 /dev/nvidia2 c 195 2</code> and <code>scontrol update nodename=gpu001 state=resume</code>.</p>
+<hr>
+<h2>10. Slurm 26.05 from source</h2>
+<p>A separate build root, so the main image keeps its Ubuntu Slurm packages:</p>
+<pre><code class="language-bash">debootstrap noble /srv/build http://archive.ubuntu.com/ubuntu
+# add &quot;universe&quot; to /srv/build/etc/apt/sources.list as in step 1, then:
+chroot /srv/build bash -c &#x27;apt-get update &amp;&amp; apt-get install -y build-essential libmunge-dev libjson-c-dev \
+  libhttp-parser-dev libyaml-dev libjwt-dev libpam0g-dev libmariadb-dev libdbus-1-dev liblz4-dev libreadline-dev libssl-dev&#x27;
+git clone --depth 1 -b slurm-26-05-6-1 https://github.com/SchedMD/slurm /srv/build/usr/src/slurm-26.05.6
+chroot /srv/build bash -c &#x27;cd /usr/src/slurm-26.05.6 &amp;&amp;
+  ./configure --prefix=/opt/slurm26 --sysconfdir=/opt/slurm26/etc --with-munge --with-json --with-http-parser --with-yaml &amp;&amp;
+  make -j2 &amp;&amp; make install &amp;&amp; echo BUILD-OK&#x27;</code></pre>
+<p><code>--with-http-parser</code> and <code>--with-yaml</code> matter: the OpenMetrics endpoints and <code>topology.yaml</code> need them. The runtime libraries (<code>libhttp-parser2.9</code>, <code>libjwt2</code>) were already in the node image.</p>
+<p>Image and containers:</p>
+<pre><code class="language-bash">cp -a /srv/build/opt/slurm26 /srv/rootfs/opt/
+tar -C /srv/rootfs -c . | docker import -c &#x27;CMD [&quot;/sbin/init&quot;]&#x27; -c &#x27;ENV container=docker&#x27; - acot/node:noble-s26
+for i in a:31 b:32 c:33; do n=s26${i%%:*}; ip=10.10.0.${i##*:}
+  docker run -d --restart unless-stopped --privileged --ulimit nofile=1024:20000 --name $n --hostname $n \
+    --network cluster --ip $ip --cgroupns=host -v /sys/fs/cgroup:/sys/fs/cgroup:rw --tmpfs /run --tmpfs /run/lock acot/node:noble-s26
+done</code></pre>
+<p>Copy <code>/tmp/munge.key</code> in and restart munge as in step 3, then on each: <code>mkdir -p /var/lib/slurm26 /var/log/slurm26 &amp;&amp; chown slurm:slurm /var/lib/slurm26 /var/log/slurm26</code>. <code>/opt/slurm26/etc/slurm.conf</code> on all three:</p>
+<pre><code class="language-text">ClusterName=lab26
+SlurmctldHost=s26a
+SlurmUser=slurm
+AuthType=auth/munge
+MpiDefault=none
+ProctrackType=proctrack/linuxproc
+TaskPlugin=task/none
+SelectType=select/cons_tres
+ReturnToService=2
+StateSaveLocation=/var/lib/slurm26/ctld
+SlurmdSpoolDir=/var/lib/slurm26/d
+SlurmctldLogFile=/var/log/slurm26/slurmctld.log
+SlurmdLogFile=/var/log/slurm26/slurmd.log
+SlurmctldPidFile=/run/slurmctld26.pid
+SlurmdPidFile=/run/slurmd26.pid
+MetricsType=metrics/openmetrics
+NodeName=s26a,s26b,s26c CPUs=2 RealMemory=1000 State=UNKNOWN
+PartitionName=all Nodes=s26a,s26b,s26c Default=YES MaxTime=1-00:00:00 State=UP
+PartitionName=nvl Nodes=s26a,s26b Topology=nvl MaxTime=1-00:00:00 State=UP</code></pre>
+<p>(Add <code>DefMemPerCPU=400</code> after reproducing the part 5 story.) Node names are listed one by one: <code>s26[a-c]</code> isn&#x27;t a valid range, Slurm ranges are numeric. <code>/opt/slurm26/etc/topology.yaml</code> is in <a href="../../../../fields/schedulers/slurm-ai-clusters/topology-aware-placement/">part 1</a>.</p>
+<p>Start the daemons once munge is running. Use <code>docker exec -d</code>; a background <code>&amp;</code> inside <code>docker exec bash -c</code> died with the exec session:</p>
+<pre><code class="language-bash">docker exec -d s26a /opt/slurm26/sbin/slurmctld -f /opt/slurm26/etc/slurm.conf
+for n in s26a s26b s26c; do docker exec -d $n /opt/slurm26/sbin/slurmd -f /opt/slurm26/etc/slurm.conf; done
+docker exec s26a bash -c &#x27;SLURM_CONF=/opt/slurm26/etc/slurm.conf /opt/slurm26/bin/sinfo&#x27;
+curl -s http://10.10.0.31:6817/metrics</code></pre>
+<p>Expected: partitions <code>all*</code> and <code>nvl</code>, and the index of five metrics endpoints.</p>
+<hr>
+<h2>11. Metrics into VictoriaMetrics</h2>
+<p>VictoriaMetrics single-node as in <a href="../../../../fields/devops/victoriametrics/single-node-in-ten-minutes/">its series</a>, with the scrape file from <a href="../../../../fields/schedulers/slurm-ai-clusters/metrics-openmetrics/">part 5</a>:</p>
+<pre><code class="language-bash">victoria-metrics-prod -storageDataPath=/root/vmlab/t12/data -httpListenAddr=127.0.0.1:8428 \
+  -promscrape.config=/root/vmlab/t12/scrape.yml
+curl -s &#x27;http://127.0.0.1:8428/api/v1/query&#x27; --data-urlencode &#x27;query=up{job=~&quot;slurm.*&quot;}&#x27;
+vmalert-tool-prod unittest --files slurm-rules.test.yml</code></pre>
+<p>Expected: three <code>up</code> series with value <code>1</code>, and <code>SUCCESS</code>.</p>
+<hr>
+<h2>When the lab breaks</h2>
+<table><thead><tr><th>Symptom</th><th>Cause</th><th>Fix</th></tr></thead><tbody><tr><td><code>docker</code> commands hang or the daemon is gone</td><td><code>dockerd</code> was started from a shell that ended</td><td><code>setsid -f dockerd &gt; /tmp/dockerd.log 2&gt;&amp;1 &lt; /dev/null</code></td></tr><tr><td>After a Docker restart, <code>gpu001</code> is <code>down*</code></td><td><code>/dev/nvidia*</code> don&#x27;t survive a container restart</td><td>Re-run <code>site.yml</code> (step 4)</td></tr><tr><td>Ansible: <code>UNREACHABLE</code></td><td><code>/etc/hosts</code> lost the node names</td><td>Re-add the lines from step 3</td></tr><tr><td>Ansible: <code>Attempting to decrypt but no vault secrets found</code></td><td>The inventory has vault-encrypted vars</td><td><code>vault_password_file</code> in <code>ansible.cfg</code></td></tr><tr><td>26.05 daemons: <code>auth/munge</code> fatal</td><td>Started before munge</td><td><code>systemctl restart munge</code>, then start them again</td></tr><tr><td><code>slurmctld</code> exits after a topology change</td><td>Unequal block sizes</td><td>See step 6</td></tr><tr><td><code>scontrol reboot</code> leaves nodes in <code>reboot^</code></td><td>Containers report the host&#x27;s boot time</td><td>Lab artifact; <code>scontrol update nodename=... state=resume</code> (<a href="../../../../fields/schedulers/slurm-cluster-operations/slurm-reboot-order/">reboot order</a>)</td></tr><tr><td><code>scancel -u alice -u bob</code> cancels only bob&#x27;s jobs</td><td>Only the last <code>-u</code> counts</td><td>Loop: <code>for u in alice bob; do scancel -u $u; done</code></td></tr></tbody></table>
+<p>Teardown: <code>~/alab/lab.sh down</code>, then <code>docker rm -f s26a s26b s26c</code>.</p>
+<p><strong>Takeaway:</strong> the whole lab is one Ubuntu root filesystem imported as a systemd image, six plus three privileged containers on one Docker network, and an Ansible playbook for Slurm; everything after that is a few files copied onto the nodes.</p>
+<p><strong>Series index:</strong> <a href="../../../../fields/schedulers/slurm-ai-clusters/">Slurm for AI Clusters</a>. For what this lab was used to show about the queue, see <a href="../../../../fields/schedulers/slurm-pending-jobs/">Why Is My Job Still Pending?</a>.</p>
+<hr>
+<h2>References</h2>
+<ul><li><a href="https://slurm.schedmd.com/quickstart_admin.html">Slurm: Quick Start Administrator Guide</a>: building from source, <code>configure</code> options, daemons.</li><li><a href="https://slurm.schedmd.com/accounting.html">Slurm: Accounting</a>: slurmdbd and MariaDB setup.</li><li><a href="https://github.com/dun/munge/wiki/Installation-Guide">MUNGE installation guide</a>: one key on every node.</li><li><a href="https://github.com/NVIDIA/enroot/blob/master/doc/installation.md">Enroot: installation</a> and <a href="https://github.com/NVIDIA/pyxis">Pyxis</a>: building from source.</li><li><a href="https://manpages.ubuntu.com/manpages/noble/man8/debootstrap.8.html">debootstrap(8)</a> and <a href="https://docs.docker.com/reference/cli/docker/image/import/">docker import</a>: building the node image.</li><li><a href="https://pypi.org/project/torch/">PyTorch on PyPI</a>: the wheel and its NVIDIA dependencies.</li></ul>
+<p><a href="../../../../#/fields/schedulers/slurm-ai-clusters/lab-build-cheatsheet">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

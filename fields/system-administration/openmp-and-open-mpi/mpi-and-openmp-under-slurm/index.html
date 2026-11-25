@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Who Starts the Ranks? OpenMP and MPI Under Slurm</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/openmp-and-open-mpi/mpi-and-openmp-under-slurm/">
+<meta name="description" content="How Slurm launches MPI ranks and OpenMP threads - srun direct launch, mpirun inside an allocation, PMIx as the address book, and how ntasks and cpus-per-task decide the binding trap from part 5.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Who Starts the Ranks? OpenMP and MPI Under Slurm">
+<meta property="og:description" content="How Slurm launches MPI ranks and OpenMP threads - srun direct launch, mpirun inside an allocation, PMIx as the address book, and how ntasks and cpus-per-task decide the binding trap from part 5.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/openmp-and-open-mpi/mpi-and-openmp-under-slurm/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/openmp-and-open-mpi/mpi-and-openmp-under-slurm/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/system-administration/openmp-and-open-mpi/mpi-and-openmp-under-slurm"></script>
+<main>
+<h1>Who Starts the Ranks? OpenMP and MPI Under Slurm</h1>
+<p><em>How Slurm launches MPI ranks and OpenMP threads - srun direct launch, mpirun inside an allocation, PMIx as the address book, and how ntasks and cpus-per-task decide the binding trap from part 5.</em></p>
+<blockquote><p><strong>Part 7 of 8.</strong> On your laptop you type <code>mpirun</code>. On a cluster somebody else owns the machines, the doors and the clock. By the end of this page you&#x27;ll know who really starts your ranks under Slurm, what a rank needs before it can talk to its neighbours, and which two job-script lines decide whether part 5&#x27;s binding trap bites you.</p></blockquote>
+<h2>Contents</h2>
+<hr>
+<h2>Two tickets, one job script</h2>
+<p>Monday, two tickets land in the cluster team&#x27;s queue. Same user, same program, two different symptoms.</p>
+<p><strong>Ticket 1:</strong> <em>&quot;I asked Slurm for 4 tasks. The program printed `rank 0 of 1` four times.&quot;</em></p>
+<p><strong>Ticket 2:</strong> <em>&quot;Now the ranks are fine, but my OpenMP part runs like it has one core.&quot;</em></p>
+<p>A junior engineer reads both and writes: &quot;MPI is broken on the cluster, reinstall Open MPI.&quot; Closes both.</p>
+<p>They&#x27;re wrong twice, and neither ticket is about the install. Ticket 1 is about <strong>who started the ranks and whether anybody introduced them to each other</strong>. Ticket 2 is part 5&#x27;s binding trap wearing a Slurm badge. To see both, you need to know who actually unlocks the kitchen doors on a cluster.</p>
+<hr>
+<h2>The building manager</h2>
+<p>Back to the kitchens from part 1. On your laptop you own the building, so you walk in and start the chefs yourself: that&#x27;s <code>mpirun</code>. On a cluster, the building has a <strong>manager</strong>. That&#x27;s Slurm. It decides which kitchens (nodes) and which burners (cores) you get, and it keeps the keys.</p>
+<p>So there&#x27;s one question: <strong>who unlocks each kitchen and tells every head chef the names of the other kitchens?</strong> The Slurm MPI guide lists three answers:</p>
+<table><thead><tr><th>Mode</th><th>Who starts the ranks</th><th>What the guide says</th></tr></thead><tbody><tr><td><strong>1. Direct launch</strong></td><td>Slurm, with <code>srun</code></td><td>&quot;Slurm directly launches the tasks and performs initialization of communications through the PMI-1, PMI-2 or PMIx APIs.&quot;</td></tr><tr><td><strong>2. `mpirun` in an allocation</strong></td><td><code>mpirun</code>, using Slurm&#x27;s machinery</td><td>&quot;Slurm creates a resource allocation for the job and then mpirun launches tasks using Slurm&#x27;s infrastructure (srun).&quot;</td></tr><tr><td><strong>3. Outside Slurm</strong></td><td><code>mpirun</code> over SSH or RSH</td><td>&quot;Slurm is not directly launching the user application in case 3,&quot; and the guide calls it &quot;not a recommended way&quot;.</td></tr></tbody></table>
+<p>For Open MPI, the guide names mode 1 as the winner: &quot;This is the preferred mode of operation since accounting features and affinity done by Slurm will become available.&quot; Mode 3 is the back door that sneaks into a kitchen the manager never knew was in use, which is why the repo has a page on <a href="../../../../fields/schedulers/slurm-cluster-operations/slurm-pam-adopt-ssh-access/">locking it with pam_slurm_adopt</a>.</p>
+<p>What is the &quot;initialization of communications&quot; that mode 1 performs? That&#x27;s where the ticket 1 mystery hides.</p>
+<hr>
+<h2>Under the hood: the road from sbatch to rank</h2>
+<p>Every rank, once it starts, has the same first problem: <strong>who else is in my job?</strong> Part 3&#x27;s <code>MPI_Init</code> answers that by asking a launcher. The question and the answer travel over <strong>PMI</strong>: the Process Management Interface, a small address-book protocol between a rank and whoever started it. Slurm speaks three dialects, PMI-1, PMI-2 and <strong>PMIx</strong>. Open MPI &quot;natively supports&quot; PMIx since version 3.1, per the guide.</p>
+<p>Here is the road a direct-launch job travels:</p>
+<pre><code class="language-mermaid">sequenceDiagram
+    participant You
+    participant C as slurmctld
+    participant D as slurmd (node)
+    participant S as slurmstepd
+    participant R as job.sh, then ranks
+    You-&gt;&gt;C: sbatch job.sh
+    C-&gt;&gt;D: run the batch script on node 1
+    D-&gt;&gt;S: fork a stepd for the script
+    S-&gt;&gt;R: job.sh runs, calls srun
+    R-&gt;&gt;C: srun asks for a step
+    C-&gt;&gt;D: start the step
+    D-&gt;&gt;S: fork a stepd for the step
+    Note over S: MPI setup first&lt;br/&gt;(the PMIx plugin)
+    S-&gt;&gt;R: fork and exec your ranks&lt;br/&gt;with their address book</code></pre>
+<p>The key line is in the box: before the stepd starts your first instruction, its first job is &quot;performs MPI setup, using the appropriate plugin&quot; (see <a href="../../../../fields/schedulers/slurm-inside-a-job/slurm-slurmstepd/">slurmstepd</a> for the full order). Slurm builds the address book before the ranks exist, then hands each rank its copy. Which plugin is used?</p>
+<ul><li>The cluster default comes from <code>MpiDefault</code> in <code>slurm.conf</code>.</li><li>You override it per job with <code>srun --mpi=&lt;type&gt;</code>.</li><li><code>srun --mpi=list</code> prints what your Slurm offers. The guide&#x27;s example lists <code>cray_shasta</code>, <code>none</code>, <code>pmi2</code> and <code>pmix</code>.</li></ul>
+<p>And the srun manual describes <code>none</code> as &quot;No special MPI processing&quot;, the default. Put the pieces together and Ticket 1 falls out:</p>
+<blockquote><p>[!NOTE] <strong>Expected, not run on a cluster for this page:</strong> an MPI rank that gets no address book starts as a team of one. Part 1 showed that on a real machine: an MPI program started without a launcher printed <code>rank 0 of 1</code>. Four such ranks, one per task, would print <code>rank 0 of 1</code> four times. That matches Ticket 1. The cheap check is <code>scontrol show config | grep MpiDefault</code> and <code>srun --mpi=list</code>; the fix is <code>srun --mpi=pmix</code> (or <code>MpiDefault=pmix</code> set by the admins).</p></blockquote>
+<p>Mode 2 doesn&#x27;t need the plugin: <code>mpirun</code> asks Slurm&#x27;s <code>srun</code> to start its helpers, and <strong>those</strong> start your ranks. It works, but your ranks are one more hop from the manager, and the guide&#x27;s &quot;preferred&quot; word goes to the mode with fewer hops.</p>
+<p>One sharp edge from the same guide: &quot;OpenMPI has a limitation that does not support calls to <code>MPI_Comm_spawn()</code> from within a Slurm allocation.&quot;</p>
+<p>So the launch itself is settled. Which leaves Ticket 2, the one about cores.</p>
+<hr>
+<h2>Try it before you scroll</h2>
+<p>☕ Ten seconds. One 32-core node, this script:</p>
+<pre><code class="language-bash">#SBATCH --nodes=1
+#SBATCH --ntasks=4
+export OMP_NUM_THREADS=8
+srun --mpi=pmix ./sim</code></pre>
+<p>You wanted 4 ranks with 8 threads each, which is exactly 32 cores. How many cores did Slurm actually reserve for each rank?</p>
+<p>Hint: the script never said how many cores a rank gets.</p>
+<p>The srun manual answers: <code>--cpus-per-task</code> &quot;The default is one CPU per process&quot;. Nothing in the script asked for more, so each rank gets <strong>one</strong> core, and <code>OMP_NUM_THREADS=8</code> is a wish OpenMP can&#x27;t fulfil. Eight threads per rank, one burner each. That is part 5&#x27;s trap, produced by a missing line.</p>
+<hr>
+<h2>Two lines decide the binding trap</h2>
+<p>Part 5&#x27;s rule was: the number of threads must match the number of CPUs each rank may use. Under Slurm, <strong>you</strong> tell Slurm those numbers, and Slurm hands them to the ranks:</p>
+<table><thead><tr><th>You write</th><th>Slurm hands the program</th><th>In kitchen terms</th></tr></thead><tbody><tr><td><code>--ntasks=N</code> (or <code>-n N</code>)</td><td>N ranks</td><td>N kitchens</td></tr><tr><td><code>--cpus-per-task=M</code> (or <code>-c M</code>)</td><td>M CPUs per rank, and <code>SLURM_CPUS_PER_TASK=M</code></td><td>M burners per kitchen</td></tr><tr><td><code>export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK</code></td><td>M threads per rank</td><td>M chefs per kitchen</td></tr></tbody></table>
+<p>Three points from the srun manual that keep the bill honest:</p>
+<ol><li><code>SLURM_CPUS_PER_TASK</code> is &quot;only set if either the <code>--cpus-per-task</code> option or the <code>--tres-per-task=cpu=#</code> option is specified&quot;. Skip the option and the variable is empty, so <code>OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK</code> exports an empty string. Part 4 warned you about that line; now you know why.</li><li>Binding is used &quot;only when the task/affinity plugin is enabled&quot;, and with no <code>--cpu-bind</code> &quot;the default binding mode will depend upon Slurm&#x27;s configuration and the step&#x27;s resource allocation&quot;. Auto binding applies when the allocation&#x27;s sockets, cores or threads match tasks times cpus-per-task. Translation: ask for the full shape, <code>-n</code> and <code>-c</code>, and Slurm can bind each rank to its own cores. Ask for half the shape, and it may not.</li><li><code>--cpu-bind=verbose</code> prints what Slurm did, per task.</li></ol>
+<blockquote><p>[!WARNING] <strong>Slurm binds, then Open MPI may bind again.</strong> In mode 2, <code>mpirun</code> has its own default binding (part 5: the core when 2 ranks or fewer, the package above that). I have not run mode 2 under Slurm for this page. If you use it, read the report from your own <code>hybrid</code> run (&quot;rank may use N cpus&quot;, from part 5) instead of assuming. In mode 1, <code>srun</code> is the only binder, and that is one more reason it is the preferred mode.</p></blockquote>
+<hr>
+<h2>A job script you can trust</h2>
+<p>This is the pattern from part 4 with the missing pieces added. <strong>Not run on a cluster for this page</strong>, so check it against your site&#x27;s Slurm version and its <code>MpiDefault</code>:</p>
+<pre><code class="language-bash">#!/bin/bash
+#SBATCH --nodes=2
+#SBATCH --ntasks-per-node=4          # 4 ranks per node, 8 in total
+#SBATCH --cpus-per-task=8            # 8 cores per rank: this line is the cure for Ticket 2
+
+export OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK:?set --cpus-per-task}   # fail loudly instead of exporting &quot;&quot;
+srun --mpi=pmix --cpu-bind=verbose ./hybrid                          # Slurm starts the ranks, builds the address book, binds</code></pre>
+<p><code>${VAR:?message}</code> is plain bash: the script stops loudly if <code>--cpus-per-task</code> is forgotten, which beats a silent slow job. <code>srun --mpi=pmix</code> takes mode 1 (harmless if your site&#x27;s <code>MpiDefault</code> is already <code>pmix</code>), and <code>--cpu-bind=verbose</code> means Ticket 2 can&#x27;t hide.</p>
+<p>The <code>hybrid</code> program from <a href="../../../../fields/system-administration/openmp-and-open-mpi/hybrid-and-the-binding-trap/">part 5</a> is the right first job on any new cluster: it prints <code>rank R thread T/N on cpu C, rank may use K cpus</code>. If K is smaller than N, you have the trap.</p>
+<hr>
+<h2>Back to the two tickets</h2>
+<table><thead><tr><th>Ticket</th><th>Cause</th><th>Fix</th></tr></thead><tbody><tr><td>1: <code>rank 0 of 1</code>, four times</td><td><code>MpiDefault=none</code> gave the ranks no address book, so each started alone (expected from the docs and part 1, not run here)</td><td><code>srun --mpi=pmix</code>, after checking <code>srun --mpi=list</code></td></tr><tr><td>2: OpenMP crawls</td><td>No <code>--cpus-per-task</code>: Slurm&#x27;s default is one CPU per task, while <code>OMP_NUM_THREADS</code> asked for more</td><td><code>--cpus-per-task=M</code> plus <code>OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK</code>, then read <code>--cpu-bind=verbose</code></td></tr></tbody></table>
+<p>Neither ticket needed a reinstall. Both needed someone to know who unlocks the kitchen doors.</p>
+<p><strong>Takeaway:</strong> under Slurm, <code>srun</code> starts the ranks and gives them their address book through PMIx, <code>--ntasks</code> and <code>--cpus-per-task</code> are the two lines that decide ranks and threads, and <code>--cpu-bind=verbose</code> shows you whether the binding trap bit.</p>
+<p>Slurm gave you the kitchens for a while, with a manager who knows every key. Now picture the same program on a city whose kitchens are shipping containers that appear, vanish and change address between breakfast and lunch. How does <code>mpirun</code> write an address book for that? That&#x27;s <a href="../../../../fields/system-administration/openmp-and-open-mpi/mpi-and-openmp-on-kubernetes/">part 8</a>.</p>
+<hr>
+<blockquote><p>[!NOTE] <strong>What was and wasn&#x27;t tested.</strong> Everything here comes from the Slurm documentation (the MPI Users Guide and the <code>srun</code> manual, for Slurm 26.05) and from the earlier parts&#x27; real runs on Ubuntu 26.04.1 with Open MPI 5.0.10. The job script, the <code>rank 0 of 1</code> symptom under <code>MpiDefault=none</code>, and mode 2&#x27;s binding behaviour were <strong>not</strong> run under a real Slurm in this series. Treat them as the documented pattern, not as measured results.</p></blockquote>
+<h2>References</h2>
+<ul><li><a href="https://slurm.schedmd.com/mpi_guide.html">Slurm MPI Users Guide: launch modes, PMI/PMIx, Open MPI notes</a></li><li><a href="https://slurm.schedmd.com/srun.html">srun manual: <code>--mpi</code>, <code>--cpus-per-task</code>, <code>--cpu-bind</code>, <code>SLURM_CPUS_PER_TASK</code></a></li><li><a href="../../../../fields/schedulers/slurm-inside-a-job/slurm-slurmstepd/">slurmstepd: The Small Daemon That Actually Runs Your Job (this repo)</a></li><li><a href="../../../../fields/schedulers/slurm-cluster-operations/slurm-pam-adopt-ssh-access/">Locking SSH access with pam_slurm_adopt (this repo)</a></li></ul>
+<p><a href="../../../../#/fields/system-administration/openmp-and-open-mpi/mpi-and-openmp-under-slurm">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

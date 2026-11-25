@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Acting Without Making It Worse</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/gpu-failure-prediction/from-alert-to-drain/">
+<meta name="description" content="The principles of safe automated response to GPU failure predictions - reversibility, drain semantics, blast radius, drain budgets, staged rollout and rollback.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Acting Without Making It Worse">
+<meta property="og:description" content="The principles of safe automated response to GPU failure predictions - reversibility, drain semantics, blast radius, drain budgets, staged rollout and rollback.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/gpu-failure-prediction/from-alert-to-drain/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/gpu-failure-prediction/from-alert-to-drain/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/system-administration/gpu-failure-prediction/from-alert-to-drain"></script>
+<main>
+<h1>Acting Without Making It Worse</h1>
+<p><em>The principles of safe automated response to GPU failure predictions - reversibility, drain semantics, blast radius, drain budgets, staged rollout and rollback.</em></p>
+<blockquote><p><strong>Part 4 of the [Predicting GPU Node Failures series](/fields/system-administration/gpu-failure-prediction/README.md).</strong> A prediction nobody acts on at 23:10 on a Friday is a log line. But automation that acts on predictions can do more damage than any single GPU. This page is about the principles that keep automated response safe. By the end you&#x27;ll be able to say which actions to automate, how to limit the harm a bad rule can do, and how to roll it out without betting the cluster.</p></blockquote>
+<hr>
+<h2>The real risk is your own automation</h2>
+<p>One failing GPU costs one job&#x27;s worth of restart. One bad deploy of a monitoring config, a driver update that misreports a flag, or a renamed metric can make <em>every</em> GPU look sick at once. If your automation drains on every alert, it turns a monitoring bug into a cluster-wide outage, at machine speed.</p>
+<p>So the design question isn&#x27;t &quot;how do I act fast on predictions?&quot; It&#x27;s: <strong>&quot;what&#x27;s the worst my automation can do on its worst day, and is that acceptable?&quot;</strong> Everything below answers that.</p>
+<hr>
+<h2>Principle 1: automate the reversible, hand off the irreversible</h2>
+<p>Sort the possible responses by how easy they are to undo:</p>
+<table><thead><tr><th>Action</th><th>Reversible?</th><th>Who should do it</th></tr></thead><tbody><tr><td>Drain the node (stop new jobs, let running ones finish)</td><td>Yes: resume it</td><td>Automation</td></tr><tr><td>Reset the GPU</td><td>Mostly, but it kills anything still running on it</td><td>Automation <em>after</em> the node is empty, or a human</td></tr><tr><td>Reboot the node</td><td>Mostly, same caveat</td><td>Human or a guarded remediation loop</td></tr><tr><td>Open an RMA, pull the GPU</td><td>No</td><td>Human, after NVIDIA&#x27;s field diagnostic</td></tr></tbody></table>
+<p>A scheduler <strong>drain</strong> is the ideal automated response. It doesn&#x27;t kill anything; it just stops feeding the node. Running jobs finish or reach their next checkpoint, which is exactly what NVIDIA&#x27;s guidance asks for before a reset.</p>
+<p>The rule of thumb: <strong>automation may take capacity away; only humans give hardware back.</strong> Resuming a node whose GPU had a remap failure is a decision, not a cleanup step.</p>
+<p>One trade-off to accept up front: schedulers like Slurm drain <em>nodes</em>, not GPUs. On an 8-GPU node, draining for one bad GPU also idles seven healthy ones until the reset. Removing just the one GPU from the scheduler is more efficient and much easier to get wrong. Start with whole-node drains.</p>
+<hr>
+<h2>Principle 2: lead time must beat drain time</h2>
+<p>A drain is only useful if it finishes before the failure. That gives a simple test for whether a prediction is worth acting on:</p>
+<blockquote><p><strong>prediction lead time &gt; time for running jobs to finish or checkpoint</strong></p></blockquote>
+<p>If your long jobs checkpoint every six hours, a warning that arrives two hours before failure can&#x27;t save the job that&#x27;s running; it can only stop the <em>next</em> job from landing there. That&#x27;s still worth a lot, but it&#x27;s a different promise. Measure lead time (<a href="../../../../fields/system-administration/gpu-failure-prediction/scoring-and-backtesting/">part 5</a>), and be honest about which of the two you&#x27;re buying.</p>
+<p>This is also why the action tiers from <a href="../../../../fields/system-administration/gpu-failure-prediction/rules-that-predict/">part 3</a> differ. Tier 1 (already broken) can&#x27;t benefit from lead time; draining just stops the bleeding. Tier 2 (pending remap) has time on its side, because NVIDIA says unaffected work keeps running. Tier 3 (wear) has the most lead time and the least certainty, so it plans instead of draining.</p>
+<hr>
+<h2>Principle 3: correlated alerts are rarely correlated hardware</h2>
+<p>Real GPU failures are mostly independent: one weak HBM cell doesn&#x27;t make the GPU in the next rack weaker. So when many GPUs alert at once, the likely cause is upstream: a driver change, an exporter upgrade, a metric rename, a firmware bug.</p>
+<p>That suggests a <strong>drain budget</strong>: a cap on how many nodes your automation may hold drained at any moment. When the budget is full, the automation stops and asks a human. This is a <strong>circuit breaker</strong>: it trips when behavior looks abnormal, so a fault can&#x27;t spread.</p>
+<p>How to size it:</p>
+<ul><li>Size it to <strong>what you can lose without anyone noticing</strong>, not to how many GPUs you expect to fail.</li><li>Count only drains made <strong>by the automation</strong>, so a human&#x27;s maintenance drains don&#x27;t use it up.</li><li>Treat &quot;budget full&quot; as a <strong>page</strong>, never a log line. Either several GPUs really are failing together, which is rare and worth a human, or something upstream is lying.</li></ul>
+<blockquote><p>[!CAUTION] Never let a &quot;resolved&quot; alert un-drain a node. Alerts resolve for many reasons, including the exporter dying. A predictive system that drains on one signal and resumes on its absence will flap nodes in and out of service.</p></blockquote>
+<hr>
+<h2>Principle 4: earn trust in stages</h2>
+<p>New automation has to earn the right to act. A standard ladder:</p>
+<pre><code class="language-mermaid">flowchart LR
+    D[&quot;Dry run&lt;br/&gt;log what it WOULD do&quot;] --&gt; C[&quot;Canary&lt;br/&gt;act on a few&lt;br/&gt;expendable nodes&quot;]
+    C --&gt; E[&quot;Enforce&lt;br/&gt;act everywhere,&lt;br/&gt;small budget&quot;]
+    E --&gt; R[&quot;Raise budget&lt;br/&gt;only with evidence&quot;]
+    E -. &quot;anything surprising&quot; .-&gt; D</code></pre>
+<table><thead><tr><th>Stage</th><th>What happens</th><th>Move on when</th></tr></thead><tbody><tr><td><strong>Dry run</strong></td><td>The automation logs &quot;would drain X because Y&quot; and touches nothing. You compare the log with what actually failed</td><td>Every &quot;would drain&quot; points at a GPU you&#x27;d have drained by hand, for at least a week or two</td></tr><tr><td><strong>Canary</strong></td><td>Real drains, but only on a short list of nodes you&#x27;re happy to lose</td><td>Drains look right, running jobs finished normally</td></tr><tr><td><strong>Enforce</strong></td><td>Real drains everywhere, with a small budget</td><td>A normal week passes without hitting the budget</td></tr><tr><td><strong>Raise the budget</strong></td><td>Only when the backtest in part 5 says the rules earn it</td><td>-</td></tr></tbody></table>
+<p>The dry-run stage has a second benefit: its log is the start of your <strong>label set</strong>. Part 5 needs a history of &quot;we predicted X&quot; next to &quot;X actually failed,&quot; and the dry-run log is exactly that.</p>
+<hr>
+<h2>Principle 5: every action must be findable and undoable</h2>
+<p>Give every automated drain a <strong>recognizable signature</strong>, for example a reason that always starts with the same prefix. Then three things become one-liners:</p>
+<ul><li><strong>Find</strong> everything the automation did: list drained nodes whose reason has the prefix.</li><li><strong>Count</strong> it, which is how the drain budget works.</li><li><strong>Undo</strong> it in bulk if the automation was wrong.</li></ul>
+<p>In Slurm, the drain reason is that signature:</p>
+<pre><code class="language-bash">scontrol update NodeName=cn042 State=DRAIN Reason=&quot;GPUPRED: GpuFatalXid gpu3 drain_now&quot;</code></pre>
+<p>Bulk rollback is &quot;find every node drained with the prefix, resume it.&quot; But the rollback is for <em>wrong</em> drains. A node whose GPU had a remap failure or fell off the bus shouldn&#x27;t be resumed just because undoing is easy.</p>
+<blockquote><p>[!TIP] A good reason string answers &quot;why is this node out?&quot; without opening a dashboard: who drained it (the prefix), which rule, which GPU, and which action tier.</p></blockquote>
+<hr>
+<h2>Principle 6: humans hear about everything</h2>
+<p>Automation should never act in silence. Every automated drain should also notify the team, through the same channel as everything else. The alert router has to send drain-tier alerts to <em>both</em> the automation and the people.</p>
+<p>This is easy to get wrong. With Prometheus Alertmanager, a route that sends drain alerts to the automation, marked to &quot;continue&quot; matching, does not automatically also reach the default human receiver: the default only catches alerts that matched <em>no</em> route. When we checked a config built that way with Alertmanager&#x27;s own route tester, drain alerts went to the automation only. The fix is an explicit catch-all route for humans after the automation route.</p>
+<p>The general lesson: <strong>test your alert routing like you test your rules.</strong> &quot;Who gets this alert?&quot; should be a question with a checked answer.</p>
+<hr>
+<h2>After the drain: reset, reboot or RMA</h2>
+<p>The drain buys time. This is what the time is for, condensed from NVIDIA&#x27;s triage guidance:</p>
+<table><thead><tr><th>What fired</th><th>Once the node is empty</th><th>Then</th></tr></thead><tbody><tr><td>Remap pending, uncorrectable error (Xid 48, 94)</td><td>Reset the GPU</td><td>Confirm the remap is no longer pending, run a short diagnostic, resume</td></tr><tr><td>Xid 64, or Xid 95 with MIG off</td><td>Reboot the node</td><td>If it repeats: collect a bug report, run field diagnostics, report</td></tr><tr><td>Xid 79</td><td>Collect evidence, reboot</td><td>Expect it to recur; report to the vendor</td></tr><tr><td>Remap failure</td><td>Keep it drained</td><td>NVIDIA&#x27;s field diagnostic validates the flag for RMA</td></tr></tbody></table>
+<p>Reset limits depend on the platform. On Hopper and later systems with NVSwitch, GPUs can be reset individually; older NVSwitch systems may need the Fabric Manager running, or all connected GPUs reset together. Check NVIDIA&#x27;s reset-capabilities table before automating resets. For the fix-and-verify loop itself, see <a href="../../../../fields/system-administration/node-health-check/checks-and-remediation/auto-remediation/">NHC auto-remediation</a>.</p>
+<p><strong>Takeaway:</strong> automate only the reversible step (drain), cap your automation&#x27;s blast radius with a budget, earn trust through dry run → canary → enforce, make every action findable and undoable, and make sure humans hear about all of it.</p>
+<p>Next: <a href="../../../../fields/system-administration/gpu-failure-prediction/scoring-and-backtesting/">part 5, is the prediction any good?</a></p>
+<h3>References</h3>
+<ul><li><a href="https://docs.nvidia.com/deploy/gpu-debug-guidelines/gpu-node-triage.html">NVIDIA GPU Debug Guidelines: GPU Node Triage (actions, reset capabilities)</a></li><li><a href="https://docs.nvidia.com/deploy/a100-gpu-mem-error-mgmt/error-recovery-and-response-flags.html">NVIDIA GPU Memory Error Management: Error Recovery and Response Flags (drain and reset)</a></li><li><a href="https://slurm.schedmd.com/scontrol.html">Slurm <code>scontrol</code> man page (DRAIN, RESUME, Reason)</a></li><li><a href="https://prometheus.io/docs/alerting/latest/configuration/">Alertmanager configuration (routes, <code>continue</code>)</a></li><li><a href="https://arxiv.org/abs/2407.21783">Grattafiori et al., &quot;The Llama 3 Herd of Models&quot;, arXiv:2407.21783</a></li></ul>
+<p><a href="../../../../#/fields/system-administration/gpu-failure-prediction/from-alert-to-drain">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

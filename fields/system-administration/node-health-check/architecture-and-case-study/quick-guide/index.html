@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Generate NHC from a Cluster Definition and Scope a Client Request</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/node-health-check/architecture-and-case-study/quick-guide/">
+<meta name="description" content="Quick guide: generate NHC configs from one cluster definition, test them with real NHC in CI, and run the discovery and validation checklist for a client request.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Generate NHC from a Cluster Definition and Scope a Client Request">
+<meta property="og:description" content="Quick guide: generate NHC configs from one cluster definition, test them with real NHC in CI, and run the discovery and validation checklist for a client request.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/node-health-check/architecture-and-case-study/quick-guide/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/node-health-check/architecture-and-case-study/quick-guide/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../../.docs/prerender-redirect.js" data-target="../../../../../#/fields/system-administration/node-health-check/architecture-and-case-study/quick-guide"></script>
+<main>
+<h1>Generate NHC from a Cluster Definition and Scope a Client Request</h1>
+<p><em>Quick guide: generate NHC configs from one cluster definition, test them with real NHC in CI, and run the discovery and validation checklist for a client request.</em></p>
+<blockquote><p><strong>Quick guide for</strong> parts 9 and 10: <a href="../../../../../fields/system-administration/node-health-check/architecture-and-case-study/architecture-driven-nhc/">Architecture-driven NHC</a> and the <a href="../../../../../fields/system-administration/node-health-check/architecture-and-case-study/case-study-build-me-an-nhc/">Case study</a>. Part 1 builds and tests the configs, Part 2 is the checklist for a &quot;build us an NHC&quot; request.</p></blockquote>
+<h2>Before you start</h2>
+<ul><li><code>pip install pyyaml</code>, and the tools from this folder: <code>nhc_gen.py</code>, <code>acme_arch.nhc</code>, <code>nhc_test_harness.sh</code>, <code>cluster-example.yaml</code>.</li><li>A CI runner or throwaway container for the tests.</li><li><code>slurm.conf</code> and <code>cluster.yaml</code> in the same repository.</li></ul>
+<h2>Part 1: generate and test (part 9)</h2>
+<ol><li>Describe each hardware class once in <code>cluster.yaml</code>: nodes, role, CPU, NUMA, memory, fabric, mounts, GPUs.</li></ol>
+<p><strong>Expect:</strong> every node in exactly one class, and <code>YAML</code> is the only file humans edit. <strong>If not:</strong> the generator reports all problems in one run.</p>
+<ol><li>Generate, cross-checking <code>slurm.conf</code>.</li></ol>
+<pre><code class="language-bash">   python3 nhc_gen.py cluster.yaml --out build/ --slurm-conf /etc/slurm/slurm.conf --strict</code></pre>
+<p><strong>Expect:</strong> <code>OK: 545 nodes in 4 classes -&gt; nhc.conf, nhc-epilog.conf, nhc-deep.conf in build/</code>. <strong>If not:</strong> <code>Nothing written.</code> Fix the listed drift: uncovered nodes, <code>RealMemory</code>, <code>Gres</code> or thread counts.</p>
+<ol><li>Install the module next to the built-ins as <code>/etc/nhc/scripts/acme_arch.nhc</code>.</li></ol>
+<p><strong>Expect:</strong> <code>check_arch_numa_nodes</code>, <code>check_arch_gpu_count</code>, <code>check_arch_gpu_model</code> and <code>check_arch_dcgm_diag</code> are available. <strong>If not:</strong> declare module globals with <code>declare -g</code>.</p>
+<ol><li>Test the generated configs with real NHC, in CI or a container only.</li></ol>
+<pre><code class="language-bash">   CI=true ./nhc_test_harness.sh build</code></pre>
+<p><strong>Expect:</strong> <code># 12 passed, 0 failed</code>. <strong>If not:</strong> the harness exits non-zero. Treat &quot;completed successfully; 0 passed&quot; as a failure too.</p>
+<ol><li>Run both steps on every pull request.</li></ol>
+<pre><code class="language-bash">   python3 nhc/nhc_gen.py nhc/cluster.yaml --out build --slurm-conf slurm/slurm.conf --strict
+   sudo -E bash nhc/nhc_test_harness.sh build</code></pre>
+<p><strong>Expect:</strong> a pull request that adds nodes to Slurm but not to the architecture fails its own CI.</p>
+<ol><li>Deliver <code>build/</code> and <code>acme_arch.nhc</code> as an RPM or an Ansible role, then roll out with a dry run, a canary and the circuit breaker.</li></ol>
+<p><strong>Expect:</strong> rollback is a <code>dnf downgrade</code>.</p>
+<ol><li>For a new hardware generation, add one class and the <code>NodeName</code> line in the same pull request.</li></ol>
+<p><strong>Expect:</strong> CI generates and tests, and every new node has health checks on day one.</p>
+<h2>Part 2: scope a client request (part 10)</h2>
+<ol><li>Reply with understanding, a discovery call and a data bundle, not a config.</li></ol>
+<p><strong>Expect:</strong> a written proposal within two working days of the call.</p>
+<ol><li>Collect the bundle, one node of each type, as root.</li></ol>
+<pre><code class="language-bash">   sinfo -R; scontrol show config | grep -i healthcheck; grep -i &#x27;^NodeName&#x27; /etc/slurm/slurm.conf
+   lscpu | grep -E &#x27;Socket|Core|Thread|NUMA node\(s\)&#x27;; free -g
+   ibdev2netdev; ibstat | grep -E &#x27;CA |Rate|State|Link layer&#x27;
+   findmnt -t nfs,nfs4,lustre,ext4,xfs
+   nvidia-smi -L; nvidia-smi --query-gpu=fabric.state,fabric.status --format=csv,noheader
+   systemctl is-active nvidia-fabricmanager nvsm munge slurmd
+   dmesg -T | grep -i &#x27;NVRM: Xid&#x27; | tail -20</code></pre>
+<p><strong>Expect:</strong> the cluster they have, not the one they describe. <strong>If not:</strong> drains with empty reasons need triage before rollout.</p>
+<ol><li>Read the fabric state next to the Fabric Manager state.</li></ol>
+<p><strong>Expect:</strong> <code>Completed, Success</code> for every GPU. <strong>If not:</strong> <code>In Progress, N/A</code> while <code>systemctl is-active nvidia-fabricmanager</code> says <code>active</code> is the hang. Add <code>check_arch_gpu_fabric</code>.</p>
+<ol><li>Cross-check the client&#x27;s <code>slurm.conf</code> with <code>--strict</code> before proposing.</li></ol>
+<p><strong>Expect:</strong> an <code>OK:</code> line. <strong>If not:</strong> ask the client which side is intended, as with <code>ThreadsPerCore</code>.</p>
+<ol><li>Validate every assumption against vendor documentation and a test run.</li></ol>
+<p><strong>Expect:</strong> the proposal changes. In the case study it changed in 9 places, for example compute HCAs <code>mlx5_0,3,4,5,6,9,10,11</code> and a drain list of 48, 64, 74, 79, 95, 119, 120, with Xid 94 sent to monitoring.</p>
+<ol><li>Answer in the client&#x27;s language: what was wrong, what is checked, what changes in Slurm, the rollout, how success is measured, what you need, what is out of scope.</li></ol>
+<p><strong>Expect:</strong> no NHC syntax in the answer.</p>
+<h2>If it fails</h2>
+<table><thead><tr><th>What you see</th><th>Likely cause</th><th>Fix</th></tr></thead><tbody><tr><td><code>not covered by any class</code></td><td>Nodes in <code>slurm.conf</code> but not in the architecture</td><td>Add them to a class, so they get health checks</td></tr><tr><td><code>RealMemory</code> exceeds what the node has</td><td>Slurm would drain it as <code>Low RealMemory</code></td><td>Correct <code>slurm.conf</code></td></tr><tr><td>The Xid check always passes</td><td>NHC&#x27;s config parser drops backslashes</td><td>Use bracket expressions: <code>[(]</code>, <code>[)]</code>, <code>[[]</code>, <code>[]]</code>, <code>[.]</code></td></tr><tr><td><code>check_arch_numa_nodes</code> fails with an empty path</td><td>A plain <code>declare</code> inside a function is local</td><td>Use <code>declare -g</code></td></tr><tr><td>&quot;completed successfully; 0 passed&quot;</td><td>NHC could not find its modules (wrong <code>INCDIR</code>)</td><td>Fix the path, fail the test on &quot;0 passed&quot;</td></tr><tr><td>The test machine started <code>sshd</code> or created <code>/scratch</code></td><td><code>MARK_OFFLINE=0</code> stops draining, not auto-fixes</td><td>Run only in CI or a container, or pass <code>--force</code></td></tr></tbody></table>
+<h2>Roll back</h2>
+<ul><li>A bad definition fails CI, so nothing is written and nothing reaches a node.</li><li>Version the generated RPM per Git tag, and roll back with <code>dnf downgrade</code>.</li></ul>
+<p><strong>Don&#x27;t:</strong> edit generated files (change the YAML and regenerate), or push a generated config to the fleet without a canary.</p>
+<p><strong>Why it works:</strong> <a href="../../../../../fields/system-administration/node-health-check/architecture-and-case-study/architecture-driven-nhc/">Architecture-driven NHC</a> and the <a href="../../../../../fields/system-administration/node-health-check/architecture-and-case-study/case-study-build-me-an-nhc/">Case study</a>.</p>
+<p><a href="../../../../../#/fields/system-administration/node-health-check/architecture-and-case-study/quick-guide">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

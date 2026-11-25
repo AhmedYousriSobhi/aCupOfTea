@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The Guest List: Setting Up QOS Preemption Without Starting a War</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-preemption/slurm-qos-preemption-setup/">
+<meta name="description" content="A step-by-step setup of QOS-based requeue preemption (slurm.conf, sacctmgr, who may use what), a drill that proves it works, and the quiet ways it goes wrong.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="The Guest List: Setting Up QOS Preemption Without Starting a War">
+<meta property="og:description" content="A step-by-step setup of QOS-based requeue preemption (slurm.conf, sacctmgr, who may use what), a drill that proves it works, and the quiet ways it goes wrong.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-preemption/slurm-qos-preemption-setup/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-preemption/slurm-qos-preemption-setup/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/schedulers/slurm-preemption/slurm-qos-preemption-setup"></script>
+<main>
+<h1>The Guest List: Setting Up QOS Preemption Without Starting a War</h1>
+<p><em>A step-by-step setup of QOS-based requeue preemption (slurm.conf, sacctmgr, who may use what), a drill that proves it works, and the quiet ways it goes wrong.</em></p>
+<blockquote><p><strong>Part of the [schedulers](/fields/schedulers/slurm-intro.md) directory.</strong> The <a href="../../../../fields/schedulers/slurm-preemption/slurm-preemption-requeue-signals/">preemption page</a> explains what preemption <em>is</em>. This page is the other half: the commands that switch it on. Everything here was run on a two-node test cluster (Slurm 23.11.4, accounting on, both <code>slurmd</code> daemons on one Ubuntu 24.04 machine) and then adapted to read well. The names are invented. Your site&#x27;s defaults, and your Slurm version, may differ, so run the drill in step 4 before you trust it.</p></blockquote>
+<hr>
+<h2>The Thursday before the deadline</h2>
+<p>It is Thursday evening. The bio lab has a paper due Monday, and Priya needs eight GPUs for a final run. All the GPUs are busy. Most of them are held by a hyperparameter sweep that a student in another time zone started three days ago, and that, honestly, could stop and restart tomorrow without anyone noticing.</p>
+<p>The admin has three options. Message the student and wait for a reply that arrives Saturday. Cancel the sweep and lose the student&#x27;s trust forever. Or have set things up beforehand, so the scheduler can ask the sweep to step aside, politely, and put it back in line afterwards.</p>
+<p>The third option takes four small steps. None of them is hard, but each has one sentence of fine print, and the fine print is the whole page.</p>
+<hr>
+<h2>Three dials, one cluster</h2>
+<p>Preemption by QOS is not one setting. It is three settings living in three places, and they have to agree:</p>
+<table><thead><tr><th>Dial</th><th>Lives in</th><th>Says</th></tr></thead><tbody><tr><td>Preemption on, and how</td><td><code>slurm.conf</code></td><td>&quot;Use QOS rules; victims are requeued&quot;</td></tr><tr><td>The tiers themselves</td><td>The accounting database (<code>sacctmgr</code>)</td><td>&quot;<code>low</code> exists; <code>high_bio</code> may evict <code>low</code>&quot;</td></tr><tr><td>Who may use which tier</td><td>Associations (<code>sacctmgr</code>)</td><td>&quot;Users in account <code>bio</code> may submit to <code>high_bio</code>&quot;</td></tr></tbody></table>
+<p>A fourth, optional piece decides which tier a job <em>lands in</em> when the user doesn&#x27;t say. That is either a default QOS on the association or the <a href="../../../../fields/schedulers/slurm-preemption/slurm-job-submit-lua/">Lua submit script</a>. Neither is preemption itself: they only put a label on the job.</p>
+<hr>
+<h2>Step 1: switch preemption on</h2>
+<p>Preemption is <strong>off by default</strong> (<code>PreemptMode=OFF</code>). In <code>slurm.conf</code>:</p>
+<pre><code class="language-text">PreemptType=preempt/qos
+PreemptMode=REQUEUE
+AccountingStorageEnforce=associations,qos</code></pre>
+<p><code>PreemptType</code> picks the rulebook. It takes <strong>one</strong> value, so QOS rules and partition-priority rules are alternatives, not layers. <code>PreemptMode</code> is the cluster-wide fate of a victim, and each QOS can override it.</p>
+<p>Check what the controller actually loaded:</p>
+<pre><code class="language-bash">scontrol show config | grep -E &#x27;^Preempt|^AccountingStorageEnforce|^JobRequeue|^KillWait&#x27;</code></pre>
+<pre><code class="language-text">PreemptType             = preempt/qos
+PreemptMode             = REQUEUE
+KillWait                = 30 sec</code></pre>
+<blockquote><p>[!WARNING] Changing <code>PreemptType</code> needs a restart of <code>slurmctld</code>; <code>scontrol reconfigure</code> is not enough. A restart does not touch running jobs, but submissions fail for a few seconds while the daemon is down, so pick a quiet moment.</p></blockquote>
+<p><code>AccountingStorageEnforce</code> needs <code>qos</code> in it, or Slurm does not hold users to the QOS they are allowed. That is the same switch described in <a href="../../../../fields/schedulers/slurm-accounting-multi-tenancy/">the accounting page</a>.</p>
+<hr>
+<h2>Step 2: define the two tiers</h2>
+<p>One victim tier, and one high tier per account that is allowed to evict:</p>
+<pre><code class="language-bash"># the tier that gets evicted
+sacctmgr -i add qos low Priority=10
+sacctmgr -i modify qos low set PreemptMode=requeue GraceTime=120 PreemptExemptTime=00:30:00
+
+# one high tier per account, each allowed to evict &quot;low&quot;
+for acct in physics bio; do
+    sacctmgr -i add qos &quot;high_${acct}&quot; Priority=1000
+    sacctmgr -i modify qos &quot;high_${acct}&quot; set Preempt=low
+done
+
+sacctmgr show qos format=Name%14,Priority,Preempt%14,PreemptMode,GraceTime,PreemptExemptTime</code></pre>
+<pre><code class="language-text">          Name   Priority        Preempt PreemptMode  GraceTime   PreemptExemptTime
+-------------- ---------- -------------- ----------- ---------- -------------------
+        normal          0                    cluster   00:00:00
+           low         10                    requeue   00:02:00            00:30:00
+  high_physics       1000            low     cluster   00:00:00
+      high_bio       1000            low     cluster   00:00:00</code></pre>
+<p><code>cluster</code> in the <code>PreemptMode</code> column means &quot;use the cluster-wide mode from <code>slurm.conf</code>&quot;. Only <code>low</code> overrides it.</p>
+<p>The settings sit on opposite sides, and mixing them up is the commonest mistake:</p>
+<table><thead><tr><th>Setting</th><th>Goes on</th><th>Meaning</th></tr></thead><tbody><tr><td><code>Preempt=low</code></td><td>the <strong>preemptor</strong> (<code>high_bio</code>)</td><td>&quot;I may evict these QOSs&quot;</td></tr><tr><td><code>PreemptMode</code>, <code>GraceTime</code>, <code>PreemptExemptTime</code></td><td>the <strong>victim</strong> (<code>low</code>)</td><td>&quot;this is what happens to me, and when&quot;</td></tr></tbody></table>
+<p><code>Priority</code> helps order the queue, but under <code>preempt/qos</code> it is the <code>Preempt=</code> list that decides who may evict whom. A high-<code>Priority</code> QOS with no <code>Preempt=</code> evicts nobody.</p>
+<p><code>PreemptExemptTime</code> is a minimum runtime before a job may be evicted. It is a good idea in production (nobody wants a job evicted a minute after it starts) and a trap in a drill, where it makes nothing happen for half an hour. Set it to <code>00:00:00</code> while testing.</p>
+<hr>
+<h2>Step 3: let people use the tiers</h2>
+<p>A QOS nobody may submit to is a very tidy decoration. Add both tiers to each account, with <code>+=</code> so existing QOSs are kept:</p>
+<pre><code class="language-bash">for acct in physics bio; do
+    sacctmgr -i modify account name=&quot;$acct&quot; set qos+=low,&quot;high_${acct}&quot;
+done
+sacctmgr show assoc format=Account%12,User%12,DefaultQOS,QOS%30</code></pre>
+<p>Now the question from the beginning: which tier does a job get when the user types nothing? Two answers, and both work:</p>
+<table><thead><tr><th>Way</th><th>How</th><th>Good for</th></tr></thead><tbody><tr><td>Default QOS on the association</td><td><code>sacctmgr modify user alice set DefaultQOS=low</code></td><td>Plain defaults, nothing to maintain</td></tr><tr><td>Submit script</td><td><a href="../../../../fields/schedulers/slurm-preemption/slurm-job-submit-lua/"><code>job_submit.lua</code></a></td><td>Rewriting what the user typed, e.g. <code>--qos=high</code> into <code>high_&lt;account&gt;</code></td></tr></tbody></table>
+<p>In the test cluster, a job submitted with no <code>--qos</code> by a user whose <code>DefaultQOS</code> was <code>low</code> came out as <code>low</code>, with the submit script doing nothing. If &quot;everyone types <code>--qos=high_bio</code> themselves&quot; is acceptable, you can stop here and skip Lua entirely.</p>
+<hr>
+<h2>Partition priority instead?</h2>
+<p>The same idea works with <code>PreemptType=preempt/partition_prio</code>: a job in a partition with a higher <code>PriorityTier</code> may evict jobs in a lower-tier partition that share its nodes. Choose by how your cluster is already organized:</p>
+<table><thead><tr><th>Choose</th><th>When</th></tr></thead><tbody><tr><td><code>preempt/qos</code></td><td>Policy follows groups, projects or users; you want several tiers in one partition</td></tr><tr><td><code>preempt/partition_prio</code></td><td>The cluster is already split into queues such as <code>high</code> and <code>low</code>, over the same nodes</td></tr></tbody></table>
+<p>You cannot mix them. Pick one, and remember that changing it is a controller restart.</p>
+<hr>
+<h2>Step 4: prove it with a drill</h2>
+<p>Do this on a quiet node, as a normal user in a real account. Give <code>low</code> drill-sized settings first, <code>PreemptExemptTime=00:00:00</code> and a short <code>GraceTime</code>, and put the real values back afterwards:</p>
+<pre><code class="language-bash">sacctmgr -i modify qos low set GraceTime=30 PreemptExemptTime=00:00:00</code></pre>
+<p>Then two jobs on one node, <code>--exclusive</code> so they cannot share it:</p>
+<pre><code class="language-bash"># 1. the victim: low QOS, requeueable, appends to its log
+L=$(sbatch --parsable -A physics --qos=low -w node1 --exclusive --requeue \
+      --open-mode=append -o low.out --wrap=&#x27;sleep 600&#x27;)
+
+# 2. wait until it is RUNNING, then land the preemptor on the same node
+H=$(sbatch --parsable -A physics --qos=high_physics -w node1 --exclusive --wrap=&#x27;sleep 5&#x27;)
+
+# 3. once the high job is COMPLETED (about a minute or two): what happened?
+sacct -X -D -j $L,$H -o JobID,QOS%12,State%12 -P
+scontrol show job $L | grep -oE &#x27;Requeue=[0-9]+ Restarts=[0-9]+&#x27;</code></pre>
+<pre><code class="language-text">JobID|QOS|State
+55|low|PREEMPTED
+56|high_physics|COMPLETED
+55|low|RUNNING
+Requeue=1 Restarts=1</code></pre>
+<p>Read the output like a detective. Job <code>55</code> appears twice because <code>-D</code> shows every run of a requeued job: first run <code>PREEMPTED</code>, second run <code>RUNNING</code> again. <code>Restarts=1</code> is the proof of a requeue, as opposed to a cancel. And the preemptor ran, which is the point.</p>
+<p>After the high job finishes, the victim starts again on its own. A script that does not look for its own checkpoint will start from the top, which is why the <a href="../../../../fields/schedulers/slurm-preemption/slurm-preemption-requeue-signals/">preemption page</a> spends so long on resuming.</p>
+<blockquote><p>[!NOTE] The drill&#x27;s victim used <code>sleep</code>, which dies on the first <code>SIGTERM</code>, so the preemptor started as soon as the victim was told. A real training job that ignores <code>SIGTERM</code> gets <code>KillWait</code> (30 seconds here) on top of the grace time before <code>SIGKILL</code>. The <a href="../../../../fields/schedulers/slurm-preemption/slurm-signals-cheatsheet/">signals cheat sheet</a> has the measured timings.</p></blockquote>
+<hr>
+<h2>Five ways this goes quietly wrong</h2>
+<table><thead><tr><th>Symptom</th><th>Cause</th><th>What to check</th></tr></thead><tbody><tr><td>The victim is <strong>gone</strong>, not requeued. <code>sacct</code> shows <code>PREEMPTED</code> and no second run</td><td>It was not requeueable: <code>JobRequeue=0</code> and no <code>--requeue</code></td><td><code>scontrol show job &lt;id&gt;</code> shows <code>Requeue=0</code>. Set <code>JobRequeue=1</code>, or make the <a href="../../../../fields/schedulers/slurm-preemption/slurm-job-submit-lua/">submit script</a> set it</td></tr><tr><td>Nothing is ever evicted</td><td><code>Preempt=</code> is missing on the high QOS, or on the wrong side</td><td><code>sacctmgr show qos format=Name,Preempt</code></td></tr><tr><td>Nothing is evicted for the first half hour</td><td><code>PreemptExemptTime</code> is longer than the job has run</td><td>The exempt time on the victim QOS</td></tr><tr><td><code>Invalid qos specification</code> on submit</td><td>The user&#x27;s association does not include that QOS</td><td><code>sacctmgr show assoc user=&lt;name&gt; format=Account,QOS%30</code></td></tr><tr><td>A high job still waits behind a low one</td><td>The low job asked for <code>--exclusive=user</code> or <code>--exclusive=mcs</code>, which block cross-user preemption</td><td>Plain <code>--exclusive</code> was fine in the test; see the <a href="../../../../fields/schedulers/slurm-preemption/slurm-preemption-requeue-signals/">preemption page</a></td></tr></tbody></table>
+<p>Two more are worth a sentence each. Jobs that were already running or pending before you switched this on keep their old QOS and are not preemptible until they finish, and that is a feature. And <code>PreemptMode=SUSPEND</code> keeps a suspended job&#x27;s GPUs allocated, so for GPU clusters requeue is the mode that actually frees anything.</p>
+<hr>
+<h2>Rolling it out, and back</h2>
+<p>The safe order is the order of the steps, because each one is invisible until the next:</p>
+<ol><li>Create the QOSs and grant them to accounts (steps 2 and 3). Nothing changes yet.</li><li>Set the <code>slurm.conf</code> lines (step 1). If <code>PreemptType</code> changed, restart <code>slurmctld</code> in a quiet moment.</li><li>Run the drill (step 4) on one node.</li><li>Only then tell users the <code>low</code> tier exists.</li></ol>
+<p>To roll back, set <strong>both</strong> <code>PreemptType=preempt/none</code> and <code>PreemptMode=OFF</code>, and restart <code>slurmctld</code>. Together is the point: in the test, <code>preempt/none</code> with <code>PreemptMode=REQUEUE</code> was refused with &quot;PreemptType and PreemptMode values incompatible&quot;, and the controller would not start. With both set, it started and a high-QOS job simply waited (<code>Resources</code>) instead of evicting anything. The QOSs can stay in the database. Unused QOSs cost nothing.</p>
+<hr>
+<h2>Version notes</h2>
+<p>The drill output on this page came from Slurm 23.11.4. Since then: 24.05 treats a job that was signalled during <code>GraceTime</code> as preempted for <code>CANCEL</code> and <code>REQUEUE</code>; 25.05 adds a <code>PRIORITY</code> option and removes a deleted QOS from other QOSes&#x27; preempt lists; 26.05 applies <code>PreemptExemptTime</code> to <code>suspend,gang</code> under <code>preempt/partition_prio</code>. Rerun the drill after any upgrade. <a href="../../../../fields/schedulers/slurm-cluster-operations/slurm-version-changes/">Version changes 23.11 to 26.05</a> has the list.</p>
+<hr>
+<h2>Back to the Thursday</h2>
+<p>Replay the evening with this page applied. Priya submits with <code>--qos=high</code>, which becomes <code>high_bio</code> on the way in. The scheduler looks at the nodes, finds the sweep running under <code>low</code>, sends it a polite signal and, once the grace time is up, puts it back in the queue. The sweep&#x27;s own script, which saves a checkpoint every hour, picks up where it left off the moment a node is free.</p>
+<p>The student wakes up in the morning to a log with one extra line and a job that is still running. Nobody sent a message. Nobody cancelled anything. Priya&#x27;s run finished on Friday afternoon.</p>
+<p><strong>Takeaway:</strong> preemption by QOS is three settings that must agree (<code>slurm.conf</code>, the QOS rules, and who may use them), <code>Preempt=</code> goes on the preemptor and <code>GraceTime</code> on the victim, and only a drill with <code>Restarts=1</code> proves it works.</p>
+<p><strong>Next:</strong> <a href="../../../../fields/schedulers/slurm-preemption/slurm-job-submit-lua/">The Receptionist Who Rewrites Your Badge</a> shows how a submit script routes jobs into these tiers automatically.</p>
+<hr>
+<h2>References</h2>
+<ul><li><a href="https://slurm.schedmd.com/preempt.html">Slurm: Preemption</a></li><li><a href="https://slurm.schedmd.com/qos.html">Slurm: Quality of Service (QOS)</a></li><li><a href="https://slurm.schedmd.com/sacctmgr.html">Slurm: sacctmgr</a></li><li><a href="https://slurm.schedmd.com/slurm.conf.html">Slurm: slurm.conf</a> (<code>PreemptType</code>, <code>PreemptMode</code>, <code>JobRequeue</code>, <code>KillWait</code>)</li></ul>
+<p><a href="../../../../#/fields/schedulers/slurm-preemption/slurm-qos-preemption-setup">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

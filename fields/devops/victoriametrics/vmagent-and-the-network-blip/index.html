@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>vmagent and the Network Blip: Keeping Metrics Through an Outage</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/victoriametrics/vmagent-and-the-network-blip/">
+<meta name="description" content="How vmagent buffers metrics on disk while storage is down, the URL edit that silently deletes that buffer, the v1.156.0 flag that prevents it, and how to size the queue.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="vmagent and the Network Blip: Keeping Metrics Through an Outage">
+<meta property="og:description" content="How vmagent buffers metrics on disk while storage is down, the URL edit that silently deletes that buffer, the v1.156.0 flag that prevents it, and how to size the queue.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/victoriametrics/vmagent-and-the-network-blip/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/victoriametrics/vmagent-and-the-network-blip/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/devops/victoriametrics/vmagent-and-the-network-blip"></script>
+<main>
+<h1>vmagent and the Network Blip: Keeping Metrics Through an Outage</h1>
+<p><em>How vmagent buffers metrics on disk while storage is down, the URL edit that silently deletes that buffer, the v1.156.0 flag that prevents it, and how to size the queue.</em></p>
+<blockquote><p><strong>Part 3 of the [VictoriaMetrics series](/fields/devops/victoriametrics/README.md).</strong> <a href="../../../../fields/devops/victoriametrics/single-node-in-ten-minutes/">Part 2</a> gave you a single node that scrapes its own targets. This page moves scraping to a vmagent and proves, on a lab, that it keeps every sample through a storage outage, and the one edit that throws them away.</p></blockquote>
+<hr>
+<h2>The switch upgrade</h2>
+<p>The network team upgrades the core switch on Sunday morning. Forty minutes of maintenance, announced weeks ago. The compute nodes keep running jobs. The monitoring server, in another rack, can&#x27;t be reached.</p>
+<p>On Monday someone asks why a training run slowed down on Sunday. The dashboard has a forty-minute hole exactly where the answer should be. The exporters were fine the whole time. Nobody was writing down what they said.</p>
+<p>You want something next to the exporters that writes it down and hands it over when the network comes back. That&#x27;s <strong>vmagent</strong>.</p>
+<hr>
+<h2>Collect at the edge, store in the middle</h2>
+<p><strong>vmagent</strong> scrapes targets (same <code>scrape_configs</code> as Prometheus) and sends the samples to one or more <code>-remoteWrite.url</code> destinations. When a destination can&#x27;t take data, vmagent writes it to a <strong>persistent queue</strong> on local disk and keeps retrying. When the destination comes back, it sends the backlog.</p>
+<p>Four facts from the docs shape everything below:</p>
+<table><thead><tr><th>Fact</th><th>Consequence</th></tr></thead><tbody><tr><td>The queue lives under <code>-remoteWrite.tmpDataPath</code> (default <code>vmagent-remotewrite-data</code>)</td><td>It&#x27;s local disk on the vmagent host. Put it somewhere with room</td></tr><tr><td>Its size per URL is capped by <code>-remoteWrite.maxDiskUsagePerURL</code>, <strong>default 0 = unlimited</strong></td><td>A long outage can fill that disk unless you set a cap</td></tr><tr><td>When the cap is reached, vmagent <strong>drops the oldest data</strong> to make room</td><td>You lose the start of an outage, never the end</td></tr><tr><td>The backlog is sent oldest-first (FIFO)</td><td>After a long outage, fresh data shows up late until the backlog drains</td></tr></tbody></table>
+<p>Where to run it: one vmagent per rack, per site, or on the login nodes. Anywhere that stays reachable from the exporters when the link to storage doesn&#x27;t.</p>
+<hr>
+<h2>Run it</h2>
+<blockquote><p>[!NOTE] Everything with numbers below was run with vmagent and VictoriaMetrics <strong>v1.156.0</strong> on a throwaway Ubuntu 24.04.5 sandbox, scraping a real node_exporter 1.12.1 every 5 seconds. The 5-second interval is only there to make a one-minute outage produce enough samples to count.</p></blockquote>
+<p>The vmagent binary is in the <code>vmutils</code> tarball from the same release, verified the same way as in part 2. A minimal run:</p>
+<pre><code class="language-bash">vmagent-prod \
+  -promscrape.config=/etc/vmagent/scrape.yml \
+  -remoteWrite.url=http://10.0.0.5:8428/api/v1/write \
+  -remoteWrite.tmpDataPath=/var/lib/vmagent \
+  -remoteWrite.queuePath=/var/lib/vmagent/queue-central \
+  -remoteWrite.maxDiskUsagePerURL=4GiB \
+  -httpListenAddr=10.0.1.2:8429</code></pre>
+<p>Hold that <code>-remoteWrite.queuePath</code> line. The rest of the page is about why it&#x27;s there.</p>
+<hr>
+<h2>The outage test</h2>
+<p>We ran vmagent against a central VictoriaMetrics, waited 20 seconds, killed the central database, waited a minute, and looked at vmagent&#x27;s own metrics:</p>
+<pre><code class="language-bash">curl -s http://127.0.0.1:8430/metrics | grep -E &#x27;^vmagent_remotewrite_pending_data_bytes&#x27;</code></pre>
+<pre><code class="language-text">vmagent_remotewrite_pending_data_bytes{path=&quot;.../vmagent-q/persistent-queue/1_9CE28D37044E5A42&quot;, url=&quot;1:secret-url&quot;} 154767</code></pre>
+<p>About 150 KB waiting, and the log said what it was doing:</p>
+<pre><code class="language-text">warn ... couldn&#x27;t send a block with size 8791 bytes to &quot;1:secret-url&quot;: ... connection refused; re-sending the block in 1s.</code></pre>
+<p>(<code>1:secret-url</code> is vmagent hiding the URL in its own metrics and logs. That&#x27;s on purpose.)</p>
+<p>Then we started the central database again and counted samples in the outage window. The outage lasted 64 seconds; at one sample every 5 seconds that&#x27;s about 13:</p>
+<pre><code class="language-bash">curl -s http://127.0.0.1:8429/api/v1/query \
+  --data-urlencode &#x27;query=count_over_time(up{job=&quot;node&quot;}[64s])&#x27; \
+  --data-urlencode &quot;time=$OUTAGE_END&quot;</code></pre>
+<pre><code class="language-text">&quot;value&quot;:[1794393604,&quot;13&quot;]</code></pre>
+<p>Thirteen. No gap. Pending bytes went back to <code>0</code>. That&#x27;s the behaviour you&#x27;re paying for.</p>
+<hr>
+<h2>The trap: tidy up a URL, lose the buffer</h2>
+<p>Same setup, second outage. This time, while the central database is down and 108 KB are queued, someone &quot;tidies&quot; the config: <code>http://127.0.0.1:8429/...</code> becomes <code>http://localhost:8429/...</code>. Same server. They restart vmagent. Here&#x27;s what it logged on start:</p>
+<pre><code class="language-text">info ... opened fast queue at &quot;.../persistent-queue/1_3F185370F349A8A0&quot; ... it contains 0 pending bytes
+info ... removing dangling queue &quot;1_9CE28D37044E5A42&quot;
+info ... removed 1 dangling queues from &quot;.../vmagent-q&quot;, active queues: 1</code></pre>
+<p>At <code>info</code> level, not <code>warn</code>. When the database came back, the outage window had <strong>1 sample where 10 were expected.</strong></p>
+<p>Why: by default the queue directory&#x27;s name is built from the URL&#x27;s position in the flag list plus a hash of the URL itself. Change the host spelling, reorder two <code>-remoteWrite.url</code> flags, or add one in front, and the name changes. On the next start, the old directory has no matching URL, so vmagent calls it dangling and deletes it. The docs describe this exactly; it&#x27;s easy to miss until it costs you a weekend&#x27;s data.</p>
+<blockquote><p>[!CAUTION] Never edit, reorder or insert <code>-remoteWrite.url</code> flags on a vmagent that has a backlog, unless each URL has a pinned <code>-remoteWrite.queuePath</code>. Check first: <code>vmagent_remotewrite_pending_data_bytes</code> should be <code>0</code>.</p></blockquote>
+<p>Query parameters and fragments are left out of the hash, so <code>?extra_label=...</code> edits don&#x27;t trigger this. Host, port and path changes do.</p>
+<hr>
+<h2>The fix: pin the queue path</h2>
+<p>v1.156.0 added <code>-remoteWrite.queuePath</code>: one per <code>-remoteWrite.url</code>, in the same order, naming the queue directory yourself. We repeated the whole trap with it set:</p>
+<pre><code class="language-bash">vmagent-prod ... \
+  -remoteWrite.url=http://127.0.0.1:8429/api/v1/write \
+  -remoteWrite.queuePath=/root/vmlab/t2/q-central
+# outage, 108 KB queued, then restart with the &quot;tidied&quot; URL:
+vmagent-prod ... \
+  -remoteWrite.url=http://localhost:8429/api/v1/write \
+  -remoteWrite.queuePath=/root/vmlab/t2/q-central</code></pre>
+<pre><code class="language-text">info ... opened fast queue at &quot;/root/vmlab/t2/q-central&quot; ... it contains 139320 pending bytes</code></pre>
+<p>No dangling queue, and the outage window had <strong>10 of about 10</strong> samples once the database returned.</p>
+<p>Rules for the flag, from the docs:</p>
+<ul><li>Every <code>-remoteWrite.queuePath</code> must be a directory used by one URL only. vmagent <strong>deletes the contents</strong> of a directory that doesn&#x27;t hold a valid queue, so never point it at something else.</li><li>vmagent doesn&#x27;t remember which URL a directory belonged to. Point a directory at a different URL and its backlog goes to the new destination.</li><li>Directories you stop using aren&#x27;t cleaned up. Remove them yourself.</li><li>Upgrading an existing vmagent? Pass the current auto-named directory as the path (<code>-remoteWrite.queuePath=&lt;tmpDataPath&gt;/persistent-queue/1_9CE28D37044E5A42</code>) and the backlog carries over.</li></ul>
+<p>On versions before v1.156.0 the flag doesn&#x27;t exist. The only protection there is <code>-remoteWrite.keepDanglingQueues</code>, which keeps orphaned directories on disk instead of deleting them, but doesn&#x27;t send their contents anywhere.</p>
+<p><strong>Recommendation:</strong> on v1.156.0 and later, always set <code>-remoteWrite.queuePath</code>. On older versions, set <code>-remoteWrite.keepDanglingQueues</code> and drain the queue before you touch a URL.</p>
+<hr>
+<h2>How big should the buffer be?</h2>
+<p>Pick how long an outage you want to survive, then measure what vmagent actually sends. The docs give the query:</p>
+<pre><code class="language-text">sum(rate(vmagent_remotewrite_bytes_sent_total[1h])) by (instance, url) * 6h / 1Gi</code></pre>
+<p>That&#x27;s the gigabytes needed to hold 6 hours. Use your own number of hours. Then set <code>-remoteWrite.maxDiskUsagePerURL</code> to that, rounded up to a multiple of 500 MB because the queue is stored in roughly 500 MB chunks. The docs&#x27; floor is 500 MiB per URL.</p>
+<table><thead><tr><th>Choice</th><th>What happens in a long outage</th></tr></thead><tbody><tr><td>No cap (the default)</td><td>Nothing is dropped until the disk fills. Then whatever else lives on that disk suffers too</td></tr><tr><td>A cap</td><td>The oldest data is dropped once the cap is reached. You keep the most recent hours</td></tr><tr><td><code>-remoteWrite.disableOnDiskQueue</code></td><td>Nothing is buffered. Scraped samples are dropped while storage can&#x27;t keep up</td></tr></tbody></table>
+<p>Rule of thumb: <strong>cap it, and size the cap to your longest planned maintenance plus a margin.</strong> Put the queue on its own filesystem if you can.</p>
+<blockquote><p>[!TIP] After a long outage, fresh samples wait behind the backlog. If dashboards need &quot;now&quot; more than they need order, <code>-remoteWrite.inmemoryQueues</code> (since v1.146.0) adds workers that send recent data while the backlog drains. The catch: samples can arrive out of order, so don&#x27;t use it with storage that rejects that. We didn&#x27;t test this flag.</p></blockquote>
+<p>Then watch it. Part 5 adds an alert on <code>vmagent_remotewrite_pending_data_bytes</code> that doesn&#x27;t fire for every short blip.</p>
+<hr>
+<h2>What vmagent is not for</h2>
+<ul><li><strong>Long-term storage.</strong> The queue is a waiting room, not a database. You can&#x27;t query it.</li><li><strong>High availability by itself.</strong> One vmagent is one point of failure for its targets. The docs&#x27; HA pattern is two identically configured vmagents writing to deduplicating storage, which is a bigger topic than this page.</li><li><strong>Fixing a storage server that&#x27;s too small.</strong> If the central database can&#x27;t keep up all the time, the queue just grows until it hits the cap. Fix the server.</li></ul>
+<hr>
+<h2>Back to the switch upgrade</h2>
+<p>Run that Sunday again, with a vmagent in each rack and this page&#x27;s flags.</p>
+<p>The core switch goes down. The exporters keep answering their rack&#x27;s vmagent, which keeps scraping and writes everything to its queue on local disk. Halfway through, a colleague notices the remote-write URL still says the old hostname, &quot;fixes&quot; it and restarts vmagent. The queue path is pinned, so the backlog stays put, just as the lab&#x27;s 139 KB did. The switch comes back, vmagent sends the backlog oldest first, and the newest minutes show up a little late. On Monday the dashboard has no hole. Whoever asks about the slow training run gets an answer.</p>
+<p>Our lab outages lasted about a minute. Forty minutes is a sizing question, not something we ran, so do these three checks before the maintenance window instead of after:</p>
+<table><thead><tr><th>Before the window</th><th>How</th></tr></thead><tbody><tr><td>The queue cap covers the outage plus a margin</td><td>Run the <code>vmagent_remotewrite_bytes_sent_total</code> query from above with your window instead of <code>6h</code>, and compare with <code>-remoteWrite.maxDiskUsagePerURL</code></td></tr><tr><td>Every URL has its own pinned queue</td><td>One <code>-remoteWrite.queuePath</code> per <code>-remoteWrite.url</code></td></tr><tr><td>Nobody is mid-backlog when config changes</td><td><code>vmagent_remotewrite_pending_data_bytes</code> is <code>0</code> before anyone restarts vmagent</td></tr></tbody></table>
+<p>If the queue still isn&#x27;t draining 15 minutes after the switch is back, the <code>VMAgentQueueBacklog</code> alert in <a href="../../../../fields/devops/victoriametrics/metricsql-and-vmalert/">part 5</a> tells you, instead of a Monday question.</p>
+<p><strong>Takeaway:</strong> vmagent turns a storage outage into a delay instead of a gap, as long as you cap its queue and pin each queue&#x27;s path so a URL edit can&#x27;t delete it.</p>
+<p><strong>Next:</strong> <a href="../../../../fields/devops/victoriametrics/retention-disk-and-backups/">Part 4, Retention, Full Disks and Backups</a>, looks after the data once it arrives.</p>
+<hr>
+<h2>References</h2>
+<ul><li><a href="https://docs.victoriametrics.com/victoriametrics/vmagent/">vmagent docs</a>: features, on-disk persistence, manual persistence paths (<code>-remoteWrite.queuePath</code>), processing order and <code>-remoteWrite.inmemoryQueues</code>, disabling on-disk persistence, calculating disk space for the queue.</li><li><a href="https://docs.victoriametrics.com/victoriametrics/vmagent/#advanced-usage">vmagent command-line flags</a>: <code>-remoteWrite.tmpDataPath</code>, <code>-remoteWrite.maxDiskUsagePerURL</code>, <code>-remoteWrite.keepDanglingQueues</code>, <code>-remoteWrite.disableOnDiskQueue</code>.</li><li><a href="https://docs.victoriametrics.com/victoriametrics/changelog/changelog_2026/">VictoriaMetrics changelog 2026</a>: v1.156.0 adds <code>-remoteWrite.queuePath</code>.</li><li><a href="https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/#high-availability-for-writes">High availability for writes</a>: replicating through vmagent, with deduplication on the storage side.</li><li><a href="../../../../fields/devops/victoriametrics/single-node-in-ten-minutes/">Part 2, A Single Node You Can Trust</a>: verifying release tarballs.</li></ul>
+<p><a href="../../../../#/fields/devops/victoriametrics/vmagent-and-the-network-blip">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

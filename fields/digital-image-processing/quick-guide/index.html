@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Pick and Check an Image-Processing Step</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/digital-image-processing/quick-guide/">
+<meta name="description" content="A cheat sheet for parts 3, 4, 7, 8 and 9 - which transform or filter to pick, the number to check by hand, and five labs to try.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Pick and Check an Image-Processing Step">
+<meta property="og:description" content="A cheat sheet for parts 3, 4, 7, 8 and 9 - which transform or filter to pick, the number to check by hand, and five labs to try.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/digital-image-processing/quick-guide/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/digital-image-processing/quick-guide/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../.docs/prerender-redirect.js" data-target="../../../#/fields/digital-image-processing/quick-guide"></script>
+<main>
+<h1>Pick and Check an Image-Processing Step</h1>
+<p><em>A cheat sheet for parts 3, 4, 7, 8 and 9 - which transform or filter to pick, the number to check by hand, and five labs to try.</em></p>
+<blockquote><p><strong>Quick guide for</strong> <a href="../../../fields/digital-image-processing/intensity-transforms-and-histograms/">Intensity transforms</a> (part 3), <a href="../../../fields/digital-image-processing/spatial-filtering/">Spatial filtering</a> (part 4), <a href="../../../fields/digital-image-processing/frequency-filtering-and-aliasing/">Frequency filtering and aliasing</a> (part 7), <a href="../../../fields/digital-image-processing/noise-and-restoration/">Noise and restoration</a> (part 8) and <a href="../../../fields/digital-image-processing/wavelets-and-multiresolution-processing/">Wavelets</a> (part 9). Use it when an image misbehaves and you need to choose the step and check one number by hand. The five labs at the end let you move the dials.</p></blockquote>
+<h2>3. Image too dark or washed out</h2>
+<ol><li>Measure first: <code>h(r_k) = n_k</code>, <code>p(r_k) = n_k / MN</code>. <strong>Expect:</strong> bars squeezed against one wall.</li><li>Pick the transform:</li></ol>
+<table><thead><tr><th>Transform</th><th>Formula</th><th>Reach for it when</th></tr></thead><tbody><tr><td>Negative</td><td><code>s = (L-1) - r</code></td><td>White-on-dark detail in a dark region</td></tr><tr><td>Log</td><td><code>s = c * log(1 + r)</code></td><td>A huge range crushed into a few bright values</td></tr><tr><td>Gamma</td><td><code>s = c * r^γ</code></td><td>γ &lt; 1 brightens darks, γ &gt; 1 darkens, γ = 1 does nothing</td></tr></tbody></table>
+<ol><li>Or equalize: <code>s_k = (L-1) * sum(p(r_j))</code>. <strong>Check:</strong> 8 x 8 pixels, L = 8, 24 pixels at level 0 gives <code>7 * 24 / 64 = 2.625</code>, so level 0 becomes 3. <strong>Expect:</strong> the counts still add up to 64.</li></ol>
+<blockquote><p>[!WARNING] Equalization merges levels (information is lost) and amplifies noise in large flat regions. CLAHE limits that: <code>createCLAHE</code> in OpenCV.</p></blockquote>
+<h2>4. One bad pixel, or noise everywhere</h2>
+<ol><li>Box filter: every weight <code>1/9</code> in a 3 x 3 window. Median: sort the nine values, take the middle one.</li><li><strong>Check:</strong> eight 10s and one 90 give a mean of <code>170 / 9 ≈ 18.9</code> and a median of 10.</li><li>Pick by noise: the mean for Gaussian-like noise (it blurs edges), the median for salt-and-pepper (it is nonlinear and keeps edges better).</li><li>Set the border: zero (dark halo), replicate (neutral, smeary) or reflect (smooth, the usual default). OpenCV&#x27;s <code>filter2D</code> uses <code>BORDER_REFLECT_101</code>. <strong>Expect:</strong> with padding the output keeps the input size; without it a k x k kernel shrinks N to <code>N - k + 1</code>.</li><li>For a big blur use a separable kernel, two 1-D passes: k = 3, 5, 11 cost 9, 25, 121 multiplies as one pass and 6, 10, 22 as two.</li></ol>
+<p>Weights that sum to 1 keep brightness; weights that sum to 0 respond only to change.</p>
+<h2>7. Filter by frequency, then sample</h2>
+<ol><li>Recipe: FFT, multiply by the mask <code>H(u,v)</code>, inverse FFT: <code>G(u,v) = H(u,v) F(u,v)</code>. Pad with zeros to at least the image size plus the kernel size, filter, crop. <strong>If not:</strong> the left edge bleeds in from the right (wraparound).</li><li>Choose the mask:</li></ol>
+<table><thead><tr><th>Filter</th><th><code>H(u,v)</code></th><th>Note</th></tr></thead><tbody><tr><td>Ideal</td><td>1 if <code>D ≤ D₀</code>, else 0</td><td>Rings</td></tr><tr><td>Butterworth</td><td><code>1 / (1 + (D/D₀)^(2n))</code></td><td>Larger n is steeper and rings more</td></tr><tr><td>Gaussian</td><td><code>exp(-D² / (2·D₀²))</code></td><td>No ringing: use it unless you have a reason not to</td></tr></tbody></table>
+<ol><li>High-pass is <code>1 - H_lp</code>. A notch removes one frequency or a symmetric pair: the tool for periodic noise.</li><li>Sample at <code>f_s &gt; 2 * f_max</code>. <strong>Check:</strong> a 9 Hz wave sampled 10 times per second appears at <code>|9 - 10| = 1</code> Hz; the general rule is <code>|f - k * f_s|</code>.</li><li>Shrinking an image: blur, then downsample. In OpenCV, <code>INTER_AREA</code> for <code>resize</code>.</li></ol>
+<blockquote><p>[!WARNING] Once aliasing has happened it cannot be undone. Fix it before sampling.</p></blockquote>
+<h2>8. Un-blur and de-noise</h2>
+<ol><li>Write the damage: <code>g = h * f + η</code>, in frequency <code>G = H F + N</code>.</li><li>Match the filter to the noise: Gaussian, mean or Gaussian blur; salt-and-pepper, median; periodic stripes, notch; several frames of a still scene, average them (the noise standard deviation falls by about <code>√n</code>).</li><li>Do not divide by the blur: <code>F̂ = G / H = F + N / H</code>. <strong>Check:</strong> H = 0.01 and N ≈ 1 make the noise about 100 times bigger.</li><li>Use Wiener: <code>F̂ = [H* / (|H|² + K)] G</code>. <strong>Check:</strong> H = 0.01, K = 0.01 give a gain of <code>0.01 / 0.0101 ≈ 0.99</code>. Tune K by eye: too small and the noise creeps back, too big and it stays blurry.</li><li>Score with <code>PSNR = 10 * log10(MAX² / MSE)</code>. <strong>Check:</strong> MSE = 100 and MAX = 255 give about 28.1 dB; every 3 dB is about half the MSE.</li></ol>
+<blockquote><p>[!WARNING] PSNR only loosely matches how a person judges quality. The <code>√n</code> rule needs noise that is independent and zero-mean across frames; a fixed pattern does not average out.</p></blockquote>
+<h2>9. See the picture at several scales</h2>
+<ol><li>One level of the Haar step: replace each pair with its average and its half-difference. <strong>Check:</strong> <code>[9, 7, 3, 5]</code> gives averages <code>[8, 4]</code> and details <code>[1, -1]</code>; again on the averages gives <code>[6 | 2 | 1, -1]</code>.</li><li>Undo it: first = average + detail, second = average − detail.</li><li>For an image, do rows then columns: four subbands (approximation, horizontal, vertical, diagonal detail), then repeat on the approximation. PyWavelets returns them in that order; other books name them differently.</li><li>Denoise: shrink or zero every detail coefficient below a threshold, then invert. <strong>Check:</strong> <code>[10, 10, 10, 50, 50, 50, 50, 50]</code> has finest details <code>[0, -20, 0, 0]</code>.</li></ol>
+<p>The orthonormal Haar transform divides by <code>√2</code> instead; the structure is the same.</p>
+<h2>Symptoms</h2>
+<table><thead><tr><th>What you see</th><th>Likely cause</th><th>Fix</th></tr></thead><tbody><tr><td>Every value between 0 and about 60</td><td>A dark image</td><td>Gamma below 1, or equalization</td></tr><tr><td>A white speck still leaves a smudge</td><td>A mean on impulse noise</td><td>Median</td></tr><tr><td>Faint bands beside every edge</td><td>An ideal low-pass</td><td>Gaussian mask</td></tr><tr><td>Crunchy thumbnails, shimmering stripes</td><td>Aliasing from sampling too coarsely</td><td>Blur, then downsample</td></tr><tr><td>&quot;Restored&quot; photo is static</td><td>Dividing by a near-zero H</td><td>Wiener with a K</td></tr><tr><td>Denoising smears the edges</td><td>A mean blurs edges with the noise</td><td>Wavelet threshold</td></tr></tbody></table>
+<h2>Try it</h2>
+<h3>Intensity transforms lab</h3>
+<p><a href="../../../fields/digital-image-processing/labs/intensity-transforms.html">Intensity transforms lab</a></p>
+<h3>Spatial filters lab</h3>
+<p><a href="../../../fields/digital-image-processing/labs/spatial-filters.html">Spatial filters lab</a></p>
+<h3>Frequency filters lab</h3>
+<p><a href="../../../fields/digital-image-processing/labs/frequency-filters.html">Frequency filters lab</a></p>
+<h3>Restoration lab</h3>
+<p><a href="../../../fields/digital-image-processing/labs/restoration.html">Restoration lab</a></p>
+<h3>Wavelets lab</h3>
+<p><a href="../../../fields/digital-image-processing/labs/wavelets.html">Wavelets lab</a></p>
+<p><strong>Why it works:</strong> the five story pages above. Back to the <a href="../../../fields/digital-image-processing/">series overview</a>.</p>
+<p><a href="../../../#/fields/digital-image-processing/quick-guide">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

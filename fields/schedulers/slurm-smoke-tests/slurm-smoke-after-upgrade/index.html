@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The Morning After the Upgrade: Smoke Tests for the Change You Cannot Undo</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-smoke-tests/slurm-smoke-after-upgrade/">
+<meta name="description" content="What to check around a Slurm upgrade: a backup proven by restoring it, versions on every node, a before/after snapshot, the control-plane smoke test, and why downgrading is not supported.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="The Morning After the Upgrade: Smoke Tests for the Change You Cannot Undo">
+<meta property="og:description" content="What to check around a Slurm upgrade: a backup proven by restoring it, versions on every node, a before/after snapshot, the control-plane smoke test, and why downgrading is not supported.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-smoke-tests/slurm-smoke-after-upgrade/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-smoke-tests/slurm-smoke-after-upgrade/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/schedulers/slurm-smoke-tests/slurm-smoke-after-upgrade"></script>
+<main>
+<h1>The Morning After the Upgrade: Smoke Tests for the Change You Cannot Undo</h1>
+<p><em>What to check around a Slurm upgrade: a backup proven by restoring it, versions on every node, a before/after snapshot, the control-plane smoke test, and why downgrading is not supported.</em></p>
+<blockquote><p><strong>Part 3 of [Slurm Smoke Tests](/fields/schedulers/slurm-smoke-tests/README.md).</strong> The commands and outputs below were run on a two-node test cluster (Slurm 23.11.4, accounting on, both <code>slurmd</code> daemons on one Ubuntu 24.04 machine). <strong>No Slurm upgrade was performed</strong>: there was only one version installed. What was tested is everything that surrounds one, namely the backup, the version reports, the snapshot and the restarts. The upgrade procedure itself is quoted from the <a href="https://slurm.schedmd.com/upgrades.html">Slurm upgrade guide</a>. The names and the story are invented. The order in which to upgrade the daemons is on the <a href="../../../../fields/schedulers/slurm-cluster-operations/slurm-upgrade-order/">upgrade order page</a>.</p></blockquote>
+<hr>
+<h2>The undo button that isn&#x27;t</h2>
+<p>Samira starts the upgrade at ten on Saturday night. The plan is the usual one: stop the accounting daemon, upgrade it, start it and let it convert its database, then the controller, then the nodes. By half past eleven the daemons are all running and she runs her smoke test. Everything passes except the last line. Jobs run, and the database has recorded none of them.</p>
+<p>Now she has a decision with a clock on it. She can fix forward, reading logs at midnight with an unknown number of causes. Or she can go back. The Slurm upgrade guide has a blunt sentence about going back: &quot;Reverting an upgrade (or downgrading) is <strong>not supported</strong> once any of the Slurm daemons have been started.&quot; The only way back is the backup, and the backup, the guide adds, loses &quot;anything that happened after the backups were created.&quot;</p>
+<p>Samira has a nightly database dump. She has never tried to restore it. At half past eleven on a Saturday, that is a poor time to find out whether it works.</p>
+<hr>
+<h2>What the guide says to test</h2>
+<p>The upgrade guide lists nine steps, and one of them is a smoke test with a different name:</p>
+<table><thead><tr><th>Step</th><th>The guide&#x27;s wording</th><th>Where it is covered</th></tr></thead><tbody><tr><td>1</td><td>Prepare cluster for the upgrade (release notes, configuration changes, downtime)</td><td><a href="../../../../fields/schedulers/slurm-cluster-operations/slurm-version-changes/">Version changes</a></td></tr><tr><td>2</td><td>Create backups</td><td>Rung 1 below</td></tr><tr><td>3</td><td>Upgrade <code>slurmdbd</code>, then validate accounting</td><td>Rung 3</td></tr><tr><td>4 to 7</td><td>Upgrade <code>slurmctld</code>, <code>slurmd</code>, login nodes, customised plugins</td><td><a href="../../../../fields/schedulers/slurm-cluster-operations/slurm-upgrade-order/">Upgrade order</a></td></tr><tr><td>8</td><td><strong>Test key functionality</strong></td><td>The <a href="../../../../fields/schedulers/slurm-smoke-tests/slurm-smoke-control-plane/">control-plane smoke test</a>, plus Rung 3</td></tr><tr><td>9</td><td>Archive backup data, once the upgrade is confirmed</td><td>After a few good days, not the same night</td></tr></tbody></table>
+<p>Two sentences from the guide frame everything: &quot;Always prepare and test configuration changes in a test environment before upgrading in production&quot;, and &quot;Sites are encouraged to actively run pre-release versions on test machines before each major release.&quot; A smoke test on production tells you whether tonight went well. A smoke test on a test cluster tells you whether tonight is a good idea.</p>
+<hr>
+<h2>Rung 1: a backup you have restored</h2>
+<p>A backup that has never been restored is a hope. The check is small: dump the accounting database, restore the dump into a scratch database, and compare the row counts of the tables that matter. This script does it and cleans up after itself:</p>
+<p>The script is <a href="../../../../fields/schedulers/slurm-smoke-tests/smoke-scripts/slurm-db-backup-check.sh"><code>slurm-db-backup-check.sh</code></a>, a plain file you can read on this site, <a href="https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/fields/schedulers/slurm-smoke-tests/smoke-scripts/slurm-db-backup-check.sh">open on GitHub</a> or fetch with its <a href="https://raw.githubusercontent.com/AhmedYousriSobhi/aCupOfTea/main/fields/schedulers/slurm-smoke-tests/smoke-scripts/slurm-db-backup-check.sh">raw link</a>.</p>
+<p>On the test cluster:</p>
+<pre><code class="language-text">dump: 237712 bytes
+PASS  smoke_job_table          live=284 restored=284
+PASS  smoke_assoc_table        live=6 restored=6
+BACKUP RESTORES</code></pre>
+<p>The tables are named after the cluster, here <code>smoke</code>, which is why the script looks them up instead of hard-coding them. Two limits are worth saying out loud. This ran while <code>slurmdbd</code> was up, using a transaction-consistent dump, which is fine for a rehearsal. The guide&#x27;s own procedure takes the real dump with <code>slurmdbd</code> stopped, and the script&#x27;s header says so. And matching row counts show the dump is complete, not that every row is right. It catches the failures that matter, an empty, truncated or unreadable dump, which are the ones nobody finds until they need it.</p>
+<p>A second backup comes with the first: the controller&#x27;s state directory (<code>StateSaveLocation</code>), which holds the queue and reservations. The <a href="../../../../fields/schedulers/slurm-cluster-operations/slurm-spool-dir-full/">spool directory page</a> covers where that lives.</p>
+<hr>
+<h2>Rung 2: take the snapshot</h2>
+<p>Save what the cluster looks like before, so the morning after has something to compare with. The <code>slurm-snapshot.sh</code> script from <a href="../../../../fields/schedulers/slurm-smoke-tests/slurm-smoke-config-change/">part 2</a> records the running configuration, partitions, nodes, reservations, QOS and associations as plain text:</p>
+<pre><code class="language-bash">./slurm-snapshot.sh /root/before-upgrade</code></pre>
+<p>After the upgrade, run it again into another directory and <code>diff -ru</code> the two. Expect differences: the version on every node, and probably a few new default parameters in <code>config.txt</code>. What should not differ is the list of partitions, the QOS and association rules, and the reservations. If one does, it is either a consequence the release notes warned about or something to investigate before the users find it.</p>
+<hr>
+<h2>Rung 3: after the daemons are back</h2>
+<p>Each of these takes seconds:</p>
+<table><thead><tr><th>Check</th><th>Command</th><th>What it should show</th></tr></thead><tbody><tr><td>Version of every daemon</td><td><code>slurmctld -V</code>, <code>slurmdbd -V</code>, <code>slurmd -V</code>, <code>sinfo -V</code></td><td>The target version. On the test cluster all four read <code>slurm-wlm 23.11.4</code></td></tr><tr><td>Version of every node, as the controller sees it</td><td><code>scontrol show node -o | grep -o &#x27;NodeName=[^ ]*|Version=[^ ]*&#x27; | paste - -</code></td><td>One line per node with the same version</td></tr><tr><td>The control plane</td><td><a href="../../../../fields/schedulers/slurm-smoke-tests/slurm-smoke-control-plane/"><code>slurm-smoke.sh</code></a>, as an ordinary user</td><td><code>ALL PASS</code></td></tr><tr><td>Accounting answers</td><td><code>sacctmgr ping</code> (24.11 and newer), and <code>sacct</code> for an old job</td><td>The old job is still readable, and the last smoke job is recorded</td></tr><tr><td>The state matches before</td><td><code>diff -ru</code> of the two snapshots</td><td>Only the expected differences</td></tr><tr><td>Custom plugins and SPANK</td><td>Submit a job that uses each one</td><td>They load. The 24.11 release notes say all SPANK plugins must be recompiled when upgrading from an earlier version</td></tr></tbody></table>
+<p>The per-node line on the test cluster:</p>
+<pre><code class="language-text">NodeName=node1	Version=23.11.4
+NodeName=node2	Version=23.11.4</code></pre>
+<p>A node that was missed shows its old version here, which is the cheapest way to find the one <code>slurmd</code> that did not restart. A version mismatch is the first thing the <a href="https://slurm.schedmd.com/troubleshoot.html">troubleshooting guide</a> suggests ruling out, with <code>sinfo -V</code> or <code>rpm -qa | grep slurm</code>.</p>
+<p><code>sacctmgr ping</code> does not exist on 23.11. On the test cluster it answered <code>invalid keyword: ping</code>. It was added in 24.11, so the script from part 1 still uses <code>sacct</code>, which works on every version.</p>
+<hr>
+<h2>Do jobs survive the restart?</h2>
+<p>The upgrade guide has you stop and start every daemon, with users&#x27; jobs running through it. Whether they survive is something to know before the real night. On the test cluster, a 300-second job was started on <code>node1</code>. Then <code>slurmdbd</code>, <code>slurmctld</code> and the <code>slurmd</code> on <code>node1</code> were all stopped, and everything restarted:</p>
+<pre><code class="language-text">job 109: RUNNING node1
+all three stopped; restarting
+job 109 after restarts: RUNNING node1</code></pre>
+<p>The job was still running, and a smoke test straight after passed. That is one job, with default settings and a process tracker that does not use cgroups, so it is evidence, not a guarantee. A rehearsal on a test cluster with your real configuration, long-running jobs and a node restart is worth more than this table.</p>
+<hr>
+<h2>Version notes</h2>
+<p>Nothing on this page was run across two versions, so there are no measured differences. From the release notes read for the <a href="../../../../fields/schedulers/slurm-cluster-operations/slurm-version-changes/">version changes page</a>: 24.11 can be upgraded directly from 23.02, 23.11 or 24.05, and the notes say to update <code>slurmdbd</code> first; 25.11 from 25.05, 24.11 or 24.05. The upgrade path for 26.05 was not checked. A jump from 23.11 to 26.05 is therefore several upgrades, and each one deserves its own backup and its own run of this page.</p>
+<hr>
+<h2>Back to the undo button that isn&#x27;t</h2>
+<p>Replay Saturday with a rehearsed Friday. On Friday afternoon Samira ran the backup check and saw <code>BACKUP RESTORES</code>, with the same row counts on both sides. She saved a snapshot. She stopped <code>slurmdbd</code>, took the real dump, and started.</p>
+<p>At half past eleven the smoke test fails on the last line, as before. This time the decision takes five minutes and not an hour. She has a dump she knows can be restored, a snapshot to compare against, and a clear question: is this a quick fix? She reads the accounting daemon&#x27;s log, finds the cause, fixes it, and reruns the script. <code>ALL PASS</code>. She did not need the restore, and she knew exactly what it would have cost.</p>
+<p><strong>Takeaway:</strong> a Slurm upgrade cannot be rolled back once a daemon has started, so the real smoke test happens before it (a backup you have restored, a saved snapshot, a rehearsal on a test cluster) and after it (versions on every node, the control-plane smoke test, accounting, and a diff of the snapshots).</p>
+<p><strong>Next:</strong> <a href="../../../../fields/schedulers/slurm-smoke-tests/slurm-smoke-policy/">Does the Rulebook Still Work?</a> tests the layer an upgrade is most likely to change quietly: QOS, submit rules and preemption.</p>
+<hr>
+<h2>References</h2>
+<ul><li><a href="https://slurm.schedmd.com/upgrades.html">Slurm: Upgrade Guide</a> (the nine steps, &quot;Test key functionality&quot;, no downgrade)</li><li><a href="https://slurm.schedmd.com/troubleshoot.html">Slurm: Troubleshooting Guide</a> (<code>sinfo -V</code>, version compatibility)</li><li><a href="https://slurm.schedmd.com/quickstart_admin.html">Slurm: Quick Start Administrator Guide</a></li><li><a href="https://third-party-mirror.googlesource.com/SchedMD/slurm/+/refs/heads/master/RELEASE_NOTES.md">Slurm 24.11 release notes, mirror</a> (<code>sacctmgr ping</code>, upgrade paths, SPANK recompile)</li></ul>
+<p><a href="../../../../#/fields/schedulers/slurm-smoke-tests/slurm-smoke-after-upgrade">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

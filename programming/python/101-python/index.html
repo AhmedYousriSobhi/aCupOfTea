@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>101 - Python</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/programming/python/101-python/">
+<meta name="description" content="A commented walk through the core of Python, from primitive types, operators and collections to the language&#x27;s other main building blocks.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="101 - Python">
+<meta property="og:description" content="A commented walk through the core of Python, from primitive types, operators and collections to the language&#x27;s other main building blocks.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/programming/python/101-python/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/programming/python/101-python/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../.docs/prerender-redirect.js" data-target="../../../#/programming/python/101-python"></script>
+<main>
+<h1>101 - Python</h1>
+<p><em>A commented walk through the core of Python, from primitive types, operators and collections to the language&#x27;s other main building blocks.</em></p>
+<h1>Table of Content</h1>
+<ul><li>101 - Python</li><li>Table of Content</li><li>Concepts Highlights<ul><li>1. Primitive Datatype and Operators<ul><li>Arithmetic</li></ul></li><li>2. Variables and Collections<ul><li>List<ul><li>None Object</li></ul></li><li>Tuple<ul><li>Default type is Tuple</li><li>Extended Unpacking</li></ul></li><li>Dictionaries<ul><li>Immutable Type Key</li><li>How Keys|Values are stored</li><li>Get Value by Key</li><li>Add New Key</li><li>Unpacking Options</li></ul></li><li>Sets<ul><li>Immutable Elements</li><li>Add More Items</li><li>Intersection/Union/Difference/Symmetric</li><li>Superset/Subset</li><li>Deep Copy</li></ul></li></ul></li><li>3. Control Flow and Iterables<ul><li>Handle Exceptions</li><li>Reading/Writing to Files<ul><li>with Clause</li></ul></li><li>Iterable<ul><li>Can&#x27;t Access Elements by Index</li><li>Iterator</li><li>For Loop does Iteration Implicitly</li><li>Grab Iterable&#x27;s elements using list()</li></ul></li></ul></li><li>4. Functions<ul><li>Variable Positional Arguments</li><li>Variable Keyword Arguments</li><li>Calling Function Expanding</li><li>Default Output Type is Tuple</li><li>First Class Function</li><li>Closure in Nested Functions</li><li>Anonymous Functions</li><li>Built-in Higher Order Functions<ul><li>Diagram Explanation</li></ul></li><li>Comprehensions<ul><li>List</li><li>Construct set and dict</li></ul></li></ul></li><li>5. Modules<ul><li>Note: Loading Module Priority</li></ul></li><li>6. Classes<ul><li>Define a Class</li><li>Create an Instance of a Class</li></ul></li><li>6.1 Inheritance<ul><li>Importing Parent Class</li><li>Define Child Class</li><li>Create an Instance of the Child</li></ul></li><li>6.2 Multiple Inheritance<ul><li>Another Parent Class</li><li>Child Class Inherit from multiple Parent Classes</li><li>Create an Instance of the Child</li></ul></li><li>7. Advanced<ul><li>Generator Functions - Yeild<ul><li>Breakdown the purpose of using <strong>yield</strong></li><li>Code Example</li></ul></li><li>Generators<ul><li>Diagrammatic</li></ul></li><li>Decorators<ul><li>Wrappers</li><li>Problem of this Method</li><li>Solution using <strong>wraps</strong></li></ul></li></ul></li></ul></li><li>References</li></ul>
+<h1>Concepts Highlights</h1>
+<p>These illustrations are provided from <a href="https://learnxinyminutes.com/docs/python/">learnxinyminutes-python</a>, so they are copied and pasted to be able to add some of my own notes on them. So please refer to the original website for the complete wonderful tutorial.</p>
+<p>So in the following sections, we will not cover a full beginning illustration for the python, and we consider that you just want to wrap up and recall the important notes in python.</p>
+<h2>1. Primitive Datatype and Operators</h2>
+<h3>Arithmetic</h3>
+<pre><code class="language-python"># Integer division rounds down for both positive and negative numbers.
+5 // 3       # =&gt; 1
+-5 // 3      # =&gt; -2</code></pre>
+<pre><code class="language-python"># i % j have the same sign as j, unlike C
+-7 % 3  # =&gt; 2</code></pre>
+<h2>2. Variables and Collections</h2>
+<h3>List</h3>
+<pre><code class="language-python"># (is vs. ==) is checks if two variables refer to the same object, but == checks
+# if the objects pointed to have the same values.
+a = [1, 2, 3, 4]  # Point a at a new list, [1, 2, 3, 4]
+b = a             # Point b at what a is pointing to
+b is a            # =&gt; True, a and b refer to the same object
+b == a            # =&gt; True, a&#x27;s and b&#x27;s objects are equal
+b = [1, 2, 3, 4]  # Point b at a new list, [1, 2, 3, 4]
+b is a            # =&gt; False, a and b do not refer to the same object
+b == a            # =&gt; True, a&#x27;s and b&#x27;s objects are equal</code></pre>
+<h4>None Object</h4>
+<pre><code class="language-python"># Don&#x27;t use the equality &quot;==&quot; symbol to compare objects to None
+# Use &quot;is&quot; instead. This checks for equality of object identity.
+&quot;etc&quot; is None  # =&gt; False
+None is None   # =&gt; True</code></pre>
+<h3>Tuple</h3>
+<h4>Default type is Tuple</h4>
+<pre><code class="language-python"># Note that a tuple of length one has to have a comma after the last element but
+# tuples of other lengths, even zero, do not.
+type((1))   # =&gt; &lt;class &#x27;int&#x27;&gt;
+type((1,))  # =&gt; &lt;class &#x27;tuple&#x27;&gt;
+type(())    # =&gt; &lt;class &#x27;tuple&#x27;&gt;</code></pre>
+<h4>Extended Unpacking</h4>
+<pre><code class="language-python"># You can also do extended unpacking
+a, *b, c = (1, 2, 3, 4)  # a is now 1, b is now [2, 3] and c is now 4</code></pre>
+<h3>Dictionaries</h3>
+<h4>Immutable Type Key</h4>
+<pre><code class="language-python"># Note keys for dictionaries have to be immutable types. This is to ensure that
+# the key can be converted to a constant hash value for quick look-ups.
+# Immutable types include ints, floats, strings, tuples.
+invalid_dict = {[1,2,3]: &quot;123&quot;}  # =&gt; Yield a TypeError: unhashable type: &#x27;list&#x27;
+valid_dict = {(1,2,3):[1,2,3]}   # Values can be of any type, however.</code></pre>
+<h4>How Keys|Values are stored</h4>
+<pre><code class="language-python"># Here is a prefilled dictionary
+filled_dict = {&quot;one&quot;: 1, &quot;two&quot;: 2, &quot;three&quot;: 3}
+# Get all values as an iterable with &quot;values()&quot;. Once again we need to wrap it
+# in list() to get it out of the iterable. Note - Same as above regarding key
+# ordering.
+list(filled_dict.values())  # =&gt; [3, 2, 1]  in Python &lt;3.7
+list(filled_dict.values())  # =&gt; [1, 2, 3] in Python 3.7+</code></pre>
+<h4>Get Value by Key</h4>
+<pre><code class="language-python"># Use &quot;get()&quot; method to avoid the KeyError
+filled_dict.get(&quot;one&quot;)      # =&gt; 1
+filled_dict.get(&quot;four&quot;)     # =&gt; None
+# The get method supports a default argument when the value is missing
+filled_dict.get(&quot;one&quot;, 4)   # =&gt; 1
+filled_dict.get(&quot;four&quot;, 4)  # =&gt; 4
+
+# &quot;setdefault()&quot; inserts into a dictionary only if the given key isn&#x27;t present
+filled_dict.setdefault(&quot;five&quot;, 5)  # filled_dict[&quot;five&quot;] is set to 5
+filled_dict.setdefault(&quot;five&quot;, 6)  # filled_dict[&quot;five&quot;] is still 5</code></pre>
+<h4>Add New Key</h4>
+<pre><code class="language-python"># Adding to a dictionary
+filled_dict.update({&quot;four&quot;:4})  # =&gt; {&quot;one&quot;: 1, &quot;two&quot;: 2, &quot;three&quot;: 3, &quot;four&quot;: 4}
+filled_dict[&quot;four&quot;] = 4         # another way to add to dict</code></pre>
+<h4>Unpacking Options</h4>
+<pre><code class="language-python"># From Python 3.5 you can also use the additional unpacking options
+{&#x27;a&#x27;: 1, **{&#x27;b&#x27;: 2}}  # =&gt; {&#x27;a&#x27;: 1, &#x27;b&#x27;: 2}
+{&#x27;a&#x27;: 1, **{&#x27;a&#x27;: 2}}  # =&gt; {&#x27;a&#x27;: 2}</code></pre>
+<h3>Sets</h3>
+<h4>Immutable Elements</h4>
+<pre><code class="language-python"># Similar to keys of a dictionary, elements of a set have to be immutable.
+invalid_set = {[1], 1}  # =&gt; Raises a TypeError: unhashable type: &#x27;list&#x27;
+valid_set = {(1,), 1}</code></pre>
+<h4>Add More Items</h4>
+<pre><code class="language-python"># Initialize a set with a bunch of values.
+some_set = {1, 1, 2, 2, 3, 4}  # some_set is now {1, 2, 3, 4}
+
+# Add one more item to the set
+filled_set = some_set
+filled_set.add(5)  # filled_set is now {1, 2, 3, 4, 5}
+# Sets do not have duplicate elements
+filled_set.add(5)  # it remains as before {1, 2, 3, 4, 5}</code></pre>
+<h4>Intersection/Union/Difference/Symmetric</h4>
+<pre><code class="language-python"># Do set intersection with &amp;
+other_set = {3, 4, 5, 6}
+filled_set &amp; other_set  # =&gt; {3, 4, 5}
+
+# Do set union with |
+filled_set | other_set  # =&gt; {1, 2, 3, 4, 5, 6}
+
+
+# Do set difference with -
+{1, 2, 3, 4} - {2, 3, 5}  # =&gt; {1, 4}
+
+# Do set symmetric difference with ^
+{1, 2, 3, 4} ^ {2, 3, 5}  # =&gt; {1, 4, 5}</code></pre>
+<h4>Superset/Subset</h4>
+<pre><code class="language-python"># Check if set on the left is a superset of set on the right
+{1, 2} &gt;= {1, 2, 3} # =&gt; False
+
+# Check if set on the left is a subset of set on the right
+{1, 2} &lt;= {1, 2, 3} # =&gt; True</code></pre>
+<h4>Deep Copy</h4>
+<pre><code class="language-python"># Make a one layer deep copy
+filled_set = some_set.copy()  # filled_set is {1, 2, 3, 4, 5}
+filled_set is some_set        # =&gt; False</code></pre>
+<h2>3. Control Flow and Iterables</h2>
+<h3>Handle Exceptions</h3>
+<pre><code class="language-python"># Handle exceptions with a try/except block
+try:
+    # Use &quot;raise&quot; to raise an error
+    raise IndexError(&quot;This is an index error&quot;)
+except IndexError as e:
+    pass                 # Refrain from this, provide a recovery (next example).
+except (TypeError, NameError):
+    pass                 # Multiple exceptions can be processed jointly.
+else:                    # Optional clause to the try/except block. Must follow
+                         # all except blocks.
+    print(&quot;All good!&quot;)   # Runs only if the code in try raises no exceptions
+finally:                 # Execute under all circumstances
+    print(&quot;We can clean up resources here&quot;)</code></pre>
+<h3>Reading/Writing to Files</h3>
+<pre><code class="language-python"># Writing to a file
+contents = {&quot;aa&quot;: 12, &quot;bb&quot;: 21}
+with open(&quot;myfile1.txt&quot;, &quot;w+&quot;) as file:
+    file.write(str(contents))        # writes a string to a file
+
+import json
+with open(&quot;myfile2.txt&quot;, &quot;w+&quot;) as file:
+    file.write(json.dumps(contents)) # writes an object to a file
+
+# Reading from a file
+with open(&#x27;myfile1.txt&#x27;, &quot;r+&quot;) as file:
+    contents = file.read()           # reads a string from a file
+print(contents)
+# print: {&quot;aa&quot;: 12, &quot;bb&quot;: 21}
+
+with open(&#x27;myfile2.txt&#x27;, &quot;r+&quot;) as file:
+    contents = json.load(file)       # reads a json object from a file
+print(contents)
+# print: {&quot;aa&quot;: 12, &quot;bb&quot;: 21}</code></pre>
+<p>Note: difference between &#x27;r&#x27; and &#x27;r+&#x27;, answer <a href="https://stackoverflow.com/questions/1466000/difference-between-modes-a-a-w-w-and-r-in-built-in-open-function">source</a></p>
+<pre><code class="language-python">
+ ``r&#x27;&#x27;   Open text file for reading.  The stream is positioned at the
+         beginning of the file.
+
+ ``r+&#x27;&#x27;  Open for reading and writing.  The stream is positioned at the
+         beginning of the file.</code></pre>
+<h4>with Clause</h4>
+<pre><code class="language-python"># Instead of try/finally to cleanup resources you can use a with statement
+with open(&quot;myfile.txt&quot;) as f:
+    for line in f:
+        print(line)</code></pre>
+<h3>Iterable</h3>
+<pre><code class="language-python"># Python offers a fundamental abstraction called the Iterable.
+# An iterable is an object that can be treated as a sequence.
+# The object returned by the range function, is an iterable.
+
+filled_dict = {&quot;one&quot;: 1, &quot;two&quot;: 2, &quot;three&quot;: 3}
+our_iterable = filled_dict.keys()
+print(our_iterable)  # =&gt; dict_keys([&#x27;one&#x27;, &#x27;two&#x27;, &#x27;three&#x27;]). This is an object
+                     # that implements our Iterable interface.
+
+# We can loop over it.
+for i in our_iterable:
+    print(i)  # Prints one, two, three</code></pre>
+<h4>Can&#x27;t Access Elements by Index</h4>
+<pre><code class="language-python"># However we cannot address elements by index.
+our_iterable[1]  # Raises a TypeError</code></pre>
+<h4>Iterator</h4>
+<pre><code class="language-python"># An iterable is an object that knows how to create an iterator.
+our_iterator = iter(our_iterable)
+
+# Our iterator is an object that can remember the state as we traverse through
+# it. We get the next object with &quot;next()&quot;.
+next(our_iterator)  # =&gt; &quot;one&quot;
+
+# It maintains state as we iterate.
+next(our_iterator)  # =&gt; &quot;two&quot;
+next(our_iterator)  # =&gt; &quot;three&quot;
+
+# After the iterator has returned all of its data, it raises a
+# StopIteration exception
+next(our_iterator)  # Raises StopIteration</code></pre>
+<h4>For Loop does Iteration Implicitly</h4>
+<pre><code class="language-python"># We can also loop over it, in fact, &quot;for&quot; does this implicitly!
+our_iterator = iter(our_iterable)
+for i in our_iterator:
+    print(i)  # Prints one, two, three
+</code></pre>
+<h4>Grab Iterable&#x27;s elements using list()</h4>
+<pre><code class="language-python"># You can grab all the elements of an iterable or iterator by call of list().
+list(our_iterable)  # =&gt; Returns [&quot;one&quot;, &quot;two&quot;, &quot;three&quot;]
+list(our_iterator)  # =&gt; Returns [] because state is saved</code></pre>
+<p>Note: the iterator of the iterable saves its state, so it will return the remaining elements that it doesn&#x27;t iter over yet.</p>
+<h2>4. Functions</h2>
+<h3>Variable Positional Arguments</h3>
+<pre><code class="language-python"># You can define functions that take a variable number of
+# positional arguments
+def varargs(*args):
+    return args
+
+varargs(1, 2, 3)  # =&gt; (1, 2, 3)</code></pre>
+<h3>Variable Keyword Arguments</h3>
+<pre><code class="language-python"># You can define functions that take a variable number of
+# keyword arguments, as well
+def keyword_args(**kwargs):
+    return kwargs
+
+
+# Let&#x27;s call it to see what happens
+keyword_args(big=&quot;foot&quot;, loch=&quot;ness&quot;)  # =&gt; {&quot;big&quot;: &quot;foot&quot;, &quot;loch&quot;: &quot;ness&quot;}</code></pre>
+<pre><code class="language-python"># You can do both at once, if you like
+def all_the_args(*args, **kwargs):
+    print(args)
+    print(kwargs)
+&quot;&quot;&quot;
+all_the_args(1, 2, a=3, b=4) prints:
+    (1, 2)
+    {&quot;a&quot;: 3, &quot;b&quot;: 4}
+&quot;&quot;&quot;</code></pre>
+<h3>Calling Function Expanding</h3>
+<pre><code class="language-python"># When calling functions, you can do the opposite of args/kwargs!
+# Use * to expand args (tuples) and use ** to expand kwargs (dictionaries).
+args = (1, 2, 3, 4)
+kwargs = {&quot;a&quot;: 3, &quot;b&quot;: 4}
+all_the_args(*args)            # equivalent: all_the_args(1, 2, 3, 4)
+all_the_args(**kwargs)         # equivalent: all_the_args(a=3, b=4)
+all_the_args(*args, **kwargs)  # equivalent: all_the_args(1, 2, 3, 4, a=3, b=4)</code></pre>
+<h3>Default Output Type is Tuple</h3>
+<pre><code class="language-python"># Returning multiple values (with tuple assignments)
+def swap(x, y):
+    return y, x  # Return multiple values as a tuple without the parenthesis.
+                 # (Note: parenthesis have been excluded but can be included)
+
+x = 1
+y = 2
+x, y = swap(x, y)     # =&gt; x = 2, y = 1
+# (x, y) = swap(x,y)  # Again the use of parenthesis is optional.</code></pre>
+<h3>First Class Function</h3>
+<pre><code class="language-python"># Python has first class functions
+def create_adder(x):
+    def adder(y):
+        return x + y
+    return adder
+
+add_10 = create_adder(10)
+add_10(3)   # =&gt; 13</code></pre>
+<h3>Closure in Nested Functions</h3>
+<ul><li>Allowing inner functions to &quot;remember&quot; the environment in which they were created</li><li>We will have to use <strong>nonlocal</strong>: The nonlocal keyword in Python is used within nested functions to modify variables that are defined in the nearest enclosing scope, excluding the global scope.</li></ul>
+<pre><code class="language-python"># Closures in nested functions:
+# We can use the nonlocal keyword to work with variables in nested scope which shouldn&#x27;t be declared in the inner functions.
+def create_avg():
+    total = 0
+    count = 0
+    def avg(n):
+        nonlocal total, count
+        total += n
+        count += 1
+        return total/count
+    return avg
+avg = create_avg()
+avg(3) # =&gt; 3.0
+avg(5) # (3+5)/2 =&gt; 4.0
+avg(7) # (8+7)/3 =&gt; 5.0</code></pre>
+<h3>Anonymous Functions</h3>
+<pre><code class="language-python"># There are also anonymous functions
+(lambda x: x &gt; 2)(3)                  # =&gt; True
+(lambda x, y: x ** 2 + y ** 2)(2, 1)  # =&gt; 5</code></pre>
+<h3>Built-in Higher Order Functions</h3>
+<pre><code class="language-python"># There are built-in higher order functions
+list(map(add_10, [1, 2, 3]))          # =&gt; [11, 12, 13]
+list(map(max, [1, 2, 3], [4, 2, 1]))  # =&gt; [4, 2, 3]
+
+list(filter(lambda x: x &gt; 5, [3, 4, 5, 6, 7]))  # =&gt; [6, 7]</code></pre>
+<h4>Diagram Explanation</h4>
+<ul><li>list(map(max, [1, 2, 3], [4, 2, 1])) <code>`</code>sql Lists: [1, 2, 3]   [4, 2, 1]</li></ul>
+<p>+------+      +------+ |  1   |      |  4   | +------+      +------+ |  2   |      |  2   | +------+      +------+ |  3   |      |  1   | +------+      +------+ |            | V            V</p>
+<p>map(max, [1, 2, 3], [4, 2, 1])</p>
+<p>|            | V            V</p>
+<p>[max(1, 4), max(2, 2), max(3, 1)]</p>
+<p>|            | V            V</p>
+<p>[4, 2, 3]</p>
+<p>|            | V            V</p>
+<p>list(map(max, [1, 2, 3], [4, 2, 1]))</p>
+<p>|            | V            V</p>
+<p>[4, 2, 3] (Final Result as a List)</p>
+<pre><code>- list(filter(lambda x: x &gt; 5, [3, 4, 5, 6, 7]))</code></pre>
+<p>Initial List: [3, 4, 5, 6, 7]</p>
+<p>+-------+ |  3    | +-------+ |  4    | +-------+ |  5    | +-------+ |  6    | +-------+ |  7    | +-------+ | V</p>
+<p>filter(lambda x: x &gt; 5)</p>
+<p>| V</p>
+<p>[6, 7] (Filtered Result)</p>
+<p>| V</p>
+<p>list(filter(lambda x: x &gt; 5))</p>
+<p>| V</p>
+<p>[6, 7] (Final Result as a List)</p>
+<pre><code>### Comprehensions
+In Python, comprehension refers to a concise and efficient way to create new sequences, such as lists, sets, or dictionaries, based on existing ones. It enables developers to generate these sequences using a compact syntax within a single line of code.
+#### List</code></pre>
+<h1>List comprehension stores the output as a list (which itself may be nested).</h1>
+<p>[add_10(i) for i in [1, 2, 3]]         # =&gt; [11, 12, 13] [x for x in [3, 4, 5, 6, 7] if x &gt; 5]  # =&gt; [6, 7]</p>
+<pre><code>#### Construct set and dict</code></pre>
+<h1>You can construct set and dict comprehensions as well.</h1>
+<p>{x for x in &#x27;abcddeef&#x27; if x not in &#x27;abc&#x27;}  # =&gt; {&#x27;d&#x27;, &#x27;e&#x27;, &#x27;f&#x27;} {x: x**2 for x in range(5)}  # =&gt; {0: 0, 1: 1, 2: 4, 3: 9, 4: 16}</p>
+<pre><code>
+## 5. Modules</code></pre>
+<h1>Import Modules</h1>
+<p>import math</p>
+<h1>Get Specific function from a module</h1>
+<p>from math import floor</p>
+<h1>Import all functions from a module, but not recommended</h1>
+<p>from math import *</p>
+<h1>Shorten module name</h1>
+<p>import math as m</p>
+<h1>To find out which functions and attributes are defined in a module</h1>
+<p>dir(math)</p>
+<pre><code>### Note: Loading Module Priority
+If you have a Python script named math.py in the same folder as your current script, the file math.py will be loaded instead of the built-in Python module. This happens because the local folder has priority over Python&#x27;s built-in libraries.
+
+## 6. Classes
+### Define a Class</code></pre>
+<h1>We use the &quot;class&quot; statement to create a class</h1>
+<p>class Human:</p>
+<p># A class attribute. It is shared by all instances of this class species = &quot;H. sapiens&quot;</p>
+<p># Basic initializer, this is called when this class is instantiated. # Note that the double leading and trailing underscores denote objects # or attributes that are used by Python but that live in user-controlled # namespaces. Methods(or objects or attributes) like: <strong>init</strong>, <strong>str</strong>, # <strong>repr</strong> etc. are called special methods (or sometimes called dunder # methods). You should not invent such names on your own. def <strong>init</strong>(self, name): # Assign the argument to the instance&#x27;s name attribute self.name = name</p>
+<p># Initialize property self._age = 0   # the leading underscore indicates the &quot;age&quot; property is # intended to be used internally # do not rely on this to be enforced: it&#x27;s a hint to other devs</p>
+<p># An instance method. All methods take &quot;self&quot; as the first argument def say(self, msg): print(&quot;{name}: {message}&quot;.format(name=self.name, message=msg))</p>
+<p># Another instance method def sing(self): return &#x27;yo... yo... microphone check... one two... one two...&#x27;</p>
+<p># A class method is shared among all instances # They are called with the calling class as the first argument @classmethod def get_species(cls): return cls.species</p>
+<p># A static method is called without a class or instance reference @staticmethod def grunt(): return &quot;<em>grunt</em>&quot;</p>
+<p># A property is just like a getter. # It turns the method age() into a read-only attribute of the same name. # There&#x27;s no need to write trivial getters and setters in Python, though. @property def age(self): return self._age</p>
+<p># This allows the property to be set @age.setter def age(self, age): self._age = age</p>
+<p># This allows the property to be deleted @age.deleter def age(self): del self._age</p>
+<pre><code>### Create an Instance of a Class</code></pre>
+<h1>When a Python interpreter reads a source file it executes all its code.</h1>
+<h1>This <strong>name</strong> check makes sure this code block is only executed when this</h1>
+<h1>module is the main program.</h1>
+<p>if <strong>name</strong> == &#x27;<strong>main</strong>&#x27;: # Instantiate a class i = Human(name=&quot;Ian&quot;) i.say(&quot;hi&quot;)                     # &quot;Ian: hi&quot; j = Human(&quot;Joel&quot;) j.say(&quot;hello&quot;)                  # &quot;Joel: hello&quot; # i and j are instances of type Human; i.e., they are Human objects.</p>
+<p># Call our class method i.say(i.get_species())          # &quot;Ian: H. sapiens&quot; # Change the shared attribute Human.species = &quot;H. neanderthalensis&quot; i.say(i.get_species())          # =&gt; &quot;Ian: H. neanderthalensis&quot; j.say(j.get_species())          # =&gt; &quot;Joel: H. neanderthalensis&quot;</p>
+<p># Call the static method print(Human.grunt())            # =&gt; &quot;<em>grunt</em>&quot;</p>
+<p># Static methods can be called by instances too print(i.grunt())                # =&gt; &quot;<em>grunt</em>&quot;</p>
+<p># Update the property for this instance i.age = 42 # Get the property i.say(i.age)                    # =&gt; &quot;Ian: 42&quot; j.say(j.age)                    # =&gt; &quot;Joel: 0&quot; # Delete the property del i.age # i.age                         # =&gt; this would raise an AttributeError</p>
+<pre><code>
+## 6.1 Inheritance
+
+Inheritance allows new child classes to be defined that inherit methods and variables from their parent class.
+
+Using the Human class defined above as the base or parent class, we can define a child class, Superhero, which inherits the class variables like &quot;species&quot;, &quot;name&quot;, and &quot;age&quot;, as well as methods, like &quot;sing&quot; and &quot;grunt&quot; from the Human class, but can also have its own unique properties.
+
+To take advantage of modularization by file you could place the classes above in their own files, say, human.py
+
+### Importing Parent Class</code></pre>
+<h1>To import functions from other files use the following format</h1>
+<h1>from &quot;filename-without-extension&quot; import &quot;function-or-class&quot;</h1>
+<p>from human import Human</p>
+<pre><code>### Define Child Class</code></pre>
+<h1>Specify the parent class(es) as parameters to the class definition</h1>
+<p>class Superhero(Human):</p>
+<p># If the child class should inherit all of the parent&#x27;s definitions without # any modifications, you can just use the &quot;pass&quot; keyword (and nothing else) # but in this case it is commented out to allow for a unique child class: # pass</p>
+<p># Child classes can override their parents&#x27; attributes species = &#x27;Superhuman&#x27;</p>
+<p># Children automatically inherit their parent class&#x27;s constructor including # its arguments, but can also define additional arguments or definitions # and override its methods such as the class constructor. # This constructor inherits the &quot;name&quot; argument from the &quot;Human&quot; class and # adds the &quot;superpower&quot; and &quot;movie&quot; arguments: def <strong>init</strong>(self, name, movie=False, superpowers=[&quot;super strength&quot;, &quot;bulletproofing&quot;]):</p>
+<p># add additional class attributes: self.fictional = True self.movie = movie # be aware of mutable default values, since defaults are shared self.superpowers = superpowers</p>
+<p># The &quot;super&quot; function lets you access the parent class&#x27;s methods # that are overridden by the child, in this case, the <strong>init</strong> method. # This calls the parent class constructor: super().<strong>init</strong>(name)</p>
+<p># override the sing method def sing(self): return &#x27;Dun, dun, DUN!&#x27;</p>
+<p># add an additional instance method def boast(self): for power in self.superpowers: print(&quot;I wield the power of {pow}!&quot;.format(pow=power))</p>
+<pre><code>### Create an Instance of the Child</code></pre>
+<p>if <strong>name</strong> == &#x27;<strong>main</strong>&#x27;: sup = Superhero(name=&quot;Tick&quot;)</p>
+<p># Instance type checks if isinstance(sup, Human): print(&#x27;I am human&#x27;) if type(sup) is Superhero: print(&#x27;I am a superhero&#x27;)</p>
+<p># Get the &quot;Method Resolution Order&quot; used by both getattr() and super() # (the order in which classes are searched for an attribute or method) # This attribute is dynamic and can be updated print(Superhero.<strong>mro</strong>)    # =&gt; (&lt;class &#x27;<strong>main</strong>.Superhero&#x27;&gt;, # =&gt; &lt;class &#x27;human.Human&#x27;&gt;, &lt;class &#x27;object&#x27;&gt;)</p>
+<p># Calls parent method but uses its own class attribute print(sup.get_species())    # =&gt; Superhuman</p>
+<p># Calls overridden method print(sup.sing())           # =&gt; Dun, dun, DUN!</p>
+<p># Calls method from Human sup.say(&#x27;Spoon&#x27;)            # =&gt; Tick: Spoon</p>
+<p># Call method that exists only in Superhero sup.boast()                 # =&gt; I wield the power of super strength! # =&gt; I wield the power of bulletproofing!</p>
+<p># Inherited class attribute sup.age = 31 print(sup.age)              # =&gt; 31</p>
+<p># Attribute that only exists within Superhero print(&#x27;Am I Oscar eligible? &#x27; + str(sup.movie))</p>
+<pre><code>## 6.2 Multiple Inheritance
+### Another Parent Class
+Let&#x27;s assume we have another class called &quot;Bat&quot; which included in a module file called &quot;bat.py&quot;</code></pre>
+<h1>Another class definition</h1>
+<h1>bat.py</h1>
+<p>class Bat:</p>
+<p>species = &#x27;Baty&#x27;</p>
+<p>def <strong>init</strong>(self, can_fly=True): self.fly = can_fly</p>
+<p># This class also has a say method def say(self, msg): msg = &#x27;... ... ...&#x27; return msg</p>
+<p># And its own method as well def sonar(self): return &#x27;))) ... (((&#x27;</p>
+<p>if <strong>name</strong> == &#x27;<strong>main</strong>&#x27;: b = Bat() print(b.say(&#x27;hello&#x27;)) print(b.fly)</p>
+<pre><code>### Child Class Inherit from multiple Parent Classes</code></pre>
+<h1>And yet another class definition that inherits from Superhero and Bat</h1>
+<h1>superhero.py</h1>
+<p>from superhero import Superhero from bat import Bat</p>
+<h1>Define Batman as a child that inherits from both Superhero and Bat</h1>
+<p>class Batman(Superhero, Bat):</p>
+<p>def <strong>init</strong>(self, <em>args, </em>*kwargs): # Typically to inherit attributes you have to call super: # super(Batman, self).<strong>init</strong>(<em>args, </em>*kwargs) # However we are dealing with multiple inheritance here, and super() # only works with the next base class in the MRO list. # So instead we explicitly call <strong>init</strong> for all ancestors. # The use of <em>args and </em>*kwargs allows for a clean way to pass # arguments, with each parent &quot;peeling a layer of the onion&quot;. Superhero.<strong>init</strong>(self, &#x27;anonymous&#x27;, movie=True, superpowers=[&#x27;Wealthy&#x27;], <em>args, </em>*kwargs) Bat.<strong>init</strong>(self, <em>args, can_fly=False, </em>*kwargs) # override the value for the name attribute self.name = &#x27;Sad Affleck&#x27;</p>
+<p>def sing(self): return &#x27;nan nan nan nan nan batman!&#x27;</p>
+<pre><code>### Create an Instance of the Child</code></pre>
+<p>if <strong>name</strong> == &#x27;<strong>main</strong>&#x27;: sup = Batman()</p>
+<p># The Method Resolution Order print(Batman.<strong>mro</strong>)       # =&gt; (&lt;class &#x27;<strong>main</strong>.Batman&#x27;&gt;, # =&gt; &lt;class &#x27;superhero.Superhero&#x27;&gt;, # =&gt; &lt;class &#x27;human.Human&#x27;&gt;, # =&gt; &lt;class &#x27;bat.Bat&#x27;&gt;, &lt;class &#x27;object&#x27;&gt;)</p>
+<p># Calls parent method but uses its own class attribute print(sup.get_species())    # =&gt; Superhuman</p>
+<p># Calls overridden method print(sup.sing())           # =&gt; nan nan nan nan nan batman!</p>
+<p># Calls method from Human, because inheritance order matters sup.say(&#x27;I agree&#x27;)          # =&gt; Sad Affleck: I agree</p>
+<p># Call method that exists only in 2nd ancestor print(sup.sonar())          # =&gt; ))) ... (((</p>
+<p># Inherited class attribute sup.age = 100 print(sup.age)              # =&gt; 100</p>
+<p># Inherited attribute from 2nd ancestor whose default value was overridden. print(&#x27;Can I fly? &#x27; + str(sup.fly)) # =&gt; Can I fly? False</p>
+<pre><code>## 7. Advanced
+### Generator Functions - Yeild
+The **yield** keyword in python is used in the context of generator functions. It serves the purpose of creating iterators-functions that can be paused and resumed later, maintaining their state across multiple calls. The primary purpose of using **yield** is to produce a sequence of values while retaining the state of the function between calls.
+
+#### Breakdown the purpose of using **yield**
+
+|Purpose|Details|
+|-|-|
+Generators| Functions containing yield are known as generator functions. They generate a sequence of values lazily, one at a time, on-demand, rather than generating all values at once. This is beneficial when dealing with large datasets or infinite sequences because it saves memory by only computing the values as needed.
+Stateful Iteration| When a generator function is called, it returns a generator object. When iterated upon (e.g., using a for loop or manually calling next() on the generator object), the function&#x27;s execution starts. The function runs until it reaches a yield statement, at which point it pauses, and the yielded value is returned. The state of the function is maintained, allowing it to resume execution from the same point on the next iteration.
+Efficient Memory Usage| Generators are memory-efficient because they don’t store all the generated values in memory at once. Instead, they produce values on-the-fly and retain local variables&#x27; state, allowing them to continue execution and yield the next value when asked.
+Iterating through Large Sequences| Generators are particularly useful for iterating through large sequences of data, such as processing large files line by line or dealing with large numerical ranges. They allow processing elements one by one without storing the entire sequence in memory.
+#### Code Example</code></pre>
+<p>def my_generator(): yield 1 print(&quot;This will be printed in the second iterate next statement&quot;) yield 2 yield 3</p>
+<h1>Using the generator</h1>
+<p>gen = my_generator() print(next(gen))  # Outputs: 1 print(next(gen))  # Outputs: This will be printed in the second iterate next statement 2 print(next(gen))  # Outputs: 3</p>
+<h1>print(next(gen))  # Raises StopIteration error as all values have been yielded</h1>
+<pre><code>### Generators</code></pre>
+<h1>Generators help you make lazy code.</h1>
+<p>def double_numbers(iterable): for i in iterable: yield i + i</p>
+<h1>Generators are memory-efficient because they only load the data needed to</h1>
+<h1>process the next value in the iterable. This allows them to perform</h1>
+<h1>operations on otherwise prohibitively large value ranges.</h1>
+<h1>NOTE: <code>range</code> replaces <code>xrange</code> in Python 3.</h1>
+<p>for i in double_numbers(range(1, 900000000)):  # <code>range</code> is a generator. print(i) if i &gt;= 30: break</p>
+<pre><code>#### Diagrammatic</code></pre>
+<p>double_numbers(range(1, 900000000)): +------------+ |            | |            | |            | |            | |            | |            | |            | |            | |            | |   Generator Function (double_numbers)  | |            | |            | |            | |            | |            | |            | +------------+ | |               i = 1 V yield 1 + 1 = 2 | | V Printing: 2 | | V i = 2 | V yield 2 + 2 = 4 | | V Printing: 4 | | V i = 3 | V yield 3 + 3 = 6 | | V Printing: 6 | | V ... | | V i = 30 | V yield 30 + 30 = 60 | | V Printing: 60 | | V Breaking the loop</p>
+<pre><code>### Decorators
+Decorators are a form of syntactic sugar, They make code easier to read while accomplishing clunky syntax.
+
+The term &quot;syntactic sugar&quot; refers to a feature in a programming language that doesn’t introduce new functionality but provides a more convenient or expressive way to use existing features.
+
+#### Wrappers</code></pre>
+<h1>Wrappers are one type of decorator.</h1>
+<h1>They&#x27;re really useful for adding logging to existing functions without needing to modify them.</h1>
+<p>def log_function(func): def wrapper(<em>args, </em>*kwargs): print(&quot;Entering function&quot;, func.<strong>name</strong>) result = func(<em>args, </em>*kwargs) print(&quot;Exiting function&quot;, func.<strong>name</strong>) return result return wrapper</p>
+<p>@log_function               # equivalent: def my_function(x,y):       # def my_function(x,y): return x+y              #   return x+y # my_function = log_function(my_function)</p>
+<h1>The decorator @log_function tells us as we begin reading the function definition</h1>
+<h1>for my_function that this function will be wrapped with log_function.</h1>
+<h1>When function definitions are long, it can be hard to parse the non-decorated</h1>
+<h1>assignment at the end of the definition.</h1>
+<p>my_function(1,2) # =&gt; &quot;Entering function my_function&quot; # =&gt; &quot;3&quot; # =&gt; &quot;Exiting function my_function&quot;</p>
+<pre><code>#### Problem of this Method</code></pre>
+<h1>But there&#x27;s a problem.</h1>
+<h1>What happens if we try to get some information about my_function?</h1>
+<p>print(my_function.<strong>name</strong>) # =&gt; &#x27;wrapper&#x27; print(my_function.<strong>code</strong>.co_argcount) # =&gt; 0. The argcount is 0 because both arguments in wrapper()&#x27;s signature are optional.</p>
+<pre><code>#### Solution using **wraps**</code></pre>
+<h1>Because our decorator is equivalent to my_function = log_function(my_function)</h1>
+<h1>we&#x27;ve replaced information about my_function with information from wrapper</h1>
+<h1>Fix this using functools</h1>
+<p>from functools import wraps</p>
+<p>def log_function(func): @wraps(func) # this ensures docstring, function name, arguments list, etc. are all copied # to the wrapped function - instead of being replaced with wrapper&#x27;s info def wrapper(<em>args, </em>*kwargs): print(&quot;Entering function&quot;, func.<strong>name</strong>) result = func(<em>args, </em>*kwargs) print(&quot;Exiting function&quot;, func.<strong>name</strong>) return result return wrapper</p>
+<p>@log_function def my_function(x,y): return x+y</p>
+<p>my_function(1,2) # =&gt; &quot;Entering function my_function&quot; # =&gt; &quot;3&quot; # =&gt; &quot;Exiting function my_function&quot;</p>
+<p>print(my_function.<strong>name</strong>) # =&gt; &#x27;my_function&#x27; print(my_function.<strong>code</strong>.co_argcount) # =&gt; 2</p>
+<pre><code>
+# References
+- Learnxinyminutes - Python: [link](https://learnxinyminutes.com/docs/python/)
+- PythonSpot: [link](https://pythonspot.com/)
+- CodeAcademy - Learn Python: [link](https://www.codecademy.com/learn/learn-python-3)
+- Google For Education - Google&#x27;s Python Class: [link](https://developers.google.com/edu/python?hl=en)
+</code></pre>
+<p><a href="../../../#/programming/python/101-python">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

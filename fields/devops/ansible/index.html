@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Ansible, for People Who Manage More Nodes Than They Can SSH Into</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/ansible/">
+<meta name="description" content="A six-page Ansible series plus a cheatsheet - a pinned install, inventories, idempotent playbooks, roles, rolling Slurm maintenance and vault-encrypted secrets.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Ansible, for People Who Manage More Nodes Than They Can SSH Into">
+<meta property="og:description" content="A six-page Ansible series plus a cheatsheet - a pinned install, inventories, idempotent playbooks, roles, rolling Slurm maintenance and vault-encrypted secrets.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/ansible/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/ansible/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../.docs/prerender-redirect.js" data-target="../../../#/fields/devops/ansible/"></script>
+<main>
+<h1>Ansible, for People Who Manage More Nodes Than They Can SSH Into</h1>
+<p><em>A six-page Ansible series plus a cheatsheet - a pinned install, inventories, idempotent playbooks, roles, rolling Slurm maintenance and vault-encrypted secrets.</em></p>
+<p>A story-first series for cluster admins who are comfortable with a root shell and tired of <code>for n in $(seq ...)</code> loops. Each page starts with something that went wrong, fixes it with Ansible, and goes back to the story at the end. The pages build one project, <code>cluster-ansible</code>, that manages a small Slurm cluster.</p>
+<p>Written against <strong>ansible-core 2.22.0</strong> (released November 2026) on Python 3.13, with ansible-lint 26.11.0.</p>
+<hr>
+<h2>Contents</h2>
+<table><thead><tr><th>File</th><th>Description</th></tr></thead><tbody><tr><td><a href="../../../fields/devops/ansible/getting-started/">1. The Laptop That Ran Ansible 2.16</a></td><td>A pinned install per project, which Python the controller and the nodes need, <code>ansible.cfg</code>, SSH host keys, and the first-run errors</td></tr><tr><td><a href="../../../fields/devops/ansible/inventory-and-ad-hoc/">2. Four Nodes Said &quot;Too Many Open Files&quot;</a></td><td>Inventory groups and ranges, <code>group_vars</code>, targeting patterns, ad-hoc commands, and checking a change in a fresh login</td></tr><tr><td><a href="../../../fields/devops/ansible/idempotence-and-handlers/">3. The Playbook That Restarted slurmd Every Night</a></td><td><code>changed</code> vs <code>ok</code>, why <code>shell</code> lies, handlers, <code>--check --diff</code>, and the handler that never ran</td></tr><tr><td><a href="../../../fields/devops/ansible/roles-and-variables/">4. The GPU Node That Thought It Had 1000 MB</a></td><td>Roles, OS-specific variables, variable precedence, <code>hostvars</code> in templates, and a check that every node got the same config</td></tr><tr><td><a href="../../../fields/devops/ansible/rolling-maintenance/">5. The Reboot That Killed a Week of Jobs</a></td><td>Rolling maintenance: drain through Slurm, a canary, stop on first failure, a dry run that really is dry, and rollback</td></tr><tr><td><a href="../../../fields/devops/ansible/secrets-and-vault/">6. The Munge Key in Git</a></td><td><code>ansible-vault</code>, rotating a leaked key, the 2.22 secret masking and where it stops, <code>no_log</code>, and a commit guard</td></tr><tr><td><a href="../../../fields/devops/ansible/cheatsheet/">7. Cheatsheet</a></td><td>Every step from the series in order, as copy-paste commands, with a quick-reference table</td></tr></tbody></table>
+<hr>
+<h2>How the pages were tested</h2>
+<ul><li><strong>Lab:</strong> six Ubuntu 24.04 nodes (<code>head01</code>, <code>cn001</code>–<code>cn004</code>, <code>gpu001</code>) running systemd, Slurm 23.11.4 and munge 0.5.15, in containers on a throwaway sandbox (Linux 6.18). The controller ran ansible-core 2.22.0 on Python 3.13.</li><li><strong>Not run:</strong> Rocky/RHEL steps. No Rocky image could be fetched in the sandbox, so those parts come from Red Hat and Fedora documentation and are marked on each page.</li><li><strong>Lab artefacts are called out</strong> where the container setup differed from real hardware: resource-limit caps, the boot-time check for reboots, and a Slurm scheduling quirk.</li><li><strong>Failure paths too:</strong> every check on these pages was also run against a broken input to prove it fails. Several of our own checks didn&#x27;t fail at first; the pages show how we found out.</li></ul>
+<h2>Related pages</h2>
+<ul><li><a href="../../../fields/system-administration/node-health-check/">Node Health Check</a>: what to run on a node before you hand it back to Slurm (part 5).</li><li><a href="../../../fields/devops/victoriametrics/">VictoriaMetrics series</a>: another stack you could deploy with the roles pattern from part 4.</li></ul>
+<p><a href="../../../#/fields/devops/ansible/">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

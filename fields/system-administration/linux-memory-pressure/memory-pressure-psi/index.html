@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Pressure Stall Information: Measuring Time Lost, Not Bytes Left</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/linux-memory-pressure/memory-pressure-psi/">
+<meta name="description" content="How to read /proc/pressure/memory, why the share of time tasks spend stalled is a better alarm than free bytes, and how to get woken by the kernel the moment a threshold is crossed.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Pressure Stall Information: Measuring Time Lost, Not Bytes Left">
+<meta property="og:description" content="How to read /proc/pressure/memory, why the share of time tasks spend stalled is a better alarm than free bytes, and how to get woken by the kernel the moment a threshold is crossed.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/linux-memory-pressure/memory-pressure-psi/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/linux-memory-pressure/memory-pressure-psi/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/system-administration/linux-memory-pressure/memory-pressure-psi"></script>
+<main>
+<h1>Pressure Stall Information: Measuring Time Lost, Not Bytes Left</h1>
+<p><em>How to read /proc/pressure/memory, why the share of time tasks spend stalled is a better alarm than free bytes, and how to get woken by the kernel the moment a threshold is crossed.</em></p>
+<blockquote><p><strong>Part 2 of the [Linux Memory Pressure series](/fields/system-administration/linux-memory-pressure/README.md).</strong> &quot;How much memory is left?&quot; is the wrong question, because Linux keeps it nearly all in use on purpose. The right question is &quot;how much time are programs losing waiting for memory?&quot;, and the kernel counts exactly that. By the end you&#x27;ll read the three lines of <code>/proc/pressure/memory</code> at a glance and know how a rescuer program gets woken by them.</p></blockquote>
+<hr>
+<h2>The restaurant that watches the queue, not the pantry</h2>
+<p>A restaurant manager wants to know when the kitchen is in trouble. She could watch the pantry: &quot;how many eggs are left?&quot; But a full pantry says nothing about whether customers are waiting, and an almost-empty one might be fine if a delivery is due. Pantry counts are a guess about trouble.</p>
+<p>What she really cares about is the <strong>queue</strong>: &quot;what share of the evening are customers sitting at a table with no food, waiting?&quot; That number is trouble itself. It does not need interpreting.</p>
+<table><thead><tr><th>Restaurant</th><th>Linux machine</th></tr></thead><tbody><tr><td>The pantry stock</td><td>Free or available memory</td></tr><tr><td>Customers waiting with no food</td><td>Tasks stalled on memory</td></tr><tr><td>&quot;Share of the evening someone was waiting&quot;</td><td><strong>PSI</strong>, Pressure Stall Information</td></tr></tbody></table>
+<p>PSI (kernel 4.20 and up) is that queue measurement. It turns the stalls from <a href="../../../../fields/system-administration/linux-memory-pressure/how-linux-reclaims-memory/">part 1</a> (direct reclaim, swap-ins, refaults) into a percentage of wall-clock time.</p>
+<hr>
+<h2>Reading the file</h2>
+<pre><code>$ cat /proc/pressure/memory
+some avg10=0.00 avg60=0.00 avg300=0.00 total=687177
+full avg10=0.00 avg60=0.00 avg300=0.00 total=680771</code></pre>
+<p>Two lines, each with the same four numbers.</p>
+<table><thead><tr><th>Field</th><th>Meaning</th></tr></thead><tbody><tr><td><code>avg10</code>, <code>avg60</code>, <code>avg300</code></td><td>The <strong>percentage of time</strong> spent stalled, averaged over the last 10, 60 and 300 seconds</td></tr><tr><td><code>total</code></td><td>Stall time since boot, in <strong>microseconds</strong>. A raw counter you can diff yourself</td></tr></tbody></table>
+<p>The three averages tell you the <em>trend</em>: if <code>avg10</code> is much higher than <code>avg300</code>, the pressure just started. If they&#x27;re all high, it has been going on a while.</p>
+<p>The zeros above are a calm machine. The thing to remember: <strong>0.00 here means no task lost any time to memory in that window, whatever `MemFree` says.</strong></p>
+<hr>
+<h2>Try it before you scroll</h2>
+<p>☕ Two machines.</p>
+<ul><li><strong>A:</strong> <code>MemFree</code> is 200 MB of 32 GB. PSI memory <code>some avg60=0.00</code>.</li><li><strong>B:</strong> <code>MemFree</code> is 8 GB of 32 GB. PSI memory <code>some avg60=35.00</code>.</li></ul>
+<p>Which one needs attention?</p>
+<p>Got your answer? Scroll on.</p>
+<p>Answer: <strong>B</strong>. A has a full cache and is losing no time at all. B has plenty of free memory and tasks are stalled a third of the time: perhaps one job is thrashing inside a small cgroup limit, or a burst of allocations just drained the free pool. The pantry looked fine; the queue was long.</p>
+<hr>
+<h2>Some versus full</h2>
+<p>There are two lines because &quot;someone is waiting&quot; and &quot;everyone is waiting&quot; are different emergencies.</p>
+<table><thead><tr><th>Line</th><th>It counts the time when...</th><th>Think of it as</th></tr></thead><tbody><tr><td><code>some</code></td><td><strong>At least one</strong> runnable task was stalled on memory</td><td>A customer is waiting. Annoying</td></tr><tr><td><code>full</code></td><td><strong>All</strong> non-idle tasks were stalled on memory at the same moment</td><td>Every customer is waiting and nobody is being served. The kitchen has stopped</td></tr></tbody></table>
+<pre><code class="language-mermaid">flowchart LR
+    A[&quot;Memory runs short&quot;] --&gt; B[&quot;some rises:&lt;br/&gt;a task is stalled&quot;]
+    B --&gt; C[&quot;more tasks join&quot;]
+    C --&gt; D[&quot;full rises:&lt;br/&gt;the whole machine&lt;br/&gt;is waiting on memory&quot;]</code></pre>
+<p><code>some</code> is the early warning, <code>full</code> is the &quot;the machine is effectively down&quot; signal. A single-threaded program that stalls shows up as <code>some</code> <em>and</em> <code>full</code> together, because its one thread is every non-idle task it has.</p>
+<hr>
+<h2>Bytes versus time, with two examples</h2>
+<p>Why is time a better alarm than bytes?</p>
+<p><strong>Low free memory, no pressure.</strong> A file server reads a lot of files, and the cache fills RAM. <code>MemFree</code> is 2% and PSI is 0. The kernel is using the spare as it should. An alert on <code>MemFree</code> fires every night for nothing.</p>
+<p><strong>Plenty free, high pressure.</strong> A container is limited to 2 GiB with <code>memory.max</code> while the host has 20 GiB free. The container&#x27;s working set is 2.5 GiB. The host looks relaxed. The container is thrashing and its PSI is high. An alert on host <code>MemFree</code> never fires.</p>
+<p>In both cases the stall time was the thing that mattered, and bytes pointed the wrong way. PSI also measures the <strong>cost</strong>: how bad a given level of use feels to the programs running on it. That is why it is the right input for a rescuer. A threshold on bytes has to be tuned per machine, and a threshold on stalled time means the same thing everywhere.</p>
+<p>PSI also exists for <code>cpu</code> and <code>io</code> (<code>/proc/pressure/cpu</code>, <code>/proc/pressure/io</code>), with the same format.</p>
+<hr>
+<h2>Getting woken up: triggers</h2>
+<p>Polling a file every second is fine. The kernel also lets a program say &quot;wake me when pressure crosses this line&quot;, with no polling at all.</p>
+<p>You write a threshold to the file, then wait on it with <code>poll</code>/<code>epoll</code>:</p>
+<pre><code class="language-python">import os, select
+
+fd = os.open(&quot;/proc/pressure/memory&quot;, os.O_RDWR | os.O_NONBLOCK)
+os.write(fd, b&quot;some 150000 1000000\0&quot;)   # 150 ms of stall inside any 1-second window
+
+p = select.poll()
+p.register(fd, select.POLLPRI)
+while True:
+    for _fd, ev in p.poll():
+        if ev &amp; select.POLLPRI:
+            print(&quot;memory pressure threshold crossed&quot;)   # act here</code></pre>
+<p>The string means: <em>stall time (150000 µs) within a window (1000000 µs)</em>. If tasks lose 150 ms or more out of any second, the program is woken. Windows run from 500 ms to 10 s.</p>
+<p>Two notes, both tested in clean VMs on Ubuntu 22.04 (Linux 5.15) and Ubuntu 26.04 (Linux 7.0).</p>
+<p><strong>A trigger keeps firing while the stall lasts.</strong> The kernel docs say notifications are rate-limited to one per tracking window. In a test, a 150 ms-in-1 s trigger on a cgroup under sustained pressure woke the program 14 times in 15 seconds on 5.15 and 15 times on 7.0, about once per window. Don&#x27;t assume a single wake-up, and re-read the file after you act to decide from the numbers.</p>
+<p><strong>Who may register a trigger depends on the kernel.</strong> The kernel docs say unprivileged users can create triggers if the window is a multiple of 2 seconds. On 7.0 that is what happened: an ordinary user registered a 2 s window on <code>/proc/pressure/memory</code>, and the 1 s window above was refused with <code>EINVAL</code>. On 5.15 the same user got <code>EPERM</code> for both. On both kernels a user&#x27;s own <code>user@1000.service</code> cgroup file was owned by root and refused the write (<code>EACCES</code>), so a rescuer that watches a group needs a file it can write. If you must support older kernels, run the rescuer as root.</p>
+<p>This is how a lightweight rescuer can sleep at zero cost until it is needed. And because it sleeps in the kernel until it is woken, it fits the memory-locking idea: the program is <strong>idle until the worst moment</strong>, the exact profile that <a href="../../../../fields/system-administration/linux-memory-pressure/memory-locking-mlockall/">part 5</a> protects.</p>
+<hr>
+<h2>Per group, and who uses it</h2>
+<p>Every cgroup v2 group has its own <code>memory.pressure</code> (and <code>cpu.pressure</code>, <code>io.pressure</code>), in the same format. So you can ask &quot;is <em>this container</em> stalled?&quot; while the rest of the machine is calm. That is the data a rescuer needs to decide <strong>which</strong> group to act on, not just <em>whether</em> to act.</p>
+<table><thead><tr><th>Tool</th><th>What it watches</th><th>Notes</th></tr></thead><tbody><tr><td><strong>`systemd-oomd`</strong></td><td>Per-cgroup memory PSI (plus swap use)</td><td>Kills a whole cgroup when pressure stays above a limit for a set time. Defaults to 60% for 20 seconds</td></tr><tr><td><strong>`earlyoom`</strong></td><td><code>MemAvailable</code> and swap free, in percent</td><td>A simpler, older approach: bytes, not time</td></tr><tr><td>A custom rescuer</td><td>Anything you choose</td><td>PSI triggers plus the per-group files give the finest control</td></tr></tbody></table>
+<p>On the machine this page was written on (Ubuntu 26.04, Linux 7.0), <code>systemd-oomd</code> is running and <code>earlyoom</code> is not.</p>
+<hr>
+<h2>Check it on your own machine</h2>
+<pre><code class="language-bash">cat /proc/pressure/memory /proc/pressure/cpu /proc/pressure/io
+cat /sys/fs/cgroup/memory.pressure                  # the root group, same numbers as above
+cat /sys/fs/cgroup/user.slice/memory.pressure       # just the user sessions
+systemctl status systemd-oomd                       # is a pressure-based killer running?</code></pre>
+<p>If <code>/proc/pressure/memory</code> doesn&#x27;t exist, the kernel was built without PSI, or booted with <code>psi=0</code>. Some distribution kernels ship PSI switched off by default (they need <code>psi=1</code> on the kernel command line), so check the file before you build on it.</p>
+<p>To watch it move, put a deliberately small memory limit on a throwaway group and run something greedy inside it (see the <a href="../../../../fields/system-administration/linux-memory-pressure/cgroup-v2-memory-control/">cgroup page</a>). Its <code>memory.pressure</code> climbs while the host&#x27;s stays near zero.</p>
+<p><strong>Takeaway:</strong> don&#x27;t alarm on how many bytes are free; alarm on the share of time tasks spend stalled on memory (<code>some</code> for early warning, <code>full</code> for &quot;the machine has stopped&quot;), because that measures the trouble itself and means the same on every machine.</p>
+<p>You can now see pressure coming. If nothing relieves it, the kernel eventually loses patience and kills something: who, and when? That&#x27;s <a href="../../../../fields/system-administration/linux-memory-pressure/the-oom-killer/">part 3</a>.</p>
+<h2>References</h2>
+<ul><li><a href="https://www.kernel.org/doc/html/latest/accounting/psi.html">Linux kernel docs: PSI, Pressure Stall Information</a> (trigger rate limit, window range, unprivileged monitors)</li><li><a href="https://facebookmicrosites.github.io/oomd/">Facebook Engineering: PSI and cgroup2-based OOM handling (oomd)</a></li><li><a href="https://www.freedesktop.org/software/systemd/man/latest/systemd-oomd.service.html">systemd-oomd.service(8)</a></li><li><a href="https://github.com/rfjakob/earlyoom">earlyoom</a></li></ul>
+<p><a href="../../../../#/fields/system-administration/linux-memory-pressure/memory-pressure-psi">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

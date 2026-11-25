@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>System Administration - LDAP</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/ldap/">
+<meta name="description" content="First steps to install OpenLDAP on Fedora or CentOS, start slapd, open its port, and how a directory tree of entries, object classes and attributes is laid out.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="System Administration - LDAP">
+<meta property="og:description" content="First steps to install OpenLDAP on Fedora or CentOS, start slapd, open its port, and how a directory tree of entries, object classes and attributes is laid out.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/ldap/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/ldap/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../.docs/prerender-redirect.js" data-target="../../../#/fields/system-administration/ldap"></script>
+<main>
+<h1>System Administration - LDAP</h1>
+<p><em>First steps to install OpenLDAP on Fedora or CentOS, start slapd, open its port, and how a directory tree of entries, object classes and attributes is laid out.</em></p>
+<h2>Reference</h2>
+<ul><li>Youtube playlist: []()</li></ul>
+<h2>Motivation</h2>
+<h2>Installation - OpenLdap</h2>
+<ol><li>In Fedora/CentOS, we install openldap and  <code>`</code>bash yum install -y openldap openldap-servers <code>`</code><ul><li>Openldap-servers is being installed along with <em>slapd</em> daemon, it support multiple of implementations that help in users authentication process.</li></ul></li><li>Start the <em>slapd</em> daemon service: <code>`</code>bash systemctl start slapd</li></ol>
+<p>systemctl enable slapd</p>
+<pre><code>3. It uses port 389/tcp, so add this port to the firewall:</code></pre>
+<p>firewall-cmd --permanent --add-port=389/tcp</p>
+<p>firewall-cmd reload</p>
+<pre><code>4. Set the configuration for the LDAP directory, which is a tree of data Entry &quot;DIT&quot; (Directory Information Tree). 
+    - Entry is a collection of *Attribute*, where each attribute has name/value pair.
+    - Each collection of attributes are defined under *ObjectClass*.</code></pre>
+<p>Tree -&gt; Collection of Entries Entry -&gt; ObjectClass -&gt; Attribute -&gt; Name/Value Each Entry has a unique Identifier called <em>DN</em> (Distinguished Name)</p>
+<pre><code>    - To edit the configuration file:</code></pre>
+<p>ls /etc/openldap/slapd.d/cn\=config</p>
+<pre><code></code></pre>
+<p><a href="../../../#/fields/system-administration/ldap">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

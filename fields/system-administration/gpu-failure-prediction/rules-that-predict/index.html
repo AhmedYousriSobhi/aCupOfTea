@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>From Signals to Decisions</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/gpu-failure-prediction/rules-that-predict/">
+<meta name="description" content="How to design GPU failure rules - state, event and trend rules, personal baselines, persistence, noise floors and action tiers - and the traps that make rules silently fail.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="From Signals to Decisions">
+<meta property="og:description" content="How to design GPU failure rules - state, event and trend rules, personal baselines, persistence, noise floors and action tiers - and the traps that make rules silently fail.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/gpu-failure-prediction/rules-that-predict/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/gpu-failure-prediction/rules-that-predict/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/system-administration/gpu-failure-prediction/rules-that-predict"></script>
+<main>
+<h1>From Signals to Decisions</h1>
+<p><em>How to design GPU failure rules - state, event and trend rules, personal baselines, persistence, noise floors and action tiers - and the traps that make rules silently fail.</em></p>
+<blockquote><p><strong>Part 3 of the [Predicting GPU Node Failures series](/fields/system-administration/gpu-failure-prediction/README.md).</strong> A signal is not a decision. This page is about the thinking between the two: what kinds of rules exist, how to make a rule notice change without crying wolf, and how to tie each rule to a specific action. By the end you&#x27;ll be able to design a GPU failure rule set on a whiteboard and explain every line of it.</p></blockquote>
+<hr>
+<h2>Concept 1: three kinds of rule</h2>
+<p>Every useful GPU health rule is one of three kinds. They differ in what they look at and how certain they are.</p>
+<table><thead><tr><th>Kind</th><th>Question it asks</th><th>Example</th><th>Certainty</th></tr></thead><tbody><tr><td><strong>State</strong></td><td>&quot;Is the GPU in a known-bad condition right now?&quot;</td><td>Remap failure flag is set; a remap is pending</td><td>High: NVIDIA defines the meaning</td></tr><tr><td><strong>Event</strong></td><td>&quot;Did something bad just happen?&quot;</td><td>A new Xid 79, 95 or 64</td><td>High, but it&#x27;s already happened</td></tr><tr><td><strong>Trend</strong></td><td>&quot;Is this GPU getting worse?&quot;</td><td>Correctable error rate climbing; spare rows running out</td><td>Lower: this is the actual <em>prediction</em></td></tr></tbody></table>
+<p>State and event rules are mostly reaction: fast, confident, and late. Trend rules are prediction: early, uncertain, and the only part that&#x27;s truly &quot;AIOps.&quot; A good rule set needs all three, and it must never let the uncertain kind trigger the drastic actions on its own.</p>
+<hr>
+<h2>Concept 2: compare a GPU with itself</h2>
+<p>The obvious trend rule is a fixed threshold: &quot;alert when a GPU has more than N correctable errors per hour.&quot; It breaks in two ways.</p>
+<ul><li><strong>What&#x27;s normal differs.</strong> Part 1 showed that errors concentrate: a few parts produce almost all of them. A fleet-wide threshold is either too high for a GPU that just started failing, or too low for a GPU that has always produced a steady trickle and never got worse.</li><li><strong>Nobody publishes the number.</strong> There&#x27;s no NVIDIA figure for &quot;a normal single-bit error rate for H100 HBM3.&quot; Any fixed threshold you pick is a guess.</li></ul>
+<p>The better question is: <strong>&quot;Is this GPU behaving differently from its own recent past?&quot;</strong> Compare the last hour&#x27;s error rate with the same GPU&#x27;s rate over the last day. A GPU that always produces 1 error a minute stays quiet. A GPU that jumps from 1 to 30 a minute gets noticed, whatever the absolute numbers are.</p>
+<p>This is a <strong>personal baseline</strong>, and it&#x27;s the core idea behind most anomaly detection: model what&#x27;s normal <em>for this thing</em>, then look for departures.</p>
+<hr>
+<h2>Concept 3: persistence and noise floors</h2>
+<p>Two problems make baseline rules noisy, and each has a simple fix.</p>
+<p><strong>Problem 1: blips.</strong> A single bad scrape or a momentary flag can flip a rule on and off. The fix is <strong>persistence</strong>: require the condition to hold for a while before acting. How long depends on what&#x27;s at stake:</p>
+<table><thead><tr><th>Condition</th><th>Sensible persistence</th><th>Why</th></tr></thead><tbody><tr><td>Remap failure flag</td><td>A couple of minutes</td><td>It&#x27;s latched; you&#x27;re only guarding against a bad read</td></tr><tr><td>Remap pending</td><td>Longer, say 15 minutes</td><td>NVIDIA says unaffected work keeps running; no rush</td></tr><tr><td>Fatal Xid</td><td>None</td><td>The event already happened</td></tr><tr><td>Rising error trend</td><td>Tens of minutes</td><td>Trends are noisy; you want it to hold</td></tr></tbody></table>
+<p><strong>Problem 2: ratios explode near zero.</strong> &quot;3× its baseline&quot; sounds sensible until a GPU with zero errors yesterday has one today: infinitely more than its baseline. The fix is a <strong>noise floor</strong>: a minimum absolute amount of activity before the ratio counts. &quot;At least 3× the baseline <em>and</em> at least 10 errors in the hour.&quot; The second clause ignores a GPU going from silent to slightly less silent.</p>
+<p>When we tested a rule set like this, removing the noise floor did exactly that: a quiet GPU with 5 errors in an hour fired a &quot;rate accelerating&quot; alert. Ratios without floors page you about nothing.</p>
+<hr>
+<h2>Concept 4: tiers that map to actions</h2>
+<p>A rule that only says &quot;something is wrong&quot; pushes the hard part onto whoever reads it at 3 AM. Each rule should say <strong>what to do</strong>, and the doing should depend on how sure you are and how bad it is.</p>
+<table><thead><tr><th>Tier</th><th>Meaning</th><th>Action</th><th>Rules in this tier</th></tr></thead><tbody><tr><td><strong>1. Broken</strong></td><td>Already failed</td><td>Stop sending work now; evidence, diagnostics, likely RMA</td><td>Remap failure; Xid 64, 79, 95</td></tr><tr><td><strong>2. Will break jobs</strong></td><td>Damaged, still running</td><td>Let current jobs finish, then reset the GPU</td><td>Remap pending; uncorrectable errors; Xid 48, 94</td></tr><tr><td><strong>3. Early warning</strong></td><td>Wearing out</td><td>Plan, watch, prefer it for short jobs</td><td>Spares nearly gone; error rate accelerating</td></tr><tr><td><strong>Blind spot</strong></td><td>Can&#x27;t see</td><td>Fix the monitoring</td><td>Telemetry missing</td></tr></tbody></table>
+<p>Tier 2 is worth a second look. Why not reset the GPU immediately? Because a reset needs an empty GPU, and NVIDIA&#x27;s guidance for a pending remap and for &quot;drain and reset&quot; situations is to stop new work, let existing work finish or checkpoint, <em>then</em> reset. A scheduler drain does exactly that.</p>
+<p>A design trick that keeps this clean: give every alert an <strong>action label</strong> (<code>drain_now</code>, <code>drain_and_reset</code>, <code>plan_rma</code>, <code>watch</code>) and let the automation in <a href="../../../../fields/system-administration/gpu-failure-prediction/from-alert-to-drain/">part 4</a> look only at that label. The automation never has to know what Xid 95 means; the rule author decides once, in one place.</p>
+<hr>
+<h2>The rule set, on one page</h2>
+<p>Here&#x27;s a complete rule set in plain words. Each line maps to one Prometheus alerting rule over dcgm-exporter metrics.</p>
+<table><thead><tr><th>Rule</th><th>Kind</th><th>Fires when</th><th>Holds for</th><th>Action</th></tr></thead><tbody><tr><td>Remap failure</td><td>State</td><td>Failure flag is 1</td><td>2 min</td><td><code>drain_now</code></td></tr><tr><td>Fatal Xid</td><td>Event</td><td>New Xid 64, 79 or 95 in the last 10 min</td><td>-</td><td><code>drain_now</code></td></tr><tr><td>Remap pending</td><td>State</td><td>Pending flag is 1</td><td>15 min</td><td><code>drain_and_reset</code></td></tr><tr><td>Uncorrectable error</td><td>Event</td><td>Double-bit count rose in the last hour, or new Xid 48 / 94</td><td>-</td><td><code>drain_and_reset</code></td></tr><tr><td>Spares nearly gone</td><td>Trend</td><td>Any bank in the &quot;Low&quot; or &quot;None&quot; bucket</td><td>1 h</td><td><code>plan_rma</code></td></tr><tr><td>Errors accelerating</td><td>Trend</td><td>Last-hour SBE rate &gt; 3× its 24 h rate, and ≥ 10 SBEs in the hour</td><td>30 min</td><td><code>watch</code></td></tr><tr><td>Telemetry missing</td><td>Blind spot</td><td>Exporter down</td><td>10 min</td><td><code>watch</code></td></tr></tbody></table>
+<p>Notice what&#x27;s <em>not</em> there: no rule drains on Xid 13, which NVIDIA lists as a graphics engine exception that is often the application&#x27;s fault. And no trend rule drains anything.</p>
+<hr>
+<h2>The first-event trap</h2>
+<p>This trap is worth understanding because it hides the most important event in the whole series: the first time a GPU falls off the bus.</p>
+<p>Recall from <a href="../../../../fields/system-administration/gpu-failure-prediction/collecting-the-signals/">part 2</a> that the per-code Xid counter is <em>born</em> on its first event: before the first Xid 79 there is no Xid 79 series at all, and then one appears with the value 1. The natural rule asks &quot;did this counter increase in the last 10 minutes?&quot; To answer, the monitoring system subtracts the old value from the new one. There is no old value, so it sees 1 → 1, which is no increase. The alert stays silent.</p>
+<p>We confirmed it with a rule unit test: we expected an increase of 1 and the test reported 0.</p>
+<pre><code class="language-text">exp: {... gpu=&quot;3&quot;, instance=&quot;cn042:9400&quot;, xid=&quot;79&quot;} 1E+00
+got: {... gpu=&quot;3&quot;, instance=&quot;cn042:9400&quot;, xid=&quot;79&quot;} 0E+00</code></pre>
+<p>The fix is to ask a second question alongside the first: <strong>&quot;does this series exist now when it didn&#x27;t 10 minutes ago?&quot;</strong> In PromQL:</p>
+<pre><code class="language-yaml">expr: |
+  increase(DCGM_EXP_XID_ERRORS_TOTAL[10m]) &gt; 0
+  or
+  (DCGM_EXP_XID_ERRORS_TOTAL unless DCGM_EXP_XID_ERRORS_TOTAL offset 10m)</code></pre>
+<p>The general lesson goes beyond Xids: <strong>any rule built on &quot;change&quot; must say what it does when there&#x27;s no &quot;before.&quot;</strong> Counters that appear on demand, nodes that just joined, exporters that just restarted all have no before.</p>
+<hr>
+<h2>Rules are code: test them</h2>
+<p>A rule that never fires looks exactly like a rule on a healthy cluster. That&#x27;s why rules should be treated like code: written down, versioned, and tested with fake inputs where you know the right answer.</p>
+<p>A good test set for GPU rules covers four kinds of case:</p>
+<table><thead><tr><th>Case</th><th>Example</th><th>Why</th></tr></thead><tbody><tr><td>Should fire</td><td>A remap failure flag set for 10 minutes</td><td>Proves the rule works</td></tr><tr><td>Should <em>not</em> fire</td><td>A steady, unchanging error rate; an application Xid 13</td><td>Proves it isn&#x27;t noisy</td></tr><tr><td>Edge</td><td>The first-ever Xid 79; a GPU going from 0 to 5 errors</td><td>Where rules actually break</td></tr><tr><td>Silence</td><td>Every counter flat on a healthy GPU</td><td>Proves the quiet path stays quiet</td></tr></tbody></table>
+<p>Then comes the step most people skip: <strong>prove the tests can fail.</strong> Deliberately break a rule (remove the &quot;new series&quot; branch, remove the noise floor) and check that a test goes red. When we did this, both breaks were caught. A test suite that can&#x27;t fail tells you nothing.</p>
+<blockquote><p>[!IMPORTANT] Run the rule tests whenever the telemetry configuration changes, not just when the rules do. Renaming one metric upstream silently disables every rule that used the old name, and only a test will notice.</p></blockquote>
+<hr>
+<h2>Knobs are opinions</h2>
+<p>The numbers in the rule set (3× baseline, 10 errors, 15 minutes) are <strong>starting opinions, not facts about GPUs.</strong> They encode trade-offs:</p>
+<table><thead><tr><th>Knob</th><th>Turn it up and you get</th><th>Turn it down and you get</th></tr></thead><tbody><tr><td>Baseline ratio</td><td>Fewer, surer warnings, later</td><td>Earlier warnings, more false alarms</td></tr><tr><td>Noise floor</td><td>Quiet GPUs never trip it</td><td>Real but small degradations get noticed</td></tr><tr><td>Persistence</td><td>Fewer flapping alerts, slower reaction</td><td>Faster reaction, more flapping</td></tr></tbody></table>
+<p>The only honest way to set them is against your own failure history, which is what <a href="../../../../fields/system-administration/gpu-failure-prediction/scoring-and-backtesting/">part 5</a> is about.</p>
+<p><strong>Takeaway:</strong> combine state, event and trend rules; judge trends against each GPU&#x27;s own baseline with persistence and a noise floor; give every rule an action tier; and test the rules, including the cases where they should stay silent and the case where there&#x27;s no &quot;before.&quot;</p>
+<p>Next: <a href="../../../../fields/system-administration/gpu-failure-prediction/from-alert-to-drain/">part 4, acting without making it worse</a>.</p>
+<h3>References</h3>
+<ul><li><a href="https://docs.nvidia.com/deploy/a100-gpu-mem-error-mgmt/error-recovery-and-response-flags.html">NVIDIA GPU Memory Error Management: Error Recovery and Response Flags</a></li><li><a href="https://docs.nvidia.com/deploy/gpu-debug-guidelines/gpu-node-triage.html">NVIDIA GPU Debug Guidelines: GPU Node Triage (Xid actions)</a></li><li><a href="https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/">Prometheus: alerting rules (<code>for</code>, labels)</a></li><li><a href="https://prometheus.io/docs/prometheus/latest/configuration/unit_testing_rules/">Prometheus: unit testing rules</a></li><li><a href="https://prometheus.io/docs/prometheus/latest/querying/functions/">PromQL functions: <code>increase()</code>, <code>rate()</code></a></li><li><a href="https://www.cs.toronto.edu/~bianca/papers/sigmetrics09.pdf">Schroeder, Pinheiro, Weber, &quot;DRAM Errors in the Wild&quot;, SIGMETRICS 2009 (error concentration)</a></li></ul>
+<p><a href="../../../../#/fields/system-administration/gpu-failure-prediction/rules-that-predict">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

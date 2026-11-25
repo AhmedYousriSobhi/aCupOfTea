@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Making a Rescuer Survive: CPU, Protection and a Checklist</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/linux-memory-pressure/rescuer-checklist/">
+<meta name="description" content="Beyond memory locking, what keeps an emergency program running under load - real-time priority, an OOM shield, restart and watchdog - and one checklist that ties all six pages together.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Making a Rescuer Survive: CPU, Protection and a Checklist">
+<meta property="og:description" content="Beyond memory locking, what keeps an emergency program running under load - real-time priority, an OOM shield, restart and watchdog - and one checklist that ties all six pages together.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/linux-memory-pressure/rescuer-checklist/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/linux-memory-pressure/rescuer-checklist/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/system-administration/linux-memory-pressure/rescuer-checklist"></script>
+<main>
+<h1>Making a Rescuer Survive: CPU, Protection and a Checklist</h1>
+<p><em>Beyond memory locking, what keeps an emergency program running under load - real-time priority, an OOM shield, restart and watchdog - and one checklist that ties all six pages together.</em></p>
+<blockquote><p><strong>Part 6 of the [Linux Memory Pressure series](/fields/system-administration/linux-memory-pressure/README.md).</strong> Pinning a program in RAM stops one kind of stall. A machine in trouble has others: the program can be starved of CPU, killed by the OOM killer, or simply hung. This page covers the rest of what a rescuer needs, then gives one checklist for the whole series.</p></blockquote>
+<hr>
+<h2>The ambulance that is stuck in traffic</h2>
+<p>A city gives its ambulance a reserved garage so it is never towed (that&#x27;s <a href="../../../../fields/system-administration/linux-memory-pressure/memory-locking-mlockall/">memory locking</a>), and keys always in the ignition (pre-allocation). On the day of the big traffic jam it is parked, intact, in its garage, and cannot get out. Three more things were needed:</p>
+<table><thead><tr><th>Gap</th><th>What goes wrong</th><th>The ambulance equivalent</th></tr></thead><tbody><tr><td><strong>CPU</strong></td><td>The machine is so busy the rescuer isn&#x27;t scheduled</td><td>Stuck in the jam: needs lights and siren, the right to jump the queue</td></tr><tr><td><strong>Being killed</strong></td><td>The OOM killer picks it as the heaviest crate</td><td>Someone impounds it for taking up space</td></tr><tr><td><strong>Hanging</strong></td><td>It&#x27;s alive but stuck, and nobody notices</td><td>The driver fell asleep at the wheel; no dispatcher is checking</td></tr></tbody></table>
+<hr>
+<h2>Gap 1: CPU time</h2>
+<p>Under memory pressure the machine is busy: reclaim threads, a thrashing workload, a disk queue. A rescuer in RAM still has to be <em>given the CPU</em>.</p>
+<p>Linux has <strong>real-time scheduling classes</strong>, <code>SCHED_FIFO</code> and <code>SCHED_RR</code>, which always beat ordinary processes. A real-time task runs the moment it is ready, and keeps the CPU until it blocks.</p>
+<pre><code class="language-bash">chrt -f 50 ./rescuer          # run with SCHED_FIFO, priority 50
+chrt -p &lt;pid&gt;                 # show a running process&#x27;s policy and priority</code></pre>
+<p>In a systemd unit: <code>CPUSchedulingPolicy=fifo</code> and <code>CPUSchedulingPriority=50</code>.</p>
+<blockquote><p>[!CAUTION] <code>SCHED_FIFO</code> can freeze a machine. A real-time rescuer that loops without blocking starves everything, including the SSH session you&#x27;d use to stop it. Try it on one canary node first, and keep a second root shell open.</p></blockquote>
+<p>The cost: this is a power that can freeze a machine. A real-time program that loops without blocking would starve everything, including the programs it was meant to rescue, which is why the kernel limits it:</p>
+<ul><li>A normal user needs <code>CAP_SYS_NICE</code> or an <code>RLIMIT_RTPRIO</code> allowance to ask for it, so it is <strong>privileged</strong>, just like the memory lock.</li><li>Real-time tasks get at most <strong>95% of each second</strong> by default (<code>sched_rt_runtime_us</code> is 950000 of 1000000 µs on my machine), leaving 5% for everyone else. That reserve is the safety net against a runaway.</li></ul>
+<p>Rule of thumb: a rescuer should do a small amount of work and then <strong>block</strong> (wait on a PSI trigger or a timer). It uses real-time priority for <em>latency</em>, not for throughput.</p>
+<p>A softer version: a negative nice value (<code>Nice=-10</code>) and a higher IO class (<code>IOSchedulingClass=realtime</code>, which usually needs privilege too).</p>
+<hr>
+<h2>Gap 2: being killed</h2>
+<p>Even locked and prioritized, the rescuer is a process. When the kernel is out of memory, it is scored like any other (<a href="../../../../fields/system-administration/linux-memory-pressure/the-oom-killer/">part 3</a>). The shield is <code>OOMScoreAdjust=-900</code>.</p>
+<p>Why <code>-900</code> and not <code>-1000</code>? Because <code>-1000</code> makes the process <strong>exempt from the OOM killer entirely</strong>. If the rescuer itself ever leaks, the kernel has no way to remove it, and the machine can wedge. <code>-900</code> makes it a victim of last resort: almost any other process dies first, but a real bug in the rescuer is still correctable.</p>
+<p>One more shield sits in the cgroup. Giving the rescuer&#x27;s service a <strong>`MemoryLow=`</strong> (or <code>memory.low</code>) tells reclaim to take memory from other groups first when the machine is short. It&#x27;s a cousin of the lock for pages that are <em>not</em> worth pinning individually. The kernel docs say the effective protection is limited by the <code>memory.low</code> of the <strong>ancestor</strong> groups, so also protect the parent slice, or the line may do little.</p>
+<hr>
+<h2>Gap 3: hanging, and who watches the watcher</h2>
+<p>A rescuer that crashes is bad. One that is alive but stuck is worse, because nothing restarts it.</p>
+<p>Two systemd settings handle this:</p>
+<ul><li><code>Restart=always</code> brings it back after a crash or a kill.</li><li><code>WatchdogSec=30</code> makes the service send an &quot;I&#x27;m alive&quot; message (via <code>sd_notify</code>) at least that often. If it goes quiet, systemd treats it as hung and restarts it.</li></ul>
+<p>This turns the rescuer&#x27;s own failure into a short gap instead of a silent one. The <code>sd_notify</code> call must itself be allocation-free, so the same rule from <a href="../../../../fields/system-administration/linux-memory-pressure/memory-locking-mlockall/">part 5</a> applies: open the notification socket at startup.</p>
+<hr>
+<h2>Try it before you scroll</h2>
+<p>☕ Grab a pen. A rescuer has <code>mlockall</code> and <code>OOMScoreAdjust=-900</code>. During a memory spike it still reacts three seconds late. Name two things that could still be wrong.</p>
+<p>Got yours? Scroll on.</p>
+<p>Answers: (1) It isn&#x27;t getting <strong>CPU</strong> quickly. It is a normal-priority process competing with a busy machine. (2) Its <strong>action</strong> allocates. If acting means starting a subprocess like <code>docker stop</code>, the child process needs new memory and can stall in direct reclaim, even though the parent is locked. A third: its <strong>trigger</strong> is slow. Polling once every few seconds is itself a three-second delay, which a PSI trigger would remove.</p>
+<hr>
+<h2>The whole unit file</h2>
+<p>Putting every gap together, a privileged rescuer&#x27;s unit might look like this:</p>
+<pre><code class="language-ini">[Unit]
+Description=Memory-pressure rescuer
+
+[Service]
+ExecStart=/usr/local/bin/rescuer
+Restart=always
+WatchdogSec=30
+
+# part 5: never swapped out
+LimitMEMLOCK=infinity
+
+# part 3: shield from the kernel OOM killer, but not exempt
+OOMScoreAdjust=-900
+
+# gap 1: get the CPU when it matters
+CPUSchedulingPolicy=fifo
+CPUSchedulingPriority=50
+
+# keep its group&#x27;s memory when others are reclaimed
+MemoryLow=64M</code></pre>
+<p>Most lines here need privilege (everything except <code>Restart=</code> and <code>WatchdogSec=</code>), which is the reason an unprivileged rescuer is &quot;best effort&quot; and a root service is &quot;the real thing&quot;. <code>WatchdogSec=</code> works without <code>Type=notify</code>: systemd sets <code>NotifyAccess=main</code> for you when <code>WatchdogSec=</code> is set and <code>NotifyAccess=</code> isn&#x27;t. Tested on Ubuntu 22.04 (systemd 249): <code>systemctl show -p NotifyAccess</code> printed <code>main</code> for a plain <code>Type=simple</code> unit that never set it.</p>
+<p><strong>Roll it out safely.</strong> Install it on one canary node first, as a drop-in, so you can undo it:</p>
+<ol><li>Run it for a few days in log-only mode (it names the group it <em>would</em> act on and does nothing).</li><li>Turn on the real action on the canary node only, and keep a second root shell open.</li><li>Roll back with <code>systemctl stop rescuer</code>, delete the unit or drop-in, and <code>systemctl daemon-reload</code>.</li></ol>
+<p><strong>Prove the watchdog works.</strong> Freeze the process with <code>kill -STOP $(pidof rescuer)</code>. Within about <code>WatchdogSec</code> (30 seconds here) the journal should show a watchdog timeout and systemd restarting the service. If nothing happens, the service isn&#x27;t sending its keep-alive pings. I ran this on Ubuntu 22.04 with <code>WatchdogSec=6</code> and a small Python process sending <code>WATCHDOG=1</code> every 2 seconds. Healthy for 14 seconds, it kept the same PID. After <code>kill -STOP</code> and 12 seconds it had a new PID, and the journal showed:</p>
+<pre><code class="language-text">wdtest.service: Watchdog timeout (limit 6s)!
+wdtest.service: Failed with result &#x27;watchdog&#x27;.
+wdtest.service: Scheduled restart job, restart counter is at 1.</code></pre>
+<hr>
+<h2>The checklist</h2>
+<p>One row per page of the series.</p>
+<table><thead><tr><th>#</th><th>Question</th><th>What to do</th><th>Page</th></tr></thead><tbody><tr><td>1</td><td>Am I looking at the right number?</td><td>Alert on <code>MemAvailable</code> and <code>pgscan_direct</code>, never <code>MemFree</code></td><td><a href="../../../../fields/system-administration/linux-memory-pressure/how-linux-reclaims-memory/">How Linux reclaims memory</a></td></tr><tr><td>2</td><td>How will I know pressure is coming?</td><td>Read PSI (<code>some</code> early, <code>full</code> late), or use a PSI trigger to wake up</td><td><a href="../../../../fields/system-administration/linux-memory-pressure/memory-pressure-psi/">Memory pressure (PSI)</a></td></tr><tr><td>3</td><td>What happens if I&#x27;m too late?</td><td>Know the kernel OOM victim rule; shield what matters with <code>oom_score_adj</code></td><td><a href="../../../../fields/system-administration/linux-memory-pressure/the-oom-killer/">The OOM killer</a></td></tr><tr><td>4</td><td>What can I do, gentlest first?</td><td><code>memory.high</code>, then <code>memory.reclaim</code>, then <code>cgroup.freeze</code>, then <code>cgroup.kill</code>, chosen per group by priority</td><td><a href="../../../../fields/system-administration/linux-memory-pressure/cgroup-v2-memory-control/">cgroup v2 memory control</a></td></tr><tr><td>5</td><td>Will I be fast when it happens?</td><td><code>mlockall</code>, plus pre-open handles and pre-touch buffers before the lock</td><td><a href="../../../../fields/system-administration/linux-memory-pressure/memory-locking-mlockall/">Memory locking (mlockall)</a></td></tr><tr><td>6</td><td>Will I get CPU, survive and be noticed if I hang?</td><td>Real-time priority, <code>-900</code> OOM adjust, <code>Restart=</code> and <code>WatchdogSec=</code></td><td>This page</td></tr></tbody></table>
+<p>And the one rule that holds them all: <strong>everything the rescuer needs under pressure must be acquired before the pressure.</strong> Memory, file handles, sockets, buffers, the decision about whom to act on. If any step opens, allocates or looks something up during the crisis, the crisis can delay it.</p>
+<p>The unprivileged fallback is a sensible product decision, not a failure: try each privileged step, log the ones that fail, and keep running with what worked.</p>
+<hr>
+<h2>Other uses of locked memory</h2>
+<p>Locking isn&#x27;t only for rescuers. The same call shows up wherever <em>the kernel moving a page</em> would be a problem:</p>
+<ul><li><strong>Secrets.</strong> Keys and passwords are locked so they never reach a swap file. Newer kernels also offer <code>memfd_secret</code>, memory even the kernel cannot read directly.</li><li><strong>Latency-critical programs.</strong> Audio, trading and packet-processing code lock memory so a page fault never interrupts a deadline. Often paired with huge pages and real-time priority, the same recipe as above.</li><li><strong>Hardware access.</strong> Devices that read memory directly (RDMA, GPU transfers) need pages that cannot move, which is why this series is related to <a href="../../../../fields/system-administration/ai-storage-and-fabric/">the GPU storage and fabric pages</a>.</li></ul>
+<p><strong>Takeaway:</strong> a rescuer that is only locked in RAM can still be starved of CPU, killed by the OOM killer or hang unnoticed; give it real-time priority, a <code>-900</code> OOM shield and a watchdog, and acquire every resource it will need before the pressure begins.</p>
+<h2>References</h2>
+<ul><li><a href="https://man7.org/linux/man-pages/man7/sched.7.html">sched(7): real-time scheduling policies</a> and <a href="https://man7.org/linux/man-pages/man1/chrt.1.html">chrt(1)</a></li><li><a href="https://www.freedesktop.org/software/systemd/man/latest/systemd.service.html">systemd.service(5): Restart, WatchdogSec</a> and <a href="https://www.freedesktop.org/software/systemd/man/latest/sd_notify.html">sd_notify(3)</a></li><li><a href="https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html">systemd.exec(5): CPUSchedulingPolicy, OOMScoreAdjust, LimitMEMLOCK</a></li><li><a href="https://man7.org/linux/man-pages/man2/memfd_secret.2.html">memfd_secret(2)</a></li></ul>
+<p><a href="../../../../#/fields/system-administration/linux-memory-pressure/rescuer-checklist">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

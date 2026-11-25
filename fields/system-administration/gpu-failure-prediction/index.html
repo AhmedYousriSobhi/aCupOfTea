@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Predicting GPU Node Failures - Overview</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/gpu-failure-prediction/">
+<meta name="description" content="A five-part series on how GPU memory fails, what its telemetry really says, and how to turn that into predictions you can trust before a training run dies.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Predicting GPU Node Failures - Overview">
+<meta property="og:description" content="A five-part series on how GPU memory fails, what its telemetry really says, and how to turn that into predictions you can trust before a training run dies.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/gpu-failure-prediction/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/gpu-failure-prediction/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../.docs/prerender-redirect.js" data-target="../../../#/fields/system-administration/gpu-failure-prediction/"></script>
+<main>
+<h1>Predicting GPU Node Failures - Overview</h1>
+<p><em>A five-part series on how GPU memory fails, what its telemetry really says, and how to turn that into predictions you can trust before a training run dies.</em></p>
+<blockquote><p>A five-part series on the &quot;AIOps&quot; half of a classic AI-infrastructure interview question: how do you see a GPU dying <em>before</em> it takes a training run down with it? It&#x27;s about understanding, not tooling: by the end you&#x27;ll be able to reason about GPU failures, judge any monitoring setup, and defend your design in a review or an interview.</p></blockquote>
+<hr>
+<h2>The question this series answers</h2>
+<blockquote><p><em>&quot;How do you define and measure operational excellence and performance in an AI research cluster?&quot;</em></p></blockquote>
+<p>A strong answer has two halves. The first is the hardware &quot;golden signals&quot;: GPU utilization, memory bandwidth, NVLink and InfiniBand traffic, thermal throttling, collected with tools like the NVIDIA DCGM exporter. That half tells you how well the cluster <em>performs</em>.</p>
+<p>The second half is what separates a senior answer: <strong>use the GPU&#x27;s own error telemetry to predict which node will fail, and get it out of the way before it crashes a critical run.</strong> That half tells you how well the cluster <em>survives</em>. This series is about the second half.</p>
+<p>A 60-second version you can say in an interview:</p>
+<blockquote><p>&quot;GPU memory rarely dies in one step. It climbs a ladder: corrected errors, then rows swapped for spares, then spares running out, then uncorrectable errors. Each rung is visible in telemetry. I react instantly to the rungs NVIDIA documents as fatal, treat the trends as early warnings, and measure every warning by precision and lead time against real failures. I only move to a learned model once I have enough labeled failures to prove it beats simple rules.&quot;</p></blockquote>
+<hr>
+<h2>The five ideas, one per page</h2>
+<table><thead><tr><th>#</th><th>Page</th><th>The idea you&#x27;ll take away</th></tr></thead><tbody><tr><td>1</td><td><a href="../../../fields/system-administration/gpu-failure-prediction/what-fails-and-what-warns/">How GPU memory fails</a></td><td>Errors are mostly hard faults that repeat and cluster, which is exactly what makes them predictable</td></tr><tr><td>2</td><td><a href="../../../fields/system-administration/gpu-failure-prediction/collecting-the-signals/">Reading the GPU&#x27;s vital signs</a></td><td>Counters, gauges and events lie in different ways; know which one you&#x27;re looking at</td></tr><tr><td>3</td><td><a href="../../../fields/system-administration/gpu-failure-prediction/rules-that-predict/">From signals to decisions</a></td><td>State, event and trend rules; baselines beat fixed thresholds; tiers map to actions</td></tr><tr><td>4</td><td><a href="../../../fields/system-administration/gpu-failure-prediction/from-alert-to-drain/">Acting without making it worse</a></td><td>Automate only reversible steps, and cap the blast radius of your own automation</td></tr><tr><td>5</td><td><a href="../../../fields/system-administration/gpu-failure-prediction/scoring-and-backtesting/">Is the prediction any good?</a></td><td>Base rates, precision, recall and lead time, and when a model is worth it</td></tr></tbody></table>
+<p>Read them in order the first time. Page 5 is the one to reread before any design review.</p>
+<blockquote><p>[!TIP] <strong>Deploying it?</strong> The <a href="../../../fields/system-administration/gpu-failure-prediction/runbook/">runbook</a> is the deep-technical companion: the counters file, node checks, tested Prometheus rules and unit tests, Alertmanager routing, a guarded Slurm drain hook and a backtest script, step by step with expected output and rollbacks.</p></blockquote>
+<hr>
+<h2>Who this is for</h2>
+<p>HPC and AI platform engineers who run NVIDIA data-center GPUs (A100, H100 or newer), usually under Slurm or Kubernetes, and who are tired of hearing about a bad GPU from a user whose job just died. You don&#x27;t need a statistics background; page 5 builds what it needs.</p>
+<hr>
+<h2>What the series assumes</h2>
+<table><thead><tr><th>Topic</th><th>Assumed</th><th>Explained here</th></tr></thead><tbody><tr><td>Prometheus-style metrics</td><td>You&#x27;ve seen a dashboard</td><td>Counter vs gauge vs event, and why it matters</td></tr><tr><td>Slurm</td><td>You know what draining a node means</td><td>Why drain is the right first action</td></tr><tr><td>GPU hardware</td><td>You know what HBM is</td><td>ECC, banks, rows, spares, containment</td></tr><tr><td>Statistics</td><td>None</td><td>Base rates, precision, recall, lead time, overfitting</td></tr></tbody></table>
+<p>Facts come from NVIDIA documentation and published field studies (Meta&#x27;s Llama 3 paper, Google&#x27;s DRAM study, NCSA&#x27;s Delta GPU study), cited on each page. Where a page gives an opinion rather than a fact, it says so.</p>
+<h2>Contents</h2>
+<table><thead><tr><th>File</th><th>Description</th></tr></thead><tbody><tr><td><a href="../../../fields/system-administration/gpu-failure-prediction/what-fails-and-what-warns/">what-fails-and-what-warns</a></td><td>How ECC, row remapping and containment work, and the error ladder</td></tr><tr><td><a href="../../../fields/system-administration/gpu-failure-prediction/collecting-the-signals/">collecting-the-signals</a></td><td>Telemetry concepts: counters, gauges, events, in-band and out-of-band</td></tr><tr><td><a href="../../../fields/system-administration/gpu-failure-prediction/rules-that-predict/">rules-that-predict</a></td><td>Designing failure rules: state, event, trend, tiers and traps</td></tr><tr><td><a href="../../../fields/system-administration/gpu-failure-prediction/from-alert-to-drain/">from-alert-to-drain</a></td><td>Safe automation: reversibility, budgets, rollout and rollback</td></tr><tr><td><a href="../../../fields/system-administration/gpu-failure-prediction/scoring-and-backtesting/">scoring-and-backtesting</a></td><td>Measuring predictions and choosing between rules and models</td></tr><tr><td><a href="../../../fields/system-administration/gpu-failure-prediction/runbook/">runbook</a></td><td>Deep-technical deployment runbook: configs, tested rules, drain hook, backtest</td></tr></tbody></table>
+<h2>Related reading in this repo</h2>
+<ul><li><a href="../../../fields/system-administration/node-health-check/">Node Health Check series</a>: the reactive side. NHC catches a node that is already broken; this series tries to get there first.</li><li><a href="../../../fields/system-administration/node-health-check/checks-and-remediation/auto-remediation/">Auto-remediation with NHC</a>: what happens after a predictive drain.</li><li><a href="../../../fields/devops/kubernetes/nvidia-cluster-readiness-engine/">The cluster that passed every test except the one that mattered</a>: failures that per-GPU counters can&#x27;t see.</li></ul>
+<p><a href="../../../#/fields/system-administration/gpu-failure-prediction/">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

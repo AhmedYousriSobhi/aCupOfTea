@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The Playbook That Restarted slurmd Every Night: Idempotence and Handlers</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/ansible/idempotence-and-handlers/">
+<meta name="description" content="Why a playbook should report changed only when it changed something, templates instead of shell, handlers that restart only when needed, --check --diff, and the handler that never ran.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="The Playbook That Restarted slurmd Every Night: Idempotence and Handlers">
+<meta property="og:description" content="Why a playbook should report changed only when it changed something, templates instead of shell, handlers that restart only when needed, --check --diff, and the handler that never ran.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/ansible/idempotence-and-handlers/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/ansible/idempotence-and-handlers/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/devops/ansible/idempotence-and-handlers"></script>
+<main>
+<h1>The Playbook That Restarted slurmd Every Night: Idempotence and Handlers</h1>
+<p><em>Why a playbook should report changed only when it changed something, templates instead of shell, handlers that restart only when needed, --check --diff, and the handler that never ran.</em></p>
+<blockquote><p><strong>Part 3 of the [Ansible series](/fields/devops/ansible/README.md).</strong> <a href="../../../../fields/devops/ansible/inventory-and-ad-hoc/">Part 2</a> made one-off changes with ad-hoc commands. This page writes a playbook that deploys <code>slurm.conf</code> to the whole cluster, restarts daemons only when the file really changed, previews changes before making them, and survives a failure halfway through.</p></blockquote>
+<hr>
+<h2>Changed, every night</h2>
+<p>A cron job runs the Slurm playbook every night &quot;to keep things in line&quot;. Every morning the summary says the same thing: <code>changed=2</code> on every node. Everyone learns to ignore it.</p>
+<p>Then someone edits <code>slurm.conf</code> by hand on one node to test something and forgets to undo it. The nightly run fixes the file, which is good. But the report says <code>changed=2</code> on that node, the same as on every other node, every other night. Nobody notices that this time it meant something. Meanwhile every node&#x27;s slurmd has been restarted every night for a year, and once a month that restart lands during a burst of job launches.</p>
+<p>A run that always says &quot;changed&quot; tells you nothing. This page makes &quot;changed&quot; mean something again.</p>
+<blockquote><p>[!NOTE] Lab: ansible-core <strong>2.22.0</strong>, Slurm <strong>23.11.4</strong> from Ubuntu 24.04&#x27;s packages, with systemd running on every node. Two Slurm settings in the template below (<code>SlurmUser=slurm</code>, <code>MpiDefault=none</code>) were added after the lab&#x27;s first run failed without them; they match Ubuntu&#x27;s packaging.</p></blockquote>
+<hr>
+<h2>Idempotent: say what, not how</h2>
+<p>A task is <strong>idempotent</strong> when running it twice leaves the system the same as running it once, and the second run reports <strong>ok</strong> instead of <strong>changed</strong>. Ansible&#x27;s modules are built for this: you describe the end state (&quot;this file has this content&quot;, &quot;this service is running&quot;), and the module checks before it acts.</p>
+<p>Every task ends in one of these states:</p>
+<table><thead><tr><th>State</th><th>Means</th><th>What you should feel</th></tr></thead><tbody><tr><td><code>ok</code></td><td>Already right, nothing done</td><td>Nothing. That&#x27;s the goal</td></tr><tr><td><code>changed</code></td><td>It was wrong, now it&#x27;s right</td><td>Look: something drifted, or you shipped a change</td></tr><tr><td><code>skipped</code></td><td>A condition said &quot;not here&quot;</td><td>Nothing</td></tr><tr><td><code>failed</code></td><td>Couldn&#x27;t make it right</td><td>Act</td></tr></tbody></table>
+<p>Rule of thumb: <strong>a clean second run should be all `ok`.</strong> If it isn&#x27;t, the playbook is lying to you.</p>
+<hr>
+<h2>The version that started it all</h2>
+<p>This is the playbook from the story, in miniature:</p>
+<pre><code class="language-yaml">- name: The way it started
+  hosts: nodes
+  become: true
+  tasks:
+    - name: Write slurm.conf
+      ansible.builtin.shell: cat /tmp/slurm.conf.new &gt; /etc/slurm/slurm.conf
+    - name: Restart slurmd
+      ansible.builtin.command: systemctl restart slurmd</code></pre>
+<p><code>shell</code> and <code>command</code> just run what you give them. Ansible can&#x27;t know whether that changed anything, so it always says <code>changed</code>. We ran it twice:</p>
+<pre><code class="language-text">cn001 : ok=3    changed=2    unreachable=0    failed=0
+cn001 : ok=3    changed=2    unreachable=0    failed=0</code></pre>
+<p>Two runs, two restarts, identical reports. And in check mode (next section) both tasks are simply <code>skipped</code>: you can&#x27;t preview anything. <code>ansible-lint</code> flags all of it:</p>
+<pre><code class="language-text">no-changed-when: Commands should not change things if nothing needs doing.
+command-instead-of-module: systemctl used in place of systemd module
+no-changed-when: Commands should not change things if nothing needs doing.</code></pre>
+<p><code>shell</code> and <code>command</code> aren&#x27;t banned. Use them for things no module does, and tell Ansible when they change something (<code>changed_when:</code>), as part 2&#x27;s check did with <code>changed_when: false</code>.</p>
+<hr>
+<h2>A template and two handlers</h2>
+<p>Two ideas fix this.</p>
+<p>A <strong>template</strong> is a file with placeholders, filled in per host from variables. The <code>ansible.builtin.template</code> module renders it, compares the result with the file on the node, and writes only if they differ. Save as <code>playbooks/templates/slurm.conf.j2</code>:</p>
+<pre><code class="language-jinja"># Managed by Ansible (playbooks/slurm-config.yml). Local edits will be overwritten.
+ClusterName={{ slurm_cluster_name }}
+SlurmctldHost={{ slurm_controller }}
+SlurmUser=slurm
+AuthType=auth/munge
+ProctrackType=proctrack/linuxproc
+TaskPlugin=task/none
+MpiDefault=none
+SelectType=select/cons_tres
+ReturnToService=2
+StateSaveLocation=/var/lib/slurm/slurmctld
+SlurmdSpoolDir=/var/lib/slurm/slurmd
+SlurmctldLogFile=/var/log/slurm/slurmctld.log
+SlurmdLogFile=/var/log/slurm/slurmd.log
+
+{% for node in groups[&#x27;nodes&#x27;] | sort %}
+NodeName={{ node }} CPUs={{ slurm_node_cpus }} RealMemory={{ slurm_node_memory_mb }} State=UNKNOWN
+{% endfor %}
+PartitionName=batch Nodes={{ groups[&#x27;nodes&#x27;] | sort | join(&#x27;,&#x27;) }} Default=YES MaxTime=INFINITE State=UP</code></pre>
+<p>The node list comes from the inventory: add a host to <code>compute</code>, and it appears in every node&#x27;s <code>slurm.conf</code> on the next run. The values go in <code>inventory/group_vars/all.yml</code>:</p>
+<pre><code class="language-yaml">slurm_cluster_name: acot
+slurm_controller: head01
+slurm_node_cpus: 1
+slurm_node_memory_mb: 1000</code></pre>
+<p>(The lab&#x27;s containers have one CPU and plenty of memory. Use your hardware&#x27;s real numbers; <code>slurmd -C</code> on a node prints them.)</p>
+<p>A <strong>handler</strong> is a task that runs only when another task <strong>notifies</strong> it, and only if that task reported <code>changed</code>. Handlers run once, at the end of the play, however many tasks notified them. So &quot;restart slurmd&quot; becomes a handler, notified by the template task. Same file, no change, no restart.</p>
+<p>The full playbook is further down. First, what it does.</p>
+<p>On the second run, every host reported <code>changed=0</code> and no handler ran. That&#x27;s the whole point:</p>
+<pre><code class="language-text">cn001 : ok=4    changed=0    unreachable=0    failed=0    skipped=1
+head01 : ok=4    changed=0    unreachable=0    failed=0    skipped=1</code></pre>
+<p>When we really changed something (adding <code>SlurmUser=slurm</code> to the template), only then did the handlers run:</p>
+<pre><code class="language-text">+SlurmUser=slurm
+RUNNING HANDLER [Restart slurmctld] ********************************************
+RUNNING HANDLER [Restart slurmd] ***********************************************</code></pre>
+<hr>
+<h2>Preview with --check --diff</h2>
+<p><strong>Check mode</strong> (<code>--check</code>) runs the playbook without changing anything: modules that support it report what they <em>would</em> do. <strong>Diff mode</strong> (<code>--diff</code>) shows the line-level change for files. Together, they&#x27;re the dry run you show a colleague before the real one.</p>
+<p>We changed <code>slurm_node_memory_mb</code> from 950 to 1000 and asked:</p>
+<pre><code class="language-bash">ansible-playbook playbooks/slurm-config.yml --check --diff -l cn001</code></pre>
+<pre><code class="language-text">--- before: /etc/slurm/slurm.conf
++++ after: /root/.ansible/tmp/.../slurm.conf.j2
+-NodeName=cn001 CPUs=1 RealMemory=950 State=UNKNOWN
++NodeName=cn001 CPUs=1 RealMemory=1000 State=UNKNOWN
+changed: [cn001]
+RUNNING HANDLER [Restart slurmctld] ********************************************
+RUNNING HANDLER [Restart slurmd] ***********************************************
+changed: [cn001]</code></pre>
+<p>You see the exact line, and that slurmd <em>would</em> restart. The file&#x27;s checksum was the same before and after: nothing was written.</p>
+<blockquote><p>[!TIP] On Ubuntu, check mode for package tasks needs <code>python3-apt</code> on the node. A minimal image without it failed with <code>python3-apt must be installed to use check mode</code>. Normal runs install it automatically; check mode can&#x27;t, because that would be a change.</p></blockquote>
+<hr>
+<h2>The handler that never ran</h2>
+<p>Here&#x27;s the trap that bites good playbooks. Handlers run at the <strong>end</strong> of the play. If a host fails anywhere after the notifying task, that host&#x27;s handlers don&#x27;t run.</p>
+<p>We reproduced it: changed a value, and added a task after the template that fails on cn002, standing in for a full <code>/var</code>, a typo, anything.</p>
+<pre><code class="language-text">fatal: [cn002]: FAILED! =&gt; {&quot;changed&quot;: false, &quot;msg&quot;: &quot;simulated failure&quot;}
+cn001 : ok=5    changed=2    unreachable=0    failed=0
+cn002 : ok=3    changed=1    unreachable=0    failed=1</code></pre>
+<p>cn002 got the new <code>slurm.conf</code> (<code>changed=1</code>), but its slurmd kept running with the old one. We compared slurmd&#x27;s start time with the file&#x27;s modification time:</p>
+<pre><code class="language-text">cn001 slurmd restarted after config change
+cn002 STALE: slurmd older than slurm.conf</code></pre>
+<p>Then we removed the failure and ran again. cn002 said <code>changed=0</code>, because the file was already correct. <strong>No change, no notification, no restart, ever.</strong> cn002 stayed stale until someone restarted it by hand.</p>
+<p>The fix is one line at the play level:</p>
+<pre><code class="language-yaml">  force_handlers: true</code></pre>
+<p>With it, Ansible runs the notified handlers for a host even when that host failed. Same failure on cn002, this time:</p>
+<pre><code class="language-text">fatal: [cn002]: FAILED! =&gt; {&quot;changed&quot;: false, &quot;msg&quot;: &quot;simulated failure&quot;}
+RUNNING HANDLER [Restart slurmd] ***********************************************
+changed: [cn002]</code></pre>
+<pre><code class="language-text">cn002 slurmd restarted after config change</code></pre>
+<p>The run still fails, as it should, but no daemon is left running on a config that&#x27;s no longer on disk. (<code>--force-handlers</code> on the command line does the same for one run.)</p>
+<hr>
+<h2>Started, then restarted</h2>
+<p>One more subtle one, found in the controller&#x27;s log on the very first deploy. The playbook had two tasks in this order: &quot;make sure slurmctld is started&quot;, then (at the end of the play) the &quot;restart slurmctld&quot; handler. On a fresh node that means:</p>
+<pre><code class="language-text">[...T13:45:15.824] Running as primary controller                         &lt;- the &quot;started&quot; task
+[...T13:45:17.895] Terminate signal (SIGINT or SIGTERM) received         &lt;- the handler, 2 s later
+[...T13:45:17.914] slurmctld version 23.11.4 started on cluster acot</code></pre>
+<p>Started, then immediately restarted, because the config was new. Harmless here, wasteful on a real controller, and confusing when you read the log.</p>
+<p><code>meta: flush_handlers</code> runs any pending handlers <em>right there</em>, instead of at the end. Put it between the template and the &quot;started&quot; tasks: a changed config restarts (or first-starts) the daemon, and the &quot;started&quot; task finds it already running. We reinstalled cn004 and counted daemon starts in its log on the first deploy:</p>
+<table><thead><tr><th>Order</th><th>slurmd starts on first deploy</th></tr></thead><tbody><tr><td>started task, then handler at end of play</td><td>2</td></tr><tr><td>template, <code>flush_handlers</code>, then started task</td><td>1</td></tr></tbody></table>
+<hr>
+<h2>The finished playbook</h2>
+<p>Save as <code>playbooks/slurm-config.yml</code>:</p>
+<pre><code class="language-yaml">- name: Deploy slurm.conf everywhere and restart only what changed
+  hosts: head:nodes
+  become: true
+  force_handlers: true
+  tasks:
+    - name: Make sure Slurm&#x27;s directories exist
+      ansible.builtin.file:
+        path: &quot;{{ item }}&quot;
+        state: directory
+        owner: slurm
+        group: slurm
+        mode: &quot;0755&quot;
+      loop:
+        - /var/lib/slurm
+        - /var/log/slurm
+
+    - name: Install slurm.conf
+      ansible.builtin.template:
+        src: templates/slurm.conf.j2
+        dest: /etc/slurm/slurm.conf
+        owner: root
+        group: root
+        mode: &quot;0644&quot;
+      notify:
+        - Restart slurmctld
+        - Restart slurmd
+
+    - name: Restart now if the config changed, before the start tasks below
+      ansible.builtin.meta: flush_handlers
+
+    - name: Run slurmctld on the controller
+      ansible.builtin.systemd_service:
+        name: slurmctld
+        state: started
+        enabled: true
+      when: inventory_hostname in groups[&#x27;head&#x27;]
+
+    - name: Run slurmd on compute and GPU nodes
+      ansible.builtin.systemd_service:
+        name: slurmd
+        state: started
+        enabled: true
+      when: inventory_hostname in groups[&#x27;nodes&#x27;]
+
+  handlers:
+    - name: Restart slurmctld
+      ansible.builtin.systemd_service:
+        name: slurmctld
+        state: restarted
+      when: inventory_hostname in groups[&#x27;head&#x27;]
+
+    - name: Restart slurmd
+      ansible.builtin.systemd_service:
+        name: slurmd
+        state: restarted
+      when: inventory_hostname in groups[&#x27;nodes&#x27;]</code></pre>
+<pre><code class="language-bash">ansible-playbook playbooks/slurm-config.yml
+ansible-playbook playbooks/slurm-config.yml   # again: should be changed=0 everywhere</code></pre>
+<p>On the lab cluster: <code>sinfo</code> showed all five nodes <code>idle</code>, a batch job ran on the node we asked for, the second run was all <code>changed=0</code>, and <code>ansible-lint</code> passed on the <code>production</code> profile.</p>
+<blockquote><p>[!NOTE] This template writes the same <code>CPUs</code> and <code>RealMemory</code> for every node. That&#x27;s fine while every node is the same. Part 4 gives the GPU node its own value and finds the bug hiding in that loop.</p></blockquote>
+<hr>
+<h2>Back to the nightly run</h2>
+<p>The cron job runs the new playbook. Most mornings the summary is <code>changed=0</code> everywhere and no daemon restarted overnight. The burst-of-launches incident stops, because nothing restarts unless something changed.</p>
+<p>Then comes the morning someone hand-edited <code>slurm.conf</code> on one node. The summary shows <code>changed=2</code> on exactly one host. It stands out like a red light on a quiet panel. The template put the file back, the handler restarted that one slurmd, and <code>--diff</code> in the log shows exactly which line drifted. If anything had failed halfway, <code>force_handlers</code> would still have restarted the daemon, so no node is left running a config that isn&#x27;t on its disk.</p>
+<p><strong>Takeaway:</strong> describe end states with modules, restart through handlers, preview with <code>--check --diff</code>, and set <code>force_handlers</code> so a failure can&#x27;t leave a daemon on a stale config.</p>
+<p><strong>Next:</strong> <a href="../../../../fields/devops/ansible/roles-and-variables/">Part 4, The GPU Node That Thought It Had 1000 MB</a>, turns this playbook into a reusable role.</p>
+<hr>
+<h2>References</h2>
+<ul><li><a href="https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_intro.html">Intro to playbooks</a>: desired state and idempotency.</li><li><a href="https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_handlers.html">Handlers: running operations on change</a>: notification, <code>meta: flush_handlers</code>, and handlers after failures.</li><li><a href="https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_error_handling.html">Error handling in playbooks</a>: <code>force_handlers</code>, <code>changed_when</code>.</li><li><a href="https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_checkmode.html">Validating tasks: check mode and diff mode</a>: <code>--check</code>, <code>--diff</code> and module support.</li><li><a href="https://docs.ansible.com/projects/ansible/latest/collections/ansible/builtin/template_module.html">ansible.builtin.template</a>, <a href="https://docs.ansible.com/projects/ansible/latest/collections/ansible/builtin/systemd_service_module.html">ansible.builtin.systemd_service</a>, <a href="https://docs.ansible.com/projects/ansible/latest/collections/ansible/builtin/command_module.html">ansible.builtin.command</a>: the modules used.</li><li><a href="https://docs.ansible.com/projects/lint/rules/">ansible-lint rules</a>: <code>no-changed-when</code>, <code>command-instead-of-module</code>.</li><li><a href="https://slurm.schedmd.com/slurm.conf.html">slurm.conf(5)</a>: <code>SlurmUser</code>, <code>MpiDefault</code>, <code>ReturnToService</code>, node and partition definitions.</li><li><a href="https://slurm.schedmd.com/slurmd.html">slurmd(8)</a>: <code>slurmd -C</code> prints a node&#x27;s real hardware for <code>slurm.conf</code>.</li></ul>
+<p><a href="../../../../#/fields/devops/ansible/idempotence-and-handlers">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

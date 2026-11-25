@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The Prometheus That Ate the Head Node: Why VictoriaMetrics</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/victoriametrics/why-victoriametrics/">
+<meta name="description" content="What VictoriaMetrics is and isn&#x27;t, its components in one table, when single-node is enough and when a cluster earns its complexity, and which features are free.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="The Prometheus That Ate the Head Node: Why VictoriaMetrics">
+<meta property="og:description" content="What VictoriaMetrics is and isn&#x27;t, its components in one table, when single-node is enough and when a cluster earns its complexity, and which features are free.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/victoriametrics/why-victoriametrics/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/victoriametrics/why-victoriametrics/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/devops/victoriametrics/why-victoriametrics"></script>
+<main>
+<h1>The Prometheus That Ate the Head Node: Why VictoriaMetrics</h1>
+<p><em>What VictoriaMetrics is and isn&#x27;t, its components in one table, when single-node is enough and when a cluster earns its complexity, and which features are free.</em></p>
+<blockquote><p><strong>Part 1 of the [VictoriaMetrics series](/fields/devops/victoriametrics/README.md).</strong> No commands yet, just the mental model. By the end you&#x27;ll know what VictoriaMetrics is, which of its pieces you need, whether one box will do, and what it won&#x27;t do for you.</p></blockquote>
+<hr>
+<h2>The 02:40 page</h2>
+<p>Friday afternoon, someone turns on extra GPU metrics across the training partition. More labels per GPU, more series per node. Nobody thinks of it as a monitoring change. It&#x27;s &quot;just an exporter flag&quot;.</p>
+<p>At 02:40 the Prometheus on the head node gets OOM-killed. systemd restarts it, it replays its write-ahead log, it eats the RAM again, it dies again. By morning there&#x27;s a seven-hour hole in every dashboard, and the one night you needed GPU temperatures is the one night you don&#x27;t have them.</p>
+<p>The fix people reach for first is &quot;give it more RAM&quot;. The fix that lasts is to ask a different question: does the thing collecting the metrics also have to be the thing storing them for months? That question is where VictoriaMetrics comes in.</p>
+<blockquote><p>[!NOTE] The story is a composite, not a measured incident. Every number further down this page comes from the VictoriaMetrics documentation, and the docs&#x27; own performance numbers are labelled as the vendor&#x27;s claims.</p></blockquote>
+<hr>
+<h2>One binary that stores, scrapes and answers</h2>
+<p><strong>VictoriaMetrics</strong> is a time series database that speaks Prometheus. It accepts the same scrape config, answers the same query API on port <code>8428</code>, and Grafana talks to it as if it were Prometheus. Its query language, <strong>MetricsQL</strong>, is built to be backwards-compatible with PromQL, adds extra functions, and has a few deliberate differences (part 5 shows them on real data).</p>
+<p>The single-node version is one executable with no external dependencies. All configuration is command-line flags, and all data lives in one directory set by <code>-storageDataPath</code>. Two flags matter on day one:</p>
+<table><thead><tr><th>Flag</th><th>Default</th><th>What it does</th></tr></thead><tbody><tr><td><code>-storageDataPath</code></td><td><code>victoria-metrics-data</code> in the current directory</td><td>Where every byte of data goes</td></tr><tr><td><code>-retentionPeriod</code></td><td><code>1M</code> (31 days); minimum <code>1d</code></td><td>How long data is kept before deletion</td></tr></tbody></table>
+<p>Here&#x27;s the mental model. Prometheus is one process that does four jobs: discover targets, scrape them, store the samples, evaluate rules. VictoriaMetrics lets you split those jobs across small programs, so one job running out of room doesn&#x27;t take the others with it.</p>
+<pre><code class="language-mermaid">flowchart LR
+    E[Exporters&lt;br/&gt;node, DCGM, Slurm] --&gt;|scrape| A[vmagent&lt;br/&gt;collects, buffers]
+    A --&gt;|remote write| V[(VictoriaMetrics&lt;br/&gt;stores, answers queries)]
+    V --&gt;|PromQL / MetricsQL| G[Grafana]
+    V --&gt;|query| R[vmalert&lt;br/&gt;evaluates rules]
+    R --&gt;|alerts| M[Alertmanager]
+    R --&gt;|alert state| V</code></pre>
+<p><em>Collect at the edge, store in one place, alert from rules. Each arrow is a job Prometheus does inside one process.</em></p>
+<p>You don&#x27;t have to split anything on day one. The single node can scrape targets itself with the same <code>prometheus.yml</code>. The split is there for when you need it.</p>
+<hr>
+<h2>The cast</h2>
+<p>Every component ships in the official release tarballs. You&#x27;ll meet most of them in this series.</p>
+<table><thead><tr><th>Component</th><th>What it does</th><th>When you need it</th></tr></thead><tbody><tr><td><strong>victoria-metrics</strong> (single-node)</td><td>Stores samples, answers queries, can scrape targets itself</td><td>Always. This is the database</td></tr><tr><td><strong>vmagent</strong></td><td>Scrapes and accepts pushed metrics, relabels them, buffers to disk when storage is down</td><td>When collection and storage live on different hosts, or the link between them isn&#x27;t perfect (part 3)</td></tr><tr><td><strong>vmalert</strong></td><td>Evaluates Prometheus-style alerting and recording rules against VictoriaMetrics</td><td>When you want alerts. It sends them to Alertmanager; it doesn&#x27;t route them itself (part 5)</td></tr><tr><td><strong>vmalert-tool</strong></td><td>Unit-tests alert rules against fake series</td><td>Before every rule change (part 5)</td></tr><tr><td><strong>vmbackup / vmrestore</strong></td><td>Backs up from instant snapshots to S3, GCS, Azure or a local path; restores them</td><td>From the first day you&#x27;d be sad to lose the data (part 4)</td></tr><tr><td><strong>vmauth</strong></td><td>Auth proxy and load balancer in front of the other components</td><td>When anything outside a trusted network needs access</td></tr><tr><td><strong>vmctl</strong></td><td>Migrates data in from Prometheus, Thanos, InfluxDB, OpenTSDB and others</td><td>Moving history from an existing system</td></tr><tr><td><strong>vminsert / vmselect / vmstorage</strong></td><td>The cluster version: ingestion, querying and storage as separate scalable services</td><td>When one machine truly isn&#x27;t enough (next section)</td></tr></tbody></table>
+<p>Rule of thumb: <strong>one job per program, and only the programs you need.</strong> For most clusters that&#x27;s the single node, vmagent, vmalert and vmbackup.</p>
+<hr>
+<h2>One box or a cluster?</h2>
+<p>The docs are blunt about this: try single-node first, and move to the cluster version only when you hit its limits. Single-node avoids shipping data between processes over the network, so for moderate workloads it&#x27;s the most efficient option.</p>
+<p>How big is &quot;moderate&quot;? The capacity planning section lists a single node working in production, according to VictoriaMetrics&#x27; own case studies, at 1.5+ million samples per second ingested and 50+ million active time series. Treat those as the vendor&#x27;s numbers, not a promise for your hardware, but they&#x27;re far above what most HPC sites push.</p>
+<table><thead><tr><th>Question</th><th>Single-node</th><th>Cluster</th></tr></thead><tbody><tr><td>Moving parts</td><td>One process</td><td>Three services, each with replicas</td></tr><tr><td>Scales</td><td>Vertically: bigger box</td><td>Horizontally: more boxes</td></tr><tr><td>High availability</td><td>Two identical nodes, vmagent writing to both</td><td>Built into the design</td></tr><tr><td>Multitenancy</td><td>Not built in; emulated with a tenant label enforced by vmauth or Grafana</td><td>Native tenants</td></tr><tr><td>Upgrade path</td><td>Data format differs from the cluster&#x27;s; moving needs re-ingestion</td><td>n/a</td></tr></tbody></table>
+<p>The trade-off nobody mentions until it&#x27;s too late is the last row. Single-node and cluster store data differently on disk, so you can&#x27;t copy a single node&#x27;s data into <code>vmstorage</code>. The docs say you can query both side by side while old data ages out, or re-ingest it.</p>
+<p><strong>Recommendation:</strong> start with one single node, sized with the <a href="../../../../fields/devops/victoriametrics/retention-disk-and-backups/">capacity planning</a> method in part 4. Add a second identical node fed by vmagent when &quot;metrics down&quot; becomes an incident instead of an inconvenience. Reach for the cluster when one machine&#x27;s RAM or disk can&#x27;t hold your active series and retention, or when you need tenants. &quot;It sounds more serious&quot; isn&#x27;t a reason.</p>
+<hr>
+<h2>What&#x27;s free and what isn&#x27;t</h2>
+<p>VictoriaMetrics is Apache 2.0 licensed, and the community edition is the full database. Some features are Enterprise-only. These are the ones admins ask about most:</p>
+<table><thead><tr><th>Feature</th><th>Community</th><th>Enterprise</th><th>Community workaround</th></tr></thead><tbody><tr><td>Single-node, cluster, vmagent, vmalert, vmbackup, vmrestore, vmauth</td><td>Yes</td><td>Yes</td><td>n/a</td></tr><tr><td>One retention for all data</td><td>Yes</td><td>Yes</td><td>n/a</td></tr><tr><td>Different retention per series (<code>-retentionFilter</code>)</td><td>No</td><td>Yes</td><td>Run one instance per retention, put vmauth in front</td></tr><tr><td>Downsampling old data (<code>-downsampling.period</code>)</td><td>No</td><td>Yes</td><td>Keep less raw data, or record aggregates with vmalert</td></tr><tr><td>Scheduled backups with rotation (vmbackupmanager)</td><td>No</td><td>Yes</td><td>vmbackup from a cron job or systemd timer (part 4)</td></tr><tr><td>Long-term support release lines</td><td>No</td><td>Yes</td><td>Track the latest release</td></tr></tbody></table>
+<blockquote><p>[!NOTE] As of v1.156.0, the old <code>-license*</code> flags are deprecated and treated as <code>-eula</code>. Only matters if you run Enterprise binaries.</p></blockquote>
+<hr>
+<h2>What it&#x27;s not for</h2>
+<p>Knowing what a tool won&#x27;t do saves you from bolting it onto the wrong problem.</p>
+<ul><li><strong>Logs.</strong> VictoriaMetrics stores numbers over time, not text lines. The same company makes VictoriaLogs for that.</li><li><strong>Traces.</strong> Same story: a separate product, VictoriaTraces.</li><li><strong>Routing and silencing alerts.</strong> vmalert decides <em>that</em> an alert fires. Who gets paged, grouping and silences still belong to Alertmanager.</li><li><strong>Per-event records.</strong> &quot;Which job ran on cn042 at 14:03&quot; is a Slurm accounting question. Metrics tell you that cn042&#x27;s GPU 3 was at 98% utilisation, not who put it there.</li><li><strong>Being reachable from the internet.</strong> The docs say all components must sit in a protected network, with vmauth or vmgateway in front of anything untrusted. Part 2 shows why that&#x27;s not paranoia.</li></ul>
+<hr>
+<h2>Back to the head node</h2>
+<p>The fix for the 02:40 page isn&#x27;t a bigger Prometheus. Each thing that went wrong that night has its own fix, and each part of this series builds one:</p>
+<table><thead><tr><th>What went wrong at 02:40</th><th>What fixes it</th><th>Where</th></tr></thead><tbody><tr><td>Storing months of data shared a process and a box with collecting it</td><td>A dedicated single node, sized from a day-long test, with 50% RAM spare</td><td><a href="../../../../fields/devops/victoriametrics/single-node-in-ten-minutes/">Part 2</a>, <a href="../../../../fields/devops/victoriametrics/retention-disk-and-backups/">part 4</a></td></tr><tr><td>While storage was down, nothing wrote the samples down</td><td>A vmagent per rack that queues on disk and catches up afterwards</td><td><a href="../../../../fields/devops/victoriametrics/vmagent-and-the-network-blip/">Part 3</a></td></tr><tr><td>Nobody knew until morning</td><td>Alerts on the database&#x27;s own health, evaluated from outside it, with tests that catch a broken rule</td><td><a href="../../../../fields/devops/victoriametrics/metricsql-and-vmalert/">Part 5</a></td></tr><tr><td>A bad night could have been a lost disk</td><td>Hourly backups, and a restore you&#x27;ve actually run</td><td><a href="../../../../fields/devops/victoriametrics/retention-disk-and-backups/">Part 4</a></td></tr></tbody></table>
+<p>Run that Friday again with all four in place. The new GPU metrics push the series count up, and the storage box has headroom for it. If it hadn&#x27;t, an alert would say so at 02:41, vmagent would hold the samples while someone fixed it, and the morning dashboards would have temperatures in them.</p>
+<p><strong>Takeaway:</strong> VictoriaMetrics is a Prometheus-compatible store you can split into collect, store and alert; start with one single node and only add moving parts when a real limit asks for them.</p>
+<p><strong>Next:</strong> <a href="../../../../fields/devops/victoriametrics/single-node-in-ten-minutes/">Part 2, A Single Node You Can Trust</a>, installs one and locks it down.</p>
+<hr>
+<h2>References</h2>
+<ul><li><a href="https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/">VictoriaMetrics single-node docs</a>: prominent features, components, default flags and port, capacity planning, scalability and cluster version, retention filters, downsampling, security recommendations.</li><li><a href="https://docs.victoriametrics.com/victoriametrics/enterprise/">VictoriaMetrics Enterprise</a>: the list of Enterprise-only features.</li><li><a href="https://docs.victoriametrics.com/victoriametrics/lts-releases/">LTS releases</a>: long-term support lines are Enterprise-only.</li><li><a href="https://docs.victoriametrics.com/victoriametrics/cluster-victoriametrics/">Cluster version docs</a>: vminsert, vmselect, vmstorage and multitenancy.</li><li><a href="https://docs.victoriametrics.com/victoriametrics/vmalert/">vmalert docs</a>: relies on Alertmanager via <code>-notifier.url</code>.</li><li><a href="https://docs.victoriametrics.com/victoriametrics/metricsql/">MetricsQL</a>: compatibility with PromQL and the intentional differences.</li><li><a href="https://docs.victoriametrics.com/victoriametrics/changelog/changelog_2026/">VictoriaMetrics changelog 2026</a>: v1.156.0 release notes, including the <code>-license*</code> deprecation.</li><li><a href="https://github.com/VictoriaMetrics/VictoriaMetrics/blob/master/LICENSE">VictoriaMetrics LICENSE</a>: Apache License 2.0.</li></ul>
+<p><a href="../../../../#/fields/devops/victoriametrics/why-victoriametrics">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

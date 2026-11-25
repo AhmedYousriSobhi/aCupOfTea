@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Calling Dibs on Nodes: Reservations, Maintenance Windows and the Job That Fit</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-cluster-operations/slurm-reservations-and-maintenance/">
+<meta name="description" content="How to block nodes ahead of time with scontrol reservations, what happens to jobs that fit before the window and jobs that do not, and what users see while it is open.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Calling Dibs on Nodes: Reservations, Maintenance Windows and the Job That Fit">
+<meta property="og:description" content="How to block nodes ahead of time with scontrol reservations, what happens to jobs that fit before the window and jobs that do not, and what users see while it is open.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-cluster-operations/slurm-reservations-and-maintenance/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-cluster-operations/slurm-reservations-and-maintenance/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/schedulers/slurm-cluster-operations/slurm-reservations-and-maintenance"></script>
+<main>
+<h1>Calling Dibs on Nodes: Reservations, Maintenance Windows and the Job That Fit</h1>
+<p><em>How to block nodes ahead of time with scontrol reservations, what happens to jobs that fit before the window and jobs that do not, and what users see while it is open.</em></p>
+<blockquote><p><strong>Part of the [schedulers](/fields/schedulers/slurm-intro.md) directory.</strong> Every command and output here was run on a two-node test cluster (Slurm 23.11.4, accounting on, both <code>slurmd</code> daemons on one Ubuntu 24.04 machine). The names, dates and the story are invented. Reservation flags have many options, so this page covers the maintenance and &quot;hold it for me&quot; cases and points to the man page for the rest.</p></blockquote>
+<hr>
+<h2>Firmware Saturday</h2>
+<p>The vendor has released a firmware update for the compute nodes, and the admin has booked Saturday at six in the morning for it. On Wednesday, the admin has a problem: the nodes are full of jobs that were never told about Saturday, and some of them have a time limit of three days.</p>
+<p>There are the usual three answers. Drain the nodes now, and the cluster sits half empty for days, which makes everyone who wanted those nodes loudly unhappy. Send an email, which will be read by exactly the people who did not need it. Or kill whatever is running at five fifty-nine on Saturday and take the angry messages on Monday.</p>
+<p>There is a fourth answer, and it makes the cluster tidy itself. Tell the scheduler on Wednesday that the nodes are <em>already taken</em> from Saturday six o&#x27;clock. From that moment the scheduler plans around the window, and only starts jobs that will be finished before it opens.</p>
+<hr>
+<h2>Three ways to clear a node</h2>
+<table><thead><tr><th>Way</th><th>What it does</th><th>The catch</th></tr></thead><tbody><tr><td>Drain the nodes (<code>scontrol update State=DRAIN</code>)</td><td>No new jobs, now. Running ones finish</td><td>The nodes sit idle from the moment the last job ends, however long before the maintenance that is</td></tr><tr><td>Reserve the nodes ahead of time</td><td>Jobs that fit before the window start as normal. Longer ones wait</td><td>Needs honest time limits. Jobs without <code>--time</code> never fit</td></tr><tr><td>Reboot on demand (<code>scontrol reboot ASAP</code>)</td><td>Drains, reboots and returns each node for you</td><td>Fine for a reboot; the <a href="../../../../fields/schedulers/slurm-cluster-operations/slurm-reboot-order/">reboot order page</a> covers when it is not enough</td></tr></tbody></table>
+<p>A reservation is the only one of the three that uses the idle time before the window. The scheduler knows when the window opens, so it keeps filling the nodes with jobs that will end in time. This is the same trick <a href="../../../../fields/schedulers/slurm-backfill-tuning/">backfill</a> plays with a reserved start for a big job: the short jobs slip into the gap.</p>
+<hr>
+<h2>Creating the reservation</h2>
+<p>On the test cluster, a one-hour maintenance window on <code>node2</code> that opens in ten minutes:</p>
+<pre><code class="language-bash">scontrol create reservation ReservationName=maint \
+    StartTime=now+10minutes Duration=60 Nodes=node2 \
+    Flags=MAINT,IGNORE_JOBS Users=root</code></pre>
+<pre><code class="language-text">Reservation created: maint</code></pre>
+<table><thead><tr><th>Field</th><th>Meaning</th></tr></thead><tbody><tr><td><code>StartTime</code></td><td>When the window opens. A timestamp, or <code>now+10minutes</code></td></tr><tr><td><code>Duration</code></td><td>Length of the window in <strong>minutes</strong> (<code>60</code> came back as <code>01:00:00</code>)</td></tr><tr><td><code>Nodes</code></td><td>Which nodes. <code>NodeCnt=</code> or <code>PartitionName=</code> are alternatives</td></tr><tr><td><code>Users</code>, <code>Accounts</code></td><td>Who may use the reserved nodes during the window. A maintenance window usually lists only root, or the admins</td></tr><tr><td><code>Flags=MAINT</code></td><td>Marks it as maintenance. It shows up in <code>scontrol show reservation</code> and in the node&#x27;s state while the window is open</td></tr><tr><td><code>Flags=IGNORE_JOBS</code></td><td>Create the reservation even though jobs are running on the nodes right now. It does not kill them</td></tr></tbody></table>
+<p>Look at what you made:</p>
+<pre><code class="language-bash">scontrol show reservation maint
+sinfo -T</code></pre>
+<pre><code class="language-text">ReservationName=maint StartTime=2026-11-12T23:03:01 EndTime=2026-11-13T00:03:01 Duration=01:00:00
+ Nodes=node2 NodeCnt=1 CoreCnt=4 Features=(null) PartitionName=(null) Flags=MAINT,IGNORE_JOBS,SPEC_NODES
+ TRES=cpu=4
+ Users=root Groups=(null) Accounts=(null) Licenses=(null) State=INACTIVE BurstBuffer=(null) Watts=n/a
+
+RESV_NAME     STATE           START_TIME             END_TIME     DURATION  NODELIST
+maint      INACTIVE  2026-11-12T23:03:01  2026-11-13T00:03:01     01:00:00  node2</code></pre>
+<p><code>State=INACTIVE</code> means the window has not opened yet. The reservation is a promise, and the scheduler already plans around it.</p>
+<hr>
+<h2>The job that fits, and the job that does not</h2>
+<p>Two jobs asked for <code>node2</code> while the window was ten minutes away. One wanted five minutes; the other wanted thirty:</p>
+<pre><code class="language-text">JobID  Time limit  State    Reason
+39       5:00     RUNNING  None
+40      30:00     PENDING  ReqNodeNotAvail, May be reserved for other job</code></pre>
+<p>The five-minute job started at once, because it would be finished long before the window opens. The thirty-minute job waits, because it would still be running when the window opened. Neither was refused. The scheduler just did the arithmetic.</p>
+<p>That arithmetic uses the <strong>time limit</strong>, not how long the job really takes. A job with no <code>--time</code> inherits the partition&#x27;s <code>MaxTime</code>, which is usually days, and it can never fit a window. This is the reason the <a href="../../../../fields/schedulers/slurm-preemption/slurm-job-submit-lua/">Lua submit script</a> insists on <code>--time</code>, and why the <a href="../../../../fields/schedulers/slurm-backfill-tuning/">backfill page</a> keeps asking whether the limits are honest.</p>
+<blockquote><p>[!NOTE] The reason text does not say &quot;maintenance&quot;. The pending reason in the test was <code>ReqNodeNotAvail, May be reserved for other job</code>, both before the window opened and while it was open. It is the same generic message you see for any reservation. When a user asks why their job waits, look at the reservation, not the reason: <code>sinfo -T</code> and <code>scontrol show reservation</code> give the real answer. The <a href="../../../../fields/schedulers/slurm-pending-jobs/why-is-my-job-pending/">pending reasons page</a> covers the codes.</p></blockquote>
+<hr>
+<h2>When the window opens</h2>
+<p>At the start time the reservation becomes <code>ACTIVE</code>, and the node&#x27;s own state shows it:</p>
+<pre><code class="language-bash">sinfo -N -o &quot;%N %T&quot;
+scontrol show node node2 | grep -oE &#x27;State=[A-Z+]+&#x27;</code></pre>
+<pre><code class="language-text">node2 maint
+State=IDLE+MAINTENANCE+RESERVED</code></pre>
+<p>If jobs were still running on the node when the window opened, the state reads <code>MIXED+MAINTENANCE+RESERVED</code> instead. The test confirmed that <strong>a running job is not killed when the window opens</strong>. It kept running on <code>node2</code> and the reservation simply blocked every <em>new</em> job. A new one-minute job submitted during the window waited with the same <code>ReqNodeNotAvail</code> reason.</p>
+<p>That detail matters for planning. The reservation protects the window from <em>new</em> work. It does nothing about work that overlaps the start, so the quality of your maintenance window depends on the time limits of the jobs that were already running when you booked it. Check them (<code>squeue -w node2 -o &quot;%i %u %L&quot;</code>) and decide, for each, whether it will end in time or needs a conversation.</p>
+<p>When the work is done, release the nodes. Either let the reservation expire at its end time, or delete it early:</p>
+<pre><code class="language-bash">scontrol delete ReservationName=maint
+sinfo -N -o &quot;%N %T&quot;</code></pre>
+<pre><code class="language-text">node1 idle
+node2 idle</code></pre>
+<p>The nodes went back to <code>idle</code> straight away. The order for a real maintenance (reserve, wait, reboot, resume, delete) fits with the <a href="../../../../fields/schedulers/slurm-cluster-operations/slurm-reboot-order/">reboot order page</a>.</p>
+<hr>
+<h2>Reservations for people, not just for maintenance</h2>
+<p>The same command holds nodes for a person, which is useful for a demo, a class, or a deadline run. On the test cluster, a reservation for one user on <code>node1</code>, starting now:</p>
+<pre><code class="language-bash">scontrol create reservation ReservationName=demo StartTime=now \
+    Duration=10 Nodes=node1 Users=tester</code></pre>
+<p>The user then asks for it explicitly:</p>
+<pre><code class="language-bash">sbatch --reservation=demo -w node1 job.sh</code></pre>
+<p>Both jobs below were submitted by the reservation&#x27;s user, and the difference was just <code>--reservation</code>:</p>
+<pre><code class="language-text">JobID  State    Reason
+41     PENDING  ReqNodeNotAvail, May be reserved for other job     (no --reservation)
+42     RUNNING  None                                                (--reservation=demo)</code></pre>
+<p>The node was held for the demo even against its own user, until the job said which reservation it was using. Other users are kept off it too, since that is what the <code>Users</code> list is for (a second user was not tested).</p>
+<hr>
+<h2>Things that go wrong</h2>
+<table><thead><tr><th>Symptom</th><th>Cause</th><th>Check</th></tr></thead><tbody><tr><td>The window opens and the node is still full</td><td>Jobs that were already running overlap it. IGNORE_JOBS lets you create the reservation, not kill them</td><td><code>squeue -w &lt;node&gt; -o &quot;%i %u %L&quot;</code> before the window</td></tr><tr><td>Nothing ever starts on the reserved nodes, even for the right user</td><td>The job did not name the reservation</td><td><code>--reservation=&lt;name&gt;</code>, and the user must be in <code>Users</code> or <code>Accounts</code></td></tr><tr><td>The short jobs do not slip in before the window</td><td>They have no <code>--time</code>, so they inherit the partition <code>MaxTime</code></td><td>A required <code>--time</code>, from the <a href="../../../../fields/schedulers/slurm-preemption/slurm-job-submit-lua/">submit script</a></td></tr><tr><td>A user cannot tell why their job waits</td><td>The reason text does not mention the reservation</td><td><code>sinfo -T</code></td></tr><tr><td>The reservation is gone after a controller problem</td><td>Reservations are saved in the controller&#x27;s state directory</td><td>Back up <code>StateSaveLocation</code>, as the <a href="../../../../fields/schedulers/slurm-cluster-operations/slurm-spool-dir-full/">spool directory page</a> notes</td></tr></tbody></table>
+<hr>
+<h2>Version notes</h2>
+<p>Tested on 23.11.4. Later versions add the <code>USER_DELETE</code> flag (24.05), <code>FORCE_START</code> for recurring reservations and a <code>ReqReservation</code> field in <code>sacct</code> (25.05), <code>AllowQOS</code> and <code>AllowPartition</code> access controls (25.11), and in 26.05 &quot;Do not allocate maintenance nodes to new reservations&quot;. <a href="../../../../fields/schedulers/slurm-cluster-operations/slurm-version-changes/">Version changes 23.11 to 26.05</a> has the list.</p>
+<hr>
+<h2>Back to Firmware Saturday</h2>
+<p>Replay Wednesday with the reservation. The admin creates <code>maint</code> for Saturday at six, then looks at what is running on the nodes and finds two jobs with limits that run into the weekend. Two short emails go to two people instead of an announcement to everyone.</p>
+<p>From Wednesday to Saturday the scheduler does the rest. Short jobs keep arriving and keep running, because they fit before the window. Long jobs wait in the queue instead of arriving at six o&#x27;clock on Saturday morning and being killed. At five fifty-nine the nodes are nearly empty, with no drain and no idle days beforehand.</p>
+<p><strong>Takeaway:</strong> a reservation tells the scheduler about the window in advance, so jobs that fit run first and jobs that do not wait, it blocks only new work, so check the running jobs&#x27; time limits before it opens, and when a user asks why their job waits, look at <code>sinfo -T</code>, not at the reason text.</p>
+<p><strong>Next:</strong> <a href="../../../../fields/schedulers/slurm-sacct-job-forensics/">Autopsy of a Job</a> shows how to read what happened to a job after it has gone.</p>
+<hr>
+<h2>References</h2>
+<ul><li><a href="https://slurm.schedmd.com/reservations.html">Slurm: Advanced Resource Reservation Guide</a></li><li><a href="https://slurm.schedmd.com/scontrol.html">Slurm: scontrol</a> (<code>create reservation</code>, <code>update</code>, <code>delete</code>, <code>reboot</code>)</li><li><a href="https://slurm.schedmd.com/sinfo.html">Slurm: sinfo</a> (<code>-T</code>)</li></ul>
+<p><a href="../../../../#/fields/schedulers/slurm-cluster-operations/slurm-reservations-and-maintenance">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

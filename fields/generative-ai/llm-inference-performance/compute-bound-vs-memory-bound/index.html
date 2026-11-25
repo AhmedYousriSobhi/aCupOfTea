@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Compute-Bound vs Memory-Bandwidth-Bound</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/generative-ai/llm-inference-performance/compute-bound-vs-memory-bound/">
+<meta name="description" content="Why a 3x faster GPU can give you 1.6x - arithmetic intensity, the ridge point and the roofline, explained with a pizza kitchen and two lines of arithmetic.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Compute-Bound vs Memory-Bandwidth-Bound">
+<meta property="og:description" content="Why a 3x faster GPU can give you 1.6x - arithmetic intensity, the ridge point and the roofline, explained with a pizza kitchen and two lines of arithmetic.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/generative-ai/llm-inference-performance/compute-bound-vs-memory-bound/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/generative-ai/llm-inference-performance/compute-bound-vs-memory-bound/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/generative-ai/llm-inference-performance/compute-bound-vs-memory-bound"></script>
+<main>
+<h1>Compute-Bound vs Memory-Bandwidth-Bound</h1>
+<p><em>Why a 3x faster GPU can give you 1.6x - arithmetic intensity, the ridge point and the roofline, explained with a pizza kitchen and two lines of arithmetic.</em></p>
+<blockquote><p><strong>Part 1 of the [LLM Inference Performance series](/fields/generative-ai/llm-inference-performance/README.md).</strong> A GPU has two speed limits, and your workload always hits one of them first. By the end of this page you&#x27;ll know which one, using only a datasheet and one division, and you&#x27;ll never again be surprised by an &quot;upgrade&quot; that didn&#x27;t upgrade.</p></blockquote>
+<hr>
+<h2>The pizza place that hired the wrong person</h2>
+<p>A pizza place is losing customers. Orders take too long. The owner watches the kitchen for an evening and sees a chef who&#x27;s clearly a genius: hands moving faster than you can follow, dough stretched in seconds.</p>
+<p>So he hires a second genius chef.</p>
+<p>Nothing improves. Not one minute.</p>
+<p>Then he notices the walk-in fridge is at the far end of the building, and there&#x27;s one teenager fetching every ingredient, one tray at a time. Both chefs spend most of the night standing still, arms crossed, waiting for mozzarella.</p>
+<p>The kitchen was never short of chef. It was short of <strong>fetching</strong>.</p>
+<p>Now swap the menu. Instead of pizza, the place sells hand-folded dumplings: one bag of ingredients becomes two hundred dumplings of fiddly work. Suddenly the teenager is sitting idle and the chefs are drowning. <em>That</em> kitchen needs another chef.</p>
+<p>Same kitchen. Same staff. Different recipe, different bottleneck.</p>
+<p>A GPU is that kitchen:</p>
+<table><thead><tr><th>Kitchen</th><th>GPU</th></tr></thead><tbody><tr><td>Chefs</td><td>Tensor cores, the math units</td></tr><tr><td>Walk-in fridge</td><td>HBM, the memory stacked beside the chip</td></tr><tr><td>The teenager&#x27;s speed</td><td>Memory bandwidth, in bytes per second</td></tr><tr><td>The recipe</td><td>Your workload</td></tr></tbody></table>
+<p>The team in <a href="../../../../fields/generative-ai/llm-inference-performance/">the overview</a> bought a kitchen with 3× faster chefs and a 1.6× faster teenager. Whether that was a good buy depends entirely on the recipe. So how do you read a recipe?</p>
+<hr>
+<h2>One number about the recipe</h2>
+<p>Count two things: how much math the work needs, and how many bytes it has to fetch from memory. Divide.</p>
+<p>A <strong>FLOP</strong> is one floating-point operation: one multiply, or one add. So intensity is <strong>math per byte fetched</strong>.</p>
+<ul><li><strong>Low intensity</strong> is the pizza: grab an ingredient, do a little with it, grab the next. Every byte gets used once and thrown away.</li><li><strong>High intensity</strong> is the dumplings: fetch once, then work on it for ages. Every byte gets reused many times while it sits in fast on-chip memory.</li></ul>
+<p>Here&#x27;s the nice part: intensity belongs to the <em>work</em>, not to the GPU. You can compute it on paper before you&#x27;ve bought anything.</p>
+<p>But a recipe&#x27;s number means nothing until you know what the kitchen can handle. Where&#x27;s the line between &quot;too much chopping&quot; and &quot;too much fetching&quot;?</p>
+<hr>
+<h2>One number about the kitchen</h2>
+<p>Divide the chefs&#x27; top speed by the teenager&#x27;s top speed:</p>
+<p>That&#x27;s the <strong>ridge point</strong>: how much math you must do per byte just to keep the chefs busy. Below it, chefs wait. Above it, the fetcher waits.</p>
+<table><thead><tr><th>GPU</th><th>Dense BF16 compute</th><th>HBM bandwidth</th><th>Ridge point</th></tr></thead><tbody><tr><td>A100 80GB SXM</td><td>312 TFLOPS</td><td>2,039 GB/s</td><td>~153 FLOP/byte</td></tr><tr><td>H100 SXM</td><td>989 TFLOPS</td><td>3.35 TB/s</td><td>~295 FLOP/byte</td></tr></tbody></table>
+<p>The rule:</p>
+<table><thead><tr><th>Your work&#x27;s intensity</th><th>You are</th><th>A faster chip helps?</th><th>More bandwidth helps?</th></tr></thead><tbody><tr><td>Below the ridge</td><td><strong>Memory-bandwidth-bound</strong></td><td>No</td><td>Yes</td></tr><tr><td>Above the ridge</td><td><strong>Compute-bound</strong></td><td>Yes</td><td>No</td></tr></tbody></table>
+<p>Now look at the table again. A100 to H100: compute up about <strong>3.2×</strong>, bandwidth up about <strong>1.6×</strong>. The ridge point <strong>doubled</strong>.</p>
+<p>That&#x27;s the plot of the overview story in one line. NVIDIA hired a much faster chef and a somewhat faster teenager. Work that kept an A100 balanced leaves an H100&#x27;s tensor cores waiting. <strong>Every new GPU generation makes it harder to be compute-bound.</strong> Remember that; it&#x27;ll come back in every page of this series.</p>
+<hr>
+<h2>Try it before you scroll</h2>
+<p>☕ Grab a pen. Two jobs. For each, guess: pizza or dumplings?</p>
+<ol><li><strong>Add two long lists of numbers</strong>, element by element (<code>c = a + b</code>), in 32-bit floats.</li><li><strong>Multiply two big square matrices</strong>, 4096 × 4096, in 16-bit floats.</li></ol>
+<p>Got your guesses? Scroll on.</p>
+<hr>
+<h2>The roofline: the whole idea in one picture</h2>
+<p>Before the answers, the picture that makes them obvious. Put intensity on the x-axis and achievable speed (FLOP/s) on the y-axis, both on log scales. The GPU&#x27;s limits draw a roof:</p>
+<ul><li>On the left, a <strong>slanted roof</strong>: speed = intensity × bandwidth. You&#x27;re waiting on the teenager. Want to go faster? Fetch less, or fetch faster.</li><li>On the right, a <strong>flat roof</strong>: speed = peak compute. You&#x27;re waiting on the chefs. Want to go faster? Faster or more chefs.</li><li>They meet at the ridge point.</li></ul>
+<pre><code class="language-mermaid">flowchart LR
+    A[&quot;Pizza work&lt;br/&gt;low intensity&quot;] --&gt;|&quot;slanted roof:&lt;br/&gt;waiting on memory&quot;| R((&quot;Ridge point&lt;br/&gt;H100 ≈ 295 FLOP/byte&quot;))
+    R --&gt;|&quot;flat roof:&lt;br/&gt;waiting on math&quot;| B[&quot;Dumpling work&lt;br/&gt;high intensity&quot;]</code></pre>
+<p>This is the <strong>roofline model</strong> (Williams, Waterman and Patterson, 2009), and its superpower is ruling things out. If your work sits on the slanted part, every optimization that adds math speed is guaranteed to do nothing. You can kill a bad proposal in one sentence.</p>
+<p>Now, the answers.</p>
+<hr>
+<h2>Two workloads, opposite fates</h2>
+<p><strong>Job 1: adding two lists.</strong> Per element: read 4 bytes, read 4 bytes, write 4 bytes. One addition.</p>
+<p>That&#x27;s thousands of times below the H100&#x27;s ridge. Pure pizza. The tensor cores might as well not exist; this runs at exactly the speed of memory.</p>
+<p><strong>Job 2: multiplying big matrices.</strong> About 2N³ FLOPs. At best, three N×N matrices of 2 bytes each cross the memory boundary:</p>
+<p>Way past the ridge. Pure dumplings. Each number fetched gets used thousands of times. This is the job tensor cores were invented for.</p>
+<p>Same GPU, idle for one job and maxed out for the other. The only difference: <strong>how many times each byte gets reused.</strong></p>
+<p>Hold onto that phrase. In <a href="../../../../fields/generative-ai/llm-inference-performance/llm-inference-on-the-roofline/">part 2</a> you&#x27;ll find out that generating text with an LLM looks a lot more like Job 1 than Job 2, which is why the team in the overview got 1.6× and not 3×.</p>
+<hr>
+<h2>Plot twist: there are four walls, not two</h2>
+<p>&quot;Compute-bound or memory-bound&quot; is the headline. In real debugging, you&#x27;ll meet four walls:</p>
+<table><thead><tr><th>Wall</th><th>What&#x27;s short</th><th>What you see</th><th>Usual fix</th></tr></thead><tbody><tr><td><strong>Compute</strong></td><td>Math units</td><td>Tensor cores busy</td><td>Lower-precision math, more GPUs</td></tr><tr><td><strong>Memory bandwidth</strong></td><td>Bytes per second</td><td>Memory busy, tensor cores idle</td><td>Fetch fewer bytes: batching, quantization, fusion</td></tr><tr><td><strong>Memory capacity</strong></td><td>Bytes that <em>fit</em></td><td>Out-of-memory, or a capped batch size</td><td>Shard across GPUs, quantize, waste less</td></tr><tr><td><strong>Overhead / latency</strong></td><td>Time between work</td><td>Nothing is busy</td><td>Fuse kernels, bigger batches, fewer sync points</td></tr></tbody></table>
+<p>The trap: people say &quot;memory-bound&quot; for both the second and third walls. They&#x27;re different problems. A 70B model that won&#x27;t fit on one GPU is a <strong>capacity</strong> problem. Once it fits, its speed is a <strong>bandwidth</strong> problem. Tensor parallelism happens to fix both at once, which is exactly why they get blurred.</p>
+<p>Separate them out loud in an interview and you&#x27;ll sound like someone who&#x27;s actually been paged about it.</p>
+<hr>
+<h2>The asterisk that doubles your mistake</h2>
+<p>One last trap, hiding in plain sight.</p>
+<p>The H100 datasheet lists BF16 Tensor Core performance as <strong>1,979 TFLOPS</strong>. Look closer: there&#x27;s an asterisk. That number is <strong>with sparsity</strong>, a special 2:4 pattern where half the weights are zero. Ordinary models aren&#x27;t like that. The dense number is half: <strong>989 TFLOPS</strong>. The A100 sheet does the same (624 with sparsity, 312 dense).</p>
+<p>Use the headline number and your ridge point doubles. Every workload suddenly looks twice as bandwidth-bound as it really is, and your capacity plan is built on sand.</p>
+<p>Here&#x27;s what that misdiagnosis looks like. A team profiles a kernel at <strong>400 FLOP/byte</strong> on an H100.</p>
+<table><thead><tr><th>Ridge point computed from</th><th>Ridge</th><th>Verdict for 400 FLOP/byte</th><th>What the team does next</th></tr></thead><tbody><tr><td>Dense BF16, 989 TFLOPS ÷ 3.35 TB/s</td><td>~295</td><td><strong>Compute-bound</strong> (correct)</td><td>Looks for faster math: FP8, better tensor-core use</td></tr><tr><td>Sparse BF16, 1,979 TFLOPS ÷ 3.35 TB/s</td><td>~590</td><td>&quot;Bandwidth-bound&quot; (wrong)</td><td>Spends a sprint cutting memory traffic, and nothing gets faster</td></tr></tbody></table>
+<p>Everything between the real ridge and the inflated one gets misfiled. The team optimizes the wrong axis, exactly the mistake the roofline exists to prevent. The sparse number only becomes the right one once a model really is pruned to 2:4, which <a href="../../../../fields/generative-ai/llm-inference-performance/structured-sparsity/">part 5</a> covers.</p>
+<p>Also remember the datasheet bandwidth is a peak. Real kernels get a fraction of it, so real ceilings sit a bit lower than the ones you&#x27;ll compute in this series.</p>
+<h3>What the roofline is not</h3>
+<ul><li><strong>Not a prediction.</strong> It&#x27;s a ceiling. Real code lives under the roof, sometimes far under.</li><li><strong>Not the whole memory story.</strong> The simple version only counts trips to HBM. Clever kernels keep data on-chip and change the math; <a href="../../../../fields/generative-ai/llm-inference-performance/optimizations-on-the-roofline/">part 4</a> shows how.</li><li><strong>Not multi-GPU.</strong> Talking between GPUs is a third roof. We&#x27;ll hit it in part 3.</li></ul>
+<p><strong>Takeaway:</strong> divide the work&#x27;s FLOPs by its bytes; if that&#x27;s below the GPU&#x27;s ridge point (about 295 for an H100), you&#x27;re short of fetching, not chefs, and no amount of TFLOPS will save you.</p>
+<p>So where does an LLM sit on this roof? Here&#x27;s a hint that should bother you: it&#x27;s fast at <em>reading</em> your prompt and slow at <em>writing</em> the answer. Same model, same GPU. Why? That&#x27;s <a href="../../../../fields/generative-ai/llm-inference-performance/llm-inference-on-the-roofline/">part 2</a>.</p>
+<h3>References</h3>
+<ul><li><a href="https://www.nvidia.com/en-us/data-center/h100/">NVIDIA H100 Tensor Core GPU datasheet</a></li><li><a href="https://www.nvidia.com/en-us/data-center/a100/">NVIDIA A100 Tensor Core GPU datasheet</a></li><li><a href="https://doi.org/10.1145/1498765.1498785">Williams, Waterman, Patterson, &quot;Roofline: An Insightful Visual Performance Model for Multicore Architectures&quot;, Communications of the ACM, 2009</a></li><li><a href="https://docs.nvidia.com/nsight-compute/ProfilingGuide/index.html">NVIDIA Nsight Compute: Profiling Guide (roofline charts)</a></li></ul>
+<p><a href="../../../../#/fields/generative-ai/llm-inference-performance/compute-bound-vs-memory-bound">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

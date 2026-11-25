@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Containers 101</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/libraries-frameworks-containers/101-containers/">
+<meta name="description" content="Containers from the ground up: what happens at boot, kernel and user space, virtual machines, then namespaces, cgroups and Linux containers.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Containers 101">
+<meta property="og:description" content="Containers from the ground up: what happens at boot, kernel and user space, virtual machines, then namespaces, cgroups and Linux containers.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/libraries-frameworks-containers/101-containers/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/libraries-frameworks-containers/101-containers/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../.docs/prerender-redirect.js" data-target="../../../#/fields/libraries-frameworks-containers/101-containers"></script>
+<main>
+<h1>Containers 101</h1>
+<p><em>Containers from the ground up: what happens at boot, kernel and user space, virtual machines, then namespaces, cgroups and Linux containers.</em></p>
+<p>You mean Docker?!! NOO!! the concept of containerzation was an old concept, even introuced by linux in &quot;C-Groups&quot; which are short for &quot;Controled Groups.&quot;</p>
+<h1>Table of Content</h1>
+<h1>What Happens When Power is on?</h1>
+<ol><li>Power On and POST (Power-On Self-Test):<ul><li>When you press the power button, the system&#x27;s power supply provides electricity to the components, and the CPU receives its initial reset signal.</li><li>The firmware (BIOS or UEFI) initializes, and the CPU executes a small piece of code stored in a special memory location called the BIOS/UEFI firmware.</li><li>The firmware performs a series of diagnostic tests known as the Power-On Self-Test (POST) to check the hardware components (CPU, memory, storage, etc.) for functionality and ensure they&#x27;re working correctly.</li></ul></li><li>Initialization and Hardware Detection:<ul><li>After the POST completes successfully, the firmware initializes various hardware components and devices connected to the system, such as the CPU, memory modules, storage devices (hard disk drives, solid-state drives), input/output devices (keyboard, mouse, display), and peripheral devices (USB drives, network adapters).</li><li>The firmware identifies and initializes these components by accessing data stored in the system&#x27;s BIOS or UEFI firmware settings.</li></ul></li></ol>
+<ol><li>Boot Device Selection:<ul><li>The firmware determines the boot device from which to load the operating system. This can be configured in the system&#x27;s BIOS or UEFI settings.</li><li>The boot device is typically a storage device such as a hard disk drive (HDD), solid-state drive (SSD), or USB flash drive.</li></ul></li></ol>
+<ol><li>Bootloader Execution:<ul><li>The firmware locates and executes the bootloader code stored in the boot sector of the selected boot device.</li><li>The bootloader is responsible for loading the operating system kernel into memory and initiating its execution. This involves reading the kernel image from the storage device and transferring control to the kernel.</li></ul></li><li>Kernel Initialization:<ul><li>Once the bootloader loads the kernel into memory, the kernel initialization process begins.</li><li>The kernel initializes various system components, such as the CPU, memory, device drivers, file systems, and networking.</li><li>It sets up data structures, establishes system parameters, and configures hardware resources to prepare the system for normal operation.</li></ul></li></ol>
+<ol><li>User Space Initialization:<ul><li>After the kernel initialization completes, the operating system transitions to user space.</li><li>User-space initialization involves launching system services, daemons, and user applications necessary for the user to interact with the system.</li><li>Graphical user interfaces (GUIs) or command-line interfaces (CLIs) may be started, depending on the system configuration and user preferences.</li></ul></li></ol>
+<ol><li>User Login and System Operation:<ul><li>Finally, the system presents the user with a login prompt or desktop environment, allowing them to log in and start using the computer.</li><li>Once logged in, the user can run applications, access files, browse the internet, and perform other tasks as needed.</li></ul></li></ol>
+<pre><code>+------------------------------------+
+|            User Space              |
+|   +--------------------------+     |
+|   |    User Applications     |     |
+|   +--------------------------+     |
++------------------------------------+
+|            Kernel Space            |
+|   +--------------------------+     |
+|   |       System Calls       |     |
+|   |    Device Drivers        |     |
+|   |    Process Management    |     |
+|   |    Memory Management     |     |
+|   |    File System           |     |
+|   |    Networking            |     |
+|   +--------------------------+     |
++------------------------------------+
+|              Hardware              |
+|   +--------------------------+     |
+|   |        CPU (Processor)    |     |
+|   |        Memory (RAM)       |     |
+|   |        Storage (HDD/SSD)  |     |
+|   |        Input Devices      |     |
+|   |        Output Devices     |     |
+|   +--------------------------+     |
++------------------------------------+</code></pre>
+<h2>Kernel</h2>
+<p>Kernel is a piece of software in the OS, that serves as the bridge between the hardware and the rest of the system, responsible for shceduling processess to run, managing devices (read/write on disk and memory), ... etc.</p>
+<h2>Kernel Space &amp; User Space</h2>
+<p>System memory in Linux can be divided into two distinct regions; <em>kernel space</em> and <em>user space</em> According to <a href="https://www.linfo.org/user_space.html">LINFO - user space definition</a> &amp; <a href="https://www.linfo.org/kernel_space.html">kernel space definition</a>:</p>
+<p>|Kernel Space|User Space |-|-| User space is that portion of system memory in which &quot;user processess&quot; run|Kernel space is that portion of memory in which kernel executes and provides its services. User processess are instances of all programs other than the kernel.&lt;/br&gt;When a program is to be run, it is copied from storage into user space so that it can be accessed at high speed by the CPU|The kernel program that consititute the central core of a computer os, it is not a process, but rather a controller of processes, and it has complete control over everything that occurs on the system.M&lt;/br&gt;This includes managing individual user processess within user space and preventing them from interfering with each other.</p>
+<h1>Hypervisor Virtual Machine</h1>
+<p>According to <a href="https://www.freecodecamp.org/news/demystifying-containers-101-a-deep-dive-into-container-technology-for-beginners-d7b60d8511c1/">freecodecamp - demystifying containers 101</a>:</p>
+<p>A virtual machine is comprised of some level of hardware and kernel virtualization on which runs a guest operating system. a VM consist of two main parts [Hypervisor, guest kernel]:</p>
+<ul><li>Hypervisor: is a piece of software that creates the virtualized hardware which may include the virtual [disk, network, CPU, ..etc].</li><li>Guest Kernel: can talk to this virutal hardware.</li></ul>
+<p>A good note is that, Hypervisor can be hosted directly to the hardware without a host OS, in this case it is called <em>Bare Metal Hypervisor VM</em>.</p>
+<p><img src="https://cdn-media-1.freecodecamp.org/images/y4w7Yvlj0aGyKUDYWnFJLf8jfyUkyKgVfGDN" alt="comparison" loading="lazy"> <em>freecodecamp [img](https://www.freecodecamp.org/news/demystifying-containers-101-a-deep-dive-into-container-technology-for-beginners-d7b60d8511c1/)</em></p>
+<h1>From History to Container!</h1>
+<p>The journy as follows:</p>
+<pre><code>Cgroup &quot;Controlled Groups&quot;: Linux kernel feature uses Linux namespaces {
+        PID: Process ID: ps aux, 
+        net: Network: ip addr, 
+        mnt: Mount, 
+        uts: Unix Time Sharing, 
+        ipc: Inter-Process Communication, 
+        user, 
+        }
+
+Linux Containers (LXC)
+
+Docker - 2013
+
+Container Orchestration and Management - e.g. Kubernetes 2014</code></pre>
+<h2>What is a Namespace?!</h2>
+<p>From this example from <a href="https://stackoverflow.com/a/991103">&#x27;jwl&#x27;</a>:</p>
+<blockquote><p>Say my wife has a sister named Sue, and so do I. How can I tell them apart in a conversation? By using their last names (&quot;Sue Larson&quot; vs &quot;Sue Jones&quot;). The last name is the namespace.</p></blockquote>
+<p>In programming, namespace is a feature used to :</p>
+<ul><li>organize code elements [classes, functions, variables, types] into logical groups and containers.</li><li>prevent naming conflicts and provide a way to encapsulate and modularize code.</li></ul>
+<p>Namespaces provide an isolation of processes and resources within a system; Linux namespaces are the fundamental feature of containerization!</p>
+<p>From <a href="https://stackoverflow.com/a/991060">mikej</a>:</p>
+<blockquote><p>So namespace provides a container to hold things like functions, classes and constants as a way to group them together logically and to help avoid conflicts with functions and classes with the same name that have been written by someone else.</p></blockquote>
+<h2>Namespace in Linux?</h2>
+<p>In Linux systems, a namespace refers to a kernel feature that provides process isolation and virtualization of system resources. so Linux namesapce allow multiple processes to have their own unique views of certain system resources, such as process IDs, network interfaces, mount points, and more, within a single operating system instance.</p>
+<p>For more info, check <a href="https://www.linkedin.com/pulse/deep-dive-linux-namespaces-understanding-container-isolation-patil-1f/">Linkedin-bolg</a>.</p>
+<p>Command <em>unshare</em> is used to create a new namespace or unshare an existing one; thereby isolating certain aspects of the system from the rest of the system.</p>
+<h2>Cgroups</h2>
+<p>It is a Linux kernel feature that uses Linux namespaces to isolate processes and resources. So Cgroups merges multiple namespaces toghether to achieve isolation.</p>
+<p>While not an original feature, cgroups in Linux were eventually reworked to include a feature called *<strong>namespace isolation</strong>*.</p>
+<p>The idea of Namespaces isolation in Linux is not new, as Linux has multiple kinds of namespace isolation. But Cgroups isolation is considered to a higher level of isolation to make sure processes within a cgroup namespace are independed.</p>
+<p>So yes some consider cgroup as a namespace.</p>
+<h2>Linux Containers (LXC)</h2>
+<p>Taking advantage of cgroups, namespace isolation other kernel features to create a virtual environment with seperate process and networking space.</p>
+<ul><li>[cgroup &quot;merging namespace isolation&quot; + Kernel features instead of creating its own kernel.]</li></ul>
+<p>This virutal environment has minimal overhead compared to traditional virtual machines.</p>
+<p>Early version of Docker were build directly on the top of LXC.</p>
+<h1>Os of a Container?!</h1>
+<p>The OS of a container is in the form of an image. The image:</p>
+<ul><li>is not a full operating system as the host.</li><li>is just the file system and binaries for the OS.</li></ul>
+<p>The full host OS includes the file system, binaries, and the kernel.</p>
+<h1>How container become alive?</h1>
+<p>Let&#x27;s take an example of Docker:</p>
+<ol><li>When the container is booted, first thing to be done is from the repo, the image and its parent images are downloaded.</li><li>The cgroup and namesapce are created.</li><li>The image is used to create a virtual environment.</li><li>From this point, the only files and binaries specified for the image, are the only files in the entire machine.</li><li>The container main process is started, and the container is considered alive.</li></ol>
+<h1>Containers Shares Kernel?</h1>
+<p>Docker says &quot;Docker shares the Kernel of the Host&quot;!! let&#x27;s dive deep to explore more about this.</p>
+<h2>gVisor: Independed Kernel</h2>
+<p>To work on secured, efficient container, we can try to make the container uses an independed kernel, then consider <a href="https://github.com/google/gvisor">gVisor</a> from google.</p>
+<p><img src="../../../fields/libraries-frameworks-containers/images/gvisor-layers.png" alt="gvisor" loading="lazy"></p>
+<h1>References</h1>
+<ul><li>IBM tutorial to explain the concept of Containerization, found <a href="https://www.youtube.com/watch?v=0qotVMX-J5s">here</a>.</li><li>LINFO: The Linux Information Project. <a href="https://www.linfo.org/index.html">https://www.linfo.org/index.html</a></li><li>Demystifying Containers 101: A Deep Dive Into Container Technology for Beginners freeCodeCamp. <a href="https://www.freecodecamp.org/news/demystifying-containers-101-a-deep-dive-into-container-technology-for-beginners-d7b60d8511c1/">https://www.freecodecamp.org/news/demystifying-containers-101-a-deep-dive-into-container-technology-for-beginners-d7b60d8511c1/</a></li><li>Scott McCarty. Redhat. Architecting Containers Part 1: Why Understanding User Space vs. Kernel Space Matters. 2015. <a href="https://www.redhat.com/en/blog/architecting-containers-part-1-why-understanding-user-space-vs-kernel-space-matters">https://www.redhat.com/en/blog/architecting-containers-part-1-why-understanding-user-space-vs-kernel-space-matters</a></li></ul>
+<p><a href="../../../#/fields/libraries-frameworks-containers/101-containers">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

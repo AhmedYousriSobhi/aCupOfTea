@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>kubectl Troubleshooting Cheat Sheet: Five Questions, in Order</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/kubernetes/cheatsheet/">
+<meta name="description" content="A kubectl cheat sheet for a pod or Job that won&#x27;t work: where is it, what does it say, what did the cluster say, why did it die, and how to look inside. Commands from the Kubernetes reference.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="kubectl Troubleshooting Cheat Sheet: Five Questions, in Order">
+<meta property="og:description" content="A kubectl cheat sheet for a pod or Job that won&#x27;t work: where is it, what does it say, what did the cluster say, why did it die, and how to look inside. Commands from the Kubernetes reference.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/kubernetes/cheatsheet/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/kubernetes/cheatsheet/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/devops/kubernetes/cheatsheet"></script>
+<main>
+<h1>kubectl Troubleshooting Cheat Sheet: Five Questions, in Order</h1>
+<p><em>A kubectl cheat sheet for a pod or Job that won&#x27;t work: where is it, what does it say, what did the cluster say, why did it die, and how to look inside. Commands from the Kubernetes reference.</em></p>
+<blockquote><p><strong>A companion to the [Kubernetes series](/fields/devops/kubernetes/README.md).</strong> It&#x27;s 6 PM, a pod is wrong, and you remember half of a command. This page is the shelf: five questions, asked in the same order every time, with the command for each.</p></blockquote>
+<hr>
+<h2>The ritual</h2>
+<p>Think of a nurse doing rounds. She doesn&#x27;t start with surgery. She checks the same five things, in the same order, on every patient, and most of the time the answer is on the second one.</p>
+<p>Do the same with a pod. Where is it, what does it say, what did the cluster say about it, why did it die, and only then, how do I look inside. The order matters because each step is cheaper than the next, and the first three fix most tickets. <a href="../../../../fields/devops/kubernetes/broken-pods-rogues-gallery/">Part 4</a> is the long version of this ritual with the gallery of failures. This page is the short one.</p>
+<blockquote><p>[!NOTE] The commands come from the Kubernetes reference pages. I also ran them on 8 November 2026 against deliberately broken pods and a failing Indexed Job, on a throwaway single-node k3s v1.37.2+k3s1 (Ubuntu 22.04.3, kernel 5.15.0-91), destroyed afterwards. Where the real output differed from what I expected, the page says so. Not tested: a multi-node cluster, other Kubernetes versions, and <code>kubectl debug</code> in a real terminal (my run had no TTY, so it fell back to streaming logs). Replace <code>POD</code>, <code>NS</code> and <code>JOB</code> with your own names.</p></blockquote>
+<hr>
+<h2>1. Where is it?</h2>
+<pre><code class="language-bash">kubectl get pods -n NS -o wide            # status, restarts, and which node it landed on
+kubectl get pods -A                       # every namespace, when you forgot which one
+kubectl get pods -l app=web --show-labels # filter by label, and show the labels</code></pre>
+<p><code>-o wide</code> adds the node name. A pod that is <code>Pending</code> has no node yet, and a pod on the wrong node tells you to look at taints and selectors (<a href="../../../../fields/devops/kubernetes/isolating-gpu-workloads/">part 7</a>).</p>
+<p>The docs give the first split: a pod stuck in <code>Pending</code> &quot;can not be scheduled onto a node&quot;, usually because of insufficient resources. A pod stuck in <code>Waiting</code> was scheduled but &quot;can&#x27;t run on that machine&quot;, most often because the image can&#x27;t be pulled.</p>
+<hr>
+<h2>2. What does it say?</h2>
+<pre><code class="language-bash">kubectl logs POD -n NS                    # the container&#x27;s output so far
+kubectl logs POD -c CONTAINER             # pick one container in a multi-container pod
+kubectl logs -p POD                       # the PREVIOUS instance, after a restart
+kubectl logs POD --tail=20 --since=1h     # the recent part only
+kubectl logs -l app=web --all-containers  # every pod matching a label
+kubectl logs job/JOB                      # a Job&#x27;s first container
+kubectl logs -f POD --timestamps          # follow it live, with times</code></pre>
+<p>The one people forget is <code>-p</code>. A pod in <code>CrashLoopBackOff</code> keeps restarting, so the container you ask for may be a new one with nothing in it yet. The docs describe <code>--previous</code> as printing &quot;the logs for the previous instance of the container in a pod if it exists.&quot;</p>
+<p>What the test showed:</p>
+<ul><li>On a pod that exits with code 3, plain <code>kubectl logs crasher</code> printed <code>starting</code> and <code>fatal-detail-here</code>, because it was between restarts and the last instance had just died. <code>kubectl logs -p crasher</code> printed <code>unable to retrieve container logs for containerd://...</code> instead. So if <code>-p</code> fails, try plain <code>logs</code> as well, and the other way round.</li><li><code>kubectl logs -p</code> on a pod that never restarted failed with <code>previous terminated container &quot;c&quot; in pod &quot;fine&quot; not found</code>. That&#x27;s the correct answer: there is no previous instance.</li><li>With a label selector, one bad pod makes the whole command exit 1, although the other pods&#x27; logs still print. In the test, <code>kubectl logs -l app=demo --all-containers</code> printed the healthy pod and then <code>container &quot;c&quot; in pod &quot;badimage&quot; is waiting to start: image can&#x27;t be pulled</code>.</li></ul>
+<p>Two limits from the docs: with a selector, <code>--tail</code> defaults to 10 lines, and <code>--max-log-requests</code> defaults to 5 pods followed at once.</p>
+<hr>
+<h2>3. What did the cluster say?</h2>
+<pre><code class="language-bash">kubectl describe pod POD -n NS            # state, restart count, and the Events at the bottom
+kubectl events -n NS --for pod/POD        # just that pod&#x27;s events
+kubectl events -n NS --types=Warning      # only the bad news
+kubectl events -A --watch                 # watch events arrive</code></pre>
+<p><code>describe</code> prints &quot;a detailed description of the selected resources, including related resources such as events&quot;. Read the <strong>Events</strong> section at the bottom first: the scheduler writes its reason there. In the test, a pod asking for 64 CPUs got <code>0/1 nodes are available: 1 Insufficient cpu. preemption: 0/1 nodes are available: 1 Preemption is not helpful for scheduling.</code> A GPU request fails the same way, with <code>Insufficient nvidia.com/gpu</code>. The bad-image pod showed <code>ErrImagePull</code> first and <code>ImagePullBackOff</code> a few seconds later, with the registry&#x27;s <code>not found</code> message in between.</p>
+<blockquote><p>[!TIP] For several pods or a prefix match, <code>describe</code> doesn&#x27;t show events unless you ask: <code>--show-events</code> defaults to true only for a single object. Name the pod.</p></blockquote>
+<hr>
+<h2>4. Why did it die?</h2>
+<p>Logs show what the program said. The pod status shows what Kubernetes saw: the exit code and the reason.</p>
+<pre><code class="language-bash">kubectl get pod POD -o yaml               # look at status.containerStatuses[].lastState.terminated
+kubectl get pod POD -o go-template=&#x27;{{range .status.containerStatuses}}{{.name}}: {{.lastState.terminated.message}}{{&quot;\n&quot;}}{{end}}&#x27;</code></pre>
+<p>Look for <code>lastState.terminated</code>: it carries <code>exitCode</code>, <code>reason</code> and <code>message</code>. In the test, a container that tried to hold about 100 MB under a 20Mi limit showed <code>OOMKilled exit 137</code>. That means the memory limit, and <a href="../../../../fields/devops/kubernetes/oomkilled-with-memory-to-spare/">part 10</a> explains why it can happen with RAM to spare.</p>
+<p>Your program can leave a note too. The docs say Kubernetes reads a termination message from <code>/dev/termination-log</code> by default. If the file is empty and the container failed, setting <code>terminationMessagePolicy: FallbackToLogsOnError</code> uses the last chunk of the log instead, limited to 2048 bytes or 80 lines. You can&#x27;t change <code>terminationMessagePath</code> after the pod has started. In the test, a container that wrote <code>fatal-detail-here</code> to stderr and exited with 3 got that line back in <code>lastState.terminated.message</code> with <code>FallbackToLogsOnError</code>, and the same field was empty for a pod that had never started.</p>
+<blockquote><p>[!NOTE] <code>lastState</code> holds the previous run. For a pod with <code>restartPolicy: Never</code>, such as a Job&#x27;s pod, there is no restart, so look under <code>state.terminated</code> instead.</p></blockquote>
+<table><thead><tr><th>What you see</th><th>Where to look</th></tr></thead><tbody><tr><td><code>Pending</code></td><td><code>describe</code>, Events: the scheduler&#x27;s reason</td></tr><tr><td><code>ImagePullBackOff</code></td><td><code>describe</code>: the image name, the registry, the pull secret</td></tr><tr><td><code>Error</code>, then <code>CrashLoopBackOff</code></td><td><code>logs</code> and <code>logs -p</code>, then <code>lastState.terminated</code></td></tr><tr><td><code>OOMKilled</code></td><td><code>lastState.terminated.reason</code>, then the memory limit</td></tr><tr><td><code>Completed</code> but wrong</td><td><code>logs</code>: the exit code was 0, so look at the program</td></tr></tbody></table>
+<hr>
+<h2>5. How do I look inside?</h2>
+<p>Only now. If the pod is up and its image has no shell, <code>kubectl debug</code> adds one:</p>
+<pre><code class="language-bash">kubectl debug POD -it --image=busybox                          # an ephemeral debug container in the pod
+kubectl debug POD -it --image=busybox --copy-to=my-debugger    # a copy of the pod, so the original is untouched
+kubectl debug node/NODE -it --image=busybox                    # a pod on the node, host filesystem at /host</code></pre>
+<p>The docs describe the first form as adding &quot;an ephemeral container to an already running pod, for example to add debugging utilities without restarting the pod.&quot; For a node, &quot;the host&#x27;s filesystem will be mounted at /host&quot;.</p>
+<p>My recommendation: prefer <code>--copy-to</code> on anything that matters. A debug session in the real pod can disturb the very problem you came to see, and a copy can be thrown away.</p>
+<p>What the test showed: all three forms worked. The ephemeral container appeared in <code>spec.ephemeralContainers</code> and, with <code>--target</code>, could see the original container&#x27;s process (<code>sh -c echo all good; sleep 3600</code> as PID 1). The <code>--copy-to</code> copy ran as a second pod, <code>fine-debug</code>, with <code>2/2</code> containers, and the node form listed the host&#x27;s <code>/</code>. A copy is a real pod: delete it when you&#x27;re done, and look at <code>kubectl get pods</code> afterwards for a leftover node-debugger pod. I didn&#x27;t check what happens to that one.</p>
+<blockquote><p>[!WARNING] <code>kubectl debug node/...</code> runs in the node&#x27;s host namespaces. Treat it like root on that machine, and check who is allowed to do it (<a href="../../../../fields/devops/kubernetes/rbac-and-the-limited-viewer/">part 13</a>).</p></blockquote>
+<hr>
+<h2>The Job that lost index 417</h2>
+<p><a href="../../../../fields/devops/kubernetes/kubernetes-at-hpc-scale/">Page 15</a> ended on a challenge: index 417 of an Indexed Job failed twice. Here is the same ritual, applied to a small version of it: a 6-index Job where index 4 always exits 1, with <code>backoffLimitPerIndex: 1</code> and <code>ttlSecondsAfterFinished: 60</code>.</p>
+<pre><code class="language-bash">kubectl get job JOB -o jsonpath=&#x27;{.status.failedIndexes}&#x27;                 # which indexes failed
+kubectl get pods -l batch.kubernetes.io/job-name=JOB,batch.kubernetes.io/job-completion-index=417   # that index&#x27;s pods
+kubectl logs -l batch.kubernetes.io/job-name=JOB,batch.kubernetes.io/job-completion-index=417       # what they said</code></pre>
+<p>What the test showed:</p>
+<ul><li><code>failedIndexes</code> printed <code>4</code>, and <code>completedIndexes</code> printed <code>0-3,5</code>. The Job&#x27;s status was <code>Failed</code> with <code>5/6</code> completions, as the docs say it would be.</li><li>Index 4 had <strong>two pods</strong>, <code>sweep-4-b9ljl</code> and <code>sweep-4-4clfz</code>, both in <code>Error</code>. With <code>restartPolicy: Never</code> a retry is a new pod, not a restart, so the selector returns every attempt and <code>logs</code> printed both.</li><li><code>kubectl logs -p</code> failed here: <code>previous terminated container &quot;task&quot; in pod &quot;sweep-4-4clfz&quot; not found</code>. Use plain <code>logs</code>.</li><li><code>kubectl logs job/JOB</code> is not the way to find the failure. It printed <code>Found 7 pods, using pod/sweep-0-29gs6</code>: the first pod, which was a healthy one.</li><li>The pods carry both <code>batch.kubernetes.io/job-name=sweep</code> and the older <code>job-name=sweep</code>, so you can scope the selector to one Job.</li></ul>
+<p>If the pods are already gone, what is left depends on what deleted them:</p>
+<pre><code class="language-bash">kubectl describe job JOB            # the Job&#x27;s events: pods created, &quot;Job has failed indexes&quot;
+kubectl events --for job/JOB        # the same, as a list
+kubectl get job JOB -o jsonpath=&#x27;{.status.conditions}&#x27;   # why it failed</code></pre>
+<p>After I deleted the two pods by hand, all three still worked. The Job&#x27;s events showed a <code>SuccessfulCreate</code> line per pod and <code>FailedIndexes</code>, and the conditions showed <code>reason: FailedIndexes</code>.</p>
+<p>After <code>ttlSecondsAfterFinished</code> fired, <code>kubectl get job sweep</code> and <code>describe job sweep</code> returned <code>jobs.batch &quot;sweep&quot; not found</code>, and <code>kubectl get pods</code> showed nothing for it. The TTL controller had deleted the Job together with its pods, as the docs say. Only <code>kubectl events --for job/sweep</code> still printed lines, and they only say that pods were created and that indexes failed. That was about 90 seconds in. I didn&#x27;t measure how long events stay. They say nothing about why index 4 failed: the log lines <code>index-4-broke</code> and <code>task 4</code> were gone with the pods.</p>
+<p>So the TTL decides how long you can debug. My recommendation: ship logs off the cluster, or set the TTL long enough for the humans, before you rely on <code>ttlSecondsAfterFinished</code>. That is advice, not a Kubernetes rule.</p>
+<p><strong>Takeaway:</strong> ask the same five questions in the same order, read the Events section before anything else, and remember that a Job&#x27;s TTL deletes the evidence along with the pods.</p>
+<hr>
+<h2>References</h2>
+<ul><li><a href="https://kubernetes.io/docs/tasks/debug/debug-application/debug-pods/">Debug Pods</a>: <code>describe</code>, Pending and Waiting pods.</li><li><a href="https://kubernetes.io/docs/reference/kubectl/generated/kubectl_logs/">kubectl logs</a>: <code>--previous</code>, selectors, <code>--tail</code>, <code>--since</code>, <code>--max-log-requests</code>.</li><li><a href="https://kubernetes.io/docs/reference/kubectl/generated/kubectl_events/">kubectl events</a>: <code>--for</code>, <code>--types</code>, <code>--watch</code>.</li><li><a href="https://kubernetes.io/docs/reference/kubectl/generated/kubectl_describe/">kubectl describe</a>: events and <code>--show-events</code>.</li><li><a href="https://kubernetes.io/docs/reference/kubectl/generated/kubectl_get/">kubectl get</a>: <code>-o wide</code>, selectors, output formats.</li><li><a href="https://kubernetes.io/docs/tasks/debug/debug-application/determine-reason-pod-failure/">Determine the reason for Pod failure</a>: <code>lastState.terminated</code>, termination messages, <code>FallbackToLogsOnError</code>.</li><li><a href="https://kubernetes.io/docs/reference/kubectl/generated/kubectl_debug/">kubectl debug</a>: ephemeral containers, <code>--copy-to</code>, node debugging.</li><li><a href="https://kubernetes.io/docs/concepts/workloads/controllers/job/">Jobs</a>: <code>failedIndexes</code>, the completion index label, <code>ttlSecondsAfterFinished</code>.</li></ul>
+<p><a href="../../../../#/fields/devops/kubernetes/cheatsheet">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>101 - Nvidia-smi</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/libraries-frameworks-containers/101-nvidia-smi/">
+<meta name="description" content="How to read nvidia-smi output to monitor GPU usage, covering what the tool is, where to get it, and the GPU state and processes tables.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="101 - Nvidia-smi">
+<meta property="og:description" content="How to read nvidia-smi output to monitor GPU usage, covering what the tool is, where to get it, and the GPU state and processes tables.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/libraries-frameworks-containers/101-nvidia-smi/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/libraries-frameworks-containers/101-nvidia-smi/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../.docs/prerender-redirect.js" data-target="../../../#/fields/libraries-frameworks-containers/101-nvidia-smi"></script>
+<main>
+<h1>101 - Nvidia-smi</h1>
+<p><em>How to read nvidia-smi output to monitor GPU usage, covering what the tool is, where to get it, and the GPU state and processes tables.</em></p>
+<p>In our daily work, we use GPU alot rather than CPU in the heavy computations, so How to monitor the usage?</p>
+<p>In this doc, we will try to talk about main points and the support points for these main points, so please refer to the main source of knowledge &quot;The Official DOCUMENTATION&quot; for <a href="https://developer.download.nvidia.com/compute/DCGM/docs/nvidia-smi-367.38.pdf">nvidia-smi</a></p>
+<h1>Table of Content</h1>
+<h1>What is NVSMI?</h1>
+<p>Also known as Nvidia-smi, which is a command line utility tool by Nvidia.</p>
+<h1>Where to get?</h1>
+<p>It could be installed along with <a href="https://developer.nvidia.com/cuda-toolkit"><strong>CUDA toolkit</strong></a>.</p>
+<h1>How it looks?</h1>
+<p>Let&#x27;s run it in our terminal, and the output should be like this: <img src="../../../fields/libraries-frameworks-containers/images/nvidia-smi-run.png" alt="Nvidia-smi command run" loading="lazy"> <em>Running Nvidia-smi in my local machine</em></p>
+<p>From the output we can first get the following GPU ATTRIBUTES info:</p>
+<ul><li>The Nvidia driver version info.</li><li>The CUDA version available that my GPU supports</li><li>The Nvidia GPU version.</li><li>The Current processes running that uses the GPU [if there is any process running]</li><li>The Memory usage.</li></ul>
+<h1>Output Desicription</h1>
+<p>The output generated is two tables;</p>
+<ol><li>The state of GPU.</li><li>The Processes table.</li></ol>
+<h2>GPU&#x27;s State Table</h2>
+<p>Please refer to the <a href="https://developer.download.nvidia.com/compute/DCGM/docs/nvidia-smi-367.38.pdf">docs</a>, to get all the info, options, and capabilities of the that simple command &quot;nvidia-smi&quot;.</p>
+<h2>Processes Table</h2>
+<p>They are the Processes using GPUs, this table lists all the processes having Compute or Graphics context on the devie.</p>
+<ul><li>Compute processes are reported on all the fully supported products.</li><li>Graphical processes is limited to the supported products starting with Kepler architecture.</li></ul>
+<p>There are some values for each entity we should be aware of:</p>
+<p>|Parameter|Description|Value| |-|-|-|</p>
+<h1>Driver models</h1>
+<p>Microsoft and NVIDIA offer two driver modes for Windows;</p>
+<ol><li>The Windows Display Driver Model (WDDM): On workstations and laptops, this is usually the default mode. This driver mode allows shared usage of the NVIDIA GPU for display output and GPGPU computing. </li><li>Tesla Compute Cluster (TCC): This driver mode uses the NVIDIA GPU for GPGPU computing exclusively.</li></ol>
+<p>|Feature|<strong>WDDM (Windows Display Driver Model)</strong>|<strong>TCC (Tesla Compute Cluster)</strong>| |-|-|-| <strong>Purpose</strong>|Graphics rendering and display management on Windows.|High-performance computing (HPC) and GPU compute tasks without display functions. <strong>Operating Mode</strong>|Primarily for graphics and display.|Dedicated compute mode without display support. <strong>GPU Compatibility</strong>|Consumer-grade NVIDIA GPUs (Geforce Series, etc.)|Typically available on certain NVIDIA Tesla and Quadro GPUs. <strong>Display Output</strong>|Supports display functions.|	Does not support display output in TCC mode. <strong>Use Cases</strong>|General-purpose graphics rendering, gaming, multimedia, etc.|	High-performance computing, scientific simulations, data processing, parallel computing tasks. <strong>Driver Type</strong>|WDDM drivers are used.|	TCC drivers are often used in TCC mode. <strong>System Integration</strong>|Integrated with the Windows operating system.|	Typically used in server environments for compute-intensive tasks. <strong>GPU Management</strong>|Provides a balance between graphics and compute tasks.|	Optimized for compute performance with minimal emphasis on graphics.</p>
+<h1>Conrtol Your GPUs</h1>
+<p>A great start of using the nvidia-smi command line, in through the tutorial illustrated by <em>Eliot Eshelman</em> in <a href="https://www.microway.com/hpc-tech-tips/nvidia-smi_control-your-gpus/">Microway-Nvidia-smi-Control_Your_GPUs</a>.</p>
+<p>Let&#x27;s write down the most might-look important ones for our reference;</p>
+<p>|Objective|Details|Command| |-|-|-| Query GPU devices|To get all available Nvidia devices|<em>nvidia-smi -L</em> Query GPU devies details|To get details about GPU|<em>nvidia-smi --query-gpu=index,name,uuid,serial --format=csv</em> Monitor Overall GPU usage with 1-second update intervals||<em>nvidia-smi dmon</em> Monitor per-process GPU usage with 1-second update intervals||<em>nvidia-smi pmon</em> Query GPU performance|To review the current state of each GPU and any reasons for clock slowdowns, use the PERFORMANCE flag|<em>nvidia-smi -q -d PERFORMANCE</em> Query GPU clock|To review the current GPU clock speed, default clock speed, and maximum possible clock speed, run|<em>nvidia-smi -q -d CLOCK</em> Query GPU supported clocks||<em>nvidia-smi -q -d SUPPORTED_CLOCKS</em> |Prinitng all GPU details| To list all available data on a particular GPU, specify the ID of the card with -i.|<em>nvidia-smi -i 0 -q</em> Priniting specific GPU details|Excerpt for a card running GPU|<em>nvidia-smi -i 0 -q -d MEMORY,UTILIZATION,POWER,CLOCK,COMPUTE</em> Query Nvidia Link &quot;NVlink&quot; status|To get info about the nvlink status|<em>nvidia-smi nvlink --status</em> Query Nvidia Link &quot;NVlink&quot; capabilities|To get info about the nvlink capabilities|<em>nvidia-smi nvlink --capabilities</em> Inquery about the system/GPU topology||<em>nvidia-smi topo --matrix</em></p>
+<h1>Note</h1>
+<ul><li>A bandwith note from <em>Making machine learning models faster by horace-brr_intro</em>, found <a href="https://horace.io/brrr_intro.html">here</a> <code>`</code> This cost of moving stuff to and from our compute units is what&#x27;s called the &quot;memory bandwidth&quot; cost. As an aside, your GPU&#x27;s DRAM is what shows up in nvidia-smi, and is the primary quantity responsible for your lovely &quot;CUDA Out of Memory&#x27; errors. <code>`</code></li></ul>
+<h1>References</h1>
+<ul><li>Nvidia docs for Nvidia-smi could be found <a href="https://developer.download.nvidia.com/compute/DCGM/docs/nvidia-smi-367.38.pdf">here</a>.</li><li>A fast quick guide from medium: <a href="https://medium.com/analytics-vidhya/explained-output-of-nvidia-smi-utility-fc4fbee3b124">Explained Output of Nvidia-smi Utility</a></li><li>Steps to help control you GPU monitoring from microway, nvidia-smi:control your GPUs, could be found <a href="https://www.microway.com/hpc-tech-tips/nvidia-smi_control-your-gpus/">here</a>.</li><li>NVIDAI Management Libarary - NVML docs could be found <a href="https://developer.nvidia.com/nvidia-management-library-nvml/">here</a></li><li>Python binding to the Nvidia Management Libaray could be found <a href="http://pypi.python.org/pypi/nvidia-ml-py/">here</a></li></ul>
+<p><a href="../../../#/fields/libraries-frameworks-containers/101-nvidia-smi">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

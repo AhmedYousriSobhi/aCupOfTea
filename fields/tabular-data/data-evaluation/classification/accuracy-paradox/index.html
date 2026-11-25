@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Accuracy Paradox</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/tabular-data/data-evaluation/classification/accuracy-paradox/">
+<meta name="description" content="Why accuracy can look high and still mislead on imbalanced classification, with the accuracy paradox explained.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Accuracy Paradox">
+<meta property="og:description" content="Why accuracy can look high and still mislead on imbalanced classification, with the accuracy paradox explained.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/tabular-data/data-evaluation/classification/accuracy-paradox/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/tabular-data/data-evaluation/classification/accuracy-paradox/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../../.docs/prerender-redirect.js" data-target="../../../../../#/fields/tabular-data/data-evaluation/classification/accuracy-paradox"></script>
+<main>
+<h1>Accuracy Paradox</h1>
+<p><em>Why accuracy can look high and still mislead on imbalanced classification, with the accuracy paradox explained.</em></p>
+<h2>Table of Content</h2>
+<p>In a Classification machine learning problem, one of the common most-used evaluation metric is <strong>Accuracy</strong>.</p>
+<pre><code>Accuracy = Number of correct predictions / Total number of predictions</code></pre>
+<p>The reason for its wide use is because it is easy to calculate, easy to interpret, and is a single number to summarize the model’s capability.</p>
+<h2>Accuracy Fails for Imbalanced Classification</h2>
+<p>As such, it is natural to use it on imbalanced classification problems, where the distribution of examples in the training dataset across the classes is not equal.</p>
+<p>This is the most common mistake made by beginners to imbalanced classification.</p>
+<p>When the class distribution is slightly skewed, accuracy can still be a useful metric. When the skew in the class distributions are severe, accuracy can become an unreliable measure of model performance.</p>
+<p>The reason for this unreliability is centered around the average machine learning practitioner and the intuitions for classification accuracy.</p>
+<p>Typically, classification predictive modeling is practiced with small datasets where the class distribution is equal or very close to equal. Therefore, most practitioners develop an intuition that large accuracy score (or conversely small error rate scores) are good, and values above 90 percent are great.</p>
+<p>Achieving 90 percent classification accuracy, or even 99 percent classification accuracy, may be trivial on an imbalanced classification problem.</p>
+<p>This means that intuitions for classification accuracy developed on balanced class distributions will be applied and will be wrong, misleading the practitioner into thinking that a model has good or even excellent performance when it, in fact, does not.</p>
+<h2>Accuracy Paradox</h2>
+<p>Consider the case of an imbalanced dataset with a 1:100 class imbalance.</p>
+<p>In this problem, each example of the minority class (class 1) will have a corresponding 100 examples for the majority class (class 0).</p>
+<p>In problems of this type, the majority class represents “normal” and the minority class represents “abnormal,” such as a fault, a diagnosis, or a fraud. Good performance on the minority class will be preferred over good performance on both classes.</p>
+<p>&quot;&quot;&quot; Considering a user preference bias towards the minority (positive) class examples, accuracy is not suitable because the impact of the least represented, but more important examples, is reduced when compared to that of the majority class.&quot;&quot;&quot;</p>
+<ul><li>A Survey of Predictive Modelling under Imbalanced Distributions, 2015.</li></ul>
+<p>On this problem, a model that predicts the majority class (class 0) for all examples in the test set will have a classification accuracy of 99 percent, mirroring the distribution of major and minor examples expected in the test set on average.</p>
+<p>Many machine learning models are designed around the assumption of balanced class distribution, and often learn simple rules (explicit or otherwise) like always predict the majority class, causing them to achieve an accuracy of 99 percent, although in practice performing no better than an unskilled majority class classifier.</p>
+<p>A beginner will see the performance of a sophisticated model achieving 99 percent on an imbalanced dataset of this type and believe their work is done, when in fact, they have been misled.</p>
+<p>This situation is so common that it has a name, referred to as the “<strong>accuracy paradox</strong>”.</p>
+<p>&quot;&quot;&quot;in the framework of imbalanced data-sets, accuracy is no longer a proper measure, since it does not distinguish between the numbers of correctly classified examples of different classes. Hence, it may lead to erroneous conclusions &quot;&quot;&quot;</p>
+<ul><li>A Review on Ensembles for the Class Imbalance Problem: Bagging-, Boosting-, and Hybrid-Based Approaches, 2011.</li></ul>
+<p>Strictly speaking, accuracy does report a correct result; it is only the practitioner’s intuition of high accuracy scores that is the point of failure. Instead of correcting faulty intuitions, it is common to use alternative metrics to summarize model performance for imbalanced classification problems.</p>
+<h2>Credits</h2>
+<ul><li><a href="https://machinelearningmastery.com/failure-of-accuracy-for-imbalanced-class-distributions/">Machine Learning Mastery</a>.</li></ul>
+<p><a href="../../../../../#/fields/tabular-data/data-evaluation/classification/accuracy-paradox">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

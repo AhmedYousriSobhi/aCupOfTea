@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Plugging NHC into Slurm (and Friends)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/node-health-check/getting-started/slurm-integration/">
+<meta name="description" content="The three slurm.conf lines, which node states to check, timeouts that don&#x27;t fight each other, prolog and epilog patterns, reboots, plus PBS and cron.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Plugging NHC into Slurm (and Friends)">
+<meta property="og:description" content="The three slurm.conf lines, which node states to check, timeouts that don&#x27;t fight each other, prolog and epilog patterns, reboots, plus PBS and cron.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/node-health-check/getting-started/slurm-integration/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/node-health-check/getting-started/slurm-integration/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../../.docs/prerender-redirect.js" data-target="../../../../../#/fields/system-administration/node-health-check/getting-started/slurm-integration"></script>
+<main>
+<h1>Plugging NHC into Slurm (and Friends)</h1>
+<p><em>The three slurm.conf lines, which node states to check, timeouts that don&#x27;t fight each other, prolog and epilog patterns, reboots, plus PBS and cron.</em></p>
+<blockquote><p><strong>Part 4 of the [Node Health Check series](/fields/system-administration/node-health-check/README.md).</strong> NHC knows how to judge a node. Now we give it a schedule, a timeout that won&#x27;t get it killed mid-sentence, and the right to drain.</p></blockquote>
+<hr>
+<h2>The three lines</h2>
+<p>Add to <code>slurm.conf</code> on <strong>every</strong> node and the controller (Slurm expects the file identical everywhere, even though only <code>slurmd</code> runs the program):</p>
+<pre><code class="language-ini">HealthCheckProgram=/usr/sbin/nhc
+HealthCheckInterval=300
+HealthCheckNodeState=ANY,CYCLE</code></pre>
+<p>Then tell NHC which resource manager it&#x27;s talking to, in <code>/etc/sysconfig/nhc</code> (or <code>/etc/default/nhc</code>):</p>
+<pre><code class="language-bash">NHC_RM=slurm</code></pre>
+<p>NHC can auto-detect Slurm, but pinning it removes one variable from every future debugging session. Apply the Slurm side with <code>scontrol reconfigure</code> (or restart <code>slurmctld</code> and the <code>slurmd</code>s), and confirm:</p>
+<pre><code class="language-bash">scontrol show config | grep -i healthcheck</code></pre>
+<p>What each line does:</p>
+<table><thead><tr><th>Setting</th><th>Meaning</th><th>Advice</th></tr></thead><tbody><tr><td><code>HealthCheckProgram</code></td><td>Absolute path, run as <strong>root</strong> by <code>slurmd</code></td><td>Point at <code>nhc</code> directly, or at a tiny wrapper if you need flags</td></tr><tr><td><code>HealthCheckInterval</code></td><td>Seconds between runs. <strong>Default 0 = never</strong></td><td>300 is the classic value. Go to 3600 if users report jitter</td></tr><tr><td><code>HealthCheckNodeState</code></td><td>Which node states get checked (next section)</td><td><code>ANY,CYCLE</code> is a sane default</td></tr></tbody></table>
+<p>Want to pass flags? Use a wrapper, because <code>HealthCheckProgram</code> takes a path, not a command line:</p>
+<pre><code class="language-bash">#!/bin/bash
+# /etc/slurm/nhc-wrapper.sh
+exec /usr/sbin/nhc -c /etc/nhc/nhc.conf &quot;$@&quot;</code></pre>
+<hr>
+<h2>Which nodes should get checked? HealthCheckNodeState</h2>
+<table><thead><tr><th>Value</th><th>Runs on</th><th>Typical use</th></tr></thead><tbody><tr><td><code>ANY</code> (default)</td><td>Every node, busy or not</td><td>Catch problems even under running jobs</td></tr><tr><td><code>IDLE</code></td><td>Idle nodes (drained-and-idle included)</td><td>Jitter-sensitive sites</td></tr><tr><td><code>NONDRAINED_IDLE</code> (23.02+)</td><td>Idle nodes that are <strong>not</strong> drained</td><td>See the warning below</td></tr><tr><td><code>ALLOC</code> / <code>MIXED</code></td><td>Fully / partially allocated nodes</td><td>Rare on their own; combine with others</td></tr><tr><td><code>CYCLE</code></td><td>Combine with the above: spreads runs across the interval instead of all at once</td><td>Big clusters, shared filesystems</td></tr><tr><td><code>START_ONLY</code></td><td>Only when <code>slurmd</code> starts</td><td>Boot-time validation only</td></tr><tr><td><code>REBOOT_ONLY</code></td><td>Only when <code>slurmd</code> reports back after a reboot</td><td>Post-reboot validation only</td></tr></tbody></table>
+<p><code>START_ONLY</code> and <code>REBOOT_ONLY</code> can&#x27;t be combined with anything else.</p>
+<blockquote><p>[!WARNING] <strong>`NONDRAINED_IDLE` breaks NHC&#x27;s auto-resume.</strong> NHC brings a node back by passing a later check, but this state means drained nodes are never checked again. Every NHC drain becomes a manual resume. That can be exactly what you want (human eyes on every failure) but choose it on purpose.</p></blockquote>
+<p>Why <code>CYCLE</code>? Without it, all 2,000 nodes run NHC in the same second. If your checks touch NFS or Lustre (stat a file, <code>df</code> a mount), that&#x27;s a synchronized thundering herd against your metadata server every five minutes. <code>CYCLE</code> staggers them.</p>
+<hr>
+<h2>Timeouts: make sure the bouncer isn&#x27;t shot mid-sentence</h2>
+<p>There are two clocks, and they need to agree:</p>
+<table><thead><tr><th>Clock</th><th>Default</th><th>Who sets it</th></tr></thead><tbody><tr><td>NHC watchdog <code>TIMEOUT</code></td><td><strong>30 s</strong></td><td><code>/etc/sysconfig/nhc</code> or <code>-t</code></td></tr><tr><td>Slurm kills the program</td><td><strong>60 s</strong> (<code>HealthCheckTimeout</code> on recent Slurm, max 65535)</td><td><code>slurm.conf</code></td></tr></tbody></table>
+<p>Rule: <strong>NHC&#x27;s timeout must be shorter than Slurm&#x27;s.</strong> When NHC&#x27;s watchdog fires, NHC reports a clean &quot;timed out&quot; failure and drains with a reason. When Slurm&#x27;s fires first, NHC just dies silently, nothing gets drained, and you learn nothing.</p>
+<p>What if your checks genuinely need minutes (GPU stress, bandwidth tests)? Don&#x27;t stretch the periodic timeout. Pick one:</p>
+<ol><li><strong>Move them</strong> to a deep context run from cron or by your remediation loop (<a href="../../../../../fields/system-administration/node-health-check/checks-and-remediation/auto-remediation/">part 7</a>).</li><li><strong>Detached mode</strong> (<code>DETACHED_MODE=1</code> in sysconfig): NHC forks, returns <em>the previous run&#x27;s</em> result immediately, and runs the checks in the background. <code>slurmd</code> never blocks. The catch: a fresh failure is only acted on at the <strong>next</strong> run, so a job can land on a node that broke five minutes ago.</li></ol>
+<blockquote><p>[!NOTE] On your Slurm version, <code>man slurm.conf</code> is the truth: older releases have a fixed 60-second kill and no <code>HealthCheckTimeout</code> knob.</p></blockquote>
+<hr>
+<h2>Life of a failure, end to end</h2>
+<p>Let&#x27;s break <code>cn042</code> on purpose (on a test node, please):</p>
+<pre><code class="language-bash"># on cn042
+umount -l /scratch</code></pre>
+<p>Within one <code>HealthCheckInterval</code>, <code>slurmd</code> runs NHC, <code>check_fs_mount_rw</code> fails, and the offline helper runs the equivalent of:</p>
+<pre><code class="language-bash">scontrol update NodeName=cn042 State=DRAIN Reason=&quot;NHC: check_fs_mount:  /scratch not mounted&quot;</code></pre>
+<p>From the controller (the exact wording depends on the check and NHC version):</p>
+<pre><code class="language-text">$ sinfo -R -n cn042
+REASON                                       USER  TIMESTAMP            NODELIST
+NHC: check_fs_mount:  /scratch not mounted   root  2026-10-28T10:05:12  cn042</code></pre>
+<p>Running jobs keep running (the node is DRAINING, then DRAINED). No new jobs land. Now fix it:</p>
+<pre><code class="language-bash">mount /scratch</code></pre>
+<p>Next run, every check passes, the online helper sees a reason starting with <code>NHC:</code>, and resumes the node. Zero humans paged. That&#x27;s the whole point.</p>
+<hr>
+<h2>Draining etiquette for humans</h2>
+<p>Because of the <code>NHC:</code> handshake from <a href="../../../../../fields/system-administration/node-health-check/getting-started/why-node-health-check/">part 1</a>:</p>
+<pre><code class="language-bash"># ✅ Good: a reason that isn&#x27;t NHC&#x27;s. NHC will never resume this node.
+scontrol update nodename=cn042 state=drain reason=&quot;ahmed: BIOS update, ticket 4711&quot;
+
+# ❌ Bad: no reason. NHC won&#x27;t touch it, and in six weeks nobody remembers why.
+scontrol update nodename=cn042 state=drain
+
+# 🧠 Pro move: claim an NHC-drained node to stop it auto-resuming while you dig
+scontrol update nodename=cn042 reason=&quot;ahmed: investigating flaky lustre&quot;</code></pre>
+<p>Two more NHC 1.5 behaviors worth knowing:</p>
+<ul><li>Nodes in Slurm&#x27;s <strong>`MAINT`</strong> state are never resumed by NHC (Slurm rejects that transition anyway).</li><li>Run with <code>-p</code> and NHC marks failures as <strong>permanent</strong>: the reason gets a <code>(perm)</code> tag and NHC won&#x27;t resume it, ever. Good for hardware classes where any failure means an RMA.</li></ul>
+<hr>
+<h2>Boot and reboot: the sneaky part</h2>
+<p><code>slurmd</code> runs the health check <strong>when it starts, before it registers with the controller</strong>. A failing check at boot means the node doesn&#x27;t register as healthy. That&#x27;s great when the check is right and baffling when your config is wrong (see <a href="../../../../../fields/system-administration/node-health-check/checks-and-remediation/troubleshooting/">troubleshooting</a>).</p>
+<p>Reboots via <code>scontrol reboot</code> used to be a mess: Slurm clears the DRAIN flag when a node comes back from an <code>ASAP</code> reboot, which could wipe out what the health check had decided. NHC 1.5 merged a set of fixes for this (<a href="https://github.com/mej/nhc/pull/115">PR #115</a> by Trey Dockendorf). After a plain <code>scontrol reboot</code>, the helper keeps the node drained until NHC itself onlines it, and it no longer fights the <code>Reboot ASAP</code> reason. If you reboot nodes from automation, <strong>run 1.5</strong>.</p>
+<hr>
+<h2>Prolog and Epilog: checks at job boundaries</h2>
+<p>The periodic check has a blind spot: the five minutes between runs. Job boundaries close it.</p>
+<p><strong>Epilog: &quot;did that job break the node?&quot;</strong> Jobs leave <code>/tmp</code> full, orphan processes behind, or trigger GPU errors. A short epilog check catches it before the next job lands:</p>
+<pre><code class="language-bash">#!/bin/bash
+# /etc/slurm/epilog.d/50-nhc.sh  (slurm.conf: Epilog=/etc/slurm/epilog.d/*)
+# NHC drains with a clear &quot;NHC:&quot; reason on failure. We exit 0 on purpose,
+# so Slurm doesn&#x27;t ALSO drain the node with a vaguer &quot;Epilog error&quot; reason.
+/usr/sbin/nhc -n nhc-epilog -t 20 || true
+exit 0</code></pre>
+<p><strong>Prolog: &quot;is it safe to start?&quot;</strong> Here you <em>want</em> a non-zero exit. When a prolog fails, Slurm drains the node and requeues the job instead of letting it die:</p>
+<pre><code class="language-bash">#!/bin/bash
+# /etc/slurm/prolog.d/50-nhc.sh
+exec /usr/sbin/nhc -n nhc-prolog -t 15</code></pre>
+<blockquote><p>[!CAUTION] Every second in the prolog/epilog is a second added to <strong>every</strong> job. A 30-second epilog on a cluster doing 100,000 short jobs a day burns 830 node-hours of idle time. Keep these contexts tiny: mounts, GPU count, a <code>dmesg</code> Xid grep, done.</p></blockquote>
+<hr>
+<h2>Not on Slurm? PBS, Grid Engine, cron, Kubernetes</h2>
+<p><strong>PBS / TORQUE</strong> (<code>mom_priv/config</code> on each MOM):</p>
+<pre><code class="language-text">$node_check_script /usr/sbin/nhc
+$node_check_interval 5,jobstart,jobend
+$down_on_error 1</code></pre>
+<p>That runs every 5 MOM intervals plus at job start and end. For NHC to offline nodes with notes, the nodes need operator rights: <code>qmgr -c &quot;set server operators += root@*&quot;</code>. The <code>NHC:</code> note rule works the same as in Slurm.</p>
+<p><strong>Grid Engine family</strong>: follow Dave Love&#x27;s <a href="https://arc.liv.ac.uk/SGE/howto/nhc-recipe.html">SGE NHC recipe</a>, which upstream points to.</p>
+<p><strong>LSF</strong>: supported (&quot;sorta&quot;, in upstream&#x27;s own words) via <code>badmin hclose</code>/<code>hopen</code>.</p>
+<p><strong>Plain cron</strong>, for servers with no scheduler (storage nodes, login nodes), use <code>nhc-wrapper</code>. It de-duplicates results, so you get one e-mail when a problem appears, one when it clears, and a reminder while it persists:</p>
+<pre><code class="language-bash"># /etc/cron.d/nhc
+*/5 * * * * root /usr/sbin/nhc-wrapper -M ops@example.org -X 12h -n nhc-oob</code></pre>
+<p><strong>Kubernetes</strong>: NHC 1.5 ships <code>check_kube*</code> checks, and Azure documents a pattern that runs AzNHC in an init container and <strong>taints</strong> the node (<code>NoExecute</code>) on failure, the k8s equivalent of a drain.</p>
+<p>Next up: getting this onto hundreds of nodes without draining all of them on the first run, in <a href="../../../../../fields/system-administration/node-health-check/getting-started/rollout-at-scale/">part 5</a>.</p>
+<blockquote><p><strong>Takeaway:</strong> three <code>slurm.conf</code> lines plus <code>NHC_RM=slurm</code>; keep NHC&#x27;s timeout under Slurm&#x27;s; use <code>CYCLE</code> on big clusters; never drain without a reason; run 1.5 if you reboot nodes from automation.</p></blockquote>
+<h3>References</h3>
+<ul><li><a href="https://slurm.schedmd.com/slurm.conf.html#OPT_HealthCheckProgram"><code>slurm.conf</code>: HealthCheckProgram / Interval / NodeState / Timeout</a></li><li><a href="https://github.com/mej/nhc#implementation">NHC README: Slurm, TORQUE, Grid Engine integration, periodic execution, detached mode</a></li><li><a href="https://github.com/mej/nhc/releases/tag/1.5">NHC 1.5 release notes (Slurm reboot handling, MAINT, <code>-p</code>)</a></li><li><a href="https://slurm.schedmd.com/prolog_epilog.html">Slurm: Prolog and Epilog guide</a></li><li><a href="https://techcommunity.microsoft.com/blog/azurehighperformancecomputingblog/pre-job-health-checks-on-aks-a-guide-to-stable-ai-workloads/4195962">Azure: Pre-job health checks on AKS</a></li></ul>
+<p><a href="../../../../../#/fields/system-administration/node-health-check/getting-started/slurm-integration">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

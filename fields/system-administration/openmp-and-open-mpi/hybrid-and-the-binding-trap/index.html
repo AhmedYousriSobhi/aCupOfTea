@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Kitchens With Cooks: Hybrid MPI+OpenMP and the Binding Trap</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/openmp-and-open-mpi/hybrid-and-the-binding-trap/">
+<meta name="description" content="Why big jobs use MPI across nodes and OpenMP inside them, and the default - Open MPI pinning each rank to one core - that makes your threads queue on a single CPU. Tested, with the fix.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Kitchens With Cooks: Hybrid MPI+OpenMP and the Binding Trap">
+<meta property="og:description" content="Why big jobs use MPI across nodes and OpenMP inside them, and the default - Open MPI pinning each rank to one core - that makes your threads queue on a single CPU. Tested, with the fix.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/openmp-and-open-mpi/hybrid-and-the-binding-trap/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/openmp-and-open-mpi/hybrid-and-the-binding-trap/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/system-administration/openmp-and-open-mpi/hybrid-and-the-binding-trap"></script>
+<main>
+<h1>Kitchens With Cooks: Hybrid MPI+OpenMP and the Binding Trap</h1>
+<p><em>Why big jobs use MPI across nodes and OpenMP inside them, and the default - Open MPI pinning each rank to one core - that makes your threads queue on a single CPU. Tested, with the fix.</em></p>
+<blockquote><p><strong>Part 5 of 8.</strong> By the end you&#x27;ll know why the two models are combined, what &quot;binding&quot; means, how to see it, and the one-line fix for the most common hybrid mistake.</p></blockquote>
+<p>The scene: you reserve a nice 4-core node, start 2 ranks with 4 threads each, and the job runs. No error. No warning. It is just a bit slow, and slow is the one thing a cluster never complains about. Meanwhile half your cores are doing a very good impression of a break room.</p>
+<h2>Contents</h2>
+<hr>
+<h2>Why combine them</h2>
+<p>Back to the kitchens (part 1). A real cluster is many machines (kitchens), each with many cores (cooks).</p>
+<ul><li><strong>All MPI</strong> means one rank per core. It works, but every cook has private ingredients and every shared fact must be sent as a message. Memory gets copied and message counts grow.</li><li><strong>All OpenMP</strong> is impossible past one machine.</li><li><strong>Hybrid</strong> puts one rank per machine (or per socket) and OpenMP threads across the cores that rank owns. Fewer messages, shared data inside each kitchen, MPI only between kitchens.</li></ul>
+<p>Hybrid is not always faster. It is one more thing to get right, and the thing most people get wrong is <strong>binding</strong>.</p>
+<blockquote><p>[!NOTE] Written against Ubuntu 26.04.1 (Linux 7.0), gcc 15.2.0, Open MPI 5.0.10, in a throwaway VM with 1 socket and 4 cores. Binding defaults come from the Open MPI 5.0.x manual and may differ in other versions.</p></blockquote>
+<hr>
+<h2>Binding in one paragraph</h2>
+<p><strong>Binding</strong> (also called pinning or affinity) tells the operating system &quot;this process may only run on these CPUs&quot;. Open MPI binds each rank by default, so ranks don&#x27;t wander between cores. Good for MPI. But a rank&#x27;s OpenMP threads inherit its allowed CPUs, so if a rank is bound to <strong>one</strong> core, all its threads share <strong>one</strong> core.</p>
+<p>Open MPI&#x27;s defaults, from its <a href="https://docs.open-mpi.org/en/v5.0.x/man-openmpi/man1/mpirun.1.html">mpirun manual</a>:</p>
+<table><thead><tr><th>Number of processes</th><th>Default binding</th></tr></thead><tbody><tr><td>2 or fewer</td><td>to a <strong>core</strong></td></tr><tr><td>more than 2</td><td>to a <strong>package</strong> (a socket)</td></tr><tr><td>oversubscribed</td><td>no binding</td></tr></tbody></table>
+<p>So the trap bites hardest on small test runs of one or two ranks, which is exactly what you do while debugging.</p>
+<hr>
+<h2>The trap, caught on camera</h2>
+<p>A hybrid hello. Each thread reports the CPU it is on, and each rank reports how many CPUs it is allowed to use (<code>sched_getaffinity</code>):</p>
+<pre><code class="language-c">#define _GNU_SOURCE
+#include &lt;mpi.h&gt;
+#include &lt;omp.h&gt;
+#include &lt;sched.h&gt;
+#include &lt;stdio.h&gt;
+int main(int argc, char **argv) {
+    int provided;
+    MPI_Init_thread(&amp;argc, &amp;argv, MPI_THREAD_FUNNELED, &amp;provided);  /* MPI + threads: only the main thread calls MPI */
+    int rank; MPI_Comm_rank(MPI_COMM_WORLD, &amp;rank);
+    cpu_set_t set; sched_getaffinity(0, sizeof set, &amp;set);          /* which CPUs may this rank use? (the binding) */
+    if (rank == 0) printf(&quot;provided=%d (FUNNELED=%d)\n&quot;, provided, MPI_THREAD_FUNNELED);
+    #pragma omp parallel                       /* each rank forks its own team of threads */
+    {
+        #pragma omp critical
+        printf(&quot;rank %d thread %d/%d on cpu %d, rank may use %d cpus\n&quot;, rank,
+               omp_get_thread_num(), omp_get_num_threads(), sched_getcpu(), CPU_COUNT(&amp;set));   /* the CPU I&#x27;m on now; how many my rank may use */
+    }
+    MPI_Finalize();
+    return 0;
+}</code></pre>
+<pre><code class="language-bash">mpicc -O2 -fopenmp hybrid.c -o hybrid
+OMP_NUM_THREADS=4 mpirun -np 2 ./hybrid       # 2 ranks x 4 threads on a 4-CPU machine</code></pre>
+<pre><code class="language-text">provided=1 (FUNNELED=1)
+rank 0 thread 3/4 on cpu 0, rank may use 1 cpus
+rank 0 thread 1/4 on cpu 0, rank may use 1 cpus
+rank 0 thread 2/4 on cpu 0, rank may use 1 cpus
+rank 0 thread 0/4 on cpu 0, rank may use 1 cpus
+rank 1 thread 3/4 on cpu 1, rank may use 1 cpus
+rank 1 thread 1/4 on cpu 1, rank may use 1 cpus
+rank 1 thread 2/4 on cpu 1, rank may use 1 cpus
+rank 1 thread 0/4 on cpu 1, rank may use 1 cpus</code></pre>
+<pre><code class="language-mermaid">flowchart LR
+    subgraph D[&quot;Default: 2 ranks x 4 threads&quot;]
+        direction TB
+        r0[&quot;rank 0&lt;br/&gt;4 threads&quot;] --&gt; c0[&quot;cpu 0&lt;br/&gt;4 threads queue here&quot;]
+        r1[&quot;rank 1&lt;br/&gt;4 threads&quot;] --&gt; c1[&quot;cpu 1&lt;br/&gt;4 threads queue here&quot;]
+        c2[&quot;cpu 2: idle&quot;]
+        c3[&quot;cpu 3: idle&quot;]
+    end</code></pre>
+<p>Read the last column: <strong>&quot;rank may use 1 cpus&quot;</strong>. Four threads per rank, all on cpu 0 (rank 0) or cpu 1 (rank 1). Four chefs, one stove burner, and two other stoves sitting cold. The program runs without a single error message. This is the whole trap.</p>
+<p>You can also see the pinning without writing code, through <code>--report-bindings</code> on the plain MPI hello:</p>
+<pre><code class="language-text">[twins:04434] Rank 0 bound to package[0][core:L0]
+[twins:04434] Rank 1 bound to package[0][core:L1]</code></pre>
+<p>Each rank bound to one core (<code>core:L0</code>, <code>core:L1</code>).</p>
+<p>Four threads, two ranks, and &quot;rank may use 1 cpus&quot;. So how do you get the second CPU?</p>
+<hr>
+<h2>Try it before you scroll</h2>
+<p>☕ Ten seconds. Each rank is allowed one CPU and needs two. What would you tell <code>mpirun</code> to change?</p>
+<p>Hint: the manual describes a qualifier that means &quot;reserve n CPUs for each process&quot;. Its name is a pair of letters.</p>
+<hr>
+<h2>The fix</h2>
+<p>The answer is <code>PE</code>. Tell Open MPI to give each rank as many CPUs as it has threads:</p>
+<pre><code class="language-bash">OMP_NUM_THREADS=2 mpirun -np 2 --map-by slot:PE=2 --bind-to core ./hybrid</code></pre>
+<p><code>PE=2</code> (&quot;processing elements&quot;) means &quot;reserve 2 CPUs per rank&quot;. The manual describes it as binding n CPUs to each process.</p>
+<pre><code class="language-text">provided=1 (FUNNELED=1)
+rank 1 thread 0/2 on cpu 2, rank may use 2 cpus
+rank 1 thread 1/2 on cpu 3, rank may use 2 cpus
+rank 0 thread 0/2 on cpu 0, rank may use 2 cpus
+rank 0 thread 1/2 on cpu 1, rank may use 2 cpus</code></pre>
+<pre><code class="language-mermaid">flowchart LR
+    subgraph F[&quot;Fixed: 2 ranks x 2 threads, PE=2&quot;]
+        direction TB
+        s0[&quot;rank 0&lt;br/&gt;2 threads&quot;] --&gt; d0[&quot;cpu 0&quot;]
+        s0 --&gt; d1[&quot;cpu 1&quot;]
+        s1[&quot;rank 1&lt;br/&gt;2 threads&quot;] --&gt; d2[&quot;cpu 2&quot;]
+        s1 --&gt; d3[&quot;cpu 3&quot;]
+    end</code></pre>
+<p>Now the output reads &quot;may use 2 cpus&quot;, and the four threads sit on four different CPUs (0, 1, 2, 3). The rule of thumb:</p>
+<blockquote><p><strong>ranks × threads per rank = cores you reserved, and each rank&#x27;s binding must hold its threads.</strong></p></blockquote>
+<p>Fixed on paper. But does it matter in practice, or is this a purist&#x27;s complaint? Let&#x27;s put a stopwatch on it.</p>
+<hr>
+<h2>Proof it matters</h2>
+<p>A busy loop of 400 million iterations, 2 ranks × 2 threads. This is a demonstration of the effect, not a benchmark: the machine is a small VM and the loop is trivial.</p>
+<table><thead><tr><th>Launch</th><th>Time per rank</th></tr></thead><tbody><tr><td>default binding (1 core per rank)</td><td>0.38 s and 0.41 s in two runs</td></tr><tr><td><code>--map-by slot:PE=2 --bind-to core</code></td><td>0.19 s</td></tr><tr><td><code>--bind-to none</code></td><td>0.19 s</td></tr></tbody></table>
+<p>Same work, same threads, <strong>twice as long</strong> under the default, because two threads shared one core. Same chefs, same recipe, half the stove. <code>--bind-to none</code> also recovered the time, but it lets the operating system move processes around, and on real multi-socket nodes you usually want the explicit binding.</p>
+<hr>
+<h2>A surprise on the way</h2>
+<p>My first attempt at the <code>PE=2</code> run <strong>failed</strong> (of course it did) with exit code 213. The error text was hidden behind the missing-help-file message (part 3), and only its topic name survived: <code>span-packages-multiple</code>. That first VM had libvirt&#x27;s default CPU layout, which I did not record. I changed the VM to present <strong>1 socket with 4 cores</strong> and the same command worked. My reading, from the topic name only: Open MPI would not give a rank two CPUs that straddle two sockets. Treat that as a guess, but the lesson is real: <strong>on a VM whose CPU layout is odd, binding can fail where bare metal works</strong>, so check <code>lscpu</code> first.</p>
+<p>I also found <code>--report-bindings</code> working on 5.0.10, although the manual lists it as deprecated in favour of <code>--display bindings</code>. I ran the latter once and saw no binding lines in that run, and did not investigate further.</p>
+<hr>
+<h2>The safe path</h2>
+<ol><li><strong>Dry run.</strong> Start tiny: 2 ranks, 2 threads, <code>--report-bindings</code>, and a program that prints how many CPUs each rank may use (the <code>hybrid.c</code> above).</li><li><strong>Check the numbers.</strong> &quot;may use N cpus&quot; must be at least your thread count, and the CPUs should differ between ranks.</li><li><strong>Canary.</strong> Run the real program on one node for a minute, watch <code>top -H</code> or your monitoring, and confirm every core you reserved is busy.</li><li><strong>Scale up.</strong> Only then run across nodes.</li><li><strong>Rollback.</strong> If binding misbehaves, <code>--bind-to none</code> is the escape hatch. It works, but check the thread placement afterwards.</li></ol>
+<p>OpenMP has its own placement controls (<code>OMP_PLACES</code>, <code>OMP_PROC_BIND</code>). I did not test them here. Binding that MPI sets first limits what OpenMP can choose from, which is why this page starts with the MPI side.</p>
+<p><strong>Takeaway:</strong> In a hybrid job, check &quot;rank may use N cpus&quot; before you trust any timing, because the default can quietly give every rank one core.</p>
+<p>One last question. Both standards just shipped a big new version, OpenMP 6.0 and MPI 5.0. Do you have to rewrite everything you&#x27;ve seen in this series? Two Monday tickets say otherwise, in <a href="../../../../fields/system-administration/openmp-and-open-mpi/where-they-are-going/">part 6</a>.</p>
+<hr>
+<h2>References</h2>
+<ul><li><a href="https://docs.open-mpi.org/en/v5.0.x/man-openmpi/man1/mpirun.1.html">Open MPI mpirun manual, v5.0.x: default binding, <code>--map-by</code>, <code>PE=n</code>, <code>--bind-to</code></a></li><li><a href="https://www.mpi-forum.org/docs/">MPI standard: MPI_Init_thread and thread levels</a></li><li><a href="../../../../fields/benchmarks/parallel-execution-affinity-master-guide/">Parallel Execution and Affinity (this repo): the wider affinity picture, Slurm and NUMA</a></li><li>Every output block on this page: Ubuntu 26.04.1, Linux 7.0, gcc 15.2.0, Open MPI 5.0.10, 1 socket × 4 cores.</li></ul>
+<p><a href="../../../../#/fields/system-administration/openmp-and-open-mpi/hybrid-and-the-binding-trap">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

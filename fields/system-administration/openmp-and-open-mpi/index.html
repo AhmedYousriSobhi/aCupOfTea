@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>OpenMP and Open MPI - Overview</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/openmp-and-open-mpi/">
+<meta name="description" content="An eight-part series that untangles OpenMP, MPI and Open MPI - what each is, where they came from, how to read their code, how to combine them and how Slurm and Kubernetes run them.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="OpenMP and Open MPI - Overview">
+<meta property="og:description" content="An eight-part series that untangles OpenMP, MPI and Open MPI - what each is, where they came from, how to read their code, how to combine them and how Slurm and Kubernetes run them.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/openmp-and-open-mpi/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/openmp-and-open-mpi/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../.docs/prerender-redirect.js" data-target="../../../#/fields/system-administration/openmp-and-open-mpi/"></script>
+<main>
+<h1>OpenMP and Open MPI - Overview</h1>
+<p><em>An eight-part series that untangles OpenMP, MPI and Open MPI - what each is, where they came from, how to read their code, how to combine them and how Slurm and Kubernetes run them.</em></p>
+<blockquote><p>An eight-part series for anyone whose brain blue-screens when two names differ by one space. By the end you&#x27;ll know what each name means, why they exist, how to spot their code at a glance, and how the two end up in the same job script, arguing over the same CPU, and who starts them on Slurm and Kubernetes.</p></blockquote>
+<p>The cast, so you can keep score: <strong>OpenMP</strong> is one kitchen with several chefs sharing a counter. <strong>MPI</strong> is the rulebook for kitchens that pass notes through a delivery window. <strong>Open MPI</strong> is one courier company that follows that rulebook. Nobody here is a twin. Several of them are, however, very good at stepping on each other&#x27;s toes.</p>
+<h2>The route</h2>
+<table><thead><tr><th>#</th><th>Page</th><th>The question it answers</th></tr></thead><tbody><tr><td>1</td><td><a href="../../../fields/system-administration/openmp-and-open-mpi/the-name-mixup/">Not twins, not even cousins</a></td><td>Are OpenMP and Open MPI twins? What is MPI, then?</td></tr><tr><td>2</td><td><a href="../../../fields/system-administration/openmp-and-open-mpi/where-they-came-from/">Where they came from</a></td><td>Why do two parallel standards exist, and who wrote each?</td></tr><tr><td>3</td><td><a href="../../../fields/system-administration/openmp-and-open-mpi/threads-and-ranks/">Threads and ranks</a></td><td>What does each style look like when it runs, and what bug does each invite?</td></tr><tr><td>4</td><td><a href="../../../fields/system-administration/openmp-and-open-mpi/spotting-openmp-and-mpi-code/">Spotting the code</a></td><td>How do I tell OpenMP, MPI or both from the source, the build and the job script?</td></tr><tr><td>5</td><td><a href="../../../fields/system-administration/openmp-and-open-mpi/hybrid-and-the-binding-trap/">Hybrid and the binding trap</a></td><td>Why does mixing them silently halve my speed, and how do I fix it?</td></tr><tr><td>6</td><td><a href="../../../fields/system-administration/openmp-and-open-mpi/where-they-are-going/">Where they&#x27;re going</a></td><td>What did OpenMP 6.0 and MPI 5.0 add, and what never changes?</td></tr><tr><td>7</td><td><a href="../../../fields/system-administration/openmp-and-open-mpi/mpi-and-openmp-under-slurm/">Under Slurm</a></td><td>Who starts the ranks on a cluster, and which job-script lines decide the binding trap?</td></tr><tr><td>8</td><td><a href="../../../fields/system-administration/openmp-and-open-mpi/mpi-and-openmp-on-kubernetes/">On Kubernetes</a></td><td>How does an MPIJob give mpirun its address book, and which three numbers must agree?</td></tr></tbody></table>
+<p>Each page ends with the question the next one answers. The story: <strong>name the things (1, 2), see them run (3), recognize them anywhere (4), combine them safely (5), know what is stable (6), and run it on Slurm (7) and Kubernetes (8)</strong>.</p>
+<h2>Versions</h2>
+<p>Parts 1 to 6 ran on Ubuntu 26.04.1 (Linux 7.0), gcc 15.2.0 and Open MPI 5.0.10 in a throwaway 4-CPU VM, destroyed afterwards. Ubuntu 22.04 and Open MPI 4.x were not tested; where a page leans on older behaviour it says so. Parts 7 and 8 were <strong>not run</strong>: they are written from the Slurm, Kubernetes, MPI Operator and Open MPI documentation (Slurm 26.05 docs, MPI Operator v2beta1) and say so on the page. The history and version facts come from the OpenMP and MPI Forum sites linked at the end of each page.</p>
+<h2>Contents</h2>
+<table><thead><tr><th>File</th><th>Description</th></tr></thead><tbody><tr><td><a href="../../../fields/system-administration/openmp-and-open-mpi/the-name-mixup/">the-name-mixup</a></td><td>Not twins, not even cousins: what OpenMP, MPI and Open MPI each are</td></tr><tr><td><a href="../../../fields/system-administration/openmp-and-open-mpi/where-they-came-from/">where-they-came-from</a></td><td>The 1990s story behind both standards and Open MPI&#x27;s ancestors</td></tr><tr><td><a href="../../../fields/system-administration/openmp-and-open-mpi/threads-and-ranks/">threads-and-ranks</a></td><td>Threads vs ranks with tested hello programs, a data race and a reduction</td></tr><tr><td><a href="../../../fields/system-administration/openmp-and-open-mpi/spotting-openmp-and-mpi-code/">spotting-openmp-and-mpi-code</a></td><td>Recognizing OpenMP, MPI or hybrid in source, builds and job scripts</td></tr><tr><td><a href="../../../fields/system-administration/openmp-and-open-mpi/hybrid-and-the-binding-trap/">hybrid-and-the-binding-trap</a></td><td>Hybrid MPI+OpenMP and the default binding that halves your speed</td></tr><tr><td><a href="../../../fields/system-administration/openmp-and-open-mpi/where-they-are-going/">where-they-are-going</a></td><td>OpenMP 6.0, MPI 5.0 and Open MPI today, and what stays stable</td></tr><tr><td><a href="../../../fields/system-administration/openmp-and-open-mpi/mpi-and-openmp-under-slurm/">mpi-and-openmp-under-slurm</a></td><td>How Slurm launches ranks, PMIx as the address book, ntasks and cpus-per-task</td></tr><tr><td><a href="../../../fields/system-administration/openmp-and-open-mpi/mpi-and-openmp-on-kubernetes/">mpi-and-openmp-on-kubernetes</a></td><td>The MPI Operator: launcher, workers, headless Service, SSH and CPU numbers</td></tr></tbody></table>
+<p><a href="../../../#/fields/system-administration/openmp-and-open-mpi/">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

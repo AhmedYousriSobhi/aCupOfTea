@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>DevOps: Where Code Meets the Machines That Run It</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/">
+<meta name="description" content="The start of the DevOps section: which topics exist, which are still brewing, where related Slurm, Linux and container pages live, and how pages are written.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="DevOps: Where Code Meets the Machines That Run It">
+<meta property="og:description" content="The start of the DevOps section: which topics exist, which are still brewing, where related Slurm, Linux and container pages live, and how pages are written.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../.docs/prerender-redirect.js" data-target="../../#/fields/devops/"></script>
+<main>
+<h1>DevOps: Where Code Meets the Machines That Run It</h1>
+<p><em>The start of the DevOps section: which topics exist, which are still brewing, where related Slurm, Linux and container pages live, and how pages are written.</em></p>
+<p>Somewhere between &quot;it works on my laptop&quot; and &quot;it works for 4,000 users at 3 AM&quot; lives a whole discipline whose job is to make the second sentence true. This is the corner of the repo where we spill the tea on that discipline: clusters, containers, pipelines and the dashboards that tell you which of them is currently on fire.</p>
+<p>The focus is practical and HPC-flavoured. Examples lean on GPU clusters, Slurm-style thinking and real lab setups, because that is where most of these notes were born.</p>
+<hr>
+<h2>The menu</h2>
+<table><thead><tr><th>Section</th><th>What you&#x27;ll find</th><th>Best with</th></tr></thead><tbody><tr><td><a href="../../fields/devops/kubernetes/">Kubernetes</a></td><td>Core concepts, a two-node lab you can break on purpose, RBAC, monitoring, and what changes at HPC scale</td><td>A strong builder&#x27;s tea</td></tr><tr><td><a href="../../fields/devops/ansible/">Ansible</a></td><td>A six-part series for cluster admins: a pinned install, inventories, idempotent playbooks and handlers, roles, rolling Slurm maintenance with a canary, secrets with vault, and a cheatsheet</td><td>A long pot</td></tr><tr><td><a href="../../fields/devops/victoriametrics/">VictoriaMetrics</a></td><td>Why it exists, a locked-down single node, vmagent through outages, retention and tested backups, MetricsQL vs PromQL, alerts with tests that can fail, and a cheatsheet</td><td>A long pot</td></tr><tr><td>Observability</td><td>Prometheus, DCGM Exporter, Grafana, and the difference between &quot;allocated&quot; and &quot;utilized&quot;</td><td><em>Brewing</em></td></tr><tr><td>CI/CD</td><td>Pipelines that fail early and loudly, instead of late and quietly</td><td><em>Brewing</em></td></tr></tbody></table>
+<p>Sections marked <em>Brewing</em> are planned and have no pages yet.</p>
+<hr>
+<h2>Neighbours worth knowing</h2>
+<p>DevOps overlaps with a few folders that already exist. Those pages stay where they are; this section links to them instead of copying them.</p>
+<table><thead><tr><th>If you&#x27;re looking for...</th><th>Go to</th></tr></thead><tbody><tr><td>Slurm and other batch schedulers</td><td><a href="../../fields/schedulers/">schedulers</a></td></tr><tr><td>Linux administration and cluster plumbing</td><td><a href="../../fields/system-administration/">system-administration</a></td></tr><tr><td>Containers on HPC (Podman, Apptainer and friends)</td><td><a href="../../fields/libraries-frameworks-containers/">libraries-frameworks-containers</a></td></tr></tbody></table>
+<hr>
+<h2>How the pages are written</h2>
+<ul><li><strong>Short.</strong> One idea per page, finishable before the tea goes cold.</li><li><strong>Checked against the source.</strong> Claims about how Kubernetes behaves are verified against the official documentation, and each page lists its references at the bottom.</li><li><strong>Honest about limits.</strong> If something was only read and never run, the page says so.</li><li><strong>Tested where it says it was.</strong> Lab commands come from a real two-node k3s lab. Anything untested is marked.</li></ul>
+<p><a href="../../#/fields/devops/">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

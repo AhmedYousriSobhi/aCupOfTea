@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Draining a GPU Node With a Three-Day Run on It</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/kubernetes/draining-a-gpu-node/">
+<meta name="description" content="Why kubectl drain means the opposite of Slurm&#x27;s drain, how the SIGTERM-to-SIGKILL clock works, five ways a long training run dies anyway, and a runbook that keeps the checkpoint.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Draining a GPU Node With a Three-Day Run on It">
+<meta property="og:description" content="Why kubectl drain means the opposite of Slurm&#x27;s drain, how the SIGTERM-to-SIGKILL clock works, five ways a long training run dies anyway, and a runbook that keeps the checkpoint.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/kubernetes/draining-a-gpu-node/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/kubernetes/draining-a-gpu-node/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/devops/kubernetes/draining-a-gpu-node"></script>
+<main>
+<h1>Draining a GPU Node With a Three-Day Run on It</h1>
+<p><em>Why kubectl drain means the opposite of Slurm&#x27;s drain, how the SIGTERM-to-SIGKILL clock works, five ways a long training run dies anyway, and a runbook that keeps the checkpoint.</em></p>
+<blockquote><p><strong>Page 9 of the [Kubernetes series](/fields/devops/kubernetes/README.md).</strong> One word means two opposite things in Slurm and Kubernetes, and a three-day training run pays for the difference. By the end you&#x27;ll know which command is the polite one, what the termination clock does to your checkpoint, and how to set up a run that survives maintenance night. Written against Kubernetes 1.31 and later. The story is invented; <strong>nothing here was run on a live cluster</strong>. Claims trace to the docs in the references, and the commands and YAML follow the patterns those docs show. The Python sketch is mine, not the docs&#x27;.</p></blockquote>
+<h2>Table of Contents</h2>
+<p>Two tickets · The hotel · The night manager · The packing clock · Five ways · The refusing guest · Maintenance night · Back to the tickets</p>
+<ul><li>* *</li></ul>
+<h2>Two tickets, one word</h2>
+<p>Tuesday, two tickets land in the platform team&#x27;s queue.</p>
+<p><strong>Ticket 1</strong> (from a Slurm cluster): <em>&quot;I drained `gpu-09` for a firmware update. My job on it is still running. Is drain broken?&quot;</em></p>
+<p><strong>Ticket 2</strong> (from the new Kubernetes cluster): <em>&quot;I drained `gpu-17` for a firmware update. My three-day training run is gone, and so is the checkpoint I was counting on.&quot;</em></p>
+<p>Sana, who ran Slurm for six years and joined the Kubernetes team last month, reads both. Ticket 1 is a customer who expected <code>drain</code> to evict. Ticket 2 is Sana, three hours ago, who expected it not to.</p>
+<p>Same word. Opposite behavior. To see why, think of the node as a hotel.</p>
+<ul><li>* *</li></ul>
+<h2>The hotel with two signs</h2>
+<p>In Slurm, <strong>drain</strong> hangs a <em>No Vacancy</em> sign: guests already inside stay until they check out, and nobody new gets a room. In Kubernetes, there are two signs, and they have different names:</p>
+<table><thead><tr><th>You want</th><th>Slurm</th><th>Kubernetes</th></tr></thead><tbody><tr><td>No new guests, current guests stay</td><td><code>State=DRAIN</code></td><td><strong>`kubectl cordon`</strong></td></tr><tr><td>No new guests, and current guests leave</td><td>cancel the jobs</td><td><strong>`kubectl drain`</strong></td></tr><tr><td>Reopen the hotel</td><td><code>State=RESUME</code></td><td><code>kubectl uncordon</code></td></tr></tbody></table>
+<p>The <code>kubectl drain</code> reference says it plainly: the node is marked unschedulable &quot;to prevent new pods from arriving&quot;, and then <code>drain</code> evicts what is there. Cordon is the first half of drain. <strong>Slurm&#x27;s drain is Kubernetes&#x27;s cordon.</strong> What <code>kubectl drain</code> adds is the night manager knocking on every door.</p>
+<p>One caveat from the drain task page: pods that tolerate the <code>node.kubernetes.io/unschedulable</code> taint can still land on a cordoned node, so <em>No Vacancy</em> has exceptions.</p>
+<p>☕ <strong>Try it before you scroll.</strong> Sana wants the run to finish on its own, with <code>gpu-17</code> empty by Friday. Which command does she run tonight? <em>(Hint: which sign did she actually want?)</em></p>
+<p><code>kubectl cordon gpu-17</code>, then wait. But some night she will need the room back, and the manager will have to knock. What exactly does he do?</p>
+<ul><li>* *</li></ul>
+<h2>What the night manager does</h2>
+<p>Per the <code>kubectl drain</code> reference, the manager evicts every guest through the Eviction API, which respects PodDisruptionBudgets. He never touches the staff (DaemonSet pods) and refuses to start unless you say <code>--ignore-daemonsets</code>, which on a GPU node is always, because the device plugin is a DaemonSet. He refuses guests with <code>emptyDir</code> luggage unless you pass <code>--delete-emptydir-data</code>. And he <strong>waits</strong>: &quot;You should not operate on the machine until the command completes.&quot;</p>
+<p>Two flags will matter in a minute:</p>
+<ul><li><code>--grace-period</code> defaults to <code>-1</code>, meaning &quot;use the pod&#x27;s own value&quot;. <strong>Any number you type overrides what the job&#x27;s author chose.</strong></li><li><code>--timeout</code> defaults to <code>0</code>, which means wait forever.</li></ul>
+<p>So the manager knocks. How long does the guest get to pack?</p>
+<ul><li>* *</li></ul>
+<h2>The packing clock</h2>
+<pre><code class="language-mermaid">flowchart LR
+    A[&quot;drain asks the&lt;br/&gt;Eviction API&quot;] --&gt; B{&quot;PDB allows it?&quot;}
+    B --&gt;|&quot;no: 429&quot;| A
+    B --&gt;|&quot;yes: 200&quot;| C[&quot;Pod gets a deletion&lt;br/&gt;timestamp, grace clock starts&quot;]
+    C --&gt; D[&quot;preStop hook&lt;br/&gt;runs, if any&quot;]
+    D --&gt; E[&quot;SIGTERM to PID 1&lt;br/&gt;of each container&quot;]
+    E --&gt; F{&quot;Exited before&lt;br/&gt;the clock ends?&quot;}
+    F --&gt;|yes| G[&quot;Pod removed&quot;]
+    F --&gt;|no| H[&quot;SIGKILL&lt;br/&gt;exit code 137&quot;]</code></pre>
+<p><em>The knock (SIGTERM) comes with a deadline. The lock change (SIGKILL) comes after it.</em></p>
+<p>The default clock, <code>terminationGracePeriodSeconds</code>, is <strong>30 seconds</strong>. Fine for a web server. Absurd for a trainer that needs minutes to write a checkpoint.</p>
+<p>The preStop hook and your shutdown run on the same clock. The pod lifecycle docs say a slow hook means you &quot;must modify <code>terminationGracePeriodSeconds</code>&quot;, and the kubelet grants only one 2-second extension. The docs never say &quot;one shared budget&quot; in a sentence; it follows from the flow, so budget as if it were.</p>
+<p>Exit codes tell the story afterward. By the usual 128 + signal convention, <strong>137</strong> is SIGKILL (the lock change) and <strong>143</strong> is a SIGTERM nobody caught.</p>
+<p>If that sounds like Slurm&#x27;s <a href="../../../../fields/schedulers/slurm-preemption/slurm-preemption-requeue-signals/"><code>KillWait</code></a>, it is: ask politely, wait a fixed time, kill. So how does a run still die even when the manager is polite?</p>
+<ul><li>* *</li></ul>
+<h2>Five ways the guest leaves without the suitcase</h2>
+<p><strong>1. Nobody answers the door.</strong> The knock goes to PID 1, and PID 1 is special. Per <code>pid_namespaces(7)</code>, <code>init</code> receives a signal from inside its namespace or from an ancestor only if it installed a handler for it. A trainer with no SIGTERM handler never hears the eviction. Only SIGKILL is forced through. The usual accomplice is <code>command: [&quot;sh&quot;, &quot;-c&quot;, &quot;python train.py&quot;]</code>: the shell is PID 1 and Python never hears the knock. Use the exec form (<code>[&quot;python&quot;, &quot;train.py&quot;]</code>) or <code>exec python train.py</code>. A sketch of the trainer side (my own illustration, not from the Kubernetes docs, and not run):</p>
+<pre><code class="language-python">import signal
+
+stop = False
+def on_sigterm(signum, frame):
+    global stop
+    stop = True                      # only set a flag: do NOT write the checkpoint in here
+
+signal.signal(signal.SIGTERM, on_sigterm)
+
+for step in range(start_step, total_steps):
+    train_one_step()
+    if stop:                         # the knock arrived: finish this step, then pack
+        save_checkpoint(step)        # to the PVC, not to emptyDir
+        raise SystemExit(0)
+    if step % 1000 == 0:
+        save_checkpoint(step)        # regular checkpoints: the SIGTERM one is the last chance</code></pre>
+<p><strong>2. Ten minutes to pack, thirty seconds on the clock.</strong> A checkpoint that takes minutes against a 30-second clock ends in SIGKILL mid-write: a half-file that looks like a checkpoint. Set <code>terminationGracePeriodSeconds</code> to your measured worst case plus margin. The sneaky version hides in a runbook: a copied <code>drain --grace-period=30</code> quietly throws away the number the author chose.</p>
+<p><strong>3. The suitcase stayed in the room.</strong> The <code>--delete-emptydir-data</code> error is a warning, not an obstacle, and adding the flag to silence it is the temptation. Anything on <code>emptyDir</code> or the container&#x27;s own filesystem dies with the pod. Checkpoints belong on a PersistentVolumeClaim, and the trainer must look there at startup.</p>
+<p><strong>4. The hotel bans the guest after a few evictions.</strong> A Job gives up after <code>backoffLimit</code> failed pods (default 6), and by default an evicted pod is a failed pod. Enough maintenance nights and the run is declared failed for reasons that have nothing to do with its code. The fix is the <strong>pod failure policy</strong>, stable since 1.31 (the rule is in the Job spec below). Disruptions such as preemption, API-initiated eviction (that is <code>drain</code>), taint-based eviction, node-pressure eviction and graceful node shutdown get a <code>DisruptionTarget</code> condition, and an <code>Ignore</code> rule keeps them out of the <code>backoffLimit</code> count. Exceeding the container&#x27;s own limits does not get it, &quot;because the disruptions were probably caused by the Pod and would reoccur on retry&quot;. It requires <code>restartPolicy: Never</code>.</p>
+<p><strong>5. One guest is the whole party.</strong> For a single-pod run, one eviction is one failure. For a distributed run, evicting one pod usually takes the whole job down, because collectives stall when a rank disappears. Whether your framework aborts, hangs or restarts elastically is something to find out before the window, not during it. (<a href="../../../../fields/devops/kubernetes/isolating-gpu-workloads/">Isolating GPU Workloads</a> covers why such jobs are scheduled all-or-nothing.)</p>
+<p>Which leaves one more question: can someone say &quot;this guest does not leave tonight&quot;?</p>
+<ul><li>* *</li></ul>
+<h2>The guest who refuses to leave</h2>
+<p>A <strong>PodDisruptionBudget (PDB)</strong> limits how many pods of a set may be down at once through voluntary disruptions, and a drain is one. If an eviction would break the budget, the Eviction API answers <code>429 Too Many Requests</code> and <code>drain</code> keeps retrying. With the default infinite <code>--timeout</code>, the night manager stands at the door until morning.</p>
+<p>Two things from the docs change the plan for a training Job:</p>
+<ul><li><strong>For a restartable batch Job, the docs&#x27; advice is not to create a PDB.</strong> The Job controller replaces the pod anyway, which is why the pod failure policy exists.</li><li><strong>A PDB on pods not owned by a Deployment, ReplicaSet, StatefulSet, ReplicationController or a custom resource with a `scale` subresource is restricted.</strong> Only an integer <code>minAvailable</code> works: no <code>maxUnavailable</code>, no percentage. A copied <code>maxUnavailable: 0</code> recipe will not do what you expect.</li></ul>
+<p>If you want a hard brake anyway, an integer <code>minAvailable</code> equal to the pod count does it. Then set a <code>--timeout</code>, so a stuck drain names the pod in the way. Know that <code>--disable-eviction</code> skips the PDB check entirely (&quot;use with caution&quot;): it turns a protected run into a dead one. And decide who may override the brake before the night you need it, because automated node upgrades drain nodes too.</p>
+<ul><li>* *</li></ul>
+<h2>A maintenance night that keeps the checkpoint</h2>
+<pre><code class="language-bash"># 0. What is on the node? (all namespaces)
+kubectl get pods --all-namespaces --field-selector spec.nodeName=gpu-17 -o wide
+
+# 1. Hang the No Vacancy sign. This is Slurm&#x27;s &quot;drain&quot;.
+kubectl cordon gpu-17
+
+# 2. Choose: wait for the run, or evict it on purpose.
+#    Waiting works because nothing new can arrive.
+#    --timeout defaults to 30s, so set it to cover the remaining run:
+kubectl wait --for=condition=complete job/train-llm --timeout=96h
+
+# 3. Rehearse the eviction without doing it.
+kubectl drain gpu-17 --ignore-daemonsets --dry-run=server
+
+# 4. Evict, with a timeout, and WITHOUT overriding the pod&#x27;s grace period.
+kubectl drain gpu-17 --ignore-daemonsets --timeout=30m
+
+# 5. Maintain only after the command returns.
+
+# 6. Reopen, and confirm the GPUs are advertised again.
+kubectl uncordon gpu-17
+kubectl describe node gpu-17 | grep -A2 &#x27;nvidia.com/gpu&#x27;</code></pre>
+<p>What the docs back: <code>--field-selector spec.nodeName=...</code> is a supported Pod selector; <code>kubectl wait --for=condition=&lt;name&gt;</code> and <code>--timeout</code> are in the reference, though its examples use Pods, so the <code>Complete</code> condition on a Job comes from the Job&#x27;s own status; <code>drain --dry-run=server</code> is in the drain reference. Step 4 leaves out <code>--grace-period</code> and <code>--delete-emptydir-data</code> on purpose: if drain asks for the second, find out why a pod has local data. The <code>30m</code> is an example; pick it to cover your longest checkpoint.</p>
+<p>And a Job that makes the whole story survivable. The <code>podFailurePolicy</code> rule and <code>restartPolicy: Never</code> are the pattern from the Job docs; the rest is a typical GPU trainer, not run:</p>
+<pre><code class="language-yaml">apiVersion: batch/v1
+kind: Job
+metadata:
+  name: train-llm
+spec:
+  backoffLimit: 3
+  podFailurePolicy:
+    rules:
+    - action: Ignore                 # evictions do not count as failures
+      onPodConditions:
+      - type: DisruptionTarget
+        status: &quot;True&quot;
+  template:
+    spec:
+      restartPolicy: Never           # required for podFailurePolicy
+      terminationGracePeriodSeconds: 900   # measured worst-case checkpoint + margin
+      containers:
+      - name: trainer
+        image: registry.example/trainer:1.0
+        command: [&quot;python&quot;, &quot;train.py&quot;, &quot;--resume-latest&quot;, &quot;--ckpt-dir&quot;, &quot;/ckpt&quot;]   # exec form: python is PID 1
+        resources:
+          limits:
+            nvidia.com/gpu: 8
+        volumeMounts:
+        - name: ckpt
+          mountPath: /ckpt
+      volumes:
+      - name: ckpt
+        persistentVolumeClaim:
+          claimName: train-llm-ckpt  # outlives the pod</code></pre>
+<p><code>--resume-latest</code> is a flag of the example trainer, not of Kubernetes. It makes the replacement pod <strong>resume</strong> instead of start over: the Job controller creates the new pod, and nothing makes it continue where the old one stopped. Slurm&#x27;s <code>--requeue</code> has the same trap: a requeue is a re-run, not a resume.</p>
+<ul><li>* *</li></ul>
+<h2>Back to the two tickets</h2>
+<p>Ticket 1 gets a one-line answer: Slurm&#x27;s drain is a cordon, and nothing is broken. Ticket 2 takes longer. Sana&#x27;s <code>kubectl drain</code> did exactly what its reference says: cordon, evict, SIGTERM, 30 seconds, SIGKILL. Her trainer had no handler, her checkpoint sat on the wrong volume, and the clock was the default, so she hit four of the five doors. One Slurm habit survives the move, though: Slurm can warn a job minutes before its end with <code>--signal=B:USR1@300</code>, and as far as I could find Kubernetes has no equivalent, so the pod hears about an eviction only when the clock has already started. Checkpoint <strong>regularly</strong>, and treat the SIGTERM checkpoint as the last chance, not the only one. (A pod stuck in <code>Terminating</code> is a cousin of <a href="../../../../fields/schedulers/slurm-cluster-operations/slurm-kill-task-failed/">Kill task failed</a>; for the Slurm-side order of operations see <a href="../../../../fields/schedulers/slurm-cluster-operations/slurm-reboot-order/">rolling reboot order</a>.)</p>
+<p><strong>Takeaway:</strong> in Kubernetes the gentle command is <code>cordon</code>, and <code>drain</code> is the one that evicts. Give a long run a handler, a PVC, a measured grace period and a pod failure policy <em>before</em> maintenance night.</p>
+<p><strong>Challenge:</strong> your 64-GPU job spans eight nodes and one must be patched. Cordon or drain, and what do the other seven ranks do when one leaves? Find out on a test run. Related: <a href="../../../../fields/devops/kubernetes/broken-pods-rogues-gallery/">Broken Pods, the Rogues&#x27; Gallery</a> shows what 137 and 143 look like in the wild, and the next page, <a href="../../../../fields/devops/kubernetes/oomkilled-with-memory-to-spare/">The Pod Killed With Memory to Spare</a>, is a SIGKILL that no drain asked for.</p>
+<ul><li>* *</li></ul>
+<h2>References</h2>
+<ul><li><a href="https://kubernetes.io/docs/reference/kubectl/generated/kubectl_drain/">kubectl drain (Kubernetes reference)</a>: cordon, eviction, flags and defaults.</li><li><a href="https://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/">Safely drain a node (Kubernetes task)</a>: PDB behaviour and the unschedulable taint caveat.</li><li><a href="https://kubernetes.io/docs/concepts/scheduling-eviction/api-eviction/">API-initiated eviction</a>: the 200, 429 and 500 answers and the termination steps.</li><li><a href="https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#pod-termination">Pod lifecycle: termination of Pods</a>: grace period, preStop, SIGTERM, SIGKILL.</li><li><a href="https://kubernetes.io/docs/concepts/workloads/pods/disruptions/">Disruptions: pod disruption conditions</a>: the <code>DisruptionTarget</code> reasons.</li><li><a href="https://kubernetes.io/docs/concepts/workloads/controllers/job/#pod-failure-policy">Job: pod failure policy and backoff limit</a>: <code>Ignore</code>, <code>restartPolicy: Never</code>, stable since 1.31.</li><li><a href="https://kubernetes.io/docs/tasks/run-application/configure-pdb/">Specifying a PodDisruptionBudget</a>: arbitrary workloads and the integer <code>minAvailable</code> restriction.</li><li><a href="https://kubernetes.io/docs/reference/kubectl/generated/kubectl_wait/">kubectl wait</a> and <a href="https://kubernetes.io/docs/concepts/overview/working-with-objects/field-selectors/">Field selectors</a>: <code>--timeout</code> default, <code>spec.nodeName</code>.</li><li><a href="https://man7.org/linux/man-pages/man7/pid_namespaces.7.html">pid_namespaces(7)</a>: signals to the init process of a PID namespace.</li></ul>
+<p><a href="../../../../#/fields/devops/kubernetes/draining-a-gpu-node">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

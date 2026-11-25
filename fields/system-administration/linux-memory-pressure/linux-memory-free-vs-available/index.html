@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The Server That Looked Full: Free vs Available Memory, Cache, and What Is Really Used</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/linux-memory-pressure/linux-memory-free-vs-available/">
+<meta name="description" content="One real free -h snapshot explained - why free is the wrong number, what buff/cache and shared hold, why the columns sum above total, and how to find what is really used.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="The Server That Looked Full: Free vs Available Memory, Cache, and What Is Really Used">
+<meta property="og:description" content="One real free -h snapshot explained - why free is the wrong number, what buff/cache and shared hold, why the columns sum above total, and how to find what is really used.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/linux-memory-pressure/linux-memory-free-vs-available/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/linux-memory-pressure/linux-memory-free-vs-available/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/system-administration/linux-memory-pressure/linux-memory-free-vs-available"></script>
+<main>
+<h1>The Server That Looked Full: Free vs Available Memory, Cache, and What Is Really Used</h1>
+<p><em>One real free -h snapshot explained - why free is the wrong number, what buff/cache and shared hold, why the columns sum above total, and how to find what is really used.</em></p>
+<blockquote><p><strong>Facts in this page come from the `free` man pages, `proc_meminfo(5)` and the kernel commit that added `MemAvailable`.</strong> The scenario is invented. The numbers are a real <code>free -h</code> snapshot, and a few derived figures depend on one assumption that is flagged where it appears. Verify with the commands in each section, on your own machine.</p></blockquote>
+<ul><li>* *</li></ul>
+<h2>The snapshot</h2>
+<p>An engineer, invented for this story, has a terminal open on a host called <code>ps331</code>, running <code>free -h</code> every two seconds. At 17:13 on a Thursday it shows this:</p>
+<pre><code>Every 2.0s: free -h                                  ps331: Thu Nov  5 17:13:47 2026
+
+               total        used        free      shared  buff/cache   available
+Mem:            14Gi       9.7Gi       789Mi       1.3Gi       5.9Gi       5.2Gi
+Swap:          2.0Gi       1.2Gi       780Mi</code></pre>
+<p>The engineer&#x27;s first reaction is the one most of us have: <strong>789Mi free out of 14Gi. This machine is nearly out of memory, and it is already swapping.</strong></p>
+<p>Is it? The answer depends on which of six numbers you read, and the one that jumps out, <code>free</code>, is the least useful of them.</p>
+<ul><li>* *</li></ul>
+<h2>The cast of columns</h2>
+<p><code>free</code> just parses <code>/proc/meminfo</code>. The man page defines each column:</p>
+<table><thead><tr><th>Column</th><th>Meaning</th><th><code>/proc/meminfo</code> field</th></tr></thead><tbody><tr><td><code>total</code></td><td>Usable RAM (and swap on the Swap line)</td><td><code>MemTotal</code>, <code>SwapTotal</code></td></tr><tr><td><code>used</code></td><td><strong>Used or unavailable memory, calculated as total − available</strong> (newer versions)</td><td>derived</td></tr><tr><td><code>free</code></td><td>Memory not used for anything at all</td><td><code>MemFree</code>, <code>SwapFree</code></td></tr><tr><td><code>shared</code></td><td>Memory used mostly by tmpfs</td><td><code>Shmem</code></td></tr><tr><td><code>buff/cache</code></td><td>Buffers plus page cache plus reclaimable slab</td><td><code>Buffers</code> + <code>Cached</code> + <code>SReclaimable</code></td></tr><tr><td><code>available</code></td><td>An estimate of how much memory can be allocated to start new applications <strong>without swapping</strong></td><td><code>MemAvailable</code></td></tr></tbody></table>
+<p>A version note that matters for this story: older <code>free</code> man pages (2016 and 2018 copies) define <code>used</code> as total − free − buffers − cache. The newer man page (the copy I read is dated 2023-05) defines it as total − <strong>available</strong>. If your <code>used</code> seems to disagree with a mental sum, check which procps-ng you have with <code>free -V</code>.</p>
+<ul><li>* *</li></ul>
+<h2>The puzzle: the columns do not add up</h2>
+<p>Add the three obvious ones from the snapshot:</p>
+<pre><code>used + free + buff/cache = 9.7 + 0.77 + 5.9 = 16.4 Gi        (789Mi is about 0.77Gi)
+total                    = 14 Gi</code></pre>
+<p>The three columns that look like a partition of memory add up to <strong>more than the total</strong>. That is not a bug, and it is the first clue about how <code>free</code> works now.</p>
+<p>With the older definition, <code>used + free + buff/cache</code> equals <code>total</code> by construction. With the newer one, <code>used</code> is <code>total − available</code>, and <code>available</code> excludes part of the cache, so some memory is counted in <code>used</code> <strong>and</strong> in <code>buff/cache</code>. The overlap is exactly <code>free + buff/cache − available</code>:</p>
+<pre><code>0.77 + 5.9 − 5.2 = 1.47 Gi of memory counted twice</code></pre>
+<p>One loose end: <code>used + available = 9.7 + 5.2 = 14.9</code>, so the real total is close to 14.9Gi, while the header says 14Gi. I believe <code>free -h</code> truncates rather than rounds, which would explain it, and the figures below use 14.9. Check on your own machine with <code>free -m</code>, which has no rounding games.</p>
+<p>Here is the whole machine on one picture (numbers in Gi, derived from the snapshot, so treat the small ones as approximate):</p>
+<pre><code>RAM ≈ 14.9 Gi
+|----------------------- used 9.7 -----------------------|--------- available 5.2 ---------|
+| 8.2 not cache at all   | ~1.5 &quot;cache&quot; that cannot be   |  free 0.77  | ~4.4 cache that    |
+| (processes, kernel)    | handed back (shared + margin) |             | can be handed back |
+                         |&lt;--------------- buff/cache 5.9 -----------------------------------&gt;|</code></pre>
+<p>So there are two different questions with two different answers: how much is <strong>not cache</strong> (8.2Gi), and how much is <strong>not available</strong> (9.7Gi). The difference between them is the part of &quot;cache&quot; that cannot actually be given back.</p>
+<ul><li>* *</li></ul>
+<h2>Free memory is a feature, not a symptom</h2>
+<p>Why is <code>free</code> so small? Because the kernel is doing its job. RAM that holds nothing is wasted, so Linux fills spare memory with cached copies of files it has read recently. Next time a program asks for that file, the answer comes from RAM instead of disk.</p>
+<p>A hotel is a good picture:</p>
+<table><thead><tr><th>Hotel</th><th>Memory</th></tr></thead><tbody><tr><td>Empty rooms</td><td><code>free</code></td></tr><tr><td>Guests who agreed to check out the moment someone arrives</td><td>Clean page cache and reclaimable slab</td></tr><tr><td>Guests who cannot leave without being moved to a warehouse (swap)</td><td>Anonymous memory, <code>shared</code>/tmpfs</td></tr><tr><td>&quot;Rooms I could realistically give a new arrival tonight&quot;</td><td><code>available</code></td></tr></tbody></table>
+<p>A hotel manager who panics because few rooms are <em>empty</em> is reading the wrong board. The one that matters is how many rooms could be freed without a fight. The kernel&#x27;s own author of the <code>MemAvailable</code> field made the same point: programs that used <code>MemFree</code> as the measure of free memory, or simply added <code>MemFree</code> and cache, kept getting it wrong, so he added an estimate calculated from <code>MemFree</code>, the reclaimable slab, the size of the file LRU lists and the low watermarks in each zone.</p>
+<ul><li>* *</li></ul>
+<h2>What cache really is</h2>
+<p><code>buff/cache</code> is three different things stirred together:</p>
+<table><thead><tr><th>Part</th><th>What it holds</th><th>Can it be dropped?</th></tr></thead><tbody><tr><td><strong>Page cache</strong></td><td>Contents of files read or written recently</td><td>Clean pages: yes, instantly. Dirty pages must be written out first (watch <code>Dirty</code> and <code>Writeback</code> in <code>/proc/meminfo</code>)</td></tr><tr><td><strong>Buffers</strong></td><td>Block-device metadata</td><td>Mostly yes</td></tr><tr><td><strong>Reclaimable slab</strong></td><td>Kernel caches such as directory entries and inodes</td><td>Yes, but the man page notes not all of it will be, because some items are in use</td></tr></tbody></table>
+<p>And then there is the guest in the wrong room: <strong>tmpfs and shared memory are counted inside `Cached`</strong>, the same pool as page cache. The <code>Shmem</code> field is the total memory used by shared memory and tmpfs, and it appears in <code>buff/cache</code>. But tmpfs pages are not a cache of anything on disk. If you delete them, the data is gone, and the kernel can only move them to swap. So they are not reclaimable the way ordinary cache is.</p>
+<p>That is exactly why <code>available</code> does not count them. A forum experiment makes it concrete: creating several 1GB files in a tmpfs reduced <code>MemAvailable</code> by 1GB each time, because the &quot;file LRU lists&quot; the kernel adds up do not include shared memory.</p>
+<p>Now the snapshot makes sense. Of the 5.9Gi in <code>buff/cache</code>, roughly 1.5Gi is not counted as available. The <code>shared</code> column says 1.3Gi of that is tmpfs or shared memory. The remaining ~0.2Gi is, as I read the kernel code, the safety margin: the estimate leaves the low watermarks untouched and keeps at least some page cache in place, because the system needs some page cache to function well. That ~0.2 figure is my arithmetic, not a measured value.</p>
+<ul><li>* *</li></ul>
+<h2>What is really used</h2>
+<p>&quot;Used&quot; is the hardest column to name, so break it into what is really in it. In the snapshot (using the 14.9Gi assumption):</p>
+<pre><code>total − free − buff/cache = 14.9 − 0.77 − 5.9 ≈ 8.2 Gi    memory that is not cache at all
++ cache that cannot be given back                ≈ 1.5 Gi    (shared/tmpfs ≈ 1.3 + kernel margin)
+= used (as free -h reports it now)               ≈ 9.7 Gi</code></pre>
+<p>The 8.2Gi is where the actual consumers live:</p>
+<table><thead><tr><th>Consumer</th><th><code>/proc/meminfo</code> field</th></tr></thead><tbody><tr><td>Process heaps and stacks</td><td><code>AnonPages</code></td></tr><tr><td>Shared memory and tmpfs</td><td><code>Shmem</code></td></tr><tr><td>Kernel memory that cannot be reclaimed</td><td><code>SUnreclaim</code>, <code>PageTables</code>, <code>KernelStack</code></td></tr><tr><td>File pages processes have mapped</td><td><code>Mapped</code></td></tr></tbody></table>
+<p>You can read them all at once:</p>
+<pre><code class="language-bash">awk &#x27;/^(MemTotal|MemFree|MemAvailable|Buffers|Cached|SReclaimable|SUnreclaim|AnonPages|Shmem|Mapped|PageTables|KernelStack|Dirty|Writeback|SwapTotal|SwapFree|SwapCached):/ \
+     { printf &quot;%-14s %8.2f GiB\n&quot;, $1, $2/1048576 }&#x27; /proc/meminfo</code></pre>
+<p>If <code>AnonPages</code> plus <code>Shmem</code> explains most of &quot;used&quot;, you have a process problem, and <code>ps</code> can name the culprit. If <code>SUnreclaim</code> is large, you have a kernel-side problem, and <code>slabtop</code> is the next stop.</p>
+<ul><li>* *</li></ul>
+<h2>The swap clue</h2>
+<p>The snapshot also shows 1.2Gi of the 2.0Gi swap in use. Does that mean the machine is thrashing?</p>
+<p>Not by itself. Swap <strong>used</strong> is a stock, not a flow. The kernel may have pushed pages that no one has touched in a long time out to swap to make room for something more useful, such as cache. Those pages can sit there for days at no cost. What hurts is swap <strong>traffic</strong>, pages moving in and out right now. Measure the flow:</p>
+<pre><code class="language-bash">vmstat 1 5          # columns si (swapped in) and so (swapped out): sustained non-zero = trouble
+cat /proc/pressure/memory    # PSI: &#x27;some&#x27; and &#x27;full&#x27; stall percentages (needs a kernel with PSI enabled)</code></pre>
+<p>A swap number that <strong>grows over time</strong> while <code>available</code> shrinks is the real warning sign. One snapshot cannot tell you which of those you are looking at, and that is worth remembering for the verdict below.</p>
+<ul><li>* *</li></ul>
+<h2>The detective kit</h2>
+<pre><code class="language-bash">free -m                                  # exact numbers, no rounding surprises
+free -V                                  # which definition of &#x27;used&#x27; you have
+grep -E &#x27;MemAvailable|Shmem|SwapCached&#x27; /proc/meminfo
+df -h /dev/shm /run /tmp                 # tmpfs mounts: who is filling Shmem?
+ps -eo pid,user,rss,comm --sort=-rss | head     # biggest resident processes
+slabtop -o | head -15                    # kernel slab consumers (usually needs root)
+vmstat 1 5                               # swap traffic and memory flow
+cat /proc/pressure/memory                # are tasks actually stalling for memory?
+dmesg -T | grep -i &#x27;out of memory\|oom&#x27;  # has the OOM killer already acted?</code></pre>
+<p>Two traps:</p>
+<ul><li><strong>`RSS` double counts shared pages.</strong> Summing <code>ps</code> RSS across processes overstates usage when processes share libraries or memory. Tools that report proportional set size (PSS), such as <code>smem</code>, split shared pages fairly.</li><li><strong>Dropping caches is a demonstration, not a fix.</strong> Writing to <code>/proc/sys/vm/drop_caches</code> empties the cache and makes <code>free</code> look healthy. It also makes every file read slow again until the cache warms up. Use it to prove a point on a test box, not to &quot;solve&quot; memory on a production one.</li></ul>
+<ul><li>* *</li></ul>
+<h2>Verdict on ps331</h2>
+<p>From one snapshot, with the caveats above:</p>
+<table><thead><tr><th>Number</th><th>Reading</th></tr></thead><tbody><tr><td><code>free</code> 789Mi</td><td>Meaningless on its own. The kernel is using spare RAM for cache, as designed</td></tr><tr><td><code>available</code> 5.2Gi</td><td>About 35% of total memory can be handed to new work without swapping. That is decent headroom</td></tr><tr><td><code>shared</code> 1.3Gi</td><td>Worth a look. Check <code>df -h /dev/shm /tmp /run</code>. This memory is not reclaimable</td></tr><tr><td><code>swap used</code> 1.2Gi</td><td>Unknown without a second look. Run <code>vmstat 1</code> and see whether <code>si</code>/<code>so</code> are zero</td></tr><tr><td><code>used</code> 9.7Gi</td><td>Mostly real: about 8.2Gi of non-cache memory plus ~1.5Gi of stuck cache. The <code>awk</code> command above says who</td></tr></tbody></table>
+<p>The engineer&#x27;s panic was premature. The question to ask is not &quot;why is free so low&quot;, but <strong>&quot;is `available` falling over time, and is swap traffic non-zero?&quot;</strong> A <code>watch -n2 free -h</code> window is good for exactly that, if you read the <code>available</code> and <code>Swap used</code> columns instead of <code>free</code>.</p>
+<ul><li>* *</li></ul>
+<h2>Which number to alert on</h2>
+<table><thead><tr><th>Signal</th><th>Alert on it?</th></tr></thead><tbody><tr><td><code>free</code> low</td><td>No. Healthy systems run with little free memory</td></tr><tr><td><code>buff/cache</code> large</td><td>No. It is mostly the kernel being useful</td></tr><tr><td><code>available</code> low <strong>and falling</strong></td><td>Yes</td></tr><tr><td>Swap in/out rate sustained above zero (<code>vmstat</code> <code>si</code>/<code>so</code>)</td><td>Yes</td></tr><tr><td>Memory pressure (PSI <code>some</code>/<code>full</code>) rising</td><td>Yes. It measures stalls, not usage</td></tr><tr><td>OOM-kill messages in the kernel log</td><td>Yes, and by then you are late</td></tr></tbody></table>
+<p>A footnote for cluster people: on a Slurm node, jobs live inside cgroups, and in cgroup v2 a job&#x27;s <code>memory.current</code> includes its page cache. That is reclaimable under the job&#x27;s limit, so a high number is not automatically a job about to be killed. The <a href="../../../../fields/schedulers/slurm-inside-a-job/slurm-cgroups-in-practice/">cgroups page</a> explains what actually gets enforced, and <code>memory.stat</code> splits a cgroup&#x27;s usage into anonymous, file and shared parts the same way this page splits the host&#x27;s.</p>
+<ul><li>* *</li></ul>
+<h2>Cheat sheet</h2>
+<pre><code>free       empty RAM. Low is normal; do not alert on it
+buff/cache page cache + buffers + reclaimable slab, PLUS shared/tmpfs that cannot be dropped
+available  free + the cache the kernel can really give back (estimate; shmem excluded)
+used       newer free: total - available  -&gt;  overlaps buff/cache, so columns can sum &gt; total
+shared     tmpfs + shared memory (Shmem): counted in cache, NOT reclaimable
+swap used  a stock, not a flow. Look at vmstat si/so and PSI for the flow
+really used = AnonPages + Shmem + SUnreclaim + PageTables + KernelStack (+ mapped files in use)</code></pre>
+<p>Free memory is the number that scares you. Available memory is the number that tells you the truth. And neither one tells you who is using the room.</p>
+<ul><li>* *</li></ul>
+<p><strong>Takeaway:</strong> Read <code>available</code>, not <code>free</code>, and watch whether it falls and whether swap is moving.</p>
+<p>Next: <a href="../../../../fields/system-administration/linux-memory-pressure/how-linux-reclaims-memory/">How Linux reclaims memory</a>, part 1: why the kernel keeps free memory near zero, and when a program really stalls.</p>
+<ul><li>* *</li></ul>
+<h2>References</h2>
+<ul><li><a href="https://mankier.com/1/free">free(1) man page, 2023 procps-ng (<code>used</code> = total − available)</a></li><li><a href="https://www.unix.com/man_page/v7/1/free">free(1) man page, 2016 procps-ng (<code>used</code> = total − free − buffers − cache; column definitions)</a></li><li><a href="https://man.he.net/man1/free">free(1) man page, 2018 copy (<code>available</code> description)</a></li><li><a href="https://coral.googlesource.com/linux-mtk/+/34e431b0ae398fc54ea69ff85ec700722c9da773%5E%21">Linux kernel commit 34e431b0: add MemAvailable to /proc/meminfo</a></li><li><a href="https://lkml.iu.edu/hypermail/linux/kernel/1311.0/03096.html">Rik van Riel&#x27;s RFC patch: provide estimated available memory</a></li><li><a href="https://backiee.wasmer.app/https_unix_stackexchange_com/questions/499649/is-cached-memory-de-facto-free">Unix StackExchange: is cached memory de facto free (tmpfs and MemAvailable experiment)</a></li><li><a href="https://wiki.neonvagabond.xyz/content/unix.stackexchange.com_en_all_2024-05/questions/500400/memavailable-higher-than-expected">Unix StackExchange: MemAvailable higher than expected (the estimate in practice)</a></li><li><a href="https://git.ipr.univ-rennes.fr/cellinfo/linuxram/src/branch/main/linuxram.md">Detailed explanation of /proc/meminfo fields (Shmem and Cached)</a></li></ul>
+<p><a href="../../../../#/fields/system-administration/linux-memory-pressure/linux-memory-free-vs-available">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

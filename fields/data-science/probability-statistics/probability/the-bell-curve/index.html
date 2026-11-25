@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The Bell Curve: Probability as Area, and One Ruler for Every Bell</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/probability/the-bell-curve/">
+<meta name="description" content="Many small nudges add up to a bell. For continuous data probability is area, and the z-score makes every bell the same bell, so one table serves all of them, until the data are not a bell.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="The Bell Curve: Probability as Area, and One Ruler for Every Bell">
+<meta property="og:description" content="Many small nudges add up to a bell. For continuous data probability is area, and the z-score makes every bell the same bell, so one table serves all of them, until the data are not a bell.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/probability/the-bell-curve/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/probability/the-bell-curve/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../../.docs/prerender-redirect.js" data-target="../../../../../#/fields/data-science/probability-statistics/probability/the-bell-curve"></script>
+<main>
+<h1>The Bell Curve: Probability as Area, and One Ruler for Every Bell</h1>
+<p><em>Many small nudges add up to a bell. For continuous data probability is area, and the z-score makes every bell the same bell, so one table serves all of them, until the data are not a bell.</em></p>
+<blockquote><p><strong>Part 11 of 15.</strong> Part of the <a href="../../../../../fields/data-science/probability-statistics/">Probability &amp; Statistics</a> series, after <a href="../../../../../fields/data-science/probability-statistics/probability/expectation-binomial-poisson/">Expectation and the Two Count Recipes</a>. The scenario is invented, and every figure was recomputed with Python 3.14.4 (stdlib only).</p></blockquote>
+<p>Tala will answer a question about Ravi&#x27;s tea bag with the single most useless sentence in statistics: &quot;Zero.&quot; She will be completely right, and it will explain why every probability on a bell curve is an area.</p>
+<p><strong>By the end of this page you will be able to:</strong></p>
+<ul><li>Say where the bell comes from and why the chance of an exact value is zero.</li><li>Read a probability off a normal curve as an area, with one ruler: the z-score.</li><li>Go both ways: value to area (<code>cdf</code>) and area to value (<code>inv_cdf</code>).</li><li>Refuse to use a bell when the histogram has two humps or a long tail.</li></ul>
+<ul><li>* *</li></ul>
+<h2>The scale that is never exact</h2>
+<p>Mira sells loose tea in bags marked <strong>100 g</strong>. Tala weighs thirty of them: &quot;None weighs exactly 100. One is 100.3, one is 98.9, one is 101.4...&quot;</p>
+<p>&quot;Of course,&quot; says Mira. &quot;What is the chance Ravi&#x27;s bag weighs exactly 100.000 grams?&quot;</p>
+<p>Tala thinks, then says something that sounds wrong and is right: &quot;Zero.&quot;</p>
+<p>If the chance of any exact weight is zero, how can anyone talk about the chance of a weight at all? Ravi&#x27;s bag is on the scale: 106 g. Is that suspicious?</p>
+<ul><li>* *</li></ul>
+<h2>Three ways to answer, all stuck</h2>
+<ol><li><strong>Ask for the chance of exactly 106 g.</strong> Zero, so the bag is &quot;impossible&quot;. It is on the scale.</li><li><strong>Count it from the thirty weighed bags.</strong> Nobody weighed exactly 106, so the count is 0 of 30 and says nothing about a range.</li><li><strong>Draw a hill for each product and measure its area by calculus.</strong> Every mean and SD is a different hill, and the shop sells forty products.</li></ol>
+<p>Mira stops the third one before the whiteboard comes out. &quot;There is one ruler for all of them. Find it.&quot;</p>
+<ul><li>* *</li></ul>
+<h2>One hill, one ruler</h2>
+<h3>Where the bell comes from</h3>
+<p>Flip a fair coin <code>n</code> times and count heads. Each flip is one small nudge; the table shows how nudges pile up (each <code>#</code> is a share of the 2^n equally likely sequences):</p>
+<pre><code class="language-text">n = 4  (one # = 1%)
+  0   6.2% ######
+  1  25.0% #########################
+  2  37.5% ######################################
+  3  25.0% #########################
+  4   6.2% ######
+
+n = 30  (one # = 0.5%)
+ 10   2.8% ######
+ 11   5.1% ##########
+ 12   8.1% ################
+ 13  11.2% ######################
+ 14  13.5% ###########################
+ 15  14.4% #############################
+ 16  13.5% ###########################
+ 17  11.2% ######################
+ 18   8.1% ################
+ 19   5.1% ##########
+ 20   2.8% ######</code></pre>
+<p>(Rows under 0.5% are left out. Exact counts, computed with Python.) The bell is what you get when <strong>many small independent nudges add up</strong>: the middle gets every mix of ups and downs, the ends need all the nudges to line up. Tiny scoop errors push each bag a little up or down in the same way.</p>
+<h3>Probability is area</h3>
+<p>With 30 flips there are 31 possible counts, each with its own probability. A weight has <strong>infinitely many</strong> possible values between 99 and 101; share 100% among them and each gets nothing: <code>P(weight = exactly 100.000...) = 0</code>. So ask about <strong>ranges</strong>: draw the hill and let the <strong>area under it</strong> be the probability. The whole area is 1. The height is not a probability but a <em>density</em>: how crowded the chances are near that spot.</p>
+<p>This is the histogram of <a href="../../../../../fields/data-science/probability-statistics/describing-data/pictures-and-the-middle/">part 3</a> taken to its end: a bar&#x27;s area was the share of the data, and with infinitely thin bars the bars become a curve.</p>
+<h3>Two dials, one bell</h3>
+<p>The normal distribution has exactly two dials (NIST calls them the <strong>location</strong> and <strong>scale</strong> parameters):</p>
+<table><thead><tr><th>Dial</th><th>What it does</th><th>You already know it as</th></tr></thead><tbody><tr><td><strong>Mean</strong> (μ)</td><td>Slides the whole bell left or right</td><td>The middle, <a href="../../../../../fields/data-science/probability-statistics/describing-data/pictures-and-the-middle/">part 4</a></td></tr><tr><td><strong>Standard deviation</strong> (σ)</td><td>Stretches or squeezes it (the total area stays 1)</td><td>The spread, <a href="../../../../../fields/data-science/probability-statistics/describing-data/spread-and-position/">part 5</a></td></tr></tbody></table>
+<p>A mean and an SD fix the whole bell. That is convenient, and a very strong claim about your data.</p>
+<h3>The one ruler: the z-score</h3>
+<p><code>z = (x − mean) / SD</code> (from <a href="../../../../../fields/data-science/probability-statistics/describing-data/spread-and-position/">part 6</a>) slides the bell to the middle and rescales the SD to 1, so <strong>every normal bell becomes the same bell</strong>: the <strong>standard normal</strong>, mean 0, SD 1.</p>
+<pre><code class="language-mermaid">flowchart LR
+    X[&quot;Any value x&lt;br/&gt;from any bell&quot;] --&gt; Z[&quot;z = x minus mean&lt;br/&gt;divided by SD&quot;]
+    Z --&gt; T[&quot;One table&lt;br/&gt;or one function&quot;]
+    T --&gt; P[&quot;Area = probability&quot;]</code></pre>
+<p><em>One standardizing step, then one table for all bells.</em></p>
+<p><code>statistics.NormalDist</code> holds that table; <code>cdf(x)</code> is the area to the left of <code>x</code>, <code>P(X &lt;= x)</code>:</p>
+<pre><code class="language-python">from statistics import NormalDist
+
+std = NormalDist()                      # mean 0, SD 1
+for k in (1, 2, 3):
+    print(k, round(std.cdf(k) - std.cdf(-k), 4))</code></pre>
+<pre><code class="language-text">1 0.6827
+2 0.9545
+3 0.9973</code></pre>
+<p>That is the <strong>68-95-99.7 rule</strong> with its exact decimals: 68.27% of a normal crowd lies within 1 SD, 95.45% within 2, 99.73% within 3 (the famous &quot;95%&quot; is 1.96 SD). Ravi&#x27;s bag, bags being normal with mean 100 g and SD 4 g (invented):</p>
+<pre><code class="language-python">bag = NormalDist(100, 4)
+z = bag.zscore(106)
+print(z, round(bag.cdf(106), 4))                     # z, then P(weight &lt;= 106)
+print(round(bag.cdf(106) - bag.cdf(98), 4))          # P(98 &lt;= weight &lt;= 106)
+print(round(1 - bag.cdf(108), 4))                    # P(weight &gt; 108): two SD above
+print(round(bag.cdf(100.0001) - bag.cdf(99.9999), 6))  # a sliver 0.0002 g wide</code></pre>
+<pre><code class="language-text">1.5 0.9332
+0.6247
+0.0228
+2e-05</code></pre>
+<p>A 106 g bag is z = 1.5, and 93.32% of bags weigh less. Between 98 and 106 g is the area from z = −0.5 to z = 1.5: <code>0.9332 − 0.3085 =</code> 0.6247. Over 108 g (z = 2) is the thin 2.28% tail. The sliver around exactly 100 is 0.00002, and only gets smaller: that is the prologue&#x27;s zero.</p>
+<h3>From z back to a value</h3>
+<p>To ask &quot;how heavy is a bag that beats 95% of bags?&quot;, run the ruler backwards. That is a <strong>percentile</strong> (part 6), and <code>inv_cdf</code> inverts <code>cdf</code>:</p>
+<pre><code class="language-python">print(round(bag.inv_cdf(0.95), 2), round(std.inv_cdf(0.95), 4))</code></pre>
+<pre><code class="language-text">106.58 1.6449</code></pre>
+<p>The 95th percentile is at z = 1.6449, so in grams <code>100 + 1.6449 × 4 = 106.58</code>. Two directions, one ruler: value → z → area (<code>cdf</code>), or area → z → value (<code>inv_cdf</code>).</p>
+<h3>Try it: Pick the recipe, turn the dials</h3>
+<blockquote><p><strong>What to try:</strong> Choose the Normal tab, set a mean and an SD, and move a and b: the shaded area is the probability. Hover the curve to read a value&#x27;s z-score. <strong>Start with:</strong> the preset <em>Smoky orders</em>.</p></blockquote>
+<p><a href="../../../../../fields/data-science/probability-statistics/labs/distributions.html">Distributions lab</a></p>
+<h3>When the data are not a bell</h3>
+<p>The 20 tasting scores of the earlier parts have mean 75.2 and SD 17.67. Compare what a bell predicts with what is there:</p>
+<pre><code class="language-python">from statistics import NormalDist, mean, stdev
+
+scores = [52,55,55,58,58,58,62,62,62,71,71,89,89,89,93,93,94,94,95,104]
+m, sd = mean(scores), stdev(scores)
+print(round(m, 1), round(sd, 2))
+for k in (0.5, 1, 2):
+    inside = sum(1 for x in scores if abs(x - m) &lt;= k * sd)
+    model = NormalDist().cdf(k) - NormalDist().cdf(-k)
+    print(k, &quot;SD: model says&quot;, round(model * 20, 1), &quot;of 20, actually&quot;, inside)</code></pre>
+<pre><code class="language-text">75.2 17.67
+0.5 SD: model says 7.7 of 20, actually 2
+1 SD: model says 13.7 of 20, actually 11
+2 SD: model says 19.1 of 20, actually 20</code></pre>
+<p>Within half an SD the bell expects nearly 8 scores and there are <strong>2</strong>: the mean sits in a valley. The 2 SD line looks fine (19.1 versus 20), which is the trap: <strong>passing one check does not make a crowd normal.</strong> A long tail breaks it too: Kettle Street&#x27;s houses (1, 2, 2, 3, 5, 9, 20) have one huge value dragging the right side out, so a bell around their mean gives real probability to impossible negative values. So the habit comes first: <strong>draw the histogram.</strong> One hump, roughly symmetric, thin tails: a bell is a fair model. Two humps or a long tail: use percentiles and describe the shape.</p>
+<ul><li>* *</li></ul>
+<h2>93% lighter, one in fourteen heavier</h2>
+<p>Ravi&#x27;s bag weighs 106 g. Tala does not guess. She turns 106 into z = 1.5, says &quot;93% of bags are lighter, 7% heavier&quot;, and shrugs: &quot;About one in fourteen. Unusual, not suspicious.&quot;</p>
+<p>Mira asks the question now sitting on the counter: &quot;All that works if a bag is bell-shaped. But if I weigh <em>ten</em> bags and average them, what do the <em>averages</em> look like?&quot; Next cup: <a href="../../../../../fields/data-science/probability-statistics/inference/averages-and-intervals/">Averages and Intervals</a>.</p>
+<ul><li>* *</li></ul>
+<h2>Never again</h2>
+<table><thead><tr><th>Mistake</th><th>Symptom</th><th>Fix</th></tr></thead><tbody><tr><td>Asking for the chance of an exact value</td><td><code>P(x) = 0</code>, &quot;impossible&quot;</td><td>Ask about a range: probability is area</td></tr><tr><td>Treating the curve&#x27;s height as a probability</td><td>Heights above 1</td><td>Height is density; area is probability</td></tr><tr><td>Using the 68-95-99.7 rule on two humps</td><td>Shares that do not match the counts</td><td>Histogram first; percentiles if not one hump</td></tr><tr><td>Passing one check as proof of normality</td><td>2 SD fits, 0.5 SD does not</td><td>Check several landmarks, not one</td></tr><tr><td>Mixing the two ruler directions</td><td><code>cdf</code> where <code>inv_cdf</code> is needed</td><td>value → z → area is <code>cdf</code>; area → z → value is <code>inv_cdf</code></td></tr></tbody></table>
+<ul><li>* *</li></ul>
+<h2>Check yourself</h2>
+<ol><li>Bags have mean 100 g and SD 4 g. What are the z-scores of 92 g and 108 g, and what share lies between them?</li><li>In a normal crowd, about what share lies more than 3 SD from the mean?</li><li>Tala scored 61 on a normal exam (mean 50, SD 4). What is her z-score, and what does it say about her rank?</li><li>A histogram shows two clear humps. Can you use the 68-95-99.7 rule? Which ruler do you use instead?</li></ol>
+<ol><li><code>(92 − 100) / 4 = −2</code> and <code>(108 − 100) / 4 = +2</code>: <strong>95.45%</strong> (<code>0.9772 − 0.0228</code>). A range has width, so its area is not zero; a single point has none.</li><li><code>1 − 0.9973 =</code> about <strong>0.27%</strong>, split between both tails.</li><li><code>(61 − 50) / 4 =</code> <strong>2.75</strong>: well under 1% scored higher, a top-of-the-class result.</li><li><strong>No</strong>: the mean sits in a valley and the rule gets the shares wrong (the count test above). Use <strong>percentiles</strong>.</li></ol>
+<ul><li>* *</li></ul>
+<h2>📜 The Scroll (keep this)</h2>
+<pre><code class="language-text">Normal       : two dials, mean (location) and SD (scale); total area = 1
+Probability  : a point is 0; ask about ranges, probability = area
+z            : (x - mean) / SD   value -&gt; z -&gt; area is cdf;  area -&gt; z -&gt; value is inv_cdf
+Landmarks    : within 1 / 2 / 3 SD = 68.27% / 95.45% / 99.73%; 1.96 SD = 95%
+Code         : NormalDist(mu, sigma).cdf(x) / .inv_cdf(p) / .zscore(x)
+Do not       : use a bell on two humps or a long tail; histogram first</code></pre>
+<ul><li>* *</li></ul>
+<h2>References</h2>
+<ul><li>Python <code>statistics.NormalDist</code>: <code>cdf</code>, <code>inv_cdf</code> and <code>zscore</code>, with <code>mu</code> and <code>sigma</code> as mean and standard deviation. Verified against Python 3.14.4. &lt;https://docs.python.org/3/library/statistics.html&gt;</li><li>NIST/SEMATECH e-Handbook of Statistical Methods, <em>Normal Distribution</em>: the density with location and scale parameters, and the standard normal (mean 0, SD 1). The page does not state the 68-95-99.7 percentages, so those come from the run above. &lt;https://www.itl.nist.gov/div898/handbook/eda/section3/eda3661.htm&gt;</li><li>Every number and output on this page was recomputed with Python 3.14.4 (stdlib only).</li></ul>
+<p><a href="../../../../../#/fields/data-science/probability-statistics/probability/the-bell-curve">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

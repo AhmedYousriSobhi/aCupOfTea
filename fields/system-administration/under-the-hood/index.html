@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>System Administration - Under the Hood</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/under-the-hood/">
+<meta name="description" content="Deeper answers to three questions, why scp is secure, what it means that a directory is a logical container, and what makes a system Unix-like.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="System Administration - Under the Hood">
+<meta property="og:description" content="Deeper answers to three questions, why scp is secure, what it means that a directory is a logical container, and what makes a system Unix-like.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/under-the-hood/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/under-the-hood/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../.docs/prerender-redirect.js" data-target="../../../#/fields/system-administration/under-the-hood"></script>
+<main>
+<h1>System Administration - Under the Hood</h1>
+<p><em>Deeper answers to three questions, why scp is secure, what it means that a directory is a logical container, and what makes a system Unix-like.</em></p>
+<p>The target of this page is to learn more deeper things that come to our minds.</p>
+<h2>1. SCP - Why it&#x27;s secured?</h2>
+<ul><li>The <code>cp</code> in scp comes from the Unix command cp (copy).</li><li>But unlike cp, which copies files locally, scp allows copying across networked systems.</li><li>The “secure” part comes from the fact that it uses SSH (Secure Shell) to handle both:<ol><li><strong>Authentication</strong> (verifying who you are), and</li><li><strong>Encryption</strong> (protecting the data in transit).</li></ol></li></ul>
+<p>So, it’s essentially: <code>cp + SSH = scp (a “secure” networked copy)</code>.</p>
+<h3>How it Works Under The Hood?</h3>
+<ol><li><strong>SSH As The Transport Layer</strong>: <code>scp</code> doesn&#x27;t reinvent network security; it delegates it to SSH. When you run: <code>`</code>bash scp file.txt user@remote:/tmp <code>`</code><ol><li>It starts an SSH session to <code>remote</code>.</li><li>SSH performs <strong>Key exchange</strong> (usually using RSA, ECDSA, or Ed25519) to establish a shared secret.</li><li>The session is <strong>encrypted</strong> (commonly via AES or ChaCha20) and authenticated (via your private key or password)</li><li>At this point, you have got a <strong>secure channel</strong>; similar to what happens when you log in using <code>ssh</code>.</li></ol></li></ol>
+<ol><li><strong>The SCP Protocol</strong>: Once the SSH tunnel is established, the actual file transfer happens using a <strong>simple, custom protocol</strong>.<ol><li>The <strong>client</strong> sends control messages like <code>c0644 12345 filename\n</code> (meaning &quot;create a file with mode 0644 and size 12345 bytes&quot;).</li><li>The <strong>server</strong> replies with acknowledgments (<code>\0</code> or error codes).</li><li>The <em>file data</em> is streamed directly afterward, byte-for-byte.</li><li>When complete, both sides send a final null byte (<code>\0</code>) to mark success.</li><li>So, the SSH connection acts as a secure &quot;pipe&quot; for these structured commands and raw bytes.</li></ol></li></ol>
+<h3>Direction Matters</h3>
+<p>Running:</p>
+<pre><code class="language-bash">scp local.txt user@remote:/tmp/</code></pre>
+<p>Your local Machine:</p>
+<ol><li>Starts an SSH connection to <code>remote</code>.</li><li>On the remote system, SSH launches a command: <code>scp -t /tmp/</code>, where <code>-t</code> means &quot;I&#x27;m the target&quot;; expects to receive files.</li></ol>
+<p>Your local scp process then sends the file data to that remote process, So:</p>
+<ul><li>local = sender</li><li>Remote = receiver</li></ul>
+<p>Now, flipping it:</p>
+<pre><code class="language-bash">scp user@remote:/tmp/file.txt .</code></pre>
+<ul><li>Here, your local command wants to <code>fetch</code> a file from the remote. So the logic inverts:</li><li>Your local scp again open a SSH session.</li><li>But this time  it tells the remote host to run: <code>scp -f /tmp/file.txt</code>, where <code>-f</code> means &quot;I&#x27;m the source&quot;; provide files.</li></ul>
+<p>Now:</p>
+<ul><li>Remote = Sender</li><li>Local = Receiver</li></ul>
+<h3>Who opens the SSH Connection?</h3>
+<p><strong>YOU!!</strong> - The machine where you run the <code>scp</code> command - always initiate the SSH connection.</p>
+<p>Where you type:</p>
+<pre><code class="language-bash">scp local.txt user@remote:/tmp/</code></pre>
+<ul><li>It&#x27;s said: Hey SSH, connect to <code>user@remote</code>, and once you&#x27;re in, run a remote scp process for me.</li><li>Local: starts SSH → connects to remote.</li><li>Remote: does not initiate anything; it just receives that SSH session and executes whatever command the SSH request tells it to.</li></ul>
+<h3>What happens after SSH connects</h3>
+<p>Here’s the subtle part — once SSH is established, the local scp tells the remote SSH daemon to run scp in either send or receive mode depending on direction.</p>
+<p>Let’s check both cases:</p>
+<p><strong>1- Upload (local → remote)</strong></p>
+<pre><code class="language-bash">scp local.txt user@remote:/tmp/</code></pre>
+<ol><li>Local opens SSH connection to remote.</li><li>Remote SSH daemon spawns scp -t /tmp/ (-t = “target mode”, i.e. receive mode).</li><li>Local scp sends file data to that process.</li></ol>
+<p>So:</p>
+<ul><li>Connection initiated by: local</li><li>Remote mode: -t (receive)</li><li>Local mode: send</li></ul>
+<p><strong>2- Download (remote → local)</strong></p>
+<pre><code class="language-bash">scp user@remote:/tmp/file.txt .</code></pre>
+<ol><li>Local opens SSH connection to remote (still you initiating!).</li><li>Remote SSH daemon spawns scp -f /tmp/file.txt (-f = “from mode”, i.e. send mode).</li><li>Local scp receives the file from that process.</li></ol>
+<p>So again:</p>
+<ul><li>Connection initiated by: local</li><li>Remote mode: -f (send)</li><li>Local mode: receive</li></ul>
+<h2>2. Directory is a Logical Container</h2>
+<p>What a catch phrase! It was from Chapter-3 in HPC book: &quot;High Performance Computing - Modern Systems and Practices&quot;.</p>
+<h3>1. What the Phrase Assumes?</h3>
+<ol><li>A directory isn&#x27;t physical entity; it does not &quot;contain&quot; files on disk the way a folder contains papers.</li><li>It&#x27;s logical, meaning it&#x27;s a data structure that organize references -- essentially, <strong>metadata</strong> pointing to where files are actually stored.</li><li>It&#x27;s independent of the physical layout on storage device. The same directory structure could map to files distributed across many disks or nodes (as in Lustre, BeeGFS, or GPFS).</li></ol>
+<h3>2. What&#x27;s True and what&#x27;s easy to misunderstand?</h3>
+<p>The definition is accurate in that directories hold references to file inodes (or equivalent structures), not the file data itself. But it’s incomplete if we take “logical” too loosely:</p>
+<ul><li>Directories are implemented physically on disk — usually as tables or trees of entries mapping filenames to inode numbers.</li><li>So they’re not purely abstract; they’re a logical abstraction backed by a physical data structure.</li></ul>
+<p>You could reframe it as:</p>
+<pre><code>A directory is a logical mapping from human-readable names to file metadata (inodes), physically implemented through data structures managed by the filesystem’s metadata service.</code></pre>
+<h2>3. Unix Like System ?!</h2>
+<p>A Unix-like system refers to any os that behaves similarly to the original UNIX, follows its design philosophy, and often implements its standards, but isn&#x27;t necessarily derived directly from the original UNIX source code.</p>
+<h3>1. Historical Context</h3>
+<ul><li>UNIX was developed in the late 1960s at Bell Labs by Ken Thompson, Dennis Ritchie, and others.</li><li>Over time, UNIX became both a technical model (its architecture, tools, and philosophy) and a cultural model (its simplicity, modularity, and text-based approach).</li></ul>
+<blockquote><p>When newer systems adopted its design ideas — but not its code, they became known as “Unix-like.”</p></blockquote>
+<h3>2. Core Traits of Unix-like Systems</h3>
+<p>They generally share these key features:</p>
+<ul><li><strong>File system hierarchy</strong>: Everything is a file — devices, sockets, text, all accessed through file-like interfaces.</li><li><strong>Multiuser, multitasking model</strong>: Designed from the start for multiple users and concurrent processes.</li><li><strong>Command-line shell</strong>: Interaction primarily through text commands (e.g., bash, zsh, tcsh).</li><li><strong>Small, composable utilities</strong>: Tools that “do one thing well” and can be combined via pipes (|) and redirection.</li><li>POSIX compliance: They follow the Portable Operating System Interface standard, which defines UNIX-like APIs and behavior.</li></ul>
+<p><a href="../../../#/fields/system-administration/under-the-hood">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

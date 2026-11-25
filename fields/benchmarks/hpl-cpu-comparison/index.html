@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Why Does Intel&#x27;s HPL Binary Beat Netlib by 60% — Then Suddenly Not?</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/benchmarks/hpl-cpu-comparison/">
+<meta name="description" content="Why Intel&#x27;s HPL binary beats the Netlib one by 60% at small problem sizes but barely matters at large ones, and what to do about it.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Why Does Intel&#x27;s HPL Binary Beat Netlib by 60% — Then Suddenly Not?">
+<meta property="og:description" content="Why Intel&#x27;s HPL binary beats the Netlib one by 60% at small problem sizes but barely matters at large ones, and what to do about it.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/benchmarks/hpl-cpu-comparison/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/benchmarks/hpl-cpu-comparison/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../.docs/prerender-redirect.js" data-target="../../../#/fields/benchmarks/hpl-cpu-comparison"></script>
+<main>
+<h1>Why Does Intel&#x27;s HPL Binary Beat Netlib by 60% — Then Suddenly Not?</h1>
+<p><em>Why Intel&#x27;s HPL binary beats the Netlib one by 60% at small problem sizes but barely matters at large ones, and what to do about it.</em></p>
+<blockquote><p><strong>The setup:</strong> same 94-core node, same fixed block size (NB=384), two different <code>xhpl</code> binaries — Intel&#x27;s optimized container vs. plain-vanilla Netlib. At small problem sizes Intel crushes it. At large problem sizes... it basically doesn&#x27;t matter. Here&#x27;s why.</p></blockquote>
+<hr>
+<h2>The headline numbers</h2>
+<p>At the smallest problem size tested, the Intel container wasn&#x27;t just a little ahead — it lapped Netlib:</p>
+<table><thead><tr><th>Metric</th><th>Result</th></tr></thead><tbody><tr><td><strong>N = 50,000</strong></td><td>Intel: <code>3,818.21</code> GFLOPS vs. Netlib: <code>2,364.87</code> GFLOPS → <strong>+61.5%</strong></td></tr><tr><td><strong>N = 200,000</strong></td><td>Intel: <code>5,616.45</code> GFLOPS vs. Netlib: <code>5,331.69</code> GFLOPS → <strong>+5.3%</strong></td></tr></tbody></table>
+<p>Same CPUs. Same core count. Same NB. That&#x27;s not a hardware story — that&#x27;s a <strong>software/runtime story</strong>, and it disappears almost entirely once the problem gets big enough.</p>
+<h2>The full curve</h2>
+<table><thead><tr><th>Problem Size (N)</th><th>Intel Container (GFLOPS)</th><th>Netlib <code>xhpl</code> (GFLOPS)</th><th>Advantage</th></tr></thead><tbody><tr><td>50,000</td><td><strong>3,818.21</strong></td><td>2,364.87</td><td>🟢 +61.45%</td></tr><tr><td>100,000</td><td><strong>5,438.80</strong></td><td>4,284.95</td><td>🟢 +26.93%</td></tr><tr><td>150,000</td><td><strong>5,648.35</strong></td><td>5,124.94</td><td>🟡 +10.21%</td></tr><tr><td>200,000</td><td><strong>5,616.45</strong></td><td>5,331.69</td><td>⚪ +5.34%</td></tr></tbody></table>
+<p>Notice the shape: Intel plateaus almost immediately (~5,600–5,650 GFLOPS from N=100k onward), while Netlib keeps climbing and closing the gap. That convergence pattern is the clue.</p>
+<hr>
+<h2>So what&#x27;s actually causing this?</h2>
+<h3>1. Overhead vs. compute — a race that only matters early</h3>
+<p>HPL&#x27;s runtime is roughly: <strong>fixed startup overhead + O(N³) compute time.</strong> At small N, that fixed overhead — process-grid init, thread pinning, OpenMP binding, memory allocation — eats a <em>huge</em> percentage of total runtime. At large N, raw floating-point work dwarfs it completely.</p>
+<pre><code>Runtime(N) ≈ startup_overhead + compute(N³)
+
+Small N  →  overhead dominates  →  the &quot;faster startup&quot; binary wins big
+Large N  →  compute dominates   →  both binaries converge toward the same ceiling</code></pre>
+<p>Concretely: at N=50,000 the runs finished in <strong>21.8s (Intel) vs. 35.2s (Netlib)</strong> — a gap that&#x27;s mostly attributable to Intel&#x27;s streamlined thread pinning, OpenMP binding, and memory-alignment wrappers doing their job <em>before the real math even starts</em>. Once N crosses ~150,000, compute time swamps that startup cost and Netlib naturally catches up as raw GEMM throughput takes over.</p>
+<h3>2. Intel plays defense against a bad HPL.dat</h3>
+<p>This is the subtler one. Netlib&#x27;s <code>xhpl</code> is a <strong>literalist</strong> — it parses <code>HPL.dat</code> exactly as written. Feed it a malformed or conflicting entry (say, <code># of NBs = 1</code> but two values <code>192 256</code> on the line), and it just... ignores the extras. No optimization, no correction, no warning.</p>
+<p>Intel&#x27;s <code>xhpl_intel64_dynamic</code>, by contrast, is an <strong>adaptive runtime</strong>. It inspects the parsed config and, if it spots something suboptimal, can silently auto-tune block sizes, process-grid mappings, or BLAS call parameters underneath you — actively working around a bad config file to avoid leaving hardware on the table.</p>
+<blockquote><p>[!NOTE] This means Intel&#x27;s &quot;advantage&quot; at small N is partly <em>runtime intelligence covering for tuning you didn&#x27;t do</em>, not raw compute superiority. That&#x27;s important context when comparing the two.</p></blockquote>
+<hr>
+<h2>The takeaway</h2>
+<pre><code>Intel&#x27;s edge at small N  =  faster startup/init  +  auto-correction of a suboptimal HPL.dat
+Intel&#x27;s edge at large N  ≈  basically gone, because compute dominates for both binaries</code></pre>
+<p><strong>Neither binary has more raw FLOP capability than the other at peak workload.</strong> The gap you see at small problem sizes is architectural overhead mitigation and algorithmic auto-tuning — not silicon.</p>
+<h2>What to actually do about it</h2>
+<p>If you&#x27;re stuck on Netlib and want Intel-like numbers at smaller N, don&#x27;t just accept the gap — go tune it yourself:</p>
+<ul><li>[ ] Tune <code>PFACT</code> (panel factorization algorithm) in <code>HPL.dat</code></li><li>[ ] Tune <code>MAPS</code> / look-ahead depth to reduce synchronization stalls</li><li>[ ] Explicitly set thread-to-core affinity instead of relying on defaults</li><li>[ ] Double-check your <code>NB</code>, process grid (<code>P×Q</code>), and <code># of NBs</code> entries are internally consistent — don&#x27;t rely on any binary to save you from a sloppy config</li></ul>
+<p>And more broadly: <strong>never compare two HPL binaries at a single problem size.</strong> Run the full curve. A 61% gap at N=50,000 and a 5% gap at N=200,000 tell two completely different stories about the same hardware.</p>
+<p><a href="../../../#/fields/benchmarks/hpl-cpu-comparison">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>RBAC: The Error Message Writes the Rule for You</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/kubernetes/rbac-and-the-limited-viewer/">
+<meta name="description" content="Read a Forbidden error as the rule you need, build a read-only user in two commands, and see RBAC&#x27;s guardrails and why the binding is the off switch for a certificate.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="RBAC: The Error Message Writes the Rule for You">
+<meta property="og:description" content="Read a Forbidden error as the rule you need, build a read-only user in two commands, and see RBAC&#x27;s guardrails and why the binding is the off switch for a certificate.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/kubernetes/rbac-and-the-limited-viewer/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/kubernetes/rbac-and-the-limited-viewer/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/devops/kubernetes/rbac-and-the-limited-viewer"></script>
+<main>
+<h1>RBAC: The Error Message Writes the Rule for You</h1>
+<p><em>Read a Forbidden error as the rule you need, build a read-only user in two commands, and see RBAC&#x27;s guardrails and why the binding is the off switch for a certificate.</em></p>
+<blockquote><p><strong>Part 13 of the Kubernetes series.</strong> Mateo has his certificate and gets a wall of &quot;Forbidden&quot;. By the end you&#x27;ll read that error as a ready-made recipe, build a read-only user in four commands, and see why RBAC refuses to let anyone hand out keys they don&#x27;t hold.</p></blockquote>
+<hr>
+<h2>Forbidden, again</h2>
+<p>Mateo from <a href="../../../../fields/devops/kubernetes/your-kubeconfig-is-a-house-key/">part 12</a> has a certificate of his own, valid for an hour. He runs his first command:</p>
+<pre><code class="language-text">$ kubectl get pods -n dev
+Error from server (Forbidden): pods is forbidden: User &quot;mateo&quot; cannot list resource &quot;pods&quot; in API group &quot;&quot; in the namespace &quot;dev&quot;</code></pre>
+<p>The teammate who cut his key sighs. &quot;RBAC is a headache. Just bind him to <code>cluster-admin</code> and move on.&quot;</p>
+<p>Don&#x27;t. That message isn&#x27;t a wall. It&#x27;s the exact rule you need, written out in plain words, and most people never read it.</p>
+<hr>
+<h2>The error is a sentence</h2>
+<p>Read it again, slowly: <strong>User &quot;mateo&quot; cannot list resource &quot;pods&quot; in API group &quot;&quot; in the namespace &quot;dev&quot;.</strong></p>
+<p>The authorization docs say every request carries the same attributes: the user, its groups, a verb, a resource, an API group and a namespace. The server compares that sentence with the rules it holds. Access is denied by default, and if no rule says yes, the answer is HTTP 403.</p>
+<p>So the error maps onto a rule field by field:</p>
+<table><thead><tr><th>The error says</th><th>The rule field is</th></tr></thead><tbody><tr><td><code>User &quot;mateo&quot;</code></td><td>the <strong>subject</strong> in a binding</td></tr><tr><td><code>list</code></td><td><code>verbs</code></td></tr><tr><td><code>resource &quot;pods&quot;</code></td><td><code>resources</code></td></tr><tr><td><code>API group &quot;&quot;</code></td><td><code>apiGroups</code> (an empty string is the core group)</td></tr><tr><td><code>namespace &quot;dev&quot;</code></td><td>where the Role and its binding live</td></tr></tbody></table>
+<p>That table is most of RBAC. Everything else is the plumbing that turns the sentence into a yes.</p>
+<hr>
+<h2>Four objects, one grammar</h2>
+<p>RBAC has four kinds of object, and permissions are purely additive: there are no &quot;deny&quot; rules. That is why it&#x27;s simpler than it looks. You only ever write the sentences you want to allow.</p>
+<table><thead><tr><th>Object</th><th>Role in the grammar</th><th>Scope</th></tr></thead><tbody><tr><td><strong>Role</strong></td><td>A list of allowed sentences: verbs on resources</td><td>One namespace</td></tr><tr><td><strong>ClusterRole</strong></td><td>The same list, or rules for cluster-wide things like nodes</td><td>No namespace</td></tr><tr><td><strong>RoleBinding</strong></td><td>&quot;These subjects get that list&quot;, here</td><td>One namespace</td></tr><tr><td><strong>ClusterRoleBinding</strong></td><td>&quot;These subjects get that list&quot;, everywhere</td><td>Whole cluster</td></tr></tbody></table>
+<p>A <strong>subject</strong> is a user, a group or a ServiceAccount. A RoleBinding can point at a Role in its own namespace or at a ClusterRole, which grants it only inside the binding&#x27;s namespace. That second trick is how one reusable ClusterRole serves many namespaces.</p>
+<pre><code class="language-mermaid">flowchart LR
+    S[&quot;subject&lt;br/&gt;mateo / group viewers&quot;] --&gt; B[&quot;RoleBinding&lt;br/&gt;namespace dev&quot;]
+    B --&gt; R[&quot;Role or ClusterRole&lt;br/&gt;get list watch pods&quot;]
+    R --&gt; A[&quot;allowed in dev only&quot;]</code></pre>
+<p><em>The binding is the glue and the namespace. The role is only a list.</em></p>
+<p>☕ <strong>Try it before you scroll.</strong> Mateo has a RoleBinding in <code>dev</code> to the built-in <code>view</code> ClusterRole. He runs <code>kubectl get pods -n prod</code>. Does it work? Hint: where does a RoleBinding grant its role?</p>
+<p>No. A RoleBinding grants only in its own namespace, even when it points at a ClusterRole. The proof is in Bind groups, not people.</p>
+<hr>
+<h2>Build the limited viewer</h2>
+<blockquote><p>[!NOTE] Everything in this section was run on a throwaway single-node k3s VM (k3s v1.37.2+k3s1 on Ubuntu 22.04, kernel 5.15), then destroyed. Outputs are real, trimmed only where marked.</p></blockquote>
+<p>Mateo&#x27;s certificate says <code>/CN=mateo/O=viewers</code>, so he arrives as user <code>mateo</code> in group <code>viewers</code>. First, the state before any rule exists:</p>
+<pre><code class="language-text">$ kubectl --kubeconfig mateo.kubeconfig auth whoami
+Username     mateo
+Groups       [viewers system:authenticated]</code></pre>
+<p>He&#x27;s authenticated and can do nothing. Now the limited viewer, as an admin, in two commands:</p>
+<pre><code class="language-bash">kubectl create role limited-viewer -n dev --verb=get --verb=list --verb=watch --resource=pods,pods/log
+kubectl create rolebinding mateo-limited-viewer -n dev --role=limited-viewer --user=mateo</code></pre>
+<p>Then Mateo tries things. Real results:</p>
+<table><thead><tr><th>Command</th><th>Result</th></tr></thead><tbody><tr><td><code>get pods -n dev</code></td><td>works</td></tr><tr><td><code>get pods -n prod</code></td><td><code>Forbidden: ... cannot list resource &quot;pods&quot; ... in the namespace &quot;prod&quot;</code></td></tr><tr><td><code>get secrets -n dev</code></td><td><code>Forbidden: ... cannot list resource &quot;secrets&quot; ...</code></td></tr><tr><td><code>delete pod web -n dev</code></td><td><code>Forbidden: ... cannot delete resource &quot;pods&quot; ...</code></td></tr><tr><td><code>get nodes</code></td><td><code>Forbidden: ... cannot list resource &quot;nodes&quot; ... at the cluster scope</code></td></tr></tbody></table>
+<p>Same user, same cluster, and every neighbour is closed. Log access needed its own entry, <code>pods/log</code>, because a subresource is a separate resource in the rule.</p>
+<blockquote><p>[!WARNING] The first thing that failed in this test wasn&#x27;t RBAC. Creating a pod right after <code>kubectl create namespace dev</code> returned <code>error looking up service account dev/default: serviceaccount &quot;default&quot; not found</code>, because the namespace&#x27;s <code>default</code> ServiceAccount is created a moment later. So no pod existed in <code>dev</code>, and <code>logs</code> and <code>exec</code> were not exercised end to end. <code>kubectl auth can-i get pods/log</code> answered <code>yes</code>; treat the rest as untested.</p></blockquote>
+<hr>
+<h2>Ask before you break things</h2>
+<p>The most useful RBAC command isn&#x27;t one that changes anything. <code>kubectl auth can-i</code> asks the server a yes/no question, and as an admin you can ask it as someone else with <code>--as</code>.</p>
+<pre><code class="language-text">$ kubectl auth can-i list pods -n dev --as mateo
+no                                  # before the Role
+$ kubectl auth can-i get pods/log -n dev --as mateo
+yes                                 # after
+$ kubectl auth can-i delete pods -n dev --as mateo
+no</code></pre>
+<p>Add <code>--list</code> to see everything he can do in a namespace. After the binding, Mateo&#x27;s list gained exactly two rows, <code>pods</code> and <code>pods/log</code>, each <code>[get list watch]</code>. Even before any binding it wasn&#x27;t empty: every user gets <code>selfsubjectreviews</code>, <code>selfsubjectaccessreviews</code>, <code>selfsubjectrulesreviews</code> and a few read-only discovery URLs like <code>/healthz</code> and <code>/version</code>. That&#x27;s how <code>whoami</code> works for someone who can&#x27;t see anything else.</p>
+<p>Build the habit: write the rule, then ask the server whether it does what you meant. It takes seconds and replaces a Slack message that starts with &quot;it still says forbidden&quot;.</p>
+<hr>
+<h2>Bind groups, not people</h2>
+<p>Binding <code>mateo</code> by name works, but now every new colleague is another binding. The certificate&#x27;s <code>O=viewers</code> already put him in a group, so bind that instead, to the built-in <code>view</code> ClusterRole:</p>
+<pre><code class="language-bash">kubectl create rolebinding viewers-view -n dev --clusterrole=view --group=viewers</code></pre>
+<p>Results: <code>get pods -n dev</code> works, <code>get pods -n prod</code> stays <code>Forbidden</code>, and <code>get secrets -n dev</code> stays <code>Forbidden</code> too. That last one is by design. The docs say <code>view</code> does not allow reading Secrets, because a Secret can hold a ServiceAccount token that would give API access as that account. In the test, <code>can-i list secrets --as mateo --as-group viewers</code> answered <code>no</code>.</p>
+<p>The built-in roles are worth knowing by name:</p>
+<table><thead><tr><th>ClusterRole</th><th>In one line (from the docs)</th></tr></thead><tbody><tr><td><code>view</code></td><td>Read most things in a namespace; no Secrets, no Roles or RoleBindings</td></tr><tr><td><code>edit</code></td><td>Read and write most things; can read Secrets and run pods as any ServiceAccount there, so it can act as them</td></tr><tr><td><code>admin</code></td><td>Everything in a namespace, including Roles and RoleBindings</td></tr><tr><td><code>cluster-admin</code></td><td>Anything, anywhere. Bound to the <code>system:masters</code> group</td></tr></tbody></table>
+<p>My recommendation: start from <code>view</code>, bind a group, and add a small Role beside it only for what&#x27;s missing.</p>
+<hr>
+<h2>Three traps that are actually guardrails</h2>
+<p>Each of these looks like RBAC being annoying. Each is RBAC protecting you. All three were run.</p>
+<p><strong>1. You can&#x27;t edit what a binding points at.</strong> Trying to swap the role on <code>viewers-view</code> for <code>admin</code>:</p>
+<pre><code class="language-text">The RoleBinding &quot;viewers-view&quot; is invalid: roleRef: Invalid value: {... &quot;Name&quot;:&quot;admin&quot;}: field is immutable</code></pre>
+<p>Delete the binding and create a new one. The docs explain why: someone allowed to change a binding&#x27;s subjects can&#x27;t quietly change what it grants.</p>
+<p><strong>2. You can&#x27;t hand out keys you don&#x27;t hold.</strong> Mateo was given the right to create Roles and RoleBindings in <code>dev</code>, but no right to read Secrets. He tries to write himself a Secret-reading role:</p>
+<pre><code class="language-text">Error from server (Forbidden): roles.rbac.authorization.k8s.io &quot;grab-secrets&quot; is forbidden: user &quot;mateo&quot; ... is attempting to grant RBAC permissions not currently held:
+{APIGroups:[&quot;&quot;], Resources:[&quot;secrets&quot;], Verbs:[&quot;get&quot; &quot;list&quot;]}</code></pre>
+<p>A role for pods, which he already can read, was created fine. Binding himself to <code>admin</code> was refused too, with a list of every permission he lacked. (That list was long, so I&#x27;ve cut it.) The docs call this privilege escalation prevention, and it&#x27;s enforced by the API itself. It&#x27;s why delegating &quot;can manage access in this namespace&quot; is much safer than it sounds.</p>
+<p><strong>3. A ServiceAccount starts with nothing.</strong></p>
+<pre><code class="language-text">$ kubectl auth can-i list pods -n dev --as system:serviceaccount:dev:default
+no
+# after: kubectl create rolebinding sa-view -n dev --clusterrole=view --serviceaccount=dev:default
+yes
+$ kubectl auth can-i list pods -n prod --as system:serviceaccount:dev:default
+no</code></pre>
+<p>The docs list this as the best practice: a role for a specific ServiceAccount, in a specific namespace. Pods you deploy inherit whatever you give that account, so a monitoring tool should never share the <code>default</code> one.</p>
+<blockquote><p>[!IMPORTANT] Not tested here: wildcards, <code>resourceNames</code>, <code>kubectl auth reconcile</code>. The docs warn that a wildcard in <code>resources</code> or <code>verbs</code> also grants any resource or verb added later. Prefer explicit lists.</p></blockquote>
+<hr>
+<h2>Revoking at the binding</h2>
+<p>Part 12&#x27;s uncomfortable fact was that Kubernetes can&#x27;t revoke a certificate. RBAC gives you the way around it. The test: remove Mateo&#x27;s bindings, and even delete his CSR object.</p>
+<pre><code class="language-text">$ kubectl --kubeconfig mateo.kubeconfig auth whoami
+Username     mateo
+Groups       [viewers system:authenticated]          # the certificate still works
+$ kubectl --kubeconfig mateo.kubeconfig get pods -n dev
+Error from server (Forbidden): pods is forbidden: User &quot;mateo&quot; cannot list resource &quot;pods&quot; ...
+$ openssl x509 -in mateo.crt -noout -enddate
+notAfter=Nov  8 13:50:46 2026 GMT                    # valid until then</code></pre>
+<p>The key still turns in the lock. It opens nothing. Authentication proves who he is, and RBAC decides what that&#x27;s worth. So the real &quot;off switch&quot; for a person is the binding, and the real safety net is a short lifetime on the certificate.</p>
+<hr>
+<h2>Back to Mateo</h2>
+<p>Mateo&#x27;s first Forbidden message told us the rule to write. We wrote it in two commands, tested it with <code>can-i</code> before he tried, and checked that the neighbours stayed locked. Later we closed it by deleting the binding, and his certificate became a keyring ornament.</p>
+<p>Nobody had to bind <code>cluster-admin</code>. The headache was reading the error as a complaint instead of a spec.</p>
+<p><strong>Takeaway:</strong> a Forbidden message is a rule written in advance, namely subject, verb, resource, group and namespace, so read it, write exactly that, and check with <code>kubectl auth can-i --as</code> before anyone else does.</p>
+<p><strong>Challenge:</strong> a monitoring tool needs to list pods, nodes and events across the whole cluster, read-only, and nothing else. Which of the four objects do you need, which <code>resources</code> and <code>verbs</code> go in it, and why must it use its own ServiceAccount? The next page, on polite API server monitoring, builds it.</p>
+<hr>
+<h2>References</h2>
+<ul><li><a href="https://kubernetes.io/docs/reference/access-authn-authz/rbac/">Using RBAC Authorization</a>: the four objects, additive permissions, roleRef immutability, subresources, user-facing roles, escalation prevention, ServiceAccount permissions, wildcard caution.</li><li><a href="https://kubernetes.io/docs/reference/access-authn-authz/authorization/">Authorization</a>: request attributes, default deny, HTTP 403, and <code>kubectl auth can-i</code> with <code>--as</code>.</li><li><a href="https://kubernetes.io/docs/reference/access-authn-authz/authentication/">Authenticating</a>: certificate username and groups, and <code>kubectl auth whoami</code>.</li><li><a href="https://kubernetes.io/docs/reference/access-authn-authz/certificate-signing-requests/">Certificates and Certificate Signing Requests</a>: how Mateo&#x27;s certificate was issued.</li></ul>
+<p><a href="../../../../#/fields/devops/kubernetes/rbac-and-the-limited-viewer">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

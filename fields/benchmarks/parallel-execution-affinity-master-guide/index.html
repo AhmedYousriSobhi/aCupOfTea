@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Parallel Execution and Affinity</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/benchmarks/parallel-execution-affinity-master-guide/">
+<meta name="description" content="How to place processes, threads and GPUs on a node: srun vs mpirun, NUMA, CPU binding syntax and GPU mapping, with tuning advice for HPL and NCCL.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Parallel Execution and Affinity">
+<meta property="og:description" content="How to place processes, threads and GPUs on a node: srun vs mpirun, NUMA, CPU binding syntax and GPU mapping, with tuning advice for HPL and NCCL.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/benchmarks/parallel-execution-affinity-master-guide/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/benchmarks/parallel-execution-affinity-master-guide/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../.docs/prerender-redirect.js" data-target="../../../#/fields/benchmarks/parallel-execution-affinity-master-guide"></script>
+<main>
+<h1>Parallel Execution and Affinity</h1>
+<p><em>How to place processes, threads and GPUs on a node: srun vs mpirun, NUMA, CPU binding syntax and GPU mapping, with tuning advice for HPL and NCCL.</em></p>
+<blockquote><p><strong>Objective:</strong> master topology-aware execution, process-to-core mapping, NUMA boundary alignment, and launcher behavior across SLURM, OpenMPI, and MPICH — because 90% of &quot;mysterious&quot; HPC performance problems are actually a misalignment between these layers, not a hardware fault.</p></blockquote>
+<hr>
+<h2>1. The mental model</h2>
+<p>Every &quot;why is my job slow / crashing / underutilizing the node&quot; question traces back to one of four layers. Performance problems are almost always a <strong>misalignment between adjacent layers</strong>, not a broken layer in isolation:</p>
+<pre><code>┌───────────────────────────────────────────────────────────────────────┐
+│ Layer 1 — SLURM (Resource Allocator)                                  │
+│ Maps cgroups, steps, and requested slots across nodes                 │
+└───────────────────────────────────────────────────────────────────────┘
+                                  │
+                                  ▼
+┌───────────────────────────────────────────────────────────────────────┐
+│ Layer 2 — Launcher Engine (srun vs. mpirun / mpiexec)                 │
+│ Spawns task structures, bootstraps PMI/PMIx, initializes transport    │
+└───────────────────────────────────────────────────────────────────────┘
+                                  │
+                                  ▼
+┌───────────────────────────────────────────────────────────────────────┐
+│ Layer 3 — Application Runtime (MPI Ranks + OpenMP Threads)            │
+│ Allocates memory, spawns pthreads per OMP_NUM_THREADS                 │
+└───────────────────────────────────────────────────────────────────────┘
+                                  │
+                                  ▼
+┌───────────────────────────────────────────────────────────────────────┐
+│ Layer 4 — Linux Kernel &amp; Hardware Topology (NUMA / Cores / GPUs)      │
+│ Enforces sched_setaffinity(), mbind(), PCIe/NVLink routing            │
+└───────────────────────────────────────────────────────────────────────┘</code></pre>
+<h3>The three formulas that decide everything</h3>
+<blockquote><p>[!CAUTION] <strong>1 SLURM &quot;CPU&quot; ≠ 1 physical core</strong>, if Simultaneous Multithreading (SMT/Hyperthreading) is active. Always explicitly manage SMT — never assume.</p></blockquote>
+<hr>
+<h2>2. Process vs. thread — know your boundaries</h2>
+<ul><li><strong>MPI Rank</strong> = an independent OS process with its own virtual address space, page tables, and file descriptors. Talks to other ranks via shared memory (<code>/dev/shm</code>, <code>vmsplice</code>) within a node, or network fabrics (InfiniBand/RoCE via UCX/libfabric) across nodes.</li><li><strong>OpenMP Thread</strong> = a <code>pthread</code> living <em>inside</em> an MPI rank&#x27;s address space. All threads in a rank share heap, globals, and file descriptors — but each keeps its own call stack (<code>OMP_STACKSIZE</code>).</li></ul>
+<pre><code>┌─────────────────────────────────────────────────────────────────────┐
+│ Physical Dual-Socket Node (e.g., 2× 48-Core CPUs = 96 Cores total)   │
+│                                                                       │
+│  ┌───────────────────────────┐   ┌───────────────────────────┐      │
+│  │ Socket 0 (NUMA 0,1)       │   │ Socket 1 (NUMA 2,3)        │      │
+│  │  ┌─────────────────────┐  │   │  ┌─────────────────────┐   │      │
+│  │  │ MPI Rank 0 (Process) │  │   │  │ MPI Rank 1 (Process) │  │      │
+│  │  │  Private Heap        │  │   │  │  Private Heap        │  │      │
+│  │  │  Thread 0 → Core 0    │  │   │  │  Thread 0 → Core 24   │  │      │
+│  │  │  Thread 1 → Core 1    │  │   │  │  Thread 1 → Core 25   │  │      │
+│  │  │  ...                  │  │   │  │  ...                  │  │      │
+│  │  │  Thread 23 → Core 23  │  │   │  │  Thread 23 → Core 47  │  │      │
+│  │  └─────────────────────┘  │   │  └─────────────────────┘   │      │
+│  └───────────────────────────┘   └───────────────────────────┘      │
+│                    Memory Interconnect: UPI / xGMI                   │
+└─────────────────────────────────────────────────────────────────────┘</code></pre>
+<hr>
+<h2>3. <code>srun</code> vs. <code>mpirun</code>: pick a lane</h2>
+<table><thead><tr><th>Feature</th><th><code>srun</code> (SLURM-native)</th><th><code>mpirun</code> / <code>mpiexec</code> (MPI-native)</th></tr></thead><tbody><tr><td><strong>Bootstrapping</strong></td><td>Direct via <code>slurmstepd</code> daemons</td><td>SSH/rsh, or SLURM&#x27;s PMI/PMIx plugin</td></tr><tr><td><strong>Affinity enforcement</strong></td><td>Direct cgroup / <code>sched_setaffinity</code> control</td><td>MPI runtime&#x27;s internal binding engine</td></tr><tr><td><strong>Accounting</strong></td><td>Native per-task tracking in <code>sacct</code></td><td>Tracked as one monolithic process</td></tr><tr><td><strong>Heterogeneous jobs</strong></td><td>Native <code>hetjob</code> syntax</td><td>Complex command-line workarounds</td></tr><tr><td><strong>MPI interoperability</strong></td><td>Needs PMI2/PMIx compiled into MPI</td><td>Native to the specific MPI implementation</td></tr></tbody></table>
+<p><strong>How they talk to MPI under the hood:</strong></p>
+<pre><code>srun → PMIx/PMI2 Plugin → libpmix.so → MPI_Init()</code></pre>
+<p><strong>OpenMPI patterns:</strong></p>
+<pre><code class="language-bash"># Recommended: native SLURM orchestration via PMIx
+srun --mpi=pmix ./mpi_app
+
+# Hybrid: mpirun leveraging a SLURM allocation
+mpirun --mca pml ucx --mca btl ^openib ./mpi_app</code></pre>
+<p><strong>MPICH / Intel MPI patterns:</strong></p>
+<pre><code class="language-bash"># Intel MPI over SLURM&#x27;s PMI2
+export I_MPI_PMI_LIBRARY=/usr/lib64/libpmi2.so
+srun --mpi=pmi2 ./intel_app
+
+# Intel MPI Hydra engine, passed through SLURM&#x27;s environment
+mpiexec -bootstrap slurm -n $SLURM_NTASKS ./intel_app</code></pre>
+<blockquote><p>[!WARNING] <strong>The Dual-Binding Trap.</strong> If you use <code>mpirun</code> inside an <code>sbatch</code> allocation, do <strong>not</strong> pass aggressive binding flags to both SLURM (<code>--cpu-bind</code>) <em>and</em> <code>mpirun</code> (<code>--bind-to core</code>) at once. They can fight over bitmasks — the classic failure mode is every single MPI rank silently getting pinned to CPU core 0.</p></blockquote>
+<hr>
+<h2>4. NUMA architecture, in one picture</h2>
+<p>Modern chiplet-based CPUs (AMD EPYC Zen 4/5, Intel Xeon Emerald/Granite Rapids) present multiple NUMA nodes per physical socket:</p>
+<pre><code>┌────────────────────────────────────────────────────────────────────┐
+│ NUMA Node 0                                                         │
+│  ┌────────────────┐  ┌────────────────┐  ┌───────────────────┐     │
+│  │ L3 Cache Dom. 0 │  │ L3 Cache Dom. 1 │  │ Local DDR5        │     │
+│  │ [Core 0-5]      │  │ [Core 6-11]     │  │ Memory Controller │     │
+│  └────────────────┘  └────────────────┘  └───────────────────┘     │
+└────────────────────────────────────────────────────────────────────┘
+                                 ▲
+                    Inter-NUMA Bus (1.5×–2.5× latency penalty)
+                                 ▼
+┌────────────────────────────────────────────────────────────────────┐
+│ NUMA Node 1                                                         │
+│  ┌────────────────┐  ┌────────────────┐  ┌───────────────────┐     │
+│  │ L3 Cache Dom. 2 │  │ L3 Cache Dom. 3 │  │ Local DDR5        │     │
+│  │ [Core 12-17]    │  │ [Core 18-23]    │  │ Memory Controller │     │
+│  └────────────────┘  └────────────────┘  └───────────────────┘     │
+└────────────────────────────────────────────────────────────────────┘</code></pre>
+<h3>The three rules that actually matter</h3>
+<ol><li><strong>Never let an MPI rank or OpenMP thread pool cross a NUMA boundary</strong> unless memory footprint genuinely forces it. Crossing costs you that 1.5–2.5× latency penalty on every access.</li><li><strong>First-touch memory policy</strong> — Linux allocates a physical page on the NUMA domain of whichever CPU thread <em>writes to it first</em>. Initialize arrays using the exact same loop structure (same thread-to-index mapping) you&#x27;ll use for the real computation, or you&#x27;ll &quot;first-touch&quot; your data onto the wrong domain.</li><li><strong>Sub-NUMA Clustering (SNC/NPS4)</strong> — a single physical socket can present as up to 4 separate NUMA nodes to the OS. Tune your MPI rank count to match the actual NUMA domain count, not the socket count.</li></ol>
+<hr>
+<h2>5. CPU binding &amp; affinity syntax</h2>
+<h3>SLURM (<code>--cpu-bind</code>)</h3>
+<pre><code class="language-bash"># Bind each MPI rank strictly to assigned physical cores
+srun --cpu-bind=cores ./app
+
+# Bind ranks to NUMA domains (good for OpenMP apps spanning a NUMA node)
+srun --cpu-bind=sockets ./app
+
+# Print the actual core mask at launch — always do this once per new config
+srun --cpu-bind=verbose,cores ./app</code></pre>
+<h3>OpenMPI (<code>--map-by</code> &amp; <code>--bind-to</code>)</h3>
+<p>OpenMPI splits binding into two stages: <strong>Mapping</strong> (assign ranks to hardware units) and <strong>Binding</strong> (enforce it via syscalls).</p>
+<pre><code class="language-bash"># Map ranks sequentially across NUMA nodes, bind each to a physical core
+mpirun --map-by numa --bind-to core ./app
+
+# Map 4 ranks per node, 16 processing elements (PE) each, for OpenMP threads
+mpirun --map-by ppr:4:node:PE=16 --bind-to core ./app</code></pre>
+<h3>OpenMP thread pinning — never trust the compiler defaults</h3>
+<pre><code class="language-bash"># Standard configuration
+export OMP_NUM_THREADS=16
+export OMP_PROC_BIND=spread    # spread threads across available cores
+export OMP_PLACES=cores        # pin each thread to a physical core (skip hyperthreads)
+
+# Alternative — dense locality (share L3 cache)
+export OMP_PROC_BIND=close     # pack threads tightly</code></pre>
+<hr>
+<h2>6. GPU topology &amp; multi-GPU mapping</h2>
+<p>On heterogeneous clusters (HGX H100/H200, Grace Hopper), CPU-to-GPU PCIe/NVLink mapping directly determines throughput:</p>
+<pre><code>┌──────────────────────────────────────────────────────────────────────┐
+│ Dual-Socket System GPU Topology                                      │
+│                                                                        │
+│ [Socket 0/NUMA 0] ⇄ PCIe/C2C ⇄ [GPU 0] ⇄ NVLink ⇄ [GPU 1]             │
+│           │                                                           │
+│    UPI/xGMI Link (high-latency cross-talk penalty)                    │
+│           ▼                                                           │
+│ [Socket 1/NUMA 1] ⇄ PCIe/C2C ⇄ [GPU 2] ⇄ NVLink ⇄ [GPU 3]             │
+└──────────────────────────────────────────────────────────────────────┘</code></pre>
+<h3>Rule of thumb</h3>
+<p><strong>Bind the MPI rank controlling GPU N to the exact CPU NUMA domain local to GPU N&#x27;s PCIe root complex.</strong></p>
+<pre><code class="language-bash">#!/bin/bash
+#SBATCH --nodes=2
+#SBATCH --ntasks-per-node=4
+#SBATCH --cpus-per-task=16
+#SBATCH --gres=gpu:4
+#SBATCH --gpu-bind=closest     # SLURM auto-maps each task to its nearest GPU
+
+export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
+export OMP_PLACES=cores
+export OMP_PROC_BIND=spread
+
+srun --cpu-bind=cores ./gpu_app</code></pre>
+<h3>When SLURM&#x27;s auto-mapping isn&#x27;t enough — explicit wrapper script</h3>
+<p>For non-standard device indices or driver mappings:</p>
+<pre><code class="language-bash">#!/bin/bash
+# select_gpu.sh — custom binding wrapper
+
+LOCAL_RANK=${SLURM_LOCALID:-${OMPI_COMM_WORLD_LOCAL_RANK}}
+
+# Map local rank directly to a GPU ID
+export CUDA_VISIBLE_DEVICES=${LOCAL_RANK}
+
+exec &quot;$@&quot;</code></pre>
+<pre><code class="language-bash">srun --ntasks-per-node=4 --cpus-per-task=16 ./select_gpu.sh ./gpu_app</code></pre>
+<hr>
+<h2>7. Benchmarking-grade tuning (HPL, NCCL, etc.)</h2>
+<p>Latency-sensitive workloads — HPL, quantum chemistry, NCCL tests — need OS noise disabled and hardware state locked down.</p>
+<h3>Let vendor wrappers control their own affinity</h3>
+<p>Vendor-optimized launchers (like NVIDIA&#x27;s HPL container wrapper) often run their own internal <code>numactl</code>/<code>hwloc</code> logic. Standard SLURM binding can fight with it:</p>
+<pre><code class="language-bash"># Pass --cpu-bind=none so the container&#x27;s own affinity script has full control
+srun --cpu-bind=none --accel-bind=g ./hpl_wrapper.sh</code></pre>
+<h3>Hardware optimization checklist</h3>
+<ul><li>[ ] <strong>Disable SMT/Hyperthreading</strong> at submission time: <code>#SBATCH --hint=nomultithread</code></li><li>[ ] <strong>Lock CPU &amp; GPU frequencies</strong> — confirm nodes run in High-Performance mode (via IPMI or Slurm node features)</li><li>[ ] <strong>Swap in a faster allocator</strong> for concurrent thread allocation: <code>`</code>bash export LD_PRELOAD=/usr/lib64/libjemalloc.so.2 <code>`</code></li></ul>
+<hr>
+<h2>8. Verify, don&#x27;t assume</h2>
+<p>Never trust that a binding flag &quot;worked.&quot; Check it every time before a production run.</p>
+<h3>Topology inspection tools</h3>
+<pre><code class="language-bash">numactl --hardware          # NUMA domains and processing elements
+lstopo --of ascii           # full CPU/PCIe/GPU topology map
+nvidia-smi topo -m          # GPU-to-CPU affinity matrix</code></pre>
+<h3>In-situ placement verification</h3>
+<pre><code class="language-bash"># SLURM affinity masks
+srun --cpu-bind=verbose,cores hostname
+
+# OpenMPI affinity masks
+mpirun --report-bindings -np 4 ./app</code></pre>
+<p>For code-level verification, embed this directly in your application:</p>
+<pre><code class="language-c">#define _GNU_SOURCE
+#include &lt;sched.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;mpi.h&gt;
+
+void print_affinity() {
+   int rank;
+   MPI_Comm_rank(MPI_COMM_WORLD, &amp;rank);
+   int cpu = sched_getcpu();
+
+   cpu_set_t mask;
+   CPU_ZERO(&amp;mask);
+   sched_getaffinity(0, sizeof(cpu_set_t), &amp;mask);
+
+   printf(&quot;MPI Rank %03d | Running on CPU %03d | Mask Core Count: %d\n&quot;,
+         rank, cpu, CPU_COUNT(&amp;mask));
+}</code></pre>
+<hr>
+<h2>9. Decision matrix &amp; copy-paste templates</h2>
+<h3>Which topology blueprint do I even need?</h3>
+<pre><code>                     [ Target Application Architecture ]
+                                     │
+              ┌──────────────────────┴──────────────────────┐
+              │                                              │
+    [ Shared Memory Only ]                         [ Distributed Memory ]
+              │                                              │
+      Use OpenMP/pthreads                          Determine GPU usage
+       Ranks = 1                                             │
+       OMP_NUM_THREADS = all cores          ┌──────────────────┴──────────────────┐
+                                             │                                     │
+                                       [ Pure CPU ]                     [ GPU Accelerated ]
+                                             │                                     │
+                                     Check NUMA bounds                   Set Ranks = GPUs
+                                             │                            1 Rank per GPU
+                                   ┌─────────┴─────────┐        CPUs/Task = Host Cores/GPU
+                                   │                   │        Use --gpu-bind=closest
+                             [ Flat MPI ]         [ Hybrid ]
+                             (1 Rank/Core)        (MPI+OMP)</code></pre>
+<h3>Template A — Pure OpenMP (single node, high memory)</h3>
+<pre><code class="language-bash">#!/bin/bash
+#SBATCH --job-name=openmp_single
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=64
+#SBATCH --time=02:00:00
+
+export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
+export OMP_PLACES=cores
+export OMP_PROC_BIND=spread
+
+srun --cpu-bind=cores ./openmp_dense_app</code></pre>
+<h3>Template B — Flat MPI (massively parallel scaling)</h3>
+<pre><code class="language-bash">#!/bin/bash
+#SBATCH --job-name=flat_mpi
+#SBATCH --nodes=4
+#SBATCH --ntasks-per-node=128
+#SBATCH --cpus-per-task=1
+#SBATCH --time=04:00:00
+
+export OMP_NUM_THREADS=1
+
+srun --mpi=pmix --cpu-bind=ranks ./mpi_pure_app</code></pre>
+<h3>Template C — Hybrid MPI + OpenMP (NUMA-aligned)</h3>
+<pre><code class="language-bash">#!/bin/bash
+#SBATCH --job-name=hybrid_mpi_omp
+#SBATCH --nodes=2
+#SBATCH --ntasks-per-node=4       # 4 ranks per node = 1 per NUMA domain
+#SBATCH --cpus-per-task=32        # 32 cores per rank
+#SBATCH --time=12:00:00
+
+export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
+export OMP_PLACES=cores
+export OMP_PROC_BIND=close        # keep threads within local NUMA L3 cache
+
+srun --mpi=pmix --cpu-bind=cores ./hybrid_app</code></pre>
+<h3>Template D — HGX multi-GPU scaled node run</h3>
+<pre><code class="language-bash">#!/bin/bash
+#SBATCH --job-name=hgx_h100_cluster
+#SBATCH --nodes=8
+#SBATCH --ntasks-per-node=8       # 8 ranks per node = 8 GPUs per node
+#SBATCH --cpus-per-task=12        # balanced CPU allocation per GPU
+#SBATCH --gres=gpu:8
+#SBATCH --gpu-bind=closest
+
+export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
+export OMP_PLACES=cores
+export OMP_PROC_BIND=spread
+
+# UCX InfiniBand optimizations
+export UCX_NET_DEVICES=mlx5_0:1,mlx5_1:1,mlx5_2:1,mlx5_3:1
+export NCCL_DEBUG=INFO
+
+srun --mpi=pmix --cpu-bind=cores ./gpu_distributed_app</code></pre>
+<hr>
+<p><strong>Bottom line:</strong> every one of these templates is really the same four-layer stack (SLURM → Launcher → Runtime → Hardware) configured to <em>agree with itself</em>. Whenever a job underperforms, walk the stack top to bottom before blaming the network or the silicon — the answer is usually a mismatch between two adjacent layers, not a fault in either one alone.</p>
+<p><a href="../../../#/fields/benchmarks/parallel-execution-affinity-master-guide">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>MetricsQL Surprises and Alerts You Can Test</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/victoriametrics/metricsql-and-vmalert/">
+<meta name="description" content="Why increase() gives different answers in Prometheus and VictoriaMetrics on the same data, and alert rules whose tests are proven to fail when the rule is wrong.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="MetricsQL Surprises and Alerts You Can Test">
+<meta property="og:description" content="Why increase() gives different answers in Prometheus and VictoriaMetrics on the same data, and alert rules whose tests are proven to fail when the rule is wrong.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/victoriametrics/metricsql-and-vmalert/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/victoriametrics/metricsql-and-vmalert/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/devops/victoriametrics/metricsql-and-vmalert"></script>
+<main>
+<h1>MetricsQL Surprises and Alerts You Can Test</h1>
+<p><em>Why increase() gives different answers in Prometheus and VictoriaMetrics on the same data, and alert rules whose tests are proven to fail when the rule is wrong.</em></p>
+<blockquote><p><strong>Part 5 of the [VictoriaMetrics series](/fields/devops/victoriametrics/README.md).</strong> <a href="../../../../fields/devops/victoriametrics/retention-disk-and-backups/">Part 4</a> kept the data safe. This page is about asking it questions: where MetricsQL and PromQL disagree on the same data, and how to write alert rules with tests that would actually catch a broken rule.</p></blockquote>
+<hr>
+<h2>The bug report that wasn&#x27;t</h2>
+<p>You&#x27;re halfway through a migration. Prometheus and VictoriaMetrics both scrape the Slurm exporter, and someone puts the same panel on both: &quot;jobs finished in the last 5 minutes&quot;. Prometheus says 15.79. VictoriaMetrics says 15. The ticket says &quot;VictoriaMetrics is losing data&quot;.</p>
+<p>It isn&#x27;t. Fifteen is the right answer, and 15.79 is a deliberate estimate. Here&#x27;s the proof.</p>
+<hr>
+<h2>Same data, two answers</h2>
+<blockquote><p>[!NOTE] Lab: Prometheus <strong>3.16.0</strong> and VictoriaMetrics <strong>v1.156.0</strong> on a throwaway Ubuntu 24.04.5 sandbox.</p></blockquote>
+<p>Our first try scraped one counter with both databases at once. Even the raw value disagreed (5 vs 4), because the two scrapers hit the target at different moments. That compares scrape timing, not query languages. So we loaded <strong>identical samples</strong> into both: a counter <code>jobs_finished_total</code>, sampled every 15 seconds for 30 minutes, going up by exactly 1 every 20 seconds. Prometheus got it through <code>promtool tsdb create-blocks-from openmetrics</code>, VictoriaMetrics through <code>/api/v1/import/prometheus</code>. Then we asked both the same questions at the same timestamp, 15 minutes in:</p>
+<table><thead><tr><th>Query</th><th>Truth</th><th>Prometheus 3.16.0</th><th>VictoriaMetrics v1.156.0</th></tr></thead><tbody><tr><td><code>jobs_finished_total</code></td><td>45</td><td>45</td><td>45</td></tr><tr><td><code>increase(jobs_finished_total[1m])</code></td><td>3</td><td>4</td><td>3</td></tr><tr><td><code>increase(jobs_finished_total[2m])</code></td><td>6</td><td>6.857142857142857</td><td>6</td></tr><tr><td><code>increase(jobs_finished_total[5m])</code></td><td>15</td><td>15.789473684210526</td><td>15</td></tr><tr><td><code>rate(jobs_finished_total[5m])</code></td><td>0.05</td><td>0.05263157894736842</td><td>0.05</td></tr></tbody></table>
+<p>&quot;Truth&quot; is the counter&#x27;s value at the query time minus its value one window earlier. VictoriaMetrics matched it every time. Prometheus was off by up to a third.</p>
+<hr>
+<h2>Why they disagree</h2>
+<p>A window like <code>[5m]</code> rarely starts and ends exactly on a sample. Each database fills the gaps at the edges differently.</p>
+<p><strong>Prometheus</strong> uses only the samples inside the window, then <strong>extrapolates</strong> the slope out to the window&#x27;s edges. That&#x27;s why it returns fractions for a counter that only ever moves in whole steps.</p>
+<p><strong>MetricsQL</strong> also uses the <strong>last sample before the window</strong> as the starting point, and doesn&#x27;t extrapolate. So <code>increase()</code> over a whole-number counter returns a whole number: the actual difference.</p>
+<p>Neither is a bug; they answer slightly different questions. But for counters you&#x27;ll read as &quot;how many&quot;, like jobs, restarts or ECC errors, the MetricsQL answer is the one a human expects.</p>
+<p>Rule of thumb: <strong>when two dashboards disagree during a migration, compare raw samples first, functions second.</strong> Most &quot;data loss&quot; turns out to be scrape timing or extrapolation.</p>
+<hr>
+<h2>Prometheus 3.16 closed the gap, and VictoriaMetrics can&#x27;t read it</h2>
+<p>Before writing &quot;Prometheus can&#x27;t do this&quot;, we checked. Prometheus 3.7.0 added two experimental <strong>range selector modifiers</strong> behind the <code>promql-extended-range-selectors</code> flag, and 3.16.0 made them stable and always on. Starting 3.16.0 with the old flag just logs that it&#x27;s a no-op. On the same data:</p>
+<table><thead><tr><th>Query</th><th>Prometheus 3.16.0</th></tr></thead><tbody><tr><td><code>increase(jobs_finished_total[5m] anchored)</code></td><td>15</td></tr><tr><td><code>increase(jobs_finished_total[1m] anchored)</code></td><td>3</td></tr><tr><td><code>increase(jobs_finished_total[5m] smoothed)</code></td><td>15</td></tr></tbody></table>
+<p><code>anchored</code> uses the sample in effect at the window&#x27;s start and the last sample at its end, without extrapolation. That&#x27;s the same idea as MetricsQL.</p>
+<p>Now the trap. Send that to VictoriaMetrics v1.156.0:</p>
+<pre><code class="language-text">{&quot;status&quot;:&quot;error&quot;,&quot;errorType&quot;:&quot;400&quot;,&quot;error&quot;:&quot;... argList: unexpected token \&quot;anchored\&quot;; want \&quot;,\&quot;, \&quot;)\&quot;; unparsed data: \&quot;anchored)\&quot;&quot;}</code></pre>
+<p>HTTP 400. A Grafana dashboard written against Prometheus 3.16 with <code>anchored</code> will break when you point it at VictoriaMetrics, and plain <code>increase()</code> will quietly change its numbers in the other direction.</p>
+<p><strong>Recommendation:</strong> while you run both, keep shared dashboards to plain <code>increase()</code>/<code>rate()</code> and accept that the numbers differ slightly. Once you&#x27;ve moved, write queries for the database you actually run.</p>
+<hr>
+<h2>Other differences you&#x27;ll notice</h2>
+<p>From the MetricsQL docs, the ones that show up on real dashboards. We ran the first three on the same lab data; the last row is from the docs only.</p>
+<table><thead><tr><th>What</th><th>Prometheus 3.16.0</th><th>VictoriaMetrics v1.156.0</th></tr></thead><tbody><tr><td><code>(-1)^0.5</code></td><td><code>NaN</code></td><td>Empty result: <code>NaN</code> is dropped</td></tr><tr><td><code>round(jobs_finished_total)</code>, <code>min_over_time(jobs_finished_total[1m])</code></td><td>Result has no <code>__name__</code></td><td>Keeps <code>__name__=&quot;jobs_finished_total&quot;</code></td></tr><tr><td><code>rate(jobs_finished_total)</code>, no window</td><td><code>parse error: expected type range vector</code></td><td><code>0.05</code>; window picked from <code>step</code> and the scrape interval</td></tr><tr><td><code>rate()</code> when Grafana&#x27;s <code>step</code> is smaller than the scrape interval</td><td>Can return empty, per the MetricsQL docs</td><td>Returns values, per the docs (not tested)</td></tr></tbody></table>
+<p>Grafana doesn&#x27;t draw <code>NaN</code> either, so the first row usually looks identical on screen. The last row is handy, but a query using it won&#x27;t run on Prometheus.</p>
+<hr>
+<h2>Three rules that watch the watchers</h2>
+<p>Parts 2 to 4 each found a failure the database won&#x27;t announce. Here they are as alert rules, in a file vmalert reads:</p>
+<pre><code class="language-yaml">groups:
+  - name: vm-self
+    interval: 30s
+    rules:
+      - alert: VMStorageReadOnly
+        expr: vm_storage_is_read_only == 1
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: &quot;VictoriaMetrics at {{ $labels.instance }} is read-only and rejecting writes&quot;
+      - alert: VMScrapeConfigReloadFailed
+        expr: vm_promscrape_config_last_reload_successful == 0
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: &quot;Scrape config reload failed on {{ $labels.instance }}; old config still active&quot;
+      - alert: VMAgentQueueBacklog
+        expr: sum by (instance) (vmagent_remotewrite_pending_data_bytes) &gt; 100e6
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: &quot;vmagent {{ $labels.instance }} has over 100 MB waiting to be sent&quot;</code></pre>
+<table><thead><tr><th>Rule</th><th>Comes from</th><th>Why this <code>for</code></th></tr></thead><tbody><tr><td><code>VMStorageReadOnly</code></td><td>Part 4: <code>/health</code> says OK while writes fail</td><td>Every minute is lost data for unbuffered targets. Page fast</td></tr><tr><td><code>VMScrapeConfigReloadFailed</code></td><td>Part 2: a bad HUP keeps the old config silently</td><td>Gives a human time to fix their own typo before it pages</td></tr><tr><td><code>VMAgentQueueBacklog</code></td><td>Part 3: the queue grows during any outage</td><td>Short blips drain on their own. Fifteen minutes means it&#x27;s not a blip</td></tr></tbody></table>
+<p>Pick the 100 MB threshold from your own queue cap in part 3, not ours.</p>
+<blockquote><p>[!IMPORTANT] These rules must run against a VictoriaMetrics that isn&#x27;t the one being watched. Part 4 showed a read-only instance can&#x27;t store its own <code>vm_storage_is_read_only</code>.</p></blockquote>
+<hr>
+<h2>Tests that can fail</h2>
+<p><strong>vmalert-tool</strong> runs alert rules against fake series and checks what fires and when. The test file uses the Prometheus rule-test format, except that <code>promql_expr_test</code> is called <code>metricsql_expr_test</code>. Save this as <code>rules_test.yml</code> next to <code>rules.yml</code>:</p>
+<pre><code class="language-yaml">rule_files:
+  - rules.yml
+evaluation_interval: 30s
+tests:
+  - name: read-only fires after 1m, not before
+    interval: 30s
+    input_series:
+      - series: &#x27;vm_storage_is_read_only{instance=&quot;vm1:8428&quot;,path=&quot;/var/lib/victoriametrics&quot;}&#x27;
+        values: &#x27;0 0 1 1 1 1&#x27;
+    alert_rule_test:
+      - eval_time: 1m
+        groupname: vm-self
+        alertname: VMStorageReadOnly
+        exp_alerts: []
+      - eval_time: 2m
+        groupname: vm-self
+        alertname: VMStorageReadOnly
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+              instance: vm1:8428
+              path: /var/lib/victoriametrics
+            exp_annotations:
+              summary: &quot;VictoriaMetrics at vm1:8428 is read-only and rejecting writes&quot;
+  - name: a short vmagent backlog does not page
+    interval: 1m
+    input_series:
+      - series: &#x27;vmagent_remotewrite_pending_data_bytes{instance=&quot;agent1:8429&quot;,url=&quot;1:secret-url&quot;}&#x27;
+        values: &#x27;0 200e6 200e6 200e6 0 0&#x27;
+    alert_rule_test:
+      - eval_time: 3m
+        groupname: vm-self
+        alertname: VMAgentQueueBacklog
+        exp_alerts: []
+  - name: a failed reload alerts after 5m, a quick fix doesn&#x27;t
+    interval: 1m
+    input_series:
+      - series: &#x27;vm_promscrape_config_last_reload_successful{instance=&quot;vm1:8428&quot;}&#x27;
+        values: &#x27;1 0 0 0 0 0 0 0&#x27;
+      - series: &#x27;vm_promscrape_config_last_reload_successful{instance=&quot;vm2:8428&quot;}&#x27;
+        values: &#x27;1 0 0 1 1 1 1 1&#x27;
+    alert_rule_test:
+      - eval_time: 3m
+        groupname: vm-self
+        alertname: VMScrapeConfigReloadFailed
+        exp_alerts: []
+      - eval_time: 7m
+        groupname: vm-self
+        alertname: VMScrapeConfigReloadFailed
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+              instance: vm1:8428
+            exp_annotations:
+              summary: &quot;Scrape config reload failed on vm1:8428; old config still active&quot;</code></pre>
+<p>The <code>values</code> shorthand reads as one sample per <code>interval</code>: <code>&#x27;0 0 1 1 1 1&#x27;</code> with a 30s interval means 0 at 0s and 30s, then 1 from 60s on.</p>
+<pre><code class="language-bash">vmalert-tool-prod unittest --files rules_test.yml; echo &quot;exit=$?&quot;</code></pre>
+<pre><code class="language-text">Unit Testing:  rules_test.yml
+SUCCESS
+exit=0</code></pre>
+<p>A green test only proves something if a broken rule turns it red. So break the rules on purpose and make sure each break is caught. This script does that, and it&#x27;s what we&#x27;d put in CI:</p>
+<pre><code class="language-bash">cat &gt; check-rules.sh &lt;&lt;&#x27;EOF&#x27;
+#!/usr/bin/env bash
+# Pass: the real rules pass their tests, and every deliberately broken copy fails them.
+set -uo pipefail
+TOOL=${TOOL:-vmalert-tool-prod}
+fail=0
+
+$TOOL unittest --files rules_test.yml &gt;/dev/null 2&gt;&amp;1 \
+  &amp;&amp; echo &quot;PASS  real rules&quot; || { echo &quot;FAIL  real rules&quot;; fail=1; }
+
+mutants=(
+  &#x27;s/        for: 1m/        for: 5m/&#x27;
+  &#x27;s/        for: 5m/        for: 1m/&#x27;
+  &#x27;s/        for: 15m/        for: 1m/&#x27;
+  &#x27;s/vm_storage_is_read_only == 1/vm_storage_is_read_only == 2/&#x27;
+)
+work=$(mktemp -d); trap &#x27;rm -rf &quot;$work&quot;&#x27; EXIT
+cp rules_test.yml &quot;$work/&quot;
+for m in &quot;${mutants[@]}&quot;; do
+  sed &quot;$m&quot; rules.yml &gt; &quot;$work/rules.yml&quot;
+  if cmp -s rules.yml &quot;$work/rules.yml&quot;; then
+    echo &quot;SKIP  mutant matched nothing: $m&quot;; fail=1; continue
+  fi
+  if $TOOL unittest --files &quot;$work/rules_test.yml&quot; &gt;/dev/null 2&gt;&amp;1; then
+    echo &quot;FAIL  mutant survived: $m&quot;; fail=1
+  else
+    echo &quot;PASS  mutant caught:   $m&quot;
+  fi
+done
+exit $fail
+EOF
+chmod +x check-rules.sh
+./check-rules.sh; echo &quot;exit=$?&quot;</code></pre>
+<pre><code class="language-text">PASS  real rules
+PASS  mutant caught:   s/        for: 1m/        for: 5m/
+PASS  mutant caught:   s/        for: 5m/        for: 1m/
+PASS  mutant caught:   s/        for: 15m/        for: 1m/
+PASS  mutant caught:   s/vm_storage_is_read_only == 1/vm_storage_is_read_only == 2/
+exit=0</code></pre>
+<p>Each <strong>mutant</strong> is a copy of the rules with one realistic mistake. If a mutant passes the tests, the tests have a blind spot. The <code>SKIP</code> check exists because a mutant that no longer matches anything (after someone edits a rule) would otherwise &quot;pass&quot; forever without testing anything.</p>
+<hr>
+<h2>How our own tests lied to us</h2>
+<p>Writing those tests, we got three wrong. Each looked fine until a mutant ran.</p>
+<p><strong>1. A failure for the wrong reason.</strong> Our first broken copy lived in a subfolder, and vmalert-tool said <code>FAILED</code>. Great, except the message was <code>found no rule group in [broken/broken/rules.yml]</code>. Paths in <code>rule_files</code> are resolved <strong>relative to the test file</strong>, not your shell. The rules never loaded. Always read <em>why</em> a test failed.</p>
+<p><strong>2. Checking at the wrong moment.</strong> The backlog test first checked at 5m. A broken rule with <code>for: 1m</code> passed, because by 5m the backlog was gone and nothing would fire under either rule. Moving the check to 3m, mid-backlog, caught it.</p>
+<p><strong>3. Same mistake, different rule.</strong> The reload test checked only at 7m, after <code>vm2</code> had recovered. A <code>for: 1m</code> rule passed again. Adding a 3m check, while both were failing, fixed it.</p>
+<p>The pattern in all three: <strong>a test written to pass will pass.</strong> Write the &quot;should not fire&quot; check at the moment a broken rule <em>would</em> fire.</p>
+<blockquote><p>[!NOTE] vmalert-tool evaluates every group at the file&#x27;s <code>evaluation_interval</code> (default <code>1m</code>) and ignores each group&#x27;s own <code>interval</code>. That&#x27;s why the test file sets <code>evaluation_interval: 30s</code> to match the group. Leave them different and you&#x27;re testing different timing than production runs.</p></blockquote>
+<hr>
+<h2>Run vmalert</h2>
+<p>Check the rules file the same way as the scrape file in part 2. A broken file exits 255; a good one exits 0:</p>
+<pre><code class="language-bash">vmalert-prod -rule=/etc/vmalert/rules.yml -dryRun; echo &quot;exit=$?&quot;</code></pre>
+<p>Then run it against the <strong>monitoring</strong> instance, the one that scrapes your main database from outside:</p>
+<pre><code class="language-bash">vmalert-prod \
+  -rule=/etc/vmalert/rules.yml \
+  -datasource.url=http://10.0.0.6:8428 \
+  -remoteWrite.url=http://10.0.0.6:8428 \
+  -notifier.url=http://10.0.0.6:9093 \
+  -httpListenAddr=10.0.0.6:8880</code></pre>
+<p><code>-datasource.url</code> is where rules are evaluated, <code>-remoteWrite.url</code> is where alert state is written back (as the <code>ALERTS</code> series), and <code>-notifier.url</code> is your Alertmanager.</p>
+<p>In the lab we replaced <code>-notifier.url</code> with <code>-notifier.blackhole</code> (no Alertmanager there), pointed a monitoring instance at a deliberately read-only one, and waited:</p>
+<pre><code class="language-bash">curl -s http://127.0.0.1:8880/api/v1/alerts</code></pre>
+<pre><code class="language-text">VMStorageReadOnly firing 127.0.0.1:8433 2026-11-11T12:50:00+02:00</code></pre>
+<p>The <code>ALERTS{alertname=&quot;VMStorageReadOnly&quot;, alertstate=&quot;firing&quot;}</code> series showed up in the monitoring instance too. Delivery through Alertmanager wasn&#x27;t tested.</p>
+<hr>
+<h2>Back to the bug report</h2>
+<p>The ticket gets closed with three lines: the raw samples are identical in both databases (45 and 45), Prometheus extrapolates <code>increase()</code> to the edges of the window, and 15 is the real number of jobs. If the team wants Prometheus to agree, <code>increase(...[5m] anchored)</code> does that on 3.16, as long as that panel never has to run on VictoriaMetrics.</p>
+<p>The bigger change is what doesn&#x27;t become a ticket any more. Each story in this series now ends in an alert, and each alert has a test that has caught a broken copy of it:</p>
+<table><thead><tr><th>The story</th><th>What used to happen</th><th>What happens now</th></tr></thead><tbody><tr><td><a href="../../../../fields/devops/victoriametrics/single-node-in-ten-minutes/">Part 2</a>: a typo in the scrape file</td><td>The old config ran silently and the new target never appeared</td><td><code>VMScrapeConfigReloadFailed</code> after 5 minutes</td></tr><tr><td><a href="../../../../fields/devops/victoriametrics/vmagent-and-the-network-blip/">Part 3</a>: storage unreachable</td><td>Nobody knew until someone looked at a dashboard</td><td><code>VMAgentQueueBacklog</code> once the queue has been over 100 MB for 15 minutes</td></tr><tr><td><a href="../../../../fields/devops/victoriametrics/retention-disk-and-backups/">Part 4</a>: disk full, <code>/health</code> green</td><td>A weekend of missing data</td><td><code>VMStorageReadOnly</code> after 1 minute, from a separate instance</td></tr></tbody></table>
+<p>The next time two dashboards disagree, compare samples before functions. The next time something breaks, it should page you, and you&#x27;ll already have proof the page works.</p>
+<p><strong>Takeaway:</strong> compare raw samples before blaming a database, and trust an alert rule only after its tests have caught a deliberately broken copy of it.</p>
+<p><strong>Next:</strong> <a href="../../../../fields/devops/victoriametrics/cheatsheet/">Part 6, the cheatsheet</a>, has every step from the series as copy-paste commands.</p>
+<p><strong>Series index:</strong> <a href="../../../../fields/devops/victoriametrics/">VictoriaMetrics</a>. Natural next steps are Grafana on top, and the cluster version once one node isn&#x27;t enough.</p>
+<hr>
+<h2>References</h2>
+<ul><li><a href="https://docs.victoriametrics.com/victoriametrics/metricsql/">MetricsQL</a>: intentional differences from PromQL, including <code>rate</code>/<code>increase</code> behaviour, <code>NaN</code> handling and kept metric names.</li><li><a href="https://docs.victoriametrics.com/victoriametrics/vmalert-tool/">vmalert-tool</a>: unit tests, the test file format, <code>metricsql_expr_test</code>, and the <code>evaluation_interval</code> limitation.</li><li><a href="https://docs.victoriametrics.com/victoriametrics/vmalert/">vmalert</a>: <code>-datasource.url</code>, <code>-remoteWrite.url</code>, <code>-notifier.url</code>, <code>-notifier.blackhole</code>, <code>-dryRun</code>.</li><li><a href="https://prometheus.io/docs/prometheus/latest/configuration/unit_testing_rules/">Prometheus rule unit testing</a>: the test format vmalert-tool is compatible with.</li><li><a href="https://github.com/prometheus/prometheus/blob/main/CHANGELOG.md">Prometheus changelog</a>: 3.7.0 adds experimental <code>anchored</code> and <code>smoothed</code>; 3.16.0 makes them stable and always on.</li><li><a href="https://prometheus.io/docs/prometheus/3.14/feature_flags/">Prometheus feature flags (3.14)</a>: what <code>anchored</code> and <code>smoothed</code> do.</li><li><a href="https://prometheus.io/docs/prometheus/latest/storage/#backfilling-from-openmetrics-format">promtool tsdb</a>: backfilling from OpenMetrics, used to load identical data.</li><li><a href="https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/#how-to-import-data-in-prometheus-exposition-format">VictoriaMetrics single-node docs, import</a>: the import endpoint used for the same data.</li></ul>
+<p><a href="../../../../#/fields/devops/victoriametrics/metricsql-and-vmalert">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

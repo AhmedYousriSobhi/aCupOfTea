@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Core AI Infrastructure Concepts: A Map</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/business/hpc-industry/ai-infrastructure-core-concepts/">
+<meta name="description" content="Six concepts every AI-infrastructure engineer gets asked about, each fact-checked with a 30-second answer and a pointer to where to go deeper.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Core AI Infrastructure Concepts: A Map">
+<meta property="og:description" content="Six concepts every AI-infrastructure engineer gets asked about, each fact-checked with a 30-second answer and a pointer to where to go deeper.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/business/hpc-industry/ai-infrastructure-core-concepts/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/business/hpc-industry/ai-infrastructure-core-concepts/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../.docs/prerender-redirect.js" data-target="../../../#/business/hpc-industry/ai-infrastructure-core-concepts"></script>
+<main>
+<h1>Core AI Infrastructure Concepts: A Map</h1>
+<p><em>Six concepts every AI-infrastructure engineer gets asked about, each fact-checked with a 30-second answer and a pointer to where to go deeper.</em></p>
+<blockquote><p><strong>A hub page for interview prep and onboarding.</strong> Six concepts come up again and again when people talk about running AI clusters. Each one is usually summarized in a sentence that&#x27;s <em>mostly</em> right. This page fact-checks each summary, gives you a 30-second answer that&#x27;s fully right, and points to the pages in this repo that go deep. By the end you&#x27;ll know which half-truths to avoid and where to learn the whole truth.</p></blockquote>
+<h2>Table of Contents</h2>
+<ul><li>Core AI Infrastructure Concepts: A Map<ul><li>Table of Contents</li><li>How to use this page</li><li>1. Feeding 10,000 GPUs: storage and fabric</li><li>2. Slurm orchestration and multi-tenancy</li><li>3. Kubernetes workload isolation</li><li>4. Heterogeneous jobs and the synchronous bottleneck</li><li>5. The roofline and the sparsity asterisk</li><li>6. The job execution journey</li><li>The thread that ties them together<ul><li>References</li></ul></li></ul></li></ul>
+<hr>
+<h2>How to use this page</h2>
+<p>Each section has the same four parts: the common summary, a verdict, a 30-second answer, and where to go next. Read the verdicts first: they&#x27;re the difference between an answer that sounds senior and one that is.</p>
+<table><thead><tr><th>#</th><th>Concept</th><th>Common summary is...</th></tr></thead><tbody><tr><td>1</td><td>Storage and fabric</td><td>Right, but misses the two things that actually starve GPUs</td></tr><tr><td>2</td><td>Slurm multi-tenancy</td><td>Half right: confuses storing limits with enforcing them</td></tr><tr><td>3</td><td>Kubernetes isolation</td><td>Right, but misses the toleration trap and gang scheduling</td></tr><tr><td>4</td><td>Heterogeneous jobs</td><td>Right</td></tr><tr><td>5</td><td>Sparsity on the roofline</td><td>Right</td></tr><tr><td>6</td><td>The job execution journey</td><td>Good skeleton, three errors: Kueue&#x27;s role, step order, where CUDA comes from</td></tr></tbody></table>
+<hr>
+<h2>1. Feeding 10,000 GPUs: storage and fabric</h2>
+<p><strong>The common summary:</strong> <em>Scaling to 10,000+ GPUs requires data ingestion on high-performance distributed filesystems such as Lustre or GPFS, paired with InfiniBand or RDMA networks, to prevent GPU starvation.</em></p>
+<p><strong>Verdict: right, but incomplete.</strong> It&#x27;s about bandwidth, while the usual killers are <strong>metadata</strong> (millions of small files) and <strong>checkpoint storms</strong>. And &quot;InfiniBand or RDMA&quot; mixes levels: InfiniBand is one way to do RDMA; RoCE is another.</p>
+<p><strong>30-second answer:</strong></p>
+<blockquote><p>&quot;I&#x27;d use a parallel filesystem that keeps metadata out of the data path, like Lustre or Storage Scale, and feed it large sharded files, because small files are limited by metadata operations, not bandwidth. I&#x27;d size storage for checkpoint bursts, which Meta&#x27;s Llama 3 paper names as a major challenge. The fabric must be RDMA, InfiniBand or RoCE, ideally with separate compute and storage networks, and GPUDirect so data skips the CPU memory hop.&quot;</p></blockquote>
+<p><strong>Go deeper:</strong> <a href="../../../fields/system-administration/ai-storage-and-fabric/">Storage and Fabric for AI Clusters</a></p>
+<hr>
+<h2>2. Slurm orchestration and multi-tenancy</h2>
+<p><strong>The common summary:</strong> <em>`slurmctld` on the head node manages resources, `slurmd` agents run tasks on workers. Multi-tenant accounting, resource limits and history are managed entirely by `slurmdbd`, while `sacctmgr` is merely a client of that daemon.</em></p>
+<p><strong>Verdict: half right.</strong> The daemon roles and <code>sacctmgr</code>&#x27;s role are correct. &quot;Managed entirely by <code>slurmdbd</code>&quot; is wrong where it matters: <code>slurmdbd</code> <strong>stores</strong> limits; <code>slurmctld</code> <strong>enforces</strong> them, and only when <code>AccountingStorageEnforce</code> is set. Set limits without it and they do nothing.</p>
+<p><strong>30-second answer:</strong></p>
+<blockquote><p>&quot;<code>slurmctld</code> schedules and enforces, <code>slurmd</code> launches and contains jobs, and <code>slurmdbd</code> is the accounting database front end. Tenancy is built on associations, cluster plus account plus user plus optional partition, with Grp limits for team quotas, Max limits for job sizes, QOS for policy classes and fairshare for ordering. <code>sacctmgr</code> writes those rules through <code>slurmdbd</code>, but they&#x27;re only enforced once <code>AccountingStorageEnforce</code> includes <code>limits</code>.&quot;</p></blockquote>
+<p><strong>Go deeper:</strong> <a href="../../../fields/schedulers/slurm-accounting-multi-tenancy/">Slurm multi-tenancy: who stores the rules, who enforces them</a> and the <a href="../../../fields/schedulers/slurm-intro/">schedulers intro</a></p>
+<hr>
+<h2>3. Kubernetes workload isolation</h2>
+<p><strong>The common summary:</strong> <em>Kubernetes uses a service-oriented scheduling paradigm. Device plugins such as NVIDIA&#x27;s expose hardware to containers. Admins isolate ML workloads from microservices with node labels, taints and tolerations.</em></p>
+<p><strong>Verdict: right, with two gaps.</strong> A toleration <strong>allows</strong> a pod onto tainted nodes but doesn&#x27;t <strong>send</strong> it there; dedicated nodes need a taint <em>and</em> a label with node affinity. And distributed training needs all-or-nothing (gang) scheduling, which Kubernetes historically left to add-ons like Kueue and Volcano and has only recently started building in natively.</p>
+<p><strong>30-second answer:</strong></p>
+<blockquote><p>&quot;The NVIDIA device plugin advertises GPUs as the <code>nvidia.com/gpu</code> resource. I taint GPU nodes so services stay off, use <code>ExtendedResourceToleration</code> so GPU-requesting pods get the toleration automatically, and add labels with affinity for anything that must run only there, because tolerations permit but don&#x27;t attract. For multi-pod training I need gang scheduling: Kueue or Volcano, or the newer native Workload and PodGroup APIs once they&#x27;re stable for my version.&quot;</p></blockquote>
+<p><strong>Go deeper:</strong> <a href="../../../fields/devops/kubernetes/isolating-gpu-workloads/">Isolating GPU workloads</a>, <a href="../../../fields/devops/kubernetes/fake-gpus-in-kubernetes/">Fake GPUs in Kubernetes</a> and <a href="../../../fields/devops/kubernetes/gpu-allocation-vs-utilization/">GPU allocation vs utilization</a></p>
+<hr>
+<h2>4. Heterogeneous jobs and the synchronous bottleneck</h2>
+<p><strong>The common summary:</strong> <em>Slurm supports mixed hardware via hetjobs, but combining H100s and A100s in one distributed training run creates a synchronous bottleneck: with NCCL AllReduce, the faster hardware idles waiting for the slower.</em></p>
+<p><strong>Verdict: right.</strong> Two refinements make it senior: on datasheet ratios the H100s idle about two-thirds of each compute-bound step, so 8 H100s alone can beat 8 H100s plus 8 A100s; and heterogeneous jobs shine when different hardware runs <strong>different roles</strong>, like a trainer on H100s with rollout workers on A100s. Watch for accidental mixing through a bare <code>|</code> in <code>--constraint</code>.</p>
+<p><strong>30-second answer:</strong></p>
+<blockquote><p>&quot;Yes, Slurm can allocate mixed GPUs, with heterogeneous jobs or constraint counts. For one synchronous run it&#x27;s a bad deal: every all-reduce waits for the slowest GPU, and you lose H100-only features like FP8. I mix hardware across roles, not within a role, and I give flexible users the matching-OR constraint, <code>[h100|a100]</code>, so they get either type but never both.&quot;</p></blockquote>
+<p><strong>Go deeper:</strong> <a href="../../../fields/schedulers/slurm-mixed-gpus/">Mixing GPU Types in Slurm</a></p>
+<hr>
+<h2>5. The roofline and the sparsity asterisk</h2>
+<p><strong>The common summary:</strong> <em>When capacity planning with the roofline, use dense TFLOPS, not the marketed 2:4 sparsity TFLOPS. The sparsity number doubles the calculated ridge point, so teams misdiagnose compute-bound workloads as memory-bandwidth-bound.</em></p>
+<p><strong>Verdict: right.</strong> On an H100, dense BF16 gives a ridge of about 295 FLOP/byte; the sparse headline gives about 590. A kernel at 400 FLOP/byte is compute-bound but looks bandwidth-bound with the wrong number. The sparse figure is only valid for models actually pruned to 2:4, and even then it helps prefill (compute-bound) far more than decode (bandwidth-bound).</p>
+<p><strong>30-second answer:</strong></p>
+<blockquote><p>&quot;The ridge point is peak FLOPS over memory bandwidth, and it must use the dense number unless the model is 2:4 sparse. The datasheet&#x27;s headline is with sparsity, which doubles the ridge and misfiles every workload between the two values as bandwidth-bound, so the team optimizes the wrong axis. If we do prune to 2:4, doubled math helps prefill, and decode only gains from the roughly 44% fewer weight bytes.&quot;</p></blockquote>
+<p><strong>Go deeper:</strong> <a href="../../../fields/generative-ai/llm-inference-performance/compute-bound-vs-memory-bound/">Compute-bound vs memory-bandwidth-bound</a>, <a href="../../../fields/generative-ai/llm-inference-performance/structured-sparsity/">2:4 sparsity</a> and <a href="../../../fields/generative-ai/llm-inference-performance/sparsity-vs-quantization/">sparsity vs quantization</a></p>
+<hr>
+<h2>6. The job execution journey</h2>
+<p><strong>The common summary:</strong> <em>`kubectl apply` hits the API server, which authenticates, validates and stores the job in etcd; an operator like the PyTorch Operator creates launcher and worker pods plus headless Services; Kueue gang-schedules the pods and binds them to nodes; the kubelet asks the NVIDIA device plugin for free GPUs, which mounts drivers and CUDA libraries; the runtime pulls images and boots containers, and Multus adds RDMA interfaces for NCCL.</em></p>
+<p><strong>Verdict: a good skeleton with three real errors.</strong> Kueue is an <strong>admission</strong> controller: it holds whole jobs suspended until quota fits and leaves pod placement to <strong>kube-scheduler</strong>, so with Kueue the operator creates no pods until admission. The <strong>CUDA toolkit</strong> comes from the container image; the NVIDIA Container Toolkit injects only the host&#x27;s driver libraries. And the pod&#x27;s network, Multus interfaces included, is set up <strong>before</strong> the containers start. Smaller fixes: the API server also authorizes and runs admission control, Kubeflow Trainer v2&#x27;s <code>TrainJob</code> replaces <code>PyTorchJob</code>, and &quot;launcher&quot; pods belong to MPIJob.</p>
+<p><strong>30-second answer:</strong></p>
+<blockquote><p>&quot;The API server authenticates, authorizes and runs admission, where Kueue&#x27;s webhook suspends the job, then validates and stores it. Kueue admits the whole job when its quota fits, optionally checking topology. The operator, Kubeflow Trainer via JobSet, creates the pods and a headless Service. kube-scheduler filters on GPUs, taints and affinity and binds each pod. On the node, the kubelet&#x27;s device manager assigns GPUs, the device plugin&#x27;s Allocate says how to expose them, and the NVIDIA Container Toolkit injects driver libraries. The sandbox gets its overlay and Multus RDMA interfaces, then containers start and NCCL runs over RDMA.&quot;</p></blockquote>
+<p><strong>Go deeper:</strong> <a href="../../../fields/devops/kubernetes/job-execution-journey/">The job execution journey</a></p>
+<hr>
+<h2>The thread that ties them together</h2>
+<p>Read the five verdicts again and one idea keeps showing up: <strong>find the real bottleneck before you add capacity.</strong></p>
+<table><thead><tr><th>Concept</th><th>The tempting fix</th><th>The real bottleneck</th></tr></thead><tbody><tr><td>Storage</td><td>More bandwidth</td><td>Metadata operations; checkpoint bursts</td></tr><tr><td>Slurm tenancy</td><td>Set more limits</td><td>The controller isn&#x27;t enforcing them</td></tr><tr><td>Kubernetes</td><td>Add tolerations</td><td>Tolerations don&#x27;t place pods; training needs gang scheduling</td></tr><tr><td>Hetjobs</td><td>Add the idle A100s</td><td>The slowest GPU sets the pace</td></tr><tr><td>Roofline</td><td>Read the headline TFLOPS</td><td>The dense number decides which wall you&#x27;re hitting</td></tr><tr><td>Job journey</td><td>Restart the stuck component</td><td>Find which of the six stops the job is waiting at</td></tr></tbody></table>
+<p>That habit, measuring which resource is actually short, is what the <a href="../../../fields/system-administration/gpu-failure-prediction/">GPU failure prediction</a> and <a href="../../../fields/generative-ai/llm-inference-performance/">LLM inference performance</a> series practice on every page.</p>
+<p><strong>Takeaway:</strong> each of these five summaries is mostly right, and the missing part is always the same: name the real bottleneck, then pick the fix that moves it.</p>
+<p>Related: <a href="../../../business/hpc-industry/hpc-interview-questions/">HPC interview questions</a>.</p>
+<h3>References</h3>
+<p>Each linked page carries its own primary sources. The key ones:</p>
+<ul><li><a href="https://slurm.schedmd.com/resource_limits.html">Slurm: Resource Limits</a> and <a href="https://slurm.schedmd.com/heterogeneous_jobs.html">Heterogeneous Job Support</a></li><li><a href="https://v1-34.docs.kubernetes.io/docs/concepts/configuration/taint-and-toleration">Kubernetes: Taints and Tolerations</a> and <a href="https://kubernetes.io/blog/2026/05/13/kubernetes-v1-36-advancing-workload-aware-scheduling/">v1.36 workload-aware scheduling</a></li><li><a href="https://wiki.lustre.org/Lustre_Architecture_for_Admins">Lustre wiki: Lustre Architecture for Admins</a></li><li><a href="https://docs.nvidia.com/gpudirect-storage/overview-guide/index.html">NVIDIA GPUDirect Storage Overview Guide</a></li><li><a href="https://arxiv.org/abs/2407.21783">Grattafiori et al., &quot;The Llama 3 Herd of Models&quot;, arXiv:2407.21783</a></li><li><a href="https://arxiv.org/abs/2104.08378">Mishra et al., &quot;Accelerating Sparse Deep Neural Networks&quot;, arXiv:2104.08378</a></li><li><a href="https://www.nvidia.com/en-us/data-center/h100/">NVIDIA H100 Tensor Core GPU datasheet</a></li></ul>
+<p><a href="../../../#/business/hpc-industry/ai-infrastructure-core-concepts">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

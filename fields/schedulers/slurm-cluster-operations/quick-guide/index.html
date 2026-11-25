@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Run Slurm Cluster Operations Without Losing Jobs</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-cluster-operations/quick-guide/">
+<meta name="description" content="Copy-paste steps for a drained node, a maintenance reservation, a reboot, an upgrade and SSH access, each with the expected output.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Run Slurm Cluster Operations Without Losing Jobs">
+<meta property="og:description" content="Copy-paste steps for a drained node, a maintenance reservation, a reboot, an upgrade and SSH access, each with the expected output.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-cluster-operations/quick-guide/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-cluster-operations/quick-guide/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/schedulers/slurm-cluster-operations/quick-guide"></script>
+<main>
+<h1>Run Slurm Cluster Operations Without Losing Jobs</h1>
+<p><em>Copy-paste steps for a drained node, a maintenance reservation, a reboot, an upgrade and SSH access, each with the expected output.</em></p>
+<blockquote><p><strong>Quick guide for</strong> the <a href="../../../../fields/schedulers/slurm-cluster-operations/">Cluster operations series</a>. Use it at the terminal when a node is drained or a maintenance window is coming. You end with a node back in service, or a window that did not kill a job.</p></blockquote>
+<h2>Before you start</h2>
+<ul><li>Root on the controller and the nodes, plus OOB/BMC/IPMI console access to every server.</li><li>A hidden root-only partition and a small test job for after the work.</li><li>Backups, taken before any upgrade: <code>StateSaveLocation</code>, the config directory and the accounting database.</li></ul>
+<hr>
+<h2>Part 1: A node drained with &quot;SlurmdSpoolDir is full&quot;</h2>
+<ol><li>Confirm the reason.</li></ol>
+<pre><code class="language-bash">   sinfo -R
+   scontrol show node &lt;node&gt; | grep -iE &#x27;reason|state&#x27;</code></pre>
+<p><strong>Expect:</strong> reason <code>SlurmdSpoolDir is full</code>. <strong>If not:</strong> go to Part 2.</p>
+<ol><li>Find the full filesystem.</li></ol>
+<pre><code class="language-bash">   df -h /var/spool/slurmd /tmp /var/tmp /var/log
+   df -i /var/spool/slurmd</code></pre>
+<p><strong>Expect:</strong> one filesystem full, or <code>df -i</code> full (inodes). <strong>If not:</strong> step 3.</p>
+<ol><li>Find the culprit.</li></ol>
+<pre><code class="language-bash">   du -sh /tmp /var/tmp /var/log /home 2&gt;/dev/null
+   lsof +L1</code></pre>
+<p><strong>Expect:</strong> a huge directory, or a deleted-but-open file (<code>df</code> full, <code>du</code> small). <strong>If not:</strong> read the logs from the time in the reason.</p>
+<ol><li>Free the temp files, then resume.</li></ol>
+<pre><code class="language-bash">   df -h /var/spool/slurmd
+   scontrol update NodeName=&lt;node&gt; State=RESUME
+   sinfo -n &lt;node&gt;</code></pre>
+<p><strong>Expect:</strong> the node is idle and a job starts and finishes. <strong>If not:</strong> it drains again within the hour, so something still fills the disk.</p>
+<p><strong>Don&#x27;t:</strong> <code>rm</code> inside <code>SlurmdSpoolDir</code>. It holds scripts and sockets of running jobs.</p>
+<hr>
+<h2>Part 2: A node drained with &quot;Kill task failed&quot;</h2>
+<ol><li>Read the reason and the timers.</li></ol>
+<pre><code class="language-bash">   sinfo -R
+   scontrol show config | grep -Ei &#x27;killwait|unkillable&#x27;</code></pre>
+<p><strong>Expect:</strong> reason <code>Kill task failed</code>. <strong>If not:</strong> check whether your epilog returned non-zero.</p>
+<ol><li>Look for processes the kernel will not release.</li></ol>
+<pre><code class="language-bash">   ps -eo pid,user,stat,wchan:32,cmd | awk &#x27;$3 ~ /^D/&#x27;</code></pre>
+<p><strong>Expect:</strong> no process in <code>D</code> state. <strong>If not:</strong> fix the filesystem path, or reboot the node (Part 4).</p>
+<ol><li>Resume only when the node is clean.</li></ol>
+<pre><code class="language-bash">   scontrol update NodeName=&lt;node&gt; State=RESUME</code></pre>
+<p><strong>Expect:</strong> the node leaves the drain. <strong>If not:</strong> a node stays drained until a human resumes it.</p>
+<ol><li>Keep the evidence next time: set <code>UnkillableStepProgram=/etc/slurm/unkillable.sh</code> in <code>slurm.conf</code>.</li></ol>
+<p><strong>Don&#x27;t:</strong> raise <code>UnkillableStepTimeout</code> as the fix. It only delays the drain.</p>
+<hr>
+<h2>Part 3: A maintenance window that does not kill jobs</h2>
+<ol><li>Create the reservation.</li></ol>
+<pre><code class="language-bash">   scontrol create reservation ReservationName=maint \
+       StartTime=now+10minutes Duration=60 Nodes=node2 \
+       Flags=MAINT,IGNORE_JOBS Users=root</code></pre>
+<p><strong>Expect:</strong> <code>Reservation created: maint</code>. <strong>If not:</strong> read the error, then check the node name.</p>
+<ol><li>Check it.</li></ol>
+<pre><code class="language-bash">   scontrol show reservation maint
+   sinfo -T</code></pre>
+<p><strong>Expect:</strong> <code>State=INACTIVE</code> until the window opens. <strong>If not:</strong> the reservation was not saved, so recreate it.</p>
+<ol><li>Check what is running on the nodes.</li></ol>
+<pre><code class="language-bash">   squeue -w node2 -o &quot;%i %u %L&quot;</code></pre>
+<p><strong>Expect:</strong> every time limit ends before the window. <strong>If not:</strong> talk to that user. Running jobs are not killed when the window opens.</p>
+<ol><li>When the work is done, release the nodes.</li></ol>
+<pre><code class="language-bash">   scontrol delete ReservationName=maint
+   sinfo -N -o &quot;%N %T&quot;</code></pre>
+<p><strong>Expect:</strong> nodes show <code>idle</code>. <strong>If not:</strong> check the reservation again with <code>sinfo -T</code>.</p>
+<p><strong>Reserve for a person:</strong> <code>sbatch --reservation=demo -w node1 job.sh</code>.</p>
+<p><strong>Don&#x27;t:</strong> expect jobs without <code>--time</code> to fit, because they inherit the partition <code>MaxTime</code>.</p>
+<hr>
+<h2>Part 4: Reboot</h2>
+<p><strong>Compute nodes only</strong> (needs <code>RebootProgram</code> in <code>slurm.conf</code>):</p>
+<pre><code class="language-bash">scontrol reboot ASAP nextstate=RESUME reason=&quot;kernel CHG-2001&quot; cn[001-400]</code></pre>
+<p><strong>Expect:</strong> <code>sinfo -R</code> shows <code>reboot^</code> or <code>draining@</code>, then the node resumes. <strong>If not:</strong> set <code>nextstate=RESUME</code> explicitly.</p>
+<p><strong>Control plane too</strong> (this order, one step each):</p>
+<ol><li>Create a <code>MAINT</code> reservation after the running jobs end.</li><li>Put <code>/etc/nologin</code> on the front-end nodes.</li><li>Check <code>State=DOWN</code> on the partitions in <code>slurm.conf</code>.</li><li>Stop and disable <code>slurmctld</code>, then <code>slurmdbd</code>.</li><li>Back up the SQL database. Stop and disable MariaDB/MySQL.</li><li>Reboot the Slurm and DB servers.</li><li>Start DB, then <code>slurmdbd</code>, then <code>slurmctld</code>. <strong>Expect:</strong> partitions still <code>DOWN</code>.</li><li>Reboot the front-ends, re-apply <code>/etc/nologin</code>, check InfiniBand, mounts and Slurm access, then remove <code>/etc/nologin</code>.</li><li>Reboot the compute nodes and set the state to <code>idle</code>.</li><li>Set the hidden partition <code>UP</code> and run the test job. <strong>Expect:</strong> it runs clean.</li><li>Set the real partitions <code>State=UP</code>.</li></ol>
+<p><strong>Don&#x27;t:</strong> trust &quot;it booted&quot;. Kernel changes can break IB drivers.</p>
+<hr>
+<h2>Part 5: Upgrade</h2>
+<ol><li>Check the hop. From 24.11 on, a release accepts the previous three. <strong>Expect:</strong> your version is in the target&#x27;s list. <strong>If not:</strong> go through an intermediate version and verify it first.</li></ol>
+<ol><li>Back up.</li></ol>
+<pre><code class="language-bash">   scontrol show config | grep StateSaveLocation
+   mysqldump --databases slurm_acct_db &gt; backup.sql</code></pre>
+<p><strong>Expect:</strong> a state directory path, the config directory (usually <code>/etc/slurm/</code>) and a dump file. <strong>If not:</strong> stop. Do not continue without all three.</p>
+<ol><li><code>slurmdbd</code> first. Stop it (<code>sacctmgr shutdown</code> or <code>systemctl stop slurmdbd</code>) and wait until it is fully down. Upgrade its packages, then run the first start by hand:</li></ol>
+<pre><code class="language-bash">   sudo -u slurm slurmdbd -D</code></pre>
+<p><strong>Expect:</strong> <code>sacct</code> and <code>sacctmgr</code> return data after the conversion (Ctrl+C when it finishes). <strong>If not:</strong> read the log. Do not start it through systemd on the first run.</p>
+<ol><li><code>slurmctld</code>, then <code>slurmd</code>. Raise <code>SlurmdTimeout</code> and <code>SlurmctldTimeout</code>, run <code>scontrol reconfig</code>, stop <code>slurmctld</code>, back up <code>StateSaveLocation</code>, upgrade, start <code>slurmd</code> then <code>slurmctld</code>. <strong>Expect:</strong> a job starts and finishes. <strong>If not:</strong> keep the timeouts raised and read the logs. Then put the timeouts back and run <code>scontrol reconfig</code> again.</li></ol>
+<ol><li>Clients and plugins.</li></ol>
+<pre><code class="language-bash">   sinfo --json=v0.0.41 | my_site_script
+   ldd /path/to/binary | grep slurm</code></pre>
+<p><strong>Expect:</strong> pinned JSON output, and no versioned <code>libslurm.so</code>. <strong>If not:</strong> recompile.</p>
+<p><strong>Don&#x27;t:</strong> call it finished until the jobs from before the upgrade have drained. <strong>Roll back:</strong> there is no undo once a daemon has started. Restore <code>StateSaveLocation</code>, the config directory and the database.</p>
+<hr>
+<h2>Part 6: SSH only for users with a job</h2>
+<ol><li>In <code>slurm.conf</code>: <code>task/cgroup</code> and <code>PrologFlags=contain</code>.</li><li>In <code>/etc/ssh/sshd_config</code>: <code>UsePAM yes</code>.</li><li>In the <code>sshd</code> PAM file: <code>account required pam_slurm_adopt.so</code>.</li><li>Switch off <code>pam_systemd</code>:</li></ol>
+<pre><code class="language-bash">   sed -i &#x27;s/^session\toptional\tpam_systemd.so/#&amp;/&#x27; /etc/pam.d/common-session</code></pre>
+<ol><li>Keep a door for admins:</li></ol>
+<pre><code class="language-bash">   groupadd -f hpcadmins
+   usermod -aG hpcadmins admin
+   printf &#x27;+:(hpcadmins):ALL\n-:ALL:ALL\n&#x27; &gt;&gt; /etc/security/access.conf</code></pre>
+<p>Then use these PAM lines:</p>
+<pre><code class="language-text">   account    sufficient    pam_access.so
+   account    required      pam_slurm_adopt.so action_adopt_failure=deny action_generic_failure=deny</code></pre>
+<p><strong>Expect:</strong> a user with a job lands in <code>job_2/step_extern</code>. A user without one gets <code>Access denied by pam_slurm_adopt</code>. <strong>If not:</strong> see the table below.</p>
+<p><strong>Don&#x27;t:</strong> log out of root before a second session proves the change. A PAM mistake locks everyone out.</p>
+<hr>
+<h2>Tips and tricks</h2>
+<ul><li>Email yourself the <code>Reason</code> of every newly drained node from a cron job, so a 3 a.m. drain becomes a 9 a.m. one.</li><li>Put the ticket in <code>reason=</code> when you reboot. It is what <code>sinfo -R</code> shows.</li><li>Alert early: a node health check on free space, run through <code>HealthCheckProgram</code>, turns a surprise drain into a warning.</li><li>Give each job its own temp directory with the <code>namespace/tmpfs</code> plugin (<code>PrologFlags=Contain</code> and a <code>job_container.conf</code>). Before 25.11 it is <code>job_container/tmpfs</code>.</li><li>Set <code>TmpFS=/scratch</code> if that is where jobs write. Jobs can then ask for space with <code>--tmp</code>.</li><li>Before an upgrade, purge old accounting records. A smaller database means a shorter dump and schema update.</li><li>For a self-built Slurm, install each version in its own directory and point a symlink at the active one.</li></ul>
+<h2>Warnings</h2>
+<blockquote><p>[!WARNING] There is no undo once any Slurm daemon has started after an upgrade. Back up <code>StateSaveLocation</code>, the config directory and the database first.</p></blockquote>
+<ul><li>A running job is not killed when a maintenance window opens. Check its time limit before the window.</li><li>A routine system update can pull in the EPEL Slurm package. Add <code>exclude=slurm*</code> to the <code>[epel]</code> section.</li><li>Do not start <code>slurmdbd</code> through systemd the first time after an upgrade. If the conversion outlasts the unit&#x27;s start timeout, systemd kills it halfway, which can lose data.</li><li>Put <code>SlurmdTimeout</code> and <code>SlurmctldTimeout</code> back after the upgrade, or a dead node takes far too long to notice.</li><li><code>/etc/nologin</code> is wiped when a front-end boots. Re-apply it.</li><li>Mass cancels can drain nodes in batches when they all hit the same stalled mount.</li></ul>
+<h2>If it fails</h2>
+<table><thead><tr><th>What you see</th><th>Likely cause</th><th>Fix</th></tr></thead><tbody><tr><td>Drained, <code>df</code> full, <code>du</code> small</td><td>Deleted file held open</td><td><code>lsof +L1</code></td></tr><tr><td>Drained after a job, <code>slurmd</code> log shows an epilog error</td><td>The epilog returned non-zero</td><td>Fix the epilog, then resume</td></tr><tr><td>Short jobs do not run before the window</td><td>No <code>--time</code></td><td>Require <code>--time</code></td></tr><tr><td>User asks why a job waits during maintenance</td><td>Reason text does not mention the reservation</td><td><code>sinfo -T</code></td></tr><tr><td><code>slurmdbd</code> died halfway through an upgrade</td><td>First start went through systemd</td><td>Run <code>sudo -u slurm slurmdbd -D</code> by hand</td></tr><tr><td>SSH session lands in <code>session-15.scope</code></td><td><code>pam_systemd</code> still on</td><td>Comment it out in <code>common-session</code></td></tr></tbody></table>
+<p><strong>Why it works:</strong> <a href="../../../../fields/schedulers/slurm-cluster-operations/slurm-spool-dir-full/">spool dir</a>, <a href="../../../../fields/schedulers/slurm-cluster-operations/slurm-kill-task-failed/">kill task failed</a>, <a href="../../../../fields/schedulers/slurm-cluster-operations/slurm-reservations-and-maintenance/">reservations</a>, <a href="../../../../fields/schedulers/slurm-cluster-operations/slurm-reboot-order/">reboot order</a>, <a href="../../../../fields/schedulers/slurm-cluster-operations/slurm-upgrade-order/">upgrade order</a>, <a href="../../../../fields/schedulers/slurm-cluster-operations/slurm-pam-adopt-ssh-access/">SSH access</a>. Next: <a href="../../../../fields/schedulers/slurm-smoke-tests/">smoke tests</a>.</p>
+<p><a href="../../../../#/fields/schedulers/slurm-cluster-operations/quick-guide">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

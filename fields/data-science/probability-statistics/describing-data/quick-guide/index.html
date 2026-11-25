@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Summarise a Data Set: Which Number, Which Picture</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/describing-data/quick-guide/">
+<meta name="description" content="A cheat sheet for parts 1 to 6 - choose a sampling method, classify the data, pick the picture, pick the middle and the spread, and place one value in its crowd.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Summarise a Data Set: Which Number, Which Picture">
+<meta property="og:description" content="A cheat sheet for parts 1 to 6 - choose a sampling method, classify the data, pick the picture, pick the middle and the spread, and place one value in its crowd.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/describing-data/quick-guide/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/describing-data/quick-guide/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../../.docs/prerender-redirect.js" data-target="../../../../../#/fields/data-science/probability-statistics/describing-data/quick-guide"></script>
+<main>
+<h1>Summarise a Data Set: Which Number, Which Picture</h1>
+<p><em>A cheat sheet for parts 1 to 6 - choose a sampling method, classify the data, pick the picture, pick the middle and the spread, and place one value in its crowd.</em></p>
+<blockquote><p><strong>Quick guide for</strong> <a href="../../../../../fields/data-science/probability-statistics/describing-data/samples-data-types-and-tables/">Samples, Data Types and Tables</a> (parts 1 and 2), <a href="../../../../../fields/data-science/probability-statistics/describing-data/pictures-and-the-middle/">Pictures and the Middle</a> (parts 3 and 4) and <a href="../../../../../fields/data-science/probability-statistics/describing-data/spread-and-position/">Spread and Position</a> (parts 5 and 6). Python 3, standard library only. Formal statements: <a href="../../../../../fields/data-science/probability-statistics/describing-data/technical-reference/">technical reference</a>.</p></blockquote>
+<h2>1. Sample</h2>
+<table><thead><tr><th>Two questions</th><th>Method</th></tr></thead><tbody><tr><td>No groups, by chance</td><td>simple random</td></tr><tr><td>No groups, by pattern</td><td>systematic: <code>k = N / n</code>, random start</td></tr><tr><td>Groups, every group, some people</td><td>stratified: <code>n_h = n * N_h / N</code></td></tr><tr><td>Groups, some groups, every person</td><td>cluster</td></tr></tbody></table>
+<p>Bias does not shrink with <code>n</code>.</p>
+<h2>2. Classify and count</h2>
+<p>Same or different: nominal. Which first: ordinal. How far apart: discrete (counted) or continuous (measured). Digits used as labels are nominal.</p>
+<p>Checks: <code>sum of f = n</code>, <code>sum of f/n = 1</code>, last cumulative frequency <code>= n</code>. Grouped: <code>h = Range / k</code>, rounded up.</p>
+<h2>3. Draw</h2>
+<table><thead><tr><th>Question</th><th>Picture</th></tr></thead><tbody><tr><td>How much lives here?</td><td>histogram (area = count)</td></tr><tr><td>How do two crowds compare?</td><td>frequency polygon</td></tr><tr><td>How many at or below here?</td><td>ogive: <code>(upper boundary, CF)</code></td></tr></tbody></table>
+<h2>4. Middle and spread</h2>
+<table><thead><tr><th>Data</th><th>Middle</th><th>Spread</th></tr></thead><tbody><tr><td>Nominal</td><td>mode</td><td>none</td></tr><tr><td>Ordinal</td><td>median</td><td>IQR</td></tr><tr><td>Symmetric numbers</td><td>mean</td><td>SD</td></tr><tr><td>Skewed or outliers</td><td>median</td><td>IQR</td></tr></tbody></table>
+<p><code>mean &gt; median</code> means a right tail. Grouped mean: <code>sum of (f * M) / sum of f</code>.</p>
+<pre><code class="language-python">import statistics as st
+data = [2, 4, 9]
+st.pvariance(data)   # divides by n: &quot;this is everyone&quot;
+st.variance(data)    # divides by n - 1: &quot;this is a sample&quot; -&gt; 13</code></pre>
+<h2>5. Place one value</h2>
+<p><code>percentile rank = (below + 0.5 * equal) / n * 100</code>; <code>z = (x - mean) / SD</code>.</p>
+<pre><code class="language-python">d = list(range(1, 10))
+st.quantiles(d, n=4)                        # [2.5, 5.0, 7.5]
+st.quantiles(d, n=4, method=&#x27;inclusive&#x27;)    # [3.0, 5.0, 7.0]</code></pre>
+<p>Box plot fences: <code>Q1 - 1.5 * IQR</code> and <code>Q3 + 1.5 * IQR</code>. Say which quartile method you used.</p>
+<h2>Symptoms</h2>
+<table><thead><tr><th>What you see</th><th>Likely cause</th><th>Fix</th></tr></thead><tbody><tr><td>Average describes nobody</td><td>Two clumps</td><td>Histogram first, describe both</td></tr><tr><td>Mean and median far apart</td><td>Long tail or outlier</td><td>Report the median</td></tr><tr><td>Bigger sample, same wrong answer</td><td>Biased frame</td><td>Fix how you choose, not how many</td></tr><tr><td>Quartiles differ between tools</td><td>Different method</td><td>Pick one and say which</td></tr></tbody></table>
+<blockquote><p>[!WARNING] Divide by <code>n</code> only if the data are everyone; divide by <code>n - 1</code> for a sample. Look at the picture before you trust any summary number.</p></blockquote>
+<h2>Try it</h2>
+<h3>Sampling methods lab</h3>
+<p><a href="../../../../../fields/data-science/probability-statistics/labs/sampling-methods.html">Sampling methods lab</a></p>
+<h3>Grouped tables lab</h3>
+<p><a href="../../../../../fields/data-science/probability-statistics/labs/grouped-tables.html">Grouped tables lab</a></p>
+<h3>Describing data lab</h3>
+<p><a href="../../../../../fields/data-science/probability-statistics/labs/describing.html">Describing data lab</a></p>
+<p><strong>Why it works:</strong> the three story pages above (parts 1 to 6). Next: <a href="../../../../../fields/data-science/probability-statistics/probability/">Probability</a>.</p>
+<p><a href="../../../../../#/fields/data-science/probability-statistics/describing-data/quick-guide">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

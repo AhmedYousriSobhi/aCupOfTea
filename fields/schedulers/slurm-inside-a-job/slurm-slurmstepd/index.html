@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>slurmstepd: The Small Daemon That Actually Runs Your Job</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-inside-a-job/slurm-slurmstepd/">
+<meta name="description" content="slurmstepd (1/step/node) bridges slurmd&#x27;s fork and task start. Jobs survive slurmd restarts via SlurmdSpoolDir sockets. Covers how to find, count, and read stepds on busy nodes.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="slurmstepd: The Small Daemon That Actually Runs Your Job">
+<meta property="og:description" content="slurmstepd (1/step/node) bridges slurmd&#x27;s fork and task start. Jobs survive slurmd restarts via SlurmdSpoolDir sockets. Covers how to find, count, and read stepds on busy nodes.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-inside-a-job/slurm-slurmstepd/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-inside-a-job/slurm-slurmstepd/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/schedulers/slurm-inside-a-job/slurm-slurmstepd"></script>
+<main>
+<h1>slurmstepd: The Small Daemon That Actually Runs Your Job</h1>
+<p><em>slurmstepd (1/step/node) bridges slurmd&#x27;s fork and task start. Jobs survive slurmd restarts via SlurmdSpoolDir sockets. Covers how to find, count, and read stepds on busy nodes.</em></p>
+<blockquote><p><strong>Part of the [schedulers](/fields/schedulers/slurm-intro.md) directory.</strong> The intro draws <code>slurmctld</code> and <code>slurmd</code> and then waves at &quot;the job&quot;. This page is about the process that sits between <code>slurmd</code> and your code. Facts come from SchedMD&#x27;s Job Launch Design Guide, support tickets, slurmd man pages and the Slurm source as I read it. Nothing was run on a live cluster for this page, and some details (such as socket handling) are from source files of different versions, so they are marked where it matters.</p></blockquote>
+<ul><li>* *</li></ul>
+<h2>The middle manager nobody draws</h2>
+<p>Every architecture diagram of Slurm has the same three boxes: the controller, the compute-node daemon and the job. It is a clean picture, and it skips the part where the work happens.</p>
+<p>A better org chart looks like this:</p>
+<table><thead><tr><th>Role</th><th>Process</th><th>What it does</th></tr></thead><tbody><tr><td>Executive</td><td><code>slurmctld</code></td><td>Decides who gets what and when. Deliberately kept out of task launch to protect itself from load</td></tr><tr><td>Receptionist</td><td><code>slurmd</code></td><td>Accepts requests, validates credentials, and <strong>forks</strong> a stepd for each step</td></tr><tr><td>Middle manager</td><td><code>slurmstepd</code></td><td>Runs one step, start to finish, on one node</td></tr><tr><td>Staff</td><td>Your tasks</td><td>The reason anyone showed up</td></tr></tbody></table>
+<p>The Job Launch Design Guide says it in one dry sentence: each <code>slurmstepd</code> program executes a single job step. That sentence has consequences, and the rest of this page unpacks them.</p>
+<ul><li>* *</li></ul>
+<h2>One stepd per step per node</h2>
+<p>Per the guide, <code>slurmd</code> tests that the job was not cancelled since the credential was issued, then spawns a <code>slurmstepd</code> to manage the step. Every step type works this way:</p>
+<table><thead><tr><th>Step</th><th>Runs where</th><th>What it runs</th></tr></thead><tbody><tr><td><strong>extern</strong></td><td>Every node of the job, if <code>PrologFlags=contain</code> is set</td><td>Nothing of yours. It exists to hold processes started outside Slurm, like <code>ssh</code> sessions adopted by <a href="../../../../fields/schedulers/slurm-cluster-operations/slurm-pam-adopt-ssh-access/"><code>pam_slurm_adopt</code></a></td></tr><tr><td><strong>batch</strong></td><td>The first node of an <code>sbatch</code> job</td><td>Your batch script</td></tr><tr><td><strong>interactive</strong></td><td>The node with your shell, for <code>salloc</code> with <code>LaunchParameters=use_interactive_step</code></td><td>The shell or command</td></tr><tr><td><strong>normal</strong></td><td>Every node of each <code>srun</code> inside the job, shown in <code>sacct</code> as <code>jobid.stepid</code></td><td>The command given to <code>srun</code></td></tr></tbody></table>
+<p>A normal step has <strong>one stepd per node</strong> in that step, and each stepd can run several tasks.</p>
+<p>An invented but typical case: a two-node <code>sbatch</code> job that calls <code>srun</code> twice. On the first node you can expect an extern stepd, a batch stepd and one stepd for each of the two <code>srun</code> steps. On the second node you can expect the extern stepd and the two step stepds. That makes four stepds on the first node and three on the second, seven small processes for one job, none of them yours.</p>
+<p>That count matters when you hear a story about a node with a job count of 40 and a process list that looks like a small town.</p>
+<ul><li>* *</li></ul>
+<h2>What it does before your code runs</h2>
+<p>The guide lists the stepd&#x27;s functions in order. Between the fork and your first instruction, it:</p>
+<ol><li>Performs MPI setup, using the appropriate plugin</li><li>Calls the <code>switch</code> plugin to do any network configuration</li><li>Creates a container for the step using a <code>proctrack</code> plugin</li><li><strong>Changes user ID</strong> to that of the user</li><li>Configures I/O for the tasks, either with files or with a socket connection back to <code>srun</code></li><li>Sets up environment variables, including many task-specific ones</li><li>Forks and execs the tasks</li></ol>
+<p>And in between, it runs several SPANK plugin hooks at various points.</p>
+<p>Three observations that explain things people find odd:</p>
+<ul><li><strong>The stepd is why your job runs as you.</strong> <code>slurmd</code> runs as root. The step changes to your UID in step 4, before any task starts. A root-owned <code>slurmd</code> never runs your code directly.</li><li><strong>The stepd owns the container.</strong> Process tracking (and, with the cgroup plugins, the resource limits described on the <a href="../../../../fields/schedulers/slurm-inside-a-job/slurm-cgroups-in-practice/">cgroups page</a>) is set up here, which is how &quot;kill the job&quot; later reaches every process.</li><li><strong>Output does not travel through `slurmd`.</strong> The stepd sets up the I/O path itself, either writing to files or connecting back to <code>srun</code>.</li></ul>
+<ul><li>* *</li></ul>
+<h2>Why restarting slurmd does not kill jobs</h2>
+<p>An old SchedMD ticket answers a question every new admin eventually asks: can I restart the daemons while jobs run? The reply is worth quoting in spirit. The controller keeps its state in the <code>StateSaveLocation</code> directory and the job information in the <code>SlurmdSpoolDir</code>, so as long as those directories exist, the information needed to restore state is there. And each job is administered by its stepd, which is forked from <code>slurmd</code> and responsible for monitoring the job and collecting its resource data. <strong>The stepd is unaffected by a `slurmd` restart</strong>, so restarting <code>slurmd</code> does not affect the job.</p>
+<p>The reply adds a caveat in the same breath: lose the stepd and you lose the job. It also says that in practice this almost never happens, because the stepd is small and stable. The ticket dates from 2014, so treat the folklore with some age in mind, but the design has not changed in shape.</p>
+<p>This is why <a href="../../../../fields/schedulers/slurm-cluster-operations/slurm-upgrade-order/">the upgrade page</a> can say that running jobs survive a <code>slurmd</code> upgrade, and why the same page warns that a job started before the upgrade keeps running with the old stepd.</p>
+<ul><li>* *</li></ul>
+<h2>The socket in the spool directory</h2>
+<p>How does a freshly restarted <code>slurmd</code> find a stepd it did not start? Through the filesystem. In the source I read, each stepd creates a Unix domain socket in <code>SlurmdSpoolDir</code> with a name built from the node name, job ID and step ID:</p>
+<pre><code>&lt;SlurmdSpoolDir&gt;/&lt;nodename&gt;_&lt;jobid&gt;.&lt;stepid&gt;</code></pre>
+<p>Other tools use the same naming to talk to a running step. The stepd API describes scanning a directory for sockets whose names begin with the node name as the way to find running step daemons, and the request types on that socket include signalling tasks, asking for state and info, attaching, and listing PIDs in the container. The older source I read creates the socket world-accessible and enforces who may do what inside the request handler, which checks for root or <code>SlurmUser</code> on privileged requests.</p>
+<p>Two details from the source that matter in practice:</p>
+<ul><li><strong>A stale socket is cleaned up with some patience.</strong> If a connection to a socket is refused (nothing is listening), the client treats it as stray, and in the version I read it removes the socket if it is at least ten minutes old.</li><li><strong>A step cannot be created twice.</strong> If a socket with the same name already exists, the stepd logs that the socket already exists and fails to start the step.</li></ul>
+<p>The practical rule that follows is a simple one, and the <a href="../../../../fields/schedulers/slurm-cluster-operations/slurm-spool-dir-full/">spool directory page</a> builds on it: <strong>do not clean up `SlurmdSpoolDir` by hand while jobs are running.</strong> The directory is where <code>slurmd</code> and its stepds find each other. That rule is my inference from the design rather than a sentence in the docs, so check with <code>ls</code> and a test node before you improvise.</p>
+<ul><li>* *</li></ul>
+<h2>Who actually kills the job</h2>
+<p>A subtle point from the Job Launch Design Guide. When a job is cancelled or hits its limit, the termination sequence is described as work done by <strong>`slurmd`</strong>:</p>
+<ol><li>Send <code>SIGCONT</code> and <code>SIGTERM</code> to user tasks</li><li>Wait <code>KillWait</code> seconds if tasks remain</li><li>Send <code>SIGKILL</code></li><li>Wait for all tasks to complete</li><li>Run the <code>Epilog</code></li><li>Send an <code>epilog_complete</code> RPC to <code>slurmctld</code></li></ol>
+<p>The stepd is the one holding the container that makes step 3 reach every process, and it is the one that reports when tasks exit. When step 4 never finishes, you get the drained node described in <a href="../../../../fields/schedulers/slurm-cluster-operations/slurm-kill-task-failed/">Kill Task Failed</a>. One log line from a support ticket on that failure reads &quot;STEPD TERMINATED ON &lt;node&gt; ... DUE TO JOB NOT ENDING WITH SIGNALS&quot;, which is the stepd&#x27;s side of the same story.</p>
+<ul><li>* *</li></ul>
+<h2>The stepd has a memory footprint too</h2>
+<p>The stepd is small, but on a busy node there are a lot of them, and some jobs make theirs grow. Slurm&#x27;s documentation makes a few separate points:</p>
+<ul><li><strong>Reserving memory for the daemons.</strong> <code>MemSpecLimit</code> reserves memory for system use. The <code>slurm.conf</code> description says that, with <code>task/cgroup</code> and <code>ConstrainRAMSpace=yes</code>, the compute node daemons (<code>slurmd</code> plus <code>slurmstepd</code>) are allocated that limit, and the OOM killer is disabled for the daemons&#x27; memory cgroup.</li><li><strong>A version caveat.</strong> The cgroups guide says that under cgroup v1 the reserved resources are also used by <code>slurmstepd</code>, while under cgroup v2 <code>slurmstepd</code> is <strong>not</strong> constrained by resource specialization. Its example is an MPI job whose PMI setup makes <code>slurmstepd</code> use a lot of memory. If those two statements seem to disagree on your version, trust a test over my summary.</li><li><strong>Pinning it in memory.</strong> <code>slurmd -M</code> locks <code>slurmd</code> into memory, and the man page suggests setting <code>LaunchParameters=slurmstepd_memlock</code> in <code>slurm.conf</code> along with it. That helps on nodes that get marked DOWN during heavy swap activity.</li><li><strong>Limits are inherited.</strong> The stepds, and so your tasks, run under the limits of the <code>slurmd</code> systemd service (<code>LimitNOFILE</code>, <code>LimitMEMLOCK</code>, <code>LimitSTACK</code>, <code>LimitCORE</code>), not the ones in <code>/etc/security/limits.conf</code>. Check them with <code>cat /proc/$(pgrep -u 0 slurmd)/limits</code>.</li></ul>
+<p>A note from Niflheim&#x27;s documentation adds a multiplication that is easy to forget: <code>LimitNOFILE</code> applies per job step, so a node running N jobs needs the kernel&#x27;s <code>fs.file-max</code> to allow N times that value.</p>
+<ul><li>* *</li></ul>
+<h2>The step manager: stepd with a promotion</h2>
+<p>Newer Slurm releases changed who creates steps. Traditionally <code>srun</code> asks <code>slurmctld</code> for a step, and the controller does the work. SchedMD&#x27;s SLUG 2024 slides describe a <strong>step manager (stepmgr)</strong> design that reduces RPC congestion and locking on the controller: one stepd of the job (the batch, extern or interactive one) is designated as the step manager, the job allocation tells clients which <code>slurmd</code> hosts it, and <code>srun</code> sends its step-create request there instead. The slides also say that <code>scontrol show steps</code> without a job ID lists the steps managed by the controller, including the extern, batch and interactive ones.</p>
+<p>I have only read the slides, not the release notes, so check your version&#x27;s release notes for how it is enabled and which commands behave differently.</p>
+<ul><li>* *</li></ul>
+<h2>Field guide: find it, count it, read it</h2>
+<p><strong>Find stepds on a node.</strong> Their process titles carry the step ID in brackets, such as <code>[12345.batch]</code>, <code>[12345.extern]</code> and <code>[12345.0]</code>:</p>
+<pre><code class="language-bash">ps -eo pid,ppid,etime,args | grep &#x27;[s]lurmstepd&#x27;</code></pre>
+<p>To see the independence for yourself on a test node, note a stepd&#x27;s PID and parent PID, restart <code>slurmd</code>, and look again. The stepd keeps running with its PID unchanged. That is a test, not a documented guarantee, so try it before you rely on it.</p>
+<p><strong>Count steps per job.</strong></p>
+<pre><code class="language-bash">ps -eo args | grep -o &#x27;\[[0-9]*\.[a-z0-9]*\]&#x27; | sort | uniq -c | sort -rn | head</code></pre>
+<p><strong>See the job&#x27;s processes.</strong> <code>scontrol listpids &lt;jobid&gt;</code> on the node lists the PIDs Slurm tracks for the job. If your process is running on the node and missing from that list, it escaped containment.</p>
+<p><strong>Look at the sockets.</strong></p>
+<pre><code class="language-bash">scontrol show config | grep SlurmdSpoolDir
+ls -l &lt;that directory&gt; | head</code></pre>
+<p><strong>Read the logs.</strong> Step messages land in the node&#x27;s <code>slurmd</code> log, prefixed with the step in brackets, as in <code>[91099.batch] error: ...</code>. <code>SlurmdDebug=debug2</code> gives more detail on the node while you test. Typical lines from support tickets include &quot;Abandoning IO 60 secs after job shutdown initiated&quot; and &quot;done with job&quot;.</p>
+<ul><li>* *</li></ul>
+<h2>📜 The Scroll (keep this)</h2>
+<pre><code class="language-text">slurmctld  decides       slurmd  receives, validates, forks       slurmstepd  runs ONE step on ONE node
+
+stepd types:  extern (PrologFlags=contain) | batch | interactive | normal (jobid.stepid)
+before tasks: MPI setup -&gt; switch plugin -&gt; proctrack container -&gt; setuid -&gt; I/O -&gt; env -&gt; fork/exec
+survives:     slurmd restarts (it is not slurmd&#x27;s child in any way that matters)
+rendezvous:   &lt;SlurmdSpoolDir&gt;/&lt;nodename&gt;_&lt;jobid&gt;.&lt;stepid&gt;   (unix socket)
+dies how:     slurmd sends signals; the stepd holds the container; a stuck process leaves the stepd waiting</code></pre>
+<p>The middle manager is small, quiet, and holds the keys. Most of what is strange about Slurm on a compute node becomes less strange once you ask which stepd it belongs to.</p>
+<ul><li>* *</li></ul>
+<h2>References</h2>
+<ul><li><a href="https://slurm.schedmd.com/job_launch.html">Slurm: Job Launch Design Guide</a></li><li><a href="https://support.schedmd.com/show_bug.cgi?id=689">SchedMD ticket 689: advice for running in production (restarting daemons and stepds)</a></li><li><a href="https://support.schedmd.com/show_bug.cgi?id=11103">SchedMD ticket 11103: unkillable step log lines</a></li><li><a href="https://support.schedmd.com/show_bug.cgi?id=22425">SchedMD ticket 22425: STEPD TERMINATED ... DUE TO JOB NOT ENDING WITH SIGNALS</a></li><li><a href="https://www.mankier.com/8/slurmd">Slurm: slurmd man page (-M, <code>slurmstepd_memlock</code>)</a></li><li><a href="https://slurm.schedmd.com/cgroups.html">Slurm: Control Group in Slurm</a></li><li><a href="https://third-party-mirror.googlesource.com/SchedMD/slurm/+/refs/heads/slurm-2.5/src/common/stepd_api.c">Slurm source: stepd_api.c (socket naming and stale-socket cleanup)</a></li><li><a href="https://slurm.schedmd.com/SLUG24/Step-Management.pdf">SchedMD SLUG 2024: Step Management slides</a></li><li><a href="https://niflheim-system.readthedocs.io/en/latest/Slurm_configuration.html">Niflheim: Slurm configuration (slurmd systemd limits)</a></li></ul>
+<p><a href="../../../../#/fields/schedulers/slurm-inside-a-job/slurm-slurmstepd">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

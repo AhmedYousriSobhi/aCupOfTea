@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Pictures and the Middle: Histogram, Polygon, Ogive, and What &#x27;Typical&#x27; Means</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/describing-data/pictures-and-the-middle/">
+<meta name="description" content="Draw the table before you summarise it: histogram for amount, polygon for comparison, ogive for up to here. Then &quot;typical&quot; is three questions, mean, median and mode, and none answers two clumps.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Pictures and the Middle: Histogram, Polygon, Ogive, and What &#x27;Typical&#x27; Means">
+<meta property="og:description" content="Draw the table before you summarise it: histogram for amount, polygon for comparison, ogive for up to here. Then &quot;typical&quot; is three questions, mean, median and mode, and none answers two clumps.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/describing-data/pictures-and-the-middle/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/describing-data/pictures-and-the-middle/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../../.docs/prerender-redirect.js" data-target="../../../../../#/fields/data-science/probability-statistics/describing-data/pictures-and-the-middle"></script>
+<main>
+<h1>Pictures and the Middle: Histogram, Polygon, Ogive, and What &#x27;Typical&#x27; Means</h1>
+<p><em>Draw the table before you summarise it: histogram for amount, polygon for comparison, ogive for up to here. Then &quot;typical&quot; is three questions, mean, median and mode, and none answers two clumps.</em></p>
+<blockquote><p><strong>Parts 3 and 4 of 15.</strong> Part of the <a href="../../../../../fields/data-science/probability-statistics/">Probability &amp; Statistics</a> series, after <a href="../../../../../fields/data-science/probability-statistics/describing-data/samples-data-types-and-tables/">Samples, Data Types and Tables</a>. The shop, the people and the counts are invented, and every figure was recomputed with Python 3.14.4.</p></blockquote>
+<p>At 16:50 Mira will send &quot;Typical taster score: 75&quot; to the label printer. Nobody gave that score. The arithmetic is right, the question is wrong, and a table that a business partner could not read was the first sign.</p>
+<p><strong>By the end of this page you will be able to:</strong></p>
+<ul><li>Choose among histogram, frequency polygon and ogive by the question you are asking of one table.</li><li>Read a median or a count-up-to-here off an ogive, and compute the median of a grouped table.</li><li>Compute mean, median and mode (including from grouped tables) and say what each answers.</li><li>Recognise when no single &quot;typical&quot; value exists.</li></ul>
+<ul><li>* *</li></ul>
+<h2>&quot;So... is that a lot?&quot;</h2>
+<p>Mira counted the customers on each of the last 50 days and grouped them. She slides the table to her partner Ravi, who is deciding how many baristas to schedule:</p>
+<table><thead><tr><th>Customers per day</th><th>Days</th></tr></thead><tbody><tr><td>100 to 104</td><td>2</td></tr><tr><td>105 to 109</td><td>8</td></tr><tr><td>110 to 114</td><td>18</td></tr><tr><td>115 to 119</td><td>13</td></tr><tr><td>120 to 124</td><td>7</td></tr><tr><td>125 to 129</td><td>1</td></tr><tr><td>130 to 134</td><td>1</td></tr></tbody></table>
+<p>Ravi reads it twice and looks up. &quot;So... is that a lot?&quot;</p>
+<p>Later that week the labels for the new smoky blend need a line: <strong>&quot;Typical taster score: __.&quot;</strong> Mira has the 20 tasting scores (0 to 120): 52, 55, 55, 58, 58, 58, 62, 62, 62, 71, 71, 89, 89, 89, 93, 93, 94, 94, 95, 104. The sum is 1,504, and 1,504 / 20 is <strong>75.2</strong>.</p>
+<ul><li>* *</li></ul>
+<h2>Three ways to get it wrong</h2>
+<ol><li><strong>Read the table harder.</strong> It is correct and useless: it makes Ravi see the shape himself.</li><li><strong>Print the average.</strong> 75 goes to the printer. Then Mira remembers the scores from 74 to 84 had a frequency of zero: not one taster gave anything close to 75.</li><li><strong>Print the median, 71, instead.</strong> It is close to the mean and misleads for the same reason.</li></ol>
+<p>Mira calls the printer before the labels go out and asks Ravi the better question: &quot;What do you actually want to know?&quot;</p>
+<ul><li>* *</li></ul>
+<h2>Three pictures, three middles</h2>
+<h3>One table, three questions</h3>
+<p>The counts are whole numbers, so the class boundaries sit half a unit beyond the limits: the first class runs 99.5 to 104.5.</p>
+<table><thead><tr><th>Class boundaries</th><th><code>f</code></th><th>Midpoint <code>M</code></th><th>Cumulative <code>CF</code></th></tr></thead><tbody><tr><td>99.5 to 104.5</td><td>2</td><td>102</td><td>2</td></tr><tr><td>104.5 to 109.5</td><td>8</td><td>107</td><td>10</td></tr><tr><td>109.5 to 114.5</td><td>18</td><td>112</td><td>28</td></tr><tr><td>114.5 to 119.5</td><td>13</td><td>117</td><td>41</td></tr><tr><td>119.5 to 124.5</td><td>7</td><td>122</td><td>48</td></tr><tr><td>124.5 to 129.5</td><td>1</td><td>127</td><td>49</td></tr><tr><td>129.5 to 134.5</td><td>1</td><td>132</td><td>50</td></tr></tbody></table>
+<p><code>M = (lower + upper) / 2</code>, so <code>(99.5 + 104.5) / 2 = 102</code>; the last <code>CF</code> must equal <code>n = 50</code>.</p>
+<pre><code class="language-mermaid">flowchart LR
+    T[&quot;One table&lt;br/&gt;of 50 days&quot;] --&gt; Q1[&quot;How much lives here?&quot;]
+    T --&gt; Q2[&quot;How do two crowds compare?&quot;]
+    T --&gt; Q3[&quot;How many are at or below here?&quot;]
+    Q1 --&gt; H[&quot;Histogram&lt;br/&gt;area = amount&quot;]
+    Q2 --&gt; P[&quot;Frequency polygon&lt;br/&gt;lines overlay&quot;]
+    Q3 --&gt; O[&quot;Ogive&lt;br/&gt;a staircase that only goes up&quot;]</code></pre>
+<h3>Histogram: how much lives here?</h3>
+<pre><code class="language-text"> 99.5 - 104.5 | ██ 2
+104.5 - 109.5 | ████████ 8
+109.5 - 114.5 | ██████████████████ 18
+114.5 - 119.5 | █████████████ 13
+119.5 - 124.5 | ███████ 7
+124.5 - 129.5 | █ 1
+129.5 - 134.5 | █ 1</code></pre>
+<ul><li><strong>The bars touch because the ruler has no holes.</strong> A gap claims a stretch of values that cannot occur. Favourite blends are separate categories, not a ruler, so their bars have gaps.</li><li><strong>The axis shows boundaries, not limits.</strong> Limits (100 to 104, 105 to 109) invent a hole between 104 and 105.</li><li><strong>Area is the amount; height is a shortcut.</strong> Merge the last three classes into one from 119.5 to 134.5 holding 9 days: drawn at height 9 it towers over the 8-day class and looks like a second peak, though the 9 days spread over 15 units. The honest height is <strong>frequency density</strong>, <code>f / width</code>: <code>9 / 15 = 0.6</code> days per unit, against <code>8 / 5 = 1.6</code> for a neighbouring-sized class. Now area = height × width = count.</li></ul>
+<h3>Polygon: how do two crowds compare?</h3>
+<p>Put a dot above each <strong>midpoint</strong> at the height of its frequency and join them: (102, 2), (107, 8), (112, 18), (117, 13), (122, 7), (127, 1), (132, 1). Close the shape to zero at both ends, with an empty class each side (midpoints 97 and 137) or at the outer boundaries (99.5 and 134.5); say which. Same information as the histogram, but <strong>lines overlay and bars do not</strong>: two outlines show at a glance whether this summer&#x27;s peak sits left, right or higher.</p>
+<h3>Ogive: how many are at or below here?</h3>
+<p>The ogive plots the running total, so each point answers &quot;how many days <strong>up to here</strong>?&quot;.</p>
+<ul><li><strong>It only goes up:</strong> it starts at 0, never goes down and ends at <code>n = 50</code>. Its steepest stretch is where the crowd is thickest.</li><li><strong>It sits on the upper boundary:</strong> the count &quot;up to 114.5&quot; is only true once the whole 109.5 to 114.5 class is counted. At the midpoint or lower edge the curve claims days that have not happened.</li></ul>
+<table><thead><tr><th>Boundary (x)</th><th>99.5</th><th>104.5</th><th>109.5</th><th>114.5</th><th>119.5</th><th>124.5</th><th>129.5</th><th>134.5</th></tr></thead><tbody><tr><td>Days up to x (y)</td><td>0</td><td>2</td><td>10</td><td>28</td><td>41</td><td>48</td><td>49</td><td>50</td></tr></tbody></table>
+<ul><li><strong>x to y:</strong> &quot;114 or fewer&quot; reaches the boundary 114.5 and reads <strong>28 days</strong>, <code>28 / 50 = 56%</code>.</li><li><strong>y to x:</strong> half of 50 is 25, on the stretch between (109.5, 10) and (114.5, 28): <code>x = 109.5 + (25 − 10) / 18 × 5 = 109.5 + 0.833 × 5 =</code> about <strong>113.7</strong>. Half the days had about 113.7 customers or fewer: the <strong>median</strong>, found by ruler. Other heights give <strong>percentiles</strong> (the next page). Straight lines assume values are spread evenly inside each class, so the curve is exact at the boundaries and an estimate between them.</li></ul>
+<h3>Try it: Change the drawers, see what grouping costs</h3>
+<blockquote><p><strong>What to try:</strong> Change the class width and the first class of the 20 scores and watch the three pictures, and how far the grouped mean and median drift from the raw 75.2 and 71. <strong>Start with:</strong> the preset <em>Five drawers of width 11</em>.</p></blockquote>
+<p><a href="../../../../../fields/data-science/probability-statistics/labs/grouped-tables.html">Grouped tables lab</a></p>
+<table><thead><tr><th>Trap</th><th>Idea it breaks</th><th>Fix</th></tr></thead><tbody><tr><td>Gaps between histogram bars</td><td>The ruler has no holes</td><td>Let bars touch, use boundaries</td></tr><tr><td>Unequal widths, plain frequency as height</td><td>Area is the amount</td><td>Plot frequency density</td></tr><tr><td>Ogive at midpoints or lower boundaries</td><td>A count up to here needs the class finished</td><td>Plot at upper boundaries</td></tr></tbody></table>
+<h3>&quot;Typical&quot; is three questions</h3>
+<pre><code class="language-mermaid">flowchart LR
+    W[&quot;What is typical?&quot;] --&gt; A[&quot;Where would the data&lt;br/&gt;balance on a seesaw?&quot;]
+    W --&gt; B[&quot;Who stands in the middle&lt;br/&gt;if everyone lines up?&quot;]
+    W --&gt; C[&quot;What did the most&lt;br/&gt;people say?&quot;]
+    A --&gt; M[&quot;Mean&quot;]
+    B --&gt; D[&quot;Median&quot;]
+    C --&gt; O[&quot;Mode&quot;]</code></pre>
+<p>None is wrong; each is wrong only when it answers a question you did not mean. Two habits: say which question you mean, and draw the picture first.</p>
+<h3>Mean: where the seesaw balances</h3>
+<pre><code class="language-text">x̄ = Σx / n</code></pre>
+<p>Eight scores 70, 65, 69, 85, 94, 62, 79, 100 sum to 624, so <code>x̄ = 624 / 8 = 78</code>. The <strong>deviations</strong> <code>x − 78</code> are −8, −13, −9, +7, +16, −16, +1, +22 and <strong>add to zero</strong>: the pull from below equals the pull from above. That is why one far value drags the mean: a heavy weight on a long arm.</p>
+<p><strong>Grouped mean:</strong> each class casts <code>f</code> votes for its midpoint <code>M</code>: <code>x̄ = Σ(f × M) / Σf</code>. Fifty visits grouped by minutes:</p>
+<table><thead><tr><th>Class boundaries</th><th><code>f</code></th><th><code>M</code></th><th><code>f × M</code></th></tr></thead><tbody><tr><td>9.5 to 12.5</td><td>4</td><td>11</td><td>44</td></tr><tr><td>12.5 to 15.5</td><td>12</td><td>14</td><td>168</td></tr><tr><td>15.5 to 18.5</td><td>20</td><td>17</td><td>340</td></tr><tr><td>18.5 to 21.5</td><td>14</td><td>20</td><td>280</td></tr><tr><td><strong>Total</strong></td><td><strong>50</strong></td><td></td><td><strong>832</strong></td></tr></tbody></table>
+<p><code>x̄ = 832 / 50 = 16.64</code> minutes: an <strong>estimate</strong>, because midpoints stand in for unknown values.</p>
+<h3>Median: the one in the middle of the line</h3>
+<p>Sort first. <code>n</code> odd: the value at position <code>(n + 1) / 2</code>. <code>n</code> even: the average of positions <code>n/2</code> and <code>n/2 + 1</code>.</p>
+<ul><li>{3, 2, 6, 2, 7} sorted is 2, 2, 3, 6, 7: position <code>(5 + 1) / 2 = 3</code>, median <strong>3</strong>. Add an 8: 2, 2, 3, 6, 7, 8, average the 3rd and 4th, <code>(3 + 6) / 2 =</code> <strong>4.5</strong>; with even <code>n</code> the median need not be a data value.</li><li>The eight scores sorted: 62, 65, 69, 70, 79, 85, 94, 100; the 4th and 5th give <code>(70 + 79) / 2 = 74.5</code>.</li></ul>
+<p><strong>The typo experiment:</strong> change the 100 into a 1,000.</p>
+<table><thead><tr><th></th><th>Original</th><th>With the typo</th></tr></thead><tbody><tr><td>Mean</td><td>78</td><td><code>1,524 / 8 =</code> <strong>190.5</strong></td></tr><tr><td>Median</td><td>74.5</td><td><strong>74.5</strong></td></tr></tbody></table>
+<p>One wrong entry moved the mean by over 110 points and the median by none: the median uses only <strong>order</strong>, so it is <strong>resistant</strong> to outliers.</p>
+<p><strong>Grouped median</strong> (the ogive read with a ruler, assuming values spread evenly inside a class), with <code>L</code> the lower boundary of the class holding the middle position, <code>cf</code> the count before it, <code>f</code> its count, <code>h</code> its width:</p>
+<pre><code class="language-text">median = L + ((N/2 − cf) / f) × h</code></pre>
+<p>Quality scores of 21 batches: boundaries 50.5 to 55.5 (<code>f</code> 2, <code>CF</code> 2), 55.5 to 60.5 (7, 9), 60.5 to 65.5 (8, 17), 65.5 to 70.5 (4, 21). The middle position is <code>N/2 = 10.5</code>; the first class with <code>CF</code> reaching it is 60.5 to 65.5 with <code>cf = 9</code>, <code>f = 8</code>, <code>h = 5</code>:</p>
+<pre><code class="language-text">median = 60.5 + ((10.5 − 9) / 8) × 5 = 60.5 + 0.9375 = 61.4375</code></pre>
+<p>Nine values lie below the class and we need the 10.5th, so 1.5 more; 1.5 of 8 is 18.75% across the width of 5, which is 0.9375. For the 50 days (<code>N/2 = 25</code>, class 109.5 to 114.5, <code>cf = 10</code>, <code>f = 18</code>): <code>109.5 + (15 / 18) × 5 ≈ 113.7</code>, the ogive reading.</p>
+<h3>Mode: the most popular</h3>
+<p>The mode works for any kind of data (among 20 customers&#x27; favourite blends Green was chosen by 6, more than any other), <strong>may not exist</strong> (the eight scores all appear once) and <strong>may not be unique</strong>: in 2, 2, 2, 3, 3, 3, 4, 7, 7, 8, 10 both 2 and 3 appear three times (<strong>bimodal</strong>); the 20 tasting scores tie at three for 58, 62 and 89. For a grouped table use the <strong>modal class</strong>: for the 50 days, 109.5 to 114.5 with 18 days.</p>
+<h3>When the answers disagree</h3>
+<table><thead><tr><th>Data</th><th>Mean</th><th>Median</th><th>Mode</th></tr></thead><tbody><tr><td>2, 2, 2, 3, 3, 3, 4, 7, 7, 8, 10</td><td>4.64</td><td>3</td><td>2 and 3</td></tr><tr><td>50 days of customers (grouped)</td><td>114.2</td><td>113.7</td><td>modal class 109.5 to 114.5</td></tr><tr><td>The 20 tasting scores</td><td>75.2</td><td>71</td><td>58, 62 and 89</td></tr></tbody></table>
+<p>(The mean of the 50 days is <code>5,710 / 50 = 114.2</code>.) In the first two rows <code>mean &gt; median</code> and both have a <strong>right tail</strong>: the seesaw is dragged toward a long tail while the median only counts positions. As a rule of thumb (not a law), <code>mean &gt; median</code> hints at a right tail and <code>mean &lt; median</code> at a left tail. The third row is the tin: mean 75.2 and median 71 are close and <strong>both mislead</strong>, because there are <strong>two clumps</strong>: nine tasters scored 62 or less, nine scored 89 or more and two sit between. No single answer rescues a data set with two centres; only the picture shows it.</p>
+<h3>What grouping costs you</h3>
+<p>The 20 scores grouped: boundaries 51.5 to 62.5 (<code>f</code> 9, <code>M</code> 57, <code>f × M</code> 513), 62.5 to 73.5 (2, 68, 136), 73.5 to 84.5 (0, 79, 0), 84.5 to 95.5 (8, 90, 720), 95.5 to 106.5 (1, 101, 101); <code>CF</code> 9, 11, 11, 19, 20.</p>
+<ul><li><strong>Grouped mean:</strong> <code>1,470 / 20 = 73.5</code>, against the true 75.2.</li><li><strong>Grouped median:</strong> <code>N/2 = 10</code> falls in the second class: <code>62.5 + ((10 − 9) / 2) × 11 = 68.0</code>, against the true 71.</li></ul>
+<p>That error is the price of having only the table; with the raw data, use it.</p>
+<h3>Choosing</h3>
+<table><thead><tr><th>Your data</th><th>Best choice</th><th>Reason</th></tr></thead><tbody><tr><td>Nominal (blend names)</td><td><strong>Mode</strong></td><td>No order and no arithmetic</td></tr><tr><td>Ordinal (mild, medium, strong)</td><td><strong>Median</strong> (and mode)</td><td>Order exists, distances do not</td></tr><tr><td>Quantitative, roughly symmetric</td><td><strong>Mean</strong></td><td>Uses every value, the natural balance point</td></tr><tr><td>Quantitative, skewed or with outliers</td><td><strong>Median</strong></td><td>It does not chase the extremes</td></tr><tr><td>Two or more clumps</td><td><strong>None alone.</strong> Describe the clumps</td><td>A single centre hides the structure</td></tr></tbody></table>
+<ul><li>* *</li></ul>
+<h2>Divides opinion</h2>
+<p>Mira rewrites the label: <strong>&quot;Divides opinion: about half of our tasters loved it, about half did not.&quot;</strong> In small print, for customers who like a number, she adds the median, 71.</p>
+<p>Ravi has the napkin picture now. &quot;The tallest bar is the 110s, that&#x27;s my normal day.&quot; Eighteen of fifty. &quot;And 114 or fewer on 28 days. How many were really busy, over 119?&quot; Mira reads the staircase: 41 days at or below 119, so <strong>9 days</strong>, a bit under one in five. &quot;Two baristas on ordinary days, a third on call.&quot;</p>
+<p>Why these three questions and not a fourth? One question hides underneath all three, and once you see it, the scores running from 52 to 104 deserve a second number beside the first. Next cup: <a href="../../../../../fields/data-science/probability-statistics/describing-data/spread-and-position/">Spread and Position</a>.</p>
+<ul><li>* *</li></ul>
+<h2>Never again</h2>
+<table><thead><tr><th>Mistake</th><th>Symptom</th><th>Fix</th></tr></thead><tbody><tr><td>Summarising before drawing</td><td>&quot;Typical: 75&quot; in a gap nobody occupies</td><td>Histogram first</td></tr><tr><td>Plain frequency as height on unequal classes</td><td>A fake second peak</td><td>Plot <code>f / width</code></td></tr><tr><td>Ogive on midpoints</td><td>A count of days that have not happened</td><td>Upper boundaries</td></tr><tr><td>Mean on a skewed or outlier-laden column</td><td>One typo moves it by 110 points</td><td>Median, and say so</td></tr><tr><td>One &quot;typical&quot; for two clumps</td><td>Mean and median both in the gap</td><td>Describe both clumps</td></tr><tr><td>Treating grouped formulas as exact</td><td>73.5 vs 75.2</td><td>Say &quot;estimate&quot;; use raw data if you have it</td></tr></tbody></table>
+<ul><li>* *</li></ul>
+<h2>Check yourself</h2>
+<ol><li>On how many days were there 119 customers or fewer, and what share? Which two numbers make the first ogive point after (99.5, 0)?</li><li>Compare this summer&#x27;s days with last summer&#x27;s on one chart: which picture, and why? Why does a bar chart of favourite blends have gaps but this histogram does not?</li><li>Estimate the value below which the lowest 25% of days fall.</li><li>Find the mean and median of 4, 8, 6, 5, 3, 200. Which answers &quot;typical&quot;?</li><li>Grouped table of 20 visits: boundaries 0.5 to 5.5 (3), 5.5 to 10.5 (9), 10.5 to 15.5 (6), 15.5 to 20.5 (2). Estimate the mean and median, name the modal class.</li><li>Modes, median and mean of 5, 5, 7, 9, 9, 12? True or false: a grouped mean is exact? A café reports average order 12.40 and median 8.10: what does the gap say?</li></ol>
+<ol><li><code>CF</code> at 119.5 is <strong>41</strong>, so <code>41 / 50 = 82%</code>; the upper boundary <strong>104.5</strong> and its cumulative frequency <strong>2</strong>.</li><li>The <strong>frequency polygon</strong>: outlines share one set of axes, and two sets of bars would cover each other. Blends are separate <strong>categories</strong>; daily customers lie on a continuous scale where classes share boundaries.</li><li>25% of 50 is 12.5, between (109.5, 10) and (114.5, 28): <code>x = 109.5 + (12.5 − 10) / 18 × 5 = 109.5 + 0.694 =</code> about <strong>110.2</strong>.</li><li>The sum is 226, mean <code>226 / 6 ≈ 37.7</code>; sorted 3, 4, 5, 6, 8, 200, median <code>(5 + 6) / 2 =</code> <strong>5.5</strong>. The median answers it: the 200 dominates the mean and five of six values are below 9.</li><li>Midpoints 3, 8, 13, 18: <code>Σ f×M = 9 + 72 + 78 + 36 = 195</code>, <strong>mean ≈ 195 / 20 = 9.75</strong>. <code>N/2 = 10</code>; cumulative 3, 12, 18, 20, so the median class is 5.5 to 10.5 with <code>cf = 3</code>, <code>f = 9</code>, <code>h = 5</code>: <code>5.5 + ((10 − 3) / 9) × 5 ≈</code> <strong>9.39</strong>. Modal class 5.5 to 10.5 (frequency 9).</li><li>Modes <strong>5 and 9</strong>; <code>n = 6</code>, median <code>(7 + 9) / 2 =</code> <strong>8</strong>; sum 47, mean <code>47 / 6 ≈ 7.83</code>. <strong>False</strong>: each value in a class is replaced by its midpoint. The mean is far above the median: a <strong>right tail</strong>, a few very large orders; the median describes the typical order better.</li></ol>
+<ul><li>* *</li></ul>
+<h2>📜 The Scroll (keep this)</h2>
+<pre><code class="language-text">Pictures   : histogram = how much (touching bars, area = count, f/width if unequal);
+             polygon = compare (dots at midpoints, closed, overlaid);
+             ogive = up to here (upper boundary, CF, 0 to n)
+Ogive read : x -&gt; y counts at or below; y -&gt; x gives a percentile (median at n/2)
+Mean       : sum x / n (balance point); grouped: sum(f M) / sum f (estimate)
+Median     : sort; position (n+1)/2; grouped: L + ((N/2 - cf)/f) h
+Mode       : most often; may be absent or several; modal class when grouped
+Disagree   : mean &gt; median -&gt; right tail; two clumps -&gt; describe both
+Choose     : nominal mode; ordinal median; symmetric mean; skewed median
+Do not     : summarise before drawing; trust a single centre on two clumps</code></pre>
+<ul><li>* *</li></ul>
+<h2>References</h2>
+<ul><li>Every number on this page was recomputed with Python 3.14.4 (<code>statistics.mean</code>, <code>median</code>, <code>multimode</code>, plus the grouped formulas written out by hand): the cumulative column, 41 and 9 days, 56% and 82%, the interpolations 113.7 and 110.2, the densities 0.6 and 1.6, the typo experiment and both grouped tables. The merged-class example is an invented illustration. No external source was fetched for this page.</li></ul>
+<p><a href="../../../../../#/fields/data-science/probability-statistics/describing-data/pictures-and-the-middle">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

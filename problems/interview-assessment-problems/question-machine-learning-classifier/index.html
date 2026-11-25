@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Question - Machine Learning Classifier</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/problems/interview-assessment-problems/question-machine-learning-classifier/">
+<meta name="description" content="An interview ML problem where you build a logistic regression and a random forest on bank customer data and report what drives term-deposit subscriptions.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Question - Machine Learning Classifier">
+<meta property="og:description" content="An interview ML problem where you build a logistic regression and a random forest on bank customer data and report what drives term-deposit subscriptions.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/problems/interview-assessment-problems/question-machine-learning-classifier/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/problems/interview-assessment-problems/question-machine-learning-classifier/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../.docs/prerender-redirect.js" data-target="../../../#/problems/interview-assessment-problems/question-machine-learning-classifier/"></script>
+<main>
+<h1>Question - Machine Learning Classifier</h1>
+<p><em>An interview ML problem where you build a logistic regression and a random forest on bank customer data and report what drives term-deposit subscriptions.</em></p>
+<blockquote><p>An interview ML problem: build a logistic regression and a random forest on bank customer data, and report what drives term-deposit subscriptions.</p></blockquote>
+<p>Implement a function, identify_customers, which will build two classifier models based on financial data. The identify_customers functions accepts two arguments:</p>
+<ul><li>data_train - a Pandas DataFrame consisting of a binary column &#x27;label&#x27; (1 means that the client subscribed to a term deposite, 0 otherwise), three integer columns describing the customer, including their age, account (account balance), and duration (time of being a bank customer) and 17 binary columns (with &#x27;yes&#x27; and &#x27;no&#x27; values) that also describe the customers.</li><li>data_test - a Pandas DataFrame with the same structure as data_train.</li></ul>
+<p>In the identify_customers function, you should perform the following steps:</p>
+<ol><li>Prepare the 17 binary variables in data_train and data_test by replacing &#x27;yes&#x27; with 1, and &#x27;no&#x27; with 0. Retain the rest of the variables without any changes. After this step, you will have two new data frames &#x27;onehot_train&#x27; and &#x27;onehot_test&#x27;.</li><li>Find the proportion (prep) of clients that have subscribed to a term deposit in onehot_train (use the &#x27;label&#x27; variable) and round the value to 3 decimal places. This will be necessary to set weights in the classifier models.</li><li>build a LogisticRegression Classifier on onehot_train. Set the parameters: class_weight={0:prep, 1:1-prep}, random_state=0, max_inter=50.</li><li>Build a RandomForest Classifier on onehot_train. Set the parameters: max_depth=10, random_state=0, n_estimators=30, class_weight={0:prep, 1:1-prep}.</li><li>Do a prediction on onehot_test.</li></ol>
+<p>After these steps you should return, in identify_customers, a dictionary with the following keys:</p>
+<ul><li>onehot_train - data_train DataFrame after replacing &#x27;yes&#x27; and &#x27;no&#x27; values with 1 and 0 (without &#x27;label&#x27; column).</li><li>onehot_test - data_test DataFrame after replacing &#x27;yes&#x27; and &#x27;no&#x27; values with 1 and 0 (without &#x27;label&#x27; column).</li><li>prep - propotion from point 2, above.</li><li>negative_impact - list of column names which reduce the probability of subscribing term deposit (when this variables increases). Use properities of the LogisticRegression classifier to obtain this point.</li><li>feature_importance - list of tuples with the five most important varialbes based on feature importances from the RandomForest classifier in the form (column names, feature_importance).</li><li>lr_recall - tupple of recall scores from onehot_train and onehot_test after training with the LogisticRegression Classifier.</li><li>rf_recall - tupple of recall scores from onehot_train and onehot_test after training with the RandomForest Classifier.</li><li>lr_obs - the probabilty of varialbes from LogisticRegression Classifier.</li><li>rf_obs - the probabilty of varialbes from RandomForest Classifier.</li></ul>
+<p><a href="../../../#/problems/interview-assessment-problems/question-machine-learning-classifier/">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

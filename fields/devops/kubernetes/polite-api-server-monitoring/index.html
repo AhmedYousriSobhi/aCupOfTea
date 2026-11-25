@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Polite API Server Monitoring: Leave Your Number, Don&#x27;t Knock Every Second</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/kubernetes/polite-api-server-monitoring/">
+<meta name="description" content="Why polling the API server every second hurts, measured on a lab: 20 lists vs 1 list and a watch, what a list costs in bytes, the priority lane monitors share, and five habits for a polite monitor.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Polite API Server Monitoring: Leave Your Number, Don&#x27;t Knock Every Second">
+<meta property="og:description" content="Why polling the API server every second hurts, measured on a lab: 20 lists vs 1 list and a watch, what a list costs in bytes, the priority lane monitors share, and five habits for a polite monitor.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/kubernetes/polite-api-server-monitoring/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/kubernetes/polite-api-server-monitoring/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/devops/kubernetes/polite-api-server-monitoring"></script>
+<main>
+<h1>Polite API Server Monitoring: Leave Your Number, Don&#x27;t Knock Every Second</h1>
+<p><em>Why polling the API server every second hurts, measured on a lab: 20 lists vs 1 list and a watch, what a list costs in bytes, the priority lane monitors share, and five habits for a polite monitor.</em></p>
+<blockquote><p><strong>Part 14 of the Kubernetes series.</strong> A wallboard that &quot;just refreshes every second&quot; is a stack of requests on the cluster&#x27;s front desk. By the end you&#x27;ll know what a poll costs, how a watch costs almost nothing, which queue your tool stands in, and the five habits that make a monitor polite.</p></blockquote>
+<hr>
+<h2>The wallboard</h2>
+<p>Someone on the platform team writes a GPU wallboard. It runs <code>kubectl get pods -A</code> in a loop, once a second, and shows the result on a screen. It&#x27;s lovely. The team likes it so much that a dozen engineers run their own copy on their laptops.</p>
+<p>Nothing breaks. The cluster just gets a little slower for everyone, and nobody connects it to a small shell loop. The control plane has a front desk, and a dozen people have started knocking on it every second to ask the same question: &quot;anything new?&quot;</p>
+<p>You can ask the desk to call you instead. First, how bad is the knocking?</p>
+<hr>
+<h2>Knocking vs leaving your number</h2>
+<blockquote><p>[!NOTE] Everything with numbers on this page was run on a throwaway single-node k3s VM (k3s v1.37.2+k3s1, Ubuntu 22.04) with 80 small pods, 86 pods in total with k3s&#x27;s own, and then destroyed. The counts come from the API server&#x27;s own <code>apiserver_request_total</code> metric.</p></blockquote>
+<p>Same 20 seconds, three ways:</p>
+<table><thead><tr><th>What ran</th><th>LIST pods requests</th><th>WATCH pods requests</th></tr></thead><tbody><tr><td>Nothing (an idle control)</td><td>+0</td><td>+0</td></tr><tr><td><code>kubectl get pods -A</code> once a second, 20 times</td><td><strong>+20</strong></td><td>+0</td></tr><tr><td>One <code>kubectl get pods -A -w</code>, while two scale changes happened</td><td><strong>+1</strong></td><td>+1</td></tr></tbody></table>
+<p>Twenty polls made twenty full lists. The watcher made one list and one long-lived watch request, and the changes arrived as they happened. Its output was 115 lines: the 86 pods of the first list, then 29 change events.</p>
+<pre><code class="language-mermaid">sequenceDiagram
+    participant W as Watcher
+    participant A as API server
+    W-&gt;&gt;A: LIST pods, once
+    A--&gt;&gt;W: 86 pods + resourceVersion
+    W-&gt;&gt;A: WATCH from that resourceVersion
+    A--&gt;&gt;W: change
+    A--&gt;&gt;W: change
+    Note over W,A: 410 Gone? List again, then watch again</code></pre>
+<p><em>A watcher pays the cost of a list once and then hears only what changed.</em></p>
+<p>☕ <strong>Try it before you scroll.</strong> One poller at one request per second: how many list requests does it make in an hour, and how many does a dozen laptops make? Hint: 60 times 60.</p>
+<p>That&#x27;s 3,600 lists an hour for one poller, and 43,200 for twelve. Each of those returns the whole collection. How big is that?</p>
+<hr>
+<h2>What one list costs</h2>
+<p>The same 86 pods, fetched different ways through the API, with the byte counts measured:</p>
+<table><thead><tr><th>How the list was asked</th><th>Bytes returned</th></tr></thead><tbody><tr><td>Full objects (plain JSON)</td><td>899,207</td></tr><tr><td>Server-side Table (what <code>kubectl get</code> uses)</td><td>469,407</td></tr><tr><td>Metadata only (<code>PartialObjectMetadataList</code>)</td><td>420,143</td></tr><tr><td>Full objects, first 10 only (<code>limit=10</code>)</td><td>159,731</td></tr><tr><td>Full objects, a label selector that matches nothing</td><td>111</td></tr></tbody></table>
+<p>Four lessons are hiding here.</p>
+<ol><li><strong>A full list is heavy.</strong> About 0.9 MB for a small lab. The docs warn that retrieving all pods across all namespaces can be a very large response, 10-20 MB, on large clusters.</li><li><strong>Asking for less really helps.</strong> The Table format is roughly half the size of full objects, and a selector can shrink a response to almost nothing.</li><li><strong>Metadata alone is not small.</strong> 420 KB for 86 pods, close to the Table. Don&#x27;t expect &quot;just names and labels&quot; to be tiny.</li><li><strong>Pages work.</strong> <code>limit=10</code> returned 10 items, a <code>continue</code> token, and <code>remainingItemCount: 76</code>. Per the docs, you fetch the next page with that token, and the collection stays a consistent snapshot across pages.</li></ol>
+<p>Using the Table size and the poller from above, one poller moves roughly 1.7 GB an hour from the API server. This is arithmetic on the measured numbers, not a separate measurement.</p>
+<p>Bytes aren&#x27;t the only price. The docs on API Priority and Fairness say a list the server expects to be large occupies more than one &quot;seat&quot; in its queue, in proportion to the estimated number of objects. So a heavy list also makes everyone else wait longer.</p>
+<hr>
+<h2>The pattern: list once, then watch</h2>
+<p>Every Kubernetes object has a <code>resourceVersion</code>, and a list response carries one for the whole collection. The pattern from the docs:</p>
+<ol><li><strong>List</strong> and remember the <code>resourceVersion</code>.</li><li><strong>Watch</strong> from that version. The server streams changes, with no missed events.</li><li>If the watch drops, <strong>watch again from the last version you saw</strong>.</li><li>If the server answers <code>410 Gone</code>, your version is too old: <strong>clear your cache, list again, watch again</strong>.</li></ol>
+<p>The docs say a cluster using etcd 3 keeps the last 5 minutes of changes by default, and a <code>continue</code> token for a chunked list expires after about 5 minutes too. For the stale case, I asked for a watch from <code>resourceVersion=1</code>:</p>
+<pre><code class="language-text">{&quot;type&quot;:&quot;ERROR&quot;,&quot;object&quot;:{&quot;kind&quot;:&quot;Status&quot;,&quot;apiVersion&quot;:&quot;v1&quot;,&quot;metadata&quot;:{},&quot;status&quot;:&quot;Failure&quot;,&quot;message&quot;:&quot;too old resource version: 1 (3)&quot;,&quot;reason&quot;:&quot;Expired&quot;,&quot;code&quot;:410}}</code></pre>
+<p>That&#x27;s the 410 in the flesh. Your client must handle it, and the client libraries already do: the Go client&#x27;s <code>Reflector</code> implements list-then-watch for you. Watch bookmarks (<code>allowWatchBookmarks=true</code>) help a short history window by sending small events that carry only a newer <code>resourceVersion</code>. I did not test bookmarks.</p>
+<blockquote><p>[!TIP] Don&#x27;t write this loop by hand. Use a client library&#x27;s informer or reflector, or a tool built on one. Write your own, and the 410 case is the one you&#x27;ll forget.</p></blockquote>
+<hr>
+<h2>Which queue are you in?</h2>
+<p>The API server doesn&#x27;t treat all callers alike. API Priority and Fairness sorts every request into a priority level with its own concurrency, and fair-queues within it. Here is the table from the lab cluster, trimmed to the rows that matter:</p>
+<table><thead><tr><th>FlowSchema</th><th>Priority level</th><th>For</th></tr></thead><tbody><tr><td><code>system-nodes</code></td><td><code>system</code></td><td>Kubelets</td></tr><tr><td><code>kube-controller-manager</code>, <code>kube-scheduler</code></td><td><code>workload-high</code></td><td>Built-in controllers</td></tr><tr><td><code>kube-system-service-accounts</code></td><td><code>workload-high</code></td><td>ServiceAccounts in <code>kube-system</code></td></tr><tr><td><code>service-accounts</code></td><td><strong>`workload-low`</strong></td><td><strong>Every other ServiceAccount</strong></td></tr><tr><td><code>global-default</code></td><td><code>global-default</code></td><td>Everything else, such as a person&#x27;s <code>kubectl</code></td></tr></tbody></table>
+<p>A monitoring tool running in a pod with its own ServiceAccount lands in <code>workload-low</code>, where the docs say requests from &quot;any other service account&quot; go. In the test, the API server&#x27;s counter confirmed it: <code>apiserver_flowcontrol_dispatched_requests_total{flow_schema=&quot;service-accounts&quot;,priority_level=&quot;workload-low&quot;}</code> was 118.</p>
+<p>That has two implications. A polite monitor doesn&#x27;t lean on the high-priority lanes, and an impolite one is competing in a lane meant for ordinary workloads. When the queue overflows, the server answers HTTP 429. The counter for that, <code>apiserver_flowcontrol_rejected_requests_total</code>, had no series at all on the quiet lab, which means nothing was ever rejected. On your real cluster, it&#x27;s the first number to chart.</p>
+<p>The stable metrics worth a dashboard:</p>
+<table><thead><tr><th>Metric</th><th>What it tells you</th></tr></thead><tbody><tr><td><code>apiserver_request_total</code></td><td>Requests by verb, resource and response code</td></tr><tr><td><code>apiserver_request_duration_seconds</code></td><td>How long they take</td></tr><tr><td><code>apiserver_current_inflight_requests</code></td><td>Load, per request kind</td></tr><tr><td><code>apiserver_flowcontrol_rejected_requests_total</code></td><td>Requests turned away (beta)</td></tr></tbody></table>
+<hr>
+<h2>A key that only reads</h2>
+<p>This is part 13 put to work. The lab&#x27;s monitor got its own ServiceAccount, a read-only ClusterRole and a binding, all with the commands from the docs:</p>
+<pre><code class="language-bash">kubectl create serviceaccount monitor -n mon
+kubectl create clusterrole polite-monitor --verb=get,list,watch --resource=pods,nodes,events
+kubectl create clusterrolebinding polite-monitor --clusterrole=polite-monitor --serviceaccount=mon:monitor
+kubectl create token monitor -n mon --duration=1h        # a short-lived token, not a forever one</code></pre>
+<p>What it could and couldn&#x27;t do, as run:</p>
+<table><thead><tr><th>Command as the monitor</th><th>Result</th></tr></thead><tbody><tr><td><code>get pods -A</code></td><td>works (86 pods)</td></tr><tr><td><code>get nodes</code></td><td>works</td></tr><tr><td><code>get secrets -A</code></td><td><code>Forbidden: ... cannot list resource &quot;secrets&quot; ... at the cluster scope</code></td></tr><tr><td><code>delete pod -n load -l app=web --dry-run=server</code></td><td>80 <code>Forbidden</code> lines, one per pod. Even a dry run is refused</td></tr><tr><td><code>get --raw /metrics</code></td><td><code>Forbidden: ... cannot get path &quot;/metrics&quot;</code></td></tr></tbody></table>
+<p>That last row is a small trap. The API server&#x27;s own metrics aren&#x27;t a resource, so they need a separate <code>nonResourceURLs</code> rule. If your monitor scrapes <code>/metrics</code>, give it that one explicitly and nothing more.</p>
+<hr>
+<h2>The right tool for the question</h2>
+<p>Not every number should come from asking the API server.</p>
+<table><thead><tr><th>Question</th><th>Right source</th><th>Note</th></tr></thead><tbody><tr><td>Is the pod pending, crash-looping, out of GPUs?</td><td>The object state: a watch, or kube-state-metrics</td><td>kube-state-metrics describes itself as listening to the API server and keeping a snapshot of cluster state in memory</td></tr><tr><td>How much CPU and memory is it using right now?</td><td>metrics-server, for autoscaling and <code>kubectl top</code></td><td>Its README says it&#x27;s meant only for autoscaling and not an accurate source of usage, and tells monitoring to scrape the kubelet&#x27;s <code>/metrics/resource</code></td></tr><tr><td>Is the API server itself healthy?</td><td>Its <code>/metrics</code> endpoint</td><td>The table above</td></tr></tbody></table>
+<p>In the lab, <code>kubectl top nodes</code> as admin showed <code>969m</code> CPU and <code>1903Mi</code> memory, and the raw Metrics API showed <code>&quot;window&quot;:&quot;10.058s&quot;</code>: an average over a short window, not a timeline.</p>
+<blockquote><p>[!NOTE] The monitor identity failed <code>kubectl top nodes</code> with &quot;Metrics API not available&quot;. I did not investigate why, so don&#x27;t read it as a rule.</p></blockquote>
+<hr>
+<h2>Five habits</h2>
+<ol><li><strong>Watch, don&#x27;t poll.</strong> One list, then a watch from its <code>resourceVersion</code>, with a client library handling 410.</li><li><strong>Ask for less.</strong> Label and field selectors, namespaces, and <code>limit</code> with <code>continue</code>. A selector that matches nothing cost 111 bytes in the test.</li><li><strong>Own your lane.</strong> A dedicated ServiceAccount and a read-only ClusterRole with explicit resources and verbs. No wildcards.</li><li><strong>Back off when told.</strong> On 429, wait and retry; on 410, relist. Never answer a rejection by asking faster.</li><li><strong>One collector, many viewers.</strong> A dozen wallboards should read from one cached collector, not a dozen API watchers. This is my recommendation, not a doc rule, and it&#x27;s the biggest saving of the five.</li></ol>
+<hr>
+<h2>Back to the wallboard</h2>
+<p>The platform team replaces the shell loop with a single small collector. It lists once, watches, and serves the screens from its own cache. A dozen laptops stop knocking, and the front desk gets quiet. Where the API server used to see 43,200 lists an hour, it now sees one list and one watch.</p>
+<p>The wallboard looks exactly the same. That&#x27;s the best kind of fix.</p>
+<p><strong>Takeaway:</strong> a poll asks the API server the whole question again every time, so list once, watch from the <code>resourceVersion</code>, filter on the server, and run it all as a read-only ServiceAccount.</p>
+<p><strong>Challenge:</strong> on a cluster of a few thousand nodes with many teams&#x27; controllers, everything on this page gets bigger, and some of it gets different. Which of the five habits stops being optional first? The next page, Kubernetes at HPC scale, takes that on.</p>
+<hr>
+<h2>References</h2>
+<ul><li><a href="https://kubernetes.io/docs/reference/using-api/api-concepts/">Kubernetes API concepts</a>: efficient detection of changes, <code>resourceVersion</code>, 410 Gone, watch bookmarks, chunked lists.</li><li><a href="https://kubernetes.io/docs/concepts/cluster-administration/flow-control/">API Priority and Fairness</a>: priority levels, seats for large lists, HTTP 429 and the rejected-requests metric.</li><li><a href="https://kubernetes.io/docs/reference/instrumentation/metrics/">Kubernetes metrics reference</a>: <code>apiserver_request_total</code>, <code>apiserver_request_duration_seconds</code>, <code>apiserver_current_inflight_requests</code>.</li><li><a href="https://kubernetes.io/docs/tasks/debug/debug-cluster/resource-metrics-pipeline/">Resource metrics pipeline</a>: the Metrics API and metrics-server&#x27;s purpose.</li><li><a href="https://github.com/kubernetes-sigs/metrics-server">metrics-server README</a>: its intended use and the advice about monitoring.</li><li><a href="https://github.com/kubernetes/kube-state-metrics">kube-state-metrics README</a>: what it exposes and how it differs from metrics-server.</li><li><a href="../../../../fields/devops/kubernetes/rbac-and-the-limited-viewer/">RBAC and the limited viewer</a>: the read-only key this page builds on.</li></ul>
+<p><a href="../../../../#/fields/devops/kubernetes/polite-api-server-monitoring">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

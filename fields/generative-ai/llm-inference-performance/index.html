@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>LLM Inference Performance - Overview</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/generative-ai/llm-inference-performance/">
+<meta name="description" content="Why a GPU with 3x the TFLOPS can make your chatbot only 1.6x faster - a four-part series on the roofline, LLM inference and the optimizations that actually work.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="LLM Inference Performance - Overview">
+<meta property="og:description" content="Why a GPU with 3x the TFLOPS can make your chatbot only 1.6x faster - a four-part series on the roofline, LLM inference and the optimizations that actually work.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/generative-ai/llm-inference-performance/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/generative-ai/llm-inference-performance/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../.docs/prerender-redirect.js" data-target="../../../#/fields/generative-ai/llm-inference-performance/"></script>
+<main>
+<h1>LLM Inference Performance - Overview</h1>
+<p><em>Why a GPU with 3x the TFLOPS can make your chatbot only 1.6x faster - a four-part series on the roofline, LLM inference and the optimizations that actually work.</em></p>
+<blockquote><p>A six-part series on the most expensive misunderstanding in AI infrastructure: buying compute when you&#x27;re short of bandwidth. By the end you&#x27;ll be able to predict a model&#x27;s speed on any GPU with a pencil, explain why vLLM, quantization, tensor parallelism and 2:4 sparsity work instead of just naming them, and decode the asterisk on every GPU datasheet.</p></blockquote>
+<hr>
+<h2>The upgrade that didn&#x27;t upgrade</h2>
+<p>A team runs their chatbot on A100s. Leadership approves the upgrade to H100s. The slide says it all: dense BF16 compute goes from 312 to 989 TFLOPS. <strong>Three times faster.</strong></p>
+<p>Migration weekend. New hardware, same model. Monday morning, someone runs the benchmark.</p>
+<p>Prompt processing: close to 3× faster. Great.</p>
+<p>The answers streaming back to users: about <strong>1.6× faster</strong>. Not great.</p>
+<p>Nothing is broken. No bug, no misconfiguration. The datasheet told them exactly what would happen. They just read the wrong line. The answer was two rows down, next to &quot;GPU memory bandwidth&quot;: 2,039 GB/s on the A100, 3.35 TB/s on the H100. <strong>1.6×.</strong></p>
+<p>This series explains why the second number decided their week, and why it decides most of LLM serving.</p>
+<hr>
+<h2>The route</h2>
+<table><thead><tr><th>#</th><th>Page</th><th>The question it answers</th></tr></thead><tbody><tr><td>1</td><td><a href="../../../fields/generative-ai/llm-inference-performance/compute-bound-vs-memory-bound/">Compute-bound vs memory-bandwidth-bound</a></td><td>Why does a 3× faster chip sometimes give you 1.6×?</td></tr><tr><td>2</td><td><a href="../../../fields/generative-ai/llm-inference-performance/llm-inference-on-the-roofline/">LLM inference on the roofline</a></td><td>Why does the answer start fast but stream slowly?</td></tr><tr><td>3</td><td><a href="../../../fields/generative-ai/llm-inference-performance/sizing-a-70b-model/">Sizing a 70B model with a pencil</a></td><td>Can you predict a model&#x27;s speed in an interview, live, on a whiteboard?</td></tr><tr><td>4</td><td><a href="../../../fields/generative-ai/llm-inference-performance/optimizations-on-the-roofline/">Optimizations, mapped to the roofline</a></td><td>Which of the five &quot;fixes&quot; proposed in the meeting will actually work?</td></tr><tr><td>5</td><td><a href="../../../fields/generative-ai/llm-inference-performance/structured-sparsity/">2:4 sparsity: half the weights, not half the time</a></td><td>What is the &quot;with sparsity&quot; asterisk on the datasheet, and what does it really buy?</td></tr><tr><td>6</td><td><a href="../../../fields/generative-ai/llm-inference-performance/sparsity-vs-quantization/">Sparsity vs quantization</a></td><td>Who pays for pruning, what does accuracy lose, and which lever comes first?</td></tr></tbody></table>
+<p>Each page ends with the question the next one answers. Page 3 is the one to rehearse: doing the arithmetic live is what wins the room.</p>
+<hr>
+<h2>Who this is for</h2>
+<p>Infrastructure and platform engineers who run GPUs for AI and keep getting asked &quot;why is it slow?&quot; and &quot;what should we buy?&quot;. You don&#x27;t need to write CUDA. You need to be happy multiplying big numbers and dividing them by other big numbers.</p>
+<p>And if you&#x27;re preparing for the interview question <em>&quot;How would you serve a 70B model?&quot;</em>, this series is the long version of a great answer.</p>
+<hr>
+<h2>The numbers we&#x27;ll use</h2>
+<p>All hardware figures from NVIDIA datasheets; the model from the Llama 2 paper and its published configuration.</p>
+<table><thead><tr><th>Item</th><th>Value</th></tr></thead><tbody><tr><td>H100 SXM</td><td>989 TFLOPS dense BF16 (the datasheet&#x27;s 1,979 is <em>with sparsity</em>), 80 GB HBM3 at 3.35 TB/s</td></tr><tr><td>A100 80GB SXM</td><td>312 TFLOPS dense BF16 (624 with sparsity), 80 GB HBM2e at 2,039 GB/s</td></tr><tr><td>Llama 2 70B</td><td>80 layers, hidden size 8192, 64 query heads, 8 key/value heads</td></tr></tbody></table>
+<blockquote><p>[!NOTE] Every speed in this series is a <strong>ceiling</strong>: what the hardware allows at 100% of datasheet numbers. Real systems land below. Ceilings are still the right tool. They tell you which resource you&#x27;ve run out of, and they catch vendor claims that break physics.</p></blockquote>
+<h2>Contents</h2>
+<table><thead><tr><th>File</th><th>Description</th></tr></thead><tbody><tr><td><a href="../../../fields/generative-ai/llm-inference-performance/compute-bound-vs-memory-bound/">compute-bound-vs-memory-bound</a></td><td>Arithmetic intensity, the roofline model and ridge points</td></tr><tr><td><a href="../../../fields/generative-ai/llm-inference-performance/llm-inference-on-the-roofline/">llm-inference-on-the-roofline</a></td><td>Prefill vs decode, batching and the KV cache</td></tr><tr><td><a href="../../../fields/generative-ai/llm-inference-performance/sizing-a-70b-model/">sizing-a-70b-model</a></td><td>Worked example: Llama 2 70B on 8×H100</td></tr><tr><td><a href="../../../fields/generative-ai/llm-inference-performance/optimizations-on-the-roofline/">optimizations-on-the-roofline</a></td><td>What each optimization moves, how to measure, interview answer</td></tr><tr><td><a href="../../../fields/generative-ai/llm-inference-performance/structured-sparsity/">structured-sparsity</a></td><td>How 2:4 sparsity works, the metadata tax, and its two gifts on the roofline</td></tr><tr><td><a href="../../../fields/generative-ai/llm-inference-performance/sparsity-vs-quantization/">sparsity-vs-quantization</a></td><td>Pruning cost and accuracy, comparison with FP8 and 4-bit, who owns what</td></tr></tbody></table>
+<h2>Related reading in this repo</h2>
+<ul><li><a href="../../../fields/system-administration/gpu-failure-prediction/">Predicting GPU Node Failures</a>: the same GPUs, the same telemetry, the reliability side of the story.</li></ul>
+<p><a href="../../../#/fields/generative-ai/llm-inference-performance/">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

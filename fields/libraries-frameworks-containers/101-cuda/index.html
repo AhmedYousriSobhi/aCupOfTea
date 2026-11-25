@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CUDA 101</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/libraries-frameworks-containers/101-cuda/">
+<meta name="description" content="What CUDA is and why it is named that, what a thread really is, memory coalescing, and the path of code from CPU to GPU.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="CUDA 101">
+<meta property="og:description" content="What CUDA is and why it is named that, what a thread really is, memory coalescing, and the path of code from CPU to GPU.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/libraries-frameworks-containers/101-cuda/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/libraries-frameworks-containers/101-cuda/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../.docs/prerender-redirect.js" data-target="../../../#/fields/libraries-frameworks-containers/101-cuda"></script>
+<main>
+<h1>CUDA 101</h1>
+<p><em>What CUDA is and why it is named that, what a thread really is, memory coalescing, and the path of code from CPU to GPU.</em></p>
+<h1>Table of Content</h1>
+<h1>CUDA</h1>
+<p>CUDA (Compute Unified Device Architecture) is a parallel computing platform and application programming interface (API) developed by Nvidia. It allows software to leverage certain types of graphics processing units (GPUs) for accelerated general-purpose processing, a concept known as general-purpose computing on GPUs (GPGPU).</p>
+<p>In sampler terms, it is a tool developed by Nvidia, to introduce the capabilities of being able to use Graphic cards to do generic computations. This changes the vision of the future GPUs cards to be more general-purpose hardware platforms, for scientific computing and parallel workloads.</p>
+<h1>Why the name CUDA?</h1>
+<p>The name CUDA stands for Compute Unified Device Architecture. It was coined by Nvidia when they introduced their parallel computing platform and API for GPUs. Let’s break down the name:</p>
+<ul><li>Compute:<ul><li>Refers to the ability of GPUs to perform general-purpose computations beyond graphics rendering.</li><li>Nvidia wanted to emphasize that GPUs could be used for more than just graphics-related tasks.</li></ul></li><li>Unified:<ul><li>Highlights the idea of a single programming model that unifies both graphics and general-purpose computing.</li><li>Before CUDA, developers had to use separate APIs for graphics (e.g., OpenGL, Direct3D) and compute (e.g., OpenCL).</li><li>CUDA unified these into a single framework.</li></ul></li><li>Device:<ul><li>Refers to the GPU itself.</li><li>CUDA enables developers to write code that runs directly on the GPU.</li></ul></li><li>Architecture:<ul><li>Signifies the underlying hardware and software design.</li><li>CUDA provides an architecture for parallel processing on GPUs.</li></ul></li></ul>
+<p>In summary, CUDA represents Nvidia’s vision of harnessing the immense parallel processing power of GPUs for a wide range of computational tasks, not just graphics. It has become a fundamental tool for scientific simulations, machine learning, and other high-performance computing workloads. 🚀🔥</p>
+<h1>What is a Thread (really)</h1>
+<p>According to a question in <a href="https://stackoverflow.com/a/5201906">Stackoverflow regarding what is a thread really</a>!!, the auther pwnall illustrate the following:</p>
+<ul><li>Thread is an execution context, where the process is a bunch of resources associated with a computation; so process can have one or many threads.</li><li>As said, the thread is an execution context, which is all the information a CPU needs to execute a stream of instructions.</li><li>The CPU knows each execution needs to be done by its thread, so if the cpu needs to continue work on it, it will continue its thread.</li><li>It&#x27;s an illusion by the CPU, that it&#x27;s doing multiple computations at the same time.</li><li>It does that by spending a bit of time on each computation. It can do that because it has an execution context for each computation</li></ul>
+<p>Following up the next answer from Ben Voigt, from <a href="https://stackoverflow.com/a/5201879">stackoverflow</a>, who tries to describe what is really a thread:</p>
+<ul><li>A thread is an independent set of values for the processor registers {instruction pointer: program counter that controls what exectures in what order, Stack pointer: points to area of memory for each thread or else they&#x27;ll interfere with.}</li><li>Threads are the software unit affected by control flow (functions call, loops, goto), because these instructions operate on the instruction pointer, and that belongs to a particular thread.</li><li>The value of instruction pointer, and the instruction stored at that location is sufficient to determine a new value for the instruction pointer.</li><li>The sequence of values that IP tales on, forms a path of execution weaving throught the program code, giving rise to the name &#x27;thread&#x27;.</li></ul>
+<h1>Memory Coalescing?</h1>
+<p>Memory coalescing is a technique used in parallel computing, particularly in GPU programming, to improve memory access efficiency.</p>
+<p>In GPU architectures, memory access typically occurs in groups called &quot;warps&quot; or &quot;threads&quot;, which are small groups of parallel execution units. When these threads access memory, they often do so in a non-contiguous manner, meaning they may request data from different memory locations.</p>
+<p>Memory coalescing aims to optimize memory access patterns by organizing memory requests from adjacent threads into larger, contiguous memory transactions. By doing so, memory coalescing reduces the number of memory transactions required to fulfill memory requests, which can significantly improve memory access performance and bandwidth utilization.</p>
+<p>For example, suppose multiple threads in a warp need to access consecutive elements of an array. Instead of accessing these elements individually, memory coalescing allows the GPU to fetch them in a single transaction, minimizing the overhead associated with memory accesses.</p>
+<p>Please refer to <a href="../../../programming/operating-system/memory-coalescing/">memory coalescing</a> blog to get more info explained.</p>
+<h1>Code Journey from CPU to GPU</h1>
+<p>With the help of ChatGPT 3.5, we try to illustrate an overview of what happen when we want to run code on GPU from CPU.</p>
+<p>A textual representation of the flow, highlighting the key components and their interactions. Let&#x27;s break it down:</p>
+<blockquote><p>Host CPU: The process begins with the host Central Processing Unit (CPU), which initiates GPU computation by sending commands and data to the GPU.</p></blockquote>
+<blockquote><p>GPU Driver: The GPU driver, running on the host CPU, acts as a communication bridge between the CPU and the GPU. It manages GPU resources, loads and compiles GPU programs, and schedules GPU tasks.</p></blockquote>
+<blockquote><p>Application Code: The application code, written by the programmer, contains GPU-accelerated tasks (e.g., CUDA or OpenCL kernels) that need to be executed on the GPU.</p></blockquote>
+<blockquote><p>Memory Allocation: The GPU driver allocates memory space in both the host and device memory. It manages data transfers between the host and device memory as needed for GPU computations.</p></blockquote>
+<blockquote><p>Kernel Execution: The GPU driver schedules the execution of GPU kernels (e.g., CUDA or OpenCL kernels) on the GPU. Each kernel is executed by multiple threads in parallel on the GPU cores.</p></blockquote>
+<blockquote><p>Streaming Multiprocessors (SMs): The GPU contains multiple SMs, each consisting of CUDA cores, registers, shared memory, and other resources. The SMs execute the GPU kernels in parallel, with each SM responsible for executing one or more blocks of threads.</p></blockquote>
+<blockquote><p>Thread Execution: Within each SM, threads execute instructions from the GPU kernels. Threads access data from global memory, shared memory, or registers as required by the kernel instructions.</p></blockquote>
+<blockquote><p>Memory Hierarchy: The GPU memory hierarchy includes registers, shared memory, L1 cache, L2 cache, and global memory. Data is moved between these memory levels to minimize memory access latency and maximize memory bandwidth.</p></blockquote>
+<blockquote><p>Memory Transactions: The memory controller manages memory transactions between the SMs and the memory hierarchy. It coordinates data fetching, caching, and storing operations to optimize memory access performance.</p></blockquote>
+<blockquote><p>Data Transfer: Data is transferred between the host and device memory as needed for GPU computations. The GPU driver manages these data transfers using DMA (Direct Memory Access) techniques to minimize CPU involvement and maximize data transfer bandwidth.</p></blockquote>
+<blockquote><p>Result Retrieval: After GPU computations are completed, the results are retrieved from the GPU memory to the host memory. The GPU driver manages this process and ensures data integrity and correctness.</p></blockquote>
+<blockquote><p>Task Completion: Once all GPU tasks are completed, the GPU driver notifies the host CPU, indicating that GPU resources are available for additional tasks or that the GPU can enter a low-power state to conserve energy.</p></blockquote>
+<h1>A good to read</h1>
+<ul><li><a href="http://supercomputingblog.com/cuda-tutorials/">The supercomputing blog</a> for Cuda tutorial.</li></ul>
+<h1>References</h1>
+<ul><li>Nvidia presentation High-Performance Computing with CUDA and TESLA GPUs, <a href="https://intranet.birmingham.ac.uk/it/teams/infrastructure/research/bear/documents/public/CUDA-2013-07-31/CUDA-Tutorial.pdf">here</a>.</li><li>High Performance Computing with CUDA, <a href="https://www.nvidia.com/content/PDF/isc-2011/Bradley2.pdf">here</a>.</li></ul>
+<p><a href="../../../#/fields/libraries-frameworks-containers/101-cuda">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

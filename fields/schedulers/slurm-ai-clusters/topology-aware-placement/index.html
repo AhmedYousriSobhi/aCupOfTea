@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Keep the Job on One Switch: Topology-Aware Placement in Slurm</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-ai-clusters/topology-aware-placement/">
+<meta name="description" content="How Slurm places multi-node jobs with and without a topology plugin - topology/tree, --switches, topology/block that refuses to straddle, the 25.05 topology.yaml, and a fatal block config.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Keep the Job on One Switch: Topology-Aware Placement in Slurm">
+<meta property="og:description" content="How Slurm places multi-node jobs with and without a topology plugin - topology/tree, --switches, topology/block that refuses to straddle, the 25.05 topology.yaml, and a fatal block config.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-ai-clusters/topology-aware-placement/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-ai-clusters/topology-aware-placement/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/schedulers/slurm-ai-clusters/topology-aware-placement"></script>
+<main>
+<h1>Keep the Job on One Switch: Topology-Aware Placement in Slurm</h1>
+<p><em>How Slurm places multi-node jobs with and without a topology plugin - topology/tree, --switches, topology/block that refuses to straddle, the 25.05 topology.yaml, and a fatal block config.</em></p>
+<blockquote><p><strong>Part 1 of [Slurm for AI Clusters](/fields/schedulers/slurm-ai-clusters/README.md)</strong> A multi-node training job is only as fast as the slowest link between its nodes. By the end you&#x27;ll know where Slurm puts a job when it knows nothing about your network, how to tell it, and the difference between &quot;prefer one switch&quot; and &quot;never leave the block&quot;.</p></blockquote>
+<hr>
+<h2>The Tuesday slowdown</h2>
+<p>A team runs the same 2-node fine-tuning job every night. Most nights it takes four hours. Some nights it takes five and a half, with the same code, the same data and the same GPU model. Nobody can find a pattern, until someone lists the node pairs: the slow nights are the ones where the two nodes sit under different leaf switches, and every gradient all-reduce crosses the spine.</p>
+<p>Slurm picked those nodes. It had no idea the switches existed, because nobody told it.</p>
+<blockquote><p>[!NOTE] Lab: Slurm <strong>23.11.4</strong>, four CPU nodes <code>cn001</code>–<code>cn004</code> with 2 CPUs each, plus <code>gpu001</code>. The &quot;network&quot; is invented: we declare <code>cn[001-002]</code> under one leaf and <code>cn[003-004]</code> under another. Containers share one real network, so these tests show <strong>placement</strong>, not speed. Slurm <strong>26.05.6</strong> on <code>s26a</code>–<code>s26c</code> for <code>topology.yaml</code>.</p></blockquote>
+<hr>
+<h2>Where Slurm puts a job by default</h2>
+<p>With no topology plugin, the scheduler treats nodes as a flat list. We filled <code>cn001</code> with a 2-CPU job, then asked for two nodes:</p>
+<pre><code class="language-bash">sbatch -p cpu -w cn001 -n2 --wrap &#x27;sleep 300&#x27;     # make cn001 busy
+sbatch -p cpu -N2 --wrap &#x27;sleep 30&#x27;
+squeue -o &#x27;%i %j %N&#x27;</code></pre>
+<pre><code class="language-text">TopologyPlugin=topology/default  job two -&gt; cn[002-003] RUNNING None</code></pre>
+<p><code>cn002</code> and <code>cn003</code>: the first two free nodes in order. On our invented network, that&#x27;s one node under each leaf. Exactly the slow nights.</p>
+<hr>
+<h2>topology/tree: prefer one switch</h2>
+<p><strong>`topology/tree`</strong> reads a switch hierarchy from <code>topology.conf</code> and tries to fit each job under the lowest common switch. In <code>slurm.conf</code>:</p>
+<pre><code class="language-text">TopologyPlugin=topology/tree</code></pre>
+<p>And <code>/etc/slurm/topology.conf</code>, on the controller and every node:</p>
+<pre><code class="language-text">SwitchName=leaf1 Nodes=cn[001-002]
+SwitchName=leaf2 Nodes=cn[003-004]
+SwitchName=leaf3 Nodes=gpu001
+SwitchName=spine Switches=leaf[1-3]</code></pre>
+<p>After restarting <code>slurmctld</code> and the <code>slurmd</code>s, Slurm shows what it understood:</p>
+<pre><code class="language-text">$ scontrol show topology
+SwitchName=leaf1 Level=0 LinkSpeed=1 Nodes=cn[001-002]
+SwitchName=leaf2 Level=0 LinkSpeed=1 Nodes=cn[003-004]
+SwitchName=leaf3 Level=0 LinkSpeed=1 Nodes=gpu001
+SwitchName=spine Level=1 LinkSpeed=1 Nodes=cn[001-004],gpu001 Switches=leaf[1-3]</code></pre>
+<p>Same test, same busy <code>cn001</code>:</p>
+<pre><code class="language-text">TopologyPlugin=topology/tree  job two -&gt; cn[003-004] RUNNING None</code></pre>
+<p>Both nodes under <code>leaf2</code>. That&#x27;s the whole fix for the Tuesday slowdown, as long as one leaf has room.</p>
+<p>When no single leaf has room, <code>tree</code> still starts the job, spread across leaves. The docs say a job that can&#x27;t fit under one leaf &quot;will be spread across as many leaf switches as possible&quot;. It <em>prefers</em> one switch, it doesn&#x27;t insist.</p>
+<blockquote><p>[!WARNING] Nodes on switches with <strong>no common parent</strong> never share a job (unless <code>TopologyParam=TopoOptional</code>). Forget the <code>spine</code> line and no job can ever span <code>leaf1</code> and <code>leaf2</code>. That&#x27;s sometimes useful, usually a typo. And the docs note that node <code>Weight</code> overrides topology-based selection.</p></blockquote>
+<hr>
+<h2>--switches: wait for one switch</h2>
+<p>A user who&#x27;d rather wait than straddle can say so:</p>
+<pre><code class="language-bash">sbatch -p cpu -N2 --switches=1@00:01:00 --wrap &#x27;sleep 30&#x27;</code></pre>
+<p><code>--switches=count@max-time</code>: at most one leaf switch, and wait up to one minute for that. We made one node busy under each leaf (<code>cn001</code> and <code>cn003</code>), so the only free pair, <code>cn002</code> and <code>cn004</code>, straddled:</p>
+<pre><code class="language-text">+10s PENDING|Resources|
+...
++90s PENDING|Resources|
++100s RUNNING|None|cn[002,004]
+SubmitTime=2026-11-12T04:41:28 StartTime=2026-11-12T04:43:06 Switches=1@00:01:00</code></pre>
+<p>It waited, then gave up and took the straddling pair, 98 seconds after submission (69 seconds in an earlier run). The wait is checked on scheduling passes, so it runs over the limit by however long the next pass takes.</p>
+<p>Without a time, the wait is capped by the cluster-wide <code>max_switch_wait</code> in <code>SchedulerParameters</code> (default 300 seconds, per <code>slurm.conf(5)</code>).</p>
+<hr>
+<h2>topology/block: never straddle</h2>
+<p><strong>`topology/block`</strong> is the stricter model, built for systems like NVLink racks where a job either fits inside a block of nodes or performs badly. <code>topology.conf</code>:</p>
+<pre><code class="language-text">BlockName=nvl1 Nodes=cn[001-002]
+BlockName=nvl2 Nodes=cn[003-004]</code></pre>
+<pre><code class="language-text">$ scontrol show topology
+BlockName=nvl1 BlockIndex=0 Nodes=cn[001-002]
+BlockName=nvl2 BlockIndex=1 Nodes=cn[003-004]</code></pre>
+<p>With <code>cn001</code> busy, the 2-node job went to <code>cn[003-004]</code>, like <code>tree</code>. The difference shows when no block has room. One busy node per block, then a 2-node and a 3-node job:</p>
+<pre><code class="language-text">after 90s:
+JOBI   NAME ST     REASON NODELIST
+ 142    two PD  Resources
+ 143  three PD   Priority
+ 140  busy1  R       None cn001
+ 141  busy3  R       None cn003
+after freeing cn003:
+JOBI   NAME ST     REASON NODELIST
+ 143  three PD  Resources
+ 142    two  R       None cn[003-004]
+ 140  busy1  R       None cn001</code></pre>
+<p>Two free nodes sat idle for 90 seconds, and the job waited rather than straddle. When <code>cn003</code> freed up, it started inside <code>nvl2</code>. That&#x27;s the trade: perfect placement, paid for in idle nodes and queue time.</p>
+<p>Two things bit us while setting it up:</p>
+<table><thead><tr><th>What we did</th><th>What happened</th></tr></thead><tbody><tr><td>Added <code>BlockName=nvl3 Nodes=gpu001</code>: a block of 1 next to blocks of 2</td><td><code>slurmctld</code> exited: <code>fatal: Block configuration (nvl3) children count no equal bblock_node_cnt</code>. Every block at a level must be the same size</td></tr><tr><td>Left <code>gpu001</code> out of every block</td><td><code>warning: blocks lack access to 1 nodes: gpu001</code> in the controller log. Jobs in the <code>gpu</code> partition still ran on <code>gpu001</code></td></tr></tbody></table>
+<p>The first one takes the controller down, so test a new <code>topology.conf</code> on a lab controller before production.</p>
+<p>The docs list more limits of <code>block</code>: <code>-w/--nodelist</code> can conflict with block placement and leave the job unallocated, and node-count ranges (<code>-N 2-8</code>) make the scheduler evaluate every value.</p>
+<p><code>--segment=&lt;size&gt;</code>, which builds a block job&#x27;s allocation out of segments of that many nodes, isn&#x27;t in 23.11 (<code>sbatch: unrecognized option &#x27;--segment=2&#x27;</code>). The 26.11 docs describe it for <code>block</code> and add a per-partition default, <code>DefSegmentSize</code>.</p>
+<hr>
+<h2>Two topologies in one cluster (25.05+)</h2>
+<p>One cluster often has both: a switch tree for most nodes, and NVLink blocks for a few racks. Before 25.05 you had to pick one plugin. Since 25.05, <strong>`topology.yaml`</strong> defines several topologies and each partition chooses one with <code>Topology=</code>. On the 26.05 lab:</p>
+<pre><code class="language-yaml"># /opt/slurm26/etc/topology.yaml
+- topology: fabric
+  cluster_default: true
+  tree:
+    switches:
+      - switch: leaf1
+        nodes: s26a,s26b
+      - switch: leaf2
+        nodes: s26c
+      - switch: spine
+        children: leaf1,leaf2
+- topology: nvl
+  block:
+    block_sizes: [2]
+    blocks:
+      - block: rack1
+        nodes: s26a,s26b</code></pre>
+<pre><code class="language-text">PartitionName=all Nodes=s26a,s26b,s26c Default=YES State=UP
+PartitionName=nvl Nodes=s26a,s26b Topology=nvl State=UP</code></pre>
+<p><code>scontrol show topology</code> lists the default tree; <code>scontrol show topology nvl</code> names the other:</p>
+<pre><code class="language-text">BlockName=rack1 BlockIndex=0 Nodes=s26a,s26b BlockSize=2</code></pre>
+<p>A <code>-p nvl -N2</code> job ran on <code>s26a,s26b</code>. Same nodes, two placement policies, chosen by partition. Our 26.05 <code>slurm.conf</code> had no <code>TopologyPlugin</code> line at all. The file sits next to <code>slurm.conf</code>, and the docs say that when <code>topology.yaml</code> exists, <code>topology.conf</code> is ignored.</p>
+<hr>
+<h2>Which one to use</h2>
+<table><thead><tr><th>Your network</th><th>Use</th><th>Users get</th></tr></thead><tbody><tr><td>Fat tree, small oversubscription</td><td><code>tree</code></td><td>Best effort, no extra waiting</td></tr><tr><td>Tree with heavy oversubscription at the spine</td><td><code>tree</code>, and teach <code>--switches=1@&lt;time&gt;</code> for big jobs</td><td>A choice: wait, or run slower</td></tr><tr><td>NVLink domains, or racks where crossing hurts a lot</td><td><code>block</code></td><td>Fast placement or no placement</td></tr><tr><td>Both (25.05+)</td><td><code>topology.yaml</code>, one topology per partition</td><td>The right policy per partition</td></tr></tbody></table>
+<p>Generate the switch list from the fabric rather than by hand. The Slurm docs point at community tools such as <code>slurmibtopology</code> for InfiniBand.</p>
+<hr>
+<h2>Back to Tuesday</h2>
+<p>With <code>topology/tree</code> and a <code>topology.conf</code> that matches the real switches, the nightly job lands under one leaf whenever one leaf has room, which on that cluster is almost every night. For the few nights it doesn&#x27;t, the team added <code>--switches=1@01:00:00</code> to the job: wait up to an hour for one switch, then run anyway. A one-hour wait beats a ninety-minute slowdown.</p>
+<p>The slow nights didn&#x27;t come from the GPUs. Slurm didn&#x27;t know where the cables went.</p>
+<p><strong>Takeaway:</strong> without a topology plugin Slurm picks nodes in list order; <code>topology/tree</code> prefers one switch, <code>--switches</code> makes a job wait for one, <code>topology/block</code> refuses to straddle at all, and since 25.05 each partition can pick its own.</p>
+<p><strong>Next:</strong> <a href="../../../../fields/schedulers/slurm-ai-clusters/launching-distributed-training/">Part 2, Launching Distributed Training</a>, gets every rank started on the nodes this page picked.</p>
+<hr>
+<h2>References</h2>
+<ul><li><a href="https://slurm.schedmd.com/topology.html">Slurm: Topology Guide</a>: <code>tree</code>, <code>block</code>, <code>BlockSizes</code>, block limitations, <code>topology.yaml</code>, <code>--segment</code>, configuration generators.</li><li><a href="https://slurm.schedmd.com/topology.conf.html">topology.conf(5)</a> and <a href="https://slurm.schedmd.com/topology.yaml.html">topology.yaml(5)</a>: file formats.</li><li><a href="https://slurm.schedmd.com/sbatch.html#OPT_switches">sbatch(1): --switches</a>: <code>count@max-time</code>.</li><li><a href="https://slurm.schedmd.com/slurm.conf.html#OPT_SchedulerParameters">slurm.conf(5): SchedulerParameters</a>: <code>max_switch_wait</code>; <code>TopologyParam=TopoOptional</code>.</li><li><a href="https://github.com/SchedMD/slurm/blob/master/RELEASE_NOTES.md">Slurm 26.11 release notes</a>: <code>DefSegmentSize</code>.</li></ul>
+<p><a href="../../../../#/fields/schedulers/slurm-ai-clusters/topology-aware-placement">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

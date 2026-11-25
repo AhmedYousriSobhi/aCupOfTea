@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Tips - Linux daily Tricks</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/tips/linux-daily-tricks/">
+<meta name="description" content="A table of everyday Linux tricks, such as clearing file content in vi, searching, checking OS and shell info, and using the mouse to scroll in tmux.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Tips - Linux daily Tricks">
+<meta property="og:description" content="A table of everyday Linux tricks, such as clearing file content in vi, searching, checking OS and shell info, and using the mouse to scroll in tmux.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/tips/linux-daily-tricks/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/tips/linux-daily-tricks/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../.docs/prerender-redirect.js" data-target="../../#/tips/linux-daily-tricks"></script>
+<main>
+<h1>Tips - Linux daily Tricks</h1>
+<p><em>A table of everyday Linux tricks, such as clearing file content in vi, searching, checking OS and shell info, and using the mouse to scroll in tmux.</em></p>
+<p>These are some tips and tricks I usually need in my daily work, so I tried to document them here.</p>
+<h1>Table of Tricks</h1>
+<ul><li>Tips - Linux daily Tricks</li><li>Table of Tricks<ul><li>To delete file content in *<strong>vi</strong>*</li><li>To search for Something</li><li>To get OS info you are using:</li><li>To know Which Shell you Use</li><li>To get OS version</li><li>To identify root dir</li><li>tmux Use mouse to scroll</li><li>To Update Nvidia Driver</li><li>Packages Management Related</li><li>VPN - To enable openconnect in Network Settings</li></ul></li></ul>
+<h2>To delete file content in *<strong>vi</strong>*</h2>
+<pre><code class="language-bash"># Enter the script
+vi &lt;script-name&gt;
+
+# to get to the first line in the file.
+gg 
+
+# to enter visualize mode.
+v 
+
+# to select all.
+G 
+
+# delete.
+dd </code></pre>
+<h2>To search for Something</h2>
+<pre><code class="language-bash">find / -name &lt;target-dir-to-find&gt; 2&gt;/dev/null</code></pre>
+<h2>To get OS info you are using:</h2>
+<pre><code class="language-bash">uname -a</code></pre>
+<h2>To know Which Shell you Use</h2>
+<pre><code class="language-bash">echo $0</code></pre>
+<h2>To get OS version</h2>
+<pre><code class="language-bash">cat /etc/os-release</code></pre>
+<h2>To identify root dir</h2>
+<pre><code class="language-bash">findmnt / -o source -n</code></pre>
+<h2>tmux Use mouse to scroll</h2>
+<pre><code class="language-bash"># To use your mouse in this mode (called copy mode) press ^b + : and enter following:
+
+setw -g mouse on</code></pre>
+<p>Reference: Scroll shell output with mouse in tmux. <a href="https://superuser.com/a/217269">https://superuser.com/a/217269</a></p>
+<h2>To Update Nvidia Driver</h2>
+<pre><code class="language-bash">dpkg -l | grep nvidia
+
+sudo apt-get --purge remove nvidia*
+
+sudo apt-get --purge remove &quot;*nvidia*&quot;
+
+sudo apt autoremove
+
+sudo apt autoclean
+
+sudo reboot</code></pre>
+<ul><li>Then use the default linux nvidia driver supported.</li></ul>
+<h2>Packages Management Related</h2>
+<ul><li>Search for package dependencies <code>`</code>bash dnf repoquery --requires &lt;packag-ename&gt; <code>`</code></li><li>Search for specific package source <code>`</code>bash yum provides &lt;package&gt; # e.g yum provides ld-linux.so.2 <code>`</code></li><li>Search for packages that requires certain &lt;packages&gt; <code>`</code>bash # For Red Hat/Fedora dnf repoquery --whatrequires gcc # or yum deplist gcc | grep dependent</li></ul>
+<p># For Debian/Ubuntu based systems sudo apt-get install apt-rdepends dnf repoquery --whatrequires gcc</p>
+<pre><code>## VPN - To enable openconnect in Network Settings
+- Objective: Wants to connect to VPN in settings, but `openconnect` does not shows it there.
+- To enable `openconnect` in Linux Network settings.</code></pre>
+<p>sudo apt install openconnect sudo apt install network-manager-openconnect network-manager-openconnect-gnome sudo systemctl restart NetworkManager</p>
+<pre><code></code></pre>
+<p><a href="../../#/tips/linux-daily-tricks">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

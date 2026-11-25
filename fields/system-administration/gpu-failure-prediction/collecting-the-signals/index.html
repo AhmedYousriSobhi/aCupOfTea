@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Reading the GPU&#x27;s Vital Signs</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/gpu-failure-prediction/collecting-the-signals/">
+<meta name="description" content="The telemetry concepts behind GPU failure prediction - counters, gauges and events, volatile versus persistent, in-band versus out-of-band - and the ways each one misleads.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Reading the GPU&#x27;s Vital Signs">
+<meta property="og:description" content="The telemetry concepts behind GPU failure prediction - counters, gauges and events, volatile versus persistent, in-band versus out-of-band - and the ways each one misleads.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/gpu-failure-prediction/collecting-the-signals/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/gpu-failure-prediction/collecting-the-signals/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/system-administration/gpu-failure-prediction/collecting-the-signals"></script>
+<main>
+<h1>Reading the GPU&#x27;s Vital Signs</h1>
+<p><em>The telemetry concepts behind GPU failure prediction - counters, gauges and events, volatile versus persistent, in-band versus out-of-band - and the ways each one misleads.</em></p>
+<blockquote><p><strong>Part 2 of the [Predicting GPU Node Failures series](/fields/system-administration/gpu-failure-prediction/README.md).</strong> <a href="../../../../fields/system-administration/gpu-failure-prediction/what-fails-and-what-warns/">Part 1</a> described the error ladder. This page is about how the ladder reaches you: what kind of number each signal is, where it comes from, and how it can mislead you. By the end you&#x27;ll be able to look at any GPU dashboard and say what it can and can&#x27;t tell you.</p></blockquote>
+<hr>
+<h2>A doctor&#x27;s analogy</h2>
+<p>A doctor uses three kinds of information. A <strong>chart</strong> of measurements taken regularly (blood pressure every visit). An <strong>alarm</strong> that goes off when something happens (a heart monitor beeping). And the <strong>patient&#x27;s history</strong>, written down at the time.</p>
+<p>GPU monitoring has the same three:</p>
+<table><thead><tr><th>Doctor</th><th>GPU</th><th>Example</th></tr></thead><tbody><tr><td>Chart</td><td>Metrics scraped every 15-60 s</td><td>ECC counters, remap counts</td></tr><tr><td>Alarm</td><td>Events</td><td>Xid messages from the driver</td></tr><tr><td>History</td><td>Logs</td><td>The kernel log, where every Xid is written</td></tr></tbody></table>
+<p>Most monitoring mistakes come from treating one kind as if it were another: reading an alarm off a chart, or trusting a chart that started yesterday as if it were the full history.</p>
+<hr>
+<h2>Concept 1: three shapes of signal</h2>
+<p>Every number in GPU telemetry has one of three shapes. Knowing the shape tells you how to read it.</p>
+<table><thead><tr><th>Shape</th><th>What it is</th><th>Example</th><th>How to read it</th><th>Classic mistake</th></tr></thead><tbody><tr><td><strong>Counter</strong></td><td>Only goes up (until it resets)</td><td>Single-bit ECC errors so far</td><td>Look at its <em>rate</em> or <em>increase</em>, not its value</td><td>Alerting on &quot;errors &gt; 100&quot; on a GPU that&#x27;s three years old</td></tr><tr><td><strong>Gauge</strong></td><td>Goes up and down; describes <em>now</em></td><td>Remap pending (0 or 1), temperature</td><td>Read the value directly</td><td>Expecting it to remember the past</td></tr><tr><td><strong>Event</strong></td><td>Something happened at a moment</td><td>Xid 79</td><td>Count it, or keep the log</td><td>Sampling it like a gauge and missing it</td></tr></tbody></table>
+<p>A good example of shape confusion is in NVIDIA&#x27;s dcgm-exporter. Its default configuration exports a field described as <em>&quot;Value of the last XID error encountered.&quot;</em> That&#x27;s an <strong>event squeezed into a gauge</strong>. If a GPU logs Xid 79 and then Xid 13 between two scrapes, the dashboard only ever sees 13. The exporter also offers a proper per-code <strong>counter</strong> of Xid events (<code>DCGM_EXP_XID_ERRORS_TOTAL</code>). Using the counter instead of the gauge is the difference between seeing the failure and not seeing it.</p>
+<blockquote><p>[!TIP] When you meet a new metric, ask first: counter, gauge or event? It decides every query and alert you&#x27;ll write on it.</p></blockquote>
+<hr>
+<h2>Concept 2: volatile versus persistent</h2>
+<p>GPU error counters come in two lifetimes, and dcgm-exporter exposes both for ECC:</p>
+<ul><li><strong>Volatile</strong> counts start from zero when the driver loads. They tell you about <em>this session</em>. A reboot or driver reload wipes them.</li><li><strong>Aggregate</strong> (persistent) counts are stored on the GPU and survive reboots. They tell you about <em>this GPU&#x27;s life</em>.</li></ul>
+<p>Row-remap counts are a third kind: NVIDIA notes that the remapped-row numbers are the entries recorded in the GPU&#x27;s <strong>InfoROM</strong> (a small non-volatile store on the board), not the rows remapped in hardware so far. A recorded remap can still be pending.</p>
+<p>Each lifetime answers a different question:</p>
+<table><thead><tr><th>Question</th><th>Use</th></tr></thead><tbody><tr><td>&quot;Is something happening on this GPU <em>right now</em>?&quot;</td><td>The rate of a volatile counter</td></tr><tr><td>&quot;Has this GPU been in trouble before?&quot;</td><td>Aggregate counts and recorded remaps</td></tr><tr><td>&quot;How much repair budget is left?&quot;</td><td>The bank buckets from <a href="../../../../fields/system-administration/gpu-failure-prediction/what-fails-and-what-warns/">part 1</a></td></tr></tbody></table>
+<p>A GPU that was moved from another node, or reset last night, can look brand new on volatile counters and tired on persistent ones. Both are true.</p>
+<hr>
+<h2>Concept 3: where the numbers come from</h2>
+<p>NVIDIA describes two paths for reading GPU health, and they fail differently.</p>
+<ul><li><strong>In-band</strong>: software on the node asks the driver. Tools: NVML, <code>nvidia-smi</code>, DCGM and the DCGM exporter, plus the kernel log. Rich and detailed, but it depends on the driver and the OS being alive.</li><li><strong>Out-of-band</strong>: the board&#x27;s management controller reads the GPU over a side channel (NVIDIA calls the interface SMBPBI), usually reached through the server&#x27;s BMC. It exposes the essentials, including remap counts and the pending and failure flags, and works even when the OS has hung.</li></ul>
+<p>When a GPU falls off the bus, in-band tools on that node can&#x27;t reach the GPU, or can&#x27;t reach anything. Out-of-band telemetry is how you still learn what happened. For prediction, in-band is enough most of the time. For the post-mortem, you&#x27;ll want both.</p>
+<p>There&#x27;s also a matter of <strong>scope</strong>. dcgm-exporter only knows what happened since it started: its Xid counter begins at zero with the process. The kernel log is written by the driver regardless of whether any exporter is running. That makes the log the closest thing to ground truth for Xid events, and it&#x27;s why NVIDIA&#x27;s own triage guidance starts from log messages.</p>
+<hr>
+<h2>Concept 4: the cost of looking</h2>
+<p>Every check has a price: time, load on the GPU, and sometimes disruption to the job running on it. That gives a simple rule of thumb:</p>
+<blockquote><p><strong>The more often a check runs, the cheaper it must be.</strong></p></blockquote>
+<table><thead><tr><th>How often</th><th>What fits</th><th>Example</th></tr></thead><tbody><tr><td>Every scrape (seconds)</td><td>Reading counters the driver already keeps</td><td>ECC, remaps, Xid counts</td></tr><tr><td>Every job (prolog/epilog)</td><td>Quick queries and short tests</td><td><code>nvidia-smi</code> queries, recent Xids in the log, a short DCGM diagnostic</td></tr><tr><td>On a drained node</td><td>Deep tests that stress the GPU</td><td>NVIDIA&#x27;s long DCGM diagnostic, about 30 minutes</td></tr><tr><td>Before an RMA</td><td>The authoritative test</td><td>NVIDIA&#x27;s field diagnostic</td></tr></tbody></table>
+<p>NVIDIA&#x27;s debug guidelines make the same split: they recommend checks at the start or end of jobs (recent Xid errors, a short <code>dcgmi diag -r 2</code>), and the long diagnostic for fully stressing a system. Prediction lives in the first row. Everything below it is what prediction tells you to <em>do</em>.</p>
+<hr>
+<h2>The ladder, as telemetry</h2>
+<p>Here&#x27;s each rung from part 1 with the signal that shows it, as exposed by dcgm-exporter and <code>nvidia-smi</code>.</p>
+<table><thead><tr><th>Rung</th><th>Signal</th><th>Shape</th><th>How you&#x27;d read it</th></tr></thead><tbody><tr><td>Correctable errors</td><td>Single-bit ECC count</td><td>Counter</td><td>Rate, compared with this GPU&#x27;s own past</td></tr><tr><td>Row remapped</td><td>Correctable / uncorrectable remapped rows; Xid 63</td><td>Counter, event</td><td>Did it go up recently?</td></tr><tr><td>Spares running out</td><td>Banks in the &quot;Low&quot; and &quot;None&quot; buckets</td><td>Gauge</td><td>Above zero means a bank is nearly out of repairs</td></tr><tr><td>Uncorrectable error</td><td>Double-bit ECC count; Xid 48, 94</td><td>Counter, event</td><td>Any increase matters</td></tr><tr><td>Remap pending</td><td>Pending flag</td><td>Gauge</td><td>1 means a reset is owed</td></tr><tr><td>Remap failure</td><td>Failure flag; Xid 64</td><td>Gauge, event</td><td>1 means RMA candidate, latched</td></tr><tr><td>Uncontained / off the bus</td><td>Xid 95, 79</td><td>Event</td><td>Any occurrence</td></tr></tbody></table>
+<p>To see the remap state of a GPU by hand, <code>nvidia-smi</code> has a dedicated view. These field names are from its documentation; confirm them with <code>nvidia-smi --help-query-remapped-rows</code> on your driver.</p>
+<pre><code class="language-bash">nvidia-smi --query-remapped-rows=gpu_bus_id,remapped_rows.pending,remapped_rows.failure --format=csv</code></pre>
+<blockquote><p>[!WARNING] <strong>The defaults don&#x27;t show the ladder.</strong> In dcgm-exporter 4.8.4, the shipped counter list has the ECC counters and the per-code Xid counter commented out. The remap counts and failure flag are on; the pending flag and bank buckets are not listed at all. A stock install mostly shows temperatures and utilization. Check what yours exports before trusting any GPU-health dashboard built on it.</p></blockquote>
+<hr>
+<h2>Five ways the numbers lie</h2>
+<table><thead><tr><th>What you see</th><th>What&#x27;s really happening</th><th>Concept</th></tr></thead><tbody><tr><td>A GPU logged Xid 79 but the dashboard shows only Xid 13</td><td>The &quot;last Xid&quot; gauge was overwritten between scrapes</td><td>Event read as a gauge</td></tr><tr><td>ECC errors dropped to zero overnight</td><td>The driver reloaded and volatile counters reset</td><td>Volatile lifetime</td></tr><tr><td>A GPU with a long error history looks clean</td><td>It was reset or moved; you&#x27;re reading volatile counts</td><td>Volatile vs persistent</td></tr><tr><td>An idle GPU has a perfect record</td><td>Errors are mostly found when memory is used</td><td>Detection depends on use (part 1)</td></tr><tr><td>Xid history vanished after maintenance</td><td>The exporter restarted and its counter started over</td><td>Scope: exporter vs log</td></tr></tbody></table>
+<p>One more, which deserves its own name because it bites rules in <a href="../../../../fields/system-administration/gpu-failure-prediction/rules-that-predict/">part 3</a>: <strong>counters that are born on their first event.</strong> The per-code Xid counter has no series for Xid 79 until the first Xid 79 happens. A rule that asks &quot;did this counter increase?&quot; can&#x27;t see an increase from <em>nothing</em> to 1, so it misses exactly the first fatal event.</p>
+<blockquote><p>[!WARNING] <strong>Metric names change.</strong> In the go-dcgm library behind dcgm-exporter 4.8.4, several remap field names in the default list are marked deprecated in favor of new ones. The exporter names each metric after the line in its config, so &quot;modernizing&quot; the config renames the metrics and every alert built on the old names silently stops matching.</p></blockquote>
+<hr>
+<h2>Silence is not health</h2>
+<p>The most dangerous dashboard is the one with no data on it. An exporter that crashed, a node whose scrape target was removed, a GPU that fell off the bus and took the exporter&#x27;s view with it: all of them produce <em>no errors</em>. No errors looks exactly like a healthy GPU.</p>
+<p>So a GPU monitoring design always needs a second question next to &quot;is anything wrong?&quot;: <strong>&quot;are we still able to see?&quot;</strong> Missing telemetry is itself an alert. Part 3 builds it in.</p>
+<p><strong>Takeaway:</strong> know each signal&#x27;s shape (counter, gauge, event), its lifetime (volatile, persistent) and its source (exporter, log, out-of-band), because every misleading GPU dashboard gets one of those three wrong.</p>
+<p>Next: <a href="../../../../fields/system-administration/gpu-failure-prediction/rules-that-predict/">part 3, from signals to decisions</a>.</p>
+<h3>References</h3>
+<ul><li><a href="https://docs.nvidia.com/deploy/a100-gpu-mem-error-mgmt/user-visible-statistics.html">NVIDIA GPU Memory Error Management: User Visible Statistics (in-band, out-of-band, InfoROM, buckets)</a></li><li><a href="https://docs.nvidia.com/deploy/gpu-debug-guidelines/best-practices.html">NVIDIA GPU Debug Guidelines: Best Practices (metrics, prolog and epilog checks)</a></li><li><a href="https://docs.nvidia.com/deploy/gpu-debug-guidelines/gpu-node-triage.html">NVIDIA GPU Debug Guidelines: GPU Node Triage (DCGM diagnostics, field diagnostics)</a></li><li><a href="https://github.com/NVIDIA/dcgm-exporter/blob/main/etc/default-counters.csv">dcgm-exporter <code>etc/default-counters.csv</code></a></li><li><a href="https://github.com/NVIDIA/go-dcgm/blob/main/pkg/dcgm/const_fields.go">go-dcgm field constants</a></li><li><a href="https://docs.nvidia.com/deploy/nvidia-smi/index.html">nvidia-smi documentation</a></li><li><a href="https://prometheus.io/docs/concepts/metric_types/">Prometheus: metric types</a></li></ul>
+<p><a href="../../../../#/fields/system-administration/gpu-failure-prediction/collecting-the-signals">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

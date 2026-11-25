@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The Photo That Turned to Static: Noise and Restoration</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/digital-image-processing/noise-and-restoration/">
+<meta name="description" content="The degradation model g = hf + n, common noise types, why inverse filtering explodes, and how the Wiener filter gives up gracefully - with PSNR to score the result.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="The Photo That Turned to Static: Noise and Restoration">
+<meta property="og:description" content="The degradation model g = hf + n, common noise types, why inverse filtering explodes, and how the Wiener filter gives up gracefully - with PSNR to score the result.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/digital-image-processing/noise-and-restoration/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/digital-image-processing/noise-and-restoration/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../.docs/prerender-redirect.js" data-target="../../../#/fields/digital-image-processing/noise-and-restoration"></script>
+<main>
+<h1>The Photo That Turned to Static: Noise and Restoration</h1>
+<p><em>The degradation model g = hf + n, common noise types, why inverse filtering explodes, and how the Wiener filter gives up gracefully - with PSNR to score the result.</em></p>
+<blockquote><p><strong>Part 8 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).</strong> Real photos arrive blurred and noisy, and the obvious cure for the blur is also the fastest way to destroy the picture. <em>The traffic-camera team is invented; the maths and numbers are real.</em> By the end you can write the damage as an equation, match a filter to a noise, and see why dividing by a blur explodes.</p></blockquote>
+<pre><code class="language-text">$ restore plate_0412.png --method inverse
+reading blur kernel ........ ok
+dividing ................... ok
+result: static</code></pre>
+<hr>
+<h2>The plate that became static</h2>
+<p>A traffic camera shot a licence plate while the car was moving. The image is smeared in one direction. The team knows the blur, and a colleague said: &quot;We know the blur. Divide it out. Easy.&quot;</p>
+<p>You ran the program. The smear is gone, and so is the car, the road and the plate. The whole picture has been replaced by a coarse checkerboard of static.</p>
+<p>Your first reading is the obvious one: <strong>a bug in your division code.</strong> You test the division on a small image with no noise, and it recovers the original exactly. The code is fine.</p>
+<p>A correct inverse, applied to a real photo, produced noise. What was it dividing by? To find out, you have to write down exactly what the camera did to the plate.</p>
+<hr>
+<h2>The damage, as an equation</h2>
+<p>Most restoration starts from one model. The true image f is blurred by something h (motion, defocus, atmosphere), then noise η is added:</p>
+<p>By the convolution theorem from <a href="../../../fields/digital-image-processing/fourier-transform-for-images/">page 6</a>, the same thing in the frequency domain is:</p>
+<p>Blur is a <strong>multiplication</strong> by H (usually a low-pass: it shrinks high frequencies). Noise is <strong>added on top</strong>. And you only have g.</p>
+<pre><code class="language-mermaid">flowchart LR
+    A[&quot;True image f&quot;] --&gt; B[&quot;Blur h&lt;br/&gt;convolve&quot;]
+    B --&gt; C[&quot;Add noise n&quot;]
+    C --&gt; D[&quot;Observed g&quot;]
+    D -.-&gt;|&quot;restoration tries&lt;br/&gt;to go backwards&quot;| A</code></pre>
+<p><em>Going forward is easy and always loses something. Going backward is guesswork with a good model.</em></p>
+<p>Notice the second term. Before you divide anything, what kind of noise is it?</p>
+<hr>
+<h2>A field guide to noise</h2>
+<p>Noise isn&#x27;t one thing. Which type you have decides which tool to use.</p>
+<table><thead><tr><th>Type</th><th>Looks like</th><th>Where it comes from</th></tr></thead><tbody><tr><td>Gaussian</td><td>Fine grain on every pixel, small random errors both ways</td><td>Sensor electronics, thermal noise, a dim scene turned up</td></tr><tr><td>Salt-and-pepper (impulse)</td><td>A few isolated pixels at pure black or white</td><td>Faulty sensor pixels, transmission bit errors</td></tr><tr><td>Poisson (shot)</td><td>Grain strongest where it&#x27;s brightest, in absolute terms</td><td>Counting photons: light arrives in discrete packets</td></tr><tr><td>Uniform</td><td>Errors spread evenly over a range</td><td>Quantization-like rounding; mostly used in models</td></tr></tbody></table>
+<p>Each has a statistical model, which is why this page lives next to statistics: the filters below come from asking &quot;what is the best guess given how the noise behaves?&quot;.</p>
+<p>You&#x27;ve met most of the tools already. This is the matching table:</p>
+<table><thead><tr><th>Noise</th><th>Reach for</th><th>Why</th></tr></thead><tbody><tr><td>Gaussian</td><td>Mean or Gaussian blur (page 4)</td><td>Averaging independent, zero-mean errors cancels them</td></tr><tr><td>Salt-and-pepper</td><td>Median (page 4)</td><td>An outlier can&#x27;t be the middle value</td></tr><tr><td>Periodic (stripes)</td><td>Notch filter (page 7)</td><td>The noise sits at a few isolated frequencies</td></tr><tr><td>Several frames of a still scene</td><td>Average the frames</td><td>Noise standard deviation falls by about √n for n independent frames</td></tr></tbody></table>
+<blockquote><p>[!NOTE] The √n rule needs the noise to be independent and zero-mean across frames. If the camera has a fixed pattern (the same hot pixels each time), averaging doesn&#x27;t remove it.</p></blockquote>
+<p>Smoothing noise also smooths edges, so the question is always how much detail you can afford to lose. But your colleague didn&#x27;t suggest smoothing. They suggested <em>dividing</em>. Try the numbers before you read on.</p>
+<p>☕ <strong>Try it before you scroll.</strong> Your blur H has a value of 0.01 at some frequency, and the noise N is about 1 there. If you &quot;undo the blur&quot; by dividing the observed G by H, <strong>how much is the noise amplified at that frequency?</strong> <em>Hint: divide 1 by 0.01.</em></p>
+<hr>
+<h2>Dividing by the blur</h2>
+<p><strong>Answer:</strong> <strong>100 times</strong>. Here&#x27;s why.</p>
+<p>The naive plan: if G = H·F + N, divide by H.</p>
+<p>If there was no noise, you&#x27;d get F back exactly. But there is noise, and the second term is the problem. A blur is a low-pass, so H is <strong>small</strong> at high frequencies, sometimes almost zero. At such a frequency N/H is huge: with H = 0.01 and N ≈ 1, the noise term is about 100, vastly bigger than the signal there, which was crushed by the blur to begin with.</p>
+<p>That&#x27;s the static in the opening scene: the &quot;restored&quot; image is dominated by amplified noise at the very frequencies the blur had already destroyed. And where H is exactly zero, the division is undefined: that frequency is gone for good.</p>
+<p>The honest summary: <strong>you can&#x27;t recover what the blur erased</strong>, and trying to makes things much worse. So what do you do instead of giving up?</p>
+<hr>
+<h2>Wiener: dividing with manners</h2>
+<p>The <strong>Wiener filter</strong> also inverts the blur, but it knows when to stop. Here&#x27;s the version with a constant K, which stands for the noise-to-signal power ratio:</p>
+<p>H* is the complex conjugate of H. Look at the two regimes:</p>
+<ul><li>Where |H| is large compared to K, the bracket is about 1/H: the plain inverse. Good signal, so undo the blur.</li><li>Where |H| is small, the bracket becomes about H*/K, which is small: the filter <strong>stops trying</strong> and lets that frequency go quiet.</li></ul>
+<p>Use the numbers from the quiz. H = 0.01 and K = 0.01 give a gain of 0.01 / (0.0001 + 0.01) = 0.01 / 0.0101 ≈ <strong>0.99</strong>, against 100 for the inverse filter. At that frequency the noise now stays at about its original size instead of exploding.</p>
+<table><thead><tr><th></th><th>Inverse filter</th><th>Wiener (K = 0.01)</th></tr></thead><tbody><tr><td>Gain applied at H = 0.01</td><td>1/H = 100</td><td>≈ 0.99</td></tr><tr><td>Where H is exactly 0</td><td>Undefined</td><td>0 (gives up)</td></tr><tr><td>Needs to know</td><td>H</td><td>H and the noise-to-signal ratio K</td></tr></tbody></table>
+<p>K is usually tuned by eye: too small and the noise creeps back, too big and the result stays blurry. That&#x27;s the trade-off in one dial. And &quot;by eye&quot; raises the last question: how do you know a result is better?</p>
+<hr>
+<h2>Scoring a restoration</h2>
+<p>When you have a clean reference, use the mean squared error and its logarithmic cousin, the <strong>peak signal-to-noise ratio</strong>:</p>
+<p>MAX is the largest possible pixel value (255 for 8 bits). Example: MSE = 100 gives 10·log₁₀(65025/100) = 10·log₁₀(650.25) ≈ <strong>28.1 dB</strong>. Higher is better, and every 3 dB is about half the mean squared error.</p>
+<p>PSNR is easy to compute and only loosely matches how a human judges quality: a result can score well and still look smeared. Treat it as a sanity check, not a verdict.</p>
+<p>Now back to the plate.</p>
+<hr>
+<h2>Back to the static</h2>
+<p>You print the blur&#x27;s strength at a high frequency: a tiny number. The noise there is not tiny. You divide one by the other and see what happened: you divided by a number that was nearly zero.</p>
+<p>Your colleague&#x27;s plan was correct on paper and murderous in practice. The blur had pushed the high frequencies close to zero, noise was hiding there too, and dividing by H made the noise a hundred times louder than the thing you wanted.</p>
+<p>Wiener&#x27;s fix is the same principle in every area of engineering: <strong>don&#x27;t trust a measurement more than it deserves</strong>. Where the signal is strong, undo the damage. Where it&#x27;s buried, stay quiet.</p>
+<p>You switch to Wiener with a K tuned by eye, and read the plate.</p>
+<h3>Try it: The photo that turned to static</h3>
+<blockquote><p><strong>What it shows:</strong> Blur multiplies each frequency by H; noise is added on top. Dividing by a small H multiplies the noise too, and Wiener stops before that happens. <strong>Start with:</strong> the preset <em>No noise: the inverse is exact</em> (Blur length 9, no noise: dividing the blur out returns the picture almost exactly: the score is above 99 dB, only rounding error).</p></blockquote>
+<p><a href="../../../fields/digital-image-processing/labs/restoration.html">Restoration lab</a></p>
+<hr>
+<h2>Never again: restoring a photo</h2>
+<table><thead><tr><th>Do</th><th>Because</th></tr></thead><tbody><tr><td>Write the damage first: <code>g = h * f + η</code>, in frequency <code>G = H F + N</code></td><td>It shows what you can and cannot undo</td></tr><tr><td>Match the filter to the noise</td><td>Gaussian: mean or Gaussian blur; salt-and-pepper: median; periodic: notch; several frames of a still scene: average them</td></tr><tr><td>Never invert a blur without a safety</td><td><code>N / H</code> explodes where <code>H</code> is small (H = 0.01, N ≈ 1: about 100 times)</td></tr><tr><td>Use Wiener and tune K by eye</td><td>Too small and the noise creeps back; too big and it stays blurry</td></tr><tr><td>Score with PSNR, but do not trust it alone</td><td>MSE = 100 gives about 28.1 dB; every 3 dB is about half the MSE; it only loosely matches the eye</td></tr><tr><td>Average frames only when the noise is independent and zero-mean</td><td>A fixed pattern (hot pixels) does not average out</td></tr></tbody></table>
+<p><strong>Takeaway:</strong> write the damage as G = HF + N, match the filter to the noise, and never invert a blur without a Wiener-style safety.</p>
+<p><strong>Next:</strong> all of these tools see the town at <strong>one scale</strong>. What if the useful structure lives at several sizes at once? <a href="../../../fields/digital-image-processing/wavelets-and-multiresolution-processing/">Part 9: Wavelets and multiresolution processing</a>.</p>
+<hr>
+<h2>📜 The Scroll (keep this)</h2>
+<pre><code class="language-text">Symptom:  &quot;Un-blurred&quot; photo is static
+Cause:    F_hat = G/H = F + N/H: where H is tiny the noise is multiplied (H=0.01, N~1 -&gt; ~100x)
+Check:    How small is |H| at high frequencies? Is there noise at all?
+Do not:   Invert a blur without a safety term
+Fix:      Wiener: [H* / (|H|^2 + K)] G  (H=0.01, K=0.01 -&gt; gain ~0.99); tune K by eye
+Score:    PSNR = 10 log10(MAX^2 / MSE); MSE 100 -&gt; ~28.1 dB</code></pre>
+<h3>References</h3>
+<ul><li>R. C. Gonzalez and R. E. Woods, <em>Digital Image Processing</em>, 4th ed., Pearson, 2018: chapter 5, &quot;Image Restoration and Reconstruction&quot; (noise models, mean and order-statistic filters, inverse and Wiener filtering).</li><li>OpenCV documentation, <a href="https://docs.opencv.org/4.x/d5/d69/tutorial_py_non_local_means.html">Image Denoising</a>: practical denoising functions.</li></ul>
+<p><a href="../../../#/fields/digital-image-processing/noise-and-restoration">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

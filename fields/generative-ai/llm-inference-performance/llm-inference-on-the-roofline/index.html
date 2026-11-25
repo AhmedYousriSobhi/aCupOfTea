@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>LLM Inference on the Roofline</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/generative-ai/llm-inference-performance/llm-inference-on-the-roofline/">
+<meta name="description" content="Why your chatbot reads a novel-length prompt in a blink but types its answer like a tired intern - prefill, decode, batching and the KV cache on the roofline.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="LLM Inference on the Roofline">
+<meta property="og:description" content="Why your chatbot reads a novel-length prompt in a blink but types its answer like a tired intern - prefill, decode, batching and the KV cache on the roofline.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/generative-ai/llm-inference-performance/llm-inference-on-the-roofline/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/generative-ai/llm-inference-performance/llm-inference-on-the-roofline/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/generative-ai/llm-inference-performance/llm-inference-on-the-roofline"></script>
+<main>
+<h1>LLM Inference on the Roofline</h1>
+<p><em>Why your chatbot reads a novel-length prompt in a blink but types its answer like a tired intern - prefill, decode, batching and the KV cache on the roofline.</em></p>
+<blockquote><p><strong>Part 2 of the [LLM Inference Performance series](/fields/generative-ai/llm-inference-performance/README.md).</strong> An LLM is two completely different workloads pretending to be one. By the end of this page you&#x27;ll know which half is pizza and which is dumplings, why batching is the closest thing to free money in AI infrastructure, and the one piece of memory that batching can never fix.</p></blockquote>
+<hr>
+<h2>Two tickets in the support queue</h2>
+<p>Monday, two tickets land in the platform team&#x27;s queue.</p>
+<p><strong>Ticket 1:</strong> <em>&quot;I pasted a 40-page contract into the assistant. It took a noticeable pause before it started answering.&quot;</em></p>
+<p><strong>Ticket 2:</strong> <em>&quot;I asked a one-line question. It started instantly, but the answer dribbles out word by word.&quot;</em></p>
+<p>A junior engineer reads both and writes: &quot;Model is slow, need more GPUs.&quot; Closes both.</p>
+<p>They&#x27;re wrong twice. These are two different bottlenecks, on opposite sides of the roofline from <a href="../../../../fields/generative-ai/llm-inference-performance/compute-bound-vs-memory-bound/">part 1</a>. More GPUs of the same kind might help one and do nothing for the other. To see why, watch what the model actually does with each request.</p>
+<p>It does two jobs:</p>
+<ol><li><strong>Prefill</strong>: read the whole prompt at once, and produce the first token of the answer.</li><li><strong>Decode</strong>: write the rest of the answer <strong>one token at a time</strong>, each token depending on everything before it.</li></ol>
+<p>Same weights, same GPU. Opposite personalities.</p>
+<hr>
+<h2>The librarian who reads the whole library for one word</h2>
+<p>Start with decode, because it&#x27;s the strange one.</p>
+<p>Imagine a librarian who answers questions one word at a time. To produce each word, she has to walk past <strong>every shelf in the library</strong> and glance at every book. Then she writes one word. Then she walks the whole library again for the next word.</p>
+<p>That&#x27;s decode. The &quot;library&quot; is the model&#x27;s weights: billions of numbers. To produce one token, every one of them is read from HBM and used in one multiply and one add. For a model with <em>P</em> parameters stored in 16 bits (2 bytes):</p>
+<p><strong>One.</strong> The H100&#x27;s ridge point is about 295. Generating text for one user sits roughly <strong>300× below</strong> the line where the tensor cores would be busy. It&#x27;s the vector addition from part 1 wearing a trench coat.</p>
+<p>Which gives the single most useful formula in LLM serving:</p>
+<p>Look at what&#x27;s missing: TFLOPS. Double the compute, keep the bandwidth, and one user&#x27;s answer streams <strong>no faster at all</strong>. Now reread the overview&#x27;s story. Answers streamed 1.6× faster after the upgrade. That&#x27;s the bandwidth ratio. It had to be.</p>
+<p>That&#x27;s Ticket 2: the dribble. So why was Ticket 1, the giant prompt, a different problem?</p>
+<hr>
+<h2>Reading the prompt: the dumpling phase</h2>
+<p>Prefill is the librarian on her best day. She walks past every shelf <strong>once</strong> and, on that single walk, handles all <em>T</em> words of your prompt together. Each weight fetched gets used <em>T</em> times:</p>
+<p>A 2,000-token prompt: about 2,000 FLOP/byte. Way past the ridge. <strong>Prefill is compute-bound.</strong> It finally uses the tensor cores the way they were built to be used.</p>
+<p>So Ticket 1, the pause before a 40-page contract, is a <em>compute</em> problem, and Ticket 2 is a <em>bandwidth</em> problem. &quot;LLM inference is memory-bound&quot; is only half true. Decode is. Prefill isn&#x27;t. Being able to say that crisply is one of the clearest signals of seniority in an inference interview.</p>
+<p>Fine. Decode wastes the tensor cores. Can we give them something to do while the librarian walks?</p>
+<hr>
+<h2>Batching: the bus instead of the taxi</h2>
+<p>Decode&#x27;s problem is that every walk through the library serves one person. So stop doing that.</p>
+<p>Run the next step for <strong>B users at once</strong>. The librarian walks past every shelf one time and writes the next word for all B answers on the way. Weights are read once and used B times:</p>
+<p>It&#x27;s a bus instead of a taxi. The road (bandwidth) is the same. The trip takes about as long. But it carries 64 people instead of one.</p>
+<p>That&#x27;s why batching is the closest thing to free money in serving: total throughput rises almost linearly with batch size while each user&#x27;s streaming speed barely moves.</p>
+<p>One catch with old-style batching: the bus waits until its <em>slowest</em> passenger arrives before leaving again. Short answers finish, their seats sit empty, and the bus keeps driving half-full. <strong>Continuous batching</strong> (also called in-flight or iteration-level batching) fixes that: at every single decode step, finished passengers get off and new ones get on. vLLM and other modern engines work this way.</p>
+<p>So here&#x27;s the obvious question. If batch B gives intensity B, and the ridge is 295... just batch 300 users and become compute-bound?</p>
+<hr>
+<h2>Try it before you scroll</h2>
+<p>☕ Before reading on, think about it for ten seconds. Batching shares the <strong>weights</strong> across users. Is there anything the model reads at every step that <strong>can&#x27;t</strong> be shared between users?</p>
+<p>Hint: the model has to remember each conversation.</p>
+<hr>
+<h2>The KV cache: the luggage that doesn&#x27;t share</h2>
+<p>When the model writes word 500 of your answer, attention needs to look back at words 1 through 499. Recomputing all of that at every step would be absurd, so the model stores two vectors for every past token in every layer: a <strong>key</strong> and a <strong>value</strong>. That store is the <strong>KV cache</strong>.</p>
+<p>Here&#x27;s the catch. <strong>Your KV cache is yours.</strong> The bus can share the road (the weights), but every passenger brings their own luggage, and the luggage has to be carried at every stop. Each decode step reads every user&#x27;s entire KV cache, and each byte of it serves exactly one user.</p>
+<p>The size per token is set by the model&#x27;s shape:</p>
+<p>This luggage causes two separate problems.</p>
+<p><strong>Problem 1: the bus fills up.</strong> Every passenger&#x27;s luggage takes memory, and it grows with every word they generate. Once memory is full, nobody else gets on. The KV cache, not the GPU&#x27;s speed, often decides the maximum batch size. Wasting that memory is expensive, which is the problem PagedAttention solves in <a href="../../../../fields/generative-ai/llm-inference-performance/optimizations-on-the-roofline/">part 4</a>.</p>
+<p><strong>Problem 2: luggage never gets cheaper to carry.</strong> Since each cached byte serves one user, attention&#x27;s intensity is fixed by the model&#x27;s shape, not by the batch. If the model has <em>H_q</em> query heads sharing <em>H_kv</em> key/value heads:</p>
+<table><thead><tr><th>Attention design</th><th>Query heads per KV head</th><th>Attention intensity</th></tr></thead><tbody><tr><td>Classic multi-head attention</td><td>1</td><td>~1 FLOP/byte</td></tr><tr><td>Grouped-query attention, Llama 2 70B (64 query, 8 KV)</td><td>8</td><td>~8 FLOP/byte</td></tr></tbody></table>
+<p>Single digits. At any batch size. At any context length. And the longer the conversations, the more of each step&#x27;s bytes are luggage, so the whole step slides <em>further</em> from the ridge, not closer.</p>
+<p>That&#x27;s why model designers care about <strong>grouped-query attention</strong>: fewer KV heads means smaller luggage (more passengers fit) <em>and</em> more work per byte of luggage carried. Llama 2 adopted it for the 70B model for exactly this kind of inference scalability.</p>
+<p>So: can you batch your way to compute-bound? With long conversations, no. You&#x27;ll see the exact numbers in part 3.</p>
+<hr>
+<h2>The whole story on one roof</h2>
+<table><thead><tr><th>Work</th><th>Intensity (16-bit)</th><th>On the H100 roofline</th></tr></thead><tbody><tr><td>Decode, 1 user</td><td>~1 FLOP/byte</td><td>Far left: waiting on memory</td></tr><tr><td>Attention over the KV cache (GQA ×8)</td><td>~8 FLOP/byte</td><td>Left, at any batch size</td></tr><tr><td>Decode, 64 users, weight reads</td><td>~64 FLOP/byte</td><td>Left, much better</td></tr><tr><td>The H100 ridge point</td><td>~295 FLOP/byte</td><td>The corner</td></tr><tr><td>Prefill, 2,000-token prompt</td><td>~2,000 FLOP/byte</td><td>Right: waiting on math</td></tr></tbody></table>
+<pre><code class="language-mermaid">flowchart LR
+    D1[&quot;Decode, 1 user&lt;br/&gt;~1 FLOP/B&quot;] --&gt; D2[&quot;KV cache reads&lt;br/&gt;~8 FLOP/B&quot;] --&gt; D3[&quot;Decode, 64 users&lt;br/&gt;~64 FLOP/B&quot;] --&gt; R((&quot;H100 ridge&lt;br/&gt;~295&quot;)) --&gt; P[&quot;Prefill, 2k tokens&lt;br/&gt;~2,000 FLOP/B&quot;]</code></pre>
+<p>Everything left of the ridge is fixed with <em>bytes</em>: fetch fewer, share more, or get more bandwidth. Everything right of it is fixed with <em>math</em>.</p>
+<hr>
+<h2>What users actually feel</h2>
+<p>Back to the two tickets. Serving engines report two latency numbers, and each one belongs to one phase:</p>
+<table><thead><tr><th>Metric</th><th>Means</th><th>Phase</th><th>Bound by</th></tr></thead><tbody><tr><td><strong>TTFT</strong>, time to first token</td><td>The pause before the answer starts</td><td>Prefill</td><td>Compute</td></tr><tr><td><strong>TPOT</strong>, time per output token</td><td>How fast the answer streams</td><td>Decode</td><td>Memory bandwidth</td></tr></tbody></table>
+<p>Ticket 1 is a TTFT complaint. Ticket 2 is a TPOT complaint. Different physics, different fixes.</p>
+<p>This also explains three things that otherwise look like bugs:</p>
+<ul><li>A huge prompt delays the start, but the answer then streams at normal speed.</li><li>Adding users to a server barely slows anyone&#x27;s streaming, until KV-cache memory fills up and new users start queuing.</li><li>When someone pastes a giant document, <em>everyone else&#x27;s</em> stream stutters for a moment: that compute-heavy prefill elbows its way in between their decode steps. Hold that thought; part 4 has a fix.</li></ul>
+<p><strong>Takeaway:</strong> reading the prompt reuses every weight thousands of times and is compute-bound; writing the answer walks the whole library for each word and is bandwidth-bound; batching shares the walk, but every user&#x27;s KV-cache luggage still has to be carried.</p>
+<p>You now have every formula you need. So here&#x27;s the challenge: an interviewer hands you a marker and says <em>&quot;Llama 2 70B, eight H100s. How fast can it go?&quot;</em> Can you answer in five minutes, from memory? That&#x27;s <a href="../../../../fields/generative-ai/llm-inference-performance/sizing-a-70b-model/">part 3</a>.</p>
+<h3>References</h3>
+<ul><li><a href="https://arxiv.org/abs/2307.09288">Touvron et al., &quot;Llama 2: Open Foundation and Fine-Tuned Chat Models&quot;, arXiv:2307.09288 (grouped-query attention for 70B)</a></li><li><a href="https://arxiv.org/abs/2309.06180">Kwon et al., &quot;Efficient Memory Management for Large Language Model Serving with PagedAttention&quot;, SOSP 2023, arXiv:2309.06180</a></li><li><a href="https://www.nvidia.com/en-us/data-center/h100/">NVIDIA H100 Tensor Core GPU datasheet</a></li><li><a href="https://doi.org/10.1145/1498765.1498785">Williams, Waterman, Patterson, &quot;Roofline&quot;, CACM 2009</a></li></ul>
+<p><a href="../../../../#/fields/generative-ai/llm-inference-performance/llm-inference-on-the-roofline">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

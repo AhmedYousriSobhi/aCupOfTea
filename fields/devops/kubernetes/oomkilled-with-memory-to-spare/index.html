@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The Pod Killed With Memory to Spare</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/kubernetes/oomkilled-with-memory-to-spare/">
+<meta name="description" content="Why a training pod is OOMKilled on a node with memory free: three killers, per-container limits, working set, /dev/shm, QoS and a spike no dashboard caught.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="The Pod Killed With Memory to Spare">
+<meta property="og:description" content="Why a training pod is OOMKilled on a node with memory free: three killers, per-container limits, working set, /dev/shm, QoS and a spike no dashboard caught.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/kubernetes/oomkilled-with-memory-to-spare/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/kubernetes/oomkilled-with-memory-to-spare/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/devops/kubernetes/oomkilled-with-memory-to-spare"></script>
+<main>
+<h1>The Pod Killed With Memory to Spare</h1>
+<p><em>Why a training pod is OOMKilled on a node with memory free: three killers, per-container limits, working set, /dev/shm, QoS and a spike no dashboard caught.</em></p>
+<blockquote><p><strong>Page 10 of the [Kubernetes series](/fields/devops/kubernetes/README.md).</strong> A training pod dies with <code>OOMKilled</code> while every dashboard says the node has gigabytes free. By the end you&#x27;ll know which of three different killers struck, why the number you were watching could not show it, and how a harmless-looking <code>/dev/shm</code> fix spends your memory budget. Written against Kubernetes 1.31 and later and cgroup v2. The story is invented; <strong>nothing here was run on a live cluster</strong>. Claims trace to the docs in the references, and the places I could not confirm a fact are marked on the page.</p></blockquote>
+<h2>Table of Contents</h2>
+<p>The dashboard · Three killers · The unit · Which number · The freezer · Who goes first · The photo · Runbook · Slurm mirror · Back to Karim</p>
+<ul><li>* *</li></ul>
+<h2>The dashboard that said everything was fine</h2>
+<p>At 02:14 a training pod restarts. Karim, the engineer on call in this story, looks at the dashboards the next morning and finds nothing wrong:</p>
+<ul><li>The node has tens of gigabytes of memory free.</li><li>The pod&#x27;s memory graph peaks around 11Gi, under its 16Gi limit.</li><li><code>kubectl top pod</code> shows a modest number, because the pod has just restarted.</li></ul>
+<p>And yet:</p>
+<pre><code class="language-text">Last State:     Terminated
+  Reason:       OOMKilled
+  Exit Code:    137</code></pre>
+<p>Picture the node as a warehouse, half empty. Each container rents a <strong>storage unit</strong> with a fixed size. Karim is staring at the warehouse floor plan. The unit that overflowed is not on it.</p>
+<p>Three different things can clear out a unit, and they look alike at 02:14. Which one came for Karim?</p>
+<ul><li>* *</li></ul>
+<h2>Three killers, three crime scenes</h2>
+<table><thead><tr><th></th><th><strong>Container OOM</strong></th><th><strong>Node OOM</strong></th><th><strong>Kubelet eviction</strong></th></tr></thead><tbody><tr><td>Who</td><td>The kernel, at the container&#x27;s cgroup limit</td><td>The kernel, when the whole node runs out before the kubelet reacts</td><td>The kubelet, when node <code>memory.available</code> crosses a threshold</td></tr><tr><td>Picture</td><td>The lock-cutter clears <strong>one unit</strong> that is over its size</td><td>A fire marshal clears whoever scores worst in a full warehouse</td><td>The manager empties whole units when the warehouse nears full</td></tr><tr><td>You see</td><td><code>OOMKilled</code>, exit code <strong>137</strong></td><td>Kernel log lines, possibly several pods hit</td><td>Pod phase <code>Failed</code>, status <code>Evicted</code></td></tr><tr><td>Next</td><td>The kubelet may restart the container per its <code>restartPolicy</code></td><td>Same as the first</td><td>The pod is not restarted in place: it is <code>Failed</code>, and its controller makes a new one</td></tr><tr><td>Needs a short node?</td><td><strong>No</strong></td><td>Yes</td><td>Yes</td></tr></tbody></table>
+<p>The Kubernetes docs back the first column: memory limits are applied by the kubelet and container runtime and &quot;ultimately enforced by the kernel&quot; through cgroups, and <code>kubectl describe pod</code> shows <code>Reason: OOMKilled</code> with exit code 137 for a container that went over its limit. Exit code 137 is 128 + 9, a SIGKILL: no chance to catch it, no chance to write a checkpoint. (<a href="../../../../fields/devops/kubernetes/draining-a-gpu-node/">Draining a GPU Node</a> covers the polite way to die. This is the other way.)</p>
+<p>☕ <strong>Try it before you scroll.</strong> The node has 200Gi free and the pod&#x27;s limit is 16Gi. Can the pod be OOMKilled? <em>(Hint: whose size matters to a storage unit?)</em></p>
+<p>Yes, and that is Karim&#x27;s column. So what exactly is the unit&#x27;s size, and who reads it?</p>
+<ul><li>* *</li></ul>
+<h2>The storage unit has its own size</h2>
+<table><thead><tr><th>Field</th><th>Read by</th><th>Effect</th></tr></thead><tbody><tr><td><code>requests.memory</code></td><td>The scheduler, and the kubelet when it ranks pods</td><td>Decides where the pod fits. The kubelet reserves at least the request for the container</td></tr><tr><td><code>limits.memory</code></td><td>The kernel, through the container&#x27;s cgroup</td><td>The size of the unit</td></tr></tbody></table>
+<p>CPU and memory differ here. A container near its CPU limit is <strong>throttled</strong>. A container over its memory limit may be <strong>killed</strong>, because there is nothing to slow down.</p>
+<p>The docs add an honest nuance: memory limits are enforced <em>reactively</em>. Terminations &quot;only happen when the kernel detects memory pressure&quot;, so a container can run over its limit for a while and not be killed yet. The kernel doc for <code>memory.max</code> says the same from the other side: the OOM killer runs &quot;if a cgroup&#x27;s memory usage reaches this limit and can&#x27;t be reduced&quot;. Two words in that sentence matter: <em>reaches</em>, and <em>can&#x27;t be reduced</em>. What can be reduced?</p>
+<ul><li>* *</li></ul>
+<h2>Which memory number?</h2>
+<p>Inside the unit, some things can be thrown out and some cannot. Packing peanuts (inactive file cache) go first. Furniture (anonymous memory) stays.</p>
+<table><thead><tr><th>Number</th><th>Source</th><th>What it counts</th></tr></thead><tbody><tr><td><code>container_memory_usage_bytes</code></td><td>cAdvisor</td><td>&quot;all memory regardless of when it was accessed&quot;</td></tr><tr><td><code>container_memory_working_set_bytes</code></td><td>cAdvisor</td><td>The working set</td></tr><tr><td><code>container_memory_rss</code></td><td>cAdvisor</td><td>RSS</td></tr><tr><td><code>memory.stat</code>: <code>anon</code>, <code>file</code>, <code>shmem</code></td><td>Kernel cgroup v2 doc</td><td>Anonymous mappings; filesystem cache <strong>including tmpfs and shared memory</strong>; the swap-backed part of that cache</td></tr></tbody></table>
+<p>The node-pressure page gives the rule the kubelet itself uses: <code>memory.available</code> is node capacity minus the node&#x27;s working set, read from cgroupfs rather than <code>free -m</code>, and the kubelet excludes <code>inactive_file</code> because it assumes that memory is reclaimable under pressure.</p>
+<p>Read the <code>memory.stat</code> row twice. The kernel counts tmpfs and shared memory inside <code>file</code>, the same bucket as cache, yet that memory has nowhere to go when pressure comes. That is the <code>shared</code> column of <code>free</code> one level down (see <a href="../../../../fields/system-administration/linux-memory-pressure/linux-memory-free-vs-available/">free vs available</a>). So where does Karim&#x27;s unit hide such memory?</p>
+<ul><li>* *</li></ul>
+<h2>The freezer you plugged in</h2>
+<p>Karim&#x27;s job uses data-loader worker processes that hand batches to the main process through shared memory, which in a container lives in <code>/dev/shm</code>, a tmpfs. Multiprocessing data loaders typically work this way; I could not retrieve the PyTorch page to cite it, so treat that as general knowledge, not a checked claim.</p>
+<p>Two facts then collide:</p>
+<ol><li><strong>`/dev/shm` is small by default in a container.</strong> It is commonly reported as 64MB. The Docker CLI reference I checked says only &quot;Size of /dev/shm&quot;, with no default, so check <code>df -h /dev/shm</code> on your runtime. Workers that outgrow it fail, which sends people looking for a fix.</li><li><strong>The usual fix spends your limit.</strong> Mount an <code>emptyDir</code> with <code>medium: Memory</code> at <code>/dev/shm</code>. The docs say the kubelet &quot;tracks <code>tmpfs</code> emptyDir volumes as container memory use, rather than as local ephemeral storage&quot;. Without a <code>sizeLimit</code>, the volume &quot;may consume up to that pod&#x27;s memory limit&quot;.</li></ol>
+<p>The docs warn about the part that bites: files on a memory-backed volume are managed by the application, and &quot;Neither Kubernetes nor the OS may automatically delete files from a volume, so memory used by those files can not be reclaimed when the system or the pod are under memory pressure.&quot; You plugged a freezer into your storage unit, and it counts as furniture.</p>
+<p>A spec that makes the budget explicit (the <code>emptyDir</code> fields follow the docs; the numbers are invented):</p>
+<pre><code class="language-yaml">spec:
+  containers:
+  - name: trainer
+    image: registry.example/trainer:1.0
+    resources:
+      requests: {cpu: &quot;8&quot;, memory: 24Gi}
+      limits:   {cpu: &quot;8&quot;, memory: 24Gi}   # requests == limits, CPU and memory -&gt; Guaranteed
+    volumeMounts:
+    - {name: dshm, mountPath: /dev/shm}
+  volumes:
+  - name: dshm
+    emptyDir:
+      medium: Memory
+      sizeLimit: 8Gi          # a ceiling, so the freezer cannot fill the unit</code></pre>
+<p>Budget the 24Gi like a floor plan: up to 8Gi for the freezer, the main process&#x27;s anonymous memory, and headroom for kernel memory and active cache. If those leave no room, the pod is a candidate for another 02:14. But what if the warehouse itself fills up? Who goes first?</p>
+<ul><li>* *</li></ul>
+<h2>Who gets cleared out first</h2>
+<p>Two different rules apply, and the docs keep them apart.</p>
+<p><strong>The kubelet&#x27;s eviction</strong> ranks pods by whether usage exceeds requests, then by Pod Priority, then by how far over they are. The docs state that the kubelet &quot;does not use the pod&#x27;s QoS class to determine the eviction order&quot;, though QoS lets you estimate the likely order. The default hard threshold is <code>memory.available&lt;100Mi</code> on Linux. For hard thresholds the kubelet does not respect PodDisruptionBudgets or <code>terminationGracePeriodSeconds</code>, so this is not the polite death of the <a href="../../../../fields/devops/kubernetes/draining-a-gpu-node/">draining page</a>.</p>
+<p><strong>The kernel&#x27;s OOM killer</strong> acts if the node runs out before the kubelet reclaims. The kubelet sets <code>oom_score_adj</code> per container from the QoS class:</p>
+<table><thead><tr><th>QoS class</th><th>Rule</th><th><code>oom_score_adj</code></th></tr></thead><tbody><tr><td><strong>Guaranteed</strong></td><td>Every container has CPU and memory requests equal to limits</td><td>-997</td></tr><tr><td><strong>Burstable</strong></td><td>Not Guaranteed, but some request or limit set</td><td>min(max(2, 1000 − 1000 × memoryRequestBytes / machineMemoryCapacityBytes), 999)</td></tr><tr><td><strong>BestEffort</strong></td><td>No requests or limits</td><td>1000</td></tr></tbody></table>
+<p>The kernel scores each container by the share of node memory it uses, adds <code>oom_score_adj</code>, and kills the highest. In the docs&#x27; words, containers in low-QoS pods that use a lot of memory relative to their requests are killed first.</p>
+<p>One more detail explains the second killer: the kubelet polls cAdvisor on an interval, and &quot;if memory usage increases within that window rapidly, the kubelet may not observe <code>MemoryPressure</code> fast enough, and the OOM killer will still be invoked&quot;. The docs suggest <code>kernelMemcgNotification</code> for immediate notification, or <code>kubeReserved</code> and <code>systemReserved</code> as a workaround.</p>
+<p>Karim&#x27;s pod was Guaranteed, so a node-level kill was unlikely. That leaves the lock-cutter. But if the kill is so loud, why did no graph see it?</p>
+<ul><li>* *</li></ul>
+<h2>The photo every thirty seconds</h2>
+<p>The graph is a <strong>sample</strong>. A monitoring system takes a photo of the unit every so often. A burst that fills the unit, triggers the kill and ends the container between two photos is in none of them, and the restarted container looks calm. <code>kubectl top</code> only shows the present.</p>
+<p>The kernel keeps its own books. Where to look:</p>
+<table><thead><tr><th>Source</th><th>What it tells you</th></tr></thead><tbody><tr><td><code>kubectl describe pod</code>, Last State</td><td>That a kill happened, and when</td></tr><tr><td><code>kube_pod_container_status_last_terminated_reason{reason=&quot;OOMKilled&quot;}</code></td><td>A kube-state-metrics gauge you can alert on (documented as EXPERIMENTAL)</td></tr><tr><td><code>memory.events</code></td><td><code>oom_kill</code>: processes in the cgroup killed by any kind of OOM killer; <code>max</code>: times usage was about to exceed the limit; <code>oom</code>: times allocation was about to fail</td></tr><tr><td><code>memory.peak</code></td><td>The highest usage recorded since the cgroup was created or the counter was reset: no photo needed</td></tr><tr><td><code>memory.stat</code></td><td>The split into <code>anon</code>, <code>file</code>, <code>shmem</code> and the rest</td></tr></tbody></table>
+<p>The cgroup files exist only while the container does, so read them in a container that is still alive and heading for trouble.</p>
+<ul><li>* *</li></ul>
+<h2>Debugging runbook</h2>
+<p>Commands follow the docs above; the cgroup path assumes cgroup v2 as seen from inside the container, so check it on your nodes.</p>
+<pre><code class="language-bash"># 1. Which killer was it?
+kubectl describe pod &lt;pod&gt; | grep -B1 -A6 &#x27;Last State&#x27;
+kubectl get pod &lt;pod&gt; -o jsonpath=&#x27;{.status.phase}{&quot; &quot;}{.status.reason}{&quot;\n&quot;}&#x27;   # Failed Evicted -&gt; kubelet
+
+# 2. What did the pod ask for, and what QoS did it get?
+kubectl get pod &lt;pod&gt; -o jsonpath=&#x27;{.spec.containers[*].resources}{&quot;\n&quot;}{.status.qosClass}{&quot;\n&quot;}&#x27;
+
+# 3. Live working set, per container
+kubectl top pod &lt;pod&gt; --containers
+
+# 4. The cgroup&#x27;s own books (inside the container, cgroup v2)
+kubectl exec &lt;pod&gt; -- sh -c &#x27;cd /sys/fs/cgroup &amp;&amp; for f in memory.max memory.current memory.peak memory.events; do echo &quot;== $f&quot;; cat $f; done; grep -E &quot;^(anon|file|shmem) &quot; memory.stat&#x27;
+kubectl exec &lt;pod&gt; -- df -h /dev/shm
+
+# 5. On the node: the kernel&#x27;s account (wording varies by kernel version)
+dmesg -T | grep -iE &#x27;out of memory|oom&#x27;</code></pre>
+<p>Reading step 4: if <code>anon</code> plus <code>shmem</code> sits near <code>memory.max</code>, the unit is full of things that cannot leave. If <code>memory.events</code> shows <code>oom_kill</code> above zero, the kernel has already acted, whatever the dashboard says.</p>
+<p>Fixes, roughly in order:</p>
+<ol><li><strong>Find what actually grew.</strong> Anonymous, shared and kernel memory have different cures.</li><li><strong>Bound the freezer.</strong> Set <code>sizeLimit</code> on the memory <code>emptyDir</code> and cap worker count and prefetch depth.</li><li><strong>Size the limit from the working-set peak</strong>, not the average, and leave headroom. The docs&#x27; advice, if the app behaves as expected, is a higher limit and possibly a higher request.</li><li><strong>Make the run survive a kill.</strong> Checkpoint regularly to a PersistentVolumeClaim: SIGKILL gives no warning to write one at the last moment.</li></ol>
+<ul><li>* *</li></ul>
+<h2>The Slurm and Linux mirror</h2>
+<table><thead><tr><th>This page</th><th>Elsewhere in the repo</th></tr></thead><tbody><tr><td>The container&#x27;s memory limit</td><td>Slurm&#x27;s <code>ConstrainRAMSpace</code>, with the same kernel OOM killer behind it (<a href="../../../../fields/schedulers/slurm-inside-a-job/slurm-cgroups-in-practice/">cgroups page</a>)</td></tr><tr><td>Kernel kills one container, the kubelet may restart it</td><td>With Slurm, <code>OOMKillStep</code> makes the whole step die instead (same page)</td></tr><tr><td>Working set vs usage</td><td>&quot;Available&quot; vs &quot;free&quot; at container scale (<a href="../../../../fields/system-administration/linux-memory-pressure/linux-memory-free-vs-available/">free vs available</a>)</td></tr><tr><td><code>/dev/shm</code> and memory <code>emptyDir</code> in the limit</td><td>The <code>shared</code> column in <code>free</code></td></tr><tr><td>A scrape hiding a spike</td><td><code>MaxRSS</code>, polled every 30 s by default</td></tr><tr><td>Kubelet eviction at <code>memory.available</code></td><td>No Slurm equivalent: the kernel decides</td></tr></tbody></table>
+<ul><li>* *</li></ul>
+<h2>Back to Karim</h2>
+<p>At 02:14 the unit, not the warehouse, was full. The worker processes had been filling a memory-backed <code>/dev/shm</code> with prefetched batches, the volume had no <code>sizeLimit</code>, and the freezer counted against the 16Gi limit alongside the main process&#x27;s tensors. The kernel cut the lock. The 11Gi on the graph was a photo taken before the break-in.</p>
+<p><strong>Takeaway:</strong> the node having memory to spare is irrelevant to a container at its own limit; watch the working set against the container&#x27;s limit, bound anything memory-backed, and trust <code>memory.events</code> over a dashboard.</p>
+<p><strong>Challenge:</strong> a pod shows <code>Evicted</code> instead of <code>OOMKilled</code>. Which killer was it, who decided, and did its <code>terminationGracePeriodSeconds</code> apply? If you can answer all three, the <a href="../../../../fields/devops/kubernetes/broken-pods-rogues-gallery/">Rogues&#x27; Gallery</a> is easier the second time.</p>
+<ul><li>* *</li></ul>
+<h2>References</h2>
+<ul><li><a href="https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/">Resource management for pods and containers</a>: limit enforcement, <code>OOMKilled</code>, memory-backed <code>emptyDir</code>.</li><li><a href="https://kubernetes.io/docs/concepts/scheduling-eviction/node-pressure-eviction/">Node-pressure eviction</a>: <code>memory.available</code>, thresholds, eviction order, <code>oom_score_adj</code>, known issues.</li><li><a href="https://kubernetes.io/docs/concepts/workloads/pods/pod-qos/">Pod Quality of Service classes</a>: Guaranteed, Burstable, BestEffort.</li><li><a href="https://kubernetes.io/docs/tasks/configure-pod-container/assign-memory-resource/">Assign memory resources to containers</a>: exceeding a limit and restart.</li><li><a href="https://docs.kernel.org/admin-guide/cgroup-v2.html">Control Group v2 (kernel docs)</a>: <code>memory.max</code>, <code>memory.peak</code>, <code>memory.events</code>, <code>memory.stat</code>.</li><li><a href="https://github.com/google/cadvisor/blob/master/docs/storage/prometheus.md">cAdvisor Prometheus metrics</a> and <a href="https://github.com/kubernetes/kube-state-metrics/blob/main/docs/metrics/workload/pod-metrics.md">kube-state-metrics pod metrics</a>: metric names and descriptions.</li><li><a href="https://docs.docker.com/reference/cli/docker/container/run/">docker container run</a>: <code>--shm-size</code> (no default stated).</li></ul>
+<p><a href="../../../../#/fields/devops/kubernetes/oomkilled-with-memory-to-spare">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The Shirt That Shimmers: Frequency Filtering and Aliasing</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/digital-image-processing/frequency-filtering-and-aliasing/">
+<meta name="description" content="Low-pass, high-pass and notch filters as masks on the spectrum, why the ideal filter rings, and how sampling too coarsely creates moire - with the Nyquist rule worked on one number.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="The Shirt That Shimmers: Frequency Filtering and Aliasing">
+<meta property="og:description" content="Low-pass, high-pass and notch filters as masks on the spectrum, why the ideal filter rings, and how sampling too coarsely creates moire - with the Nyquist rule worked on one number.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/digital-image-processing/frequency-filtering-and-aliasing/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/digital-image-processing/frequency-filtering-and-aliasing/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../.docs/prerender-redirect.js" data-target="../../../#/fields/digital-image-processing/frequency-filtering-and-aliasing"></script>
+<main>
+<h1>The Shirt That Shimmers: Frequency Filtering and Aliasing</h1>
+<p><em>Low-pass, high-pass and notch filters as masks on the spectrum, why the ideal filter rings, and how sampling too coarsely creates moire - with the Nyquist rule worked on one number.</em></p>
+<blockquote><p><strong>Part 7 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).</strong> Give the choir a volume knob for every singer, then find out what happens when the town is too small to hear the fast ones. <em>Kofi and the broadcast team are invented; the maths and numbers are real.</em> By the end you can design a filter as a mask on the spectrum and compute an alias by hand.</p></blockquote>
+<pre><code class="language-text">T-40:00   segment confirmed, anchor in the striped shirt
+T-25:00   moire noticed on camera two
+T-12:00   you draft a very sharp low-pass filter</code></pre>
+<hr>
+<h2>The shirt that crawls</h2>
+<p>The anchor wears a fine striped shirt. On camera, the stripes crawl and shimmer in slow rainbow bands that aren&#x27;t on the shirt at all. The producers have a name for it: moiré. The viewers have another name for it: &quot;why is his shirt doing that?&quot;.</p>
+<p>You&#x27;re the broadcast engineer, Kofi is the producer&#x27;s voice in your ear, and the segment is live in forty minutes. Your first reading is the obvious one: <strong>the footage has a pattern in it that should be filtered out.</strong></p>
+<hr>
+<h2>One very sharp filter</h2>
+<p>You build a low-pass filter with a perfectly sharp wall to remove everything above a cutoff, and put it on the live feed with twelve minutes to spare. Nobody reviews it.</p>
+<p>On the monitor, the slow bands are still there, and now there is a faint ripple around the anchor&#x27;s collar and every edge on the set. The producer notices at T-00:10 and asks what happened to the picture. You take the filter out.</p>
+<p>The filter softened the picture, left the slow bands alone and added ripples of its own. The stripes are the problem, and filtering after the camera did nothing to them. Where do the stripes come from? First, you need to see what a filter actually does to the spectrum.</p>
+<hr>
+<h2>The recipe: transform, multiply, transform back</h2>
+<p>Thanks to the convolution theorem, filtering in the frequency domain is a three-step recipe:</p>
+<pre><code class="language-mermaid">flowchart LR
+    A[&quot;Image f&quot;] --&gt; B[&quot;FFT&quot;]
+    B --&gt; C[&quot;Multiply by&lt;br/&gt;filter H(u,v)&quot;]
+    C --&gt; D[&quot;Inverse FFT&quot;]
+    D --&gt; E[&quot;Filtered image g&quot;]</code></pre>
+<p><em>H is a mask the same size as the spectrum. Values near 1 keep a frequency, values near 0 remove it.</em></p>
+<p>Think of the choir from the last page: every singer is a frequency, and H is a volume knob for each one. Let D(u,v) be the distance of a frequency from the centre of the (shifted) spectrum, and D₀ the <strong>cutoff</strong>. Everything below is a different way to design H. So how do you turn the high singers down?</p>
+<hr>
+<h2>Three ways to turn the highs down</h2>
+<p>A <strong>low-pass</strong> filter keeps low frequencies (smooth shading) and removes high ones (edges, texture, noise). It blurs.</p>
+<table><thead><tr><th>Filter</th><th>H(u,v)</th><th>Character</th></tr></thead><tbody><tr><td>Ideal</td><td>1 if D ≤ D₀, else 0</td><td>Sharp cutoff, <strong>rings</strong> (next section)</td></tr><tr><td>Butterworth (order n)</td><td>1 / (1 + (D/D₀)^(2n))</td><td>Smooth cutoff; larger n is steeper and rings more</td></tr><tr><td>Gaussian</td><td>exp(−D² / (2·D₀²))</td><td>Smoothest; <strong>no ringing</strong></td></tr></tbody></table>
+<p>The Gaussian has a bonus: its inverse transform is also a Gaussian. A Gaussian mask in frequency matches a Gaussian kernel in space, so it&#x27;s the same blur as page 4, just designed from the other side.</p>
+<blockquote><p>[!TIP] Recommendation: use the Gaussian unless you have a reason not to. It&#x27;s the only one of the three with no artifacts. Pick the Ideal filter only to see the artifact once, for the lesson.</p></blockquote>
+<p>You picked the first row, the Ideal one, with twelve minutes to spare. So where did the ripples around the collar come from?</p>
+<hr>
+<h2>Why the sharp wall rings</h2>
+<p>An ideal low-pass is a perfect circle of 1s with a hard wall. Its equivalent spatial kernel, via the inverse transform, is not a gentle blob. It&#x27;s a <strong>sinc</strong>-like function: a central peak with endless decaying ripples around it.</p>
+<p>Convolve a sharp edge with ripples and you get ripples next to the edge: faint bands that follow every edge, like the echo after a shout in a stairwell. It&#x27;s the same overshoot and undershoot as page 5&#x27;s sharpening, now caused by cutting frequencies too abruptly.</p>
+<p>The rule: <strong>a sharp edge in one domain becomes ripples in the other.</strong> A softer cutoff means fewer ripples. That&#x27;s why Gaussian wins.</p>
+<p>Turn the knob the other way and you get a <strong>high-pass</strong> filter: H_hp = 1 − H_lp. It removes smooth shading and keeps edges, which is another way to see the sharpening of page 5: unsharp masking is &quot;the original plus some high-pass&quot;.</p>
+<p>A <strong>notch</strong> filter removes one specific frequency, or a symmetric pair, and leaves everything else alone. It&#x27;s the right tool for <strong>periodic noise</strong>, such as the regular line pattern from a scanner or a screen-captured halftone. In the spectrum that noise shows up as a few isolated bright dots, and you mask just those dots. No spatial kernel can do that as cleanly.</p>
+<table><thead><tr><th>Goal</th><th>Filter</th><th>Mask looks like</th></tr></thead><tbody><tr><td>Blur, remove noise</td><td>Low-pass</td><td>Bright disc in the centre</td></tr><tr><td>Find edges, sharpen</td><td>High-pass</td><td>Dark disc in the centre</td></tr><tr><td>Remove a repeating pattern</td><td>Notch</td><td>Everything on except small holes at the bright dots</td></tr></tbody></table>
+<p>A notch looks like the right tool for stripes, doesn&#x27;t it? It isn&#x27;t, and the reason is the stripes aren&#x27;t in the footage the way a scanner&#x27;s lines are. Try this first.</p>
+<p>☕ <strong>Try it before you scroll.</strong> A signal contains a pure 9 Hz wave. You sample it <strong>10 times per second</strong>. When you look at the samples, what frequency do they appear to have? <em>Hint: 10 samples per second can describe at most 5 Hz honestly.</em></p>
+<hr>
+<h2>A grid that cannot hear every singer</h2>
+<p><strong>Answer:</strong> <strong>1 Hz.</strong> Here&#x27;s why.</p>
+<p>To capture a wave faithfully you must sample it more than <strong>twice per cycle</strong>. The <strong>Nyquist–Shannon sampling theorem</strong> says: if the highest frequency in the signal is f_max, you need</p>
+<p>samples per unit length (per second, or per millimetre across a scene) to be able to reconstruct it. Half the sampling rate, f_s / 2, is the <strong>Nyquist frequency</strong>: the fastest wave the grid can honestly describe.</p>
+<p>Anything faster doesn&#x27;t vanish. It <strong>folds back</strong> into the range the grid can see. A wave at frequency f above the Nyquist limit appears at |f − k·f_s| for the integer k that lands it inside the range. For our case: |9 − 10| = <strong>1 Hz</strong>.</p>
+<p>That&#x27;s <strong>aliasing</strong>: a fast wave pretending to be a slow one. Now look at the shirt again.</p>
+<hr>
+<h2>The shirt, the screen and the wheel</h2>
+<p>The stripes are too fine for the camera&#x27;s pixel grid. The sensor reports a much coarser stripe pattern that isn&#x27;t on the shirt: moiré.</p>
+<p>The same effect appears in three places you&#x27;ve met:</p>
+<table><thead><tr><th>Where</th><th>What happens</th></tr></thead><tbody><tr><td>Camera or scanner</td><td>Fine patterns (shirts, screens, brick, halftone) make moiré</td></tr><tr><td>Shrinking an image</td><td>Picking every second pixel drops fine detail into false jagged patterns</td></tr><tr><td>Wheel on video</td><td>The wheel appears to turn slowly or backward (temporal aliasing, same math)</td></tr></tbody></table>
+<p>The <strong>fix is applied before sampling</strong>: remove the frequencies the grid can&#x27;t carry, by blurring with a low-pass filter, then sample. Optical cameras use an anti-aliasing filter on the sensor for exactly this. In software, <strong>blur, then downsample</strong>. Shrinking without blurring first is the standard cause of &quot;my thumbnails look crunchy&quot;. OpenCV&#x27;s <code>INTER_AREA</code> option for <code>resize</code> exists for this reason, and its docs recommend it for shrinking.</p>
+<p>Once aliasing has happened it can&#x27;t be undone: the information about the true frequency is gone, and the 1 Hz you see could just as well have come from a real 1 Hz wave.</p>
+<p>There&#x27;s one more trap in the recipe, and it bites at the edges of the picture.</p>
+<hr>
+<h2>The wallpaper trap</h2>
+<p>One trap from <a href="../../../fields/digital-image-processing/fourier-transform-for-images/">page 6</a>: multiplying DFTs corresponds to <strong>circular</strong> convolution, as if the image repeated like wallpaper. Filter without care and the left edge&#x27;s content bleeds in from the right edge.</p>
+<p>The fix is to <strong>pad</strong> the image with zeros (to at least the image size plus the kernel size) before transforming, filter, and crop afterwards.</p>
+<p>Now you know enough to go back to the live feed.</p>
+<hr>
+<h2>Back to the shirt</h2>
+<p>You compare the stripe spacing with the camera grid. The stripes are finer than the grid can describe, so the camera reports different, coarser stripes that were never there.</p>
+<p>The anchor&#x27;s shirt had stripes finer than the Nyquist limit of the camera, so they folded down into slow bands: moiré. You can&#x27;t fix it after the fact. You fix it before: change the shirt, move the camera, or blur optically.</p>
+<p>And the choir picture holds: each singer is a frequency, the grid can only hear up to half its sampling rate, and any singer above that is mistaken for a lower one.</p>
+<h3>Try it: The shirt that shimmers, filter the spectrum, then sample it</h3>
+<blockquote><p><strong>What it shows:</strong> Filtering in frequency is three steps: transform, multiply by a mask, transform back. Cut too sharply and it rings; sample too coarsely and it aliases. <strong>Start with:</strong> the preset <em>Gaussian low-pass</em> (No ringing at all: its twin in space is a Gaussian too. PSNR 21.8 dB at D₀ = 30).</p></blockquote>
+<p><a href="../../../fields/digital-image-processing/labs/frequency-filters.html">Frequency filters lab</a></p>
+<hr>
+<h2>Never again: filter by frequency, sample with care</h2>
+<table><thead><tr><th>Do</th><th>Because</th></tr></thead><tbody><tr><td>Use a Gaussian mask unless you have a reason not to</td><td>It is the only one of the three with no artifacts; the ideal filter rings; Butterworth rings more as <code>n</code> grows</td></tr><tr><td>Build high-pass as <code>1 − H_lp</code></td><td>It keeps edges and removes smooth shading</td></tr><tr><td>Use a notch for periodic noise</td><td>It removes one frequency (or a symmetric pair) and nothing else</td></tr><tr><td>Pad before you transform</td><td>Zero-pad to at least the image size plus the kernel size, filter, then crop; otherwise the left edge bleeds in from the right</td></tr><tr><td>Check <code>f_s &gt; 2 f_max</code> before you sample</td><td>The Nyquist frequency <code>f_s / 2</code> is the fastest wave the grid describes honestly</td></tr><tr><td>Blur first, then downsample</td><td>Aliasing cannot be undone afterwards (<code>INTER_AREA</code> in OpenCV for shrinking)</td></tr></tbody></table>
+<p><strong>Takeaway:</strong> a frequency filter is a mask on the spectrum (Gaussian is the safe choice), and sampling below twice the highest frequency creates aliases that can&#x27;t be undone.</p>
+<p><strong>Next:</strong> real images arrive damaged by noise and blur. Can you undo the damage by dividing it out? <a href="../../../fields/digital-image-processing/noise-and-restoration/">Part 8: Noise and restoration</a>.</p>
+<hr>
+<h2>📜 The Scroll (keep this)</h2>
+<pre><code class="language-text">Symptom:  Shimmering bands that are not on the object (moire); crunchy thumbnails
+Cause:    Detail finer than the grid folds back: |f - k*fs|; 9 Hz at 10/s -&gt; 1 Hz
+Check:    fs &gt; 2 * fmax ? Nyquist = fs/2
+Do not:   Filter after sampling and expect it back; use an ideal low-pass (rings)
+Fix:      Blur before sampling or shrinking; Gaussian mask; notch for stripes
+Pad:      Zero-pad before the FFT, crop after (wraparound)</code></pre>
+<h3>References</h3>
+<ul><li>R. C. Gonzalez and R. E. Woods, <em>Digital Image Processing</em>, 4th ed., Pearson, 2018: chapter 4 (sampling and the Fourier transform of sampled functions, aliasing, lowpass, highpass and notch filters).</li><li>C. E. Shannon, &quot;Communication in the Presence of Noise&quot;, <em>Proceedings of the IRE</em>, 37(1), 10-21, 1949.</li><li>OpenCV documentation, <a href="https://docs.opencv.org/4.x/da/d54/group__imgproc__transform.html">Geometric Image Transformations</a>: <code>resize</code> and <code>INTER_AREA</code>.</li></ul>
+<p><a href="../../../#/fields/digital-image-processing/frequency-filtering-and-aliasing">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

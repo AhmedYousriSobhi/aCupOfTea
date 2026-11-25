@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Tabular Data - Data Processing - Handling Missing Data - Determining Missing Data</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/tabular-data/data-processing/handling-missing-data/determine-missing-values/">
+<meta name="description" content="How to find missing data that is hidden as zeros instead of NaN, using the Pima Indians Diabetes dataset, and how to visualize missing values with missingno.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Tabular Data - Data Processing - Handling Missing Data - Determining Missing Data">
+<meta property="og:description" content="How to find missing data that is hidden as zeros instead of NaN, using the Pima Indians Diabetes dataset, and how to visualize missing values with missingno.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/tabular-data/data-processing/handling-missing-data/determine-missing-values/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/tabular-data/data-processing/handling-missing-data/determine-missing-values/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../../.docs/prerender-redirect.js" data-target="../../../../../#/fields/tabular-data/data-processing/handling-missing-data/determine-missing-values"></script>
+<main>
+<h1>Tabular Data - Data Processing - Handling Missing Data - Determining Missing Data</h1>
+<p><em>How to find missing data that is hidden as zeros instead of NaN, using the Pima Indians Diabetes dataset, and how to visualize missing values with missingno.</em></p>
+<h2>Determining Missing Data: <strong>Data Exists but Missing</strong></h2>
+<p>From <a href="https://www.kaggle.com/code/shashankasubrahmanya/missing-data-imputation-using-regression">kaggle notebook</a>, the author explained important point regarding determining the Missing Data in a dataset even there were no actual missing values in the data.</p>
+<p>The dataset the author used was:</p>
+<p>Pima Indians Diabetes dataset is used for our analysis. The objective of the dataset is to diagnostically predict whether or not a patient has diabetes, based on certain diagnostic measurements included in the dataset</p>
+<table><thead><tr><th>Pregnancies</th><th>Glucose</th><th>BloodPressure</th><th>SkinThickness</th><th>Insulin</th><th>BMI</th><th>DiabetesPedigreeFunction</th><th>Age</th><th>Outcome</th></tr></thead><tbody><tr><td>6</td><td>148</td><td>72</td><td>35</td><td>0</td><td>33.6</td><td>0.627</td><td>50</td><td>1</td></tr><tr><td>1</td><td>85</td><td>66</td><td>29</td><td>0</td><td>26.6</td><td>0.351</td><td>31</td><td>0</td></tr><tr><td>8</td><td>183</td><td>64</td><td>0</td><td>0</td><td>23.3</td><td>0.672</td><td>32</td><td>1</td></tr></tbody></table>
+<p>When you check for any Nans values in the dataset, you will find that all values exists and the total missing values are None.</p>
+<p>But some data related to diabetes, five number summary would show that some variables have 0.0 as their minimum value which would be meaningless in their case. Plasma glucose concentration, Diastolic blood pressure, Triceps skinfold thickness, 2-Hour serum insulin and Body mass index cannot be zero.</p>
+<p>So for feasibility of the analysis, we replace all these &#x27;missing&#x27; data with <strong>nan</strong>, and try to impute them again with more appropriate values.</p>
+<pre><code class="language-python">df.loc[df[&quot;Glucose&quot;] == 0.0, &quot;Glucose&quot;] = np.NAN
+df.loc[df[&quot;BloodPressure&quot;] == 0.0, &quot;BloodPressure&quot;] = np.NAN
+df.loc[df[&quot;SkinThickness&quot;] == 0.0, &quot;SkinThickness&quot;] = np.NAN
+df.loc[df[&quot;Insulin&quot;] == 0.0, &quot;Insulin&quot;] = np.NAN
+df.loc[df[&quot;BMI&quot;] == 0.0, &quot;BMI&quot;] = np.NAN
+
+# For better visulizing of missing values in each column
+# missingno package is used.
+import missingno as mno
+mno.matrix(df, figsize = (20, 6))</code></pre>
+<p>Then starting to impute these missing features by any appropriate method.</p>
+<p><a href="../../../../../#/fields/tabular-data/data-processing/handling-missing-data/determine-missing-values">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

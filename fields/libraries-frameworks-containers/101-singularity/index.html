@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Singularity</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/libraries-frameworks-containers/101-singularity/">
+<meta name="description" content="Singularity (rootless containers for HPC): installing it, building SIF images, converting from Docker, bind mounts and definition-file variables.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Singularity">
+<meta property="og:description" content="Singularity (rootless containers for HPC): installing it, building SIF images, converting from Docker, bind mounts and definition-file variables.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/libraries-frameworks-containers/101-singularity/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/libraries-frameworks-containers/101-singularity/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../.docs/prerender-redirect.js" data-target="../../../#/fields/libraries-frameworks-containers/101-singularity"></script>
+<main>
+<h1>Singularity</h1>
+<p><em>Singularity (rootless containers for HPC): installing it, building SIF images, converting from Docker, bind mounts and definition-file variables.</em></p>
+<h1>Table of Content</h1>
+<h1>1- Intro</h1>
+<p>Singularity is a rootless container solution, which means that we can bring up a container as user on a system, and the container process retains that user identity and cannot be used to gain additional privileges on the system.</p>
+<p>Singularity uses image format called <em>Singularity Image Format</em> &quot;SIF&quot;. This format is unique for only Singularity.</p>
+<p>Singularity contains the ecosystem to integrate with other containers format like Docker.</p>
+<p>Shared Working directory!</p>
+<blockquote><p>It&#x27;s also interesting to note that the current working directory within this container is the same as the current working directory outside the container on my host; This is possible because singularity mounts several directories from your host environment like /home into the container file by default; This gives the illusion of simply swapping the user space of your linux distrubtion while keeping all of your user data intact; this allows your containerized applications to read and write data within user owned locations just like they are being run natively on the host</p></blockquote>
+<p>A great 5-mins intro tutorial illustrated by CtrlQ channel on youtube, found <a href="https://www.youtube.com/watch?v=UbxCwcreJqU&amp;embeds_referring_euri=https%3A%2F%2Fapptainer.org%2F&amp;source_ve_path=Mjg2NjY&amp;feature=emb_logo">here</a>.</p>
+<h1>2- Installation</h1>
+<p>Follow the steps in the INSTALL markdown file on <a href="https://github.com/sylabs/singularity/blob/main/INSTALL.md">Singularity&#x27; Github</a>.</p>
+<p>when executing the ./mconfig to make the configuration file, some packages were not installed, so this error arise;</p>
+<pre><code class="language-bash">fuse / fuse3 (libfuse / libfuse3) headers are required to build squashfuse.</code></pre>
+<p>To solve this we need to install both libraries;</p>
+<pre><code class="language-bash">sudo yum install fuse-devel fuse3-devel</code></pre>
+<ul><li>Note this also works with &#x27;dnf&#x27;</li></ul>
+<h1>3- Simple test - Docker alpine</h1>
+<p>To test, you can run a simple container of docker image for linux alpine</p>
+<pre><code class="language-bash">singularity shell docker://alpine
+
+# will be inside the shell of linux alpine
+# to check os
+cat /etc/os-release
+# The output should be linux alpine.</code></pre>
+<p>What is Alpine Linux?</p>
+<blockquote><p>Alpine Linux is a security-focused, lightweight Linux distribution designed for power users who prioritize security, simplicity, and efficiency.</p></blockquote>
+<p>Why used with containers?</p>
+<blockquote><p>Alpine&#x27;s primary feature is its small size, which enables it to start quickly and run in environments very low in memory and storage, such as containers or embedded devices.</p></blockquote>
+<h1>4- Build sif for Adder App</h1>
+<p>The script is provided in seperate file, go check it.</p>
+<p>To create a go module, follow along with this tutorial from <a href="https://go.dev/doc/tutorial/create-module">go.dev docs</a>.</p>
+<p>To start your module, first use go mod init command:</p>
+<pre><code class="language-bash">go mod init adder
+# go: creating new go.mod: module adder</code></pre>
+<p>According to the docs:</p>
+<blockquote><p>The go mod init command creates a go.mod file to track your code&#x27;s dependencies. So far, the file includes only the name of your module and the Go version your code supports. But as you add dependencies, the go.mod file will list the versions your code depends on. This keeps builds reproducible and gives you direct control over which module versions to use.</p></blockquote>
+<p>To test adder.go locally:</p>
+<pre><code class="language-bash">go run adder.go 5 10
+# output: Result: 15</code></pre>
+<p>To build the app:</p>
+<pre><code class="language-bash">singularity build --fakeroot adder.sif adder.def</code></pre>
+<p>--fakeroot:</p>
+<blockquote><p>This allows us to build our container as a normal user without any elevated privileges. If you wanted to omit this flag you would need to use sudo before running singularity in order to have elevated privileges on your system.</p></blockquote>
+<blockquote><p>Doing this allows you to pretend to be the root user inside of your container without actually granting singularity elevated privilleges on host system.</p></blockquote>
+<p><img src="../../../fields/libraries-frameworks-containers/images/singularity-adder-sig.png" alt="adder.sig" loading="lazy"> <em>Building Sif container for app adder</em></p>
+<p>To run the app:</p>
+<pre><code class="language-bash">singularity run adder.sif 5 10</code></pre>
+<h1>5- More Deeper Singularity Tech</h1>
+<p>Now we have our first impression of using Singularity, let&#x27;s go deeper and understand more.</p>
+<h2>5.1- Two Ways to Build a Container</h2>
+<p>||Sandbox|Image| |-|-|-| |Details|&quot;Which is really just a directory&quot;!! Singularity support create a directory with the entire OS and some Singularity metadata in your current working directory.| &quot;Immutable Images&quot;!! we can build an image where the container encapsulates everything that cannot be modified, so our developing environment becomes eternal. Benefits|During testing and debugging you may want an image format that is writable, you can also use <em>shell</em>, <em>exec</em> &amp; <em>run</em> commands|This ensures reproducible and verifiable images. |Code|singularity build --fakeroot adder.sif adder.def|singularity build --fakeroot --sandbox adder_sandbox/ adder.def</p>
+<p><img src="../../../fields/libraries-frameworks-containers/images/singularity-sandbox-format.png" alt="sandbox image format" loading="lazy"> <em>Sandbox format is a directory with 21 files included</em></p>
+<p>Check Singularity docs for <a href="https://docs.sylabs.io/guides/3.5/user-guide/quick_start.html#sandbox-directories">Sandbox Directories</a> sections.</p>
+<h2>5.2- Converting Images from One Format to Another</h2>
+<p>Using the <em>build</em> command, you can build a container from an existing container.</p>
+<pre><code class="language-bash"># Convert from a sandbox format to sif image immutable format.
+singularity build new-sif sandbox</code></pre>
+<p>Note:</p>
+<blockquote><p>Becarefull of breaking the reproducibility if you have altered your sandbox outside of the context of definition file, so you are advised to exercise care.</p></blockquote>
+<h2>5.3- Notice: Size Difference between [SIF, Sandbox] Formats</h2>
+<p>As notices in the image above showing the size of sif file format is much larger than the sandbox directory format!!</p>
+<p>This should come from many different reasons:</p>
+<ul><li>As SIF images typically include not only the filesystem layers but also metadata, including environment variables, labels, and other information associated with the container.</li><li>Unlike Sandbox, refers to the directory-based container image format used Singularity, where the container image is represented as a directory containing the filesystem layers and associated metadate. So Singularity accesses the env variables, labels and other info needed directoly from local filesystem.</li></ul>
+<p>Let&#x27;s see the size from converting sandbox format to SIF format: <img src="../../../fields/libraries-frameworks-containers/images/singularity-image-size.png" alt="size" loading="lazy"> <em>Converting from sandbox to sif format, and check the size</em></p>
+<h2>5.4- Immutable Images Modification?</h2>
+<p>To modify the content of an image:</p>
+<ol><li>it should first be in the <em>sandbox</em> format.</li><li>Add the option <em>--writeable</em> to allow to modify the container, and the changes will actully be saved into the container and will presist across uses.</li><li>In case of root privillege required to install some apps, you will have to enter the container with <em>sudo</em> command from the start.</li></ol>
+<pre><code class="language-bash">singularity shell --writable &lt;sandbox&gt;
+
+sudo singularity shell --writable &lt;sandbox&gt;</code></pre>
+<h2>5.5- Inspect Definition File of a Container</h2>
+<p>To inspect the definition file that was used to build the image [both sif &amp; sandbox] formats;</p>
+<pre><code class="language-bash">singularity inspect --deffile adder.sig</code></pre>
+<p><img src="../../../fields/libraries-frameworks-containers/images/singularity-inspect-def-file.png" alt="inspect def file" loading="lazy"> <em>Inspect definition file of a Singularity image</em></p>
+<h2>5.6- Running Container from Docker File</h2>
+<p>You can directly <a href="https://docs.sylabs.io/guides/latest/user-guide/build_a_container.html#building-from-dockerfiles">build a container from a DockerFile</a>, with Singilarity starting version 4.1, using the <a href="https://docs.sylabs.io/guides/latest/user-guide/oci_runtime.html#oci-runtime">OCI Runtime Support</a>.</p>
+<pre><code class="language-bash">singularity build --oci adder.oci.sif ./Dockerfile</code></pre>
+<p>Notes:</p>
+<ul><li><em>--oci</em> Mode, does not mount a user&#x27;s $HOME (similar to <em>--compat</em> in native mode); when tested it, there are no any mounted directories, so I have to do it manually using <em>--bind</em> . <code>`</code>bash singularity exec --oci adder.oci.sif ls # no output <code>`</code></li><li>To solve this, instead of using --bind, we could simply use <em>--no-compat</em> option according to the <a href="https://docs.sylabs.io/guides/latest/user-guide/oci_runtime.html#running-existing-non-oci-singularity-containers">docs</a>. <code>`</code>bash singularity exec --oci --no-compat adder.oci.sif ls # output a directory contents <code>`</code></li></ul>
+<p>Older version, there are two option so far I know about:</p>
+<ol><li>Convert DockerFile to Definition file either manually, third-party tool, or even ChatGPT. Then build you container image normally.</li><li>Build a Docker image, then upload to the Docker server, then build the Singularity image from Docker image.</li><li>Build from Dockerfiles as regular (non-OCI-SIF) build</li></ol>
+<h2>5.7- singularity.conf file</h2>
+<p>This file is used to edit all the configuration of singularity, could be found in directory <strong>&quot;/singularity/builddir/singularity.conf&quot;</strong>.</p>
+<p>You can edit the mount directories when a singularity container is running (mainly the system administrator task).</p>
+<p>For more info in the <a href="https://singularity-admindoc.readthedocs.io/en/latest/the_singularity_config_file.html#the-singularity-config-file">docs: The Singularity Config File</a></p>
+<p>Also it could edit the config from the command line using the <a href="https://docs.sylabs.io/guides/latest/user-guide/cli/singularity_config.html"><em>singularity config</em> command</a>.</p>
+<h2>5.8- System Bind</h2>
+<p>For <a href="https://docs.sylabs.io/guides/latest/user-guide/bind_paths_and_mounts.html#bind-paths-and-mounts">Bind Paths and Mounts</a>, we can control to un/mount a directory to the container using <em>--no-mount</em>/<em>--bind</em>, regarding the configuration defined in <em>singularity.confg</em> file.</p>
+<p>Example to unmount /home directory from the container:</p>
+<pre><code class="language-bash">singularity shell --no-home adder.sif
+
+# Equivalent to
+singularity shell --no-mount home adder.sif</code></pre>
+<p><img src="../../../fields/libraries-frameworks-containers/images/singularity-unmount-home.png" alt="unmount home" loading="lazy"> <em>Unmount $HOME directory from Image</em></p>
+<pre><code class="language-bash"># We only need to check if it&#x27;s work, so we need to execute a simple command in the container, not running it all.
+
+# General format: singularity exec --bind &lt;target_dirs_to_mount, seperated_by_comma&gt;:&lt;target mount point&gt; &lt;Container.sif&gt; Command to execute
+singularity exec --bind ~/source:/mnt adder.sif ls /mnt
+
+singularity exec adder.sif ls /mnt</code></pre>
+<p><img src="../../../fields/libraries-frameworks-containers/images/singularity-bind-option.png" alt="bind option" loading="lazy"> <em>Bind directory into /mnt directory</em></p>
+<h3>--mount</h3>
+<p>Starting from v3.9, they added <a href="https://docs.sylabs.io/guides/latest/user-guide/bind_paths_and_mounts.html#mount-examples">flag --mount</a> with the following format:</p>
+<pre><code class="language-bash">--mount type=bind,src=&lt;source&gt;,dst=&lt;destination&gt;[,&lt;option&gt;]...</code></pre>
+<p>This could be useful in case of a path containing &quot;:&quot;, which is not possible with --bind</p>
+<pre><code class="language-bash"># Mount a path containing &#x27;:&#x27; (not possible with --bind)
+$ singularity run \
+    --mount type=bind,src=/my:path,dst=/mnt \
+    mycontainer.sif
+
+# Mount a path containing a &#x27;,&#x27;
+$ singularity run \
+    --mount type=bind,&quot;src=/comma,dir&quot;,dst=/mnt \
+    mycontainer.sif</code></pre>
+<h3>SINGULARITY_BIND</h3>
+<p>In case you have lots of directories we need to bind into our container, it&#x27;s better and more advanced to use the Singularity variable &quot;<em>SINGULARITY_BIND</em>&quot;, and set its value to all directories you want to bind.</p>
+<pre><code class="language-bash"># Outside the container
+export SINGULARITY_BIND=&quot;${WORKDIR}/run:/run,${WORKDIR}/file:/file&quot;</code></pre>
+<ul><li>Yes you could use and host environment variables, as you are executing this command in the local host not container.</li></ul>
+<p>According to the <a href="https://docs.sylabs.io/guides/latest/user-guide/build_env.html#environment-variables">documentation</a>:</p>
+<blockquote><p>If a flag is represented by both a CLI option and an environment variable, and both are set, the CLI option will take precedence. This is true for all environment variables with the exception of SINGULARITY_BIND and SINGULARITY_BINDPATH, which are combined with the --bind option / argument pair, if both are present.</p></blockquote>
+<h2>5.9- Variable in .def File</h2>
+<p>According to <a href="https://docs.sylabs.io/guides/latest/user-guide/definition_files.html#templating-how-to-pass-values-into-definition-files">&quot;Templating: How to Pass Values into Definition file&quot;</a> docs, Variables could be supported in def file using the {{ placeholder }}, and define the variables in <em>%arguments</em> section in def file.</p>
+<p>Let&#x27;s take an example of def file:</p>
+<pre><code class="language-def">Bootstrap: docker
+From: rockylinux:9.3
+
+%startscript
+        export PATH={{ arg4 }}:$PATH
+
+%runscript
+        echo &quot;here is arg1:&quot; {{ arg1 }}
+        echo &quot;here is arg2:&quot; {{ arg2 }}
+        echo &quot;here is arg3:&quot; {{ arg3 }}
+        echo &quot;here is my local host PATH:&quot; {{ arg4 }}
+        echo &quot;here is path inside container:&quot; {{ $PATH }}
+
+%arguments
+        arg1=&quot;ARGUMENT_1st&quot;
+        arg2=&quot;ARGUMETN_2nd&quot;
+        arg3=$AHMED
+        arg4=$PATH</code></pre>
+<p>Let&#x27;s build this image:</p>
+<pre><code class="language-bash">singularity build --fakeroot rocky9.3.sif rocky9.3.def</code></pre>
+<p>Running this container results in:</p>
+<pre><code class="language-bash">here is arg1: ARGUMENT_1st
+here is arg2: ARGUMETN_2nd
+here is arg3: he_is_ME
+here is my local host PATH: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+here is path inside container: {{ /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin }}</code></pre>
+<h3>Setting Default Variables&#x27; Values</h3>
+<p>Using the</p>
+<h3>Assign build-time Variables&#x27; Values</h3>
+<p>Singularity gives you the capability to assign a new value to overwrite the default value defined in .def file during the build process of the container image.</p>
+<p>This can be achieved by the option <em>--build-arg</em> :</p>
+<pre><code class="language-bash">singularity build --fakeroot --build-arg arg4=&lt;SOME_VALUE&gt; rocky9.3.sif rocky9.3.def</code></pre>
+<p>You can set any value you want even if it&#x27;s a environment variable of the local host (e.g. $PATH, etc...).</p>
+<p><img src="../../../fields/libraries-frameworks-containers/images/singularity-build-arg.png" alt="--build-arg" loading="lazy"></p>
+<h1>6- Tips, Notes &amp; Troubleshooting</h1>
+<p>|Tip, Note, Troubleshoot|Details| |-|-| Troubleshoot| If you receive warnings from the Perl language about the locale being incorrect, you can usually fix them with export LC_ALL=C Note| Starting with v3.4.0, the encrypted containers became a feature, and the decryption occurs at runtime completely within kernel space, so there is no intermediate, decrypted version of the container on disk. Check <a href="https://docs.sylabs.io/guides/latest/user-guide/encryption.html#encryption">Encrypted Containers</a>. Tip| It is recommended by sylabs (Singularity creators), and Dockers to not build containers using the root user, in this <a href="https://medium.com/sylabs/a-note-on-cve-2019-14271-running-untrusted-containers-as-root-is-still-a-bad-idea-245d227d4e02">blog</a> talking about the Common Vulnerabilities and Exposures <a href="https://nvd.nist.gov/vuln/detail/CVE-2019-5736">CVE-2019-5736</a>, and how this motivate to build Singularity.&lt;/br&gt; This vulnerability is categorized as a &quot;container escape&quot; vulnerability, meaning an attacker who exploits it could potentially escape from a container and gain root access to the host system by overwriting the host runc binary, so consequently obtain host root access. Tip|From the <a href="https://docs.sylabs.io/guides/latest/user-guide/bind_paths_and_mounts.html#using-bind-or-mount-with-the-writable-flag">docs</a>, binding paths to non-existent points within the container can result in unexpected behavior when used in conjunction with the --writable flag, and is therefore disallowed. If you need to specify bind paths in combination with the --writable flag, please ensure that the appropriate bind points exist within the container. If they do not already exist, it will be necessary to modify the container and create them. Tip| You can export $SINGULARITY_BIND as env variable with all directories you want to mount inside your container. Tip| Not highly recommended to build a OCI-SIF container from Dockerfile using --oci, It may break any runscripts or conda environments in the container!. That&#x27;s because the Singularity is not fully optimized for OCI standard container format yet. &quot;They basically don&#x27;t speek the same language!!&quot;. Tip|Try to add more info/description for def file, to be documented, using sections {%labels, %help}, so you can easily use commands {inspect, run-help} to get that documentation. &quot;A good container tells the user how to interact with it&quot;&lt;/br&gt;<img src="../../../fields/libraries-frameworks-containers/images/singularity-run-help-inspect.png" alt="Terminal output of singularity run-help and inspect showing a container&#x27;s labels and metadata" loading="lazy"></p>
+<h1>7- Apptainer</h1>
+<p>update: The new version of singularity is called <a href="https://apptainer.org/">apptainer</a> one can install that easily on rockylinux.</p>
+<h1>References</h1>
+<ul><li>Official Docs, located <a href="https://docs.sylabs.io/guides/latest/user-guide/index.html">here</a>.</li><li>Apptainer (formerly Singularity), located <a href="https://apptainer.org/">here</a>.</li><li>Tutorial of Singularity by hackmd, located <a href="https://hackmd.io/@yihu3230/By1ipSiWF">here</a>.</li><li>Singularity Tutorial github, located <a href="https://singularity-tutorial.github.io/03-building/">here</a>.</li><li>Usefull create a systemd file for container in local machine, located <a href="https://ciq.com/blog/managing-containerized-services-with-apptainer-and-systemd/">here</a>.</li></ul>
+<p><a href="../../../#/fields/libraries-frameworks-containers/101-singularity">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

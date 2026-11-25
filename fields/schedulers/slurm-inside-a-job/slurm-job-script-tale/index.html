@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The Tale of a Slurm Job Script: Submission Is a Commitment, Not a Promise</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-inside-a-job/slurm-job-script-tale/">
+<meta name="description" content="Why editing a script after sbatch changes nothing, where Slurm keeps the frozen copy, what stays live, how to read the script back, and how to keep runs traceable.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="The Tale of a Slurm Job Script: Submission Is a Commitment, Not a Promise">
+<meta property="og:description" content="Why editing a script after sbatch changes nothing, where Slurm keeps the frozen copy, what stays live, how to read the script back, and how to keep runs traceable.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-inside-a-job/slurm-job-script-tale/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-inside-a-job/slurm-job-script-tale/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/schedulers/slurm-inside-a-job/slurm-job-script-tale"></script>
+<main>
+<h1>The Tale of a Slurm Job Script: Submission Is a Commitment, Not a Promise</h1>
+<p><em>Why editing a script after sbatch changes nothing, where Slurm keeps the frozen copy, what stays live, how to read the script back, and how to keep runs traceable.</em></p>
+<blockquote><p><strong>Part of the [schedulers](/fields/schedulers/slurm-intro.md) directory.</strong> The story below is the original tale. The sections after it check its claims against the Slurm man pages, SchedMD support tickets and the slurm-users list, and add what the story leaves out. The commands were not run on a live cluster for this page, so try them with a short test job first. The sources date from 2019 to 2023, and the accounting flags in the last sections need Slurm 21.08 or newer.</p></blockquote>
+<ul><li>* *</li></ul>
+<h2>The tale</h2>
+<p>You fixed the bug in <code>job.sh</code> at 18:02. Job 2 was still pending, so you assumed it would pick up the fix. At 03:00 it started, ran the old script, and burned the night on the bug you&#x27;d already fixed. Here&#x27;s why.</p>
+<p>When you run <code>sbatch job.sh</code>, Slurm doesn&#x27;t keep a live link to your file. Instead, at the moment of submission, it reads the script, copies its contents into the job record (spooled internally, typically under <code>StateSaveLocation</code>), and hands it a JobID. From that instant on, the job is frozen in time — it carries its own private copy of the script.</p>
+<p>So here&#x27;s what&#x27;s happening in your case:</p>
+<ul><li><strong>Job 1 (running)</strong> — using the snapshot taken when you submitted it. Editing <code>job.sh</code> now does nothing to it. It&#x27;s already off living its own life.</li><li><strong>Job 2 (pending)</strong> — same story. Even though it hasn&#x27;t started yet, Slurm already took its snapshot at submission time, not at start time. It&#x27;s sitting in the queue holding onto the old version of the script, waiting for resources — not waiting to &quot;check&quot; the file again.</li></ul>
+<p><strong>When does your edit matter?</strong></p>
+<p>Only for the next <code>sbatch job.sh</code> you run. Any submission after your edit will pick up the new snapshot. That&#x27;s it.</p>
+<blockquote><p>[!NOTE] The core of the tale checks out. The sections below make the picture more exact in four places: where the copy lives, what &quot;frozen&quot; covers, which options exist besides cancelling, and what the versioning advice can and cannot do.</p></blockquote>
+<ul><li>* *</li></ul>
+<h2>Where the snapshot actually lives</h2>
+<p>&quot;Typically under <code>StateSaveLocation</code>&quot; is right, and it can be made precise. Three sources agree:</p>
+<ul><li><strong>The layout.</strong> A SchedMD commit message describes a <code>hash.#</code> subdirectory based on the last digit of the job ID, added so file systems with limited files per directory can cope with many jobs. A support ticket then shows the path in full, <code>&lt;StateSaveLocation&gt;/hash.6/job.25596/script</code>, and a log from another ticket shows the same pattern with <code>hash.4/job.33767454/script</code>.</li><li><strong>There are two files, not one.</strong> Tools that archive jobs read both <code>script</code> and <code>environment</code> from that job directory, and the ticket about a controller that would not start mentions the script file and the environment file both being empty.</li><li><strong>The controller does the keeping, not your file system.</strong> A slurm-users reply explains the flow: <code>sbatch</code> submits the script over the network to <code>slurmctld</code>, which stores it in <code>StateSaveLocation</code> and sends it to <code>slurmd</code> at dispatch time. The node then stores it under its own <code>SlurmdSpoolDir</code>. So the controller host never needs to see your home directory.</li></ul>
+<pre><code>sbatch ──(network)──&gt; slurmctld ──&gt; &lt;StateSaveLocation&gt;/hash.N/job.&lt;id&gt;/{script,environment}
+                          │
+                          └─(at dispatch)──&gt; slurmd ──&gt; &lt;SlurmdSpoolDir&gt;/job&lt;id&gt;/slurm_script</code></pre>
+<p>Two consequences worth knowing:</p>
+<ul><li><strong>A damaged state directory can be fatal for a job.</strong> In a SchedMD ticket, a zero-length <code>script</code> file made <code>slurmctld</code> log that it could not find the batch script and stop with &quot;Check file system serving StateSaveLocation as that directory may be missing or corrupted&quot;. That is why the <a href="../../../../fields/schedulers/slurm-cluster-operations/slurm-upgrade-order/">upgrade page</a> backs this directory up before anything else.</li><li><strong>Arrays share one copy.</strong> A SchedMD talk on cluster field notes points out that array jobs cost far less than many individual jobs, because only one job script and environment file is kept for the whole array.</li></ul>
+<p>On the node side, the <a href="../../../../fields/schedulers/slurm-cluster-operations/slurm-spool-dir-full/">spool directory page</a> explains why a full disk there drains the node: <code>slurmd</code> cannot write the script it is about to run.</p>
+<ul><li>* *</li></ul>
+<h2>Frozen in time? Only the script and its environment</h2>
+<p>&quot;Frozen in time&quot; is accurate for the script text. It is too strong for everything the script touches. Slurm freezes a small set of things and leaves the rest of your world alive:</p>
+<table><thead><tr><th>What</th><th>Frozen at submit?</th><th>Notes</th></tr></thead><tbody><tr><td>The script text</td><td><strong>Yes</strong></td><td>The <code>script</code> file above</td></tr><tr><td>Your <code>#SBATCH</code> options</td><td><strong>Yes</strong></td><td>Resolved into the job record</td></tr><tr><td>Your environment variables</td><td><strong>Yes</strong></td><td>The <code>environment</code> file. This includes loaded modules, because they live in variables</td></tr><tr><td>Your working directory</td><td><strong>Yes</strong></td><td>The job starts where you ran <code>sbatch</code>, unless <code>--chdir</code> says otherwise</td></tr><tr><td><code>train.py</code>, helper scripts, configs, data</td><td><strong>No</strong></td><td>Read at run time, from whatever is on disk then</td></tr></tbody></table>
+<p>The <code>sbatch</code> man page is explicit about the last row: other than the batch script itself, Slurm does no movement of user files. A cluster guide from VSC spells out the environment row: by default <code>sbatch</code> copies the environment it sees, so every module loaded when you submitted is loaded in the job.</p>
+<p>Now go back to your two jobs, and suppose <code>job.sh</code> contains <code>python train.py</code>:</p>
+<table><thead><tr><th>You edit</th><th>Job 1 (running)</th><th>Job 2 (pending)</th></tr></thead><tbody><tr><td><code>job.sh</code></td><td>Unchanged</td><td>Unchanged</td></tr><tr><td><code>train.py</code>, before the job reaches it</td><td><strong>Sees the new code</strong></td><td><strong>Sees the new code</strong></td></tr><tr><td>Your shell&#x27;s loaded modules</td><td>Unchanged</td><td>Unchanged</td></tr></tbody></table>
+<p>That is the trap behind &quot;the old script with the new code&quot;. A pending job that holds the old <code>--lr 1.0</code> and runs a freshly fixed <code>train.py</code> is a combination nobody tested. Even a running job can pick up a change, if the script later runs <code>source config.sh</code> or the Python process imports a module it has not loaded yet.</p>
+<ul><li>* *</li></ul>
+<h2>How sbatch reads the script</h2>
+<p>Three rules from the man page explain surprises at submission time:</p>
+<ul><li><strong>Directives stop at the first command.</strong> After the first non-comment, non-whitespace line, <code>sbatch</code> processes no more <code>#SBATCH</code> lines. A directive below a command is ignored as an ordinary comment.</li><li><strong>Directives are literal text.</strong> They are read by Slurm, not the shell, so <code>#SBATCH --output=$HOME/out.txt</code> does not expand <code>$HOME</code>. Filename patterns such as <code>%j</code> are Slurm&#x27;s own and do work.</li><li><strong>Precedence.</strong> The man page says <code>SBATCH_*</code> environment variables override options in the script, and command-line options override those variables. A leftover <code>SBATCH_PARTITION</code> in a <code>.bashrc</code> can quietly outvote the script.</li></ul>
+<pre><code class="language-bash">#!/bin/bash
+#SBATCH --job-name=train      # read
+module load python/3.11       # first command: directive block ends here
+#SBATCH --time=12:00:00       # IGNORED</code></pre>
+<p>If a job came out with the wrong limit or partition, check <code>scontrol show job &lt;id&gt;</code> first, then <code>env | grep ^SBATCH_</code>.</p>
+<ul><li>* *</li></ul>
+<h2>Peeking at the frozen copy</h2>
+<p>You can ask Slurm for the exact script it holds:</p>
+<pre><code class="language-bash">scontrol write batch_script &lt;jobid&gt;            # writes slurm-&lt;jobid&gt;.sh
+scontrol write batch_script &lt;jobid&gt; held.sh    # or a name you choose
+scontrol write batch_script &lt;jobid&gt; -          # to stdout
+diff job.sh held.sh                            # what did Slurm freeze?</code></pre>
+<p>From a SchedMD ticket: the file defaults to <code>slurm-&lt;job_id&gt;.sh</code>, <code>-</code> writes to stdout, and only an admin, an operator or the job&#x27;s owner can retrieve it. It works while the controller still holds the job. A finished job&#x27;s record is purged after <code>MinJobAge</code> seconds, which the <code>sbatch</code> man page mentions when it explains dependencies on finished jobs.</p>
+<p>Admins have a second route, the same ticket notes: copy <code>&lt;StateSaveLocation&gt;/hash.N/job.&lt;id&gt;/script</code> directly.</p>
+<ul><li>* *</li></ul>
+<h2>Changing your mind without starting over</h2>
+<p>Cancel and resubmit is the only way to change the <strong>script</strong>. For some other changes, though, it is not the only option, and it costs you your place in the queue (the job&#x27;s age restarts, which is my inference from how the age factor works rather than a documented statement).</p>
+<table><thead><tr><th>You want to change</th><th>While pending?</th><th>How</th></tr></thead><tbody><tr><td>Time limit, partition, QOS, account, dependency, name</td><td>Often</td><td><code>scontrol update JobId=&lt;id&gt; ...</code>. The <code>sbatch</code> man page notes, for instance, that the account can be changed after submission. Which fields a regular user may change is site policy</td></tr><tr><td>Pause a job without losing it</td><td>Yes</td><td><code>scontrol hold &lt;id&gt;</code>, then <code>scontrol release &lt;id&gt;</code></td></tr><tr><td>The script text</td><td><strong>No</strong></td><td>Cancel, edit, resubmit</td></tr><tr><td>The captured environment</td><td><strong>No</strong></td><td>Resubmit from the right environment</td></tr></tbody></table>
+<p>Two related cases:</p>
+<ul><li><strong>Requeue.</strong> A requeued job returns to pending and runs again. Since the controller holds the script, I would expect the original text to run even if you have edited the file since, but I found no source that says so. Test it with a short job. The <a href="../../../../fields/schedulers/slurm-preemption/slurm-preemption-requeue-signals/">preemption page</a> covers writing scripts that survive requeue.</li><li><strong>Dependent jobs.</strong> If <code>job2</code> was submitted with <code>--dependency=afterok:&lt;job1&gt;</code>, it carries its own snapshot taken when <em>it</em> was submitted. Fixing <code>job.sh</code> and resubmitting job 1 does not update job 2.</li></ul>
+<ul><li>* *</li></ul>
+<h2>Best practice</h2>
+<p>If you want to change what&#x27;s running or queued:</p>
+<p><strong>Cancel and resubmit:</strong> <code>scancel</code> then <code>sbatch job.sh</code> — cleanest option.</p>
+<p><strong>Version your scripts:</strong> <code>job_v1.sh</code>, <code>job_v2.sh</code>, or better, tag by commit hash / date, so <code>squeue</code> output and your script history stay traceable to what actually ran.</p>
+<p><strong>Never edit-in-place while jobs are pending if you&#x27;re debugging</strong> — you&#x27;ll convince yourself the fix &quot;should&quot; apply and burn time confused when it doesn&#x27;t.</p>
+<p>Slurm treats submission as a commitment, not a promise to check back later.</p>
+<ul><li>* *</li></ul>
+<h2>Making runs traceable</h2>
+<p>The versioning advice is right, with one catch: <code>squeue</code> shows the job <strong>name</strong>, not the script file. A file called <code>job_v2.sh</code> does not show up anywhere unless you carry the version into something Slurm records.</p>
+<table><thead><tr><th>Where</th><th>Shows the version?</th></tr></thead><tbody><tr><td><code>squeue</code>, <code>sacct</code> job name</td><td>Yes, if you pass it: <code>sbatch --job-name=train-a1b2c3d job.sh</code></td></tr><tr><td><code>--comment</code></td><td>Yes, but <code>sacct</code> only keeps it if <code>AccountingStoreFlags</code> includes <code>job_comment</code> (the configuration tool lists <code>job_comment</code> among the flags)</td></tr><tr><td><code>scontrol show job</code> → <code>Command=</code></td><td>Only the <strong>path</strong> of the script, not its content. After an edit, it points at a file that no longer matches what ran, which is the complaint in a 2021 slurm-users thread</td></tr></tbody></table>
+<p>A pattern that pins both the script and the code to a commit:</p>
+<pre><code class="language-bash">REV=$(git rev-parse --short HEAD)
+sbatch --job-name=&quot;train-$REV&quot; --comment=&quot;commit $REV&quot; job.sh</code></pre>
+<p>And a self-documenting habit, adapted from the same slurm-users thread, which describes capturing the original script with each run. Put this at the top of the script body so every run keeps its own record (the filenames are my own):</p>
+<pre><code class="language-bash">OUT=runs/$SLURM_JOB_ID
+mkdir -p &quot;$OUT&quot;
+scontrol write batch_script &quot;$SLURM_JOB_ID&quot; &quot;$OUT/script.sh&quot;
+env | sort &gt; &quot;$OUT/env.txt&quot;          # check for secrets before sharing
+git rev-parse HEAD &gt; &quot;$OUT/commit.txt&quot; 2&gt;/dev/null
+module list &gt; &quot;$OUT/modules.txt&quot; 2&gt;&amp;1</code></pre>
+<ul><li>* *</li></ul>
+<h2>The afterlife of a script</h2>
+<p>After the job ends and the controller purges its record, can you still get the script back?</p>
+<ul><li><strong>By default, no.</strong> A 2021 slurm-users reply says the accounting database stores neither the job&#x27;s <code>Command</code> nor the script.</li><li><strong>Since 21.08, optionally yes.</strong> The release notes add <code>AccountingStoreFlags=job_script</code> to store the batch script and <code>job_env</code> to store the environment variables.</li></ul>
+<p>With the flags on:</p>
+<pre><code class="language-bash">sacct -j &lt;jobid&gt; --batch-script      # or -B
+sacct -j &lt;jobid&gt; --env-vars          # needs job_env; -j is required</code></pre>
+<p>The man page says <code>-B</code> prints <code>NONE</code> when the job had no script. SchedMD&#x27;s SC21 slides show the idea with a wrapped <code>sleep</code> job whose generated <code>#!/bin/sh</code> script comes back through <code>sacct --batch-script</code>.</p>
+<p>Two cautions that are my own, not from the docs.</p>
+<blockquote><p>[!WARNING] Don&#x27;t switch on <code>job_env</code> cluster-wide first. Scripts and environments can hold secrets, so think about who can read the accounting database before enabling <code>job_env</code>. And storing them grows the database, which makes dumps and schema conversions slower. Safe path: enable <code>job_script</code> alone first, check database size after a week of normal load, then decide on <code>job_env</code>. Rollback is removing the flag from <code>AccountingStoreFlags</code> and reconfiguring. Rows already stored probably stay in the database (my inference, untested).</p></blockquote>
+<ul><li>* *</li></ul>
+<h2>📜 The Scroll (keep this)</h2>
+<pre><code class="language-text">sbatch freezes   script text + options + environment (two files in StateSaveLocation) + cwd
+sbatch ignores   code, configs, data: read live at run time, by running AND pending jobs
+read it back     scontrol write batch_script &lt;id&gt; [file|-]    (owner or admin, while the record exists)
+change it        scontrol update (some fields) | hold/release | script change = cancel + resubmit
+precedence       command line &gt; SBATCH_* env vars &gt; #SBATCH lines (which stop at the first command)
+trace it         --job-name / --comment (job_comment flag) with a commit hash; Command= is only a path
+afterwards       AccountingStoreFlags=job_script,job_env (21.08+) then sacct -B / --env-vars -j &lt;id&gt;</code></pre>
+<p><strong>Takeaway:</strong> Submission freezes the letter and its envelope (script, options, environment). Everything the letter points to is still out in the world.</p>
+<p><strong>Next:</strong> <a href="../../../../fields/schedulers/slurm-inside-a-job/slurm-slurmstepd/">slurmstepd: The Small Daemon That Actually Runs Your Job</a></p>
+<ul><li>* *</li></ul>
+<h2>References</h2>
+<ul><li><a href="https://man.archlinux.org/man/sbatch.1.en.txt">Slurm: sbatch man page</a> (directive parsing, exit after transfer, no movement of user files, account changes)</li><li><a href="https://manpages.ubuntu.com/manpages/noble/man1/sbatch.1.html">Slurm: sbatch man page, Ubuntu copy (MinJobAge and dependencies)</a></li><li><a href="https://docs.vscentrum.be/compute/jobs/job_submission.html">VSC documentation: submission of job scripts (environment copied by default)</a></li><li><a href="https://support.schedmd.com/show_bug.cgi?id=7609">SchedMD ticket 7609: storing job scripts in the database (<code>scontrol write batch_script</code>, StateSaveLocation path)</a></li><li><a href="https://support.schedmd.com/show_bug.cgi?id=7757">SchedMD ticket 7757: slurmctld will not start (zero-length script and environment files)</a></li><li><a href="https://earth.bsc.es/gitlab/mgimenez/ces_slurm_simulator/-/commit/d4156ab5572dcab8b805ed37c26b8bde784a2ad9">SchedMD commit: &quot;Add subdirectory for job script/env files&quot; (hash.# layout)</a></li><li><a href="https://lists.schedmd.com/pipermail/slurm-users/2022-February/008417.html">slurm-users: sbatch submits scripts to slurmctld, which stores them in StateSaveLocation (2022)</a></li><li><a href="https://Slurm.schedmd.com/SLUG23/Field-Notes-7.pdf">SchedMD SLUG 2023: Field Notes 7 (array jobs store one script and environment)</a></li><li><a href="https://groups.google.com/g/slurm-users/c/lmg6_5Lq9UY">slurm-users: Get original script of a job (2021)</a></li><li><a href="https://github.com/SchedMD/slurm/blob/slurm-21-08-8-2/RELEASE_NOTES">Slurm 21.08 release notes (job_script and job_env flags)</a></li><li><a href="https://manpages.ubuntu.com/manpages/kinetic/man1/sacct.1.html">Slurm: sacct man page (<code>--batch-script</code>, <code>--env-vars</code>)</a></li><li><a href="https://slurm.schedmd.com/configurator.html">Slurm: configuration tool (AccountingStoreFlags options)</a></li><li><a href="https://Slurm.schedmd.com/SC21/BoF.pdf">SchedMD SC21 BoF slides: storing batch scripts in SlurmDBD</a></li></ul>
+<p><a href="../../../../#/fields/schedulers/slurm-inside-a-job/slurm-job-script-tale">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

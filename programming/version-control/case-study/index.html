@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Git - Case Study</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/programming/version-control/case-study/">
+<meta name="description" content="Two Git situations worked through, syncing a fork with an updated branch of another repo and reviewing a merged PR on your own commit.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Git - Case Study">
+<meta property="og:description" content="Two Git situations worked through, syncing a fork with an updated branch of another repo and reviewing a merged PR on your own commit.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/programming/version-control/case-study/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/programming/version-control/case-study/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../.docs/prerender-redirect.js" data-target="../../../#/programming/version-control/case-study"></script>
+<main>
+<h1>Git - Case Study</h1>
+<p><em>Two Git situations worked through, syncing a fork with an updated branch of another repo and reviewing a merged PR on your own commit.</em></p>
+<h2>Table of Contents</h2>
+<ul><li>Git - Case Study<ul><li>Table of Contents</li><li>Situation - Sync Repo-A/dev with Fork Repo-B/dev-updated<ul><li>Objective</li><li>Should I Sync My Fork Before Opening a PR, or just create PR as-is?</li><li>Solution - Best Practice</li></ul></li><li>Situation - Reviewing Merge PR to my Commit<ul><li>Objective</li><li>Solution - Best Practice</li></ul></li></ul></li></ul>
+<h2>Situation - Sync Repo-A/dev with Fork Repo-B/dev-updated</h2>
+<h3>Objective</h3>
+<p>I’ve forked repo-b from repo-a and updated a specific branch, creating repo-b/dev-updated based on repo-a/dev. However, since then, several commits have been added to repo-a/dev, causing my repo-b/dev-updated branch to fall out of sync. As a result, merging a PR from repo-b/dev-updated into repo-a/dev will likely cause significant conflicts due to the large divergence.</p>
+<p>This is a common situation when working with forks and multiple branches.</p>
+<h3>Should I Sync My Fork Before Opening a PR, or just create PR as-is?</h3>
+<p>|Situation|	Recommended Action| |-|-| ✅ Your branch (dev-uodated) is based on upstream/dev and only a few commits behind|	Continue without syncing — just open the PR. GitHub will handle showing the diff correctly. ⚠️ Your branch is significantly behind (many commits, structural changes, or conflicts likely)|	Sync first (merge or rebase from upstream/dev), then open the PR. 🚫 You accidentally synced with the wrong branch (upstream/main)|	Undo or ignore that sync (depending if it affected your branch) — then sync from the correct one later if needed.</p>
+<h3>Solution - Best Practice</h3>
+<blockquote><p>CAUTION!! Do not use GitHub&#x27;s Sync Fork button; it only syncs &#x27;main&#x27;.</p></blockquote>
+<ol><li>Add upstream remote (it not already) <code>`</code>bash git remote add upstream https://github.com/&lt;owner-of-repo-a&gt;/&lt;repo-a&gt;.git <code>`</code></li></ol>
+<blockquote><p>Note: In case you use ssh key, please use <em>&#x27;git remote set-url upstream git@\&lt;ssh-key-name&gt;:\&lt;owner-of-repo-a&gt;/\&lt;repo-a&gt;.git&#x27;</em></p></blockquote>
+<ol><li>Fetch all branches from upstream <code>`</code>bash git fetch upstream <code>`</code></li><li>Checkout your working branch <code>`</code>bash git checkout dev-updated <code>`</code></li><li>[Best-Practice] Create a new branch for the sync, let&#x27;s call it dev-updated-synched, and it&#x27;s starting from the current commit of branch A. <code>`</code>bash git checkout -b dev-updated-synched <code>`</code></li><li>From this point, there are two options:<ol><li>Using Merge; this will keeps history. <code>`</code>bash git merge upstream/dev <code>`</code><ul><li>To undo, you can use: git reset --hard HEAD~1</li></ul></li><li>Using rebase; This will have cleaner history, and rewrite commits. <code>`</code>bash git rebase upstream/dev <code>`</code></li></ol></li></ol>
+<blockquote><p>From Here, We will choose the Rebase Approach. Rebase is used to push your commits on a top of the target branch. So once you did a rebase, it will place your commits on a top of the current branch. The issue you may face other than conflict, is that You will find all your commits (let&#x27;s say 8) are a top of the synched branch. In this case we need to Squash them.</p></blockquote>
+<ol><li>Squash the commits; Manually get the numbers of commits you need to squash, from command <em>git log</em>, then do a soft reset: <code>`</code>bash git reset --soft HEAD~8</li></ol>
+<p># Check the latest staged modified files from the latest commit. git status</p>
+<pre><code>7. Commit the changes, and push it to the target branch in the repo-b:</code></pre>
+<p>git commit -m &quot;Your message, latest update in the commit&quot;</p>
+<p>git push origin dev-updated-synched</p>
+<pre><code>
+## Situation - Reviewing Merge PR to my Commit
+### Objective
+A merge PR from another repo to my commit in a repo. I wanted to check the running the changes he requested locally to verify.
+
+### Solution - Best Practice</code></pre>
+<p>git remote -v</p>
+<h1>Add</h1>
+<p>git remote add &lt;title&gt; https://github.com/&lt;username&gt;/&lt;repo-name&gt;.git</p>
+<h1>To verify adding the repo</h1>
+<p>git remote -v</p>
+<h1>Fetching the repo</h1>
+<p>git fetch kadirc-docs</p>
+<h1>To be safe, create a separate branch to merge with the fetched external repo</h1>
+<p>git checkout -b review-kadirc-image</p>
+<h1>Merge the external branch to the target branch</h1>
+<p>git merge &lt;title&gt;/&lt;branch-name&gt;</p>
+<h1>Check the changes</h1>
+<p>git status</p>
+<pre><code>
+&gt; Note: you can commit the change in case of adding/removing modifications.
+
+&gt; Note: You can delete the created branch if the case if just reviewing the requested merged branch</code></pre>
+<p><a href="../../../#/programming/version-control/case-study">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Your GPU Has Core Affinity. Slurm Has Socket Affinity. They Are Not Speaking.</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-inside-a-job/slurm-gpu-affinity-socket-lie/">
+<meta name="description" content="gres.conf Cores= schedules per socket, not core. Fix topology via l3cacheassocket or numanodeassocket. Also covers four 1-GPU schemes and how MIG, MPS, and sharding isolate workloads.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Your GPU Has Core Affinity. Slurm Has Socket Affinity. They Are Not Speaking.">
+<meta property="og:description" content="gres.conf Cores= schedules per socket, not core. Fix topology via l3cacheassocket or numanodeassocket. Also covers four 1-GPU schemes and how MIG, MPS, and sharding isolate workloads.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-inside-a-job/slurm-gpu-affinity-socket-lie/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-inside-a-job/slurm-gpu-affinity-socket-lie/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/schedulers/slurm-inside-a-job/slurm-gpu-affinity-socket-lie"></script>
+<main>
+<h1>Your GPU Has Core Affinity. Slurm Has Socket Affinity. They Are Not Speaking.</h1>
+<p><em>gres.conf Cores= schedules per socket, not core. Fix topology via l3cacheassocket or numanodeassocket. Also covers four 1-GPU schemes and how MIG, MPS, and sharding isolate workloads.</em></p>
+<blockquote><p><strong>Part of the [schedulers](/fields/schedulers/slurm-intro.md) directory</strong>, and the missing neighbor of the <a href="../../../../fields/schedulers/slurm-mixed-gpus/">mixed-GPU series</a>: that series is about <em>which</em> GPUs a job gets, this page is about <em>where</em> they sit. Everything below comes from SchedMD&#x27;s GRES documentation for Slurm 26.05 and the <code>gres.conf</code> man page. None of it was run on a live cluster for this page.</p></blockquote>
+<ul><li>* *</li></ul>
+<h2>The comforting misconception</h2>
+<p>An admin writes this in <code>gres.conf</code>:</p>
+<pre><code>Name=gpu File=/dev/nvidia0 Cores=0-15
+Name=gpu File=/dev/nvidia1 Cores=16-31</code></pre>
+<p>It reads like a promise: GPU 0 gets cores 0 to 15, GPU 1 gets cores 16 to 31, and Slurm will keep jobs on matching pairs. It is a lovely picture of NUMA-aware scheduling.</p>
+<p>SchedMD&#x27;s GRES documentation has a polite name for what happens next. It calls it a <strong>common misconception</strong>.</p>
+<ul><li>* *</li></ul>
+<h2>What the docs actually say</h2>
+<p>The GRES guide puts it plainly: Slurm handles GRES affinity on a <strong>socket</strong> basis internally. The <code>Cores</code> field in <code>gres.conf</code> creates the impression that core-level affinity is respected during scheduling, &quot;which it does not and never has&quot;. The <code>gres.conf</code> man page says the same thing from the other side: Slurm can track resources at the CPU or thread level, but the scheduling algorithms that co-allocate GRES with CPUs operate at socket level.</p>
+<p>The practical trouble shows up with <strong>job steps</strong>. Jobs are placed by socket, steps look at cores, and the two views can disagree. To stop admins from writing affinity that Slurm cannot honor, Slurm now checks that any <code>Cores</code> value lines up with socket boundaries, and it complains if it does not:</p>
+<pre><code>error: _check_core_range_matches_sock: gres/gpu GRES autodetected core affinity 0-7
+on node node0 doesn&#x27;t match socket boundaries. (Socket 0 is cores 0-1)</code></pre>
+<p>That message turns up on modern CPUs with many cache domains. The GPU driver reports an affinity based on the real hardware topology, Slurm believes the node has two big sockets, and the two descriptions do not nest.</p>
+<p>What <code>--gres-flags</code> changes, per the man page:</p>
+<table><thead><tr><th>Flag on the job</th><th>Effect</th></tr></thead><tbody><tr><td><em>(none)</em></td><td>The cores listed for a GPU are <strong>preferred</strong>, not required</td></tr><tr><td><code>--gres-flags=enforce-binding</code></td><td>Only the listed cores may be allocated with that GPU. Better performance, possibly longer queue time</td></tr><tr><td><code>--gres-flags=disable-binding</code></td><td>Any core may be used. Faster scheduling, possibly worse application performance. Needed if a job wants more CPUs than are bound to a GPU</td></tr></tbody></table>
+<p>So the setting is real, but it operates inside Slurm&#x27;s socket-shaped view of the node, not on the physical layout you drew on the whiteboard.</p>
+<ul><li>* *</li></ul>
+<h2>Making Slurm&#x27;s sockets match the hardware</h2>
+<p>The documented fix is to change what Slurm believes a &quot;socket&quot; is, so that it matches the GPU affinity boundaries. Two topology parameters do this: <code>l3cache_as_socket</code> and <code>numa_node_as_socket</code>. Test first, change second:</p>
+<pre><code class="language-bash"># what does the hardware look like to Slurm right now?
+slurmd -C
+
+# what would it look like with a different socket definition?
+slurmd -C --parameters=l3cache_as_socket
+
+# which grouping matches the GPUs? compare with the driver&#x27;s view
+nvidia-smi topo -m</code></pre>
+<p>If one of the options lines the socket count and cores per socket up with the GPU affinity you see in <code>nvidia-smi topo -m</code>, make it permanent. Per node is the recommended form when only some nodes need it:</p>
+<pre><code># slurm.conf, per node
+NodeName=node0 CPUs=32 Boards=1 SocketsPerBoard=8 CoresPerSocket=2 ThreadsPerCore=2 Parameters=l3cache_as_socket Gres=gpu:a100:2
+
+# or globally
+SlurmdParameters=l3cache_as_socket</code></pre>
+<p>Then let <code>AutoDetect=nvml</code> in <code>gres.conf</code> pick up the affinity. The socket count may now differ from the number of physical sockets on the board. That is expected and not a bug.</p>
+<p>The manual alternative is to turn AutoDetect off for that node and write <code>Cores=</code> yourself, still aligned to socket boundaries or it gets rejected:</p>
+<pre><code>NodeName=node0 Autodetect=off Name=gpu Type=a100 File=/dev/nvidia0 Cores=0-15
+NodeName=node0 Autodetect=off Name=gpu Type=a100 File=/dev/nvidia1 Cores=16-31</code></pre>
+<blockquote><p>[!WARNING] <code>Cores</code> in <code>gres.conf</code> uses Slurm&#x27;s <strong>logical</strong> core index, not the physical one. A mismatch between the two is a quiet way to build a topology that validates and is still wrong.</p></blockquote>
+<ul><li>* *</li></ul>
+<h2>One GPU, four names</h2>
+<p>The GRES guide spends a surprising number of lines on numbering, and for good reason. The same physical GPU can be known by four different numbers.</p>
+<table><thead><tr><th>Where</th><th>How it is numbered</th></tr></thead><tbody><tr><td><code>nvidia-smi</code> (NVML)</td><td>By PCI bus ID, lowest to highest</td></tr><tr><td>CUDA</td><td>Not necessarily the same, unless <code>CUDA_DEVICE_ORDER=PCI_BUS_ID</code> is set</td></tr><tr><td><code>/dev/nvidiaN</code></td><td>By Linux minor number. The mapping to NVML numbers is, in the docs&#x27; words, nondeterministic and system dependent, and can change between boots after hardware or OS changes</td></tr><tr><td>Inside a job with device cgroups</td><td>Renumbered from 0, whatever the physical device was</td></tr></tbody></table>
+<p>That last row has a consequence that trips up site scripts. If a job is allocated <code>/dev/nvidia1</code> and devices are constrained by cgroup (see the <a href="../../../../fields/schedulers/slurm-inside-a-job/slurm-cgroups-in-practice/">cgroups page</a>), the job sees <code>CUDA_VISIBLE_DEVICES=0</code>. The Prolog and Epilog, which run <strong>outside</strong> any cgroup, see <code>CUDA_VISIBLE_DEVICES=1</code>. An epilog that cleans up &quot;the GPU the job used&quot; by reading its own environment has to translate between the two.</p>
+<p>Two housekeeping rules from the docs: list <code>File=</code> entries in increasing numeric order, and do an after-boot check that each device file still belongs to the GPU you think it does. The docs describe the assignment as &quot;fairly stable&quot;, which is a phrase worth remembering at 3 a.m.</p>
+<ul><li>* *</li></ul>
+<h2>AutoDetect: nvml, nvidia, and what each can see</h2>
+<table><thead><tr><th>Setting</th><th>Needs the NVML library?</th><th>Detects MIG and NVLink?</th></tr></thead><tbody><tr><td><code>AutoDetect=nvml</code></td><td>Yes</td><td>Yes</td></tr><tr><td><code>AutoDetect=nvidia</code> (added in 24.11)</td><td>No</td><td><strong>No</strong></td></tr></tbody></table>
+<p>Other values exist for AMD (<code>rsmi</code>), Intel (<code>oneapi</code>) and <code>nrt</code>. With AutoDetect on, you still need the <code>Gres=</code> line in <code>slurm.conf</code> so <code>slurmctld</code> knows how many to expect. And counts are enforced: a node that finds <strong>fewer</strong> resources than configured is drained, and a node whose detected GPUs are not all covered by the config is drained too.</p>
+<p><code>Type</code> matching has a charming quirk. It must equal, or be a substring of, the name the hardware reports with spaces turned into underscores. So <code>geforce_rtx_2060</code> can be written as <code>geforce</code>, <code>rtx</code>, <code>2060</code> or the whole thing. Two commands show you what Slurm sees:</p>
+<pre><code class="language-bash">slurmd -C    # detected hardware and Gres line
+slurmd -G    # the gres setup as configured, including autodetected devices being ignored</code></pre>
+<p>If <code>gres.conf</code> specifies <code>Type</code> and <code>File</code> that match a real GPU, any <code>Cores</code> or <code>Links</code> you added become a <strong>sanity check</strong> against the detected values. A GPU that disagrees with its configuration is omitted from the node with an error. That is useful, because it turns a silent hardware change into a loud one.</p>
+<ul><li>* *</li></ul>
+<h2>The library that will not let go</h2>
+<p>Here is an interaction that few people see until it bites. With <code>AutoDetect=nvml</code> or <code>rsmi</code>, <code>slurmstepd</code> loads the management library and <strong>holds it open</strong> to account for GPU use in any step that asked for a GPU. <code>slurmd</code> does the same if <code>AcctGatherEnergyType=acct_gather_energy/gpu</code> is set. The docs state the consequence directly: while a process holds the library open, no other process can configure the GPU.</p>
+<p>That matters if your Prolog tries to change GPU settings (persistence mode, clocks and similar). The documented escape hatches:</p>
+<ul><li>Do not set <code>AcctGatherEnergyType=acct_gather_energy/gpu</code> if a Prolog needs to configure GPUs.</li><li>If jobs share GPUs on the node, you may also need <code>JobAcctGatherParams=DisableGPUAcct</code>.</li></ul>
+<p>The library is also held when a job requests <code>--gpu-freq</code>.</p>
+<p>On the plus side, with <code>AccountingStorageTRES=gres/gpu</code> and <code>AutoDetect=nvml</code>, Slurm gathers <code>gres/gpumem</code> and <code>gres/gpuutil</code> per step, and <code>sacct</code> shows them in the <code>TRESUsageIn*</code> fields. For once the accounting has a view of GPU <em>utilization</em>, not just allocation. MIG devices are the exception, because NVML does not provide utilization metrics for them.</p>
+<ul><li>* *</li></ul>
+<h2>Sharing a GPU: MIG, MPS, shards</h2>
+<p>Three ways to put more than one job on a GPU, with very different guarantees.</p>
+<table><thead><tr><th>Mechanism</th><th>What it gives you</th><th>The catch, per the docs</th></tr></thead><tbody><tr><td><strong>MIG</strong></td><td>Hardware-isolated GPU instances (up to seven on an A100), each treated as a GPU with cgroup isolation and task binding</td><td>Partitions must already exist, because Slurm does not do dynamic MIG partitioning. No <code>gpumem</code>/<code>gpuutil</code> accounting for MIG</td></tr><tr><td><strong>MPS</strong></td><td>Several jobs sharing a GPU, each given a percentage</td><td>A request must fit on one GPU. A job cannot request both <code>gpu</code> and <code>mps</code>. Only one user can have an active MPS server on a system, so different users are <strong>time-sliced</strong>, not truly concurrent</td></tr><tr><td><strong>Shards</strong></td><td>A generic way to let several jobs share a GPU</td><td>Does <strong>not</strong> fence the processes on the GPU. Works best with homogeneous workloads</td></tr></tbody></table>
+<p>A few notes that save debugging time:</p>
+<ul><li>A MIG <code>Type</code> must be a substring of the &quot;MIG Profile&quot; string in the <code>slurmd</code> log at <code>debug2</code> level, for example <code>nvidia_a100_3g.20gb</code>.</li><li>MPS needs a Prolog to start and stop the MPS servers. A sample ships in <code>etc/prolog.example</code> in the Slurm distribution.</li><li><code>Count</code> for MPS is translated to a percentage, so it is normally a multiple of 100.</li><li>The same GPU can be allocated as <code>gpu</code> or as <code>mps</code>/<code>shard</code>, never both at once.</li><li>Shards and MPS both require the <code>select/cons_tres</code> plugin.</li></ul>
+<ul><li>* *</li></ul>
+<h2>Steps want all your GPUs by default</h2>
+<p>A job allocation is one thing and a job step is another. By default a step is given <strong>all</strong> the GRES the job requested, except those implicitly requested by an exclusive job. SchedMD&#x27;s explanation is that granting less by default would force steps that need no GPU to say so explicitly.</p>
+<p>The consequence shows up when you launch parallel steps inside one allocation. The docs&#x27; own example is a batch script that starts several <code>srun</code> steps in the background, each asking for its own count:</p>
+<pre><code class="language-bash">#SBATCH --gres=gpu:4 -n4 -N1-1
+srun --gres=gpu:2 -n2 --exclusive show_device.sh &amp;
+srun --gres=gpu:1 -n1 --exclusive show_device.sh &amp;
+srun --gres=gpu:1 -n1 --exclusive show_device.sh &amp;
+wait</code></pre>
+<p>Leave the <code>--gres</code> off and each step claims everything. Also note the typing rule: a job requested as <code>gpu:2</code> cannot start a step requesting <code>gpu:tesla:2</code>, and the reverse holds too. Typed and untyped requests must be consistent within a job.</p>
+<ul><li>* *</li></ul>
+<h2>A debugging routine for a bad GPU node</h2>
+<pre><code class="language-bash"># 1. What does Slurm think the node is?
+slurmd -C
+slurmd -G
+
+# 2. What does the hardware say about affinity and links?
+nvidia-smi topo -m
+
+# 3. Would a different socket definition line them up?
+slurmd -C --parameters=l3cache_as_socket     # or numa_node_as_socket
+
+# 4. Why is the node drained?
+sinfo -R
+scontrol show node &lt;node&gt; | grep -i reason
+
+# 5. Inside a job: which GPU numbers does it actually see?
+srun --gres=gpu:1 bash -c &#x27;echo $CUDA_VISIBLE_DEVICES; nvidia-smi -L&#x27;</code></pre>
+<p>Remember step 5 gives numbers from inside the job&#x27;s own view, which may not match what an epilog or monitoring agent sees.</p>
+<table><thead><tr><th>Symptom</th><th>First suspect</th></tr></thead><tbody><tr><td><code>doesn&#x27;t match socket boundaries</code> error at start</td><td>Autodetected GPU affinity does not nest in Slurm&#x27;s socket layout</td></tr><tr><td>Node drained with fewer GRES than configured</td><td>A GPU fell off the bus, or <code>Gres=</code> in <code>slurm.conf</code> says more than the node has</td></tr><tr><td>Prolog cannot change GPU settings</td><td>A process (often <code>slurmstepd</code> or <code>slurmd</code>) holds the management library open</td></tr><tr><td>Two parallel <code>srun</code> steps fight over the same GPUs</td><td>Steps default to all the job&#x27;s GRES</td></tr><tr><td>Scripts disagree about which GPU is &quot;1&quot;</td><td>Four numbering schemes; check <code>CUDA_DEVICE_ORDER</code> and cgroup renumbering</td></tr></tbody></table>
+<ul><li>* *</li></ul>
+<h2>References</h2>
+<ul><li><a href="https://slurm.schedmd.com/gres.html">Slurm: Generic Resource (GRES) Scheduling</a></li><li><a href="https://slurm.schedmd.com/gres.conf.html">Slurm: gres.conf man page</a></li><li><a href="https://slurm.schedmd.com/prolog_epilog.html">Slurm: Prolog and Epilog Guide</a></li><li><a href="https://docs.nvidia.com/datacenter/tesla/mig-user-guide/index.html">NVIDIA: MIG User Guide</a></li><li><a href="https://docs.nvidia.com/deploy/mps/index.html">NVIDIA: MPS documentation</a></li></ul>
+<p><a href="../../../../#/fields/schedulers/slurm-inside-a-job/slurm-gpu-affinity-socket-lie">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

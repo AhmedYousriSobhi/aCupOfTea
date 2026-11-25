@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>A Single Node You Can Trust: Installing VictoriaMetrics Properly</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/victoriametrics/single-node-in-ten-minutes/">
+<meta name="description" content="Install single-node VictoriaMetrics from a verified tarball, run it under systemd, reload scrape config safely, and close the delete endpoint that is open by default.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="A Single Node You Can Trust: Installing VictoriaMetrics Properly">
+<meta property="og:description" content="Install single-node VictoriaMetrics from a verified tarball, run it under systemd, reload scrape config safely, and close the delete endpoint that is open by default.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/victoriametrics/single-node-in-ten-minutes/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/victoriametrics/single-node-in-ten-minutes/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/devops/victoriametrics/single-node-in-ten-minutes"></script>
+<main>
+<h1>A Single Node You Can Trust: Installing VictoriaMetrics Properly</h1>
+<p><em>Install single-node VictoriaMetrics from a verified tarball, run it under systemd, reload scrape config safely, and close the delete endpoint that is open by default.</em></p>
+<blockquote><p><strong>Part 2 of the [VictoriaMetrics series](/fields/devops/victoriametrics/README.md).</strong> <a href="../../../../fields/devops/victoriametrics/why-victoriametrics/">Part 1</a> explained what VictoriaMetrics is. By the end of this page you&#x27;ll have a single node running under systemd, scraping targets, reloading config without surprises, and refusing to delete data for strangers.</p></blockquote>
+<hr>
+<h2>The intern and the empty dashboard</h2>
+<p>An intern is cleaning up &quot;test metrics&quot; from Grafana. They find a VictoriaMetrics URL, read that <code>/api/v1/admin/tsdb/delete_series</code> deletes series, and send it a match for everything starting with <code>node_</code>. It works on the first try. No password, no prompt. Every node metric for the whole retention period is gone.</p>
+<p>Nothing about that is a bug. It&#x27;s the default. This page installs VictoriaMetrics the way you&#x27;d want it on a shared network: verified binary, its own user, a bound address, and keys on the endpoints that can destroy or copy data.</p>
+<hr>
+<h2>Before you start</h2>
+<blockquote><p>[!NOTE] Written against VictoriaMetrics <strong>v1.156.0</strong>. Every step was run on a throwaway Ubuntu 24.04.5 sandbox (Linux 6.18, systemd 255) with node_exporter 1.12.1 as a target. systemd wasn&#x27;t running there, so the unit in step 5 was linted with <code>systemd-analyze verify</code> and its exact command line was run by hand as the service user, but <code>systemctl start</code> itself wasn&#x27;t run.</p></blockquote>
+<p>You need: a Linux x86-64 host, root, and outbound HTTPS to GitHub. The examples use <code>10.0.0.5</code> as the host&#x27;s internal address. Replace it with yours.</p>
+<hr>
+<h2>Step 1: download and verify</h2>
+<p>Pin the version, download the tarball and its checksum file, and check one against the other before you run anything.</p>
+<pre><code class="language-bash">VM_VERSION=v1.156.0
+cd /tmp
+curl -fsSLO https://github.com/VictoriaMetrics/VictoriaMetrics/releases/download/${VM_VERSION}/victoria-metrics-linux-amd64-${VM_VERSION}.tar.gz
+curl -fsSLO https://github.com/VictoriaMetrics/VictoriaMetrics/releases/download/${VM_VERSION}/victoria-metrics-linux-amd64-${VM_VERSION}_checksums.txt
+grep &quot;victoria-metrics-linux-amd64-${VM_VERSION}.tar.gz&quot; victoria-metrics-linux-amd64-${VM_VERSION}_checksums.txt | sha256sum --check</code></pre>
+<p>Success looks like this, with exit code 0:</p>
+<pre><code class="language-text">victoria-metrics-linux-amd64-v1.156.0.tar.gz: OK</code></pre>
+<p>We also appended one line of junk to the tarball to prove the check bites. It printed <code>FAILED</code> and exited 1:</p>
+<pre><code class="language-text">victoria-metrics-linux-amd64-v1.156.0.tar.gz: FAILED
+sha256sum: WARNING: 1 computed checksum did NOT match</code></pre>
+<p>Then install the binary and confirm the version:</p>
+<pre><code class="language-bash">tar -xzf victoria-metrics-linux-amd64-${VM_VERSION}.tar.gz
+install -m 0755 victoria-metrics-prod /usr/local/bin/victoria-metrics-prod
+/usr/local/bin/victoria-metrics-prod --version</code></pre>
+<pre><code class="language-text">victoria-metrics-20261106-174742-tags-v1.156.0-0-g0c1bf87a0c</code></pre>
+<blockquote><p>[!TIP] The binary is called <code>victoria-metrics-prod</code>, not <code>victoria-metrics</code>. Keep the name; the docs and every example online use it.</p></blockquote>
+<hr>
+<h2>Step 2: a user and two directories</h2>
+<p>The database should own its data and nothing else.</p>
+<pre><code class="language-bash">useradd --system --no-create-home --shell /usr/sbin/nologin victoriametrics
+install -d -o victoriametrics -g victoriametrics -m 0750 /var/lib/victoriametrics
+install -d -m 0755 /etc/victoriametrics</code></pre>
+<p>Success: <code>ls -ld /var/lib/victoriametrics</code> shows <code>drwxr-x--- victoriametrics victoriametrics</code>.</p>
+<p>Put <code>/var/lib/victoriametrics</code> on its own filesystem if you can. When the disk fills, you want the database to stop, not the whole host. Part 4 covers what &quot;stop&quot; means here, and it isn&#x27;t what you&#x27;d guess.</p>
+<hr>
+<h2>Step 3: what to scrape</h2>
+<p>Single-node VictoriaMetrics reads a normal Prometheus <code>scrape_configs</code> file. Start with node_exporter and the database itself:</p>
+<pre><code class="language-bash">cat &gt; /etc/victoriametrics/scrape.yml &lt;&lt;&#x27;EOF&#x27;
+global:
+  scrape_interval: 30s
+scrape_configs:
+  - job_name: node
+    static_configs:
+      - targets: [&#x27;10.0.0.11:9100&#x27;, &#x27;10.0.0.12:9100&#x27;]
+  - job_name: victoriametrics
+    static_configs:
+      - targets: [&#x27;10.0.0.5:8428&#x27;]
+EOF</code></pre>
+<p>Check the file before the database ever sees it:</p>
+<pre><code class="language-bash">/usr/local/bin/victoria-metrics-prod -promscrape.config=/etc/victoriametrics/scrape.yml \
+  -promscrape.config.dryRun -loggerLevel=ERROR
+echo &quot;exit=$?&quot;</code></pre>
+<p>A good file prints nothing and exits 0. A broken one (we dropped a colon) exits 255 with the line number:</p>
+<pre><code class="language-text">fatal ... error when checking -promscrape.config: cannot parse Prometheus config from &quot;scrape.yml&quot;: cannot unmarshal data: yaml: line 15: could not find expected &#x27;:&#x27;</code></pre>
+<p>Keep this command. You&#x27;ll use it before every reload.</p>
+<hr>
+<h2>Step 4: two admin keys</h2>
+<p>Several endpoints can delete or copy your data, and each can be protected by a key. Make two: one for deleting series, one for snapshots. They&#x27;re separate on purpose. The backup tool in part 4 needs the snapshot key, and it prints that key in its logs, so a leaked backup log mustn&#x27;t be able to delete anything.</p>
+<pre><code class="language-bash">for k in delete snapshot; do
+  openssl rand -hex 24 | install -m 0640 -g victoriametrics /dev/stdin /etc/victoriametrics/$k.key
+done</code></pre>
+<p>Success: <code>ls -l /etc/victoriametrics/</code> shows both files as <code>-rw-r----- root victoriametrics</code>. The trailing newline that <code>openssl</code> writes is fine; the keys still matched in testing. We also checked they don&#x27;t cross: the delete key got 401 on <code>/snapshot/list</code>, and the snapshot key got 401 on the delete endpoint.</p>
+<hr>
+<h2>Step 5: the systemd unit</h2>
+<pre><code class="language-bash">cat &gt; /etc/systemd/system/victoriametrics.service &lt;&lt;&#x27;EOF&#x27;
+[Unit]
+Description=VictoriaMetrics single-node
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=victoriametrics
+Group=victoriametrics
+StateDirectory=victoriametrics
+ExecStart=/usr/local/bin/victoria-metrics-prod \
+  -storageDataPath=/var/lib/victoriametrics \
+  -retentionPeriod=90d \
+  -httpListenAddr=10.0.0.5:8428 \
+  -promscrape.config=/etc/victoriametrics/scrape.yml \
+  -deleteAuthKey=file:///etc/victoriametrics/delete.key \
+  -snapshotAuthKey=file:///etc/victoriametrics/snapshot.key
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=on-failure
+RestartSec=5
+LimitNOFILE=1048576
+
+[Install]
+WantedBy=multi-user.target
+EOF</code></pre>
+<p>What each choice buys you:</p>
+<table><thead><tr><th>Line</th><th>Why</th></tr></thead><tbody><tr><td><code>-retentionPeriod=90d</code></td><td>The default is 31 days. Say what you mean, and read part 4 before you pick</td></tr><tr><td><code>-httpListenAddr=10.0.0.5:8428</code></td><td>Without it, the database binds <code>:8428</code>, every interface. Bind to the internal one</td></tr><tr><td><code>-deleteAuthKey</code>, <code>-snapshotAuthKey</code></td><td>Closes the delete and snapshot endpoints to anyone without the right key</td></tr><tr><td><code>ExecReload=... -HUP</code></td><td>A HUP re-reads the scrape file. Flags still need a restart</td></tr><tr><td><code>LimitNOFILE=1048576</code></td><td>Raising the open-files limit is the one OS tweak the docs&#x27; tuning section recommends</td></tr></tbody></table>
+<p>Now lint it. Here&#x27;s a trap we hit: <code>systemd-analyze verify</code> (systemd 255) <strong>exits 0 even when it finds a bad value</strong>. With <code>Restart=on-falure</code> it printed a warning and still returned 0:</p>
+<pre><code class="language-text">victoriametrics.service:19: Failed to parse service restart specifier, ignoring: on-falure</code></pre>
+<p>So check its output, not its exit code:</p>
+<pre><code class="language-bash">out=$(systemd-analyze verify /etc/systemd/system/victoriametrics.service 2&gt;&amp;1)
+[ -z &quot;$out&quot; ] &amp;&amp; echo &quot;LINT OK&quot; || { echo &quot;LINT FAIL: $out&quot;; false; }</code></pre>
+<p>Success: <code>LINT OK</code>. On the typo&#x27;d copy, the same check printed <code>LINT FAIL</code> and returned non-zero.</p>
+<hr>
+<h2>Step 6: start it and check it</h2>
+<pre><code class="language-bash">systemctl daemon-reload
+systemctl enable --now victoriametrics
+curl -fsS http://10.0.0.5:8428/health; echo &quot; exit=$?&quot;</code></pre>
+<p>Success: <code>OK exit=0</code>. Then look at the targets:</p>
+<pre><code class="language-bash">curl -s http://10.0.0.5:8428/api/v1/targets | python3 -c &#x27;
+import json, sys
+for t in json.load(sys.stdin)[&quot;data&quot;][&quot;activeTargets&quot;]:
+    print(t[&quot;labels&quot;][&quot;job&quot;], t[&quot;health&quot;], t.get(&quot;lastError&quot;, &quot;&quot;))&#x27;</code></pre>
+<pre><code class="language-text">victoriametrics up
+node up</code></pre>
+<p>And ask a real question:</p>
+<pre><code class="language-bash">curl -s http://10.0.0.5:8428/api/v1/query --data-urlencode &#x27;query=up&#x27;</code></pre>
+<p><code>vmui</code>, the built-in query UI, lives at <code>http://10.0.0.5:8428/vmui/</code> if you&#x27;d rather click.</p>
+<hr>
+<h2>Two things that look broken but aren&#x27;t</h2>
+<p>Both showed up in the lab within the first minute, and both make people restart things that are fine.</p>
+<p><strong>A new target shows `down` before its first scrape.</strong> Right after start, <code>/api/v1/targets</code> showed <code>node down</code> with an empty <code>lastError</code>. Twenty seconds later it was <code>up</code>. Scrapes are spread out over the interval, so the first one can take up to one <code>scrape_interval</code>. An empty <code>lastError</code> means &quot;not tried yet&quot;. A real failure always carries a message.</p>
+<p><strong>A query returns nothing for the newest data.</strong> Our first <code>up</code> query came back empty even though the targets had just been scraped:</p>
+<pre><code class="language-text">{&quot;status&quot;:&quot;success&quot;,&quot;data&quot;:{&quot;resultType&quot;:&quot;vector&quot;,&quot;result&quot;:[]}, ...}</code></pre>
+<p>That&#x27;s <code>-search.latencyOffset</code>, which defaults to 30 seconds: points younger than that are hidden from queries so you don&#x27;t see half-written data. The same query with <code>latency_offset=1s</code> returned both series. Leave the default alone; it&#x27;s there for a reason. Just know it exists when you test with <code>curl</code> straight after a start.</p>
+<hr>
+<h2>Changing config without a surprise</h2>
+<p>Here&#x27;s the trap. When you HUP with a broken scrape file, VictoriaMetrics logs an error and <strong>keeps running the old config</strong>:</p>
+<pre><code class="language-text">error ... cannot read &quot;scrape.yml&quot; on SIGHUP: ... yaml: line 15: could not find expected &#x27;:&#x27;; ... continuing with the previous config</code></pre>
+<p>The process stays up, targets stay the same, and nobody notices your new target was never added. So reload in three steps: check, reload, confirm.</p>
+<ol><li><strong>Check</strong> the file with the dry run from step 3. Stop if the exit code isn&#x27;t 0.</li><li><strong>Reload:</strong> <code>systemctl reload victoriametrics</code>.</li><li><strong>Confirm</strong> the reload took:</li></ol>
+<pre><code class="language-bash">curl -s http://10.0.0.5:8428/metrics | grep &#x27;^vm_promscrape_config_last_reload_successful &#x27;</code></pre>
+<pre><code class="language-text">vm_promscrape_config_last_reload_successful 1</code></pre>
+<p>In the lab this metric went to <code>0</code> after the bad HUP and back to <code>1</code> after a good one. Part 5 turns it into an alert.</p>
+<blockquote><p>[!NOTE] <code>systemctl reload</code> wasn&#x27;t run in the lab (no systemd). We sent <code>kill -HUP</code> directly, which is what the unit&#x27;s <code>ExecReload</code> does.</p></blockquote>
+<hr>
+<h2>Why the admin keys matter</h2>
+<p>Back to the intern. Without <code>-deleteAuthKey</code>, we imported a scratch series and deleted it with one unauthenticated request. HTTP 204, series gone:</p>
+<pre><code class="language-bash">curl -s -X POST &#x27;http://127.0.0.1:8428/api/v1/admin/tsdb/delete_series&#x27; \
+  --data-urlencode &#x27;match[]=scratch_metric&#x27; -w &#x27;%{http_code}\n&#x27;</code></pre>
+<pre><code class="language-text">204</code></pre>
+<p>With the key set, the same request was refused, and so was a wrong key:</p>
+<pre><code class="language-text">Expected to receive non-empty authKey when -deleteAuthKey is set     (401)
+The provided authKey doesn&#x27;t match -deleteAuthKey                    (401)</code></pre>
+<p>Only <code>?authKey=&lt;the key&gt;</code> got 204. <code>/snapshot/create</code> behaved the same way with <code>-snapshotAuthKey</code>.</p>
+<p>The keys protect a handful of dangerous endpoints, and the server itself is careful with them: its startup log prints <code>-snapshotAuthKey=&quot;secret&quot;</code>, not the value. They don&#x27;t protect queries or ingestion. The docs list more endpoint keys (<code>-reloadAuthKey</code>, <code>-configAuthKey</code>, <code>-flagsAuthKey</code>, <code>-pprofAuthKey</code> and others) and say plainly that every component belongs in a private network, with <strong>vmauth</strong> in front of anything that untrusted clients can reach. Rule of thumb: <strong>bind to the inside, key the dangerous doors, proxy everything else.</strong></p>
+<hr>
+<h2>Back to the intern</h2>
+<p>Same intern, same cleanup idea, same Friday. This time the database was installed with this page:</p>
+<table><thead><tr><th>What the intern tries</th><th>What happens now</th><th>Which step stopped it</th></tr></thead><tbody><tr><td>Sends <code>delete_series</code> for <code>node_.*</code> with no key</td><td><code>401 Expected to receive non-empty authKey when -deleteAuthKey is set</code></td><td>Step 4 and step 5</td></tr><tr><td>Goes looking for the key</td><td><code>/etc/victoriametrics/delete.key</code> is <code>-rw-r-----</code>, readable by root and the <code>victoriametrics</code> group only</td><td>Step 4</td></tr><tr><td>Tries the snapshot key from a backup log</td><td><code>401</code>: it can take snapshots, not delete</td><td>Step 4</td></tr><tr><td>Connects from a network that shouldn&#x27;t reach it</td><td>Nothing listens there: the database is bound to <code>10.0.0.5</code>, and anything wider goes through vmauth</td><td>Step 5</td></tr><tr><td>Someone with root deletes the series anyway</td><td>The hourly backup from <a href="../../../../fields/devops/victoriametrics/retention-disk-and-backups/">part 4</a> restores them</td><td>Part 4</td></tr></tbody></table>
+<p>The cleanup can still happen. The intern asks, someone holding the delete key runs it, on purpose, with a match they&#x27;ve read twice. Deleting history should take a decision, not just a <code>curl</code>.</p>
+<p>And when the same intern adds a new target with a typo in the YAML, the dry run catches it before the reload, and the reload metric catches it if they skip the dry run.</p>
+<p><strong>Takeaway:</strong> a verified binary, its own user, a bound address, admin keys and a check-reload-confirm habit turn a &quot;just run it&quot; database into one you can leave on a shared network.</p>
+<p><strong>Next:</strong> <a href="../../../../fields/devops/victoriametrics/vmagent-and-the-network-blip/">Part 3, vmagent and the Network Blip</a>, moves scraping to the edge and keeps data through an outage.</p>
+<hr>
+<h2>References</h2>
+<ul><li><a href="https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/">VictoriaMetrics single-node docs</a>: how to start, scraping with <code>-promscrape.config</code>, how to apply new config, security recommendations and protected endpoints, deleting series, snapshots.</li><li><a href="https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/#list-of-command-line-flags">Common command-line flags</a>: <code>-promscrape.config.dryRun</code>, <code>-search.latencyOffset</code> (default 30s), <code>-deleteAuthKey</code>, <code>-snapshotAuthKey</code>, <code>-httpListenAddr</code>.</li><li><a href="https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.156.0">VictoriaMetrics v1.156.0 release</a>: tarballs and checksum files.</li><li><a href="https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/#vmui">vmui</a>: the built-in query UI.</li><li><a href="https://docs.victoriametrics.com/victoriametrics/vmauth/">vmauth</a>: the auth proxy recommended in front of VictoriaMetrics.</li><li><a href="https://www.freedesktop.org/software/systemd/man/latest/systemd-analyze.html">systemd-analyze(1)</a>: the <code>verify</code> command.</li><li><a href="https://github.com/prometheus/node_exporter">node_exporter</a>: the example target.</li></ul>
+<p><a href="../../../../#/fields/devops/victoriametrics/single-node-in-ten-minutes">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

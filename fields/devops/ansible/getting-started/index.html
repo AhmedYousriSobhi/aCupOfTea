@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The Laptop That Ran Ansible 2.16: An Install You Can Trust</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/ansible/getting-started/">
+<meta name="description" content="A pinned Ansible install per project, which Python the control machine and the nodes need, ansible.cfg, SSH host keys, and the errors you hit on the first runs.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="The Laptop That Ran Ansible 2.16: An Install You Can Trust">
+<meta property="og:description" content="A pinned Ansible install per project, which Python the control machine and the nodes need, ansible.cfg, SSH host keys, and the errors you hit on the first runs.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/ansible/getting-started/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/ansible/getting-started/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/devops/ansible/getting-started"></script>
+<main>
+<h1>The Laptop That Ran Ansible 2.16: An Install You Can Trust</h1>
+<p><em>A pinned Ansible install per project, which Python the control machine and the nodes need, ansible.cfg, SSH host keys, and the errors you hit on the first runs.</em></p>
+<blockquote><p><strong>Part 1 of the [Ansible series](/fields/devops/ansible/README.md).</strong> By the end you&#x27;ll have a pinned Ansible in a project folder, a config file it actually reads, every node&#x27;s SSH host key checked, and a ping that answers <code>pong</code> from the whole cluster.</p></blockquote>
+<hr>
+<h2>Two laptops, one playbook</h2>
+<p>Two admins share one Git repo of playbooks. Sara installed Ansible with <code>apt</code> two years ago. Omar ran <code>pip install ansible-core</code> last week. Same repo, same command, different results.</p>
+<p>Sara&#x27;s run works everywhere, including the old Rocky 8 nodes nobody wants to touch. Omar&#x27;s fails on exactly those nodes:</p>
+<pre><code class="language-text">Ansible requires Python 3.9 or newer on the target.</code></pre>
+<p>Omar concludes his laptop is broken. It isn&#x27;t. Sara is running an ansible-core that went out of support in July 2025, and Omar is running one that no longer talks to the Python those nodes ship with. Neither of them chose a version. Their package managers did.</p>
+<p>This page fixes that: one pinned version per project, chosen on purpose, the same on every laptop.</p>
+<blockquote><p>[!NOTE] Lab: ansible-core <strong>2.22.0</strong> on Python 3.13 (control machine), six Ubuntu 24.04 nodes with Python 3.12. Rocky/RHEL steps weren&#x27;t run (no Rocky image in the sandbox); they come from Red Hat&#x27;s documentation and are marked.</p></blockquote>
+<hr>
+<h2>Which Ansible, which Python</h2>
+<p>Ansible runs on your machine, the <strong>control node</strong>, and copies small Python programs, <strong>modules</strong>, to each <strong>managed node</strong> (target), where they run with that node&#x27;s Python. So two Pythons matter, and each ansible-core release supports a range of both. From the official support matrix:</p>
+<table><thead><tr><th>ansible-core</th><th>Status (Nov 2026)</th><th>Control node Python</th><th>Target Python</th></tr></thead><tbody><tr><td>2.22</td><td>Current, GA Nov 2026</td><td>3.13 – 3.15</td><td>3.9 – 3.15</td></tr><tr><td>2.21</td><td>Critical fixes until Nov 2026, security until May 2027</td><td>3.12 – 3.14</td><td>3.9 – 3.14</td></tr><tr><td>2.20</td><td>Security phase ended 2 Nov 2026; end of life May 2027</td><td>3.12 – 3.14</td><td>3.9 – 3.14</td></tr><tr><td>2.18, 2.19</td><td>2.18 end of life May 2026; 2.19 end of life Nov 2026</td><td>3.11 – 3.13</td><td>3.8 – 3.13</td></tr><tr><td>2.16</td><td>End of life since July 2025</td><td>3.10 – 3.12</td><td>2.7, 3.6 – 3.12</td></tr></tbody></table>
+<p>What that means on real machines:</p>
+<table><thead><tr><th>What you do</th><th>What you get</th><th>Why</th></tr></thead><tbody><tr><td><code>apt install ansible-core</code> on Ubuntu 24.04</td><td>2.16.3</td><td>That&#x27;s the version in Ubuntu&#x27;s archive</td></tr><tr><td><code>pip install ansible-core</code> on Python 3.12 (Ubuntu 24.04&#x27;s)</td><td>2.21.6</td><td>pip quietly picks the newest release that supports your Python</td></tr><tr><td><code>pip install ansible-core==2.22.0</code> on Python 3.12</td><td>An error</td><td>2.22.0 requires Python 3.13</td></tr><tr><td><code>pip install ansible</code> (the big package with collections)</td><td>14.6.0, which pins core 2.21.6</td><td>The community package trails ansible-core</td></tr></tbody></table>
+<p>We ran all four in the lab. The third one says so plainly:</p>
+<pre><code class="language-text">ERROR: Ignored the following versions that require a different python version: 2.22.0 Requires-Python &gt;=3.13
+ERROR: No matching distribution found for ansible-core==2.22.0</code></pre>
+<p>And on the target side, the trap from the story: <strong>Rocky/RHEL 8&#x27;s built-in Python is 3.6</strong> (<code>platform-python</code>, used by <code>dnf</code> itself). Every ansible-core since 2.17 refuses it. We come back to that below.</p>
+<p>Rule of thumb: <strong>pin ansible-core per project, and pick the version from your oldest node&#x27;s Python, not from your laptop.</strong></p>
+<hr>
+<h2>Step 1: a pinned install per project</h2>
+<p>We use <strong>uv</strong>, a Python package manager that can also download the Python version a project needs. That matters here: ansible-core 2.22 needs Python 3.13, and Ubuntu 24.04 ships 3.12. Install uv with any method from its docs; in the lab we used <code>pip install uv</code>.</p>
+<ol><li>Make the project and write down the versions:</li></ol>
+<pre><code class="language-bash">mkdir -p ~/cluster-ansible/inventory/{group_vars,host_vars} ~/cluster-ansible/{playbooks,roles}
+cd ~/cluster-ansible
+cat &gt; requirements.txt &lt;&lt;&#x27;EOF&#x27;
+ansible-core==2.22.0
+ansible-lint==26.11.0
+EOF</code></pre>
+<ol><li>Create the environment with its own Python, and install exactly those versions:</li></ol>
+<pre><code class="language-bash">uv python install 3.13
+uv venv --python 3.13 .venv
+uv pip install --python .venv/bin/python -r requirements.txt
+source .venv/bin/activate</code></pre>
+<ol><li>Check it:</li></ol>
+<pre><code class="language-bash">ansible --version | head -2
+ansible-lint --version</code></pre>
+<pre><code class="language-text">ansible [core 2.22.0]
+  config file = /root/cluster-ansible/ansible.cfg
+ansible-lint 26.11.0 using ansible-core:2.22.0 ansible-compat:26.11.0 ruamel-yaml:0.19.1</code></pre>
+<p>Commit <code>requirements.txt</code>; add <code>.venv/</code> to <code>.gitignore</code>. Anyone who clones the repo runs the same two <code>uv</code> commands and gets the same Ansible.</p>
+<blockquote><p>[!TIP] Always <code>source .venv/bin/activate</code> first. Without it, ansible-lint printed <code>WARNING: PATH altered to include .../.venv/bin ... This is usually a sign of broken local setup</code> in our lab.</p></blockquote>
+<p>If you&#x27;d rather use Mamba, as an earlier version of this page did, the same idea applies: one environment per project, with the version pinned (<code>mamba install ansible-core=2.22.0</code>). We didn&#x27;t test that route this time, and conda-forge has to carry the version you pin.</p>
+<hr>
+<h2>Step 2: an ansible.cfg it will actually read</h2>
+<p>Put the settings in the project, next to the playbooks:</p>
+<pre><code class="language-ini">[defaults]
+inventory = inventory/hosts.yml
+remote_user = admin
+roles_path = roles
+collections_path = collections
+interpreter_python = auto_silent
+forks = 20
+
+[ssh_connection]
+pipelining = True</code></pre>
+<table><thead><tr><th>Setting</th><th>Why</th></tr></thead><tbody><tr><td><code>inventory</code></td><td>So you never need <code>-i</code> and never run against the wrong list</td></tr><tr><td><code>remote_user</code></td><td>The account Ansible logs in as on every node</td></tr><tr><td><code>interpreter_python = auto_silent</code></td><td>Finds each node&#x27;s Python without a warning per host</td></tr><tr><td><code>forks = 20</code></td><td>How many nodes it works on at once. The default is 5</td></tr><tr><td><code>pipelining = True</code></td><td>Fewer SSH round trips per task; noticeably faster on many nodes</td></tr></tbody></table>
+<p>Ansible uses the <strong>first</strong> config file it finds, in this order: the file named by <code>ANSIBLE_CONFIG</code>, <code>./ansible.cfg</code> in the current directory, <code>~/.ansible.cfg</code>, then <code>/etc/ansible/ansible.cfg</code>. That&#x27;s why you run Ansible from the project folder.</p>
+<p>Here&#x27;s the trap. If the current directory is <strong>world-writable</strong>, Ansible ignores the <code>ansible.cfg</code> in it, because anyone could have planted it. We ran <code>chmod o+w .</code> in the project:</p>
+<pre><code class="language-text">[WARNING]: Ansible is being run in a world writable directory (/root/cluster-ansible), ignoring it as an ansible.cfg source.
+[WARNING]: No inventory was parsed, only implicit localhost is available
+[WARNING]: provided hosts list is empty, only localhost is available. Note that the implicit localhost does not match &#x27;all&#x27;</code></pre>
+<p>No config, so no inventory, so a playbook against <code>all</code> runs against nothing and finishes. Shared project folders on NFS are where this bites. Check with <code>ansible --version</code>: the <code>config file =</code> line must show your file.</p>
+<hr>
+<h2>Step 3: a first inventory</h2>
+<p>Part 2 explains inventories properly. For now, this file says which machines exist and how they&#x27;re grouped:</p>
+<pre><code class="language-yaml">all:
+  children:
+    head:
+      hosts:
+        head01:
+    compute:
+      hosts:
+        cn[001:004]:
+    gpu:
+      hosts:
+        gpu001:
+    nodes:
+      children:
+        compute:
+        gpu:</code></pre>
+<p>Save it as <code>inventory/hosts.yml</code>. The node names must resolve (DNS or <code>/etc/hosts</code>), and the <code>admin</code> user needs your SSH key and passwordless <code>sudo</code> on every node.</p>
+<hr>
+<h2>Step 4: first contact and host keys</h2>
+<pre><code class="language-bash">ansible all -m ansible.builtin.ping</code></pre>
+<p>On a fresh setup, every node failed:</p>
+<pre><code class="language-text">cn001 | UNREACHABLE! =&gt; {
+    &quot;changed&quot;: false,
+    &quot;msg&quot;: &quot;Task failed: Failed to connect to the host via ssh: Host key verification failed.&quot;,
+    &quot;unreachable&quot;: true
+}</code></pre>
+<p>Ansible uses OpenSSH, and OpenSSH won&#x27;t talk to a machine whose host key it hasn&#x27;t seen. Interactive <code>ssh</code> would ask you; Ansible can&#x27;t. The tempting fix is <code>host_key_checking = False</code>. Don&#x27;t: that&#x27;s the exact check that tells you someone is impersonating a node.</p>
+<p>Collect the keys once, and compare them with what the nodes report about themselves:</p>
+<pre><code class="language-bash">for n in head01 cn001 cn002 cn003 cn004 gpu001; do ssh-keyscan -t ed25519 $n 2&gt;/dev/null; done &gt; /tmp/scanned
+ssh-keygen -lf /tmp/scanned</code></pre>
+<pre><code class="language-text">256 SHA256:LcF5cJgCXRUCelr3XOoLcEs60Fb9yy7fwmD728/YF3w head01 (ED25519)
+256 SHA256:80kw4rx6+UTPjQmo2yqjCzANvYQlBglvLX+FdZqOgAM cn001 (ED25519)
+...</code></pre>
+<p>On the node itself (through the BMC console, or your provisioning logs), <code>ssh-keygen -lf /etc/ssh/ssh_host_ed25519_key.pub</code> must print the same fingerprint. In the lab, cn001 printed <code>SHA256:80kw4rx6...gAM</code>, a match. Then trust them:</p>
+<pre><code class="language-bash">cat /tmp/scanned &gt;&gt; ~/.ssh/known_hosts
+ansible all -m ansible.builtin.ping</code></pre>
+<pre><code class="language-text">cn001 | SUCCESS =&gt; {
+    &quot;ansible_facts&quot;: {
+        &quot;discovered_interpreter_python&quot;: &quot;/usr/bin/python3.12&quot;
+    },
+    &quot;changed&quot;: false,
+    &quot;ping&quot;: &quot;pong&quot;
+}</code></pre>
+<p>Success is a <code>pong</code> from every node and exit code 0. When any node is unreachable, Ansible carries on with the others and exits <strong>4</strong>. Scripts should check for that.</p>
+<blockquote><p>[!NOTE] The <code>-o</code> (one line per host) option still works in 2.22 but prints a deprecation warning: it goes away in 2.23. Don&#x27;t build scripts on it.</p></blockquote>
+<hr>
+<h2>When a node is reinstalled</h2>
+<p>You reinstall cn004. It comes back with new host keys, and the next run says:</p>
+<pre><code class="language-text">WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!
+...
+Host key verification failed.</code></pre>
+<p>We reproduced this by rebuilding cn004 in the lab. Everything else kept working; cn004 was <code>UNREACHABLE!</code> and the run exited 4. The fix is the same as first contact, for one node: remove the old key, scan, compare, trust.</p>
+<pre><code class="language-bash">ssh-keygen -R cn004
+ssh-keyscan -t ed25519 cn004 2&gt;/dev/null | tee -a ~/.ssh/known_hosts | ssh-keygen -lf -
+ansible cn004 -m ansible.builtin.ping</code></pre>
+<p>Do it only when you <em>know</em> the node was reinstalled. If you didn&#x27;t reinstall it, that warning is the one that matters.</p>
+<hr>
+<h2>When a node&#x27;s Python is too old</h2>
+<p>Back to Omar&#x27;s error. In the lab we pointed one node at a Python 3.8 to reproduce it:</p>
+<pre><code class="language-bash">ansible cn003 -m ansible.builtin.ping -e ansible_python_interpreter=/opt/py38/bin/python3.8</code></pre>
+<pre><code class="language-text">&quot;msg&quot;: &quot;Ansible requires Python 3.9 or newer on the target. Current version: 3.8.20 ...&quot;</code></pre>
+<p>Older ansible-core versions failed differently on old Pythons; an earlier version of this page shows <code>SyntaxError: future feature annotations is not defined</code> from a CentOS 7 node with Python 2.7. Same cause: a target Python older than the release supports.</p>
+<p><strong>The fix is a newer Python on the node, not an older Ansible.</strong> For Rocky/RHEL 8, Red Hat&#x27;s documentation says:</p>
+<ul><li><code>platform-python</code> (3.6) is for system tools and isn&#x27;t meant for you to use. Don&#x27;t remove it; <code>dnf</code> needs it.</li><li>Newer Pythons are packages: <code>python3.11</code> (RHEL 8.8 and later) and <code>python3.12</code> (8.10 and later).</li></ul>
+<p>So on those nodes, install one and tell Ansible to use it, in that group&#x27;s variables (<code>inventory/group_vars/el8.yml</code>, for a group called <code>el8</code>):</p>
+<pre><code class="language-bash">dnf install -y python3.12</code></pre>
+<pre><code class="language-yaml">ansible_python_interpreter: /usr/bin/python3.12</code></pre>
+<p>We couldn&#x27;t run this on Rocky 8 in the lab. Check the path with <code>ls /usr/bin/python3*</code> on one node first. CentOS 7 reached end of life in June 2024; the earlier advice to compile Python from source there is a workaround for a system you should be replacing.</p>
+<hr>
+<h2>Which Python did it pick?</h2>
+<p>A small playbook to see which interpreter Ansible uses on each node. It&#x27;s the fixed version of a snippet from an earlier version of this page, which had two bugs: wrong indentation, and a fact that isn&#x27;t always there.</p>
+<pre><code class="language-yaml">- name: Show which Python Ansible uses on each node
+  hosts: all
+  gather_facts: true
+  tasks:
+    - name: Print the interpreter
+      ansible.builtin.debug:
+        msg: &quot;{{ ansible_facts.discovered_interpreter_python | default(ansible_python_interpreter) }}&quot;</code></pre>
+<p><code>discovered_interpreter_python</code> only exists when Ansible had to <em>discover</em> the interpreter. If you set <code>ansible_python_interpreter</code> yourself, as for the el8 group above, it doesn&#x27;t exist, and the plain version of this task fails:</p>
+<pre><code class="language-text">[ERROR]: Task failed: Finalization of task args for &#x27;ansible.builtin.debug&#x27; failed: Error while resolving value for &#x27;msg&#x27;: object of type &#x27;dict&#x27; has no attribute &#x27;discovered_interpreter_python&#x27;</code></pre>
+<p>With <code>| default(ansible_python_interpreter)</code>, it printed <code>/usr/bin/python3.12</code> for discovered nodes and <code>/usr/bin/python3</code> for the one we&#x27;d set by hand. It passes <code>ansible-lint</code> on the <code>production</code> profile.</p>
+<hr>
+<h2>Your editor</h2>
+<p>If you use VS Code with the Ansible extension, point it at the project&#x27;s environment so it lints with the same versions you pinned. In the extension&#x27;s settings, set the Ansible path to <code>.venv/bin/ansible</code>, the Python interpreter to <code>.venv/bin/python</code>, and the lint path to <code>.venv/bin/ansible-lint</code>. We didn&#x27;t test the extension itself in the lab.</p>
+<hr>
+<h2>Back to the two laptops</h2>
+<p>Sara and Omar delete their system Ansibles. Both clone the repo, run the two <code>uv</code> commands, and get ansible-core 2.22.0 on Python 3.13, the version written in <code>requirements.txt</code>. Their runs now behave identically, because they <em>are</em> identical.</p>
+<p>The Rocky 8 nodes still say &quot;requires Python 3.9&quot;. Now that&#x27;s the right answer, not a laptop problem: they get <code>python3.12</code> from AppStream and one line in <code>group_vars/el8.yml</code>. The next admin who joins doesn&#x27;t inherit Sara&#x27;s out-of-support version or Omar&#x27;s surprise. And when it&#x27;s time for 2.23, upgrading is a one-line change in a reviewed commit, not something a package manager decided on a Tuesday.</p>
+<p><strong>Takeaway:</strong> pin ansible-core per project from your oldest node&#x27;s Python, keep <code>ansible.cfg</code> in the project folder, and check host keys instead of switching checking off.</p>
+<p><strong>Next:</strong> <a href="../../../../fields/devops/ansible/inventory-and-ad-hoc/">Part 2, Four Nodes Said &quot;Too Many Open Files&quot;</a>, makes the inventory do real work.</p>
+<hr>
+<h2>References</h2>
+<ul><li><a href="https://docs.ansible.com/projects/ansible/latest/reference_appendices/release_and_maintenance.html">Releases and maintenance</a>: the ansible-core support matrix with control and target Python versions and end-of-life dates.</li><li><a href="https://github.com/ansible/ansible/blob/stable-2.22/changelogs/CHANGELOG-v2.22.rst">ansible-core 2.22 changelog</a>: dropping Python 3.12 on the controller.</li><li><a href="https://github.com/ansible/ansible/blob/v2.22.0/lib/ansible/module_utils/basic.py">ansible-core source, <code>module_utils/basic.py</code></a>: the target Python minimum (<code>_PY_MIN = (3, 9)</code>) and its error message.</li><li><a href="https://github.com/ansible/ansible/blob/v2.22.0/lib/ansible/config/manager.py">ansible-core source, <code>config/manager.py</code></a>: config file search order and the world-writable directory check.</li><li><a href="https://docs.ansible.com/projects/ansible/latest/installation_guide/intro_installation.html">Installing Ansible</a>: <code>ansible</code> vs <code>ansible-core</code> and installation with pip.</li><li><a href="https://docs.ansible.com/projects/ansible/latest/reference_appendices/interpreter_discovery.html">Interpreter discovery</a>: how Ansible picks the target Python and the <code>auto_silent</code> setting.</li><li><a href="https://pypi.org/project/ansible-core/">ansible-core on PyPI</a> and <a href="https://pypi.org/project/ansible/">ansible on PyPI</a>: <code>Requires-Python</code> and versions.</li><li><a href="https://packages.ubuntu.com/noble/ansible-core">Ubuntu noble: ansible-core</a>: the 2.16.3 package in Ubuntu 24.04.</li><li><a href="https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/8/html/configuring_basic_system_settings/installing-and-using-dynamic-programming-languages_configuring-basic-system-settings">Red Hat: Installing and using dynamic programming languages (RHEL 8)</a>: <code>platform-python</code>, <code>python3.11</code>, <code>python3.12</code>.</li><li><a href="https://docs.astral.sh/uv/">uv documentation</a>: installing uv, Python versions and virtual environments.</li><li><a href="https://man.openbsd.org/ssh-keyscan.1">ssh-keyscan(1)</a> and <a href="https://man.openbsd.org/ssh-keygen.1">ssh-keygen(1)</a>: collecting and fingerprinting host keys.</li></ul>
+<p><a href="../../../../#/fields/devops/ansible/getting-started">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Tabular Data - Data Processing - Handling Missing Data - Mean Imputing</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/tabular-data/data-processing/handling-missing-data/mean-imputing/">
+<meta name="description" content="How to fill missing values with a column mean, or with a mean per category, in pandas.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Tabular Data - Data Processing - Handling Missing Data - Mean Imputing">
+<meta property="og:description" content="How to fill missing values with a column mean, or with a mean per category, in pandas.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/tabular-data/data-processing/handling-missing-data/mean-imputing/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/tabular-data/data-processing/handling-missing-data/mean-imputing/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../../.docs/prerender-redirect.js" data-target="../../../../../#/fields/tabular-data/data-processing/handling-missing-data/mean-imputing"></script>
+<main>
+<h1>Tabular Data - Data Processing - Handling Missing Data - Mean Imputing</h1>
+<p><em>How to fill missing values with a column mean, or with a mean per category, in pandas.</em></p>
+<p>It is recommend to read <strong>determineMissingValues</strong> before starting.</p>
+<h2>Methods for Handling Missing Values: <strong>Mean Imputing</strong></h2>
+<p>The Idea here is to get the average value of certain column to fill the missing values with it.</p>
+<pre><code class="language-python">df[&#x27;A&#x27;] = df.A.fillna(df.A.mean())</code></pre>
+<p>But In case that, the average value is depending on other certain categorical values, So it is recommended to calculate each mean for each unique categorical value</p>
+<h3>Step#1: Calculate the average value per categorical feature</h3>
+<pre><code class="language-python"># Calculate the average value for feature numeical_col &#x27;A&#x27; based on each categorical_col unique value &#x27;B&#x27;.
+fill_value = (
+    df.groupby(&#x27;B&#x27;)
+    .agg({&#x27;A&#x27;:&#x27;mean&#x27;})
+    # In case, it&#x27;s required to have integer values only
+    .round()
+    # Convert the dataframe into dictionary with list values
+    .T.to_dict(&#x27;list&#x27;)
+)
+
+display(fill_value)</code></pre>
+<p>The output should be like:</p>
+<pre><code class="language-python">{&#x27;Apartment&#x27;: [965.0],
+ &#x27;Cabin&#x27;: [688.0],
+ &#x27;Chalet&#x27;: [1207.0],
+ &#x27;Clinic&#x27;: [1159.0],
+ &#x27;Duplex&#x27;: [1127.0],
+ &#x27;Family House&#x27;: [228.0],
+ &#x27;Office&#x27;: [1121.0],
+ &#x27;Penthouse&#x27;: [989.0],
+ &#x27;Retail&#x27;: [1023.0],
+ &#x27;Serviced Apartment&#x27;: [823.0],
+ &#x27;Studio&#x27;: [887.0],
+ &#x27;Townhouse&#x27;: [1201.0],
+ &#x27;Twinhouse&#x27;: [1151.0],
+ &#x27;Villa&#x27;: [1093.0]}</code></pre>
+<h3>Step#2: Impute the missing values based on that dictionary</h3>
+<pre><code class="language-python">df[&#x27;A&#x27;] = (
+    df.A
+    .fillna(
+        df.B.apply(lambda x: fill_value.get(x)[0])
+        )
+)</code></pre>
+<p><a href="../../../../../#/fields/tabular-data/data-processing/handling-missing-data/mean-imputing">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

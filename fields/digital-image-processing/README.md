@@ -1,0 +1,104 @@
+
+# Digital Image Processing - Overview
+
+
+> A nine-part series for people returning to digital image processing (DIP) who want the **why** behind the formulas before going back to the textbook. By the end you'll read `s = c·r^γ`, `F(u,v)` and `H(u,v)G(u,v)` without flinching, and know which one to reach for when a real image misbehaves.
+
+---
+
+## Welcome to Pixel Town
+
+Picture a town laid out as a perfect grid. Every citizen stands on one square and holds up a card with a single number: how bright they are. That's an image.
+
+Everything in this series is about what you can do to that town. Learn what a citizen is, then move the whole town to a new map without losing anyone (**pages 1, 2**). Change what the cards say (**page 3**). Let neighbours vote on each other's numbers (**pages 4, 5**). Stop looking at who stands where and listen to the town as a choir instead (**pages 6, 7**). Work out what the town looked like before someone sneezed on the camera (**page 8**). Look at the town at several zoom levels at once (**page 9**).
+
+Same town, nine points of view. The math is only the language we use to describe them.
+
+---
+
+## The route
+
+| # | Page | The question it answers |
+|---|------|-------------------------|
+| 1 | [Images are just matrices](/fields/digital-image-processing/images-are-just-matrices.md) | Why does my 16-bit image look black, and what is a pixel anyway? |
+| 2 | [Geometric transforms and interpolation](/fields/digital-image-processing/geometric-transforms-and-interpolation.md) | Why does a rotated scan come out jagged? |
+| 3 | [Intensity transforms and histograms](/fields/digital-image-processing/intensity-transforms-and-histograms.md) | How do you rescue an image that's too dark, with one formula? |
+| 4 | [Spatial filtering](/fields/digital-image-processing/spatial-filtering.md) | What is a kernel, and why is blurring "a vote"? |
+| 5 | [Edges and sharpening](/fields/digital-image-processing/edges-and-sharpening.md) | Why does sharpening make noise louder? |
+| Interlude | [Meet Fourier](/fields/digital-image-processing/meet-fourier.md) | Who was Fourier, and why is heat a blur filter? |
+| 6 | [The Fourier transform for images](/fields/digital-image-processing/fourier-transform-for-images.md) | What does an image sound like? |
+| 7 | [Frequency filtering and aliasing](/fields/digital-image-processing/frequency-filtering-and-aliasing.md) | Why do striped shirts shimmer on video? |
+| 8 | [Noise and restoration](/fields/digital-image-processing/noise-and-restoration.md) | Why does "un-blurring" a photo explode into static? |
+| 9 | [Wavelets and multiresolution processing](/fields/digital-image-processing/wavelets-and-multiresolution-processing.md) | Where in the picture is the scratch, and at what scale? |
+
+Each page opens with a small scene (the people in it are invented), tells the maths as one story told to you, in Pixel Town, and ends with a Scroll you can keep. It also ends with the question the next one answers. Read them in order the first time; later, jump straight to the formula you need.
+
+---
+
+## Who this is for
+
+You took a DIP course (or half of one), the formulas are fuzzy, and the textbook looks heavier than you remember. You don't need a signal-processing background. You do need to be comfortable with sums, a little matrix notation, and the idea of a function.
+
+The route follows the topic order of the course's main reference, R. C. Gonzalez and R. E. Woods, *Digital Image Processing*, 4th ed. (Pearson, 2018): fundamentals and geometry, intensity and spatial filtering, the frequency domain, restoration, then wavelets. Each page cites the chapter to open next. This is a **starter**, not a replacement. It trades completeness for intuition so that the reference book becomes readable again.
+
+---
+
+## Conventions used in the series
+
+| Item | Convention |
+|------|------------|
+| Image | f(x, y) is the input, g(x, y) the output |
+| Origin | Top-left corner; x runs along the column, y runs down the row |
+| Gray levels | L = 2^k levels, from 0 (black) to L−1 (white), unless a page says normalized [0, 1] |
+| Sources | Gonzalez and Woods, *Digital Image Processing*, 4th ed.; library behaviour from the OpenCV and NumPy docs |
+| Code | Short snippets are **not executed** by the author; worked numbers are computed by hand and checkable with a calculator |
+
+> [!NOTE]
+> Textbooks and libraries disagree on small conventions (which axis is first, where a 1/N factor goes). Each page names the convention it uses and where libraries differ.
+
+## Contents
+
+| File | Description |
+|------|-------------|
+| [images-are-just-matrices](/fields/digital-image-processing/images-are-just-matrices.md) | Sampling, quantization, bit depth, coordinates and neighbours |
+| [geometric-transforms-and-interpolation](/fields/digital-image-processing/geometric-transforms-and-interpolation.md) | Affine transforms, inverse mapping, bilinear and bicubic interpolation |
+| [intensity-transforms-and-histograms](/fields/digital-image-processing/intensity-transforms-and-histograms.md) | Negative, log, gamma and histogram equalization |
+| [spatial-filtering](/fields/digital-image-processing/spatial-filtering.md) | Kernels, correlation vs convolution, padding, separability |
+| [edges-and-sharpening](/fields/digital-image-processing/edges-and-sharpening.md) | Gradient, Sobel, Laplacian and unsharp masking |
+| [meet-fourier](/fields/digital-image-processing/meet-fourier.md) | The story of Joseph Fourier and why heat flow is a blur filter |
+| [fourier-transform-for-images](/fields/digital-image-processing/fourier-transform-for-images.md) | The 2D DFT, magnitude vs phase, the convolution theorem |
+| [frequency-filtering-and-aliasing](/fields/digital-image-processing/frequency-filtering-and-aliasing.md) | Low-pass, high-pass and notch filters; sampling and aliasing |
+| [noise-and-restoration](/fields/digital-image-processing/noise-and-restoration.md) | Noise models, inverse and Wiener filtering, PSNR |
+| [wavelets-and-multiresolution-processing](/fields/digital-image-processing/wavelets-and-multiresolution-processing.md) | Pyramids, the Haar transform, subbands, wavelet denoising |
+| [Quick guide: pick a step](/fields/digital-image-processing/quick-guide.md) | The step to pick and the number to check for parts 3, 4, 7, 8 and 9, with the five labs |
+
+## Interactive labs
+
+| Lab | What you can do |
+|---|---|
+| [Intensity transforms lab](/fields/digital-image-processing/quick-guide.md?id=intensity-transforms-lab) | Edit the 8 × 8 bag and watch equalization build its table; rescue a dark picture with gamma, log or equalization |
+| [Spatial filters lab](/fields/digital-image-processing/quick-guide.md?id=spatial-filters-lab) | Edit a 3 × 3 window; add Gaussian or salt-and-pepper noise and compare the mean, the median and the border rules |
+| [Frequency filters lab](/fields/digital-image-processing/quick-guide.md?id=frequency-filters-lab) | Cut the spectrum with an ideal, Butterworth or Gaussian mask and measure the ringing; click the dots of stripe noise to notch them out; sample a wave too coarsely and see the alias |
+| [Restoration lab](/fields/digital-image-processing/quick-guide.md?id=restoration-lab) | See the inverse filter multiply the noise and Wiener hold back; restore a blurred, noisy picture and score it |
+| [Wavelets lab](/fields/digital-image-processing/quick-guide.md?id=wavelets-lab) | Run the Haar transform on a row by hand, then threshold the detail coefficients of a noisy picture |
+
+## Related reading in this repo
+
+- [Deep Learning - Concepts - Convolution](/fields/deep-learning/concepts/convolution.md): the same sliding-window idea, as used in CNNs.
+
+<!-- related-block -->
+<div class="mentioned-in">
+
+**Mentioned in**
+
+- [Meet Fourier](/fields/digital-image-processing/meet-fourier.md) — The story of Joseph Fourier, the prefect who drained swamps and studied heat, and why his idea that heat spreads as a sum of sine waves ended up inside every image filter.
+- [One Bad Pixel: Spatial Filtering](/fields/digital-image-processing/spatial-filtering.md) — Kernels, correlation versus convolution, padding and separability - blurring explained as a neighbourhood vote, with the mean and median compared on one noisy pixel.
+- [Pick and Check an Image-Processing Step](/fields/digital-image-processing/quick-guide.md) — A cheat sheet for parts 3, 4, 7, 8 and 9 - which transform or filter to pick, the number to check by hand, and five labs to try.
+- [The Fourier Transform for Images](/fields/digital-image-processing/fourier-transform-for-images.md) — What the 2D DFT really says - an image as a sum of waves, magnitude versus phase, a 4-point DFT done by hand, and the convolution theorem that turns sliding windows into multiplication.
+- [The Jagged Scan: Geometric Transforms and Interpolation](/fields/digital-image-processing/geometric-transforms-and-interpolation.md) — Moving the whole map - affine transforms in homogeneous coordinates, why you must map backwards, and nearest, bilinear and bicubic interpolation with a bilinear example worked by hand.
+- [The Photo That Turned to Static: Noise and Restoration](/fields/digital-image-processing/noise-and-restoration.md) — The degradation model g = h*f + n, common noise types, why inverse filtering explodes, and how the Wiener filter gives up gracefully - with PSNR to score the result.
+- [The Scan That Opened Black: Images Are Just Matrices](/fields/digital-image-processing/images-are-just-matrices.md) — A pixel is a number in a grid - sampling, quantization, bit depth, coordinates and neighbours, and why 200 + 100 can equal 44.
+- [The Sharpen Button That Made Things Worse: Edges and Sharpening](/fields/digital-image-processing/edges-and-sharpening.md) — Derivatives as differences between neighbours - gradient, Sobel, Laplacian and unsharp masking, plus a one-line example that shows exactly where sharpening halos come from.
+- and 3 more
+
+</div>

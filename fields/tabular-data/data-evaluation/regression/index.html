@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Tabular Data - Data Evaluation - Regression Evaluation Metrics</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/tabular-data/data-evaluation/regression/">
+<meta name="description" content="A comparison of regression evaluation metrics, including MSE, RMSE, MAE, R-squared, MAPE, RMSLE, MedAE, explained variance, AIC and BIC.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Tabular Data - Data Evaluation - Regression Evaluation Metrics">
+<meta property="og:description" content="A comparison of regression evaluation metrics, including MSE, RMSE, MAE, R-squared, MAPE, RMSLE, MedAE, explained variance, AIC and BIC.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/tabular-data/data-evaluation/regression/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/tabular-data/data-evaluation/regression/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/tabular-data/data-evaluation/regression/"></script>
+<main>
+<h1>Tabular Data - Data Evaluation - Regression Evaluation Metrics</h1>
+<p><em>A comparison of regression evaluation metrics, including MSE, RMSE, MAE, R-squared, MAPE, RMSLE, MedAE, explained variance, AIC and BIC.</em></p>
+<blockquote><p>A field guide to the metrics that score a model predicting numbers: MSE, RMSE, MAE, R-squared, MAPE, RMSLE and more. By the end you&#x27;ll know what each one measures, when it fails, and which to reach for.</p></blockquote>
+<p>Your model predicted 310 and the real answer was 300. How wrong is that? It depends on whether you square the gap, take its absolute value, or turn it into a percentage. Each metric answers a slightly different question. Outliers are the usual tiebreaker, so the notes below flag which metrics they hurt.</p>
+<p>Short on time? Jump to the comparison table or A Good Tip.</p>
+<h1>Table of Content</h1>
+<h1>Abstract</h1>
+<p>For a regression problem, the output is a continous number from the infinite values in the number world, unlike the classification problem, where the output should belong to either a binary value like [0, 1], or a multiclass output.</p>
+<p>In this markdown, we will highlight some of the most common used evaluation metrics, how to calculate them, and when to use them.</p>
+<h1>MSE - Mean Squared Error</h1>
+<p>This is the most common evaluation metric for regression problems. It measures the average squared difference between the predicted and actual values. MSE is sensitive to outliers, so it is not always the best metric to use if the data contains a lot of outliers.</p>
+<p>Formula:</p>
+<pre><code>MSE = Σ(y_i - y_hat_i)^2 / n</code></pre>
+<h1>RMSE - Root Mean Squared Error</h1>
+<p>This is the square root of MSE. It has the same units as the target variable, so it is easier to interpret than MSE. Like MSE, RMSE is sensitive to outliers.</p>
+<p>Formula:</p>
+<pre><code>RMSE = √(MSE)</code></pre>
+<h1>Mean absolute error (MAE)</h1>
+<p>This metric measures the average absolute difference between the predicted and actual values. MAE is less sensitive to outliers than MSE, but it is not as easy to interpret as RMSE.</p>
+<p>Formula:</p>
+<pre><code>MAE = Σ|y_i - y_hat_i| / n</code></pre>
+<h1>R-squared (R^2)</h1>
+<p>This metric measures the proportion of variance in the target variable that is explained by the model. R^2 is at most 1: 1 means that the model perfectly explains all of the variance in the target variable, and 0 means it does no better than always predicting the mean. It can be negative for a model that does worse than that.</p>
+<p>Formula:</p>
+<pre><code>R^2 = 1 - Σ(y_i - y_hat_i)^2 / Σ(y_i - y_bar)^2
+    = 1 - RSS/TSS</code></pre>
+<p>Where:</p>
+<ul><li>RSS: Sum of squares of residuals.</li><li>TSS: Total sum of squares.</li></ul>
+<h1>Adjusted R^2</h1>
+<p>This metric is similar to R^2, but it adjusts for the number of features in the model. Adjusted R^2 can be lower than R^2 if the model has too many features.</p>
+<p>Formula:</p>
+<pre><code>Adjusted R^2 = 1 - (1 - R^2) * (n - 1) / (n - p - 1)</code></pre>
+<p>Where n is the number of data points and p is the number of features.</p>
+<h1>Mean absolute percentage error (MAPE)</h1>
+<p>This metric measures the average percentage error between the predicted and actual values. MAPE is expressed as a percentage, so it is easy to understand and interpret. However, MAPE is sensitive to outliers, so it is not always the best metric to use.</p>
+<p>Formula:</p>
+<pre><code>MAPE = Σ|(y_i - y_hat_i) / y_i| * 100 / n</code></pre>
+<h1>Root mean squared logarithmic error (RMSLE)</h1>
+<p>This metric is similar to RMSE, but it takes into account the fact that the target variable is often skewed. RMSLE is less sensitive to outliers than RMSE, and it is more appropriate for predicting skewed target variables.</p>
+<p>Formula:</p>
+<pre><code>RMSLE = √(Σ(log(y_i + 1) - log(y_hat_i + 1))^2 / n)</code></pre>
+<h1>Median absolute error (MedAE)</h1>
+<p>This metric is similar to MAE, but it uses the median instead of the mean. MedAE is less sensitive to outliers than MAE, and it is more robust to changes in the distribution of the target variable.</p>
+<p>Formula:</p>
+<pre><code>MedAE = median(|y_i - y_hat_i|)</code></pre>
+<h1>Explained variance score (EVS)</h1>
+<p>This metric measures the proportion of variance in the target variable that is explained by the model. EVS is similar to R^2, but it measures the variance of the errors instead of their squared size, so it does not penalize a constant bias in the predictions (R^2 does).</p>
+<p>Formula:</p>
+<pre><code>EVS = 1 - Var(y - y_hat) / Var(y)</code></pre>
+<p>Note: It can be misleading if the target variable is not normally distributed. Additionally, EVS can be sensitive to outliers.</p>
+<h1>AIC (Akaike information criterion)</h1>
+<p>This metric measures the information loss associated with a model. AIC is a penalized likelihood metric, which means that it penalizes models with more parameters. AIC can be used to compare different models and select the model with the best trade-off between goodness of fit and complexity.</p>
+<p>Formula:</p>
+<pre><code>AIC = 2 * K - 2 * log(L)</code></pre>
+<p>where:</p>
+<ul><li>K is the number of parameters in the model</li><li>L is the likelihood of the model (so log(L) is its log-likelihood)</li></ul>
+<p>The log-likelihood of a model is a measure of how well the model fits the data. It is calculated by taking the natural logarithm of the likelihood of the model. The likelihood of a model is a probability distribution that describes how likely the observed data is under the assumption that the model is correct.</p>
+<ul><li>The formula for the log-likelihood function is:<ul><li>log(L) = Σ(ln(p(x_i | θ))) &lt;/br&gt; where:&lt;/br&gt; L is the log-likelihood function&lt;/br&gt; p(x_i | θ) is the probability of observing the data point x_i under the assumption that the model parameters are θ&lt;/br&gt; Σ is the sum over all data points</li></ul></li><li>The log-likelihood function is a logarithmic transformation of the likelihood function, which makes it easier to work with mathematically. The log-likelihood function is also a more stable measure of fit than the likelihood function, because it is less sensitive to small changes in the data.</li><li>A higher log-likelihood value indicates a better-fitting model. This is because a higher log-likelihood value means that the model is more likely to have generated the observed data.</li></ul>
+<p>The penalty term in AIC is 2 * K. This penalty term penalizes models with more parameters. The reason for this is that models with more parameters are more likely to overfit the data. Overfitting occurs when a model learns the noise in the data instead of the underlying relationships between the variables.</p>
+<p>A lower AIC value indicates a better-fitting model. This is because a lower AIC value means that the model has a higher log-likelihood and a smaller penalty term.</p>
+<p>For example, let&#x27;s say that we have two models that we are trying to compare. The first model has 2 parameters, and the second model has 3 parameters. The log-likelihood of the first model is 100, and the log-likelihood of the second model is 90. The AIC of the first model is 2 * 2 - 2 * 100 = -196, and the AIC of the second model is 2 * 3 - 2 * 90 = -174.</p>
+<p>In this case, the first model would be considered to be a better-fitting model because it has a lower AIC value. This is because the first model has a higher log-likelihood and a smaller penalty term.</p>
+<p>AIC is a useful metric for evaluating the fit of a statistical model to a set of data. It is a simple metric to understand and interpret, and it can be used to compare models with different numbers of parameters.</p>
+<h1>BIC (Bayesian information criterion)</h1>
+<p>This metric is similar to AIC, but it uses a different penalty term. BIC is also a penalized likelihood metric, but it penalizes models with more parameters more heavily than AIC. BIC can be used to compare different models and select the model with the best trade-off between goodness of fit and complexity.</p>
+<p>Formula:</p>
+<pre><code>BIC = K * log(n) - 2 * log(L)</code></pre>
+<h1>Comparison</h1>
+<table><thead><tr><th>Evaluation Function</th><th>Description</th><th>Advantages</th><th>Disadvantages</th><th>Best suited for</th><th>Date of creation</th></tr></thead><tbody><tr><td>Mean Squared Error (MSE)</td><td>Measures the average squared difference between the predicted and actual values</td><td>Easy to understand and interpret</td><td>Sensitive to outliers</td><td>Linear regression models</td><td>1823</td></tr><tr><td>Root Mean Squared Error (RMSE)</td><td>The square root of the MSE</td><td>More interpretable than MSE because it is in the same units as the target variable</td><td>Sensitive to outliers</td><td>Linear regression models</td><td>1823</td></tr><tr><td>Mean Absolute Error (MAE)</td><td>Measures the average absolute difference between the predicted and actual values</td><td>Robust to outliers</td><td>Not as informative as R-squared for non-linear regression models</td><td>Linear and non-linear regression models</td><td>1823</td></tr><tr><td>R-squared</td><td>Measures the proportion of the variance in the actual values that is explained by the predicted values</td><td>Can be used for both linear and non-linear regression models</td><td>Can be negative for poor models</td><td>Linear and non-linear regression models</td><td>1888</td></tr><tr><td>Adjusted R-squared</td><td>A penalized version of R-squared that takes into account the number of predictors in the model</td><td>More accurate than R-squared for selecting the best model in a model selection procedure</td><td>-</td><td>Linear and non-linear regression models</td><td>1908</td></tr><tr><td>Mean Absolute Percentage Error (MAPE)</td><td>Measures the average absolute percentage difference between the predicted and actual values</td><td>Easy to interpret because it is expressed as a percentage</td><td>Can be misleading if the actual values are close to zero</td><td>Linear and non-linear regression models</td><td>1960</td></tr><tr><td>Root Mean Squared Log Error (RMSLE)</td><td>The square root of the mean squared log error</td><td>More informative than MAPE for forecasting models</td><td>Cannot be used for regression models with non-positive target variables</td><td>Linear and non-linear regression models</td><td>1972</td></tr><tr><td>Median Absolute Error</td><td>Measures the median absolute difference between the predicted and actual values</td><td>Robust to outliers</td><td>Not as interpretable as MSE or RMSE</td><td>Linear and non-linear regression models</td><td>1975</td></tr><tr><td>Explained Variance Score (EVS)</td><td>Measures the proportion of the variance in the actual values that is explained by the predicted values</td><td>Easy to understand and interpret</td><td>Can be negative for poor models</td><td>Linear and non-linear regression models</td><td>1981</td></tr><tr><td>Akaike information criterion (AIC)</td><td>A measure of the complexity of a statistical model</td><td>Can be used to compare different models and select the best model</td><td>Sensitive to the scale of the data</td><td>Linear and non-linear regression models</td><td>1973</td></tr><tr><td>Bayesian information criterion (BIC)</td><td>A penalized version of the AIC that takes into account the number of parameters in the model</td><td>More accurate than AIC for selecting the best model in a model selection procedure</td><td>Sensitive to the scale of the data</td><td>Linear and non-linear regression models</td><td>1978</td></tr></tbody></table>
+<h1>A Good Tip</h1>
+<p>The best evaluation metric to use for a regression problem depends on the specific problem and the desired outcome. For example, if the goal is to minimize the error, then MSE or RMSE might be the best metrics to use. If the goal is to understand the relationship between the features and the target variable, then R^2 or adjusted R^2 might be the best metrics to use.</p>
+<h1>Accuracy Metric in Regression Problem</h1>
+<p>There is no accuracy metric for a regression problem, although the business always ask for a accuracy metric to evaulate the model that a data science build.</p>
+<p>One of the best approaches, is to define a threshould, so if the output predicted lies between this margain of +- threshould, then we can classify this prediction to be a 1, otherwise it is classified to be a zero.</p>
+<p>Advanced estimation to define the acceptable margain, is that, it could depend on other features, depending on the use case we have, and its related features.</p>
+<p><a href="../../../../#/fields/tabular-data/data-evaluation/regression/">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

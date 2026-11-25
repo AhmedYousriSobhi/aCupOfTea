@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Spread and Position: Variance, n − 1, Percentiles, Z-Scores and the Box Plot</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/describing-data/spread-and-position/">
+<meta name="description" content="Mean, median and mode are three attitudes to how a long walk hurts; spread is the walking left over. A value then has a position only in its crowd: rank (percentile) or distance (z-score).">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Spread and Position: Variance, n − 1, Percentiles, Z-Scores and the Box Plot">
+<meta property="og:description" content="Mean, median and mode are three attitudes to how a long walk hurts; spread is the walking left over. A value then has a position only in its crowd: rank (percentile) or distance (z-score).">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/describing-data/spread-and-position/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/describing-data/spread-and-position/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../../.docs/prerender-redirect.js" data-target="../../../../../#/fields/data-science/probability-statistics/describing-data/spread-and-position"></script>
+<main>
+<h1>Spread and Position: Variance, n − 1, Percentiles, Z-Scores and the Box Plot</h1>
+<p><em>Mean, median and mode are three attitudes to how a long walk hurts; spread is the walking left over. A value then has a position only in its crowd: rank (percentile) or distance (z-score).</em></p>
+<blockquote><p><strong>Parts 5 and 6 of 15.</strong> Part of the <a href="../../../../../fields/data-science/probability-statistics/">Probability &amp; Statistics</a> series, after <a href="../../../../../fields/data-science/probability-statistics/describing-data/pictures-and-the-middle/">Pictures and the Middle</a>. The scenario is invented, and every figure was recomputed with Python 3.14.4 (including a scan of every cart position and the enumeration of all nine samples of two).</p></blockquote>
+<p>At 15:10 Tala will tape her brewing result to the till as her strong subject. It is the lower of her two results. She will be comparing numbers that were never measured on the same ruler.</p>
+<p><strong>By the end of this page you will be able to:</strong></p>
+<ul><li>Say why mean, median and mode are three rules for one question, and which spread belongs with which middle.</li><li>Apply the one-house test to choose mean and SD or median and IQR.</li><li>Explain why a sample&#x27;s variance divides by <code>n − 1</code>, and show it by enumeration.</li><li>Place a value in its crowd with a percentile rank or a z-score, and read a box plot, including what it cannot see.</li></ul>
+<ul><li>* *</li></ul>
+<h2>84 versus 61</h2>
+<p>Tala has taken two apprentice exams this month. <strong>Brewing:</strong> 84. <strong>Cupping:</strong> 61. She tapes both to the till. &quot;Brewing is my strong subject.&quot;</p>
+<p>Mira asks the only question that matters: &quot;Better than what?&quot;</p>
+<p>The brewing exam was easy: the class averaged <strong>70</strong> and scores typically landed about <strong>7</strong> away. The cupping exam was brutal: class average <strong>50</strong>, typical distance <strong>4</strong> (invented numbers).</p>
+<ul><li>* *</li></ul>
+<h2>Three comparisons that fail</h2>
+<ol><li><strong>Compare the raw scores.</strong> 84 &gt; 61, so brewing. The exams had different crowds.</li><li><strong>Subtract each class average.</strong> 14 above against 11 above: brewing again. It ignores how far scores usually stray: 11 is nearly three steps of 4, 14 only two of 7.</li><li><strong>Divide by the class average.</strong> 84 / 70 = 1.20 against 61 / 50 = 1.22: cupping edges ahead, for the wrong reason. Nothing in a ratio knows how far scores usually stray, so a different spread could flip it.</li></ol>
+<p>Mira&#x27;s hint: every &quot;better&quot; needs a middle and a size of step. A street problem has both.</p>
+<p>Build the ruler, with the cart.</p>
+<ul><li>* *</li></ul>
+<h2>One question behind every summary</h2>
+<h3>The cart on Kettle Street</h3>
+<p>Seven houses on blocks 1, 2, 2, 3, 5, 9 and 20. The cart stands in exactly one place, so every &quot;middle&quot; is a rule for choosing it, and each rule answers one question: <strong>how much should a long walk hurt?</strong></p>
+<pre><code class="language-mermaid">flowchart LR
+    Q[&quot;Where does the&lt;br/&gt;cart go?&quot;] --&gt; A{&quot;How much should&lt;br/&gt;a long walk hurt?&quot;}
+    A --&gt;|&quot;Not at all. Count&lt;br/&gt;who is at the door&quot;| M[&quot;Mode&lt;br/&gt;most doorsteps&quot;]
+    A --&gt;|&quot;A block is a block&quot;| D[&quot;Median&lt;br/&gt;least total walking&quot;]
+    A --&gt;|&quot;Long walks hurt&lt;br/&gt;far more&quot;| S[&quot;Mean&lt;br/&gt;least squared walking&quot;]</code></pre>
+<table><thead><tr><th>Cart at</th><th>Name</th><th>Total walk (blocks)</th><th>Total of squared walks</th><th>People at the door</th></tr></thead><tbody><tr><td>block 2</td><td>mode</td><td>30</td><td>384</td><td><strong>2</strong></td></tr><tr><td>block 3</td><td>median</td><td><strong>29</strong></td><td>335</td><td>1</td></tr><tr><td>block 6</td><td>mean</td><td>34</td><td><strong>272</strong></td><td>0</td></tr></tbody></table>
+<p>Each spot wins one column. A scan of every position from block 0 to block 20 in steps of 0.01 found nothing better than block 3 for total walking and nothing better than block 6 for squared walking.</p>
+<ul><li><strong>Mode:</strong> distance does not matter, only &quot;right here&quot;.</li><li><strong>Median:</strong> distance matters in proportion; ten blocks is ten times one block.</li><li><strong>Mean:</strong> distance matters more than in proportion; one ten-block walk hurts as much as a hundred one-block walks. That is why it chases tails: block 20 is one person but owes 196 of the 272 in squared walking, 72% of the bill.</li></ul>
+<p>Slide the cart one block right. <strong>Total walking</strong> changes by <em>(people on the left) − (people on the right)</em>, so slide toward the side with more people and stop when the sides are equal: the <strong>median</strong> (with an even count any spot between the two middle houses ties). <strong>Squared walking</strong> stops improving when the pulls cancel, when the deviations add to zero: <strong>the balance point minimises squared walking.</strong> The seesaw was never a separate idea.</p>
+<h3>What is left over: spread</h3>
+<p>Spread is the walking that remains after the best spot. Each middle has a natural partner:</p>
+<table><thead><tr><th>Middle</th><th>Leftover rule</th><th>Name</th><th>On Kettle Street</th></tr></thead><tbody><tr><td>Mean (block 6)</td><td>Average squared walk</td><td><strong>Variance</strong> <code>σ²</code></td><td>272 / 7 = 38.9 blocks²</td></tr><tr><td>Mean</td><td>The same, square-rooted</td><td><strong>Standard deviation</strong> <code>σ</code></td><td>6.23 blocks</td></tr><tr><td>Median (block 3)</td><td>Average plain walk</td><td><strong>Mean absolute deviation</strong></td><td>29 / 7 = 4.1 blocks</td></tr><tr><td>Median</td><td>Width of the middle half</td><td><strong>IQR</strong> (Q3 − Q1)</td><td>7 − 2 = 5 blocks</td></tr><tr><td>none</td><td>Farthest minus nearest</td><td><strong>Range</strong></td><td>20 − 1 = 19 blocks</td></tr></tbody></table>
+<p>The square root brings blocks² back to blocks, which is the whole reason SD exists beside variance. Q1 and Q3 are the values a quarter and three quarters of the data sit below. <strong>Mean goes with SD, median goes with IQR.</strong></p>
+<h3>The one-house test</h3>
+<p><em>If one value were wrong, how much would my number move?</em> House 20 typed as <strong>200</strong>:</p>
+<table><thead><tr><th></th><th>Real data</th><th>With the typo</th></tr></thead><tbody><tr><td>Mean</td><td>6</td><td><strong>31.7</strong></td></tr><tr><td>Standard deviation</td><td>6.23</td><td><strong>68.75</strong></td></tr><tr><td>Median</td><td>3</td><td>3</td></tr><tr><td>IQR</td><td>5</td><td>5</td></tr></tbody></table>
+<table><thead><tr><th>Your data</th><th>Use</th></tr></thead><tbody><tr><td>Roughly symmetric, every value matters, you care about totals</td><td>Mean and standard deviation</td></tr><tr><td>Skewed, or you cannot vouch for the extremes</td><td>Median and IQR</td></tr><tr><td>Two clumps</td><td>Neither alone; describe both clumps</td></tr></tbody></table>
+<h3>Try it: One crowd, many summaries</h3>
+<blockquote><p><strong>What to try:</strong> Pick Mira&#x27;s scores or Kettle Street, add one wrong value, switch the divisor between n and n − 1, and watch the mean, median, SD and IQR react. <strong>Start with:</strong> the preset <em>The mean in a valley</em>.</p></blockquote>
+<p><a href="../../../../../fields/data-science/probability-statistics/labs/describing.html">Describing data lab</a></p>
+<h3>The n − 1 mystery</h3>
+<p>The seven houses were <strong>everyone</strong>, so we divided by 7. A <strong>sample</strong> picks its own mean, which is by construction the spot that suits that sample best, so squared walking measured from it is always <strong>too small</strong>, and dividing by <code>n</code> inherits the shortfall.</p>
+<p>Three houses at blocks <strong>2, 4 and 9</strong>: true mean 5, true variance <code>(9 + 1 + 16) / 3 = 8.67</code>. Take <strong>every possible sample of two</strong> (nine equally likely draws, with replacement):</p>
+<table><thead><tr><th>Sample</th><th>Sample mean</th><th>Divide by <code>n</code> (= 2)</th><th>Divide by <code>n − 1</code> (= 1)</th></tr></thead><tbody><tr><td>2, 2</td><td>2.0</td><td>0</td><td>0</td></tr><tr><td>2, 4</td><td>3.0</td><td>1</td><td>2</td></tr><tr><td>2, 9</td><td>5.5</td><td>12.25</td><td>24.5</td></tr><tr><td>4, 2</td><td>3.0</td><td>1</td><td>2</td></tr><tr><td>4, 4</td><td>4.0</td><td>0</td><td>0</td></tr><tr><td>4, 9</td><td>6.5</td><td>6.25</td><td>12.5</td></tr><tr><td>9, 2</td><td>5.5</td><td>12.25</td><td>24.5</td></tr><tr><td>9, 4</td><td>6.5</td><td>6.25</td><td>12.5</td></tr><tr><td>9, 9</td><td>9.0</td><td>0</td><td>0</td></tr><tr><td><strong>Average</strong></td><td>5.0</td><td><strong>4.33</strong></td><td><strong>8.67</strong></td></tr></tbody></table>
+<p>Dividing by <code>n</code> averages <strong>half</strong> the truth; dividing by <code>n − 1</code> lands on <strong>8.67 exactly</strong>. The shortfall is a factor <code>(n − 1) / n</code>, 1/2 for two points, and fades as <code>n</code> grows. The square root, the standard deviation, still comes out a little low on average (2.20 here, against a true 2.94), because a root bends the average.</p>
+<pre><code class="language-python">import statistics as st
+
+data = [2, 4, 9]
+st.pvariance(data)   # divides by n.    &quot;this is everyone&quot;        -&gt; 8.666...
+st.variance(data)    # divides by n-1.  &quot;this is a sample&quot;        -&gt; 13
+st.stdev(data)       # square root of the line above              -&gt; 3.605...</code></pre>
+<p><strong>Everyone in the room: divide by `n`. A sample from a bigger group: `n − 1`.</strong> Almost every real data set is the second kind.</p>
+<h3>A score needs a crowd</h3>
+<p>A position is a value <em>plus its crowd</em>, and there are two natural rulers:</p>
+<table><thead><tr><th>Ruler</th><th>The question it asks</th><th>Name</th><th>Uses</th></tr></thead><tbody><tr><td><strong>Rank</strong></td><td>What share of the crowd is below me?</td><td>Percentile</td><td>Only the order of the data</td></tr><tr><td><strong>Distance</strong></td><td>How many &quot;typical distances&quot; am I from the middle?</td><td>z-score</td><td>The mean and the standard deviation</td></tr></tbody></table>
+<p>Rank is the median&#x27;s attitude (count heads); distance is the mean&#x27;s (measure steps in spread units).</p>
+<h3>Ruler 1: percentile</h3>
+<pre><code class="language-text">percentile rank = (number below + 0.5 × number equal) / n × 100</code></pre>
+<p>Eight scores sorted: 62, 65, 69, 70, 79, 85, 94, 100. For <strong>85</strong>: five below, one equal, <code>(5 + 0.5) / 8 = 68.75%</code>, about the 69th percentile. Run it backwards for the <strong>percentile value</strong>: <strong>Q1</strong> is the 25th percentile, <strong>Q2</strong> the median (50th), <strong>Q3</strong> the 75th.</p>
+<p><strong>Different tools give different quartiles.</strong> For 1 to 9, Python&#x27;s <code>statistics.quantiles</code> returns <strong>2.5 and 7.5</strong> by default (<code>method=&#x27;exclusive&#x27;</code>) and <strong>3 and 7</strong> with <code>method=&#x27;inclusive&#x27;</code>; both are legitimate interpolations. R lists nine quantile types with type 7 as the default and cites Hyndman and Fan (1996), who recommended type 8; NumPy lists the same nine, with default <code>linear</code> being type 7.</p>
+<pre><code class="language-python">d = list(range(1, 10))
+st.quantiles(d, n=4)                        # [2.5, 5.0, 7.5]  exclusive (the default)
+st.quantiles(d, n=4, method=&#x27;inclusive&#x27;)    # [3.0, 5.0, 7.0]  inclusive</code></pre>
+<p><strong>Pick one method, write down which, and never compare quartiles across tools.</strong> The pages here use the inclusive method.</p>
+<h3>Ruler 2: z-score</h3>
+<pre><code class="language-text">z = (x − mean) / SD</code></pre>
+<table><thead><tr><th>Exam</th><th>Her score</th><th>Class mean</th><th>Class SD</th><th>z-score</th></tr></thead><tbody><tr><td>Brewing</td><td>84</td><td>70</td><td>7</td><td>(84 − 70) / 7 = <strong>2.00</strong></td></tr><tr><td>Cupping</td><td>61</td><td>50</td><td>4</td><td>(61 − 50) / 4 = <strong>2.75</strong></td></tr></tbody></table>
+<p>A z-score converts every crowd into the same units, which is why it compares things on different scales. The condition from the one-house test applies: the mean and SD must be a fair summary. In a two-clump crowd like the tasting scores a z-score measures distance from a middle where nobody lives. When to use which:</p>
+<table><thead><tr><th>Situation</th><th>Ruler</th></tr></thead><tbody><tr><td>Comparing across different scales (two exams, two stalls)</td><td><strong>z-score</strong></td></tr><tr><td>Skewed data, outliers or two clumps</td><td><strong>Percentile</strong></td></tr><tr><td>&quot;Top 10%&quot;, &quot;bottom quarter&quot;, grading on rank</td><td><strong>Percentile</strong></td></tr><tr><td>Going on to chance and the bell curve</td><td><strong>z-score</strong></td></tr></tbody></table>
+<h3>The box plot is the ogive with its landmarks</h3>
+<pre><code class="language-mermaid">flowchart LR
+    T[&quot;One table&lt;br/&gt;of counts&quot;] --&gt; H[&quot;Histogram&lt;br/&gt;how much lives here?&quot;]
+    T --&gt; O[&quot;Ogive&lt;br/&gt;how many are at&lt;br/&gt;or below here?&quot;]
+    O --&gt; P[&quot;Percentiles&lt;br/&gt;read the staircase&lt;br/&gt;at 25, 50 and 75&quot;]
+    P --&gt; B[&quot;Box plot&lt;br/&gt;those landmarks&lt;br/&gt;in one picture&quot;]</code></pre>
+<p>Histogram to see the <strong>shape</strong>, ogive to count up to a value, box plot to compare <strong>several groups</strong>: <strong>histogram first, box plot second.</strong> A box plot is five landmarks: minimum, Q1, median, Q3, maximum. NIST&#x27;s rule: <code>IQR = Q3 − Q1</code>, <strong>fences</strong> at <code>Q1 − 1.5 × IQR</code> and <code>Q3 + 1.5 × IQR</code>, whiskers to the last point inside them, anything beyond drawn as its own dot.</p>
+<p>For the 20 tasting scores <code>Q1 = 58</code>, median <code>71</code>, <code>Q3 = 93</code>, <code>IQR = 35</code>, fences 5.5 and 145.5; nothing falls outside, so the whiskers run 52 to 104:</p>
+<pre><code class="language-text">52                                                104
+|-----[============|=====================]----------|
+      58           71                    93</code></pre>
+<pre><code class="language-text">50-54    #
+55-59    #####
+60-64    ###
+65-69
+70-74    ##
+75-79
+80-84
+85-89    ###
+90-94    ####
+95-99    #
+100-104  #</code></pre>
+<p>The box plot shows one tidy box; the histogram shows <strong>two clumps and a valley</strong>. The box swallows the valley.</p>
+<blockquote><p>[!NOTE] A box plot answers &quot;where is the middle half, and are there outliers?&quot; It cannot answer &quot;how many clumps?&quot;. That is a limit, not a flaw: know which question you are asking before you pick the picture.</p></blockquote>
+<ul><li>* *</li></ul>
+<h2>The better exam, and the lying centre</h2>
+<p>Tala runs the z-scores: brewing <strong>2.00</strong>, cupping <strong>2.75</strong>. Her 61 is 2.75 typical distances above a brutal crowd&#x27;s middle, farther out than her 84 on an easy one. She peels the brewing result off the till and moves cupping to the top. &quot;So I am better at cupping.&quot; &quot;Than most people on that exam,&quot; says Mira. &quot;Which is the only kind of better there is.&quot;</p>
+<p>Back to the tin: the 20 tasting scores have a mean of 75.2 and a sample SD of <strong>17.67</strong>, and only two of the twenty tasters sit within five points of the number on the tin. A spread that wide next to a centre is the alarm that says the centre is lying; the clumps were found by the table, and a single number could have raised the alarm.</p>
+<p>Everything so far was about <strong>what already happened</strong>. Then Ravi leans over the counter: &quot;How many people will walk in tomorrow?&quot; That is about <strong>chance</strong>, and it needs a different language. Next cup: <a href="../../../../../fields/data-science/probability-statistics/probability/counting-and-conditioning/">Counting and Conditioning</a>.</p>
+<ul><li>* *</li></ul>
+<h2>Never again</h2>
+<table><thead><tr><th>Mistake</th><th>Symptom</th><th>Fix</th></tr></thead><tbody><tr><td>Comparing raw scores across crowds</td><td>84 beats 61</td><td>z-score, or percentile</td></tr><tr><td>Dividing a sample&#x27;s variance by <code>n</code></td><td>Half the truth on average</td><td><code>n − 1</code> for a sample, <code>n</code> for everyone</td></tr><tr><td>Mean and SD on skewed data or outliers</td><td>One typo moves SD from 6.2 to 68.8</td><td>Median and IQR</td></tr><tr><td>Quartiles compared across tools</td><td>Python 2.5 vs 3 for the same data</td><td>Pick one method and say which</td></tr><tr><td>A z-score in a two-clump crowd</td><td>Distance from an empty middle</td><td>Percentile rank</td></tr><tr><td>Box plot instead of histogram</td><td>The valley disappears</td><td>Histogram first</td></tr></tbody></table>
+<ul><li>* *</li></ul>
+<h2>Check yourself</h2>
+<ol><li>Houses at blocks 1, 3, 4 and 10: where does the cart go for least total walking, and is it unique? Find the mean, variance and SD (treating them as everyone).</li><li>Why is variance in squared units, and what turns it back? The twelve staff versus twelve customers from the loyalty cabinet: which uses <code>n</code>, which <code>n − 1</code>? A column with one value mistyped by a factor of 100: which pair of numbers survives?</li><li>In the eight scores (62, 65, 69, 70, 79, 85, 94, 100) what is the percentile rank of <strong>70</strong>? The mean is 78 and sample SD 13.94: what is the z-score of <strong>100</strong>?</li><li>A test has mean 60, SD 10, and a student scores 55: z-score and meaning? Which ruler for a single taster in a two-clump crowd?</li><li>Q1 = 10 and Q3 = 18: is 31 an outlier by the 1.5 × IQR rule? What about 29?</li></ol>
+<ol><li>Total walking is 10 at blocks 3, 3.5, 4 and anywhere between: <strong>not unique</strong>; the usual choice is the midpoint <strong>3.5</strong>. Mean <code>(1 + 3 + 4 + 10) / 4 =</code> <strong>4.5</strong>; squared walks 12.25, 2.25, 0.25, 30.25 total 45, so variance <code>45 / 4 =</code> <strong>11.25</strong>, SD <strong>3.35</strong>. Moving the cart to 3.5 raises the total to 49, to 4 raises it to 46, to 3 raises it to 54.</li><li>Each walk is squared, so the result is in blocks²; the <strong>square root</strong> turns it back. The staff are <strong>everyone</strong>: <code>n</code>. The customers are a <strong>sample</strong>: <code>n − 1</code>. <strong>Median and IQR</strong> survive: only the squared pair lets one far value dominate.</li><li>Three below 70 (62, 65, 69), one equal: <code>(3 + 0.5) / 8 × 100 =</code> <strong>43.75%</strong>. <code>(100 − 78) / 13.94 ≈</code> <strong>1.58</strong> (with the population SD of 13.04 it would be 1.69).</li><li><code>(55 − 60) / 10 =</code> <strong>−0.5</strong>: half a typical distance <strong>below</strong> the middle, nothing dramatic. The <strong>percentile rank</strong>: mean and SD describe a middle where nobody lives; rank only counts how many are below.</li><li><code>IQR = 8</code>, fences <code>10 − 12 = −2</code> and <code>18 + 12 = 30</code>: <strong>31 is an outlier</strong>, <strong>29 is not</strong>.</li></ol>
+<ul><li>* *</li></ul>
+<h2>📜 The Scroll (keep this)</h2>
+<pre><code class="language-text">One question : how much should a long walk hurt? none = mode; in proportion = median;
+               more than that = mean (least squared walking, deviations add to 0)
+Spread       : mean &lt;-&gt; variance (average squared walk), SD = sqrt(var);
+               median &lt;-&gt; IQR = Q3 - Q1; range = max - min
+One-house    : one wrong value moves mean and SD a lot, median and IQR almost not at all
+Divide by    : n if the data are everyone; n - 1 for a sample (python pvariance vs variance)
+Percentile   : (below + 0.5 equal) / n x 100; order only; quartile method differs by tool
+z-score      : (x - mean) / SD; compares scales; needs a fair mean and SD
+Box plot     : min, Q1, median, Q3, max; fences Q1 - 1.5 IQR, Q3 + 1.5 IQR; blind to clumps
+Do not       : compare raw scores across crowds; use a box plot before the histogram</code></pre>
+<ul><li>* *</li></ul>
+<h2>References</h2>
+<ul><li>NIST/SEMATECH e-Handbook of Statistical Methods, <em>Box Plot</em>: quartiles, the 1.5 × IQR fences and the outlier circles. &lt;https://www.itl.nist.gov/div898/handbook/eda/section3/boxplot.htm&gt;</li><li>Python <code>statistics</code> module: <code>pvariance</code>, <code>variance</code>, <code>pstdev</code>, <code>stdev</code> (population divides by <code>N</code>, sample by <code>N − 1</code>, &quot;Bessel&#x27;s correction&quot;) and <code>quantiles</code> with <code>method=&#x27;exclusive&#x27;</code> (default) and <code>&#x27;inclusive&#x27;</code>. Verified against Python 3.14.4. &lt;https://docs.python.org/3/library/statistics.html&gt;</li><li>NumPy <code>percentile</code>: nine selectable methods, default <code>&#x27;linear&#x27;</code>. This page did not run NumPy, so no NumPy output is shown. &lt;https://numpy.org/doc/stable/reference/generated/numpy.percentile.html&gt;</li><li>Hyndman, R. J. and Fan, Y. (1996), <em>Sample Quantiles in Statistical Packages</em>, The American Statistician 50(4). &lt;https://doi.org/10.1080/00031305.1996.10473566&gt;. The origin of the nine-type numbering; cited through the R documentation, which names it and states its recommendation. &lt;https://stat.ethz.ch/R-manual/R-devel/library/stats/html/quantile.html&gt;</li><li>Every other number on this page was recomputed with Python 3.14.4.</li></ul>
+<p><a href="../../../../../#/fields/data-science/probability-statistics/describing-data/spread-and-position">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

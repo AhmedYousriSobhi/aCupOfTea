@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>From a Sample to a Statement: Intervals, Tests and Lines</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/inference/quick-guide/">
+<meta name="description" content="A cheat sheet for parts 12 to 15 - the spread of averages, a confidence interval, a shuffle test and a regression line - with the check and the common trap for each.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="From a Sample to a Statement: Intervals, Tests and Lines">
+<meta property="og:description" content="A cheat sheet for parts 12 to 15 - the spread of averages, a confidence interval, a shuffle test and a regression line - with the check and the common trap for each.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/inference/quick-guide/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/inference/quick-guide/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../../.docs/prerender-redirect.js" data-target="../../../../../#/fields/data-science/probability-statistics/inference/quick-guide"></script>
+<main>
+<h1>From a Sample to a Statement: Intervals, Tests and Lines</h1>
+<p><em>A cheat sheet for parts 12 to 15 - the spread of averages, a confidence interval, a shuffle test and a regression line - with the check and the common trap for each.</em></p>
+<blockquote><p><strong>Quick guide for</strong> <a href="../../../../../fields/data-science/probability-statistics/inference/averages-and-intervals/">Averages and Intervals</a> (parts 12 and 13), <a href="../../../../../fields/data-science/probability-statistics/inference/the-courtroom-for-numbers/">The Courtroom for Numbers</a> and <a href="../../../../../fields/data-science/probability-statistics/inference/two-things-moving-together/">Two Things Moving Together</a>. Python 3, standard library only. Formal statements: <a href="../../../../../fields/data-science/probability-statistics/inference/technical-reference/">technical reference</a>.</p></blockquote>
+<h2>1. How wobbly is an average?</h2>
+<p><code>SE = sigma / sqrt(n)</code>. Four times the sample halves it. Averages pile into a bell whatever the crowd (<code>n &gt;= 30</code> is a rule of thumb only; skewed crowds need more).</p>
+<p><strong>Trap:</strong> bias is not cured by <code>n</code>: tight and wrong.</p>
+<h2>2. Give a range</h2>
+<pre><code class="language-python">import math, statistics as st
+from statistics import NormalDist
+
+z = NormalDist().inv_cdf(0.975)            # 1.96
+def interval(sample):                      # estimate +/- z * standard error
+    m = st.fmean(sample)
+    se = st.stdev(sample) / math.sqrt(len(sample))
+    return m - z * se, m + z * se</code></pre>
+<p>Proportion: <code>SE = sqrt(p * (1 - p) / n)</code>. Small <code>n</code>: use the t distribution (<code>n = 10</code>: 2.262, <code>n = 40</code>: 2.023, not 1.96). No formula: bootstrap, resampling your sample with replacement and taking the middle 95% of the means.</p>
+<p><strong>Trap:</strong> 95% is about the method (95 of 100 nets catch the truth), not one interval.</p>
+<h2>3. Could luck do this?</h2>
+<ol><li>Say the null: luck only, the labels mean nothing.</li><li>Re-deal the labels many times; count how often luck gives a result at least as extreme.</li><li>That share is the p-value. Small p means luck is a poor explanation.</li></ol>
+<p>Many tests: <code>P(at least one false alarm) = 1 - 0.95^k</code> (<code>k = 20</code> gives 0.64). Report the effect size and interval, and how many things you tried.</p>
+<p><strong>Trap:</strong> p is not the chance the null is true, and not the size of the effect.</p>
+<h2>4. Do two columns move together?</h2>
+<pre><code class="language-python">import statistics as st
+fit = st.linear_regression(temp, cups)    # slope, intercept
+r = st.correlation(temp, cups)</code></pre>
+<p><code>r</code> is the average of <code>z_x * z_y</code>; <code>slope = r * SD(y) / SD(x)</code>; <code>r squared</code> is the share of the squared miss the line removes. Draw the scatter first.</p>
+<p><strong>Trap:</strong> not causation, not curves, one outlier can swing <code>r</code>, no prediction beyond the range of <code>x</code> you saw.</p>
+<h2>Symptoms</h2>
+<table><thead><tr><th>What you see</th><th>Likely cause</th><th>Fix</th></tr></thead><tbody><tr><td>Tight interval, wrong answer</td><td>Biased sample</td><td>Fix how you choose, not how many</td></tr><tr><td>Interval too narrow for small <code>n</code></td><td>Used 1.96</td><td>Use t</td></tr><tr><td>&quot;Significant&quot; but tiny gap</td><td>Huge sample</td><td>Report effect size</td></tr><tr><td>One hit in twenty tries</td><td>Many tests</td><td>Count the tries</td></tr><tr><td>Strong <code>r</code>, odd scatter</td><td>Curve or outlier</td><td>Draw it first</td></tr></tbody></table>
+<blockquote><p>[!WARNING] Narrow is not right, small p is not proof, and a line is not a law. Check the sample and the picture before the number.</p></blockquote>
+<h2>Try it</h2>
+<h3>Sampling and intervals lab</h3>
+<p><a href="../../../../../fields/data-science/probability-statistics/labs/sampling.html">Sampling and intervals lab</a></p>
+<h3>Permutation test lab</h3>
+<p><a href="../../../../../fields/data-science/probability-statistics/labs/permutation.html">Permutation test lab</a></p>
+<h3>Correlation lab</h3>
+<p><a href="../../../../../fields/data-science/probability-statistics/labs/regression.html">Correlation lab</a></p>
+<p><strong>Why it works:</strong> the three story pages above (parts 12 to 15). Back to <a href="../../../../../fields/data-science/probability-statistics/the-map-of-leaf-and-kettle/">the map of the series</a>.</p>
+<p><a href="../../../../../#/fields/data-science/probability-statistics/inference/quick-guide">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Slurm Multi-Tenancy: Who Stores the Rules, Who Enforces Them</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-accounting-multi-tenancy/">
+<meta name="description" content="How slurmctld, slurmd, slurmdbd and sacctmgr split the work of multi-tenant accounting, why limits you set can silently do nothing, and how associations, TRES limits, QOS and fairshare fit together.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Slurm Multi-Tenancy: Who Stores the Rules, Who Enforces Them">
+<meta property="og:description" content="How slurmctld, slurmd, slurmdbd and sacctmgr split the work of multi-tenant accounting, why limits you set can silently do nothing, and how associations, TRES limits, QOS and fairshare fit together.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-accounting-multi-tenancy/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-accounting-multi-tenancy/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../.docs/prerender-redirect.js" data-target="../../../#/fields/schedulers/slurm-accounting-multi-tenancy"></script>
+<main>
+<h1>Slurm Multi-Tenancy: Who Stores the Rules, Who Enforces Them</h1>
+<p><em>How slurmctld, slurmd, slurmdbd and sacctmgr split the work of multi-tenant accounting, why limits you set can silently do nothing, and how associations, TRES limits, QOS and fairshare fit together.</em></p>
+<blockquote><p><strong>Part of the [schedulers](/fields/schedulers/slurm-intro.md) directory.</strong> The <a href="../../../fields/schedulers/slurm-intro/">intro</a> sketched Slurm&#x27;s three daemons. This page zooms in on the part that makes a shared cluster fair: accounts, limits and usage history. By the end you&#x27;ll know which daemon stores the rules, which one enforces them, what <code>sacctmgr</code> actually is, and the one missing line in <code>slurm.conf</code> that makes every limit you set do nothing.</p></blockquote>
+<hr>
+<h2>The limit that wasn&#x27;t</h2>
+<p>A university buys a GPU cluster. Three labs share it. The vision lab is promised at most 16 GPUs at a time.</p>
+<p>The admin opens a terminal and runs:</p>
+<pre><code class="language-bash">sacctmgr modify account vision set GrpTRES=gres/gpu=16</code></pre>
+<p><code>sacctmgr</code> says the change was made. The admin closes the ticket.</p>
+<p>Two weeks later, the NLP lab&#x27;s PI sends an angry email with a screenshot: the vision lab is running on 40 GPUs. The limit is right there in the database. <code>sacctmgr show assoc</code> displays it proudly. And Slurm is ignoring it completely.</p>
+<p>Nothing is broken. Slurm&#x27;s resource-limits docs say that to enforce scheduling policy you set <code>AccountingStorageEnforce</code> in <code>slurm.conf</code>, and its <code>limits</code> option is the one that enforces association limits. Leave it unset, the default, and the limits sit in the database doing nothing. The admin stored the rule. Nobody told the enforcer to read it.</p>
+<p>That gap, between where rules are <strong>stored</strong> and where they&#x27;re <strong>enforced</strong>, is the whole story of this page.</p>
+<hr>
+<h2>Four programs, four jobs</h2>
+<table><thead><tr><th>Program</th><th>Kind</th><th>Runs on</th><th>Its job</th></tr></thead><tbody><tr><td><strong>`slurmctld`</strong></td><td>Daemon (the controller)</td><td>Head node, plus an optional backup</td><td>Holds the live state of nodes, partitions and jobs; makes every scheduling decision; <strong>enforces</strong> limits when enforcement is turned on</td></tr><tr><td><strong>`slurmd`</strong></td><td>Daemon (the node agent)</td><td>Every compute node</td><td>Launches job steps, contains them with cgroups, reports back</td></tr><tr><td><strong>`slurmdbd`</strong></td><td>Daemon (the database front end)</td><td>A database host, often the head node or a dedicated server</td><td><strong>Stores</strong> accounts, users, limits, QOS definitions and job history in MySQL/MariaDB; serves them to controllers and commands</td></tr><tr><td><strong>`sacctmgr`</strong></td><td>Command-line client</td><td>Anywhere with Slurm clients installed</td><td>Edits the accounting database <strong>through</strong> <code>slurmdbd</code></td></tr></tbody></table>
+<p>Plus the quiet fifth member: <strong>MUNGE</strong>, the authentication service. Slurm&#x27;s resource-limits docs note that <code>slurmdbd</code> authenticates its traffic through a Slurm authentication plugin such as MUNGE, so a controller or command can&#x27;t just claim to be someone else.</p>
+<p>A useful way to picture it: <code>slurmdbd</code> is the <strong>filing cabinet</strong>, <code>slurmctld</code> is the <strong>bouncer at the door</strong>, and <code>sacctmgr</code> is the <strong>pen</strong> you write rules with. Writing a rule into the cabinet doesn&#x27;t make the bouncer check it.</p>
+<p>How the rules travel, per SchedMD&#x27;s own architecture slides: <code>slurmdbd</code> sits between users and the database so nobody needs direct database access, and it <strong>pushes updates out to `slurmctld`</strong> on each cluster. The controller keeps its own working copy, which is why scheduling doesn&#x27;t stop for a database round trip on every job.</p>
+<pre><code class="language-mermaid">flowchart LR
+    S[&quot;sacctmgr&lt;br/&gt;(client)&quot;] --&gt;|&quot;MUNGE-authenticated RPC&quot;| D[&quot;slurmdbd&lt;br/&gt;(stores rules + history)&quot;]
+    D &lt;--&gt; DB[(&quot;MySQL / MariaDB&quot;)]
+    D --&gt;|&quot;pushes association,&lt;br/&gt;limit, QOS updates&quot;| C[&quot;slurmctld&lt;br/&gt;(caches + enforces)&quot;]
+    C --&gt;|&quot;job records,&lt;br/&gt;usage&quot;| D
+    C --&gt; N1[&quot;slurmd&quot;]
+    C --&gt; N2[&quot;slurmd&quot;]</code></pre>
+<hr>
+<h2>Correcting a common summary</h2>
+<p>You&#x27;ll often see multi-tenancy summarized like this: <em>&quot;accounting, resource limits and historical data are managed entirely by slurmdbd, while sacctmgr is merely a client.&quot;</em> Half right:</p>
+<table><thead><tr><th>Claim</th><th>Verdict</th></tr></thead><tbody><tr><td>&quot;<code>sacctmgr</code> is a command-line client of <code>slurmdbd</code>.&quot;</td><td><strong>Correct.</strong> It reads and writes accounting data through the daemon.</td></tr><tr><td>&quot;<code>slurmdbd</code> stores accounts, limits and history.&quot;</td><td><strong>Correct.</strong> It&#x27;s the system of record, backed by a database.</td></tr><tr><td>&quot;Limits are managed <strong>entirely</strong> by <code>slurmdbd</code>.&quot;</td><td><strong>Wrong where it matters.</strong> <code>slurmdbd</code> stores them; <code>slurmctld</code> enforces them, and only if <code>AccountingStorageEnforce</code> says so.</td></tr><tr><td>&quot;Without <code>slurmdbd</code>, no accounting.&quot;</td><td><strong>Mostly true</strong> for multi-tenant setups: Slurm&#x27;s docs strongly recommend <code>slurmdbd</code> as the front end to the database for security and performance.</td></tr></tbody></table>
+<p>The precise version: <strong>`slurmdbd` remembers, `slurmctld` decides.</strong></p>
+<hr>
+<h2>Associations: the unit of fairness</h2>
+<p>Every rule hangs off an <strong>association</strong>. The resource-limits docs define it as a 4-tuple: <strong>cluster, account, user and (optionally) partition</strong>. Accounting and scheduling policy are both configured per association.</p>
+<p>Accounts nest, which is how organizations map onto the cluster:</p>
+<pre><code class="language-text">cluster: gpucluster
+└── account: research              (GrpTRES=gres/gpu=96)
+    ├── account: vision            (GrpTRES=gres/gpu=16)
+    │   ├── user: alice
+    │   └── user: bob              (MaxJobs=4)
+    └── account: nlp               (GrpTRES=gres/gpu=48)
+        └── user: carol</code></pre>
+<p>A user can belong to several accounts and choose one per job with <code>--account</code>. Each (cluster, account, user) combination is a separate association with its own limits and its own usage history.</p>
+<p>A typical setup, using <code>sacctmgr</code>:</p>
+<pre><code class="language-bash">sacctmgr add account research Description=&quot;All research groups&quot;
+sacctmgr add account vision parent=research Description=&quot;Vision lab&quot;
+sacctmgr add user alice account=vision
+sacctmgr modify account vision set GrpTRES=gres/gpu=16</code></pre>
+<p>These are standard <code>sacctmgr</code> operations from SchedMD&#x27;s documentation; they weren&#x27;t run on a live cluster for this page.</p>
+<hr>
+<h2>Limits: Grp versus Max</h2>
+<p>Slurm tracks resources as <strong>TRES</strong> (trackable resources): CPUs, memory, nodes, GPUs as <code>gres/gpu</code>, and more. Limits come in two families, and mixing them up is the most common policy bug:</p>
+<table><thead><tr><th>Family</th><th>Meaning</th><th>Example</th><th>Use it for</th></tr></thead><tbody><tr><td>**<code>Grp*</code>**</td><td>A ceiling on the <strong>whole association and everything under it</strong>, added up across all its running jobs</td><td><code>GrpTRES=gres/gpu=16</code> on <code>vision</code>: the lab&#x27;s jobs together can&#x27;t hold more than 16 GPUs</td><td>Lab or team quotas</td></tr><tr><td>**<code>Max*</code>**</td><td>A ceiling on <strong>each single job</strong> (or each user, depending on the limit)</td><td><code>MaxTRESPerJob=gres/gpu=8</code>: no single job above 8 GPUs</td><td>Stopping one job from swallowing the cluster</td></tr></tbody></table>
+<p>Grp limits are budgets for a group. Max limits are size caps for individuals. A lab quota written as a Max limit lets the lab run as many 16-GPU jobs as it likes.</p>
+<hr>
+<h2>Try it before you scroll</h2>
+<p>☕ The <code>vision</code> account has <code>GrpTRES=gres/gpu=16</code>. Alice submits two 8-GPU jobs; both run. Bob submits a 4-GPU job. <code>AccountingStorageEnforce=limits</code> is set. What happens to Bob&#x27;s job?</p>
+<p>It <strong>pends</strong>. The account&#x27;s running jobs already hold 16 GPUs, its group ceiling. Bob&#x27;s job waits until one of Alice&#x27;s finishes, even if half the cluster is idle. That&#x27;s the point of a group limit, and also its cost: quotas can leave GPUs idle. That trade-off is why many sites pair hard limits with fairshare, below.</p>
+<hr>
+<h2>QOS and fairshare: the other two dials</h2>
+<p>Limits say <strong>how much</strong>. Two more mechanisms say <strong>who goes first</strong>.</p>
+<p><strong>QOS (Quality of Service)</strong> is a named policy a job runs under: priority boost, preemption rules, its own limits. A site might have <code>normal</code>, <code>high</code> for deadline work, and <code>scavenger</code> for preemptible jobs that soak up idle GPUs. With <code>qos</code> in <code>AccountingStorageEnforce</code>, every job must use a valid QOS, given explicitly or by default.</p>
+<p><strong>Fairshare</strong> adjusts priority by recent usage. An association that has consumed more than its share recently drops in priority; one that&#x27;s been quiet rises. It&#x27;s how a cluster stays fair <em>without</em> hard caps: heavy users aren&#x27;t blocked, they just wait behind lighter ones. It needs usage history, which is exactly what the accounting database keeps.</p>
+<table><thead><tr><th>Dial</th><th>Answers</th><th>Blocks jobs?</th></tr></thead><tbody><tr><td>Grp/Max limits</td><td>&quot;How much may you hold?&quot;</td><td>Yes, hard</td></tr><tr><td>QOS</td><td>&quot;Under which policy does this job run?&quot;</td><td>Can, through its own limits</td></tr><tr><td>Fairshare</td><td>&quot;Who goes next?&quot;</td><td>No, it reorders</td></tr></tbody></table>
+<p>A preemption rule is just a field on a QOS. The preemptor lists the QOS it may evict, and the victim says how it is evicted:</p>
+<pre><code class="language-bash">sacctmgr -i modify qos high set Preempt=scavenger
+sacctmgr -i modify qos scavenger set PreemptMode=requeue</code></pre>
+<p>It only takes effect once <code>PreemptType=preempt/qos</code> is set in <code>slurm.conf</code>. <a href="../../../fields/schedulers/slurm-preemption/slurm-qos-preemption-setup/">The Guest List</a> walks through the whole setup with a drill, and <a href="../../../fields/schedulers/slurm-sacct-job-forensics/">Autopsy of a Job</a> shows how to read the result in <code>sacct</code>.</p>
+<p>The opinionated default for a shared GPU cluster: <strong>fairshare for everyday fairness, Grp limits only for promises you&#x27;ve actually made</strong> (like &quot;the vision lab gets 16 GPUs&quot;), and a preemptible QOS so idle GPUs don&#x27;t stay idle.</p>
+<hr>
+<h2>Turning it on safely</h2>
+<p><code>AccountingStorageEnforce</code> takes a comma-separated list. From the <code>slurm.conf</code> man page and resource-limits docs:</p>
+<table><thead><tr><th>Option</th><th>Effect</th></tr></thead><tbody><tr><td><code>associations</code></td><td>Jobs only run if the user and account exist in the database</td></tr><tr><td><code>limits</code></td><td>Enforces association limits; implies <code>associations</code></td></tr><tr><td><code>qos</code></td><td>Jobs must use a valid QOS; implies <code>associations</code></td></tr><tr><td><code>safe</code></td><td>Only starts jobs that can finish within their limits; implies <code>limits</code> and <code>associations</code></td></tr><tr><td><code>wckeys</code></td><td>Requires a valid workload characterization key</td></tr></tbody></table>
+<blockquote><p>[!WARNING] Turning on <code>associations</code> blocks every user who isn&#x27;t in the accounting database. On an existing cluster, load every user and account with <code>sacctmgr</code> <strong>first</strong>, then enable enforcement. The <code>slurm.conf</code> man page also notes that changing <code>AccountingStorageEnforce</code> needs a <code>slurmctld</code> restart, not just <code>scontrol reconfigure</code>; check the man page for your version.</p></blockquote>
+<p>A safe rollout:</p>
+<ol><li><strong>Populate.</strong> Create accounts and users with <code>sacctmgr</code>. Check with <code>sacctmgr show assoc format=account,user,grptres</code>.</li><li><strong>Enable `associations`</strong> in a maintenance window. Watch for jobs rejected for invalid accounts; fix the gaps.</li><li><strong>Add `limits`</strong> (and <code>qos</code> if you use it). Verify a test account actually pends at its limit.</li><li><strong>Keep the rollback ready:</strong> remove the option and restart <code>slurmctld</code>.</li></ol>
+<hr>
+<h2>When slurmdbd goes down</h2>
+<p>The filing cabinet being locked shouldn&#x27;t stop the bouncer. SchedMD&#x27;s slides on the database daemon say <code>slurmctld</code> <strong>caches data if `slurmdbd` isn&#x27;t responding</strong>, so the cluster keeps scheduling with the limits it already knows, and job records wait until the database comes back.</p>
+<p>What you lose while it&#x27;s down: <strong>changes</strong>. <code>sacctmgr</code> edits can&#x27;t land, new users can&#x27;t be added, and reports from <code>sacct</code> or <code>sreport</code> won&#x27;t show the newest jobs. Treat <code>slurmdbd</code> as important but not critical-path, and monitor it so &quot;a few minutes down&quot; doesn&#x27;t quietly become &quot;a week of cached records.&quot;</p>
+<p><strong>Takeaway:</strong> <code>slurmdbd</code> remembers, <code>slurmctld</code> decides, and <code>sacctmgr</code> is just the pen, so a limit only exists once <code>AccountingStorageEnforce</code> tells the controller to read it.</p>
+<p>For what happens when tenants ask for <em>different</em> hardware in one job, see <a href="../../../fields/schedulers/slurm-mixed-gpus/">mixing GPU types in Slurm</a>.</p>
+<hr>
+<h2>References</h2>
+<ul><li><a href="https://slurm.schedmd.com/accounting.html">Slurm: Accounting and Resource Limits</a></li><li><a href="https://slurm.schedmd.com/resource_limits.html">Slurm: Resource Limits (associations, enforcement options)</a></li><li><a href="https://www.mankier.com/5/slurm.conf">Slurm <code>slurm.conf</code> man page, <code>AccountingStorageEnforce</code></a></li><li><a href="https://Slurm.schedmd.com/slurm_ug_2012/SUG_Oct2012_DBD.pdf">SchedMD, &quot;Slurm Database Daemon&quot; (Slurm User Group 2012 slides)</a></li></ul>
+<p><a href="../../../#/fields/schedulers/slurm-accounting-multi-tenancy">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

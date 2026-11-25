@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Dying Politely: Preemption, Requeue and Signals</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-preemption/">
+<meta name="description" content="A four-part series on preemption in Slurm - how the modes differ, how to set up QOS requeue preemption, routing jobs with jobsubmit.lua, and which signals reach whom.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Dying Politely: Preemption, Requeue and Signals">
+<meta property="og:description" content="A four-part series on preemption in Slurm - how the modes differ, how to set up QOS requeue preemption, routing jobs with jobsubmit.lua, and which signals reach whom.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-preemption/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-preemption/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../.docs/prerender-redirect.js" data-target="../../../#/fields/schedulers/slurm-preemption/"></script>
+<main>
+<h1>Dying Politely: Preemption, Requeue and Signals</h1>
+<p><em>A four-part series on preemption in Slurm - how the modes differ, how to set up QOS requeue preemption, routing jobs with jobsubmit.lua, and which signals reach whom.</em></p>
+<p>A high-priority job arrives and a running job has to make room. Whether it dies cleanly, loses a day of training, or restarts by itself depends on settings most clusters never test. This series goes from the theory to a working setup to a signal reference.</p>
+<p>Read parts 1 to 3 in order. Part 4 is the reference you come back to.</p>
+<hr>
+<h2>Contents</h2>
+<table><thead><tr><th>File</th><th>Description</th></tr></thead><tbody><tr><td><a href="../../../fields/schedulers/slurm-preemption/slurm-preemption-requeue-signals/">1. Dying Politely</a></td><td>Preemption modes, <code>GraceTime</code>, signals your training job ignores, and a requeue-safe wrapper</td></tr><tr><td><a href="../../../fields/schedulers/slurm-preemption/slurm-qos-preemption-setup/">2. The Guest List</a></td><td>Setting up QOS preemption with requeue, step by step, with a drill that proves it works</td></tr><tr><td><a href="../../../fields/schedulers/slurm-preemption/slurm-job-submit-lua/">3. job_submit.lua</a></td><td>Routing jobs to the right QOS, requiring time limits, and how the plugin fails</td></tr><tr><td><a href="../../../fields/schedulers/slurm-preemption/slurm-signals-cheatsheet/">4. Who Gets Told What</a></td><td>Every signal Slurm sends, whether the batch shell or the <code>srun</code> steps hear it, and how late it arrives</td></tr><tr><td><a href="../../../fields/schedulers/slurm-preemption/quick-guide/">Quick guide: Set Up QOS Preemption and Make Jobs Survive It</a></td><td>Steps to switch on QOS preemption, prove it, add a submit rule and make a job requeue</td></tr></tbody></table>
+<hr>
+<h2>Related pages</h2>
+<ul><li><a href="../../../fields/schedulers/slurm-accounting-multi-tenancy/">Multi-tenancy: who stores the rules</a>: QOS, associations and fairshare, the prerequisite for part 2.</li><li><a href="../../../fields/schedulers/slurm-sacct-job-forensics/">Autopsy of a job: <code>sacct</code></a>: reading how a preempted or requeued job ended.</li><li><a href="../../../fields/schedulers/slurm-inside-a-job/">Inside a Slurm job</a>: the daemon and cgroups that deliver the signals.</li><li><a href="../../../fields/schedulers/slurm-cluster-operations/slurm-version-changes/">What changed between Slurm 23.11 and 26.05</a>: version differences for preemption, Lua and signals.</li></ul>
+<p><a href="../../../#/fields/schedulers/slurm-preemption/">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

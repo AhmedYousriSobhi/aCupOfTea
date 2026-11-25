@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The OOM Killer: Who Gets Thrown Overboard, and Why So Late</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/linux-memory-pressure/the-oom-killer/">
+<meta name="description" content="How the kernel decides when it is out of memory and whom to kill, how oomscoreadj shields or sacrifices a process, and why userspace killers like systemd-oomd act earlier than the kernel.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="The OOM Killer: Who Gets Thrown Overboard, and Why So Late">
+<meta property="og:description" content="How the kernel decides when it is out of memory and whom to kill, how oomscoreadj shields or sacrifices a process, and why userspace killers like systemd-oomd act earlier than the kernel.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/linux-memory-pressure/the-oom-killer/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/linux-memory-pressure/the-oom-killer/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/system-administration/linux-memory-pressure/the-oom-killer"></script>
+<main>
+<h1>The OOM Killer: Who Gets Thrown Overboard, and Why So Late</h1>
+<p><em>How the kernel decides when it is out of memory and whom to kill, how oomscoreadj shields or sacrifices a process, and why userspace killers like systemd-oomd act earlier than the kernel.</em></p>
+<blockquote><p><strong>Part 3 of the [Linux Memory Pressure series](/fields/system-administration/linux-memory-pressure/README.md).</strong> When reclaim can&#x27;t free another page, the kernel kills a process. It will tell you which one in <code>dmesg</code>, but never why that one, and rarely early enough. By the end you&#x27;ll be able to predict the victim, protect or sacrifice a process on purpose, and explain why the kernel is the <em>last</em> line of defence, not the first.</p></blockquote>
+<hr>
+<h2>The overloaded ship</h2>
+<p>A cargo ship is caught in a storm, riding too low. The captain will not throw cargo overboard while the ship is merely heavy. She waits until water is coming over the deck and nothing else can be done. Then she picks the crate that frees the most weight and sends it into the sea.</p>
+<p>Two things about this are true of the Linux OOM killer too:</p>
+<ol><li>It is a <strong>last resort</strong>. It only fires after everything else, including all the reclaim from the previous pages, has failed.</li><li>It picks the <strong>heaviest crate</strong>, with a way for the crates to wear labels like &quot;medical supplies: do not throw&quot;.</li></ol>
+<table><thead><tr><th>Ship</th><th>Linux machine</th></tr></thead><tbody><tr><td>Water over the deck</td><td>An allocation that reclaim cannot satisfy</td></tr><tr><td>The captain</td><td>The kernel&#x27;s OOM killer</td></tr><tr><td>A crate</td><td>A process</td></tr><tr><td>Weight of the crate</td><td>Memory the process holds (RSS plus swap and page tables)</td></tr><tr><td>The label on the crate</td><td><code>oom_score_adj</code></td></tr></tbody></table>
+<hr>
+<h2>When the kernel decides it is out of memory</h2>
+<p>It does not trigger on &quot;memory is low&quot;. It triggers on a <strong>failure</strong>:</p>
+<ol><li>A program asks for a page.</li><li>There isn&#x27;t one, so the kernel tries direct reclaim (<a href="../../../../fields/system-administration/linux-memory-pressure/how-linux-reclaims-memory/">part 1</a>), and compaction, repeating several times.</li><li>Still nothing. Only now it calls the OOM killer.</li></ol>
+<p>Because of memory <strong>overcommit</strong> (<code>vm.overcommit_memory</code>, default 0), a program&#x27;s <code>malloc</code> almost always <em>succeeds</em>: the kernel promises memory without handing over real pages until each page is first touched. The bill arrives at touch time, which is why a program can crash with an OOM kill in the middle of an ordinary loop, long after the allocation call that &quot;worked&quot;.</p>
+<hr>
+<h2>How the victim is chosen</h2>
+<p>For every candidate process the kernel computes a <strong>badness</strong> score. The base is how much real memory it holds:</p>
+<p>and that is scaled to a number from 0 to 1000 by the share of the machine&#x27;s memory it represents. A process holding half of all RAM scores about 500. Then the label is added:</p>
+<p>&quot;Total pages&quot; is the memory the process is <em>allowed</em> to use: RAM plus swap on the whole machine, or the cgroup&#x27;s limit inside a cgroup (so the same process scores higher in a small cgroup). The proc(5) man pages describe it as an estimate of memory and swap use relative to allowed memory.</p>
+<p>The process with the <strong>highest</strong> score is killed. Its memory is released quickly by a helper (the <em>OOM reaper</em>), so the system recovers without waiting for the victim to finish exiting.</p>
+<p>Notes that explain real surprises:</p>
+<ul><li>It&#x27;s the <strong>biggest</strong>, not the <strong>guilty</strong>. A small leaky service filled the machine, but a large database holding more RAM scores higher and gets killed instead.</li><li>Memory is counted <em>per process</em>. Ten workers at 1 GiB each score lower than one process at 8 GiB, even though together they use more.</li><li>You can read any process&#x27;s current score in <code>/proc/&lt;pid&gt;/oom_score</code>.</li></ul>
+<hr>
+<h2>Try it before you scroll</h2>
+<p>☕ Grab a pen. On a 16 GiB machine that has run out of memory:</p>
+<table><thead><tr><th>Process</th><th>RSS</th><th><code>oom_score_adj</code></th></tr></thead><tbody><tr><td>A: database</td><td>8 GiB</td><td>0</td></tr><tr><td>B: a rescue daemon</td><td>0.05 GiB</td><td>-900</td></tr><tr><td>C: a build job</td><td>5 GiB</td><td>0</td></tr><tr><td>D: a browser</td><td>3 GiB</td><td>+500</td></tr></tbody></table>
+<p>Which process is killed first?</p>
+<p>Got your answer? Scroll on.</p>
+<p>Answer: the <strong>browser (D)</strong>. The scores are roughly A: 500, B: -897, C: 312, D: about 690 (3 GiB is 188 on its own, plus 500). Even though it is the smallest of the big three, its label of +500 pushes it to the top. The rescue daemon, at -900, is nearly untouchable. Labels, not just size, decide.</p>
+<hr>
+<h2>Shielding and sacrificing: oom_score_adj</h2>
+<p><code>oom_score_adj</code> is a number from <strong>-1000 to +1000</strong> written to <code>/proc/&lt;pid&gt;/oom_score_adj</code>.</p>
+<table><thead><tr><th>Value</th><th>Effect</th></tr></thead><tbody><tr><td><code>-1000</code></td><td><strong>Never kill.</strong> The process is exempt (its badness score is always 0). Use sparingly: if it leaks, the kernel has nothing else left to sacrifice</td></tr><tr><td><code>-900</code></td><td>Very strongly protected, but not exempt. The usual choice for something that must survive</td></tr><tr><td><code>0</code></td><td>Default: judged on size alone</td></tr><tr><td><code>+500</code> to <code>+1000</code></td><td>Prefer to kill this first. Good for disposable batch work</td></tr></tbody></table>
+<p>The rule that matters for permissions: <strong>an ordinary user can raise the value of their own processes</strong>. Lowering it below the value the process started with, which is what shields it, needs <code>CAP_SYS_RESOURCE</code>, which in practice means root. (This rule is from the kernel source, <code>fs/proc/base.c</code>, not from the man pages, which don&#x27;t spell it out. Tested as an ordinary user on Linux 5.15: raising to 100, then lowering to 50 and back to the starting 0, worked; lowering to -100 failed with <code>Permission denied</code>.) This is the same shape as <code>RLIMIT_MEMLOCK</code> from <a href="../../../../fields/system-administration/linux-memory-pressure/memory-locking-mlockall/">part 5</a>: protection from the machine&#x27;s limits is rationed to privileged code.</p>
+<p>In systemd you don&#x27;t write the file yourself:</p>
+<pre><code class="language-ini">[Service]
+OOMScoreAdjust=-900          # shield this service
+# OOMScoreAdjust=500         # or: sacrifice it first</code></pre>
+<p>Locking a program in RAM (part 5) keeps it from being <em>slow</em> under pressure. A low <code>oom_score_adj</code> keeps it from being <em>killed</em>. A rescuer needs both, and they are separate settings.</p>
+<hr>
+<h2>A smaller ship: OOM inside a cgroup</h2>
+<p>A cgroup with a hard <code>memory.max</code> has its own, smaller ship. When the group tries to go past its cap and reclaim inside it fails, the kernel runs an OOM kill <strong>within that cgroup only</strong>, and the rest of the machine is untouched. The kernel&#x27;s log says so: <code>Memory cgroup out of memory</code>, and in the constraint line <code>CONSTRAINT_MEMCG</code>.</p>
+<p>Two files in the group show what happened:</p>
+<table><thead><tr><th>File</th><th>What it tells you</th></tr></thead><tbody><tr><td><code>memory.events</code></td><td>Counters: how often <code>max</code> was hit, how many times <code>oom</code> fired, how many processes were killed (<code>oom_kill</code>)</td></tr><tr><td><code>memory.oom.group</code></td><td>If set to <code>1</code>, an OOM kill takes down <strong>the whole group</strong> together, instead of one process. Right for a container that is useless once any part dies</td></tr></tbody></table>
+<p>This is why a container is &quot;OOM-killed&quot; with the host looking healthy: its ship was small, and it sank on its own. The files are covered in <a href="../../../../fields/system-administration/linux-memory-pressure/cgroup-v2-memory-control/">part 4</a>.</p>
+<hr>
+<h2>Why the kernel is late, and who acts earlier</h2>
+<p>The kernel OOM killer only runs when reclaim <em>fails outright</em>. But recall thrashing from part 1: a machine can spend minutes swapping the same pages in and out, where every allocation technically <strong>succeeds</strong>, slowly. The OOM killer never fires, and the machine is unusable. People then power-cycle it, which is worse than a kill.</p>
+<p>That gap, from &quot;unusable&quot; to &quot;kernel notices&quot;, is why userspace killers exist. They watch pressure (<a href="../../../../fields/system-administration/linux-memory-pressure/memory-pressure-psi/">part 2</a>) and act early, on purpose, and on a chosen victim:</p>
+<p>| | Kernel OOM killer | Userspace killer (systemd-oomd, earlyoom, your own rescuer) | |-|-------------------|--------------------------------------------------------------| | Trigger | An allocation failed after reclaim | Pressure stays high, or available memory is low | | Timing | Last resort, can be minutes late | Early, while the machine still works | | Victim | Biggest score | Chosen by policy: a whole cgroup, a low-priority job | | Gentler options | None, it kills | Can throttle, freeze or pause first | | Needs memory to act? | It&#x27;s the kernel | <strong>Yes</strong>, which is the reason for memory locking |</p>
+<p>Note the last row. The userspace killer is the program whose pages could have been swapped out. It is the tow truck from <a href="../../../../fields/system-administration/linux-memory-pressure/memory-locking-mlockall/">part 5</a>.</p>
+<p>systemd adds a policy setting: <code>OOMPolicy=</code> decides what happens to a <em>service</em> when one of its processes is OOM-killed (<code>stop</code> the whole service, <code>kill</code> it, or <code>continue</code>), and <code>ManagedOOMMemoryPressure=kill</code> opts a cgroup into <code>systemd-oomd</code>.</p>
+<hr>
+<h2>Read the crime scene</h2>
+<p>When something was killed, the kernel writes a report. Read it with:</p>
+<pre><code class="language-bash">journalctl -k | grep -i -E &quot;out of memory|oom-kill|killed process&quot;
+dmesg -T | grep -i -E &quot;out of memory|oom-kill|killed process&quot;</code></pre>
+<p>You&#x27;ll see lines like <code>Out of memory: Killed process 1234 (python) ... anon-rss: ...</code>, a table of every process&#x27;s memory at that moment, and the constraint (<code>CONSTRAINT_NONE</code> for the whole machine, <code>CONSTRAINT_MEMCG</code> for a cgroup).</p>
+<p>To see how exposed a process is right now:</p>
+<pre><code class="language-bash">cat /proc/&lt;pid&gt;/oom_score          # its current badness
+cat /proc/&lt;pid&gt;/oom_score_adj      # its label
+cat /sys/fs/cgroup/&lt;group&gt;/memory.events    # oom, oom_kill counts for a cgroup</code></pre>
+<p><strong>Takeaway:</strong> the kernel kills only after reclaim has failed, picks the process holding the most memory adjusted by <code>oom_score_adj</code>, and often acts long after the machine became unusable; so shield what must survive with a low <code>oom_score_adj</code>, and use a userspace killer on pressure for the early, gentler action.</p>
+<p>The kernel&#x27;s tool is a blunt kill. The cgroup files give you gentler levers, such as throttling, asking a group to give memory back, freezing it. That&#x27;s <a href="../../../../fields/system-administration/linux-memory-pressure/cgroup-v2-memory-control/">part 4</a>.</p>
+<h2>References</h2>
+<ul><li><a href="https://www.kernel.org/doc/html/latest/admin-guide/mm/concepts.html#oom-killer">Linux kernel docs: Out of memory management</a></li><li><a href="https://man7.org/linux/man-pages/man5/proc.5.html">proc(5): oom_score, oom_score_adj</a></li><li><a href="https://www.kernel.org/doc/html/latest/admin-guide/cgroup-v2.html#memory">Linux kernel docs: Control Group v2, memory.events and memory.oom.group</a></li><li><a href="https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html">systemd.exec(5): OOMScoreAdjust</a> and <a href="https://www.freedesktop.org/software/systemd/man/latest/systemd.service.html">systemd.service(5): OOMPolicy</a></li></ul>
+<p><a href="../../../../#/fields/system-administration/linux-memory-pressure/the-oom-killer">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

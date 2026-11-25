@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>OSU Benchmarks, Explained Like You&#x27;re Debugging Them at 2 AM</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/benchmarks/osu/">
+<meta name="description" content="What the OSU Micro-Benchmarks measure, the three that matter, how to build and run them, and a sane order for diagnosing slow network numbers.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="OSU Benchmarks, Explained Like You&#x27;re Debugging Them at 2 AM">
+<meta property="og:description" content="What the OSU Micro-Benchmarks measure, the three that matter, how to build and run them, and a sane order for diagnosing slow network numbers.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/benchmarks/osu/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/benchmarks/osu/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../.docs/prerender-redirect.js" data-target="../../../#/fields/benchmarks/osu"></script>
+<main>
+<h1>OSU Benchmarks, Explained Like You&#x27;re Debugging Them at 2 AM</h1>
+<p><em>What the OSU Micro-Benchmarks measure, the three that matter, how to build and run them, and a sane order for diagnosing slow network numbers.</em></p>
+<p>If you work in HPC long enough, someone eventually hands you a ticket that says &quot;network seems slow, can you run OSU?&quot; and walks away. This is the guide I wish someone had given me before I had to Google what <code>osu_bibw</code> even meant.</p>
+<hr>
+<h2>The one-sentence version</h2>
+<p><strong>OSU Micro-Benchmarks measure how well MPI talks over your network — nothing more, nothing less.</strong></p>
+<p>Not your GPU. Not your CPU. Not your storage. Just: <em>when Rank 0 sends a message to Rank 1, how long does it take, and how much data can flow per second?</em></p>
+<p>That&#x27;s it. Everything else in this guide is detail.</p>
+<hr>
+<h2>Where it came from</h2>
+<p>OSU stands for <strong>Ohio State University</strong> — specifically their Network-Based Computing Lab, the same group behind MVAPICH. Back in the day, people needed a way to answer a simple question: <em>&quot;Is my slow app slow because of my code, or because of my network?&quot;</em> So they built tiny, boring, single-purpose test programs that do nothing but send messages back and forth. Over the years the suite grew to cover MPI collectives, OpenSHMEM, UPC++, and eventually GPU buffers via CUDA.</p>
+<p>Think of it as a stethoscope for your interconnect. It doesn&#x27;t fix anything — it just tells you exactly where the problem lives.</p>
+<hr>
+<h2>The three benchmarks that actually matter day-to-day</h2>
+<table><thead><tr><th>Benchmark</th><th>What it&#x27;s really asking</th><th>Analogy</th></tr></thead><tbody><tr><td><code>osu_latency</code></td><td>&quot;How long for one message to make a round trip?&quot;</td><td>Texting a friend and timing their reply</td></tr><tr><td><code>osu_bw</code></td><td>&quot;How much data can I shove through in one direction?&quot;</td><td>Timing how fast you can move boxes onto a truck</td></tr><tr><td><code>osu_bibw</code></td><td>&quot;What if both sides send at once?&quot;</td><td>Two people moving boxes through the same doorway simultaneously</td></tr></tbody></table>
+<p>Everything else (<code>osu_allreduce</code>, <code>osu_alltoall</code>, <code>osu_bcast</code>, etc.) is a variation on &quot;how fast can a group of ranks coordinate,&quot; which matters a lot more once you&#x27;re running real distributed training or CFD jobs.</p>
+<hr>
+<h2>The math, minus the intimidation</h2>
+<p><strong>Latency</strong> is just: send a message, get a reply, divide by two.</p>
+<pre><code>one_way_latency = round_trip_time / 2</code></pre>
+<p><strong>Bandwidth</strong> is just: how much data, divided by how long it took.</p>
+<pre><code>bandwidth = (message_size × window_size) / elapsed_time</code></pre>
+<p>The one equation worth tattooing on your monitor:</p>
+<pre><code>T(S) = α + S/B</code></pre>
+<p>Where <code>α</code> is fixed overhead (latency) and <code>S/B</code> is size divided by bandwidth. This single formula explains almost every OSU curve you&#x27;ll ever see:</p>
+<ul><li><strong>Tiny messages</strong> → <code>α</code> dominates → the curve is flat and latency-bound, no matter how fast your NIC is.</li><li><strong>Huge messages</strong> → <code>S/B</code> dominates → you finally see your real, sustained bandwidth.</li></ul>
+<p>That&#x27;s why a 1-byte message and a 4 MB message tell you completely different stories about the same network.</p>
+<hr>
+<h2>&quot;Reference&quot; doesn&#x27;t mean what you think it means</h2>
+<p>This is the part people get wrong constantly: <strong>there is no universal &quot;correct&quot; OSU number.</strong> A 400 Gb/s link doesn&#x27;t mean you should expect 50 GB/s out of <code>osu_bw</code>. You need to pick which kind of reference you&#x27;re comparing against:</p>
+<ol><li><strong>Theoretical hardware limit</strong> — divide your link speed by 8 to get GB/s, then treat that as a ceiling, not a target.</li><li><strong>Known-good baseline</strong> — &quot;this node used to get 48 GB/s, now it gets 45&quot; is a regression, full stop, regardless of theory.</li><li><strong>Application requirement</strong> — if your app needs Allreduce under 20 µs and you&#x27;re getting 18 µs, you&#x27;re fine. Nobody cares if that&#x27;s &quot;only&quot; 90% of theoretical.</li></ol>
+<p>Pick one before you start comparing numbers, or you&#x27;ll chase ghosts.</p>
+<hr>
+<h2>RoCE, quickly</h2>
+<p><strong>RoCE = RDMA over Converged Ethernet.</strong> It&#x27;s a way to get InfiniBand-style low-latency, kernel-bypass communication (RDMA) but running over regular Ethernet instead of a dedicated IB fabric. Modern deployments almost always mean <strong>RoCEv2</strong>, which wraps RDMA traffic in UDP/IP so it can actually be routed like normal network traffic.</p>
+<p>The important bit for benchmarking: <strong>OSU doesn&#x27;t care whether you&#x27;re on InfiniBand or RoCE.</strong> It talks to MPI, and MPI picks the transport underneath (UCX, libfabric, whatever). OSU just reports what came out the other end.</p>
+<hr>
+<h2>&quot;But OSU touches GPU memory — isn&#x27;t that the same as NCCL or BabelStream?&quot;</h2>
+<p>No, and this trips people up constantly. Same hardware, wildly different software paths:</p>
+<table><thead><tr><th>Tool</th><th>What it actually tests</th><th>Path</th></tr></thead><tbody><tr><td><strong>BabelStream</strong></td><td>GPU&#x27;s own memory bandwidth</td><td>GPU compute cores ↔ HBM (never leaves the GPU)</td></tr><tr><td><strong>NCCL tests</strong></td><td>NVIDIA&#x27;s own GPU-to-GPU comms</td><td>GPU ↔ NVLink/PCIe/NIC via NCCL</td></tr><tr><td><strong>OSU (CPU buffers)</strong></td><td>Your MPI stack over the network</td><td>CPU ↔ MPI ↔ NIC ↔ network</td></tr><tr><td><strong>OSU (CUDA buffers)</strong></td><td>Your MPI stack&#x27;s <em>GPU-aware</em> comm path</td><td>GPU ↔ MPI (GPU-aware) ↔ NIC ↔ network</td></tr></tbody></table>
+<p>They&#x27;re four completely different software stacks touching the same silicon. Running all four isn&#x27;t redundant — it&#x27;s how you triangulate a problem. For example:</p>
+<ul><li>BabelStream ✅, NCCL ✅, but OSU (CPU) ❌ → your GPUs and NCCL are fine, your <strong>MPI setup is broken</strong>.</li><li>BabelStream ✅, OSU (CPU) ✅, but NCCL ❌ and OSU (GPU) ❌ → the issue is likely <strong>GPU↔NIC topology or GPUDirect RDMA</strong>, not basic networking.</li></ul>
+<p>That&#x27;s the whole point of running more than one — each tool isolates a different layer, and the layer that fails tells you exactly where to dig.</p>
+<hr>
+<h2>Building it (the short version)</h2>
+<pre><code class="language-bash">module load gcc openmpi
+wget &lt;osu-tarball&gt;
+tar xf osu-micro-benchmarks-&lt;version&gt;.tar.gz
+cd osu-micro-benchmarks-&lt;version&gt;
+
+./configure CC=mpicc CXX=mpicxx --prefix=$HOME/opt/omb
+make -j &amp;&amp; make install
+export PATH=$HOME/opt/omb/bin:$PATH</code></pre>
+<p>For GPU (H200-relevant) builds, just add CUDA flags:</p>
+<pre><code class="language-bash">./configure CC=mpicc CXX=mpicxx \
+  --enable-cuda \
+  --with-cuda-include=/usr/local/cuda/include \
+  --with-cuda-libpath=/usr/local/cuda/lib64
+make -j &amp;&amp; make install</code></pre>
+<p><strong>Golden rule:</strong> build OSU against the exact MPI you actually intend to run in production. A benchmark built against the wrong MPI is measuring nothing useful.</p>
+<hr>
+<h2>Running it</h2>
+<pre><code class="language-bash"># Basic CPU latency between two ranks
+mpirun -np 2 --host node01,node02 ./osu_latency
+
+# Bandwidth
+mpirun -np 2 --host node01,node02 ./osu_bw
+
+# Collective (Allreduce across 8 ranks)
+mpirun -np 8 ./osu_allreduce
+
+# GPU-to-GPU (device buffers) — needs CUDA-enabled build + GPU-aware MPI
+mpirun -np 2 ./osu_latency D D</code></pre>
+<p>Watch out: if both ranks land on the same node, you&#x27;re accidentally benchmarking shared memory, not the network. Always pin ranks to separate nodes when you&#x27;re testing the fabric.</p>
+<hr>
+<h2>A sane diagnostic order when numbers look bad</h2>
+<p>Don&#x27;t jump straight to &quot;the network is broken.&quot; Work through it like a checklist:</p>
+<pre><code>1. Is this actually inter-node?
+2. Right MPI, right version?
+3. Right transport (UCX/OFI/TCP)?
+4. Right NIC selected?
+5. Rank placement sane?
+6. CPU / NUMA affinity correct?
+7. PCIe topology reasonable?
+8. Link state / congestion?
+
+If GPU involved, also check:
+9. GPU-aware MPI actually enabled?
+10. GPUDirect RDMA working?
+11. GPU ↔ NIC topology favorable? (nvidia-smi topo -m)</code></pre>
+<p>Nine times out of ten it&#x27;s #2 through #6, not the actual fabric.</p>
+<hr>
+<h2>The one-paragraph takeaway</h2>
+<p>OSU is a stethoscope, not a scoreboard. It doesn&#x27;t tell you if your network is &quot;fast&quot; — it tells you exactly how a <em>specific, precisely configured</em> communication path performs, one layer at a time. Run CPU-buffer OSU to validate MPI-over-network, GPU-buffer OSU to validate MPI&#x27;s GPU-aware path, BabelStream to validate raw HBM bandwidth, and NCCL tests to validate NVIDIA&#x27;s own GPU comm stack — separately, not as interchangeable &quot;GPU benchmarks.&quot; Keep them apart, and when something&#x27;s slow, you&#x27;ll know which layer to blame instead of guessing.</p>
+<p><a href="../../../#/fields/benchmarks/osu">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

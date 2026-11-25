@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Tips - Ubuntu Debian File Installation</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/tips/ubuntu-deb-file-install/">
+<meta name="description" content="How to install a .deb file from the command line on Ubuntu and fix a dependencies error.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Tips - Ubuntu Debian File Installation">
+<meta property="og:description" content="How to install a .deb file from the command line on Ubuntu and fix a dependencies error.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/tips/ubuntu-deb-file-install/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/tips/ubuntu-deb-file-install/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../.docs/prerender-redirect.js" data-target="../../#/tips/ubuntu-deb-file-install"></script>
+<main>
+<h1>Tips - Ubuntu Debian File Installation</h1>
+<p><em>How to install a .deb file from the command line on Ubuntu and fix a dependencies error.</em></p>
+<h2>Table of Content</h2>
+<ul><li>Tips - Ubuntu Debian File Installation<ul><li>Table of Content</li><li>Install deb file from Command Line</li><li>Steps to Fix Dependencies Error</li></ul></li></ul>
+<h2>Install deb file from Command Line</h2>
+<p>To install deb package from CL, simply run:</p>
+<pre><code>sudp dpkg -i &lt;package.deb&gt;</code></pre>
+<h2>Steps to Fix Dependencies Error</h2>
+<ol><li>Instruct dpkg to &quot;fix&quot; itself. <code>`</code> sudo dpkg --configure -a <code>`</code></li></ol>
+<ol><li>This will instruct apt-get to correct dependencies and continue to configure your packages <code>`</code> sudo apt-get -f install <code>`</code></li></ol>
+<ol><li>Reinstall the package <code>`</code> sudo dpkg -i &lt;package.deb&gt; <code>`</code></li></ol>
+<p>Note:</p>
+<ul><li>In case of using apt install: <code>`</code> sudo apt install &lt;package&gt; --reinstall <code>`</code></li></ul>
+<p><a href="../../#/tips/ubuntu-deb-file-install">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

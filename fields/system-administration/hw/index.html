@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>System Administration - Hardware</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/hw/">
+<meta name="description" content="A fix for missing HDMI audio on Ubuntu with an NVIDIA GPU, done by commenting one udev rule line.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="System Administration - Hardware">
+<meta property="og:description" content="A fix for missing HDMI audio on Ubuntu with an NVIDIA GPU, done by commenting one udev rule line.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/hw/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/hw/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../.docs/prerender-redirect.js" data-target="../../../#/fields/system-administration/hw"></script>
+<main>
+<h1>System Administration - Hardware</h1>
+<p><em>A fix for missing HDMI audio on Ubuntu with an NVIDIA GPU, done by commenting one udev rule line.</em></p>
+<h2>Table of Contents</h2>
+<ul><li>System Administration - Hardware<ul><li>Table of Contents</li><li>Audio in HDMI</li></ul></li></ul>
+<h2>Audio in HDMI</h2>
+<ul><li>To resolve the issue for HDMI audio in Ubuntu OS: <code>`</code>bash vi /lib/udev/rules.d/71-nvidia.rules</li></ul>
+<p># Comment this line: ACTION==“add”, SUBSYSTEM==“pci”, ATTR{vendor}==“0x10de”, ATTR{class}==“0x040300”, TEST==“power/control”, ATTR{power/control}=“auto”</p>
+<pre><code></code></pre>
+<p><a href="../../../#/fields/system-administration/hw">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

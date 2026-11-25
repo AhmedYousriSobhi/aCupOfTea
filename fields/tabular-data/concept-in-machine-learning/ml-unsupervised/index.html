@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Unsupervised Learning</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/tabular-data/concept-in-machine-learning/ml-unsupervised/">
+<meta name="description" content="Unsupervised learning notes on clustering (K-means, picking an algorithm and the number of clusters) and dimensionality reduction such as PCA, plus the curse of dimensionality.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Unsupervised Learning">
+<meta property="og:description" content="Unsupervised learning notes on clustering (K-means, picking an algorithm and the number of clusters) and dimensionality reduction such as PCA, plus the curse of dimensionality.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/tabular-data/concept-in-machine-learning/ml-unsupervised/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/tabular-data/concept-in-machine-learning/ml-unsupervised/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/tabular-data/concept-in-machine-learning/ml-unsupervised"></script>
+<main>
+<h1>Unsupervised Learning</h1>
+<p><em>Unsupervised learning notes on clustering (K-means, picking an algorithm and the number of clusters) and dimensionality reduction such as PCA, plus the curse of dimensionality.</em></p>
+<p>Unsupervised machine learning is a type of machine learning where the model is trained on a dataset without labeled target values or explicit supervision. In unsupervised learning, the algorithm is tasked with finding patterns, structures, or relationships within the data on its own.</p>
+<h1>Table of Content</h1>
+<h1>Description of Unspervised ML</h1>
+<p>Here&#x27;s a description of unsupervised machine learning:</p>
+<table><thead><tr><th>Aspect</th><th>Description</th></tr></thead><tbody><tr><td>No Labeled Output</td><td>Unlike supervised learning, where the algorithm is provided with input-output pairs and learns to map inputs to specific outputs, unsupervised learning deals with data where there are no target labels or explicit output values to predict.</td></tr><tr><td>Objective</td><td>The primary objective of unsupervised learning is to discover the inherent structure or organization within the data. This could involve finding clusters of similar data points, reducing the dimensionality of the data, or discovering underlying patterns.</td></tr><tr><td>Common Tasks</td><td>Clustering: One common task in unsupervised learning is clustering, where the algorithm groups similar data points together into clusters or categories. Common clustering algorithms include K-Means, hierarchical clustering, and DBSCAN. &lt;/br&gt;&lt;/br&gt;Dimensionality Reduction: Unsupervised learning is also used for dimensionality reduction, which involves reducing the number of features or variables in the data while preserving its essential structure. Principal Component Analysis (PCA) and t-Distributed Stochastic Neighbor Embedding (t-SNE) are popular dimensionality reduction techniques.&lt;/br&gt;&lt;/br&gt;Anomaly Detection: Another task is anomaly detection, where the algorithm identifies data points that are significantly different from the rest of the data. This is useful for detecting outliers or unusual patterns in the data.&lt;/br&gt;&lt;/br&gt;Density Estimation: Unsupervised learning can be used for density estimation, which involves estimating the probability distribution of the data. Kernel Density Estimation (KDE) is an example of a density estimation technique.</td></tr><tr><td>Feature Learning</td><td>Unsupervised learning is often used for feature learning, where the algorithm automatically learns relevant features or representations from the data. This can be particularly beneficial for tasks like image and text analysis.</td></tr><tr><td>Evaluation</td><td>Evaluating the performance of unsupervised learning algorithms can be challenging because there are no ground truth labels. Evaluation metrics depend on the specific task; for example, silhouette score for clustering or reconstruction error for dimensionality reduction.</td></tr><tr><td>Applications</td><td>Unsupervised learning finds applications in various domains, including image and speech recognition, recommendation systems, anomaly detection in cybersecurity, customer segmentation in marketing, and more.&lt;/br&gt;&lt;/br&gt;It is particularly useful in exploratory data analysis when you want to gain insights from data that lacks clear labels or when you want to preprocess data before applying supervised learning techniques.</td></tr><tr><td>Challenges</td><td>Unsupervised learning can be challenging because it relies on the algorithm&#x27;s ability to discover meaningful patterns without explicit guidance.&lt;/br&gt;&lt;/br&gt;The choice of the right algorithm and hyperparameters can significantly impact results.</td></tr></tbody></table>
+<p>In summary, unsupervised machine learning is a branch of machine learning focused on finding patterns and structures within data without the use of labeled target values. It is a valuable tool for uncovering hidden insights and knowledge from large and complex datasets.</p>
+<h1>Two cases of unsupervised learning</h1>
+<p>One popularly use case is called <strong>clustering</strong>, where we use our unlabeled data to identify an unknown structure and an example of this may be segmenting our customers into different groups.</p>
+<p>The other major use case for unsupervised algorithms is for <strong>dimensionality reduction</strong>. Namely using structural characteristics to reduce the size of our dataset without losing much information contained in that original dataset.</p>
+<h1>The Curse of dimensionality</h1>
+<p>The dimensionality refers to the number of features in our dataset, and theortically the more features we have the better the model should perform, since models will have more features to learn from, however in real life there are several reasons why too many features may end up leading to worse performance in practice.</p>
+<p>If we have several features, things can go wrong;</p>
+<ul><li>Maybe some of those features are spurios correlations (meaning they correlate within your dataset, but with new data outside form our training dataset)</li></ul>
+<ul><li>Too many features may create more noise and signal.</li></ul>
+<ul><li>Algorithms find it harder to sort through non-meaningful features.</li></ul>
+<ul><li>The number of training examples required will increase exponentially with the dimensionality</li></ul>
+<ul><li>On top of that, higher dimensions will often lead to slower performance as dealing with more columns is going to be more computationally expensive.</li></ul>
+<ul><li>Also it will lead to the incidence of outliers increasing as the dimensionality increases</li></ul>
+<p>Here are some of the specific problems that can arise due to the curse of dimensionality:</p>
+<ul><li>Data sparsity: As the number of dimensions increases, the data becomes more and more sparse. This means that there are fewer and fewer data points that are close to each other in high-dimensional space. This can make it difficult to find patterns and relationships in the data.</li><li>Overfitting: Machine learning models are more likely to overfit high-dimensional data. Overfitting occurs when a model learns the training data too well and is unable to generalize to new data.</li><li>Computational complexity: Training machine learning models on high-dimensional data can be very computationally expensive. This is because the algorithms need to learn the relationships between all of the different dimensions in the data.</li></ul>
+<p>There are a number of techniques that can be used to mitigate the curse of dimensionality, such as:</p>
+<ul><li>Feature selection: Feature selection is the process of selecting a subset of features that are most relevant to the task at hand. This can help to reduce the dimensionality of the data and make it easier to find patterns and relationships.</li><li>Dimensionality reduction: Dimensionality reduction is the process of transforming the data into a lower-dimensional space while preserving as much information as possible. This can help to make the data more manageable and easier to analyze.</li><li>Regularization: Regularization is a technique that can help to prevent overfitting. It works by penalizing the model for having complex relationships between the different features.</li></ul>
+<p>The curse of dimensionality is a complex topic, and there is no one-size-fits-all solution. The best approach to dealing with the curse of dimensionality will depend on the specific problem that you are trying to solve.</p>
+<h1>K-means</h1>
+<p>The process is to take k centroids, find the nearest points, then take the average of each one of those points that are closer to that centroid than any other centroid, and set that average that we have as the new centroid and view the closest points to that new centroid.</p>
+<p>This movement towards that average as we keep reinitiating that centroid after every iteration, is going to stop once that centroid no longer moves and this can happen at different points depending on where we initiate our centroids.</p>
+<h1>Choosing the right Clustering ALgorithm</h1>
+<p>Choosing the right clustering algorithm depends on the nature of your data, your objectives, and the characteristics you want in your clusters. Here are some considerations to help you choose a clustering algorithm:</p>
+<table><thead><tr><th>Factor</th><th>Description</th></tr></thead><tbody><tr><td>Data Characteristics</td><td>Data Distribution: Consider the distribution of your data. K-Means and Gaussian Mixture Models (GMM) assume that clusters have a spherical shape and follow a Gaussian distribution. If your data doesn&#x27;t meet these assumptions, other algorithms like DBSCAN or hierarchical clustering might be more suitable.&lt;/br&gt;Density: DBSCAN and related algorithms are effective when dealing with clusters of varying shapes and densities.</td></tr><tr><td>Number of Clusters</td><td>K-Means: If you have a good estimate of the number of clusters (K), K-Means can work well. You can use techniques like the Elbow Method or Silhouette Score to help determine the optimal K.&lt;/br&gt;Hierarchical Clustering: If you want to explore clusters at different granularities, hierarchical clustering can be useful as it produces a hierarchy of clusters.</td></tr><tr><td>Scalability</td><td>Consider the size of your dataset. K-Means and GMM can handle large datasets efficiently. DBSCAN, on the other hand, can be slow for very large datasets due to its density-based nature.</td></tr><tr><td>Interpretability</td><td>Think about how interpretable you want the clusters to be. K-Means and GMM often provide clusters that are easy to understand, while hierarchical clustering produces a hierarchy that may require more interpretation.</td></tr><tr><td>Outliers</td><td>If you expect outliers in your data and want to exclude them from clusters, consider algorithms like DBSCAN, which can identify noise points.</td></tr><tr><td>Robustness to Noise</td><td>DBSCAN and other density-based algorithms are robust to noise and can handle datasets with outliers effectively.</td></tr><tr><td>Non-Euclidean Distances</td><td>Some algorithms like K-Means and GMM assume Euclidean distances between data points. If your data requires a different distance metric (e.g., cosine similarity for text data), consider algorithms that support custom distance metrics.</td></tr><tr><td>Cluster Shape</td><td>Consider whether your clusters are expected to have arbitrary shapes. Algorithms like DBSCAN, Mean-Shift, or Spectral Clustering can handle non-convex clusters.</td></tr><tr><td>Hierarchical vs. Partitional</td><td>Decide if you prefer hierarchical clustering (which produces a tree of clusters) or partitional clustering (which assigns each data point to a single cluster).</td></tr><tr><td>Domain Knowledge</td><td>Your domain expertise and understanding of the problem can also influence the choice of clustering algorithm. Sometimes, a specific algorithm may be known to work well in your domain.</td></tr><tr><td>Experimentation</td><td>It&#x27;s often a good practice to experiment with multiple clustering algorithms and compare their results in terms of cluster quality and interpretability.</td></tr><tr><td>Evaluation Metrics</td><td>Consider the evaluation metrics you plan to use to assess the quality of clusters. Different algorithms may perform differently in terms of metrics like silhouette score, Davies-Bouldin index, or within-cluster sum of squares (for K-Means).</td></tr><tr><td>Software and Library Support</td><td>Ensure that the algorithm you choose is available in your preferred programming language and has good library support (e.g., scikit-learn, scipy).</td></tr></tbody></table>
+<p>In practice, it&#x27;s common to try several clustering algorithms and evaluate their performance based on your specific objectives and data characteristics. No single algorithm is best for all scenarios, so it&#x27;s essential to choose the one that best suits your needs and produces meaningful clusters for your analysis or applications.</p>
+<h1>Clustering Algorithms Comparison</h1>
+<table><thead><tr><th>Algorithm</th><th>Data Distribution</th><th>Number of Clusters</th><th>Scalability</th><th>Interpretability</th><th>Outlier Handling</th><th>Robustness to Noise</th><th>Cluster Shape</th><th>Non-Euclidean Distances</th><th>Hierarchical vs. Partitional</th><th>Domain Knowledge</th><th>Evaluation Metrics</th><th>Software Support</th></tr></thead><tbody><tr><td>K-Means</td><td>Assumes spherical</td><td>Requires pre-defined K</td><td>Scalable</td><td>Easy to interpret</td><td>Sensitive to outliers</td><td>Not robust</td><td>Assumes convex</td><td>Supports custom distances</td><td>Partitional</td><td>Widely used</td><td>Silhouette Score, Within-cluster SSE</td><td>scikit-learn, R</td></tr><tr><td>Gaussian Mixture Models</td><td>Assumes Gaussian</td><td>Requires pre-defined K</td><td>Scalable</td><td>Easy to interpret</td><td>Sensitive to outliers</td><td>Not robust</td><td>Assumes convex</td><td>Supports custom distances</td><td>Partitional</td><td>Gaussian data</td><td>Silhouette Score, BIC</td><td>scikit-learn, R</td></tr><tr><td>DBSCAN</td><td>Does not assume specific shape</td><td>Adapts to density</td><td>Limited</td><td>scalability for large datasets</td><td>Less interpretable</td><td>Identifies noise points</td><td>Robust to noise</td><td>Handles non-convex</td><td>Customizable distance metric</td><td>Partitional</td><td>Effective for noisy data</td><td>Silhouette Score</td><td>scikit-learn, R</td></tr><tr><td>Mean-Shift</td><td>Does not assume specific shape</td><td>Adapts to density</td><td>Moderate scalability</td><td>Moderate interpretability</td><td>Identifies modes</td><td>Robust to noise</td><td>Handles non-convex</td><td>Supports custom distances</td><td>Partitional</td><td>Mode-seeking</td><td>Silhouette Score</td><td>scikit-learn, R</td></tr><tr><td>Agglomerative Hierarchical</td><td>Does not assume specific shape</td><td>Hierarchical hierarchy</td><td>Moderate scalability</td><td>Hierarchical structure</td><td>No explicit outlier handling</td><td>Moderate robustness</td><td>Handles non-convex</td><td>Supports custom distances</td><td>Hierarchical</td><td>Hierarchical clustering</td><td>Silhouette Score, Cophenetic Correlation</td><td>scikit-learn, scipy</td></tr><tr><td>Spectral Clustering</td><td>Does not assume specific shape</td><td>Requires pre-defined K</td><td>Limited scalability for large datasets</td><td>Moderate interpretability</td><td>No explicit outlier handling</td><td>Robust to noise</td><td>Handles non-convex</td><td>Supports custom distances</td><td>Partitional</td><td>Spectral techniques</td><td>Silhouette Score</td><td>scikit-learn</td></tr></tbody></table>
+<h1>Determining The Number of Clusters</h1>
+<p>Choosing the appropriate number of clusters (K) is a crucial step in clustering analysis. Several methods can help you determine the optimal K:</p>
+<table><thead><tr><th>Method</th><th>Details</th></tr></thead><tbody><tr><td>Elbow Method</td><td>Plot the within-cluster sum of squares (inertia) against different values of K.&lt;/br&gt;Look for an &quot;elbow&quot; point in the plot where the inertia starts to level off. This can be a good choice for K.</td></tr><tr><td>Silhouette Score</td><td>Calculate the silhouette score for different values of K. The silhouette score measures the quality of clustering, and higher values indicate better separation between clusters.Choose the K that maximizes the silhouette score.&lt;/br&gt;You can use the silhouette_score function from scikit-learn.</td></tr><tr><td>Gap Statistics</td><td>Gap statistics compare the performance of your clustering to a reference (e.g., random data) and can help identify the optimal K.&lt;/br&gt;The larger the gap statistic, the better the clustering.&lt;/br&gt;You can use libraries like scikit-learn or external packages for gap statistics.</td></tr><tr><td>Domain Knowledge</td><td>In some cases, domain knowledge or business requirements may guide your choice of K.</td></tr><tr><td>Visual Inspection</td><td>Visualize the results of different K values and choose the one that makes the most sense based on the distribution of data points.</td></tr></tbody></table>
+<p>After determining the optimal number of clusters (K), you can proceed with clustering your data using the chosen algorithm and K value within your pipeline.</p>
+<h2>Silhouette Score</h2>
+<p>The Silhouette Score is a metric for evaluating the quality of clustering results. It measures how well a data point fits into its assigned cluster and how distinct it is from other clusters. The Silhouette Score ranges from -1 to 1, where a high value indicates that the object is well matched to its own cluster and poorly matched to neighboring clusters.</p>
+<p>The Silhouette Score is calculated for each data point in the dataset, and calculated as follows:</p>
+<pre><code>Silhouette Score = (b - a) / max(a, b)
+
+where:
+
+    a is the average intra-cluster distance for the data point
+    b is the average nearest-cluster distance for the data point</code></pre>
+<p>The average intra-cluster distance is the average distance between the data point and all other data points in its cluster. The average nearest-cluster distance is the average distance between the data point and the nearest data point in another cluster.</p>
+<p>The Silhouette Score for a cluster is calculated as the average Silhouette Score for all data points in the cluster. The overall Silhouette Score for the clustering is calculated as the average Silhouette Score for all clusters.</p>
+<p>If b &gt; a, then the score is postive, this indicates:</p>
+<ul><li>From b, which is bigger, clusters are far from each others, which means they are seperated.</li><li>From a, which is smaller, in the same cluster, the data points are near to each others.</li></ul>
+<p>A high Silhouette Score indicates that the clustering is well-defined and that the data points are well-assigned to their clusters. A low Silhouette Score indicates that the clustering is not well-defined and that some of the data points may be assigned to the wrong clusters.</p>
+<p>The Silhouette Score is a useful metric for evaluating the quality of clustering results. It is a simple and intuitive metric that can be easily calculated and interpreted.</p>
+<p>Here are some tips for improving the Silhouette Score:</p>
+<ul><li>Choose the right clustering algorithm for your data.</li><li>Use a variety of hyperparameters and choose the ones that give the highest Silhouette Score.</li><li>Preprocess the data to remove outliers and noise.</li><li>Use feature engineering to create new features that are more informative for the clustering task.</li><li>Merge small clusters or split large clusters.</li></ul>
+<h2>Elbow Method</h2>
+<p>The elbow method is a heuristic method for determining the optimal number of clusters in a data set. It involves plotting the <strong>within-cluster sum of squares (WCSS)</strong> for different cluster numbers and identifying the “elbow” point where WCSS starts to level off.</p>
+<p>The WCSS is a measure of how well the data points in a cluster are grouped together. It is calculated as the sum of the squared distances between each data point and the cluster centroid.</p>
+<p>The elbow method is based on the observation that increasing the number of clusters can help to reduce the WCSS. This is because having more clusters allows one to capture finer groups of data objects that are more similar to each other. However, at some point, adding more clusters will not significantly improve the WCSS. This is because the data points are already well-grouped into a smaller number of clusters.</p>
+<p>The elbow point in the WCSS plot is the point where the rate of decrease in WCSS starts to slow down. This point is generally considered to be the optimal number of clusters.</p>
+<p>Here is an example of how to use the elbow method to determine the optimal number of clusters in a data set:</p>
+<ol><li>Calculate the WCSS for different cluster numbers.</li><li>Plot the WCSS against the cluster number.</li><li>Identify the “elbow” point in the plot.</li><li>The cluster number at the elbow point is the optimal number of clusters.</li></ol>
+<p>Example of Elbow Method:</p>
+<p><img src="../../../../fields/tabular-data/concept-in-machine-learning/images/ml-unsupervised-01.jpg" alt="Elbow Method for Optimal K" loading="lazy"></p>
+<p>The elbow method is a simple and intuitive method for determining the optimal number of clusters in a data set. However, it is important to note that it is a heuristic method, and there is no guarantee that it will always find the optimal number of clusters.</p>
+<p>Here are some tips for using the elbow method effectively:</p>
+<ul><li>Use a variety of clustering algorithms and choose the one that gives the best results.</li><li>Preprocess the data to remove outliers and noise.</li><li>Use feature engineering to create new features that are more informative for the clustering task.</li><li>Try different values for the elbow detection threshold.</li><li>Use other metrics, such as the Silhouette Score, to validate the results of the elbow method.</li></ul>
+<h3>Python Implementation</h3>
+<p>python code provided for Elbow method implementation locatted at <a href="https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/fields/tabular-data/data-modeling/clustering/cluster_elbow_method.py">&quot;tabularData/dataModeling/cluster_elbow_method.py&quot;</a></p>
+<h1>Dimensionality Reduction Techniques</h1>
+<p>There are many different dimensionality reduction techniques, each with its own strengths and weaknesses. Some of the most common dimensionality reduction techniques include:</p>
+<table><thead><tr><th>Technique</th><th>Description</th></tr></thead><tbody><tr><td>Principal component analysis (PCA)</td><td>PCA is a linear dimensionality reduction technique that finds the principal components of the data, which are the directions in which the data varies the most. PCA is a simple and efficient technique, but it is not able to capture non-linear relationships in the data.</td></tr><tr><td>Kernel principal component analysis (KPCA)</td><td>KPCA is a non-linear extension of PCA that uses a kernel function to transform the data into a higher-dimensional space, where PCA is then performed. This allows KPCA to capture non-linear relationships in the data. However, KPCA is more computationally expensive than PCA and the results can be more difficult to interpret.</td></tr><tr><td>Linear discriminant analysis (LDA)</td><td>LDA is a supervised dimensionality reduction technique that is used to reduce the dimensionality of the data while preserving the information that is useful for discrimination between different classes. LDA is a powerful technique for classification, but it is not able to capture non-linear relationships in the data.</td></tr><tr><td>t-distributed stochastic neighbor embedding (t-SNE)</td><td>t-SNE is a non-linear dimensionality reduction technique that is used to visualize high-dimensional data in a low-dimensional space. t-SNE is able to preserve the local structure of the data, which makes it well-suited for visualization tasks. However, t-SNE is computationally expensive and the results can be difficult to interpret.</td></tr><tr><td>Uniform manifold approximation and projection (UMAP)</td><td>UMAP is a non-linear dimensionality reduction technique that is similar to t-SNE, but it is more efficient and produces more consistent results. UMAP is well-suited for visualization and clustering tasks.</td></tr></tbody></table>
+<p>In addition to these general-purpose dimensionality reduction techniques, there are also many specialized techniques that have been developed for specific applications. For example, there are dimensionality reduction techniques for image processing, natural language processing, and financial data analysis.</p>
+<h2>Technical Comparison</h2>
+<table><thead><tr><th>Technique</th><th>Date of creation</th><th>Work principle</th><th>Other important comparison points</th></tr></thead><tbody><tr><td>Principal component analysis (PCA)</td><td>1901</td><td>Finds the principal components of the data, which are the directions in which the data varies the most.</td><td>Linear, simple to implement and understand, fast and efficient, interpretable results, sensitive to outliers</td></tr><tr><td>Kernel principal component analysis (KPCA)</td><td>1999</td><td>Uses a kernel function to transform the data into a higher-dimensional space, where PCA is then performed.</td><td>Non-linear, can capture non-linear relationships in the data, more robust to outliers than PCA, more computationally expensive than PCA, results can be more difficult to interpret</td></tr><tr><td>Linear discriminant analysis (LDA)</td><td>1936</td><td>Finds a linear combination of the features that maximizes the discrimination between different classes.</td><td>Supervised, powerful for classification, cannot capture non-linear relationships in the data</td></tr><tr><td>t-distributed stochastic neighbor embedding (t-SNE)</td><td>2008</td><td>Uses a probability distribution to embed the data in a lower-dimensional space while preserving the local structure of the data.</td><td>Non-linear, well-suited for visualization tasks, computationally expensive, results can be difficult to interpret</td></tr><tr><td>Uniform manifold approximation and projection (UMAP)</td><td>2018</td><td>Uses a fuzzy topological data analysis framework to embed the data in a lower-dimensional space while preserving the local and global structure of the data.</td><td>Non-linear, well-suited for visualization and clustering tasks, more efficient and produces more consistent results than t-SNE</td></tr></tbody></table>
+<p>The best dimensionality reduction technique to use will depend on the specific characteristics of your data and your needs. It is important to experiment with different techniques to find the one that works best for your problem.</p>
+<h1>Principal Component Analysis (PCA)</h1>
+<p>Principal component analysis (PCA) is a statistical procedure that uses an orthogonal transformation to convert a set of observations of possibly correlated variables into a set of values of linearly uncorrelated variables called principal components. This transformation is defined in such a way that the first principal component has the largest possible variance (that is, accounts for as much of the variability in the data as possible), and each succeeding component in turn has the largest possible variance given that it is orthogonal to the preceding components. The resulting components are a linear combination of the original variables, and at any given component, information about the original variables is lost.</p>
+<p>PCA is often used to reduce the dimensionality of data while preserving as much of the variation in the data as possible. This can be useful for many purposes, such as:</p>
+<ul><li>Data visualization: PCA can be used to project high-dimensional data into a lower-dimensional space, which can make it easier to visualize and understand the data.</li><li>Feature extraction: PCA can be used to extract the most important features from a dataset, which can be used to improve the performance of machine learning algorithms.</li><li>Anomaly detection: PCA can be used to detect anomalies in a dataset, which can be useful for fraud detection and other applications.</li></ul>
+<p>PCA is a powerful tool that can be used for a variety of tasks. It is a popular technique in machine learning, statistics, and data science.</p>
+<h2>Example: Dimensionality Reduction using PCA</h2>
+<p>Here is an example of how PCA can be used to reduce the dimensionality of data:</p>
+<p>Suppose we have a dataset of images of cats and dogs. Each image is represented by a vector of pixels, where each pixel is a value between 0 and 255. This means that each image is represented by a vector of length 1024 * 1024, which is very high-dimensional.</p>
+<p>We can use PCA to reduce the dimensionality of this dataset while preserving as much of the variation in the data as possible. For example, we can reduce the dimensionality to 100 dimensions without losing too much information. This means that we can now represent each image by a vector of length 100, which is much easier to visualize and process.</p>
+<p>Once we have reduced the dimensionality of the data, we can use PCA to visualize the data. For example, we can create a scatter plot of the first two principal components. This scatter plot will show us how the cats and dogs are distributed in the two-dimensional space.</p>
+<p>We can also use PCA to extract the most important features from the dataset. For example, we can train a machine learning algorithm to classify the images as cats or dogs. We can then use PCA to extract the most important features from the dataset and use those features to train a new machine learning algorithm. This new algorithm will likely be more accurate than the original algorithm because it is trained on the most important features in the data.</p>
+<h2>PCA Algorithm</h2>
+<p>The steps involved in PCA Algorithm are as follows:</p>
+<pre><code>Step-01: Get data.
+Step-02: Compute the mean vector (µ).
+Step-03: Subtract mean from the given data.
+Step-04: Calculate the covariance matrix.
+Step-05: Calculate the eigen vectors and eigen values of the covariance matrix.
+Step-06: Choosing components and forming a feature vector.
+Step-07: Deriving the new data set.</code></pre>
+<h2>PRACTICE PROBLEMS BASED ON PRINCIPAL COMPONENT ANALYSIS</h2>
+<h3>Problem-01</h3>
+<pre><code>Given data = { 2, 3, 4, 5, 6, 7 ; 1, 5, 3, 6, 7, 8 }.
+Compute the principal component using PCA Algorithm.
+ 
+OR
+ 
+Consider the two dimensional patterns (2, 1), (3, 5), (4, 3), (5, 6), (6, 7), (7, 8).
+Compute the principal component using PCA Algorithm.
+ 
+OR
+ 
+Compute the principal component of following data-
+CLASS 1
+X = 2 , 3 , 4
+Y = 1 , 5 , 3
+CLASS 2
+X = 5 , 6 , 7
+Y = 6 , 7 , 8</code></pre>
+<h3>Solution</h3>
+<p>We use the above discussed PCA Algorithm</p>
+<p><strong>Step-01:</strong></p>
+<ul><li>Get data,The given feature vectors are</li></ul>
+<pre><code>x1 = (2, 1)
+x2 = (3, 5)
+x3 = (4, 3)
+x4 = (5, 6)
+x5 = (6, 7)
+x6 = (7, 8)</code></pre>
+<p><img src="../../../../fields/tabular-data/concept-in-machine-learning/images/ml-unsupervised-02.png" alt="Six two-dimensional data points written as column vectors" loading="lazy"></p>
+<p><strong>Step-02:</strong></p>
+<ul><li>Calculate the mean vector (µ).</li></ul>
+<pre><code>Mean vector (µ)
+= ((2 + 3 + 4 + 5 + 6 + 7) / 6, (1 + 5 + 3 + 6 + 7 + 8) / 6)
+= (4.5, 5)</code></pre>
+<p>Thus,</p>
+<p><img src="../../../../fields/tabular-data/concept-in-machine-learning/images/ml-unsupervised-03.png" alt="Mean vector of the six points, equal to 4.5 and 5" loading="lazy"></p>
+<p><strong>Step-03:</strong></p>
+<ul><li>Subtract mean vector (µ) from the given feature vectors.</li></ul>
+<pre><code>x1 – µ = (2 – 4.5, 1 – 5) = (-2.5, -4)
+x2 – µ = (3 – 4.5, 5 – 5) = (-1.5, 0)
+x3 – µ = (4 – 4.5, 3 – 5) = (-0.5, -2)
+x4 – µ = (5 – 4.5, 6 – 5) = (0.5, 1)
+x5 – µ = (6 – 4.5, 7 – 5) = (1.5, 2)
+x6 – µ = (7 – 4.5, 8 – 5) = (2.5, 3)</code></pre>
+<p>Feature vectors (xi) after subtracting mean vector (µ) are</p>
+<p><img src="../../../../fields/tabular-data/concept-in-machine-learning/images/ml-unsupervised-04.png" alt="Six data points after subtracting the mean vector, as column vectors" loading="lazy"></p>
+<p><strong>Step-04:</strong></p>
+<ul><li>Calculate the covariance matrix. Covariance matrix is given by</li></ul>
+<p><img src="../../../../fields/tabular-data/concept-in-machine-learning/images/ml-unsupervised-05.png" alt="Covariance matrix formula: sum of outer products of centered points divided by n" loading="lazy"></p>
+<p>Now,</p>
+<p><img src="../../../../fields/tabular-data/concept-in-machine-learning/images/ml-unsupervised-06.png" alt="Six worked outer products of centered vectors, each giving a 2 by 2 matrix" loading="lazy"></p>
+<p>Now,</p>
+<pre><code>Covariance matrix
+= (m1 + m2 + m3 + m4 + m5 + m6) / 6</code></pre>
+<p>On adding the above matrices and dividing by 6, we get:</p>
+<p><img src="../../../../fields/tabular-data/concept-in-machine-learning/images/ml-unsupervised-07.png" alt="Covariance matrix as one sixth of summed matrix, giving 2.92, 3.67, 3.67, 5.67" loading="lazy"></p>
+<p><strong>Step-05:</strong></p>
+<ul><li>Calculate the eigen values and eigen vectors of the covariance matrix.</li></ul>
+<p>λ is an eigen value for a matrix M if it is a solution of the characteristic equation |M – λI| = 0. So, we have:</p>
+<p><img src="../../../../fields/tabular-data/concept-in-machine-learning/images/ml-unsupervised-08.png" alt="Characteristic equation: determinant of covariance matrix minus lambda times identity equals zero" loading="lazy"></p>
+<p>From here,</p>
+<pre><code>(2.92 – λ)(5.67 – λ) – (3.67 x 3.67) = 0
+16.56 – 2.92λ – 5.67λ + λ2 – 13.47 = 0
+λ2 – 8.59λ + 3.09 = 0
+Solving this quadratic equation, we get λ = 8.22, 0.38
+Thus, two eigen values are λ1 = 8.22 and λ2 = 0.38.</code></pre>
+<p>Clearly, the second eigen value is very small compared to the first eigen value. So, the second eigen vector can be left out.</p>
+<p>Eigen vector corresponding to the greatest eigen value is the principal component for the given data set. So. we find the eigen vector corresponding to eigen value λ1.</p>
+<p>We use the following equation to find the eigen vector:</p>
+<pre><code>MX = λX
+where-
+M = Covariance Matrix
+X = Eigen vector
+λ = Eigen value</code></pre>
+<p>Substituting the values in the above equation, we get</p>
+<p><img src="../../../../fields/tabular-data/concept-in-machine-learning/images/ml-unsupervised-09.png" alt="Covariance matrix times vector X1, X2 equals 8.22 times the same vector" loading="lazy"></p>
+<p>Solving these, we get:</p>
+<pre><code>2.92X1 + 3.67X2 = 8.22X1
+3.67X1 + 5.67X2 = 8.22X2
+ 
+On simplification, we get-
+5.3X1 = 3.67X2 ………(1)
+3.67X1 = 2.55X2 ………(2)</code></pre>
+<p>From (1) and (2), <strong>X1 = 0.69X2</strong></p>
+<p>From (2), the eigen vector is</p>
+<p><img src="../../../../fields/tabular-data/concept-in-machine-learning/images/ml-unsupervised-10.png" alt="Eigenvector X1, X2 computed as 2.55 and 3.67" loading="lazy"></p>
+<p>Thus, principal component for the given data set is</p>
+<p><img src="../../../../fields/tabular-data/concept-in-machine-learning/images/ml-unsupervised-11.png" alt="Principal component equals the eigenvector with values 2.55 and 3.67" loading="lazy"></p>
+<p>Lastly, we project the data points onto the new subspace as</p>
+<pre><code>Y = 2.55*C , X = 3.67C -🡪 Y = 2.55/3.67 X</code></pre>
+<p><img src="../../../../fields/tabular-data/concept-in-machine-learning/images/ml-unsupervised-12.png" alt="Scatter plot of points projected onto the principal component line x1 = 0.69 x2" loading="lazy"></p>
+<h2>PCA Technical Points</h2>
+<p>There are various of points that one should take care during deciding using PCA, which we refered in <a href="../../../../fields/tabular-data/data-feature-engineering/pca/">&quot;tabularData/dataModeling/PCA&quot;</a></p>
+<p>Along with Python script for determining the number of components in PCA <a href="https://github.com/AhmedYousriSobhi/aCupOfTea/blob/main/fields/tabular-data/data-feature-engineering/pca-ncomponent.py">&quot;tabularData/dataModeling/pca_ncomponent.py&quot;</a></p>
+<h1>Credits</h1>
+<ul><li>IBM Coursera Specialization</li></ul>
+<p><a href="../../../../#/fields/tabular-data/concept-in-machine-learning/ml-unsupervised">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

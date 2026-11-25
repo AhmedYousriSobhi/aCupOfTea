@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>GPU Temperature in a Health Check: The Ceiling Rule</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/node-health-check/gpu-temperature/gpu-temperature-ceiling/">
+<meta name="description" content="Add a GPU over-temperature ceiling to a health-check script: read temperature with one dcgmi call, drain without killing jobs, fail safe when the sensor can&#x27;t be read, and pick the number.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="GPU Temperature in a Health Check: The Ceiling Rule">
+<meta property="og:description" content="Add a GPU over-temperature ceiling to a health-check script: read temperature with one dcgmi call, drain without killing jobs, fail safe when the sensor can&#x27;t be read, and pick the number.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/node-health-check/gpu-temperature/gpu-temperature-ceiling/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/node-health-check/gpu-temperature/gpu-temperature-ceiling/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../../.docs/prerender-redirect.js" data-target="../../../../../#/fields/system-administration/node-health-check/gpu-temperature/gpu-temperature-ceiling"></script>
+<main>
+<h1>GPU Temperature in a Health Check: The Ceiling Rule</h1>
+<p><em>Add a GPU over-temperature ceiling to a health-check script: read temperature with one dcgmi call, drain without killing jobs, fail safe when the sensor can&#x27;t be read, and pick the number.</em></p>
+<blockquote><p><strong>Part 12 of the [Node Health Check series](/fields/system-administration/node-health-check/README.md).</strong> Dana, Sam and <code>gpu-node-12</code> are invented, and 87 °C is an example value. Commands and field IDs come from NVIDIA&#x27;s DCGM documentation. The check is a site-style bash health script, the kind many clusters run next to or instead of stock NHC checks, not an upstream NHC module. The author tested this code and it works; the output samples on the page are synthetic.</p></blockquote>
+<p>Around 04:10, a GPU on <code>gpu-node-12</code> will cross a temperature nobody ever wrote down. Nothing will page anyone, because nothing is looking. Dana will fix that by making the health check shout whenever it can&#x27;t read a number, and that will be a much louder mistake.</p>
+<p><strong>By the end of this page you will be able to:</strong></p>
+<ul><li>Read GPU temperature, utilization and memory in one <code>dcgmi dmon</code> call.</li><li>Write a ceiling rule that drains a node without killing its jobs.</li><li>Make the check fail safe, so an unreadable sensor never drains a node.</li><li>Choose a ceiling from the GPU&#x27;s own limits and roll it out alert-first.</li></ul>
+<hr>
+<h2>The job that got slower and never failed</h2>
+<p>It&#x27;s 04:10. A training job on <code>gpu-node-12</code> has been running for days, and its step time has crept up by a little each hour. No error, no crash, no alert.</p>
+<p>By morning Sam from the hardware team finds a failed fan tray. One GPU had been running hotter than anything else in the rack for hours.</p>
+<p>Dana, who inherited the cluster&#x27;s health checks on Monday, takes the action item: the health check should have noticed. It already counts GPUs and reads their health. It has never once looked at temperature.</p>
+<p>The obvious plan is a few lines: read the temperature, compare, drain.</p>
+<hr>
+<h2>Three ways to get a ceiling wrong</h2>
+<p><strong>Attempt 1: use `nvidia-smi`.</strong> The script already calls it elsewhere, so Dana adds one more call.</p>
+<p><strong>Attempt 2: pick 80.</strong> It feels hot, and nobody objects.</p>
+<p><strong>Attempt 3: be safe.</strong> If the temperature can&#x27;t be read, treat the GPU as too hot and drain the node. Better safe than sorry. Dana&#x27;s cursor is on &quot;Save&quot; when Sam replies in the review:</p>
+<blockquote><p><strong>Sam:</strong> If the DCGM host engine restarts across the fleet, every node fails to read at the same moment. Every node drains at once.</p></blockquote>
+<p>Dana deletes the line.</p>
+<p>Three attempts, one lesson: the ceiling itself is simple. Everything around it (where the number comes from, how it&#x27;s chosen, and what happens when it&#x27;s missing) is where the page is.</p>
+<hr>
+<h2>What the check reads</h2>
+<p>One call returns all three values the temperature rules need:</p>
+<pre><code class="language-bash">dcgmi dmon -e 150,203,252 -c 1</code></pre>
+<table><thead><tr><th>Field</th><th>Meaning</th><th>Current name (DCGM docs)</th></tr></thead><tbody><tr><td>150</td><td>GPU temperature (°C)</td><td><code>DCGM_FI_DEV_GPU_TEMP_CELSIUS</code></td></tr><tr><td>203</td><td>GPU utilization (%)</td><td><code>DCGM_FI_DEV_GPU_UTIL_RATIO</code></td></tr><tr><td>252</td><td>GPU memory in use (MiB)</td><td><code>DCGM_FI_DEV_FB_USED</code></td></tr></tbody></table>
+<ul><li><code>-e</code> takes a comma-separated list of field IDs, and <code>-c 1</code> exits after one sample.</li><li>With no entity given, <code>dcgmi dmon</code> monitors all supported GPUs.</li><li>The IDs are stable, but names have changed between DCGM releases. <code>dcgmi dmon -l</code> lists the fields your installed version knows.</li></ul>
+<p>Each GPU comes back as a row, for example <code>GPU 0     38     0     12</code>, with the columns in the order of <code>-e</code>.</p>
+<h3>Why dcgmi and not nvidia-smi</h3>
+<p>Both read the same sensor, as far as the author knows. The trade-off is the failure mode, and that is the author&#x27;s experience, not NVIDIA&#x27;s documentation.</p>
+<ul><li><code>nvidia-smi</code> can hang on a bad GPU.</li><li><code>dcgmi</code> depends on the DCGM host engine being up.</li></ul>
+<p>Wrap either in <code>timeout</code>. A health check that can hang is a health check that needs a health check.</p>
+<h3>One reading per run</h3>
+<p>The script reads once per run and keeps the parsed rows for later rules. The excerpt below is the core of it. The helper names (<code>record_error</code>, <code>TIMEOUT_DURATION</code>) belong to the surrounding site script.</p>
+<pre><code class="language-bash">raw=$(timeout -k 5 ${TIMEOUT_DURATION}s dcgmi dmon -e 150,203,252 -c 1 2&gt;&amp;1)
+ret=$?
+
+GPU_TEMPS=&quot;&quot;
+while read -r _ idx temp util mem _; do
+    [[ &quot;$idx&quot; =~ ^[0-9]+$ ]] || continue          # skip header lines
+    temp=&quot;${temp%%.*}&quot;; util=&quot;${util%%.*}&quot;; mem=&quot;${mem%%.*}&quot;
+    [[ &quot;$temp&quot; =~ ^[0-9]+$ ]] || continue          # skip N/A readings
+    GPU_TEMPS+=&quot;${idx}, ${temp}, ${util}, ${mem}&quot;$&#x27;\n&#x27;
+done &lt; &lt;(echo &quot;$raw&quot; | grep -E &#x27;^[[:space:]]*GPU[[:space:]]+[0-9]+&#x27;)</code></pre>
+<hr>
+<h2>What a ceiling does, and what it must not do</h2>
+<p>The rule is one comparison per GPU, busy or idle:</p>
+<pre><code class="language-bash">if (( temp &gt; GPU_TEMP_CEILING )); then
+    msg=&quot;GPU_TEMP_CRITICAL: GPU-$idx at ${temp}C (ceiling ${GPU_TEMP_CEILING}C)&quot;
+    flag_gpu_temp &quot;GPU_TEMP_CRITICAL&quot; &quot;crit&quot; &quot;$msg&quot;   # one line to syslog via logger
+    record_error &quot;14_check_gpu_temp_ceiling&quot; &quot;$msg&quot;   # the drain happens at the end of the run
+fi</code></pre>
+<p><img src="../../../../../fields/system-administration/node-health-check/gpu-temperature/images/temp-ceiling.svg" alt="A GPU temperature line rises over time and crosses a dashed ceiling; at the crossing the node drains with the reason GPU_TEMP_CRITICAL and running jobs keep running." loading="lazy"></p>
+<p><em>One crossing, one drain. Running jobs are not touched.</em></p>
+<ul><li><strong>The node drains at once.</strong> Any GPU above the ceiling drains the node, whatever the node&#x27;s state. The reason text starts with <code>GPU_TEMP_CRITICAL</code>, so alerts can match on it.</li><li><strong>Running jobs are not killed.</strong> A drained node accepts no new jobs, and jobs already running continue (see the <code>sinfo</code> and <code>scontrol</code> docs for the DRAINING and DRAINED states).</li><li><strong>It needs a manual resume.</strong> The drain does not clear itself when the GPU cools.</li><li><strong>A node already drained for another reason</strong> only gets the event logged.</li></ul>
+<blockquote><p>[!WARNING] Never drain because a reading failed. If <code>dcgmi</code> can&#x27;t be read, print a warning and skip the temperature checks for that run.</p></blockquote>
+<pre><code class="language-bash">if [[ $ret -ne 0 || -z &quot;$GPU_TEMPS&quot; ]]; then
+    echo &quot;  WARNING: could not read GPU temperatures (dcgmi said: $(echo &quot;$raw&quot; | head -1)). Temperature checks skipped.&quot;
+    GPU_TEMPS=&quot;&quot;
+    return
+fi</code></pre>
+<p>A real DCGM or GPU failure is caught by the other checks (GPU count, GPU health), so this check has no reason to drain on its own. It fails safe, and it fails quietly.</p>
+<hr>
+<h2>Where the number comes from</h2>
+<p>Dana&#x27;s 80 came from a feeling. The right place to start is the GPU itself:</p>
+<pre><code class="language-bash">nvidia-smi -q -d TEMPERATURE</code></pre>
+<p>It prints the current temperature along with limits such as the slowdown and shutdown temperatures. Fields differ by GPU model, and forum threads disagree on what each one means, so read the output of your own GPU and the NVIDIA documentation, not a blog (this one included).</p>
+<ul><li><strong>Pick the ceiling below the slowdown threshold, with margin.</strong> That is the author&#x27;s reading, not a documented rule.</li><li><strong>87 °C in this page is an example value.</strong> Take yours from your GPU&#x27;s limits and your fleet&#x27;s real readings.</li><li><strong>The variable is `GPU_TEMP_CEILING`.</strong> Every rule on this page reads it, so changing it is one line.</li></ul>
+<hr>
+<h2>The night it happens again</h2>
+<p>Three weeks later, a fan tray fails on <code>gpu-node-12</code> again. The health check reads the temperature once per run. On the run that finds a GPU above the ceiling, the log shows:</p>
+<pre><code class="language-text">nhc: GPU_TEMP_CRITICAL node=gpu-node-12 GPU-3 at 89C (ceiling 87C)</code></pre>
+<p>The node drains in that same run and stops taking new jobs. The jobs already running keep going, and Sam swaps the fan tray in the morning, not at 04:10.</p>
+<p>Dana&#x27;s other checks stay quiet. When DCGM restarts across the fleet a week later, every node prints a warning and none of them drains. Nobody notices, which is how a health check is supposed to feel.</p>
+<p>The ceiling protects against a GPU that is hot while it works. What about a GPU that is hot while it does nothing?</p>
+<hr>
+<h2>Before this reaches every node</h2>
+<p>Ship it the way the series teaches: <a href="../../../../../fields/system-administration/node-health-check/getting-started/rollout-at-scale/">dry run, canary, enforce</a>. Practical steps for this check:</p>
+<table><thead><tr><th>Question</th><th>Where to look</th><th>Why it matters</th></tr></thead><tbody><tr><td>What are healthy readings in your fleet?</td><td>A few <code>dcgmi dmon -e 150,203,252 -c 1</code> samples across busy and idle nodes</td><td>Your ceiling should sit well above them</td></tr><tr><td>What is the GPU&#x27;s own limit?</td><td><code>nvidia-smi -q -d TEMPERATURE</code></td><td>The ceiling goes below it, with margin</td></tr><tr><td>Does the flag line reach your alerts?</td><td><code>logger</code> output in syslog, matched on <code>GPU_TEMP_CRITICAL</code></td><td>A drain nobody sees is a silent outage</td></tr><tr><td>What happens when <code>dcgmi</code> is down?</td><td>A test node with the DCGM host engine stopped</td><td>Prove it warns and does not drain</td></tr></tbody></table>
+<p>A suggestion of the author&#x27;s: start with the flag line only and watch syslog for a few days before letting the check drain.</p>
+<p><strong>Next:</strong> a GPU at 50 °C is fine under load and suspicious when it has nothing to do. How do you tell an idle GPU from a busy one that happens to read 0%? See <a href="../../../../../fields/system-administration/node-health-check/gpu-temperature/gpu-temperature-idle-timer/">the idle timer</a>. <strong>Just the steps:</strong> <a href="../../../../../fields/system-administration/node-health-check/gpu-temperature/quick-guide/">quick guide</a>.</p>
+<hr>
+<h2>📜 The Scroll (keep this)</h2>
+<pre><code class="language-text">Read:       dcgmi dmon -e 150,203,252 -c 1   (150 temp C, 203 util %, 252 memory MiB)
+Rule:       any GPU above GPU_TEMP_CEILING -&gt; drain the node at once
+Reason:     GPU_TEMP_CRITICAL: GPU-&lt;n&gt; at &lt;t&gt;C (ceiling &lt;c&gt;C)
+Running:    jobs already running are not killed; resume is manual
+Fail safe:  dcgmi unreadable -&gt; warn and skip, never drain
+Pick:       ceiling below the GPU&#x27;s slowdown limit, from nvidia-smi -q -d TEMPERATURE</code></pre>
+<h2>References</h2>
+<ul><li><a href="https://docs.nvidia.com/datacenter/dcgm/latest/reference/command-line-reference/dcgmi/dcgmi-dmon.html">NVIDIA DCGM: <code>dcgmi dmon</code> reference</a></li><li><a href="https://docs.nvidia.com/datacenter/dcgm/latest/reference/field-identifiers.html">NVIDIA DCGM: field identifiers</a></li><li><a href="https://man.archlinux.org/man/nvidia-smi.1.en">nvidia-smi manual page</a> (a copy of NVIDIA&#x27;s man page)</li><li><a href="https://forums.developer.nvidia.com/t/nvidia-smi-gpu-target-temperature-maximum-operating-temperature/229325">NVIDIA developer forum: nvidia-smi target and maximum operating temperature</a></li><li><a href="https://docs.nvidia.com/deploy/nvidia-smi/index.html">nvidia-smi documentation (NVIDIA)</a></li><li><a href="https://docs.nvidia.com/nvsentinel/runbooks/gpu-thermal-margin.md">NVIDIA NVSentinel: GPU thermal margin runbook</a></li><li><a href="https://forums.developer.nvidia.com/t/nvidia-smi-gpu-t-limit-gpu-shutdown-t-limit-temp/292006">NVIDIA developer forum: GPU T.Limit and shutdown T.Limit explained by NVIDIA staff</a></li><li><a href="https://slurm.schedmd.com/sinfo.html">Slurm: <code>sinfo</code> (node states DRAINING and DRAINED)</a></li><li><a href="https://docs.coreweave.com/products/sunk/manage_sunk/drain-and-undrain-nodes">CoreWeave: drain and undrain nodes (running workloads are not killed)</a></li><li><a href="https://www.gnu.org/s/coreutils/manual/html_node/timeout-invocation.html">GNU coreutils: <code>timeout</code> (<code>-k</code>, exit status 124 and 137)</a></li><li><a href="https://slurm.schedmd.com/scontrol.html">Slurm: <code>scontrol</code></a></li><li><a href="https://github.com/mej/nhc">Upstream NHC (LBNL)</a></li></ul>
+<p><a href="../../../../../#/fields/system-administration/node-health-check/gpu-temperature/gpu-temperature-ceiling">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

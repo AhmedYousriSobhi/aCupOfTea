@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>RDMA, InfiniBand and GPUDirect: Taking the CPU Out of the Way</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/ai-storage-and-fabric/rdma-infiniband-gpudirect/">
+<meta name="description" content="Why AI clusters use RDMA fabrics (InfiniBand or RoCE), what kernel bypass and zero-copy mean, and how GPUDirect RDMA and GPUDirect Storage move data straight into GPU memory.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="RDMA, InfiniBand and GPUDirect: Taking the CPU Out of the Way">
+<meta property="og:description" content="Why AI clusters use RDMA fabrics (InfiniBand or RoCE), what kernel bypass and zero-copy mean, and how GPUDirect RDMA and GPUDirect Storage move data straight into GPU memory.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/ai-storage-and-fabric/rdma-infiniband-gpudirect/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/ai-storage-and-fabric/rdma-infiniband-gpudirect/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/system-administration/ai-storage-and-fabric/rdma-infiniband-gpudirect"></script>
+<main>
+<h1>RDMA, InfiniBand and GPUDirect: Taking the CPU Out of the Way</h1>
+<p><em>Why AI clusters use RDMA fabrics (InfiniBand or RoCE), what kernel bypass and zero-copy mean, and how GPUDirect RDMA and GPUDirect Storage move data straight into GPU memory.</em></p>
+<blockquote><p><strong>Part 2 of the [Storage and Fabric for AI Clusters series](/fields/system-administration/ai-storage-and-fabric/README.md).</strong> <a href="../../../../fields/system-administration/ai-storage-and-fabric/parallel-filesystems-for-ai/">Part 1</a> built the storage. This page is the road between storage, GPUs and other GPUs. By the end you&#x27;ll know why AI clusters use RDMA instead of ordinary networking, what InfiniBand and RoCE are, and how GPUDirect lets data skip the CPU entirely.</p></blockquote>
+<hr>
+<h2>The fast network with a slow middleman</h2>
+<p>A team upgrades to 400 Gb/s network cards. Their data loading barely improves. Profiling shows the network links half idle and the CPUs on each node busy at 80%.</p>
+<p>The network wasn&#x27;t the bottleneck. <strong>The CPU was the middleman.</strong> With ordinary TCP networking, every packet is handled by the operating system kernel: copied from the network card into kernel memory, processed, copied again into the application&#x27;s memory, and, for a GPU workload, copied once more into GPU memory. At hundreds of gigabits per second, all that copying and interrupt handling eats the CPU alive, and the CPU becomes the speed limit of a network that could go much faster.</p>
+<p>AI clusters fix this by taking the CPU out of the data path. Twice.</p>
+<hr>
+<h2>Two fabrics, two jobs</h2>
+<p>A large GPU cluster usually has at least two kinds of network traffic, often on separate physical networks:</p>
+<table><thead><tr><th>Fabric</th><th>Carries</th><th>Traffic shape</th><th>What breaks if it&#x27;s slow</th></tr></thead><tbody><tr><td><strong>Compute fabric</strong> (east-west)</td><td>GPU-to-GPU traffic between nodes: gradient all-reduces, tensor and pipeline parallel exchanges</td><td>Huge, synchronized bursts; everyone waits for the slowest link</td><td>Every training step (<a href="../../../../fields/schedulers/slurm-mixed-gpus/why-mixed-training-disappoints/">the rowing boat rule</a>)</td></tr><tr><td><strong>Storage fabric</strong></td><td>Dataset reads, checkpoint writes</td><td>Steady streams, plus checkpoint storms</td><td>Data loading and checkpoints (<a href="../../../../fields/system-administration/ai-storage-and-fabric/parallel-filesystems-for-ai/">part 1</a>)</td></tr></tbody></table>
+<p>Keeping them separate means a checkpoint storm can&#x27;t slow down the all-reduces, and vice versa. Many clusters also have a third, ordinary Ethernet network for management, logins and monitoring.</p>
+<hr>
+<h2>RDMA: three things the CPU stops doing</h2>
+<p><strong>RDMA</strong> (Remote Direct Memory Access) lets one machine&#x27;s network card read or write another machine&#x27;s memory directly. Three things change:</p>
+<table><thead><tr><th>Without RDMA</th><th>With RDMA</th></tr></thead><tbody><tr><td>The kernel handles every send and receive</td><td><strong>Kernel bypass</strong>: the application hands work straight to the network card</td></tr><tr><td>Data is copied between kernel and application buffers</td><td><strong>Zero-copy</strong>: the card moves data directly to and from application memory</td></tr><tr><td>The CPU runs the network protocol</td><td><strong>Offload</strong>: the network card runs the transport itself</td></tr></tbody></table>
+<p>The result is lower latency, higher bandwidth, and CPUs left free for actual work, like decoding the images part 1&#x27;s data loaders just read.</p>
+<p>The analogy: ordinary networking is sending a package through a mailroom, where a clerk opens it, logs it and repackages it at each end. RDMA is a courier with a key to the recipient&#x27;s office who puts the package straight on their desk.</p>
+<hr>
+<h2>InfiniBand or RoCE?</h2>
+<p>RDMA runs on two main families of network:</p>
+<table><thead><tr><th></th><th>InfiniBand</th><th>RoCE (RDMA over Converged Ethernet)</th></tr></thead><tbody><tr><td>What it is</td><td>A network designed around RDMA from the start</td><td>RDMA carried over Ethernet</td></tr><tr><td>Strengths</td><td>Built-in lossless behavior and congestion handling; long HPC track record</td><td>Uses Ethernet switches and skills many organizations already have</td></tr><tr><td>Watch out for</td><td>A separate technology and toolset to run</td><td>Needs careful configuration to stay lossless and avoid congestion problems</td></tr></tbody></table>
+<p>Both work at the largest scales. Meta&#x27;s Llama 3 paper is a nice proof: the 405B model trained on a <strong>RoCE</strong> fabric, while smaller Llama 3 models trained on <strong>NVIDIA Quantum-2 InfiniBand</strong>, both with 400 Gb/s links between GPUs.</p>
+<p>So the opinionated answer isn&#x27;t &quot;InfiniBand always.&quot; It&#x27;s: <strong>InfiniBand if you want the most mature path with the least tuning; RoCE if your team is strong on Ethernet and wants one network technology everywhere.</strong> Either way, it must be RDMA.</p>
+<hr>
+<h2>GPUDirect: skipping one more stop</h2>
+<p>RDMA took the kernel out. But on a GPU node there&#x27;s one more stop: the data still usually lands in <strong>CPU memory</strong> first, then gets copied to GPU memory. NVIDIA&#x27;s <strong>GPUDirect</strong> technologies remove that stop too.</p>
+<p><strong>GPUDirect RDMA</strong> lets the network card read and write <strong>GPU memory</strong> directly. When NCCL sends gradients from a GPU on one node to a GPU on another, the bytes can go GPU memory → network card → network → network card → GPU memory, without a detour through either node&#x27;s CPU memory.</p>
+<p><strong>GPUDirect Storage (GDS)</strong> does the same for storage. NVIDIA&#x27;s overview describes it as a direct DMA data path between storage and GPU memory that <strong>avoids a bounce buffer through the CPU</strong>. Without it, a read goes storage → CPU memory → GPU memory, two trips. With it, one.</p>
+<p>What GDS needs and gives, per NVIDIA&#x27;s overview guide:</p>
+<ul><li><strong>It&#x27;s explicit.</strong> Applications use the <strong>cuFile</strong> API, whose reads and writes work with GPU memory buffers, closely mimicking POSIX <code>pread</code> and <code>pwrite</code>.</li><li><strong>It needs `O_DIRECT`</strong>, which bypasses the filesystem page cache, for direct transfers (newer releases can take the direct path for aligned buffers even without it).</li><li><strong>It needs GDS-enabled filesystem drivers.</strong> The direct path depends on the filesystem&#x27;s driver supporting it, which is why &quot;does our parallel filesystem support GDS?&quot; is a real procurement question.</li><li><strong>It suits big streaming transfers</strong> better than fine-grained random access.</li><li><strong>The gain can be large on the right hardware.</strong> NVIDIA notes that on some systems, a direct path through a PCIe switch offers at least twice the peak bandwidth of a path through the CPU.</li></ul>
+<pre><code class="language-mermaid">flowchart LR
+    subgraph Without[&quot;Without GPUDirect Storage&quot;]
+        S1[&quot;Storage&quot;] --&gt; C1[&quot;CPU memory&lt;br/&gt;(bounce buffer)&quot;] --&gt; G1[&quot;GPU memory&quot;]
+    end
+    subgraph With[&quot;With GPUDirect Storage&quot;]
+        S2[&quot;Storage&quot;] --&gt; G2[&quot;GPU memory&quot;]
+    end</code></pre>
+<p>Notice the pattern across this whole page: <strong>every layer removes a middleman.</strong> RDMA removes the kernel. GPUDirect removes the CPU memory hop. The goal is the same each time: let the data go where the GPUs are, as directly as the hardware allows.</p>
+<hr>
+<h2>Try it before you scroll</h2>
+<p>☕ A training job loads large dataset shards from a parallel filesystem over RDMA, but GPU utilization is still low, and each node&#x27;s CPUs are busy. Which of these would you check first?</p>
+<ol><li>Upgrade the network to faster links.</li><li>Check whether data takes a CPU-memory detour and whether the CPU is busy decoding or copying.</li><li>Add more storage servers.</li></ol>
+<p><strong>2.</strong> Busy CPUs plus underused links point at the middleman, not the road. Check whether GPUDirect Storage is available and used, and whether data preprocessing (like image decoding) is running on the CPU when it could move to the GPU. Options 1 and 3 add capacity to resources that aren&#x27;t the bottleneck, the <a href="../../../../fields/generative-ai/llm-inference-performance/compute-bound-vs-memory-bound/">roofline lesson</a> all over again.</p>
+<hr>
+<h2>How to know if the fabric is starving your GPUs</h2>
+<table><thead><tr><th>Symptom</th><th>Likely cause</th><th>First check</th></tr></thead><tbody><tr><td>All-reduce time grows with node count far more than expected</td><td>Compute fabric congestion or a bad link</td><td>Run NCCL tests across nodes (<a href="../../../../fields/benchmarks/nccl/">NCCL benchmark guide</a>)</td></tr><tr><td>One node makes every step slower</td><td>A degraded link or misconfigured port on that node</td><td>Point-to-point bandwidth tests (<a href="../../../../fields/benchmarks/osu/">OSU benchmarks</a>); link error counters</td></tr><tr><td>High CPU, low network and GPU use during data loading</td><td>CPU copying and processing data</td><td>GPUDirect Storage support; move preprocessing to the GPU</td></tr><tr><td>Checkpoint stalls also slow other jobs&#x27; communication</td><td>Storage and compute traffic sharing one fabric</td><td>Separate fabrics, or traffic classes on a shared one</td></tr><tr><td>Good bandwidth in tests, poor in training</td><td>Small messages, latency-bound collectives, or topology-unaware placement</td><td>Rank placement and affinity (<a href="../../../../fields/benchmarks/parallel-execution-affinity-master-guide/">affinity guide</a>)</td></tr></tbody></table>
+<p><strong>Takeaway:</strong> at AI scale the CPU is the slowest thing between your data and your GPUs, so use RDMA (InfiniBand or RoCE) to remove the kernel, GPUDirect to remove the CPU memory hop, and separate fabrics so checkpoints don&#x27;t trample gradients.</p>
+<p>Back to the <a href="../../../../fields/system-administration/ai-storage-and-fabric/">series overview</a>.</p>
+<h3>References</h3>
+<ul><li><a href="https://docs.nvidia.com/gpudirect-storage/overview-guide/index.html">NVIDIA Magnum IO GPUDirect Storage Overview Guide</a></li><li><a href="https://docs.nvidia.com/cuda/gpudirect-rdma/index.html">NVIDIA GPUDirect RDMA documentation</a></li><li><a href="https://arxiv.org/abs/2407.21783">Grattafiori et al., &quot;The Llama 3 Herd of Models&quot;, arXiv:2407.21783 (section 3.3.1, network)</a></li><li><a href="https://docs.nvidia.com/ai-enterprise/deployment/bare-metal/latest/gds-overview.html">NVIDIA AI Enterprise: GPUDirect Storage overview</a></li></ul>
+<p><a href="../../../../#/fields/system-administration/ai-storage-and-fabric/rdma-infiniband-gpudirect">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Reading the Reason Column: Why Is My Slurm Job Pending?</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-pending-jobs/why-is-my-job-pending/">
+<meta name="description" content="What Slurm&#x27;s common pending reasons mean, which ones fix themselves and which never will, what users can fix without an admin, and a small triage script tested against each reason.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Reading the Reason Column: Why Is My Slurm Job Pending?">
+<meta property="og:description" content="What Slurm&#x27;s common pending reasons mean, which ones fix themselves and which never will, what users can fix without an admin, and a small triage script tested against each reason.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-pending-jobs/why-is-my-job-pending/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-pending-jobs/why-is-my-job-pending/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/schedulers/slurm-pending-jobs/why-is-my-job-pending"></script>
+<main>
+<h1>Reading the Reason Column: Why Is My Slurm Job Pending?</h1>
+<p><em>What Slurm&#x27;s common pending reasons mean, which ones fix themselves and which never will, what users can fix without an admin, and a small triage script tested against each reason.</em></p>
+<blockquote><p><strong>Part 1 of [Why Is My Job Still Pending?](/fields/schedulers/slurm-pending-jobs/README.md)</strong> By the end you&#x27;ll read any pending job&#x27;s reason in one look, know whether it will ever start, and have a script that tells users what to try before they open a ticket.</p></blockquote>
+<hr>
+<h2>Two days in the queue</h2>
+<p>A PhD student submits a training job on Monday morning and checks on Wednesday. Still <code>PD</code>. They&#x27;ve watched other people&#x27;s jobs start and finish around theirs. They open a ticket: &quot;the scheduler is broken, my job isn&#x27;t starting&quot;.</p>
+<p>The admin runs one command and sees <code>PartitionTimeLimit</code>. The student asked for three days on a partition whose limit is two. The job was never going to start, and Slurm said so from the first second, in a column nobody read.</p>
+<p>Most pending jobs are fine; they&#x27;re just waiting. A few will wait forever. The reason column tells you which, if you know how to read it.</p>
+<blockquote><p>[!NOTE] Lab: Slurm <strong>23.11.4</strong> with slurmdbd, four CPU nodes in partition <code>cpu</code> (2 CPUs each, 2-day <code>MaxTime</code>) and one node in partition <code>gpu</code>. Every reason below was produced on purpose and copied from the terminal. Reason names come from <code>squeue(1)</code>, section JOB REASON CODES.</p></blockquote>
+<hr>
+<h2>Where the reason lives</h2>
+<p>Slurm records one <strong>reason</strong> for every pending job: its best single explanation of why that job isn&#x27;t running <em>right now</em>. Three ways to see it:</p>
+<pre><code class="language-bash">squeue -u $USER -t PD -o &quot;%.8i %.12j %.8Q %.24r&quot;     # id, name, priority, reason
+scontrol show job &lt;jobid&gt; | grep -o &#x27;Reason=[^ ]*&#x27;
+squeue --start -j &lt;jobid&gt;                              # estimated start, if Slurm has one</code></pre>
+<p>The default <code>squeue</code> output puts the reason in the last column, in brackets, as <code>NODELIST(REASON)</code>. Easy to miss when you&#x27;re looking for a node list.</p>
+<hr>
+<h2>Only one job says Resources</h2>
+<p>We filled the <code>cpu</code> partition, then submitted more jobs. This is the most misread line on any cluster:</p>
+<pre><code class="language-text">JOBID   USER        NAME PRIORITY                   REASON
+   21  carol   carol-job    10000                Resources
+   13    bob     bob-job     6000                 Priority
+   12  alice  wants-2cpu     2000                 Priority</code></pre>
+<table><thead><tr><th>Reason</th><th>Means</th></tr></thead><tbody><tr><td><code>Resources</code></td><td>This job is <strong>first in line</strong> for the partition. It&#x27;s waiting for nodes to free up</td></tr><tr><td><code>Priority</code></td><td>One or more jobs with higher priority are ahead of it in the same partition</td></tr></tbody></table>
+<p>Only the top job in a partition shows <code>Resources</code>. Everyone behind it shows <code>Priority</code>, even when they&#x27;d fit the moment something frees up. So <code>Priority</code> doesn&#x27;t mean &quot;your priority is low&quot;; it means &quot;you&#x27;re not first&quot;. (Alice submitted before bob and carol, and still sits behind both. That&#x27;s fairshare, and it&#x27;s <a href="../../../../fields/schedulers/slurm-pending-jobs/who-goes-first/">part 2</a>.)</p>
+<p>Smaller jobs behind the queue can still start early, through the backfill scheduler, if they fit in a gap without delaying the top job. See <a href="../../../../fields/schedulers/slurm-backfill-tuning/">backfill tuning</a>.</p>
+<hr>
+<h2>The common reasons, produced on purpose</h2>
+<p>Here&#x27;s every reason we produced, with the command that caused it, whether it fixes itself, and who can fix it:</p>
+<table><thead><tr><th>Reason</th><th>How we caused it</th><th>Starts by itself?</th><th>Fix</th></tr></thead><tbody><tr><td><code>Resources</code></td><td>Partition full</td><td>Yes</td><td>Wait. <code>squeue --start</code> gives an estimate</td></tr><tr><td><code>Priority</code></td><td>Behind other jobs</td><td>Yes</td><td>Wait. <a href="../../../../fields/schedulers/slurm-pending-jobs/who-goes-first/">Part 2</a> explains the order</td></tr><tr><td><code>Dependency</code></td><td><code>--dependency=afterok:12</code>, job 12 still pending</td><td>Yes, when 12 succeeds</td><td>Wait</td></tr><tr><td><code>DependencyNeverSatisfied</code></td><td><code>afterok</code> on a job that exited 3</td><td><strong>Never</strong></td><td><code>scancel</code> it and resubmit</td></tr><tr><td><code>BeginTime</code></td><td><code>--begin=now+2hours</code></td><td>Yes, at that time</td><td>Nothing, or <code>scontrol update jobid=&lt;id&gt; starttime=now</code></td></tr><tr><td><code>JobHeldUser</code></td><td><code>sbatch -H</code></td><td><strong>Never</strong></td><td><code>scontrol release &lt;id&gt;</code></td></tr><tr><td><code>ReqNodeNotAvail, Unavail</code></td><td><code>-w cn004</code> while cn004 was drained</td><td>Only when the node returns</td><td>Drop the <code>-w</code>, or ask why it&#x27;s drained: <code>sinfo -R</code></td></tr><tr><td><code>PartitionTimeLimit</code></td><td><code>-t 3-00:00:00</code> on a 2-day partition</td><td><strong>Never</strong></td><td>Lower the time limit</td></tr><tr><td><code>QOSMaxGRESPerUser</code></td><td>More GPUs than the QOS allows per user</td><td>Depends; see <a href="../../../../fields/schedulers/slurm-pending-jobs/limits-that-wait-forever/">part 3</a></td><td>Wait for your other jobs, or ask less</td></tr><tr><td><code>AssocGrpGRES</code></td><td>The account&#x27;s GPU limit was reached</td><td>When the account&#x27;s other jobs end</td><td>Wait, or talk to your group</td></tr></tbody></table>
+<p>The three marked <strong>Never</strong> are the ones that generate tickets. Nothing about the cluster will change their fate. <code>PartitionTimeLimit</code> is the sneakiest: by default Slurm accepts the job and lets it wait. (<code>EnforcePartLimits</code> in <code>slurm.conf</code> makes it reject such jobs at submission instead.)</p>
+<p><code>JobHeldUser</code> showed priority <code>0</code> in our lab. A held job isn&#x27;t considered at all.</p>
+<hr>
+<h2>Rejected before it ever queues</h2>
+<p>Some mistakes never get as far as a reason. <code>sbatch</code> refuses them and prints why. From the same lab:</p>
+<table><thead><tr><th>What we asked</th><th>What <code>sbatch</code> said</th></tr></thead><tbody><tr><td><code>--mem=64G</code> on nodes with 3 GB configured</td><td><code>Memory specification can not be satisfied</code> / <code>Requested node configuration is not available</code></td></tr><tr><td><code>-A chem</code> by a user who isn&#x27;t in that account</td><td><code>Invalid account or account/partition combination specified</code></td></tr><tr><td><code>--dependency=afternotok:999999</code> (no such job)</td><td><code>Job dependency problem</code></td></tr></tbody></table>
+<p>These are the good failures: immediate, specific, and impossible to miss.</p>
+<hr>
+<h2>What users can fix themselves</h2>
+<p>Several fixes don&#x27;t need an admin. A user can update their own pending job, as long as the change makes it <em>smaller</em> or <em>later</em>:</p>
+<pre><code class="language-bash">scontrol update jobid=14 timelimit=1-00:00:00   # 3 days -&gt; 1 day: allowed
+scontrol release 18                              # their own hold: allowed</code></pre>
+<p>Both ran as the job&#x27;s owner in the lab, exit 0, and both jobs moved to <code>Priority</code>. Asking for <em>more</em> is refused:</p>
+<pre><code class="language-text">$ scontrol update jobid=12 timelimit=3-00:00:00
+Access/permission denied for job 12</code></pre>
+<p>Only an operator or admin can raise a limit. That&#x27;s on purpose: otherwise a user could submit a short job to get backfilled, then extend it.</p>
+<hr>
+<h2>A triage script, and the bug we found in it</h2>
+<p>Most of the tickets above have the same answer, so put the answer next to the question. This script takes a job ID, reads the reason, and prints what to try. Save it as <code>/usr/local/bin/whypending</code> on login nodes:</p>
+<pre><code class="language-bash">#!/usr/bin/env bash
+# whypending JOBID - explain why a pending Slurm job is waiting, and what to try.
+set -euo pipefail
+job=${1:?usage: whypending JOBID}
+line=$(squeue -h -j &quot;$job&quot; -o &quot;%T|%P|%Q|%r&quot;) || exit 1
+IFS=&#x27;|&#x27; read -r state part prio reason &lt;&lt;&lt;&quot;$line&quot;
+if [ &quot;$state&quot; != &quot;PENDING&quot; ]; then echo &quot;job $job is $state, not pending&quot;; exit 0; fi
+# Ahead = higher priority, or equal priority and submitted earlier (lower job ID).
+ahead=$(squeue -h -t PD -p &quot;$part&quot; -o &quot;%Q %i&quot; | awk -v p=&quot;$prio&quot; -v j=&quot;$job&quot; &#x27;$1 &gt; p || ($1 == p &amp;&amp; $2 &lt; j)&#x27; | wc -l)
+echo &quot;job $job: pending in partition $part, priority $prio, reason: $reason&quot;
+case &quot;$reason&quot; in
+  Resources)                echo &quot;First in line for $part. Waiting for nodes to free up. Estimate: squeue --start -j $job&quot; ;;
+  Priority)                 echo &quot;$ahead pending job(s) in $part are ahead of it. Breakdown: sprio -j $job&quot; ;;
+  Dependency)               echo &quot;Waiting for another job to finish: scontrol show job $job | grep -o &#x27;Dependency=[^ ]*&#x27;&quot; ;;
+  DependencyNeverSatisfied) echo &quot;The job it depends on ended the wrong way. This job will never start: scancel $job&quot; ;;
+  ReqNodeNotAvail*)         echo &quot;A node it needs is down, drained or reserved. Check: sinfo -R&quot; ;;
+  PartitionTimeLimit)       echo &quot;Time limit is above the partition&#x27;s MaxTime. Lower it: scontrol update jobid=$job timelimit=&lt;shorter&gt;&quot; ;;
+  BeginTime)                echo &quot;Asked not to start before a set time: scontrol show job $job | grep -o &#x27;StartTime=[^ ]*&#x27;&quot; ;;
+  JobHeld*)                 echo &quot;Held. Release it: scontrol release $job&quot; ;;
+  QOS*)                     echo &quot;A QOS limit. See it: sacctmgr show qos format=name,maxtrespu,grptres,maxwall&quot; ;;
+  Assoc*)                   echo &quot;An account or user limit. See it: sacctmgr show assoc where user=$(squeue -h -j &quot;$job&quot; -o %u) format=account,user,grptres,maxtres&quot; ;;
+  *)                        echo &quot;Look this reason up in squeue(1), section JOB REASON CODES.&quot; ;;
+esac</code></pre>
+<p>We ran it against every reason above. A few of the answers:</p>
+<pre><code class="language-text">job 55: pending in partition cpu, priority 2000, reason: DependencyNeverSatisfied
+The job it depends on ended the wrong way. This job will never start: scancel 55
+
+job 56: pending in partition cpu, priority 2000, reason: PartitionTimeLimit
+Time limit is above the partition&#x27;s MaxTime. Lower it: scontrol update jobid=56 timelimit=&lt;shorter&gt;
+
+job 59: pending in partition gpu, priority 2000, reason: AssocGrpGRES
+An account or user limit. See it: sacctmgr show assoc where user=alice format=account,user,grptres,maxtres</code></pre>
+<p>An unknown job ID prints Slurm&#x27;s own <code>Invalid job id specified</code> and exits 1.</p>
+<p>The bug: the first version counted only jobs with <strong>higher</strong> priority as &quot;ahead&quot;. Two jobs from the same user had the same priority (2000), and the second one was told:</p>
+<pre><code class="language-text">0 pending job(s) in cpu have higher priority. Breakdown: sprio -j 60</code></pre>
+<p>True, and useless: it was second in line. Slurm breaks priority ties by submission order, so the count now includes equal-priority jobs with a lower job ID. Retested: the first job said <code>First in line</code>, the second <code>1 pending job(s) in cpu are ahead of it</code>.</p>
+<blockquote><p>[!TIP] The script uses only <code>squeue</code>, so any user can run it on their own jobs. It doesn&#x27;t need accounting access.</p></blockquote>
+<hr>
+<h2>Back to the two days</h2>
+<p>Run Monday again with this page on the wiki. The student submits, sees <code>PD</code>, runs <code>whypending</code>, and reads: &quot;Time limit is above the partition&#x27;s MaxTime. Lower it.&quot; One <code>scontrol update</code> later, the job is <code>Priority</code>, then <code>Resources</code>, and it&#x27;s running before lunch. No ticket, two days saved.</p>
+<p>And when the reason <em>is</em> <code>Priority</code>, the script says how many jobs are ahead and points at <code>sprio</code>. That&#x27;s the right question for part 2: not &quot;is the scheduler broken&quot; but &quot;why are those jobs ahead of mine&quot;.</p>
+<p><strong>Takeaway:</strong> <code>Resources</code> means first in line and <code>Priority</code> means not first; check for the three reasons that never clear (<code>DependencyNeverSatisfied</code>, held jobs, <code>PartitionTimeLimit</code>) before waiting any longer.</p>
+<p><strong>Next:</strong> <a href="../../../../fields/schedulers/slurm-pending-jobs/who-goes-first/">Part 2, Who Goes First</a>, opens up the priority number.</p>
+<hr>
+<h2>References</h2>
+<ul><li><a href="https://slurm.schedmd.com/squeue.html">squeue(1)</a>: output format codes (<code>%r</code>, <code>%Q</code>), <code>--start</code>, and the JOB REASON CODES section.</li><li><a href="https://slurm.schedmd.com/resource_limits.html">Slurm: Resource Limits</a>: the limit-related reasons and how they&#x27;re enforced.</li><li><a href="https://slurm.schedmd.com/scontrol.html">scontrol(1)</a>: <code>update jobid=... timelimit=</code>, <code>release</code>, and what users may change.</li><li><a href="https://slurm.schedmd.com/sbatch.html">sbatch(1)</a>: <code>--dependency</code>, <code>--begin</code>, <code>-H</code>, <code>-w</code>.</li><li><a href="https://slurm.schedmd.com/slurm.conf.html#OPT_EnforcePartLimits">slurm.conf(5): EnforcePartLimits</a>: rejecting jobs that exceed partition limits at submission.</li><li><a href="../../../../fields/schedulers/slurm-backfill-tuning/">Backfill tuning</a>: how jobs behind the queue can still start early.</li></ul>
+<p><a href="../../../../#/fields/schedulers/slurm-pending-jobs/why-is-my-job-pending">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

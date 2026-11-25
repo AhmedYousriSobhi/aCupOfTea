@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Slurm cgroups in Practice: What Gets Constrained, and Where the Numbers Lie</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-inside-a-job/slurm-cgroups-in-practice/">
+<meta name="description" content="Which cgroup.conf switches actually fence a Slurm job, why every one of them defaults to off, how v1 and v2 differ, and why sacct&#x27;s memory numbers are samples and not measurements.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Slurm cgroups in Practice: What Gets Constrained, and Where the Numbers Lie">
+<meta property="og:description" content="Which cgroup.conf switches actually fence a Slurm job, why every one of them defaults to off, how v1 and v2 differ, and why sacct&#x27;s memory numbers are samples and not measurements.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-inside-a-job/slurm-cgroups-in-practice/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-inside-a-job/slurm-cgroups-in-practice/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/schedulers/slurm-inside-a-job/slurm-cgroups-in-practice"></script>
+<main>
+<h1>Slurm cgroups in Practice: What Gets Constrained, and Where the Numbers Lie</h1>
+<p><em>Which cgroup.conf switches actually fence a Slurm job, why every one of them defaults to off, how v1 and v2 differ, and why sacct&#x27;s memory numbers are samples and not measurements.</em></p>
+<blockquote><p><strong>Part of the [schedulers](/fields/schedulers/slurm-intro.md) directory.</strong> The intro says <code>slurmd</code> &quot;enforces resource containment&quot; with <code>task/cgroup</code>. This page opens that sentence up: what exactly is fenced, what is not, and how to check which one you have. Commands and option names come from SchedMD&#x27;s documentation for Slurm 26.05. They were not run on a live cluster for this page, so try them on a test node first.</p></blockquote>
+<ul><li>* *</li></ul>
+<h2>The eight-GPU job that could see eight GPUs</h2>
+<p>Picture a node with eight GPUs. A user submits a job with <code>--gres=gpu:2</code>. Slurm allocates two, sets <code>CUDA_VISIBLE_DEVICES</code> to match, and the training script behaves.</p>
+<p>Then someone runs <code>nvidia-smi</code> inside the job and sees all eight. A more curious user unsets <code>CUDA_VISIBLE_DEVICES</code>, and PyTorch happily opens a GPU that belongs to someone else&#x27;s job.</p>
+<p>Nothing is misconfigured here, at least not by the usual definition. <code>CUDA_VISIBLE_DEVICES</code> is a request that the CUDA runtime politely honors. NVML tools such as <code>nvidia-smi</code> ignore it. What actually stops a process from touching a device file is the kernel, and the kernel only gets involved if Slurm asks it to. The setting that asks is <code>ConstrainDevices</code>, and its documented default is <code>no</code>.</p>
+<p>That is the whole theme of this page. <strong>Slurm&#x27;s containment is a set of independent opt-in switches, and the shipped default for each one is off.</strong> A cluster can run <code>task/cgroup</code> for years and still leak GPUs, cores or memory, because the plugin being loaded and the constraint being applied are two different things.</p>
+<ul><li>* *</li></ul>
+<h2>One switchboard, two files</h2>
+<p>Two files cooperate. <code>slurm.conf</code> loads the plugins. <code>cgroup.conf</code> (same directory) decides what they enforce.</p>
+<table><thead><tr><th>Setting</th><th>File</th><th>What it does</th><th>Default</th></tr></thead><tbody><tr><td><code>ProctrackType=proctrack/cgroup</code></td><td><code>slurm.conf</code></td><td>Tracks every process in a step, so a cancel reaches all of them</td><td>n/a</td></tr><tr><td><code>TaskPlugin=task/cgroup,task/affinity</code></td><td><code>slurm.conf</code></td><td>Loads the plugin that applies the <code>Constrain*</code> switches below</td><td>n/a</td></tr><tr><td><code>PrologFlags=Contain</code></td><td><code>slurm.conf</code></td><td>Creates the &quot;extern&quot; step that <a href="../../../../fields/schedulers/slurm-cluster-operations/slurm-pam-adopt-ssh-access/"><code>pam_slurm_adopt</code></a> needs</td><td>off</td></tr><tr><td><code>ConstrainCores</code></td><td><code>cgroup.conf</code></td><td>Limits a job to its allocated cores (cpuset)</td><td><code>no</code></td></tr><tr><td><code>ConstrainDevices</code></td><td><code>cgroup.conf</code></td><td>Limits access to GRES devices, meaning GPUs</td><td><code>no</code></td></tr><tr><td><code>ConstrainRAMSpace</code></td><td><code>cgroup.conf</code></td><td>Sets soft and hard RAM limits from the allocation</td><td><code>no</code></td></tr><tr><td><code>ConstrainSwapSpace</code></td><td><code>cgroup.conf</code></td><td>Limits swap on top of RAM</td><td><code>no</code></td></tr><tr><td><code>SignalChildrenProcesses</code></td><td><code>cgroup.conf</code></td><td>Sends signals to all children, not just the parent process of a step</td><td><code>no</code></td></tr></tbody></table>
+<p>Two small prerequisites trip people up:</p>
+<ul><li>Memory constraints do nothing unless <code>slurm.conf</code> selects a memory-aware consumable resource mode (a <code>CR_*_Memory</code> value in <code>SelectTypeParameters</code>).</li><li>SchedMD&#x27;s example config pairs <code>task/cgroup</code> with <code>task/affinity</code>. The <code>ConstrainCores</code> entry notes that an old hwloc bug can make <code>task/affinity</code> necessary for cpuset binding to work properly.</li></ul>
+<p>SchedMD&#x27;s own example <code>cgroup.conf</code> turns on cores, devices, RAM and swap together. If your file is shorter than that, it is worth asking which of the four you decided to leave out and why.</p>
+<blockquote><p>[!NOTE] The same example config says nodes should either set <code>MemSpecLimit</code> or declare <code>RealMemory</code> below the physical total, so the OS and daemons always have memory the jobs cannot take. Compare your node definitions with the output of <code>slurmd -C</code>.</p></blockquote>
+<ul><li>* *</li></ul>
+<h2>cgroup v1 or v2: check before you debug</h2>
+<p><code>CgroupPlugin</code> defaults to <code>autodetect</code>, so Slurm picks whichever the node has, and mixed v1/v2 fleets are supported. The v1 plugin is marked deprecated with no new features coming, so any cluster still on v1 has a migration waiting for it.</p>
+<p>A quick way to see which one a node runs:</p>
+<pre><code class="language-bash">stat -fc %T /sys/fs/cgroup     # cgroup2fs  -&gt; v2 (unified)
+                               # tmpfs      -&gt; v1 (legacy or hybrid)
+cat /proc/self/cgroup          # a single line starting with 0:: -&gt; v2</code></pre>
+<p>Differences that matter in practice:</p>
+<ul><li><strong>Devices are enforced with eBPF on v2.</strong> The device controller of cgroup v2 is eBPF-based, which is why Slurm&#x27;s v2 documentation tells you to read up on eBPF before debugging odd GPU-access behavior.</li><li><strong>Job paths changed in 26.05.</strong> On v2 the job directories used to be named by job ID, as in <code>/sys/fs/cgroup/system.slice/slurmstepd.scope/job_123/</code>. In 26.05 they are named with an opaque ID unless you set <code>CgroupJobIdPaths=yes</code>. If you run exporters or scripts that find a job&#x27;s cgroup by number, this is the first thing to check after an upgrade.</li><li><strong>Resource specialization behaves differently.</strong> With v1, the cores and memory you reserve for the system are also used by <code>slurmstepd</code>. With v2, <code>slurmstepd</code> is not constrained by that reservation. SchedMD&#x27;s example is an MPI job whose PMI setup makes <code>slurmstepd</code> grow.</li><li><strong>Debian and Ubuntu</strong> historically ship without the memory and swap controllers enabled. The <code>cgroup.conf</code> man page still lists <code>cgroup_enable=memory swapaccount=1</code> on the kernel command line for those systems, so check your distro before assuming <code>ConstrainRAMSpace</code> is doing anything.</li></ul>
+<p>Moving a node from v1 to v2 is a boot-parameter change (the docs list <code>systemd.unified_cgroup_hierarchy=1 systemd.legacy_systemd_cgroup_controller=0 cgroup_no_v1=all</code>), but plan it like a maintenance task: it touches every job on the node.</p>
+<ul><li>* *</li></ul>
+<h2>Memory: two killers, pick one</h2>
+<p>Slurm has two separate mechanisms that can kill a job for using too much memory, and they behave very differently.</p>
+<table><thead><tr><th></th><th><code>ConstrainRAMSpace</code> (cgroup)</th><th><code>OverMemoryKill</code> (<code>JobAcctGatherParams</code>)</th></tr></thead><tbody><tr><td>Who kills</td><td>The kernel OOM killer</td><td>Slurm, after polling usage</td></tr><tr><td>What dies</td><td>One or more processes in the step</td><td>The whole step</td></tr><tr><td>When</td><td>As soon as the cgroup limit is hit</td><td>At the next sample</td></tr><tr><td>Step afterwards</td><td>Marked OOM, but may keep running</td><td>Killed or cancelled</td></tr></tbody></table>
+<p>Per the man page, with cgroup enforcement the step is flagged as OOM but keeps running, and other processes in it may carry on. For a single-process job that is invisible. For a multi-rank job it can mean one rank dies while the rest sit waiting for it. Whether that shows up as a hang or a clean failure depends on your launcher, so check what your own stack does before the first big run.</p>
+<p>There is a middle option for exactly this problem. <code>TaskPluginParam=OOMKillStep</code> in <code>slurm.conf</code> makes Slurm kill the whole step, on all nodes, when an OOM event hits any task in it. It does not apply to the extern step, and a user can override it. It requires the <code>task/cgroup</code> plugin, cgroup v2 and a kernel newer than 4.19. I found it in the Niflheim site documentation, which cites SchedMD ticket 25478, so read the current <code>slurm.conf</code> page for the exact wording before enabling it.</p>
+<p>SchedMD&#x27;s release notes and support replies treat the two mechanisms as incompatible: since 18.08 the default is to enforce memory with neither, and the advice is not to combine cgroup enforcement with <code>OverMemoryKill</code>. Pick one deliberately.</p>
+<p>Three details from the man page that save an afternoon:</p>
+<ul><li><strong>Soft and hard limits.</strong> <code>ConstrainRAMSpace</code> sets the soft limit at the allocation and the hard limit at the allocation times <code>AllowedRAMSpace</code> (default 100%). Setting it above 100 can cause system-wide OOM events, because jobs may then take more than the node has.</li><li><strong>`AllowedSwapSpace=0` does not forbid swapping.</strong> It limits RAM plus swap to the RAM limit. How eagerly the kernel swaps is a separate knob, and <code>MemorySwappiness</code> applies only to v1.</li><li><strong>There is a throughput cost.</strong> The docs warn that <code>ConstrainRAMSpace</code> can noticeably reduce per-node job throughput, so high-throughput sites have a real trade-off to weigh.</li></ul>
+<p>When an OOM kill does happen, the kernel logs it. <code>dmesg</code> or the journal on the node will say so, and <code>sacct</code> should report the state as <code>OUT_OF_MEMORY</code>.</p>
+<ul><li>* *</li></ul>
+<h2>Where the numbers lie</h2>
+<p>After a job dies of memory, the natural next step is <code>sacct -o JobID,State,ReqMem,MaxRSS</code>. Sometimes <code>MaxRSS</code> is far below <code>ReqMem</code>, and the job still says <code>OUT_OF_MEMORY</code>. Believe the state, not the number.</p>
+<p><code>MaxRSS</code> is a <strong>sample</strong>. The task-level gather plugin polls on a timer, and the default <code>JobAcctGatherFrequency</code> is 30 seconds. A process that allocates fast, spikes and dies between two polls leaves no trace in the accounting data. SchedMD staff say exactly this when users ask why a fast-growing task is under-reported.</p>
+<p>More ways the number can mislead:</p>
+<ul><li><strong>The plugin decides what &quot;RSS&quot; means.</strong> <code>jobacct_gather/linux</code> reads RSS from <code>/proc</code>, with <code>UsePSS</code> and <code>NoShare</code> options that change the calculation. Two clusters with different settings can report different <code>MaxRSS</code> for the same job.</li><li><strong>`jobacct_gather/cgroup` on v2 has no virtual memory.</strong> The <code>sstat</code> man page notes that combination reports 0 for the virtual-memory fields, because of what the kernel exposes.</li><li><strong>Sampling can be switched off.</strong> With the task interval set to 0 (as in <code>JobAcctGatherFrequency=task=0</code>), data is collected only when the job ends.</li><li><strong>Gathering costs something.</strong> SchedMD&#x27;s large-cluster guidance calls <code>jobacct_gather/none</code> the best choice for throughput and, if you need job accounting, says to tune the sampling interval.</li></ul>
+<p>If you want a number you can trust, read it from the kernel while the job is alive. On cgroup v2 each job&#x27;s cgroup has <code>memory.events</code> (look for <code>oom_kill</code>) and, on newer kernels, <code>memory.peak</code>. The cgroup is removed when the job ends, so this is a live-debugging tool, not a post-mortem one:</p>
+<pre><code class="language-bash"># on the compute node, while the job runs
+# the job directory name depends on your version and CgroupJobIdPaths, so look first
+ls /sys/fs/cgroup/system.slice/slurmstepd.scope/
+cat /sys/fs/cgroup/system.slice/slurmstepd.scope/&lt;job-dir&gt;/memory.events
+cat /sys/fs/cgroup/system.slice/slurmstepd.scope/&lt;job-dir&gt;/memory.peak</code></pre>
+<ul><li>* *</li></ul>
+<h2>systemd and the scope nobody sees</h2>
+<p>On cgroup v2, Slurm cannot just build a directory tree and walk away, because systemd owns the hierarchy and will tidy up anything it did not create. Slurm&#x27;s answer is a dedicated scope, <code>slurmstepd.scope</code>, delegated to Slurm. Step processes live there rather than under the <code>slurmd</code> service, so restarting <code>slurmd</code> does not take running jobs with it. A small <code>slurmstepd infinity</code> process sits in the scope to keep it alive.</p>
+<p>Knobs worth knowing:</p>
+<ul><li><strong>`CgroupSlice`</strong> moves the scope out of the default <code>system.slice</code>.</li><li><strong>`SystemdTimeout`</strong> is how long Slurm waits for the scope at <code>slurmd</code> start. It defaults to 1000 ms, which can be too short on a busy or virtualized node.</li><li><strong>`IgnoreSystemd`</strong> exists for development. The docs call it dangerous on a systemd machine, because systemd may modify the cgroups under running jobs.</li><li><strong>`EnableControllers`</strong> is for old kernels and old systemd (RHEL8 is the documented example) where not every controller is enabled down the tree.</li></ul>
+<p>This is also where <a href="../../../../fields/schedulers/slurm-cluster-operations/slurm-pam-adopt-ssh-access/"><code>pam_slurm_adopt</code></a> plugs in. The <code>cgroup.conf</code> example says sites should configure it so users cannot escape the cgroups through <code>ssh</code>, and the cgroup v2 guide has its own section on running it there.</p>
+<ul><li>* *</li></ul>
+<h2>Verify it in ten minutes</h2>
+<p>On a test node, with a test account:</p>
+<pre><code class="language-bash"># 1. What is Slurm configured to do?
+scontrol show config | grep -E &#x27;ProctrackType|TaskPlugin|JobAcctGather|PrologFlags|SelectTypeParameters&#x27;
+cat /etc/slurm/cgroup.conf
+
+# 2. GPUs: should list exactly the GPUs you asked for
+srun --gres=gpu:1 nvidia-smi -L
+
+# 3. Cores: affinity should match the allocation
+srun --cpus-per-task=2 bash -c &#x27;nproc; taskset -cp $$&#x27;
+
+# 4. Memory: should die and be reported as OUT_OF_MEMORY
+srun --mem=500M python3 -c &quot;x = bytearray(2 * 1024**3); print(&#x27;survived&#x27;)&quot;
+sacct -j &lt;jobid&gt; -o JobID,State,ReqMem,MaxRSS</code></pre>
+<p>Read the results like this:</p>
+<table><thead><tr><th>Result</th><th>Meaning</th></tr></thead><tbody><tr><td><code>nvidia-smi -L</code> lists every GPU on the node</td><td><code>ConstrainDevices</code> is off, or the GPU device files are not known to Slurm</td></tr><tr><td><code>nproc</code> shows more cores than requested</td><td><code>ConstrainCores</code> is off, or affinity binding is not working</td></tr><tr><td>The Python line prints <code>survived</code></td><td>Memory is not being constrained (check <code>ConstrainRAMSpace</code>, <code>CR_*_Memory</code> and the memory controller)</td></tr><tr><td><code>MaxRSS</code> is tiny but the state says OOM</td><td>Sampling missed the spike; the state is the truth</td></tr></tbody></table>
+<blockquote><p>[!TIP] Run test 2 before and after switching on <code>ConstrainDevices</code>. Seeing eight GPUs shrink to one is the clearest way to explain this page to a colleague.</p></blockquote>
+<ul><li>* *</li></ul>
+<h2>📜 The Scroll (keep this)</h2>
+<pre><code class="language-text">slurm.conf  : loads the plugins     (task/cgroup, proctrack/cgroup, PrologFlags=Contain)
+cgroup.conf : switches on the fences (cores, devices, RAM, swap) -&gt; all default OFF
+
+            slurmstepd.scope           (v2: delegated to Slurm by systemd)
+            └── job
+                ├── extern step        &lt;- pam_slurm_adopt sessions land here
+                ├── batch step
+                └── step 0, 1, ...     &lt;- cpuset, devices, memory limits apply here
+
+accounting numbers (MaxRSS ...) = periodic samples; the kernel&#x27;s OOM log = the truth</code></pre>
+<p>Loading <code>task/cgroup</code> is not the same as constraining anything, and <code>sacct</code> is a sampled summary, not a flight recorder.</p>
+<ul><li>* *</li></ul>
+<h2>References</h2>
+<ul><li><a href="https://slurm.schedmd.com/cgroup.conf.html">Slurm: cgroup.conf man page</a></li><li><a href="https://slurm.schedmd.com/cgroups.html">Slurm: Control Group in Slurm</a></li><li><a href="https://slurm.schedmd.com/cgroup_v2.html">Slurm: Control Group v2 plugin</a></li><li><a href="https://lists.schedmd.com/pipermail/slurm-users/2023-November/010597.html">slurm-users: accounting sampling and fast-growing tasks</a></li><li><a href="https://lists.schedmd.com/pipermail/slurm-users/2019-October/004260.html">slurm-users: memory enforcement mechanisms and OverMemoryKill</a></li><li><a href="https://support.schedmd.com/show_bug.cgi?id=10538">SchedMD ticket 10538: how MaxRSS is calculated per plugin</a></li><li><a href="https://dokk.org/manpages/debian/13/slurm-client/sstat.1.en">sstat man page: jobacct_gather/cgroup on v2 and virtual memory</a></li></ul>
+<p><a href="../../../../#/fields/schedulers/slurm-inside-a-job/slurm-cgroups-in-practice">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Git CLI</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/programming/version-control/git-cli/">
+<meta name="description" content="Using Git and the GitHub CLI from the terminal, with SSH key setup, managing several users and undoing the last pushed commit.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Git CLI">
+<meta property="og:description" content="Using Git and the GitHub CLI from the terminal, with SSH key setup, managing several users and undoing the last pushed commit.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/programming/version-control/git-cli/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/programming/version-control/git-cli/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../.docs/prerender-redirect.js" data-target="../../../#/programming/version-control/git-cli"></script>
+<main>
+<h1>Git CLI</h1>
+<p><em>Using Git and the GitHub CLI from the terminal, with SSH key setup, managing several users and undoing the last pushed commit.</em></p>
+<p>In the context of Git, &quot;gh&quot; refers to the GitHub CLI tool, which is a command-line interface for interacting with GitHub repositories. It provides a convenient way to manage GitHub-specific features, such as issues, pull requests, and releases, directly from your terminal. The GitHub CLI is available for macOS, Windows, and Linux, and it can be installed using a package manager or by downloading the binary from the GitHub CLI website.</p>
+<h2>Table of Contents</h2>
+<ul><li>Git<ul><li>Table of Contents</li><li>Command Line Interface (CLI)<ul><li>CLI Benefits</li><li>HTTP vs CLI Cloning</li><li>Usage Examples</li><li>How to Use?</li></ul></li><li>Git Steps - SSH Key Configuration</li><li>Git Steps to Manage Multiple Users</li><li>How to Remove Last Pushed Commit ?</li><li>Classic GitHub Workflow (Fork -\&gt; Modify -\&gt; Pull Request -\&gt; Merge)<ul><li>Step-1: Fork</li><li>Step-2: Clone and Modify</li><li>Step-3: Open a Pull Request (PR)</li><li>Step-4: Merge (in repo A)</li><li>Workflow Diagram</li></ul></li><li>Situation - Sync Repo-A/dev with Fork Repo-B/dev-updated<ul><li>Objective</li><li>Should I Sync My Fork Before Opening a PR, or just create PR as-is?</li><li>Solution - Best Practice</li></ul></li><li>Situation - Reviewing Merge PR to my Commit<ul><li>Objective</li><li>Solution - Best Practice</li></ul></li><li>Handy Commands</li><li>To be Cont....</li></ul></li></ul>
+<h2>CLI Benefits</h2>
+<p>Here are some of the benefits of using the GitHub CLI:</p>
+<p>|Benefit|Details| |-|-| |Efficiency| It allows you to perform GitHub tasks without having to switch between the terminal and a web browser. |Automation| You can use scripts to automate repetitive tasks, such as creating issues or updating pull requests. |Customization| You can create custom aliases and extensions to personalize your GitHub CLI experience.</p>
+<h2>HTTP vs CLI Cloning</h2>
+<p>Normal HTTP cloning and gh clone are both methods for cloning a Git repository, but there are some key differences between the two.</p>
+<p>Normal HTTP cloning involves downloading the contents of the repository directly from the Git server using the HTTP protocol. This method is simple to use, but it can be slow and unreliable, especially for large repositories.</p>
+<p>gh clone is a command provided by the GitHub CLI tool that uses GitHub-specific APIs to clone repositories. This method is more efficient and reliable than normal HTTP cloning, and it also supports additional features, such as cloning private repositories and using SSH authentication.</p>
+<p>Here is a table summarizing the key differences between normal HTTP cloning and gh clone:</p>
+<p>|Feature|	Normal HTTP cloning|	gh clone| |-|-|-| Protocol|	HTTP|	GitHub-specific APIs| Speed|	Slow|	Efficient| Reliability|	Unreliable|	Reliable| Supported features|	Cloning public repositories|	Cloning public and private repositories, using SSH authentication</p>
+<p>In general, it is recommended to use gh clone for cloning Git repositories whenever possible. It is a more efficient, reliable, and feature-rich method than normal HTTP cloning.</p>
+<h2>Usage Examples</h2>
+<p>Here are some examples of how to use the GitHub CLI:</p>
+<p>|Action|Command| |-|-| |Create an issue| gh issue create &quot;Describe the issue here&quot; |List open pull requests| gh pr list |Create a new release| gh release create &quot;Version 1.0.0&quot; -t &quot;v1.0.0&quot;</p>
+<p>Here is an example of how to clone a repository using gh clone: Bash</p>
+<pre><code>gh clone https://github.com/google/bard</code></pre>
+<p>This will clone the google/bard repository to the current directory. If you want to clone the repository to a different directory, you can specify the directory name as an argument to the gh clone command. For example, the following command will clone the google/bard repository to the directory named bard: Bash</p>
+<pre><code>gh clone https://github.com/google/bard bard</code></pre>
+<h2>How to Use GitHub CLI?</h2>
+<p>Here are the general steps on how to use the GitHub CLI:</p>
+<ol><li>Install the GitHub CLI:</li></ol>
+<ul><li>For macOS, download the binary from the GitHub CLI website or use Homebrew to install it.</li><li>For Windows, download the installer from the GitHub CLI website or use Chocolatey to install it.</li><li>For Linux, use your distribution&#x27;s package manager to install the GitHub CLI package.</li></ul>
+<ol><li>Authenticate with GitHub:<ul><li>Open a terminal window and run the command gh auth login.</li><li>Follow the on-screen instructions to sign in to your GitHub account.</li><li>GitHub CLI will store your credentials securely.</li></ul></li></ol>
+<ol><li>Use GitHub CLI commands:<ul><li>There are many different GitHub CLI commands available for managing issues, pull requests, repositories, and other GitHub features.</li><li>You can find a list of all available commands by running the command gh help.</li><li>For help with a specific command, run the command gh help &lt;command&gt;.</li></ul></li></ol>
+<ol><li>Customize your GitHub CLI experience:<ul><li>You can create custom aliases for frequently used commands.</li><li>You can install extensions to add additional features to GitHub CLI.</li><li>You can configure GitHub CLI settings to personalize your experience.</li></ul></li></ol>
+<p>Here are some examples of how to use GitHub CLI commands:</p>
+<ul><li>Create an issue: gh issue create &quot;Describe the issue here&quot;</li><li>List open pull requests: gh pr list</li><li>Create a new release: gh release create &quot;Version 1.0.0&quot; -t &quot;v1.0.0&quot;</li><li>Clone a repository: gh clone https://github.com/google/bard</li></ul>
+<p>For more information on the GitHub CLI, please refer to the official documentation: https://github.com/cli/cli</p>
+<h2>Git Steps - SSH Key Configuration</h2>
+<ol><li>In case of any unwanted SSH Key file, Start by removing them:<ul><li>Open a terminal window and navigate to the directory where your SSH key files are stored.</li><li>Locate the id_rsa and id_rsa.pub files.</li><li>Delete both files using the rm command.</li><li>For example, to delete the id_rsa and id_rsa.pub files, you would run the following commands:</li></ul></li></ol>
+<pre><code>rm ~/.ssh/id_rsa
+rm ~/.ssh/id_rsa.pub</code></pre>
+<ol><li>Remove the SSH key from your GitHub account:<ul><li>Go to your GitHub account settings.</li><li>Click on the &quot;SSH and GPG keys&quot; tab.</li><li>Find the SSH key that you want to remove and click on the &quot;Delete key&quot; button.</li></ul></li></ol>
+<ol><li>Re-generate the SSH key:<ul><li>Open a terminal window and run the following command:</li></ul></li></ol>
+<pre><code class="language-bash">ssh-keygen</code></pre>
+<ul><li>When prompted, enter a filename for the key pair.</li><li>Then, enter a passphrase for the key. This is optional, but it is recommended for security reasons.</li><li>Your SSH key pair will be generated.</li><li>The public key will be saved to a file called id_rsa.pub, and the private key will be saved to a file called id_rsa.</li></ul>
+<ol><li>Add the public key to your GitHub account:<ul><li>Copy the contents of the id_rsa.pub file to your clipboard.</li><li>Go to your GitHub account settings.</li><li>Click on the &quot;SSH and GPG keys&quot; tab.</li><li>Click on the &quot;New SSH key&quot; button.</li><li>Paste the contents of your clipboard into the &quot;Key&quot; field.</li><li>Give your key a title, such as &quot;My new SSH key for GitHub&quot;.</li><li>Click on the &quot;Add SSH key&quot; button.</li></ul></li></ol>
+<ol><li>Re-configure GitHub CLI to use SSH:<ul><li>Open a terminal window and run the following command:</li></ul></li></ol>
+<pre><code class="language-bash">git config --global core.sshCommand &quot;ssh -o IdentityFile=$HOME/.ssh/yousri_per&quot;</code></pre>
+<ul><li>This will configure GitHub CLI to use the id_rsa key for SSH authentication.</li></ul>
+<ol><li>Retry the gh command:<ul><li>Once you have completed these steps, you should be able to retry the gh command without any errors.</li></ul></li></ol>
+<p>This process will ensure that you start with a fresh set of SSH keys and that your GitHub account is properly configured to use them.</p>
+<p><a href="../../../#/programming/version-control/git-cli">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

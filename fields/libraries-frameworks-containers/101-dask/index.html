@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Dask</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/libraries-frameworks-containers/101-dask/">
+<meta name="description" content="What Dask is, how it compares with Spark, and how it scales Python data work with parallel and distributed computing, performance stages and scheduling.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Dask">
+<meta property="og:description" content="What Dask is, how it compares with Spark, and how it scales Python data work with parallel and distributed computing, performance stages and scheduling.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/libraries-frameworks-containers/101-dask/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/libraries-frameworks-containers/101-dask/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../.docs/prerender-redirect.js" data-target="../../../#/fields/libraries-frameworks-containers/101-dask"></script>
+<main>
+<h1>Dask</h1>
+<p><em>What Dask is, how it compares with Spark, and how it scales Python data work with parallel and distributed computing, performance stages and scheduling.</em></p>
+<p>Imagine having the power of Apache Spark&#x27;s distributed computing, but seamlessly integrated into your Python data science ecosystem. That&#x27;s Dask. While Spark is fantastic for big data processing, Dask brings parallel and distributed computing capabilities directly to your Python environment, making it feel like a natural extension of libraries like NumPy, Pandas, and Scikit-learn. With Dask, you can effortlessly scale your data analysis and machine learning workflows across multiple cores on a single machine or even across a cluster of machines, all while leveraging familiar Python APIs and tools. It&#x27;s like having the scalability of Spark with the simplicity and flexibility of Python, offering a compelling solution for tackling large-scale data challenges in a way that feels intuitive and seamless for Python-centric data scientists</p>
+<h1>Table of Content</h1>
+<h1>What is Dask?</h1>
+<p>Dask is a parallel and distributed computing library that scales teh existing Python and PyData ecosystem.</p>
+<h1>Dask Over Spark</h1>
+<p>There are some use cases and trade-offs between Dask and Spark:</p>
+<ul><li><strong>Python Integration</strong>: Dask is written in Python, compared to Spark which is written in Scala, so this gives Dask the capability of achieving the ecosystem between all integrated Python libraries that&#x27;s being used in Machine Learning and Data science like NumPy, Pandas, and Scikit-learn.<ul><li>On the other hand, as Spark is implemented in Scala, it has APIs for other language like Python which is known for (PySpark), but the Python API (PySpark) may not be as idiomatic or as tightly integrated with Python libraries.</li></ul></li><li><strong>Easy of Use</strong>: The developers of Dask tried their best to make Dask usage is familiar with Data scientist who always use Pandas, and NumPy in their work, so Dask is a more user-friendly experience by mimicking the APIs of popular Python libraries such as NumPy, Pandas, and Scikit-learn. So there is no overhead and more easier to transit from single-machine to distributed computing without needing to learn new syntax or paradigms.<ul><li>Unlike Spark which has its own set of APIs and abstractions which may require a steeper learning curve for Python-focused data scientists.</li></ul></li></ul>
+<p>Here are some comparison between Dask and Spark:</p>
+<p>|Point of Difference|Details| |-|-| APIs|- Dask DataFrame reuses the Pandas API and memory model.&lt;/br&gt;- Spark DataFrame has its own API and memory model, it also implements a large subset of SQL language. Machine Learning|- Dask does not have a built-in machine learning library, but it can be used in conjunction with other Python libraries like Scikit-Learn.&lt;/br&gt;- Spark MLLib is a cohesive project with support for common operations that are easy to implement with Spark&#x27;s Map-Shuffle-Reduce style system. Scale| Both Dask and Spark scale from a single node to thousand-node clusters. Internal Design|- Dask’s internal model is lower level, and so lacks high-level optimizations, but is able to implement more sophisticated algorithms and build more complex bespoke systems1.&lt;/br&gt;- Spark’s internal model is higher level, providing good high-level optimizations on uniformly applied computations, but lacking flexibility for more complex algorithms or ad-hoc systems1.</p>
+<p>For more comparison, refer to the official Dask spark - <a href="https://docs.dask.org/en/stable/spark.html">Comparison to Spark</a>.</p>
+<p>and for a Comparison conclusion from Dask docs:</p>
+<ul><li>Spark is a mature and all-inclusive, and would be better in case you want a single project that does everything and you already on a Big Data hardware, especially in cases that are ETL + SQL.</li><li>Dask is lighter weight and is easier to integrate into existing code and hardware, and in case you are beyond ETL + SQL, just want to add flexible parallelism to existing solutions, and you&#x27;re already using Python and associated libraries like NumPy and Pandas.</li></ul>
+<p>A final good tip from the Dask developers, in case you manage 100GB or less of tabular CSV or JSON data, then you should forget about both Spark and Dask and use Postgres or MongoDB.</p>
+<h1>Dask Overview</h1>
+<p><img src="../../../fields/libraries-frameworks-containers/images/dask-overview.svg" alt="architecture" loading="lazy"></p>
+<p>High level collections are used to generate task graphs which can be executed by schedulers on a single machine or a cluster.</p>
+<p>Before moving forward into this tutorial, let&#x27;s try to get all the info we can highlight from this figure!</p>
+<ul><li>Dask has its own Python data collection, but they are looks like the same normal Python data collections we are familiar with.</li><li>The task is visualized as a task graph, where each node represents something like a sub-task, and the edge (arrow) represent the next step to be computed, which could be named as dependencies between sub-tasks. </li><li>There are two families of schedulers included in Dask; the single-machine scheduler and Distributed scheduler.</li></ul>
+<h1>Dask Collections</h1>
+<p>A parallelized versions of common Python data structure!; They are high-level collections that mimic familiar Python data structures, but are designed to operate in parallel on large datasets.</p>
+<p>These make then easier for users to transition from single-machine to parallel and distributed computing without significant changes to their code.</p>
+<p>An overview of their 4 main collections:</p>
+<p>|Data Collection|Specs| |-|-| Dask Arrays|Parallelized versions of NumPy arrays.&lt;/br&gt; They implement a subset of the NumPy ndarray interface using blocked algorithms, breaking up the large array into many small arrays Dask DataFrames|Parallelized versions of Pandas DataFrames.&lt;/br&gt; They implement a blocked parallel DataFrame object that mimic large subset of Pandas DataFrame. Dask Bag|Excels in processing data that can be represented as sequence of arbitrary inputs.&lt;/br&gt;It is ideal for semi-structure data and provides very general computation. Dask Delayed|A simple way to parallelize custom code.&lt;/br&gt;It allows users to delay function calls into a task graph with dependencies.</p>
+<p>Each of these collections partitions large datasets into smaller pieces, allowing computations to be performed in parallel. They also integrate well with the larger Python ecosystem.</p>
+<p>For cases where the build-in Dask collections aren&#x27;t sufficient, it&#x27;s possible to create your own Dask collections. This is considered an advanced feature and requires fulfilling the Dask collection interface.</p>
+<p>In addition to these, all collections support <em>from_delayed</em> functions and <em>to_delayed</em> methods, which allow you to do a bit of custom work with <em>dask.delayed</em>, then leverage the algorithms in <em>dask.array</em> or <em>dask.dataframe</em>, and then switch back to custom work</p>
+<p>For more info, refer to Dask Docs - <a href="https://docs.dask.org/en/stable/delayed-collections.html">Working with Collections</a> &amp; <a href="https://docs.dask.org/en/stable/custom-collections.html">Custom Collections</a>.</p>
+<h1>Dask Components</h1>
+<p>To understand how Dask actually works, it&#x27;s essential to grasp its core components, which work together to execute tasks in parallel and distributed environments.</p>
+<p>Dask could be constructed into three main components; [Client, Scheduler, Workers]</p>
+<pre><code class="language-lua">      +-----------------------+
+      |        Client         |
+      | DAG           Process |
+      +-----------------------+
+                  |
+                  v
+          +--------------+
+          |  Scheduler   |
+          +------+-------+
+                 |
+      +----------+------------+
+      |           |           |
+      v           v           v
+ +---------+  +---------+  +---------+
+ |  Worker |  |  Worker |  |  Worker |
+ +---------+  +---------+  +---------+</code></pre>
+<p>|Component|Sub-Component|Functionality| |-|-|-| Dask Client|Main|Developer interact with Dask through the Client.&lt;/br&gt;Dask Client creates the Directed Acyclic Graph (DAG) of tasks by analyzing the code.&lt;/br&gt;Responsible for instructing the scheduler what to compute.&lt;/br&gt;Gather results from the workers and aggregate the results in the Client Process. ||DAG &quot;Directed Acyclic Graph&quot;|Represent the task graph constructed when performing operations on Dask collection.&lt;/br&gt;The Graph consists of nodes representing individual tasks and edges representing dependencies between tasks.&lt;/br&gt; Each task corresponds to a specific computation or operation on the data.&lt;/br&gt; Dask construct this DAG dynamically as operations are performed, allowing it to efficiently track dependencies and parallelize computation. ||Client Process|Responsible for managing interactions between the user and Dask infrastructure.&lt;/br&gt; Provides a high-level interface for user to create and manipulate Dask collections, submit computations for execution, and monitor task progress.&lt;/br&gt;Coordinates communication with the scheduler, sending task graphs and receiving results back from the scheduler.&lt;/br&gt; Additionally, it handles error handling, retries, and other aspects of job management. Dask Scheduler|Main|Middle layer between the Client and Workers.&lt;/br&gt;Orchestrate the execution of tasks in Dask; it receives task graphs from the client, schedule tasks for execution on available workers.&lt;/br&gt;Manages task dependencies to ensure parallelism and efficiency.&lt;/br&gt;Dask Scheduler is a single point of failure but it&#x27;s generally a very stable component of Dask. Dask Workers|Main|They are the computing units responsible for executing tasks assigned by the scheduler, defined in the DAG.&lt;/br&gt; Workers can communicate to share data for a computation, but this can be inefficient and should be avoided.&lt;/br&gt;Each worker runs on an individual machine within the cluster and can execute tasks in parallel, utilizing multiple CPU cores and/or threads.&lt;/br&gt;Once the computation are done, they return the results to the client, which aggregates them with results from other workers.</p>
+<p>Notes important to know:</p>
+<ul><li>&quot;Dask Scheduler is a single point of failure but it&#x27;s generally a very stable component of Dask&quot;; These are two important aspects of Dask architecture:<ul><li>Single point of failure as if the scheduler fails or becomes unavailable, the entire cluster may become unresponsive, and users may lose access to their computations. This makes the scheduler a single point of failure within the Dask system.</li><li>Stability as despite being a single point of failure, the scheduler is typically a very stable component, they are designed to handle a wide range of workloads and operate reliably under normal conditions, with fault-tolerance mechanism built.</li></ul></li></ul>
+<h1>How Dask Handles Task Dependencies?</h1>
+<p>Using a concept called a <strong>Task Graph</strong>, which works as follow:</p>
+<ol><li><strong>Task Graph</strong>: in Dask, as computations are represented as DAG, where each <em>node</em> is a Python functions and <em>edges</em> represents data dependencies between these functions. So we could simplify this into: [Nodes-&gt;Tasks, Edges-&gt;Dependencies between these tasks].</li><li><strong>Task Scheduling</strong>: Once the graph is created, Dask used a task scheduler to execute the graph. The scheduler ensures that tasks are executed in an order that respects their dependencies. So if one task depends on the output of another, the dependent task won&#x27;t be executed until the task it depends on has completed.</li><li><strong>Parallel Execution</strong>: The scheduler leverages parallelism where possible, So if tasks are independent of each other, they are executed simultaneously, making the full use of multiple cores or even multiple machines.</li></ol>
+<h1>Internals</h1>
+<h2>Understanding Performance</h2>
+<p>Each type of scheduling defined in Dask, it has its own different diagnostic tool.</p>
+<p>In case you are interested in understanding the various phases where slowdown can occur, read the following Stages of Computation.</p>
+<h3>Stages of Computation</h3>
+<p>In this sections of document <a href="https://docs.dask.org/en/stable/phases-of-computation.html">phases/stages of computation</a>, it describes all of the parts of computation, some common causes of slowness and how to effectively profile.</p>
+<p>They are categorized into 7 parts:</p>
+<ol><li><strong>Graph Construction</strong></li><li><strong>Graph Optimization</strong></li><li><strong>Graph Serialization</strong></li><li><strong>Graph</strong></li><li><strong>Communication</strong></li><li><strong>Scheduling</strong></li><li><strong>Execution</strong></li></ol>
+<h2>Scheduling</h2>
+<p>According to the <a href="https://docs.dask.org/en/stable/scheduling.html">docs</a>; after Dask generate task graphs, it needs to execute them on parallel hardware. This is the job of <strong>a task scheduler</strong>. So there are different families of task schedulers exist, and each will consume a task graph and compute the same result, but with different performance characteristics.</p>
+<h1>References</h1>
+<ul><li>Understanding Dask Architecture: The CLient, Scheduler and Workers. By data revenue. <a href="https://www.datarevenue.com/en-blog/understanding-dask-architecture-client-scheduler-workers">https://www.datarevenue.com/en-blog/understanding-dask-architecture-client-scheduler-workers</a></li><li>Dask scheduling documentation - <a href="https://docs.dask.org/en/stable/scheduling.html">https://docs.dask.org/en/stable/scheduling.html</a></li></ul>
+<p><a href="../../../#/fields/libraries-frameworks-containers/101-dask">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

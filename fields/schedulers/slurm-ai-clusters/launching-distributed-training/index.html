@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Launching Distributed Training on Slurm: srun, torchrun, and the Rank Contract</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-ai-clusters/launching-distributed-training/">
+<meta name="description" content="Why a 2-node training job can run on one node, the environment PyTorch needs from Slurm, launching with srun or torchrun, and the double-launch trap - tested with PyTorch 2.15 on Slurm 23.11.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Launching Distributed Training on Slurm: srun, torchrun, and the Rank Contract">
+<meta property="og:description" content="Why a 2-node training job can run on one node, the environment PyTorch needs from Slurm, launching with srun or torchrun, and the double-launch trap - tested with PyTorch 2.15 on Slurm 23.11.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-ai-clusters/launching-distributed-training/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-ai-clusters/launching-distributed-training/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/schedulers/slurm-ai-clusters/launching-distributed-training"></script>
+<main>
+<h1>Launching Distributed Training on Slurm: srun, torchrun, and the Rank Contract</h1>
+<p><em>Why a 2-node training job can run on one node, the environment PyTorch needs from Slurm, launching with srun or torchrun, and the double-launch trap - tested with PyTorch 2.15 on Slurm 23.11.</em></p>
+<blockquote><p><strong>Part 2 of [Slurm for AI Clusters](/fields/schedulers/slurm-ai-clusters/README.md)</strong> <a href="../../../../fields/schedulers/slurm-ai-clusters/topology-aware-placement/">Part 1</a> got the job good nodes. This page gets a process started on each of them with the right rank. By the end you&#x27;ll have two working launch scripts, and you&#x27;ll recognise the three ways they usually break.</p></blockquote>
+<hr>
+<h2>Sixteen GPUs, eight busy</h2>
+<p>A researcher moves a training script from one 8-GPU node to two. The job asks for <code>-N 2 --gpus-per-node=8</code>, Slurm allocates both nodes, the job runs, and it&#x27;s exactly as fast as before. Monitoring shows the second node&#x27;s GPUs at 0% for the whole run. Nobody gets an error. The job finishes, and they paid for two nodes and used one.</p>
+<p>The batch script was:</p>
+<pre><code class="language-bash">#SBATCH -N 2 --gpus-per-node=8
+python train.py</code></pre>
+<blockquote><p>[!NOTE] Lab: Slurm <strong>23.11.4</strong>, CPU nodes <code>cn001</code>–<code>cn004</code> (2 CPUs each), PyTorch <strong>2.15.0</strong> from PyPI in a venv at <code>/opt/torchenv</code> on every node, the <strong>Gloo</strong> backend on CPUs. No GPUs: the launch mechanics are what&#x27;s tested here, and they don&#x27;t depend on the device. Every output below is from the lab.</p></blockquote>
+<hr>
+<h2>The batch script runs on one node</h2>
+<p>A Slurm allocation is a set of nodes. The batch script itself is a single shell process, and it runs on the <strong>first</strong> node of the allocation. To run anything on the other nodes, you start a <strong>job step</strong> with <code>srun</code>. Two nodes, one test:</p>
+<pre><code class="language-bash">sbatch -p cpu -N2 --wrap &#x27;hostname; srun hostname&#x27;</code></pre>
+<pre><code class="language-text">cn001
+cn001
+cn002</code></pre>
+<p><code>hostname</code> alone ran once, on <code>cn001</code>. <code>srun hostname</code> ran once per task, on both nodes. The researcher&#x27;s <code>python train.py</code> is the first line: one process, one node, sixteen GPUs allocated.</p>
+<p>So every multi-node training job needs <code>srun</code> somewhere. The only question is what <code>srun</code> starts.</p>
+<hr>
+<h2>What PyTorch needs from Slurm</h2>
+<p><code>torch.distributed.init_process_group()</code> with the default <code>env://</code> method reads four environment variables. Slurm sets its own versions of them for each task:</p>
+<table><thead><tr><th>PyTorch reads</th><th>Means</th><th>Slurm sets</th></tr></thead><tbody><tr><td><code>RANK</code></td><td>This process&#x27;s global number, 0..N-1</td><td><code>SLURM_PROCID</code></td></tr><tr><td><code>WORLD_SIZE</code></td><td>Total number of processes</td><td><code>SLURM_NTASKS</code></td></tr><tr><td><code>LOCAL_RANK</code></td><td>Number on this node, picks the GPU</td><td><code>SLURM_LOCALID</code></td></tr><tr><td><code>MASTER_ADDR</code>, <code>MASTER_PORT</code></td><td>Where rank 0 listens</td><td>Nothing. You choose: usually the first node, <code>scontrol show hostnames &quot;$SLURM_JOB_NODELIST&quot; | head -n 1</code></td></tr></tbody></table>
+<p>The test program: every rank adds its rank + 1, so with 4 ranks every rank must print <code>sum=10</code>.</p>
+<pre><code class="language-python"># allreduce.py - every rank adds its number; all ranks should print the same sum.
+import os, socket, torch, torch.distributed as dist
+dist.init_process_group(&quot;gloo&quot;)   # reads RANK, WORLD_SIZE, MASTER_ADDR, MASTER_PORT
+rank, world = dist.get_rank(), dist.get_world_size()
+t = torch.tensor([float(rank + 1)])
+dist.all_reduce(t)
+print(f&quot;rank {rank}/{world} on {socket.gethostname()} local_rank={os.environ.get(&#x27;LOCAL_RANK&#x27;)} sum={t.item():.0f}&quot;, flush=True)
+dist.destroy_process_group()</code></pre>
+<hr>
+<h2>Way 1: srun starts every rank</h2>
+<p>One Slurm task per process. Slurm starts them all; a one-line wrapper renames Slurm&#x27;s variables to PyTorch&#x27;s:</p>
+<pre><code class="language-bash">#!/bin/bash
+#SBATCH -J ddp-srun -p cpu -N 2 --ntasks-per-node=2 -t 00:05:00
+export MASTER_ADDR=$(scontrol show hostnames &quot;$SLURM_JOB_NODELIST&quot; | head -n 1)
+export MASTER_PORT=29500
+srun bash -c &#x27;RANK=$SLURM_PROCID WORLD_SIZE=$SLURM_NTASKS LOCAL_RANK=$SLURM_LOCALID \
+  exec /opt/torchenv/bin/python -W ignore /usr/local/share/allreduce.py&#x27;</code></pre>
+<pre><code class="language-text">rank 0/4 on cn001 local_rank=0 sum=10
+rank 1/4 on cn001 local_rank=1 sum=10
+rank 2/4 on cn002 local_rank=0 sum=10
+rank 3/4 on cn002 local_rank=1 sum=10</code></pre>
+<p>The single quotes matter: the variables must expand inside each task, not once in the batch script. On GPUs, <code>--ntasks-per-node</code> equals the GPUs per node, and each rank uses GPU <code>LOCAL_RANK</code>.</p>
+<p>The output also had a few lines like this, which are harmless in a container without IPv6:</p>
+<pre><code class="language-text">[c10d] The client socket cannot be initialized to connect to [cn001]:29500 (errno: 97 - Address family not supported by protocol).</code></pre>
+<p><strong>Good for:</strong> Slurm accounts for every rank as a task, <code>scancel</code> and time limits hit every process directly, and <code>sacct</code> shows one step with N tasks.</p>
+<hr>
+<h2>Way 2: srun starts torchrun, torchrun starts the ranks</h2>
+<p>One Slurm task <strong>per node</strong>. Each runs <code>torchrun</code>, which starts the per-node processes itself and sets <code>RANK</code>, <code>LOCAL_RANK</code> and <code>WORLD_SIZE</code> for them:</p>
+<pre><code class="language-bash">#!/bin/bash
+#SBATCH -J ddp-torchrun -p cpu -N 2 --ntasks-per-node=1 --cpus-per-task=2 -t 00:05:00
+head=$(scontrol show hostnames &quot;$SLURM_JOB_NODELIST&quot; | head -n 1)
+srun /opt/torchenv/bin/torchrun \
+  --nnodes=&quot;$SLURM_NNODES&quot; --nproc-per-node=2 \
+  --rdzv-backend=c10d --rdzv-endpoint=&quot;$head:29500&quot; --rdzv-id=&quot;$SLURM_JOB_ID&quot; \
+  /usr/local/share/allreduce.py</code></pre>
+<pre><code class="language-text">rank 0/4 on cn001 local_rank=0 sum=10
+rank 1/4 on cn001 local_rank=1 sum=10
+rank 3/4 on cn002 local_rank=1 sum=10
+rank 2/4 on cn002 local_rank=0 sum=10</code></pre>
+<p>Same answer, 6 seconds of wall time. <code>torchrun</code> also printed a warning that it set <code>OMP_NUM_THREADS=1</code> for each process; set it yourself if your data loading needs more threads. Note <code>--cpus-per-task=2</code>: the one Slurm task must own all the CPUs (and on GPU nodes, all the GPUs) its child processes will use.</p>
+<p><strong>Good for:</strong> scripts already written for <code>torchrun</code>, and <code>torchrun</code>&#x27;s elastic features (restarting workers on failure, <code>--max-restarts</code>).</p>
+<table><thead><tr><th></th><th>Way 1: <code>srun</code> per rank</th><th>Way 2: <code>srun</code> + <code>torchrun</code></th></tr></thead><tbody><tr><td>Slurm tasks</td><td>One per process</td><td>One per node</td></tr><tr><td>Who sets <code>RANK</code></td><td>Your wrapper, from <code>SLURM_PROCID</code></td><td><code>torchrun</code></td></tr><tr><td><code>--ntasks-per-node</code></td><td>= processes per node</td><td><strong>1</strong></td></tr><tr><td>Rendezvous</td><td><code>MASTER_ADDR:MASTER_PORT</code></td><td><code>--rdzv-endpoint</code> (c10d)</td></tr></tbody></table>
+<hr>
+<h2>Three ways it breaks</h2>
+<table><thead><tr><th>Mistake</th><th>What we saw</th></tr></thead><tbody><tr><td>No <code>srun</code> at all</td><td>Runs once, on the first node (the story above). No error</td></tr><tr><td><code>srun python</code> without setting <code>RANK</code></td><td><code>ValueError: Error initializing torch.distributed using env:// rendezvous: environment variable RANK expected, but not set</code>, every task exits 1, job <code>FAILED</code></td></tr><tr><td><code>torchrun</code> with <code>--ntasks-per-node=2</code> (copied from Way 1)</td><td>Four <code>torchrun</code> agents for a 2-node rendezvous. Two formed the group and the 4 ranks printed <code>sum=10</code>; the other two crashed with <code>RendezvousConnectionError: The connection to the C10d store has failed</code>. Job state <code>FAILED</code></td></tr></tbody></table>
+<p>The third one is the nasty one: the training ran, then the job reported failure, with a long traceback that never says &quot;you started torchrun twice per node&quot;. In our run the two winning agents happened to be on different nodes. If both had been on the same node, all four ranks would have run there, on that node&#x27;s GPUs only.</p>
+<p>Rule of thumb: <strong>count the processes.</strong> <code>nodes × ntasks-per-node × nproc-per-node</code> must equal the world size you meant.</p>
+<hr>
+<h2>On real GPUs</h2>
+<p>The same two scripts, with these changes. These are from the PyTorch and Slurm docs, not tested in this lab:</p>
+<ul><li>Backend <code>nccl</code> instead of <code>gloo</code>, and <code>torch.cuda.set_device(int(os.environ[&quot;LOCAL_RANK&quot;]))</code> before creating the process group.</li><li>Ask for GPUs per node: <code>--gpus-per-node=8</code>. With Way 1, <code>--ntasks-per-node=8</code>; with Way 2, <code>--ntasks-per-node=1</code> and <code>--nproc-per-node=8</code>.</li><li>NCCL picks a network interface on its own and can pick the wrong one on multi-homed nodes. <code>NCCL_DEBUG=INFO</code> prints which interface and transport it chose; <code>NCCL_SOCKET_IFNAME</code> forces one.</li><li>If you use containers, <a href="../../../../fields/schedulers/slurm-ai-clusters/containers-with-pyxis/">part 3</a> shows an Enroot hook that sets <code>RANK</code>, <code>WORLD_SIZE</code>, <code>MASTER_ADDR</code> and friends for you, tested in the lab.</li></ul>
+<hr>
+<h2>Back to the eight idle GPUs</h2>
+<p>The researcher&#x27;s script becomes Way 2, because <code>train.py</code> was already written for <code>torchrun</code>:</p>
+<pre><code class="language-bash">#SBATCH -N 2 --ntasks-per-node=1 --gpus-per-node=8 --cpus-per-task=64
+head=$(scontrol show hostnames &quot;$SLURM_JOB_NODELIST&quot; | head -n 1)
+srun torchrun --nnodes=2 --nproc-per-node=8 \
+  --rdzv-backend=c10d --rdzv-endpoint=&quot;$head:29500&quot; --rdzv-id=&quot;$SLURM_JOB_ID&quot; train.py</code></pre>
+<p>The first log line now says <code>world_size=16</code>, both nodes&#x27; GPUs show load, and the epoch time drops. The fix was one <code>srun</code>, because the batch script only ever ran on the first node.</p>
+<p><strong>Takeaway:</strong> the batch script runs on the first node only; start ranks with <code>srun</code>, either one task per rank with <code>RANK=$SLURM_PROCID</code>, or one task per node running <code>torchrun</code>, and make sure nodes × tasks × processes equals the world size.</p>
+<p><strong>Next:</strong> <a href="../../../../fields/schedulers/slurm-ai-clusters/containers-with-pyxis/">Part 3, Containers with Pyxis and Enroot</a>, runs the same ranks inside a container.</p>
+<hr>
+<h2>References</h2>
+<ul><li><a href="https://slurm.schedmd.com/sbatch.html">sbatch(1)</a>: the batch script runs on the first allocated node; <code>SLURM_*</code> output environment variables.</li><li><a href="https://slurm.schedmd.com/srun.html">srun(1)</a>: <code>SLURM_PROCID</code>, <code>SLURM_LOCALID</code>, <code>SLURM_NTASKS</code>.</li><li><a href="https://docs.pytorch.org/docs/stable/elastic/run.html">PyTorch: torchrun (Elastic Launch)</a>: <code>--nnodes</code>, <code>--nproc-per-node</code>, c10d rendezvous, the environment it sets.</li><li><a href="https://docs.pytorch.org/docs/stable/distributed.html">PyTorch: torch.distributed</a>: <code>init_process_group</code>, <code>env://</code> initialization, backends.</li><li><a href="https://docs.nvidia.com/deeplearning/nccl/user-guide/docs/env.html">NCCL environment variables</a>: <code>NCCL_DEBUG</code>, <code>NCCL_SOCKET_IFNAME</code>.</li><li><a href="../../../../fields/schedulers/slurm-inside-a-job/slurm-job-script-tale/">The job script tale</a>: what Slurm does with the batch script.</li></ul>
+<p><a href="../../../../#/fields/schedulers/slurm-ai-clusters/launching-distributed-training">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Schedulers - Overview</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/">
+<meta name="description" content="How a cluster scheduler decides who runs where, with Slurm as the working example.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Schedulers - Overview">
+<meta property="og:description" content="How a cluster scheduler decides who runs where, with Slurm as the working example.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../.docs/prerender-redirect.js" data-target="../../#/fields/schedulers/"></script>
+<main>
+<h1>Schedulers - Overview</h1>
+<p><em>How a cluster scheduler decides who runs where, with Slurm as the working example.</em></p>
+<p>How a cluster scheduler decides who runs where, with Slurm as the working example.</p>
+<p>Forty people share a cluster. Everyone wants the GPUs now. Somebody has to decide who goes first, where the job lands and what happens when it misbehaves. That somebody is the scheduler, and these pages show how Slurm does it.</p>
+<h2>Contents</h2>
+<table><thead><tr><th>File</th><th>Description</th></tr></thead><tbody><tr><td><a href="../../fields/schedulers/slurm-intro/">slurm-intro</a></td><td>What a scheduler does and why it matters</td></tr><tr><td><a href="../../fields/schedulers/slurm-accounting-multi-tenancy/">slurm-accounting-multi-tenancy</a></td><td>Who stores and who enforces multi-tenant rules: slurmdbd, associations, QOS, fairshare</td></tr><tr><td><a href="../../fields/schedulers/slurm-backfill-tuning/">slurm-backfill-tuning</a></td><td>Why a short bf_window hides long jobs, and how to tune backfill with sdiag</td></tr><tr><td><a href="../../fields/schedulers/slurm-sacct-job-forensics/">slurm-sacct-job-forensics</a></td><td>Reading sacct to find out how a job ended: states, exit codes, requeued runs</td></tr><tr><td><a href="../../fields/schedulers/slurm-inside-a-job/">slurm-inside-a-job</a></td><td>Series: one job from script to node - the frozen script, slurmstepd, cgroups and GPU affinity</td></tr><tr><td><a href="../../fields/schedulers/slurm-preemption/">slurm-preemption</a></td><td>Series: preemption, requeue, QOS setup, job_submit.lua and every signal Slurm sends</td></tr><tr><td><a href="../../fields/schedulers/slurm-cluster-operations/">slurm-cluster-operations</a></td><td>Series: reservations, reboots, upgrades, version changes, SSH access and drain runbooks</td></tr><tr><td><a href="../../fields/schedulers/slurm-smoke-tests/">slurm-smoke-tests</a></td><td>Series: smoke tests for Slurm - control plane, config changes, upgrades, policy, node readiness, and regression suites</td></tr><tr><td><a href="../../fields/schedulers/slurm-mixed-gpus/">slurm-mixed-gpus</a></td><td>Series: mixing H100s and A100s in one Slurm job, and when it pays off</td></tr><tr><td><a href="../../fields/schedulers/slurm-pending-jobs/">slurm-pending-jobs</a></td><td>Series: why is my job still pending - reason codes, multifactor priority, and QOS limits that wait forever</td></tr><tr><td><a href="../../fields/schedulers/slurm-ai-clusters/">slurm-ai-clusters</a></td><td>Series: Slurm for AI clusters - topology, distributed training, containers, GPU health checks, metrics, and a lab cheatsheet</td></tr></tbody></table>
+<h2>The route</h2>
+<table><thead><tr><th>Start here if...</th><th>Read</th></tr></thead><tbody><tr><td>You are new to schedulers</td><td><a href="../../fields/schedulers/slurm-intro/">slurm-intro</a>, then <a href="../../fields/schedulers/slurm-inside-a-job/">Inside a Slurm job</a></td></tr><tr><td>Jobs misbehave or nodes drain</td><td><a href="../../fields/schedulers/slurm-cluster-operations/slurm-kill-task-failed/">slurm-kill-task-failed</a>, <a href="../../fields/schedulers/slurm-cluster-operations/slurm-spool-dir-full/">slurm-spool-dir-full</a></td></tr><tr><td>You run a multi-user cluster</td><td><a href="../../fields/schedulers/slurm-accounting-multi-tenancy/">slurm-accounting-multi-tenancy</a>, <a href="../../fields/schedulers/slurm-backfill-tuning/">slurm-backfill-tuning</a>, <a href="../../fields/schedulers/slurm-preemption/">Preemption and signals</a></td></tr><tr><td>Users ask why their job isn&#x27;t running, or where it went</td><td><a href="../../fields/schedulers/slurm-pending-jobs/">slurm-pending-jobs</a>, <a href="../../fields/schedulers/slurm-sacct-job-forensics/">slurm-sacct-job-forensics</a></td></tr><tr><td>You maintain the cluster</td><td><a href="../../fields/schedulers/slurm-cluster-operations/">Cluster operations</a>, <a href="../../fields/schedulers/slurm-smoke-tests/">Smoke tests</a></td></tr><tr><td>You run GPU training jobs</td><td><a href="../../fields/schedulers/slurm-preemption/slurm-signals-cheatsheet/">slurm-signals-cheatsheet</a>, <a href="../../fields/schedulers/slurm-ai-clusters/">slurm-ai-clusters</a>, <a href="../../fields/schedulers/slurm-inside-a-job/slurm-gpu-affinity-socket-lie/">slurm-gpu-affinity-socket-lie</a></td></tr><tr><td>You want to build a lab to try all this</td><td><a href="../../fields/schedulers/slurm-ai-clusters/lab-build-cheatsheet/">lab build cheatsheet</a></td></tr></tbody></table>
+<p><a href="../../#/fields/schedulers/">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

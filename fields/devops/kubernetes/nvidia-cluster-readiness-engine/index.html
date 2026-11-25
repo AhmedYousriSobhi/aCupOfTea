@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The Cluster That Passed Every Test Except the One That Mattered</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/kubernetes/nvidia-cluster-readiness-engine/">
+<meta name="description" content="Even when traditional monitoring tools show all GPUs and networks operating normally, subtle bottlenecks—like a single slow GPU or a degraded network link—can silently drag down the performance of an">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="The Cluster That Passed Every Test Except the One That Mattered">
+<meta property="og:description" content="Even when traditional monitoring tools show all GPUs and networks operating normally, subtle bottlenecks—like a single slow GPU or a degraded network link—can silently drag down the performance of an">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/kubernetes/nvidia-cluster-readiness-engine/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/kubernetes/nvidia-cluster-readiness-engine/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/devops/kubernetes/nvidia-cluster-readiness-engine"></script>
+<main>
+<h1>The Cluster That Passed Every Test Except the One That Mattered</h1>
+<p><em>Even when traditional monitoring tools show all GPUs and networks operating normally, subtle bottlenecks—like a single slow GPU or a degraded network link—can silently drag down the performance of an</em></p>
+<p>Every platform engineer has lived this morning. The dashboards are green, DCGM is smiling, the fabric reports no errors, and every pod is <code>Running</code>. You announce the cluster ready, someone launches a 512-GPU training job, and the job proceeds to run like a laptop on 2% battery.</p>
+<p>Nothing is &quot;broken.&quot; No alert fires. One GPU is a bit slow, one link only degrades when it&#x27;s actually pushed, one route is quietly longer than intended. Yet a synchronous training job moves at the speed of its slowest rank, so a single shy GPU can hold hundreds of its colleagues hostage.</p>
+<p>This page is about the tool NVIDIA built for exactly that morning: <strong>NVIDIA Cluster Readiness Engine (NVCRE)</strong>. It&#x27;s a good page to read after <a href="../../../../fields/devops/kubernetes/kubernetes-in-five-nouns/">Kubernetes in Five Nouns</a>, because it uses a Kubernetes pattern you&#x27;ll meet everywhere: you declare what you want, and a controller does the work.</p>
+<hr>
+<h2>The one-sentence version</h2>
+<p><strong>NVCRE is an open source Kubernetes controller that proves a GPU cluster is ready by running real distributed workloads on it, then tells you which nodes failed and why.</strong></p>
+<p>The thesis is almost insultingly simple: the best way to find out whether a cluster can run a workload is to run the workload. On Slurm that&#x27;s one <code>srun</code> away. On Kubernetes there&#x27;s no built-in equivalent, because the test needs GPU and RDMA resource requests, NCCL settings matched to your fabric, a big enough shared-memory volume, and every pod starting together. NVCRE packages all that up.</p>
+<hr>
+<h2>Why &quot;all green&quot; isn&#x27;t &quot;ready&quot;</h2>
+<p>Two kinds of tools watch a cluster, and they see different things.</p>
+<table><thead><tr><th></th><th>Passive (telemetry)</th><th>Active (workload-driven)</th></tr></thead><tbody><tr><td>Question it answers</td><td>&quot;Is anything obviously broken?&quot;</td><td>&quot;Will this cluster hold up under real load?&quot;</td></tr><tr><td>How it works</td><td>Watches signals the cluster already emits</td><td>Generates real load and measures the result</td></tr><tr><td>Blind spot</td><td>Problems that emit nothing</td><td>It uses GPU time, so you can&#x27;t run it all day</td></tr><tr><td>Example here</td><td>NVSentinel</td><td>NVCRE</td></tr></tbody></table>
+<p>A GPU running a few percent slow with no errors and no log lines is invisible to a passive watcher, because there&#x27;s nothing to watch. It only shows up when something leans on the hardware.</p>
+<p>If this sounds familiar, it&#x27;s the same lesson as the <a href="../../../../fields/benchmarks/osu/">OSU benchmarks page</a>: run different tests that exercise different layers, and let the layer that fails tell you where to dig.</p>
+<hr>
+<h2>Readiness is a staircase, not a light switch</h2>
+<p>A cluster doesn&#x27;t flip from &quot;not ready&quot; to &quot;ready.&quot; The article describes four stages: <strong>bring-up, burn-in, preproduction, production</strong>. Each one sets a higher bar, and a node that passes a smoke test is not automatically fit for a 512-GPU run.</p>
+<p>Most teams encode this staircase in runbooks, spreadsheets and shell scripts wrapped around hand-rolled NCCL tests. That&#x27;s a second system to maintain next to everything else you&#x27;re already running. NVCRE&#x27;s pitch is to make the staircase a Kubernetes object instead.</p>
+<hr>
+<h2>The architecture: three resources, one chain of custody</h2>
+<p>Everything in NVCRE is a Custom Resource, so you can inspect it with <code>kubectl</code> and manage it with GitOps. There&#x27;s no separate dashboard holding secrets.</p>
+<table><thead><tr><th>Resource</th><th>What it is</th><th>Your relationship with it</th></tr></thead><tbody><tr><td><strong>Certification</strong></td><td>Which nodes to test and which categories to run</td><td>You write this one</td></tr><tr><td><strong>Workflow</strong></td><td>One per category; applies defaults and overrides, sets iterations, creates the job</td><td>It does the paperwork</td></tr><tr><td><strong>Job</strong></td><td>Runs the workload, watches node health, records measurements and failures</td><td>It does the sweating</td></tr></tbody></table>
+<p>Instructions flow down, and results flow back up the same chain. The job records which nodes failed and why, the workflow reports the category result, and the certification groups everything by category. That&#x27;s how a report can say <code>gpu-01</code> hit a hardware fault during the NCCL test while <code>gpu-02</code> merely missed its bandwidth target. The blame is attributed by design, not guessed afterwards.</p>
+<p>A certification describes intent, not mechanism:</p>
+<pre><code class="language-yaml">apiVersion: nvcre.nvidia.com/v1alpha1
+kind: Certification
+metadata:
+  name: gpu-cluster-cert
+spec:
+  target:
+    nodeSelector:
+      nvidia.com/gpu.present: &quot;true&quot;
+  categories:
+    - domain: communication
+      variant: nccl-all-reduce
+    - domain: training
+      variant: nemotron5-8b</code></pre>
+<p>Note the <code>v1alpha1</code>. It&#x27;s an early API version, so expect fields to change between releases and check the docs before copying anything into automation.</p>
+<p>You never say how to run an all-reduce. NVCRE detects the GPU architecture and cloud platform from the target nodes, then derives GPUs per node, the NCCL environment and platform-specific networking. The built-in catalog covers three domains:</p>
+<ul><li><strong>Communication:</strong> five NCCL variants (all-reduce, all-gather, all-to-all, loopback, and loopback across NVSwitch)</li><li><strong>Diagnostics:</strong> the DCGM level-4 diagnostic suite</li><li><strong>Training:</strong> NeMo pretraining with Nemotron 5 at 8B and 56B parameters</li></ul>
+<hr>
+<h2>Pass or fail is an expression, not a vibe</h2>
+<p>NVCRE ships with <strong>no default thresholds</strong>. You write the criteria yourself, in Common Expression Language (CEL), evaluated against measured metrics:</p>
+<pre><code class="language-yaml">categories:
+  - domain: communication
+    variant: nccl-all-reduce
+    options:
+      thresholds:
+        busBandwidthGBps: &quot;value &gt;= 900&quot;
+  - domain: training
+    variant: nemotron5-8b
+    options:
+      thresholds:
+        goodputRatio: &quot;value &gt;= 0.9&quot;
+        avgTFLOPsPerGPU: &quot;value &gt;= 800&quot;</code></pre>
+<p><strong>Do not copy those numbers.</strong> NVIDIA&#x27;s own article calls them illustrative values for GB200 NVL72-class systems. Your threshold comes from the same place as in the OSU page: a known-good baseline for your hardware, or what your application actually needs.</p>
+<p>The design point worth remembering is that &quot;the job finished&quot; and &quot;the job hit its target&quot; are different facts. A training run that completes at 60% of expected goodput technically succeeded and told you the cluster isn&#x27;t ready. NVCRE records the second case as a <code>ValidationFailed</code> condition, separate from whether the run itself succeeded, and treats it as a failure.</p>
+<hr>
+<h2>Scale decides what you&#x27;re measuring</h2>
+<p>The same test at a different scale answers a different question. An NCCL test inside one NVLink domain measures NVLink. The same test across three racks measures the scale-out fabric. So NVCRE makes scale explicit with <code>testScale</code>:</p>
+<table><thead><tr><th>Mode</th><th>What it does</th></tr></thead><tbody><tr><td>Intra-node</td><td>Tests each node on its own</td></tr><tr><td>Intra-rack</td><td>Groups nodes by topology domain (via the <code>nvidia.com/gpu.clique</code> label)</td></tr><tr><td>Full-scale</td><td>Puts every node in one big group</td></tr><tr><td>Diagnose</td><td>Adaptive fault isolation, described next</td></tr></tbody></table>
+<hr>
+<h2>The detective: adaptive fault isolation</h2>
+<p>Here is the nightmare it solves. A 64-node all-reduce returns low bandwidth. Every node in the group is equally suspect, and the old answer was days of engineers bisecting racks by hand while the GPUs sat idle.</p>
+<p>With <code>testScale: diagnose</code>, NVCRE does the bisecting itself. It splits a failing group, reruns the halves, and keeps going until it hits a floor size (<code>minGroupSize</code>). Groups that still fail at the floor become suspects. A <code>maxConcurrent</code> setting caps how many jobs run at once, so the detective doesn&#x27;t saturate the very fabric it&#x27;s measuring.</p>
+<p>The output is a short list of suspect nodes with a reason each, instead of a shrug aimed at an entire rack. A failing report looks like this:</p>
+<pre><code>communication/nccl-all-reduce
+Status:       Failed
+Scale:        full-scale
+Nodes/Job:    8
+
+Failed Nodes:
+  gpu-node-07  ThresholdViolation
+  gpu-node-12  HardwareFailureDetected
+
+Summary
+Categories:   1/2 passed
+Failed Nodes: 2
+Result:       FAILED</code></pre>
+<hr>
+<h2><code>WorkloadRun</code>: the plumbing, available separately</h2>
+<p>Underneath certification sits <code>WorkloadRun</code>, which solves a more mundane problem. Running any multi-node GPU workload on Kubernetes needs the same pile of setup every time: platform detection, framework wiring, GPU and network requests, and cleanup when a run dies halfway.</p>
+<p>You give it an image, a framework and a node count. The framework is exactly one of:</p>
+<ul><li><code>torch</code> for distributed training through <code>torchrun</code></li><li><code>mpi</code> for NCCL tests and other MPI workloads</li><li><code>exec</code> for an arbitrary command</li></ul>
+<p>NVCRE then generates the matching Kubeflow <code>TrainingRuntime</code>, injects the shared-memory volume, sets the NCCL and platform environment variables, and enables NVLink scale-up networking where the hardware supports it.</p>
+<h3>The gang scheduling aside</h3>
+<p>This is the most transferable idea on the page. Without a gang scheduler, Kubernetes places pods independently. On a busy cluster that can deadlock: some pods land, grab their GPUs, and wait forever at the framework&#x27;s rendezvous for peers that can&#x27;t be scheduled. Everyone is holding a seat and nobody can start the meeting.</p>
+<p>Setting <code>spec.gangScheduler</code> opts the workload&#x27;s pods into a gang-aware scheduler such as KAI Scheduler, which holds all pods until the whole gang can be placed at once. It&#x27;s all-or-nothing placement, the Kubernetes answer to a habit Slurm users take for granted. Because <code>WorkloadRun</code> is a plain CRD, other tools can call it without adopting the rest of NVCRE.</p>
+<hr>
+<h2>Three questions, three layers</h2>
+<p>NVIDIA frames a production cluster as needing three separate answers, one per layer of its DSX OS stack:</p>
+<table><thead><tr><th>Question</th><th>Layer</th><th>Style</th></tr></thead><tbody><tr><td>Is it configured correctly?</td><td><strong>AI Cluster Runtime (AICR)</strong></td><td>Version-locked, validated recipes for drivers, operators and kernels; detects drift</td></tr><tr><td>Is it ready to run real work?</td><td><strong>NVCRE</strong></td><td>Active: generates load, finds failures that emit no telemetry</td></tr><tr><td>Is it healthy right now?</td><td><strong>NVSentinel</strong></td><td>Passive: watches DCGM metrics, Xid errors, logs and cloud maintenance events</td></tr></tbody></table>
+<p>NVSentinel costs no GPU time, so it can run forever in production. NVCRE costs GPU time, so you run it before workloads land. They don&#x27;t compete. One covers what emits signals, the other covers what stays quiet.</p>
+<p>NVCRE also deliberately <strong>does not act on what it finds</strong>. It doesn&#x27;t cordon, taint or patch node conditions, which avoids conflicting actions and half-cleaned-up state. The NVSentinel NVCRE Certification Monitor can turn a failed certification into a health event, and your NVSentinel policies can then quarantine, drain or trigger remediation. A later passing certification can clear the signal and release the taint. Find and fix stay in separate lanes.</p>
+<hr>
+<h2>Getting started</h2>
+<p>Prerequisites on the target cluster:</p>
+<ul><li>Kubernetes 1.29 or later, <code>kubectl</code> and Helm 3.x</li><li>NVIDIA GPU Operator</li><li>NVIDIA DRA Driver for GPUs, if you&#x27;re on GB200 or GB300 NVL72 (those catalog entries create ComputeDomain resources)</li><li>The standalone DCGM service, for the DCGM level-4 category</li><li>A gang-aware scheduler such as KAI Scheduler, optional but recommended on busy shared clusters</li></ul>
+<p>Then the whole loop is four commands:</p>
+<pre><code class="language-bash">curl -fsSL https://github.com/NVIDIA/cluster-readiness-engine/releases/latest/download/installer | bash
+nvcrectl setup init
+nvcrectl certification run --cert-file certification.yaml --wait
+nvcrectl certification report gpu-cluster-cert -n &lt;namespace&gt;</code></pre>
+<p><code>nvcrectl setup init</code> installs the CRDs, the controller, Kubeflow Trainer and the default log profiles. As with any installer you pipe into <code>bash</code>, read it first on anything that matters.</p>
+<hr>
+<h2>What it doesn&#x27;t tell you (yet)</h2>
+<ul><li><strong>It&#x27;s alpha-versioned (`v1alpha1`).</strong> Treat field names as subject to change.</li><li><strong>No default thresholds.</strong> It will not tell you whether 932 GB/s is good for your fabric. You decide that.</li><li><strong>Not in the lab series yet.</strong> The two-node k3s lab in this series has no real GPUs, so nothing here was run by the author. The page summarizes NVIDIA&#x27;s documentation and article.</li></ul>
+<hr>
+<h2>The one-paragraph takeaway</h2>
+<p>A cluster can pass every health check it owns and still fail the only test that counts, because the failures that hurt (a slightly slow GPU, a link that sulks under load) emit nothing until real work pushes on them. NVCRE&#x27;s answer is almost rude in its simplicity: run the real workload before production does, measure it against thresholds you choose, and bisect automatically when the numbers are bad. Pair it with a passive watcher like NVSentinel, and readiness stops being an assumption and becomes something you can prove before the first customer job lands.</p>
+<hr>
+<h2>References</h2>
+<ul><li>NVIDIA Technical Blog, <a href="https://developer.nvidia.com/blog/validate-gpu-cluster-readiness-before-ai-workloads-land/">Validate GPU Cluster Readiness Before AI Workloads Land</a> (Sept 23, 2026; Dhvani Chheda and Kai Wombacher). The architecture, catalog, <code>testScale</code> modes, adaptive isolation, <code>WorkloadRun</code>, prerequisites and install commands on this page come from this article.</li><li><a href="https://github.com/NVIDIA/cluster-readiness-engine">NVCRE on GitHub</a> and its <a href="https://docs.nvidia.com/cluster-readiness-engine/">documentation</a>, where the current API is defined</li><li><a href="https://docs.nvidia.com/nvsentinel/getting-started/overview/">NVSentinel overview</a></li></ul>
+<p>The comparison tables and the framing around the OSU page are the author&#x27;s own.</p>
+<p><a href="../../../../#/fields/devops/kubernetes/nvidia-cluster-readiness-engine">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

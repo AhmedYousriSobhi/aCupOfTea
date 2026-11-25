@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Runbook: Deploying GPU Failure Prediction End to End</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/gpu-failure-prediction/runbook/">
+<meta name="description" content="The hands-on companion to the series - counters file, node checks, tested Prometheus rules, Alertmanager routing, a guarded Slurm drain hook and a backtest, step by step.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Runbook: Deploying GPU Failure Prediction End to End">
+<meta property="og:description" content="The hands-on companion to the series - counters file, node checks, tested Prometheus rules, Alertmanager routing, a guarded Slurm drain hook and a backtest, step by step.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/gpu-failure-prediction/runbook/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/gpu-failure-prediction/runbook/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/system-administration/gpu-failure-prediction/runbook"></script>
+<main>
+<h1>Runbook: Deploying GPU Failure Prediction End to End</h1>
+<p><em>The hands-on companion to the series - counters file, node checks, tested Prometheus rules, Alertmanager routing, a guarded Slurm drain hook and a backtest, step by step.</em></p>
+<blockquote><p><strong>The deep-technical companion to the [Predicting GPU Node Failures series](/fields/system-administration/gpu-failure-prediction/README.md).</strong> Parts 1-5 explain the <em>why</em>: how GPU memory fails, what telemetry means, how to design rules, act safely and measure predictions. This runbook is the <em>how</em>: every config, command and script you need to deploy it on a real cluster, in order, with expected output and a rollback for each risky step. Read the concept pages first; come back here with a root shell.</p></blockquote>
+<hr>
+<h2>Before you start</h2>
+<h3>What you need</h3>
+<table><thead><tr><th>Component</th><th>Version this runbook targets</th><th>Role</th></tr></thead><tbody><tr><td>NVIDIA GPUs</td><td>Ampere or later data-center parts (A100, H100, ...)</td><td>Row remapping and bank buckets exist from Ampere on</td></tr><tr><td>dcgm-exporter</td><td>4.8.4 (built on go-dcgm 1.4611.2)</td><td>Exports GPU telemetry on <code>:9400</code></td></tr><tr><td>Prometheus / <code>promtool</code></td><td>3.15.1</td><td>Rule evaluation and rule unit tests</td></tr><tr><td>Alertmanager / <code>amtool</code></td><td>0.34.2</td><td>Routing alerts to people and to the drain hook</td></tr><tr><td>Slurm client tools</td><td>Any current release</td><td><code>scontrol</code>, <code>sinfo</code> on the Alertmanager host</td></tr><tr><td>Python</td><td>3.12 (standard library only)</td><td>Drain hook and backtest</td></tr></tbody></table>
+<h3>What was tested, and what wasn&#x27;t</h3>
+<table><thead><tr><th>Item</th><th>Status</th></tr></thead><tbody><tr><td>Prometheus rules (13 rules) and 10 unit tests</td><td><strong>Tested</strong> with promtool 3.15.1, including two deliberate failure paths</td></tr><tr><td>Alertmanager routing</td><td><strong>Tested</strong> with <code>amtool check-config</code> and <code>amtool config routes test</code></td></tr><tr><td>Drain hook</td><td><strong>Tested</strong> in all modes against fake <code>scontrol</code>/<code>sinfo</code> scripts, plus the HTTP path</td></tr><tr><td>Backtest script</td><td><strong>Tested</strong> on a hand-made fixture checked by hand</td></tr><tr><td>Xid log one-liners</td><td><strong>Tested</strong> on captured kernel-log text</td></tr><tr><td>Counters file field names</td><td><strong>Checked</strong> against the dcgm-exporter 4.8.4 source and go-dcgm field table</td></tr><tr><td>dcgm-exporter, <code>nvidia-smi</code>, <code>journalctl</code> on real GPUs; <code>scontrol</code> on a real cluster</td><td><strong>Not run</strong> (no GPU in the test environment). From NVIDIA and SchedMD docs</td></tr></tbody></table>
+<blockquote><p>[!IMPORTANT] Run every phase on <strong>one node</strong> first. The untested items above are standard tools used as documented, but your driver, exporter packaging and Slurm setup are the final judges.</p></blockquote>
+<hr>
+<h2>Phase 1: export the health signals</h2>
+<p><strong>Why:</strong> in dcgm-exporter 4.8.4 the shipped <code>etc/default-counters.csv</code> has the ECC counters and the per-code Xid counter <strong>commented out</strong>, and doesn&#x27;t list the remap-pending flag or the bank buckets at all. Concepts: <a href="../../../../fields/system-administration/gpu-failure-prediction/collecting-the-signals/">part 2</a>.</p>
+<ol><li><strong>Copy the default counters file</strong> from the dcgm-exporter release you run (<code>etc/default-counters.csv</code> in the repo) and keep it in version control.</li></ol>
+<pre><code class="language-bash">   sudo install -d /etc/dcgm-exporter
+   sudo cp default-counters.csv /etc/dcgm-exporter/health-counters.csv</code></pre>
+<p>Success: <code>grep -c ROW_REMAP_FAILURE /etc/dcgm-exporter/health-counters.csv</code> prints <code>1</code>.</p>
+<ol><li><strong>Append the health fields.</strong> Format: <code>DCGM field, Prometheus type, help text</code>.</li></ol>
+<pre><code class="language-bash">   sudo tee -a /etc/dcgm-exporter/health-counters.csv &gt;/dev/null &lt;&lt;&#x27;CSV&#x27;
+
+   # --- GPU health prediction (see gpu-failure-prediction runbook) ---
+   DCGM_FI_DEV_ECC_SBE_VOL_TOTAL,     counter, Single-bit ECC errors since driver load.
+   DCGM_FI_DEV_ECC_DBE_VOL_TOTAL,     counter, Double-bit ECC errors since driver load.
+   DCGM_FI_DEV_ROW_REMAP_PENDING,     gauge,   1 if a row remap waits for a GPU reset.
+   DCGM_FI_DEV_BANK_REMAP_AVAIL_LOW,  gauge,   Memory banks with one spare row left.
+   DCGM_FI_DEV_BANK_REMAP_AVAIL_NONE, gauge,   Memory banks with no spare rows left.
+   DCGM_EXP_XID_ERRORS_TOTAL,         counter, Xid errors per code since exporter start.
+   CSV</code></pre>
+<p>Success: <code>grep -c &#x27;^DCGM&#x27; /etc/dcgm-exporter/health-counters.csv</code> is six higher than before.</p>
+<ol><li><strong>Hopper only: add the NVLink error counters.</strong></li></ol>
+<pre><code class="language-bash">   sudo tee -a /etc/dcgm-exporter/health-counters.csv &gt;/dev/null &lt;&lt;&#x27;CSV&#x27;
+   DCGM_FI_DEV_NVLINK_CRC_ERROR_TOTAL, counter, NVLink data-link CRC errors.
+   DCGM_FI_DEV_NVLINK_REPLAY_TOTAL,    counter, NVLink data-link replay errors.
+   CSV</code></pre>
+<p>Pre-Hopper and Blackwell use different NVLink fields; copy the commented lines for your generation from the default file rather than guessing.</p>
+<ol><li><strong>Point the exporter at the file.</strong> Flag <code>-f</code> (long form <code>--collectors</code>, env <code>DCGM_EXPORTER_COLLECTORS</code>); default listen address <code>:9400</code>.</li></ol>
+<pre><code class="language-bash">   dcgm-exporter -f /etc/dcgm-exporter/health-counters.csv</code></pre>
+<p>In a container or the GPU Operator, mount the file and set <code>DCGM_EXPORTER_COLLECTORS</code> to its path.</p>
+<ol><li><strong>Verify.</strong></li></ol>
+<pre><code class="language-bash">   curl -s localhost:9400/metrics \
+     | grep -E &#x27;^DCGM_(FI_DEV_ROW_REMAP_PENDING|FI_DEV_ECC_SBE_VOL_TOTAL|FI_DEV_BANK_REMAP_AVAIL_NONE)&#x27; | head</code></pre>
+<p>Success: one line per GPU per field, with labels <code>gpu</code>, <code>UUID</code>, <code>pci_bus_id</code>, <code>device</code>, <code>modelName</code>, <code>hostname</code> (the 4.8.4 label set). <code>DCGM_EXP_XID_ERRORS_TOTAL</code> appears <strong>only after a GPU logs an Xid</strong>, labeled <code>xid</code>; its absence on a healthy node is normal.</p>
+<blockquote><p>[!WARNING] <strong>Pin the metric names.</strong> In go-dcgm 1.4611.2 several remap names in the default file are deprecated aliases (for example <code>DCGM_FI_DEV_UNCORRECTABLE_REMAPPED_ROWS</code> → <code>DCGM_FI_DEV_ROW_REMAP_UNCORRECTABLE_TOTAL</code>, <code>DCGM_FI_DEV_ROW_REMAP_FAILURE</code> → <code>DCGM_FI_DEV_ROW_REMAP_FAILED</code>). The exporter names each metric after its CSV line, so renaming lines renames metrics and silently breaks Phase 3. Keep the file as written here, and keep Phase 3&#x27;s tests in CI.</p></blockquote>
+<p><strong>Rollback:</strong> restart the exporter without <code>-f</code> (or unset <code>DCGM_EXPORTER_COLLECTORS</code>); it falls back to its default list.</p>
+<hr>
+<h2>Phase 2: node-side checks</h2>
+<p><strong>Why:</strong> the exporter only knows what happened since it started; the kernel log is the ground truth for Xids. These checks fit a Slurm prolog or a manual triage. NVIDIA&#x27;s debug guidelines recommend checking recent Xids at job start.</p>
+<h3>Remap state with nvidia-smi</h3>
+<p>From the <code>nvidia-smi</code> docs; confirm field names on your driver with <code>nvidia-smi --help-query-remapped-rows</code>.</p>
+<pre><code class="language-bash"># Machine-readable remap state per GPU (Ampere and later)
+nvidia-smi --query-remapped-rows=gpu_bus_id,remapped_rows.correctable,remapped_rows.uncorrectable,remapped_rows.pending,remapped_rows.failure --format=csv
+
+# Human-readable, including bank availability buckets
+nvidia-smi -q -d ROW_REMAPPER</code></pre>
+<p>Healthy: <code>pending</code> and <code>failure</code> read <code>No</code>/<code>0</code>, all banks in the top bucket. On a misbehaving multi-GPU node, query one GPU at a time with <code>-i N</code>.</p>
+<h3>Xid summary for the last 24 hours</h3>
+<pre><code class="language-bash">journalctl -k --since &quot;24 hours ago&quot; -o short-iso \
+  | grep -oE &#x27;NVRM: Xid \(PCI:[^)]*\): [0-9]+&#x27; \
+  | sed -E &#x27;s/NVRM: Xid \((PCI:[^ )]*)[^)]*\): /\1 xid=/&#x27; \
+  | sort | uniq -c</code></pre>
+<p>On our test log (Xid 13 on one GPU; 94, 63 and two 79s on another):</p>
+<pre><code class="language-text">      1 PCI:0000:1b:00 xid=13
+      1 PCI:0000:3b:00 xid=63
+      2 PCI:0000:3b:00 xid=79
+      1 PCI:0000:3b:00 xid=94</code></pre>
+<p>No Xids: no output, exit 0. MIG lines (<code>PCI:0000:01:00 GPU-I:05</code>) collapse to the same shape.</p>
+<h3>Prolog gate on fatal Xids</h3>
+<pre><code class="language-bash">if journalctl -k --since &quot;24 hours ago&quot; -o short-iso \
+     | grep -qE &#x27;NVRM: Xid \(PCI:[^)]*\): (64|79|95),&#x27;; then
+  echo &quot;fatal Xid in the last 24h&quot;; exit 1
+fi</code></pre>
+<p>Tested: exit 1 on the log with Xid 79, exit 0 on a clean log.</p>
+<h3>What each Xid means</h3>
+<p>Condensed from NVIDIA&#x27;s GPU Debug Guidelines, Table 1:</p>
+<table><thead><tr><th>Xid</th><th>Meaning</th><th>Action</th></tr></thead><tbody><tr><td>48</td><td>Double-bit ECC error</td><td>Followed by 63/64: drain, wait, reset GPU. Otherwise field diagnostics</td></tr><tr><td>63</td><td>Row remap recorded</td><td>With 94: restart that app; reset/reboot when convenient</td></tr><tr><td>64</td><td>Row remap recording failure</td><td>Reboot immediately; if it continues, drain, triage, report</td></tr><tr><td>74</td><td>NVLink error</td><td>Decode the first DWORD; repeated ECC/parity bits on one link: report</td></tr><tr><td>79</td><td>GPU fell off the bus</td><td>Drain and report</td></tr><tr><td>92</td><td>High single-bit ECC rate</td><td>Field diagnostics; check RMA guidance</td></tr><tr><td>94</td><td>Contained ECC error</td><td>Restart the affected app; reset when convenient</td></tr><tr><td>95</td><td>Uncontained ECC error</td><td>MIG off: reboot immediately. MIG on: drain other instances, reset</td></tr></tbody></table>
+<blockquote><p>[!CAUTION] Don&#x27;t gate or drain on Xid 13 alone. NVIDIA classes it as a graphics engine exception and says to run diagnostics to separate hardware from application faults.</p></blockquote>
+<hr>
+<h2>Phase 3: the Prometheus rules</h2>
+<p><strong>Why:</strong> turns Phase 1 metrics into tiered alerts, each with an <code>action</code> label that Phase 4 routes on. Concepts: <a href="../../../../fields/system-administration/gpu-failure-prediction/rules-that-predict/">part 3</a>.</p>
+<h3>The rule file</h3>
+<p>Save as <code>gpu-health.rules.yml</code>:</p>
+<pre><code class="language-yaml"># GPU health prediction rules for dcgm-exporter 4.8.4 metrics.
+# Tested with promtool 3.15.1 (see gpu-health.rules.test.yml).
+# Knobs you are expected to tune from your own backtest are marked KNOB.
+groups:
+- name: gpu-health-recording
+  interval: 1m
+  rules:
+  # New Xid events per GPU and Xid code in the last 10 minutes.
+  # The &quot;unless ... offset&quot; half catches the FIRST event of a code since
+  # exporter start: that series did not exist before, and increase() reads 0.
+  - record: gpu:xid_new:10m
+    expr: |
+      increase(DCGM_EXP_XID_ERRORS_TOTAL[10m]) &gt; 0
+      or
+      (DCGM_EXP_XID_ERRORS_TOTAL unless DCGM_EXP_XID_ERRORS_TOTAL offset 10m)
+  - record: gpu:ecc_sbe:rate1h
+    expr: rate(DCGM_FI_DEV_ECC_SBE_VOL_TOTAL[1h])
+  - record: gpu:ecc_sbe:rate24h
+    expr: rate(DCGM_FI_DEV_ECC_SBE_VOL_TOTAL[24h])
+  - record: gpu:ecc_sbe:increase1h
+    expr: increase(DCGM_FI_DEV_ECC_SBE_VOL_TOTAL[1h])
+  - record: gpu:ecc_dbe:increase1h
+    expr: increase(DCGM_FI_DEV_ECC_DBE_VOL_TOTAL[1h])
+  # Banks with one spare row left (LOW) or none (NONE).
+  - record: gpu:remap_banks_nearly_full
+    expr: DCGM_FI_DEV_BANK_REMAP_AVAIL_LOW + DCGM_FI_DEV_BANK_REMAP_AVAIL_NONE
+
+- name: gpu-health-alerts
+  interval: 1m
+  rules:
+  # Tier 1: the GPU is already broken. Drain now, open an RMA.
+  - alert: GpuRowRemapFailure
+    expr: DCGM_FI_DEV_ROW_REMAP_FAILURE == 1
+    for: 2m
+    labels: {severity: critical, action: drain_now}
+    annotations:
+      summary: &quot;Row remap failure on {{ $labels.instance }} GPU {{ $labels.gpu }}: spare rows exhausted, RMA candidate&quot;
+  - alert: GpuFatalXid
+    expr: gpu:xid_new:10m{xid=~&quot;64|79|95&quot;}
+    labels: {severity: critical, action: drain_now}
+    annotations:
+      summary: &quot;Xid {{ $labels.xid }} on {{ $labels.instance }} GPU {{ $labels.gpu }}&quot;
+
+  # Tier 2: the GPU will fail jobs if left alone. Stop new work, reset when empty.
+  - alert: GpuRowRemapPending
+    expr: DCGM_FI_DEV_ROW_REMAP_PENDING == 1
+    for: 15m
+    labels: {severity: warning, action: drain_and_reset}
+    annotations:
+      summary: &quot;Row remap pending on {{ $labels.instance }} GPU {{ $labels.gpu }}: needs a GPU reset to take effect&quot;
+  - alert: GpuUncorrectableMemoryError
+    expr: gpu:ecc_dbe:increase1h &gt; 0 or gpu:xid_new:10m{xid=~&quot;48|94&quot;}
+    labels: {severity: warning, action: drain_and_reset}
+    annotations:
+      summary: &quot;Uncorrectable memory error on {{ $labels.instance }} GPU {{ $labels.gpu }}&quot;
+
+  # Tier 3: early warning. Nothing is broken yet; this is the prediction.
+  - alert: GpuSpareRowsNearlyExhausted
+    expr: gpu:remap_banks_nearly_full &gt; 0
+    for: 1h
+    labels: {severity: warning, action: plan_rma}
+    annotations:
+      summary: &quot;{{ $value }} memory bank(s) with &lt;=1 spare row on {{ $labels.instance }} GPU {{ $labels.gpu }}&quot;
+  - alert: GpuSbeRateAccelerating
+    # KNOB: 3x the GPU&#x27;s own 24h baseline, and at least 10 SBEs in the hour.
+    expr: |
+      gpu:ecc_sbe:rate1h &gt; 3 * gpu:ecc_sbe:rate24h
+      and
+      gpu:ecc_sbe:increase1h &gt;= 10
+    for: 30m
+    labels: {severity: info, action: watch}
+    annotations:
+      summary: &#x27;Single-bit ECC rate on {{ $labels.instance }} GPU {{ $labels.gpu }} is {{ printf &quot;%.2f&quot; $value }}/s, over 3x its 24h baseline&#x27;
+
+  # Silence is not health: no data means no prediction.
+  - alert: GpuTelemetryMissing
+    expr: up{job=&quot;dcgm-exporter&quot;} == 0
+    for: 10m
+    labels: {severity: warning, action: watch}
+    annotations:
+      summary: &quot;dcgm-exporter on {{ $labels.instance }} is down; GPU failure prediction is blind there&quot;</code></pre>
+<blockquote><p>[!NOTE] <code>GpuTelemetryMissing</code> assumes your scrape job is named <code>dcgm-exporter</code>. Change the <code>job</code> matcher to match your <code>prometheus.yml</code>.</p></blockquote>
+<h3>The unit tests</h3>
+<p>Save as <code>gpu-health.rules.test.yml</code> next to the rules. Ten cases: the first-Xid trap, a repeat Xid, an application Xid that must stay quiet, pending and failed remaps, a double-bit error, accelerating SBEs with two GPUs that must stay quiet, nearly exhausted spares, a healthy GPU, and missing telemetry.</p>
+<pre><code class="language-yaml"># promtool test rules gpu-health.rules.test.yml
+rule_files: [gpu-health.rules.yml]
+evaluation_interval: 1m
+tests:
+
+# 1. The trap: the first Xid 79 since exporter start must still fire.
+- name: first-ever fatal Xid fires, then resolves
+  interval: 1m
+  input_series:
+  - series: &#x27;DCGM_EXP_XID_ERRORS_TOTAL{instance=&quot;cn042:9400&quot;,gpu=&quot;3&quot;,UUID=&quot;GPU-0003&quot;,xid=&quot;79&quot;}&#x27;
+    values: &#x27;_x20 1x30&#x27;
+  alert_rule_test:
+  - eval_time: 25m
+    alertname: GpuFatalXid
+    exp_alerts:
+    - exp_labels: {instance: &quot;cn042:9400&quot;, gpu: &quot;3&quot;, UUID: &quot;GPU-0003&quot;, xid: &quot;79&quot;, severity: critical, action: drain_now}
+      exp_annotations: {summary: &quot;Xid 79 on cn042:9400 GPU 3&quot;}
+  - eval_time: 40m
+    alertname: GpuFatalXid
+    exp_alerts: []
+
+# 2. A repeat of the same Xid later fires again through increase().
+- name: repeated fatal Xid fires again
+  interval: 1m
+  input_series:
+  - series: &#x27;DCGM_EXP_XID_ERRORS_TOTAL{instance=&quot;cn042:9400&quot;,gpu=&quot;3&quot;,UUID=&quot;GPU-0003&quot;,xid=&quot;95&quot;}&#x27;
+    values: &#x27;_x5 1x30 2x10&#x27;
+  alert_rule_test:
+  - eval_time: 30m
+    alertname: GpuFatalXid
+    exp_alerts: []
+  - eval_time: 40m
+    alertname: GpuFatalXid
+    exp_alerts:
+    - exp_labels: {instance: &quot;cn042:9400&quot;, gpu: &quot;3&quot;, UUID: &quot;GPU-0003&quot;, xid: &quot;95&quot;, severity: critical, action: drain_now}
+      exp_annotations: {summary: &quot;Xid 95 on cn042:9400 GPU 3&quot;}
+
+# 3. Xid 13 is usually an application fault: no hardware alert.
+- name: application Xid does not page
+  interval: 1m
+  input_series:
+  - series: &#x27;DCGM_EXP_XID_ERRORS_TOTAL{instance=&quot;cn007:9400&quot;,gpu=&quot;0&quot;,UUID=&quot;GPU-0700&quot;,xid=&quot;13&quot;}&#x27;
+    values: &#x27;_x5 1x10 2x10&#x27;
+  alert_rule_test:
+  - eval_time: 20m
+    alertname: GpuFatalXid
+    exp_alerts: []
+  - eval_time: 20m
+    alertname: GpuUncorrectableMemoryError
+    exp_alerts: []
+
+# 4. Row remap pending must persist 15m before we act.
+- name: pending row remap
+  interval: 1m
+  input_series:
+  - series: &#x27;DCGM_FI_DEV_ROW_REMAP_PENDING{instance=&quot;cn042:9400&quot;,gpu=&quot;3&quot;,UUID=&quot;GPU-0003&quot;}&#x27;
+    values: &#x27;0x10 1x30&#x27;
+  alert_rule_test:
+  - eval_time: 20m
+    alertname: GpuRowRemapPending
+    exp_alerts: []
+  - eval_time: 30m
+    alertname: GpuRowRemapPending
+    exp_alerts:
+    - exp_labels: {instance: &quot;cn042:9400&quot;, gpu: &quot;3&quot;, UUID: &quot;GPU-0003&quot;, severity: warning, action: drain_and_reset}
+      exp_annotations: {summary: &quot;Row remap pending on cn042:9400 GPU 3: needs a GPU reset to take effect&quot;}
+
+# 5. Remap failure is latched: fires after 2m.
+- name: row remap failure
+  interval: 1m
+  input_series:
+  - series: &#x27;DCGM_FI_DEV_ROW_REMAP_FAILURE{instance=&quot;cn042:9400&quot;,gpu=&quot;3&quot;,UUID=&quot;GPU-0003&quot;}&#x27;
+    values: &#x27;0x5 1x10&#x27;
+  alert_rule_test:
+  - eval_time: 9m
+    alertname: GpuRowRemapFailure
+    exp_alerts:
+    - exp_labels: {instance: &quot;cn042:9400&quot;, gpu: &quot;3&quot;, UUID: &quot;GPU-0003&quot;, severity: critical, action: drain_now}
+      exp_annotations: {summary: &quot;Row remap failure on cn042:9400 GPU 3: spare rows exhausted, RMA candidate&quot;}
+
+# 6. A double-bit (uncorrectable) ECC error.
+- name: uncorrectable ECC
+  interval: 1m
+  input_series:
+  - series: &#x27;DCGM_FI_DEV_ECC_DBE_VOL_TOTAL{instance=&quot;cn042:9400&quot;,gpu=&quot;3&quot;,UUID=&quot;GPU-0003&quot;}&#x27;
+    values: &#x27;0x30 1x30&#x27;
+  alert_rule_test:
+  - eval_time: 45m
+    alertname: GpuUncorrectableMemoryError
+    exp_alerts:
+    - exp_labels: {instance: &quot;cn042:9400&quot;, gpu: &quot;3&quot;, UUID: &quot;GPU-0003&quot;, severity: warning, action: drain_and_reset}
+      exp_annotations: {summary: &quot;Uncorrectable memory error on cn042:9400 GPU 3&quot;}
+
+# 7. Prediction: SBE rate jumps from 1/min to 30/min.
+- name: accelerating single-bit errors
+  interval: 1m
+  input_series:
+  - series: &#x27;DCGM_FI_DEV_ECC_SBE_VOL_TOTAL{instance=&quot;cn042:9400&quot;,gpu=&quot;3&quot;,UUID=&quot;GPU-0003&quot;}&#x27;
+    values: &#x27;0+1x1500 1530+30x90&#x27;
+  # Steady 1/min forever: a noisy but stable GPU. Must NOT fire.
+  - series: &#x27;DCGM_FI_DEV_ECC_SBE_VOL_TOTAL{instance=&quot;cn011:9400&quot;,gpu=&quot;5&quot;,UUID=&quot;GPU-1105&quot;}&#x27;
+    values: &#x27;0+1x1600&#x27;
+  # Quiet GPU that sees 5 SBEs in an hour: infinite ratio, below the floor.
+  - series: &#x27;DCGM_FI_DEV_ECC_SBE_VOL_TOTAL{instance=&quot;cn012:9400&quot;,gpu=&quot;1&quot;,UUID=&quot;GPU-1201&quot;}&#x27;
+    values: &#x27;0x1540 0+0.1x50&#x27;
+  alert_rule_test:
+  - eval_time: 1590m
+    alertname: GpuSbeRateAccelerating
+    exp_alerts:
+    - exp_labels: {instance: &quot;cn042:9400&quot;, gpu: &quot;3&quot;, UUID: &quot;GPU-0003&quot;, severity: info, action: watch}
+      exp_annotations: {summary: &quot;Single-bit ECC rate on cn042:9400 GPU 3 is 0.50/s, over 3x its 24h baseline&quot;}
+
+# 8. Spare rows nearly gone in one bank.
+- name: spare rows nearly exhausted
+  interval: 5m
+  input_series:
+  - series: &#x27;DCGM_FI_DEV_BANK_REMAP_AVAIL_LOW{instance=&quot;cn042:9400&quot;,gpu=&quot;3&quot;,UUID=&quot;GPU-0003&quot;}&#x27;
+    values: &#x27;0x6 1x20&#x27;
+  - series: &#x27;DCGM_FI_DEV_BANK_REMAP_AVAIL_NONE{instance=&quot;cn042:9400&quot;,gpu=&quot;3&quot;,UUID=&quot;GPU-0003&quot;}&#x27;
+    values: &#x27;0x26&#x27;
+  alert_rule_test:
+  - eval_time: 60m
+    alertname: GpuSpareRowsNearlyExhausted
+    exp_alerts: []
+  - eval_time: 100m
+    alertname: GpuSpareRowsNearlyExhausted
+    exp_alerts:
+    - exp_labels: {instance: &quot;cn042:9400&quot;, gpu: &quot;3&quot;, UUID: &quot;GPU-0003&quot;, severity: warning, action: plan_rma}
+      exp_annotations: {summary: &quot;1 memory bank(s) with &lt;=1 spare row on cn042:9400 GPU 3&quot;}
+
+# 9. A healthy GPU: every counter flat, nothing fires.
+- name: healthy GPU is quiet
+  interval: 1m
+  input_series:
+  - series: &#x27;DCGM_FI_DEV_ROW_REMAP_PENDING{instance=&quot;cn100:9400&quot;,gpu=&quot;0&quot;,UUID=&quot;GPU-10000&quot;}&#x27;
+    values: &#x27;0x120&#x27;
+  - series: &#x27;DCGM_FI_DEV_ROW_REMAP_FAILURE{instance=&quot;cn100:9400&quot;,gpu=&quot;0&quot;,UUID=&quot;GPU-10000&quot;}&#x27;
+    values: &#x27;0x120&#x27;
+  - series: &#x27;DCGM_FI_DEV_ECC_DBE_VOL_TOTAL{instance=&quot;cn100:9400&quot;,gpu=&quot;0&quot;,UUID=&quot;GPU-10000&quot;}&#x27;
+    values: &#x27;0x120&#x27;
+  - series: &#x27;DCGM_FI_DEV_ECC_SBE_VOL_TOTAL{instance=&quot;cn100:9400&quot;,gpu=&quot;0&quot;,UUID=&quot;GPU-10000&quot;}&#x27;
+    values: &#x27;0x120&#x27;
+  - series: &#x27;up{job=&quot;dcgm-exporter&quot;,instance=&quot;cn100:9400&quot;}&#x27;
+    values: &#x27;1x120&#x27;
+  alert_rule_test:
+  - {eval_time: 120m, alertname: GpuRowRemapPending, exp_alerts: []}
+  - {eval_time: 120m, alertname: GpuRowRemapFailure, exp_alerts: []}
+  - {eval_time: 120m, alertname: GpuUncorrectableMemoryError, exp_alerts: []}
+  - {eval_time: 120m, alertname: GpuSbeRateAccelerating, exp_alerts: []}
+  - {eval_time: 120m, alertname: GpuTelemetryMissing, exp_alerts: []}
+
+# 10. Exporter down: we are blind, say so.
+- name: telemetry missing
+  interval: 1m
+  input_series:
+  - series: &#x27;up{job=&quot;dcgm-exporter&quot;,instance=&quot;cn042:9400&quot;}&#x27;
+    values: &#x27;1x5 0x20&#x27;
+  alert_rule_test:
+  - eval_time: 20m
+    alertname: GpuTelemetryMissing
+    exp_alerts:
+    - exp_labels: {job: dcgm-exporter, instance: &quot;cn042:9400&quot;, severity: warning, action: watch}
+      exp_annotations: {summary: &quot;dcgm-exporter on cn042:9400 is down; GPU failure prediction is blind there&quot;}</code></pre>
+<h3>Lint, test, load</h3>
+<ol><li><strong>Lint.</strong></li></ol>
+<pre><code class="language-bash">   promtool check rules gpu-health.rules.yml</code></pre>
+<p>Expected, exit 0:</p>
+<pre><code class="language-text">   Checking gpu-health.rules.yml
+     SUCCESS: 13 rules found</code></pre>
+<ol><li><strong>Test.</strong></li></ol>
+<pre><code class="language-bash">   promtool test rules gpu-health.rules.test.yml</code></pre>
+<p>Expected, exit 0:</p>
+<pre><code class="language-text">     SUCCESS</code></pre>
+<ol><li><strong>Prove the tests can fail.</strong> Temporarily delete the <code>or (... unless ... offset 10m)</code> branch and rerun. Expected: exit 1 and</li></ol>
+<pre><code class="language-text">     FAILED:
+       name: first-ever fatal Xid fires, then resolves,
+       alertname: GpuFatalXid, time: 25m,
+           ...
+           got:[]</code></pre>
+<p>Then delete the <code>and gpu:ecc_sbe:increase1h &gt;= 10</code> floor instead. Expected: exit 1, with an extra alert for the quiet GPU <code>cn012</code> (<code>... is 0.00/s, over 3x its 24h baseline</code>). Restore the file afterwards.</p>
+<ol><li><strong>Load.</strong> Add to <code>prometheus.yml</code> and reload (<code>SIGHUP</code>, or <code>POST /-/reload</code> with <code>--web.enable-lifecycle</code>):</li></ol>
+<pre><code class="language-yaml">   rule_files:
+     - /etc/prometheus/rules/gpu-health.rules.yml</code></pre>
+<p>Success: the rules appear on <code>/rules</code> with no evaluation errors; <code>gpu:remap_banks_nearly_full</code> returns one series per GPU.</p>
+<blockquote><p>[!IMPORTANT] Put step 2 in CI for both the rules repo <strong>and</strong> the counters file from Phase 1. A renamed metric upstream disables rules silently; only the tests notice.</p></blockquote>
+<p><strong>Rollback:</strong> remove the file from <code>rule_files</code> and reload.</p>
+<h3>Knobs to tune later</h3>
+<table><thead><tr><th>Knob</th><th>Starting value</th><th>Raise if</th><th>Lower if</th></tr></thead><tbody><tr><td>SBE ratio vs 24h baseline</td><td>3×</td><td>Many <code>watch</code> alerts never precede failures</td><td>Failures arrive unwarned</td></tr><tr><td>SBE noise floor</td><td>10/hour</td><td>Quiet GPUs keep tripping it</td><td>Real degradations stay under it</td></tr><tr><td>Pending-remap <code>for:</code></td><td>15m</td><td>Pending flags clear on their own</td><td>Jobs die on pending GPUs within 15 min</td></tr><tr><td>Spare-rows <code>for:</code></td><td>1h</td><td>Rarely needed</td><td>You want earlier RMA planning</td></tr></tbody></table>
+<p>Set them with Phase 6, not by feel.</p>
+<hr>
+<h2>Phase 4: alert routing</h2>
+<p><strong>Why:</strong> acting tiers go to the drain hook <em>and</em> to people; everything else goes to people only. Concepts: <a href="../../../../fields/system-administration/gpu-failure-prediction/from-alert-to-drain/">part 4</a>.</p>
+<p>Save as <code>alertmanager.yml</code> (or merge into yours):</p>
+<pre><code class="language-yaml">route:
+  receiver: ops-chat
+  group_by: [alertname, instance]
+  routes:
+  - matchers: [&#x27;action=~&quot;drain_now|drain_and_reset&quot;&#x27;]
+    receiver: gpu-drain-hook
+    group_wait: 30s
+    repeat_interval: 1h
+    continue: true          # keep matching: humans hear about every drain too
+  - receiver: ops-chat      # catch-all sibling
+receivers:
+- name: ops-chat
+  webhook_configs:
+  - url: http://chat-bridge.example.internal/alert
+- name: gpu-drain-hook
+  webhook_configs:
+  - url: http://127.0.0.1:9095/
+    send_resolved: false</code></pre>
+<p>Replace the <code>ops-chat</code> URL with your real receiver (Slack, email, PagerDuty, ...).</p>
+<ol><li><strong>Check the config.</strong></li></ol>
+<pre><code class="language-bash">   amtool check-config alertmanager.yml</code></pre>
+<p>Expected: <code>Checking &#x27;alertmanager.yml&#x27;  SUCCESS</code>, exit 0.</p>
+<ol><li><strong>Check who gets what.</strong></li></ol>
+<pre><code class="language-bash">   amtool config routes test --config.file=alertmanager.yml action=drain_now alertname=GpuFatalXid
+   amtool config routes test --config.file=alertmanager.yml action=watch alertname=GpuSbeRateAccelerating</code></pre>
+<p>Expected: <code>gpu-drain-hook,ops-chat</code>, then <code>ops-chat</code>.</p>
+<blockquote><p>[!WARNING] <strong>`continue: true` alone doesn&#x27;t reach the root receiver.</strong> Our first version had only the drain route plus <code>continue: true</code>; the route test returned just <code>gpu-drain-hook</code>, because the root receiver only catches alerts that match <em>no</em> child route. The explicit catch-all sibling fixes it.</p></blockquote>
+<p><code>send_resolved: false</code> is deliberate: a resolved alert must never un-drain a node.</p>
+<hr>
+<h2>Phase 5: the drain hook</h2>
+<p><strong>Why:</strong> turns <code>drain_now</code>/<code>drain_and_reset</code> alerts into Slurm drains, with a mode switch, a canary list and a budget.</p>
+<h3>The script</h3>
+<p>Save as <code>/usr/local/sbin/gpu_drain_hook.py</code> on the Alertmanager host (which needs Slurm client tools and a user allowed to drain nodes):</p>
+<pre><code class="language-python">#!/usr/bin/env python3
+&quot;&quot;&quot;Alertmanager webhook -&gt; Slurm drain, with dry-run, canary and a drain budget.&quot;&quot;&quot;
+import json, os, subprocess, sys
+from http.server import BaseHTTPRequestHandler, HTTPServer
+
+MODE = os.environ.get(&quot;MODE&quot;, &quot;dryrun&quot;)             # dryrun | canary | enforce
+CANARY = set(os.environ.get(&quot;CANARY_NODES&quot;, &quot;&quot;).split(&quot;,&quot;))
+BUDGET = int(os.environ.get(&quot;MAX_DRAINED&quot;, &quot;4&quot;))    # nodes we may hold drained at once
+PREFIX = &quot;GPUPRED:&quot;
+ACT_ON = {&quot;drain_now&quot;, &quot;drain_and_reset&quot;}
+
+def drained_by_us():
+    out = subprocess.run([&quot;sinfo&quot;, &quot;-h&quot;, &quot;-N&quot;, &quot;-t&quot;, &quot;drain&quot;, &quot;-o&quot;, &quot;%N|%E&quot;],
+                         capture_output=True, text=True, check=True).stdout
+    return {l.split(&quot;|&quot;, 1)[0] for l in out.splitlines() if PREFIX in l}
+
+def handle(payload):
+    ours = drained_by_us()
+    for a in payload.get(&quot;alerts&quot;, []):
+        lab = a.get(&quot;labels&quot;, {})
+        if a.get(&quot;status&quot;) != &quot;firing&quot; or lab.get(&quot;action&quot;) not in ACT_ON:
+            continue
+        node = lab.get(&quot;instance&quot;, &quot;&quot;).split(&quot;:&quot;)[0]
+        if not node or node in ours:
+            continue
+        reason = f&#x27;{PREFIX} {lab.get(&quot;alertname&quot;)} gpu{lab.get(&quot;gpu&quot;, &quot;?&quot;)} {lab.get(&quot;action&quot;)}&#x27;
+        cmd = [&quot;scontrol&quot;, &quot;update&quot;, f&quot;NodeName={node}&quot;, &quot;State=DRAIN&quot;, f&quot;Reason={reason}&quot;]
+        if len(ours) &gt;= BUDGET:
+            print(f&quot;BUDGET {len(ours)}/{BUDGET} reached, NOT draining {node}: {reason}&quot;, flush=True)
+        elif MODE == &quot;enforce&quot; or (MODE == &quot;canary&quot; and node in CANARY):
+            subprocess.run(cmd, check=True)
+            ours.add(node)
+            print(f&quot;DRAINED {node}: {reason}&quot;, flush=True)
+        else:
+            print(f&quot;WOULD DRAIN ({MODE}) {node}: {reason}&quot;, flush=True)
+
+class Hook(BaseHTTPRequestHandler):
+    def do_POST(self):
+        body = self.rfile.read(int(self.headers.get(&quot;Content-Length&quot;, 0)))
+        handle(json.loads(body))
+        self.send_response(200); self.end_headers()
+    def log_message(self, *a):
+        pass
+
+if __name__ == &quot;__main__&quot;:
+    if len(sys.argv) &gt; 1:                            # offline test: drain_hook.py payload.json
+        handle(json.load(open(sys.argv[1]))); sys.exit(0)
+    HTTPServer((&quot;127.0.0.1&quot;, 9095), Hook).serve_forever()</code></pre>
+<p>Design notes:</p>
+<ul><li><strong>Listens on `127.0.0.1` only.</strong> Anything that can POST to it can drain nodes. Put authentication in front before widening the address.</li><li><strong>`instance` → node name by stripping the port</strong> (<code>cn042:9400</code> → <code>cn042</code>). If your targets use IPs or FQDNs, map them here or relabel in Prometheus.</li><li><strong>Whole-node drains.</strong> Slurm drains nodes, not GPUs; one bad GPU idles its node until the reset.</li></ul>
+<h3>Run it as a service</h3>
+<p>An example systemd unit (standard systemd syntax; not run in our test environment):</p>
+<pre><code class="language-ini">[Unit]
+Description=GPU failure prediction drain hook
+After=network-online.target
+
+[Service]
+Environment=MODE=dryrun
+Environment=MAX_DRAINED=4
+Environment=CANARY_NODES=
+ExecStart=/usr/bin/python3 /usr/local/sbin/gpu_drain_hook.py
+Restart=on-failure
+User=slurmops
+
+[Install]
+WantedBy=multi-user.target</code></pre>
+<p>Save as <code>/etc/systemd/system/gpu-drain-hook.service</code>, then <code>systemctl daemon-reload &amp;&amp; systemctl enable --now gpu-drain-hook</code>. Logs: <code>journalctl -u gpu-drain-hook</code>. Replace <code>slurmops</code> with a user your Slurm configuration allows to drain nodes.</p>
+<h3>Test it offline before connecting Alertmanager</h3>
+<p>Save this as <code>payload.json</code>: a fatal Xid on <code>cn042</code>, a <code>watch</code> alert on <code>cn011</code>, a pending remap on <code>cn017</code>, a <em>resolved</em> fatal Xid on <code>cn050</code>.</p>
+<pre><code class="language-json">{&quot;alerts&quot;:[
+ {&quot;status&quot;:&quot;firing&quot;,&quot;labels&quot;:{&quot;alertname&quot;:&quot;GpuFatalXid&quot;,&quot;instance&quot;:&quot;cn042:9400&quot;,&quot;gpu&quot;:&quot;3&quot;,&quot;xid&quot;:&quot;79&quot;,&quot;action&quot;:&quot;drain_now&quot;}},
+ {&quot;status&quot;:&quot;firing&quot;,&quot;labels&quot;:{&quot;alertname&quot;:&quot;GpuSbeRateAccelerating&quot;,&quot;instance&quot;:&quot;cn011:9400&quot;,&quot;gpu&quot;:&quot;5&quot;,&quot;action&quot;:&quot;watch&quot;}},
+ {&quot;status&quot;:&quot;firing&quot;,&quot;labels&quot;:{&quot;alertname&quot;:&quot;GpuRowRemapPending&quot;,&quot;instance&quot;:&quot;cn017:9400&quot;,&quot;gpu&quot;:&quot;0&quot;,&quot;action&quot;:&quot;drain_and_reset&quot;}},
+ {&quot;status&quot;:&quot;resolved&quot;,&quot;labels&quot;:{&quot;alertname&quot;:&quot;GpuFatalXid&quot;,&quot;instance&quot;:&quot;cn050:9400&quot;,&quot;gpu&quot;:&quot;1&quot;,&quot;xid&quot;:&quot;79&quot;,&quot;action&quot;:&quot;drain_now&quot;}}]}</code></pre>
+<pre><code class="language-bash">MODE=dryrun python3 /usr/local/sbin/gpu_drain_hook.py payload.json</code></pre>
+<p>Expected (dry run touches nothing):</p>
+<pre><code class="language-text">WOULD DRAIN (dryrun) cn042: GPUPRED: GpuFatalXid gpu3 drain_now
+WOULD DRAIN (dryrun) cn017: GPUPRED: GpuRowRemapPending gpu0 drain_and_reset</code></pre>
+<p>What our tests with fake <code>scontrol</code>/<code>sinfo</code> showed in each mode:</p>
+<table><thead><tr><th>Mode</th><th>Output</th><th><code>scontrol</code> calls</th></tr></thead><tbody><tr><td><code>dryrun</code></td><td><code>WOULD DRAIN</code> for cn042 and cn017</td><td>none</td></tr><tr><td><code>canary</code>, <code>CANARY_NODES=cn017</code></td><td><code>WOULD DRAIN (canary) cn042</code>, <code>DRAINED cn017</code></td><td>one</td></tr><tr><td><code>enforce</code></td><td><code>DRAINED cn042</code>, <code>DRAINED cn017</code></td><td>two</td></tr><tr><td><code>enforce</code>, <code>MAX_DRAINED=2</code>, two <code>GPUPRED:</code> drains active</td><td><code>BUDGET 2/2 reached, NOT draining ...</code> for both</td><td>none</td></tr></tbody></table>
+<p><code>cn011</code> (<code>watch</code>) and <code>cn050</code> (resolved) were ignored in every mode, and a POST of the same payload returned HTTP <code>200</code>. The real command produced:</p>
+<pre><code class="language-text">scontrol update NodeName=cn042 State=DRAIN Reason=GPUPRED: GpuFatalXid gpu3 drain_now</code></pre>
+<h3>Roll out: dry run → canary → enforce</h3>
+<ol><li><strong>Dry run, at least a week.</strong> <code>MODE=dryrun</code>. Each morning compare <code>WOULD DRAIN</code> lines with what actually failed. Move on when every line points at a GPU you&#x27;d have drained by hand.</li><li><strong>Canary.</strong> <code>MODE=canary CANARY_NODES=cn201,cn202,cn203</code> (nodes you&#x27;re happy to lose). Move on when canary drains carry the <code>GPUPRED:</code> reason and running jobs finished normally.</li><li><strong>Enforce, small budget.</strong> <code>MODE=enforce MAX_DRAINED=4</code>. Size the budget to what you can lose unnoticed. Move on after a normal week with no <code>BUDGET</code> lines.</li><li><strong>Raise the budget</strong> only when Phase 6 says the rules earn it.</li></ol>
+<blockquote><p>[!CAUTION] Alert on any <code>BUDGET ... reached</code> line from the hook&#x27;s journal. It means either several GPUs are failing together (rare) or something upstream is lying (common).</p></blockquote>
+<h3>Rollback</h3>
+<p>Undo every drain the hook made (tested against fake Slurm: it resumed only the <code>GPUPRED:</code> node and left others alone):</p>
+<pre><code class="language-bash">sinfo -h -N -t drain -o &#x27;%N|%E&#x27; | awk -F&#x27;|&#x27; &#x27;/GPUPRED:/{print $1}&#x27; | sort -u \
+  | xargs -r -I{} scontrol update NodeName={} State=RESUME</code></pre>
+<p>Stop new drains without undoing old ones: set <code>MODE=dryrun</code> and restart the service.</p>
+<blockquote><p>[!WARNING] Don&#x27;t resume a node whose GPU had a remap failure or Xid 79 just because the rollback is easy. Roll back drains you believe were wrong.</p></blockquote>
+<h3>After the drain</h3>
+<table><thead><tr><th>Alert</th><th>Once the node is empty</th><th>Then</th></tr></thead><tbody><tr><td><code>GpuRowRemapPending</code>, <code>GpuUncorrectableMemoryError</code></td><td><code>nvidia-smi -r -i N</code> (root, no processes on that GPU)</td><td>Confirm <code>remapped_rows.pending</code> is No, run <code>dcgmi diag -r 2</code>, resume</td></tr><tr><td><code>GpuFatalXid</code> 64, or 95 with MIG off</td><td>Reboot the node</td><td>If repeated: <code>nvidia-bug-report.sh</code>, field diagnostics, report</td></tr><tr><td><code>GpuFatalXid</code> 79</td><td>Collect evidence, reboot</td><td>Expect recurrence; report to the vendor</td></tr><tr><td><code>GpuRowRemapFailure</code></td><td>Keep it drained</td><td>Field diagnostic validates the flag for RMA</td></tr></tbody></table>
+<p>GPU reset limits depend on the platform (NVSwitch and Fabric Manager state); check NVIDIA&#x27;s reset-capabilities table before automating resets. For the fix-and-verify loop, see <a href="../../../../fields/system-administration/node-health-check/checks-and-remediation/auto-remediation/">NHC auto-remediation</a>.</p>
+<hr>
+<h2>Phase 6: backtesting</h2>
+<p><strong>Why:</strong> precision, recall and lead time per rule, on your own history, decide which knobs to turn and which rules may drain. Concepts: <a href="../../../../fields/system-administration/gpu-failure-prediction/scoring-and-backtesting/">part 5</a>.</p>
+<h3>Inputs</h3>
+<p>Two CSV files with ISO timestamps, a GPU identified by node and index:</p>
+<pre><code class="language-text"># failures.csv: one row per real hardware failure (RMA records, human drain reasons, fatal Xids)
+time,node,gpu
+2026-09-02T22:00:00,cn042,3
+
+# alerts.csv: one row per alert start
+time,node,gpu,alertname
+2026-09-01T10:00:00,cn042,3,GpuSbeRateAccelerating</code></pre>
+<p>Alert history: Prometheus keeps firing alerts as the <code>ALERTS</code> series. Export <code>ALERTS{alertstate=&quot;firing&quot;}</code> with the HTTP API&#x27;s <code>query_range</code>, keep the first sample of each firing run, and strip the <code>:9400</code> port from <code>instance</code>. The hook&#x27;s dry-run log is a second source.</p>
+<h3>The script</h3>
+<p>Save as <code>backtest.py</code>:</p>
+<pre><code class="language-python">#!/usr/bin/env python3
+&quot;&quot;&quot;Backtest alert rules against real failures: precision, recall, lead time.&quot;&quot;&quot;
+import csv, sys
+from collections import defaultdict
+from datetime import datetime, timedelta
+from statistics import median
+
+HORIZON = timedelta(hours=float(sys.argv[3]) if len(sys.argv) &gt; 3 else 72)
+
+def load(path):
+    with open(path) as f:
+        return [dict(r, t=datetime.fromisoformat(r[&quot;time&quot;])) for r in csv.DictReader(f)]
+
+alerts, failures = load(sys.argv[1]), load(sys.argv[2])
+fail_by_gpu = defaultdict(list)
+for f in failures:
+    fail_by_gpu[(f[&quot;node&quot;], f[&quot;gpu&quot;])].append(f[&quot;t&quot;])
+
+stats = defaultdict(lambda: {&quot;fired&quot;: 0, &quot;hit&quot;: 0, &quot;caught&quot;: set(), &quot;leads&quot;: []})
+for a in alerts:
+    s = stats[a[&quot;alertname&quot;]]
+    s[&quot;fired&quot;] += 1
+    nxt = [t for t in fail_by_gpu[(a[&quot;node&quot;], a[&quot;gpu&quot;])] if a[&quot;t&quot;] &lt;= t &lt;= a[&quot;t&quot;] + HORIZON]
+    if nxt:
+        s[&quot;hit&quot;] += 1
+        s[&quot;caught&quot;].add((a[&quot;node&quot;], a[&quot;gpu&quot;], min(nxt)))
+        s[&quot;leads&quot;].append((min(nxt) - a[&quot;t&quot;]).total_seconds() / 3600)
+
+print(f&quot;{len(failures)} failures, horizon {HORIZON}&quot;)
+print(f&quot;{&#x27;RULE&#x27;:&lt;30} {&#x27;FIRED&#x27;:&gt;5} {&#x27;PRECISION&#x27;:&gt;9} {&#x27;RECALL&#x27;:&gt;6} {&#x27;MEDIAN_LEAD_H&#x27;:&gt;13}&quot;)
+for rule, s in sorted(stats.items()):
+    prec = s[&quot;hit&quot;] / s[&quot;fired&quot;]
+    rec = len(s[&quot;caught&quot;]) / len(failures) if failures else 0
+    lead = f&#x27;{median(s[&quot;leads&quot;]):.1f}&#x27; if s[&quot;leads&quot;] else &quot;-&quot;
+    print(f&quot;{rule:&lt;30} {s[&#x27;fired&#x27;]:&gt;5} {prec:&gt;9.2f} {rec:&gt;6.2f} {lead:&gt;13}&quot;)</code></pre>
+<p>Run with the horizon in hours as the last argument:</p>
+<pre><code class="language-bash">python3 backtest.py alerts.csv failures.csv 72</code></pre>
+<h3>What a run looks like</h3>
+<p>On a hand-made fixture (four alerts, three failures; <strong>test input, not cluster data</strong>):</p>
+<pre><code class="language-text">3 failures, horizon 3 days, 0:00:00
+RULE                           FIRED PRECISION RECALL MEDIAN_LEAD_H
+GpuRowRemapPending                 1      1.00   0.33          13.0
+GpuSbeRateAccelerating             2      0.50   0.33          36.0
+GpuSpareRowsNearlyExhausted        1      1.00   0.33          18.0</code></pre>
+<p>With a 12-hour horizon the same inputs score 0.00 everywhere: every warning came more than 12 hours early. Always report the horizon with the numbers.</p>
+<h3>Using the results</h3>
+<ol><li>Tune knobs on <strong>older</strong> months, grade on the most recent months you held back.</li><li>Change one knob at a time; keep before/after output in the commit that changes the rule.</li><li>Promote a <code>watch</code> rule to a drain tier only when its precision on held-out months justifies it.</li><li>Rerun after every driver, firmware or exporter upgrade (drift).</li></ol>
+<hr>
+<h2>Troubleshooting</h2>
+<table><thead><tr><th>Symptom</th><th>Likely cause</th><th>Fix</th></tr></thead><tbody><tr><td><code>curl :9400/metrics</code> shows no ECC or pending metrics</td><td>Exporter still on the default counters file</td><td>Check <code>-f</code> / <code>DCGM_EXPORTER_COLLECTORS</code> points at <code>health-counters.csv</code></td></tr><tr><td><code>DCGM_EXP_XID_ERRORS_TOTAL</code> missing everywhere</td><td>Normal until a GPU logs an Xid</td><td>Verify with the Phase 2 log one-liner</td></tr><tr><td><code>GpuFatalXid</code> never fires for a first Xid 79</td><td>Naive <code>increase()</code> rule</td><td>Use the <code>unless ... offset</code> branch; run test 1</td></tr><tr><td>All GPU alerts went quiet after an upgrade</td><td>Metric names changed in the counters file or exporter</td><td>Restore pinned names; run the rule tests</td></tr><tr><td>Drains happen but nobody is told</td><td>Routing without the catch-all sibling</td><td>Phase 4, <code>amtool config routes test</code></td></tr><tr><td>Hook logs <code>BUDGET ... reached</code></td><td>Correlated alerts: probably upstream, not hardware</td><td>Stop and investigate before raising the budget</td></tr><tr><td>Hook says <code>WOULD DRAIN</code> in enforce</td><td><code>MODE</code> not set in the service environment</td><td><code>systemctl show gpu-drain-hook -p Environment</code></td></tr><tr><td><code>scontrol</code> permission denied from the hook</td><td>Service user not allowed to drain</td><td>Run as a Slurm operator/admin user</td></tr><tr><td>Pending remap stays after reset</td><td>GPU still in use, or reset not supported in this topology</td><td>Confirm no processes; check NVIDIA&#x27;s reset table</td></tr><tr><td><code>GpuTelemetryMissing</code> never fires</td><td>Scrape job name isn&#x27;t <code>dcgm-exporter</code></td><td>Fix the <code>job</code> matcher</td></tr></tbody></table>
+<hr>
+<h2>Day-2 checklist</h2>
+<table><thead><tr><th>How often</th><th>Check</th></tr></thead><tbody><tr><td>Every change</td><td><code>promtool test rules</code> and <code>amtool check-config</code> pass in CI</td></tr><tr><td>Daily (during dry run)</td><td><code>WOULD DRAIN</code> lines vs actual failures</td></tr><tr><td>Weekly</td><td>Nodes drained with <code>GPUPRED:</code> and their outcome after reset</td></tr><tr><td>Monthly</td><td>Backtest on the latest month; review knobs</td></tr><tr><td>Every driver / exporter upgrade</td><td>Counters file still exports every field; backtest again</td></tr></tbody></table>
+<p><strong>Takeaway:</strong> deploy in order (signals, node checks, tested rules, routing, a dry-run drain hook, then backtests), and never skip the tests or the dry run, because every phase can fail silently.</p>
+<p>Back to the concepts: <a href="../../../../fields/system-administration/gpu-failure-prediction/">series overview</a>.</p>
+<h3>References</h3>
+<ul><li><a href="https://github.com/NVIDIA/dcgm-exporter">dcgm-exporter repository and <code>etc/default-counters.csv</code></a></li><li><a href="https://github.com/NVIDIA/go-dcgm/blob/main/pkg/dcgm/const_fields.go">go-dcgm field constants</a></li><li><a href="https://docs.nvidia.com/deploy/a100-gpu-mem-error-mgmt/index.html">NVIDIA GPU Memory Error Management</a></li><li><a href="https://docs.nvidia.com/deploy/gpu-debug-guidelines/gpu-node-triage.html">NVIDIA GPU Debug Guidelines: GPU Node Triage</a></li><li><a href="https://docs.nvidia.com/deploy/gpu-debug-guidelines/best-practices.html">NVIDIA GPU Debug Guidelines: Best Practices</a></li><li><a href="https://docs.nvidia.com/deploy/nvidia-smi/index.html">nvidia-smi documentation</a></li><li><a href="https://prometheus.io/docs/prometheus/latest/configuration/unit_testing_rules/">Prometheus: unit testing rules</a></li><li><a href="https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/">Prometheus: alerting rules and the <code>ALERTS</code> series</a></li><li><a href="https://prometheus.io/docs/prometheus/latest/querying/api/#range-queries">Prometheus HTTP API: range queries</a></li><li><a href="https://prometheus.io/docs/alerting/latest/configuration/">Alertmanager configuration</a></li><li><a href="https://slurm.schedmd.com/scontrol.html">Slurm <code>scontrol</code></a> and <a href="https://slurm.schedmd.com/sinfo.html"><code>sinfo</code></a></li><li><a href="https://www.freedesktop.org/software/systemd/man/latest/systemd.service.html">systemd.service</a></li></ul>
+<p><a href="../../../../#/fields/system-administration/gpu-failure-prediction/runbook">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

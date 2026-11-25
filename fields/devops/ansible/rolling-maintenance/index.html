@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The Reboot That Killed a Week of Jobs: Rolling Maintenance with Slurm</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/ansible/rolling-maintenance/">
+<meta name="description" content="Change busy compute nodes safely - drain through Slurm, wait for jobs, one canary first, stop on the first failure, check the node really came back, a dry run that is really dry, and rollback.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="The Reboot That Killed a Week of Jobs: Rolling Maintenance with Slurm">
+<meta property="og:description" content="Change busy compute nodes safely - drain through Slurm, wait for jobs, one canary first, stop on the first failure, check the node really came back, a dry run that is really dry, and rollback.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/ansible/rolling-maintenance/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/ansible/rolling-maintenance/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/devops/ansible/rolling-maintenance"></script>
+<main>
+<h1>The Reboot That Killed a Week of Jobs: Rolling Maintenance with Slurm</h1>
+<p><em>Change busy compute nodes safely - drain through Slurm, wait for jobs, one canary first, stop on the first failure, check the node really came back, a dry run that is really dry, and rollback.</em></p>
+<blockquote><p><strong>Part 5 of the [Ansible series](/fields/devops/ansible/README.md).</strong> <a href="../../../../fields/devops/ansible/roles-and-variables/">Part 4</a> built a role that configures Slurm. This page changes nodes that are busy <em>running</em> jobs: drain each node, wait for its jobs to finish, do the work, prove it came back healthy, return it to service. One canary first, and a full stop at the first failure.</p></blockquote>
+<hr>
+<h2>All at once, at 14:00</h2>
+<p>A driver update has to go out, and it needs a reboot. The playbook is ready and tested on a spare node. At 14:00 someone runs it against <code>compute</code>. Without <code>serial</code>, Ansible runs each task on every host before moving to the next (5 hosts in parallel by default, 20 with part 1&#x27;s <code>forks</code>), with no idea that a node has jobs on it. Batch after batch, nodes reboot under running jobs. Some jobs had been running for six days.</p>
+<p>Worse, the new driver has a problem on one hardware revision. Those nodes come back without their GPUs, and Slurm hands them new jobs immediately. Those fail too.</p>
+<p>Every piece worked as written. Nobody wrote &quot;wait for the jobs&quot; or &quot;stop if it goes wrong&quot;.</p>
+<blockquote><p>[!NOTE] Lab: ansible-core <strong>2.22.0</strong>, Slurm 23.11.4 on five Ubuntu 24.04 nodes in containers. Two lab differences, both disclosed where they matter: reboots needed one extra setting because containers share the host&#x27;s boot ID, and the lab&#x27;s Slurm (no accounting database) logged &quot;invalid account&quot; for new jobs; the backfill scheduler still started them within its 30-second cycle.</p></blockquote>
+<hr>
+<h2>The mental model: drain, change, prove, resume</h2>
+<p>Four ideas, each a few lines of YAML:</p>
+<table><thead><tr><th>Idea</th><th>Slurm or Ansible feature</th><th>Meaning</th></tr></thead><tbody><tr><td><strong>Drain</strong></td><td><code>scontrol update state=drain</code></td><td>No <em>new</em> jobs land on the node; running jobs finish normally</td></tr><tr><td><strong>Batches</strong></td><td><code>serial:</code></td><td>Work on a few nodes at a time; the rest keep running jobs</td></tr><tr><td><strong>Canary</strong></td><td><code>serial: [1, ...]</code></td><td>The first batch is a single node. If it goes wrong, one node is affected</td></tr><tr><td><strong>Stop on failure</strong></td><td><code>max_fail_percentage: 0</code></td><td>Any failure in a batch stops the whole run before the next batch</td></tr></tbody></table>
+<p>The Slurm commands run on the controller, not on the node being changed. That&#x27;s <strong>`delegate_to`</strong>: &quot;run this task on another host, on behalf of this one&quot;.</p>
+<p>Rule of thumb: <strong>a node is out of service from the moment you drain it until you&#x27;ve proven it healthy, not until the reboot finishes.</strong></p>
+<hr>
+<h2>The playbook</h2>
+<p>Save as <code>playbooks/rolling-maintenance.yml</code>:</p>
+<pre><code class="language-yaml">- name: Rolling maintenance, one canary node first, then a quarter at a time
+  hosts: nodes
+  become: true
+  serial:
+    - 1
+    - &quot;25%&quot;
+  order: sorted
+  max_fail_percentage: 0
+  vars:
+    maint_reason: &quot;ansible maintenance {{ maint_ticket | default(&#x27;no-ticket&#x27;) }}&quot;
+  tasks:
+    - name: Drain the node in Slurm
+      ansible.builtin.command: &gt;-
+        scontrol update nodename={{ inventory_hostname }}
+        state=drain reason=&quot;{{ maint_reason }}&quot;
+      delegate_to: &quot;{{ slurm_controller }}&quot;
+      changed_when: true
+
+    - name: Wait for its running jobs to finish
+      ansible.builtin.command: sinfo --noheader --nodes={{ inventory_hostname }} --format=%T
+      delegate_to: &quot;{{ slurm_controller }}&quot;
+      register: node_state
+      until: node_state.stdout == &#x27;drained&#x27;
+      retries: &quot;{{ drain_wait_retries | default(360) }}&quot;
+      delay: 10
+      changed_when: false
+      when: not ansible_check_mode
+
+    - name: Do the maintenance
+      ansible.builtin.include_tasks: tasks/maintenance.yml
+
+    - name: Remember when slurmd last registered, to compare after the reboot
+      ansible.builtin.command: scontrol show node {{ inventory_hostname }} --oneliner
+      delegate_to: &quot;{{ slurm_controller }}&quot;
+      register: before_reboot
+      changed_when: false
+      when: not ansible_check_mode
+
+    - name: Reboot
+      ansible.builtin.reboot:
+        reboot_timeout: 900
+
+    - name: Read slurmd&#x27;s state after the reboot
+      ansible.builtin.systemd_service:
+        name: slurmd
+      register: slurmd_unit
+
+    - name: Fail unless slurmd is running
+      ansible.builtin.assert:
+        that: slurmd_unit.status.ActiveState == &#x27;active&#x27;
+        fail_msg: &quot;slurmd is {{ slurmd_unit.status.ActiveState }} on {{ inventory_hostname }}&quot;
+        quiet: true
+
+    - name: Wait until slurmd has registered again since the reboot
+      ansible.builtin.command: scontrol show node {{ inventory_hostname }} --oneliner
+      delegate_to: &quot;{{ slurm_controller }}&quot;
+      register: node_back
+      until: &gt;-
+        (node_back.stdout | regex_search(&#x27;SlurmdStartTime=\\S+&#x27;))
+        != (before_reboot.stdout | regex_search(&#x27;SlurmdStartTime=\\S+&#x27;))
+        and &#x27;NOT_RESPONDING&#x27; not in node_back.stdout
+      retries: 30
+      delay: 10
+      changed_when: false
+      when: not ansible_check_mode
+
+    - name: Return the node to service
+      ansible.builtin.command: &gt;-
+        scontrol update nodename={{ inventory_hostname }} state=resume
+      delegate_to: &quot;{{ slurm_controller }}&quot;
+      changed_when: true</code></pre>
+<p>The actual change lives in its own file, <code>playbooks/tasks/maintenance.yml</code>, so this playbook never changes. In the lab it just records what was done:</p>
+<pre><code class="language-yaml"># The actual change goes here: a driver, a kernel, firmware, a config that needs a reboot.
+- name: Record what was done and when
+  ansible.builtin.copy:
+    dest: /etc/cluster-maintenance
+    content: &quot;{{ maint_reason }}\n&quot;
+    owner: root
+    group: root
+    mode: &quot;0644&quot;</code></pre>
+<blockquote><p>[!NOTE] In the lab, the playbook ran with one extra play setting: <code>module_defaults</code> giving <code>ansible.builtin.reboot</code> a <code>boot_time_command</code> of <code>stat -c %Z /proc/1</code>. Containers share the host&#x27;s boot ID, so the default check never saw a new boot and timed out after the container had restarted fine. Real nodes don&#x27;t need it; the default is right for them.</p></blockquote>
+<hr>
+<h2>What each piece buys you</h2>
+<table><thead><tr><th>Line</th><th>Without it</th></tr></thead><tbody><tr><td><code>serial: [1, &quot;25%&quot;]</code></td><td>Every node at once (well, 20 at a time)</td></tr><tr><td><code>order: sorted</code></td><td>The canary is whichever host the inventory lists first. Sorting keeps it stable when someone reorders the inventory</td></tr><tr><td><code>max_fail_percentage: 0</code></td><td>By default the run stops only when <em>every</em> host in a batch fails. A canary batch of one stops either way, but in a batch of 100, 99 failures wouldn&#x27;t. The percentage must be <em>exceeded</em>, so 0 means &quot;any failure stops the run&quot;</td></tr><tr><td>Drain, then wait for <code>drained</code></td><td><code>draining</code> means jobs are still running. Only <code>drained</code> means the node is empty</td></tr><tr><td><code>drain_wait_retries</code> default 360 × 10 s</td><td>One hour per node. Raise it for long jobs, or use <code>-e drain_wait_retries=...</code></td></tr><tr><td>Reason with a ticket number</td><td><code>sinfo -R</code> tells everyone why the node is out, and who to ask</td></tr><tr><td>Health checks before resume</td><td>A broken node goes back into service and eats jobs</td></tr></tbody></table>
+<p>Batch sizes from percentages are rounded down, with a minimum of one host (<code>pct_to_int</code> in ansible-core&#x27;s source). On our five nodes, 25% is one node per batch; on 400 nodes it&#x27;s 100. Pick a percentage that leaves enough of the cluster running.</p>
+<p>Don&#x27;t trust <code>--list-hosts</code> to tell you who the canary will be. In the lab it listed the hosts in a different order every time (<code>gpu001</code> first, once), while real runs always started with cn001. It shows <em>which</em> hosts, not in what order.</p>
+<hr>
+<h2>Step 1: dry run</h2>
+<pre><code class="language-bash">ansible-playbook playbooks/rolling-maintenance.yml -e maint_ticket=CHG-1047 --check --diff -l cn001</code></pre>
+<pre><code class="language-text">-ansible maintenance CHG-1043
++ansible maintenance CHG-1047
+cn001 : ok=6    changed=2    unreachable=0    failed=0    skipped=5</code></pre>
+<p>You see the change the maintenance would make, and that a reboot would happen. Nothing actually happened: in the lab, the node wasn&#x27;t drained, wasn&#x27;t rebooted (PID 1&#x27;s start time was the same before and after), and the file still had the old ticket.</p>
+<hr>
+<h2>The dry run that hung</h2>
+<p>The first version of this playbook didn&#x27;t have the <code>when: not ansible_check_mode</code> lines, and its dry run never finished. We killed it after five minutes. With the retries turned down to two, it showed what was going on:</p>
+<pre><code class="language-text">TASK [Drain the node in Slurm]
+skipping: [cn001]
+TASK [Wait for its running jobs to finish]
+FAILED - RETRYING: [cn001 -&gt; head01]: Wait for its running jobs to finish (1 retries left).
+FAILED - RETRYING: [cn001 -&gt; head01]: Wait for its running jobs to finish (0 retries left).</code></pre>
+<p>In check mode, <code>command</code> doesn&#x27;t run: the task returns <code>&quot;Command would have run if not in check mode&quot;</code> and an empty output. An empty output never equals <code>drained</code>, so <code>until</code> retried, 360 times, ten seconds apart. The drain was skipped too, so even a real <code>sinfo</code> couldn&#x27;t have said <code>drained</code>.</p>
+<p>Wait loops only mean something in a real run, so they&#x27;re skipped in check mode. Same for the &quot;remember when slurmd registered&quot; task, which only feeds a wait loop.</p>
+<hr>
+<h2>Step 2: canary, then the rest</h2>
+<p>Before the real run in the lab, we put a 45-second job on cn001 and another on cn002:</p>
+<pre><code class="language-text">JOBID NAME        STATE   NODELIST
+4     long-cn001  RUNNING cn001
+5     long-cn002  RUNNING cn002</code></pre>
+<pre><code class="language-bash">ansible-playbook playbooks/rolling-maintenance.yml -e maint_ticket=CHG-1042</code></pre>
+<p>The controller&#x27;s log tells the story better than Ansible&#x27;s output:</p>
+<pre><code class="language-text">14:00:45 sched/backfill: _start_job: Started JobId=4 in batch on cn001
+14:00:49 update_node: node cn001 reason set to: ansible maintenance CHG-1042
+14:00:49 update_node: node cn001 state set to DRAINING
+14:01:30 _job_complete: JobId=4 WEXITSTATUS 0
+14:01:46 update_node: node cn001 state set to IDLE</code></pre>
+<p>cn001 was drained at 14:00:49 with its job still running. Ansible waited (five retries in its log) until the job <strong>finished on its own</strong> at 14:01:30 with exit 0. Then it did the change, rebooted, proved the node was back, and resumed it at 14:01:46. cn002&#x27;s job had finished by the time its turn came. The run ended with exit 0, <code>failed=0</code> on every node, the change on all five, and <code>sinfo</code> showing all five idle.</p>
+<hr>
+<h2>When the canary comes back broken</h2>
+<p>The story&#x27;s second problem: a node that comes back wrong. We stood in for the bad driver by masking slurmd on cn001, so it wouldn&#x27;t start after the reboot, and ran the playbook again:</p>
+<pre><code class="language-text">fatal: [cn001]: FAILED! =&gt; {&quot;assertion&quot;: &quot;slurmd_unit.status.ActiveState == &#x27;active&#x27;&quot;, ... &quot;msg&quot;: &quot;slurmd is inactive on cn001&quot;}
+NO MORE HOSTS LEFT *************************************************************
+cn001 : ok=8    changed=3    unreachable=0    failed=1</code></pre>
+<p>Exit 2. The run stopped after the canary. Look at what that left behind:</p>
+<pre><code class="language-text">REASON               USER      TIMESTAMP           NODELIST
+ansible maintenance  root      2026-11-11T14:24:42 cn001</code></pre>
+<table><thead><tr><th>Node</th><th>State</th></tr></thead><tbody><tr><td>cn001</td><td>Drained, with the ticket as the reason. No jobs will land on it</td></tr><tr><td>cn002, cn003, cn004, gpu001</td><td>Untouched: no drain, no change, no reboot, still running jobs</td></tr></tbody></table>
+<p>That&#x27;s the point of a canary: the failure cost one node, and that node is parked safely.</p>
+<hr>
+<h2>Rollback</h2>
+<p>There&#x27;s no magic undo for a driver. Rollback means two things: fix or revert the node, and return it to service only once it&#x27;s healthy. In the lab:</p>
+<ol><li>Fix the canary (here, unmask and start slurmd; in real life, roll back the package or the change in <code>maintenance.yml</code>):</li></ol>
+<pre><code class="language-bash">ansible cn001 -b -m ansible.builtin.systemd_service -a &#x27;name=slurmd masked=false state=started&#x27;</code></pre>
+<ol><li>Return it to service, by hand, deliberately:</li></ol>
+<pre><code class="language-bash">ansible head01 -b -m ansible.builtin.command -a &#x27;scontrol update nodename=cn001 state=resume&#x27;</code></pre>
+<p><code>sinfo</code> showed <code>cn001 idle</code>.</p>
+<ol><li>Then either stop there (the change is bad), or continue with the nodes that haven&#x27;t had it yet:</li></ol>
+<pre><code class="language-bash">ansible-playbook playbooks/rolling-maintenance.yml -e maint_ticket=CHG-1043 --limit &#x27;nodes:!cn001&#x27;</code></pre>
+<p>That finished with exit 0 on the remaining four, all five idle, and the change recorded on every node.</p>
+<blockquote><p>[!CAUTION] Rerunning without <code>--limit</code> drains and reboots <em>every</em> node again, including the ones that are done. This playbook is an operation, not a desired state: it isn&#x27;t idempotent, by design.</p></blockquote>
+<hr>
+<h2>How we caught our own weak health check</h2>
+<p>Our first version had a different last check: &quot;wait until <code>sinfo</code> says the node is <code>drained</code>&quot; (drained and responding). It passed. But right after resume, <code>sinfo</code> showed cn002 as <code>idle*</code>; the asterisk means &quot;not responding&quot;. The controller&#x27;s log explained it:</p>
+<pre><code class="language-text">14:21:31 update_node: node cn002 state set to DRAINED
+14:21:36 update_node: node cn002 state set to IDLE        &lt;- our resume
+14:21:37 Node cn002 now responding                         &lt;- slurmd re-registering</code></pre>
+<p>The container rebooted in seconds, faster than the controller noticed it had gone. So <code>drained</code> was the controller&#x27;s <em>old</em> opinion, and our check proved nothing. On real hardware the reboot takes minutes, but the same race exists: the controller only marks a node not responding after missed contacts.</p>
+<p>The fix is the version above. Record <code>SlurmdStartTime</code> before the reboot, and wait until it has changed, meaning slurmd has started and registered since the reboot. On the next real run, cn003&#x27;s slurmd started at 14:22:15 and the check saw the new time. To prove it fails when it should, we ran the record-and-wait pair on cn004 <em>without</em> a reboot: <code>SlurmdStartTime</code> never changed, and it failed after its retries, exit 2.</p>
+<p>A one-second <code>idle*</code> right after resume still showed up once in the lab. It cleared on its own at the controller&#x27;s next contact.</p>
+<blockquote><p>[!TIP] For a real health check before resume, run <a href="../../../../fields/system-administration/node-health-check/">Node Health Check</a> on the node as one more task. Checking that GPUs, mounts and InfiniBand came back is exactly what it&#x27;s for.</p></blockquote>
+<hr>
+<h2>Back to 14:00</h2>
+<p>Run the story again with this playbook. At 14:00 the canary drains. It has a six-day job on it, so the playbook waits, and the job finishes on its own that evening. The node reboots onto the new driver, and it&#x27;s one of the bad hardware revisions: no GPUs. slurmd doesn&#x27;t come up healthy, the assertion fails, the run stops. One node is drained with <code>CHG-1042</code> as the reason; the rest of the cluster never noticed.</p>
+<p>Next morning the admin reads <code>sinfo -R</code>, rolls the driver back on that one node, resumes it, and excludes that hardware revision from the change with a <code>--limit</code>. Then the rest goes through, one batch at a time, each node empty before it reboots. Nobody&#x27;s six-day job was killed, and no job ever landed on a node without its GPUs.</p>
+<p><strong>Takeaway:</strong> for busy nodes, drain through Slurm, canary first, stop on the first failure, prove the node re-registered before resuming, and make sure your dry run is really dry.</p>
+<p><strong>Next:</strong> <a href="../../../../fields/devops/ansible/secrets-and-vault/">Part 6, The Munge Key in Git</a>, handles the secrets these playbooks need.</p>
+<hr>
+<h2>References</h2>
+<ul><li><a href="https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_strategies.html">Controlling playbook execution: strategies and more</a>: <code>serial</code> with lists and percentages, <code>order</code>, rolling updates.</li><li><a href="https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_error_handling.html">Error handling in playbooks</a>: <code>max_fail_percentage</code> (must be exceeded, not equaled), <code>any_errors_fatal</code>.</li><li><a href="https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_delegation.html">Controlling where tasks run: delegation</a>: <code>delegate_to</code>.</li><li><a href="https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_loops.html#retrying-a-task-until-a-condition-is-met">Retrying a task until a condition is met</a>: <code>until</code>, <code>retries</code>, <code>delay</code>.</li><li><a href="https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_checkmode.html">Validating tasks: check mode and diff mode</a>: <code>ansible_check_mode</code> and how modules behave in check mode.</li><li><a href="https://docs.ansible.com/projects/ansible/latest/collections/ansible/builtin/reboot_module.html">ansible.builtin.reboot</a>: <code>reboot_timeout</code>, <code>boot_time_command</code>.</li><li><a href="https://slurm.schedmd.com/scontrol.html">scontrol(1)</a>: <code>update state=drain|resume</code>, <code>show node</code>, <code>SlurmdStartTime</code>.</li><li><a href="https://slurm.schedmd.com/sinfo.html">sinfo(1)</a>: node states (<code>draining</code>, <code>drained</code>, <code>*</code> for not responding) and <code>-R</code>.</li><li><a href="../../../../fields/system-administration/node-health-check/">Node Health Check</a>: health checks to run before returning a node to service.</li></ul>
+<p><a href="../../../../#/fields/devops/ansible/rolling-maintenance">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

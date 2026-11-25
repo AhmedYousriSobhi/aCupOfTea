@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>VictoriaMetrics Cheatsheet: Every Step from the Series</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/victoriametrics/cheatsheet/">
+<meta name="description" content="The VictoriaMetrics series as direct steps - verified install, service user, scrape config, admin keys, systemd unit, vmagent with a pinned queue, retention, backups, restore test, and tested alerts.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="VictoriaMetrics Cheatsheet: Every Step from the Series">
+<meta property="og:description" content="The VictoriaMetrics series as direct steps - verified install, service user, scrape config, admin keys, systemd unit, vmagent with a pinned queue, retention, backups, restore test, and tested alerts.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/victoriametrics/cheatsheet/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/victoriametrics/cheatsheet/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/devops/victoriametrics/cheatsheet"></script>
+<main>
+<h1>VictoriaMetrics Cheatsheet: Every Step from the Series</h1>
+<p><em>The VictoriaMetrics series as direct steps - verified install, service user, scrape config, admin keys, systemd unit, vmagent with a pinned queue, retention, backups, restore test, and tested alerts.</em></p>
+<blockquote><p><strong>Part 6 of [VictoriaMetrics](/fields/devops/victoriametrics/README.md)</strong> The series as one list of commands, in the order you&#x27;d run them on a new host. Each step links to the page that explains it, shows its output, and shows how it fails.</p></blockquote>
+<hr>
+<h2>Before you start</h2>
+<blockquote><p>[!NOTE] Every command here appears on one of the series pages, where it was run on a throwaway Ubuntu 24.04.5 sandbox with VictoriaMetrics <strong>v1.156.0</strong>. That sandbox had no running systemd: the unit files were linted but <code>systemctl start</code> wasn&#x27;t run, as each page says. This sheet collects the commands; it wasn&#x27;t re-run from top to bottom as one script.</p></blockquote>
+<p>Replace <code>10.0.0.5</code> (the database) and <code>10.0.0.6</code> (a separate monitoring instance) with your addresses.</p>
+<hr>
+<h2>1. Download and verify</h2>
+<p><a href="../../../../fields/devops/victoriametrics/single-node-in-ten-minutes/">Part 2, step 1</a>.</p>
+<pre><code class="language-bash">VM_VERSION=v1.156.0
+REL=https://github.com/VictoriaMetrics/VictoriaMetrics/releases/download/${VM_VERSION}
+cd /tmp
+for t in victoria-metrics vmutils; do
+  curl -fsSLO ${REL}/${t}-linux-amd64-${VM_VERSION}.tar.gz
+  curl -fsSLO ${REL}/${t}-linux-amd64-${VM_VERSION}_checksums.txt
+  grep &quot;${t}-linux-amd64-${VM_VERSION}.tar.gz&quot; ${t}-linux-amd64-${VM_VERSION}_checksums.txt | sha256sum --check
+  tar -xzf ${t}-linux-amd64-${VM_VERSION}.tar.gz
+done
+install -m 0755 victoria-metrics-prod vmagent-prod vmalert-prod vmalert-tool-prod vmbackup-prod vmrestore-prod /usr/local/bin/
+victoria-metrics-prod --version</code></pre>
+<p>Expected: <code>...tar.gz: OK</code> for each tarball (a tampered one prints <code>FAILED</code> and exits 1), then <code>victoria-metrics-...-tags-v1.156.0-...</code>.</p>
+<hr>
+<h2>2. User, directories, keys</h2>
+<p><a href="../../../../fields/devops/victoriametrics/single-node-in-ten-minutes/">Part 2, steps 2 and 4</a>.</p>
+<pre><code class="language-bash">useradd --system --no-create-home --shell /usr/sbin/nologin victoriametrics
+install -d -o victoriametrics -g victoriametrics -m 0750 /var/lib/victoriametrics
+install -d -m 0755 /etc/victoriametrics
+for k in delete snapshot; do
+  openssl rand -hex 24 | install -m 0640 -g victoriametrics /dev/stdin /etc/victoriametrics/$k.key
+done
+ls -l /etc/victoriametrics/</code></pre>
+<p>Two keys on purpose: vmbackup logs the snapshot key, so it must not be able to delete anything. Put <code>/var/lib/victoriametrics</code> on its own filesystem if you can.</p>
+<hr>
+<h2>3. Scrape config</h2>
+<p><a href="../../../../fields/devops/victoriametrics/single-node-in-ten-minutes/">Part 2, step 3</a>.</p>
+<pre><code class="language-bash">cat &gt; /etc/victoriametrics/scrape.yml &lt;&lt;&#x27;EOF&#x27;
+global:
+  scrape_interval: 30s
+scrape_configs:
+  - job_name: node
+    static_configs:
+      - targets: [&#x27;10.0.0.11:9100&#x27;, &#x27;10.0.0.12:9100&#x27;]
+  - job_name: victoriametrics
+    static_configs:
+      - targets: [&#x27;10.0.0.5:8428&#x27;]
+EOF
+victoria-metrics-prod -promscrape.config=/etc/victoriametrics/scrape.yml -promscrape.config.dryRun -loggerLevel=ERROR
+echo &quot;exit=$?&quot;</code></pre>
+<p>Expected: no output, <code>exit=0</code>. A broken file exits 255 with the line number.</p>
+<hr>
+<h2>4. The service</h2>
+<p><a href="../../../../fields/devops/victoriametrics/single-node-in-ten-minutes/">Part 2, steps 5 and 6</a>.</p>
+<pre><code class="language-bash">cat &gt; /etc/systemd/system/victoriametrics.service &lt;&lt;&#x27;EOF&#x27;
+[Unit]
+Description=VictoriaMetrics single-node
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=victoriametrics
+Group=victoriametrics
+StateDirectory=victoriametrics
+ExecStart=/usr/local/bin/victoria-metrics-prod \
+  -storageDataPath=/var/lib/victoriametrics \
+  -retentionPeriod=90d \
+  -httpListenAddr=10.0.0.5:8428 \
+  -promscrape.config=/etc/victoriametrics/scrape.yml \
+  -deleteAuthKey=file:///etc/victoriametrics/delete.key \
+  -snapshotAuthKey=file:///etc/victoriametrics/snapshot.key
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=on-failure
+RestartSec=5
+LimitNOFILE=1048576
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+# Lint by output: systemd-analyze verify exits 0 even when it finds a bad value
+out=$(systemd-analyze verify /etc/systemd/system/victoriametrics.service 2&gt;&amp;1)
+[ -z &quot;$out&quot; ] &amp;&amp; echo &quot;LINT OK&quot; || { echo &quot;LINT FAIL: $out&quot;; false; }
+
+systemctl daemon-reload
+systemctl enable --now victoriametrics
+curl -fsS http://10.0.0.5:8428/health; echo &quot; exit=$?&quot;
+curl -s http://10.0.0.5:8428/api/v1/targets | python3 -c &#x27;
+import json, sys
+for t in json.load(sys.stdin)[&quot;data&quot;][&quot;activeTargets&quot;]:
+    print(t[&quot;labels&quot;][&quot;job&quot;], t[&quot;health&quot;], t.get(&quot;lastError&quot;, &quot;&quot;))&#x27;</code></pre>
+<p>Expected: <code>LINT OK</code>, <code>OK exit=0</code>, then every job <code>up</code>. A target can show <code>down</code> with an empty <code>lastError</code> for up to one scrape interval after start; that means &quot;not tried yet&quot;. The newest 30 s of data are hidden from queries by <code>-search.latencyOffset</code>, so a query straight after start can come back empty.</p>
+<hr>
+<h2>5. Reload safely</h2>
+<p><a href="../../../../fields/devops/victoriametrics/single-node-in-ten-minutes/">Part 2</a>. A HUP with a broken file keeps the old config and only logs an error. So: check, reload, confirm.</p>
+<pre><code class="language-bash">victoria-metrics-prod -promscrape.config=/etc/victoriametrics/scrape.yml -promscrape.config.dryRun -loggerLevel=ERROR \
+  &amp;&amp; systemctl reload victoriametrics
+curl -s http://10.0.0.5:8428/metrics | grep &#x27;^vm_promscrape_config_last_reload_successful &#x27;</code></pre>
+<p>Expected: <code>vm_promscrape_config_last_reload_successful 1</code>. Flags need a restart, not a reload.</p>
+<hr>
+<h2>6. vmagent at the edge</h2>
+<p><a href="../../../../fields/devops/victoriametrics/vmagent-and-the-network-blip/">Part 3</a>. Buffers on disk while the database is unreachable.</p>
+<pre><code class="language-bash">vmagent-prod \
+  -promscrape.config=/etc/vmagent/scrape.yml \
+  -remoteWrite.url=http://10.0.0.5:8428/api/v1/write \
+  -remoteWrite.tmpDataPath=/var/lib/vmagent \
+  -remoteWrite.queuePath=/var/lib/vmagent/queue-central \
+  -remoteWrite.maxDiskUsagePerURL=4GiB \
+  -httpListenAddr=10.0.1.2:8429</code></pre>
+<ul><li><strong>Always</strong> set <code>-remoteWrite.queuePath</code> (v1.156.0+), one per <code>-remoteWrite.url</code>, in the same order. Without it, editing or reordering a URL makes vmagent delete its queue as &quot;dangling&quot; on the next start. Before v1.156.0, use <code>-remoteWrite.keepDanglingQueues</code> and drain the queue before touching a URL.</li><li>Each queue path is used by one URL only; vmagent deletes the contents of a directory that isn&#x27;t a valid queue.</li><li>Size the cap from what you actually send, here for 6 hours:</li></ul>
+<pre><code class="language-text">sum(rate(vmagent_remotewrite_bytes_sent_total[1h])) by (instance, url) * 6h / 1Gi</code></pre>
+<ul><li>Check the backlog before any URL change: <code>vmagent_remotewrite_pending_data_bytes</code> should be <code>0</code>.</li></ul>
+<hr>
+<h2>7. Retention and disk</h2>
+<p><a href="../../../../fields/devops/victoriametrics/retention-disk-and-backups/">Part 4</a>.</p>
+<table><thead><tr><th>Fact</th><th>Value</th></tr></thead><tbody><tr><td>Default <code>-retentionPeriod</code></td><td><code>1M</code> = 31 days. Units <code>h d w M y</code>; bare number = months; lowercase <code>m</code> is refused</td></tr><tr><td>Disk peaks at</td><td>Retention <strong>plus one month</strong> (monthly partitions are deleted on the 1st)</td></tr><tr><td>Size the disk</td><td>Run one real day, then <code>disk = day × (retention days + 31) ÷ 0.8</code></td></tr><tr><td>Disk full</td><td>Read-only below <code>-storage.minFreeDiskSpaceBytes</code> (default 100 MB). <code>/health</code> still says <code>OK</code>. Watch <code>vm_storage_is_read_only</code></td></tr><tr><td>Monitor it from</td><td><strong>Another</strong> instance. A read-only database can&#x27;t store its own metrics</td></tr></tbody></table>
+<p>Lowering retention deletes data with no undo: back up first, change one node, watch <code>vm_data_size_bytes</code>, then the rest.</p>
+<hr>
+<h2>8. Backups</h2>
+<p><a href="../../../../fields/devops/victoriametrics/retention-disk-and-backups/">Part 4</a>. Hourly incremental into <code>latest/</code>, daily server-side copy into a dated folder, 14 days kept.</p>
+<pre><code class="language-bash">install -d -o victoriametrics -g victoriametrics -m 0750 /backup/victoriametrics
+
+cat &gt; /usr/local/sbin/vm-backup &lt;&lt;&#x27;EOF&#x27;
+#!/usr/bin/env bash
+# Hourly: incremental backup into latest/. Once a day: server-side copy of latest/ into YYYYMMDD/.
+# Run as the victoriametrics user. Exits non-zero on any failure.
+set -euo pipefail
+
+VM_URL=http://10.0.0.5:8428
+DATA=/var/lib/victoriametrics
+DST=/backup/victoriametrics
+DAILY_HOUR=00
+KEEP_DAYS=14
+
+VM_SNAPSHOT_KEY=$(cat /etc/victoriametrics/snapshot.key)
+export VM_SNAPSHOT_KEY
+
+/usr/local/bin/vmbackup-prod -loggerLevel=ERROR \
+  -storageDataPath=&quot;$DATA&quot; \
+  -snapshot.createURL=&quot;$VM_URL/snapshot/create?authKey=%{VM_SNAPSHOT_KEY}&quot; \
+  -dst=&quot;fs://$DST/latest&quot;
+
+if [ &quot;$(date +%H)&quot; = &quot;$DAILY_HOUR&quot; ]; then
+  /usr/local/bin/vmbackup-prod -loggerLevel=ERROR \
+    -origin=&quot;fs://$DST/latest&quot; -dst=&quot;fs://$DST/$(date +%Y%m%d)&quot;
+  cutoff=$(date -d &quot;$KEEP_DAYS days ago&quot; +%Y%m%d)
+  for d in &quot;$DST&quot;/[0-9]*; do
+    name=$(basename &quot;$d&quot;)
+    if [[ $name =~ ^[0-9]{8}$ ]] &amp;&amp; [ &quot;$name&quot; -lt &quot;$cutoff&quot; ]; then
+      rm -rf -- &quot;$d&quot;
+    fi
+  done
+fi
+echo &quot;vm-backup: ok&quot;
+EOF
+chmod 0755 /usr/local/sbin/vm-backup
+runuser -u victoriametrics -- /usr/local/sbin/vm-backup; echo &quot;exit=$?&quot;
+
+cat &gt; /etc/systemd/system/vm-backup.service &lt;&lt;&#x27;EOF&#x27;
+[Unit]
+Description=VictoriaMetrics backup (hourly incremental, daily copy)
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=victoriametrics
+Group=victoriametrics
+ExecStart=/usr/local/sbin/vm-backup
+EOF
+
+cat &gt; /etc/systemd/system/vm-backup.timer &lt;&lt;&#x27;EOF&#x27;
+[Unit]
+Description=Run vm-backup every hour
+
+[Timer]
+OnCalendar=*-*-* *:05:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+EOF
+
+systemctl daemon-reload
+systemctl enable --now vm-backup.timer
+systemctl list-timers vm-backup.timer</code></pre>
+<p>Expected: <code>vm-backup: ok</code>, <code>exit=0</code>, and the next run at five past the hour. <code>fs://</code> on a local disk isn&#x27;t a backup of the machine: point <code>DST</code> at another host, or use <code>s3://</code> with <code>-credsFilePath</code>. Since v1.122.0, <code>-snapshotsMaxAge</code> (default <code>3d</code>) removes snapshots an interrupted backup left behind; on older versions set it yourself.</p>
+<hr>
+<h2>9. Prove the backup</h2>
+<p><a href="../../../../fields/devops/victoriametrics/retention-disk-and-backups/">Part 4</a>. Monthly. vmrestore makes the target match the backup exactly, so never point it at a live data directory (it refuses while the lock is held).</p>
+<pre><code class="language-bash">vmrestore-prod -src=fs:///backup/victoriametrics/$(date +%Y%m%d) \
+  -storageDataPath=/srv/restore-test -loggerLevel=ERROR
+victoria-metrics-prod -storageDataPath=/srv/restore-test -httpListenAddr=127.0.0.1:8435 &amp;
+curl -s http://127.0.0.1:8435/api/v1/query \
+  --data-urlencode &#x27;query=count(count_over_time({job=&quot;node&quot;}[2h]))&#x27;</code></pre>
+<p>Expected: the same count as the same query on the live database.</p>
+<hr>
+<h2>10. Alerts with tests</h2>
+<p><a href="../../../../fields/devops/victoriametrics/metricsql-and-vmalert/">Part 5</a>. Save the rules as <code>/etc/vmalert/rules.yml</code>:</p>
+<pre><code class="language-yaml">groups:
+  - name: vm-self
+    interval: 30s
+    rules:
+      - alert: VMStorageReadOnly
+        expr: vm_storage_is_read_only == 1
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: &quot;VictoriaMetrics at {{ $labels.instance }} is read-only and rejecting writes&quot;
+      - alert: VMScrapeConfigReloadFailed
+        expr: vm_promscrape_config_last_reload_successful == 0
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: &quot;Scrape config reload failed on {{ $labels.instance }}; old config still active&quot;
+      - alert: VMAgentQueueBacklog
+        expr: sum by (instance) (vmagent_remotewrite_pending_data_bytes) &gt; 100e6
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: &quot;vmagent {{ $labels.instance }} has over 100 MB waiting to be sent&quot;</code></pre>
+<p>The test file <code>rules_test.yml</code> and the mutation script <code>check-rules.sh</code> are printed in full in <a href="../../../../fields/devops/victoriametrics/metricsql-and-vmalert/">Tests that can fail</a>. Run both:</p>
+<pre><code class="language-bash">vmalert-tool-prod unittest --files rules_test.yml; echo &quot;exit=$?&quot;
+./check-rules.sh; echo &quot;exit=$?&quot;</code></pre>
+<p>Expected: <code>SUCCESS</code>, then <code>PASS  real rules</code> and one <code>PASS  mutant caught</code> per mutant, <code>exit=0</code>. Three things that made our own tests lie:</p>
+<ul><li><code>rule_files</code> paths are relative to the <strong>test file</strong>, not your shell.</li><li>Put each &quot;should not fire&quot; check at the moment a broken rule <strong>would</strong> fire.</li><li>vmalert-tool ignores a group&#x27;s <code>interval</code> and uses the file&#x27;s <code>evaluation_interval</code>: set them equal.</li></ul>
+<hr>
+<h2>11. Run vmalert</h2>
+<p><a href="../../../../fields/devops/victoriametrics/metricsql-and-vmalert/">Part 5</a>. On the <strong>monitoring</strong> instance, not the one being watched.</p>
+<pre><code class="language-bash">vmalert-prod -rule=/etc/vmalert/rules.yml -dryRun; echo &quot;exit=$?&quot;
+vmalert-prod \
+  -rule=/etc/vmalert/rules.yml \
+  -datasource.url=http://10.0.0.6:8428 \
+  -remoteWrite.url=http://10.0.0.6:8428 \
+  -notifier.url=http://10.0.0.6:9093 \
+  -httpListenAddr=10.0.0.6:8880
+curl -s http://10.0.0.6:8880/api/v1/alerts</code></pre>
+<p>Expected: <code>exit=0</code> from the dry run. Firing alerts also appear as <code>ALERTS{alertstate=&quot;firing&quot;}</code> series in the monitoring instance.</p>
+<hr>
+<h2>Quick reference</h2>
+<table><thead><tr><th>Task</th><th>Command or setting</th></tr></thead><tbody><tr><td>Health (process only, not writes)</td><td><code>curl http://10.0.0.5:8428/health</code></td></tr><tr><td>Is it actually storing?</td><td><code>vm_storage_is_read_only == 0</code></td></tr><tr><td>Did the last reload work?</td><td><code>vm_promscrape_config_last_reload_successful == 1</code></td></tr><tr><td>vmagent backlog</td><td><code>vmagent_remotewrite_pending_data_bytes</code></td></tr><tr><td>Data on disk</td><td><code>vm_data_size_bytes</code></td></tr><tr><td>Query UI</td><td><code>http://10.0.0.5:8428/vmui/</code></td></tr><tr><td>Delete series (needs the delete key)</td><td><code>curl -X POST &#x27;http://10.0.0.5:8428/api/v1/admin/tsdb/delete_series?authKey=...&#x27; --data-urlencode &#x27;match[]=...&#x27;</code></td></tr><tr><td>Expose to untrusted clients</td><td>Only through <strong>vmauth</strong>, never directly</td></tr><tr><td><code>increase()</code> disagrees with Prometheus</td><td>Expected: VictoriaMetrics doesn&#x27;t extrapolate. See <a href="../../../../fields/devops/victoriametrics/metricsql-and-vmalert/">part 5</a></td></tr></tbody></table>
+<p><strong>Takeaway:</strong> verify the binary, run it as its own user on an internal address with admin keys, reload by check-reload-confirm, buffer with a pinned vmagent queue, size the disk for retention plus a month, back up hourly and restore monthly, and alert from a second instance with rules whose tests can fail.</p>
+<p><strong>Series index:</strong> <a href="../../../../fields/devops/victoriametrics/">VictoriaMetrics</a>. To scrape Slurm into it, see <a href="../../../../fields/schedulers/slurm-ai-clusters/metrics-openmetrics/">Slurm Metrics Without an Exporter</a>.</p>
+<hr>
+<h2>References</h2>
+<ul><li><a href="https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/">VictoriaMetrics single-node docs</a>: flags, retention, capacity planning, security.</li><li><a href="https://docs.victoriametrics.com/victoriametrics/vmagent/">vmagent</a>: remote write, on-disk queue, <code>-remoteWrite.queuePath</code>.</li><li><a href="https://docs.victoriametrics.com/victoriametrics/vmbackup/">vmbackup</a> and <a href="https://docs.victoriametrics.com/victoriametrics/vmrestore/">vmrestore</a>: snapshots, smart backups, restores.</li><li><a href="https://docs.victoriametrics.com/victoriametrics/vmalert/">vmalert</a> and <a href="https://docs.victoriametrics.com/victoriametrics/vmalert-tool/">vmalert-tool</a>: rules and unit tests.</li><li><a href="https://github.com/VictoriaMetrics/VictoriaMetrics/releases">VictoriaMetrics releases</a>: tarballs and checksums.</li></ul>
+<p><a href="../../../../#/fields/devops/victoriametrics/cheatsheet">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sign-In Hygiene: How the Clerk Says &quot;No&quot; Without Giving Anything Away</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/programming/local-app-accounts/sign-in-hygiene/">
+<meta name="description" content="Slow self-describing password hashes, a decoy check for unknown users, one identical error message, and throttling that cannot be used to lock someone out forever.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Sign-In Hygiene: How the Clerk Says &quot;No&quot; Without Giving Anything Away">
+<meta property="og:description" content="Slow self-describing password hashes, a decoy check for unknown users, one identical error message, and throttling that cannot be used to lock someone out forever.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/programming/local-app-accounts/sign-in-hygiene/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/programming/local-app-accounts/sign-in-hygiene/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../.docs/prerender-redirect.js" data-target="../../../#/programming/local-app-accounts/sign-in-hygiene"></script>
+<main>
+<h1>Sign-In Hygiene: How the Clerk Says &quot;No&quot; Without Giving Anything Away</h1>
+<p><em>Slow self-describing password hashes, a decoy check for unknown users, one identical error message, and throttling that cannot be used to lock someone out forever.</em></p>
+<p><em>Local App Accounts, tea talk 2 of 6. Previous: [Threat Model and First Launch](/programming/local-app-accounts/threat-model-and-first-launch.md). Next: [Sessions and Two Walls](/programming/local-app-accounts/sessions-and-two-walls.md).</em></p>
+<p>Ahmed comes back the next morning, types his password and presses Enter. In the fraction of a second that follows, the Clerk does four things he never notices, and each one closes a small leak. This talk is about those four things.</p>
+<hr>
+<h2>The one-sentence version</h2>
+<p><strong>Most of sign-in hygiene is making different failures look identical: in text, in timing and in counting.</strong></p>
+<hr>
+<h2>Words you&#x27;ll meet</h2>
+<table><thead><tr><th>Term</th><th>Plain meaning</th></tr></thead><tbody><tr><td><strong>Hash</strong></td><td>A one-way scramble of a password. You can check a guess against it, but you can&#x27;t run it backwards</td></tr><tr><td><strong>Salt</strong></td><td>Random extra data mixed into each hash, so two identical passwords don&#x27;t produce identical hashes</td></tr><tr><td><strong>Memory-hard hash</strong></td><td>A hash (scrypt, Argon2id) that is deliberately slow and RAM-hungry, so guessing millions of passwords gets expensive</td></tr><tr><td><strong>Timing attack</strong></td><td>Learning a secret from <em>how long</em> something takes, not from what it says</td></tr><tr><td><strong>User enumeration</strong></td><td>Using differences in errors or timing to learn which usernames exist</td></tr><tr><td><strong>Throttling vs lockout</strong></td><td>Throttling only slows repeated attempts; lockout blocks the account after N failures</td></tr></tbody></table>
+<hr>
+<h2>Detail 1: slow, self-describing hashes</h2>
+<p>Passwords are scrambled with <strong>scrypt</strong>, taking about a tenth of a second per check. The stored result records its <em>own</em> settings, so the app can raise the cost later and quietly upgrade an entry the next time its owner signs in.</p>
+<pre><code class="language-js">// stored as: scrypt$&lt;N&gt;$&lt;r&gt;$&lt;p&gt;$&lt;salt&gt;$&lt;hash&gt;
+// On sign-in:
+//   1. read N, r, p and salt out of the record
+//   2. hash the attempt with those same settings
+//   3. compare in constant time
+//   4. if the stored settings are weaker than today&#x27;s policy, rehash and save</code></pre>
+<p><em>(A sketch of the idea, not production code.)</em></p>
+<p>Why slow? A normal hash is fast, which is exactly what a password cracker wants. scrypt and Argon2id are built to be slow <em>and</em> to need a lot of RAM per guess, so an attacker can&#x27;t simply buy more cheap chips.</p>
+<p><strong>How slow is slow enough?</strong> OWASP&#x27;s Password Storage Cheat Sheet recommends <strong>Argon2id</strong> first. If it isn&#x27;t available, it says to use scrypt with a cost of at least 2^17, a block size of 8 and parallelism of 1. A tenth of a second usually means defaults well below that. The original design says it tuned for comfort, because the login protects a door that encrypts nothing. That is defensible, and because each record stores its own settings, raising them later costs one line of code. (Your runtime&#x27;s default memory ceiling may need raising to use the larger setting, so check its docs.)</p>
+<hr>
+<h2>Detail 2: unknown usernames cost the same</h2>
+<p>Type a name that doesn&#x27;t exist and the Clerk <em>still</em> checks your password, against a decoy. Otherwise a faster &quot;no&quot; would reveal which accounts exist.</p>
+<p>If &quot;no such user&quot; returns in 1 ms and &quot;wrong password&quot; takes 100 ms, an attacker can stopwatch their way to a list of valid usernames. Doing the same work either way closes that leak. OWASP&#x27;s Authentication Cheat Sheet describes the same defence: the code should go through the same process whatever the user or password is.</p>
+<hr>
+<h2>Detail 3: one message for every failure</h2>
+<p>Wrong password or no such user, the answer is identical: <em>&quot;Wrong username or password.&quot;</em> The red ring and the little shake on the password field are the same too. For screen reader users, the sentence is announced from a visually hidden alert, so nobody is left in silence.</p>
+<p>OWASP&#x27;s guidance is the same: respond with a generic message whether or not the account exists, for login, password reset and recovery alike.</p>
+<hr>
+<h2>Detail 4: the Slow Clerk</h2>
+<p>After four wrong passwords you start waiting: one second, then two, four, eight, doubling up to a cap of fifteen minutes. Two clever choices make this interesting:</p>
+<ul><li>It counts per username <strong>whether or not the account exists</strong>, so the waiting message can&#x27;t be used to discover accounts either.</li><li>It lives <strong>in memory on purpose</strong>. Restart the app and it&#x27;s a fresh start. The honest trade-off: someone at the keyboard could keep a username waiting for fifteen minutes, but nobody can lock Ahmed out <em>forever</em>.</li></ul>
+<p>Why not a hard lockout? OWASP lists the lockout threshold, the observation window and the duration as the parameters to weigh. A fixed, long lockout is easy to abuse against a victim. A capped, doubling delay is a common compromise: it slows guessing without giving an attacker a way to lock someone out for good. (That last comparison is design reasoning, not an OWASP quote.)</p>
+<hr>
+<h2>Recap</h2>
+<table><thead><tr><th>Leak</th><th>Plug</th></tr></thead><tbody><tr><td>Fast hashes are cheap to guess</td><td>Slow, memory-hard hash with self-describing settings</td></tr><tr><td>Timing reveals which usernames exist</td><td>Decoy check for unknown users</td></tr><tr><td>Error text reveals which usernames exist</td><td>One identical message</td></tr><tr><td>Waiting message reveals which usernames exist</td><td>Throttle counted per username, existing or not</td></tr></tbody></table>
+<p><strong>Next tea talk:</strong> <a href="../../../programming/local-app-accounts/sessions-and-two-walls/">Sessions and Two Walls</a>, where the password is right and the real separation begins.</p>
+<hr>
+<h2>References</h2>
+<ul><li>OWASP Cheat Sheet Series, <a href="https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html">Password Storage Cheat Sheet</a>: Argon2id first, then scrypt at N of at least 2^17, r of 8 and p of 1</li><li>OWASP Cheat Sheet Series, <a href="https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html">Authentication Cheat Sheet</a>: generic error messages, equal processing for known and unknown accounts, lockout parameters</li></ul>
+<p><a href="../../../#/programming/local-app-accounts/sign-in-hygiene">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

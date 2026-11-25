@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Find Out Why a Slurm Job Is Pending</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-pending-jobs/quick-guide/">
+<meta name="description" content="Read the reason column, tell waiting from never-starting, see the priority breakdown and roll out a QOS limit safely.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Find Out Why a Slurm Job Is Pending">
+<meta property="og:description" content="Read the reason column, tell waiting from never-starting, see the priority breakdown and roll out a QOS limit safely.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-pending-jobs/quick-guide/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-pending-jobs/quick-guide/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/schedulers/slurm-pending-jobs/quick-guide"></script>
+<main>
+<h1>Find Out Why a Slurm Job Is Pending</h1>
+<p><em>Read the reason column, tell waiting from never-starting, see the priority breakdown and roll out a QOS limit safely.</em></p>
+<blockquote><p><strong>Quick guide for</strong> the <a href="../../../../fields/schedulers/slurm-pending-jobs/">Why is my job still pending series</a>. Use it when a user asks why a job has not started. You end knowing whether to wait, fix the job, or change a limit.</p></blockquote>
+<h2>Before you start</h2>
+<ul><li>A job ID, and <code>squeue</code>, <code>sprio</code>, <code>sshare</code> and <code>sacctmgr</code> on your path.</li><li>Admin rights for <code>sacctmgr</code>. A user can lower a time limit or release their own hold, but cannot raise a limit.</li></ul>
+<hr>
+<h2>Steps</h2>
+<ol><li>Read the reason.</li></ol>
+<pre><code class="language-bash">   squeue -u $USER -t PD -o &quot;%.8i %.12j %.8Q %.24r&quot;
+   scontrol show job &lt;jobid&gt; | grep -o &#x27;Reason=[^ ]*&#x27;
+   squeue --start -j &lt;jobid&gt;</code></pre>
+<p><strong>Expect:</strong> a reason such as <code>Resources</code> or <code>Priority</code>. <strong>If not:</strong> the job is not pending, so check its state.</p>
+<ol><li>Decide: wait or act. Use the table below. <strong>Expect:</strong> <code>Resources</code> means first in line, <code>Priority</code> means someone is ahead. <strong>If not:</strong> look up the reason in <code>squeue(1)</code>, section JOB REASON CODES.</li></ol>
+<ol><li>If it is <code>Priority</code>, see why.</li></ol>
+<pre><code class="language-bash">   sprio -o &quot;%.6i %.6u %.9Y %.6A %.9F %.6Q&quot;
+   sshare -a -o account,user,rawshares,rawusage,effectvusage,fairshare</code></pre>
+<p><strong>Expect:</strong> priority split into age, fairshare and QOS columns. <strong>If not:</strong> every weight defaults to 0, so a column of zeros means the factor is off.</p>
+<ol><li>If it is a limit (<code>QOS...</code> or <code>Assoc...</code>), read the live numbers.</li></ol>
+<pre><code class="language-bash">   scontrol show assoc_mgr flags=qos qos=gpu-normal
+   scontrol show assoc_mgr flags=assoc accounts=physics</code></pre>
+<p><strong>Expect:</strong> current use against the limit, such as <code>gres/gpu=2(2)</code>. <strong>If not:</strong> the limit is on the account, not the QOS.</p>
+<hr>
+<h2>Wait or act</h2>
+<table><thead><tr><th>Reason</th><th>Starts by itself?</th><th>Fix</th></tr></thead><tbody><tr><td><code>Resources</code>, <code>Priority</code></td><td>Yes</td><td>Wait. <code>squeue --start</code> gives an estimate</td></tr><tr><td><code>Dependency</code></td><td>Yes, when the other job succeeds</td><td>Wait</td></tr><tr><td><code>DependencyNeverSatisfied</code></td><td><strong>Never</strong></td><td><code>scancel</code> it and resubmit</td></tr><tr><td><code>JobHeldUser</code></td><td><strong>Never</strong></td><td><code>scontrol release &lt;id&gt;</code></td></tr><tr><td><code>PartitionTimeLimit</code></td><td><strong>Never</strong></td><td>Lower the time limit: <code>scontrol update jobid=&lt;id&gt; timelimit=&lt;shorter&gt;</code></td></tr><tr><td><code>BeginTime</code></td><td>At that time</td><td>Nothing, or <code>scontrol update jobid=&lt;id&gt; starttime=now</code></td></tr><tr><td><code>ReqNodeNotAvail, Unavail</code></td><td>When the node returns</td><td>Drop <code>-w</code>, or <code>sinfo -R</code></td></tr><tr><td><code>QOSMaxGRESPerUser</code>, <code>AssocGrpGRES</code></td><td>When other jobs end</td><td>Wait, or ask for less</td></tr></tbody></table>
+<hr>
+<h2>Add a limit without surprises</h2>
+<ol><li>Dry run: count who would be over it today with <code>squeue -o &quot;%u %b&quot; -t R</code>.</li><li>Announce the limit and the date.</li><li>Put the cap on a partition QOS and add <code>DenyOnLimit</code>.</li></ol>
+<pre><code class="language-bash">   sacctmgr -i add qos gpu-normal MaxTRESPerUser=gres/gpu=2
+   sacctmgr -i modify qos gpu-normal set flags=DenyOnLimit</code></pre>
+<p><strong>Expect:</strong> a job that could never run is refused with <code>Job violates accounting/QOS policy</code>. <strong>If not:</strong> the cap is on a QOS the job does not use.</p>
+<p><strong>Don&#x27;t:</strong> put a cap on a QOS only. It binds only jobs running under that QOS. <strong>Roll back:</strong> <code>sacctmgr modify ... set MaxTRESPerUser=gres/gpu=-1</code> clears the limit for the next scheduling pass.</p>
+<hr>
+<h2>Make an urgent lane</h2>
+<pre><code class="language-bash">sacctmgr -i add qos urgent Priority=100
+sacctmgr -i modify user carol set qos+=urgent
+sbatch -q urgent ...</code></pre>
+<p><strong>Expect:</strong> the job&#x27;s <code>QOS</code> column in <code>sprio</code> is non-zero. <strong>If not:</strong> the QOS weight is 0.</p>
+<h2>Tips and tricks</h2>
+<ul><li>Ask for the estimate first: <code>squeue --start -j &lt;jobid&gt;</code>.</li><li>Every priority weight defaults to 0, so turn on only the factors you want, with fairshare largest by a clear margin if groups must share fairly.</li><li>Users can lower their own time limit and release their own hold.</li><li>A small triage script (<code>whypending JOBID</code>) can print the reason, the number of jobs ahead and what to try.</li><li><code>-1</code> clears a limit.</li></ul>
+<h2>Warnings</h2>
+<blockquote><p>[!WARNING] A limit on a QOS binds only jobs running under that QOS. A second QOS bypasses your cap, so put caps on a partition QOS.</p></blockquote>
+<ul><li><code>DependencyNeverSatisfied</code>, <code>JobHeldUser</code> and <code>PartitionTimeLimit</code> never start by themselves.</li><li>Running jobs are not killed when you add a limit.</li></ul>
+<h2>If it fails</h2>
+<table><thead><tr><th>What you see</th><th>Likely cause</th><th>Fix</th></tr></thead><tbody><tr><td><code>Memory specification can not be satisfied</code> at submit</td><td>Asked for more than the nodes have</td><td>Lower <code>--mem</code></td></tr><tr><td><code>Invalid account or account/partition combination specified</code></td><td>User is not in that account</td><td>Use their own account</td></tr><tr><td><code>Job dependency problem</code></td><td>The dependency job does not exist</td><td>Fix the <code>--dependency</code> ID</td></tr><tr><td><code>Access/permission denied for job 12</code></td><td>A user tried to raise a time limit</td><td>Only an admin can</td></tr></tbody></table>
+<p><strong>Why it works:</strong> <a href="../../../../fields/schedulers/slurm-pending-jobs/why-is-my-job-pending/">reading the reason column</a>, <a href="../../../../fields/schedulers/slurm-pending-jobs/who-goes-first/">who goes first</a>, <a href="../../../../fields/schedulers/slurm-pending-jobs/limits-that-wait-forever/">limits that wait forever</a>. Next: <a href="../../../../fields/schedulers/slurm-sacct-job-forensics/">read what happened to a finished job</a>.</p>
+<p><a href="../../../../#/fields/schedulers/slurm-pending-jobs/quick-guide">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

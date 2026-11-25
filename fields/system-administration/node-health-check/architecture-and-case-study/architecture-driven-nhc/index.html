@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Architecture-Driven NHC: Generate Health Checks from Your Cluster&#x27;s Definition</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/node-health-check/architecture-and-case-study/architecture-driven-nhc/">
+<meta name="description" content="Describe your cluster&#x27;s architecture once in YAML, generate every NHC config from it, cross-check it against slurm.conf, and prove the result with real NHC before it ships.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Architecture-Driven NHC: Generate Health Checks from Your Cluster&#x27;s Definition">
+<meta property="og:description" content="Describe your cluster&#x27;s architecture once in YAML, generate every NHC config from it, cross-check it against slurm.conf, and prove the result with real NHC before it ships.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/node-health-check/architecture-and-case-study/architecture-driven-nhc/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/node-health-check/architecture-and-case-study/architecture-driven-nhc/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../../.docs/prerender-redirect.js" data-target="../../../../../#/fields/system-administration/node-health-check/architecture-and-case-study/architecture-driven-nhc"></script>
+<main>
+<h1>Architecture-Driven NHC: Generate Health Checks from Your Cluster&#x27;s Definition</h1>
+<p><em>Describe your cluster&#x27;s architecture once in YAML, generate every NHC config from it, cross-check it against slurm.conf, and prove the result with real NHC before it ships.</em></p>
+<blockquote><p><strong>Part 9 of the [Node Health Check series](/fields/system-administration/node-health-check/README.md).</strong> The capstone. Parts 3 to 7 taught you to write <code>nhc.conf</code> by hand. This part stops doing that: you describe what the cluster <em>is</em>, and NHC gets built from that description. Everything here was run against real NHC 1.5, and two of its bugs-in-waiting were found that way.</p></blockquote>
+<p>The files used on this page:</p>
+<table><thead><tr><th>File</th><th>What it is</th></tr></thead><tbody><tr><td><a href="../../../../../fields/system-administration/node-health-check/architecture-and-case-study/cluster-example.yaml"><code>cluster-example.yaml</code></a></td><td>The architecture definition: classes, roles, fabrics, storage, GPUs</td></tr><tr><td><a href="../../../../../fields/system-administration/node-health-check/architecture-and-case-study/nhc_gen.py"><code>nhc_gen.py</code></a></td><td>Validates the definition, cross-checks <code>slurm.conf</code>, writes all NHC configs</td></tr><tr><td><a href="../../../../../fields/system-administration/node-health-check/architecture-and-case-study/acme_arch.nhc"><code>acme_arch.nhc</code></a></td><td>NHC module with the architecture checks the generated configs call</td></tr><tr><td><a href="../../../../../fields/system-administration/node-health-check/architecture-and-case-study/nhc_test_harness.sh"><code>nhc_test_harness.sh</code></a></td><td>The Step 4 tests as one CI script with assertions; exits non-zero on any failure</td></tr></tbody></table>
+<hr>
+<h2>Three sources of truth, zero agreement</h2>
+<p>On a cluster that&#x27;s a few years old, the same facts live in at least three places:</p>
+<table><thead><tr><th>Fact</th><th><code>slurm.conf</code> says</th><th><code>nhc.conf</code> says</th><th>The hardware says</th></tr></thead><tbody><tr><td>Memory on <code>cn001</code></td><td><code>RealMemory=530000</code></td><td><code>512GB</code></td><td>503 GB usable</td></tr><tr><td>GPUs on <code>gpu07</code></td><td><code>Gres=gpu:h100:4</code> (copy-paste from the test rack)</td><td>8</td><td>8</td></tr><tr><td><code>cn513-516</code> exist?</td><td>Yes, added last month</td><td>No line matches them</td><td>Yes, running jobs</td></tr></tbody></table>
+<p>Each row is a real failure mode. The first gets every node drained as <code>Low RealMemory</code> by Slurm. The second schedules jobs onto half the GPUs. The third is the scariest: four production nodes with <strong>no health checks at all</strong>, and nothing tells you, because a node that matches no line in <code>nhc.conf</code> just passes.</p>
+<p>Hand-written configs drift because nobody&#x27;s job is to keep them in sync. So make it a machine&#x27;s job.</p>
+<hr>
+<h2>The idea: health policy as code</h2>
+<pre><code class="language-mermaid">flowchart LR
+    A[&quot;cluster.yaml&lt;br/&gt;architecture definition&quot;] --&gt; G[&quot;nhc_gen.py&quot;]
+    S[&quot;slurm.conf&quot;] -. cross-check .-&gt; G
+    G -- &quot;inconsistent&quot; --&gt; X[&quot;CI fails&lt;br/&gt;nothing written&quot;]
+    G --&gt; C[&quot;nhc.conf&lt;br/&gt;nhc-epilog.conf&lt;br/&gt;nhc-deep.conf&lt;br/&gt;sysconfig/*&quot;]
+    M[&quot;acme_arch.nhc&quot;] --&gt; T
+    C --&gt; T[&quot;Test with real NHC&lt;br/&gt;masquerade per class,&lt;br/&gt;fake GPUs, fake dmesg&quot;]
+    T --&gt; P[&quot;Package / config mgmt&quot;]
+    P --&gt; R[&quot;Canary, then fleet&lt;br/&gt;(part 5)&quot;]</code></pre>
+<p>Three rules make it work:</p>
+<ol><li><strong>The YAML is the only thing humans edit.</strong> Generated files carry a &quot;do not edit&quot; header and a hash of their source.</li><li><strong>The generator refuses to write anything inconsistent</strong>, with itself or with <code>slurm.conf</code>. A bad definition fails CI, not the cluster.</li><li><strong>Every generated config is executed by real NHC in CI</strong> before it reaches a node.</li></ol>
+<hr>
+<h2>Step 1: describe the architecture</h2>
+<p>Model what the cluster <em>should</em> be, at the level an architect would draw it. The example file has five sections:</p>
+<table><thead><tr><th>Section</th><th>Captures</th><th>Why it&#x27;s separate</th></tr></thead><tbody><tr><td><code>storage</code></td><td>Mounts: path, type, source, read-only</td><td>Shared by many classes; change the NFS server in one place</td></tr><tr><td><code>fabrics</code></td><td>Link rate and the HCAs that must be up</td><td>A GPU rail design has 8 HCAs; a CPU node has one</td></tr><tr><td><code>roles</code></td><td>What a node <em>does</em>: services, user-process hygiene</td><td>Login and compute nodes can share hardware but not policy</td></tr><tr><td><code>classes</code></td><td>Hardware classes: node list, CPU, NUMA, memory, fabric, mounts, GPUs</td><td>One class per distinct hardware build</td></tr><tr><td><code>defaults</code></td><td>Fudge factors, timeouts per context, ping targets</td><td>Site-wide knobs</td></tr></tbody></table>
+<p>A class reads like a spec sheet:</p>
+<pre><code class="language-yaml">gpu-h100:
+  nodes: &quot;gpu[01-30],gpu32&quot;          # gpu31 is out for RMA
+  role: compute
+  cpu: {sockets: 2, cores: 96, threads: 192}
+  numa_nodes: 2
+  memory: 2TB
+  fabric: ndr-rail                   # 8 x NDR HCAs, defined once under fabrics
+  mounts: [home, scratch, apps]
+  gpus:
+    count: 8
+    model: &quot;H100&quot;
+    fatal_xids: [48, 79, 94, 95, 119]
+    deep_diag_level: 2</code></pre>
+<p>How each fact becomes a check, and in which context (<a href="../../../../../fields/system-administration/node-health-check/getting-started/writing-nhc-conf/">part 3</a>):</p>
+<table><thead><tr><th>Architecture fact</th><th>Generated check</th><th>periodic</th><th>epilog</th><th>deep</th></tr></thead><tbody><tr><td><code>mounts</code></td><td><code>check_fs_mount_rw</code> / <code>_ro</code> with type and source</td><td>✅</td><td>✅</td><td>✅</td></tr><tr><td><code>gpus.count</code></td><td><code>check_arch_gpu_count</code></td><td>✅</td><td>✅</td><td>✅</td></tr><tr><td><code>gpus.fatal_xids</code></td><td><code>check_cmd_dmesg</code> with a negated Xid regex</td><td>✅</td><td>✅</td><td>✅</td></tr><tr><td>role <code>services</code></td><td><code>check_ps_service -S</code> (self-healing, <a href="../../../../../fields/system-administration/node-health-check/checks-and-remediation/auto-remediation/">part 7</a>)</td><td>✅</td><td></td><td>✅</td></tr><tr><td><code>cpu</code></td><td><code>check_hw_cpuinfo</code></td><td>✅</td><td></td><td>✅</td></tr><tr><td><code>numa_nodes</code></td><td><code>check_arch_numa_nodes</code></td><td>✅</td><td></td><td>✅</td></tr><tr><td><code>memory</code> + fudge</td><td><code>check_hw_physmem</code></td><td>✅</td><td></td><td>✅</td></tr><tr><td><code>fabric</code></td><td>one <code>check_hw_ib rate dev</code> per HCA</td><td>✅</td><td></td><td>✅</td></tr><tr><td><code>gpus.model</code></td><td><code>check_arch_gpu_model</code></td><td>✅</td><td></td><td>✅</td></tr><tr><td>role <code>user_hygiene</code></td><td><code>check_ps_unauth_users</code>, <code>check_ps_userproc_lineage</code> (log only)</td><td>✅</td><td></td><td>✅</td></tr><tr><td><code>gpus.deep_diag_level</code></td><td><code>check_arch_dcgm_diag</code></td><td></td><td></td><td>✅</td></tr></tbody></table>
+<p>Ordering inside each class is cheapest-and-most-likely-first: mounts, then GPUs, then everything else. The epilog context stops after the GPU lines because every second there is added to every job (<a href="../../../../../fields/system-administration/node-health-check/getting-started/slurm-integration/">part 4</a>).</p>
+<hr>
+<h2>Step 2: the generator</h2>
+<pre><code class="language-bash">pip install pyyaml
+python3 nhc_gen.py cluster.yaml --out build/ --slurm-conf /etc/slurm/slurm.conf --strict</code></pre>
+<p>It does four jobs.</p>
+<p><strong>1. Validate the definition.</strong> Every node in exactly one class, every referenced role, fabric and mount defined, <code>sockets &lt;= cores &lt;= threads</code>, sizes parseable, every service known to the <code>SERVICE_MAP</code>. All problems are reported in one run, not one per attempt.</p>
+<p><strong>2. Cross-check `slurm.conf`.</strong> The generator parses <code>NodeName</code> lines (including <code>NodeName=DEFAULT</code> and <code>\</code> continuations) and compares them with the architecture. Here&#x27;s the real output against a <code>slurm.conf</code> with the three drifts from the table at the top:</p>
+<pre><code class="language-text">$ python3 nhc_gen.py cluster-example.yaml --out build --slurm-conf slurm-drift.conf
+ERROR:   slurm.conf: 4 node(s) not covered by any class, so they get no health checks: cn513, cn514, cn515, cn516
+ERROR:   class &#x27;cpu-std&#x27; vs slurm.conf (cn001 and others): RealMemory=530000 MB exceeds the 524288 MB the node has; Slurm will drain it as &#x27;Low RealMemory&#x27;
+ERROR:   class &#x27;gpu-h100&#x27; vs slurm.conf (gpu01 and others): Gres has 4 GPUs, architecture says 8
+Nothing written.</code></pre>
+<p>And against a consistent one:</p>
+<pre><code class="language-text">$ python3 nhc_gen.py cluster-example.yaml --out build --slurm-conf slurm-good.conf
+OK: 545 nodes in 4 classes -&gt; nhc.conf, nhc-epilog.conf, nhc-deep.conf in build/</code></pre>
+<p>The coverage check is the most valuable line in the whole tool. It turns &quot;nodes silently without health checks&quot; from an invisible state into a failed build.</p>
+<p><strong>3. Translate hostlists.</strong> Slurm and NHC disagree on range syntax (<a href="../../../../../fields/system-administration/node-health-check/getting-started/writing-nhc-conf/">part 3</a>): NHC allows one range per name and no commas inside brackets. The generator converts:</p>
+<table><thead><tr><th>Slurm hostlist (in YAML)</th><th>NHC target (generated)</th></tr></thead><tbody><tr><td><code>cn[001-480]</code></td><td><code>{cn[001-480]}</code></td></tr><tr><td><code>gpu[01-30],gpu32</code></td><td><code>{gpu[01-30],gpu32}</code></td></tr><tr><td><code>cn[001-010,015]</code></td><td><code>{cn[001-010],cn015}</code></td></tr></tbody></table>
+<p><strong>4. Emit one file per context</strong>, plus a sysconfig file each, so &quot;early&quot; settings like <code>TIMEOUT</code> land where NHC actually reads them (<a href="../../../../../fields/system-administration/node-health-check/getting-started/writing-nhc-conf/">part 3</a>). An excerpt of the generated periodic config:</p>
+<pre><code class="language-bash">##############################################################################
+# nhc.conf for cluster &#x27;acme&#x27; -- GENERATED by nhc_gen.py.
+# Source sha256:156f1e7b603c346f. Do not edit: change the YAML and regenerate.
+##############################################################################
+
+### Global
+* || DF_FLAGS=&quot;-Tkal&quot;
+* || DFI_FLAGS=&quot;-Tial&quot;
+* || check_fs_mount_rw -f /
+* || check_net_ping -W 2 -c 2 slurmctl01
+
+### class gpu-h100 (31 nodes, role compute)
+{gpu[01-30],gpu32} || check_fs_mount_rw -t nfs -s &#x27;nas01:/export/home&#x27; -f /home
+{gpu[01-30],gpu32} || check_fs_mount_rw -t lustre -s &#x27;*@o2ib*:/scratch&#x27; -f /scratch
+{gpu[01-30],gpu32} || check_fs_mount_ro -t nfs -s &#x27;nas01:/export/apps&#x27; -f /apps
+{gpu[01-30],gpu32} || check_arch_gpu_count 8
+{gpu[01-30],gpu32} || check_cmd_dmesg -m &#x27;!/NVRM: Xid [(]PCI:[^)]*[)]: (48|79|94|95|119),/&#x27; -M &#x27;Fatal GPU Xid in kernel log&#x27;
+{gpu[01-30],gpu32} || check_ps_service -u root -d sshd -S sshd
+{gpu[01-30],gpu32} || check_ps_service -u munge -d munged -S munge
+{gpu[01-30],gpu32} || check_hw_cpuinfo 2 96 192
+{gpu[01-30],gpu32} || check_arch_numa_nodes 2
+{gpu[01-30],gpu32} || check_hw_physmem 2TB 2TB 3%
+{gpu[01-30],gpu32} || check_hw_ib 400 mlx5_0
+   ... one check_hw_ib line per rail HCA ...
+{gpu[01-30],gpu32} || check_arch_gpu_model &#x27;H100&#x27;
+{gpu[01-30],gpu32} || check_ps_unauth_users log syslog
+{gpu[01-30],gpu32} || check_ps_userproc_lineage log syslog</code></pre>
+<p>It&#x27;s one cluster-wide file, the way NHC was designed to be used: every node gets the same bytes and picks its own lines.</p>
+<hr>
+<h2>Step 3: the architecture check module</h2>
+<p>Built-in checks cover CPUs, memory, mounts and IB. <code>acme_arch.nhc</code> adds the architecture facts NHC doesn&#x27;t know about:</p>
+<table><thead><tr><th>Check</th><th>Verifies</th></tr></thead><tbody><tr><td><code>check_arch_numa_nodes N</code></td><td>NUMA nodes online, parsed from <code>/sys/devices/system/node/online</code> in pure bash. Catches a BIOS reset to the wrong NPS / sub-NUMA setting, a classic silent performance killer</td></tr><tr><td><code>check_arch_gpu_count N</code></td><td>GPUs visible to <code>nvidia-smi</code> (timeout-bounded, cached)</td></tr><tr><td><code>check_arch_gpu_model S</code></td><td>Every GPU&#x27;s name contains <code>S</code>. Catches the wrong card swapped in by a well-meaning technician</td></tr><tr><td><code>check_arch_dcgm_diag L [secs]</code></td><td><code>dcgmi diag -r L</code> reports no failure. Deep context only</td></tr></tbody></table>
+<p>It follows <a href="../../../../../fields/system-administration/node-health-check/checks-and-remediation/custom-checks/">part 6</a>&#x27;s rules, including one that testing this page added to the list: <strong>declare module globals with `declare -g`</strong>. More on that below.</p>
+<p>Install it next to the built-ins: <code>/etc/nhc/scripts/acme_arch.nhc</code>.</p>
+<hr>
+<h2>Step 4: prove it with real NHC before it ships</h2>
+<p>Generated configs are only trustworthy if something executes them. NHC 1.5 can run straight from a Git clone and has three features that make a test harness easy:</p>
+<ul><li><code>NHC_CFG_CONFDIR</code> / <code>NHC_CFG_INCDIR</code> point it at a test directory instead of <code>/etc/nhc</code>.</li><li><code>-m host</code> masquerades as any node, so one CI runner can test every class.</li><li>Module command variables (<code>ARCH_NVSMI</code>, <code>ARCH_NUMA_ONLINE</code>) and <code>NHC_DMESG_CMD</code> can point at fakes.</li></ul>
+<blockquote><p>[!WARNING] <strong>Run these tests only in CI or a throwaway container.</strong> <code>MARK_OFFLINE=0</code> stops draining, not fixing: checks with auto-fix flags still act. In testing, NHC tried to start <code>sshd</code> and <code>munge</code> and created <code>/scratch</code> and <code>/apps</code> on the test machine. <a href="../../../../../fields/system-administration/node-health-check/architecture-and-case-study/nhc_test_harness.sh"><code>nhc_test_harness.sh</code></a> refuses to run outside CI or a container unless you pass <code>--force</code>.</p></blockquote>
+<pre><code class="language-bash">git clone --depth 1 --branch 1.5 https://github.com/mej/nhc.git /tmp/nhc
+mkdir -p /tmp/nhctest &amp;&amp; cp -r /tmp/nhc/scripts /tmp/nhctest/ &amp;&amp; cp acme_arch.nhc /tmp/nhctest/scripts/
+mkdir -p /var/run/nhc                      # PID file directory (1.5)
+
+nhc_test() {   # usage: nhc_test &lt;conf&gt; &lt;host&gt; [VAR=value ...]
+  local conf=$1 host=$2; shift 2
+  NHC_CFG_CONFDIR=/tmp/nhctest NHC_CFG_INCDIR=/tmp/nhctest/scripts \
+    /tmp/nhc/nhc -c &quot;$conf&quot; -m &quot;$host&quot; -l- -t 60 -a -v NHC_RM=none MARK_OFFLINE=0 &quot;$@&quot;
+}</code></pre>
+<p><strong>Test 1: does each node get the right lines?</strong> Count the checks selected per host:</p>
+<pre><code class="language-bash">for h in cn100 cn500 gpu07 gpu31 login01 storage01; do
+  printf &#x27;%-10s &#x27; &quot;$h&quot;; nhc_test build/nhc.conf &quot;$h&quot; | grep -m1 -oE &#x27;of [0-9]+&#x27;
+done</code></pre>
+<p>Real results for the example cluster:</p>
+<table><thead><tr><th>Host</th><th>Checks</th><th>Why</th></tr></thead><tbody><tr><td><code>cn100</code></td><td>15</td><td>4 global + 11 for <code>cpu-std</code></td></tr><tr><td><code>cn500</code></td><td>15</td><td>4 global + 11 for <code>cpu-bigmem</code> (different memory size, same count)</td></tr><tr><td><code>gpu07</code></td><td>25</td><td>4 global + 21 for <code>gpu-h100</code> (8 HCA lines)</td></tr><tr><td><code>gpu31</code></td><td>4</td><td>Out for RMA: excluded from the class, globals only ✅</td></tr><tr><td><code>login01</code></td><td>11</td><td>4 global + 7 for <code>login</code> (no scratch, no hygiene)</td></tr><tr><td><code>storage01</code></td><td>4</td><td>Not in the architecture: globals only</td></tr><tr><td><code>gpu07</code> epilog</td><td>8</td><td>Mounts and GPU lines only</td></tr></tbody></table>
+<p>Turn that table into assertions and a change that accidentally drops a class&#x27;s checks fails CI.</p>
+<p><strong>Test 2: do the checks pass on a good node and fail on a bad one?</strong> Fake the hardware:</p>
+<pre><code class="language-bash"># fake nvidia-smi with 8 healthy GPUs, and one where a GPU fell off the bus
+for n in 8 7; do
+  printf &#x27;#!/bin/bash\nfor i in $(seq %d); do echo &quot;NVIDIA H100 80GB HBM3&quot;; done\n&#x27; &quot;$n&quot; &gt; /tmp/fake-smi$n
+done
+chmod +x /tmp/fake-smi*; echo &quot;0-1&quot; &gt; /tmp/numa2      # fake 2-NUMA-node layout
+
+nhc_test build/nhc.conf gpu07 ARCH_NVSMI=/tmp/fake-smi8 ARCH_NUMA_ONLINE=/tmp/numa2 | grep -A1 check_arch
+nhc_test build/nhc.conf gpu07 ARCH_NVSMI=/tmp/fake-smi7 | grep &#x27;failed:  check_arch_gpu_count&#x27;
+#  -&gt; Health check failed:  check_arch_gpu_count:  7 GPUs visible, expected 8</code></pre>
+<p><strong>Test 3: does the Xid line catch a fatal Xid?</strong> Prepend a line that swaps <code>dmesg</code> for a fake log:</p>
+<pre><code class="language-bash">printf &#x27;[5012.3] NVRM: Xid (PCI:0000:3b:00): 79, pid=4242, GPU has fallen off the bus.\n&#x27; &gt; /tmp/dmesg-bad
+printf &#x27;[7.1] NVRM: Xid (PCI:0000:3b:00): 13, pid=1, Graphics Exception\n&#x27;                   &gt; /tmp/dmesg-ok
+for f in dmesg-bad dmesg-ok; do
+  { echo &quot;* || NHC_DMESG_CMD=( cat /tmp/$f )&quot;; cat build/nhc-epilog.conf; } &gt; /tmp/ep.conf
+  printf &#x27;%-10s &#x27; &quot;$f&quot;; nhc_test /tmp/ep.conf gpu07 ARCH_NVSMI=/tmp/fake-smi8 | grep -E &#x27;Xid.*failed|completed&#x27; | head -1
+done
+#  dmesg-bad  Health check failed:  check_cmd_dmesg:  Fatal GPU Xid in kernel log.
+#  dmesg-ok   (GPU checks pass: Xid 13 is usually an application fault, not hardware)</code></pre>
+<p>Real hardware failures are rare and you can&#x27;t schedule them. Fakes let you prove every check fails when it should, on every commit.</p>
+<p><strong>All three tests in one script.</strong> <a href="../../../../../fields/system-administration/node-health-check/architecture-and-case-study/nhc_test_harness.sh"><code>nhc_test_harness.sh</code></a> runs them with assertions. Expected check counts per host live in a block at the top; update them when <code>cluster.yaml</code> changes. On the example cluster:</p>
+<pre><code class="language-text">$ CI=true ./nhc_test_harness.sh build
+ok   - cn100 nhc: 15 checks
+...
+ok   - gpu07 nhc-deep: 26 checks
+ok   - GPU count passes with 8 GPUs
+ok   - GPU count fails with one GPU missing
+ok   - Xid check fails on fatal Xid 79
+ok   - Xid check passes on benign Xid 13
+# 12 passed, 0 failed</code></pre>
+<p>With the backslash bug from the next section put back into the config, it reports <code>FAIL - Xid check does NOT fail on fatal Xid 79</code> and exits 1.</p>
+<hr>
+<h2>Two traps the tests caught</h2>
+<p>Both of these were in the first draft of this series. Neither shows up when you test checks with <code>nhc -e</code>, only when real NHC reads a real config and loads a real module. That&#x27;s the whole argument for Step 4.</p>
+<p><strong>Trap 1: backslashes vanish from config lines.</strong> The Xid regex was first written with <code>\(PCI:...\)</code>. Through <code>nhc -e</code> it worked. Through the config file it <strong>passed even with Xid 79 in the log</strong>: NHC&#x27;s config parser drops backslashes, <code>\(</code> became <code>(</code>, and the regex turned into a group that can never match the real line. A health check that always passes is worse than none, because it looks like coverage. The fix is bracket expressions, which need no escaping: <code>[(]</code>, <code>[)]</code>, <code>[[]</code>, <code>[]]</code>, <code>[.]</code>. The generator emits only those. <a href="../../../../../fields/system-administration/node-health-check/getting-started/writing-nhc-conf/">Part 3</a> now carries a warning about it.</p>
+<p><strong>Trap 2: module variables that disappear.</strong> <code>check_arch_numa_nodes</code> first failed with <code>cannot read</code> and an <em>empty</em> path. NHC loads modules by sourcing them <strong>inside a function</strong>, and in bash a plain <code>declare</code> inside a function makes a local variable. The module&#x27;s defaults existed only while the file was being loaded. It hid in testing because passing <code>ARCH_NVSMI=...</code> on the command line sets a global that masks the bug, while on a real node, with no override, every GPU node would have drained with &quot;nvidia-smi failed&quot;. Fix: <code>declare -g</code>. <a href="../../../../../fields/system-administration/node-health-check/checks-and-remediation/custom-checks/">Part 6</a> now lists it as a rule.</p>
+<p>A third thing worth knowing from the harness: when NHC couldn&#x27;t find its modules (a wrong <code>INCDIR</code>), it still ended with <strong>&quot;completed successfully; 0 passed&quot;</strong>. Treat &quot;0 passed&quot; as a failure in your tests and your monitoring.</p>
+<hr>
+<h2>Step 5: ship it through CI</h2>
+<p>A minimal pipeline, here as GitHub Actions; the shape is the same in GitLab or Jenkins:</p>
+<pre><code class="language-yaml"># .github/workflows/nhc.yml in your cluster-config repo
+name: nhc
+on: [pull_request, push]
+jobs:
+  generate-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip install pyyaml
+      - name: Generate (fails on inconsistency or slurm.conf drift)
+        run: python3 nhc/nhc_gen.py nhc/cluster.yaml --out build --slurm-conf slurm/slurm.conf --strict
+      - name: Test with real NHC 1.5
+        run: sudo -E bash nhc/nhc_test_harness.sh build     # -E keeps CI=true for the safety guard
+      - uses: actions/upload-artifact@v4
+        with: {name: nhc-build, path: build/}</code></pre>
+<p>Then deliver <code>build/</code> and <code>acme_arch.nhc</code> the way you deliver any config: an RPM such as <code>acme-nhc-config</code> (with <code>Requires: lbnl-nhc</code>, versioned per Git tag, which makes rollback a <code>dnf downgrade</code>), or your Ansible role from <a href="../../../../../fields/system-administration/node-health-check/getting-started/build-and-install/">part 2</a>. The rollout itself is still dry run, canary, enforce, behind the circuit breaker (<a href="../../../../../fields/system-administration/node-health-check/getting-started/rollout-at-scale/">part 5</a>). Generation makes the config <em>correct</em>; it doesn&#x27;t make it <em>safe to push to 2,000 nodes at once</em>.</p>
+<blockquote><p>[!TIP] Keep <code>slurm.conf</code> and <code>cluster.yaml</code> in the same repository. Then a pull request that adds nodes to Slurm but not to the architecture fails its own CI, and the reviewer sees both halves of the change in one diff.</p></blockquote>
+<hr>
+<h2>Onboarding a new hardware generation</h2>
+<p>The payoff. A new rack of 64 GPU nodes arrives with a different GPU model and a different NUMA layout:</p>
+<ol><li><strong>Add one class</strong> to <code>cluster.yaml</code>: <code>gpu-next</code>, <code>nodes: &quot;gpx[01-64]&quot;</code>, its CPU, NUMA, memory, fabric and <code>gpus</code> block.</li><li><strong>Add the `NodeName` line</strong> to <code>slurm.conf</code> in the same pull request.</li><li><strong>CI generates and tests.</strong> Forgot the Slurm line? Forgot the class? Typo in the GPU count? The build fails and says which.</li><li><strong>Bring the rack up in canary mode</strong> (<a href="../../../../../fields/system-administration/node-health-check/getting-started/rollout-at-scale/">part 5</a>), then into production.</li></ol>
+<p>Every new node gets health checks on day one, without anyone writing an NHC line.</p>
+<hr>
+<h2>Growing the model</h2>
+<p>The example covers the essentials. Common next additions, each a YAML field plus a few generator lines:</p>
+<table><thead><tr><th>Architecture fact</th><th>How to check it</th></tr></thead><tbody><tr><td>BIOS version, SMT, power profile</td><td><code>check_dmi_data_match</code> against <code>dmidecode</code> data</td></tr><tr><td>Kernel and driver versions</td><td><code>check_file_contents /proc/sys/kernel/osrelease &#x27;&lt;version&gt;*&#x27;</code> and <code>/proc/driver/nvidia/version</code></td></tr><tr><td>NVLink / GPU topology</td><td>Golden copy of <code>nvidia-smi topo -m</code> per class, compared by a small module check</td></tr><tr><td>HCA firmware and port GUIDs</td><td><code>ibstat</code> output through <code>check_cmd_output</code></td></tr><tr><td>CPU frequency governor, THP, hugepages</td><td><code>check_file_contents</code> on <code>/sys</code> files (<a href="../../../../../fields/system-administration/node-health-check/checks-and-remediation/custom-checks/">part 6</a>)</td></tr><tr><td>Local NVMe scratch</td><td><code>check_fs_mount_rw</code> plus <code>check_fs_size</code> per class</td></tr></tbody></table>
+<p>One honest limit: everything here is still a <strong>per-node</strong> truth. A cluster where every node passes can still have a degraded fabric path or one slow GPU dragging a 512-GPU job (<a href="../../../../../fields/devops/kubernetes/nvidia-cluster-readiness-engine/">related reading</a>). Multi-node tests (NCCL, MPI benchmarks) are the layer above, and they can be generated from the same architecture file.</p>
+<blockquote><p><strong>Takeaway:</strong> describe the cluster once, generate NHC from it, refuse to build when it disagrees with <code>slurm.conf</code> or leaves nodes uncovered, and run every generated config through real NHC with fakes in CI. The tests on this page found two silent bugs that hand-written configs and <code>nhc -e</code> testing never would have.</p></blockquote>
+<h3>References</h3>
+<ul><li><a href="https://github.com/mej/nhc#configuration">NHC README: match strings, contexts, <code>-m</code> masquerade, <code>NHC_CFG_*</code> overrides</a></li><li><a href="https://github.com/mej/nhc/releases/tag/1.5">NHC 1.5 release notes</a></li><li><a href="https://slurm.schedmd.com/slurm.conf.html#SECTION_NODE-CONFIGURATION"><code>slurm.conf</code>: node configuration (<code>NodeName</code>, <code>RealMemory</code>, <code>Gres</code>)</a></li><li><a href="https://docs.nvidia.com/deploy/xid-errors/index.html">NVIDIA Xid errors catalogue</a></li></ul>
+<p><a href="../../../../../#/fields/system-administration/node-health-check/architecture-and-case-study/architecture-driven-nhc">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

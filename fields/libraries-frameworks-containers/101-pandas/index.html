@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>101 - Pandas</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/libraries-frameworks-containers/101-pandas/">
+<meta name="description" content="Pandas basics: what a DataFrame is, ways to create one, display options, and reading CSV files with pd.readcsv.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="101 - Pandas">
+<meta property="og:description" content="Pandas basics: what a DataFrame is, ways to create one, display options, and reading CSV files with pd.readcsv.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/libraries-frameworks-containers/101-pandas/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/libraries-frameworks-containers/101-pandas/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../.docs/prerender-redirect.js" data-target="../../../#/fields/libraries-frameworks-containers/101-pandas"></script>
+<main>
+<h1>101 - Pandas</h1>
+<p><em>Pandas basics: what a DataFrame is, ways to create one, display options, and reading CSV files with pd.readcsv.</em></p>
+<h1>Table of Content</h1>
+<h1>Pandas Basics</h1>
+<h2>Concepts and Definitions</h2>
+<h3>DataFrame</h3>
+<p>A DataFrame is a two-dimensional, size-mutable, and potentially heterogeneous tabular data structure.</p>
+<p>Key features of a DataFrame:</p>
+<p>|Feature|Description| |-|-| Tabular Data Structure| It represents data in a table format with rows and columns, much like a spreadsheet or SQL table. Two-Dimensional| Data is arranged in rows and columns. Each row typically represents an observation or an individual data point, while each column represents a different variable or feature. Size-Mutable| The DataFrame object&#x27;s size can be modified after creation, meaning rows and columns can be added, removed, or modified. Heterogeneous Data Types| Unlike arrays or lists in Python, a DataFrame can contain different data types (e.g., integers, floats, strings, etc.) within the same DataFrame. Labels and Indexing| Each row and column in a DataFrame has a label or index associated with it, allowing for easy data retrieval, manipulation, and alignment.</p>
+<p>The pandas DataFrame is a fundamental data structure used extensively for data cleaning, data analysis, manipulation, transformation, and computation in various fields, including data science, machine learning, finance, and more.</p>
+<p>Creating a DataFrame usually involves importing the pandas library and constructing it from various data sources, such as lists, dictionaries, NumPy arrays, or reading data from CSV files, databases, Excel files, etc. Pandas provides a wide range of functionalities to handle, analyze, and process data stored in DataFrames efficiently.</p>
+<h2>Setting Display Options</h2>
+<p>When exploring the dataframe, it will be displayed like a table with rows and columns. By default pandas displays a default number of rows=15 and columns=15, so some times our data are much bigger, so the  inbetween rows and columns will be trimmed from the display.</p>
+<p>In case you need to fully visualize a specific number of rows and columns, we can do that by setting the options for that!:</p>
+<pre><code class="language-python"># we can set numbers for how many rows and columns will be displayed
+pd.set_option(&#x27;display.min_rows&#x27;, 10) #default will be 10 
+pd.set_option(&#x27;display.max_columns&#x27;, 20)</code></pre>
+<p>Refer to pandas documents to know more about <a href="https://pandas.pydata.org/docs/user_guide/options.html">options and settings</a></p>
+<h2>Methods to Create a DataFrame</h2>
+<p>In pandas there are various methods to create a dataframe depending on the shape of the data you have.</p>
+<h3>from Lists or Arrays</h3>
+<pre><code class="language-python"># Creating a DataFrame from lists
+data = {&#x27;Column1&#x27;: [1, 2, 3], &#x27;Column2&#x27;: [&#x27;A&#x27;, &#x27;B&#x27;, &#x27;C&#x27;]}
+df = pd.DataFrame(data)
+
+# Output:
+#   Column1	Column2
+# 0	1	A
+# 1	2	B
+# 2	3	C</code></pre>
+<h3>from List of Dictionaries</h3>
+<pre><code class="language-python"># Creating a DataFrame from a list of dictionaries
+data = [{&#x27;Column1&#x27;: 1, &#x27;Column2&#x27;: &#x27;A&#x27;},
+        {&#x27;Column1&#x27;: 2, &#x27;Column2&#x27;: &#x27;B&#x27;},
+        {&#x27;Column1&#x27;: 3, &#x27;Column2&#x27;: &#x27;C&#x27;}]
+df = pd.DataFrame(data)
+
+# Output:
+#   Column1	Column2
+# 0	1	A
+# 1	2	B
+# 2	3	C</code></pre>
+<h3>from a Numpy Array</h3>
+<pre><code class="language-python">import numpy as np
+
+# Creating a DataFrame from a NumPy array
+data = np.array([[1, &#x27;A&#x27;], [2, &#x27;B&#x27;], [3, &#x27;C&#x27;]])
+df = pd.DataFrame(data, columns=[&#x27;Column1&#x27;, &#x27;Column2&#x27;])
+
+# Output:
+#   Column1	Column2
+# 0	1	A
+# 1	2	B
+# 2	3	C</code></pre>
+<h3>from a Series or Dictionary of Series</h3>
+<pre><code class="language-python"># Creating a DataFrame from pandas Series
+series1 = pd.Series([1, 2, 3])
+series2 = pd.Series([&#x27;A&#x27;, &#x27;B&#x27;, &#x27;C&#x27;])
+df = pd.DataFrame({&#x27;Column1&#x27;: series1, &#x27;Column2&#x27;: series2})
+
+# Output:
+#   Column1	Column2
+# 0	1	A
+# 1	2	B
+# 2	3	C</code></pre>
+<h3>from a List of Tuples</h3>
+<pre><code class="language-python"># Creating a DataFrame from a list of tuples
+data = [(1, &#x27;A&#x27;), (2, &#x27;B&#x27;), (3, &#x27;C&#x27;)]
+df = pd.DataFrame(data, columns=[&#x27;Column1&#x27;, &#x27;Column2&#x27;])
+
+# Output:
+#   Column1	Column2
+# 0	1	A
+# 1	2	B
+# 2	3	C</code></pre>
+<h2>Reading a CSV file</h2>
+<p>As a Data Scientist, most of our works depends on data, these data are mostly stored as a CSV &quot;Comma Seperated Values&quot; files. The data are called a tabular data as they are have a tabular structure represents a data in a table format with raw and columns. In most common practice, we usually call the data in CSV a <strong>DataFrame</strong>.</p>
+<h3>To Read Data from CSV File</h3>
+<pre><code class="language-python"># Importing pandas libarary
+import pandas as pd
+
+# Load the data into a varaible called df &quot;dataframe&quot;
+df = pd.read_csv(&#x27;data.csv&#x27;)</code></pre>
+<h3>To Read CSV File from URL</h3>
+<pre><code class="language-python">url = &quot;https://Some.url-to/file.csv&quot;
+df_url = pd.read_csv(url)</code></pre>
+<h3>pd.read_csv Method</h3>
+<p>According to the <a href="https://pandas.pydata.org/docs/reference/api/pandas.read_csv.html">documentation</a>, there are multiple provided parameters regarding the reading of the CSV file which pandas support. Let&#x27;s talk about the most common used ones.</p>
+<p>|Paramter|Details| |-|-| File Path or URL| Provide the file path or URL correctly as the first argument. This can be a local file path or a URL pointing to the CSV file. Header| Specify whether the CSV file contains a header row. Use the <strong>header</strong> parameter (default is infer) to indicate whether the first row should be used as column names (header=0) or not (header=None). Index Column| Define which column(s) to use as the DataFrame index. Use the <strong>index_col</strong> parameter to specify the column number or name to set as the index. For multiple indices, pass a list of column names/numbers. Specify Columns| Use the <strong>usecols</strong> parameter to select specific columns from the CSV file. This can be a list of column names or indices to include in the DataFrame. Data Types| Use the <strong>dtype</strong> parameter to specify the data types of columns explicitly. This can be a dictionary where keys are column names and values are the desired data types. Parsing Dates| If the CSV contains date/time data, use the <strong>parse_dates</strong> parameter to specify which columns to parse as dates. Pass either a list of column names or indices. Missing Values Handling| Use the <strong>na_values</strong> parameter to define the values considered as missing (NaN) during parsing. It can be a string, list, or dictionary of columns and their respective missing values. Skip Rows| To skip initial rows in the CSV file (e.g., for skipping headers or metadata), use the <strong>skiprows</strong> parameter. Handling Quotes| If the CSV file uses quotes to enclose fields, use the <strong>quotechar</strong> parameter to specify the quote character. Chunking and Memory Optimization| For large datasets, consider using <strong>chunksize</strong> to read the file in smaller chunks, allowing for efficient memory usage when processing large files. Encoding| Use the <strong>encoding</strong> parameter to specify the character encoding of the CSV file, especially if it&#x27;s not in UTF-8 format (encoding=&#x27;utf-8&#x27;). Custom Delimiter| Use the <strong>delimiter</strong> or <strong>sep</strong> parameter to specify a custom delimiter if the CSV file is not comma-separated (e.g., tab-separated: delimiter=&#x27;\t&#x27;).</p>
+<pre><code class="language-python">import pandas as pd
+
+# Reading CSV file with specific options
+data = pd.read_csv(&#x27;file.csv&#x27;, 
+                   header=0,
+                   index_col=&#x27;ID&#x27;,
+                   usecols=[&#x27;ID&#x27;, &#x27;Name&#x27;, &#x27;Age&#x27;],
+                   dtype={&#x27;ID&#x27;: int, &#x27;Age&#x27;: float},
+                   parse_dates=[&#x27;Date&#x27;],
+                   na_values={&#x27;Age&#x27;: -1},
+                   encoding=&#x27;utf-8&#x27;)</code></pre>
+<h3>Assign Operations while reading a CSV File</h3>
+<p>In some cases, during the reading process, we need to perform an operation on a specific column in our data, like for example; let&#x27;s assume we have a datetime column (which values represent dates/timestamps), these values are by default stored as an <strong>object</strong> (Strings) datatype, so we need to convert them to the correct datatype again.</p>
+<pre><code class="language-python"># Using pandas method .assign, to apply a certain function to each raw of a column.
+# It takes a lambda expression to apply a certain function on the target column.
+df = pd.read_csv(&#x27;data.csv&#x27;).assign(date_col = lambda x: pd.to_datetime(x.date_col))</code></pre>
+<p>Let&#x27;s assume another case, where we want to rename some columns to a different naming:</p>
+<pre><code class="language-python"># Using pandas method .rename, to change the name of columns by giving a dictionary to where the keys are the original column name, and the values are the target new names.
+df = pd.read_csv(&#x27;data.csv&#x27;).rename(columns={&#x27;data_col&#x27;:&#x27;Date&#x27;})</code></pre>
+<p>Now, let&#x27;s warp these two methods together into a single line of command:</p>
+<pre><code class="language-python"># Using () enclosure to be able to split the code line into several lines
+df = (
+    pd.read_csv(&quot;data.csv&quot;)
+    .assign(
+        data_col = lambda x: pd.to_datetime(x.data_col)
+    )
+    .rename(
+        columns={&#x27;date_col&#x27;:&#x27;Date&#x27;}
+    )
+)</code></pre>
+<p>A note here, in the .assign method, you can simply create a new column by setting is name as you like instead of <strong>data_col</strong>, like: <strong>my_data = lambda x: pd.to_datetime(x.data_col)</strong>, so this will create a new column called my_data, and the old column data_col still exists in our data. But it has no benefit to have a two columns, and one of them (the Object datatype one) will not be used in this string format.</p>
+<h2>Saving DataFrame as CSV File</h2>
+<p>After working on your project, some times we may clean, process, or even feature engineer our data, so we have to be able to store these new modified/created dataframe in a CSV file, so we could simply load that data to continue work on it.</p>
+<pre><code class="language-python"># Save dataframe as csv format
+df.to_csv(&quot;/Path/to/save/df.csv&quot;, index=False)
+
+# Adding parameter: as_index and assign a False value to it, so this will not create an index for these dataframe while storing.</code></pre>
+<h2>Data Exploring: Retrieving rows from a dataframe</h2>
+<p>After we load the dataframe, we need to take a look to check our data, even this look is a glance look, but it is a catchy one, which helps us to make sure that everything is loaded correctly so far.</p>
+<p>To do this, we simply could use <strong>.head</strong>/<strong>.tail</strong> method to display the first/last n number of rows</p>
+<pre><code class="language-python"># display first 3 rows
+df.head(3)
+
+# int_column	float_column	str_column	bool_column	date_column	category_column	object_column	nullable_column
+# 0	1	1.5	a	True	2023-01-01	x	&lt;object object at 0x7f12538191d0&gt;	1.5
+# 1	2	2.5	b	False	2023-01-02	y	&lt;object object at 0x7f1253819230&gt;	NaN
+
+# display the last 6 rows
+df.tail(6)</code></pre>
+<h2>Data Exploring: DataFrame Schema</h2>
+<p>To know the schema about the dataframe, we could use <strong>.info</strong> method:</p>
+<pre><code class="language-python">df.info()
+
+# &lt;class &#x27;pandas.core.frame.DataFrame&#x27;&gt;
+# RangeIndex: 4 entries, 0 to 3
+# Data columns (total 8 columns):
+#  #   Column           Non-Null Count  Dtype         
+# ---  ------           --------------  -----         
+#  0   int_column       4 non-null      int64         
+#  1   float_column     4 non-null      float64       
+#  2   str_column       4 non-null      object        
+#  3   bool_column      4 non-null      bool          
+#  4   date_column      4 non-null      datetime64[ns]
+#  5   category_column  4 non-null      category      
+#  6   object_column    4 non-null      object        
+#  7   nullable_column  3 non-null      float64       
+# dtypes: bool(1), category(1), datetime64[ns](1), float64(2), int64(1), object(2)
+# memory usage: 464.0+ bytes</code></pre>
+<h1>Reference</h1>
+<ul><li>Pandas Docs - Cummunity Tutorials: <a href="https://pandas.pydata.org/pandas-docs/stable/getting_started/tutorials.html">link</a></li><li>Towardsai-Pandas Complete Tutprial for Data Science in 2022: <a href="https://towardsai.net/p/data-science/pandas-complete-tutorial-for-data-science-in-2022">link</a></li><li>kdnuggets - 5 Advanced Features Pandas: <a href="https://www.kdnuggets.com/2019/10/5-advanced-features-pandas.html">link</a></li><li>bitbucket - learn pandas: <a href="https://bitbucket.org/hrojas/learn-pandas/src/master/">link</a></li><li>Github - pandas cookbook: <a href="https://github.com/jvns/pandas-cookbook">link</a></li></ul>
+<p><a href="../../../#/fields/libraries-frameworks-containers/101-pandas">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Where Heterogeneous Jobs Shine</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-mixed-gpus/where-hetjobs-shine/">
+<meta name="description" content="The workloads where mixing GPU types in one Slurm job is exactly right, how admins should label and guard a multi-generation cluster, a decision table, and the interview answer.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Where Heterogeneous Jobs Shine">
+<meta property="og:description" content="The workloads where mixing GPU types in one Slurm job is exactly right, how admins should label and guard a multi-generation cluster, a decision table, and the interview answer.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-mixed-gpus/where-hetjobs-shine/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-mixed-gpus/where-hetjobs-shine/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/schedulers/slurm-mixed-gpus/where-hetjobs-shine"></script>
+<main>
+<h1>Where Heterogeneous Jobs Shine</h1>
+<p><em>The workloads where mixing GPU types in one Slurm job is exactly right, how admins should label and guard a multi-generation cluster, a decision table, and the interview answer.</em></p>
+<blockquote><p><strong>Part 3 of the [Mixing GPU Types in Slurm series](/fields/schedulers/slurm-mixed-gpus/README.md), the last one.</strong> <a href="../../../../fields/schedulers/slurm-mixed-gpus/why-mixed-training-disappoints/">Part 2</a> showed why one synchronous training run across H100s and A100s is usually a bad deal. This page is the other half: the jobs where different hardware for different parts is exactly the right design. By the end you&#x27;ll have the rule that separates the two, a setup guide for admins, and an answer that turns &quot;Slurm can&#x27;t do that&quot; into a strong interview moment.</p></blockquote>
+<hr>
+<h2>The restaurant, not the rowing boat</h2>
+<p>A rowing boat needs identical rowers because everyone does the same job at the same moment. A restaurant is different. It has a head chef, line cooks, a dishwasher and waiters. Nobody expects the dishwasher to be as fast at cooking as the head chef. They do <em>different jobs</em>, connected by queues: orders go in, plates come out. If the dishwasher is slower, a stack of plates builds up, but the kitchen keeps cooking.</p>
+<p>That&#x27;s what heterogeneous jobs were designed for. Look at the example in Slurm&#x27;s own documentation: one node with lots of memory running a program called <code>server</code>, and 32 other nodes running a program called <code>client</code>. Different programs, different hardware, each sized for its role.</p>
+<p>Nobody in that example is rowing in sync.</p>
+<hr>
+<h2>The rule: mix across roles, not within a role</h2>
+<p>Part 2&#x27;s problem was that every GPU did the <strong>same job</strong>, in <strong>lockstep</strong>. Take either of those away and mixing makes sense.</p>
+<blockquote><p><strong>Mix hardware across roles, not within a role.</strong></p></blockquote>
+<table><thead><tr><th>Question</th><th>If yes</th><th>If no</th></tr></thead><tbody><tr><td>Do the GPU types run <em>different programs</em> or roles?</td><td>Mixing can fit</td><td>Same role on different speeds: the rowing boat</td></tr><tr><td>Are the parts connected by queues or occasional messages, rather than a per-step barrier?</td><td>Each part runs at its own pace</td><td>Everyone waits for the slowest</td></tr><tr><td>Does each part have needs that suit one kind of hardware?</td><td>Put each part where it fits best</td><td>No reason to mix</td></tr></tbody></table>
+<p>Three yeses is a heterogeneous job. Here are the patterns that pass.</p>
+<hr>
+<h2>Pattern 1: trainer and rollout workers</h2>
+<p>Reinforcement learning on language models often has two roles:</p>
+<ul><li>A <strong>trainer</strong> that updates the model&#x27;s weights: big matrix math, compute-heavy, benefits from the fastest GPUs.</li><li><strong>Rollout workers</strong> that run the current model to generate samples: mostly inference, and as the <a href="../../../../fields/generative-ai/llm-inference-performance/llm-inference-on-the-roofline/">LLM inference series</a> explains, text generation is limited by memory bandwidth far more than by compute.</li></ul>
+<p>The roles are connected by a queue of samples going one way and occasional weight updates going the other. They don&#x27;t meet at every step.</p>
+<p>That&#x27;s a natural heterogeneous job: component 0 on H100s for the trainer, component 1 on A100s for the workers. Each runs at its own pace. The A100s do useful work instead of slowing anyone down.</p>
+<pre><code class="language-bash">#!/bin/bash
+#SBATCH --nodes=1 --gres=gpu:h100:8 --partition=h100
+#SBATCH hetjob
+#SBATCH --nodes=2 --gres=gpu:a100:8 --partition=a100
+
+srun --het-group=0 ./trainer &amp;
+srun --het-group=1 ./rollout_worker &amp;
+wait</code></pre>
+<p>Two <code>srun</code> calls, two separate worlds, one allocation that starts and ends together. The trainer can find its workers through the per-component variables such as <code>SLURM_JOB_NODELIST_HET_GROUP_1</code>.</p>
+<hr>
+<h2>Pattern 2: server and clients</h2>
+<p>The documentation&#x27;s own pattern, generalized: one component is a coordinator, a parameter store, a database or an inference endpoint; the other is a fleet of workers that talk to it. The coordinator might want a big-memory node; the workers want GPUs. Or the coordinator wants one H100 node and the workers are happy on older GPUs.</p>
+<p>Slurm gives each its own size, partition, account and QOS, and guarantees they start together, so workers never come up before the thing they connect to.</p>
+<hr>
+<h2>Pattern 3: &quot;either kind, never both&quot;</h2>
+<p>Sometimes the honest need isn&#x27;t mixing at all. It&#x27;s flexibility: &quot;I can run on H100s or A100s; give me whichever is free first.&quot; That&#x27;s <strong>matching OR</strong> from <a href="../../../../fields/schedulers/slurm-mixed-gpus/four-ways-to-mix-gpus/">part 1</a>:</p>
+<pre><code class="language-bash">#SBATCH --nodes=4
+#SBATCH --gres=gpu:4
+#SBATCH --constraint=&quot;[h100|a100]&quot;</code></pre>
+<p>All four nodes are the same kind, so the rowing boat stays matched. The job just starts sooner. For most researchers who think they want &quot;mixed GPUs,&quot; this is the request they actually need.</p>
+<p>Make sure the job adapts to whichever kind it gets: for example, enable FP8 only when it lands on H100s.</p>
+<hr>
+<h2>Pattern 4: uneven layouts in one allocation</h2>
+<p>When the allocation is uniform but the work inside it isn&#x27;t, a <strong>heterogeneous step</strong> (Slurm 20.11 and later) lets one <code>srun</code> give different nodes different layouts. The docs&#x27; example splits a 10-GPU, 2-node allocation into one node with 4 tasks on 4 GPUs and another with 1 task on 6 GPUs. No co-scheduling of separate jobs, so none of the queue tax from part 2.</p>
+<hr>
+<h2>Try it before you scroll</h2>
+<p>☕ Four requests from users. Heterogeneous job, matching OR, or &quot;please don&#x27;t&quot;?</p>
+<ol><li>&quot;I want to fine-tune on 8 H100s plus the 4 idle A100s to go faster.&quot;</li><li>&quot;My evaluation harness runs a judge model next to my training job, and I want them to start together.&quot;</li><li>&quot;I don&#x27;t care which GPUs, I just want to start today.&quot;</li><li>&quot;My simulation runs on CPU nodes and streams data to a GPU model.&quot;</li></ol>
+<p>Answers: (1) please don&#x27;t: same role in lockstep, the rowing boat; (2) heterogeneous job: different roles, loosely connected; (3) matching OR; (4) heterogeneous job: CPU and GPU components, connected by a stream.</p>
+<hr>
+<h2>For admins: setting up a multi-generation cluster</h2>
+<p>The configuration below uses standard <code>slurm.conf</code> and <code>gres.conf</code> parameters described in Slurm&#x27;s GRES documentation and man pages. Adapt names to your site and try it on a test partition first.</p>
+<h3>Label GPUs and nodes the same way</h3>
+<p>Give every node both a <strong>GRES type</strong> (for <code>--gres</code>/<code>--gpus</code>) and a <strong>feature</strong> (for <code>--constraint</code>), using the same short names so users only learn one vocabulary:</p>
+<pre><code class="language-text"># slurm.conf (excerpt)
+GresTypes=gpu
+NodeName=gpu-a[001-016] Gres=gpu:a100:8 Features=a100,ampere
+NodeName=gpu-h[001-032] Gres=gpu:h100:8 Features=h100,hopper</code></pre>
+<p>With <code>AutoDetect=nvml</code> in <code>gres.conf</code>, Slurm reads the GPUs from the driver, and the type in <code>slurm.conf</code> only needs to be a substring of the detected name. Check what a node reports with <code>slurmd -C</code> before choosing names.</p>
+<h3>Decide how partitions map to generations</h3>
+<table><thead><tr><th>Layout</th><th>Upside</th><th>Downside</th></tr></thead><tbody><tr><td>One partition per generation</td><td>Simple; plain OR can&#x27;t mix across partitions by accident</td><td>Users must pick; idle capacity in one isn&#x27;t visible from the other</td></tr><tr><td>One shared GPU partition, features to choose</td><td>Flexible; matching OR lets jobs take whichever is free</td><td>A bare <code>|</code> can mix generations in multi-node jobs</td></tr></tbody></table>
+<p>If you choose the shared partition, guard it.</p>
+<h3>Guard against the accidental mix</h3>
+<p>Slurm&#x27;s docs note the job submit plugin runs <strong>independently for each component</strong> of a heterogeneous job, and it sees every regular job too. That&#x27;s the place to enforce site policy, for example: flag or reject multi-node GPU jobs whose constraint uses a bare <code>|</code> without brackets, with a message pointing users to matching OR.</p>
+<h3>Tune the controls heterogeneous jobs care about</h3>
+<table><thead><tr><th>Setting</th><th>What it does, per the docs</th></tr></thead><tbody><tr><td><code>SchedulerParameters=disable_hetjob_steps</code></td><td>Disables steps that span more than one component cluster-wide (useful if your MPI stack can&#x27;t handle them)</td></tr><tr><td><code>SchedulerParameters=whole_hetjob</code></td><td>Makes cancel, hold and release on any component apply to the whole job</td></tr><tr><td>Per-user running-job limits</td><td>Remember every component counts as a job; a low limit can block multi-component jobs</td></tr></tbody></table>
+<h3>Teach users the three lines</h3>
+<p>Most mixing problems are vocabulary problems. Put this in your user docs:</p>
+<table><thead><tr><th>You want</th><th>Write</th></tr></thead><tbody><tr><td>A specific kind</td><td><code>--gres=gpu:h100:4</code></td></tr><tr><td>Either kind, all the same</td><td><code>--constraint=&quot;[h100|a100]&quot;</code></td></tr><tr><td>Different hardware for different programs</td><td>A heterogeneous job (<code>#SBATCH hetjob</code>)</td></tr></tbody></table>
+<hr>
+<h2>The decision table</h2>
+<table><thead><tr><th>Your situation</th><th>Use</th><th>Why</th></tr></thead><tbody><tr><td>One training run, same role on every GPU</td><td><strong>One GPU type</strong></td><td>Synchronous jobs run at the slowest GPU&#x27;s pace</td></tr><tr><td>Flexible about the type, but not mixing</td><td><strong>Matching OR</strong> <code>[h100|a100]</code></td><td>Faster start, matched hardware</td></tr><tr><td>Different programs that start together and talk loosely</td><td><strong>Heterogeneous job</strong></td><td>Each part sized for its role</td></tr><tr><td>Uniform allocation, uneven work inside</td><td><strong>Heterogeneous step</strong></td><td>No co-scheduling cost</td></tr><tr><td>Need job arrays, gang scheduling or migration between federated clusters</td><td><strong>Not a heterogeneous job</strong></td><td>Unsupported for heterogeneous jobs</td></tr><tr><td>Fixed node split, same per-node request</td><td><strong>Constraint counts</strong> <code>[h100*2&amp;a100*2]</code></td><td>Lightweight, but you&#x27;re mixing: be sure the workload tolerates it</td></tr></tbody></table>
+<hr>
+<h2>The interview answer</h2>
+<blockquote><p><em>&quot;Can Slurm allocate different GPU types, say H100s and A100s, to one job?&quot;</em></p></blockquote>
+<blockquote><p>&quot;Yes. Since 17.11 it supports heterogeneous jobs: several components, each with its own resources, partition and QOS, scheduled together. You can also get a fixed split with constraint counts, or mix by accident with a plain OR constraint, which is why I&#x27;d use matching OR, the bracketed form, when users just want either type.</p>
+<p>The real question is whether you should. For one synchronous training run, no: every step waits at the all-reduce for the slowest GPU, so eight H100s plus eight A100s train at A100 pace, and on datasheet numbers the eight H100s alone would be faster. You also lose H100-only features like FP8. Heterogeneous jobs also pay a queue cost: all components must start together, only the backfill scheduler places them, and they don&#x27;t support job arrays.</p>
+<p>Where they shine is different roles on different hardware: a trainer on H100s with rollout or inference workers on A100s, or a server with a fleet of clients. The rule I use is: mix hardware across roles, not within a role.&quot;</p></blockquote>
+<p><strong>Takeaway:</strong> heterogeneous jobs are for restaurants, not rowing boats, so give different roles different hardware, give one synchronous role one kind of GPU, and give flexible users matching OR.</p>
+<p>That&#x27;s the series. You started with &quot;Slurm can&#x27;t&quot; and &quot;it doesn&#x27;t really work.&quot; You&#x27;re leaving with &quot;it works, here&#x27;s exactly when to use it.&quot; Back to the <a href="../../../../fields/schedulers/slurm-mixed-gpus/">overview</a>.</p>
+<hr>
+<h2>References</h2>
+<ul><li><a href="https://slurm.schedmd.com/heterogeneous_jobs.html">Slurm: Heterogeneous Job Support (examples, heterogeneous steps, system administrator information)</a></li><li><a href="https://slurm.schedmd.com/gres.html">Slurm: Generic Resource (GRES) Scheduling (GPU types, AutoDetect, <code>slurmd -C</code>)</a></li><li><a href="https://manpages.org/sbatch">Slurm <code>sbatch</code> man page, <code>--constraint</code> operators (mirror of the official man page)</a></li><li><a href="https://www.nvidia.com/en-us/data-center/h100/">NVIDIA H100 Tensor Core GPU datasheet</a></li><li><a href="https://www.nvidia.com/en-us/data-center/a100/">NVIDIA A100 Tensor Core GPU datasheet</a></li></ul>
+<p><a href="../../../../#/fields/schedulers/slurm-mixed-gpus/where-hetjobs-shine">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Isolating GPU Workloads: Taints, Labels and the Device Plugin</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/kubernetes/isolating-gpu-workloads/">
+<meta name="description" content="How the NVIDIA device plugin exposes GPUs to pods, why taints alone don&#x27;t dedicate GPU nodes, and why distributed training needs all-or-nothing scheduling.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Isolating GPU Workloads: Taints, Labels and the Device Plugin">
+<meta property="og:description" content="How the NVIDIA device plugin exposes GPUs to pods, why taints alone don&#x27;t dedicate GPU nodes, and why distributed training needs all-or-nothing scheduling.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/kubernetes/isolating-gpu-workloads/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/devops/kubernetes/isolating-gpu-workloads/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/devops/kubernetes/isolating-gpu-workloads"></script>
+<main>
+<h1>Isolating GPU Workloads: Taints, Labels and the Device Plugin</h1>
+<p><em>How the NVIDIA device plugin exposes GPUs to pods, why taints alone don&#x27;t dedicate GPU nodes, and why distributed training needs all-or-nothing scheduling.</em></p>
+<blockquote><p><strong>Page 7 of the [Kubernetes series](/fields/devops/kubernetes/README.md).</strong> <a href="../../../../fields/devops/kubernetes/fake-gpus-in-kubernetes/">Page 3</a> faked GPUs with a hand-patched counter. This page is the real thing: how a device plugin advertises GPUs, how to keep web services off your GPU nodes and GPU jobs on them, and why a 64-GPU training job needs a kind of scheduling Kubernetes was never built for. By the end you&#x27;ll be able to design GPU isolation on a shared cluster and explain where Kubernetes still differs from Slurm.</p></blockquote>
+<hr>
+<h2>The logging agent that ate a GPU node</h2>
+<p>A company runs one Kubernetes cluster for everything: the website, internal tools, and a pool of 8-GPU H100 nodes for model training.</p>
+<p>Monday morning, a 32-GPU training job sits <code>Pending</code>. Four GPU nodes exist. Every one has 8 free GPUs. So why won&#x27;t it schedule?</p>
+<p>Because the scheduler doesn&#x27;t only count GPUs. It also counts CPU and memory. Over the weekend, a dozen web pods, a log shipper and a batch report job drifted onto the GPU nodes, because those nodes had the most free CPU and RAM in the cluster. Each GPU node now has its GPUs free and its memory full. The training pods don&#x27;t fit anywhere.</p>
+<p>Nobody did anything wrong. Kubernetes did exactly what it was built to do: pack services onto whatever capacity is free. It just had no idea those nodes were special.</p>
+<p>This page is about telling it.</p>
+<hr>
+<h2>Concept 1: the device plugin is a translator</h2>
+<p>Kubernetes doesn&#x27;t know what a GPU is. As page 3 showed, it only knows <strong>extended resources</strong>: named counters on nodes, like <code>nvidia.com/gpu: 8</code>.</p>
+<p>A <strong>device plugin</strong> is the translator between real hardware and those counters. NVIDIA&#x27;s runs as a DaemonSet, one pod on every GPU node, and does three things:</p>
+<ol><li><strong>Discovers</strong> the GPUs on its node.</li><li><strong>Advertises</strong> them to the kubelet, which publishes <code>nvidia.com/gpu</code> in the node&#x27;s capacity.</li><li><strong>Hands them out</strong>: when a pod that asked for GPUs lands on the node, the plugin tells the kubelet which specific devices to expose to that container.</li></ol>
+<p>Pods ask for GPUs in <code>limits</code>, as page 3 covered:</p>
+<pre><code class="language-yaml">resources:
+  limits:
+    nvidia.com/gpu: 8</code></pre>
+<p>In production, the plugin rarely comes alone. NVIDIA&#x27;s <strong>GPU Operator</strong> installs the whole stack as Kubernetes components: the driver, the container toolkit, the device plugin, <strong>GPU Feature Discovery</strong> (which labels nodes with facts like the GPU model), and the DCGM exporter for metrics. One install, every GPU node configured the same way.</p>
+<p>What a GPU request does <strong>not</strong> do: it says nothing about which <em>kind</em> of node or who else may land there. A pod asking for 8 GPUs can only go where 8 are free. But a pod asking for <strong>zero</strong> GPUs can go anywhere, GPU nodes included. That&#x27;s the logging agent&#x27;s loophole.</p>
+<hr>
+<h2>Concept 2: labels attract, taints repel</h2>
+<p>Kubernetes has two opposite tools for placement, and the official docs put the contrast neatly: <strong>node affinity attracts pods to nodes; taints let a node repel pods.</strong></p>
+<table><thead><tr><th>Tool</th><th>Lives on</th><th>Effect</th><th>Analogy</th></tr></thead><tbody><tr><td><strong>Label</strong> + <code>nodeSelector</code> / node affinity</td><td>Label on node, selector on pod</td><td>&quot;This pod should go <strong>only</strong> to nodes like these&quot;</td><td>A pod&#x27;s destination address</td></tr><tr><td><strong>Taint</strong></td><td>Node</td><td>&quot;Keep <strong>every</strong> pod away unless it tolerates me&quot;</td><td>A &quot;staff only&quot; sign on a door</td></tr><tr><td><strong>Toleration</strong></td><td>Pod</td><td>&quot;I&#x27;m allowed past that sign&quot;</td><td>A staff badge</td></tr></tbody></table>
+<p>A taint has a key, a value and an <strong>effect</strong>:</p>
+<table><thead><tr><th>Effect</th><th>Meaning</th></tr></thead><tbody><tr><td><code>NoSchedule</code></td><td>New pods without a matching toleration won&#x27;t be placed here</td></tr><tr><td><code>PreferNoSchedule</code></td><td>The scheduler tries to avoid placing them here</td></tr><tr><td><code>NoExecute</code></td><td>Also evicts already-running pods that don&#x27;t tolerate it</td></tr></tbody></table>
+<p>The docs list GPU nodes as a textbook case: in a cluster where a small subset of nodes have special hardware, taint those nodes so pods that don&#x27;t need the hardware stay off, leaving room for pods that do.</p>
+<pre><code class="language-bash">kubectl taint nodes gpu-h100-01 nvidia.com/gpu=present:NoSchedule</code></pre>
+<p>Now the web pods and the log shipper bounce off the GPU nodes. Monday&#x27;s problem is solved.</p>
+<p>There&#x27;s even a built-in shortcut. The docs recommend representing special hardware as an extended resource, tainting those nodes with the extended resource&#x27;s name, and enabling the <strong>`ExtendedResourceToleration`</strong> admission controller. Then any pod that requests <code>nvidia.com/gpu</code> automatically gets the matching toleration. GPU users don&#x27;t have to remember anything.</p>
+<blockquote><p>[!TIP] Some system DaemonSets, like the device plugin itself, the GPU Operator&#x27;s components and node monitoring agents, must run on GPU nodes. Give those pods the toleration deliberately; the taint will block them too.</p></blockquote>
+<hr>
+<h2>The trap: a toleration is a permission, not a destination</h2>
+<p>Here&#x27;s where most GPU isolation designs go wrong. The docs say it in one line: tolerations <strong>allow, but do not require</strong>, pods to schedule onto nodes with matching taints.</p>
+<p>A toleration is a staff badge. It lets you into the staff area. It doesn&#x27;t make you go there.</p>
+<p>So picture a data-preprocessing pod: CPU-heavy, no GPUs, but it belongs to the ML team, so someone gave it the GPU toleration &quot;so it can run next to the training job.&quot; The scheduler is now free to put it on a GPU node <em>or</em> any ordinary node. Worse, if it lands on a GPU node, it&#x27;s eating CPU and memory that training pods need, recreating Monday&#x27;s problem from the inside.</p>
+<p>The docs&#x27; recipe for <strong>dedicated nodes</strong> uses both tools together:</p>
+<ol><li><strong>Taint</strong> the GPU nodes, so outsiders stay off.</li><li><strong>Label</strong> the same nodes (for example <code>node-pool=gpu-training</code>).</li><li>Give the pods that belong there **a toleration <em>and</em> a node affinity or <code>nodeSelector</code>** for that label, so they go there and only there.</li></ol>
+<table><thead><tr><th>You want</th><th>Taint on node</th><th>Toleration on pod</th><th>Affinity on pod</th></tr></thead><tbody><tr><td>Keep outsiders off GPU nodes</td><td>Yes</td><td>-</td><td>-</td></tr><tr><td>Let GPU pods onto GPU nodes</td><td>Yes</td><td>Yes</td><td>-</td></tr><tr><td>Keep a team&#x27;s pods <strong>only</strong> on their nodes</td><td>Yes</td><td>Yes</td><td><strong>Yes</strong></td></tr></tbody></table>
+<p>The rule of thumb: <strong>taints guard the door; labels give directions.</strong> You almost always need both.</p>
+<hr>
+<h2>Try it before you scroll</h2>
+<p>☕ Three pods on a cluster where GPU nodes are tainted <code>nvidia.com/gpu=present:NoSchedule</code> and labeled <code>node-pool=gpu</code>. Where can each one land?</p>
+<ol><li>A web server with no tolerations and no selectors.</li><li>A training pod requesting 8 GPUs, with the toleration (added automatically by <code>ExtendedResourceToleration</code>).</li><li>A CPU-only preprocessing pod with the toleration but no node selector.</li></ol>
+<p>Answers: (1) only non-GPU nodes: the taint repels it; (2) only GPU nodes, but because it asked for GPUs, not because of the toleration; (3) <strong>anywhere</strong>, GPU nodes included, which is probably not what anyone intended. Add <code>nodeSelector: {node-pool: gpu}</code> if it should be there, or remove the toleration if it shouldn&#x27;t.</p>
+<hr>
+<h2>Concept 3: training jobs need all-or-nothing</h2>
+<p>Isolation gets the right pods onto the right nodes. Distributed training needs one more thing: <strong>all of its pods at once.</strong></p>
+<p>A 32-GPU job is four pods of 8 GPUs, and it can&#x27;t take a single training step until all four are running. The traditional kube-scheduler placed pods <strong>one at a time</strong>. Two jobs that each need four pods, on a cluster with room for four, could each grab two pods and wait forever for the rest, both holding GPUs and neither running. That&#x27;s a scheduling deadlock, and it&#x27;s why the batch world invented <strong>gang scheduling</strong>: place all of a group&#x27;s pods, or none.</p>
+<p>For years, the answer on Kubernetes was an add-on: <strong>Kueue</strong> (job queueing and admission) or <strong>Volcano</strong> (a batch scheduler), among others. That&#x27;s changing. Kubernetes 1.35 added a Workload API with an initial alpha implementation of gang scheduling; the Kubernetes project&#x27;s 1.36 post describes a redesigned Workload and PodGroup API (<code>scheduling.k8s.io/v1alpha2</code>) and a dedicated PodGroup scheduling cycle in kube-scheduler. Release coverage of 1.37 reports these APIs moving to beta.</p>
+<blockquote><p>[!IMPORTANT] These APIs changed incompatibly between alpha versions: per the 1.36 announcement, <code>v1alpha2</code> completely replaced <code>v1alpha1</code>. Check your cluster&#x27;s version and feature gates before relying on native gang scheduling, and keep Kueue or Volcano until it&#x27;s stable for you.</p></blockquote>
+<p>This is the clearest place where Kubernetes&#x27;s roots show. It grew up placing long-running services that each work alone. Batch schedulers like Slurm grew up placing jobs that need many nodes at the same moment.</p>
+<hr>
+<h2>Slurm and Kubernetes, side by side</h2>
+<table><thead><tr><th>Concern</th><th>Slurm</th><th>Kubernetes</th></tr></thead><tbody><tr><td>Design center</td><td>Batch jobs that start, run, finish</td><td>Long-running services, kept at a desired state</td></tr><tr><td>GPU discovery</td><td>GRES, configured in <code>gres.conf</code> or autodetected via NVML</td><td>Device plugin advertising <code>nvidia.com/gpu</code></td></tr><tr><td>Keeping workloads apart</td><td>Partitions, features, accounts and QOS</td><td>Taints, tolerations, labels, affinity, namespaces</td></tr><tr><td>All-or-nothing multi-node start</td><td>Built in: a job gets all its nodes or waits</td><td>Add-ons (Kueue, Volcano); native gang scheduling arriving in recent releases</td></tr><tr><td>Tenant quotas and fairness</td><td>Associations, Grp/Max limits, fairshare (<a href="../../../../fields/schedulers/slurm-accounting-multi-tenancy/">see the Slurm page</a>)</td><td>ResourceQuota per namespace; Kueue adds queues, quotas and borrowing</td></tr><tr><td>Mixed GPU types</td><td>Typed GRES, constraints, heterogeneous jobs (<a href="../../../../fields/schedulers/slurm-mixed-gpus/">see the series</a>)</td><td>Node labels such as GPU Feature Discovery&#x27;s GPU model label, plus affinity</td></tr></tbody></table>
+<p>Neither is &quot;better.&quot; A common pattern at large AI organizations is both: Slurm for big training runs, Kubernetes for inference services and tooling, sometimes on the same hardware pool.</p>
+<p><strong>Takeaway:</strong> the device plugin turns GPUs into counters, taints keep outsiders off GPU nodes, labels and affinity send the right pods there, and distributed training still needs all-or-nothing scheduling that Kubernetes is only now building in.</p>
+<p>Isolation decides where pods <em>may</em> go. To follow one training job through every component, from <code>kubectl apply</code> to its first all-reduce, continue to <a href="../../../../fields/devops/kubernetes/job-execution-journey/">page 8, the job execution journey</a>.</p>
+<h3>References</h3>
+<ul><li><a href="https://v1-34.docs.kubernetes.io/docs/concepts/configuration/taint-and-toleration">Kubernetes: Taints and Tolerations (dedicated nodes, special hardware, <code>ExtendedResourceToleration</code>)</a></li><li><a href="https://kubernetes.io/docs/tasks/manage-gpus/scheduling-gpus/">Kubernetes: Schedule GPUs</a></li><li><a href="https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/device-plugins/">Kubernetes: Device Plugins</a></li><li><a href="https://kubernetes.io/blog/2026/05/13/kubernetes-v1-36-advancing-workload-aware-scheduling/">Kubernetes blog: &quot;Kubernetes v1.36: Advancing Workload-Aware Scheduling&quot;</a></li><li><a href="https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/index.html">NVIDIA GPU Operator documentation</a></li><li><a href="https://github.com/NVIDIA/k8s-device-plugin">NVIDIA k8s-device-plugin (includes GPU Feature Discovery)</a></li></ul>
+<p><a href="../../../../#/fields/devops/kubernetes/isolating-gpu-workloads">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

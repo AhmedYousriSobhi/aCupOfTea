@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>System Administration - Linux - MPI</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/mpi/">
+<meta name="description" content="An mpirun command that starts 4 ranks and binds each one to a core, with the output to expect.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="System Administration - Linux - MPI">
+<meta property="og:description" content="An mpirun command that starts 4 ranks and binds each one to a core, with the output to expect.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/mpi/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/mpi/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../.docs/prerender-redirect.js" data-target="../../../#/fields/system-administration/mpi"></script>
+<main>
+<h1>System Administration - Linux - MPI</h1>
+<p><em>An mpirun command that starts 4 ranks and binds each one to a core, with the output to expect.</em></p>
+<h2>Table of Contents</h2>
+<ul><li>System Administration - Linux - MPI<ul><li>Table of Contents</li></ul></li></ul>
+<p>Verify that it creates 4 ranks and bind each rank to a specific core:</p>
+<pre><code class="language-bash">mpirun \
+  --report-bindings \
+  -np 4 \
+  --bind-to core \
+  --map-by ppr:1:numa \
+  hostname</code></pre>
+<p>Expected output:</p>
+<pre><code class="language-bash">Rank 0 bound to core 0
+Rank 1 bound to core 24
+Rank 2 bound to core 48
+Rank 3 bound to core 72</code></pre>
+<p><a href="../../../#/fields/system-administration/mpi">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

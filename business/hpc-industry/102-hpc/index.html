@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>102 - HPC - A More Gentle Introduction</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/business/hpc-industry/102-hpc/">
+<meta name="description" content="A gentler HPC introduction from a Coursera course: filesystems, supercomputer architecture, modules, Slurm jobs, memory models, parallelism and high throughput computing.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="102 - HPC - A More Gentle Introduction">
+<meta property="og:description" content="A gentler HPC introduction from a Coursera course: filesystems, supercomputer architecture, modules, Slurm jobs, memory models, parallelism and high throughput computing.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/business/hpc-industry/102-hpc/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/business/hpc-industry/102-hpc/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../.docs/prerender-redirect.js" data-target="../../../#/business/hpc-industry/102-hpc"></script>
+<main>
+<h1>102 - HPC - A More Gentle Introduction</h1>
+<p><em>A gentler HPC introduction from a Coursera course: filesystems, supercomputer architecture, modules, Slurm jobs, memory models, parallelism and high throughput computing.</em></p>
+<p>The contents in this document are from Coursera Course <a href="https://www.coursera.org/learn/introduction-high-performance-computing"><strong>Introduction High Performance Computing</strong></a>, and any additional contents are from web browsing over the realm of internet.</p>
+<h1>Table of Content</h1>
+<ul><li>102 - HPC - A More Gentle Introduction</li><li>Table of Content</li><li>HPC FileSystems<ul><li>FileSystem</li><li>What Belongs Where?</li></ul></li><li>HPC Concepts<ul><li>HPC Architecture<ul><li>Architecture of a Supercomputer</li><li>Racks<ul><li>Compute Node</li></ul></li><li>Interconnect</li></ul></li><li>Software Installation<ul><li>Modules<ul><li>Working with Modules</li></ul></li><li>Installing Your Own Software</li></ul></li><li>Allocation</li><li>Node Types</li><li>Job Submissions with Slurm<ul><li>Job Scheduling</li></ul></li><li>Application Profiling</li><li>Parallel Memory Models<ul><li>Visualizing Memory Models</li></ul></li><li>Parallelism<ul><li>Data Parallelism<ul><li>SIMD vs SPMD</li><li>SIMD<ul><li>How to Vectorize your Data?</li></ul></li></ul></li></ul></li><li>High Throughput Computing (HTC)<ul><li>How to HTC?</li><li>Questions to highlight!</li></ul></li></ul></li><li>How to Parallelize Code?<ul><li>General Parallelism</li><li>What can be Parallelized?</li><li>How to Parallelized using Languages?</li></ul></li><li>How to Evaluate the Performance of a Parallel Program</li><li>References</li></ul>
+<h1>HPC FileSystems</h1>
+<p>There are three main typically allocated storage space for users on HPC infrastructure, where each has an important different reasons. The three are:</p>
+<ul><li>Home</li><li>Project or Work</li><li>Scratch</li></ul>
+<p>Note in case there are only two spaces, it would be Home &amp; Scratch.</p>
+<h2>FileSystem</h2>
+<p>|Space|Details| |-|-| /home|- Main purpose is for the user only, where the user is the owner of this space, and can install/put his personal files.&lt;/br&gt;- Usually this space is backed up.&lt;/br&gt;Usually allocated small space like 5GB.&lt;/br&gt;When a user login, he typically login to this space (his /home directory).&lt;/br&gt;- To access your home directory: [~ , /home/$USER] Project or Work|- This space is used for mid-level size data.&lt;/br&gt;- Might have approximately 250-500 GB of space available.&lt;/br&gt;- Typically: /projects/$USER Scratch|- It is provided on most HPC systems.&lt;/br&gt;- Usually a much large quota available &lt;/br&gt;- Temporary space.&lt;/br&gt;- Usually not backed up.&lt;/br&gt;- cd /scratch/$USER</p>
+<h2>What Belongs Where?</h2>
+<p>|Space|Belongs| |-|-| |/home|- Scripts&lt;/br&gt;- code&lt;/br&gt;- Very small files&lt;/br&gt;- Inappropriate for sharing files with others&lt;/br&gt;- Inappropriate for job output |/projects|- Code/files/libraries relevant for any software you are installing (if you want to share files with others)&lt;/br&gt;- Mid-level size input files&lt;/br&gt;- Appropriate for sharing files with others&lt;/br&gt;- Inappropriate for job output |/scratch|- Output from running jobs&lt;/br&gt;- Large files&lt;/br&gt;- Appropriate for sharing files with others&lt;/br&gt;- THIS IS NOT APPROPRIATE FOR LONG TERM STORAGE; as these data will purge after set of time, and will be lost.</p>
+<h1>HPC Concepts</h1>
+<h2>HPC Architecture</h2>
+<p>This section aims to get an understanding of computer hardware and infrastructure. The basic components are [Processors, Memory, Network, Storage].</p>
+<h3>Architecture of a Supercomputer</h3>
+<p>The architecture (from highest level to lowest level) is:</p>
+<ul><li>System.</li><li>Nodes.</li><li>Cores/Memory/Storage.</li></ul>
+<p>Then there should be the <strong>Network Interconnect</strong> to interconnect the components of teh system to work as a whole one.</p>
+<pre><code>      ----------------
+      | Compute Node |
+      |    Storage   |
+      |    Network   |
+Racks ----------------</code></pre>
+<h3>Racks</h3>
+<p>The components of teh system are mounted in <strong>racks</strong>, which are nice cabinets with rails, can be purchased standards or customized, and can encompass entires rooms.</p>
+<p>The part behind racks are cooling units, to keeps optimal temperature.</p>
+<p>The infrastructure of racks are:</p>
+<ul><li>Storage - disks</li><li>Network - high speed switches and cables</li><li>Compute - for example: 8 chassis of 4 nodes each (32 total)</li></ul>
+<h4>Compute Node</h4>
+<p>|Component|Details| |-|-| CPU Sockets|- The compute nodes sets within sockets on node, under large silver heat sinks, for example (2 sockets, 2 CPUs) is a compute node.&lt;/br&gt;- Within CPUs are cores, main processing power and memory (cache).&lt;/br&gt;- For example, a node has 12 cores per socketed CPU, this means 24 total. &lt;/br&gt;- The power comes from the amount of cores a compute node has. Memory Cards|- Memory cards are eight green, thin cards (RAM).&lt;/br&gt;- Shared Memory on node, e.g., eight 16-GB memory cards per node.&lt;/br&gt;Also there are memory in socketed CPUs, which are cache, and they are shared between sockets.</p>
+<h3>Interconnect</h3>
+<p>The supercomputers should work together as a one to solve a huge problem, Here comes the reason for an interconnect to make everything work together.</p>
+<p>The reasons for interconnect:</p>
+<ul><li>Access to memory and computing power.</li><li>Nodes talk to each other.</li></ul>
+<p>The type of interconnect that commonly used in HPC are:</p>
+<ul><li>OmniPath.</li><li>InfiniBand.</li></ul>
+<h2>Software Installation</h2>
+<p>Yes, we can&#x27;t do anything without application to execute the job we need, so we have to install all the application required in our system. But managing loaded software can be a headache for that several reasons like:</p>
+<ul><li>Make sure that correct versions are available.</li><li>Make sure that software dependencies for package <strong>A</strong> don&#x27;t interfere with package <strong>B</strong>.</li></ul>
+<p>What about a method to simply load software into a directory and start using it on our shared system?. Here comes the <strong>Package Manager</strong>. But this does not mean we will not use the normal software installation method, yes we will need it in some cases, but the installation should be from the source, for more details, I will explain it below.</p>
+<h3>Modules</h3>
+<p>Modules are pieces of code that can be dynamically loaded and unloaded into the Linux kernel to extend its functionality. So environment modules allows centers to provide multiple versions of software and load dependencies seamlessly.</p>
+<p>A module is a package that contains al the files required to run the software, including libraries, and will also load the required dependencies.</p>
+<p>The accessing of linux modules are very simple using a few commands.</p>
+<h4>Working with Modules</h4>
+<p>|Module Action|Details| |-|-| See a list of available modules| <strong>module avail</strong> Load a module|- Adds software to your $PATH.&lt;/br&gt;- May also load dependencies.&lt;/br&gt;- May also unload other versions or dependencies that would conflict. &lt;/br&gt;- <strong>module load &lt;name_of_module&gt;/&lt;version&gt;</strong> See a list of loaded modules| <strong>module list</strong> Unload a module| <strong>module unload</strong> Unload all modules| <strong>module purge</strong> Discover information about module|- <strong>module spider &lt;name_of_module&gt;/&lt;version&gt;</strong>&lt;/br&gt;- Tells about dependencies, the package, etc.</p>
+<h3>Installing Your Own Software</h3>
+<p>In such cases, where the software user required is not installed, or required an older version to install that does not have a module file, or the HPC does not provide a module manager.</p>
+<p>There are general process to follow:</p>
+<ul><li>Download Software:This might have several looks, like;<ul><li>Clone repo from Git.</li><li>Download a docker or singularity image.</li><li>Install from a file.</li><li>Olden days - Install from a disk.</li><li>Any other appropriate methods :)</li></ul></li><li>Install Software [Read Instructions, Install dependencies].</li><li>Compile.</li><li>Use.</li></ul>
+<h2>Allocation</h2>
+<p>According to <a href="https://www.nrel.gov/hpc/resource-allocations.html">nrel documents</a> about allocation in HPC:</p>
+<pre><code>An allocation is a portion of the HPC data center resources planned for a particular research project&#x27;s use.</code></pre>
+<p>HPC centers provides infrastructures for enormous number of users, where each user needs to share a portion of the system. So users must justify how much of the system they need to use.</p>
+<p>HPCs centers manage resources and keep track of current or upcoming usage by:</p>
+<ul><li>Determining Priority: as certain projects may have higher priority than others.</li><li>Reporting: like paper citation for grants </li></ul>
+<p>Each HPC centers have different policies for managing allocations, so user must make sure to understand them.</p>
+<h2>Node Types</h2>
+<p>There are three general types of nodes in each HPC system;</p>
+<p>|Node Type|Details| |-|-| Login nodes|- Where you typically land when logging into the system.&lt;/br&gt;- Not a place for heavy computation.&lt;/br&gt;- Not a place for running memory intensive applications.&lt;/br&gt;- There are great for: Script editing, and job submission. Compile nodes|- Place to compile code.&lt;/br&gt;- Same software stack and compilers as compute nodes&lt;/br&gt;- When compile code on this node should run on compute node.&lt;/br&gt;- Only certain languages required compiling like [C, C++, Fortran], and not for [Python, R, Matlab]. Compute nodes|- Where the submitted job run.&lt;/br&gt;- Accessible indirectly through job scheduler.&lt;/br&gt;- Heavy computational load.</p>
+<h2>Job Submissions with Slurm</h2>
+<p>A job is? according to <a href="https://learn.microsoft.com/en-us/powershell/high-performance-computing/understanding-jobs-and-tasks?view=hpc19-ps">microsoft-understanding jobs and tasks</a>;</p>
+<pre><code>In HPC pack, a job is a resource request that is submitted to the HPC Job Scheduler Service and that contains, or will contains, one or more tasks.</code></pre>
+<p>There are two types of jobs in HPC system to make your work done;</p>
+<p>|Job type|Details| |-|-| Batch jobs|- Submit job that will be executed in the background. &lt;/br&gt;- Create a text file containing information about the job.&lt;/br&gt;- Submit the job file to a queue. Interactive jobs|- Work interactively at the command line of a compute node.&lt;/br&gt;- Login to compute node.</p>
+<h3>Job Scheduling</h3>
+<p>As you are not the only one to use the supercomputer, so the job can&#x27;t not just run instantly, and will be scheduled and putted in a queue until resources are available.</p>
+<p>To do so, we need a software that will distribute the jobs appropriately and manage the resources. The most famous one used is <strong>Slurm</strong>, which is stands for <strong>Simple Linux Utility for Resource Management</strong>. Slurm do the following:</p>
+<ul><li>Keeps track of what nodes are busy/available, and what jobs are queued or running.</li><li>Tells the resource manager when to run which job on the available resources.</li></ul>
+<p>Most of the useful Slurm commands is <strong>sbatch</strong>, refer to the <a href="https://slurm.schedmd.com/sbatch.html">Slurm docs</a> for more details. ALso there are some Slurm environment variables that could be useful to pass to job script like [$SLURM_NTASKS, $SLURM_MEM_PER_CPU].</p>
+<h2>Application Profiling</h2>
+<p>To efficiently be able to determine:</p>
+<ul><li>if your app requires parallelism.</li><li>where is the most resource consuming in your code.</li><li>the required resources for your application.</li></ul>
+<p>Then it is best to try to split your codes into chunks and try to profile the behavior of each segment in your code, starting with the loops.</p>
+<h2>Parallel Memory Models</h2>
+<p>| Memory Model             | Description                         | Illustration                                | |-|-|-| | Distributed Memory Model | Each node has its own local memory. Communication via message passing. | Nodes are connected, each with local memory.   | | Shared Memory Model      | All processing elements share a global address space.     | Single shared memory space accessible by multiple processing elements (PEs). | | Hybrid Memory Model      | Combination of distributed and shared memory models.     | Nodes have local memory, but PEs within a node share a common memory space.  | | NUMA Model               | Non-Uniform Memory Access. Latency differs based on proximity to the memory.          | Nodes have local memory with varying access latency, connected by interconnect.  |                                             | | Cache Coherent Model     | Maintains data consistency in shared memory systems.         | Multiple caches (L1, L2) coherent with each other and main memory. | | Global Address Space Model    | Shared memory model with a global address space.  | Single global memory space accessible by all PEs.  |</p>
+<h3>Visualizing Memory Models</h3>
+<ul><li>Distributed Memory Model (Message Passing Model): <code>`</code>bash Node 1        Node 2        Node 3 +--------+    +--------+    +--------+ | Memory |    | Memory |    | Memory | +--------+    +--------+    +--------+ |        |    |        |    |        | |   PE   |    |   PE   |    |   PE   | |        |    |        |    |        | +--------+    +--------+    +--------+ <code>`</code></li><li>Shared Memory Model: <code>`</code>bash +--------+ | Memory | +--------+ |   PE   | +--------+ |   PE   | +--------+ |   PE   | +--------+ <code>`</code></li><li>Hybrid Memory Model: <code>`</code>bash Node 1        Node 2        Node 3 +--------+    +--------+    +--------+ | Memory |    | Memory |    | Memory | +--------+    +--------+    +--------+ |        |    |        |    |        | |   PE   |    |   PE   |    |   PE   | |        |    |        |    |        | +--------+    +--------+    +--------+ |            |            | +------------+------------+ Shared Memory <code>`</code></li><li>Non-Uniform Memory Access (NUMA) Model: <code>`</code>bash Node 1               Node 2 +--------+           +--------+ | Local  |           | Local  | | Memory |&lt;---------&gt;| Memory | +--------+           +--------+ |        |           |        | |   PE   |           |   PE   | |        |           |        | +--------+           +--------+ <code>`</code></li><li>Cache Coherent Memory Model: <code>`</code>bash +--------+    +--------+ | Cache  |    | Cache  | |   L1   |    |   L1   | +--------+    +--------+ |            | +--------+    +--------+ | Cache  |    | Cache  | |   L2   |    |   L2   | +--------+    +--------+ |            | +--------+    +--------+ | Memory |    | Memory | +--------+    +--------+ |   PE   |    |   PE   | +--------+    +--------+ <code>`</code></li><li>Global Address Space Model: <code>`</code>bash +--------+    +--------+    +--------+ | Memory |    | Memory |    | Memory | +--------+    +--------+    +--------+ |   PE   |    |   PE   |    |   PE   | +--------+    +--------+    +--------+ <code>`</code></li></ul>
+<h2>Parallelism</h2>
+<p>There are two types of parallelism;</p>
+<p>|      Parallelism    |              Data Parallelism         |            Task Parallelism          | |-|-|-| | Definition          | Involves dividing a task based on the data, performing the same operation on multiple data elements concurrently | Involves dividing a program into independent tasks, each executed  concurrently | | Work Division       | Division based on data elements. Each processing unit works on different subset of data. | Division based on independent tasks. Different processing units handle different tasks.  | | Example             | Parallel processing of elements in a dataset. Vectorized computations.  | Concurrent execution of different functions/modules in a program.  | | Independence        | Assumes independence of data elements (operations on one element do not affect others).  | Assumes independence of tasks. Tasks can be executed independently without dependencies.      | | Coordination        | Synchronization may be required if data elements interact or share state.    | Less need for synchronization as tasks are often independent.  | | Utilization         | Efficient for operations on large datasets or arrays.    | Useful when different parts of a program can run concurrently.     | | Real-world Usage    | Image processing, numerical simulations with large datasets. | Parallel execution of different modules in a software application.     |</p>
+<p>There are additional types of parallelism, you can take a look at, they are: [<em>Pipeline Parallelism</em>, <em>Bit-level Parallelism</em>]</p>
+<h3>Data Parallelism</h3>
+<p>In data parallelism, they are divided into two types;</p>
+<ul><li>SIMD: Single Instruction, Multiple Data.</li><li>SPMD: Single Program, Multiple Data.</li></ul>
+<h4>SIMD vs SPMD</h4>
+<p>|Data Parallelism Type|SIMD|SPMD| |-|-|-| Definition|SIMD is a type of data parallelism where a single instruction is applied to multiple data elements simultaneously| SPDM is a type of data parallelism where multiple instances of the same program are executed concurrently, but each instance may operate on different data. How it Works|A single instruction is broadcast to all processing units, and each unit operates on its local set of data. All processing units execute the same instruction in parallel on their respective data elements.|Each processing unit executes the same program, but they may process different data subsets. Unlike SIMD, where all units execute the exact same instruction simultaneously, in SPMD, there can be conditional statements allowing different processing units to follow different paths in the program. Examples|Modern processors often have SIMD instructions that enable parallel processing of multiple data elements in a single instruction. For instance, Intel&#x27;s SSE (Streaming SIMD Extensions) and AVX (Advanced Vector Extensions) are SIMD instruction sets.|In parallel programming models like CUDA or OpenCL, SPMD is commonly used. Each parallel thread executes the same kernel (program) but may operate on different portions of the data. Benefits|SIMD is particularly efficient for operations where the same operation needs to be applied to a large set of independent data elements.| SPMD is flexible and allows for more varied processing on different data elements. It is suitable for applications where different processing units may follow different execution paths based on data-dependent conditions.</p>
+<h4>SIMD</h4>
+<p>The SIMD is mainly a vector operation like [addition, subtraction, multiplication, division], so it is best to have our data vectorized!.</p>
+<h5>How to Vectorize your Data?</h5>
+<p>Vectorization aims to involves converting scalar code, which operates on single data elements, into vectorized code for efficient parallel processing.</p>
+<h2>High Throughput Computing (HTC)</h2>
+<p>Let&#x27;s image the following scenario, where we have a parallel job, which will be executed into two nodes, now each of these parallel jobs consume only a small part of the node, and the rest are idle.</p>
+<pre><code class="language-diagram">        Parallel Job 
+    ---------    ---------
+    | Job-A |    | Job-B |
+    ---------    ---------
+
+        Compute Nodes 
+    ---------    ---------
+    | Node-A |    | Node-B |
+    |        |    |        |
+    |        |    |        |
+    ----------    ----------
+</code></pre>
+<p>Here comes <strong>HTC</strong> to the rescue!!</p>
+<ul><li>HTC useful when have many small jobs that require little computational power or memory; &quot;Multiple small jobs spread across many processors&quot;.</li><li>Jobs are typically serial, and not parallel.</li><li>Small serial jobs can fill in the &#x27;gaps&#x27; left by large parallel jobs.</li><li>Which will leads to <em>effectively parallel</em> where batch of jobs completes faster when spread across multiple cores.</li></ul>
+<h3>How to HTC?</h3>
+<ul><li>[Task Parallelism] Break down your problem and then submit a lot of smaller jobs.</li><li>[Job Scheduling] The resource manager (i.e., Slurm) should take care of the rest.</li></ul>
+<h3>Questions to highlight!</h3>
+<ol><li>Is HTC appropriate? Actually it is a problem dependent!</li><li>Is the serial execution time reasonable?</li><li>Can the problem fit into one core&#x27;s worth of memory?</li></ol>
+<h1>How to Parallelize Code?</h1>
+<h2>General Parallelism</h2>
+<ul><li>You can parallelize code across cores on one node using shared memory or across nodes using distributed memory.</li><li>Generally it&#x27;s easier to parallelize using shared memory than distributed memory; means try first to know how to parallelism across cores rather than across nodes.</li><li>Parallel programming is either supported directly by the compiler or by libraries that will help you parallelize your code.</li></ul>
+<h2>What can be Parallelized?</h2>
+<p>Code that can be executed independently of other instructions.</p>
+<ul><li>In a loop, make sure iteration do not depend on other iteration. <code>`</code>python # Dependency - not parallel: for i=1:10 a[i]= b[i] + a[i-1] end</li></ul>
+<p># or # Also dependency - not parallel: for i=1:10 a[i]= b[i] + c[i] d[i]= e[i] * a[i] end</p>
+<pre><code>  - Search for different algorithms or functions instead that are intended or suitable for parallelization.
+
+## How to Parallelized using Languages?
+There are two types of languages that could support parallelism;
+1. Compiled Languages [C++, Fortran, etc] use:
+   1. OpenMP &quot;Open Multi-Processing&quot;: Shared memory parallelization (within a node).
+   2. MPI &quot;Message Passing Interface&quot;: Parallelize across nodes.
+2. Scripted Language (Python, R):
+   1. Packages that you can use that have functions that will allow you to parallelize based on certain bits of code.
+
+# How to Evaluate the Performance of a Parallel Program
+To know how well the parallelization has been implemented and to identify potential areas for optimization, we have to evaluate the performance of the parallel code we develop. There are several key performance metrics and tools that could help us
+
+|Performance Matrix|Definition|Formula|Interpretation|
+|-|-|-|-|
+Speedup|- A measure of how much faster a parallel program runs compared to a sequential (single-threaded) version.&lt;/br&gt; Calculated as the ratio of the execution time of the sequential version to the execution time of the parallel version.| Speedup = Sequential Execution Time / Parallel Execution Time|A speedup of 2, for example, indicates that the parallel version is running twice as fast as the sequential version.
+Parallel Efficiency| - Measures how well the parallel program utilizes the available computing resources.&lt;/br&gt;- It is calculated as the ratio of speedup to the number of processors (or threads) used.|Efficiency = Speedup / Number of Processors| An efficiency close to 1 indicates good utilization of resources.
+Scaling|- Evaluates the performance of a parallel program as the problem size or the number of processors increases.&lt;/br&gt;- Strong scaling considers fixed problem size per processor, while weak scaling considers a proportional increase in problem size with the number of processors.||Good scaling means that as the number of processors increases, the speedup and efficiency remain relatively high.
+
+|Key Performance|Definition|Monitoring|
+|-|-|-|
+Execution Time|The total time taken by the parallel program to complete its execution.|Measure the overall execution time using timers or profiling tools.
+Load Balancing|- Load balancing assesses how well the computational load is distributed among processors.&lt;/br&gt;- An imbalance can lead to some processors being underutilized while others are overloaded.|Use performance analysis tools to identify load imbalances and optimize task distribution.
+Communication Overhead|Communication overhead refers to the time spent on inter-process communication. Excessive communication can degrade performance.|Profile communication patterns using tools like MPI profiling tools or OpenMP performance analysis tools.
+Resource Utilization|Evaluate how well system resources (CPU, memory, etc.) are utilized by the parallel program.|Use system monitoring tools to assess CPU and memory usage.
+Scalability Analysis|Scalability analysis assesses how well the performance of a parallel program scales with increasing resources.|Conduct scalability tests with varying problem sizes and processors to identify limitations.
+
+Profiling Tools
+- Tools: Use profiling tools such as Intel VTune, PAPI, gprof, or Scalasca to analyze the performance characteristics of your parallel code, identify bottlenecks, and understand resource utilization.
+
+Benchmarking
+- Definition: Use benchmarking to compare the performance of your parallel code against standard benchmarks or other implementations.
+- Interpretation: Benchmark results provide a comparative measure of performance.
+
+# References
+- [Parallel Programming Fundamental](https://curc.readthedocs.io/en/latest/programming/parallel-programming-fundamentals.html#mpi) - by Research Computing University of Colorado Boulder.
+- [MPI tutorial](https://mpitutorial.com/tutorials/mpi-introduction/) - by MPItutorial Wes Kendall.
+- [Parallel Programming Primer](https://researchcomputing.princeton.edu/support/knowledge-base/parallel-code) - by Princeton Research Computing.
+- [How to evaluate the performance of a parallel program ](https://subscription.packtpub.com/book/programming/9781785289583/1/ch01lvl1sec14/how-to-evaluate-the-performance-of-a-parallel-program)- by &lt;packt&gt;</code></pre>
+<p><a href="../../../#/business/hpc-industry/102-hpc">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Wavelets and Multiresolution Processing</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/digital-image-processing/wavelets-and-multiresolution-processing/">
+<meta name="description" content="Seeing an image at several scales at once - pyramids, a Haar wavelet transform by hand, the four 2D subbands, and why mostly-zero detail makes denoising and compression work.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Wavelets and Multiresolution Processing">
+<meta property="og:description" content="Seeing an image at several scales at once - pyramids, a Haar wavelet transform by hand, the four 2D subbands, and why mostly-zero detail makes denoising and compression work.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/digital-image-processing/wavelets-and-multiresolution-processing/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/digital-image-processing/wavelets-and-multiresolution-processing/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../.docs/prerender-redirect.js" data-target="../../../#/fields/digital-image-processing/wavelets-and-multiresolution-processing"></script>
+<main>
+<h1>Wavelets and Multiresolution Processing</h1>
+<p><em>Seeing an image at several scales at once - pyramids, a Haar wavelet transform by hand, the four 2D subbands, and why mostly-zero detail makes denoising and compression work.</em></p>
+<blockquote><p><strong>Part 9 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).</strong> Fourier tells you which waves are in the town but not where they sing. Wavelets fix that by looking at the town at several zoom levels at once. By the end you&#x27;ll build a Haar transform by hand, read the four subbands of a 2-D transform, and see why throwing away tiny coefficients is the secret of both denoising and JPEG 2000.</p></blockquote>
+<hr>
+<h2>The scratch that is everywhere</h2>
+<p>You compute the Fourier transform of a photo with one thin vertical scratch. You expect a tidy little feature in the spectrum. Instead, the scratch has smeared itself across <strong>every frequency</strong>, and nothing in the spectrum says where in the picture it was.</p>
+<p>That&#x27;s Fourier&#x27;s blind spot. Each wave in <a href="../../../fields/digital-image-processing/fourier-transform-for-images/">page 6</a> stretches over the whole image, so the transform knows <strong>how much</strong> of each pattern there is and almost nothing about <strong>where</strong>. A scratch, a sharp edge or a blob of texture is local; the tool is global.</p>
+<hr>
+<h2>A map with zoom levels</h2>
+<p>Think of Pixel Town as a <strong>map app</strong>. At the lowest zoom you see the whole country in a few blurry tiles. Zoom in and finer tiles appear, adding only the detail that the previous level couldn&#x27;t show. A good map doesn&#x27;t store the whole country at full detail; it stores the <strong>rough picture</strong>, plus <strong>the extra detail at each level</strong>.</p>
+<p>That is the idea of <strong>multiresolution processing</strong>: represent the image as a coarse version and a stack of detail layers, each living at its own scale and each tied to a place. Two classic structures do it. We start with the easy one.</p>
+<hr>
+<h2>Image pyramids</h2>
+<p>A <strong>Gaussian pyramid</strong> repeatedly blurs the image (page 4) and halves its width and height. Each level is a smaller, blurrier version of the one below.</p>
+<p>The <strong>Laplacian pyramid</strong> stores what each shrink lost: the original at that level, minus the next level scaled back up:</p>
+<pre><code class="language-mermaid">flowchart TB
+    G0[&quot;G0: full size&quot;] --&gt; G1[&quot;G1: half size&lt;br/&gt;blur and shrink&quot;]
+    G1 --&gt; G2[&quot;G2: quarter size&quot;]
+    G0 -.-&gt; L0[&quot;L0 = G0 minus up of G1&lt;br/&gt;the detail lost&quot;]
+    G1 -.-&gt; L1[&quot;L1 = G1 minus up of G2&quot;]
+    G2 --&gt; R[&quot;Keep G2 as the coarse base&quot;]</code></pre>
+<p><em>Keep the small top image and each layer of lost detail: that&#x27;s enough to rebuild the original exactly.</em></p>
+<p>Rebuilding is the reverse: scale the coarse image up, add the detail layer, repeat. Nothing is lost, because the details are exactly what was subtracted. The cost is modest: each level has a quarter of the pixels of the one below, so the total is 1 + 1/4 + 1/16 + … = <strong>4/3</strong> of the original size.</p>
+<p>Pyramids are the tool behind blending two photos without a visible seam (blend each level separately), and behind looking for an object at several sizes (shrink, search, shrink again).</p>
+<hr>
+<h2>Try it before you scroll</h2>
+<p>☕ Take four pixels: <strong>9, 7, 3, 5</strong>. Replace each pair with its <strong>average</strong> and its <strong>half-difference</strong>. What do you get, and can you get the four numbers back?</p>
+<p><em>Hint: the pair (9, 7) gives an average of 8 and a half-difference of 1.</em></p>
+<p><strong>Answer:</strong> coming up, and yes.</p>
+<hr>
+<h2>The Haar wavelet by hand</h2>
+<p>The simplest wavelet transform is exactly the quiz. Take pairs, keep the average (the coarse picture) and the half-difference (the detail):</p>
+<table><thead><tr><th>Pair</th><th>Average</th><th>Half-difference</th></tr></thead><tbody><tr><td>(9, 7)</td><td>(9 + 7) / 2 = <strong>8</strong></td><td>(9 − 7) / 2 = <strong>1</strong></td></tr><tr><td>(3, 5)</td><td>(3 + 5) / 2 = <strong>4</strong></td><td>(3 − 5) / 2 = <strong>−1</strong></td></tr></tbody></table>
+<p>So [9, 7, 3, 5] becomes averages [8, 4] and details [1, −1].</p>
+<p>To get the pair back: first = average + detail, second = average − detail. 8 + 1 = 9, 8 − 1 = 7 ✓, 4 + (−1) = 3, 4 − (−1) = 5 ✓. Nothing was lost.</p>
+<p>Now do it again <strong>on the averages</strong> (that&#x27;s the multiresolution step): the pair (8, 4) has average <strong>6</strong> and half-difference <strong>2</strong>. The full transform is:</p>
+<pre><code class="language-text">[9, 7, 3, 5]  -&gt;  [6 | 2 | 1, -1]
+                   |   |    |
+                   |   |    +-- finest detail (pairs of pixels)
+                   |   +------- coarser detail (between the two halves)
+                   +----------- overall average</code></pre>
+<p>The same four numbers, rearranged by <strong>scale</strong>. The first is the average level of the whole row; the next says how the left half differs from the right; the last two say how each pair differs inside. That&#x27;s the whole idea of a wavelet transform: <strong>a coarse summary plus detail at every scale, each tied to a position</strong>.</p>
+<blockquote><p>[!NOTE] This is the unnormalized &quot;average and half-difference&quot; form for readability. The orthonormal Haar transform divides by √2 instead, so that it preserves energy. The structure is identical.</p></blockquote>
+<p>For a wavelet that&#x27;s longer and smoother than Haar, the pairs become longer overlapping windows with carefully designed weights, but the recipe, a low-pass half and a high-pass half at each level, doesn&#x27;t change.</p>
+<hr>
+<h2>From one row to a whole image</h2>
+<p>For an image, do the one-level step along every <strong>row</strong>, then along every <strong>column</strong> of the result. The image splits into four quarter-size pieces called <strong>subbands</strong>:</p>
+<table><thead><tr><th>Subband</th><th>Built from</th><th>Holds</th></tr></thead><tbody><tr><td>LL (approximation)</td><td>low-pass along rows, low-pass along columns</td><td>A half-size blurry copy of the image</td></tr><tr><td>Horizontal detail</td><td>high-pass in one direction, low-pass in the other</td><td>Edges running horizontally (changes up and down)</td></tr><tr><td>Vertical detail</td><td>the opposite combination</td><td>Edges running vertically</td></tr><tr><td>Diagonal detail (HH)</td><td>high-pass both ways</td><td>Corners, diagonals, and <strong>a lot of the noise</strong></td></tr></tbody></table>
+<p>The names (LH, HL and so on) are used in opposite ways by different books and libraries. PyWavelets, for one, returns the approximation and then horizontal, vertical and diagonal detail in that order, so check your tool.</p>
+<p>Then repeat on the LL piece: <strong>the same trick again</strong> at half the size. Three levels give you one tiny approximation plus three sets of details at three scales. It&#x27;s the pyramid idea again, but with details that take no extra space: a four-piece split holds exactly as many numbers as the original image.</p>
+<hr>
+<h2>Why mostly-zero is a gift</h2>
+<p>Real images are mostly smooth, with edges here and there. In a wavelet transform:</p>
+<ul><li>A <strong>smooth region</strong> has near-zero detail coefficients, because neighbouring pixels are alike (their half-difference is about 0).</li><li>An <strong>edge</strong> produces a few large detail coefficients, <strong>only at that location and at the scales that match it</strong>.</li></ul>
+<p>So the transform of a typical image is a handful of large numbers and a sea of near-zeros. That sparsity is the point, and it gives two payoffs.</p>
+<table><thead><tr><th>Use</th><th>Idea</th></tr></thead><tbody><tr><td><strong>Denoising</strong></td><td>Noise spreads thinly over every detail coefficient, while real edges concentrate in a few big ones. Shrink or zero every detail coefficient below a threshold, then invert. The edges survive; the noise mostly goes. Donoho and Johnstone&#x27;s &quot;wavelet shrinkage&quot; made this principled.</td></tr><tr><td><strong>Compression</strong></td><td>Store only the large coefficients, coarsely quantized, and drop the small ones. JPEG 2000 does this with a wavelet transform; the older JPEG uses 8 × 8 block cosine transforms instead.</td></tr></tbody></table>
+<p>Compare with <a href="../../../fields/digital-image-processing/noise-and-restoration/">page 8</a>: a mean filter blurs the edges together with the noise because it can&#x27;t tell them apart. A wavelet threshold can, because edges and noise <strong>look different</strong> in this domain.</p>
+<p>Honest limits: thresholding too hard leaves ringing-like artifacts around edges and a patchy look, and a wavelet is chosen to suit the image type. And there&#x27;s a trade-off you can&#x27;t escape: you cannot know a position and a frequency both perfectly. Wavelets just pick a smarter compromise than Fourier&#x27;s all-frequency, no-position extreme: short windows for fast changes, long windows for slow ones.</p>
+<hr>
+<h2>Where you meet wavelets</h2>
+<table><thead><tr><th>Where</th><th>Role</th></tr></thead><tbody><tr><td>JPEG 2000 (ISO/IEC 15444-1)</td><td>Wavelet-based compression, with a lossless mode</td></tr><tr><td>Denoising</td><td>Threshold the detail subbands</td></tr><tr><td>Blending and zooming</td><td>Laplacian pyramids</td></tr><tr><td>Multi-scale detection</td><td>Search the pyramid for objects at several sizes</td></tr><tr><td>Feature extraction</td><td>Subband statistics as texture descriptors</td></tr></tbody></table>
+<p>If you&#x27;ve studied CNNs, the pattern should sound familiar: early layers see fine detail and later, downsampled layers see coarse structure. That&#x27;s a learned multiresolution analysis (see <a href="../../../fields/deep-learning/concepts/convolution/">Convolution in deep learning</a>).</p>
+<hr>
+<h2>Try it: The scratch that is everywhere, look at several scales at once</h2>
+<blockquote><p><strong>What it shows:</strong> A wavelet transform keeps a coarse picture plus detail at each scale, each tied to a place. Most details are near zero, so shrinking the small ones removes noise and keeps edges. <strong>Start with:</strong> the preset <em>The quiz row</em> (9, 7, 3, 5 becomes 6 | 2 | 1, −1: the overall average, the left half against the right, the details inside each pair).</p></blockquote>
+<p><a href="../../../fields/digital-image-processing/labs/wavelets.html">Wavelets lab</a></p>
+<hr>
+<h2>Back to the scratch</h2>
+<p>Fourier couldn&#x27;t place the scratch because every one of its waves lives everywhere. In a wavelet transform the scratch shows up as a few large detail coefficients <strong>at its own position and at the fine scales</strong>, and nowhere else. That&#x27;s the whole advantage: the transform answers &quot;what&quot; and &quot;where&quot; at once.</p>
+<p>You&#x27;ve now gone from a grid of numbers to the frequency domain, to restoring and moving images, to seeing them at every scale. That&#x27;s the whole starter map of the subject.</p>
+<p><strong>Takeaway:</strong> multiresolution keeps a coarse picture plus localized detail at each scale; the detail is mostly near-zero, which is why denoising and compression work.</p>
+<p><strong>Challenge:</strong> take the row [10, 10, 10, 50, 50, 50, 50, 50] and run one level of the average and half-difference transform by hand. Which detail coefficient is the only nonzero one, and what does its position tell you? (Check: the details should be [0, −20, 0, 0].) Then go back to Gonzalez and Woods, which should now read like a conversation instead of a wall.</p>
+<h3>References</h3>
+<ul><li>R. C. Gonzalez and R. E. Woods, <em>Digital Image Processing</em>, 4th ed., Pearson, 2018: the chapter &quot;Wavelet and Other Image Transforms&quot; (the 3rd edition called it &quot;Wavelets and Multiresolution Processing&quot;; chapter numbers differ between listings, so look it up by title): pyramids, subband coding, the discrete wavelet transform.</li><li>P. J. Burt and E. H. Adelson, &quot;The Laplacian Pyramid as a Compact Image Code&quot;, <em>IEEE Transactions on Communications</em>, 31(4), 532-540, 1983.</li><li>S. G. Mallat, &quot;A Theory for Multiresolution Signal Decomposition: The Wavelet Representation&quot;, <em>IEEE Transactions on Pattern Analysis and Machine Intelligence</em>, 11(7), 674-693, 1989.</li><li>D. L. Donoho and I. M. Johnstone, &quot;Ideal spatial adaptation by wavelet shrinkage&quot;, <em>Biometrika</em>, 81(3), 425-455, 1994.</li><li>PyWavelets documentation, <a href="https://pywavelets.readthedocs.io/en/latest/ref/2d-dwt-and-idwt.html">2D Discrete Wavelet Transform</a>: subband naming in <code>dwt2</code>.</li></ul>
+<p><a href="../../../#/fields/digital-image-processing/wavelets-and-multiresolution-processing">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Tips Concepts</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/tips/concepts/">
+<meta name="description" content="Short explanations of what a CPLD is and does on server boards, and why PCI is called a link.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Tips Concepts">
+<meta property="og:description" content="Short explanations of what a CPLD is and does on server boards, and why PCI is called a link.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/tips/concepts/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/tips/concepts/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../.docs/prerender-redirect.js" data-target="../../#/tips/concepts"></script>
+<main>
+<h1>Tips Concepts</h1>
+<p><em>Short explanations of what a CPLD is and does on server boards, and why PCI is called a link.</em></p>
+<h2>Table of Contents</h2>
+<ul><li>Tips Concepts<ul><li>Table of Contents</li><li>CPLD &quot;Complex Programmable Logic Device&quot;</li><li>PCI -- and Why It&#x27;s Called a &quot;Link&quot;?<ul><li>That&#x27;s why people call it a <strong>link</strong></li></ul></li></ul></li></ul>
+<h2>CPLD &quot;Complex Programmable Logic Device&quot;</h2>
+<p>A CPLD is a small, reconfigurable hardware chip used on motherboards or server boards to control low-level logic (e.g., power sequencing, board-level signals).</p>
+<p><strong>What it actually does?</strong></p>
+<ul><li>When you update firmware on server hardware (e.g., BMC, BIOS, and CPLD), you’re updating different layers:<ul><li>BIOS → Boot-time firmware configuring CPU, memory, PCIe, etc.</li><li>BMC → Baseboard Management Controller firmware providing remote management (IPMI/Redfish, power on/off, monitoring sensors).</li><li>CPLD → Hardware logic that controls things like:<ul><li>Power routing and sequencing</li><li>Reset logic</li><li>Board signals that must react faster or more deterministically than software.</li></ul></li></ul></li></ul>
+<blockquote><p>Note: CPLD code contains logic configuration like a simplified FPGA.</p>
+<p>Note: Updating CPLD requires shutting down the target server to be updated first.</p></blockquote>
+<p><strong>A Useful Analogy:</strong></p>
+<ul><li><strong>BOIS</strong>: Operating System of the motherboard.</li><li><strong>BMC</strong>: Remote management supervisor.</li><li><strong>CPLD</strong>: Hardwired automation logic and traffic lights controlling signals.</li></ul>
+<h2>PCI -- and Why It&#x27;s Called a &quot;Link&quot;?</h2>
+<p>PCI (Peripheral Component Interconnect) is a <strong>communication bus standard</strong> that defines how components inside a computer exchange data with the CPU and memory.</p>
+<ul><li>Originally PCI (parallel bus): Old and slower.</li><li>Npw PCIe (PCI Express): high-speed serial links between device.</li></ul>
+<p>PCIe is a high-speed point-to-point data link, not just a slot</p>
+<p>Instead of one shared bus, PCIe establishes <strong>point-to-point lanes</strong>, e.g:</p>
+<ul><li>x1, x4, x8, x16 lanes: Each lane is full-duplex and independent.</li><li>Lane counts is like how many parallel lines to transfer the series data.</li></ul>
+<h3>That&#x27;s why people call it a <strong>link</strong></h3>
+<ul><li>It&#x27;s literally a <strong>logical data link</strong> between two endpoints (CPU-GPU, CPU-NIC, etc).</li></ul>
+<p><a href="../../#/tips/concepts">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Slurm Cluster Operations</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-cluster-operations/">
+<meta name="description" content="Runbooks for the people who keep a Slurm cluster alive - maintenance windows, reboots, upgrades, version changes, closing SSH access, and two drain mysteries.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Slurm Cluster Operations">
+<meta property="og:description" content="Runbooks for the people who keep a Slurm cluster alive - maintenance windows, reboots, upgrades, version changes, closing SSH access, and two drain mysteries.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-cluster-operations/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/schedulers/slurm-cluster-operations/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../.docs/prerender-redirect.js" data-target="../../../#/fields/schedulers/slurm-cluster-operations/"></script>
+<main>
+<h1>Slurm Cluster Operations</h1>
+<p><em>Runbooks for the people who keep a Slurm cluster alive - maintenance windows, reboots, upgrades, version changes, closing SSH access, and two drain mysteries.</em></p>
+<p>The admin shelf. The first four pages are about planned work: blocking nodes, rebooting, upgrading and knowing what changed between versions. The last three are about access and about nodes that drain for reasons that look unrelated to the real cause.</p>
+<p>Pages 1 to 4 are best read in order before a maintenance window. Pages 5 to 7 stand alone.</p>
+<hr>
+<h2>Contents</h2>
+<table><thead><tr><th>File</th><th>Description</th></tr></thead><tbody><tr><td><a href="../../../fields/schedulers/slurm-cluster-operations/slurm-reservations-and-maintenance/">1. Calling Dibs on Nodes</a></td><td>Reserving nodes for maintenance or people, and what happens to jobs that fit or overlap</td></tr><tr><td><a href="../../../fields/schedulers/slurm-cluster-operations/slurm-reboot-order/">2. Rebooting a Slurm Cluster</a></td><td>Rebooting a cluster without losing jobs: drain, lock access, control plane first</td></tr><tr><td><a href="../../../fields/schedulers/slurm-cluster-operations/slurm-upgrade-order/">3. Upgrading Slurm</a></td><td>The order to upgrade daemons, the version window, and the parts that bite</td></tr><tr><td><a href="../../../fields/schedulers/slurm-cluster-operations/slurm-version-changes/">4. The Changelog Nobody Reads</a></td><td>What changed between Slurm 23.11 and 26.05, plus the security timeline</td></tr><tr><td><a href="../../../fields/schedulers/slurm-cluster-operations/slurm-pam-adopt-ssh-access/">5. The SSH Backdoor</a></td><td>Closing SSH access that escapes job limits with <code>pam_slurm_adopt</code></td></tr><tr><td><a href="../../../fields/schedulers/slurm-cluster-operations/slurm-kill-task-failed/">6. Kill Task Failed</a></td><td>Why jobs fail to die on uninterruptible sleep, drain the node, and how to debug it</td></tr><tr><td><a href="../../../fields/schedulers/slurm-cluster-operations/slurm-spool-dir-full/">7. SlurmdSpoolDir Is Full</a></td><td>The &quot;SlurmdSpoolDir is full&quot; drain: the real culprit and a triage runbook</td></tr><tr><td><a href="../../../fields/schedulers/slurm-cluster-operations/quick-guide/">Quick guide: Run Slurm Cluster Operations Without Losing Jobs</a></td><td>Copy-paste steps for a drained node, a maintenance reservation, a reboot, an upgrade and SSH access</td></tr></tbody></table>
+<hr>
+<h2>Related pages</h2>
+<ul><li><a href="../../../fields/schedulers/slurm-intro/">Schedulers: the traffic controller</a>: the starting point for the whole Slurm set.</li><li><a href="../../../fields/schedulers/slurm-inside-a-job/">Inside a Slurm job</a>: the <code>slurmstepd</code> and cgroup background behind pages 5 to 7.</li><li><a href="../../../fields/schedulers/slurm-backfill-tuning/">Backfill tuning</a>: why reservations change start-time estimates.</li><li><a href="../../../fields/system-administration/node-health-check/">Node health check</a>: automated checks that drain bad nodes.</li></ul>
+<p><a href="../../../#/fields/schedulers/slurm-cluster-operations/">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

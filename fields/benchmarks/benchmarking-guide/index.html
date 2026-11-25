@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The HPC Benchmarking Landscape: A Field Guide</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/benchmarks/benchmarking-guide/">
+<meta name="description" content="A map of the HPC benchmarks (OSU, STREAM, HPL, NCCL, affinity), the ones not yet covered, a node validation walkthrough and a diagnostic flowchart.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="The HPC Benchmarking Landscape: A Field Guide">
+<meta property="og:description" content="A map of the HPC benchmarks (OSU, STREAM, HPL, NCCL, affinity), the ones not yet covered, a node validation walkthrough and a diagnostic flowchart.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/benchmarks/benchmarking-guide/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/benchmarks/benchmarking-guide/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../.docs/prerender-redirect.js" data-target="../../../#/fields/benchmarks/benchmarking-guide"></script>
+<main>
+<h1>The HPC Benchmarking Landscape: A Field Guide</h1>
+<p><em>A map of the HPC benchmarks (OSU, STREAM, HPL, NCCL, affinity), the ones not yet covered, a node validation walkthrough and a diagnostic flowchart.</em></p>
+<blockquote><p>One node. Five different questions. Five different tools. This is the map that ties <code>OSU</code>, <code>STREAM/BabelStream</code>, <code>HPL</code>, <code>NCCL</code>, and the execution/affinity layer together — plus the benchmarks that haven&#x27;t come up yet but will, the moment you validate your next node.</p></blockquote>
+<hr>
+<h2>Why one benchmark is never enough</h2>
+<p>Every HPC node is really four separate subsystems wearing a single hostname:</p>
+<pre><code>Compute  →  how fast can it do math?
+Memory   →  how fast can it feed that math?
+Communication → how fast can it talk to its neighbors?
+Orchestration → is the software stack even placing work correctly?</code></pre>
+<p>A single &quot;the node feels slow&quot; complaint could be caused by any one of these — or, more often, by a <em>misconfiguration between two of them</em> (wrong rank placement, wrong NUMA binding, wrong buffer type). Running one benchmark and declaring victory is how regressions slip through acceptance testing. Running the <em>right sequence</em> of benchmarks is how you actually localize the fault before you touch a support ticket.</p>
+<hr>
+<h2>The mental map</h2>
+<pre><code>                         HPC Node Validation
+                                 │
+        ┌────────────────┬──────┴──────┬────────────────────┐
+        │                │             │                    │
+     Compute           Memory     Communication        Orchestration
+        │                │             │                    │
+   ┌────┴────┐    ┌──────┴──────┐  ┌───┴────┐        (Affinity / Placement
+   │         │    │             │  │        │         — the layer that makes
+  HPL      HPL-GPU │        BabelStream │    │          every other number
+ (CPU)              STREAM CPU  stream-gpu-test        trustworthy or garbage)
+                                        │
+                                ┌───────┴───────┐
+                                │               │
+                              MPI               NCCL
+                                │               │
+                              OSU          nccl-tests
+                                │
+                         ┌──────┴──────┐
+                         │             │
+                    CPU buffers   GPU buffers (CUDA-aware)</code></pre>
+<p>The single most important idea in this whole map: <strong>compute, memory, and communication are orthogonal.</strong> A win in one tells you nothing about the others. A GPU that aces BabelStream can still fail NCCL. A node that aces OSU over CPU buffers can still choke the moment you switch to GPU-aware MPI. Test them separately, on purpose.</p>
+<hr>
+<h2>The core five — quick index</h2>
+<table><thead><tr><th>#</th><th>Benchmark</th><th>One-line job</th><th>Full write-up</th></tr></thead><tbody><tr><td>1</td><td><strong>OSU Micro-Benchmarks</strong></td><td>MPI point-to-point &amp; collective latency/bandwidth over the network</td><td><em>(see OSU deep-dive)</em></td></tr><tr><td>2</td><td><strong>STREAM / BabelStream / stream-gpu-test</strong></td><td>Raw memory bandwidth — CPU RAM or GPU HBM, before any real compute happens</td><td><code>stream-benchmarks-blog.md</code></td></tr><tr><td>3</td><td><strong>HPL / HPL-GPU</strong></td><td>Dense linear algebra compute throughput — the TOP500 number</td><td><code>hpl-benchmarks-blog.md</code></td></tr><tr><td>4</td><td><strong>NCCL / nccl-tests</strong></td><td>GPU-native collective communication — NVLink, NVSwitch, GPUDirect RDMA</td><td><code>nccl-benchmarks-blog.md</code></td></tr><tr><td>5</td><td><strong>Parallel Execution &amp; Affinity</strong></td><td>Not a benchmark itself — the placement/binding discipline that makes the other four <em>trustworthy</em></td><td><code>parallel-execution-affinity-blog.md</code></td></tr></tbody></table>
+<p>Plus the standalone <strong>Intel vs. Netlib HPL comparison</strong> — a worked example of why &quot;same binary category, different vendor build&quot; numbers aren&#x27;t directly comparable without controlling for problem size. (<code>hpl-cpu-comparison-blog.md</code>)</p>
+<hr>
+<h2>The benchmarks we haven&#x27;t covered yet</h2>
+<p>The five above get you most of the way through H200-class node validation — but the broader HPC benchmarking world is bigger. Here&#x27;s what else exists, organized by the same compute/memory/communication/storage split, so you know what to reach for when OSU, HPL, STREAM, and NCCL don&#x27;t answer the question in front of you.</p>
+<h3>Compute-adjacent</h3>
+<table><thead><tr><th>Benchmark</th><th>What it tests</th><th>When you&#x27;d reach for it</th></tr></thead><tbody><tr><td><strong>HPCG</strong> (High Performance Conjugate Gradient)</td><td>Sparse linear algebra — deliberately <em>memory-bandwidth-bound</em>, unlike HPL&#x27;s compute-bound dense math</td><td>TOP500&#x27;s companion list; a much more &quot;realistic application&quot; proxy than HPL</td></tr><tr><td><strong>MLPerf (Training / Inference / HPC)</strong></td><td>End-to-end ML workload throughput on real model architectures (BERT, ResNet, GPT-style)</td><td>Validating a GPU cluster&#x27;s actual deep-learning throughput, not just raw FLOPS</td></tr><tr><td><strong>SPEC CPU / SPEC HPC</strong></td><td>General-purpose CPU throughput across a broad workload suite</td><td>Comparing CPU generations/vendors outside of pure linear algebra</td></tr><tr><td><strong>Graph500</strong></td><td>Breadth-first search / graph traversal performance</td><td>Irregular-memory-access workloads — very different stress profile than dense HPL</td></tr></tbody></table>
+<h3>Memory &amp; storage adjacent</h3>
+<table><thead><tr><th>Benchmark</th><th>What it tests</th><th>When you&#x27;d reach for it</th></tr></thead><tbody><tr><td><strong>Intel MLC (Memory Latency Checker)</strong></td><td>Fine-grained memory latency <em>and</em> bandwidth, per NUMA domain, per access pattern</td><td>Diagnosing exactly <em>where</em> in the NUMA topology a memory bottleneck lives — more granular than STREAM</td></tr><tr><td><strong>IOR / IOzone / mdtest</strong></td><td>Parallel filesystem I/O throughput and metadata performance</td><td>Validating Lustre/Weka/GPFS storage — the layer STREAM and OSU don&#x27;t touch at all</td></tr><tr><td><strong>fio</strong></td><td>Block-device-level I/O benchmarking</td><td>Isolating storage hardware from the parallel filesystem layer above it</td></tr></tbody></table>
+<h3>Communication-adjacent</h3>
+<table><thead><tr><th>Benchmark</th><th>What it tests</th><th>When you&#x27;d reach for it</th></tr></thead><tbody><tr><td><strong>GPCNeT</strong> (Global Performance and Congestion Network Test)</td><td>Network congestion and &quot;noisy neighbor&quot; interference under concurrent load</td><td>Multi-tenant cluster fabrics — does one job&#x27;s traffic pattern degrade another job&#x27;s?</td></tr><tr><td><strong>iperf3 / netperf</strong></td><td>Raw TCP/UDP throughput, no MPI or RDMA involved</td><td>Baseline Ethernet sanity check before layering RoCE/MPI complexity on top</td></tr><tr><td><strong>ib_send_bw / ib_read_bw / perftest suite</strong></td><td>Raw InfiniBand verbs-level bandwidth and latency — below MPI entirely</td><td>Isolating &quot;is the fabric itself fine&quot; from &quot;is my MPI stack configured correctly&quot; — the layer <em>underneath</em> OSU</td></tr></tbody></table>
+<blockquote><p>[!TIP] When OSU gives you a bad number, <code>perftest</code> (ib_send_bw etc.) is often your next move — it strips MPI out of the equation entirely and talks to the verbs layer directly. If <code>perftest</code> looks great but OSU looks bad, the problem is definitely in your MPI stack, not the fabric.</p></blockquote>
+<hr>
+<h2>A complete node validation walkthrough</h2>
+<p>Putting the whole map into a single run order — this is roughly the sequence I&#x27;d actually execute on a fresh H200 node before signing off on it:</p>
+<pre><code>1. Affinity sanity check
+   numactl --hardware &amp;&amp; nvidia-smi topo -m
+   → confirm NUMA layout and GPU/NIC topology match what you expect
+
+2. Memory bandwidth (before anything else touches compute or network)
+   BabelStream / STREAM-CPU
+   → establishes the ceiling everything downstream is competing against
+
+3. Compute throughput
+   HPL-CPU  → validate raw CPU floating-point path
+   HPL-GPU  → validate GPU-dominant compute path, watch for CPU-stall-on-panel-factorization
+
+4. Network — CPU path first
+   OSU (host buffers): osu_latency, osu_bw, osu_bibw
+   → isolates plain MPI-over-fabric, no GPU complexity yet
+
+5. Network — GPU-aware path
+   OSU (CUDA buffers, D D)
+   → isolates whether MPI&#x27;s GPU-aware/GPUDirect path is actually working
+
+6. GPU-native communication
+   nccl-tests (all_reduce_perf, -g 1, matching -np to GPU count)
+   → validates NVLink/NVSwitch/GDR independent of MPI entirely
+
+7. Storage (if the workload is I/O-heavy)
+   IOR / mdtest against the target parallel filesystem
+
+8. Only now — application-level validation
+   MLPerf-style training run, or your actual production workload</code></pre>
+<p>Steps 1–6 are diagnostic. Step 8 is the number that actually matters to your users — but it&#x27;s meaningless to debug directly if you skipped 1–6, because a slow training run could be caused by <em>any</em> of the five layers above it, and step 8 alone won&#x27;t tell you which one.</p>
+<hr>
+<h2>The diagnostic flowchart</h2>
+<p>When something&#x27;s slow and you don&#x27;t know why yet, this is the actual decision tree:</p>
+<pre><code>                    &quot;The job is slower than expected&quot;
+                                  │
+                                  ▼
+              Run BabelStream / STREAM — is memory BW normal?
+                       │                          │
+                      NO                          YES
+                       │                          │
+          Memory subsystem issue          Run HPL — is compute
+          (DIMM config, NUMA           throughput near theoretical peak?
+           first-touch, channel                    │
+           population)                    ┌────────┴────────┐
+                                          NO                  YES
+                                           │                  │
+                              Check affinity/binding    Run OSU (CPU buffers) —
+                              (Part 5 of the affinity    is host-to-host MPI
+                               guide) before blaming      bandwidth/latency normal?
+                               the silicon                        │
+                                                          ┌────────┴────────┐
+                                                         NO                  YES
+                                                          │                  │
+                                              Check MPI config,     Run OSU (GPU buffers)
+                                              transport (UCX/OFI),  or nccl-tests —
+                                              rank placement,       is GPU-to-GPU comm
+                                              perftest (ib_send_bw) normal?
+                                              to isolate fabric              │
+                                              vs. MPI stack         ┌────────┴────────┐
+                                                                   NO                  YES
+                                                                    │                  │
+                                                        Check GPUDirect RDMA,   The bottleneck is
+                                                        nvidia-fabricmanager,   likely application-
+                                                        NCCL_DEBUG=INFO logs,   level, not infra —
+                                                        GPU↔NIC topology        profile the code itself</code></pre>
+<hr>
+<h2>The one table to screenshot</h2>
+<p>If you remember nothing else from this series, remember this:</p>
+<table><thead><tr><th>Layer</th><th>Benchmark</th><th>Bad number means...</th><th>Good number alone tells you...</th></tr></thead><tbody><tr><td><strong>Memory</strong></td><td>BabelStream / STREAM</td><td>DIMM/HBM config, NUMA placement, or first-touch policy is wrong</td><td>Nothing about compute or network — they&#x27;re independent</td></tr><tr><td><strong>Compute</strong></td><td>HPL / HPL-GPU</td><td>Wrong P×Q grid, bad thread affinity, wrong BLAS linkage, AVX throttling</td><td>Nothing about whether ranks can actually talk to each other</td></tr><tr><td><strong>MPI network</strong></td><td>OSU</td><td>Wrong transport, bad rank placement, GDR misconfigured, NUMA/NIC mismatch</td><td>Nothing about NCCL&#x27;s independent GPU-native path</td></tr><tr><td><strong>GPU-native network</strong></td><td>NCCL / nccl-tests</td><td>Missing <code>nvidia_peermem</code>, dead <code>nvidia-fabricmanager</code>, bad GPU↔NIC topology</td><td>Nothing about your actual MPI application&#x27;s communication pattern</td></tr><tr><td><strong>Placement/orchestration</strong></td><td><em>(no single benchmark — verify manually)</em></td><td>Every layer above will report a &quot;fine&quot; number for the <em>wrong resource</em>, silently invalidating the test</td><td>This is the layer that makes all four other layers&#x27; results meaningful in the first place</td></tr></tbody></table>
+<hr>
+<h2>Further reading in this series</h2>
+<ul><li><strong>OSU Micro-Benchmarks</strong> — MPI communication microscope: latency, bandwidth, collectives, and why RoCE/InfiniBand distinctions matter less than you&#x27;d think at the OSU layer.</li><li><strong>STREAM / BabelStream / stream-gpu-test</strong> — memory bandwidth math, <code>arraysize</code> tuning for H200-class HBM, and picking the right variant per vendor comparison.</li><li><strong>HPL &amp; HPL-GPU</strong> — theoretical peak derivation (SIMD/AVX-512/FMA math), P×Q grid tuning, MPI rank-placement traps, and why HPL-GPU&#x27;s core-count sensitivity looks nothing like HPL-CPU&#x27;s.</li><li><strong>Intel vs. Netlib HPL</strong> — a worked case study in why &quot;binary A beats binary B&quot; claims fall apart once you plot the full problem-size curve instead of one data point.</li><li><strong>NCCL</strong> — collective primitives, Ring vs. Tree topology selection, the <code>-g 1</code> vs <code>-g 8</code> oversubscription trap, and reading <code>busbw</code> correctly.</li><li><strong>Parallel Execution &amp; Affinity</strong> — the four-layer stack (SLURM → Launcher → Runtime → Hardware) that determines whether any of the numbers above can be trusted at all.</li></ul>
+<blockquote><p><strong>Closing thought:</strong> none of these benchmarks tell you if your cluster is &quot;fast.&quot; They tell you, one precisely-scoped layer at a time, exactly <em>where</em> to look when it isn&#x27;t.</p></blockquote>
+<p><a href="../../../#/fields/benchmarks/benchmarking-guide">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

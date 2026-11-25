@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Tips - Linux Create App Launcher</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/tips/linux-create-app-launcher/">
+<meta name="description" content="The steps to create an app launcher on Linux.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Tips - Linux Create App Launcher">
+<meta property="og:description" content="The steps to create an app launcher on Linux.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/tips/linux-create-app-launcher/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/tips/linux-create-app-launcher/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../.docs/prerender-redirect.js" data-target="../../#/tips/linux-create-app-launcher"></script>
+<main>
+<h1>Tips - Linux Create App Launcher</h1>
+<p><em>The steps to create an app launcher on Linux.</em></p>
+<h1>Table of Content</h1>
+<ul><li>Tips - Linux Create App Launcher</li><li>Table of Content</li><li>Steps to Create App Launcher</li><li>Reference</li></ul>
+<h1>Steps to Create App Launcher</h1>
+<ol><li>Use Gedit to create an app launcher for Iris. <code>`</code>bash sudo gedit /usr/share/applications/iris.desktop <code>`</code></li></ol>
+<ol><li>Add the following lines in this file. <code>`</code>bash [Desktop Entry] Name=Iris Comment=Eye Protection Software Exec=/opt/iris/Iris.sh Type=Application Terminal=false Icon=/opt/iris/iris.png NoDisplay=false <code>`</code></li><li>Save and close this file. Then Download the Iris logo file. <code>`</code>bash wget -O iris.png https://iristech.co/wp-content/themes/iris/img/Logo.png <code>`</code></li><li>Move it to /opt/iris/ directory. <code>`</code>bash sudo mv iris.png /opt/iris/ <code>`</code></li></ol>
+<h1>Reference</h1>
+<ul><li>This tutorial was taken from the instructions to setup <a href="https://www.linuxbabe.com/desktop-linux/protect-your-eyes-from-computer-screen-with-iris">Iris eye care app</a> on Linux system</li></ul>
+<p><a href="../../#/tips/linux-create-app-launcher">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

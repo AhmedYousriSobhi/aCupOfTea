@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The Scan That Opened Black: Images Are Just Matrices</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/digital-image-processing/images-are-just-matrices/">
+<meta name="description" content="A pixel is a number in a grid - sampling, quantization, bit depth, coordinates and neighbours, and why 200 + 100 can equal 44.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="The Scan That Opened Black: Images Are Just Matrices">
+<meta property="og:description" content="A pixel is a number in a grid - sampling, quantization, bit depth, coordinates and neighbours, and why 200 + 100 can equal 44.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/digital-image-processing/images-are-just-matrices/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/digital-image-processing/images-are-just-matrices/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../.docs/prerender-redirect.js" data-target="../../../#/fields/digital-image-processing/images-are-just-matrices"></script>
+<main>
+<h1>The Scan That Opened Black: Images Are Just Matrices</h1>
+<p><em>A pixel is a number in a grid - sampling, quantization, bit depth, coordinates and neighbours, and why 200 + 100 can equal 44.</em></p>
+<blockquote><p><strong>Part 1 of the [Digital Image Processing series](/fields/digital-image-processing/README.md).</strong> <em>Ravi and Dr. Okafor are invented; the maths and numbers are real.</em> By the end you can count the bytes in an image, predict what <code>250 + 10</code> does, and say why a perfectly good file can look black.</p></blockquote>
+<p>At 09:40 you&#x27;ll open a medical scan that is, by every check you can run, perfectly fine. It will be black. You&#x27;ll spend a morning proving, with great care, that nothing is wrong with it, and every proof will be correct.</p>
+<hr>
+<h2>The scan that opened black</h2>
+<p>You&#x27;re the newest engineer on a small imaging team. At 09:40 Dr. Okafor, a radiologist, sends you a scan and one line of instructions:</p>
+<blockquote><p>&quot;It&#x27;s a 16-bit PNG. Open it in anything.&quot;</p></blockquote>
+<p>You open it in the team&#x27;s viewer. A black rectangle. You check the file size: fine. You check the dimensions: fine. You squint at the screen. Still black.</p>
+<p>Your first reading is the obvious one: the file is broken.</p>
+<p>It isn&#x27;t. The file is correct, and so is the viewer. They just disagree about what the number <strong>4095</strong> means. Hold that thought. First you&#x27;ll meet what a pixel really is, and then we&#x27;ll come back to it.</p>
+<hr>
+<h2>Three fixes that sounded reasonable</h2>
+<table><thead><tr><th>Tried</th><th>Saw</th></tr></thead><tbody><tr><td>Download the file again</td><td>The checksum matches. Same black rectangle.</td></tr><tr><td>Convert it to 8 bits &quot;so every viewer agrees&quot; (Ravi&#x27;s idea)</td><td>Every viewer now agrees: the same black rectangle, in fewer bits.</td></tr><tr><td>Batch-convert every scan to 8 bits and save over the originals, &quot;so nobody else ever hits this&quot;</td><td>You type the command and let your finger hover over Enter. Ravi, walking past with a coffee, reads the screen and says one word: &quot;Originals.&quot; You don&#x27;t press Enter.</td></tr></tbody></table>
+<p>The file isn&#x27;t corrupt and the viewer isn&#x27;t broken. Converting didn&#x27;t help, and overwriting the archive would have been a one-way trip.</p>
+<p>Three clean checks, and still a black rectangle. If nothing is broken, what exactly is the viewer being asked to show? To answer that, we need to talk about the thing every image is made of.</p>
+<hr>
+<h2>Welcome to Pixel Town</h2>
+<p>Picture a town on a perfect grid, one citizen per square. Every citizen holds a card with one number on it: how bright they are. That&#x27;s an image. The town is <strong>Pixel Town</strong>, and it&#x27;s where this whole series lives.</p>
+<p>The real world is continuous. Light varies smoothly across space and has infinitely many intensities. A camera turns that into a town in two steps, and each step throws something away on purpose:</p>
+<pre><code class="language-mermaid">flowchart LR
+    A[&quot;Continuous scene&quot;] --&gt; B[&quot;Sampling&lt;br/&gt;choose the grid&quot;]
+    B --&gt; C[&quot;Quantization&lt;br/&gt;round each value&quot;]
+    C --&gt; D[&quot;Digital image&lt;br/&gt;matrix of integers&quot;]</code></pre>
+<p><em>Sampling decides where we look. Quantization decides how precisely we write down what we see.</em></p>
+<p>Mathematically, the result is a function f(x, y) that returns an integer for each grid position, which is the same thing as a matrix with M rows and N columns:</p>
+<p>That&#x27;s the whole object. Every algorithm in this series is &quot;do something to this matrix&quot;. So the two questions are: how many citizens live in the town, and what can their cards say?</p>
+<hr>
+<h2>How many citizens?</h2>
+<p><strong>Sampling</strong> picks the grid size. More squares means finer detail, up to the limit of the optics.</p>
+<p>Too few squares and small things fall between citizens and vanish, or worse, turn into patterns that were never there. That second failure is called <strong>aliasing</strong>, and it deserves its own page (<a href="../../../fields/digital-image-processing/frequency-filtering-and-aliasing/">page 7</a>).</p>
+<p>Spatial resolution is simply how many samples you take per unit of the scene. &quot;12 megapixels&quot; means roughly twelve million citizens. It says nothing about how good each card is, and that&#x27;s the half your scan went wrong on.</p>
+<hr>
+<h2>What fits on a card?</h2>
+<p><strong>Quantization</strong> rounds each brightness into one of L allowed levels. With k bits per pixel:</p>
+<table><thead><tr><th>Bits per pixel (k)</th><th>Levels (L)</th><th>Typical use</th></tr></thead><tbody><tr><td>1</td><td>2</td><td>Scanned text, masks</td></tr><tr><td>8</td><td>256</td><td>Ordinary photos and screens, <code>uint8</code></td></tr><tr><td>12</td><td>4096</td><td>Many medical and camera-raw sensors</td></tr><tr><td>16</td><td>65,536</td><td>Containers for deep sensors, <code>uint16</code></td></tr></tbody></table>
+<p>Use too few levels and smooth gradients break into visible steps called <strong>false contouring</strong>. Eight bits is enough for most screens; deeper data matters when you plan to stretch the contrast later.</p>
+<p>Look at the 12-bit row, then at the 16-bit one. Keep an eye on them. You&#x27;ll want them in about ten minutes.</p>
+<p>How much space does the whole town take? Storage for an uncompressed grayscale image is just the number of squares times the bits on each card:</p>
+<p>A 1024 × 768 image at 8 bits: 1024 × 768 = 786,432 pixels, times 8 bits is 6,291,456 bits, which is <strong>786,432 bytes</strong> (768 KiB). A colour image with three channels (red, green, blue) triples that. Compression changes the file size, never the matrix once it is decoded.</p>
+<p>Now you know what&#x27;s in the file. The next trap is how your code <em>reads</em> it.</p>
+<hr>
+<h2>Which way is up?</h2>
+<p>Two conventions trip up everyone at least once.</p>
+<table><thead><tr><th></th><th>Math / textbook</th><th>Matrix / NumPy / OpenCV</th></tr></thead><tbody><tr><td>First index</td><td>x (horizontal)</td><td>row (vertical)</td></tr><tr><td>Order</td><td>f(x, y)</td><td><code>img[row, col]</code> = <code>img[y, x]</code></td></tr><tr><td>Origin</td><td>Often top-left in DIP books</td><td>Top-left</td></tr><tr><td>y direction</td><td>Down the image</td><td>Down the image</td></tr></tbody></table>
+<p>So <code>img[y, x]</code> is the pixel at column x, row y. If your result looks transposed, you swapped the two. And because y grows <strong>downward</strong>, a &quot;counter-clockwise&quot; rotation in the usual math formula looks clockwise on screen (we&#x27;ll meet that again on <a href="../../../fields/digital-image-processing/geometric-transforms-and-interpolation/">page 2</a>).</p>
+<blockquote><p>[!NOTE] OpenCV also stores colour channels in BGR order, not RGB. Show a BGR array with an RGB viewer and every face turns blue.</p></blockquote>
+<p>Now a quick one, before you read on.</p>
+<p>☕ <strong>Try it before you scroll.</strong> In a <code>uint8</code> image, a pixel holds 250. Your code adds 10 to it. <strong>What is the new value?</strong> <em>Hint: 8 bits can&#x27;t hold 260.</em></p>
+<hr>
+<h2>The speckle in the sky</h2>
+<p><strong>Answer:</strong> it depends on who does the adding, and that&#x27;s the trap.</p>
+<table><thead><tr><th>Operation</th><th>250 + 10</th><th>200 + 100</th></tr></thead><tbody><tr><td>NumPy <code>uint8</code> array addition</td><td>wraps modulo 256: <strong>4</strong></td><td>wraps: <strong>44</strong></td></tr><tr><td>OpenCV <code>cv2.add</code></td><td>saturates at the ceiling: <strong>255</strong></td><td>saturates: <strong>255</strong></td></tr></tbody></table>
+<p>A bright pixel becoming almost black is the classic &quot;why is there a dark speckle where the sky was?&quot; bug. NumPy wraps; OpenCV&#x27;s <code>add</code> saturates (clips). Convert to a wider type first (<code>float32</code>) if you want arithmetic that behaves.</p>
+<p>So pixels have a type, an order and a range, and every one of those can lie to you. One last piece of vocabulary, because every later page looks at a pixel <em>and the pixels around it</em>.</p>
+<hr>
+<h2>Who lives next door?</h2>
+<p>We need words for &quot;around&quot;.</p>
+<ul><li><strong>4-neighbours</strong> of (x, y): the four squares that share an edge, up, down, left, right.</li><li><strong>8-neighbours</strong>: those four plus the four diagonals.</li></ul>
+<p>Distance between two pixels p = (x₁, y₁) and q = (x₂, y₂) depends on which moves you allow:</p>
+<table><thead><tr><th>Name</th><th>Formula</th><th>Moves allowed</th><th>Shape of &quot;all points within r&quot;</th></tr></thead><tbody><tr><td>Euclidean</td><td>√((x₁−x₂)² + (y₁−y₂)²)</td><td>Straight line</td><td>Circle</td></tr><tr><td>City-block (D4)</td><td>|x₁−x₂| + |y₁−y₂|</td><td>4-neighbour steps</td><td>Diamond</td></tr><tr><td>Chessboard (D8)</td><td>max(|x₁−x₂|, |y₁−y₂|)</td><td>8-neighbour steps</td><td>Square</td></tr></tbody></table>
+<p>The names come from taxis on a street grid versus a chess king. You&#x27;ll meet D4 and D8 again whenever someone asks &quot;which pixels are connected?&quot;.</p>
+<p>That&#x27;s the whole town. You know the grid, the cards, the byte count, the traps and the neighbours. Now go back to your black rectangle.</p>
+<hr>
+<h2>Back to the black rectangle</h2>
+<p>You read the file header instead of trusting the viewer. The scan is stored in a <strong>16-bit container</strong> (values 0 to 65,535), but the sensor only produces <strong>12 bits</strong> (0 to 4095). Remember those two table rows? The brightest possible pixel is 4095, and the viewer maps 65,535 to white:</p>
+<p>The brightest pixel in the picture is shown at about <strong>6%</strong> of full brightness. To a human eye, that&#x27;s a black rectangle with extra steps. The data is fine; it needs its contrast stretched, which is exactly what the next page does.</p>
+<p>You stretch the contrast on a <strong>copy</strong> and the bones appear. The originals stay as they were, 12 bits and all. You tell Dr. Okafor the file was fine. Dr. Okafor says that is what the last three people said, too.</p>
+<p>You had proved, correctly, that nothing was wrong. That was the whole problem.</p>
+<hr>
+<h2>Never again: five questions before you trust a pixel</h2>
+<table><thead><tr><th>Ask</th><th>Why</th></tr></thead><tbody><tr><td>What is the bit depth, and what is the sensor&#x27;s real maximum?</td><td>A 12-bit sensor in a 16-bit container tops out near 6% of white</td></tr><tr><td>What type is the array?</td><td>NumPy <code>uint8</code> wraps (<code>250 + 10</code> is 4, <code>200 + 100</code> is 44); OpenCV <code>cv2.add</code> saturates at 255</td></tr><tr><td>Do I need arithmetic that behaves?</td><td>Convert to a wider type first, such as <code>float32</code></td></tr><tr><td>Which axis is first?</td><td><code>img[y, x]</code> is column x, row y; a transposed result means they were swapped</td></tr><tr><td>Which channel order?</td><td>OpenCV is BGR; show it in an RGB viewer and every face turns blue</td></tr></tbody></table>
+<p>Never overwrite an original to fix a display problem: stretch a copy.</p>
+<p><strong>Takeaway:</strong> an image is a matrix of integers with a finite number of levels, and most &quot;mystery&quot; bugs are the wrong type, the wrong axis or the wrong range.</p>
+<p><strong>Next:</strong> every rotation, zoom and shift sends a citizen to a square that doesn&#x27;t exist. What number do you write on the squares left behind? <a href="../../../fields/digital-image-processing/geometric-transforms-and-interpolation/">Part 2: Geometric transforms and interpolation</a>.</p>
+<hr>
+<h2>📜 The Scroll (keep this)</h2>
+<pre><code class="language-text">Symptom:  A correct file shows as a black rectangle
+Cause:    12-bit data in a 16-bit container: 4095 / 65535 = 0.0625, about 6% of white
+Check:    bits per pixel k, L = 2^k, the sensor&#x27;s real maximum
+Do not:   add uint8 pixels in NumPy and expect saturation; swap img[y, x]; overwrite originals
+Fix:      stretch the contrast on a copy (next page)
+Bytes:    M x N x k bits; 1024 x 768 at 8 bits = 786,432 bytes</code></pre>
+<h3>References</h3>
+<ul><li>R. C. Gonzalez and R. E. Woods, <em>Digital Image Processing</em>, 4th ed., Pearson, 2018: chapter 2, &quot;Digital Image Fundamentals&quot; (sampling, quantization, neighbours, distance measures).</li><li>OpenCV documentation, <a href="https://docs.opencv.org/4.x/d0/d86/tutorial_py_image_arithmetics.html">Arithmetic operations on images</a>: <code>cv2.add</code> saturation versus NumPy modulo arithmetic.</li><li>NumPy documentation, <a href="https://numpy.org/doc/stable/user/basics.types.html">Data types</a>: fixed-size integer overflow.</li></ul>
+<p><a href="../../../#/fields/digital-image-processing/images-are-just-matrices">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Add GPU Temperature Rules to a Health Check</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/node-health-check/gpu-temperature/quick-guide/">
+<meta name="description" content="Quick guide: a ceiling rule that drains above a limit, then an idle timer that warns before it drains, with a read-only fleet scan first.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Add GPU Temperature Rules to a Health Check">
+<meta property="og:description" content="Quick guide: a ceiling rule that drains above a limit, then an idle timer that warns before it drains, with a read-only fleet scan first.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/node-health-check/gpu-temperature/quick-guide/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/node-health-check/gpu-temperature/quick-guide/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../../.docs/prerender-redirect.js" data-target="../../../../../#/fields/system-administration/node-health-check/gpu-temperature/quick-guide"></script>
+<main>
+<h1>Add GPU Temperature Rules to a Health Check</h1>
+<p><em>Quick guide: a ceiling rule that drains above a limit, then an idle timer that warns before it drains, with a read-only fleet scan first.</em></p>
+<blockquote><p><strong>Quick guide for</strong> <a href="../../../../../fields/system-administration/node-health-check/gpu-temperature/gpu-temperature-ceiling/">The Ceiling Rule</a> and <a href="../../../../../fields/system-administration/node-health-check/gpu-temperature/gpu-temperature-idle-timer/">The Idle Timer</a>. Do the ceiling first, then the idle timer. You will end with one rule that drains above a ceiling and never drains on a failed read, and a second that drains only after a warm idle GPU stays warm for a window.</p></blockquote>
+<h2>Before you start</h2>
+<ul><li>A health-check script you can edit, and a test node.</li><li><code>dcgmi</code> installed and the DCGM host engine running.</li><li>Your GPU&#x27;s limits: <code>nvidia-smi -q -d TEMPERATURE</code>.</li><li>For the idle timer: <code>scontrol</code> on the node, an ssh key loaded for the scan, and your nodes in <code>nodelist.yml</code> (a <code>nodes:</code> list, one <code>- name</code> per line).</li></ul>
+<h2>Part 1: the ceiling rule</h2>
+<ol><li>Read all GPUs once.</li></ol>
+<pre><code class="language-bash">   dcgmi dmon -e 150,203,252 -c 1</code></pre>
+<p><strong>Expect:</strong> one row per GPU, for example <code>GPU 0     38     0     12</code> (temperature, utilization, memory). <strong>If not:</strong> list the fields your version knows with <code>dcgmi dmon -l</code>.</p>
+<ol><li>Choose a ceiling below your GPU&#x27;s slowdown limit and set it once.</li></ol>
+<pre><code class="language-bash">   GPU_TEMP_CEILING=87      # example value: take yours from the nvidia-smi output in Before you start</code></pre>
+<p><strong>Expect:</strong> one variable the rule reads.</p>
+<ol><li>Wrap the call in <code>timeout</code>, skip headers and <code>N/A</code>, and keep the rows.</li></ol>
+<p><strong>Expect:</strong> <code>GPU_TEMPS</code> holds one <code>index, temp, util, mem</code> line per GPU. <strong>If not:</strong> if <code>dcgmi</code> failed or <code>GPU_TEMPS</code> is empty, print a warning and return. Do not drain.</p>
+<ol><li>Flag and fail the check for any GPU above the ceiling.</li></ol>
+<pre><code class="language-bash">   msg=&quot;GPU_TEMP_CRITICAL: GPU-$idx at ${temp}C (ceiling ${GPU_TEMP_CEILING}C)&quot;</code></pre>
+<p><strong>Expect:</strong> a syslog line like <code>nhc: GPU_TEMP_CRITICAL node=gpu-node-12 GPU-3 at 89C (ceiling 87C)</code> and a drain at the end of the run. <strong>If not:</strong> check that the flag line reaches syslog and your alerts.</p>
+<h2>Part 2: the idle timer</h2>
+<ol><li>Set the parameters (example values: choose yours from your fleet).</li></ol>
+<pre><code class="language-bash">   GPU_IDLE_TEMP_MAX=45
+   GPU_IDLE_WINDOW_MIN=10
+   GPU_IDLE_MEM_MAX_MIB=1024
+   GPU_TEMP_STATE_DIR=&quot;/var/tmp/nhc_gpu_temp&quot;</code></pre>
+<p><strong>Expect:</strong> four variables at the top of the temperature block.</p>
+<ol><li>Gate on the node state.</li></ol>
+<pre><code class="language-bash">   scontrol show node $(hostname -s) | grep -E &#x27;State=|GresUsed|AllocTRES&#x27;</code></pre>
+<p><strong>Expect:</strong> apply the idle rule only when <code>State=</code> starts with <code>IDLE</code> and does not contain <code>COMPLETING</code>. <strong>If not:</strong> on <code>MIXED</code> or <code>ALLOCATED</code>, apply the ceiling only and clear the idle timers.</p>
+<ol><li>Treat a GPU as idle only if utilization is 0% and memory in use is at most <code>GPU_IDLE_MEM_MAX_MIB</code>.</li></ol>
+<p><strong>Expect:</strong> anything else clears that GPU&#x27;s timer.</p>
+<ol><li>On first sight above <code>GPU_IDLE_TEMP_MAX</code>, record the time and warn only.</li></ol>
+<p><strong>Expect:</strong> <code>/var/tmp/nhc_gpu_temp/gpu&lt;N&gt;.hot_since</code> exists, and no drain yet.</p>
+<ol><li>Drain only if the GPU is still idle and hot after the window.</li></ol>
+<p><strong>Expect:</strong> <code>GPU_TEMP_IDLE_HIGH: GPU-&lt;n&gt; idle above 45C for &lt;m&gt;m</code> and a drain at the end of the run. <strong>If not:</strong> discard the timer when the node leaves IDLE, utilization rises, memory is in use, the GPU cools, or the recorded time is before the last boot or in the future.</p>
+<ol><li>Before enforcing, scan the fleet read-only.</li></ol>
+<pre><code class="language-bash">   eval &quot;$(ssh-agent -s)&quot;; ssh-add
+   ./gpu_temp_scan.sh nodelist.yml</code></pre>
+<p><strong>Expect:</strong> a summary with scanned, unreachable and flagged counts, and <code>all_gpus.csv</code> and <code>flagged.csv</code>. <strong>If not:</strong> unreachable and no-data nodes are unknown, not fine.</p>
+<h2>If it fails</h2>
+<table><thead><tr><th>What you see</th><th>Likely cause</th><th>Fix</th></tr></thead><tbody><tr><td>Every node drains at once</td><td>A failed read was treated as hot</td><td>Warn and skip on a failed read</td></tr><tr><td>No temperature rows</td><td><code>dcgmi</code> or the DCGM host engine is down</td><td>Start the host engine, then re-run Part 1 step 1</td></tr><tr><td>Drain never happens</td><td>Ceiling above what your GPUs reach</td><td>Lower it, below the slowdown limit</td></tr><tr><td>A node with a live job is flagged idle</td><td>Idle was defined by utilization alone</td><td>Gate on node state and memory in use</td></tr><tr><td>Idle timer never starts</td><td>Node not <code>IDLE</code>, or GPU not idle</td><td>Check <code>State=</code> and memory in use</td></tr><tr><td>Hot GPUs on <code>MIXED</code> nodes are missed</td><td>The idle rule skips them by design</td><td>Only the ceiling covers them</td></tr></tbody></table>
+<h2>Roll out and roll back</h2>
+<ul><li>Start with the flag line only and watch syslog for a few days, then let the check drain.</li><li>Test on a node with the DCGM host engine stopped: it must warn and not drain.</li><li>For the idle timer: scan first, then run the check with draining off, then enforce.</li><li>A drained node needs a manual resume, and running jobs are not killed.</li><li>Roll back the idle timer: restore the previous script and remove <code>/var/tmp/nhc_gpu_temp/</code>.</li></ul>
+<p><strong>Don&#x27;t:</strong> drain because a reading failed, and don&#x27;t define idle by utilization alone.</p>
+<p><strong>Why it works:</strong> <a href="../../../../../fields/system-administration/node-health-check/gpu-temperature/gpu-temperature-ceiling/">The Ceiling Rule</a> and <a href="../../../../../fields/system-administration/node-health-check/gpu-temperature/gpu-temperature-idle-timer/">The Idle Timer</a>.</p>
+<p><a href="../../../../../#/fields/system-administration/node-health-check/gpu-temperature/quick-guide">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

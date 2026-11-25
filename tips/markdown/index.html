@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Tips - Markdown</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/tips/markdown/">
+<meta name="description" content="Markdown tricks for adding an Open in Colab button and general buttons, and for converting Markdown to .rst or to PDF with math formulas.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Tips - Markdown">
+<meta property="og:description" content="Markdown tricks for adding an Open in Colab button and general buttons, and for converting Markdown to .rst or to PDF with math formulas.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/tips/markdown/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/tips/markdown/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../.docs/prerender-redirect.js" data-target="../../#/tips/markdown"></script>
+<main>
+<h1>Tips - Markdown</h1>
+<p><em>Markdown tricks for adding an Open in Colab button and general buttons, and for converting Markdown to .rst or to PDF with math formulas.</em></p>
+<h2>Table of Content</h2>
+<ul><li>Tips - Markdown<ul><li>Table of Content</li><li>Add &quot;Open in Colab&quot; Button</li><li>Add General Button</li><li>Convert Markdown to .rst format</li><li>Convert Markdown to pdf with Mathematic Formula</li><li>Resources</li></ul></li></ul>
+<h2>Add &quot;Open in Colab&quot; Button</h2>
+<p>Here is a markdown syntax to create a &quot;Open in Colab&quot; button</p>
+<pre><code class="language-md">&lt;a href=&quot;NOTEBOOK_URL&quot; target=&quot;_parent&quot;&gt;&lt;img src=&quot;https://colab.research.google.com/assets/colab-badge.svg&quot; alt=&quot;Open In Colab&quot;/&gt;&lt;/a&gt;</code></pre>
+<p>Here is an example for Notebook-04 in <a href="https://github.com/mrdbourke/pytorch-deep-learning">Pytorch DeepLearning course</a>:</p>
+<h2>Add General Button</h2>
+<p>Here is the markdown syntax to create a &quot;General Button&quot;</p>
+<pre><code class="language-md">&lt;a href=&quot;https://nbviewer.org/github/user/repo/blob/main/notebook.ipynb&quot; target=&quot;_blank&quot; 
+   style=&quot;background-color:#f5f5f5;border-radius:6px;padding:6px 12px;text-decoration:none;
+          color:#333;border:1px solid #ccc;&quot;&gt;
+   View on nbviewer
+&lt;/a&gt;</code></pre>
+<p>style=&quot;background-color:#f5f5f5;border-radius:6px;padding:6px 12px;text-decoration:none; color:#333;border:1px solid #ccc;&quot;&gt; View on nbviewer</p>
+<h2>Convert Markdown to .rst format</h2>
+<ul><li>To convert .md file format to .rst file, this could be done with: <code>`</code>bash pandoc input.md -f markdown -t rst -o output.rst <code>`</code><ul><li>Make sure to install the <a href="https://pandoc.org/installing.html"><em>pandoc</em> packages</a> on the system: <em>sudo apt ./pandoc-&lt;version&gt;-amd64.deb</em>  </li></ul></li><li>To convert .rst file into html file to review, use <em>rst2html</em> command: <code>`</code>bash rst2html input.rst output.html <code>`</code></li></ul>
+<h2>Convert Markdown to pdf with Mathematic Formula</h2>
+<ul><li>There are no suppoprt for Tex, Latex, Katex, MathJax.</li><li>Solution following this <a href="https://github.com/yzane/vscode-markdown-pdf/issues/355#issuecomment-2040722446">github issue</a>: Add the following line in the top of your md file: <code>`</code> &lt;script type=&quot;text/javascript&quot; src=&quot;http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML&quot;&gt;&lt;/script&gt; &lt;script type=&quot;text/x-mathjax-config&quot;&gt; MathJax.Hub.Config({ tex2jax: {inlineMath: [[&#x27;$&#x27;, &#x27;$&#x27;]]}, messageStyle: &quot;none&quot; }); &lt;/script&gt; <code>`</code></li></ul>
+<h2>Resources</h2>
+<ul><li>In <a href="https://www.markdownguide.org/basic-syntax/#overview">markdownguide</a>, illustrate the basic syntax in markdown design, including all tips to do and not to do.</li></ul>
+<p><a href="../../#/tips/markdown">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

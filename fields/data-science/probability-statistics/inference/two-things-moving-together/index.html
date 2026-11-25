@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Two Things Moving Together: Correlation and the Line</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/inference/two-things-moving-together/">
+<meta name="description" content="Correlation is the average product of paired z-scores, a number about straight-line togetherness only. The regression line is least squared walking applied to a line. Graph first, always.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Two Things Moving Together: Correlation and the Line">
+<meta property="og:description" content="Correlation is the average product of paired z-scores, a number about straight-line togetherness only. The regression line is least squared walking applied to a line. Graph first, always.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/inference/two-things-moving-together/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/inference/two-things-moving-together/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../../.docs/prerender-redirect.js" data-target="../../../../../#/fields/data-science/probability-statistics/inference/two-things-moving-together"></script>
+<main>
+<h1>Two Things Moving Together: Correlation and the Line</h1>
+<p><em>Correlation is the average product of paired z-scores, a number about straight-line togetherness only. The regression line is least squared walking applied to a line. Graph first, always.</em></p>
+<blockquote><p><strong>Part 15 of 15.</strong> Part of the <a href="../../../../../fields/data-science/probability-statistics/">Probability &amp; Statistics</a> series, after <a href="../../../../../fields/data-science/probability-statistics/inference/the-courtroom-for-numbers/">The Courtroom for Numbers</a>. Nothing new to memorize: two ideas you already own are reused. The scenario is invented, and every figure was recomputed with Python 3.14.4.</p></blockquote>
+<p>Ravi will turn a feeling into a number, <code>-0.98</code>, and use it to forecast negative tea sales. The number is right. His reading of it is the problem, and four small traps explain exactly how.</p>
+<p><strong>By the end of this page you will be able to:</strong></p>
+<ul><li>Compute a correlation as the average product of paired z-scores, and a line as least squared walking.</li><li>Read slope, intercept, residuals and <code>r²</code> in plain units.</li><li>Name the four traps: extrapolation, hidden third causes, curves, outliers.</li><li>Say why you graph first, with Anscombe&#x27;s four sets as the proof.</li></ul>
+<ul><li>* *</li></ul>
+<h2>Cold days, full cups</h2>
+<p>Ravi has bought tea at Leaf &amp; Kettle for months, and he has a theory. &quot;The colder it is, the more you sell.&quot;</p>
+<p>Mira shrugs. &quot;Feels true.&quot; &quot;Feels,&quot; says Ravi, and asks for the till book. Tala copies eight days into two columns: the temperature at opening, and the cups sold that day. (Invented numbers, small enough to check with a pencil.)</p>
+<table><thead><tr><th>Day</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th></tr></thead><tbody><tr><td>Temperature (°C)</td><td>2</td><td>4</td><td>6</td><td>8</td><td>10</td><td>12</td><td>14</td><td>16</td></tr><tr><td>Cups sold</td><td>58</td><td>50</td><td>52</td><td>42</td><td>40</td><td>30</td><td>28</td><td>20</td></tr></tbody></table>
+<p>How do you put a number on &quot;feels true&quot;? And what would the number <em>not</em> tell you?</p>
+<ul><li>* *</li></ul>
+<h2>Three ways to use a feeling</h2>
+<ol><li><strong>Trust the feeling.</strong> &quot;Feels true&quot; is not a number, and cannot be wrong in a way anyone can check.</li><li><strong>Trust the number.</strong> <code>r = -0.98</code> sounds like a law of nature and says nothing about steepness, cause or curves.</li><li><strong>Trust the line anywhere.</strong> It will happily forecast the 40-degree day.</li></ol>
+<p>Mira stops it at the third. The pieces are all on the page; build them in order, picture first.</p>
+<ul><li>* *</li></ul>
+<h2>Draw it first</h2>
+<p>Part 3 said it: draw before you describe. For two columns, the picture is a <strong>scatter plot</strong>, one dot per day, temperature across and cups up. Here it is as text, each row a band of 10 cups:</p>
+<pre><code class="language-text">cups
+ 60 |  *   *
+ 50 |    *   *
+ 40 |          *
+ 30 |            * *
+ 20 |                *
+    +------------------
+     0   4   8  12  16  (deg C)</code></pre>
+<p>The dots slide down as you go right. No clumps, no strays, roughly a line. This is the picture to check the number against, and later you will see why you must.</p>
+<blockquote><p>☕ <strong>Try it before you scroll.</strong> A perfectly downhill line should score one extreme, a shapeless cloud the middle. What numbers? <em>Hint: minus sign for &quot;one rises as the other falls&quot;.</em></p></blockquote>
+<ul><li>* *</li></ul>
+<h2>Idea 1: do the z-scores rise and fall together?</h2>
+<p>Temperature is in degrees, cups are in cups. Different units, different spreads. You already own the tool that makes them comparable: the <strong>z-score</strong> from <a href="../../../../../fields/data-science/probability-statistics/describing-data/spread-and-position/">Spread and Position</a>, distance from the middle in typical distances.</p>
+<p>Convert every day to two z-scores. Then ask one question: on a day when temperature is above its middle, is cups above or below <em>its</em> middle? Multiply the two z-scores of each day:</p>
+<ul><li>both above, or both below: product <strong>positive</strong> (they agree);</li><li>one above, one below: product <strong>negative</strong> (they disagree).</li></ul>
+<p>The <strong>correlation coefficient</strong> <code>r</code> is the average of those products. That is the whole definition. It lands between <strong>-1</strong> (perfect disagreement along a line) and <strong>+1</strong> (perfect agreement), with about 0 for no straight-line pattern.</p>
+<p>Ravi&#x27;s days (mean temperature 9, mean cups 40, SDs 4.58 and 12.33, the divide-by-<code>n</code> SD from part 5):</p>
+<pre><code class="language-text">z temperature: -1.53 -1.09 -0.65 -0.22  0.22  0.65  1.09  1.53
+z cups:         1.46  0.81  0.97  0.16  0.00 -0.81 -0.97 -1.62
+product:       -2.23 -0.88 -0.64 -0.04  0.00 -0.53 -1.06 -2.48</code></pre>
+<p>Every product is zero or negative. Their average is <strong>-0.982</strong>: nearly perfect disagreement. Python&#x27;s <code>statistics.correlation</code> should say the same, and it does:</p>
+<pre><code class="language-python">import statistics as st
+
+temp = [2, 4, 6, 8, 10, 12, 14, 16]          # degrees C at opening time
+cups = [58, 50, 52, 42, 40, 30, 28, 20]      # cups sold that day
+
+mt, mc = st.mean(temp), st.mean(cups)        # 9 and 40
+sdt, sdc = st.pstdev(temp), st.pstdev(cups)  # the SD that divides by n, as in part 5
+zt = [(x - mt) / sdt for x in temp]          # part 6: each day&#x27;s z-score for temperature
+zc = [(y - mc) / sdc for y in cups]          # and for cups
+r = sum(a * b for a, b in zip(zt, zc)) / len(temp)   # average product of paired z-scores
+print(round(r, 4), round(st.correlation(temp, cups), 4))</code></pre>
+<pre><code class="language-text">-0.9823 -0.9823</code></pre>
+<p>Two honest notes: <code>r</code> says nothing about <em>how steep</em> the pattern is, only how tightly dots hug a <strong>straight</strong> line; and <code>statistics.correlation</code> (Python 3.10+) returns Pearson&#x27;s <code>r</code>, while 3.12 added <code>method=&#x27;ranked&#x27;</code> (Spearman, for any always-rising or always-falling pattern).</p>
+<p>So <code>r = -0.98</code>. But Ravi wants to <em>predict</em>: how many cups tomorrow at 5 degrees?</p>
+<ul><li>* *</li></ul>
+<h2>Idea 2: the line is least squared walking</h2>
+<p>You have met this problem in disguise. In <a href="../../../../../fields/data-science/probability-statistics/describing-data/spread-and-position/">Spread and Position</a>, the mean was the spot that leaves the smallest total <strong>squared</strong> walk to the crowd. Now the crowd is eight dots and the thing we place is a <strong>line</strong>. The walk of each dot is the vertical gap between it and the line, called its <strong>residual</strong> (what is left over after the line has said its piece). The same rule applies: the line that leaves the smallest total squared residual wins. That is <strong>least squares</strong>, and it is the whole idea of regression.</p>
+<pre><code class="language-python">fit = st.linear_regression(temp, cups)
+print(round(fit.slope, 3), round(fit.intercept, 2))
+miss = [y - (fit.slope * x + fit.intercept) for x, y in zip(temp, cups)]
+print([round(m, 2) for m in miss], round(sum(miss), 6), round(sum(m * m for m in miss), 2))
+print(round(sum((y - mc) ** 2 for y in cups), 2))   # the miss if you ignore temperature
+print(round(fit.slope * 5 + fit.intercept, 1), round(fit.slope * 40 + fit.intercept, 1))</code></pre>
+<pre><code class="language-text">-2.643 63.79
+[-0.5, -3.21, 4.07, -0.64, 2.64, -2.07, 1.21, -1.5] 0.0 42.57
+1216.0
+50.6 -41.9</code></pre>
+<p>Read each number in plain units:</p>
+<table><thead><tr><th>Number</th><th>Value</th><th>Meaning</th></tr></thead><tbody><tr><td>Slope</td><td>-2.643</td><td>Each extra degree goes with about <strong>2.6 fewer cups</strong></td></tr><tr><td>Intercept</td><td>63.79</td><td>The line&#x27;s height at 0 °C (a point on the line, not a promise)</td></tr><tr><td>Residuals</td><td>-0.5, -3.21, 4.07, ...</td><td>The leftover per day: actual minus the line. They add up to 0, the seesaw again</td></tr><tr><td>Squared miss</td><td>42.57</td><td>Left after the line, against 1216 if you guess the mean, 40, every day</td></tr></tbody></table>
+<p>The line removed 96.5% of the total squared miss (1 - 42.57/1216), and that fraction equals <code>r²</code> (0.9823² = 0.965). The two ideas are one fact seen twice. They are tied by a formula too: <code>slope = r × (SD of cups) / (SD of temperature)</code>, which gives -0.9823 × 12.33 / 4.58 = -2.643.</p>
+<p>The candidates <code>64 - 2.5x</code> and <code>67 - 3x</code> both miss by exactly 64.0, worse than 42.57.</p>
+<p>At 5 degrees the line predicts <strong>50.6 cups</strong>. Sensible, since 5 degrees is inside the temperatures Tala wrote down. At 40 degrees it predicts <strong>-41.9 cups</strong>. A shop does not sell negative tea.</p>
+<p>At 40 degrees a shop sells negative tea. Is <code>r = -0.98</code> any safer?</p>
+<ul><li>* *</li></ul>
+<h3>Try it: Drag a point, watch the line</h3>
+<blockquote><p><strong>What to try:</strong> Drag a point, add the festival day, or step through Anscombe&#x27;s four sets and watch r and the line. <strong>Start with:</strong> the preset <em>Predict at 40 degrees</em>.</p></blockquote>
+<p><a href="../../../../../fields/data-science/probability-statistics/labs/regression.html">Correlation lab</a></p>
+<ul><li>* *</li></ul>
+<h2>Where it lies: four traps</h2>
+<p>Each trap below is a case where the numbers say one thing and the truth is another.</p>
+<p><strong>1. Prediction outside the data.</strong> The line was fitted on 2 to 16 degrees. At 40 it falls apart, as you just saw. A line describes the range it has seen; past that edge it is a guess in a confident voice.</p>
+<p><strong>2. Correlation is not causation.</strong> Two columns can move together because a <em>third</em> thing drives both. Simulated, seed 7: 200 days, each with a hidden amount of sun; iced-tea cups follow the sun, and so do sunburns. Neither follows the other.</p>
+<pre><code class="language-python">import random
+
+random.seed(7)
+sun = [random.gauss(0, 1) for _ in range(200)]             # hidden cause: hours of sun, standardised
+iced = [s + random.gauss(0, 0.5) for s in sun]             # iced-tea cups follow the sun
+burn = [s + random.gauss(0, 0.5) for s in sun]             # sunburns follow the sun; neither follows the other
+print(round(st.correlation(iced, burn), 3))
+same = [(i, b) for s, i, b in zip(sun, iced, burn) if abs(s) &lt; 0.3]   # only days with about the same sun
+print(len(same), round(st.correlation([i for i, b in same], [b for i, b in same]), 3))</code></pre>
+<pre><code class="language-text">0.795
+45 -0.075</code></pre>
+<p>Across all days, iced tea and sunburn correlate at <strong>0.795</strong>. Look only at days with about the same sun (45 of them) and it collapses to <strong>-0.075</strong>. Banning iced tea would not cure a single sunburn. The way to see this is to hold the third thing still, and when you cannot, <code>r</code> alone cannot tell you the direction of cause.</p>
+<p><strong>3. A curve hides from `r`.</strong> Take <code>y = x²</code> for x from -5 to 5: a perfect, noiseless pattern. <code>statistics.correlation</code> returns <strong>0.0</strong>. The left half falls, the right half rises, and the products cancel. <code>r</code> measures straight-line togetherness only.</p>
+<p><strong>4. One outlier can move `r` a lot.</strong> Add a ninth day to Ravi&#x27;s book: a 30-degree heatwave festival, 60 cups.</p>
+<pre><code class="language-python">print(round(st.correlation(temp + [30], cups + [60]), 3))  # one heatwave festival day added</code></pre>
+<pre><code class="language-text">-0.075</code></pre>
+<p>One day moved <code>r</code> from -0.982 to <strong>-0.075</strong>. (The same digits as the sunburn result by coincidence; it is a different data set.) Just as one far house wrecked the mean on Kettle Street, one far dot wrecks <code>r</code>, because z-scores are built from the mean and SD.</p>
+<p>All four traps share a cure, and it is the one <a href="../../../../../fields/data-science/probability-statistics/describing-data/pictures-and-the-middle/">Part 3</a> gave you.</p>
+<ul><li>* *</li></ul>
+<h2>Anscombe&#x27;s quartet: four crowds, one set of numbers</h2>
+<p>In 1973 the statistician Francis Anscombe built four small data sets, 11 points each, to make exactly this point. The data is copied from the table in his paper (checked value by value against the JSTOR scan), and every summary below was recomputed in Python. Sets I to III share the same x values.</p>
+<pre><code class="language-python">x123 = [10, 8, 13, 9, 11, 14, 6, 4, 12, 7, 5]
+sets = {
+    &quot;I&quot;:   (x123, [8.04, 6.95, 7.58, 8.81, 8.33, 9.96, 7.24, 4.26, 10.84, 4.82, 5.68]),
+    &quot;II&quot;:  (x123, [9.14, 8.14, 8.74, 8.77, 9.26, 8.10, 6.13, 3.10, 9.13, 7.26, 4.74]),
+    &quot;III&quot;: (x123, [7.46, 6.77, 12.74, 7.11, 7.81, 8.84, 6.08, 5.39, 8.15, 6.42, 5.73]),
+    &quot;IV&quot;:  ([8] * 7 + [19] + [8] * 3,
+            [6.58, 5.76, 7.71, 8.84, 8.47, 7.04, 5.25, 12.50, 5.56, 7.91, 6.89]),
+}
+for name, (xs, ys) in sets.items():
+    f = st.linear_regression(xs, ys)
+    print(name, st.mean(xs), st.variance(xs), round(st.mean(ys), 2), round(st.variance(ys), 2),
+          round(st.correlation(xs, ys), 3), round(f.intercept, 2), round(f.slope, 3))</code></pre>
+<pre><code class="language-text">I 9 11 7.5 4.13 0.816 3.0 0.5
+II 9 11 7.5 4.13 0.816 3.0 0.5
+III 9 11 7.5 4.12 0.816 3.0 0.5
+IV 9 11 7.5 4.12 0.817 3.0 0.5</code></pre>
+<p>Columns: mean of x, variance of x, mean of y, variance of y, <code>r</code>, intercept, slope. <strong>Same mean, same spread, same `r` (0.816), same line `y = 3 + 0.5x`</strong>, in all four. Now draw them (y rounded to whole units, one <code>*</code> per point, overlaps hidden):</p>
+<pre><code class="language-text"> I: a plain cloud         II: a smooth curve       III: a line plus one stray   IV: a stack plus one lever
+11|         *             9|      *****             13|          *                12|                *
+10|           *           8|     *     *             9|           *               9|     *
+ 9|      *                7|    *                    8|        **                 8|     *
+ 8|       ** *            6|   *                     7|     ***                   7|     *
+ 7|   * *                 5|  *                      6|  ***                      6|     *
+ 6|  *                    3| *                        5| *                         5|     *
+ 5|    *                                                                          
+ 4| *                                                                              </code></pre>
+<p>Set I is honest. II is a curve (trap 3). III is a line with one stray dot (trap 4). IV has ten dots at the same x and <strong>one</strong> far dot that alone creates the slope. Four crowds, one stand-in.</p>
+<blockquote><p>[!NOTE] <code>r</code>, the slope and the line are all summaries. Like every summary in this series they throw information away. The picture is what gets it back: <strong>graph first, number second.</strong></p></blockquote>
+<ul><li>* *</li></ul>
+<h2>Cold days, in this range</h2>
+<p>Ravi studies the scatter plot and the number. &quot;So I was right. Cold days, more tea.&quot;</p>
+<p>&quot;On these eight days, in this range,&quot; says Mira. &quot;Not a law, not a cause, and not at 40 degrees. But I would rather act on a picture and a number than on a feeling, and on a picture rather than a number.&quot;</p>
+<p><strong>Takeaway:</strong> correlation is the average product of paired z-scores, the line is least squared walking, and both describe a straight-line pattern in the range you saw, nothing more. Graph first.</p>
+<ul><li>* *</li></ul>
+<h2>The series in three sentences</h2>
+<p>You made it to the last cup. The whole series was three ideas, retold in different costumes:</p>
+<ul><li>A <strong>summary is a stand-in for a crowd</strong>: the mean, the spread, <code>r</code> and the slope each throw something away, so know the crowd.</li><li><strong>Graphs are one table seen several ways</strong>: histogram, ogive, box plot and scatter plot show the same numbers from different angles, and the picture always comes first.</li><li><strong>A value needs its crowd</strong>: a score, a test result, a correlation means nothing until you ask &quot;compared to what?&quot;</li></ul>
+<p><strong>Closing challenge.</strong> Find two columns in your own life, steps and mood, spending and the weather, anything you can write down for ten days. Draw the scatter plot, compute <code>r</code>, and then try to break your own conclusion with the four traps above. If it survives, you have earned a claim. If not, you have learned something better.</p>
+<p>Everything in one place: <a href="../../../../../fields/data-science/probability-statistics/the-map-of-leaf-and-kettle/">The Map of Leaf &amp; Kettle</a>, or back to the start of the series at the <a href="../../../../../fields/data-science/probability-statistics/">series index</a>.</p>
+<ul><li>* *</li></ul>
+<h2>Never again</h2>
+<table><thead><tr><th>Mistake</th><th>Symptom</th><th>Fix</th></tr></thead><tbody><tr><td>Predicting outside the data</td><td>-41.9 cups at 40 degrees</td><td>A line describes the range it has seen</td></tr><tr><td>Reading correlation as cause</td><td>Iced tea and sunburn at 0.795</td><td>Hold the third thing still: with the same sun it is -0.075</td></tr><tr><td>Trusting <code>r</code> on a curve</td><td><code>y = x²</code> gives 0.0</td><td>Draw the scatter first</td></tr><tr><td>Trusting <code>r</code> with one outlier</td><td>A heatwave day moves <code>r</code> from -0.982 to -0.075</td><td>Look for the far dot; z-scores use the mean and SD</td></tr><tr><td>Summaries without the picture</td><td>Anscombe: four sets, one <code>r</code></td><td>Graph first, number second</td></tr></tbody></table>
+<h2>Check yourself</h2>
+<ol><li>Four days have z-scores for (temperature, cups) of (1, -1), (-1, 1), (0.5, -0.5), (-0.5, 0.5): what is <code>r</code>?</li><li>A fitted line is <code>cups = 64 - 2.5 × temp</code>: cups at 10 degrees, and what does the slope mean in words?</li><li>Towns with more fire engines at a fire have more damage (<code>r = 0.8</code>): does sending fewer engines reduce damage, and what is the hidden third thing? Why is 40 degrees from data covering 2 to 16 a bad idea, even with <code>r = -0.98</code>? Which one picture shows that Anscombe&#x27;s four sets differ?</li></ol>
+<ol><li>Products: -1, -1, -0.25, -0.25; sum -2.5, over 4 days: <code>r =</code> <strong>-0.625</strong>.</li><li><code>64 - 2.5 × 10 =</code> <strong>39 cups</strong>; each extra degree goes with 2.5 fewer cups sold, inside the range the line was fitted on.</li><li><strong>No</strong>: both follow the <strong>size of the fire</strong>; hold it still and the link largely disappears. 40 degrees is far outside 2 to 16, the line is only evidence about the range seen, and there it predicts <strong>-41.9 cups</strong>. The <strong>scatter plot</strong> of each set; the summary numbers are identical.</li></ol>
+<ul><li>* *</li></ul>
+<h2>📜 The Scroll (keep this)</h2>
+<pre><code class="language-text">Correlation : r = average of (z of x) x (z of y); -1 .. +1; straight-line togetherness only
+Line        : the smallest total squared residual (least squares); residuals add to 0
+Slope       : r x SD(y) / SD(x);  r squared = share of the squared miss the line removes
+Traps       : extrapolating; a hidden third cause; curves (r = 0 hides them); one outlier
+Always      : draw the scatter first; Anscombe&#x27;s four sets share every summary
+Do not      : read correlation as cause; predict beyond the range of x you saw</code></pre>
+<ul><li>* *</li></ul>
+<h2>References</h2>
+<ul><li>Python <code>statistics</code> module: <code>correlation</code> (added in 3.10; <code>method=&#x27;ranked&#x27;</code> added in 3.12) and <code>linear_regression</code> (added in 3.10; <code>proportional</code> added in 3.11). All code on this page ran on Python 3.14.4, stdlib only. &lt;https://docs.python.org/3/library/statistics.html&gt;</li><li>Anscombe, F. J. (1973), <em>Graphs in Statistical Analysis</em>, The American Statistician 27(1): 17-21. &lt;https://doi.org/10.1080/00031305.1973.10478966&gt;. The paper&#x27;s table gives the four data sets and states the shared summaries (mean of x 9.0, mean of y 7.5, regression line y = 3 + 0.5x, multiple R² 0.667, so r = 0.816). The data on this page match that table value by value, and the summaries were recomputed above.</li><li>The Ravi tea table and the simulated sun/iced-tea/sunburn data are invented for this page (fixed seed 7).</li><li>Every other number on this page was recomputed with Python 3.14.4.</li></ul>
+<p><a href="../../../../../#/fields/data-science/probability-statistics/inference/two-things-moving-together">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

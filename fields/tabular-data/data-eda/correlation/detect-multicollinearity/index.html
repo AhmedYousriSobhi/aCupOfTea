@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Tabular Data - Data EDA - Correlation - Detect Multicollinearity</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/tabular-data/data-eda/correlation/detect-multicollinearity/">
+<meta name="description" content="How to measure correlation between numeric features with a correlation matrix and show it as a heatmap, to spot multicollinearity.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Tabular Data - Data EDA - Correlation - Detect Multicollinearity">
+<meta property="og:description" content="How to measure correlation between numeric features with a correlation matrix and show it as a heatmap, to spot multicollinearity.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/tabular-data/data-eda/correlation/detect-multicollinearity/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/tabular-data/data-eda/correlation/detect-multicollinearity/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../../.docs/prerender-redirect.js" data-target="../../../../../#/fields/tabular-data/data-eda/correlation/detect-multicollinearity"></script>
+<main>
+<h1>Tabular Data - Data EDA - Correlation - Detect Multicollinearity</h1>
+<p><em>How to measure correlation between numeric features with a correlation matrix and show it as a heatmap, to spot multicollinearity.</em></p>
+<h2>Table of Content</h2>
+<ul><li>Tabular Data - Data EDA - Correlation - Detect Multicollinearity<ul><li>Table of Content</li><li>How to detect correlation between features?</li></ul></li></ul>
+<h2>How to detect correlation between features?</h2>
+<ol><li>Correlation is measured between numeric features only.<ul><li>Starting with calculating the correlation metric between numeric features <code>`</code>python corr_matrix = df.select_dtypes(&#x27;number&#x27;).corr() <code>`</code></li></ul></li></ol>
+<ol><li>Secondly, visualizing the metric using heatmap <code>`</code>python _, ax = plt.subplots(figsize =(10,8)) sns.heatmap(corr_matrix,ax = ax, linewidths = 0.1) plt.title(&#x27;Features Correlation&#x27;) plt.savefig(&#x27;../report/plots/correlation.jpg&#x27;) plt.show() <code>`</code> <img src="https://vitalflux.com/wp-content/uploads/2020/09/Screenshot-2020-09-29-at-11.19.40-AM.png" alt="Correlation_metric" loading="lazy"></li></ol>
+<ul><li>Heatmap is not very easily to be visualized, So for better interpreting, we will jump to third step.</li></ul>
+<ol><li>Thirdly, Calculating the correlation between each feature and all the other features. <code>`</code>python # Simplify by emptying all the data below the diagonal # np.tril_indices_from will return the indecies diagonal and below (lower triangle) tril_index = np.tril_indices_from(corr_matrix)</li></ol>
+<p># Make the unused values NaNs for coord in zip(*tril_index): corr_matrix.iloc[coord[0], coord[1]] = np.NaN</p>
+<p># Stack the data and convert to a dataframe corr_values = (corr_matrix .stack() .to_frame() .reset_index() .rename(columns={&#x27;level_0&#x27;:&#x27;feature1&#x27;, &#x27;level_1&#x27;:&#x27;feature2&#x27;, 0:&#x27;correlation&#x27;}))</p>
+<p># Get the absolute values for sorting corr_values[&#x27;abs_correlation&#x27;] = corr_values.correlation.abs()</p>
+<pre><code>
+   - This will output a dataframe, containing each feature and its correlation coefficient with other features.
+
+      |feature1|feature2|correlation|abs_correlation|
+      |--|--|--|--|
+      |f1|f2|-0.52|0.52|
+      |f1|f3|0.89|0.89|
+      |f2|f3|-0.023|0.023|
+
+4. Fourthly, Ploting a histplot to get an overview of the features correlation.</code></pre>
+<p>ax = corr_values.abs_correlation.hist(bins=50, figsize=(12, 8)) ax.set(xlabel=&#x27;Absolute Correlation&#x27;, ylabel=&#x27;Frequency&#x27;)</p>
+<pre><code>
+5. Lastly, Check which of the featueres has a correlation above certain threshold like 0.8</code></pre>
+<p>corr_values.sort_values(&#x27;correlation&#x27;, ascending=False).query(&#x27;abs_correlation&gt;0.8&#x27;)</p>
+<pre><code></code></pre>
+<p><a href="../../../../../#/fields/tabular-data/data-eda/correlation/detect-multicollinearity">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

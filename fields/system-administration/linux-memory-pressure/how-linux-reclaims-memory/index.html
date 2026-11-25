@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>How Linux Reclaims Memory: Cache, Swap and the Two Kinds of Stall</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/linux-memory-pressure/how-linux-reclaims-memory/">
+<meta name="description" content="Why free memory near zero is normal, which pages the kernel can drop for free and which need swap, how kswapd and direct reclaim differ, and why the second one is where programs stall.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="How Linux Reclaims Memory: Cache, Swap and the Two Kinds of Stall">
+<meta property="og:description" content="Why free memory near zero is normal, which pages the kernel can drop for free and which need swap, how kswapd and direct reclaim differ, and why the second one is where programs stall.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/linux-memory-pressure/how-linux-reclaims-memory/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/linux-memory-pressure/how-linux-reclaims-memory/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/system-administration/linux-memory-pressure/how-linux-reclaims-memory"></script>
+<main>
+<h1>How Linux Reclaims Memory: Cache, Swap and the Two Kinds of Stall</h1>
+<p><em>Why free memory near zero is normal, which pages the kernel can drop for free and which need swap, how kswapd and direct reclaim differ, and why the second one is where programs stall.</em></p>
+<blockquote><p><strong>Part 1 of the [Linux Memory Pressure series](/fields/system-administration/linux-memory-pressure/README.md).</strong> A Linux machine with almost no free memory is usually healthy, and a machine with plenty of free memory can still be in trouble. By the end of this page you&#x27;ll know why, you&#x27;ll be able to read <code>/proc/meminfo</code> without panic, and you&#x27;ll know the exact moment a program starts to stall.</p></blockquote>
+<hr>
+<h2>The library with no empty desks</h2>
+<p>A university library has a reading room with a fixed number of desks. Every desk holds something a student is working on right now. The rest of the collection lives in the basement stacks, which are slow to reach.</p>
+<p>A good librarian doesn&#x27;t keep desks empty. An empty desk is wasted. She fills spare desks with books people <em>might</em> want again soon, because fetching from the basement costs ten minutes. When a student walks in and needs a desk, she clears one in seconds by sending the least-recently-touched book back down.</p>
+<p>Walk in at 3 p.m. and every desk is covered. Is the library overloaded? Not necessarily. Most of those desks hold books that can be swept away at no cost the moment someone needs the space.</p>
+<table><thead><tr><th>Library</th><th>Linux machine</th></tr></thead><tbody><tr><td>Reading-room desks</td><td>RAM, in 4 KiB pages</td></tr><tr><td>The basement stacks</td><td>Disk (files, swap)</td></tr><tr><td>Spare desks used as a shelf of &quot;might want again&quot; books</td><td>The <strong>page cache</strong></td></tr><tr><td>The librarian clearing a desk</td><td>Page <strong>reclaim</strong></td></tr><tr><td>The student who can&#x27;t sit down until a desk is cleared</td><td>A program waiting on an allocation</td></tr></tbody></table>
+<p>Everything on this page is about how the librarian decides what to clear, and what happens when she can&#x27;t keep up.</p>
+<hr>
+<h2>Three kinds of page</h2>
+<p>Not every page is equally cheap to take back. This is the fact that everything else follows from.</p>
+<table><thead><tr><th>Kind of page</th><th>Library version</th><th>What reclaim has to do</th><th>Cost</th></tr></thead><tbody><tr><td><strong>Clean file page</strong></td><td>A library book: the original is in the stacks</td><td>Just drop it. Re-read it from the file if it is needed again</td><td>Free now, a disk read later</td></tr><tr><td><strong>Dirty file page</strong></td><td>A book someone wrote notes in</td><td>Write the changes back to the file first, then drop it</td><td>One disk write</td></tr><tr><td><strong>Anonymous page</strong></td><td>Your own handwritten notes: no original exists</td><td>Needs somewhere to go: <strong>swap</strong>. With no swap, these pages <strong>cannot</strong> be reclaimed</td><td>A disk write now, a read later</td></tr></tbody></table>
+<p><em>Anonymous</em> means &quot;not backed by a file&quot;: a program&#x27;s heap, its stack, memory from <code>malloc</code>. That&#x27;s the memory programs own.</p>
+<p>The kernel sorts pages onto four lists in <code>/proc/meminfo</code>: <code>Active(file)</code>, <code>Inactive(file)</code>, <code>Active(anon)</code> and <code>Inactive(anon)</code>. A page moves from active to inactive when it hasn&#x27;t been touched for a while, and the inactive ends are where reclaim eats first. (Kernels with <strong>multi-gen LRU</strong>, on by default on Ubuntu 26.04, age pages through several generations instead. The four <code>/proc/meminfo</code> counters are still there, so the picture here still reads correctly. Check <code>/sys/kernel/mm/lru_gen/enabled</code>.) This is the &quot;least recently used&quot; rule from the <a href="../../../../fields/system-administration/linux-memory-pressure/memory-locking-mlockall/">memory-locking page</a>, made concrete.</p>
+<p>One consequence is worth saying out loud. <strong>A machine with no swap isn&#x27;t safer, it just has fewer pages it is allowed to reclaim.</strong> All the anonymous memory is pinned by the lack of a place to put it, and only the file cache is left to squeeze.</p>
+<hr>
+<h2>Try it before you scroll</h2>
+<p>☕ Grab a pen. A 16 GiB server reports this:</p>
+<pre><code>MemFree:      300 MB
+Cached:       11 GB
+Swap used:    0</code></pre>
+<p>Is the server in trouble?</p>
+<p>Got your answer? Scroll on.</p>
+<p>Answer: <strong>no</strong>. 11 GB of the &quot;used&quot; memory is cache, mostly clean file pages the librarian can send back to the stacks in an instant. The 300 MB figure only says the desks are being used well. The number that matters is the next section&#x27;s.</p>
+<p>One catch: <code>Cached</code> also counts <strong>shared memory</strong> (<code>tmpfs</code>, <code>/dev/shm</code>, MPI shared segments), which is swap-backed like anonymous memory. With no swap those pages can&#x27;t be dropped. Check the <code>Shmem</code> line in <code>/proc/meminfo</code> before you call all of <code>Cached</code> free.</p>
+<hr>
+<h2>Free is not available</h2>
+<p><code>MemFree</code> is memory nobody is using at all. On a healthy, busy machine it is small <em>on purpose</em>, because the kernel spends the spare on cache.</p>
+<p>The number you want is <code>MemAvailable</code>: the kernel&#x27;s estimate of how much it could hand to a new program <strong>without swapping</strong>, which is free memory plus the part of the cache it can drop, minus a safety margin.</p>
+<p>On the machine I wrote this page on (Ubuntu 26.04, Linux 7.0, 14.8 GiB of RAM):</p>
+<table><thead><tr><th>Field</th><th>Value</th><th>Meaning</th></tr></thead><tbody><tr><td><code>MemTotal</code></td><td>14.8 GiB</td><td>The desks</td></tr><tr><td><code>MemFree</code></td><td>1.3 GiB</td><td>Empty desks</td></tr><tr><td><code>Cached</code></td><td>4.3 GiB</td><td>Books kept on desks, mostly droppable</td></tr><tr><td><code>MemAvailable</code></td><td>5.4 GiB</td><td>What a new student could get without anyone being sent to swap</td></tr></tbody></table>
+<p><code>free</code> says 1.3, <code>MemAvailable</code> says 5.4. A script alerting on <code>MemFree</code> would have paged someone for nothing. A script alerting on <code>MemAvailable</code> is much closer to right, and PSI in the <a href="../../../../fields/system-administration/linux-memory-pressure/memory-pressure-psi/">next page</a> is closer still.</p>
+<hr>
+<h2>Who does the clearing: kswapd and direct reclaim</h2>
+<p>The librarian doesn&#x27;t wait for a student to ask. She has two modes, and the difference between them is the most important idea on this page.</p>
+<p>The kernel tracks three <strong>watermarks</strong> on free memory: <em>high</em>, <em>low</em> and <em>min</em>. Think of them as three lines painted on the wall of the reading room.</p>
+<table><thead><tr><th>Free memory is...</th><th>What happens</th><th>Who waits</th></tr></thead><tbody><tr><td>Above <em>high</em></td><td>Nothing. Everything is calm</td><td>Nobody</td></tr><tr><td>Below <em>low</em></td><td>A background thread, <strong>`kswapd`</strong>, wakes up and reclaims pages</td><td><strong>Nobody.</strong> It runs beside the programs</td></tr><tr><td>Below <em>min</em></td><td>The program asking for memory has to <strong>reclaim pages itself</strong>, before its allocation can finish. This is <strong>direct reclaim</strong></td><td><strong>The program</strong></td></tr></tbody></table>
+<pre><code class="language-mermaid">flowchart LR
+    A[&quot;Free memory&lt;br/&gt;above high&quot;] --&gt; B[&quot;Below low:&lt;br/&gt;kswapd wakes&lt;br/&gt;in the background&quot;]
+    B --&gt; C[&quot;Below min:&lt;br/&gt;direct reclaim&quot;]
+    C --&gt; D[&quot;Your program&lt;br/&gt;stalls inside malloc&quot;]</code></pre>
+<p>While <code>kswapd</code> keeps up, memory pressure is invisible. When programs allocate faster than it can clear, free memory sinks to <em>min</em>, and now <strong>the program that wanted one page is made to do the clearing before it gets it</strong>. That wait is a stall: no CPU used, nothing wrong with the code, just a thread queued behind disk writes.</p>
+<p>This is exactly the trap behind the mlock page: allocating under pressure can block, which is why a rescuer must do its allocating before the trouble starts.</p>
+<p>The kernel counts both. On the same machine:</p>
+<table><thead><tr><th>Counter in <code>/proc/vmstat</code></th><th>Value</th><th>Reading</th></tr></thead><tbody><tr><td><code>pgscan_kswapd</code></td><td>5.39 million</td><td>Pages scanned by the background thread</td></tr><tr><td><code>pgscan_direct</code></td><td>122 thousand</td><td>Pages scanned by stalled programs themselves</td></tr><tr><td><code>allocstall_*</code></td><td>about 1,000 in total</td><td>Times a program had to enter direct reclaim</td></tr></tbody></table>
+<p>Roughly two scanned pages in a hundred were done by a program that was made to wait. A healthy machine has a small <code>pgscan_direct</code>. When that line starts climbing fast, the stalls have begun.</p>
+<hr>
+<h2>The knobs: swappiness, zram and zswap</h2>
+<p>Three settings change how the librarian behaves. People often misread the first.</p>
+<p><strong>`vm.swappiness`</strong> (default 60) is the balance between reclaiming <strong>file pages</strong> and <strong>anonymous pages</strong>. It is <em>not</em> &quot;start swapping when memory is 60% full&quot;. Higher values make the kernel more willing to push anonymous pages to swap rather than shrink the cache. At 0 it strongly prefers dropping cache first. The range is 0 to 200 since Linux 5.8 (0 to 100 before).</p>
+<p><strong>zram</strong> is a swap device that lives in RAM and <strong>compresses</strong> what is put into it. Swapping out a page costs a bit of CPU instead of a disk write, which is why zram-backed swap hurts far less. It is common on laptops and some servers.</p>
+<p><strong>zswap</strong> is a compressed <em>cache in front of a real swap device</em>. Pages are compressed into a RAM pool first, and only pushed to disk when that pool fills.</p>
+<p>| | Where evicted pages go | Cost to bring one back | |-|------------------------|------------------------| | Disk swap | A swap file or partition | Microseconds (SSD) to milliseconds (disk), worse when the disk is busy | | zram | A compressed block in RAM | A decompression: far faster than disk | | zswap | Compressed RAM, spilling to disk when full | Fast while the pool lasts |</p>
+<p>None of these remove the stall. They make each swapped-in page cheaper, so the stall is shorter.</p>
+<hr>
+<h2>Thrashing: when the clearing never ends</h2>
+<p>One more word, because it names the worst case.</p>
+<p>If the pages programs are <em>actively using</em> (their <strong>working set</strong>) don&#x27;t fit in RAM, reclaim evicts a page, the program touches it a moment later, and it has to be read straight back in. The kernel counts these in <code>workingset_refault_*</code>. The machine spends its time swapping the same pages in and out while no program makes progress. This is <strong>thrashing</strong>, and it feels like the machine froze, though nothing has crashed.</p>
+<p>Thrashing is also why the kernel&#x27;s OOM killer, which only fires when it truly cannot find a page, can take <strong>minutes</strong> to act on a machine that is unusable long before. That gap is the subject of the <a href="../../../../fields/system-administration/linux-memory-pressure/the-oom-killer/">OOM-killer page</a>, and it is why something has to notice trouble earlier.</p>
+<hr>
+<h2>See it on your own machine</h2>
+<pre><code class="language-bash">free -h                                           # the quick view; read the &quot;available&quot; column
+grep -E &quot;MemTotal|MemFree|MemAvailable|^Cached|^Active|^Inactive|SwapTotal|SwapFree&quot; /proc/meminfo
+sysctl vm.swappiness vm.min_free_kbytes           # the knob and the &quot;min&quot; watermark source
+grep -E &quot;^(pgscan_kswapd|pgscan_direct|allocstall)&quot; /proc/vmstat
+vmstat 1                                          # watch si/so (swap in/out per second) live</code></pre>
+<p>Run the <code>/proc/vmstat</code> line twice, a minute apart, during busy work, and subtract. A growing <code>pgscan_direct</code> is the number that says programs are paying for the clearing themselves.</p>
+<p><strong>Takeaway:</strong> the kernel keeps RAM full on purpose and takes it back as needed; a background thread does it quietly until free memory hits the minimum line, and from then on <em>your program</em> does the clearing and stalls. Watch <code>MemAvailable</code> and <code>pgscan_direct</code>, not <code>MemFree</code>.</p>
+<p>So the machine is spending its time clearing desks. How do you notice that it&#x27;s happening <em>before</em> anything breaks? That&#x27;s <a href="../../../../fields/system-administration/linux-memory-pressure/memory-pressure-psi/">part 2</a>.</p>
+<h2>References</h2>
+<ul><li><a href="https://www.kernel.org/doc/html/latest/admin-guide/mm/concepts.html">Linux kernel docs: Concepts overview (page cache, anonymous memory, reclaim)</a></li><li><a href="https://www.kernel.org/doc/html/latest/admin-guide/sysctl/vm.html">Linux kernel docs: /proc/sys/vm (swappiness, min_free_kbytes, watermark_scale_factor)</a></li><li><a href="https://www.kernel.org/doc/html/latest/admin-guide/blockdev/zram.html">Linux kernel docs: zram</a> and <a href="https://www.kernel.org/doc/html/latest/admin-guide/mm/zswap.html">zswap</a></li><li><a href="https://man7.org/linux/man-pages/man5/proc.5.html">proc(5): /proc/meminfo and /proc/vmstat</a></li></ul>
+<p><a href="../../../../#/fields/system-administration/linux-memory-pressure/how-linux-reclaims-memory">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

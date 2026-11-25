@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Counting and Conditioning: Why a 99% Accurate Test Is Usually Wrong</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/probability/counting-and-conditioning/">
+<meta name="description" content="Probability is a share of the equally likely ways, so &quot;or&quot; adds, &quot;and&quot; multiplies and &quot;at least one&quot; is 1 minus none. Conditioning shrinks the crowd, and Bayes&#x27; rule reads that count backwards.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Counting and Conditioning: Why a 99% Accurate Test Is Usually Wrong">
+<meta property="og:description" content="Probability is a share of the equally likely ways, so &quot;or&quot; adds, &quot;and&quot; multiplies and &quot;at least one&quot; is 1 minus none. Conditioning shrinks the crowd, and Bayes&#x27; rule reads that count backwards.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/probability/counting-and-conditioning/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/data-science/probability-statistics/probability/counting-and-conditioning/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../../.docs/prerender-redirect.js" data-target="../../../../../#/fields/data-science/probability-statistics/probability/counting-and-conditioning"></script>
+<main>
+<h1>Counting and Conditioning: Why a 99% Accurate Test Is Usually Wrong</h1>
+<p><em>Probability is a share of the equally likely ways, so &quot;or&quot; adds, &quot;and&quot; multiplies and &quot;at least one&quot; is 1 minus none. Conditioning shrinks the crowd, and Bayes&#x27; rule reads that count backwards.</em></p>
+<blockquote><p><strong>Parts 7 and 8 of 15.</strong> Part of the <a href="../../../../../fields/data-science/probability-statistics/">Probability &amp; Statistics</a> series. Parts 1 to 6 described data you <strong>have</strong>; from here on, chance. The scenario is invented, and every count was checked by listing the ways in Python 3.14.4 (exact fractions).</p></blockquote>
+<p>At 10:40 on a Monday, Tala will hold a tin over the bin because a leaflet said &quot;99% accurate&quot;. The leaflet will be telling the truth. She will be answering a different question, and the difference is about ten to one.</p>
+<p><strong>By the end of this page you will be able to:</strong></p>
+<ul><li>Count a probability as a share of the list of equally likely ways, and apply &quot;or&quot;, &quot;not&quot; and &quot;and&quot; correctly.</li><li>Turn &quot;at least one&quot; into 1 minus none.</li><li>Shrink a crowd to the people who match a clue and count again (conditional probability).</li><li>Build a tree of whole tins and read Bayes&#x27; rule off it, then update on a second result.</li></ul>
+<ul><li>* *</li></ul>
+<h2>The leaflet said 99%</h2>
+<p>A supplier sends Mira a rapid check for a rare problem: a contaminated tin in a delivery. The leaflet is proud: <strong>&quot;99% accurate.&quot;</strong> Roughly one tin in a thousand is contaminated (invented numbers).</p>
+<p>Tala, three weeks into the job, runs the check on a tin from the new delivery.</p>
+<pre><code class="language-text">CHECK RESULT: POSITIVE</code></pre>
+<p>She goes pale and reaches for the bin. &quot;It&#x27;s ninety-nine percent sure. It says so on the leaflet.&quot;</p>
+<ul><li>* *</li></ul>
+<h2>Three attempts, one bin</h2>
+<ol><li><strong>Bin the tin.</strong> 99% is nearly certain. Cost: one tin, which is cheap.</li><li><strong>Check the whole delivery and bin every positive.</strong> If the check is that good, trust it everywhere. Cost: a delivery of 1,000 tins.</li><li><strong>Recall last month&#x27;s 100,000 tins, because the same check passed them.</strong> Ravi, reading the leaflet aloud, backs this one. Cost: the shop.</li></ol>
+<p>Mira stops it at the third with one question: &quot;If the check is wrong about 1 tin in 100, and nearly every tin is fine, how many fine tins does it flag?&quot;</p>
+<p>Nobody answers. The question needs a crowd, so build one.</p>
+<ul><li>* *</li></ul>
+<h2>The list, the share and the crowd</h2>
+<h3>Probability is a share of the list of ways</h3>
+<p>Chance needs a list of <strong>what could happen</strong>, written down first.</p>
+<ul><li>The <strong>sample space</strong> is the list of all possible outcomes. An <strong>event</strong> is a group of them.</li><li>If every outcome is equally likely, <code>P(event) = (ways the event can happen) / (all ways)</code>. OpenStax gives the sample space, event and this counting rule in these terms.</li></ul>
+<p>Two dice have 6 × 6 = <strong>36</strong> outcomes. <code>D</code> marks doubles, <code>8</code> total-8 and <code>X</code> both:</p>
+<pre><code class="language-text">         second die
+          1  2  3  4  5  6
+first  1  D  .  .  .  .  .
+die    2  .  D  .  .  .  8
+       3  .  .  D  .  8  .
+       4  .  .  .  X  .  .
+       5  .  .  8  .  D  .
+       6  .  8  .  .  .  D</code></pre>
+<p><em>The whole sample space. Probability is how many cells you shade, out of 36.</em></p>
+<p>A relative frequency is <strong>what happened</strong> divided by the number of throws; a probability is <strong>what could happen</strong> divided by the number of cells. Roll often enough and the first drifts toward the second.</p>
+<h3>Or, not, and</h3>
+<p>A shop promotion reads: &quot;Roll a double, or a total of 8, and the biscuit is free.&quot; Adding the two lists gives 6/36 + 5/36 = 11/36. The grid has 10 shaded cells, because <code>X</code> is in both groups and the sum counts it twice.</p>
+<pre><code class="language-text">P(A or B) = P(A) + P(B) − P(A and B)       6 + 5 − 1 = 10, so 10/36, about 28%</code></pre>
+<p>If the events cannot happen together, the overlap is empty and &quot;or&quot; is plain addition. The same trap in another form: <strong>at least one six</strong> in two rolls is <strong>11/36</strong>, not 1/6 + 1/6 = 12/36, because (6, 6) is on the list twice.</p>
+<p><strong>At least one</strong> hides a long list. Its <strong>complement</strong>, no six at all, is one rectangle: 5 × 5 = 25 cells.</p>
+<pre><code class="language-text">P(not A) = 1 − P(A)          at least one six = 1 − 25/36 = 11/36</code></pre>
+<p><strong>And</strong> asks for the cells where both hold. &quot;First die even&quot; is 18 cells, &quot;second die is 5 or 6&quot; is 12, and where both hold is a block of 3 rows by 2 columns: 6 cells.</p>
+<pre><code class="language-text">18/36 × 12/36 = 6/36          independent: the shaded cells form a rectangle</code></pre>
+<p>That is <strong>independence</strong>: knowing one tells you nothing about the other. A pair that talks: &quot;first die is a 6&quot; (6 cells) and &quot;total is at least 10&quot; (6 cells: 4+6, 5+5, 5+6, 6+4, 6+5, 6+6) overlap in 3 cells, not 6/36 × 6/36 = 1. Multiplying would have been wrong.</p>
+<p>The same idea kills the gambler&#x27;s fallacy. Of the 6⁴ = 1296 four-roll sequences, exactly 6 start with three sixes, and in 1 of those 6 the fourth roll is a six: <strong>1/6</strong>. The dice have no memory.</p>
+<h3>Counting without writing the list</h3>
+<p>Picking 2 free samples from 6 blends: with order, 6 × 5 = <strong>30</strong>; without order each pair is counted twice, so 30 / 2 = <strong>15</strong>. Python lists them and has the shortcuts:</p>
+<pre><code class="language-python">import itertools, math
+
+grid = list(itertools.product(range(1, 7), repeat=2))
+double = {g for g in grid if g[0] == g[1]}
+eight  = {g for g in grid if sum(g) == 8}
+print(len(grid), len(double), len(eight), len(double &amp; eight), len(double | eight))
+no_six = [g for g in grid if 6 not in g]
+print(len(grid) - len(no_six))                           # at least one six: 1 minus none
+print(len(list(itertools.permutations(range(6), 2))), math.perm(6, 2))
+print(len(list(itertools.combinations(range(6), 2))), math.comb(6, 2))</code></pre>
+<pre><code class="language-text">36 6 5 1 10
+11
+30 30
+15 15</code></pre>
+<p>If two of the six blends are secret, a random pair holds <strong>both</strong> with probability 1/15, and <strong>at least one</strong> with <code>1 − comb(4, 2)/15 = 9/15 = 60%</code> (the complement again). Counting a share of the list is a probability only when every pick is equally likely.</p>
+<h3>Conditional probability: shrink the crowd</h3>
+<p>Extra information changes the crowd. <code>P(A | B)</code>, &quot;the chance of A given B&quot;, means: throw away everyone who does not match B, then count the share inside what is left.</p>
+<table><thead><tr><th>Without the clue</th><th>With the clue</th></tr></thead><tbody><tr><td>Count among all tins</td><td>Count among only the tins that tested positive</td></tr><tr><td>Denominator: everyone</td><td>Denominator: the tins that match</td></tr></tbody></table>
+<h3>Natural frequencies: the 100,000 tins</h3>
+<p>Start with people-sized things you can count, not percentages: 100,000 tins, split by truth, then by test result.</p>
+<pre><code class="language-mermaid">flowchart TD
+    A[&quot;100,000 tins&quot;] --&gt; B[&quot;100 contaminated&quot;]
+    A --&gt; C[&quot;99,900 clean&quot;]
+    B --&gt; D[&quot;99 test positive&quot;]
+    B --&gt; E[&quot;1 tests negative&quot;]
+    C --&gt; F[&quot;999 test positive&quot;]
+    C --&gt; G[&quot;98,901 test negative&quot;]</code></pre>
+<p><em>The test is 99% right about each branch, and the branches are very unequal.</em></p>
+<p>Tala&#x27;s tin tested positive, so shrink the crowd to the positives: 99 + 999 = <strong>1,098</strong> tins, of which 99 are contaminated.</p>
+<pre><code class="language-python">from fractions import Fraction as F
+
+crowd = 100_000
+sick  = crowd * F(1, 1000)
+clean = crowd - sick
+tp = sick  * F(99, 100)               # contaminated and flagged
+fp = clean * F(1, 100)                # clean but flagged
+print(tp, fp, tp + fp, tp / (tp + fp), float(tp / (tp + fp)))</code></pre>
+<pre><code class="language-text">99 999 1098 11/122 0.09016393442622951</code></pre>
+<p>About <strong>9%</strong>, not 99%. The check is not broken; the <strong>base rate</strong> is the issue. Contaminated tins are so rare that a 1% false-alarm rate on a huge clean crowd makes ten times more false alarms than true catches. Ignoring this is <strong>base-rate neglect</strong>.</p>
+<h3>Two questions, two crowds</h3>
+<table><thead><tr><th>Question</th><th>Crowd you count inside</th><th>Answer</th></tr></thead><tbody><tr><td><code>P(positive | contaminated)</code>: if a tin is bad, does the test flag it?</td><td>The 100 contaminated tins</td><td>99 / 100 = <strong>99%</strong></td></tr><tr><td><code>P(contaminated | positive)</code>: if the test flags a tin, is it bad?</td><td>The 1,098 flagged tins</td><td>99 / 1,098 = <strong>about 9%</strong></td></tr></tbody></table>
+<p>The leaflet reports the first. Tala needs the second. Same two events, different crowd.</p>
+<h3>Bayes&#x27; rule is the tree with the people divided out</h3>
+<pre><code class="language-text">P(A | B) = P(B | A) × P(A) / P(B)</code></pre>
+<p>With A = contaminated and B = positive: <code>P(B | A) = 0.99</code> (the leaflet), <code>P(A) = 0.001</code> (the base rate), and <code>P(B)</code>, all the ways to be positive, is <code>0.99 × 0.001 + 0.01 × 0.999 = 0.01098</code>. So <code>0.00099 / 0.01098 = 11/122</code>, about 9%. You do not need to memorize it: rebuild the crowd, shrink it, count.</p>
+<blockquote><p>[!NOTE] The tree of counts is the <strong>frequency format</strong> studied by Gigerenzer and Hoffrage (1995). Their paper is about how people reason with it; this page uses the idea, not their results.</p></blockquote>
+<h3>Try it: Why a 99% accurate test is so often wrong</h3>
+<blockquote><p><strong>What to try:</strong> Move the base rate, the catch rate and the false-alarm rate, and watch the 100 positive tins change colour. The starting dials are this page&#x27;s numbers. <strong>Start with:</strong> the preset <em>The page: rare</em>.</p></blockquote>
+<p><a href="../../../../../fields/data-science/probability-statistics/labs/bayes.html">Bayes lab</a></p>
+<h3>Updating on a second positive</h3>
+<p>After one positive the belief is not 0.1% and not 99%: it is <strong>about 9%</strong>, and that becomes the new starting crowd. Run a second check, <strong>assuming the two checks make independent mistakes</strong>, and suppose it is positive again. Of 99 contaminated tins about 98 flag again; of 999 clean ones about 10 do. <code>98 / (98 + 10)</code> is about <strong>90.7%</strong>, and exact fractions give <code>363/400 = 90.75%</code>.</p>
+<pre><code class="language-python">p = F(11, 122)                         # belief after the first positive
+p2 = F(99, 100) * p / (F(99, 100) * p + F(1, 100) * (1 - p))
+print(p2, float(p2))</code></pre>
+<pre><code class="language-text">363/400 0.9075</code></pre>
+<pre><code class="language-text">before any test       0.1%
+after one positive    9.0%
+after two positives   90.75%</code></pre>
+<blockquote><p>[!WARNING] If the second check shares the first one&#x27;s flaw (same dirty reagent, same bad batch), the mistakes are not independent, and repeating it teaches you much less.</p></blockquote>
+<ul><li>* *</li></ul>
+<h2>The tin goes in the bin, eventually</h2>
+<p>Tala puts the tin down on the counter and counts it out on the back of the leaflet: 99 real, 999 false, 1,098 flagged.</p>
+<p>&quot;So the leaflet wasn&#x27;t lying,&quot; she says. &quot;It told me how the check treats bad tins. I asked it about <em>this</em> tin.&quot;</p>
+<p>&quot;And this tin sits in a crowd where almost everything is fine,&quot; says Mira. &quot;Nine alarms in ten are false. Run it again, and read the batch code while we wait.&quot;</p>
+<p>Positive again. Now the tin goes in the bin, 90% sure rather than 99% fooled. Ravi quietly un-recalls the shop.</p>
+<ul><li>* *</li></ul>
+<h2>Never again</h2>
+<table><thead><tr><th>Trap</th><th>What it looks like</th><th>Fix</th></tr></thead><tbody><tr><td>Adding overlapping chances</td><td>&quot;10 customers × 0.3 = 300%&quot;</td><td><code>P(A or B)</code> subtracts the overlap; &quot;at least one&quot; is 1 minus none</td></tr><tr><td>Multiplying events that talk</td><td>&quot;first die 6&quot; and &quot;total ≥ 10&quot; as 1/6 × 1/6</td><td>Multiply only if the cells form a rectangle; otherwise count the overlap</td></tr><tr><td>Flipping the condition</td><td>99% reported for a rare thing</td><td>Count inside the positives, not inside the sick</td></tr><tr><td>Ignoring the base rate</td><td>A good test, a rare problem</td><td>Build the 100,000 crowd first</td></tr><tr><td>Repeating a correlated test</td><td>Same reagent twice</td><td>Update only if the mistakes are independent</td></tr></tbody></table>
+<p><strong>Next:</strong> Ravi has been counting tins in his head. How many alarms should he <strong>expect</strong> altogether if he runs the check on all 100,000? Next cup: <a href="../../../../../fields/data-science/probability-statistics/probability/expectation-binomial-poisson/">Expectation and the Two Count Recipes</a>.</p>
+<ul><li>* *</li></ul>
+<h2>Check yourself</h2>
+<ol><li>Two dice: chance the total is 7, and chance of <strong>at least one</strong> even number?</li><li>In the tree, how many of the 100,000 tins test <strong>negative</strong>, and how many of those are contaminated?</li><li>A school has 1,000 pupils; 10 are in the chess club; 6 of the club wear glasses and 90 of the other 990 do. What is the chance a pupil with glasses is in the club?</li><li>The same check is used on a delivery where <strong>half</strong> the tins are contaminated. Is a positive more or less trustworthy than 9%?</li><li>How many ways to pick 3 blends from 6 when order does not matter?</li></ol>
+<ol><li>The total is 7 in 6 cells: <strong>1/6</strong>. No even number means both dice odd, 3 × 3 = 9 cells, so 1 − 9/36 = <strong>3/4</strong>.</li><li>98,901 + 1 = <strong>98,902</strong> test negative, and <strong>1</strong> of them is contaminated (about 0.001%): a negative is very trustworthy here.</li><li>6 + 90 = 96 wear glasses, so 6 / 96 = <strong>1/16</strong>, about 6%.</li><li><strong>More</strong>: 49,500 of 50,000 contaminated are caught and 500 clean ones are flagged, so 49,500 / 50,000 = 99%. The base rate did the work.</li><li><code>math.comb(6, 3)</code> = <strong>20</strong> (6 × 5 × 4 = 120 ordered picks, divided by the 6 orderings of each trio).</li></ol>
+<h2>📜 The Scroll (keep this)</h2>
+<pre><code class="language-text">Probability : ways it happens / all ways (equally likely outcomes only)
+Or / not    : P(A or B) = P(A) + P(B) - P(A and B);  P(not A) = 1 - P(A)
+And         : P(A) x P(B) only if independent (a rectangle of cells)
+Picks       : math.perm(n, k) ordered, math.comb(n, k) unordered
+Conditional : shrink to the matching crowd, count again
+Bayes       : P(A | B) = P(B | A) P(A) / P(B); rebuild the crowd instead
+Do not      : confuse P(positive | sick) with P(sick | positive)</code></pre>
+<ul><li>* *</li></ul>
+<ul><li>* *</li></ul>
+<h2>References</h2>
+<ul><li>OpenStax, <em>Introductory Statistics 2e</em>, Ch. 3 &quot;Probability Topics&quot;, section 3.1 Terminology: sample space, event, and probability as a count for equally likely outcomes. The page fetched did not define independence, so the definition above is this page&#x27;s own plain-words version. &lt;https://openstax.org/books/introductory-statistics-2e/pages/3-1-terminology&gt;</li><li>Python <code>itertools</code> (<code>product</code>, <code>permutations</code>, <code>combinations</code>) and <code>math</code> (<code>comb(n, k)</code> &quot;without repetition and without order&quot;, <code>perm(n, k)</code> &quot;with order&quot;; soft-deprecated aliases in 3.15, working as shown on 3.14.4). &lt;https://docs.python.org/3/library/itertools.html&gt;, &lt;https://docs.python.org/3/library/math.html&gt;</li><li>Gigerenzer, G. and Hoffrage, U. (1995), <em>How to improve Bayesian reasoning without instruction: Frequency formats</em>, Psychological Review 102(4), 684-704. &lt;https://doi.org/10.1037/0033-295X.102.4.684&gt;. Bibliographic details confirmed through Crossref; the paper&#x27;s text and findings are not quoted.</li><li>Every count, fraction and percentage was recomputed with Python 3.14.4 using exact <code>fractions.Fraction</code>, including the 1296 four-roll sequences. The scenario and its rates (1 in 1,000, 99% and 1%) are invented.</li></ul>
+<p><a href="../../../../../#/fields/data-science/probability-statistics/probability/counting-and-conditioning">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

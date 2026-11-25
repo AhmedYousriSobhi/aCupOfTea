@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>System Administration - Build Process</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/build-process/">
+<meta name="description" content="Why and how to configure the build of a Linux package, with a closer look at how CMake works, how to clean a build and how findpackage fails.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="System Administration - Build Process">
+<meta property="og:description" content="Why and how to configure the build of a Linux package, with a closer look at how CMake works, how to clean a build and how findpackage fails.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/build-process/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/build-process/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../.docs/prerender-redirect.js" data-target="../../../#/fields/system-administration/build-process"></script>
+<main>
+<h1>System Administration - Build Process</h1>
+<p><em>Why and how to configure the build of a Linux package, with a closer look at how CMake works, how to clean a build and how findpackage fails.</em></p>
+<h1>Mystic Map</h1>
+<h1>Why Configure the Build Process for Applications or Packages in Linux?</h1>
+<p>Configuring the build process for applications or packages in Linux is crucial for several reasons:</p>
+<ol><li>Customization: Allows tailoring the software to specific needs by enabling or disabling features, optimizing for particular hardware, or integrating with other software components.</li><li>Performance Optimization: Adjusting compiler flags and options can enhance performance and efficiency, making the application run faster or use fewer resources.</li><li>Dependency Management: Ensures that all required libraries and dependencies are correctly identified and linked, preventing runtime errors and ensuring smooth operation.</li><li>Security: Custom builds can apply specific security patches, enforce stricter security policies, and remove unnecessary components that might introduce vulnerabilities.</li><li>Compatibility: Configuring the build process ensures compatibility with the specific environment, such as the operating system version, library versions, and hardware architecture.</li><li>Automated Deployment: Facilitates automated deployment processes, allowing consistent and reproducible builds, essential for continuous integration and delivery pipelines.</li><li>Debugging and Testing: Custom configurations can include debug symbols, enabling more effective debugging and more thorough testing processes.</li></ol>
+<h1>Key Steps in the Build Configuration Process</h1>
+<ol><li>Obtaining the Source Code: Usually from repositories like GitHub, or by downloading tarballs.</li><li>Preparing the Build Environment: Installing necessary tools and libraries, such as compilers, build systems, and dependencies.</li><li>Configuring the Build Options: Using tools like ./configure, CMake, or Meson to set options and preferences.</li><li>Compiling the Code: Running make or another build command to compile the source code.</li><li>Installing the Application: Using make install or equivalent to install the built software.</li><li>Post-Installation Configuration: Adjusting runtime configurations and environment variables if necessary.</li></ol>
+<h1>Common Tools and Commands</h1>
+<ul><li>Autoconf and Automake: Tools for generating configure scripts.</li><li>CMake: A cross-platform tool for managing the build process.</li><li>Meson: A modern build system focused on speed and ease of use.</li><li>make: A build automation tool that uses Makefiles to control the build process.</li></ul>
+<p>They both differ in their design, usage, and capabilities.</p>
+<p>Let&#x27;s explore some of them.</p>
+<h1>CMake</h1>
+<h2>Overview and History</h2>
+<p>CMake (short for &quot;Cross-Platform Make&quot;) is an open-source tool designed to manage the build process of software in a compiler-independent manner. It was created by Kitware in 2000 to address the limitations of make and other build tools in cross-platform environments. CMake generates native build files (like Makefiles on Unix or project files for IDEs like Visual Studio) based on platform-specific configurations.</p>
+<h2>How CMake Works Internally</h2>
+<ol><li>CMakeLists.txt: The primary configuration file where build instructions are written.</li><li>Configuration Phase: When you run cmake command, it reads the CMakeLists.txt files and generates native build system files.</li><li>Build Phase: Using the generated files (e.g., Makefiles), the actual build process is executed by running the appropriate build tool (like make).</li></ol>
+<h2>Cmake follows a two-phase process</h2>
+<ol><li><strong>Configuration Phase</strong><ul><li>Parses <em>CmakeLists.txt</em>.</li><li>Resolves dependencies.</li><li>Generates cache entries in <em>CMakeCache.txt</em>.</li></ul></li><li><strong>Generation Phase</strong><ul><li>Produces native build system files.</li><li>Configures includes directories, library dependencies, and compilation options.</li></ul></li></ol>
+<h2>How to configure using CMake</h2>
+<h3>1- Basic Structure of CMakeLists.txt</h3>
+<pre><code class="language-cmake">    cmake_minimum_required(VERSION 3.10)
+    project(AdvancedProject)
+
+    # Set project version
+    set(PROJECT_VERSION_MAJOR 1)
+    set(PROJECT_VERSION_MINOR 0)
+
+    # Specify C++ standard
+    set(CMAKE_CXX_STANDARD 17)
+    set(CMAKE_CXX_STANDARD_REQUIRED True)
+
+    # Add executable
+    add_executable(AdvancedExecutable main.cpp)
+
+    # Add include directories
+    target_include_directories(AdvancedExecutable PUBLIC include)
+
+    # Link libraries
+    find_package(Boost 1.65 REQUIRED COMPONENTS system)
+    target_link_libraries(AdvancedExecutable Boost::system)
+
+    # Add custom build step
+    add_custom_command(TARGET AdvancedExecutable POST_BUILD
+                    COMMAND ${CMAKE_COMMAND} -E copy
+                    &quot;${PROJECT_SOURCE_DIR}/config.cfg&quot;
+                    $&lt;TARGET_FILE_DIR:AdvancedExecutable&gt;)</code></pre>
+<ul><li>This example shows a more advanced configuration, specifying the C++ standard, linking Boost libraries, and adding custom build steps.</li></ul>
+<h3>2- Running CMake</h3>
+<p>2.1. *<strong>Approach-01- Manually creating build directory</strong>*</p>
+<ul><li>Create build directory: <code>`</code>sh mkdir build cd build <code>`</code></li><li>Run Cmake to generate the build system files: <code>`</code>sh cmake .. # Note you must specify the location of the binaries of the source. # specifies the source directory, which is the parent directory (&#x27;..&#x27;). <code>`</code></li><li>Build the project: <code>`</code>sh make <code>`</code></li><li>Install the project <code>`</code>sh make install <code>`</code></li></ul>
+<p>2.2. *<strong>Approach-02- Without manually creating the build directory</strong>*</p>
+<ul><li>Running Cmake with the specified build directory: instead of creating the build directory and manually navigating to it, you can run CMake in a single command, specifying the build directory. <code>`</code>sh cmake -S . -B build <code>`</code><ul><li>*<strong>-s .</strong>* : specifies the source directory, which is the current directory (&#x27;.&#x27;).</li><li>*<strong>-B build</strong> : specifies the build directory, which will be created if it doesn&#x27;t exists.</li></ul></li><li>Building the project: Once the build directory is specified, you can invoke the build system from the source directory. <code>`</code>sh cmake --build build <code>`</code></li><li>Install the project <code>`</code>sh cmake --install build <code>`</code></li></ul>
+<h3>3- Common Default Parameters</h3>
+<ul><li>*<strong>Installation directories specific</strong>* <code>`</code>sh -DCMAKE_INSTALL_PREFIX=/path/to/install/directory # Specifies the installation directory</li></ul>
+<p>-DCMAKE_RUNTIME_OUTPUT_DIRECTORY=/path/to/bin # Specifies the directory where runtime files (executables) will be placed.</p>
+<p>-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=/path/to/lib # Specifies the directory where library files will be placed.</p>
+<p>-DCMAKE_ARCHIVE_OUTPUT_DIRECTORY=/path/to/lib # Specifies the directory where archive files (static libraries) will be placed.</p>
+<pre><code>- ***Compiler specific parameters***</code></pre>
+<p>-DCMAKE_BUILD_TYPE=Release # Specifies the build type (e.g, Debug, Release, RelWithDebInfo, MinSizeRel).</p>
+<p>-DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -DCMAKE_Fortran_COMPILER=gfortran # Specifies the C, C++, Fortran compilers.</p>
+<p>-DCMAKE_C_FLAGS=&quot;-Wall -02&quot; -DCMAKE_CXX_FLAGS=&quot;-Wall -02&quot; -DCMAKE_Fortran_FLAGS=&quot;-Wall -02&quot; # Specifies the Additional compiler flags for C, C++, Fortran files.</p>
+<pre><code>- ***Dependencies specific paramters***</code></pre>
+<p>-DCMAKE_PREFIX_PATH=/path/to/dependencies # Lists of directories specifying where to search for dependencies.</p>
+<p>-DCMAKE_FIND_ROOT_PATH=/path/to/root # Specifies one or more directories to be prepended to all other search directories.</p>
+<p>-DCMAKE_TOOLCHAIN_FILE=/path/to/toolchain.cmake # Specifies the path to a toolchain file to use for cross-compilation.</p>
+<pre><code>- ***Additional info paramters***</code></pre>
+<p>-DBUILD_SHARED_LIBS=ON # Controls whether shared libraries are build [ON, OFF].</p>
+<p>-DCMAKE_INSTALL_MESSAGE=ALWAYS # Specifies the install message level [ALWAYS, LAZY, NEVER]</p>
+<p>-DCMAKE_EXPORT_COMPILE_COMMANDS=ON # Generates a compile_commands.json file. [ON, OFF]</p>
+<pre><code>
+## Cleaning the Build Directory
+### 1- Using *--build* with *--target clean* option</code></pre>
+<p>cmake --build build --target clean</p>
+<h1>This removes the files generated during the build process but does not clear the entire build directory.</h1>
+<h1>Recreate the build directory and configure the project</h1>
+<p>cmake -S . -B build</p>
+<h1>Build the project</h1>
+<p>cmake --build build</p>
+<pre><code>### 2- Using *-E rm* Command</code></pre>
+<p>cmake -E rm -rf build</p>
+<h1>The -E rm command can be used to completely remove files or directories</h1>
+<h1>Recreate the build directory and configure the project</h1>
+<p>cmake -S . -B build</p>
+<h1>Build the project</h1>
+<p>cmake --build build</p>
+<pre><code>
+### 3- Using CMake Scripting with a Clean Target
+You can create a custom clean target in your CMakeLists.txt that removes the build directory contents. This is useful if you want to integrate this functionality directly into your build configuration.</code></pre>
+<p>add_custom_target(clean-all COMMAND ${CMAKE_COMMAND} -E remove_directory ${CMAKE_BINARY_DIR} COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR} COMMENT &quot;Cleaning all build files&quot; )</p>
+<pre><code>Then, you can run:</code></pre>
+<p>cmake --build build --target clean-all</p>
+<pre><code>
+## Advanced Tips and Tricks for CMake Command Line
+
+|Title|objective|Command|
+|-|-|-|
+Out-of-Source Builds|Always use out-of-source builds to keep your source directory clean.|***cmake -S . -B build***
+Parallel Builds|Use the --parallel option to speed up builds by utilizing multiple CPU cores.|***cmake --build build --parallel $(nproc)***
+Reconfigure with cmake --fresh|Reconfigure the project with fresh cache values.|***cmake -S . -B build -DCMAKE_BUILD_TYPE=Release --fresh***
+Using Ninja for Faster Builds|Ninja is a small build system with a focus on speed. Use the Ninja generator for faster builds.|***cmake -S . -B build -G Ninja&lt;/br&gt;cmake --build build***
+Build and Install in One Step|Build and install the project in one step using the --target and --install options.|***cmake --build build --target install***
+Using Environment Variables|You can set environment variables to customize the build process.|***CXX=g++ CC=gcc cmake -S . -B build***
+Clearing the Cache|If you need to clear the cache without deleting the entire build directory, you can remove the CMakeCache.txt file.|**rm build/CMakeCache.txt&lt;/br&gt;cmake -S . -B build**
+Custom Build Commands|Add custom build commands directly from the command line|***cmake --build build --target my_custom_target***
+Install Only Specific Components|If your project has multiple install components, you can install specific ones.|***cmake --install build --component MyComponent***
+Test and Package Your Build|Use CTest and CPack for testing and packaging.|***cmake --build build --target test&lt;/br&gt;cmake --build build --target package***
+
+One final tip is CMake Presets:
+- Use CMakePresets.json to define and manage build configurations more easily.</code></pre>
+<p>{ &quot;version&quot;: 3, &quot;cmakeMinimumRequired&quot;: { &quot;major&quot;: 3, &quot;minor&quot;: 19, &quot;patch&quot;: 0 }, &quot;configurePresets&quot;: [ { &quot;name&quot;: &quot;default&quot;, &quot;hidden&quot;: true, &quot;generator&quot;: &quot;Ninja&quot;, &quot;binaryDir&quot;: &quot;${sourceDir}/build&quot;, &quot;cacheVariables&quot;: { &quot;CMAKE_EXPORT_COMPILE_COMMANDS&quot;: &quot;YES&quot; } }, { &quot;name&quot;: &quot;release&quot;, &quot;inherits&quot;: &quot;default&quot;, &quot;description&quot;: &quot;Release build&quot;, &quot;cacheVariables&quot;: { &quot;CMAKE_BUILD_TYPE&quot;: &quot;Release&quot; } } ] }</p>
+<pre><code>- Then use</code></pre>
+<p>cmake --preset release</p>
+<pre><code>
+## Using find_package and Config Modules
+Find Modules: Use find_package() to locate and configure external dependencies. Prefer using package config files provided by libraries over writing custom find modules.
+
+Using find_package in CMake can sometimes lead to issues, especially when dealing with external dependencies. Here are some common issues and their solutions:
+
+### Common Issues and Solutions with find_package
+#### 1. *Package Not Found*
+     - Issue: CMake cannot locate the package.
+     - Solution: Ensure the package is installed and its paths are correctly set. Use CMAKE_PREFIX_PATH or CMAKE_MODULE_PATH to help CMake find the package.
+</code></pre>
+<p>cmake -DCMAKE_PREFIX_PATH=/path/to/package ..</p>
+<pre><code>
+#### 2. *Version Mismatch*
+    - Issue: The specified version of the package is not found.
+    - Solution: Check the installed version of the package and specify the correct version in the find_package command.
+</code></pre>
+<p>find_package(PackageName 1.2 REQUIRED)</p>
+<pre><code>
+#### 3. *Incorrect Find&lt;Package&gt;.cmake Module*
+    * Issue: The Find&lt;Package&gt;.cmake module provided by CMake is incorrect or outdated.
+    * Solution: Write your own Find&lt;Package&gt;.cmake module or use the package config file provided by the library.
+</code></pre>
+<p>set(CMAKE_MODULE_PATH &quot;${CMAKE_CURRENT_SOURCE_DIR}/cmake&quot;) find_package(PackageName REQUIRED)</p>
+<pre><code>
+#### 4. *Missing Dependencies*
+    - Issue: The package depends on other libraries that are not found.
+    - Solution: Ensure all dependencies are installed and their paths are set correctly. You may need to manually specify paths for these dependencies.
+</code></pre>
+<p>cmake -DCMAKE_PREFIX_PATH=&quot;/path/to/dependency1;/path/to/dependency2&quot; ..</p>
+<pre><code>
+#### 5. *Incorrect Package Config File Location*
+    - Issue: CMake cannot find the package config file (&lt;Package&gt;Config.cmake or &lt;package&gt;-config.cmake).
+    - Solution: Specify the directory containing the config file using CMAKE_PREFIX_PATH.
+</code></pre>
+<p>cmake -DCMAKE_PREFIX_PATH=&quot;/path/to/package&quot; ..</p>
+<pre><code>#### 6. *Case Sensitivity Issues*
+    - Issue: Case sensitivity issues on case-sensitive file systems (e.g., Linux).
+    - Solution: Ensure the case matches exactly as CMake is case-sensitive when looking for files and directories.
+</code></pre>
+<p>find_package(PackageName REQUIRED)</p>
+<pre><code>
+#### 7. *Incorrect Usage of find_package Options*
+    - Issue: Misuse of find_package options like REQUIRED, QUIET, and COMPONENTS.
+    - Solution: Correctly use find_package options based on your requirements.
+</code></pre>
+<p>find_package(PackageName REQUIRED COMPONENTS component1 component2)</p>
+<pre><code>
+#### 8. *Custom Installation Locations*
+    - Issue: Packages installed in non-standard locations.
+    - Solution: Use environment variables or specify paths directly.
+</code></pre>
+<p>export CMAKE_PREFIX_PATH=/custom/path/to/package cmake ..</p>
+<pre><code></code></pre>
+<p><a href="../../../#/fields/system-administration/build-process">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

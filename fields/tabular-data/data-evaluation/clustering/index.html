@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Tabular Data - DATA EVALUATION - CLUSTERING</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/tabular-data/data-evaluation/clustering/">
+<meta name="description" content="How to inspect clusters and turn them into groups you can name, including why only the first two PCA components are plotted and how to describe each cluster.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Tabular Data - DATA EVALUATION - CLUSTERING">
+<meta property="og:description" content="How to inspect clusters and turn them into groups you can name, including why only the first two PCA components are plotted and how to describe each cluster.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/tabular-data/data-evaluation/clustering/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/tabular-data/data-evaluation/clustering/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/tabular-data/data-evaluation/clustering/"></script>
+<main>
+<h1>Tabular Data - DATA EVALUATION - CLUSTERING</h1>
+<p><em>How to inspect clusters and turn them into groups you can name, including why only the first two PCA components are plotted and how to describe each cluster.</em></p>
+<blockquote><p>How to look at clusters and turn them into groups you can name. By the end you&#x27;ll know why we plot only the first two PCA components, and five ways to describe what each cluster is.</p></blockquote>
+<p>You ran the algorithm and got cluster 0, 1, 2. Now what? A cluster number means nothing until you can say who is in it. This page shows the plot first, then how to profile each group.</p>
+<h1>Table of Content</h1>
+<ul><li>Tabular Data - DATA EVALUATION - CLUSTERING</li><li>Table of Content</li><li>Why just plot the first two PCA components?</li><li>Defining Customers Groups from Clusters</li></ul>
+<p>Code for this page: <a href="../../../../fields/tabular-data/data-evaluation/clustering/clustering.py">clustering.py</a>.</p>
+<h1>Why just plot the first two PCA components?</h1>
+<p><img src="../../../../fields/tabular-data/data-evaluation/clustering/images/clustering-01.jpg" alt="Agglomerative Clustering Results" loading="lazy"></p>
+<p>Visualizing data in two dimensions (using the first two PCA components) is a common approach because it allows us to create scatter plots that are easy to interpret and provide insights into the data&#x27;s structure.</p>
+<p>These two components typically capture the most significant sources of variation in the data. While it&#x27;s possible to visualize data in higher dimensions (using more PCA components), it becomes increasingly challenging to create meaningful plots beyond two or three dimensions. Therefore, reducing the dimensionality to two components is a practical choice for visualization.</p>
+<p>In case we decide to see how each cluster will be in case we used different pair of principle components</p>
+<p><img src="../../../../fields/tabular-data/data-evaluation/clustering/images/clustering-02.jpg" alt="Pairplot of PCA Components with Cluster Assignments" loading="lazy"></p>
+<h1>Defining Customers Groups from Clusters</h1>
+<p>Once you have clustered your customers using Agglomerative Clustering or any other clustering algorithm, you can define customer groups or segments by analyzing the characteristics of each cluster. Here&#x27;s how you can approach it:</p>
+<table><thead><tr><th>Approach</th><th>Description</th></tr></thead><tbody><tr><td>Cluster Profiling</td><td>Calculate summary statistics for each cluster. For example, compute the mean, median, or mode of various features (e.g., income, purchase behavior) within each cluster. &lt;/br&gt;This will provide you with an overview of the typical characteristics of customers in each cluster.</td></tr><tr><td>Visual Inspection</td><td>Visualize the cluster centers or centroids in the PCA space. &lt;/br&gt;You can plot the mean values of the PCA-transformed data for each cluster. &lt;/br&gt;This will help you understand how clusters are positioned relative to each other in the reduced-dimensional space.</td></tr><tr><td>Feature Importance</td><td>If applicable, analyze the feature importances within each cluster. &lt;/br&gt;For example, if you used decision tree-based methods, you can examine feature importances to understand which features contribute most to the clustering. &lt;/br&gt;This can help you interpret why certain customers are grouped together.</td></tr><tr><td>Domain Knowledge</td><td>Combine the statistical analysis with domain knowledge to give meaning to the clusters. &lt;/br&gt;Domain experts may provide insights into why certain customer segments are formed and what they represent in real-world terms.</td></tr><tr><td>Behavioral Patterns</td><td>Examine the behavioral patterns or purchasing behaviors of each cluster. &lt;/br&gt;Are there clusters that predominantly buy specific types of products? Do certain clusters respond differently to marketing campaigns? Analyzing customer behaviors can help define the groups more precisely.</td></tr></tbody></table>
+<p>By combining these approaches, you can gain a deeper understanding of each customer cluster and define them based on their unique characteristics. Keep in mind that the interpretation of clusters should be aligned with your business goals and objectives, and it may require iterative analysis and refinement.</p>
+<p><a href="../../../../#/fields/tabular-data/data-evaluation/clustering/">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Two Tickets About the Future: OpenMP 6, MPI 5 and What Never Expires</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/openmp-and-open-mpi/where-they-are-going/">
+<meta name="description" content="OpenMP 6.0 and MPI 5.0 are out. Do you have to rewrite everything? Two Monday tickets, the new GPU annex and the standard delivery box, and the ideas that will outlive every version number.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="Two Tickets About the Future: OpenMP 6, MPI 5 and What Never Expires">
+<meta property="og:description" content="OpenMP 6.0 and MPI 5.0 are out. Do you have to rewrite everything? Two Monday tickets, the new GPU annex and the standard delivery box, and the ideas that will outlive every version number.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/openmp-and-open-mpi/where-they-are-going/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/openmp-and-open-mpi/where-they-are-going/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../../.docs/prerender-redirect.js" data-target="../../../../#/fields/system-administration/openmp-and-open-mpi/where-they-are-going"></script>
+<main>
+<h1>Two Tickets About the Future: OpenMP 6, MPI 5 and What Never Expires</h1>
+<p><em>OpenMP 6.0 and MPI 5.0 are out. Do you have to rewrite everything? Two Monday tickets, the new GPU annex and the standard delivery box, and the ideas that will outlive every version number.</em></p>
+<blockquote><p><strong>Part 6 of 8.</strong> Both standards shipped a big new version. By the end of this page you&#x27;ll know what each one added, why the answer to &quot;do we have to rewrite everything?&quot; is mostly no, and the one caveat hiding in it.</p></blockquote>
+<h2>Contents</h2>
+<hr>
+<h2>Two tickets in the Monday queue</h2>
+<p>Monday morning, two tickets land in the platform team&#x27;s queue.</p>
+<p><strong>Ticket 1:</strong> <em>&quot;OpenMP 6.0 is out. Our code is full of `parallel for` loops from years ago. Do we have to rewrite everything?&quot;</em></p>
+<p><strong>Ticket 2:</strong> <em>&quot;MPI 5.0 is out and the news keeps saying &#x27;ABI&#x27;. What is that, and do we have to recompile?&quot;</em></p>
+<p>A junior engineer reads both, writes &quot;yes, upgrade everything, it&#x27;s a new major version&quot;, and closes them.</p>
+<p>They&#x27;re wrong, and not in the same way twice. One answer is &quot;mostly no, with a caveat&quot;. The other is &quot;no, and here&#x27;s what you get if you want it&quot;. To see why, look at what each version actually added, using the two kitchens from <a href="../../../../fields/system-administration/openmp-and-open-mpi/the-name-mixup/">part 1</a>.</p>
+<p>First, the trail, with dates from the official lists (<a href="https://www.openmp.org/specifications/">OpenMP</a>, <a href="https://www.mpi-forum.org/docs/">MPI</a>):</p>
+<table><thead><tr><th></th><th>OpenMP</th><th>MPI</th></tr></thead><tbody><tr><td>The pilot</td><td>Fortran 1.0, October 1997</td><td>MPI-1.0, 1994</td></tr><tr><td>The big widening</td><td><strong>4.0, July 2013</strong></td><td>3.0, September 2012</td></tr><tr><td>The recent big one</td><td>5.0 (2018), 5.1 (2020), 5.2 (2021)</td><td><strong>4.0, June 2021</strong>, then 4.1 (November 2023)</td></tr><tr><td><strong>Latest</strong></td><td><strong>6.0, November 14, 2024</strong></td><td><strong>5.0, June 5, 2025</strong></td></tr></tbody></table>
+<p>A rule for reading version numbers: a jump in the <strong>first</strong> digit is a bigger storyline; a jump in the second is mostly tidying.</p>
+<p>Ticket 1 first. What did OpenMP learn?</p>
+<hr>
+<h2>OpenMP: the kitchen gets a loading dock</h2>
+<p>For years, OpenMP&#x27;s whole plot was &quot;several chefs share one kitchen&quot;. Then, in <strong>4.0 (July 2013)</strong>, the kitchen got a loading dock. Per the <a href="https://www.openmp.org/press-release/openmp-4-0-api-released/">4.0 announcement</a>:</p>
+<table><thead><tr><th>New in 4.0</th><th>In kitchen terms</th></tr></thead><tbody><tr><td><strong>Accelerator devices</strong> (<code>#pragma omp target</code>)</td><td>The head chef can send a dish to an annex kitchen next door, the GPU</td></tr><tr><td><strong>SIMD</strong></td><td>One chef, one knife stroke, eight carrots chopped</td></tr><tr><td><strong>Task dependencies</strong></td><td>&quot;Dice the onions <em>before</em> you fry them&quot;, written down</td></tr><tr><td><strong>Thread affinity</strong></td><td>Which stove each chef stands at (you met the trouble with that in <a href="../../../../fields/system-administration/openmp-and-open-mpi/hybrid-and-the-binding-trap/">part 5</a>)</td></tr><tr><td>User-defined reductions, cancellation</td><td>Custom ways to combine results, and a way to say &quot;stop, the order was cancelled&quot;</td></tr></tbody></table>
+<p>Then came <strong>6.0 (November 14, 2024)</strong>, which per <a href="https://www.openmp.org/home-news/openmp-arb-releases-openmp-6-0-for-easier-programming/">the release page</a> brought easier tasks, finer control over memory, loop transformations such as fusion, reversal and interchange, support for recent C, C++ and Fortran standards, and a clean-out: <strong>features that were deprecated in 5.0, 5.1 and 5.2 were removed</strong>. <a href="https://www.openmp.org/blog/openmp-6/">The OpenMP blog</a> says Intel and GCC compilers already ship first implementations of some 6.0 features. There is also a <strong>6.1</strong> public comment draft dated July 2026. That is a trailer, not a release.</p>
+<p>So Ticket 1 isn&#x27;t a &quot;yes&quot;. It&#x27;s a &quot;mostly no, with one caveat&quot;: your plain <code>parallel for</code> loops are the heart of OpenMP and were never the target. What 6.0 removed is the stuff that had been <strong>deprecated</strong>, meaning already marked &quot;please stop using this&quot;. If your old code used only the basics, you have nothing to do. If it used something that was flagged along the way, that&#x27;s where to look.</p>
+<blockquote><p>[!NOTE] A spec version is not a compiler version. What matters for you is what your cluster&#x27;s compiler supports, so check its documentation before leaning on a brand-new directive.</p></blockquote>
+<p>That settles the threads. But the other ticket mentions an acronym that sounds suspiciously like a new bug.</p>
+<hr>
+<h2>MPI: the delivery box gets a standard size</h2>
+<p>Before 5.0, here&#x27;s a thing nobody tells beginners. A compiled MPI program was quietly married to <strong>one specific MPI implementation</strong>. Small details, such as how a communicator looks inside memory, differed between Open MPI and MPICH. Compile against one, and the binary only really worked with that one. Switch implementations and you recompiled.</p>
+<p>Picture a delivery window where every courier company has its own box size. To change courier, you repack every parcel.</p>
+<p><strong>MPI 5.0 (June 5, 2025)</strong> adds the <strong>standard ABI</strong> (Application Binary Interface): one agreed box size. In its own words it &quot;exists in parallel with existing implementation ABIs&quot;, so nothing that already works breaks, and the standard promises &quot;any valid MPI-4.1 program is a valid MPI-5.0 program&quot;.</p>
+<pre><code class="language-mermaid">flowchart TB
+    subgraph B[&quot;Before: repack for every courier&quot;]
+        direction TB
+        A1[&quot;program built&lt;br/&gt;for Open MPI&quot;] --&gt; O1[&quot;Open MPI&quot;]
+        A2[&quot;same code built&lt;br/&gt;for MPICH&quot;] --&gt; M1[&quot;MPICH&quot;]
+    end
+    subgraph F[&quot;With the 5.0 ABI: one box&quot;]
+        direction TB
+        A3[&quot;program built once&quot;] --&gt; O2[&quot;Open MPI&quot;]
+        A3 --&gt; M2[&quot;MPICH&quot;]
+    end
+    B ~~~ F</code></pre>
+<p>There&#x27;s a catch, and it&#x27;s the same catch as OpenMP&#x27;s compilers: a standard is a promise, and an implementation has to keep it. At ISC25, MPICH was described as already supporting the ABI, and Open MPI&#x27;s support as work in progress (<a href="https://lists.mpi-forum.org/pipermail/mpi-forum/2025-June/007905.html">MPI 5.0 announcement</a>, <a href="https://www.mpi-forum.org/bofs/2025-06-MPI-BOF-ISC25.pdf">ISC25 slides</a>).</p>
+<p>The season before that, <strong>MPI 4.0 (June 2021)</strong> had added, per the MPI-4.1 document: <strong>large counts</strong> (message sizes no longer limited by what a plain <code>int</code> can hold), <strong>persistent collectives</strong> (set up a repeating operation once, run it many times), <strong>partitioned communication</strong>, and <strong>sessions</strong>, a new way to start MPI.</p>
+<p>So Ticket 2 is a &quot;no&quot;. The ABI is something you <em>may</em> use once your MPI supports it, not something you must do on Monday.</p>
+<p>Time to see if it stuck.</p>
+<hr>
+<h2>Try it before you scroll</h2>
+<p>☕ Ten seconds. A colleague upgrades from Open MPI 4.1 to 5.0 and says: <em>&quot;The MPI standard promises compatibility, so my job script will run unchanged.&quot;</em></p>
+<p>What part of that sentence could still bite?</p>
+<p>Hint: think about what the standard actually promises, and what a job script contains.</p>
+<p><strong>Answer:</strong> the standard promises that your <strong>program</strong> stays valid. It says nothing about your <strong>launch line</strong>: <code>mpirun</code> flags, binding defaults, and error messages belong to the implementation, not to MPI. I tested 5.0.10 only: its <code>mpirun</code> shipped with PMIx and PRRTE packages, and on Ubuntu 26.04 hid its error text behind a missing help file (part 3). I did not test 4.1, so I can&#x27;t tell you which flags differ. The right move is the oldest one in the book: read the version&#x27;s manual before you reuse the script.</p>
+<hr>
+<h2>Open MPI today</h2>
+<p>Per its <a href="https://www.open-mpi.org/software/ompi/">downloads page</a> when I wrote this:</p>
+<table><thead><tr><th>Series</th><th>Status</th></tr></thead><tbody><tr><td>v6.0</td><td>Upcoming, no date listed</td></tr><tr><td>v5.0</td><td>Current stable; latest 5.0.11 (September 16, 2026)</td></tr><tr><td>v4.1</td><td>Still supported</td></tr><tr><td>v4.0 and older</td><td>Retired</td></tr></tbody></table>
+<p>Its <a href="https://www.open-mpi.org/about/">about page</a> says it offers full MPI-3.1 conformance with many MPI-4.0 elements. Remember the cast from part 1: MPI is the script, and Open MPI is one of the actors reading it, so the script&#x27;s version and the actor&#x27;s version are different questions.</p>
+<hr>
+<h2>The tickets, answered</h2>
+<p>Back to Monday&#x27;s queue.</p>
+<table><thead><tr><th>Ticket</th><th>Verdict</th><th>Why</th></tr></thead><tbody><tr><td>&quot;OpenMP 6.0: rewrite everything?&quot;</td><td><strong>Mostly no.</strong> Check anything that was deprecated</td><td>Basic loops are the core and stay. 6.0 removed features that were already deprecated in 5.0 to 5.2</td></tr><tr><td>&quot;MPI 5.0 ABI: recompile?&quot;</td><td><strong>No.</strong> The ABI is optional</td><td>Valid 4.1 programs are valid 5.0 programs; the ABI runs alongside the old ones, and not every implementation has it yet</td></tr></tbody></table>
+<p>Notice what neither verdict needed: knowing the new features. It needed the <strong>models</strong> from this series. Threads share memory and need care about who writes what. Ranks own their memory and need messages. Binding decides where the work lands. Those storylines have run since the 1990s and no version number cancels them.</p>
+<hr>
+<h2>The whole series in six lines</h2>
+<table><thead><tr><th>Part</th><th>One line</th></tr></thead><tbody><tr><td>1</td><td>OpenMP = threads, MPI = messages, Open MPI = one implementation of MPI</td></tr><tr><td>2</td><td>Two tribes in the 1990s solved the same headache from opposite sides</td></tr><tr><td>3</td><td>One kitchen with many chefs vs many kitchens passing notes; race vs deadlock</td></tr><tr><td>4</td><td><code>omp.h</code> + <code>#pragma omp</code> + <code>-fopenmp</code> vs <code>mpi.h</code> + <code>MPI_</code> + <code>mpirun</code>; both = hybrid</td></tr><tr><td>5</td><td>Check &quot;rank may use N cpus&quot;: the default can pin each rank to one core</td></tr><tr><td>6</td><td>OpenMP 6.0 and MPI 5.0 are current, and the core ideas are the stable part</td></tr></tbody></table>
+<p><strong>Takeaway:</strong> a new version number adds vocabulary, but the two ideas underneath, share memory between threads or send messages between processes, are the part that doesn&#x27;t expire.</p>
+<p>The standards are the stable part. The next question is about where your job actually runs: on a cluster someone else manages. Next time a Slurm script says <code>--ntasks=4</code> and your program prints <code>rank 0 of 1</code> four times, can you say who forgot to introduce the ranks? That&#x27;s <a href="../../../../fields/system-administration/openmp-and-open-mpi/mpi-and-openmp-under-slurm/">part 7: who starts the ranks under Slurm</a>, and Kubernetes follows in part 8.</p>
+<hr>
+<h2>References</h2>
+<ul><li><a href="https://www.openmp.org/specifications/">OpenMP specifications: release dates and the 6.1 draft</a></li><li><a href="https://www.openmp.org/press-release/openmp-4-0-api-released/">OpenMP 4.0 release announcement (July 26, 2013)</a></li><li><a href="https://www.openmp.org/home-news/openmp-arb-releases-openmp-6-0-for-easier-programming/">OpenMP ARB releases OpenMP 6.0 (November 2024)</a></li><li><a href="https://www.openmp.org/blog/openmp-6/">OpenMP 6.0 blog: first implementations</a></li><li><a href="https://www.mpi-forum.org/docs/">MPI Forum: standard versions and dates</a></li><li><a href="https://www.mpi-forum.org/docs/mpi-5.0/mpi50-report/node20.htm">MPI-5.0 standard: background, ABI chapter</a></li><li><a href="https://mpi-forum.org/docs/mpi-4.1/mpi41-report/node17.htm">MPI-4.1 standard: summary of the MPI-4.0 additions</a></li><li><a href="https://lists.mpi-forum.org/pipermail/mpi-forum/2025-June/007905.html">MPI 5.0 voted in (MPI Forum mailing list)</a></li><li><a href="https://www.mpi-forum.org/bofs/2025-06-MPI-BOF-ISC25.pdf">MPI Forum ISC25 BoF slides: ABI implementation status</a></li><li><a href="https://www.open-mpi.org/software/ompi/">Open MPI downloads: release series</a></li><li><a href="https://www.open-mpi.org/about/">About Open MPI</a></li></ul>
+<p><a href="../../../../#/fields/system-administration/openmp-and-open-mpi/where-they-are-going">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>

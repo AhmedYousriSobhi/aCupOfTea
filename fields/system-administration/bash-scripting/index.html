@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>System Administration - Bash Scripting</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/bash-scripting/">
+<meta name="description" content="Bash scripting from the first script to the basics, covering naming, shebang, variables, input and output, and running a script.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="aCupOfTea">
+<meta property="og:title" content="System Administration - Bash Scripting">
+<meta property="og:description" content="Bash scripting from the first script to the basics, covering naming, shebang, variables, input and output, and running a script.">
+<meta property="og:url" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/bash-scripting/">
+<meta property="og:image" content="https://ahmedyousrisobhi.github.io/aCupOfTea/fields/system-administration/bash-scripting/card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<script src="../../../.docs/prerender-redirect.js" data-target="../../../#/fields/system-administration/bash-scripting"></script>
+<main>
+<h1>System Administration - Bash Scripting</h1>
+<p><em>Bash scripting from the first script to the basics, covering naming, shebang, variables, input and output, and running a script.</em></p>
+<h1>Table of Content</h1>
+<h1>Introduction</h1>
+<h2>Bash Scripting Definition</h2>
+<p>Working in UNIX operating system, we will face this type of a file which contain a sequence of commands that are executed by the bash program line by line to perfrom a series of actions. These actions performed by commands can be repeated multiple times and execute them by running the script.</p>
+<h2>Advantages</h2>
+<p>Adv|Description| |-|-| Automation| Bash scripting allows you to automate repetitive tasks, making it incredibly useful for tasks like file manipulation, system maintenance, backups, and more. This automation can significantly save time and reduce human error. Accessibility| Bash is the default shell for most Unix-like operating systems, ensuring its widespread availability. It&#x27;s pre-installed on macOS and most Linux distributions, making it easily accessible without the need for additional installations. Customization| Users can customize and tailor scripts according to their needs, making it a flexible tool for various tasks. With conditional statements, loops, and functions, it&#x27;s possible to create complex and specific workflows. Integration| Bash scripts can integrate with other command-line utilities and programs seamlessly. This integration allows for powerful scripting by combining the functionality of multiple tools into a single script. System Administration| Bash scripting is extensively used in system administration tasks. It helps in automating system configurations, user management, log analysis, and other administrative tasks. Portability| Bash scripts are often portable across different Unix-like systems. However, it&#x27;s essential to consider the differences in commands and functionalities across different versions of Bash and other shells. Rapid Development| Writing scripts in Bash is relatively quick and straightforward due to its simple syntax. For quick solutions or prototyping, it provides a fast development environment. Learning Curve| Compared to more complex programming languages, Bash scripting has a relatively lower learning curve, making it accessible for beginners. It&#x27;s a good starting point for those new to scripting or programming concepts. Debugging Tools| Bash provides debugging options like tracing execution, setting breakpoints, and displaying error messages, aiding in identifying and fixing issues in scripts. Community Support| There&#x27;s a large community of Bash scripters and developers, resulting in an abundance of online resources, forums, and tutorials to seek help from and learn.</p>
+<p>Note: It is important to note that, bash scripting might not always be the most suitable tool for every task, for complex projects or tasks requiring extensive data manupulation or advanced data structures.</p>
+<h1>Creating a bash script</h1>
+<p>Let&#x27;s start creating our own script!!</p>
+<h2>Script naming conventions</h2>
+<p>Bash scripts ends with <strong>.sh</strong>, However, they can run fine without the <strong>sh</strong> extention.</p>
+<p>An Important Observation! In Unix system, a file extention is useless for Unix system, and has no any importants except for the user, to know what is the file type working on. So how does the system knows it is a bash script?</p>
+<h2>Shebang</h2>
+<p>A shebang, also known as a hashbang (hash <strong>#</strong> + bang <strong>!</strong>) or a pound-bang, refers to the first line in a script file in Unix-like operating systems. It begins with the characters &quot;#!&quot; followed by the path to the interpreter that should execute the script. For example:</p>
+<pre><code class="language-bash">#!/bin/bashc</code></pre>
+<p>Shebang is simply an absoulte path to the bash interpreter</p>
+<p>To find the bash shell path:</p>
+<pre><code class="language-bash">which bash</code></pre>
+<h2>Executing the Bash Script</h2>
+<p>In Unix system, any created file by default is not executable, which means user can not execute it.</p>
+<h3>Make Script Executable</h3>
+<ul><li>To make a file executable: <code>`</code>bash chmod u+x my_script.sh <code>`</code></li></ul>
+<p>|Command|Description| |-|-| chmod|Modifies the ownership of a file u|Modify this ownership for the current user x| adds the execution rights u+x|This means that the user who is the owner can now run the script my_script.sh| The file which the user want to run</p>
+<h3>Execute</h3>
+<ul><li>there are several methods to execute the scirpt <code>`</code>bash sh my_script.sh bash my_script.sh ./my_script.sh <code>`</code></li></ul>
+<h1>Basics</h1>
+<p>There are some basics in the bash scripting any user should know</p>
+<h2>1- Comments</h2>
+<p>A neat bash script is the one that you could understand what is happening inside. To make a script readable, we should add comments.</p>
+<p>Comments starts with <strong>#</strong>, so any line begins with <strong>#</strong> is a comment and will be ignored by the interpreter. There is exception in the <strong>shebang</strong>!!</p>
+<pre><code class="language-bash">#!/bin/bash
+
+# This line is a comment, and will not be executed
+# So try to say something usefull to illustrate the mess you are doing.</code></pre>
+<h2>2- Variables &amp; Data Types</h2>
+<p>To easily store, read, and access the data, variables knows how to get this job done.There are no data types in Bash, so variables can easily store any type of data.</p>
+<h3>Define a Varialbe</h3>
+<pre><code class="language-bash">#!/bin/bash
+
+# this is a variable to store a string
+firstname=ahmed
+lastname=&quot;yousri&quot;</code></pre>
+<ul><li>You can enclose the string with quots or just leave it without them, but in case of not using the quotes, make sure the string does not have any spaces</li></ul>
+<h3>Access a Varialbe</h3>
+<p>To access the value in a variable, use <strong>$</strong></p>
+<pre><code class="language-bash">#!/bin/bash
+
+echo $firstname</code></pre>
+<h3>Naming Convention</h3>
+<p>In Bash scripting, variable names should follow certain conventions for readability and consistency. Here are the commonly recommended naming conventions for variables:</p>
+<ul><li>Should start with a letter or an underscore</li><li>Can contains letters, numbers, and underscores</li><li>Case-senstive</li><li>Should not contain spaces or special characters</li></ul>
+<h4>Tips</h4>
+<ul><li>Avoid using reserved keywords, such as if, then, else, fi, and so on.</li><li>Avoid using system or Bash reserved variables names like PATH, HOME, PWD, ...</li><li>Use descriptive names that reflect the purpose of the variables.</li><li>Uppercase for Environment Variables</li><li>Lowercase or CamelCase for Local Variables</li><li>Underscores for Multi-word Variable Names</li><li>Constants in Uppercase</li></ul>
+<h2>3- Inputs</h2>
+<h3>Read User Input</h3>
+<p>You can read user input using the <strong>read</strong> command</p>
+<pre><code class="language-bash">#!/bin/bash
+
+# Print a message for the user
+echo &quot;What&#x27;s your name?&quot;
+
+# Read input from user, and store it in varialbe called usernamne
+read username
+
+# print user input
+echo &quot;Hello, $username! Welcome&quot;</code></pre>
+<h3>Reading from File</h3>
+<pre><code class="language-bash">#!/bin/bash
+
+# Reading line by line from user
+while read line
+do
+  echo $line
+done &lt; input.txt</code></pre>
+<p>|Command|Details| |-|-| while read line| This line starts a while loop. The read command reads a line from the input and stores it in the variable line. This loop continues until there are no more lines to read. do| Marks the beginning of the loop body. Commands placed after do and before done will be executed repeatedly as long as the read command successfully reads a line from the file. echo $line| This command prints the content of the variable line to the terminal. done| Marks the end of the loop body.</p>
+<h3>Command Line Arguments</h3>
+<p>In many cases, we add arugments along side with the bash script during the execution, like:</p>
+<pre><code class="language-bash">./my_script.sh ahmed</code></pre>
+<p>So in the bash script, we can access this using the <strong>$</strong> operator.</p>
+<pre><code class="language-bash">#!/bin/bash
+
+echo &quot;Hello, $1!&quot;</code></pre>
+<p>so the expected output will be: &quot;Hello, Ahmed!&quot;</p>
+<p>The number notation, indecate the argument position, so in our case, <strong>ahmed</strong> was the first arguments in the command line, so we can read it using <strong>$1</strong>. So in case there are other arguments, we can access them using their index number in the command line.</p>
+<p>What about <strong>$0</strong> you may ask?</p>
+<ul><li>This holds the bash script name itself!!.</li></ul>
+<h2>4- Outputs</h2>
+<h3>Printing to the Terminal</h3>
+<p>Using Command <strong>echo</strong></p>
+<pre><code class="language-bash">#!/bin/bash
+
+echo &quot;Hello Bash!&quot;</code></pre>
+<h3>Writing to a File</h3>
+<p>Using redirect operator <strong>&gt;</strong></p>
+<pre><code class="language-bash">#!/bin/bash
+
+echo &quot;This is bash text.&quot; &gt; my_output.txt</code></pre>
+<h3>Appending to a File</h3>
+<p>Using the appending operator <strong>&gt;&gt;</strong> :</p>
+<pre><code class="language-bash">#!/bin/bash
+
+echo &quot;More bash text&quot; &gt;&gt; my_output.txt</code></pre>
+<h3>Redirecting Output</h3>
+<p>You can redirect the output of a command to a file using the redirect operator</p>
+<pre><code class="language-bash">ls &gt; my_file.txt</code></pre>
+<h2>5- Conditional Statements (if/else)</h2>
+<p>TO have a boolean results, with a true or false. this is what is called conditions. To do so using if, if-else, if-elif-else, and nested conitionals.</p>
+<h3>If</h3>
+<pre><code class="language-bash">#!/bin/bash
+
+if [[ condition ]]; then 
+  statement
+elif [[ condition ]]; then
+  statement
+else
+  do this by default
+fi</code></pre>
+<h3>Multiple Conditions</h3>
+<p>You can combine multiple conditions using AND <strong>-a</strong> and OR <strong>-o</strong> to make comparisons that have more significance:</p>
+<pre><code class="language-bash">#!/bin/bash
+
+if [ $a -gt 60 -a $b -lt 100]
+# To check if varialbe a is greater than 60 AND variable b is less than 100</code></pre>
+<h3>Case Statements</h3>
+<pre><code class="language-bash">case expression in
+    pattern1)
+        # code to execute if expression matches pattern1
+        ;;
+    pattern2)
+        # code to execute if expression matches pattern2
+        ;;
+    pattern3)
+        # code to execute if expression matches pattern3
+        ;;
+    *)
+        # code to execute if none of the above patterns match expression
+        ;;
+esac
+</code></pre>
+<h3>If Flags</h3>
+<p>Refer to <strong>man if</strong> manual page to get more about the supported flags used in the conitions.</p>
+<pre><code class="language-bash"> -a    file exists  This is identical in effect to -e. It has been &quot;deprecated,&quot; [1] and its use is discouraged.
+ -b    file is a block device
+ -c    file is a character device  [ -b &quot;/dev/sda2&quot; ]
+ -d    file is a directory
+ -e    file exists
+ -f    file is a regular file (not a directory or device file)
+ -G    group-id of file same as yours
+ -g    set-group-id (sgid) flag set on file or directory
+          If a directory has the sgid flag set, then a file created within that directory belongs to the group
+          that owns the directory, not necessarily to the group of the user who created the file.
+ -h    file is a symbolic link
+ -k    sticky bit1 set
+ -L    file is a symbolic link
+ -N    file modified since it was last read
+ -O    you are owner of file
+ -p    file is a pipe  [ -p /dev/fd/0 ]
+ -r    file has read permission (for the user running the test)
+ -S    file is a socket
+ -s    file is not zero size
+ -t    file (descriptor) is associated with a terminal device.
+ -u    set-user-id2 (suid) flag set on file
+ -w    file has write permission (for the user running the test)
+ -x    file has execute permission (for the user running the test)
+
+ -nt   file f1 is newer than f2   f1 -nt f2
+ -ot   file f1 is older than f2   f1 -ot f2
+ -ef   files f1 and f2 are hard links to the same file   f1 -ef f2
+    
+ !     &quot;not&quot; -- reverses the sense of the tests above (returns true if condition absent).</code></pre>
+<h2>6- Looping</h2>
+<p>To repeatily doing same instructions commands as long as a condition is valid (true), you can easily use looping, until a condition become invalid (false) and break the loop.</p>
+<h3>While Loop</h3>
+<p>It is used in case you want to repeat some commands as long a condition is valid</p>
+<pre><code class="language-bash">#!/bin/bash
+
+i=1
+while [[ $i -ls 10]]; do
+  echo $i
+  (( i +=1 ))
+done</code></pre>
+<h3>For Loop</h3>
+<p>It is more used in case if you know how many times you need to iterate and repeatly do the same commands, so this even used in case of reading a file line by line.</p>
+<pre><code class="language-bash">#!/bin/bash
+
+for i in [1..5]
+do
+  echo $i
+done</code></pre>
+<h2>7- Functions</h2>
+<p>In Bash scripting, functions are blocks of code that can be defined once and executed multiple times within a script. They offer modularity, reusability, and help organize code. Here&#x27;s an overview of using functions in Bash:</p>
+<pre><code class="language-bash">function function_name {
+    # Commands or code block
+    # Within the function
+}</code></pre>
+<p>Example for a cslculator:</p>
+<pre><code class="language-bash">#!/bin/bash
+
+# Define functions to perform calculations
+function add {
+echo $(($1 + $2))
+}
+
+function subtract {
+echo $(($1 - $2))
+}
+
+function multiply {
+echo $(($1 * $2))
+}
+
+function divide {
+echo $(($1 / $2))
+}
+
+# Get input numbers from command-line arguments
+num1=$1
+num2=$2
+
+# Call the functions with input numbers
+echo &quot;Addition: $(add $num1 $num2)&quot;
+echo &quot;Subtraction: $(subtract $num1 $num2)&quot;
+echo &quot;Multiplication: $(multiply $num1 $num2)&quot;
+echo &quot;Division: $(divide $num1 $num2)&quot;</code></pre>
+<h2>8- Schedule Scripts using cron</h2>
+<p>Not all scripts are meant to be immediatly run to do their task, some time we need to set a schedule to automate their work on a specific time. We will use cron to do this schedule feature.</p>
+<h3>Cron</h3>
+<p>Cron is a time-based job scheduler in Unix-like operating systems, including Linux and macOS. It allows users to schedule tasks, commands, or shell scripts to run automatically at predefined intervals or specific times without manual intervention.</p>
+<h3>Steps to Shcedule a Bash Script</h3>
+<h4>1. Understand Cron Syntax</h4>
+<p>Cron uses a specific syntax to define the schedule. It comprises five fields followed by the command/script to be executed. The fields represent minute, hour, day of the month, month, and day of the week. Here&#x27;s the syntax:</p>
+<pre><code class="language-plaintext">* * * * * command_to_execute
+- - - - -
+| | | | |
+| | | | +----- Day of the week (0 - 7) (Sunday is 0 or 7)
+| | | +------- Month (1 - 12)
+| | +--------- Day of the month (1 - 31)
+| +----------- Hour (0 - 23)
++------------- Minute (0 - 59)</code></pre>
+<h4>2. Edit the User&#x27;s Cron Jobs</h4>
+<p>Use the <strong>crontab -e</strong> command to open the cron job editor for the current user. This command opens the user&#x27;s crontabe file for editting in the default text editor.</p>
+<pre><code class="language-bash">crontab -e</code></pre>
+<h4>3.Schedule the Bash Script</h4>
+<p>Add an entry to schedule your bash script by specifying the schedule and the command to execute:</p>
+<pre><code class="language-bash"># Schdule a script to run every 0 mins, 4 hours, for every day, month, day of week
+0 4 * * * /path/to/your/script.sh</code></pre>
+<h4>4. Save and exit</h4>
+<p>After adding the entry, save the changes and exit the editor</p>
+<h4>5. Check Shceduled Scripts</h4>
+<pre><code class="language-bash">crontab -l</code></pre>
+<h4>Additional Tips:</h4>
+<ul><li>Ensure that the script has executable permissions (chmod +x script.sh).</li><li>Specify absolute paths for files, as cron might not use the same environment variables as your interactive shell.</li><li>Redirect output (if necessary) to a specific file within the script itself to capture any output or errors that might occur during execution.</li></ul>
+<h1>Debug &amp; Troubleshoot</h1>
+<p>&quot;Do it work just fine? then do not touch it!!&quot;, we need to be able to debug our script, and can catch the error, so we need to be able to deubg our script.</p>
+<p>Debugging Bash scripts involves identifying and resolving issues or errors that occur during script execution. There are several techniques and tools available to debug Bash scripts effectively:</p>
+<h2>1. Using &#x27;set -x&#x27;</h2>
+<p>Add &#x27;<strong>set -x</strong>&#x27; at the beginning of your script to enable debugging mode. This mode displays each command before executing it, allowing you to see the sequence of commands executed.</p>
+<pre><code class="language-bash">#!/bin/bash
+
+set -x
+# Your script commands here</code></pre>
+<h2>2. echo Statements:</h2>
+<p>Use &#x27;<strong>echo</strong>&#x27; statements within the script to print variables, messages, or checkpoints to the terminal. This helps track the flow of the script and identify where issues might occur.</p>
+<pre><code class="language-bash">#!/bin/bash
+
+echo &quot;Starting script...&quot;
+# Your script commands here
+echo &quot;Script completed.&quot;</code></pre>
+<h2>3. Redirecting Output and Errors</h2>
+<p>Redirect standard output and errors to separate files to capture any issues or messages that might not be displayed in the terminal.</p>
+<pre><code class="language-bash">#!/bin/bash
+
+# Redirect standard output to a file
+exec &gt; output.log
+
+# Redirect errors to a file
+exec 2&gt; error.log
+
+# Your script commands here</code></pre>
+<h2>4. set -e</h2>
+<p>Use &#x27;<strong>set -e</strong>&#x27; to exit immediately if any command returns a non-zero exit status. This helps in catching errors early in the script execution.</p>
+<pre><code class="language-bash">#!/bin/bash
+
+set -e
+# Your script commands here</code></pre>
+<h2>5. trap Command</h2>
+<p>Use trap to catch and handle signals or errors that occur during script execution. This helps perform specific actions when an error occurs.</p>
+<pre><code class="language-bash">#!/bin/bash
+
+trap &#x27;echo &quot;Error occurred&quot;; exit 1&#x27; ERR
+
+# Your script commands here</code></pre>
+<h2>6. Shellcheck</h2>
+<p>Use external tools like Shellcheck to statically analyze your Bash script for common issues, syntax errors, and pitfalls</p>
+<h2>7. Debugging with bash -x</h2>
+<p>Run your script with bash -x script.sh to debug it directly from the command line, enabling debugging mode only for that execution.</p>
+<h2>8. Logging</h2>
+<p>Implement logging mechanisms within your script to track the execution flow, variable values, and errors encountered during script execution.</p>
+<h1>Tips &amp; Tricks</h1>
+<h2>Braces Expansion</h2>
+<p>You can use brace expansion feature to allow user to generate list of words or commands.</p>
+<p>To use it, enclose a comma-seperated list of workds or command in curly braces.</p>
+<pre><code class="language-bash">touch file.{txt,doc,pdf}
+
+mkdir /var/tmp/{one,two,three}</code></pre>
+<h2>Braces for Variables</h2>
+<p>Using braces around a variable name can help to avoid ambiguity and improve readability.</p>
+<pre><code class="language-bash">output_dir=/path/to/directory
+
+echo &quot;The output file is: ${output_dir}&quot;</code></pre>
+<h2>Command Substitution</h2>
+<p>It is a good programming tip to use variables for commands substitution instead of</p>
+<pre><code class="language-bash">current_time=$(date +%Y-%m-%d_%H:%M:%S)
+echo &quot;The current time is: $current_time&quot;</code></pre>
+<h2>Aliases</h2>
+<p>You can use aliases as shortcuts for commands or command sequences. This could save time and typing by allowing user to use a shorter or more intuitive command.</p>
+<p>To create an alias, use the alias command followed by the name of the alias and the command or command sequence you want to alias.</p>
+<pre><code class="language-bash">alias ll=&quot;ls -la&quot;</code></pre>
+<h2>The Watch Command</h2>
+<p>Use watch command to allows you to execute a command periodically and display the output in real-time.</p>
+<p>Useful for monitoring system resources or processess.</p>
+<p>To use watch command:</p>
+<pre><code class="language-bash"># display the output of ps aux command every second.
+watch -n 1 ps aux</code></pre>
+<h2>History Expansion</h2>
+<p>History expansion allows user to reuse commands from your command history.</p>
+<p>To use it:</p>
+<pre><code class="language-bash"># return the last command
+!!
+
+# return the command two commands ago
+!-2</code></pre>
+<h1>References</h1>
+<ul><li>freeCodeCamp - Bash Scripting Tutorial – Linux Shell Script and Command Line for Beginners: <a href="https://www.freecodecamp.org/news/bash-scripting-tutorial-linux-shell-script-and-command-line-for-beginners/">link</a></li><li>10 must-known Bash shell scripting tips and tricks for beginners - <a href="https://www.fosslinux.com/105140/10-must-know-bash-shell-scripting-tips-and-tricks-for-beginners.htm">Foos Linux</a></li><li>10 Bash Tricks Every Developer Should Know - <a href="https://tecadmin.net/bash-tricks-every-developer-should-know/#google_vignette">tecadmin</a></li><li>Chatgpt - openAI: <a href="https://chat.openai.com">link</a></li></ul>
+<p><a href="../../../#/fields/system-administration/bash-scripting">Open the interactive version of this page</a></p>
+</main>
+</body>
+</html>
